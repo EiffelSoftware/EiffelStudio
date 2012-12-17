@@ -183,10 +183,10 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "6B736424-1729-0B6F-6DDD-8240F9F8FFD6"
+			Result := {STRING_32} "6B736424-1729-0B6F-6DDD-8240F9F8FFD6"
 		end
 
 feature {NONE} -- Factory

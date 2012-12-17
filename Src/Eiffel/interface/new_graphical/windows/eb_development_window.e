@@ -419,7 +419,7 @@ feature -- Access
 
 feature -- Access: Help
 
-	help_context_id: STRING = "E34647C8-840E-159D-74B3-07353A27472E"
+	help_context_id: STRING_32 = "E34647C8-840E-159D-74B3-07353A27472E"
 			-- Id linked to Eiffel Studio help documentation book.
 			-- <Precursor>
 

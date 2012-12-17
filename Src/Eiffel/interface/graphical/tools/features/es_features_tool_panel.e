@@ -128,10 +128,10 @@ feature {NONE} -- Access
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
+			Result := {STRING_32} "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
 		end
 
 feature {ES_FEATURES_GRID} -- Status report

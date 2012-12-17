@@ -204,10 +204,10 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "E70D5827-A00D-47EE-9E7A-B7B4BFB34CCF"
+			Result := {STRING_32} "E70D5827-A00D-47EE-9E7A-B7B4BFB34CCF"
 		end
 
 feature {NONE} -- Factory

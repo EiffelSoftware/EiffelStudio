@@ -297,10 +297,10 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "8C3CD0FE-78AA-7EC6-F36A-2233A4E26755"
+			Result := {STRING_32} "8C3CD0FE-78AA-7EC6-F36A-2233A4E26755"
 		end
 
 feature {NONE} -- Factory

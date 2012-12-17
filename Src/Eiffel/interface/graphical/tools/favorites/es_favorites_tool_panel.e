@@ -46,10 +46,10 @@ feature {NONE} -- Access: User interface
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "75CFEDA2-3823-EF29-130A-39E686116F40"
+			Result := {STRING_32} "75CFEDA2-3823-EF29-130A-39E686116F40"
 		end
 
 feature {NONE} -- Action handlers

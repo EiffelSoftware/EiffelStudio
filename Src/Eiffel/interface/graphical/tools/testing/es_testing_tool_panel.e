@@ -146,10 +146,10 @@ feature {NONE} -- Initialization: widget status
 
 feature -- Access: help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "1d8cc843-238e-feaa-cfa6-629f080ffba7"
+			Result := {STRING_32} "1d8cc843-238e-feaa-cfa6-629f080ffba7"
 		end
 
 feature {NONE} -- Access

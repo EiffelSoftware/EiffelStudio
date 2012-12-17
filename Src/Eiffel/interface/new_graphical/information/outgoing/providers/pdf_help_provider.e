@@ -19,18 +19,16 @@ create
 
 feature -- Access
 
-	document_protocol: STRING
+	document_protocol: STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		once
-			create Result.make_empty
-			Result.append ("PDF")
+			Result := {STRING_32} "PDF"
 		end
 
 	document_description: STRING_32
 			-- Document short description
 		once
-			create Result.make_empty
-			Result.append ("PDF")
+			Result := {STRING_32} "PDF"
 		end
 
 feature -- Basic operations

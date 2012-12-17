@@ -59,7 +59,7 @@ inherit
 
 feature -- HELP_CONTEXT_I, Access
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		local
 			l_eis_entry: detachable EIS_ENTRY
@@ -71,7 +71,7 @@ feature -- HELP_CONTEXT_I, Access
 				Result := l_src
 			else
 					-- Looks like the post condition is too strict.
-				Result := "No source specified."
+				Result := {STRING_32} "No source specified."
 			end
 		end
 

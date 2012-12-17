@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Access
 
-	base_url: STRING
+	base_url: STRING_32
 			-- Base URL used to locate help documentation.
 		deferred
 		ensure
@@ -31,20 +31,16 @@ feature {NONE} -- Access
 			result_ends_with_url_separator: Result.item (Result.count) = url_separator
 		end
 
-	url_separator: CHARACTER
+	url_separator: CHARACTER_32
 			-- Separator for web-urls.
 		once
 			Result := '/'
-		ensure
-			result_is_printable: Result.is_printable
 		end
 
-	section_url_separator: CHARACTER
+	section_url_separator: CHARACTER_32
 			-- Separator for web-urls between the help context content and the help context section.
 		once
 			Result := '#'
-		ensure
-			result_is_printable: Result.is_printable
 		end
 
 feature -- Query
@@ -75,7 +71,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	full_url (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING
+	full_url (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING_32
 			-- Full URL to navigate to, base on the help content context.
 		require
 			a_context_id_attached: a_context_id /= Void
@@ -93,7 +89,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	document_title (a_url: READABLE_STRING_8; a_trim: BOOLEAN): detachable STRING_32
+	document_title (a_url: READABLE_STRING_32; a_trim: BOOLEAN): detachable STRING_32
 			-- Attempts to retrieve a document title from a URL.
 			--
 			-- `a_url': URL to fetch a document title from
@@ -103,7 +99,7 @@ feature {NONE} -- Query
 			is_accessible: is_accessible -- Need to call `make' from {CURL_ACCESS}.
 			a_url_attached: a_url /= Void
 		local
-			l_result: detachable STRING
+			l_result: detachable STRING_32
 			l_protcol: detachable HTTP_PROTOCOL
 			l_regex: like title_extract_regex
 			l_url: HTTP_URL
@@ -187,7 +183,7 @@ feature -- Basic operations
 
 feature {NONE} -- Formatting
 
-	format_context_id (a_context_id: READABLE_STRING_GENERAL): STRING
+	format_context_id (a_context_id: READABLE_STRING_GENERAL): STRING_32
 			-- Formats the context id so it may be used in a URL.
 			--
 			-- `a_context_id': A help content context identifier to format
@@ -202,7 +198,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context_section (a_section: READABLE_STRING_GENERAL): STRING
+	format_context_section (a_section: READABLE_STRING_GENERAL): STRING_32
 			-- Formats the context section so it may be used in a URL.
 			--
 			-- `a_section': A help content context section to format
@@ -217,7 +213,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context (a_context: READABLE_STRING_GENERAL): STRING
+	format_context (a_context: READABLE_STRING_GENERAL): STRING_32
 			-- Formats the context so it may be used in a URL.
 			--
 			-- `a_context': A help content context of session context identifier to format
@@ -226,10 +222,7 @@ feature {NONE} -- Formatting
 			a_context_attached: a_context /= Void
 			not_a_context_is_empty: not a_context.is_empty
 		do
-			Result := a_context.as_string_8.as_attached
-			if Result ~ a_context then
-				Result := Result.twin
-			end
+			create Result.make_from_string_general (a_context)
 		ensure
 			result_attached: Result /= Void
 			not_result_id_is_empty: not Result.is_empty
@@ -249,7 +242,7 @@ feature {NONE} -- Regular expressions
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

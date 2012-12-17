@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 
-	help_context_section: detachable STRING
+	help_context_section: detachable STRING_32
 			-- -- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 
 feature {NONE} -- Access
@@ -68,7 +68,7 @@ invariant
 	not_help_context_section_is_empty: help_context_section /= Void implies not help_context_section.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

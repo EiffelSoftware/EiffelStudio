@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	frozen help_context_id: STRING
+	frozen help_context_id: STRING_32
 			-- <Precursor>
 		do
 			create Result.make_empty
@@ -35,7 +35,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	help_context: STRING
+	help_context: STRING_32
 			-- A contextual identifer to link an associated help through.
 		require
 			is_interface_usable: is_interface_usable
@@ -55,7 +55,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

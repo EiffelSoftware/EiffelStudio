@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	section: STRING
+	section: STRING_32
 			-- String representation of the section
 		do
 			if attached entry.name as l_name and then not l_name.is_empty then
@@ -55,7 +55,7 @@ invariant
 	entry_not_void: entry /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

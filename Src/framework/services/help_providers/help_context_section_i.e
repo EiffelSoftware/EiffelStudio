@@ -13,7 +13,7 @@ deferred class
 
 feature -- Access
 
-	section: STRING
+	section: STRING_32
 			-- String representation of the page navigation section locator.
 		deferred
 		ensure
@@ -22,7 +22,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

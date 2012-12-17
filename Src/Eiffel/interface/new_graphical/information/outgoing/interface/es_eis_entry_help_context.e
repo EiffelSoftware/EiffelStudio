@@ -53,7 +53,7 @@ feature -- Querry
 
 feature -- Access
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <precursor>
 
 	help_context_section: detachable HELP_CONTEXT_SECTION_I
@@ -83,7 +83,7 @@ invariant
 	not_help_context_id_is_empty: not help_context_id.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

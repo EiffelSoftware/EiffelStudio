@@ -123,10 +123,10 @@ feature -- Access
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "4D0CC8B3-2FFD-42D4-7855-672FA0C11CF8"
+			Result := {STRING_32} "4D0CC8B3-2FFD-42D4-7855-672FA0C11CF8"
 		end
 
 feature -- Command
@@ -195,7 +195,7 @@ feature {NONE} -- Recyclable
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

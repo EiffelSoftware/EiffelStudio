@@ -84,10 +84,10 @@ feature {NONE} -- Initialization: User interface
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "62002CE3-37F9-22DE-39F0-0930468A67BE"
+			Result := {STRING_32} "62002CE3-37F9-22DE-39F0-0930468A67BE"
 		end
 
 feature {NONE} -- Factory

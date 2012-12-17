@@ -140,13 +140,13 @@ feature -- Value
 			Result := console_shell_command_preference.value
 		end
 
-	file_browser_command: STRING
+	file_browser_command: STRING_32
 			-- Command to open a target in file browser
 		do
 			Result := file_browser_command_preference.value
 		end
 
-	web_browser_command: STRING
+	web_browser_command: STRING_32
 			-- Command to open a target in web browser
 		do
 			Result := internet_browser_preference.value
@@ -174,7 +174,7 @@ feature -- Preference
 
 	acrobat_reader_preference: STRING_PREFERENCE
 	text_mode_is_windows_preference: BOOLEAN_PREFERENCE
-	internet_browser_preference: STRING_PREFERENCE
+	internet_browser_preference: STRING_32_PREFERENCE
 	external_editor_command_preference: STRING_PREFERENCE
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE
@@ -182,7 +182,7 @@ feature -- Preference
 	preference_window_height_preference: INTEGER_PREFERENCE
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 	console_shell_command_preference: STRING_PREFERENCE
-	file_browser_command_preference: STRING_PREFERENCE
+	file_browser_command_preference: STRING_32_PREFERENCE
 	locale_id_preference: ARRAY_PREFERENCE
 	pnd_preference: BOOLEAN_PREFERENCE
 	eis_path_preference: STRING_32_PREFERENCE
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 
 			acrobat_reader_preference := l_manager.new_string_preference_value (l_manager, acrobat_reader_string, "acrobat")
 			text_mode_is_windows_preference := l_manager.new_boolean_preference_value (l_manager, text_mode_is_windows_string, l_platform.is_windows)
-			internet_browser_preference := l_manager.new_string_preference_value (l_manager, internet_browser_string, "netscape $url")
+			internet_browser_preference := l_manager.new_string_32_preference_value (l_manager, internet_browser_string, {STRING_32} "netscape $url")
 			dyn_lib_window_height_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_width_string, 400)
 			preference_window_height_preference := l_manager.new_integer_preference_value (l_manager, preference_window_height_string, 200)
@@ -229,10 +229,10 @@ feature {NONE} -- Implementation
 			if l_platform.is_windows then
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "cmd")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "notepad $target")
-				file_browser_command_preference := l_manager.new_string_preference_value (l_manager, file_browser_command_string, "explorer $target")
+				file_browser_command_preference := l_manager.new_string_32_preference_value (l_manager, file_browser_command_string, {STRING_32} "explorer $target")
 			else
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "xterm -geometry 80x40")
-				file_browser_command_preference := l_manager.new_string_preference_value (l_manager, file_browser_command_string, "xterm -geometry 80x40")
+				file_browser_command_preference := l_manager.new_string_32_preference_value (l_manager, file_browser_command_string, {STRING_32} "xterm -geometry 80x40")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
 			end
 

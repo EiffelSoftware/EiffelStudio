@@ -36,10 +36,10 @@ feature {NONE} -- User interface initialization
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "57B14A4B-8694-12F6-06C8-24411E331559"
+			Result := {STRING_32} "57B14A4B-8694-12F6-06C8-24411E331559"
 		end
 
 feature {NONE} -- Factory

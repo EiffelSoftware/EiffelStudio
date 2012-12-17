@@ -234,10 +234,10 @@ feature {NONE} -- Access
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "867BCB6B-1052-B28F-BD18-243532816DFD"
+			Result := {STRING_32} "867BCB6B-1052-B28F-BD18-243532816DFD"
 		end
 
 feature {NONE} -- Element change

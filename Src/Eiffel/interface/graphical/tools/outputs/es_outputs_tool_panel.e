@@ -152,13 +152,13 @@ feature {NONE} -- Access
 
 feature -- Access: Help
 
-	help_context_id: attached STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		do
 			if (attached last_output as l_output) and then (attached {HELP_CONTEXT_I} l_output.widget_from_window (develop_window) as l_context) then
 				Result := l_context.help_context_id
 			else
-				Result := once "4f35254c-9a22-7773-21ed-aa740c3eddd5"
+				Result := once {STRING_32} "4f35254c-9a22-7773-21ed-aa740c3eddd5"
 			end
 		end
 

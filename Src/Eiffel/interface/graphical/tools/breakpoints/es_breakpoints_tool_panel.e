@@ -219,10 +219,10 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "9FA30DD2-231F-C1F2-4139-F8E90DF0E77F"
+			Result := {STRING_32} "9FA30DD2-231F-C1F2-4139-F8E90DF0E77F"
 		end
 
 feature {NONE} -- Factory

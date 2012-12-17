@@ -81,10 +81,10 @@ feature -- Properties
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "457B71DC-4609-DAC1-8458-CD9B64FD5945"
+			Result := {STRING_32} "457B71DC-4609-DAC1-8458-CD9B64FD5945"
 		end
 
 feature {NONE} -- Factory

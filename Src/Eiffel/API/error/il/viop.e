@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING)
+	make (a_path: READABLE_STRING_GENERAL)
 			-- create warning with path to directory `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			precompiled_path := a_path.twin
 		ensure
-			precompiled_path_set: a_path.is_equal (precompiled_path)
+			precompiled_path_set: a_path.same_string (precompiled_path)
 		end
 
 feature -- Properties
@@ -36,7 +36,7 @@ feature -- Properties
 	code: STRING = "VIOP"
 		-- Error code
 
-	precompiled_path: STRING
+	precompiled_path: READABLE_STRING_GENERAL
 		-- Path to precompiled library
 
 	file_name: like {ERROR}.file_name

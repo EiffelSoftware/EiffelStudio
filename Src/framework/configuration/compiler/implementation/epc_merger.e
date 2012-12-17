@@ -106,7 +106,7 @@ feature -- Status Report
 			retry
 		end
 
-	merge (a_file_names: LIST [STRING])
+	merge (a_file_names: ARRAYED_LIST [READABLE_STRING_GENERAL])
 			-- Merge content of files in `a_file_names' into one class.
 			-- `a_file_names': Files to be merged.
 		require

@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 	old_group: CONF_GROUP
 			-- The old group that corresponds to `current_group'.
 
-	partial_classes: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
+	partial_classes: HASH_TABLE [ARRAYED_LIST [READABLE_STRING_GENERAL], STRING]
 			-- The partial classes in the current string mapped to their class name.
 
 	partial_location: CONF_DIRECTORY_LOCATION
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			l_class: CONF_CLASS
 			l_name: STRING
 			l_full_file: STRING_32
-			l_pc: ARRAYED_LIST [STRING]
+			l_pc: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_file_name: STRING_32
 			l_done: BOOLEAN
 			l_suggested_filename: STRING_32

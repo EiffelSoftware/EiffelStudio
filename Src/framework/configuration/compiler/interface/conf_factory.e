@@ -41,7 +41,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_CLUSTER; a_base_location: CONF_DIRECTORY_LOCATION): CONF_CLASS_PARTIAL
+	new_class_partial (a_partial_classes: ARRAYED_LIST [READABLE_STRING_GENERAL]; a_group: CONF_CLUSTER; a_base_location: CONF_DIRECTORY_LOCATION): CONF_CLASS_PARTIAL
 			-- Create a `CONF_CLASS_PARTIAL' object.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void

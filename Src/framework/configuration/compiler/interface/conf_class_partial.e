@@ -23,7 +23,7 @@ create {CONF_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_from_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location; a_factory: like factory)
+	make_from_partial (a_partial_classes: ARRAYED_LIST [READABLE_STRING_GENERAL]; a_group: like group; a_base_location: like base_location; a_factory: like factory)
 			-- Create.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void
@@ -75,7 +75,7 @@ feature -- Access
 	base_location: CONF_DIRECTORY_LOCATION
 			-- Base location where the generated files are stored.
 
-	partial_classes: HASH_TABLE [INTEGER, STRING]
+	partial_classes: STRING_TABLE [INTEGER]
 			-- Partial classes that are the source for this class, mapped to their last modification time.
 
 feature {CONF_ACCESS} -- Update, in compiled only
@@ -90,7 +90,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			base_location_set: base_location = a_location
 		end
 
-	rebuild_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location)
+	rebuild_partial (a_partial_classes: ARRAYED_LIST [READABLE_STRING_GENERAL]; a_group: like group; a_base_location: like base_location)
 			-- Rebuild.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void
@@ -128,7 +128,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			-- Check if any of the partial classes that build this class have changed.
 		local
 			l_date: INTEGER
-			l_key: STRING
+			l_key: READABLE_STRING_GENERAL
 		do
 			is_modified := False
 			from
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			base_location_not_void: base_location /= Void
 			partial_classes_not_void: partial_classes /= Void
 		local
-			l_lst: ARRAYED_LIST [STRING]
+			l_lst: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_file: PLAIN_TEXT_FILE
 			l_name: STRING
 			u: FILE_UTILITIES

@@ -173,7 +173,7 @@ feature -- Query
 
 feature {NONE} -- Constants
 
-	character_properties: CHARACTER_32_PROPERTY
+	character_properties: CHARACTER_PROPERTY
 			-- For efficient operation on characters
 		once
 			create Result.make

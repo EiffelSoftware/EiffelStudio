@@ -25,7 +25,7 @@ inherit
 			is_equal
 		end
 
-	CHARACTER_32_PROPERTY
+	CHARACTER_PROPERTY
 		export
 			{NONE} all
 		redefine

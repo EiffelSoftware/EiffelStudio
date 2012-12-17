@@ -353,7 +353,6 @@ feature -- Basic Actions
 		-- key referenced by 'key'.
 		local
 			i: INTEGER
-			s: detachable READABLE_STRING_GENERAL
 		do
 			create Result.make
 			from
@@ -361,9 +360,8 @@ feature -- Basic Actions
 			until
 				i = -1
 			loop
-				s := enumerate_value(key, i)
-				if s /= Void then
-					Result.extend(s.as_string_32)
+				if attached enumerate_value(key, i) as l_val then
+					Result.extend (l_val)
 					i := i+1
 				else
 					i := -1
@@ -372,8 +370,10 @@ feature -- Basic Actions
 		end
 
 	enumerate_values_as_string_8 (key: POINTER): LINKED_LIST [STRING]
-		-- Find the names of the key values within the
-		-- key referenced by 'key'.
+			-- Find the names of the key values within the
+			-- key referenced by 'key'.
+		obsolete
+			"Use `enumerate_values' instead."
 		local
 			i: INTEGER
 			s: detachable READABLE_STRING_GENERAL
@@ -409,7 +409,7 @@ feature  -- New actions
 			last_call_successful := res = Error_success
 		end
 
-	enumerate_value (key: POINTER; index: INTEGER): detachable READABLE_STRING_GENERAL
+	enumerate_value (key: POINTER; index: INTEGER): detachable STRING_32
 			-- Find the name of the key_value corresponding
 			-- to the key 'key and the index 'index'.
 		local

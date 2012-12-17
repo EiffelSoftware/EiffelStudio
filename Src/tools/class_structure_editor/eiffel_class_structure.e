@@ -172,12 +172,12 @@ feature -- Element change
 
 feature -- Basic operations
 
-	get_structure (file_name: STRING)
+	get_structure (file_name: READABLE_STRING_GENERAL)
 			-- Compute `structure' from file `file_name'
 		require
 			file_name_not_void: file_name /= Void
 		local
-			file: KL_BINARY_INPUT_FILE
+			file: KL_BINARY_INPUT_FILE_32
 			count, nb: INTEGER
 		do
 			class_as := Void

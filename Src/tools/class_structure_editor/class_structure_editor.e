@@ -5,11 +5,9 @@ class
 	CLASS_STRUCTURE_EDITOR
 
 inherit
-	ARGUMENTS
+	ARGUMENTS_32
 
 	STRING_HANDLER
-
-	KL_SHARED_EXECUTION_ENVIRONMENT
 
 create
 	make,
@@ -43,7 +41,7 @@ feature {NONE} -- File discovering and processing
 			-- Process all files under directories specified on the command line arguments.
 		local
 			i: INTEGER
-			l_filename: STRING
+			l_filename: STRING_32
 			f: RAW_FILE
 		do
 			if argument_count < 1 then
@@ -51,8 +49,8 @@ feature {NONE} -- File discovering and processing
 				io.error.put_new_line
 			else
 				i := 1
-				l_filename := Execution_environment.interpreted_string (argument (i))
-				create f.make (l_filename)
+				l_filename := (create {ENV_INTERP}).interpreted_string_32 (argument (i))
+				create f.make_with_name (l_filename)
 				if f.exists then
 					class_structure.get_structure (l_filename)
 					class_structure.display_structure

@@ -81,7 +81,7 @@ feature -- Access
 			bridge_ok: Result = implementation.parent_tree
 		end
 
-	default_identifier_name: STRING
+	default_identifier_name: STRING_32
 			-- Default `identifier_name' if no specific name is set.
 		do
 			if attached parent as l_parent then

@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_identifier_name: STRING
+	default_identifier_name: STRING_32
 			-- Default name if no other name is set.
 		local
 			i: INTEGER

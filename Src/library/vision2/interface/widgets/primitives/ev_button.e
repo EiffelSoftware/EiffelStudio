@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_identifier_name: STRING
+	default_identifier_name: STRING_32
 			-- Default `identifier_name' if no specific name is set.
 		do
 			if text.is_empty then

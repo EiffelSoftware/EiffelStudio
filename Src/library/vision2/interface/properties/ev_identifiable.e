@@ -25,7 +25,7 @@ feature -- Access
 			correct: not has_parent implies Result = Void
 		end
 
-	identifier_name: STRING
+	identifier_name: STRING_32
 			-- Name of object
 			-- If no specific name is set, `default_identifier_name' is used.
 		do
@@ -41,17 +41,17 @@ feature -- Access
 			default_name_available: not has_identifier_name_set implies Result.is_equal (default_identifier_name)
 		end
 
-	default_identifier_name: STRING
+	default_identifier_name: STRING_32
 			-- Default name if no other name is set.
 		do
-			Result := "{"+generating_type+"}"
+			Result := {STRING_32} "{"+generating_type+"}"
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
 			no_period_in_result: not Result.has ('.')
 		end
 
-	full_identifier_path: STRING
+	full_identifier_path: STRING_32
 			-- Full name of object by prepending path of parent
 			-- Uses '.' as a separator.
 		do
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_identifier_name (a_name: like identifier_name)
+	set_identifier_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `identifier_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -92,9 +92,9 @@ feature -- Element change
 			no_period_in_name: not a_name.has ('.')
 			no_special_regexp_characters_in_name: -- TODO
 		do
-			internal_name := a_name.twin
+			create internal_name.make_from_string_general (a_name)
 		ensure
-			identifier_name_set: identifier_name.is_equal (a_name)
+			identifier_name_set: identifier_name.same_string_general (a_name)
 		end
 
 feature {EV_IDENTIFIABLE} -- Implementation
@@ -107,7 +107,7 @@ feature {EV_IDENTIFIABLE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_name: detachable STRING
+	internal_name: detachable STRING_32
 			-- Internal name set by `set_identifier_name'
 
 invariant

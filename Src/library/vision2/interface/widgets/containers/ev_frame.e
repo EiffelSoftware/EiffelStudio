@@ -67,7 +67,7 @@ feature -- Access
 			bridge_ok: Result = implementation.style
 		end
 
-	default_identifier_name: STRING
+	default_identifier_name: STRING_32
 			-- Default `identifier_name' if no specific name is set
 		do
 			if text.is_empty then

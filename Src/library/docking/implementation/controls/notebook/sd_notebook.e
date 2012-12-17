@@ -339,7 +339,7 @@ feature -- Command
 			l_tab: SD_NOTEBOOK_TAB
 		do
 			debug ("docking")
-				print ("%NSD_NOTEBOOK set_content_position a_content is: " + a_content.unique_title.as_string_8 + " a_index is:" + a_index.out )
+				print ({STRING_32} "%NSD_NOTEBOOK set_content_position a_content is: " + a_content.unique_title + " a_index is:" + a_index.out )
 			end
 			if contents.i_th (a_index) /= a_content then
 				l_tab := tab_by_content (a_content)

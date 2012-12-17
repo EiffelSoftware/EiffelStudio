@@ -566,7 +566,7 @@ feature {NONE} -- Implementation
 			if not a_config_data.is_split_area then -- If it's a zone.
 				create l_internal
 				if attached a_config_data.state as l_state then
-					l_type_id := l_internal.dynamic_type_from_string (l_state.as_string_8)
+					l_type_id := l_internal.dynamic_type_from_string (l_state)
 				end
 
 				check a_type_exist: l_type_id /= -1 end

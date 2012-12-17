@@ -106,7 +106,7 @@ feature -- Enumeration
 	tool_bar_right_click_customize (toolbar_name: READABLE_STRING_GENERAL): STRING_32
 			-- String for menu area right click menu.
 		do
-			Result := "Customize " + toolbar_name.as_string_8 + "..."
+			Result := {STRING_32} "Customize " + toolbar_name + "..."
 		end
 
 feature -- Tool bar customize dialog strings

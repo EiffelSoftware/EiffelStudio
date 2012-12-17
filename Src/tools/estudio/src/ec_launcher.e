@@ -385,7 +385,7 @@ feature {NONE} -- Command sender
 
 feature -- Environment
 
-	cmdline_arguments: ARGUMENTS
+	cmdline_arguments: ARGUMENTS_32
 
 	cmdline_arguments_offset: INTEGER
 
@@ -399,7 +399,7 @@ feature -- Environment
 
 	get_cmdline_arguments
 		do
-			cmdline_arguments := Execution_environment.command_line
+			cmdline_arguments := Execution_environment.arguments
 			cmdline_arguments_count := cmdline_arguments.argument_count
 		end
 

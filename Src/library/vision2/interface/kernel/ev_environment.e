@@ -56,6 +56,8 @@ feature -- Access
 
 	font_families_8: LINEAR [STRING]
 			-- All fonts families available on current platform.
+		obsolete
+			"Use `font_families' isntead."
 		require
 			not_destroyed: not is_destroyed
 		local

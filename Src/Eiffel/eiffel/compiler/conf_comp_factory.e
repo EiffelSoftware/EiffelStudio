@@ -35,7 +35,7 @@ feature -- Factory
 			create Result.make_assembly_class (a_name, a_dotnet_name, an_assembly, a_position, Current)
 		end
 
-	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CLUSTER_I; a_base_location: CONF_DIRECTORY_LOCATION): PARTIAL_EIFFEL_CLASS_I
+	new_class_partial (a_partial_classes: ARRAYED_LIST [READABLE_STRING_GENERAL]; a_group: CLUSTER_I; a_base_location: CONF_DIRECTORY_LOCATION): PARTIAL_EIFFEL_CLASS_I
 			-- Create a `CONF_CLASS_PARTIAL' object.
 		do
 			create Result.make_from_partial (a_partial_classes, a_group, a_base_location, Current)

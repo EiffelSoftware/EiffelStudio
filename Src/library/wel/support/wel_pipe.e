@@ -154,8 +154,8 @@ feature -- Status Report
 	last_read_successful: BOOLEAN
 			-- Was last read operation successful?
 
-	last_string: detachable READABLE_STRING_GENERAL
-			-- Last read string
+	last_string: detachable STRING_8
+			-- Last read string as a sequence of bytes encoded in a STRING_8 instance.
 
 	last_written_bytes: INTEGER
 			-- Last amount of bytes written to pipe
@@ -208,10 +208,10 @@ feature -- Input
 			non_void_string: a_string /= Void
 			input_open: not input_closed
 		local
-			a_wel_string: C_STRING
+			a_c_string: C_STRING
 		do
-			create a_wel_string.make (a_string)
-			last_write_successful := cwin_write_file (input_handle, a_wel_string.item, a_string.count, $last_written_bytes, default_pointer)
+			create a_c_string.make (a_string)
+			last_write_successful := cwin_write_file (input_handle, a_c_string.item, a_string.count, $last_written_bytes, default_pointer)
 		end
 
 feature -- Output

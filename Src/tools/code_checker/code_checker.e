@@ -5,15 +5,12 @@ class
 	CODE_CHECKER
 
 inherit
-	ARGUMENTS
-
-	KL_SHARED_EXECUTION_ENVIRONMENT
+	ARGUMENTS_32
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
-	make,
-	make_with_filename
+	make
 
 feature {NONE} -- Initialization
 
@@ -21,12 +18,6 @@ feature {NONE} -- Initialization
 		do
 			initialize
 			execute
-		end
-
-	make_with_filename (fn: STRING)
-		do
-			initialize
-			process_file (fn)
 		end
 
 	initialize
@@ -64,25 +55,25 @@ feature -- Access
 	visitor: CODE_CHECKER_VISITOR
 			-- Factories and visitors being used for parsing.
 
-	process_file (fn: STRING)
+	process_file (fn: PATH)
 		local
-			ast: like ast_from_string
+			ast: like ast_from_file
 			f: RAW_FILE
+			l_name: STRING_32
 		do
-			create f.make (execution_environment.interpreted_string (fn))
+			create f.make_with_path (fn)
 			if
 				f.exists and then
 				f.is_readable and then
-				attached f.name as l_filename and then l_filename.count > 2 and then
-				l_filename.substring (l_filename.count - 1, l_filename.count).is_case_insensitive_equal (".e")
+				fn.has_extension ("e")
 			then
-				ast := ast_from_string (fn)
+				ast := ast_from_file (fn)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	ast_from_string (fn: STRING): AST_EIFFEL
+	ast_from_file (fn: PATH): AST_EIFFEL
 		require
 			fn_not_void: fn /= Void
 		local
@@ -90,10 +81,8 @@ feature {NONE} -- Implementation
 			s: STRING
 			f: RAW_FILE
 		do
-			debug
-				print ("Processing " + fn + "%N")
-			end
-			create f.make_open_read (fn)
+			create f.make_with_path (fn)
+			f.open_read
 			from
 				create s.make (f.count)
 			until
@@ -119,14 +108,14 @@ feature {NONE} -- Implementation
 					-- Perform the visiting
 				cl_as.process (visitor)
 				if visitor.print_occurrences > 0 then
-					print ("%"" + fn + "%" : class " + visitor.text (cl_as.class_name) + ": " + visitor.print_occurrences.out + "%N%N")
+					print ("%"" + fn.name + "%" : class " + visitor.text (cl_as.class_name) + ": " + visitor.print_occurrences.out + "%N%N")
 				end
 				-- Free our memory.
 				visitor.reset
 
 				parser.wipe_out
 			else
-				print ("ERROR %"" + fn + "%"")
+				print ("ERROR %"" + fn.name + "%"")
 				if attached parser.error_message as m and then not m.is_empty then
 					print (": " + m)
 				end
@@ -143,7 +132,7 @@ feature {NONE} -- File discovering and processing
 			-- Process all files under directories specified on the command line arguments.
 		local
 			i: INTEGER
-			l_path: STRING
+			l_path: IMMUTABLE_STRING_32
 			d: DIRECTORY
 		do
 			if argument_count < 1 then
@@ -158,9 +147,9 @@ feature {NONE} -- File discovering and processing
 					l_path := argument (i)
 					create d.make (l_path)
 					if d.exists then
-						process_directory (create {KL_DIRECTORY}.make (l_path))
+						process_directory (d)
 					else
-						process_file (l_path)
+						process_file (create {PATH}.make_from_string (l_path))
 					end
 					i := i + 1
 				end
@@ -168,37 +157,27 @@ feature {NONE} -- File discovering and processing
 			end
 		end
 
-	process_directory (a_dir: KL_DIRECTORY)
+	process_directory (a_dir: DIRECTORY)
+		require
+			a_dir_exists: a_dir.exists
 		local
-			dir_names, file_names: ARRAY [STRING]
+			l_file: RAW_FILE
+			l_dir_path, l_path: PATH
 		do
-			if
-				a_dir.exists
-			then
-				dir_names := a_dir.directory_names
-				if dir_names /= Void then
-					dir_names.do_all (agent (a_path: STRING; a_dir_name: STRING)
-						local
-							l_dir: KL_DIRECTORY
-						do
-							create l_dir.make (a_path + operating_environment.Directory_separator.out + a_dir_name)
-							if
-								l_dir.exists and then
-								not a_dir_name.same_string ("EIFGENs") and then
-								not a_dir_name.same_string (".svn")
-							then
-								process_directory (l_dir)
+			l_dir_path := a_dir.path
+			across a_dir.entries as l_name loop
+				if not l_name.item.is_current_symbol and not l_name.item.is_parent_symbol then
+					l_path := l_dir_path.extended_path (l_name.item)
+					create l_file.make_with_path (l_path)
+					if l_file.exists then
+						if l_file.is_directory then
+							if not l_path.name.same_string_general (".svn") and not l_path.name.same_string_general ("EIFGENs") then
+								process_directory (create {DIRECTORY}.make_with_path (l_path))
 							end
-						end (a_dir.name, ?))
-				end
-
-				a_dir.open_read
-				file_names := a_dir.filenames
-				if file_names /= Void then
-					file_names.do_all (agent (a_path: STRING; a_dir_name: STRING)
-						do
-							process_file (a_path + operating_environment.Directory_separator.out + a_dir_name)
-						end (a_dir.name, ?))
+						else
+							process_file (l_path)
+						end
+					end
 				end
 			end
 		end

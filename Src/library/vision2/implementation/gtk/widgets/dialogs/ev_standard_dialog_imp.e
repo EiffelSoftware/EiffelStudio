@@ -59,7 +59,7 @@ feature -- Status setting
 			if attached selected_button as l_selected_button then
 				if l_selected_button.is_equal (internal_accept) then
 					ok_actions.call (Void)
-				elseif ev_cancel.is_equal (l_selected_button) then
+				elseif ev_cancel.same_string_general (l_selected_button) then
 					cancel_actions.call (Void)
 				end
 			end

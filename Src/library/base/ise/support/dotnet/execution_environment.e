@@ -12,8 +12,16 @@ class EXECUTION_ENVIRONMENT
 
 feature -- Access
 
+	arguments: ARGUMENTS_32
+			-- Arguments that were used to start current execution.
+		once
+			create Result
+		end
+
 	command_line: ARGUMENTS
 			-- Command line that was used to start current execution
+		obsolete
+			"Use `arguments' instead for handling Unicode command lines."
 		once
 			create Result
 		end

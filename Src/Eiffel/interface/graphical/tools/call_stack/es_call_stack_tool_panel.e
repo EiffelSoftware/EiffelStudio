@@ -1181,8 +1181,7 @@ feature {NONE} -- Export call stack
 				end
 					-- Save the path to the preferences.
 					-- Encode it as UTF-8.
-				preferences.debug_tool_data.last_saved_stack_path_preference.set_value
-					(u.string_32_to_utf_8_string_8 (a_fn.parent.name))
+				preferences.debug_tool_data.last_saved_stack_path_preference.set_value (a_fn.parent)
 				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).

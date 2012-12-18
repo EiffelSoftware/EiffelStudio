@@ -29,15 +29,16 @@ create
 
 feature -- Initialization
 
-	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING)
+	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: PATH)
 		local
 			file: RAW_FILE
 			dc: WEL_CLIENT_DC
 			dib: WEL_DIB
 			l_bitmap: like bitmap
 		do
-			mdi_child_window_make (a_parent, a_name)
-			create file.make_open_read (a_name)
+			mdi_child_window_make (a_parent, a_name.name)
+			create file.make_with_path (a_name)
+			file.open_read
 			create dib.make_by_file (file)
 			create dc.make (Current)
 			dc.get

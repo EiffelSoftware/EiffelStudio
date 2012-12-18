@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			when Cmd_file_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
-					create child.make (Current, open_file_dialog.file_name)
+					create child.make (Current, open_file_dialog.file_path)
 						-- Add `Child' to `All_children'.
 					All_children.extend (child)
 				end

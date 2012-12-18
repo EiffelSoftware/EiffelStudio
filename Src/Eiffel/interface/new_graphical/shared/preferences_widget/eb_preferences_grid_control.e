@@ -316,16 +316,14 @@ feature {NONE} -- Widget initialization
 			Result.set_displayed_booleans (names.l_true, names.l_false)
 		end
 
-	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET
+	new_choice_widget (a_pref: ABSTRACT_CHOICE_PREFERENCE [ANY]): CHOICE_PREFERENCE_WIDGET
 		local
-			l_array: ARRAY [STRING]
 			l_displayed_names: HASH_TABLE [STRING_32, STRING]
 		do
 			Result := Precursor (a_pref)
 				-- Set display names for preferences of type LIST.
 			if a_pref = preferences.misc_data.locale_id_preference then
-				l_array := a_pref.value
-				l_displayed_names := locale_names.locales_from_array (l_array)
+				l_displayed_names := locale_names.locales_from_list (a_pref.value_as_list_of_text)
 				l_displayed_names.force (names.l_unselected, "Unselected")
 				Result.set_displayed_value (l_displayed_names)
 			elseif a_pref = preferences.development_window_data.ctrl_right_click_receiver_preference then

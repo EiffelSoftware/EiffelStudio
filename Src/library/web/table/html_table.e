@@ -29,7 +29,7 @@ feature
 	make(nb_row, nb_col: INTEGER)
 			-- Create a table
 		do
-			array2_make (nb_row, nb_col);
+			make_filled ("", nb_row, nb_col)
 			set_row(1);
 			set_col(1);
 		end;

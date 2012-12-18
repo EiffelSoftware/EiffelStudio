@@ -2472,7 +2472,7 @@ feature -- Measurements
 			result_positive: Result >= 1
 		end
 
-feature {EV_GRID_ITEM, EV_GRID_ITEM_I} -- Activation Handling
+feature -- Activation Handling
 
 	propagate_key_press (a_key: EV_KEY)
 			-- Propagate key press for `a_key' to `Current'.

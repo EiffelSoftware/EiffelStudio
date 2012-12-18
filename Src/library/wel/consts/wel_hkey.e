@@ -32,18 +32,15 @@ feature -- Status
 		require
 			name_possible: name /= Void
 			name_valid: name.is_valid_as_string_8
-		local
-			l_string: STRING
 		do
-			l_string := name.to_string_8
 			if
-				l_string.is_case_insensitive_equal ("hkey_classes_root") or else
-				l_string.is_case_insensitive_equal ("hkey_dyn_data") or else
-				l_string.is_case_insensitive_equal ("hkey_current_config") or else
-				l_string.is_case_insensitive_equal ("hkey_performance_data") or else
-				l_string.is_case_insensitive_equal ("hkey_users") or else
-				l_string.is_case_insensitive_equal ("hkey_current_user") or else
-				l_string.is_case_insensitive_equal ("hkey_local_machine")
+				name.is_case_insensitive_equal ("hkey_classes_root") or else
+				name.is_case_insensitive_equal ("hkey_dyn_data") or else
+				name.is_case_insensitive_equal ("hkey_current_config") or else
+				name.is_case_insensitive_equal ("hkey_performance_data") or else
+				name.is_case_insensitive_equal ("hkey_users") or else
+				name.is_case_insensitive_equal ("hkey_current_user") or else
+				name.is_case_insensitive_equal ("hkey_local_machine")
 			then
 				Result := True
 			end
@@ -55,23 +52,20 @@ feature -- Status
 			name_not_void: name /= Void
 			name_valid: name.is_valid_as_string_8
 			valid_key: basic_valid_name_for_hkey (name)
-		local
-			l_string: STRING
 		do
-			l_string := name.to_string_8
-			if l_string.is_case_insensitive_equal ("hkey_classes_root") then
+			if name.is_case_insensitive_equal ("hkey_classes_root") then
 					Result := Hkey_classes_root
-			elseif l_string.is_case_insensitive_equal ("hkey_dyn_data") then
+			elseif name.is_case_insensitive_equal ("hkey_dyn_data") then
 					Result := Hkey_dyn_data
-			elseif l_string.is_case_insensitive_equal ("hkey_current_config") then
+			elseif name.is_case_insensitive_equal ("hkey_current_config") then
 					Result := Hkey_current_config
-			elseif l_string.is_case_insensitive_equal ("hkey_performance_data") then
+			elseif name.is_case_insensitive_equal ("hkey_performance_data") then
 					Result := Hkey_performance_data
-			elseif l_string.is_case_insensitive_equal ("hkey_users") then
+			elseif name.is_case_insensitive_equal ("hkey_users") then
 					Result := Hkey_users
-			elseif l_string.is_case_insensitive_equal ("hkey_current_user") then
+			elseif name.is_case_insensitive_equal ("hkey_current_user") then
 					Result := Hkey_current_user
-			elseif l_string.is_case_insensitive_equal ("hkey_local_machine") then
+			elseif name.is_case_insensitive_equal ("hkey_local_machine") then
 					Result := Hkey_local_machine
 			end
 		end

@@ -120,7 +120,7 @@ feature  -- Control
 			is_last_wait_timeout := not timer.wait (a_timeout)
 		end
 
-	put_string (s: STRING)
+	put_string (s: READABLE_STRING_8)
 		do
 			append_input_buffer (s)
 		end
@@ -205,7 +205,7 @@ feature {NONE} -- Interprocess IO
 			-- This buffer is used temporarily to store data that can not be
 			-- consumed by launched process.
 
-	append_input_buffer (a_input: STRING)
+	append_input_buffer (a_input: READABLE_STRING_8)
 			-- Append `a_input' to `input_buffer'.
 		require
 			a_input_not_void: a_input /= Void

@@ -311,7 +311,7 @@ feature -- Control
 
 feature -- Interprocess data transmission
 
-	put_string (s: STRING)
+	put_string (s: READABLE_STRING_8)
 			-- Send `s' into launched process as its input data.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable

@@ -358,7 +358,6 @@ feature -- Access
 		require
 			a_array_of_id_not_void: a_array_of_id /= Void
 		local
-			l_array: like a_array_of_id
 			i: INTEGER
 			l_displayed_name: detachable STRING_GENERAL
 			l_langs, l_locales: HASH_TABLE [STRING_32, STRING]
@@ -367,13 +366,12 @@ feature -- Access
 			create Result.make (a_array_of_id.count)
 			l_langs := languages
 			l_locales := locales
-			l_array := a_array_of_id
 			from
-				i := l_array.lower
+				i := a_array_of_id.lower
 			until
-				i > l_array.upper
+				i > a_array_of_id.upper
 			loop
-				l_value := l_array.item (i).as_lower
+				l_value := a_array_of_id.item (i).as_lower
 				if l_locales.has_key (l_value) then
 					l_displayed_name := l_locales.found_item
 					check l_displayed_name /= Void end -- Implied from `has_key'.
@@ -381,9 +379,43 @@ feature -- Access
 					l_displayed_name := l_langs.found_item
 					check l_displayed_name /= Void end -- Implied from `has_key'.
 				else
-					l_displayed_name := l_array.item (i)
+					l_displayed_name := a_array_of_id.item (i)
 				end
-				Result.force (l_displayed_name, l_array.item (i))
+				Result.force (l_displayed_name, a_array_of_id.item (i))
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	locales_from_list (a_list_of_id: LIST [READABLE_STRING_GENERAL]): like locales
+			-- Locale pairs of names and locale ids.
+			-- Names have been translated according to current selected locale.
+		require
+			a_list_of_id_not_void: a_list_of_id /= Void
+		local
+			i: INTEGER
+			l_displayed_name: detachable READABLE_STRING_GENERAL
+			l_langs, l_locales: HASH_TABLE [STRING_32, STRING]
+			k: STRING_8
+		do
+			create Result.make (a_list_of_id.count)
+			l_langs := languages
+			l_locales := locales
+			across
+				a_list_of_id as c
+			loop
+				k := c.item.to_string_8.as_lower
+				if l_locales.has_key (k) then
+					l_displayed_name := l_locales.found_item
+					check l_displayed_name /= Void end -- Implied from `has_key'.
+				elseif l_langs.has_key (k) then
+					l_displayed_name := l_langs.found_item
+					check l_displayed_name /= Void end -- Implied from `has_key'.
+				else
+					l_displayed_name := c.item
+				end
+				Result.force (l_displayed_name.to_string_32,c.item.to_string_8)
 				i := i + 1
 			end
 		ensure
@@ -391,35 +423,35 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

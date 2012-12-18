@@ -26,15 +26,23 @@ feature -- Access
 		local
 			l_str: WEL_STRING
 			l_name: STRING_32
-			l_pos: INTEGER
+			l_path, l_parent_path: PATH
 		once
-				-- Note: 
-			l_name := current_instance.name
-			l_pos := l_name.last_index_of ({PATH}.Directory_separator_char, l_name.count)
-			l_name.insert_string ("lib", l_pos + 1)
-			l_name.remove_tail (4)
-			l_name.append (".dll")
-			create l_str.make (l_name)
+				-- Note:
+			create l_path.make_from_string (current_instance.name)
+			l_parent_path := l_path.parent
+			if attached l_path.entry as l_entry then
+				create l_name.make_from_string_general (l_entry.name)
+				l_name.insert_string ("lib", 1)
+				if attached l_entry.extension as l_ext then
+					l_name.remove_tail (l_ext.count + 1)
+				end
+				l_name.append (".dll")
+				create l_str.make (l_parent_path.extended (l_name).name)
+			else
+				check not_possible: False end
+				create l_str.make ("Invalid_path.dll")
+			end
 			create Result.make (cwel_load_library (l_str.item))
 		ensure
 			result_not_void: Result /= Void

@@ -36,11 +36,8 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 
 	last_saved_stack_path: PATH
 			-- Last saved stack path.
-		local
-			u: UTF_CONVERTER
 		do
-				-- Decode value from UTF-8.
-			create Result.make_from_string (u.utf_8_string_8_to_string_32 (last_saved_stack_path_preference.value))
+			Result := last_saved_stack_path_preference.value
 		end
 
 	default_expanded_view_size: INTEGER
@@ -151,7 +148,7 @@ feature -- Preference
 
 feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 
-	last_saved_stack_path_preference: STRING_PREFERENCE
+	last_saved_stack_path_preference: PATH_PREFERENCE
 	default_expanded_view_size_preference: INTEGER_PREFERENCE
 	local_vs_object_proportion_preference: STRING_PREFERENCE
 	left_debug_layout_preference: ARRAY_PREFERENCE
@@ -272,7 +269,7 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "debug_tool")
 
-			last_saved_stack_path_preference := l_manager.new_string_preference_value (l_manager, last_saved_stack_path_string, "")
+			last_saved_stack_path_preference := l_manager.new_path_preference_value (l_manager, last_saved_stack_path_string, create {PATH}.make_empty)
 			last_saved_stack_path_preference.set_hidden (True)
 			default_expanded_view_size_preference := l_manager.new_integer_preference_value (l_manager, default_expanded_view_size_string, 500)
 			local_vs_object_proportion_preference := l_manager.new_string_preference_value (l_manager, local_vs_object_proportion_string, "0.5")

@@ -11,6 +11,7 @@
 			<exclude>/temp$</exclude>
 		</file_rule>
 		<option warning="true" is_attached_by_default="false" syntax="transitional" namespace="EiffelSoftware.Library">
+			<warning name="syntax" enabled="false"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\vision2\spec\include">

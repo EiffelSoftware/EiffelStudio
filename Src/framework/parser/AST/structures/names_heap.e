@@ -161,7 +161,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
 				from
 					i := t.lower
 					nb := t.upper
-					create Result.make (i, nb)
+					create Result.make_filled (Void, i, nb)
 				until
 					i > nb
 				loop

@@ -169,7 +169,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 				list := i.index_list
 				from
 					list.start
-					create Result.make (1, list.count)
+					create Result.make_filled ("", 1, list.count)
 				until
 					list.after
 				loop

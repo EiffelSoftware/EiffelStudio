@@ -193,8 +193,8 @@ feature {NONE} -- Implementation
 	get_env_variable (v: STRING): STRING
 			-- Get value of environment variable `v'.
 		do
-			if attached {STRING} get (v) as l_result then
-				Result := l_result
+			if attached item (v) as l_result then
+				Result := l_result.as_string_8
 			else
 				create Result.make_empty
 			end
@@ -211,8 +211,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class CGI_ENVIRONMENT
-

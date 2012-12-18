@@ -140,17 +140,17 @@ feature {NONE} -- Behaviors
 		local
 			conv: CONVERTER
 			c: WEL_CURSOR
-			previous_text: STRING
+			previous_text: STRING_32
 			msg_box: WEL_MSG_BOX
 		do
 			if file_exists (create {PATH}.make_from_string (h_file_edit.text)) then
 				create c.make_by_predefined_id (Idc_wait)
 				c.set
-				previous_text := translate_button.text.to_string_8
+				previous_text := translate_button.text
 				translate_button.set_text ("Translating...")
-				create conv.make (class_name_edit.text.to_string_8,
-					eiffel_file_edit.text.to_string_8,
-					h_file_edit.text.to_string_8)
+				create conv.make (class_name_edit.text,
+					eiffel_file_edit.text,
+					h_file_edit.text)
 				conv.extract_definition (h_file_edit.text)
 				conv.close_file
 				translate_button.set_text (previous_text)

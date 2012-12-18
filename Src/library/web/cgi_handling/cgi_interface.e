@@ -179,19 +179,19 @@ feature {CGI_FORMS}-- Access
 			-- Parse arguments array and set environment variables.
 		local
 			i, sep_index: INTEGER
-			lh, rh, item: STRING
+			lh, rh, l_item: STRING
 		do
 			from
 				i := args.lower
 			until
 				i > args.upper
 			loop
-				item := args.item (i)
-				sep_index := item.index_of ('=', 1)
+				l_item := args.item (i)
+				sep_index := l_item.index_of ('=', 1)
 				if sep_index > 1 then
-					lh := item.substring (1, sep_index - 1)
-					if sep_index < item.count then
-						rh := item.substring (sep_index + 1, item.count)
+					lh := l_item.substring (1, sep_index - 1)
+					if sep_index < l_item.count then
+						rh := l_item.substring (sep_index + 1, l_item.count)
 					else
 						rh := ""
 					end

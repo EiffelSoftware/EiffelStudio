@@ -8,6 +8,9 @@ note
 deferred class
 	ARGUMENT_BASE_PARSER
 
+obsolete
+	"Use the new library with Unicode argument support at $ISE_LIBRARY/library/runtime/process/args".
+
 feature {NONE} -- Initialization
 
 	make (a_cs: like is_case_sensitive; a_allow_non_switched: like is_allowing_non_switched_arguments; a_non_switch_required: like is_non_switch_argument_required)

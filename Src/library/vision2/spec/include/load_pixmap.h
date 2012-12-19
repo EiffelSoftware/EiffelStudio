@@ -45,7 +45,7 @@ void c_ev_load_pixmap(
 
 void c_ev_save_png(
 		char *,
-		char *,
+		EIF_FILENAME,
 		int,
 		int,
 		int,

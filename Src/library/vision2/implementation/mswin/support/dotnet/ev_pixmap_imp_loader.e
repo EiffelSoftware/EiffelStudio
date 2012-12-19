@@ -24,9 +24,11 @@ inherit
 			{NONE} all
 		end
 
+	NATIVE_STRING_HANDLER
+
 feature -- Status report
 
-	pixmap_filename: detachable STRING
+	pixmap_filename: detachable PATH
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
@@ -45,23 +47,24 @@ feature {NONE} -- Implementation
 		require
 			filename_exists: pixmap_filename /= Void
 		local
-			l_c_string: C_STRING
+			filename_ptr: MANAGED_POINTER
 			load_pixmap_delegate: EV_PIXMAP_IMP_DELEGATE
-			l_pixmap_filename: STRING_8
 		do
 				-- Disable invariant checking.
 			disable_initialized
-			l_pixmap_filename := pixmap_filename
 
-			last_pixmap_loading_had_error := False
-			create load_pixmap_delegate.make (Current, $update_fields)
+			if attached pixmap_filename as l_name then
+				last_pixmap_loading_had_error := False
+				create load_pixmap_delegate.make (Current, $update_fields)
 
-			check l_pixmap_filename /= Void end
-			if l_pixmap_filename.is_empty then
-				c_ev_load_pixmap (Default_pointer, load_pixmap_delegate)
+				if l_name.is_empty then
+					c_ev_load_pixmap (Default_pointer, load_pixmap_delegate)
+				else
+					filename_ptr := l_name.to_pointer
+					c_ev_load_pixmap (filename_ptr.item, load_pixmap_delegate)
+				end
 			else
-				create l_c_string.make (l_pixmap_filename)
-				c_ev_load_pixmap (l_c_string.item, load_pixmap_delegate)
+				last_pixmap_loading_had_error := True
 			end
 			if last_pixmap_loading_had_error then
 					-- An error occurred while loading the file
@@ -91,7 +94,7 @@ feature {NONE} -- Externals
 		update_fields_routine: EV_PIXMAP_IMP_DELEGATE
 		)
 		external
-			"C signature (char *, void *) use %"load_pixmap.h%""
+			"C signature (EIF_FILENAME, void *) use %"load_pixmap.h%""
 		end
 
 note

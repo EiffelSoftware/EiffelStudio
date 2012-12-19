@@ -32,6 +32,7 @@ indexing
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
+#include <io.h>
 #else
 #include <stdlib.h>
 #include <unistd.h>
@@ -82,6 +83,12 @@ indexing
 
 /* Other constants */
 #define TEMP_PATH_MAX_LENGTH	1024
+
+#ifdef EIF_WINDOWS
+#define rt_unlink _wunlink
+#else
+#define rt_unlink unlink
+#endif
 
 /* Bufferred File definition */
 struct TBufferedFile {
@@ -506,7 +513,7 @@ unsigned char default_vision2_icon_for_windows[4710] = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	};
 
-void c_ev_save_png (char image[], char *path, int array_width, int array_height, int a_width, int a_height, int colormode)
+void c_ev_save_png (char image[], EIF_FILENAME path, int array_width, int array_height, int a_width, int a_height, int colormode)
 {
 	FILE *fp;
 	png_structp png_ptr;
@@ -519,7 +526,11 @@ void c_ev_save_png (char image[], char *path, int array_width, int array_height,
 
 	/* Create a new file handle */
 
-	fp = eif_file_open ((EIF_FILENAME) path, 11);
+#ifdef EIF_WINDOWS
+	fp = _wfopen (path, L"wb");
+#else
+	fp = fopen (path, "wb");
+#endif
 	if (fp == NULL) {
 		/* Raise Eiffel exception */
 		printf ("File could not be created\n");
@@ -627,7 +638,7 @@ void c_ev_load_pixmap(
 		}
 
 		/* Open the temporary file */
-		pFile = eif_file_open (pszFileName, 14);
+		pFile = _wfopen (pszFileName, L"w+b");
 		if (pFile==NULL && bFreeFileName==TRUE) {
 				/* Unable to open temporary file created with GetTempFileName, try "tmpnam" */
 			free(pszFileName);
@@ -637,7 +648,7 @@ void c_ev_load_pixmap(
 			pszFileName = _wtmpnam(NULL);
 
 				/* Open the temporary file */
-			pFile = eif_file_open (pszFileName, 14);
+			pFile = _wfopen (pszFileName, L"w+b");
 		}
 
 		if (pFile == NULL) {
@@ -664,7 +675,11 @@ void c_ev_load_pixmap(
 		fseek (pFile, 0, SEEK_SET);
 	} else {
 			/* Open the file */
-		pFile = eif_file_open (pszFileName, 10);
+#ifdef EIF_WINDOWS
+		pFile = _wfopen (pszFileName, L"rb");
+#else
+		pFile = fopen (pszFileName, "rb");
+#endif
 		if (pFile == NULL) {
 				/* Unable to open the file, return NULL */
 			LoadPixmapUpdateObject(
@@ -736,7 +751,7 @@ void c_ev_load_pixmap(
 			);
 #endif
 			if (bFileToBeDeleted)
-				eif_file_unlink(pszFileName);
+				rt_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
@@ -767,7 +782,7 @@ void c_ev_load_pixmap(
 			);
 #endif
 			if (bFileToBeDeleted)
-				eif_file_unlink(pszFileName);
+				rt_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
@@ -785,7 +800,7 @@ void c_ev_load_pixmap(
 				/* close the graphical file or the temporary file */
 			fclose (pFile);
 			if (bFileToBeDeleted)
-				eif_file_unlink(pszFileName);
+				rt_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
@@ -806,7 +821,7 @@ void c_ev_load_pixmap(
 			/* close the graphical file or the temporary file */
 			fclose (pFile);
 			if (bFileToBeDeleted)
-				eif_file_unlink(pszFileName);
+				rt_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;

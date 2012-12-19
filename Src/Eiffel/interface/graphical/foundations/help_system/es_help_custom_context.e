@@ -24,17 +24,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: like help_context_id; a_section: detachable like help_context_section)
+	make (a_id: READABLE_STRING_GENERAL; a_section: detachable like help_context_section)
 			-- Initialize a new custom help context.
 		require
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		do
-			help_context_id := a_id
+			create help_context_id.make_from_string_general (a_id)
 			help_context_section := a_section
 		ensure
-			help_context_id_set: help_context_id.same_string (a_id)
+			help_context_id_set: a_id.same_string (help_context_id)
 			help_context_section_set: help_context_section /= Void implies help_context_section.same_string (a_section)
 		end
 

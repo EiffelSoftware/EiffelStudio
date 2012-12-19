@@ -50,7 +50,7 @@ create
 
 feature {PROCESS_UNIX_OS} -- Creation
 
-	make (fname: STRING; args: detachable LIST [STRING]; working_dir: like working_directory)
+	make (fname: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_dir: detachable READABLE_STRING_GENERAL)
 			-- Create a process object which represents an
 			-- independent process that can execute the
 			-- program residing in file `fname'
@@ -58,7 +58,11 @@ feature {PROCESS_UNIX_OS} -- Creation
 			file_name_exists: fname /= Void
 			file_name_not_empty: not fname.is_empty
 		do
-			working_directory := working_dir
+			if a_working_dir /= Void then
+				create working_directory.make_from_string (a_working_dir)
+			else
+				working_directory := Void
+			end
 			program_file_name := fname
 			set_arguments (args)
 			process_id := 0
@@ -67,7 +71,7 @@ feature {PROCESS_UNIX_OS} -- Creation
 			set_error_file_name ("")
 			set_is_executing (False)
 		ensure
-			program_file_name_set: program_file_name.is_equal (fname)
+			program_file_name_set: program_file_name.same_string (fname)
 			input_file_name_empty: attached input_file_name as l_input_fn and then l_input_fn.is_empty
 			output_file_name_empty: attached output_file_name as l_output_fn and then l_output_fn.is_empty
 			error_file_name_empty: attached error_file_name as l_error_fn and then l_error_fn.is_empty
@@ -95,10 +99,10 @@ feature -- Access
 			end
 		end
 
-	working_directory: detachable STRING
+	working_directory: detachable PATH
 			-- Working directory of process
 
-	arguments_for_exec: detachable ARRAY [STRING]
+	arguments_for_exec: detachable ARRAY [READABLE_STRING_GENERAL]
 			-- Arguments to be passed to `exec_process'
 
 feature -- Status report
@@ -133,7 +137,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_arguments (arg_list: detachable LIST [STRING])
+	set_arguments (arg_list: detachable LIST [READABLE_STRING_GENERAL])
 			-- Set `arguments' to `args'.
 		local
 			count: INTEGER
@@ -271,7 +275,7 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	spawn_nowait (is_control_terminal_enabled: BOOLEAN; envs: detachable HASH_TABLE [STRING, STRING]; a_new_process_group: BOOLEAN)
+	spawn_nowait (is_control_terminal_enabled: BOOLEAN; envs: detachable HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]; a_new_process_group: BOOLEAN)
 			-- Spawn a process and return immediately.
 			-- If `is_control_terminal_enabled' is true, attach controlling terminals to spawned process.
 			-- Environment variables for new process is stored in `envptr'. If `envptr' is `default_pointer',
@@ -291,8 +295,8 @@ feature {PROCESS_IMP} -- Process management
             create ee
             l_working_directory := working_directory
             if l_working_directory /= Void then
-				cur_dir := ee.current_working_path
-                ee.change_working_path (create {PATH}.make_from_string (l_working_directory))
+                cur_dir := ee.current_working_path
+                ee.change_working_path (l_working_directory)
             end
             l_debug_state := debug_state
             discard_debug
@@ -406,11 +410,11 @@ feature {PROCESS_IMP} -- Process management
 
 feature {NONE} -- Properties
 
-	program_file_name: STRING;
+	program_file_name: READABLE_STRING_GENERAL;
 			-- Name of file containing program which will be
 			-- executed when process is spawned
 
-	arguments: detachable ARRAY [STRING];
+	arguments: detachable ARRAY [READABLE_STRING_GENERAL];
 			-- Arguments to passed to process when it is spawned,
 			-- not including argument 0 (which is conventionally
 			-- the name of the program).  If Void or if count
@@ -421,21 +425,21 @@ feature {NONE} -- Properties
 			-- standard input, standard output and standard
 			-- error) be closed in the spawned process?
 
-	input_file_name: detachable STRING;
+	input_file_name: detachable READABLE_STRING_GENERAL;
 			-- Name of file to be used as standard input in
 			-- spawned process if `input_descriptor' is not a
 			-- valid descriptor and `input_piped' is false.
 			-- A Void value leaves standard input same as
 			-- parent's and an empty string closes standard input
 
-	output_file_name: detachable STRING;
+	output_file_name: detachable READABLE_STRING_GENERAL;
 			-- Name of file to be used as standard output in
 			-- spawned process if `output_descriptor' is not a
 			-- valid descriptor and `output_piped' is false.
 			-- A Void value leaves standard output same as
 			-- parent's and an empty string closes standard output
 
-	error_file_name: detachable STRING;
+	error_file_name: detachable READABLE_STRING_GENERAL;
 			-- Name of file to be used as standard error in
 			-- spawned process if `error_descriptor' is not a
 			-- valid descriptor and `error_piped' is false.
@@ -471,8 +475,8 @@ feature {NONE} -- Implementation
 			-- `arguments' as the rest of the arguments
 		local
 			k, count, lower: INTEGER
-			pname: STRING
-			a: ARRAY [STRING]
+			pname: READABLE_STRING_GENERAL
+			a: ARRAY [READABLE_STRING_GENERAL]
 			l_arguments: like arguments
 		do
 			l_arguments := arguments
@@ -483,7 +487,7 @@ feature {NONE} -- Implementation
 				count := 1
 				lower := 1	-- Not applicable
 			end
-			create pname.make_empty
+			create {STRING_32} pname.make_empty
 			create a.make_filled (pname, 1, count);
 
 			pname := program_file_name
@@ -696,16 +700,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	environment_table_as_pointer (a_envs: detachable HASH_TABLE [STRING, STRING]): POINTER
+	environment_table_as_pointer (a_envs: detachable HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]): POINTER
 			-- {POINTER} representation of `environment_variable_table'.
 			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
 			--| Not that memory will be leaked if not use for spawning the process.
 		local
 			l_ptr: MANAGED_POINTER
-			l_cstr: C_STRING
+			l_natstr: NATIVE_STRING
 			l_cstr_ptr: POINTER
 			i, nb: INTEGER
-			l_str: STRING
+			l_str: STRING_32
 		do
 			if a_envs /= Void and then not a_envs.is_empty then
 					-- Estimate the number of environment variables that will be stored.
@@ -733,15 +737,17 @@ feature {NONE} -- Implementation
 						attached a_envs.item_for_iteration as l_value
 					then
 						create l_str.make (l_key.count + l_value.count + 1)
-						l_str.append (l_key)
+						l_str.append_string_general (l_key)
 						l_str.append_character ('=')
-						l_str.append (l_value)
-							-- We allocate memory ourself so that the C_STRING object does not
-							-- free the memory.
-						l_cstr_ptr := l_cstr_ptr.memory_alloc (l_str.count + 1)
-						create l_cstr.make_shared_from_pointer_and_count (l_cstr_ptr, l_str.count)
-						l_cstr.set_string (l_str)
+						l_str.append_string_general (l_value)
+
+						create l_natstr.make (l_str)
+
+						l_cstr_ptr := l_cstr_ptr.memory_alloc (l_natstr.bytes_count + 1)
+						l_cstr_ptr.memory_copy (l_natstr.item, l_natstr.bytes_count + 1)
+
 						l_ptr.put_pointer (l_cstr_ptr, i * {PLATFORM}.pointer_bytes)
+
 						i := i + 1
 					end
 					a_envs.forth

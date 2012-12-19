@@ -97,7 +97,7 @@ feature -- Process operations
 			]"
 		end
 
-	exec_process (prog_file: STRING; args: ARRAY [STRING];
+	exec_process (prog_file: READABLE_STRING_GENERAL; args: ARRAY [READABLE_STRING_GENERAL];
 			close_nonstd_files: BOOLEAN; env_ptr: POINTER)
 			-- Overlay the process with a new process,
 			-- which will execute program `prog_file' with
@@ -116,25 +116,27 @@ feature -- Process operations
 			arguments_exist: args /= Void
 		local
 			k, count, lower: INTEGER
-			pname, area: ANY
 			arguments, arg_copy, null_ptr: POINTER
+			ns: NATIVE_STRING
 		do
 			count := args.count
 			lower := args.lower
-			pname := prog_file.to_c
 			arguments := unix_allocate_arg_memory (count + 1)
 			from
+				create ns.make_empty (0)
 				k := 1
 			until
 				k > count
 			loop
-				area := args.item (lower + k - 1).to_c
-				arg_copy := str_dup ($area)
+				ns.set_string (args.item (lower + k - 1))
+				arg_copy := str_dup (ns.item)
 				unix_set_arg_value (arguments, k - 1, arg_copy)
 				k := k + 1
 			end
 			unix_set_arg_value (arguments, count, null_ptr)
-			unix_exec_process ($pname, arguments, env_ptr, close_nonstd_files)
+
+			create ns.make (prog_file)
+			unix_exec_process (ns.item, arguments, env_ptr, close_nonstd_files)
 		end
 
 	terminate_hard (pid: INTEGER)

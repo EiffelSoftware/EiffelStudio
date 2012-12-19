@@ -402,7 +402,7 @@ feature -- Status setting
 			environment_variable_table_set: environment_variable_table = a_table
 		end
 
-	set_environment_variables (a_table: HASH_TABLE [C_STRING, STRING])
+	set_environment_variables (a_table: HASH_TABLE [NATIVE_STRING, READABLE_STRING_GENERAL])
 			-- Set `environment_variable_table' with `a_table'.
 			-- `a_table' can be retrieved directly from {EXECUTION_ENVIRONMENT}.`environ'.
 		require
@@ -633,7 +633,7 @@ feature -- Access
 			-- Where will the error stream of the to-be launched process be redirected.
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
 
-	environment_variable_table: detachable HASH_TABLE [STRING, STRING]
+	environment_variable_table: detachable HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
 			-- Table of environment variables to be passed to new process.
 			-- Key is variable name and value is the value of the variable.
 			-- If this table is Void or empty, environment variables of the

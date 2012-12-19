@@ -15,6 +15,8 @@ inherit
 
 	SHARED_ENCODING_CONVERTER
 
+	CHARACTER_ROUTINES
+
 feature -- Operation
 
 	process (a_entry: EIS_ENTRY)
@@ -191,7 +193,7 @@ feature -- Access
 					i := i + 1
 					create l_attr.make_from_string (lt_parameters.key_for_iteration)
 					l_value := lt_parameters.item_for_iteration
-					if not l_value.is_equal ({ES_EIS_TOKENS}.void_string) then
+					if not l_value.same_string ({ES_EIS_TOKENS}.void_string) then
 						l_attr.append ({ES_EIS_TOKENS}.value_assignment)
 						l_attr.append (l_value)
 						l_found := True
@@ -218,7 +220,7 @@ feature {NONE} -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		do
-			create Result.make_from_string (a_string)
+			Result := eiffel_string_32 (a_string)
 			Result.prepend_character ('%"')
 			Result.append_character ('%"')
 		ensure

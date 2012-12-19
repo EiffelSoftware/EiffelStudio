@@ -274,7 +274,7 @@ feature -- Basic operations
 			loop
 				if not commands.after then
 						-- block header?
-					if commands.item.count > 4 and then ("@@ ").is_equal(commands.item.substring (1, 3)) then
+					if commands.item.count > 4 and then ("@@ ").same_string (commands.item.substring (1, 3)) then
 						if reversed then
 							tmp := commands.item.substring (commands.item.index_of (' ', 6)+2, commands.item.count-3)
 						else

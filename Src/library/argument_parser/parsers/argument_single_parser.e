@@ -8,6 +8,9 @@ note
 deferred class
 	ARGUMENT_SINGLE_PARSER
 
+obsolete
+	"Use the new library with Unicode argument support at $ISE_LIBRARY/library/runtime/process/args".
+
 inherit
 	ARGUMENT_MULTI_PARSER
 		export

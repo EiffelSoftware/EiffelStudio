@@ -52,6 +52,7 @@ feature {NONE} -- Implementation
 			disable_initialized
 
 			if attached pixmap_filename as l_name then
+				last_pixmap_loading_had_error := False
 				if l_name.is_empty then
 					c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
 				else

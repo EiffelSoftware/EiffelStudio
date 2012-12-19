@@ -215,7 +215,7 @@ feature -- Access
 	hidden: BOOLEAN
 			-- Should process be hidden?
 
-	environment_variables: detachable HASH_TABLE [STRING, STRING]
+	environment_variables: detachable HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
 			-- Table of environment variables to be passed to new process.
 			-- Key is variable name and value is the value of the variable.
 			-- If this table is Void or empty, environment variables of the
@@ -229,38 +229,38 @@ feature {NONE} -- Implementation
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty
 		local
-			a_wel_string1, a_wel_string2: WEL_STRING
+			l_ws_command_line, l_ws_working_directory: WEL_STRING
 			l_process_info: like process_info
-			l_envs: detachable C_STRING
+			l_envs: detachable WEL_STRING
 			l_envs_ptr: POINTER
 		do
 			create process_info.make
-			create a_wel_string1.make (a_command_line)
+			create l_ws_command_line.make (a_command_line)
 			l_process_info := process_info
 			check l_process_info /= Void end
-			l_envs := environment_variables_as_c_string
+			l_envs := environment_variables_as_wel_string
 			if l_envs /= Void then
 				l_envs_ptr := l_envs.item
 			end
 			if a_working_directory /= Void and then not a_working_directory.is_empty then
-				create a_wel_string2.make (a_working_directory)
-				last_launch_successful := {WEL_API}.create_process (default_pointer, a_wel_string1.item,
+				create l_ws_working_directory.make (a_working_directory)
+				last_launch_successful := {WEL_API}.create_process (default_pointer, l_ws_command_line.item,
 							default_pointer, default_pointer, True, a_flags,
-							l_envs_ptr, a_wel_string2.item,
+							l_envs_ptr, l_ws_working_directory.item,
 							startup_info.item, l_process_info.item)
 			else
-				last_launch_successful := {WEL_API}.create_process (default_pointer, a_wel_string1.item,
+				last_launch_successful := {WEL_API}.create_process (default_pointer, l_ws_command_line.item,
 							default_pointer, default_pointer, True, a_flags,
 							l_envs_ptr, default_pointer,
 							startup_info.item, l_process_info.item)
 			end
 		end
 
-	environment_variables_as_c_string: detachable C_STRING
+	environment_variables_as_wel_string: detachable WEL_STRING
 			-- {POINTER} representation of `environment_variables'
 			-- Return `default_pointer' if `environment_variables' is Void or empty.
 		local
-			l_str: STRING
+			l_str: STRING_32
 			l_tbl: like environment_variables
 		do
 			l_tbl := environment_variables
@@ -272,15 +272,15 @@ feature {NONE} -- Implementation
 					l_tbl.after
 				loop
 					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
-						l_str.append (l_tbl.key_for_iteration)
+						l_str.append (l_tbl.key_for_iteration.to_string_32)
 						l_str.append_character ('=')
-						l_str.append (l_tbl.item_for_iteration)
+						l_str.append (l_tbl.item_for_iteration.to_string_32)
 						l_str.append_character ('%U')
 					end
 					l_tbl.forth
 				end
 				l_str.append_character ('%U')
-				create {C_STRING} Result.make (l_str)
+				create Result.make (l_str)
 			end
 		end
 

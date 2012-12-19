@@ -46,7 +46,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	create_process (a_executable: STRING; a_arg_list: detachable LIST [STRING])
+	create_process (a_executable: READABLE_STRING_GENERAL; a_arg_list: detachable LIST [READABLE_STRING_GENERAL])
 			-- Initialize `current_process' to launch given executable.
 			--
 			-- `a_executable': Name of executable to be launched.
@@ -68,10 +68,10 @@ feature {NONE} -- Status setting
 			current_process_not_launched: not is_process_launched
 		end
 
-	create_echo_process (a_arg_list: detachable LIST [STRING])
+	create_echo_process (a_arg_list: detachable LIST [READABLE_STRING_GENERAL])
 			-- Initialize `current_process' to launch `echo_executable'.
 		local
-			l_args: detachable ARRAYED_LIST [STRING]
+			l_args: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
 			if a_arg_list /= Void then
 				create l_args.make (a_arg_list.count + 1)
@@ -82,7 +82,7 @@ feature {NONE} -- Status setting
 					l_args.force (c.item)
 				end
 			end
-			create_process (echo_executable, l_args)
+			create_process (echo_executable.name, l_args)
 		ensure
 			current_process_attached: current_process /= Void
 			current_process_new: current_process /= old current_process
@@ -123,6 +123,7 @@ feature {NONE} -- Query
 			l_env: EXECUTION_ENVIRONMENT
 			l_ise_eiffel, l_ise_platform: detachable STRING_32
 			l_filename: PATH
+			l_cached: like echo_executable_cache
 		do
 			l_cached := echo_executable_cache
 			if l_cached = Void then
@@ -135,10 +136,11 @@ feature {NONE} -- Query
 						l_filename := l_filename.extended ("usr").extended ("bin")
 					end
 				else
-					l_filename := l_filename.extended (l_ise_eiffel).extended ("tools").extended ("spec").extended (l_ise_platform).expended ("bin")
+					l_filename := l_filename.extended (l_ise_eiffel).extended ("tools").extended ("spec").extended (l_ise_platform).extended ("bin")
 				end
 				l_filename := l_filename.extended (eiffel_echo_name)
 				echo_executable_cache := l_filename
+				l_cached := l_filename
 			end
 			Result := l_cached
 		ensure

@@ -77,6 +77,7 @@ feature -- Process operations
 			elseif has_detached_console then
 				l_flag := detached_process
 			end
+			l_flag := l_flag + create_unicode_environment
 			spawn_with_flags (a_cmd, a_working_directory, l_flag)
 			l_success := file_handle.close (child_input)
 			l_success := file_handle.close (child_output)

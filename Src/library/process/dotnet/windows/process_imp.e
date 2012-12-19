@@ -34,7 +34,6 @@ feature{NONE} -- Initialization
 			create exit_mutex.make
 			create input_mutex.make
 
-			arguments := args
 			create c.make (a_exec_name.count)
 			c.append_string_general (a_exec_name)
 
@@ -477,15 +476,19 @@ feature{NONE} -- Implementation
 				Result.set_redirect_standard_error (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
 			end
 			if l_environ_tbl /= Void and then not l_environ_tbl.is_empty and then attached Result.environment_variables as l_environ_dic then
+				-- Clear previous environment table to replace with new one.
+				l_environ_dic.clear
+
 				from
 					l_environ_tbl.start
 				until
 					l_environ_tbl.after
 				loop
 					if l_environ_tbl.key_for_iteration /= Void and then l_environ_tbl.item_for_iteration /= Void then
-						l_key := l_environ_tbl.key_for_iteration
-						l_value := l_environ_tbl.item_for_iteration
+						l_key := l_environ_tbl.key_for_iteration.to_cil
+						l_value := l_environ_tbl.item_for_iteration.to_cil
 						if l_environ_dic.contains_key (l_key) then
+							-- Remove previous variable for key `l_key', in case we have duplication
 							l_environ_dic.remove (l_key)
 						end
 						l_environ_dic.add (l_key, l_value)

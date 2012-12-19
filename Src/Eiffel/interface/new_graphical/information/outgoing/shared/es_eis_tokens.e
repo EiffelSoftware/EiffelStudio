@@ -10,23 +10,23 @@ class
 
 feature -- Access
 
-	eis_string: STRING = "EIS"
+	eis_string: STRING_32 = "EIS"
 
-	name_string: STRING = "name"
+	name_string: STRING_32 = "name"
 
-	protocol_string: STRING = "protocol"
+	protocol_string: STRING_32 = "protocol"
 
-	source_string: STRING = "src"
+	source_string: STRING_32 = "src"
 
-	tag_string: STRING = "tag"
+	tag_string: STRING_32 = "tag"
 
-	override_string: STRING = "override"
+	override_string: STRING_32 = "override"
 
-	true_string: STRING = "true"
+	true_string: STRING_32 = "true"
 
-	false_string: STRING = "false"
+	false_string: STRING_32 = "false"
 
-	auto_string: STRING = "auto"
+	auto_string: STRING_32 = "auto"
 
 	value_assignment: STRING_32 = "="
 

@@ -167,6 +167,8 @@ feature {NONE} -- Variable expansion
 			l_uri: STRING_32
 			l_expander: STRING_AGENT_EXPANDER
 		do
+				-- Escape '%%' before processing
+			a_uri.replace_substring_all ("%%", "%%%%")
 			create l_expander
 			l_uri := l_expander.expand_string_32 (a_uri, agent variable, False, True)
 			a_uri.wipe_out

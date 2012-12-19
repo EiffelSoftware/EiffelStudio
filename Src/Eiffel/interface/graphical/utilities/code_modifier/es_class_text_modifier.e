@@ -24,6 +24,11 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_ENCODINGS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -39,7 +44,6 @@ feature {NONE} -- Initialization
 			l_editor: like active_editor_for_class
 			l_text: detachable STRING_32
 			l_encoding: ENCODING
-			l_bom: detachable STRING_8
 		do
 			context_class := a_class
 
@@ -49,11 +53,11 @@ feature {NONE} -- Initialization
 					-- There's no open editor, use the class text from disk instead.
 				l_text := a_class.text_32
 				l_encoding ?= a_class.encoding
-				l_bom := a_class.bom
+				original_bom := a_class.bom
 			else
 				l_text := l_editor.wide_text
 				l_encoding := l_editor.encoding
-				l_bom := l_editor.bom
+				original_bom := l_editor.bom
 			end
 
 				-- Set detected encoding
@@ -451,7 +455,13 @@ feature -- Basic operations
 
 						-- Save directly to disk.
 					create l_save
-					l_save.save (context_class.file_name.name, l_new_text, original_encoding, original_bom)
+					l_save.presave_process (l_new_text, original_encoding, original_bom)
+					if l_save.last_process_lost_data then
+						l_save.save (context_class.file_name.name, l_new_text, utf8, {UTF_CONVERTER}.utf_8_bom_to_string_8)
+					else
+						l_save.save (context_class.file_name.name, l_new_text, original_encoding, original_bom)
+					end
+
 					from l_editors.start until l_editors.after loop
 						l_editor := l_editors.item
 						l_editor.continue_editing

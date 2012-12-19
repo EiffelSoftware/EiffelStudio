@@ -187,13 +187,13 @@ feature -- Output
 	out: STRING
 			-- <Precursor>
 		do
-			Result := name
+			create Result.make_from_string (name)
 		end
 
 	debug_output: STRING
 			-- <Precursor>
 		do
-			Result := name
+			create Result.make_from_string (name)
 		end
 
 feature -- Features from STRING needed here for the transition period (see convert clause)
@@ -208,10 +208,12 @@ feature -- Features from STRING needed here for the transition period (see conve
 		require
 			argument_not_void: other /= Void
 		do
-			Result := name + other
+			create Result.make (name.count + other.count)
+			Result.append (name)
+			Result.append (other)
 		ensure
 			result_exists: Result /= Void
-			definition: Result.is_equal (name + other)
+			definition: Result.same_string (name + other)
 		end
 
 	same_string (other: STRING): BOOLEAN
@@ -253,10 +255,11 @@ feature -- Features from STRING needed here for the transition period (see conve
 		obsolete
 			"[070813] Use 'name.as_lower' instead (or 'out.as_lower' during the transition period)."
 		do
-			Result := name.as_lower
+			create Result.make_from_string (name)
+			Result.to_lower
 		ensure
 			as_lower_not_void: Result /= Void
-			definition: Result.is_equal (name.as_lower)
+			definition: Result.same_string (name.as_lower)
 		end
 
 	as_upper: STRING
@@ -267,17 +270,18 @@ feature -- Features from STRING needed here for the transition period (see conve
 		obsolete
 			"[070813] Use 'name.as_upper' instead (or 'out.as_upper' during the transition period)."
 		do
-			Result := name.as_upper
+			create Result.make_from_string (name)
+			Result.to_upper
 		ensure
 			as_upper_not_void: Result /= Void
-			definition: Result.is_equal (name.as_upper)
+			definition: Result.same_string (name.as_upper)
 		end
 
 	to_string_8: STRING_8
 		obsolete
 			"Use `name' instead (or `out' during the transition period)."
 		do
-			Result := name
+			create Result.make_from_string (name)
 		ensure
 			to_string_8_not_void: Result /= Void
 		end

@@ -12,6 +12,11 @@ class
 inherit
 	OUTPUT_REDIRECTOR
 
+	LOCALIZED_PRINTER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -34,14 +39,18 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	put (a_string: STRING)
+	put (a_string: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
-			medium.put_string (a_string)
+			if attached utf32_to_console_encoding (console_encoding, a_string) as l_string then
+				medium.put_string (l_string)
+			else
+				medium.put_string (a_string.as_string_8)
+			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,10 +74,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

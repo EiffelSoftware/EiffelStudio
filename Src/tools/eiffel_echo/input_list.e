@@ -8,7 +8,7 @@ note
 
 class
 	INPUT_LIST
-	
+
 
 inherit
 	INPUT_PROVIDER
@@ -18,22 +18,24 @@ create
 
 feature -- Initialization
 
-	make (a_list: LIST [like next])
+	make (a_list: LIST [READABLE_STRING_GENERAL])
 			-- Initialize `Current'.
 			--
 			-- `a_list': List of input strings.
 		do
 			create items.make (a_list.count)
-			a_list.do_all (agent items.force)
+			across a_list as l_item loop
+				items.extend (l_item.item)
+			end
 			items.go_i_th (0)
 		ensure
 			same_count: items.count = a_list.count
-			same_items: items.for_all (agent a_list.has)
+			same_items: across items as l_item all a_list.has (l_item.item) end
 		end
 
 feature -- Access
 
-	next: STRING
+	next: READABLE_STRING_GENERAL
 			-- <Precursor>
 		do
 			Result := items.item_for_iteration
@@ -66,7 +68,7 @@ feature -- Basic functionality
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -90,10 +92,10 @@ feature -- Basic functionality
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

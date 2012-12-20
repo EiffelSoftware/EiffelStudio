@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
 	<target name="com_wizard">
 		<root class="WIZARD_APPLICATION" feature="make"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" full_class_checking="true">
+		<option trace="false" profile="false" debug="false" full_class_checking="true" is_attached_by_default="false" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="True"/>
@@ -13,7 +13,7 @@
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
-		<setting name="multithreaded" value="True"/>
+		<setting name="concurrency" value="thread"/>
 		<external_object location="htmlhelp.lib"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -21,7 +21,7 @@
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="date_time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing.ecf"/>
+		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing-unsafe.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
@@ -36,8 +36,8 @@
 		<cluster name="new_gui" location="$EIFFEL_SRC\tools\com_wizard\project\new_gui\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGEN$</exclude>
-				<exclude>/resources$</exclude>
 				<exclude>/Diagrams$</exclude>
+				<exclude>/resources$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\com_wizard\root\"/>

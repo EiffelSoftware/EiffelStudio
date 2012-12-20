@@ -12,6 +12,8 @@ class
 inherit
 	INPUT_PROVIDER
 
+	LOCALIZED_PRINTER
+
 create
 	make
 
@@ -29,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	next: STRING
+	next: STRING_32
 			-- <Precursor>
 		local
 			l_last_line: like last_line
@@ -69,8 +71,11 @@ feature -- Basic operations
 			l_last: like last_line
 		do
 			medium.read_line
-			l_last := medium.last_string
-			check l_last /= Void end
+			if attached console_encoding_to_utf32 (console_encoding,  medium.last_string) as l_string then
+				l_last := l_string
+			else
+				l_last := medium.last_string.as_string_8
+			end
 			if l_last.same_string ("quit") then
 				last_line := Void
 			else
@@ -79,7 +84,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -103,10 +108,10 @@ feature -- Basic operations
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -80,7 +80,9 @@ feature -- Initialization
 			l_cls_lst: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cluster: CONF_CLUSTER
 		do
-			l_target := universe.target
+			if workbench.universe_defined then
+				l_target := universe.target
+			end
 			if l_target /= Void then
 				from
 					l_cls := l_target.clusters

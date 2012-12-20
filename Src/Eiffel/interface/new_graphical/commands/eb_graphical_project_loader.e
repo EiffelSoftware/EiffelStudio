@@ -592,7 +592,7 @@ feature {NONE} -- User interaction
 			l_question.show (parent_window)
 		end
 
-	ask_environment_update (a_key, a_old_val, a_new_val: STRING)
+	ask_environment_update (a_key, a_old_val, a_new_val: READABLE_STRING_32)
 			-- Should new environment values be accepted?
 		local
 			l_question: ES_QUESTION_PROMPT

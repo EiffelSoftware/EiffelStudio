@@ -1017,7 +1017,7 @@ feature {NONE} -- User interaction
 		deferred
 		end
 
-	ask_environment_update (a_key, a_old_val, a_new_val: STRING)
+	ask_environment_update (a_key, a_old_val: READABLE_STRING_32; a_new_val: detachable READABLE_STRING_32)
 			-- Should new environment values be accepted?
 		require
 			a_key_ok: a_key /= Void and then not a_key.is_empty and then not a_key.has ('%U')

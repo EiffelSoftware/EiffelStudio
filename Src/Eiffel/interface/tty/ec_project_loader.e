@@ -411,7 +411,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_environment_update (a_key, a_old_val, a_new_val: STRING)
+	ask_environment_update (a_key, a_old_val: READABLE_STRING_32; a_new_val: detachable READABLE_STRING_32)
 			-- Should new environment values be accepted?
 		local
 			l_answered: BOOLEAN
@@ -424,7 +424,7 @@ feature {NONE} -- User interaction
 				until
 					l_answered
 				loop
-					localized_print (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val).as_string_32 + ewb_names.yes_or_no)
+					localized_print (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val) + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.is_empty then
 					elseif io.last_string.item (1).as_lower = 'y' then

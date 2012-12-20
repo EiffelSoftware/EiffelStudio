@@ -1,0 +1,28 @@
+test_name 	bracket-wrong-dispatch
+test_description In finalized mode, a call of the form `a[i] := x' would fail at runtime due to a wrong dynamic dispatch.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+copy_raw	test5.e $CLUSTER test5.e
+copy_raw	test6.e $CLUSTER test6.e
+
+compile_melted
+compile_result	ok
+
+copy_raw 	test_rev1.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

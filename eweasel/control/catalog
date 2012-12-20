@@ -1163,6 +1163,7 @@ test	melted-tuple-expression-order melt099 tcf pass execution melting tuple
 test	melted-creation-constrained-generic melt100 tcf fail execution melting generic
 test	melted-once-creation-of-generic	melt101 tcf fail execution melting generic
 test	melted-special-creation-crash-2	melt102  tcf pass melting execution special
+test	melted-on-character-32	melt103  tcf pass melting execution
 
 -- Freezing
 
@@ -1321,6 +1322,7 @@ test	tight-loop-integer-constant-infinite-loop final117 tcf fail finalizing manu
 test	finalize-once-strings-in-invariant	final118 tcf fail finalizing
 test	equation-evaluation-sequence	final119 tcf fail finalizing
 test	comparison-involving-allocation	final120 tcf fail finalizing
+test	bracket-wrong-dispatch			final121 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

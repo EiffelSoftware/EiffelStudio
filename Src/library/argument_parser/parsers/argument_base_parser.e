@@ -9,7 +9,7 @@ deferred class
 	ARGUMENT_BASE_PARSER
 
 obsolete
-	"Use the new library with Unicode argument support at $ISE_LIBRARY/library/runtime/process/args".
+	"Use the new library with Unicode argument support at $ISE_LIBRARY/library/runtime/process/arg_parser."
 
 feature {NONE} -- Initialization
 

@@ -89,7 +89,7 @@ feature {NONE} -- Internationalization
 invariant
 	flags_attached: flags/= Void
 	not_flags_is_empty: not flags.is_empty
-	flags_contain_printable_character: across flags as l_flag all l_flag.item.is_character_8 and then l_flag.item.to_character_8.is_printable end
+	flags_contain_printable_character: across flags as l_flag all not l_flag.item.is_character_8 or else l_flag.item.to_character_8.is_printable end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

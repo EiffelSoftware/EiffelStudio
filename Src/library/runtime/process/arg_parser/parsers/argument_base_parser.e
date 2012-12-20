@@ -1325,7 +1325,7 @@ feature {NONE} -- Output
 			l_cursor: CURSOR
 		do
 			l_name := system_name
-			localized_print (once "USAGE: %N")
+			localized_print ("USAGE: %N")
 
 			l_cfgs := command_option_configurations
 			if not l_cfgs.is_empty then
@@ -1463,9 +1463,9 @@ feature {NONE} -- Output
 				until i > l_count loop
 					if i > 1 then
 						if i < l_count then
-							l_prefix.append (once ", ")
+							l_prefix.append (", ")
 						else
-							l_prefix.append (once " or ")
+							l_prefix.append (" or ")
 						end
 					end
 					l_prefix.append_character ('%'')
@@ -1531,7 +1531,7 @@ feature {NONE} -- Output
 				create l_desc.make (256)
 				l_desc.append (l_switch.description)
 				if l_switch.optional then
-					l_desc.append (once " (Optional)")
+					l_desc.append (" (Optional)")
 				end
 				l_padding := l_name.count + tab_string.count + 2
 				l_desc := format_terminal_text (l_desc, l_padding.as_natural_8)
@@ -1541,10 +1541,10 @@ feature {NONE} -- Output
 					l_desc.append (create {STRING_32}.make_filled (' ', l_padding))
 					l_desc.append_character ('<')
 					l_desc.append (l_arg_name)
-					l_desc.append (once ">: ")
+					l_desc.append (">: ")
 					create l_arg_desc.make (32)
 					if l_value_switch_2.is_value_optional then
-						l_arg_desc.append (once "(Optional) ")
+						l_arg_desc.append ("(Optional) ")
 					end
 					l_arg_desc.append (l_value_switch_2.arg_description)
 					l_arg_desc := format_terminal_text (l_arg_desc, (l_padding + l_arg_name.count + 4).as_natural_8)
@@ -1553,7 +1553,7 @@ feature {NONE} -- Output
 
 				localized_print (tab_string)
 				localized_print (l_name)
-				localized_print (once ": ")
+				localized_print (": ")
 				localized_print (l_desc)
 				io.new_line
 				l_switches.forth
@@ -1590,7 +1590,7 @@ feature {NONE} -- Output
 						l_desc := format_terminal_text (l_value_switch.arg_description, (l_arg_name.count + tab_string.count + 4).as_natural_8)
 						localized_print (tab_string)
 						localized_print (l_name)
-						localized_print (once ": ")
+						localized_print (": ")
 						localized_print (l_desc)
 						io.new_line
 

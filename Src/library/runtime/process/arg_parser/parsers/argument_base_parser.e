@@ -1600,7 +1600,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Usage
 
-	name: IMMUTABLE_STRING_32
+	name: READABLE_STRING_GENERAL
 			-- Full name of application.
 		deferred
 		ensure
@@ -1608,7 +1608,7 @@ feature {NONE} -- Usage
 			not_result_is_empty: not Result.is_empty
 		end
 
-	version: IMMUTABLE_STRING_32
+	version: READABLE_STRING_GENERAL
 			-- Version number of application.
 		deferred
 		ensure
@@ -1616,7 +1616,7 @@ feature {NONE} -- Usage
 			not_result_is_empty: not Result.is_empty
 		end
 
-	copyright: IMMUTABLE_STRING_32
+	copyright: READABLE_STRING_GENERAL
 			-- Copyright information.
 			-- Not used if empty.
 		deferred

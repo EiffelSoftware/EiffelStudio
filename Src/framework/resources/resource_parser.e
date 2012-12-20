@@ -88,7 +88,7 @@ feature -- Errors
 			l_resource_file := resource_file
 			check attached l_resource_file end -- implied by precondition `resource_file_attached'
 			io.error.put_string ("Warning: resource file %"");
-			io.error.put_string (a_file_name.name.as_string_8);
+			localized_print_error (a_file_name.name);
 			io.error.put_string ("%"%N%TSyntax error, line ");
 			io.error.put_integer (line_number);
 			io.error.put_string (": ");

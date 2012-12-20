@@ -80,7 +80,7 @@
 		<root cluster="main" class="APPLICATION" feature="make"/>
 		<setting name="executable_name" value="emdc"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser-safe.ecf"/>
 		<cluster name="main" location="$EIFFEL_SRC\dotnet\consumer\main\"/>
 	</target>
 	<target name="consumer_20" extends="consumer_library">

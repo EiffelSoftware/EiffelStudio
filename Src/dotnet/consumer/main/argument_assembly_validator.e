@@ -21,11 +21,11 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: READABLE_STRING_8)
+	validate_value (a_value: READABLE_STRING_GENERAL)
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		do
-			if assembly_loader.load_from (a_value) = Void then
+			if assembly_loader.load_from (a_value.to_cil) = Void then
 				invalidate_option ("The specified assembly cannot be loaded.")
 			end
 		end

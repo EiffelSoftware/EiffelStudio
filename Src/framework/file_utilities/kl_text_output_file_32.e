@@ -11,6 +11,8 @@ inherit
 		rename
 			make as kl_make,
 			make_with_name as make
+		export
+			{ANY} path
 		redefine
 			make
 		end

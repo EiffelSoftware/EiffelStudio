@@ -59,8 +59,8 @@ feature -- Basic operations
 				l_curl.setopt_curl_string (l_hnd, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_page)
 				perform
 
-				l_view_state_value := encoding_url (find_view_state (l_page.string).as_string_8)
-				l_event_validation := encoding_url (find_event_validation (l_page.string).as_string_8)
+				l_view_state_value := encoding_url (find_view_state (l_page.string))
+				l_event_validation := encoding_url (find_event_validation (l_page.string))
 
 				l_page.wipe_out
 
@@ -177,11 +177,11 @@ feature {NONE} -- Query
 			Result.append_character ('&')
 			Result.append ("ctl00%%24ctl00%%24default_main_content%%24main_content%%24display_username=")
 			Result.append_character ('&')
-			Result.append ("ctl00%%24ctl00%%24default_main_content%%24main_content%%24register_username=" + a_user.as_string_32)
+			Result.append ("ctl00%%24ctl00%%24default_main_content%%24main_content%%24register_username=" + a_user)
 			Result.append_character ('&')
 			Result.append ("ctl00%%24ctl00%%24default_main_content%%24main_content%%24display_password=")
 			Result.append_character ('&')
-			Result.append ("ctl00%%24ctl00%%24default_main_content%%24main_content%%24register_password=" + a_pass.as_string_32)
+			Result.append ("ctl00%%24ctl00%%24default_main_content%%24main_content%%24register_password=" + encoding_url (a_pass))
 			Result.append_character ('&')
 			Result.append ("ctl00%%24ctl00%%24default_main_content%%24main_content%%24login_button=Login")
 			Result.append_character ('&')
@@ -203,7 +203,7 @@ invariant
 	not_last_password_is_empty: is_logged_in implies not last_password.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -227,11 +227,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -198,20 +198,22 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	encoding_url (a_url: STRING): STRING
+	encoding_url (a_url: READABLE_STRING_GENERAL): STRING_32
 			-- Simple URL encoding.
 			-- Only replace / and + for the moment.
 		require
 			a_url_attached: a_url /= Void
 		do
-			Result := a_url.twin
+			create Result.make_from_string_general (a_url)
 			Result.replace_substring_all ("/", "%%2F")
 			Result.replace_substring_all ("+", "%%2B")
+			Result.replace_substring_all ("&", "%%26")
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not a_url.is_empty implies not Result.is_empty
 			forward_slash_replaced: not Result.has_substring ("/")
 			plus_replaced: not Result.has_substring ("+")
+			ampersand_replaced: not Result.has_substring ("&")
 		end
 
 feature {NONE} -- Constants
@@ -223,7 +225,7 @@ feature {NONE} -- Constants
 			-- Support site unsecure base URL
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -247,11 +249,11 @@ feature {NONE} -- Constants
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -44,8 +44,8 @@ feature {NONE} -- Initialization
 		local
 			l_manager: CACHE_MANAGER
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
-			l_assemblies: LIST [STRING]
-			l_references: LIST [STRING]
+			l_assemblies: ARRAYED_LIST [STRING]
+			l_references: ARRAYED_LIST [STRING]
 			l_info_only: BOOLEAN
 			l_assembly: STRING
 			l_verbose: BOOLEAN

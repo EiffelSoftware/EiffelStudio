@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
 		<version major="6" minor="4" release="7" build="7751"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.MetadataConsumer">
+		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional" namespace="EiffelSoftware.MetadataConsumer">
 			<assertions/>
 		</option>
 		<setting name="cls_compliant" value="false"/>
@@ -56,9 +56,9 @@
 				<exclude>/emitter$</exclude>
 				<exclude>/support/notifier$</exclude>
 				<exclude>/resources$</exclude>
-				<exclude>/support/errors$</exclude>
-				<exclude>/interop$</exclude>
 				<exclude>/cache$</exclude>
+				<exclude>/interop$</exclude>
+				<exclude>/support/errors$</exclude>
 				<exclude>/support/interop$</exclude>
 				<exclude>/main$</exclude>
 				<exclude>/support/helpers$</exclude>
@@ -81,7 +81,7 @@
 		<root cluster="main" class="APPLICATION" feature="make"/>
 		<setting name="executable_name" value="emdc"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser-safe.ecf"/>
 		<cluster name="main" location="$EIFFEL_SRC\dotnet\consumer\main\"/>
 	</target>
 	<target name="consumer_20" extends="consumer_library">

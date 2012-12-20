@@ -326,9 +326,7 @@ feature -- Status report
 	is_character_printable (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' printable?
 		do
-			if a_char.is_character_8 then
-				Result := a_char.to_character_8.is_printable
-			end
+			Result := not a_char.is_character_8 or else a_char.to_character_8.is_printable
 		end
 
 feature {NONE} -- Status report

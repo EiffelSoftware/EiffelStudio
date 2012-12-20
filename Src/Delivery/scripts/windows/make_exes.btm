@@ -211,7 +211,7 @@ endiff
 remtrace Recompile finish_freezing
 cdd %EIFFEL_SRC\tools\finish_freezing
 clean_project
-finalize finish_freezing.ecf
+finalize finish_freezing.ecf finish_freezing
 cleanup_eiffel finish_freezing finish_freezing.exe
 iff not exist finish_freezing.exe then
 	remtrace Could not finalize a new finish_freezing

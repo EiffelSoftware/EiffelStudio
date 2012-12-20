@@ -398,7 +398,7 @@ feature {NONE} -- Implementation: preparation
 
 feature{NONE} -- Test result analyizing
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
 			-- <Precursor>
 		local
 			l_system: like system

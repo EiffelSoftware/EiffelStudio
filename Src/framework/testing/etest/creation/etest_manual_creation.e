@@ -131,20 +131,20 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Basic operations
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
 			-- Create test routine in new class
 		do
 			a_file.close
-			render_class_text (a_file.name, a_class_name)
+			render_class_text (a_file.path, a_class_name)
 		end
 
-	render_class_text (a_file_name: STRING; a_class_name: STRING)
+	render_class_text (a_file_name: PATH; a_class_name: STRING)
 			-- Render test class text from default template to file.
 			--
 			-- `a_file_name': Name of file to which class text will be rendered.
 		require
 			a_file_name_not_empty: a_file_name /= Void and then not a_file_name.is_empty
-			a_file_name_createable: (create {RAW_FILE}.make (a_file_name)).is_creatable
+			a_file_name_createable: (create {RAW_FILE}.make_with_path (a_file_name)).is_creatable
 		local
 			l_retried: BOOLEAN
 			l_template: PATH
@@ -162,7 +162,7 @@ feature {NONE} -- Basic operations
 				if l_u.file_path_exists (l_template) then
 					create l_wizard
 					if l_wizard.is_service_available then
-						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters (a_class_name), create {PATH}.make_from_string (a_file_name))
+						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters (a_class_name), a_file_name)
 						create l_name.make (class_name.count + test_routine_name.count + 1)
 						l_name.append (class_name)
 						l_name.append_character ('.')

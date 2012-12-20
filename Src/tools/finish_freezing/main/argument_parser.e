@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	location: detachable STRING
+	location: detachable IMMUTABLE_STRING_32
 			-- Location specified by user, via command line
 		require
 			is_successful: is_successful

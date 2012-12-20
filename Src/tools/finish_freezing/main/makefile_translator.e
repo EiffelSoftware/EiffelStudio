@@ -7,17 +7,17 @@ class
 inherit
 	ANY
 
-	PATH_CONVERTER
-		export
-			{NONE} all
-		end
-
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
 
 	PROCESS_FACTORY
+		export
+			{NONE} all
+		end
+
+	LOCALIZED_PRINTER
 		export
 			{NONE} all
 		end
@@ -197,7 +197,7 @@ feature -- Execution
 					if l_success then
 						l_process.wait_for_exit
 					else
-						io.error.put_string ("ERROR: Cannot start %"" + command.as_string_8 + "%".")
+						io.error.put_string ("ERROR: Cannot start %"" + command + "%".")
 					end
 				end
 
@@ -211,7 +211,7 @@ feature -- Execution
 					if l_success then
 						l_process.wait_for_exit
 					else
-						io.error.put_string ("ERROR: Cannot start %"" + command.as_string_8 + "%".")
+						io.error.put_string ("ERROR: Cannot start %"" + command + "%".")
 					end
 				end
 			end
@@ -235,7 +235,7 @@ feature -- Execution
 			if l_success then
 				l_process.wait_for_exit
 			else
-				io.error.put_string ("ERROR: Cannot start %"" + eiffel_layout.emake_command_name.name.as_string_8 + "%".")
+				localized_print_error ({STRING_32} "ERROR: Cannot start %"" + eiffel_layout.emake_command_name.name + "%".")
 			end
 				-- Restore original code page in case it has been changed.
 			{WEL_API}.set_console_input_code_page (input_code_page).do_nothing

@@ -510,7 +510,7 @@ feature {NONE} -- Query
 				from l_options.start until l_options.after loop
 					l_opt := l_options.item
 					if l_cs then
-						l_equal := l_opt.switch.id ~ a_name
+						l_equal := l_opt.switch.id.same_string_general (a_name)
 					else
 						l_equal := l_opt.switch.id.is_case_insensitive_equal_general (a_name)
 					end
@@ -640,7 +640,7 @@ feature {NONE} -- Query
 		ensure
 			result_attached: Result /= Void
 			available_switches_unmoved: available_switches.cursor ~ old available_switches.cursor
-			result_is_requsted_switch: Result.id ~ a_name
+			result_is_requsted_switch: Result.id.same_string_general (a_name)
 		end
 
 feature {NONE} -- Helpers
@@ -824,13 +824,13 @@ feature {NONE} -- Parsing
 										l_switch := l_switches.item
 										if l_use_long_name then
 											if l_cs then
-												l_match := l_switch.long_name ~ l_option
+												l_match := l_switch.long_name.same_string (l_option)
 											else
 												l_match := l_switch.long_name.is_case_insensitive_equal (l_option)
 											end
 										else
 											if l_cs then
-												l_match := l_switch.name ~ l_option
+												l_match := l_switch.name.same_string (l_option)
 											else
 												l_match := l_switch.name.is_case_insensitive_equal (l_option)
 											end
@@ -854,9 +854,9 @@ feature {NONE} -- Parsing
 												l_switch := l_switches.item
 												if l_switch.has_short_name then
 													if l_cs then
-														l_match := l_switch.short_name ~ l_option.item (k)
+														l_match := l_switch.short_name = l_option.item (k)
 													else
-														l_match := l_switch.short_name.as_lower ~ l_option.item (k)
+														l_match := l_switch.short_name.as_lower = l_option.item (k)
 													end
 													if l_match and k < l_count then
 															-- if matches and we are not processing the last item
@@ -902,7 +902,7 @@ feature {NONE} -- Parsing
 						if attached {ARGUMENT_VALUE_SWITCH} l_last_switch as l_last_value_switch then
 							check
 								not_internal_option_values_is_empty: not internal_option_values.is_empty
-								same_name: internal_option_values.last.switch.id ~ l_last_value_switch.id
+								same_name: internal_option_values.last.switch.id.same_string (l_last_value_switch.id)
 							end
 							internal_option_values.finish
 							if l_arg /= Void and then not l_arg.is_empty then
@@ -1512,7 +1512,12 @@ feature {NONE} -- Output
 				end
 
 				if l_switch.has_short_name then
-					l_arg_name := l_def_prefix + l_switch.short_name.out + " " + l_def_prefix + l_def_prefix + l_switch.long_name
+					create l_arg_name.make (20)
+					l_arg_name.append (l_def_prefix)
+					l_arg_name.append_character (l_switch.short_name)
+					l_arg_name.append_string_general (" ")
+					l_arg_name.append (l_def_prefix)
+					l_arg_name.append (l_switch.long_name)
 				elseif is_using_unix_switch_style then
 					l_arg_name := "   " + l_def_prefix + l_def_prefix + l_switch.long_name
 				else
@@ -1718,7 +1723,7 @@ feature {NONE} -- Usage
 				from a_group.start until a_group.after loop
 					l_switch := a_group.item
 					l_opt := l_switch.optional
-					if l_switch.id /~ help_switch and not l_switch.is_hidden then
+					if not l_switch.id.same_string (help_switch) and not l_switch.is_hidden then
 						l_add_switch := not a_add_appurtenances implies (not a_src_group.has (l_switch) or l_switch.optional)
 						if l_add_switch then
 							if l_opt then
@@ -1888,7 +1893,7 @@ feature {NONE} -- Switches
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result ~ nologo_switch
+			result_consistent: Result.same_string (nologo_switch)
 		end
 
 	help_switch: IMMUTABLE_STRING_32
@@ -1910,7 +1915,7 @@ feature {NONE} -- Switches
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result ~ help_switch
+			result_consistent: Result.same_string (help_switch)
 		end
 
 	version_switch: IMMUTABLE_STRING_32
@@ -1924,7 +1929,7 @@ feature {NONE} -- Switches
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result ~ version_switch
+			result_consistent: Result.same_string (version_switch)
 		end
 
 	available_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -2198,7 +2203,7 @@ feature {NONE} -- Implementation: Query
 				from l_options.start until l_options.after or Result /= Void loop
 					l_opt := l_options.item
 					if l_cs then
-						l_equal := a_name ~ l_opt.switch.id
+						l_equal := a_name.same_string (l_opt.switch.id)
 					else
 						l_equal := a_name.is_case_insensitive_equal (l_opt.switch.id)
 					end

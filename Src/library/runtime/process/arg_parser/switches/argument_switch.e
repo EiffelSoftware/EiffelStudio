@@ -70,9 +70,13 @@ feature -- Access
 
 	name: IMMUTABLE_STRING_32
 			-- Priority option name
+		local
+			l_result: STRING_32
 		do
 			if has_short_name then
-				Result := short_name.out
+				create l_result.make (1)
+				l_result.append_character (short_name)
+				create Result.make_from_string (l_result)
 			else
 				Result := long_name
 			end

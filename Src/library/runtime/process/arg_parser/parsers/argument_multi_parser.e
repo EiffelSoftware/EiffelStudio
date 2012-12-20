@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	non_switched_argument_name: IMMUTABLE_STRING_32
+	non_switched_argument_name: READABLE_STRING_GENERAL
 			-- Name of non-switched argument, used in usage information.
 		deferred
 		ensure
@@ -43,7 +43,7 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	non_switched_argument_description: IMMUTABLE_STRING_32
+	non_switched_argument_description: READABLE_STRING_GENERAL
 			-- Description of non-switched argument, used in usage information.
 		deferred
 		ensure
@@ -51,7 +51,7 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	non_switched_argument_type: IMMUTABLE_STRING_32
+	non_switched_argument_type: READABLE_STRING_GENERAL
 			-- Type of non-switched argument, used in usage information.
 			-- A type is a short description of the argument. I.E. "Configuration File"
 		deferred
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 		once
 			create l_result.make (non_switched_argument_name.count + 2)
 			l_result.append_character ('<')
-			l_result.append (non_switched_argument_name)
+			l_result.append_string_general (non_switched_argument_name)
 			l_result.append_character ('>')
 			create Result.make_from_string_general (l_result)
 		ensure
@@ -116,7 +116,7 @@ feature {NONE} -- Query
 		once
 			create l_tabbed_nl.make_filled (' ', tab_string.count + 2 + non_switched_argument_name_arg.count)
 			l_tabbed_nl.insert_string ("%N", 1)
-			l_desc := non_switched_argument_description.twin
+			create l_desc.make_from_string_general (non_switched_argument_description)
 			l_desc.replace_substring_all ("%N", l_tabbed_nl)
 
 			create l_result.make (30)

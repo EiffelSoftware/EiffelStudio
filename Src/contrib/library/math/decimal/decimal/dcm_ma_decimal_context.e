@@ -362,7 +362,7 @@ feature -- Duplication
 			traps := other.traps.twin
 		end
 
-feature {DECIMAL_HANDLER, DCM_MA_DECIMAL_CONTEXT} -- Signals
+feature {DCM_MA_DECIMAL_CONTEXT} -- Signals
 
 	flags: ARRAY [BOOLEAN]
 			-- Signals flagged

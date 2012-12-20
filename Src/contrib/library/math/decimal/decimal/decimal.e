@@ -472,7 +472,7 @@ feature {DECIMAL} -- Access
 			definition: Result = (exponent + count - 1)
 		end
 
-feature {DECIMAL, DCM_MA_DECIMAL_PARSER, DECIMAL_HANDLER} -- Access
+feature {DECIMAL, DCM_MA_DECIMAL_PARSER} -- Access
 
 	coefficient: DCM_MA_DECIMAL_COEFFICIENT
 			-- Storage for digits

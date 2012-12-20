@@ -33,18 +33,24 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	assemblies: LIST [STRING]
+	assemblies: ARRAYED_LIST [STRING]
 			-- List of passed assemblies
 		once
-			Result := values
+			create Result.make (0)
+			across values as l_item loop
+				Result.extend (l_item.item.as_string_8)
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	include_paths: LIST [STRING]
+	include_paths: ARRAYED_LIST [STRING]
 			-- Specified list of lookup paths
 		once
-			Result := unique_options_values_of_name (include_switch, True)
+			create Result.make (0)
+			across unique_options_values_of_name (include_switch, True) as l_item loop
+				Result.extend (l_item.item.as_string_8)
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -54,17 +60,20 @@ feature -- Access
 		require
 			modify_ecf_file: modify_ecf_file
 		once
-			Result := option_of_name (ecf_switch).value
+			Result := option_of_name (ecf_switch).value.as_string_8
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	ecf_targets_file: LIST [STRING]
+	ecf_targets_file: ARRAYED_LIST [STRING]
 			-- Location of an *.ecf file to modify
 		require
 			modify_ecf_file: modify_ecf_file
 		once
-			Result := unique_options_values_of_name (target_switch, False)
+			create Result.make (0)
+			across unique_options_values_of_name (target_switch, False) as l_item loop
+				Result.extend (l_item.item.as_string_8)
+			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
@@ -127,7 +136,7 @@ feature {NONE} -- Constants
 			-- Switches
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

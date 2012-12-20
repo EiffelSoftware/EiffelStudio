@@ -156,7 +156,9 @@ feature {NONE} -- Initialization
 
 			l_shrinkable.resize_actions.extend (agent (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 				do
-					shrink_widget.set_item_size (login_frame, a_width, a_height)
+					if a_width > 0 and a_height > 0 then
+						shrink_widget.set_item_size (login_frame, a_width, a_height)
+					end
 				end)
 
 			a_container.extend (l_shrinkable)
@@ -998,7 +1000,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

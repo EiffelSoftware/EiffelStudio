@@ -260,7 +260,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
 			-- Print new class text to `a_file'.
 		require
 			a_file_attached: a_file /= Void

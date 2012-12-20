@@ -104,7 +104,7 @@ feature {NONE} -- Status setting
 			progress := {REAL_32} 0.5
 		end
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
 			-- <Precursor>
 		local
 			l_source_writer: TEST_EXTRACTED_SOURCE_WRITER

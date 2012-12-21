@@ -175,7 +175,6 @@
     <Compile Include="interface\PromptError.wxs" />
     <Compile Include="interface\PromptOutOfDiskSpace.wxs" />
     <Compile Include="interface\PromptOutOfRollbackDiskSpace.wxs" />
-    <Compile Include="interface\PromptViewLicenseAgreement.wxs" />
     <Compile Include="Package.wxs" />
   </ItemGroup>
   <ItemGroup>

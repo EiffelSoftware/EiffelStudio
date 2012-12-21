@@ -39,8 +39,8 @@
             <?ifdef EiffelStudio?>
               <Publish Event="NewDialog" Value="DialogSelectFolder"><![CDATA[PIDACCEPTED = "1"]]></Publish>
             <?endif?>
-            <Condition Action="enable"><![CDATA[NOT (PIDKEY = "" OR USERNAME = "")]]></Condition>
-            <Condition Action="disable"><![CDATA[PIDKEY = "" OR USERNAME = ""]]></Condition>
+			<Condition Action="enable"><![CDATA[USERNAME <> ""]]></Condition>
+            <Condition Action="disable"><![CDATA[USERNAME = ""]]></Condition>
           </Control>
           <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
             <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

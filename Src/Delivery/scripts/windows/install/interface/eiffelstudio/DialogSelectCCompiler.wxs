@@ -17,7 +17,7 @@
           <Text>[SubTitleFont]The Eiffel compiler requires a C/C++ compiler to generate executables</Text>
         </Control>
         <Control Id="Description1" Type="Text" X="11" Y="70" Width="355" Height="30" Transparent="yes" NoPrefix="yes">
-          <Text>If you have the Microsoft Visual C++ compiler version 6.0, or above, or you have installed the latest Windows SDK then select "Use a Microsoft C/C++ compiler".</Text>
+          <Text>If you have the Microsoft Visual C++ compiler version 8.0, or above, or you have installed the latest Windows SDK then select "Use a Microsoft C/C++ compiler".</Text>
         </Control>
         <Control Id="Description2" Type="Text" Height="30" Width="354" X="12" Y="100" Text="Otherwise select &quot;Install and use MinGW (GCC)&quot;. This will install MinGW's C/C++ compiler and configure the Eiffel compiler to use it as the default C/C++ compiler." Transparent="yes" />
         <Control Id="Choice" Type="RadioButtonGroup" X="40" Y="135" Width="218" Height="36" Property="C_CONFIG_NAME" TabSkip="no"/>

@@ -13,7 +13,8 @@ inherit
 		rename
 			set_selection as text_component_imp_set_selection
 		undefine
-			hide_border
+			hide_border,
+			text_length
 		redefine
 			interface
 		end

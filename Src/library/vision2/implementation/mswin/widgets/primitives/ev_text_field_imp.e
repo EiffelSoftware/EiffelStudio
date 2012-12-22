@@ -15,6 +15,7 @@ inherit
 			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
+			text_length,
 			hide_border
 		end
 
@@ -25,6 +26,7 @@ inherit
 			on_key_down,
 			interface,
 			make,
+			text_length,
 			next_dlgtabitem,
 			ignore_character_code
 		end
@@ -152,6 +154,12 @@ feature -- Element Change
 		end
 
 feature -- Access
+
+	text_length: INTEGER
+			-- <Precursor>
+		do
+			Result := wel_text_length
+		end
 
 	text: STRING_32
 			-- Text of `Current'.

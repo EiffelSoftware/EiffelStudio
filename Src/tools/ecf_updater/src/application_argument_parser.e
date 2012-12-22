@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	copyright: STRING
+	copyright: IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
-			Result := "Copyright Eiffel Software 2011-2012. All Rights Reserved."
+			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2012. All Rights Reserved.")
 		end
 
 	files: LIST [PATH]
@@ -52,7 +52,7 @@ feature -- Access
 				end
 			end
 			create {ARRAYED_LIST [PATH]} Result.make (l_options.count)
-			l_options.do_all (agent (s: STRING_8; res: LIST [PATH])
+			l_options.do_all (agent (s: IMMUTABLE_STRING_32; res: LIST [PATH])
 					do
 						res.force (create {PATH}.make_from_string (s))
 					end (?, Result))
@@ -74,7 +74,7 @@ feature -- Access
 				end
 			end
 			create {ARRAYED_LIST [PATH]} Result.make (l_options.count)
-			l_options.do_all (agent (s: STRING_8; res: LIST [PATH])
+			l_options.do_all (agent (s: IMMUTABLE_STRING_32; res: LIST [PATH])
 					do
 						res.force (create {PATH}.make_from_string (s))
 					end (?, Result))
@@ -172,27 +172,38 @@ feature -- Access
 
 feature {NONE} -- Usage
 
-	non_switched_argument_name: STRING = "path"
-			--  <Precursor>
-
-	non_switched_argument_description: STRING = "Eiffel configuration file or directory"
-			--  <Precursor>
-
-	non_switched_argument_type: STRING = "Eiffel configuration file/directory"
-			--  <Precursor>
-
-	name: STRING
+	non_switched_argument_name: IMMUTABLE_STRING_32
 		once
-			Result := {APPLICATION_CONSTANTS}.executable_name
+			create Result.make_from_string ({STRING_32} "path")
 		end
 
-	version: STRING
+	non_switched_argument_description: IMMUTABLE_STRING_32
 			--  <Precursor>
 		once
-			create Result.make (5)
-			Result.append_natural_16 ({APPLICATION_CONSTANTS}.major_version)
-			Result.append_character ('.')
-			Result.append_natural_16 ({APPLICATION_CONSTANTS}.minor_version)
+			create Result.make_from_string ({STRING_32} "Eiffel configuration file or directory")
+		end
+
+	non_switched_argument_type: IMMUTABLE_STRING_32
+			--  <Precursor>
+		once
+			create Result.make_from_string ({STRING_32} "Eiffel configuration file/directory")
+		end
+
+	name: IMMUTABLE_STRING_32
+		once
+			create Result.make_from_string_general ({APPLICATION_CONSTANTS}.executable_name)
+		end
+
+	version: IMMUTABLE_STRING_32
+			--  <Precursor>
+		local
+			s: STRING_32
+		once
+			create s.make (5)
+			s.append_natural_16 ({APPLICATION_CONSTANTS}.major_version)
+			s.append_character ('.')
+			s.append_natural_16 ({APPLICATION_CONSTANTS}.minor_version)
+			create Result.make_from_string (s)
 		end
 
 feature {NONE} -- Switches

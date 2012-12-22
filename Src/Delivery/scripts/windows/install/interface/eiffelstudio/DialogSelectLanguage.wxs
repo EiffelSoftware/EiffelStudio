@@ -31,10 +31,8 @@
           </Control>
           <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
             <Publish Event="NewDialog" Value="DialogMissingNetFx"><![CDATA[IS_DOTNET_INSTALLED <> "1"]]></Publish>
-            <Publish Event="NewDialog" Value="DialogMissingMscWarning"><![CDATA[IS_DOTNET_INSTALLED = "1" AND (C_CONFIG_CHOOSE = "1" AND C_CONFIG_MSC_FOUND <> "1")]]></Publish>
-            <Publish Event="NewDialog" Value="DialogMissingMscError"><![CDATA[IS_DOTNET_INSTALLED = "1" AND (C_CONFIG_CHOOSE <> "1" AND C_CONFIG_MSC_FOUND <> "1")]]></Publish>
-            <Publish Event="NewDialog" Value="DialogSelectCCompiler"><![CDATA[IS_DOTNET_INSTALLED = "1" AND (C_CONFIG_CHOOSE = "1" AND C_CONFIG_MSC_FOUND = "1")]]></Publish>
-            <Publish Event="NewDialog" Value="DialogVerifyReadyInstall"><![CDATA[IS_DOTNET_INSTALLED = "1" AND (C_CONFIG_CHOOSE <> "1" AND C_CONFIG_MSC_FOUND = "1")]]></Publish>
+            <Publish Event="NewDialog" Value="DialogSelectCCompiler"><![CDATA[IS_DOTNET_INSTALLED = "1" AND C_CONFIG_CHOOSE = "1"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogVerifyReadyInstall"><![CDATA[IS_DOTNET_INSTALLED = "1" AND C_CONFIG_CHOOSE <> "1"]]></Publish>
           </Control>
           <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
             <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>

@@ -8,7 +8,7 @@
           <Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30">
             <Text>The CD-Key entered is not a valid CD-Key for [ProductName]. Please check and try again.</Text>
           </Control>
-          <Control Id="Okay" Type="PushButton" X="100" Y="57" Width="56" Height="17" TabSkip="no" Text="[Button_OK]">
+          <Control Id="Okay" Type="PushButton" X="100" Y="57" Width="56" Height="17" TabSkip="no" Default="yes" Text="[Button_OK]">
             <Publish Event="EndDialog" Value="Return">1</Publish>
           </Control>
         </Dialog>

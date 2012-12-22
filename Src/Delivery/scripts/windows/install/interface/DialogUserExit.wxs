@@ -13,7 +13,7 @@
         <Control Id="Description2" Type="Text" X="9" Y="162" Width="356" Height="21" Transparent="yes" NoPrefix="yes">
           <Text>Click the Finish button to exit the installer.</Text>
         </Control>
-        <Control Id="Finish" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Finish]">
+        <Control Id="Finish" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Default="yes" Text="[Button_Finish]">
           <Publish Event="EndDialog" Value="Exit">1</Publish>
         </Control>
       </Dialog>

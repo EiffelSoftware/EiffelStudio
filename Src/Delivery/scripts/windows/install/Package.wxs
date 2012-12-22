@@ -66,7 +66,7 @@
     <!-- Has license aggreement been viewed -->
     <Property Id="HAS_VIEWED_LICENSE">0</Property>
     <!-- Indicates if a C config choice is present -->
-    <Property Id="C_CONFIG_CHOOSE">1</Property>
+    <Property Id="C_CONFIG_CHOOSE">0</Property>
     <!-- URL for How-To-Install a C/C++ compiler -->
     <Property Id="C_CONFIG_INSTALL_URL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>
     <!-- Eiffel C configuration name -->
@@ -75,7 +75,7 @@
     <Property Id="C_CONFIG_MSC_ENVIRONMENT">Unused</Property>
     <!-- Inidicates if a C compilation can be performed -->
     <Property Id="C_CONFIG_CAN_COMPILE">0</Property>
-    <!-- Indicates if a MS C compiler has been found -->
+    <!-- Indicates if a MS C compiler has been found, usefull to bring some help in how to install the C compiler in the dialog letting you choose your C compiler. -->
     <Property Id="C_CONFIG_MSC_FOUND">0</Property>
     <!-- Last truncated error when determinine a Visual C/C++ compiler environment -->
     <Property Id="C_CONFIG_ERROR_TEXT">Unknown Reason</Property>

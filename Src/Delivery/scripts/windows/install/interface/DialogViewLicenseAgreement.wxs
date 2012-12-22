@@ -15,10 +15,10 @@
         <Control Id="AgreementText" Type="ScrollableText" X="10" Y="58" Width="355" Height="118" Sunken="yes" TabSkip="no" >
           <Text SourceFile="licenses\$(var.Product)\$(var.LicenseFile)"></Text>
         </Control>
-        <Control Id="Disagree" Type="PushButton" X="187" Y="293" Width="56" Height="17" Default="yes" Text="[Button_Disagree]">
-          <Publish Event="SpawnDialog" Value="PromptCancelLicense">1</Publish>
+        <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
+          <Publish Event="NewDialog" Value="DialogWelcome">1</Publish>
         </Control>
-        <Control Id="Agree" Type="PushButton" X="242" Y="193" Width="56" Height="17" Text="[Button_Agree]">
+        <Control Id="Agree" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Agree]">
           <?ifdef EiffelStudio?>
             <!-- EiffelStudio actions -->
             <?ifdef Enterprise?>

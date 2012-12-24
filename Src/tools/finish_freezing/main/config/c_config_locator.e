@@ -213,7 +213,6 @@ feature -- Basic operations
 					set_error (e_compiler_deprecated_1, <<l_config.description>>)
 				else
 					internal_c_configuration := l_config
-					check_compiler_executable (l_config)
 				end
 			end
 		end
@@ -230,77 +229,6 @@ feature {NONE} -- Basic operations
 			not_has_checked: not has_checked
 			internal_c_configuration_detached: internal_c_configuration = Void
 			internal_c_configuration_error_detached: internal_c_configuration_error = Void
-		end
-
-	check_compiler_executable (a_config: C_CONFIG)
-			-- Checks of a given file name in a canonicalized list of paths.
-			--
-			-- `a_config': A C configuration to use to locate the matching compiler'.
-		require
-			a_config_attached: a_config /= Void
-			a_config_exists: a_config.exists
-		local
-			l_var_path: STRING_32
-			l_var: detachable STRING_32
-			l_paths: LIST [STRING_32]
-			l_path: PATH
-			l_sep: CHARACTER_32
-			l_has_file: BOOLEAN
-			l_stop: BOOLEAN
-		do
-			create l_var_path.make (1024)
-			l_var_path.append_string_general (a_config.path_var)
-
-				-- Get PATH environment variable, incase the CL compiler is located there.
-			l_var := (create {ENVIRONMENT_ACCESS}).item ("PATH")
-			if l_var /= Void and then not l_var.is_empty then
-				if not l_var_path.is_empty then
-					l_var_path.append_character (';')
-				end
-				l_var_path.append (l_var)
-			end
-
-			l_sep := operating_environment.directory_separator
-			l_paths := l_var_path.split (';')
-
-				-- Scan each path to find the first compiler file name match
-			from l_paths.start until l_paths.after or l_stop or l_has_file loop
-				if attached l_paths.item as l_path_item and then not l_path_item.is_empty then
-					create l_path.make_from_string (l_path_item)
-					l_path := l_path.extended (a_config.compiler_file_name)
-					l_has_file := (create {RAW_FILE}.make_with_path (l_path)).exists
-					if l_has_file then
-						inspect file_assembly_type (l_path)
-						when x86_assembly_type then
-							if {PLATFORM_CONSTANTS}.is_64_bits then
-								l_has_file := False
-								l_stop := True
-								set_error (e_x86_compiler_binary_1, <<l_path.name>>)
-							end
-						when x64_assembly_type then
-							if not {PLATFORM_CONSTANTS}.is_64_bits then
-								l_has_file := False
-								l_stop := True
-								set_error (e_x64_compiler_binary_1, <<l_path.name>>)
-							end
-						else
-								-- Not a valid PE file
-							l_has_file := False
-							l_stop := True
-							set_error (e_corrupt_compiler_binary_1, <<l_path.name>>)
-						end
-					end
-				end
-				l_paths.forth
-			end
-
-			if not l_has_file and not l_stop then
-				if {PLATFORM_CONSTANTS}.is_64_bits then
-					set_error (e_no_compiler_1, <<a_config.description, "64-bit (x64)">>)
-				else
-					set_error (e_no_compiler_1, <<a_config.description, "32-bit (x86)">>)
-				end
-			end
 		end
 
 feature {NONE} -- Implementation: Internal cache

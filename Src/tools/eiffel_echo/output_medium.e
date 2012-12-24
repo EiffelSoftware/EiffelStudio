@@ -45,6 +45,7 @@ feature -- Basic operations
 			if attached utf32_to_console_encoding (console_encoding, a_string) as l_string then
 				medium.put_string (l_string)
 			else
+				medium.put_string ("Console output truncated: ")
 				medium.put_string (a_string.as_string_8)
 			end
 		end

@@ -191,11 +191,11 @@ feature -- Status report
 	is_tab_navigatable: BOOLEAN
 			-- Is `Current' tab key navigatable?
 			-- Used to determine whether it may be tabbed to if `is_item_tab_navigation_enabled' is True.
-			-- Redefined by descendents.
+			-- Set via `set_is_tab_navigatable'.
 		require
 			not_destroyed: not is_destroyed
 		do
-			-- Result := False
+			Result := implementation.is_tab_navigatable
 				-- By default items are not tab navigatable.
 		end
 
@@ -248,6 +248,17 @@ feature -- Status setting
 		ensure
 			tooltip_reset: a_tooltip = Void implies tooltip = Void
 			tooltip_set: a_tooltip /= Void implies (attached tooltip as l_tooltip and then a_tooltip.as_string_32 ~ l_tooltip)
+		end
+
+	set_is_tab_navigatable (a_is_tab_navigatable: BOOLEAN)
+			-- Set tab navigatable state to `a_is_tab_navigatable'
+			-- Used to determine whether it may be tabbed to if `a_is_tab_navigatable' is True.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.set_is_tab_navigatable (a_is_tab_navigatable)
+		ensure
+			is_tab_navigatable_set: is_tab_navigatable = a_is_tab_navigatable
 		end
 
 feature -- Actions

@@ -425,6 +425,9 @@ feature -- Status report
 			Result := Precursor {EV_ANY_I} or (is_parented and then attached parent_i as l_parent_i and then l_parent_i.is_destroyed)
 		end
 
+	is_tab_navigatable: BOOLEAN
+			-- Is `Current' tab key navigatable?
+
 feature -- Element change
 
 	set_foreground_color (a_color: like foreground_color)
@@ -462,6 +465,17 @@ feature -- Element change
 			tooltip_reset: a_tooltip = Void implies tooltip = Void
 			tooltip_set: a_tooltip /= Void and then attached tooltip as l_tooltip implies (
 				l_tooltip.same_string_general (a_tooltip))
+		end
+
+	set_is_tab_navigatable (a_is_tab_navigatable: BOOLEAN)
+			-- Set tab navigatable state to `a_is_tab_navigatable'
+			-- Used to determine whether it may be tabbed to if `a_is_tab_navigatable' is True.
+		require
+			not_destroyed: not is_destroyed
+		do
+			is_tab_navigatable := a_is_tab_navigatable
+		ensure
+			is_tab_navigatable_set: is_tab_navigatable = a_is_tab_navigatable
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
@@ -773,15 +787,15 @@ invariant
 	hash_code_valid: is_initialized implies ((not is_parented and hash_code = 0) or (is_parented and then hash_code > 0))
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end
 

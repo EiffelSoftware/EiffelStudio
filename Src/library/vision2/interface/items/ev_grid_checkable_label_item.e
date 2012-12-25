@@ -16,7 +16,7 @@ inherit
 		redefine
 			implementation, create_implementation, initialize,
 			computed_initial_grid_label_item_layout, activate, deactivate,
-			is_in_default_state, is_tab_navigatable
+			is_in_default_state
 		end
 
 create
@@ -33,6 +33,7 @@ feature {EV_ANY} -- Initialization
 			key_press_actions.extend (agent on_key_pressed)
 			key_release_actions.extend (agent on_key_released)
 			deselect_actions.extend (agent disable_key_processing)
+			set_is_tab_navigatable (True)
 		end
 
 feature -- Access
@@ -79,12 +80,6 @@ feature -- Change
 		end
 
 feature -- Status
-
-	is_tab_navigatable: BOOLEAN
-			-- <Precursor>
-		do
-			Result := True
-		end
 
 	is_sensitive: BOOLEAN
 			-- Is current sensitive ?

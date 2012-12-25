@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			if attached text_field as l_text_field then
 				l_text_field.focus_out_actions.extend (agent deactivate)
 				l_text_field.set_focus
-				l_text_field.set_caret_position (l_text_field.text.count + 1)
+				l_text_field.set_caret_position (l_text_field.text_length + 1)
 				user_cancelled_activation := False
 				l_text_field.key_press_actions.extend (agent handle_key)
 			end

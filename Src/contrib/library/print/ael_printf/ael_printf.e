@@ -76,6 +76,161 @@ feature -- Formatting
 			buf.append (printf_fmt_funcs.pf_formatted (fmt, args))
 		end
 
+	--|--------------------------------------------------------------
+
+	axdump (buf, opt: STRING; ss, es, sa, cs: INTEGER): STRING
+			-- Hex dump of buffer 'buf' with options 'opt'
+			--
+			-- 'opt' can contain 0 or more characters denoting output 
+			-- options
+			--
+			-- If included, 'A' denotes "DO NOT show ASCII chars at line 
+			-- end"
+			-- If included, 'a' denotes "show ASCII chars at line end"
+			--   Default, included for completeness
+			-- If included, 'd' denotes "show addresses as decimal"
+			--   Default, included for completeness
+			-- If included, 'w' denotes "wide format"
+			--   64 byte sequences (default is 16)
+			-- If included, 'x' denotes "show addresses as hexadecimal"
+			--   Default is to show addressed in decimal
+			--
+			-- 'ss' and 'es' are start and end sequence numbers to 
+			-- included in Result.  By default, output includes all 
+			-- sequences in 'buffer'
+			-- If 'ss' = 0, then the assumed start is '1'
+			-- If 'es' = 0 then end is end of the buffer
+			-- If 'es' is greater than the total number of sequence, 
+			-- then end is the end of the bugger
+			--
+			-- 'sa' is the starting address to associate with position 0
+			--
+			-- If 'cs' is positive, then add a blank line every 
+			-- 'cs' sequences (cs<=0 suppresses line insertion)
+		require
+			valid_buffer: buf /= Void and then not buf.is_empty
+		local
+			xd: AEL_PF_HEXDUMP
+		do
+			create xd.make_with_string (buf)
+			Result := xd.to_string (ss, es, opt, sa, cs)
+		ensure
+			exists: Result /= Void
+		end
+
+	--|--------------------------------------------------------------
+
+	amemdump (p: POINTER; sz: INTEGER; opt: STRING; sa, cs: INTEGER): STRING
+			-- Hex dump of memory locations starting at address 'p' and 
+			-- continuing for 'sz' bytes
+			--
+			-- 'opt' conveys formatting options
+			-- 'opt' can contain 0 or more characters
+			--
+			-- If included, 'A' denotes "DO NOT show ASCII chars at line 
+			-- end"
+			-- If included, 'a' denotes "show ASCII chars at line end"
+			--   Default, included for completeness
+			-- If included, 'd' denotes "show addresses as decimal"
+			--   Default, included for completeness
+			-- If included, 'w' denotes "wide format"
+			--   64 byte sequences (default is 16)
+			-- If included, 'x' denotes "show addresses as hexadecimal"
+			--   Default is to show addressed in decimal
+			--
+			-- 'sa' is the starting address to associate with position 0
+			--
+			-- If 'cs' is positive, then add a blank line every 
+			-- 'cs' sequences (cs<=0 suppresses line insertion)
+		require
+			valid_address: p /= Default_pointer
+			valid_size: sz > 0
+		local
+			xd: AEL_PF_HEXDUMP
+		do
+			create xd.make_with_addr (p, sz)
+			Result := xd.to_string (0, 0, opt, sa, cs)
+		ensure
+			exists: Result /= Void
+		end
+
+	--|--------------------------------------------------------------
+
+	lxdump (buf, opt: STRING; ss, es, sa: INTEGER): LINKED_LIST [ARRAY [STRING]]
+			-- Hex dump of buffer 'buf' in the form of a list of rows of
+			-- strings, each with 3 sections
+			-- For use by list-oriented user interfaces
+			--
+			-- 'ss' and 'es' are start and end sequence numbers to 
+			-- included in Result.  By default, output includes all 
+			-- sequences in 'buf'
+			-- If 'es' = 0 then end is last sequence in buffer
+			--
+			-- 'opt' can contain 0 or more characters denoting output 
+			-- options
+			--
+			-- If included, 'd' denotes "show addresses as decimal"
+			--   Default, included for completeness
+			-- If included, 'w' denotes "wide format"
+			--   64 byte sequences (default is 16)
+			-- If included, 'x' denotes "show addresses as hexadecimal"
+			--   Default is to show addressed in decimal
+			-- 'sa' is the starting address to associate with position 0
+			--
+		require
+			valid_buffer: buf /= Void and then not buf.is_empty
+		local
+			xd: AEL_PF_HEXDUMP
+		do
+			create xd.make_with_string (buf)
+			Result := xd.to_list (ss, es, sa, opt)
+		ensure
+			exists: Result /= Void
+		end
+
+	--|--------------------------------------------------------------
+
+	lmemdump (p: POINTER; sz: INTEGER; opt: STRING; ss, es, sa: INTEGER)
+						: LINKED_LIST [ARRAY [STRING]]
+			-- Hex dump of memory locations starting at address 'p' and 
+			-- continuing for 'sz' bytes, in the form of a list of rows 
+			-- or strings, each with 3 sections (position, values, ascii 
+			-- chars)
+			--
+			-- For use by list-oriented user interfaces
+			--
+			-- 'ss' and 'es' are start and end sequence numbers to 
+			-- included in Result.  By default, output includes all 
+			-- sequences in 'buf'
+			-- If 'es' = 0 then end is last sequence in buffer
+			--
+			-- 'opt' conveys formatting options
+			-- 'opt' can contain 0 or more characters
+			--
+			-- If included, 'A' denotes "DO NOT show ASCII chars at line 
+			-- end"
+			-- If included, 'a' denotes "show ASCII chars at line end"
+			--   Default, included for completeness
+			-- If included, 'd' denotes "show addresses as decimal"
+			--   Default, included for completeness
+			-- If included, 'w' denotes "wide format"
+			--   64 byte sequences (default is 16)
+			-- If included, 'x' denotes "show addresses as hexadecimal"
+			--   Default is to show addressed in decimal
+			-- 'sa' is the starting address to associate with position 0
+			--
+		require
+			valid_address: p /= Default_pointer
+			valid_size: sz > 0
+		local
+			xd: AEL_PF_HEXDUMP
+		do
+			create xd.make_with_addr (p, sz)
+			Result := xd.to_list (ss, es, sa, opt)
+		ensure
+			exists: Result /= Void
+		end
+
 --|========================================================================
 feature -- Convenience function
 --|========================================================================
@@ -144,14 +299,18 @@ feature -- Error Status
 			end
 		end
 
-	pf_fmt_constants: AEL_PF_FORMATTING_CONSTANTS
-		once
-			create Result
-		end
-
 	last_printf_errors: LINKED_LIST [ AEL_PF_FORMAT_ERROR ]
 		once
 			Result := pf_fmt_constants.last_printf_errors
+		end
+
+--|========================================================================
+feature {NONE} -- Constants and shared resources
+--|========================================================================
+
+	pf_fmt_constants: AEL_PF_FORMATTING_CONSTANTS
+		once
+			create Result
 		end
 
 	printf_fmt_funcs: AEL_PF_FORMATTING_ROUTINES
@@ -251,6 +410,9 @@ end -- class AEL_PRINTF
 --|----------------------------------------------------------------------
 --| History
 --|
+--| 008 14-Nov-2012
+--|     Added axdump, amemdump, lxdump and lmemdump routines
+--|     Compiled and tested with Eiffel Studio 7.1
 --| 007 03-Apr-2011
 --|     Added front-ends to the functions for setting global values 
 --|     like delimiters, pad characters and error notification agent.
@@ -271,10 +433,6 @@ end -- class AEL_PRINTF
 --|
 --| Use 'print_line' to write a value to stdout, followed by a newline
 --|
---| Use 'scanf' to read objects from stdin
---| Use 'fscanf' to read objects from a text file
---| Use 'sscanf' to read objects from a buffer
---|
 --| Refer the README.txt file and the AEL_Printf.pdf document that
---| accompanies this class for details.
+--| accompany this class for details.
 --|----------------------------------------------------------------------

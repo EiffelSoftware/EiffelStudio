@@ -20,16 +20,16 @@ feature {NONE} -- Initialization
 
 	default_create
 		do
-			create current_parsed_string.make_empty
+			create {STRING_32} current_parsed_string.make_empty
 		end
 
 feature -- Status report
 
-	is_valid_class_type_name (a_class_type: STRING): BOOLEAN
-			-- Is `cn' a valid class type?
+	is_valid_class_type_name (a_class_type: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_class_type' a valid class type?
 			-- according to ECMA-367 Section 8.11.1
 		require
-			ct_not_void: a_class_type /= Void
+			class_type_not_void: a_class_type /= Void
 		do
 			current_position_in_input := 1
 			current_parsed_string := a_class_type
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 	current_position_in_input: INTEGER
 		-- remembers the current position in the string (lexer state)
 
-	current_parsed_string: STRING
+	current_parsed_string: READABLE_STRING_GENERAL
 		-- The string for the lexer.
 
 	current_token: INTEGER
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 			Result := current_position_in_input >  current_parsed_string.count
 		end
 
-	current_character: CHARACTER
+	current_character: CHARACTER_32
 			-- Current character used by the the lexer.
 			-- require: not is_eof
 
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 	consume_current_token
 			-- Consume the current token.
 		local
-			l_consumed_token: STRING
+			l_consumed_token: STRING_32
 		do
 			if current_token /= tkn_error then
 
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

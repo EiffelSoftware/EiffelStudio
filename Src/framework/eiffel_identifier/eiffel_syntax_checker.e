@@ -17,8 +17,8 @@ inherit
 
 feature -- Status report
 
-	is_valid_class_type_name (ct: STRING): BOOLEAN
-			-- Is `cn' a valid class type?
+	is_valid_class_type_name (ct: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `ct' a valid class type?
 			-- according to ECMA-367 Section 8.11.1
 		require
 			ct_not_void: ct /= Void
@@ -29,16 +29,16 @@ feature -- Status report
 			Result := type_checker.is_valid_class_type_name (ct)
 		end
 
-	is_valid_class_name (cn: STRING): BOOLEAN
+	is_valid_class_name (cn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `cn' a valid class name?
 		do
 			Result := is_valid_identifier (cn) and then not keywords.has (cn.as_lower)
 		end
 
-	is_valid_group_name (cn: READABLE_STRING_GENERAL): BOOLEAN
+	is_valid_group_name (gn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `cn' a valid group name?
 		do
-			Result := is_valid_config_identifier (cn)
+			Result := is_valid_config_identifier (gn)
 		end
 
 	is_valid_feature_name_32 (fn: STRING_32): BOOLEAN
@@ -95,33 +95,40 @@ feature -- Status report
 			end
 		end
 
-	is_valid_operator (op: STRING): BOOLEAN
+	is_valid_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid operator name?
 		do
 			Result := op /= Void and then (basic_operators.has (op.as_lower) or else is_valid_free_operator (op))
 		end
 
-	is_valid_binary_operator (op: STRING): BOOLEAN
+	is_valid_binary_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid binary operator?
 		do
 			Result := op /= Void and then (binary_operators.has (op.as_lower) or else is_valid_free_operator (op))
 		end
 
-	is_valid_unary_operator (op: STRING): BOOLEAN
+	is_valid_unary_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid unary operator?
 		do
 			Result := op /= Void and then (unary_operators.has (op.as_lower) or else is_valid_free_operator (op))
 		end
 
-	is_valid_free_operator (op: STRING): BOOLEAN
+	is_valid_free_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid free operator name?
+			-- If `op' is a READABLE_STRING_8 instance, we treat it as UTF-8 encoded.
 		local
 			i: INTEGER
 			cc: CHARACTER_32
 			l_str32: STRING_32
+			u: UTF_CONVERTER
 		do
 			if op /= Void and then not op.is_empty then
-				l_str32 := encoding_converter.utf8_to_utf32 (op)
+				if attached {READABLE_STRING_8} op as l_op then
+						-- We have a UTF-8 encoded string.
+					l_str32 := u.utf_8_string_8_to_string_32 (l_op)
+				else
+					l_str32 := op.as_string_32
+				end
 					-- Allow Unicode codepoint greater than 255.
 				Result := (free_operators_start.has (op.item (1)) or l_str32.item (1).code > 255)
 				from
@@ -184,7 +191,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_valid_feature_name (fn: STRING): BOOLEAN
+	is_valid_feature_name (fn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `fn' a valid feature name?
 		do
 			Result := fn /= Void and then not keywords.has (fn) and (is_valid_identifier (fn) or

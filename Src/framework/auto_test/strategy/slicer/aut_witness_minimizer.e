@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 					printer.set_output_stream (null_output_stream)
 					file.close
 				else
-					error_handler.report_cannot_read_error (file.name)
+					error_handler.report_cannot_read_error (file.path.utf_8_name)
 				end
 				minimized_witness := l_sliced_witness
 			end
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			end
 			error_handler.report_benchmark_message ("slice execution time: " + timer_execution.last_duration.second_count.out + "s, " + timer_execution.last_duration.millisecond_count.out + "ms.")
 			error_handler.report_benchmark_message ("slice minimization time total: " + timer_total.last_duration.second_count.out + "s, " + timer_total.last_duration.millisecond_count.out + "ms.")
-			error_handler.report_benchmark_message ("slice fn: " + file.name)
+			error_handler.report_benchmark_message ("slice fn: " + file.path.utf_8_name)
 			error_handler.report_benchmark_message ("slice original loc: " + l_witness.count.out)
 			error_handler.report_benchmark_message ("slice minimized loc: " + l_sliced_witness.count.out)
 			error_handler.report_benchmark_message ("slice successful: " + (l_sliced_witness.is_fail and then l_sliced_witness.is_same_bug (l_witness)).out)
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

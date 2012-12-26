@@ -42,9 +42,9 @@ feature {NONE} -- Query
 	button_from_dialog_selected_button (a_dialog: attached EV_FILE_OPEN_DIALOG): INTEGER
 			-- <Precursor>
 		local
-			l_file_name: detachable STRING_32
+			l_file_name: detachable PATH
 		do
-			l_file_name := a_dialog.file_title
+			l_file_name := a_dialog.full_file_path.entry
 			if l_file_name = Void or else l_file_name.is_empty then
 				Result := dialog_buttons.cancel_button
 			else

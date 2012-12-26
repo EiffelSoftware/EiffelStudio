@@ -1162,7 +1162,6 @@ feature {NONE} -- Export call stack
 		local
 			fn: FILE_WINDOW
 			retried: BOOLEAN
-			u: UTF_CONVERTER
 		do
 			if not retried then
 					--| We create a file (or open it).

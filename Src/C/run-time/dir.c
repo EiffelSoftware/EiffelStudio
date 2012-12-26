@@ -78,7 +78,7 @@ typedef struct tagDIR {
 #else
 typedef struct tagDIR {
 	DIR *dir;
-	DIRENTRY last_entry;
+	DIRENTRY *last_entry;
 } EIF_DIR;
 #endif
 
@@ -216,8 +216,8 @@ rt_public EIF_POINTER eif_dir_next(EIF_POINTER d)
 	DIRENTRY *dp = readdir(dirp->dir);
 
 	if (dp) {
-		memcpy(&dirp->last_entry, dp, sizeof(DIRENTRY));
-		return dirp->last_entry.d_name;
+		dirp->last_entry = dp;
+		return dirp->last_entry->d_name;
 	} else {
 		return NULL;
 	}

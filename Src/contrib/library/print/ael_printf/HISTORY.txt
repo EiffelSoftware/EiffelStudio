@@ -1,5 +1,11 @@
 History
 
+009 14-Nov-2012
+    Added hex dump routines (axdump, amemdump, lxdump, lmemdump)
+    Updated PDF document, HISTORY.txt and README.txt
+    Changed export status of pf_fmt_constants and printf_fmt_funcs to NONE
+    Rebuilt and tested using Eiffel Studio 7.1
+
 008 18-Aug-2012
     Rebuilt and tested using Eiffel Studio 7.0
     Complete void-safety, types attached by default, standard syntax

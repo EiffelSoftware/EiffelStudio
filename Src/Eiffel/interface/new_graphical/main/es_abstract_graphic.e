@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 		do
 				-- Check that environment variables
 				-- are properly set.
-			check not_is_eiffel_layout_defined: not is_eiffel_layout_defined end
+			check not_is_eiffel_layout_defined: is_eiffel_layout_defined implies eiffel_layout.generating_type ~ {ES_EIFFEL_LAYOUT} end
 			create l_layout
 			set_eiffel_layout (l_layout)
 			l_layout.check_environment_variable

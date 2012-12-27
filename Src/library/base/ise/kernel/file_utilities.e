@@ -259,12 +259,11 @@ feature -- Directory operations
 			Result := not n.is_empty and then (create {DIRECTORY}.make (n)).exists
 		end
 
-	file_names (n: READABLE_STRING_32): detachable LIST [STRING_32]
+	file_names (n: READABLE_STRING_32): detachable ARRAYED_LIST [STRING_32]
 			-- List of file names in directory with name `n'.
 			-- Or void if directory is not readable (does not exist, cannot be accessed, etc.).
 		local
 			d: detachable DIRECTORY
-			l: ARRAYED_LIST [STRING_32]
 			is_retried: BOOLEAN
 			f: RAW_FILE
 		do
@@ -274,18 +273,17 @@ feature -- Directory operations
 					d.open_read
 					from
 						create f.make_with_name ({STRING_32} ".")
-						create l.make (0)
+						create Result.make (0)
 						d.readentry
 					until
 						not attached d.last_entry_32 as e
 					loop
 						create f.make_with_path ((create {PATH}.make_from_string (n)).extended (e))
 						if f.exists and then f.is_readable and then f.is_plain then
-							l.extend (e)
+							Result.extend (e)
 						end
 						d.readentry
 					end
-					Result := l
 					d.close
 				end
 			elseif attached d and then not d.is_closed then
@@ -296,12 +294,11 @@ feature -- Directory operations
 			retry
 		end
 
-	directory_names (n: READABLE_STRING_32): detachable LIST [STRING_32]
+	directory_names (n: READABLE_STRING_32): detachable ARRAYED_LIST [STRING_32]
 			-- List of directory names (excluding current and parent directory) in directory with name `n'.
 			-- Or void if directory is not readable (does not exist, cannot be accessed, etc.).
 		local
 			d: detachable DIRECTORY
-			l: ARRAYED_LIST [STRING_32]
 			is_retried: BOOLEAN
 			f: DIRECTORY
 		do
@@ -310,7 +307,7 @@ feature -- Directory operations
 				if d.exists and then d.is_readable then
 					d.open_read
 					from
-						create l.make (0)
+						create Result.make (0)
 						d.readentry
 					until
 						not attached d.last_entry_32 as e
@@ -323,12 +320,11 @@ feature -- Directory operations
 						else
 							create f.make_with_path ((create {PATH}.make_from_string (n)).extended (e))
 							if f.exists and then f.is_readable then
-								l.extend (e)
+								Result.extend (e)
 							end
 						end
 						d.readentry
 					end
-					Result := l
 					d.close
 				end
 			elseif attached d and then not d.is_closed then

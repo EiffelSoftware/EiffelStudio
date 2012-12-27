@@ -32,16 +32,16 @@ create
 feature {NONE} -- Initialization
 
 	make_with_tag_and_trace (a_tag, a_trace_string: STRING)
-			-- Make `Current' with `tag' set to `a_tag'.
+			-- Make `Current' with `description' set to `a_tag'.
 		obsolete
-			"Use `default_create' and `set_message' instead."
+			"Use `default_create' and `set_description' instead."
 		require
 			tag_not_void: a_tag /= Void
 			trace_string_not_void: a_trace_string /= Void
 		do
-			set_message (a_tag)
+			set_description (a_tag)
 		ensure
-			tag_set: tag ~ a_tag
+			description_set: attached description as l_des and then a_tag.same_string_general (l_des)
 		end
 
 feature -- Raise
@@ -57,18 +57,46 @@ feature -- Raise
 feature -- Access
 
 	meaning: STRING
-			-- A message in English describing what `except' is
+			-- A short message describing what current exception is
+		obsolete
+			"Use `tag' instead."
 		do
-			Result := internal_meaning
+			Result := tag.as_string_8
+		end
+
+	tag: IMMUTABLE_STRING_32
+			-- A short message describing what current exception is
+		once
+			create Result.make_from_string_8 ("General exception")
 		end
 
 	message: detachable STRING
-			-- A message in English describing what `except' is
+			-- Message of current exception
+		obsolete
+			"Use `description' instead."
 		do
-			Result := internal_message
+			if attached internal_description as l_m then
+				Result := l_m.as_string_8
+			end
+		end
+
+	description: detachable STRING_32
+			-- Detailed description of current exception
+		do
+			if attached internal_description as l_m then
+				Result := l_m.as_string_32
+			end
 		end
 
 	exception_trace: detachable STRING
+			-- String representation of current exception trace
+		obsolete
+			"Use `exception_trace_32' instead."
+		do
+			create Result.make_from_cil (stack_trace)
+		end
+
+	trace: detachable STRING_32
 			-- String representation of current exception trace
 		do
 			create Result.make_from_cil (stack_trace)
@@ -121,14 +149,6 @@ feature -- Access
 
 feature -- Access obselete
 
-	tag: detachable STRING
-			-- Exception tag of `Current'
-		obsolete
-			"Use `message' instead."
-		do
-			Result := message
-		end
-
 	trace_as_string: detachable STRING
 			-- Exception trace represented as a string
 		obsolete
@@ -141,10 +161,21 @@ feature -- Status settings
 
 	set_message (a_message: like message)
 			-- Set `message' with `a_message'.
+		obsolete
+			"Use `set_description' instead."
 		do
-			internal_message := a_message
+			set_description (a_message)
 		ensure
-			message_set: equal (internal_message, a_message)
+			message_set: message ~ a_message
+		end
+
+	set_description (a_description: detachable READABLE_STRING_GENERAL)
+			-- Set `description' with `a_description'.
+		do
+			internal_description := a_description
+		ensure
+			description_set: (attached a_description as a_des and then attached description as l_des and then l_des.same_string (l_des)) or else
+							(a_description = Void and then description = Void)
 		end
 
 feature -- Status report
@@ -202,7 +233,9 @@ feature -- Output
 		do
 			Result := generating_type
 			Result.append_character ('%N')
-			Result.append_string (exception_trace)
+			if attached trace as l_t then
+				Result.append_string (l_t.as_string_8)
+			end
 		end
 
 feature {EXCEPTION} -- Access
@@ -241,22 +274,16 @@ feature {EXCEPTION_MANAGER} -- Implementation
 	frozen internal_is_ignorable: BOOLEAN
 			-- Internal `is_ignorable'
 
-	internal_meaning: STRING
-			-- Internal `meaning'
-		once
-			Result := "General exception."
-		end
-
-	exception_message: STRING
+	exception_message: STRING_32
 		do
-			Result := internal_meaning
+			Result := tag
 			if Result /= Void then
-				Result := "Code: " + code.out + " (" + Result + ")"
+				Result := {STRING_32} "Code: " + code.out + " (" + Result + ")"
 			else
-				Result := "Code: " + code.out
+				Result := {STRING_32} "Code: " + code.out
 			end
-			if attached message as l_message then
-				Result := Result + " Tag: " + l_message
+			if attached description as l_des then
+				Result := Result + " Tag: " + l_des
 			end
 		end
 
@@ -268,7 +295,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen internal_message: detachable STRING
-			-- Backend storage for message
+	frozen internal_description: detachable READABLE_STRING_GENERAL
+			-- Backend storage for description
 
 end

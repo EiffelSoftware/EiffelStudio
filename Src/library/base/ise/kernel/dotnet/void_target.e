@@ -19,7 +19,7 @@ inherit
 			source as local_source,
 			stack_trace as local_stack_trace
 		redefine
-			internal_meaning
+			tag
 		end
 
 	DOTNET_EXCEPTION_WRAPPER
@@ -42,9 +42,11 @@ feature -- Access
 			Result := {EXCEP_CONST}.void_call_target
 		end
 
-feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "Feature call on void target.";
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("Feature call on void target.")
+		end
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."

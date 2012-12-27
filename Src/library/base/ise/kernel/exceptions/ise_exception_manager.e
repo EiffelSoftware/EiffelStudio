@@ -52,7 +52,7 @@ feature -- Raise
 					-- Meaning is not yet used in the runtime.
 					-- We passes NULL, until we implemented it.
 				p_meaning := default_pointer
-				if attached {C_STRING} a_exception.c_message as m then
+				if attached {C_STRING} a_exception.c_description as m then
 					p_message := m.item
 				else
 					p_message := default_pointer
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 					e.set_throwing_exception (t)
 				end
 				e.set_exception_trace (l_data.trace)
-				e.set_message (l_data.tag)
+				e.set_description (l_data.tag)
 				e.set_recipient_name (l_data.recipient)
 				e.set_type_name (l_data.eclass)
 				Result := e
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 					-- Meaning is not yet used in the runtime.
 					-- We passes NULL, until we implemented it.
 				p_meaning := default_pointer
-				if attached {C_STRING} a_exception.c_message as m then
+				if attached {C_STRING} a_exception.c_description as m then
 					p_message := m.item
 				else
 					p_message := default_pointer
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 		do
 			e := no_memory_exception_object_cell.item
 			if e /= Void then
-				e.set_message (Void)
+				e.set_description (Void)
 			end
 		end
 

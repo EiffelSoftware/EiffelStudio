@@ -23,8 +23,10 @@ feature -- Access
 			Result := {EXCEP_CONST}.external_exception
 		end
 
-feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "External event."
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("External event.")
+		end
 
 end

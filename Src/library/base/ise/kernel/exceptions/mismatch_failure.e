@@ -23,8 +23,10 @@ feature -- Access
 			Result := {EXCEP_CONST}.retrieve_exception
 		end
 
-feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "Mismatch failed."
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("Mismatch failed.")
+		end
 
 end

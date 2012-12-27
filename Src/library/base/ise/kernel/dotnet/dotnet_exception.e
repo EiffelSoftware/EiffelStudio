@@ -20,7 +20,7 @@ inherit
 			stack_trace as local_stack_trace
 		redefine
 			code,
-			internal_meaning
+			tag
 		end
 
 	DOTNET_EXCEPTION_WRAPPER
@@ -42,8 +42,10 @@ feature
 			Result := {EXCEP_CONST}.developer_exception
 		end
 
-feature {NONE}
-
-	internal_meaning: STRING_8 = ".NET exception."
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 (".NET exception.")
+		end
 
 end

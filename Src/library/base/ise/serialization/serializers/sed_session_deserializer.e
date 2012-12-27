@@ -203,7 +203,7 @@ feature {NONE} -- Implementation: Settings
 		do
 			add_error (a_error)
 			create l_failure
-			l_failure.set_message (a_error.error)
+			l_failure.set_description (a_error.message)
 			l_failure.raise
 		ensure
 			error_set: attached errors as l_errors and then l_errors.has (a_error)

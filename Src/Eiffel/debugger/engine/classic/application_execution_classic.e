@@ -572,15 +572,15 @@ feature -- Query
 						end
 							--| Exception meaning					
 						if e.exception_meaning = Void then
-							e.set_exception_meaning (string_field_evaluation_on (val, edv, cl, "meaning"))
+							e.set_exception_meaning (string_field_evaluation_on (val, edv, cl, "tag"))
 						end
 							--| Exception message					
 						if e.exception_message = Void then
-							e.set_exception_message (string_field_evaluation_on (val, edv, cl, "message"))
+							e.set_exception_message (string_field_evaluation_on (val, edv, cl, "description"))
 						end
 						if a_details_level > 1 then
 							if e.exception_text = Void then
-								e.set_exception_text (string_field_evaluation_on (val, edv, cl, "exception_trace"))
+								e.set_exception_text (string_field_evaluation_on (val, edv, cl, "trace"))
 							end
 						end
 					end

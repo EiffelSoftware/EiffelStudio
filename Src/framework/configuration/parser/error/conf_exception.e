@@ -11,14 +11,15 @@ class
 inherit
 	DEVELOPER_EXCEPTION
 		redefine
-			internal_meaning
+			tag
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
-	internal_meaning: STRING
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
 		once
-			Result := "Configuration system exception."
+			create Result.make_from_string_8 ("Configuration system exception.")
 		end
 
 note

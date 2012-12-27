@@ -22,8 +22,10 @@ feature -- Access
 			Result := {EXCEP_CONST}.create_on_deferred
 		end
 
-feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "Create on deferred."
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("Create on deferred.")
+		end
 
 end

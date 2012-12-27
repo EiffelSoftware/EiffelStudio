@@ -375,7 +375,7 @@ feature {NONE} -- Implementation, exception chain
 				else
 					create {OPERATING_SYSTEM_SIGNAL_FAILURE} Result.make_dotnet_exception (a_exception)
 				end
-				Result.set_message ("")
+				Result.set_description ("")
 			end
 		end
 
@@ -494,7 +494,7 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 			-- Internal raise exception of code `e_code'
 		local
 			l_saved_assertion, l_assertion_set: BOOLEAN
-			l_assertion_tag: STRING
+			l_assertion_tag: STRING_32
 		do
 			if is_assertion_violation (e_code) then
 					-- Disable assertion check in assertions.
@@ -507,9 +507,9 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 				end
 				if msg /= Void then
 					create l_assertion_tag.make_from_cil (msg)
-					l_exception.set_message (l_assertion_tag)
+					l_exception.set_description (l_assertion_tag)
 				else
-					l_assertion_tag := ""
+					create l_assertion_tag.make_empty
 				end
 				if not l_exception.is_ignored then
 						-- Restore assertion level just before throwing the exception.

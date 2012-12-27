@@ -30,6 +30,12 @@ feature -- Access
 	error_code: INTEGER
 			-- Error code
 
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("I/O error.")
+		end
+
 feature {EXCEPTION_MANAGER} -- Status setting
 
 	set_error_code (a_code: like error_code)
@@ -45,8 +51,6 @@ feature {EXCEPTION_MANAGER} -- Status setting
 		end
 
 feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "I/O error."
 
 	internal_code: like code
 			-- Internal code

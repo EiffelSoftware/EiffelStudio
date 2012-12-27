@@ -13,7 +13,7 @@ class
 inherit
 	DEVELOPER_EXCEPTION
 		redefine
-			internal_meaning
+			tag
 		end
 
 create
@@ -28,9 +28,16 @@ feature {NONE} -- Initialization
 		require
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_str: STRING_32
 		do
 			create api_feature_name.make_from_string (a_name)
-			set_message (once "dynamic feature unavailable")
+
+			create l_str.make (40)
+			l_str.append ("The API function or variable `")
+			l_str.append_string_general (api_feature_name)
+			l_str.append ("' is not available.")
+			set_description (l_str)
 		ensure
 			api_feature_name_set: api_feature_name.same_string (a_name)
 		end
@@ -40,15 +47,10 @@ feature -- Access
 	api_feature_name: IMMUTABLE_STRING_8
 			-- The API feature name.
 
-feature {NONE} -- Access
-
-	internal_meaning: STRING
+	tag: IMMUTABLE_STRING_32
 			-- <Precursor>
 		do
-			create Result.make (40)
-			Result.append ("The API function or variable `")
-			Result.append_string_general (api_feature_name)
-			Result.append ("' is not available.")
+			create Result.make_from_string_8 ("API Missing in dynamic library.")
 		ensure then
 			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty

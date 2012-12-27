@@ -22,8 +22,10 @@ feature -- Access
 			Result := {EXCEP_CONST}.exception_in_signal_handler
 		end
 
-feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "Exception in signal handler."
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("Exception in signal handler.")
+		end
 
 end

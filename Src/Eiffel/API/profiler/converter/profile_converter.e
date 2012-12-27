@@ -164,7 +164,7 @@ end
 				file.close
 			else
 				create io_except
-				io_except.set_message ("write permission failure")
+				io_except.set_description ("write permission failure")
 				io_except.raise
 			end
 

@@ -15,17 +15,26 @@ create {SED_ERROR_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_with_string (a_string: STRING)
+	make_with_string (a_string: READABLE_STRING_GENERAL)
 			-- Create `Current' and set `error' to `a_string'.
 		do
-			error := a_string
+			message := a_string.as_string_32
 		ensure
-			error_set: error = a_string
+			error_set: message.same_string_general (a_string)
 		end
 
 feature -- Access
 
-	error: STRING;
+	error: STRING
+			-- Error
+		obsolete
+			"Use `message' instead."
+		do
+			Result := message.as_string_8
+		end
+
+	message: STRING_32;
+			-- Message of the error.
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

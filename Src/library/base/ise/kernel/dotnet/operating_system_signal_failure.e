@@ -21,7 +21,7 @@ inherit
 			source as local_source,
 			stack_trace as local_stack_trace
 		redefine
-			internal_meaning
+			tag
 		end
 
 	DOTNET_EXCEPTION_WRAPPER
@@ -47,6 +47,12 @@ feature -- Access
 	signal_code: INTEGER
 			-- Signal code, not implemented.
 
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("Operating system signal.")
+		end
+
 feature {EXCEPTION_MANAGER} -- Status setting
 
 	set_signal_code (a_code: like signal_code)
@@ -54,10 +60,6 @@ feature {EXCEPTION_MANAGER} -- Status setting
 		do
 			signal_code := a_code
 		end
-
-feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "Operating system signal.";
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."

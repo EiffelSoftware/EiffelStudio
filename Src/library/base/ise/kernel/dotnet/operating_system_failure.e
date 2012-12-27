@@ -20,8 +20,6 @@ inherit
 			set_source as local_set_source,
 			source as local_source,
 			stack_trace as local_stack_trace
-		redefine
-			internal_meaning
 		end
 
 	DOTNET_EXCEPTION_WRAPPER
@@ -47,6 +45,12 @@ feature -- Access
 	error_code: INTEGER
 			-- Error code, not implemeted.
 
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("Operating system error.")
+		end
+
 feature {EXCEPTION_MANAGER} -- Status setting
 
 	set_error_code (a_code: like error_code)
@@ -54,10 +58,6 @@ feature {EXCEPTION_MANAGER} -- Status setting
 		do
 			error_code := a_code
 		end
-
-feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "Operating system error.";
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."

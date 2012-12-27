@@ -265,7 +265,7 @@ feature {NONE} -- Buffer update
 						buffer_position := 0
 						buffer_size := buffer.count
 						create l_failure
-						l_failure.set_message ("Read less than expected number of bytes in buffer.")
+						l_failure.set_description ("Read less than expected number of bytes in buffer.")
 						l_failure.raise
 					end
 				else
@@ -273,14 +273,14 @@ feature {NONE} -- Buffer update
 					buffer_position := 0
 					buffer_size := buffer.count
 					create l_failure
-					l_failure.set_message ("Read less than 4 bytes in buffer's header.")
+					l_failure.set_description ("Read less than 4 bytes in buffer's header.")
 					l_failure.raise
 				end
 			else
 				buffer_position := 0
 				buffer_size := buffer.count
 				create l_failure
-				l_failure.set_message ("Cannot read buffer size from header.")
+				l_failure.set_description ("Cannot read buffer size from header.")
 				l_failure.raise
 			end
 		end

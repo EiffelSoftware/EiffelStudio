@@ -27,6 +27,12 @@ feature -- Access
 			end
 		end
 
+	tag: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string_8 ("No more memory.")
+		end
+
 feature {EXCEPTION_MANAGER} -- Status setting
 
 	set_code (a_code: like code)
@@ -36,8 +42,6 @@ feature {EXCEPTION_MANAGER} -- Status setting
 		end
 
 feature {NONE} -- Accesss
-
-	frozen internal_meaning: STRING = "No more memory."
 
 	internal_code: like code
 			-- Internal code

@@ -196,9 +196,6 @@ feature -- Commands
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 			-- All commands that can be put in a toolbar
 
---	show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
---			-- Commands to show/hide a tool
-
 	show_shell_tool_commands: HASH_TABLE [ES_SHOW_TOOL_COMMAND, ES_TOOL [EB_TOOL]]
 			-- Commands to show/hide a tool
 
@@ -393,14 +390,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 		ensure
 			set: show_profiler = a_cmd
 		end
-
---	set_show_tool_commands (a_commands: like show_tool_commands)
---			-- Set `show_tool_commands'
---		do
---			show_tool_commands := a_commands
---		ensure
---			set: show_tool_commands = a_commands
---		end
 
 	set_show_shell_tool_commands (a_commands: like show_shell_tool_commands)
 			-- Set `show_tool_commands'
@@ -759,17 +748,6 @@ feature -- Recycle
 			go_to_next_warning_command.recycle
 			go_to_previous_warning_command.recycle
 
---			from
---				show_tool_commands.start
---			until
---				show_tool_commands.after
---			loop
---				show_tool_commands.item_for_iteration.recycle
---				show_tool_commands.forth
---			end
---			show_tool_commands.wipe_out
---			show_tool_commands := Void
-
 			from
 				toolbarable_commands.start
 			until
@@ -838,7 +816,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

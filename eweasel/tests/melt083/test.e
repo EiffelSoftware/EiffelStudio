@@ -17,7 +17,7 @@ feature
 					valid: (agent {STRING}.is_integer).item ([value])
 				end
 			else
-				print (last_exception.original.meaning); io.new_line
+				print (last_exception.original.tag); io.new_line
 			end
 		rescue
 			if not tried then

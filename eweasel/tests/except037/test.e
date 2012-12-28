@@ -198,8 +198,8 @@ feature
 	print_exception (a_ex: EXCEPTION)
 		do
 			print (a_ex.generating_type + ": ")
-			if a_ex.message /= Void then
-				print (a_ex.message)
+			if a_ex.description /= Void then
+				print (a_ex.description)
 			end
 			print ("%N")
 		end

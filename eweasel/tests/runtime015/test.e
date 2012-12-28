@@ -20,7 +20,7 @@ feature
 		rescue
 			if not is_error then
 				is_error := True
-				io.put_string ((create {EXCEPTION_MANAGER}).last_exception.meaning)
+				io.put_string ((create {EXCEPTION_MANAGER}).last_exception.tag)
 				io.put_new_line
 				retry
 			end

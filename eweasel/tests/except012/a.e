@@ -24,7 +24,7 @@ feature
 	my_exception: MY_EXCEPTION is
 		once
 			create Result
-			Result.set_message ("mymessage")
+			Result.set_description ("mymessage")
 		end
 
 	print_exception (a_ex: EXCEPTION; rf: BOOLEAN) is
@@ -33,7 +33,7 @@ feature
 			print (a_ex.recipient_name + "%N")
 			print (a_ex.type_name + "%N")
 			if not rf then
-				print (a_ex.message + "%N")
+				print (a_ex.description + "%N")
 			end
 		end
 

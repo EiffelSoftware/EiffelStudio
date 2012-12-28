@@ -26,7 +26,7 @@ feature
 				if {e: INVARIANT_VIOLATION} last_exception then
 					print ("Class invariant violation%N");
 				else
-					print (last_exception.meaning); io.new_line
+					print (last_exception.tag); io.new_line
 				end
 			end
 		rescue
@@ -48,7 +48,7 @@ feature
 				if {e: INVARIANT_VIOLATION} last_exception then
 					print ("Class invariant violation%N");
 				else
-					print (last_exception.meaning); io.new_line
+					print (last_exception.tag); io.new_line
 				end
 			end
 		rescue

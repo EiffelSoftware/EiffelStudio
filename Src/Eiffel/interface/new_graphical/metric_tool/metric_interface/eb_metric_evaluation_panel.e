@@ -699,10 +699,8 @@ feature {NONE} -- Implementation
 			if l_domain_generator.error_handler.has_error then
 				display_status_message (l_domain_generator.error_handler.error_list.last.text)
 			else
-				if attached {UNICODE_MESSAGE_EXCEPTION} exception_manager.last_exception.original as lt_ex then
-					display_status_message (lt_ex.unicode_message)
-				else
-					display_status_message (tag_name)
+				if attached exception_manager.last_exception as lt_ex then
+					display_status_message (lt_ex.original.description)
 				end
 			end
 		end

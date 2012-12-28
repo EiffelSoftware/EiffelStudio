@@ -36,8 +36,8 @@ feature -- Basic operations
 			not_a_template_1_is_empty: not a_template_1.is_empty
 		local
 			l_exception: EXCEPTION
-			l_exception_meaning: detachable STRING_8
-			l_meaning: STRING_32
+			l_exception_tag: detachable READABLE_STRING_GENERAL
+			l_tag: STRING_32
 			l_prompt: ES_ERROR_PROMPT
 		do
 				-- Fetch exception.
@@ -48,23 +48,23 @@ feature -- Basic operations
 			end
 			if l_exception /= Void then
 					-- Fetch the exception's meaning.
-				l_exception_meaning := l_exception.meaning
+				l_exception_tag := l_exception.tag
 			end
 
 				-- Translate
-			if l_exception_meaning /= Void then
-				l_meaning := locale_formatter.translation (l_exception_meaning)
+			if l_exception_tag /= Void then
+				l_tag := locale_formatter.translation (l_exception_tag)
 			else
-				l_meaning := (create {ERROR_MESSAGES}).e_unknown_error
+				l_tag := (create {ERROR_MESSAGES}).e_unknown_error
 			end
 
 				-- Display prompt
-			create l_prompt.make_standard (locale_formatter.formatted_translation (a_template_1, [l_meaning]))
+			create l_prompt.make_standard (locale_formatter.formatted_translation (a_template_1, [l_tag]))
 			l_prompt.show_on_active_window
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

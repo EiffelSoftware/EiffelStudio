@@ -273,7 +273,7 @@ feature {NONE} -- Exception handling
 			try_to_save_session_data
 
 				-- Raise exception dialog
-			clean_exit (a_exception.exception_trace)
+			clean_exit (a_exception.trace)
 		end
 
 	parent_for_dialog: EV_WINDOW
@@ -332,7 +332,7 @@ feature {NONE} -- Exception handling
 			retry
 		end
 
-	clean_exit (trace: STRING)
+	clean_exit (trace: READABLE_STRING_GENERAL)
 			-- Perform clean quit of $EiffelGraphicalCompiler$
 		local
 			l_dialog: ES_EXCEPTION_DIALOG

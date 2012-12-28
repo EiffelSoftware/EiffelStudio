@@ -34,6 +34,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -88,6 +93,7 @@ feature {NONE} -- Initialize
 			register_kamikaze_action (show_actions, agent l_box.set_background_color (colors.stock_colors.black))
 
 			create exception_text_panel
+			exception_text_panel.set_encoding (utf32)
 			exception_text_panel.set_cursors (create {EB_EDITOR_CURSORS})
 			exception_text_panel.disable_line_numbers
 			exception_text_panel.widget.set_minimum_size (400, 165)
@@ -150,10 +156,10 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	trace: STRING_32
+	trace: READABLE_STRING_GENERAL
 			-- Exception trace message
 
-	last_description: detachable STRING
+	last_description: detachable STRING_32
 			-- Last description for submitting bug report
 			-- Maybe void if not recorded
 
@@ -283,7 +289,7 @@ feature {NONE} -- Action handlers
 				if not l_save_dialog.full_file_path.is_empty then
 					create l_file.make_with_path (l_save_dialog.full_file_path)
 					l_file.open_write
-					l_file.put_string (trace)
+					save_string_in_file (l_file, trace)
 					l_file.close
 				end
 			else

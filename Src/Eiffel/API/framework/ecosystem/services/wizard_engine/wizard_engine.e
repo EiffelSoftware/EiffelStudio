@@ -76,7 +76,7 @@ feature -- Basic operations
 				l_count := l_file.count
 				if l_count > 0 then
 					l_file.open_read
-					l_contents := read_string_32_from_file (l_file)
+					l_contents := read_string_from_file (l_file)
 					l_file.close
 					if attached l_contents then
 						Result := render_template (l_contents, a_parameters)
@@ -102,7 +102,7 @@ feature -- Basic operations
 				create l_file.make_with_path (a_destination_file)
 				if attached l_file then
 					l_file.open_write
-					save_string_32_in_file (l_file, l_rendered)
+					save_string_in_file (l_file, l_rendered)
 					l_file.close
 				end
 			end
@@ -123,7 +123,7 @@ feature -- Basic operations
 				create l_file.make_with_path (a_destination_file)
 
 				l_file.open_write
-				save_string_32_in_file (l_file, l_rendered)
+				save_string_in_file (l_file, l_rendered)
 				l_file.close
 			end
 		rescue

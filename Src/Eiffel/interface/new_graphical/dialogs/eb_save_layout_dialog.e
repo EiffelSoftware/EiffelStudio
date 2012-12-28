@@ -268,15 +268,15 @@ feature {NONE} -- Implementation functions
 		local
 			l_information: ES_PROMPT_PROVIDER
 			l_exception: EXCEPTION_MANAGER
-			l_meaning: STRING_GENERAL
+			l_tag: detachable READABLE_STRING_GENERAL
 		do
 			create l_exception
-			l_meaning := l_exception.last_exception.meaning
-			if l_meaning = Void then
-				l_meaning := interface_names.l_unknown_error
+			l_tag := l_exception.last_exception.tag
+			if l_tag = Void then
+				l_tag := interface_names.l_unknown_error
 			end
 			create l_information
-			l_information.show_error_prompt (interface_names.l_saving_docking_data_error (l_meaning), dialog, void)
+			l_information.show_error_prompt (interface_names.l_saving_docking_data_error (l_tag), dialog, void)
 		end
 
 feature {NONE} -- Implementation

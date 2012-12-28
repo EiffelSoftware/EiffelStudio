@@ -176,13 +176,10 @@ feature -- Formatting
 			not_a_str_is_empty: not a_str.is_empty
 			a_max_len_big_enough: a_max_len > 3
 		do
-			Result := a_str.as_string_32
-			if Result ~ a_str then
-				Result := Result.twin
-			end
+			create Result.make_from_string_general (a_str)
 			if Result.count > a_max_len then
 				Result.keep_head (a_max_len - 3)
-				Result.append (once "...")
+				Result.append_string_general ("...")
 			end
 		ensure
 			result_attached: Result /= Void
@@ -223,17 +220,15 @@ feature -- Formatting
 			not_a_str_is_empty: not a_str.is_empty
 			a_tab_chars_positive: a_tab_chars > 0
 		local
-			l_str: STRING_32
 			l_spaces: INTEGER
 			l_reset: BOOLEAN
 			i, l_count: INTEGER
 			c: CHARACTER_32
 		do
-			l_str := a_str.as_string_32
-			l_count := l_str.count
+			l_count := a_str.count
 			create Result.make (l_count)
 			from i := 1 until i > l_count loop
-				c := l_str.item (i)
+				c := a_str.item (i)
 				if c = ' ' then
 					l_reset := l_spaces = 3
 					if not l_reset then

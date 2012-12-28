@@ -105,15 +105,13 @@ feature -- Conversion
 			a_str_not_void: a_str /= Void
 			a_result_not_void: a_result /= Void
 			a_result_valid: a_result.count >= a_str.length + escape_count (a_str)
-		local
-			l_result: STRING_32
 		do
 			if attached {STRING_8} a_result as l_str then
 				read_system_string_into_area_8 (a_str, l_str.area)
+			elseif attached {STRING_32} a_result as l_str then
+				read_system_string_into_area_32 (a_str, l_str.area)
 			else
-				l_result := a_result.as_string_32
-				check string_32_instance: a_result = l_result end
-				read_system_string_into_area_32 (a_str, l_result.area)
+				check False end
 			end
 		end
 

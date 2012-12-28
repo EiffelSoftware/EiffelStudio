@@ -312,7 +312,7 @@ feature -- Update
 						else
 							file_w.open_file
 							if file_w.exists then
-								save_string_32_in_file (file_w, s)
+								save_string_in_file (file_w, s)
 								file_w.close
 								done := True
 							else

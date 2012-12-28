@@ -102,9 +102,9 @@ feature {NONE} -- Implementation
 
 feature -- File saving
 
-	save_string_32_in_file (a_file: FILE; a_str: STRING_32)
+	save_string_in_file (a_file: FILE; a_str: READABLE_STRING_GENERAL)
 			-- Save `a_str' in `a_file', according to current locale.
-			-- `a_str' should be UTF-32 string.
+			-- `a_str' is taken as UTF-32 string.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open: a_file.is_open_write
@@ -119,7 +119,7 @@ feature -- File saving
 			end
 		end
 
-	read_string_32_from_file (a_file: FILE): STRING_32
+	read_string_from_file (a_file: FILE): STRING_32
 			-- Read Unicode from `a_file'. If no encoding is detected
 			-- use encoding of current locale.
 		require

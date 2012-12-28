@@ -690,7 +690,7 @@ feature {NONE} -- error handling
 		do
 			last_error := an_error
 			create l_conf_exception
-			l_conf_exception.set_message (an_error.out)
+			l_conf_exception.set_description (an_error.text)
 			l_conf_exception.raise
 		end
 

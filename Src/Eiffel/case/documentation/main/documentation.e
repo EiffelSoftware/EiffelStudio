@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 			fn := root_directory.path.extended ("goto.html")
 			create textfile.make_with_path (fn)
 			textfile.open_write
-			save_string_32_in_file (textfile, goto_text)
+			save_string_in_file (textfile, goto_text)
 			textfile.close
 		end
 
@@ -712,7 +712,7 @@ feature -- Specific Generation
 				check file_writable: False end
 			end
 			if fi.is_open_write then
-				save_string_32_in_file (fi, filter.image)
+				save_string_in_file (fi, filter.image)
 				fi.close
 			end
 			filter.wipe_out_image

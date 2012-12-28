@@ -270,7 +270,7 @@ feature -- Pick and drop
 
 feature{NONE} -- Implementation
 
-	display_status_message (a_msg: STRING_GENERAL)
+	display_status_message (a_msg: READABLE_STRING_GENERAL)
 			-- Display `a_msg' in message bar.
 		require
 			a_msg_attached: a_msg /= Void

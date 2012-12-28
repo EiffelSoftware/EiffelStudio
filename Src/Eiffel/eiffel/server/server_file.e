@@ -306,7 +306,7 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 					Result := l_project.compilation_path
 				else
 					create l_dev
-					l_dev.set_message ("Mapping ID(" + an_id.out + ") to precompilation ID(" + l_precomp_id.out + ") not found.")
+					l_dev.set_description ("Mapping ID(" + an_id.out + ") to precompilation ID(" + l_precomp_id.out + ") not found.")
 					l_dev.raise
 				end
 			end

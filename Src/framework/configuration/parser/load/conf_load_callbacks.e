@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			is_error := True
 			last_error := an_error
 			create l_conf_exception
-			l_conf_exception.set_message ("Parse error")
+			l_conf_exception.set_description ("Parse error")
 			l_conf_exception.raise
 		end
 
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 				is_error := True
 				last_error := l_error
 				create l_conf_exception
-				l_conf_exception.set_message ("Parse error")
+				l_conf_exception.set_description ("Parse error")
 				l_conf_exception.raise
 			end
 		end

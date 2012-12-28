@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			l_conf_exception: CONF_EXCEPTION
 		do
 			create l_conf_exception
-			l_conf_exception.set_message (configuration_error_tag)
+			l_conf_exception.set_description (configuration_error_tag)
 			l_conf_exception.raise
 		end
 

@@ -275,7 +275,7 @@ feature -- Query
 	is_submit_successed: BOOLEAN
 			-- If bug report submitted successfully
 
-	user_description: STRING
+	user_description: STRING_32
 			-- Text in `description_text'
 		do
 			if description_text /= Void then
@@ -810,9 +810,9 @@ feature {NONE} -- Reporting
 			l_class_name: STRING
 			l_recipient: STRING
 			l_exceptions: EXCEPTIONS
-			l_exception_meaning: STRING_32
+			l_exception_tag: like {EXCEPTION}.tag
 			l_exception_code: INTEGER_32
-			l_tag_name: STRING
+			l_description: like {EXCEPTION}.description
 			l_exception: EXCEPTION
 		do
 			create Result.make (100)
@@ -821,25 +821,25 @@ feature {NONE} -- Reporting
 				create l_exceptions
 				l_exception := l_exceptions.exception_manager.last_exception
 				if l_exception /= Void then
-					l_exception_meaning := l_exception.original.meaning
+					l_exception_tag := l_exception.original.tag
 					l_exception_code := l_exception.original.code
 				end
-				if l_exception_meaning = Void then
-					l_exception_meaning := (" " + l_exception_code.out + " Unknown exception code")
+				if l_exception_tag = Void then
+					l_exception_tag := (" " + l_exception_code.out + " Unknown exception code")
 				end
-				Result.append (l_exception_meaning)
+				Result.append_string_general (l_exception_tag)
 				Result.prune_all_trailing ('.')
 				Result.append_character (' ')
 
 				if l_exceptions.assertion_violation then
 					Result.append ("Tag: ")
 					if l_exception /= Void then
-						l_tag_name := l_exception.original.message
+						l_description := l_exception.original.description
 					end
-					if l_tag_name = Void then
-						l_tag_name := "unknown tag name"
+					if l_description = Void then
+						l_description := "unknown tag name"
 					end
-					Result.append (l_tag_name)
+					Result.append_string_general (l_description)
 					Result.append_character (' ')
 				end
 

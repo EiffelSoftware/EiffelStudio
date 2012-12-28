@@ -23,7 +23,7 @@ feature
 				print (value7); io.new_line
 			else
 				if attached last_exception as x then
-					print (x.meaning); io.new_line
+					print (x.tag); io.new_line
 				end
 			end
 		rescue

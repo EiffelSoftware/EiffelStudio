@@ -40,7 +40,7 @@ feature
 		do
 			print (a_ex.recipient_name + "%N")
 			print (a_ex.type_name + "%N")
-			print (a_ex.message + "%N")
+			print (a_ex.description + "%N")
 		end
 
 invariant

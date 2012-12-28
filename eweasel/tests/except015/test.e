@@ -64,7 +64,7 @@ feature
 	dev_ex: DEVELOPER_EXCEPTION is
 		once
 			create Result
-			Result.set_message ("WEASEL")
+			Result.set_description ("WEASEL")
 		end
 	
 end

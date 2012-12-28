@@ -13,7 +13,7 @@ feature
 			if not tried then
 			       print (x.value); io.new_line
 			else
-				print (last_exception.meaning); io.new_line
+				print (last_exception.tag); io.new_line
 			end
 		rescue
 			tried := True

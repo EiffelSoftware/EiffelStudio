@@ -152,7 +152,7 @@ feature -- Element change
 				file.close
 			else
 				--create io_exception
-				--io_exception.set_message ("write permission failure")
+				--io_exception.set_description ("write permission failure")
 				--io_exception.raise
 			end
 		end

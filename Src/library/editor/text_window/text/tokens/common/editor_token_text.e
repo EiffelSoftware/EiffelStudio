@@ -21,7 +21,8 @@ inherit
 	SINGLE_MATH
 
 create
-	make
+	make,
+	make_from_utf_8
 
 feature -- Initialisation
 
@@ -33,6 +34,17 @@ feature -- Initialisation
 			set_image (text)
 		ensure
 			wide_image_not_void: wide_image /= Void
+		end
+
+	make_from_utf_8 (text: STRING_8)
+			-- Make from UTF-8 string
+		require
+			text_not_void: text /= Void
+			no_eol_in_text: not text.has ('%N')
+		local
+			u: UTF_CONVERTER
+		do
+			make (u.utf_8_string_8_to_string_32 (text))
 		end
 
 feature -- Miscellaneous

@@ -559,7 +559,7 @@ feature -- Removal
 				l_name = Void or requested_cancel
 			loop
 					-- Ignore current and parent directories.
-				if (not l_name.same_string (current_directory_string) and not l_name.same_string (parent_directory_string)) then
+				if (not l_name.same_string_general (current_directory_string) and not l_name.same_string_general (parent_directory_string)) then
 						-- Avoid creating too many objects.
 					l_file_name := l_path.extended (l_name)
 					create file.make_with_path (l_file_name)

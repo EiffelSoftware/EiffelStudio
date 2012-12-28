@@ -22,7 +22,7 @@ feature -- Action
 		local
 			l_token: EDITOR_TOKEN_TEXT
 		do
-			create l_token.make (a_string)
+			create l_token.make_from_utf_8 (a_string)
 			first_token := l_token
 			end_token := l_token
 		end

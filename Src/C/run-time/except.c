@@ -65,6 +65,10 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #ifdef EIF_WINDOWS
 #include "eif_console.h"
 #include <winbase.h>	/* To call `ExitProcess' */
+#include <fcntl.h>
+#ifndef _O_U16TEXT /* Not availble in VS2005 */
+#define _O_U16TEXT 0x20000
+#endif
 #endif
 
 #ifdef WORKBENCH
@@ -278,6 +282,27 @@ rt_private SMART_STRING ex_string = {	/* Container of the exception trace */
 	0L		/* Null length */
 };
 
+#ifdef EIF_WINDOWS
+/*
+doc:	<attribute name="ex_buffer_n" return_type="SMART_STRING" export="private">
+doc:		<summary>Buffer for exception trace printing</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_private SMART_STRING ex_buffer_1 = {	/* Buffer of the exception trace */
+	NULL,	/* No area */
+	0L,		/* No byte used yet */
+	0L		/* Null length */
+};
+
+rt_private SMART_STRING ex_buffer_2 = {	/* Buffer of the exception trace */
+	NULL,	/* No area */
+	0L,		/* No byte used yet */
+	0L		/* Null length */
+};
+#endif
+
 #endif /* EIF_THREADS */
 
 /*
@@ -386,6 +411,22 @@ struct test {
 #ifdef DEBUG
 rt_private void dump_vector(char *msg, struct ex_vect *vector);			/* Dump an execution vector on stdout */
 #endif
+
+/* Preallocated size for trace printing buffer.
+ * The value is larger enough than the number of 
+ * characters of a line we allow */
+#define TRACE_BUF_SZ	512
+
+/* Set size with zero first in case exception is thrown at allocation. */
+/* Call failure if no enough memory to init the application */
+#define ALLOC_SMART_STRING(s,s_size)	\
+	(s).used = 0;	\
+	(s).size = 0; 	\
+	(s).area = (char *) eif_rt_xmalloc((s_size), C_T, GC_OFF);	\
+	(s).size = (s_size);	\
+	if (!(s).area) {	\
+		failure();	\
+	}
 
 #ifdef EIF_THREADS
 rt_shared void eif_except_thread_init (void)
@@ -2479,8 +2520,64 @@ rt_private void find_call(void)
 rt_private void ds_stderr (char *line)
 {
 	/* Print the string 'line' to the standard output */
-
+#ifdef EIF_WINDOWS
+	RT_GET_CONTEXT
+	int mode;
+	int res;
+	DWORD dw;
+	
+	int cp = GetConsoleOutputCP();
+	if (cp == CP_UTF8) {
+		/* Output directly as the line is expected in UTF-8 */
+		print_err_msg(stderr, "%s", line);
+	} else {
+		/* First try to convert UTF-8 into UTF-16 and print this using `fwprintf'. */
+		res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, ex_buffer_1.area, ex_buffer_1.size / sizeof (WCHAR));
+		if (res == 0) {
+			dw = GetLastError();
+			if (dw == ERROR_INSUFFICIENT_BUFFER) {
+				res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, NULL, 0); /* Calculate the required buffer size */
+				ex_buffer_1.area = (char *) xrealloc(ex_buffer_1.area, res * sizeof (WCHAR), GC_OFF);
+				ex_buffer_1.size = res * sizeof (WCHAR);
+				res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, ex_buffer_1.area, ex_buffer_1.size / sizeof (WCHAR));
+			}
+		}
+		
+		if (res == 0) {
+			/* Cannot convert to wide char, print UTF-8 directly */
+			print_err_msg(stderr, "%s", line);
+		} else {
+			/* Try to print UTF-16 directly if possible */
+			fflush(stderr); /* Must flush before _setmode */
+			mode = _setmode(_fileno(stderr), _O_U16TEXT); /* Is it thread safe between _setmode and fwprintf? */
+			if (mode != -1) {
+				fwprintf(stderr, ex_buffer_1.area);
+				fflush(stderr);
+				_setmode(_fileno(stderr), mode); /* Restore mode */
+			} else {
+				/* We cannot print UTF-16, we thus convert our UTF-16 into the current console locale. */
+				res = WideCharToMultiByte (cp, 0, ex_buffer_1.area, -1, ex_buffer_2.area, ex_buffer_2.size, NULL, NULL);
+				if (res == 0) {
+					dw = GetLastError();
+					if (dw == ERROR_INSUFFICIENT_BUFFER) {
+						res = WideCharToMultiByte (cp, 0, ex_buffer_1.area, -1, NULL, 0, NULL, NULL); /* Calculate the required buffer size */
+						ex_buffer_2.area = (char *) xrealloc(ex_buffer_2.area, res, GC_OFF);
+						ex_buffer_2.size = res;
+						res = WideCharToMultiByte (cp, 0, ex_buffer_1.area, -1, ex_buffer_2.area, ex_buffer_2.size, NULL, NULL);
+					}
+				}
+				if (res == 0) {
+					/* Cannot convert UTF-16 to console encoding, print UTF-8 directly */
+					print_err_msg(stderr, "%s", line);
+				} else {
+					print_err_msg(stderr, ex_buffer_2.area);
+				}
+			}
+		}
+	}
+#else
 	print_err_msg(stderr, "%s", line);
+#endif
 }
 
 rt_private void ds_string(char *line)
@@ -4085,13 +4182,12 @@ rt_public void init_emnger (void)
 	if (!except_mnger){	
 		except_mnger = RTLNSMART(egc_except_emnger_dtype);
 	}
-	ex_string.used = 0;
-	ex_string.size = 0; /* Set with zero in case exception is thrown at allocation. */
-	ex_string.area = (char *) eif_rt_xmalloc(TRACE_SZ, C_T, GC_OFF);
-	ex_string.size = TRACE_SZ;
-	if (!ex_string.area) {
-		failure(); /* No enough memory to init the application */
-	}
+	ALLOC_SMART_STRING(ex_string,TRACE_SZ);
+#ifdef EIF_WINDOWS
+	ALLOC_SMART_STRING(ex_buffer_1,TRACE_BUF_SZ);
+	ALLOC_SMART_STRING(ex_buffer_2,TRACE_BUF_SZ);
+#endif
+	
 #ifndef ENABLE_STEP_THROUGH
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif

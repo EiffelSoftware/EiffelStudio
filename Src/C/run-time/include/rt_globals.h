@@ -120,6 +120,10 @@ typedef struct tag_rt_globals
 	struct exprint eif_except_cx;		/* Where exception has been raised */
 	int print_history_table_cx;			/* Enable/disable printing of hist. table */
 	SMART_STRING ex_string_cx;			/* Container of the exception trace */
+#ifdef EIF_WINDOWS
+	SMART_STRING ex_buffer_1_cx;				/* Buffer for trace printing */
+	SMART_STRING ex_buffer_2_cx;				/* Buffer for trace printing */
+#endif
 #ifdef WORKBENCH
 	unsigned char db_ign_cx[EN_NEX];	/* Item set to 1 to ignore exception */
 #endif
@@ -343,6 +347,10 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define eif_except			(rt_globals->eif_except_cx)	/* rt_private */
 #define print_history_table (rt_globals->print_history_table_cx)   /* rt_private */
 #define ex_string			(rt_globals->ex_string_cx)	/* rt_public */
+#ifdef EIF_WINDOWS
+#define ex_buffer_1			(rt_globals->ex_buffer_1_cx)	/* rt_private */
+#define ex_buffer_2			(rt_globals->ex_buffer_2_cx)	/* rt_private */
+#endif
 #ifdef WORKBENCH
 #define db_ign				(rt_globals->db_ign_cx)	/* rt_public */
 #endif

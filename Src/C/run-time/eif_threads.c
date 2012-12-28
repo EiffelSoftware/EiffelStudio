@@ -697,6 +697,23 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		ex_string.area = NULL;
 	}
 
+#ifdef EIF_WINDOWS
+		/* Free allocated structure for trace printing buffer. */
+	ex_buffer_1.used = 0;
+	ex_buffer_1.size = 0;
+	if (ex_buffer_1.area) {
+		eif_rt_xfree (ex_buffer_1.area);
+		ex_buffer_1.area = NULL;
+	}
+
+	ex_buffer_2.used = 0;
+	ex_buffer_2.size = 0;
+	if (ex_buffer_2.area) {
+		eif_rt_xfree (ex_buffer_2.area);
+		ex_buffer_2.area = NULL;
+	}
+#endif
+
 		/* Free allocated structure for invariant monitoring. */
 	if (inv_mark_tablep) {
 		eif_rt_xfree(inv_mark_tablep);

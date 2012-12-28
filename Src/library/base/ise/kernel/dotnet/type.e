@@ -291,7 +291,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 		obsolete
 			"[080717] Use 'name' instead (or 'out' during the transition period)."
 		do
-			Result := name
+			create Result.make_from_string_general (name)
 		ensure
 			to_string_32_not_void: Result /= Void
 		end

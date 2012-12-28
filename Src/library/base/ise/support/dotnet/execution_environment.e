@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			if should_wait then
 				l_comspec := item ("COMSPEC")
 				if l_comspec = Void then
-					l_comspec := "cmd.exe"
+					l_comspec := {STRING_32} "cmd.exe"
 				end
 				if s.is_empty then
 					create l_si.make_from_file_name (l_comspec.to_cil)
@@ -373,8 +373,8 @@ feature {NONE} -- Implementation
 		require
 			a_cmd_not_void: a_cmd /= Void
 		local
-			l_ext, l_paths: ARRAYED_LIST [STRING_32]
-			l_program_name: STRING_32
+			l_ext, l_paths: ARRAYED_LIST [READABLE_STRING_32]
+			l_program_name: PATH
 		do
 			if {SYSTEM_FILE}.exists (a_cmd) and then attached {SYSTEM_PATH}.get_full_path (a_cmd) as l_path then
 				Result := l_path
@@ -391,11 +391,10 @@ feature {NONE} -- Implementation
 					until
 						Result /= Void or l_paths.off
 					loop
-						l_program_name := l_paths.item.twin
-						l_program_name.extend ({SYSTEM_PATH}.directory_separator_char)
-						l_program_name.append (a_cmd + l_ext.item)
-						if {SYSTEM_FILE}.exists (l_program_name) then
-							Result := l_program_name
+						create l_program_name.make_from_string (l_paths.item)
+						l_program_name := l_program_name.extended (a_cmd).appended (l_ext.item)
+						if (create {RAW_FILE}.make_with_path (l_program_name)).exists then
+							create Result.make_from_string_general (l_program_name.name)
 						end
 						l_paths.forth
 					end
@@ -419,7 +418,7 @@ feature {NONE} -- Implementation
 			executable_extensions_not_void: Result /= Void
 		end
 
-	search_directories: ARRAYED_LIST [STRING_32]
+	search_directories: ARRAYED_LIST [READABLE_STRING_32]
 			-- While it would be more efficient to make this a
 			-- "once" feature, it's also possible that the caller
 			-- could manually modify environment variables between
@@ -431,7 +430,7 @@ feature {NONE} -- Implementation
 				attached {ASSEMBLY}.get_entry_assembly as l_assembly and then
 				attached {SYSTEM_PATH}.get_directory_name (l_assembly.location) as l_location
 			then
-				Result.extend (l_location)
+				Result.extend (create {STRING_32}.make_from_cil (l_location))
 			end
 			Result.extend (current_working_path.name)
 			if attached item ("PATH") as l_path then

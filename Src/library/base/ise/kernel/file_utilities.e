@@ -23,7 +23,7 @@ feature -- Query
 		local
 			l_sep: CHARACTER_32
 			l_parts: LIST [READABLE_STRING_32]
-			l_part: STRING_32
+			l_part: READABLE_STRING_32
 			l_error: BOOLEAN
 		do
 			l_sep := operating_environment.directory_separator

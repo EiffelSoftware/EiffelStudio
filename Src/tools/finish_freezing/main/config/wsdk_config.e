@@ -38,13 +38,13 @@ feature {NONE} -- Access
 				create l_result.make (256)
 				l_result.append (l_layout.config_eif_path.name)
 				if code.is_equal (wsdk_60) then
-					l_result.append ({STRING_32} "\windows_sdk_v6.0.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v6.0.cmd")
 				elseif code.is_equal (wsdk_61) then
-					l_result.append ({STRING_32} "\windows_sdk_v6.1.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v6.1.cmd")
 				elseif code.is_equal (wsdk_70) then
-					l_result.append ({STRING_32} "\windows_sdk_v7.0.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v7.0.cmd")
 				elseif code.is_equal (wsdk_71) then
-					l_result.append ({STRING_32} "\windows_sdk_v7.1.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v7.1.cmd")
 				else
 						-- We will use the default batch file.
 					l_result := Void

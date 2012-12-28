@@ -59,9 +59,9 @@ feature -- Creation
 			physical_not_exists: not exists
 		local
 			di: detachable DIRECTORY_INFO
-			l_sub_dir: STRING
+			l_sub_dir: STRING_32
 			l_sep_index: INTEGER
-			l_full_path: STRING
+			l_full_path: STRING_32
 		do
 			create di.make (internal_name.to_cil)
 			create l_full_path.make_from_cil (di.full_name)

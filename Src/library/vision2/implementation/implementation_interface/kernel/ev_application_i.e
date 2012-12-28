@@ -967,7 +967,7 @@ feature -- Implementation
 		require
 			a_empty_dialog_valid: a_empty_dialog /= Void and then not a_empty_dialog.is_destroyed
 		local
-			l_exception_string: detachable STRING_8
+			l_exception_string: detachable STRING_32
 			l_label: EV_TEXT
 			l_label_box: EV_HORIZONTAL_BOX
 			l_vbox: EV_VERTICAL_BOX
@@ -977,9 +977,9 @@ feature -- Implementation
 			l_frame: EV_FRAME
 			l_error_box: EV_HORIZONTAL_BOX
 			l_error_label: EV_LABEL
-			l_exception_message: STRING
+			l_exception_message: READABLE_STRING_GENERAL
 		do
-			l_exception_string := an_exception.exception_trace
+			l_exception_string := an_exception.trace
 			if l_exception_string /= Void then
 				l_exception_string := l_exception_string.twin
 				l_exception_string.prune_all ('%R')
@@ -1034,12 +1034,12 @@ feature -- Implementation
 			l_hbox.disable_item_expand (l_quit)
 			l_hbox.set_border_width (5)
 			l_hbox.set_padding (5)
-			if attached an_exception.message as l_message then
+			if attached an_exception.description as l_message then
 				l_exception_message := l_message
 			else
 				l_exception_message := ""
 			end
-			a_empty_dialog.set_title ("Uncaught Exception: " + l_exception_message)
+			a_empty_dialog.set_title ({STRING_32} "Uncaught Exception: " + l_exception_message)
 			a_empty_dialog.set_minimum_height (350)
 			a_empty_dialog.set_size (500, 300)
 			a_empty_dialog.raise

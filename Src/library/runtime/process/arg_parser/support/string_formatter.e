@@ -70,7 +70,6 @@ feature -- Formatting
 			a_args_attached: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		local
-			l_str: STRING_32
 			l_arg: detachable ANY
 			l_count: INTEGER
 			l_arg_count: INTEGER
@@ -82,8 +81,7 @@ feature -- Formatting
 			c, n: CHARACTER_32
 			o, cl: CHARACTER_32
 		do
-			l_str := a_str.as_string_32
-			l_count := l_str.count
+			l_count := a_str.count
 			l_arg_count := a_args.count
 			o := open_char
 			cl := close_char
@@ -96,9 +94,9 @@ feature -- Formatting
 			until
 				i > l_count
 			loop
-				c := l_str @ i
+				c := a_str.item (i)
 				if i < l_count then
-					n := l_str @ (i + 1)
+					n := a_str.item (i + 1)
 				end
 				if c = o then
 					if i < l_count then
@@ -124,7 +122,11 @@ feature -- Formatting
 							if l_index > 0 and l_index <= l_arg_count then
 								l_arg := a_args[l_index]
 								if l_arg /= Void then
-									Result.append (l_arg.out)
+									if attached {READABLE_STRING_GENERAL} l_arg as l_str then
+										Result.append_string_general (l_str)
+									else
+										Result.append_string_general (l_arg.out)
+									end
 								end
 							end
 						end

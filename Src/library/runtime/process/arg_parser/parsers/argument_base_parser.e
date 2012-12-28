@@ -1334,8 +1334,8 @@ feature {NONE} -- Output
 					localized_print (tab_string)
 					localized_print (l_name)
 					localized_print (" ")
-					l_cfg := l_cfgs.item
-					l_cfg.replace_substring_all ("%N", "%N" + create {STRING_32}.make_filled (' ', l_name.count + 1))
+					create l_cfg.make_from_string (l_cfgs.item)
+					l_cfg.replace_substring_all ({STRING_32} "%N", {STRING_32} "%N" + create {STRING_32}.make_filled (' ', l_name.count + 1))
 					localized_print (l_cfg)
 					if not l_cfgs.islast then
 						io.new_line
@@ -1401,9 +1401,9 @@ feature {NONE} -- Output
 			l_tab_string: STRING_32
 		do
 			create l_tab_string.make (10)
-			l_tab_string.append ("%N")
+			l_tab_string.append_string_general ("%N")
 			l_tab_string.append (tab_string)
-			l_tab_string.append ("  ")
+			l_tab_string.append_string_general ("  ")
 
 			l_errors := error_messages
 			l_cursor := l_errors.cursor
@@ -1442,7 +1442,8 @@ feature {NONE} -- Output
 			l_arg_name: STRING_32
 			l_desc: STRING_32
 			l_arg_desc: STRING_32
-			l_added_args: ARRAYED_LIST [STRING_32]
+			l_immutable: IMMUTABLE_STRING_32
+			l_added_args: STRING_TABLE [BOOLEAN]
 			l_inline_args: like is_showing_argument_usage_inline
 			l_count: INTEGER
 			i: INTEGER
@@ -1463,9 +1464,9 @@ feature {NONE} -- Output
 				until i > l_count loop
 					if i > 1 then
 						if i < l_count then
-							l_prefix.append (", ")
+							l_prefix.append_string_general (", ")
 						else
-							l_prefix.append (" or ")
+							l_prefix.append_string_general (" or ")
 						end
 					end
 					l_prefix.append_character ('%'')
@@ -1517,7 +1518,7 @@ feature {NONE} -- Output
 					l_arg_name.append (l_def_prefix)
 					l_arg_name.append (l_switch.long_name)
 				elseif is_using_unix_switch_style then
-					l_arg_name := "   " + l_def_prefix + l_def_prefix + l_switch.long_name
+					l_arg_name := {STRING_32} "   " + l_def_prefix + l_def_prefix + l_switch.long_name
 				else
 					l_arg_name := l_def_prefix + l_switch.long_name
 				end
@@ -1531,23 +1532,22 @@ feature {NONE} -- Output
 				create l_desc.make (256)
 				l_desc.append (l_switch.description)
 				if l_switch.optional then
-					l_desc.append (" (Optional)")
+					l_desc.append_string_general (" (Optional)")
 				end
 				l_padding := l_name.count + tab_string.count + 2
 				l_desc := format_terminal_text (l_desc, l_padding.as_natural_8)
 				if l_inline_args and then attached {ARGUMENT_VALUE_SWITCH} l_switch as l_value_switch_2 then
-					l_arg_name := l_value_switch_2.arg_name
 					l_desc.append_character ('%N')
 					l_desc.append (create {STRING_32}.make_filled (' ', l_padding))
 					l_desc.append_character ('<')
-					l_desc.append (l_arg_name)
-					l_desc.append (">: ")
+					l_desc.append (l_value_switch_2.arg_name)
+					l_desc.append_string_general (">: ")
 					create l_arg_desc.make (32)
 					if l_value_switch_2.is_value_optional then
-						l_arg_desc.append ("(Optional) ")
+						l_arg_desc.append_string_general ("(Optional) ")
 					end
 					l_arg_desc.append (l_value_switch_2.arg_description)
-					l_arg_desc := format_terminal_text (l_arg_desc, (l_padding + l_arg_name.count + 4).as_natural_8)
+					l_arg_desc := format_terminal_text (l_arg_desc, (l_padding + l_value_switch_2.arg_name.count + 4).as_natural_8)
 					l_desc.append (l_arg_desc)
 				end
 
@@ -1564,37 +1564,35 @@ feature {NONE} -- Output
 				localized_print ("%NARGUMENTS:%N")
 
 				create l_added_args.make (l_value_switches.count)
-				l_added_args.compare_objects
 
 				l_max_len := 0
 				from l_value_switches.start until l_value_switches.after loop
-					l_name := l_value_switches.item.arg_name
-					l_max_len := l_max_len.max (l_name.count)
+					l_max_len := l_max_len.max (l_value_switches.item.arg_name.count)
 					l_value_switches.forth
 				end
 
 				from l_value_switches.start until l_value_switches.after loop
 					l_value_switch := l_value_switches.item
 
-					l_arg_name := l_value_switch.arg_name
-					if not l_added_args.has (l_arg_name) then
-						if l_max_len > l_arg_name.count then
-							create l_name.make_filled (' ', l_max_len - l_arg_name.count)
+					l_immutable := l_value_switch.arg_name
+					if not l_added_args.has (l_immutable) then
+						if l_max_len > l_immutable.count then
+							create l_name.make_filled (' ', l_max_len - l_immutable.count)
 						else
 							create l_name.make_empty
 						end
 						l_name.insert_character ('<', 1)
-						l_name.insert_string (l_arg_name, 2)
-						l_name.insert_character ('>', l_arg_name.count + 2)
+						l_name.insert_string (l_immutable, 2)
+						l_name.insert_character ('>', l_immutable.count + 2)
 
-						l_desc := format_terminal_text (l_value_switch.arg_description, (l_arg_name.count + tab_string.count + 4).as_natural_8)
+						l_desc := format_terminal_text (l_value_switch.arg_description, (l_immutable.count + tab_string.count + 4).as_natural_8)
 						localized_print (tab_string)
 						localized_print (l_name)
 						localized_print (": ")
 						localized_print (l_desc)
 						io.new_line
 
-						l_added_args.extend (l_arg_name)
+						l_added_args.put (True, l_immutable)
 					end
 					l_value_switches.forth
 				end
@@ -1743,7 +1741,7 @@ feature {NONE} -- Usage
 									Result.append_character ('[')
 								end
 								if l_use_separated then
-									Result.append (" <")
+									Result.append_string_general (" <")
 								else
 									Result.append_character (switch_value_qualifer)
 									Result.append_character ('<')
@@ -1785,10 +1783,10 @@ feature {NONE} -- Usage
 								end
 							end
 							if l_switch.allow_multiple then
-								Result.append (" [")
+								Result.append_string_general (" [")
 								Result.append_character (l_prefix)
 								Result.append (l_switch.name)
-								Result.append ("...]")
+								Result.append_string_general ("...]")
 							end
 							if l_opt then
 								Result.append_character (']')
@@ -1867,7 +1865,6 @@ feature {NONE} -- Usage
 					l_lines.forth
 				end
 			end
-
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

@@ -698,10 +698,13 @@ feature {NONE} -- Implementation
 			l_domain_generator := domain_generator_internal
 			if l_domain_generator.error_handler.has_error then
 				display_status_message (l_domain_generator.error_handler.error_list.last.text)
+			elseif
+				attached exception_manager.last_exception as lt_ex and then
+				attached lt_ex.original.description as l_descr
+			then
+				display_status_message (l_descr)
 			else
-				if attached exception_manager.last_exception as lt_ex then
-					display_status_message (lt_ex.original.description)
-				end
+				display_status_message (interface_names.l_unknown_error)
 			end
 		end
 

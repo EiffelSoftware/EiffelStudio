@@ -162,10 +162,13 @@ feature -- Calculation
 			destroy_calculation_context (l_domain_generator)
 			if l_domain_generator.error_handler.has_error then
 				set_last_error_message (l_domain_generator.error_handler.error_list.last.text.as_string_32)
+			elseif
+				attached exception_manager.last_exception as lt_ex and then
+				attached lt_ex.original.description as l_descr
+			then
+				set_last_error_message (l_descr)
 			else
-				if attached exception_manager.last_exception.original as lt_ex then
-					set_last_error_message (lt_ex.description)
-				end
+				set_last_error_message (names.l_unknown_error)
 			end
 			retry
 		end

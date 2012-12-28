@@ -276,14 +276,9 @@ feature {EXCEPTION_MANAGER} -- Implementation
 
 	exception_message: STRING_32
 		do
-			Result := tag
-			if Result /= Void then
-				Result := {STRING_32} "Code: " + code.out + " (" + Result + ")"
-			else
-				Result := {STRING_32} "Code: " + code.out
-			end
+			Result := {STRING_32} "Code: " + code.out + " (" + tag + ")"
 			if attached description as l_des then
-				Result := Result + " Tag: " + l_des
+				Result := Result + " Description: " + l_des
 			end
 		end
 

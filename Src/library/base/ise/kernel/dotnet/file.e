@@ -1274,7 +1274,7 @@ feature -- Element change
 			file_exists: exists
 		local
 			l_info: SYSTEM_FILE_INFO
-			l_new_name: STRING_32
+			l_new_name: READABLE_STRING_32
 		do
 			l_new_name := new_name.name
 			create l_info.make (l_new_name.to_cil)

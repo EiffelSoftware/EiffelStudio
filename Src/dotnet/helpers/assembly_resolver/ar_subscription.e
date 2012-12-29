@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Initialize subscription for `app_domain' by subscribing `a_resolver'
 			-- to its resolver event
 		require
-			a_domain_not_void: a_domain /= VOid
+			a_domain_not_void: a_domain /= Void
 			a_domain_not_unloading: not a_domain.is_finalizing_for_unload
 			a_resolver_not_void: a_resolver /= Void
 		do

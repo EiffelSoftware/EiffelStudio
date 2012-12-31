@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make_with_string (a_string: READABLE_STRING_GENERAL)
 			-- Create `Current' and set `error' to `a_string'.
 		do
-			message := a_string.as_string_32
+			create message.make_from_string_general (a_string)
 		ensure
 			error_set: message.same_string_general (a_string)
 		end

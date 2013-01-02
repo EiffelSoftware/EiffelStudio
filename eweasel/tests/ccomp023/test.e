@@ -18,7 +18,7 @@ feature
      
    	try: INTEGER is
 		external "C :EIF_INTEGER | %"eif_except.h%""
-		alias "arg_number"
+		alias "eif_arg_count"
       		end;
      
 end

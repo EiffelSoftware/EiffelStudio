@@ -1,4 +1,4 @@
-test_name  melted-on-character_32
+test_name  melted-on-character-32
 test_description A call to `is_character_8' on a CHARACTER_32 causes incorrect melted code to be generated.
 
 copy_sub	Ace $TEST Ace

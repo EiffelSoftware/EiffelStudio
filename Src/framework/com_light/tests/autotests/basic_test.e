@@ -55,6 +55,20 @@ feature -- Test routines
 					else
 						assert ("Call failed", l_active_doc.is_successful)
 					end
+
+					l_active_doc.call_property_get ("ActiveWindow", Void)
+					if attached l_active_doc.last_object as l_active_window then
+						l_active_window.call_property_get ("Selection", Void)
+						if attached l_active_window.last_object as l_selection then
+							l_selection.call_property_get ("Text", Void)
+							assert ("Got selection", attached l_selection.last_string as l_str and then l_str.is_equal ("test 2"))
+						else
+							assert ("Call failed", l_active_doc.is_successful)
+						end
+					else
+						assert ("Call failed", l_active_doc.is_successful)
+					end
+
 					l_active_doc.call_method ("Close", Void)
 					assert ("Call failed", l_active_doc.is_successful)
 				else

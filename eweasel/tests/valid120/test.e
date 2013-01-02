@@ -14,7 +14,7 @@ feature
 		end;
 
 	x1: ANY
-	x2: ARGUMENTS
+	x2: ARGUMENTS_32
 	x3: ARRAY [DOUBLE]
 	x4: BASIC_ROUTINES
 	x5: BIT_REF

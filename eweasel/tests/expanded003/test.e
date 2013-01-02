@@ -20,12 +20,12 @@ feature -- Initialization
 		do
 			create env
 			if
-				env.command_line.argument_count = 1 and then
-				env.command_line.argument (1).is_integer
+				env.arguments.argument_count = 1 and then
+				env.arguments.argument (1).is_integer
 			then
 				create test_array.make_filled(b, 0, 1000 )
 				from
-					rounds_to_go := env.command_line.argument (1).to_integer
+					rounds_to_go := env.arguments.argument (1).to_integer
 				until
 					rounds_to_go > 0
 				loop

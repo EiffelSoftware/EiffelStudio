@@ -68,6 +68,17 @@ feature -- Access
 			end
 		end
 
+	string: detachable STRING_32
+			-- String from VARIANT
+		local
+			l_s: WEL_STRING
+		do
+			if c_variant_vt (item) = vt_bstr then
+				create l_s.make_by_pointer (c_variant_bstrVal (item))
+				Result := l_s.string
+			end
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER
@@ -95,11 +106,26 @@ feature {NONE} -- Externals
 			"pdispVal"
 		end
 
+	c_variant_vt (ptr: POINTER): INTEGER
+			-- (export status {NONE})
+		external
+			"C [struct <OleAuto.h>] (VARIANT): EIF_INTEGER"
+		alias
+			"vt"
+		end
+
 	c_variant_set_vt (ptr: POINTER; value: INTEGER)
 		external
 			"C [struct <OleAuto.h>] (VARIANT, VARTYPE)"
 		alias
 			"vt"
+		end
+
+	c_variant_bstrVal (ptr: POINTER): POINTER
+		external
+			"C [struct <OleAuto.h>] (VARIANT): EIF_POINTER"
+		alias
+			"bstrVal"
 		end
 
 	c_variant_set_bstrVal (ptr: POINTER; value: POINTER)

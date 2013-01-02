@@ -122,6 +122,14 @@ feature -- Access
 			end
 		end
 
+	last_string: detachable STRING_32
+			-- Last string from call result
+		do
+			if attached last_variant_result as l_variant then
+				Result := l_variant.string
+			end
+		end
+
 feature -- Status report
 
 	exists: BOOLEAN

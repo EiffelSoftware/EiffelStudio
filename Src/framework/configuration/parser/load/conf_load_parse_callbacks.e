@@ -2117,7 +2117,7 @@ feature {NONE} -- Note Implementation
 			last_undefined_tag_number := Result
 		end
 
-	current_attributes_undefined: HASH_TABLE [STRING_32, STRING_8]
+	current_attributes_undefined: STRING_TABLE [STRING_32]
 			-- The values of the current attributes.
 			-- Undefined attributes.
 

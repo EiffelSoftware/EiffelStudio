@@ -76,7 +76,7 @@ feature -- Access
 	element_name: STRING_32
 			-- Name of the element
 
-	attributes: HASH_TABLE [STRING_32, STRING_8]
+	attributes: STRING_TABLE [STRING_32]
 			-- Attributes
 
 	content: STRING_32

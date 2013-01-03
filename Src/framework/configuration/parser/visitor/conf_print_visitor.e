@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_text_attribute (n: READABLE_STRING_8; v: READABLE_STRING_32)
+	append_text_attribute (n: READABLE_STRING_GENERAL; v: READABLE_STRING_32)
 			-- Append XML attribute of name `n' with value `v'
 			-- in the form ' n="v"'.
 		require
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 			valid_n: -- n is a valid Name in ASCII
 		do
 			text.append_character (' ')
-			text.append_string (n)
+			text.append_string_general (n)
 			text.append_character ('=')
 			text.append_character ('"')
 			append_text_escaped (v)
@@ -1164,7 +1164,7 @@ feature {NONE} -- Implementation
 		require
 			a_note_not_void: a_note /= Void
 		local
-			l_name: STRING
+			l_name: READABLE_STRING_GENERAL
 			l_value: STRING_32
 			l_attr: like {CONF_NOTE_ELEMENT}.attributes
 		do

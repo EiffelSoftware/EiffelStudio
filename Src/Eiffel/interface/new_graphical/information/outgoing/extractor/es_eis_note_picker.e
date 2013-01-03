@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	fill_from_key_value (a_key: STRING_32;
+	fill_from_key_value (a_key: READABLE_STRING_GENERAL;
 						a_value: STRING_32;
 						a_eis_tuple: TUPLE [
 											name: STRING_32;
@@ -29,13 +29,15 @@ feature {NONE} -- Implementation
 											source: STRING_32;
 											tags: ARRAYED_LIST [STRING_32];
 											id: STRING;
-											parameters: HASH_TABLE [STRING_32, STRING_32];
+											parameters: STRING_TABLE [STRING_32];
 											override: BOOLEAN])
 			-- Fill `a_eis_tuple' from `a_key' and `a_value'.
 			-- There is still problem of the attached type for tuples.
 		require
 			a_key_not_void: a_key /= Void
+			a_key_valid: not a_key.is_empty and then not a_key.item (1).is_space and then not a_key.item (a_key.count).is_space
 			a_value_not_void: a_value /= Void
+			a_value_valid: (not a_value.is_empty) implies not a_value.item (1).is_space and then not a_value.item (a_value.count).is_space
 			a_eis_tuple_not_void: a_eis_tuple /= Void
 			tags_not_void: a_eis_tuple.tags /= Void
 			parameters_not_void: a_eis_tuple.parameters /= Void
@@ -67,7 +69,7 @@ feature {NONE} -- Implementation
 			l_index_list: EIFFEL_LIST [ATOMIC_AS]
 			l_atomic: ATOMIC_AS
 			l_attribute_pair: STRING
-			l_parameters: HASH_TABLE [STRING_32, STRING_32]
+			l_parameters: STRING_TABLE [STRING_32]
 			l_tags: ARRAYED_LIST [STRING_32]
 
 			l_entry_tuple: TUPLE [
@@ -76,8 +78,9 @@ feature {NONE} -- Implementation
 							source: STRING_32;
 							tags: ARRAYED_LIST [STRING_32];
 							id: STRING;
-							parameters: HASH_TABLE [STRING_32, STRING_32];
+							parameters: STRING_TABLE [STRING_32];
 							override: BOOLEAN]
+			l_key, l_value: STRING_32
 		do
 			if a_index.tag /= Void and then a_index.tag.name_8.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
@@ -107,11 +110,13 @@ feature {NONE} -- Implementation
 								attached attribute_regex_matcher.captured_substring (1) as lt_key and then
 								attached attribute_regex_matcher.captured_substring (2) as lt_value
 							then
-								lt_key.left_adjust
-								lt_key.right_adjust
-								lt_value.left_adjust
-								lt_value.right_adjust
-								fill_from_key_value (encoding_converter.utf8_to_utf32 (lt_key) , encoding_converter.utf8_to_utf32 (lt_value) , l_entry_tuple)
+								l_key := encoding_converter.utf8_to_utf32 (lt_key)
+								l_value := encoding_converter.utf8_to_utf32 (lt_value)
+								l_key.left_adjust
+								l_key.right_adjust
+								l_value.left_adjust
+								l_value.right_adjust
+								fill_from_key_value (l_key, l_value, l_entry_tuple)
 							end
 						else
 								-- Don't recognize the attribute
@@ -139,7 +144,7 @@ feature {NONE} -- Implementation
 			l_id_not_void: l_id /= Void
 		local
 			l_attributes: like {CONF_NOTE_ELEMENT}.attributes
-			l_parameters: HASH_TABLE [STRING_32, STRING_32]
+			l_parameters: STRING_TABLE [STRING_32]
 			l_tags: ARRAYED_LIST [STRING_32]
 			l_entry_tuple: TUPLE [
 							name: STRING_32;
@@ -147,9 +152,9 @@ feature {NONE} -- Implementation
 							source: STRING_32;
 							tags: ARRAYED_LIST [STRING_32];
 							id: STRING;
-							parameters: HASH_TABLE [STRING_32, STRING_32];
+							parameters: STRING_TABLE [STRING_32];
 							override: BOOLEAN]
-
+			l_key, l_value: STRING_32
 		do
 			if a_note /= Void then
 				l_attributes := a_note.attributes
@@ -172,11 +177,13 @@ feature {NONE} -- Implementation
 							attached l_attributes.key_for_iteration as lt_key and then
 							attached l_attributes.item_for_iteration as lt_value
 						then
-							lt_key.left_adjust
-							lt_key.right_adjust
-							lt_value.left_adjust
-							lt_value.right_adjust
-							fill_from_key_value (lt_key, lt_value, l_entry_tuple)
+							create l_key.make_from_string_general (lt_key)
+							create l_value.make_from_string_general (lt_value)
+							l_key.left_adjust
+							l_key.right_adjust
+							l_value.left_adjust
+							l_value.right_adjust
+							fill_from_key_value (l_key, l_value, l_entry_tuple)
 						end
 						l_attributes.forth
 					end
@@ -203,8 +210,8 @@ feature {NONE} -- Implementation
 						agent (aa_string: STRING_32)
 							do
 								check aa_string_not_void: aa_string /= Void end
-								string_general_left_adjust (aa_string)
-								string_general_right_adjust (aa_string)
+								aa_string.left_adjust
+								aa_string.right_adjust
 							end)
 				Result := lt_splitted
 					-- Empty string is not needed.
@@ -216,9 +223,10 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			Result_not_void: Result /= Void
+			tags_valid: across Result as l_c all not l_c.item.is_empty implies not l_c.item.item (1).is_space and then not l_c.item.item (l_c.item.count).is_space end
 		end
 
-	parse_parameters (a_parameters_string: STRING_32): HASH_TABLE [STRING_32, STRING_32]
+	parse_parameters (a_parameters_string: STRING_32): STRING_TABLE [STRING_32]
 			-- Parse `a_parameters_string' into an array.
 			-- parameters string should be in the form of
 			-- "parameter1=value1, parameter2=value2, parameter3=value3"
@@ -229,7 +237,9 @@ feature {NONE} -- Implementation
 			if attached {ARRAYED_LIST [STRING_32]} a_parameters_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
 				create Result.make (1)
 				lt_splitted.do_all (
-						agent (aa_string: STRING_32; a_result: HASH_TABLE [STRING_32, STRING_32])
+						agent (aa_string: STRING_32; a_result: STRING_TABLE [STRING_32])
+							local
+								l_key, l_value: STRING_32
 							do
 								string_general_left_adjust (aa_string)
 								string_general_right_adjust (aa_string)
@@ -242,11 +252,13 @@ feature {NONE} -- Implementation
 										attached attribute_regex_matcher.captured_substring (1) as lt_key and then
 										attached attribute_regex_matcher.captured_substring (2) as lt_value
 									then
-										lt_key.left_adjust
-										lt_key.right_adjust
-										lt_value.left_adjust
-										lt_value.right_adjust
-										a_result.force (encoding_converter.utf8_to_utf32 (lt_value), encoding_converter.utf8_to_utf32 (lt_key))
+										l_key := encoding_converter.utf8_to_utf32 (lt_key)
+										l_value := encoding_converter.utf8_to_utf32 (lt_value)
+										l_key.left_adjust
+										l_key.right_adjust
+										l_value.left_adjust
+										l_value.right_adjust
+										a_result.force (l_value, l_key)
 									end
 								end
 							end (?, Result))
@@ -255,6 +267,9 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			Result_not_void: Result /= Void
+			parameters_valid: across Result as l_c all
+				(not l_c.key.is_empty implies not l_c.key.item (1).is_space and then not l_c.key.item (l_c.key.count).is_space) and then
+				(not l_c.item.is_empty implies not l_c.item.item (1).is_space and then not l_c.item.item (l_c.item.count).is_space) end
 		end
 
 	auto_entry (a_target: CONF_TARGET): detachable TUPLE [enabled: BOOLEAN; src: STRING_32]
@@ -284,7 +299,9 @@ feature {NONE} -- Implementation
 							l_enabled := l_attributes.found_item.is_case_insensitive_equal ({ES_EIS_TOKENS}.true_string)
 							l_attributes.search ({ES_EIS_TOKENS}.source_string)
 							if l_attributes.found then
-								l_src := l_attributes.found_item
+								create l_src.make_from_string_general (l_attributes.found_item)
+								l_src.left_adjust
+								l_src.right_adjust
 							else
 								create l_src.make_empty
 							end
@@ -296,7 +313,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_auto_entry_note (enabled: BOOLEAN; src: STRING): CONF_NOTE_ELEMENT
+	new_auto_entry_note (enabled: BOOLEAN; src: STRING_32): CONF_NOTE_ELEMENT
 			-- Note for EIS auto setting.
 		require
 			src_not_void: src /= Void
@@ -319,7 +336,7 @@ feature {NONE} -- Implemetation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

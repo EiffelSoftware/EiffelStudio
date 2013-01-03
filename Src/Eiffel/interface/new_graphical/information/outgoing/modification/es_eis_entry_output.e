@@ -103,7 +103,11 @@ feature -- Operation
 						lt_parameters.after
 					loop
 						if not lt_parameters.key_for_iteration.is_empty then
-							last_output_conf.add_attribute (encoding_converter.utf32_to_utf8 (lt_parameters.key_for_iteration.as_string_32), encoding_converter.utf32_to_utf8 (lt_parameters.item_for_iteration))
+							--|FIXME: Since .ecf does not support Unicode attribute names,
+							-- we cannot write Unicode data at the moment.
+								if lt_parameters.key_for_iteration.is_valid_as_string_8 then
+									last_output_conf.add_attribute (lt_parameters.key_for_iteration, lt_parameters.item_for_iteration)
+								end
 						end
 						lt_parameters.forth
 					end

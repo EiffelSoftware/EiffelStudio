@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 		local
 			l_note, l_notes, l_auto_note: detachable CONF_NOTE_ELEMENT
 			l_attributes: like {CONF_NOTE_ELEMENT}.attributes
-			l_auto_value: STRING
+			l_auto_value: STRING_32
 		do
 			if enabled then
 				l_auto_value := {ES_EIS_TOKENS}.true_string
@@ -230,7 +230,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

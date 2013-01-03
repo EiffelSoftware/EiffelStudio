@@ -75,7 +75,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (parameters_as_code (a_entry))
+					l_output.append (quoted_string (parameters_as_code (a_entry)))
 				end
 
 					-- Nothing has been added, we need to complete the syntax
@@ -96,14 +96,14 @@ feature -- Operation
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
 					last_output_conf.add_attribute ({ES_EIS_TOKENS}.tag_string, tags_as_code (a_entry))
 				end
-				if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.parameters as lt_parameters and then not a_entry.parameters.is_empty then
+				if attached a_entry.parameters as lt_parameters and then not lt_parameters.is_empty then
 					from
 						lt_parameters.start
 					until
 						lt_parameters.after
 					loop
 						if not lt_parameters.key_for_iteration.is_empty then
-							last_output_conf.add_attribute (encoding_converter.utf32_to_utf8 (lt_parameters.key_for_iteration), encoding_converter.utf32_to_utf8 (lt_parameters.item_for_iteration))
+							last_output_conf.add_attribute (encoding_converter.utf32_to_utf8 (lt_parameters.key_for_iteration.as_string_32), encoding_converter.utf32_to_utf8 (lt_parameters.item_for_iteration))
 						end
 						lt_parameters.forth
 					end
@@ -146,7 +146,7 @@ feature -- Access
 		local
 			l_found: BOOLEAN
 		do
-			if attached {ARRAYED_LIST [STRING_32]} a_entry.tags as lt_tags then
+			if attached a_entry.tags as lt_tags then
 				create Result.make (10)
 				from
 					lt_tags.start
@@ -182,7 +182,7 @@ feature -- Access
 			l_value: STRING_32
 			l_found: BOOLEAN
 		do
-			if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.parameters as lt_parameters then
+			if attached a_entry.parameters as lt_parameters then
 				create Result.make (10)
 				from
 					lt_parameters.start
@@ -191,14 +191,14 @@ feature -- Access
 					lt_parameters.after
 				loop
 					i := i + 1
-					create l_attr.make_from_string (lt_parameters.key_for_iteration)
+					create l_attr.make_from_string_general (lt_parameters.key_for_iteration)
 					l_value := lt_parameters.item_for_iteration
 					if not l_value.same_string ({ES_EIS_TOKENS}.void_string) then
 						l_attr.append ({ES_EIS_TOKENS}.value_assignment)
 						l_attr.append (l_value)
 						l_found := True
 					end
-					Result.append (quoted_string (l_attr))
+					Result.append (l_attr)
 					if i < l_count then
 						Result.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						Result.append_character ({ES_EIS_TOKENS}.space)
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

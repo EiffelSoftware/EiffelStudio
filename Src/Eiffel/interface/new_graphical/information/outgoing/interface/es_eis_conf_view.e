@@ -312,6 +312,8 @@ feature {NONE} -- Callbacks
 			l_new_entry: EIS_ENTRY
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_name then
+				lt_name.left_adjust
+				lt_name.right_adjust
 				if lt_entry.name /= Void and then lt_name.is_equal (lt_entry.name) then
 						-- Do nothing when the name is not actually changed
 				else
@@ -342,10 +344,13 @@ feature {NONE} -- Callbacks
 			l_protocol: like {EIS_ENTRY}.protocol
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {READABLE_STRING_GENERAL} a_choice_item.data as lt_protocol then
-				if lt_entry.protocol /= Void and then lt_entry.protocol.is_case_insensitive_equal (lt_entry.protocol) then
+				create l_protocol.make_from_string_general (lt_protocol)
+				l_protocol.left_adjust
+				l_protocol.right_adjust
+				if lt_entry.protocol /= Void and then l_protocol.is_case_insensitive_equal (lt_entry.protocol) then
 						-- Do nothing when the protocol is not actually changed
 				else
-					l_protocol := lt_protocol.as_string_32
+
 					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
@@ -371,9 +376,13 @@ feature {NONE} -- Callbacks
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: EIS_ENTRY
+			l_source: STRING_32
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_value as lt_source then
-				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
+				create l_source.make_from_string (lt_source)
+				l_source.right_adjust
+				l_source.left_adjust
+				if lt_entry.source /= Void and then l_source.is_equal (lt_entry.source) then
 						-- Do nothing when the source is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
@@ -381,12 +390,12 @@ feature {NONE} -- Callbacks
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
-							l_new_entry.set_source (lt_source)
+							l_new_entry.set_source (l_source)
 							modify_entry_in_conf (lt_entry, l_new_entry, conf_notable, lt_system)
 								-- Modify the source in the entry when the modification is done
 							if last_entry_modified then
 								storage.deregister_entry (lt_entry, component_id)
-								lt_entry.set_source (lt_source)
+								lt_entry.set_source (l_source)
 								storage.register_entry (lt_entry, component_id, lt_system.file_date)
 							end
 						end
@@ -438,7 +447,7 @@ feature {NONE} -- Callbacks
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: attached EIS_ENTRY
-			l_parameters: attached HASH_TABLE [STRING_32, STRING_32]
+			l_parameters: attached STRING_TABLE [STRING_32]
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_parameters then
 				l_parameters := parse_parameters (lt_parameters)
@@ -539,7 +548,7 @@ invariant
 	conf_notable_is_valid: valid_notable (conf_notable)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

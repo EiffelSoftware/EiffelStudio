@@ -22,6 +22,12 @@ feature {NONE} -- Initialization
 			-- Initialization
 		require
 			a_id_not_void: a_id /= Void
+			id_valid: valid_attribute (a_id)
+			name_valid: attached a_name as l_n implies valid_attribute (l_n)
+			protocol_valid: attached a_protocol as l_p implies valid_attribute (l_p)
+			source_valid: attached a_source as l_s implies valid_attribute (l_s)
+			tags_valid: attached a_tags as l_t implies valid_tags (l_t)
+			parameters_valid: attached a_parameters as l_p implies valid_parameters (l_p)
 		do
 			name := a_name
 			protocol := a_protocol
@@ -43,6 +49,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 
 	set_name (a_name: like name)
 			-- Set `name' with `a_name'
+		require
+			name_valid: attached a_name as l_n implies valid_attribute (l_n)
 		do
 			name := a_name
 		ensure
@@ -51,6 +59,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 
 	set_protocol (a_protocol: like protocol)
 			-- Set `protocol' with `a_protocol'
+		require
+			protocol_valid: attached a_protocol as l_p implies valid_attribute (l_p)
 		do
 			protocol := a_protocol
 		ensure
@@ -59,6 +69,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 
 	set_source (a_source: like source)
 			-- Set `source' with `a_source'
+		require
+			source_valid: attached a_source as l_s implies valid_attribute (l_s)
 		do
 			source := a_source
 		ensure
@@ -67,6 +79,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 
 	set_tags (a_tags: like tags)
 			-- Set `tags' with `a_tags'
+		require
+			tags_valid: attached a_tags as l_t implies valid_tags (l_t)
 		do
 			tags := a_tags
 		ensure
@@ -77,6 +91,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `id' with `a_id'
 		require
 			a_id_not_void: a_id /= Void
+			id_valid: valid_attribute (a_id)
 		do
 			id := a_id
 		ensure
@@ -85,10 +100,32 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 
 	set_parameters (a_parameters: like parameters)
 			-- Set `parameters' with `a_parameters'
+		require
+			parameters_valid: attached a_parameters as l_p implies valid_parameters (l_p)
 		do
 			parameters := a_parameters
 		ensure
 			parameters_set: parameters = a_parameters
+		end
+
+feature -- Query
+
+	valid_attribute (a_attr: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_attr' valid?
+		do
+			Result := a_attr.is_empty or else (not a_attr.item (1).is_space and then not a_attr.item (a_attr.count).is_space)
+		end
+
+	valid_tags (a_tags: like tags): BOOLEAN
+			-- Is `a_tags' valid?
+		do
+			Result := across a_tags as l_c all valid_attribute (l_c.item) end
+		end
+
+	valid_parameters (a_parameters: like parameters): BOOLEAN
+			-- Is `a_tags' valid?
+		do
+			Result := across a_parameters as l_c all valid_attribute (l_c.key) and then valid_attribute (l_c.item) end
 		end
 
 feature {ES_EIS_NOTE_PICKER} -- Element change
@@ -118,7 +155,7 @@ feature -- Access
 	id: STRING
 			-- Id of the entry (from EB_SHARED_ID_SOLUTION)
 
-	parameters: detachable HASH_TABLE [STRING_32, STRING_32]
+	parameters: detachable STRING_TABLE [STRING_32]
 			-- Parameters of the entry
 
 	override: BOOLEAN
@@ -161,7 +198,7 @@ feature -- Access
 				until
 					lt_parameters.after
 				loop
-					Result.append (lt_parameters.key_for_iteration)
+					Result.append_string_general (lt_parameters.key_for_iteration)
 					Result.append (lt_parameters.item_for_iteration)
 					lt_parameters.forth
 				end

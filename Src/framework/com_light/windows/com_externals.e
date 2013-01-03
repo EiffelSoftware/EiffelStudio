@@ -91,6 +91,113 @@ feature -- Initialization
 			"RPC_E_CHANGED_MODE"
 		end
 
+feature -- HRESULT
+
+	frozen com_REGDB_E_CLASSNOTREG: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"REGDB_E_CLASSNOTREG"
+		end
+
+	frozen com_CLASS_E_NOAGGREGATION: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"CLASS_E_NOAGGREGATION"
+		end
+
+	frozen com_E_NOINTERFACE: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"E_NOINTERFACE"
+		end
+
+	frozen com_E_POINTER: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"E_POINTER"
+		end
+
+	frozen com_DISP_E_BADPARAMCOUNT: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_BADPARAMCOUNT"
+		end
+
+	frozen com_DISP_E_BADVARTYPE: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_BADVARTYPE"
+		end
+
+	frozen com_DISP_E_EXCEPTION: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_EXCEPTION"
+		end
+
+	frozen com_DISP_E_MEMBERNOTFOUND: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_MEMBERNOTFOUND"
+		end
+
+	frozen com_DISP_E_NONAMEDARGS: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_NONAMEDARGS"
+		end
+
+	frozen com_DISP_E_OVERFLOW: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_OVERFLOW"
+		end
+
+	frozen com_DISP_E_PARAMNOTFOUND: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_PARAMNOTFOUND"
+		end
+
+	frozen com_DISP_E_TYPEMISMATCH: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_TYPEMISMATCH"
+		end
+
+	frozen com_DISP_E_UNKNOWNINTERFACE: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_UNKNOWNINTERFACE"
+		end
+
+	frozen com_DISP_E_UNKNOWNLCID: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_UNKNOWNLCID"
+		end
+
+	frozen com_DISP_E_PARAMNOTOPTIONAL: INTEGER
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"DISP_E_PARAMNOTOPTIONAL"
+		end
+
 feature -- VARTYPE constants
 
 	vt_empty: NATURAL_16 = 0
@@ -115,7 +222,7 @@ feature -- VARTYPE constants
 	vt_unknown: NATURAL_16 = 13
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

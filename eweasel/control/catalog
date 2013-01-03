@@ -2194,6 +2194,8 @@ test	ptf-file-read-to-string		lib037	 tcf pass library file
 test	managed-pointer-invariant	lib038	 tcf pass library invariant
 test	file-info-not-duplicated	lib039	 tcf pass library file
 
+test	utf-16-surrogate		utf001	tcf pass library unicode
+
 
 -- TUPLE tests
 test	tuple-manipulation				tuple001	tcf	pass tuple

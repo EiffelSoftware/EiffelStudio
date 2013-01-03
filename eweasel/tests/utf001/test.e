@@ -22,15 +22,16 @@ feature
 	test_utf_16_d834_dd1e
 		local
 			u: UTF_CONVERTER
-			p: MANAGED_POINTER
+			p, q: MANAGED_POINTER
 			l_str: STRING_32
 			l_ref: STRING_32
 			l_utf16le: STRING_8
 		do
 				-- Let's create a valid Surrogate pair
-			create p.make (4)
+			create p.make (6)
 			p.put_natural_16 (0xD834, 0)
 			p.put_natural_16 (0xDD1E, 2)
+			p.put_natural_16 (0x0, 4)
 			create l_utf16le.make (6)
 			l_utf16le.append_character ('%/0x34/')
 			l_utf16le.append_character ('%/0xD8/')
@@ -59,20 +60,35 @@ feature
 			if not l_str.same_string (l_ref) then
 				io.put_string ("Not OK%N")
 			end
+
+				-- Now let's check that we roundtrip properly
+				-- We preallocate a buffer for UTF-16 encoding that includes also the null character.
+			create q.make ((l_ref.count + 1) * 2)
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (l_ref, 1, l_ref.count, q, 0, Void)
+			if q /~ p then
+				io.put_string ("Not Ok%N")
+			end
+
+			create q.make ((l_ref.count + 1) * 2)
+			u.utf_32_substring_into_utf_16_0_pointer (l_ref, 1, l_ref.count, q, 0, Void)
+			if q /~ p then
+				io.put_string ("Not Ok%N")
+			end
 		end
 
 	test_utf_16_d834_d000
 		local
 			u: UTF_CONVERTER
-			p: MANAGED_POINTER
+			p, q: MANAGED_POINTER
 			l_str: STRING_32
 			l_ref: STRING_32
 			l_utf16le: STRING_8
 		do
 				-- Let's create an invalid valid Surrogate pair
-			create p.make (4)
+			create p.make (6)
 			p.put_natural_16 (0xD834, 0)
 			p.put_natural_16 (0xD000, 2)
+			p.put_natural_16 (0x0, 4)
 			create l_utf16le.make (6)
 			l_utf16le.append_character ('%/0x34/')
 			l_utf16le.append_character ('%/0xD8/')
@@ -92,6 +108,7 @@ feature
 				io.put_string ("Not OK%N")
 			end
 
+				-- Now check with escape.
 			create l_ref.make (7)
 			l_ref.append_character ('%/65533/')
 			l_ref.append_string_general ("uD834")
@@ -106,20 +123,29 @@ feature
 			if not l_str.same_string (l_ref) then
 				io.put_string ("Not OK%N")
 			end
+
+				-- Now let's check that we roundtrip properly
+				-- We preallocate a buffer for UTF-16 encoding that includes also the null character.
+			create q.make (2)
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (l_ref, 1, l_ref.count, q, 0, Void)
+			if q /~ p then
+				io.put_string ("Not Ok%N")
+			end
 		end
 
 	test_utf_16_dc01_d834
 		local
 			u: UTF_CONVERTER
-			p: MANAGED_POINTER
+			p, q: MANAGED_POINTER
 			l_str: STRING_32
 			l_ref: STRING_32
 			l_utf16le: STRING_8
 		do
 				-- Let's create an invalid valid Surrogate pair
-			create p.make (4)
+			create p.make (6)
 			p.put_natural_16 (0xDC01, 0)
 			p.put_natural_16 (0xD834, 2)
+			p.put_natural_16 (0x0, 4)
 			create l_utf16le.make (6)
 			l_utf16le.append_character ('%/0x01/')
 			l_utf16le.append_character ('%/0xDC/')
@@ -153,6 +179,14 @@ feature
 			l_str := u.utf_16le_string_8_to_escaped_string_32 (l_utf16le)
 			if not l_str.same_string (l_ref) then
 				io.put_string ("Not OK%N")
+			end
+
+				-- Now let's check that we roundtrip properly
+				-- We preallocate a buffer for UTF-16 encoding that includes also the null character.
+			create q.make (2)
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (l_ref, 1, l_ref.count, q, 0, Void)
+			if q /~ p then
+				io.put_string ("Not Ok%N")
 			end
 		end
 

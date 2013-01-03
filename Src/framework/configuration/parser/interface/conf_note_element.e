@@ -67,6 +67,10 @@ feature {CONF_ACCESS} -- Element Change
 
 	add_attribute (a_name, a_value: READABLE_STRING_GENERAL)
 			-- Add attribute with `a_name' and `a_value'.
+			--|FIXME: Since .ecf does not accept Unicode attribute names,
+			--|FIXME: we have to keep the assertion, a_name_valid_string_8.
+		require
+			a_name_valid_string_8: a_name.is_valid_as_string_8
 		do
 			attributes.force (a_value.to_string_32, a_name.as_string_8.as_lower)
 		end

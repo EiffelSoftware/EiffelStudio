@@ -314,14 +314,11 @@ feature {EV_ANY_I} -- Implementation
 			abstract_pick_and_dropable: detachable EV_ABSTRACT_PICK_AND_DROPABLE
 			text_component: detachable EV_TEXT_COMPONENT_IMP
 			l_pebble: like pebble
-			l_original: detachable like original_top_level_window_imp
 		do
-			if press_action = ev_pnd_end_transport then
+			if press_action = ev_pnd_end_transport and attached original_top_level_window_imp as l_original then
 				pointer_x := a_screen_x.to_integer_16
 				pointer_y := a_screen_y.to_integer_16
 
-				l_original := original_top_level_window_imp
-				check l_original /= Void end
 				modify_widget_appearance (False)
 					-- Remove the capture (as soon as possible because we can't
 					-- debug when the capture is enabled)
@@ -419,7 +416,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		ensure then
 			original_window_void: original_top_level_window_imp = Void
-			press_action_Reset: press_action = Ev_pnd_start_transport
+			press_action_reset: press_action = Ev_pnd_start_transport
 			not_has_capture: internal_capture_status.item = False
 		end
 

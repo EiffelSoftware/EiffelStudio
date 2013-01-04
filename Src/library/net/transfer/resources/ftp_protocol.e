@@ -622,8 +622,6 @@ feature {NONE} -- Implementation
 			else
 				close
 			end
-		ensure
-			logged_in: is_logged_in
 		end
 
 	send_username: BOOLEAN

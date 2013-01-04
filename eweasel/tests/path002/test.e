@@ -16,6 +16,7 @@ feature
 			test_one_character_entry
 			test_extended
 			test_absolute
+			test_canonical
 			trailing_slashes_removed
 		end
 
@@ -144,6 +145,7 @@ feature
 	test_entry
 		local
 			p: PATH
+			s: STRING_32
 		do
 			counter := 0
 				-- No root.
@@ -214,6 +216,20 @@ feature
 
 			create p.make_from_string ("c:\abc\def\")
 			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+
+			create s.make (2)
+			s.append_string_general ("C:\")
+			s.append_character ('%/119070/')
+			s.append_string_general ("\calc")
+			create p.make_from_string (s)
+			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("calc"))
+
+			create s.make (2)
+			s.append_string_general ("C:\")
+			s.append_character ('%/119070/')
+			s.append_string_general ("\calc\calc.ecf")
+			create p.make_from_string (s)
+			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("calc.ecf"))
 		end
 
 	test_one_character_entry
@@ -310,6 +326,21 @@ feature
 			current_path := env.current_working_path
 			create p.make_from_string ("abc.txt")
 			check_equal ("absolute", p.absolute_path.name.same_string (current_path.name + "\" + p.name))
+		end
+
+	test_canonical
+		local
+			s: STRING_32
+			p: PATH
+		do
+			create s.make (2)
+			s.append_string_general ("C:\")
+			s.append_character ('%/119070/')
+			s.append_string_general ("\calc\calc.ecf")
+			create p.make_from_string (s)
+			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("calc.ecf"))
+
+			check_equal ("canonical_path", p.canonical_path ~ p)
 		end
 
 	trailing_slashes_removed

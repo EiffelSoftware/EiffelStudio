@@ -415,7 +415,11 @@ feature -- Command
 				-- FIXIT: We can't query font name now.
 				-- EV_FONT.name and WEL_LOG_FONT.name all return "".
 				check only_roman_supported_currently: a_font.family = {EV_FONT_CONSTANTS}.family_roman end
-				create l_font_family.make_with_name ("Times New Roman")
+				if a_font.name.is_empty then
+					create l_font_family.make
+				else
+					create l_font_family.make_with_name (a_font.name)
+				end
 
 				create l_font.make (l_font_family, a_font.height_in_points)
 

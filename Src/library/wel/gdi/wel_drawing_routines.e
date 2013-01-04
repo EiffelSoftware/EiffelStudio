@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_DATA_TYPE
 		export
 			{NONE} all
@@ -64,7 +64,7 @@ feature -- Basic operations
 		do
 			create wel_string.make (txt)
 			cwin_draw_state (dc.item, default_pointer, default_pointer,
-					wel_string.item, to_lparam (txt.count), x, y, dc.tabbed_text_width (txt),
+					wel_string.item, to_lparam (wel_string.count), x, y, dc.tabbed_text_width (txt),
 					dc.tabbed_text_height (txt), Dst_text + Dss_disabled)
 		end
 

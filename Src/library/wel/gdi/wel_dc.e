@@ -277,7 +277,7 @@ feature -- Status report
 		do
 			a_wel_string := wel_string_from_string (s)
 			create Result.make (0, 0)
-			cwin_get_text_extend_point (item, a_wel_string.item, s.count,
+			cwin_get_text_extend_point (item, a_wel_string.item, a_wel_string.count,
 				Result.item)
 		ensure
 			result_exists: Result /= Void
@@ -332,7 +332,7 @@ feature -- Status report
 		do
 			a_wel_string := wel_string_from_string (text)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
-				text.count, 0, a_default_pointer)
+				a_wel_string.count, 0, a_default_pointer)
 			create Result.make (size & 0x0000FFFF, ((size |>> 16) & 0x0000FFFF))
 		ensure
 			result_not_void: Result /= Void
@@ -378,7 +378,7 @@ feature -- Status report
 			a_wel_string := wel_string_from_string (text)
 			create a.make (tabulations)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
-				text.count, tabulations.count, a.item)
+				a_wel_string.count, tabulations.count, a.item)
 			create Result.make (size & 0x0000FFFF, ((size |>> 16) & 0x0000FFFF))
 		ensure
 			result_not_void: Result /= Void
@@ -487,8 +487,7 @@ feature -- Status report
 			nb: INTEGER
 		do
 			create a_wel_string.make_empty (Max_text_face)
-			nb := cwin_get_text_face (item,
-				Max_text_face, a_wel_string.item)
+			nb := cwin_get_text_face (item, Max_text_face, a_wel_string.item)
 			Result := a_wel_string.substring (1, nb)
 		ensure
 			result_not_void: Result /= Void
@@ -1048,7 +1047,7 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			a_wel_string := wel_string_from_string (string)
-			cwin_text_out (item, x, y, a_wel_string.item, string.count)
+			cwin_text_out (item, x, y, a_wel_string.item, a_wel_string.count)
 		end
 
 	tabbed_text_out (x, y: INTEGER; string: READABLE_STRING_GENERAL;
@@ -1068,7 +1067,7 @@ feature -- Basic operations
 		do
 			create a_wel_string.make (string)
 			create a.make (tabulations)
-			cwin_tabbed_text_out (item, x, y, a_wel_string.item, string.count,
+			cwin_tabbed_text_out (item, x, y, a_wel_string.item, a_wel_string.count,
 				tabulations.count, a.item, tabulations_origin)
 		end
 
@@ -1099,7 +1098,7 @@ feature -- Basic operations
 		do
 			a_wel_string := wel_string_from_string (string)
 			Result := cwin_draw_text (item, a_wel_string.item,
-				string.count, rect.item, format)
+				a_wel_string.count, rect.item, format)
 		end
 
 	draw_disabled_text (string: READABLE_STRING_GENERAL; rect: WEL_RECT; format: INTEGER)
@@ -1114,7 +1113,7 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			a_wel_string := wel_string_from_string (string)
-			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
+			cwin_draw_disabled_text (item, a_wel_string.item, a_wel_string.count, rect.item, format)
 		end
 
 	draw_state_text (a_brush: detachable WEL_BRUSH; string: READABLE_STRING_GENERAL; x, y: INTEGER; format: INTEGER)
@@ -1136,7 +1135,7 @@ feature -- Basic operations
 			if a_brush /= Void then
 				a_brush_ptr := a_brush.item
 			end
-			success := cwin_draw_state (item, a_brush_ptr, null, a_wel_string.item, string.count, x, y, 0, 0, format)
+			success := cwin_draw_state (item, a_brush_ptr, null, a_wel_string.item, a_wel_string.count, x, y, 0, 0, format)
 		end
 
 	draw_centered_text (string: READABLE_STRING_GENERAL; rect: WEL_RECT)

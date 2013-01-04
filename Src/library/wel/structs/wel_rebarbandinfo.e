@@ -207,7 +207,7 @@ feature -- Element change
 			create l_text.make (txt)
 				-- For GC reference
 			str_text := l_text
-			cwel_rebarbandinfo_set_cch (item, txt.count)
+			cwel_rebarbandinfo_set_cch (item, l_text.count)
 			cwel_rebarbandinfo_set_lptext (item, l_text.item)
 		ensure
 			text_set: text.same_string_general (txt)

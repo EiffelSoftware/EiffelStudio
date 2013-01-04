@@ -134,7 +134,7 @@ feature -- Element change
 				-- For GC reference
 			str_text := l_text
 			cwel_tc_item_set_psztext (item, l_text.item)
-			cwel_tc_item_set_cchtextmax (item, a_text.count)
+			cwel_tc_item_set_cchtextmax (item, l_text.count)
 		ensure
 			text_set: text.same_string_general (a_text)
 		end

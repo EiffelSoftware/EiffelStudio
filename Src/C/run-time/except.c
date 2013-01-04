@@ -65,6 +65,7 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #ifdef EIF_WINDOWS
 #include "eif_console.h"
 #include <winbase.h>	/* To call `ExitProcess' */
+#include <io.h>
 #include <fcntl.h>
 #ifndef _O_U16TEXT /* Not availble in VS2005 */
 #define _O_U16TEXT 0x20000
@@ -2532,14 +2533,15 @@ rt_private void ds_stderr (char *line)
 		print_err_msg(stderr, "%s", line);
 	} else {
 		/* First try to convert UTF-8 into UTF-16 and print this using `fwprintf'. */
-		res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, ex_buffer_1.area, ex_buffer_1.size / sizeof (WCHAR));
+		CHECK("No truncation", ((int) ex_buffer_1.size) == ex_buffer_1.size);
+		res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, (LPWSTR) ex_buffer_1.area, (int) ex_buffer_1.size / sizeof (WCHAR));
 		if (res == 0) {
 			dw = GetLastError();
 			if (dw == ERROR_INSUFFICIENT_BUFFER) {
 				res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, NULL, 0); /* Calculate the required buffer size */
 				ex_buffer_1.area = (char *) xrealloc(ex_buffer_1.area, res * sizeof (WCHAR), GC_OFF);
 				ex_buffer_1.size = res * sizeof (WCHAR);
-				res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, ex_buffer_1.area, ex_buffer_1.size / sizeof (WCHAR));
+				res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, (LPWSTR) ex_buffer_1.area, (int) ex_buffer_1.size / sizeof (WCHAR));
 			}
 		}
 		
@@ -2551,19 +2553,20 @@ rt_private void ds_stderr (char *line)
 			fflush(stderr); /* Must flush before _setmode */
 			mode = _setmode(_fileno(stderr), _O_U16TEXT); /* Is it thread safe between _setmode and fwprintf? */
 			if (mode != -1) {
-				fwprintf(stderr, ex_buffer_1.area);
+				fwprintf(stderr, (LPWSTR) ex_buffer_1.area);
 				fflush(stderr);
 				_setmode(_fileno(stderr), mode); /* Restore mode */
 			} else {
 				/* We cannot print UTF-16, we thus convert our UTF-16 into the current console locale. */
-				res = WideCharToMultiByte (cp, 0, ex_buffer_1.area, -1, ex_buffer_2.area, ex_buffer_2.size, NULL, NULL);
+				CHECK("No truncation", ((int) ex_buffer_2.size) == ex_buffer_2.size);
+				res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, ex_buffer_2.area, (int) ex_buffer_2.size, NULL, NULL);
 				if (res == 0) {
 					dw = GetLastError();
 					if (dw == ERROR_INSUFFICIENT_BUFFER) {
-						res = WideCharToMultiByte (cp, 0, ex_buffer_1.area, -1, NULL, 0, NULL, NULL); /* Calculate the required buffer size */
+						res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, NULL, 0, NULL, NULL); /* Calculate the required buffer size */
 						ex_buffer_2.area = (char *) xrealloc(ex_buffer_2.area, res, GC_OFF);
 						ex_buffer_2.size = res;
-						res = WideCharToMultiByte (cp, 0, ex_buffer_1.area, -1, ex_buffer_2.area, ex_buffer_2.size, NULL, NULL);
+						res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, ex_buffer_2.area, (int) ex_buffer_2.size, NULL, NULL);
 					}
 				}
 				if (res == 0) {

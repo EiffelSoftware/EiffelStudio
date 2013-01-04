@@ -142,6 +142,20 @@ feature {NONE} -- Externals
 			"lVal"
 		end
 
+	c_variant_set_intVal (ptr: POINTER; value: INTEGER_32)
+		external
+			"C [struct <OleAuto.h>] (VARIANT, INT)"
+		alias
+			"intVal"
+		end
+
+	c_variant_set_llVal (ptr: POINTER; value: INTEGER_64)
+		external
+			"C [struct <OleAuto.h>] (VARIANT, LONGLONG)"
+		alias
+			"llVal"
+		end
+
 	vt_bstr: INTEGER
 		external
 			"C [macro <OleAuto.h>]"
@@ -156,12 +170,40 @@ feature {NONE} -- Externals
 			"VT_I4"
 		end
 
+	vt_i8: INTEGER
+		external
+			"C [macro <OleAuto.h>]"
+		alias
+			"VT_I8"
+		end
+
+	vt_int: INTEGER
+		external
+			"C [macro <OleAuto.h>]"
+		alias
+			"VT_INT"
+		end
+
+	c_variant_pcVal (ptr: POINTER): POINTER
+		external
+			"C [struct <OleAuto.h>] (VARIANT): EIF_POINTER"
+		alias
+			"pcVal"
+		end
+
+	c_variant_set_pcVal (ptr: POINTER; value: POINTER)
+		external
+			"C [struct <OleAuto.h>] (VARIANT, CHAR*)"
+		alias
+			"pcVal"
+		end
+
 feature {NONE} -- Implementation
 
 	bstr_string: detachable COM_BSTR_STRING
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

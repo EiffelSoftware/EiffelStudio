@@ -14,9 +14,39 @@ feature
 
 	test_utf_16_surrogate
 		do
+			test_utf_16_roundtrip
 			test_utf_16_d834_dd1e
 			test_utf_16_d834_d000
 			test_utf_16_dc01_d834
+		end
+
+	test_utf_16_roundtrip
+		local
+			s: STRING_32
+			u: UTF_CONVERTER
+			l_upper: CELL [INTEGER_32]
+			q: MANAGED_POINTER
+			l_spec8: SPECIAL [NATURAL_8]
+			l_spec16: SPECIAL [NATURAL_16]
+		do
+			s := {STRING_32} "Manu"
+			create q.make (s.count * 2 + 2)
+			create l_upper.put (0)
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (s, 1, s.count, q, 0, l_upper)
+			if not u.utf_16_0_pointer_to_escaped_string_32 (q).same_string (s) then
+				io.put_string ("Not ok%N")
+			end
+			if not u.utf_16_0_subpointer_to_string_32 (q, 0, (l_upper.item // 2) - 1, False).same_string (s) then
+				io.put_string ("Not ok%N")
+			end
+
+			l_spec16 := u.string_32_to_utf_16 (s)
+			if
+				not (l_spec16.item (0).to_character_8 = 'M' and l_spec16.item (1).to_character_8 = 'a' and
+				l_spec16.item (2).to_character_8 = 'n' and l_spec16.item (3).to_character_8 = 'u')
+			then
+				io.put_string ("Not OK%N")
+			end
 		end
 
 	test_utf_16_d834_dd1e

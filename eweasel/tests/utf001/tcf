@@ -1,5 +1,5 @@
-test_name 	utf-16-surrogate
-test_description When you get a surrogate UTF-16, the UTF_CONVERTER incorrectly generates the STRING_32 or its escaped version.
+test_name 	utf-16-basics
+test_description Various UTF-16 encoding testing.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

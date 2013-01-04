@@ -26,6 +26,7 @@ feature -- UTF-8 tests
 			u: UTF_CONVERTER
 			l_upper: CELL [INTEGER_32]
 			q: MANAGED_POINTER
+			l_spec8: SPECIAL [NATURAL_8]
 		do
 			create s.make (2)
 			s.append_character ('%/112900/')
@@ -71,6 +72,15 @@ feature -- UTF-8 tests
 			u.utf_32_string_into_utf_8_0_pointer (s, q, 0, l_upper)
 			if not u.utf_8_0_pointer_to_escaped_string_32 (q).same_string (s) then
 				io.put_string ("Not Ok%N")
+			end
+
+			s := {STRING_32} "Manu"
+			l_spec8 := u.utf_32_string_to_utf_8 (s)
+			if
+				not (l_spec8.item (0).to_character_8 = 'M' and l_spec8.item (1).to_character_8 = 'a' and
+				l_spec8.item (2).to_character_8 = 'n' and l_spec8.item (3).to_character_8 = 'u')
+			then
+				io.put_string ("Not OK%N")
 			end
 		end
 

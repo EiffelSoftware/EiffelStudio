@@ -880,7 +880,12 @@ rt_private void adopt(EIF_PSTREAM sp, Opaque *what)
 		/* We are passing hector address + offset */
 		app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_protect((EIF_REFERENCE) rt_boxed_expanded_item_at_index(eif_access((EIF_OBJECT) physical_addr), offset - 1)));
 	} else {
-		app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_adopt((EIF_OBJECT) &physical_addr));
+		if ((HEADER(physical_addr)->ov_flags & EO_STACK) == EO_STACK) {
+				/* Object is on the stack, it won't move but it cannot be stored in hector stack, we clone it. */
+			app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_protect (RTCL(physical_addr)));
+		} else {
+			app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_protect((EIF_REFERENCE) physical_addr));
+		}
 	}
 }
 

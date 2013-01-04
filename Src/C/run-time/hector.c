@@ -258,6 +258,8 @@ doc:	</routine>
 */
 rt_public EIF_OBJECT eif_adopt(EIF_OBJECT object)
 {
+	REQUIRE("Not on stack", (HEADER(eif_access(object))->ov_flags & EO_STACK) != EO_STACK);
+
 	return eif_protect(eif_access(object));	/* Enter object in saved stack */
 }
 
@@ -413,6 +415,8 @@ rt_public EIF_OBJECT eif_protect(EIF_REFERENCE object)
 {
 	RT_GET_CONTEXT
 	EIF_OBJECT address;						/* Address in hector */
+
+	REQUIRE("Not on stack", (HEADER(object)->ov_flags & EO_STACK) != EO_STACK);
 
 	EIFMTX_LOCK;
 	address = hpop(&eif_free_hec_stack);					/* Check for an already free location */

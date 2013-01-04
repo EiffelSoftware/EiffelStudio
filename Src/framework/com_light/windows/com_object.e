@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 	make_with_program_id (a_name: READABLE_STRING_GENERAL)
 			-- Initialization
 			-- Example of program ID: "Word.Application"
+			-- CLS context defaults to all.
 		local
 			l_uname: COM_BSTR_STRING
 			l_clsid: like clsid
@@ -46,7 +47,7 @@ feature {NONE} -- Initialization
 			last_call_success := clsid_from_prog_id (l_uname.item, l_clsid.item)
 
 			if is_successful then
-				last_call_success := com_create_instance (l_clsid.item, default_pointer, clsctx_local_server, $item)
+				last_call_success := com_create_instance (l_clsid.item, default_pointer, clsctx_all, $item)
 				if not is_successful then
 					item := default_pointer
 				end
@@ -203,6 +204,7 @@ feature {NONE} -- Call
 			l_managed_pointer: MANAGED_POINTER
 			i: INTEGER
 			l_arrayed_list: ARRAYED_LIST [COM_VARIANT]
+			l_error: INTEGER
 		do
 			create l_bstr.make_from_string (a_name)
 			if attached a_args as l_args and then l_args.count > 0 then
@@ -227,7 +229,7 @@ feature {NONE} -- Call
 				l_args_pointer := l_managed_pointer.item
 			end
 			create l_v.make
-			last_call_success := cpp_ole_method (a_ntype, l_v.item, item, l_bstr.item, l_args_count, l_args_pointer)
+			last_call_success := cpp_ole_method (a_ntype, l_v.item, item, l_bstr.item, l_args_count, l_args_pointer, $l_error)
 
 			if last_call_success = {COM_EXTERNALS}.com_s_ok then
 				last_variant_result := l_v
@@ -304,6 +306,34 @@ feature {NONE} -- Externals
 			"CLSCTX_LOCAL_SERVER"
 		end
 
+	clsctx_inproc_server: INTEGER_32
+		external
+			"C [macro <Objbase.h>] : EIF_INTEGER"
+		alias
+			"CLSCTX_INPROC_SERVER"
+		end
+
+	clsctx_remote_server: INTEGER_32
+		external
+			"C [macro <Objbase.h>] : EIF_INTEGER"
+		alias
+			"CLSCTX_REMOTE_SERVER"
+		end
+
+	clsctx_inproc_handler: INTEGER_32
+		external
+			"C [macro <Objbase.h>] : EIF_INTEGER"
+		alias
+			"CLSCTX_INPROC_HANDLER"
+		end
+
+	clsctx_all: INTEGER_32
+		external
+			"C [macro <Objbase.h>] : EIF_INTEGER"
+		alias
+			"CLSCTX_ALL"
+		end
+
 	clsid_from_prog_id (a_str: POINTER; a_clsid: POINTER): INTEGER_32
 		external
 			"C inline use <Objbase.h>"
@@ -332,8 +362,9 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cpp_ole_method (a_ntype: INTEGER; a_variant_result: POINTER; a_dispatch: POINTER; a_c_str_name: POINTER; arg_count: INTEGER; a_args: POINTER): INTEGER
-			-- Allow three argument at most
+	cpp_ole_method (a_ntype: INTEGER; a_variant_result: POINTER; a_dispatch: POINTER; a_c_str_name: POINTER; arg_count: INTEGER; a_args: POINTER; a_err: TYPED_POINTER [INTEGER]): INTEGER
+			-- `a_err' returns index within rgvarg of the first parameter that has an error,
+			-- when the resulting return value of `Invoke' is DISP_E_TYPEMISMATCH or DISP_E_PARAMNOTFOUND.
 		require
 			a_dispatch_set: a_dispatch /= default_pointer
 			a_variant_result_set: a_variant_result /= default_pointer
@@ -354,7 +385,9 @@ feature {NONE} -- Externals
 
 					// Fetch arguments from Eiffel pointers.
 					for(int i=0; i<$arg_count; i++) {
-						pArgs[i] = *(VARIANT *)(*(((EIF_POINTER *)$a_args) + i));
+						/* pArgs should be in reverse order */
+						/* ref: http://msdn.microsoft.com/en-us/library/aa912367.aspx */
+						pArgs[$arg_count - i - 1] = *(VARIANT *)(*(((EIF_POINTER *)$a_args) + i));
 					}
 
 					// Build DISPPARAMS
@@ -368,7 +401,7 @@ feature {NONE} -- Externals
 					}
 
 					// Make the call!
-					hr = ((IDispatch *)$a_dispatch)->Invoke(dispID, IID_NULL, LOCALE_SYSTEM_DEFAULT, $a_ntype, &dp, (VARIANT *)$a_variant_result, NULL, NULL);
+					hr = ((IDispatch *)$a_dispatch)->Invoke(dispID, IID_NULL, LOCALE_SYSTEM_DEFAULT, $a_ntype, &dp, (VARIANT *)$a_variant_result, NULL, (UINT *)$a_err);
 
 					delete [] pArgs;
 				}
@@ -387,7 +420,7 @@ feature {NONE} -- COM Ref management
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

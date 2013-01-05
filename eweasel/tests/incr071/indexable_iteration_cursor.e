@@ -153,6 +153,17 @@ feature -- Status report
 	is_reversed: BOOLEAN
 			-- Are we traversing `target' backwards?
 
+	is_last: BOOLEAN
+			-- Is cursor at last position?
+		do
+		end
+
+	is_first: BOOLEAN
+			-- Is cursor at first position?
+		do
+		end
+
+
 feature {NONE} -- Implementation
 
 	target: READABLE_INDEXABLE [G]

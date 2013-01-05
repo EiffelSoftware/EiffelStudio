@@ -14,8 +14,15 @@ inherit
 
 feature -- Access
 
+	arguments: ARGUMENTS_32
+		once
+			create Result
+		end
+
 	command_line: ARGUMENTS
 			-- Command line that was used to start current execution
+		obsolete
+			"use `arguments' instead'"
 		once
 			create Result
 		end

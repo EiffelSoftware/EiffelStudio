@@ -103,6 +103,7 @@ test	extend-after-removal-failures	table009 tcf pass table
 test	valid-iteration-index-failure	table010 tcf fail table
 test	table-disjoint			table011 tcf fail table
 test	hash-table-is-equal		table012 tcf fail table
+test	string-table-duplicate-caseless-insertion table013 tcf pass table
 
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
 

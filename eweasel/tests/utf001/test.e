@@ -26,7 +26,6 @@ feature
 			u: UTF_CONVERTER
 			l_upper: CELL [INTEGER_32]
 			q: MANAGED_POINTER
-			l_spec8: SPECIAL [NATURAL_8]
 			l_spec16: SPECIAL [NATURAL_16]
 		do
 			s := {STRING_32} "Manu"

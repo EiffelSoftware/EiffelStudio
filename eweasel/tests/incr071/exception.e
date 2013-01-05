@@ -15,11 +15,23 @@ feature -- Access
 		do
 		end
 
+	tag: IMMUTABLE_STRING_32
+		do
+		end
+
+	description: READABLE_STRING_GENERAL
+		do
+		end
+
 	message: STRING
 			-- Message(Tag) of current exception
 
 	exception_trace: STRING is
 			-- String representation of current exception trace
+		do
+		end
+
+	trace: STRING_32
 		do
 		end
 
@@ -56,6 +68,11 @@ feature -- Status settings
 
 	set_message (a_message: like message) is
 			-- Set `message' with `a_message'.
+		do
+		end
+
+	set_description (a_description: detachable READABLE_STRING_GENERAL)
+			-- Set `description' with `a_description'.
 		do
 		end
 

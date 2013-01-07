@@ -341,7 +341,7 @@ feature {NONE} -- HTML Generation
 		require
 			a_repository_not_void: a_repository /= Void
 		local
-			file: KL_TEXT_OUTPUT_FILE
+			file: KL_TEXT_OUTPUT_FILE_32
 			set: AUT_TEST_CASE_RESULT_SET
 		do
 			create file.make (file_system.pathname (output_dirname, "summary.html"))
@@ -360,7 +360,7 @@ feature {NONE} -- HTML Generation
 	generate_header_page
 			-- Generate header page.
 		local
-			file: KL_TEXT_OUTPUT_FILE
+			file: KL_TEXT_OUTPUT_FILE_32
 		do
 			create file.make (file_system.pathname (output_dirname, "header.html"))
 			file.open_write
@@ -380,7 +380,7 @@ feature {NONE} -- HTML Generation
 			tree_content_file_not_void: tree_content_file /= Void
 			tree_content_file_open_write: tree_content_file.is_open_write
 		local
-			file: KL_TEXT_OUTPUT_FILE
+			file: KL_TEXT_OUTPUT_FILE_32
 			absolute_filename: STRING
 			filename: STRING
 			set: AUT_TEST_CASE_RESULT_SET
@@ -506,7 +506,7 @@ feature {NONE} -- HTML Generation
 			tree_content_file_open_write: tree_content_file.is_open_write
 			a_id_list_not_void: a_id_list /= Void
 		local
-			file: KL_TEXT_OUTPUT_FILE
+			file: KL_TEXT_OUTPUT_FILE_32
 			set: AUT_TEST_CASE_RESULT_SET
 			absolute_filename: STRING
 			filename: STRING
@@ -763,7 +763,7 @@ feature {NONE} -- HTML Generation
 
 feature {NONE} -- File handles
 
-	tree_content_file: KL_TEXT_OUTPUT_FILE
+	tree_content_file: KL_TEXT_OUTPUT_FILE_32
 			-- File that contains script to build Javascript tree
 
 feature {NONE} -- Implementation
@@ -951,7 +951,7 @@ invariant
 	test_case_printer_not_void: test_case_printer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

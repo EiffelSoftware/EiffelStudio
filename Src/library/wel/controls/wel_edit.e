@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Window class name to create
 		once
-			Result := "Edit"
+			Result := {STRING_32} "Edit"
 		end
 
 	default_style: INTEGER

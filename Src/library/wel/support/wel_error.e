@@ -24,7 +24,7 @@ feature -- Status
 			l_msg_box: WEL_MSG_BOX
 		do
 			l_str := text_for_error_code (last_error_code)
-			l_str.append ("%NGetLastError returned " + last_error_code.out + "%N")
+			l_str.append ({STRING_32} "%NGetLastError returned " + last_error_code.out + "%N")
 			create l_msg_box.make
 			l_msg_box.information_message_box (Void, l_str, "WEL_ERROR Dialog")
 		end
@@ -43,7 +43,7 @@ feature -- Status
 				Result := l_str.string
 				cwin_local_free (l_ptr)
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		ensure
 			text_for_error_code_not_void: Result /= Void

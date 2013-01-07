@@ -135,7 +135,7 @@ feature -- Status report
 		require
 			exits: exists
 		do
-			
+
 			Result := {WEL_API}.send_message_result_integer (item,
 				Lb_getselcount, to_wparam (0), to_lparam (0))
 		ensure
@@ -157,17 +157,17 @@ feature -- Status report
 			create Result.make_filled (0, 0, local_count_selected_items - 1)
 			if local_count_selected_items /= 0 then
 				create l_result.make (Result)
-	
+
 					-- Retrieve the selected items.
 				items_in_buffer := {WEL_API}.send_message_result_integer (
-					item, Lb_getselitems, 
+					item, Lb_getselitems,
 					to_wparam (local_count_selected_items), l_result.item)
-	
+
 					-- Check that Windows has filled the given buffer.
 				check
 					buffer_filled: items_in_buffer = local_count_selected_items
 				end
-				
+
 				Result := l_result.to_array (0)
 			end
 		ensure
@@ -184,7 +184,7 @@ feature -- Status report
 			i: INTEGER
 		do
 			a := selected_items
-			create Result.make_filled ("", a.lower, a.upper)
+			create Result.make_filled ({STRING_32} "", a.lower, a.upper)
 			from
 				i := a.lower
 			until

@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 		local
 			l_uni_str: WEL_STRING
 			l_c_str: C_STRING
-			l_text: STRING_32
+			l_text: READABLE_STRING_GENERAL
 			l_buffer: like buffer
 		do
 			l_buffer := buffer
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 				create l_c_str.make_shared_from_pointer_and_count (l_buffer.item, l_buffer.count)
 				l_text := l_c_str.substring (1, l_c_str.count)
 			end
-			text.append (l_text)
+			text.append_string_general (l_text)
 		end
 
 invariant

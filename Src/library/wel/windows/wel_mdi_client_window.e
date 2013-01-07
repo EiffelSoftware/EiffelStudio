@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Window class name to create
 		once
-			Result := "MDICLIENT"
+			Result := {STRING_32} "MDICLIENT"
 		end
 
 	default_style: INTEGER

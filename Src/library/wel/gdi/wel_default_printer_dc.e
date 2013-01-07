@@ -59,10 +59,7 @@ feature -- Basic operations
 				a_device.item, options.item, a_printer.item,
 				Max_printer_name)
 			printer := a_printer.substring (1, nb)
-			if printer.is_equal (Options_const) then
-				-- There is no default printer connected.
-				-- Nothing to be done
-			else
+			if not printer.same_string_general (Options_const) then
 				-- There is a default printer connected.
 				-- Let's parse the string and find the device,
 				-- driver and output fields.
@@ -72,6 +69,9 @@ feature -- Basic operations
 					printer.index_of (Comma_const, device_count + 2) - 1)
 				output := printer.substring (device_count + driver.count + 3,
 					printer.count)
+			else
+				-- There is no default printer connected.
+				-- Nothing to be done
 			end
 		end
 

@@ -57,31 +57,31 @@ feature -- Format encoders enumeration
 	bmp: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Bmp format encoder
 		do
-			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/bmp"))
+			Result := find_encoder_with ("image/bmp")
 		end
 
 	jpg: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Jpeg format encoder
 		do
-			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/jpeg"))
+			Result := find_encoder_with ("image/jpeg")
 		end
 
 	gif: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Gif format encoder
 		do
-			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/gif"))
+			Result := find_encoder_with ("image/gif")
 		end
 
 	tiff: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Tiff format encoder
 		do
-			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/tiff"))
+			Result := find_encoder_with ("image/tiff")
 		end
 
 	png: detachable WEL_GDIP_IMAGE_ENCODER
 			-- Png format encoder
 		do
-			Result := find_encoder_with (create {STRING_32}.make_from_string ("image/png"))
+			Result := find_encoder_with ("image/png")
 		end
 
 feature -- Parameters type enumeration
@@ -167,7 +167,7 @@ feature -- Contract support
 
 feature {NONE} -- Implementation
 
-	find_encoder_with (a_mini_type: STRING_32): detachable WEL_GDIP_IMAGE_ENCODER
+	find_encoder_with (a_mini_type: READABLE_STRING_GENERAL): detachable WEL_GDIP_IMAGE_ENCODER
 			-- Find encoder which mini type is `a_mini_type'.
 			-- Result void if not found
 		require
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			until
 				l_all_encoders.after or l_info /= Void
 			loop
-				if  l_all_encoders.item.mime_type.is_equal (a_mini_type) then
+				if  l_all_encoders.item.mime_type.same_string_general (a_mini_type) then
 					l_info := l_all_encoders.item
 				end
 				l_all_encoders.forth

@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			Result := "\\.\pipe\"
+			create Result.make_from_string_general ("\\.\pipe\")
 			Result.append_string_general (a_name)
 		ensure
 			non_void_result: Result /= Void

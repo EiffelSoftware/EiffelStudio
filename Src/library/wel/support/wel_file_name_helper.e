@@ -24,14 +24,14 @@ feature -- Access
 			create l_wel_string.make (a_file_name)
 			create l_wel_string_result.make_empty (Max_path_length)
 
-			-- Although this API's input and output string buffer can be same pointer
-			-- But we must make sure the result output string is long enough, otherwise, it will crash (in finalized mode)
+				-- Although this API's input and output string buffer can be same pointer
+				-- But we must make sure the result output string is long enough, otherwise, it will crash (in finalized mode)
 			l_api_return_value := c_win_get_short_path_name (l_wel_string.item, l_wel_string_result.item, Max_path_length);
 			if l_api_return_value > 0 and l_api_return_value < Max_path_length then
 				Result := l_wel_string_result.string
 			else
-				-- Error
-				Result := a_file_name.as_string_32
+					-- Error
+				create Result.make_from_string_general (a_file_name)
 			end
 		end
 

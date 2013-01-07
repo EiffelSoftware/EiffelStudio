@@ -48,13 +48,13 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_save: STRING
-			l_freeze_cmd, l_dir: detachable IMMUTABLE_STRING_8
-			l_exec_error: detachable STRING
+			l_freeze_cmd, l_dir: detachable IMMUTABLE_STRING_32
+			l_exec_error: detachable READABLE_STRING_32
 			l_max_c_processes: INTEGER
 			l_compilation: EQA_EW_C_COMPILATION
 			l_file_system: EQA_FILE_SYSTEM
 		do
-			l_freeze_cmd := a_test.environment.get ({EQA_EW_PREDEFINED_VARIABLES}.Freeze_command_name)
+			l_freeze_cmd := a_test.environment.item ({EQA_EW_PREDEFINED_VARIABLES}.Freeze_command_name)
 			check attached l_freeze_cmd end -- Implied by environment values have been set before executing test cases
 			l_freeze_cmd := a_test.environment.substitute_recursive (l_freeze_cmd)
 			l_file_system := a_test.file_system
@@ -66,7 +66,7 @@ feature -- Command
 
 			if l_exec_error = Void then
 				a_test.increment_c_compile_count
-				l_dir := a_test.environment.get (compilation_dir_name)
+				l_dir := a_test.environment.item (compilation_dir_name)
 				check attached l_dir end -- Implied by environment values have been set before executing test cases
 --				l_max_c_processes := a_test.environment.max_c_processes
 				if attached output_file_name as l_output_file_name and then not l_output_file_name.is_empty then

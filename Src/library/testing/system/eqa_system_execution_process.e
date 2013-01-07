@@ -102,7 +102,7 @@ feature {NONE} -- Status report
 
 feature {EQA_EXECUTION} -- Status setting
 
-	launch (a_exec: READABLE_STRING_8; a_arg_list: LIST [STRING]; a_dir: READABLE_STRING_8)
+	launch (a_exec: READABLE_STRING_GENERAL; a_arg_list: LIST [READABLE_STRING_GENERAL]; a_dir: READABLE_STRING_GENERAL)
 			-- Launch `processor'.
 		require
 			a_exec_attached: a_exec /= Void
@@ -114,7 +114,7 @@ feature {EQA_EXECUTION} -- Status setting
 			l_process: like process
 		do
 			create l_factory
-			l_process := l_factory.process_launcher (a_exec, a_arg_list, a_dir.string)
+			l_process := l_factory.process_launcher (a_exec, a_arg_list, a_dir)
 			l_process.enable_launch_in_new_process_group
 			l_process.set_separate_console (False)
 			l_process.set_hidden (True)
@@ -149,15 +149,13 @@ feature {EQA_EXECUTION} -- Basic operations
 			a_input_attached: a_input /= Void
 			running: is_running
 		local
-			l_input: STRING
 			l_process: like process
 		do
 			mutex.lock
 			if not is_finished then
-				create l_input.make_from_string (a_input)
 				l_process := process
 				check l_process /= Void end
-				l_process.put_string (l_input)
+				l_process.put_string (a_input)
 			end
 			mutex.unlock
 		end
@@ -253,7 +251,7 @@ feature {NONE} -- Basic operations
 				if not l_output_file.is_closed then
 					l_output_file.close
 				end
-				a_process.redirect_output_to_file (l_output_file.name)
+				a_process.redirect_output_to_file (l_output_file.path.name)
 			end
 			l_error_proc := error_processor
 			l_error_file := error_file
@@ -263,7 +261,7 @@ feature {NONE} -- Basic operations
 				if not l_error_file.is_closed then
 					l_error_file.close
 				end
-				a_process.redirect_error_to_file (l_error_file.name)
+				a_process.redirect_error_to_file (l_error_file.path.name)
 			else
 				a_process.redirect_error_to_same_as_output
 			end
@@ -272,7 +270,7 @@ feature {NONE} -- Basic operations
 				if not l_input_file.is_closed then
 					l_input_file.close
 				end
-				a_process.redirect_input_to_file (l_input_file.name)
+				a_process.redirect_input_to_file (l_input_file.path.name)
 			else
 				a_process.redirect_input_to_stream
 			end

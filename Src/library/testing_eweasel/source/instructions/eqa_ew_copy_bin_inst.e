@@ -16,7 +16,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Properties
 
 	substitute: BOOLEAN = True
@@ -38,10 +38,10 @@ feature {NONE} -- Implementation
 --			dest.close
 --		end
 
-	new_file (a_file_name: STRING): RAW_FILE
+	new_file (a_file_name: READABLE_STRING_GENERAL): RAW_FILE
 			-- <Precursor>
 		do
-			create Result.make (a_file_name)
+			create Result.make_with_name (a_file_name)
 		end
 
 ;note

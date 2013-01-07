@@ -14,7 +14,7 @@ class
 
 feature -- Access
 
-	get (a_key: READABLE_STRING_8): detachable IMMUTABLE_STRING_8
+	item (a_key: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
 			-- Retrieve setting for given key
 			--
 			-- `a_key': Key for which setting should be returned.
@@ -28,7 +28,7 @@ feature -- Access
 			end
 		end
 
-	get_attached (a_key: READABLE_STRING_8; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_8
+	item_attached (a_key: READABLE_STRING_GENERAL; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_32
 			-- Retrieve setting for given key or rise exception if no value for given key has been defined.
 			--
 			-- `a_key': Key for which setting should be returned.
@@ -38,9 +38,9 @@ feature -- Access
 			a_key_attached: a_key /= Void
 			an_asserter_attached: an_asserter /= Void
 		local
-			l_value: like get
+			l_value: like item
 		do
-			if attached get (a_key) as l_v then
+			if attached item (a_key) as l_v then
 				l_value := l_v
 			else
 				an_asserter.assert (a_key + " not defined", False)
@@ -51,7 +51,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	get_not_empty (a_key: READABLE_STRING_8; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_8
+	item_not_empty (a_key: READABLE_STRING_GENERAL; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_32
 			-- Retrieve setting for given key or rise exception if no value for given key has been defined
 			-- or the value defined is empty.
 			--
@@ -62,13 +62,60 @@ feature -- Access
 			a_key_attached: a_key /= Void
 			an_asserter_attached: an_asserter /= Void
 		do
-			Result := get_attached (a_key, an_asserter)
+			Result := item_attached (a_key, an_asserter)
 			an_asserter.assert (a_key + " is empty", not Result.is_empty)
+		end
+
+feature -- Access: obsolete
+
+	get (a_key: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_8
+			-- Retrieve setting for given key
+			--
+			-- `a_key': Key for which setting should be returned.
+			-- `Result': Value associated with `a_key'..
+		obsolete "Use `item' [dec/2012]"
+		require
+			a_key_attached: a_key /= Void
+		do
+			if attached item (a_key) as v then
+				create Result.make_from_string (v.as_string_8)
+			end
+		end
+
+	get_attached (a_key: READABLE_STRING_GENERAL; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_8
+			-- Retrieve setting for given key or rise exception if no value for given key has been defined.
+			--
+			-- `a_key': Key for which setting should be returned.
+			-- `an_asserter': Asserter in which exceptions are raised if value could not be retrieved.
+			-- `Result': Value associated with `a_key'.
+		obsolete "Use `item_attached' [dec/2012]"
+		require
+			a_key_attached: a_key /= Void
+			an_asserter_attached: an_asserter /= Void
+		do
+			create Result.make_from_string (item_attached (a_key, an_asserter).as_string_8)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	get_not_empty (a_key: READABLE_STRING_GENERAL; an_asserter: EQA_ASSERTIONS): IMMUTABLE_STRING_8
+			-- Retrieve setting for given key or rise exception if no value for given key has been defined
+			-- or the value defined is empty.
+			--
+			-- `a_key': Key for which setting should be returned.
+			-- `an_asserter': Asserter in which exceptions are raised if value could not be retrieved.
+			-- `Result': Non-empty value associated with `a_key'.
+		obsolete "Use `item_not_empty' [dec/2012]"
+		require
+			a_key_attached: a_key /= Void
+			an_asserter_attached: an_asserter /= Void
+		do
+			create Result.make_from_string (item_not_empty (a_key, an_asserter).as_string_8)
 		end
 
 feature {NONE} -- Access
 
-	table: HASH_TABLE [IMMUTABLE_STRING_8, READABLE_STRING_8]
+	table: STRING_TABLE [IMMUTABLE_STRING_32]
 			-- Table in which settings are stored.
 		once
 			create Result.make (default_table_size)
@@ -76,7 +123,7 @@ feature {NONE} -- Access
 
 feature -- Status setting
 
-	put (a_value: READABLE_STRING_8; a_key: READABLE_STRING_8)
+	put (a_value: READABLE_STRING_GENERAL; a_key: READABLE_STRING_GENERAL)
 			-- Set the value for a given key.
 			--
 			-- `a_value': Value for new setting.
@@ -85,16 +132,16 @@ feature -- Status setting
 			a_value_attached: a_value /= Void
 			a_key_attached: a_key /= Void
 		local
-			l_ivalue: IMMUTABLE_STRING_8
+			l_ivalue: IMMUTABLE_STRING_32
 		do
-			if attached {IMMUTABLE_STRING_8} a_value as l_v then
+			if attached {IMMUTABLE_STRING_32} a_value as l_v then
 				l_ivalue := l_v
 			else
-				create l_ivalue.make_from_string (a_value)
+				create l_ivalue.make_from_string_general (a_value)
 			end
-			table.force (a_value, a_key)
+			table.force (l_ivalue, a_key)
 		ensure
-			set: attached get (a_key) as l_value and then l_value.same_string(a_value)
+			set: attached item (a_key) as l_value and then a_value.same_string (l_value)
 		end
 
 feature {EQA_EVALUATOR} -- Status setting
@@ -107,7 +154,7 @@ feature {EQA_EVALUATOR} -- Status setting
 
 feature {NONE} -- Query
 
-	is_identifier_char (c: CHARACTER): BOOLEAN
+	is_identifier_char (c: CHARACTER_32): BOOLEAN
 			-- Is `c' an identifier character?
 		do
 			Result := (c >= 'A' and c <= 'Z') or
@@ -118,21 +165,21 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	substitute_recursive (a_line: STRING): STRING
+	substitute_recursive (a_line: READABLE_STRING_GENERAL): STRING_32
 			-- Call `substitute' recursively util no '$' found anymore
 		require
 			not_void: a_line /= Void
 		local
-			l_temp: STRING
+			l_temp: STRING_32
 			l_stop: BOOLEAN
 		do
 			from
-				Result := a_line
+				create Result.make_from_string_general (a_line)
 			until
 				not Result.has ('$') or l_stop
 			loop
 				l_temp := substitute (Result)
-				if l_temp.is_equal (Result) then
+				if l_temp.same_string (Result) then
 					l_stop := True
 				else
 					l_stop := False
@@ -143,7 +190,7 @@ feature -- Basic operations
 			not_void: Result /= Void
 		end
 
-	substitute (a_line: STRING): STRING
+	substitute (a_line: READABLE_STRING_GENERAL): STRING_32
 			-- `line' with all environment variables replaced
 			-- by their values (or left alone if not in
 			-- environment)
@@ -151,9 +198,8 @@ feature -- Basic operations
 			line_not_void: a_line /= Void
 		local
 			k, l_count, l_start: INTEGER
-			c: CHARACTER
-			l_word: STRING
-			l_replacement: detachable READABLE_STRING_8
+			c: CHARACTER_32
+			l_word: READABLE_STRING_GENERAL
 			l_subst_started, l_in_group: BOOLEAN
 		do
 			create Result.make (a_line.count)
@@ -184,12 +230,11 @@ feature -- Basic operations
 						end
 						k := k - 1
 						l_word := a_line.substring (l_start, k)
-						l_replacement := get (l_word)
-						if l_replacement /= Void then
+						if attached item (l_word) as l_replacement then
 							Result.append (l_replacement)
 						else
 							Result.extend (Substitute_char)
-							Result.append (l_word)
+							Result.append_string_general (l_word)
 						end
 						if l_in_group then
 							l_in_group := False
@@ -213,12 +258,12 @@ feature {NONE} -- Constants
 	default_table_size: INTEGER = 10
 			-- Default number of settings stored in `table'
 
-	Substitute_char: CHARACTER = '$'
+	Substitute_char: CHARACTER_32 = '$'
 			-- Character which triggers environment variable
 			-- substitution
 
-	Left_group_char: CHARACTER = '('
-	Right_group_char: CHARACTER = ')'
+	Left_group_char: CHARACTER_32 = '('
+	Right_group_char: CHARACTER_32 = ')'
 			-- Characters which are used for setting environment
 			-- variable name off from surrounding text
 

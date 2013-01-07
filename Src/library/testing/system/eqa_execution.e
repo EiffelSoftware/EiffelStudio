@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_set: like test_set; a_command: like command)
+	make (a_test_set: like test_set; a_command: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 			--
 			-- `a_test_set': Test set for which `Current' will be used.
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			l_empty_path: EQA_SYSTEM_PATH
 		do
 			test_set := a_test_set
-			command := a_command.to_string_8
+			create command.make_from_string_general (a_command)
 			create l_empty_path.make_empty
 			set_working_directory (file_system.build_source_path (l_empty_path))
 			create arguments.make (default_argument_count)
@@ -37,22 +37,22 @@ feature -- Access
 	test_set: EQA_SYSTEM_TEST_SET
 			-- Test set for which `Current' is used
 
-	command: READABLE_STRING_8
+	command: IMMUTABLE_STRING_32
 			-- Executable name
 
-	working_directory: READABLE_STRING_8
+	working_directory: IMMUTABLE_STRING_32
 			-- Working directory in which process is launched
 
-	output_file_name: detachable IMMUTABLE_STRING_8
+	output_file_name: detachable IMMUTABLE_STRING_32
 			-- File to which output will be printed, Void if output should be stored
 
-	error_file_name: detachable IMMUTABLE_STRING_8
+	error_file_name: detachable IMMUTABLE_STRING_32
 			-- File to which error output will be printed
 			--
 			-- Note: if `error_file' and `error_processor' are void at the time the `Current' is launched,
 			--       the error output will be redirected to the regular output
 
-	input_file_name: detachable IMMUTABLE_STRING_8
+	input_file_name: detachable IMMUTABLE_STRING_32
 			-- File from which input will be read, Void if input is not read from a file
 
 	output_processor: detachable EQA_SYSTEM_OUTPUT_PROCESSOR
@@ -81,7 +81,7 @@ feature {NONE} -- Access
 			Result := test_set.file_system
 		end
 
-	arguments: ARRAYED_LIST [STRING]
+	arguments: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Arguments passed to process when `launch' is called.
 
 	process: detachable EQA_SYSTEM_EXECUTION_PROCESS
@@ -107,19 +107,15 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_working_directory (a_working_directory: like working_directory)
+	set_working_directory (a_working_directory: READABLE_STRING_GENERAL)
 			-- Set `working_directory' to `a_working_directory'.
 		require
 			a_working_directory_attached: a_working_directory /= Void
 			not_launched: not is_launched
-		local
-			l_dir: detachable like working_directory
 		do
-			l_dir := a_working_directory.string
-			check l_dir /= Void end
-			working_directory := l_dir
+			create working_directory.make_from_string_general (a_working_directory)
 		ensure
-			working_directory_set: working_directory ~ a_working_directory.string
+			working_directory_set: working_directory.same_string_general (a_working_directory)
 		end
 
 	set_output_path (a_path: EQA_SYSTEM_PATH)
@@ -128,30 +124,44 @@ feature -- Status setting
 			not_launched: not is_launched
 			a_path_attached: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
-		local
-			l_path: like output_directory
 		do
-			l_path := test_set.file_system.build_path (output_directory, a_path)
-			set_output_file_name (l_path)
+			set_output_file_name (test_set.file_system.build_path (output_directory, a_path))
 		ensure
 			output_file_name_set: attached output_file_name as l_file_name and then
 				l_file_name.same_string (test_set.file_system.build_path (output_directory, a_path))
 		end
 
-	set_output_file_name (a_output_file_name: detachable READABLE_STRING_8)
+	set_output_file_name (a_output_file_name: detachable READABLE_STRING_GENERAL)
 			-- Set `output_file_name' to `a_output_file_name'.
 		require
 			not_launched: not is_launched
 			a_output_file_name_not_empty: a_output_file_name /= Void implies not a_output_file_name.is_empty
 		do
 			if a_output_file_name /= Void then
-				create output_file_name.make_from_string (a_output_file_name)
+				create output_file_name.make_from_string_general (a_output_file_name)
 			else
 				output_file_name := Void
 			end
 		ensure
 			output_file_name_set: a_output_file_name /= Void implies
-				(attached output_file_name as l_path and then l_path.same_string (a_output_file_name))
+				(attached output_file_name as l_path and then l_path.same_string_general (a_output_file_name))
+			output_file_name_unset: a_output_file_name = Void implies output_file_name = Void
+		end
+
+	set_output_file_path (a_output_file_name: detachable PATH)
+			-- Set `output_file_name' to `a_output_file_name'.
+		require
+			not_launched: not is_launched
+			a_output_file_name_not_empty: a_output_file_name /= Void implies not a_output_file_name.is_empty
+		do
+			if a_output_file_name /= Void then
+				output_file_name := a_output_file_name.name
+			else
+				output_file_name := Void
+			end
+		ensure
+			output_file_name_set: a_output_file_name /= Void implies
+				(attached output_file_name as l_path and then l_path.same_string (a_output_file_name.name))
 			output_file_name_unset: a_output_file_name = Void implies output_file_name = Void
 		end
 
@@ -161,30 +171,44 @@ feature -- Status setting
 			not_launched: not is_launched
 			a_path_attached: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
-		local
-			l_path: like output_directory
 		do
-			l_path := test_set.file_system.build_path (output_directory, a_path)
-			set_error_file_name (l_path)
+			set_error_file_name (test_set.file_system.build_path (output_directory, a_path))
 		ensure
 			error_file_name_set: attached error_file_name as l_file_name and then
 				l_file_name.same_string (test_set.file_system.build_path (output_directory, a_path))
 		end
 
-	set_error_file_name (a_error_file_name: detachable READABLE_STRING_8)
+	set_error_file_name (a_error_file_name: detachable READABLE_STRING_GENERAL)
 			-- Set `error_file_name' to `a_error_file_name'.
 		require
 			not_launched: not is_launched
 			a_error_file_name_not_empty: a_error_file_name /= Void implies not a_error_file_name.is_empty
 		do
 			if a_error_file_name /= Void then
-				create error_file_name.make_from_string (a_error_file_name)
+				create error_file_name.make_from_string_general (a_error_file_name)
 			else
 				error_file_name := Void
 			end
 		ensure
 			error_file_name_set: a_error_file_name /= Void implies
-				(attached error_file_name as l_path and then l_path.same_string (a_error_file_name))
+				(attached error_file_name as l_path and then l_path.same_string_general (a_error_file_name))
+			error_file_name_unset: a_error_file_name = Void implies error_file_name = Void
+		end
+
+	set_error_file_path (a_error_file_name: detachable PATH)
+			-- Set `error_file_name' to `a_error_file_name'.
+		require
+			not_launched: not is_launched
+			a_error_file_name_not_empty: a_error_file_name /= Void implies not a_error_file_name.is_empty
+		do
+			if a_error_file_name /= Void then
+				error_file_name := a_error_file_name.name
+			else
+				error_file_name := Void
+			end
+		ensure
+			error_file_name_set: a_error_file_name /= Void implies
+				(attached error_file_name as l_path and then l_path.same_string (a_error_file_name.name))
 			error_file_name_unset: a_error_file_name = Void implies error_file_name = Void
 		end
 
@@ -194,30 +218,44 @@ feature -- Status setting
 			not_launched: not is_launched
 			a_path_attached: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
-		local
-			l_path: READABLE_STRING_8
 		do
-			l_path := test_set.file_system.build_source_path (a_path)
-			set_input_file_name (l_path)
+			set_input_file_name (test_set.file_system.build_source_path (a_path))
 		ensure
 			input_file_name_set: attached input_file_name as l_file_name and then
 				l_file_name.same_string (test_set.file_system.build_source_path (a_path))
 		end
 
-	set_input_file_name (a_input_file_name: detachable READABLE_STRING_8)
+	set_input_file_name (a_input_file_name: detachable READABLE_STRING_GENERAL)
 			-- Set `input_file_name' to `a_input_file_name'.
 		require
 			not_launched: not is_launched
 			a_input_file_name_not_empty: a_input_file_name /= Void implies not a_input_file_name.is_empty
 		do
 			if a_input_file_name /= Void then
-				create input_file_name.make_from_string (a_input_file_name)
+				create input_file_name.make_from_string_general (a_input_file_name)
 			else
 				input_file_name := Void
 			end
 		ensure
 			input_file_name_set: a_input_file_name /= Void implies
-				(attached input_file_name as l_path and then l_path.same_string (a_input_file_name))
+				(attached input_file_name as l_path and then l_path.same_string_general (a_input_file_name))
+			input_file_name_unset: a_input_file_name = Void implies input_file_name = Void
+		end
+
+	set_input_file_path (a_input_file_name: detachable PATH)
+			-- Set `input_file_name' to `a_input_file_name'.
+		require
+			not_launched: not is_launched
+			a_input_file_name_not_empty: a_input_file_name /= Void implies not a_input_file_name.is_empty
+		do
+			if a_input_file_name /= Void then
+				input_file_name := a_input_file_name.name
+			else
+				input_file_name := Void
+			end
+		ensure
+			input_file_name_set: a_input_file_name /= Void implies
+				(attached input_file_name as l_path and then l_path.same_string (a_input_file_name.name))
 			input_file_name_unset: a_input_file_name = Void implies input_file_name = Void
 		end
 
@@ -252,10 +290,12 @@ feature -- Basic operations
 			l_output_file, l_error_file, l_input_file: detachable PLAIN_TEXT_FILE
 		do
 			if attached output_file_name as l_name then
-				create l_output_file.make_open_write (l_name)
+				create l_output_file.make_with_name (l_name)
+				l_output_file.open_write
 			end
 			if attached error_file_name as l_name then
-				create l_error_file.make_open_write (l_name)
+				create l_error_file.make_with_name (l_name)
+				l_error_file.open_write
 			end
 			if attached input_file_name as l_name then
 				create l_input_file.make_with_name (l_name)
@@ -331,14 +371,14 @@ feature -- Element change
 			arguments.wipe_out
 		end
 
-	add_argument (a_argument: READABLE_STRING_8)
+	add_argument (a_argument: READABLE_STRING_GENERAL)
 			-- Add `a_arguments' to end of `arguments'.
 		require
 			a_argument_attached: a_argument /= Void
 			not_launched: not is_launched
 			a_argument_not_empty: not a_argument.is_empty
 		do
-			arguments.force (create {STRING}.make_from_string (a_argument))
+			arguments.extend (create {IMMUTABLE_STRING_32}.make_from_string_general (a_argument))
 		ensure
 			arguments_count_increased: arguments.count = old arguments.count + 1
 			a_argument_last: arguments.last.same_string (a_argument)
@@ -346,10 +386,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	output_directory: READABLE_STRING_8
+	output_directory: READABLE_STRING_32
 			-- Path to which output files are written.
 		do
-			if attached test_set.environment.get ({EQA_EXECUTION}.output_path_key) as l_path then
+			if attached test_set.environment.item ({EQA_EXECUTION}.output_path_key) as l_path then
 				Result := l_path
 			else
 				Result := test_set.file_system.build_target_path (<< default_output_directory >>)
@@ -357,7 +397,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
-			same_as_environment: attached test_set.environment.get ({EQA_EXECUTION}.output_path_key) as l_path
+			same_as_environment: attached test_set.environment.item ({EQA_EXECUTION}.output_path_key) as l_path
 				and then l_path.same_string (Result)
 		end
 
@@ -378,19 +418,19 @@ feature {NONE} -- Implementation
 			exited: has_exited
 		end
 
-	frozen assert (a_tag: STRING; a_condition: BOOLEAN)
+	frozen assert (a_tag: READABLE_STRING_GENERAL; a_condition: BOOLEAN)
 			-- Assert `a_condition'.
 		require
 			a_tag_attached: a_tag /= Void
 		do
-			test_set.assert (a_tag, a_condition)
+			test_set.assert_32 (a_tag, a_condition)
 		end
 
 feature -- Constants
 
-	output_path_key: STRING = "OUTPUT_PATH"
+	output_path_key: STRING_32 = "OUTPUT_PATH"
 
-	default_output_directory: STRING = "output"
+	default_output_directory: STRING_32 = "output"
 
 feature {NONE} -- Constants
 

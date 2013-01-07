@@ -556,12 +556,10 @@ feature {NONE} -- Implementation
 			-- Test set that current managed
 		require
 			valid: attached (({EQA_EW_SYSTEM_TEST_SET}).attempt (Current))
-		local
-			l_result: detachable EQA_EW_SYSTEM_TEST_SET
 		do
-			l_result ?= Current
-			check attached l_result end -- Implied by precondition `valid'
-			Result := l_result
+			check attached {like test_set} Current as l_result then
+				Result := l_result
+			end
 		ensure
 			not_void: Result /= Void
 		end

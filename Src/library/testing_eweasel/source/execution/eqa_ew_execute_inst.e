@@ -78,13 +78,14 @@ feature -- Command
 			-- instructions of `a_test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			l_prog, l_outfile, l_exec_dir, l_execute_cmd: READABLE_STRING_8
-			l_exec_error: detachable STRING
+			l_prog, l_exec_dir: STRING_32
+			l_outfile, l_execute_cmd: READABLE_STRING_32
+			l_exec_error: detachable READABLE_STRING_32
 			l_execution: EQA_EW_SYSTEM_EXECUTION
 			l_file_system: EQA_FILE_SYSTEM
 			l_arguments: like arguments
 		do
-			l_execute_cmd := a_test.environment.get_attached ({EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name, a_test.asserter)
+			l_execute_cmd := a_test.environment.item_attached ({EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name, a_test.asserter)
 			l_execute_cmd := a_test.environment.substitute (l_execute_cmd)
 			l_file_system := a_test.file_system
 			l_exec_error := l_file_system.executable_file_exists (l_execute_cmd)

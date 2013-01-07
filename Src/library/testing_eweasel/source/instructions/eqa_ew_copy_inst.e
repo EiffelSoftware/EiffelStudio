@@ -66,8 +66,8 @@ feature -- Commannd
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			l_src_name: READABLE_STRING_8
-			l_dest_name: STRING
+			l_src_name: STRING_32
+			l_dest_name: STRING_32
 			l_src, l_dir, l_dest: like new_file
 			l_before_date, l_after_date: INTEGER
 			l_orig_date, l_final_date: INTEGER
@@ -156,7 +156,7 @@ feature -- Commannd
 
 feature {NONE} -- Implementation
 
-	new_file (a_file_name: STRING): FILE
+	new_file (a_file_name: READABLE_STRING_GENERAL): FILE
 			-- Create an instance of FILE
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -228,10 +228,10 @@ feature {NONE} -- Implementation
 	is_fast: BOOLEAN
 			-- Should "speed" mode be used?
 		do
-			Result := test_set.environment.get ({EQA_EW_PREDEFINED_VARIABLES}.Eweasel_fast_name) /= Void
+			Result := test_set.environment.item ({EQA_EW_PREDEFINED_VARIABLES}.Eweasel_fast_name) /= Void
 		end
 
-	check_dates (a_test: EQA_EW_SYSTEM_TEST_SET; a_start_date, a_orig_date, a_final_date, a_before_date, a_after_date: INTEGER a_fname: STRING)
+	check_dates (a_test: EQA_EW_SYSTEM_TEST_SET; a_start_date, a_orig_date, a_final_date, a_before_date, a_after_date: INTEGER a_fname: READABLE_STRING_GENERAL)
 			-- Check if date correct
 		local
 			l_error: STRING
@@ -244,13 +244,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dest_directory: STRING
+	dest_directory: STRING_32
 			-- Name of destination directory
 
-	dest_file: STRING
+	dest_file: STRING_32
 			-- Name of destination file
 
-	source_file: STRING
+	source_file: STRING_32
 			-- Name of source file (always in source directory)
 
 	use_source_environment_variable: BOOLEAN

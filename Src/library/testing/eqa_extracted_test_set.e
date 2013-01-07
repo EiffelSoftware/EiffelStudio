@@ -247,7 +247,7 @@ feature {NONE} -- Basic operations
 			l_new := a_routine.empty_operands
 			check l_new /= Void end
 			if a_operands.count < l_new.count then
-				assert ("size of operands not correct", False)
+				assert_32 ("size of operands not correct", False)
 			end
 			set_tuple_attributes (l_new, a_operands, 0)
 			a_routine.call (l_new)
@@ -279,14 +279,14 @@ feature {NONE} -- Object initialization
 						if attached {STRING} context.item (i).attributes.item (1) as l_string_object then
 							l_object := l_string_object
 						else
-							assert ("first attribute of a STRING_8 or STRING_32 object must be a manifest string", False)
+							assert_32 ("first attribute of a STRING_8 or STRING_32 object must be a manifest string", False)
 						end
 					else
 						l_gtype := generic_dynamic_type (context.item (i).type, 1)
 						if attached {ANY} new_instance_of (l_gtype) as l_any then
 							l_object := l_any
 						else
-							assert ("objects of type " + type_name_of_type (l_gtype) + " are not supported", False)
+							assert_32 ("objects of type " + type_name_of_type (l_gtype) + " are not supported", False)
 						end
 					end
 					check l_object /= Void end
@@ -308,7 +308,7 @@ feature {NONE} -- Object initialization
 						if is_valid_item_tuple (l_special_object, context.item (i).attributes) then
 							set_special_attributes (l_special_object, context.item (i).attributes)
 						else
-							assert ("all items of a special object must be of the same type", False)
+							assert_32 ("all items of a special object must be of the same type", False)
 						end
 					elseif attached {TUPLE} l_object as l_tuple_object then
 							-- First item of `an_attribute_list' describes whether
@@ -320,7 +320,7 @@ feature {NONE} -- Object initialization
 								l_tuple_object.compare_references
 							end
 						else
-							assert ("first item of tuple object must be boolean", False)
+							assert_32 ("first item of tuple object must be boolean", False)
 						end
 						set_tuple_attributes (l_tuple_object, context.item (i).attributes, 1)
 					else
@@ -394,7 +394,7 @@ feature {NONE} -- Object initialization
 					check l_special /= Void end
 					l_result := l_special
 				else
-					assert ("special type not supported", False)
+					assert_32 ("special type not supported", False)
 					check l_result /= Void end
 				end
 				Result := l_result
@@ -424,7 +424,7 @@ feature {NONE} -- Object initialization
 				if an_attributes.is_reference_item (i) and then attached {STRING} an_attributes.reference_item (i) as l_key then
 					l_attributes.force (i + 1, l_key)
 				else
-					assert ("attribute tuple for normal object must always be a pair of strings and values", False)
+					assert_32 ("attribute tuple for normal object must always be a pair of strings and values", False)
 				end
 				i := i + 2
 			end
@@ -596,7 +596,7 @@ feature {NONE} -- Object initialization
 				when {TUPLE}.pointer_code then
 
 				else
-					assert ("Tuple item type not supported", False)
+					assert_32 ("Tuple item type not supported", False)
 				end
 				i := i + 1
 			end

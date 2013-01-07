@@ -27,11 +27,8 @@ feature {NONE} -- Initialization
 			-- `a_test_set': Test set for which `Current' will be used.
 		require
 			a_test_set_attached: a_test_set /= Void
-		local
-			l_cmd: like command
 		do
-			l_cmd := a_test_set.environment.get_attached (system_executable_key, a_test_set.asserter)
-			make_execution (a_test_set, l_cmd)
+			make_execution (a_test_set, a_test_set.environment.item_attached (system_executable_key, a_test_set.asserter))
 		end
 
 feature -- Constants

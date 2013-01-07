@@ -52,7 +52,7 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_compilation: detachable EQA_EW_EIFFEL_COMPILATION
-			l_path: READABLE_STRING_8
+			l_path: STRING_32
 		do
 			l_compilation := a_test.e_compilation
 			if l_compilation = Void then

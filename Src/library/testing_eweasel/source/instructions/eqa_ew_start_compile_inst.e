@@ -32,14 +32,14 @@ feature -- Command
 			l_name: STRING
 			l_exec_error: detachable STRING
 			l_compilation: detachable EQA_EW_EIFFEL_COMPILATION
-			l_curr_dir: STRING
+			l_curr_dir: PATH
 			l_file_system: EQA_FILE_SYSTEM
 		do
 			-- Work around a bug in Eiffel 4.2 (can't start
 			-- es4 on existing project unless project directory
 			-- is current directory
 
-			l_curr_dir := current_working_directory
+			l_curr_dir := current_working_path
 --			l_test_dir := a_test.environment.target_directory -- FIXME: use file system to build target directory
 
 			l_compilation := a_test.e_compilation
@@ -70,15 +70,15 @@ feature -- Command
 				print (failure_explanation)
 				a_test.assert ("Invalid compile instruction", False)
 			end
-			change_working_directory (l_curr_dir)
+			change_working_path (l_curr_dir)
 		end
 
 feature {NONE} -- Query
 
-	compiler_arguments (a_test: EQA_EW_SYSTEM_TEST_SET): LINKED_LIST [STRING]
+	compiler_arguments (a_test: EQA_EW_SYSTEM_TEST_SET): LINKED_LIST [STRING_32]
 			-- The arguments to the compiler for test `test'.
 		local
-			l_test_dir: READABLE_STRING_8
+			l_test_dir: STRING_32
 			l_ecf_name: detachable STRING
 		do
 			create Result.make

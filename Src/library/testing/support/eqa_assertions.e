@@ -6,26 +6,27 @@ note
 class
 	EQA_ASSERTIONS
 
-inherit
-	EXCEPTIONS
-
 feature -- Basic operations
 
-	frozen assert (a_tag: STRING; a_condition: BOOLEAN)
+	frozen assert (a_tag: READABLE_STRING_GENERAL; a_condition: BOOLEAN)
 			-- Assert `a_condition'.
 		require
 			a_tag_not_void: a_tag /= Void
+		local
+			l_exception: DEVELOPER_EXCEPTION
 		do
 			last_assertion_failed := not a_condition
 			if last_assertion_failed then
 				on_violation (a_tag)
-				raise (a_tag)
+				create l_exception
+				l_exception.set_description (a_tag)
+				l_exception.raise
 			else
 				on_satisfaction (a_tag)
 			end
 		end
 
-	disassert (a_tag: STRING; a_condition: BOOLEAN)
+	disassert (a_tag: READABLE_STRING_GENERAL; a_condition: BOOLEAN)
 			-- Assert that `a_condition' is false.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -33,7 +34,7 @@ feature -- Basic operations
 			assert (a_tag, not a_condition)
 		end
 
-	on_violation (a_tag: STRING)
+	on_violation (a_tag: READABLE_STRING_GENERAL)
 			-- Called when a violation occurred in `assert'.
 		require
 			last_assertion_failed: last_assertion_failed
@@ -41,7 +42,7 @@ feature -- Basic operations
 		do
 		end
 
-	on_satisfaction (a_tag: STRING)
+	on_satisfaction (a_tag: READABLE_STRING_GENERAL)
 			-- Called when no violation occurred in `assert'.
 		require
 			last_assertion_succeeded: not last_assertion_failed

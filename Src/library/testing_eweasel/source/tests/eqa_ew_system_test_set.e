@@ -43,7 +43,8 @@ feature {NONE} -- Initialization
 			i: INTEGER
 			l_env: like environment
 			l_exec_env: EXECUTION_ENVIRONMENT
-			l_test_name, l_ise_platform, l_path: READABLE_STRING_8
+			l_test_name, l_ise_platform: READABLE_STRING_32
+			l_path: STRING_32
 			l_ew_test_name: STRING
 		do
 
@@ -59,22 +60,22 @@ feature {NONE} -- Initialization
 			until
 				i > l_vars.upper
 			loop
-				if attached l_exec_env.get (l_vars[i]) as l_env_var then
+				if attached l_exec_env.item (l_vars[i]) as l_env_var then
 					l_env.put (l_env_var, l_vars[i])
 				end
 				i := i + 1
 			end
 
-			l_ise_platform := l_env.get_not_empty ("ISE_PLATFORM", asserter)
+			l_ise_platform := l_env.item_not_empty ("ISE_PLATFORM", asserter)
 
-			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "precomp", "spec", l_ise_platform, "base.ecf" >>)
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << {STRING_32} "precomp", {STRING_32} "spec", l_ise_platform, {STRING_32} "base.ecf" >>)
 			l_env.put (l_path, "PRECOMPILED_BASE")
-			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "precomp", "spec", l_ise_platform, "base-mt.ecf" >>)
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << {STRING_32} "precomp", {STRING_32} "spec", l_ise_platform, {STRING_32} "base-mt.ecf" >>)
 			l_env.put (l_path, "PRECOMPILED_BASE_MT")
-			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "precomp", "spec", l_ise_platform, "base-safe.ecf" >>)
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << {STRING_32} "precomp", {STRING_32} "spec", l_ise_platform, {STRING_32} "base-safe.ecf" >>)
 			l_env.put (l_path, "PRECOMPILED_BASE_SAFE")
 
-			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << "studio", "spec", l_ise_platform, "bin", "ec" >>)
+			l_path := file_system.build_path_from_key ("ISE_EIFFEL", << {STRING_32} "studio", {STRING_32} "spec", l_ise_platform, {STRING_32} "bin", {STRING_32} "ec" >>)
 			l_env.put (l_path, {EQA_SYSTEM_EXECUTION}.system_executable_key)
 			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.Compile_command_name)
 
@@ -135,7 +136,7 @@ feature {NONE} -- Initialization
 
 				-- Note: the following is a workaround to obtain the former Eweasel test name from the current one
 				--       e.g. TEST_ATTACH.test_001  --> attach001
-			l_test_name := l_env.get_attached (test_name_key, asserter)
+			l_test_name := l_env.item_attached (test_name_key, asserter)
 			assert("valid_test_name_format", l_test_name.starts_with ("TEST_") and l_test_name.has_substring (".test_"))
 			create l_ew_test_name.make_from_string (l_test_name)
 			l_ew_test_name.remove_head (5)
@@ -178,7 +179,7 @@ feature {NONE} -- Initialization
 			a_key_attached: a_key /= Void
 			a_key_not_empty: not a_key.is_empty
 		local
-			l_path: READABLE_STRING_8
+			l_path: STRING_32
 			l_dir: DIRECTORY
 		do
 			l_path := file_system.build_target_path (a_path)
@@ -270,10 +271,10 @@ feature -- Query
 	execution_result: detachable EQA_EW_EXECUTION_RESULT
 			-- Result of the last Eiffel system execution.
 
-	has_env (a_key: STRING): BOOLEAN
+	has_env (a_key: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_key' has associate value in `environment'
 		do
-			Result := attached environment.get (a_key)
+			Result := attached environment.item (a_key)
 		end
 
 feature -- Command

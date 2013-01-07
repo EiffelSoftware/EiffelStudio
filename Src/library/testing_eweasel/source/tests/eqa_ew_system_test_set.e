@@ -170,7 +170,7 @@ feature {NONE} -- Initialization
 
 		end
 
-	associate (a_key: READABLE_STRING_8; a_path: detachable EQA_SYSTEM_PATH)
+	associate (a_key: READABLE_STRING_32; a_path: detachable EQA_SYSTEM_PATH)
 			-- Define target directory for `a_path' in environment under `a_key' and make sure
 			-- directory exists.
 			--

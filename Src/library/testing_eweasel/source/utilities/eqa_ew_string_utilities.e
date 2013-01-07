@@ -67,7 +67,7 @@ feature -- String properties
 			Result := not failure
 		end;
 
-	is_prefix (s, t: STRING): BOOLEAN
+	is_prefix (s, t: READABLE_STRING_8): BOOLEAN
 			-- Is `s' a prefix of `t'?
 		require
 			string1_not_void: s /= Void

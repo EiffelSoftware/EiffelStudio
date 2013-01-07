@@ -7,14 +7,11 @@ class
 	ROOT_CLASS
 
 inherit
+	LOCALIZED_PRINTER
+
 	EIFFEL_LAYOUT
 
 	CONF_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	KL_SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -40,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation: results
 
-	failed_compilations: LINKED_LIST [TUPLE [log: detachable READABLE_STRING_8; ecf: READABLE_STRING_32; system: READABLE_STRING_8; target: READABLE_STRING_8; uuid: READABLE_STRING_8]]
+	failed_compilations: LINKED_LIST [TUPLE [log: detachable PATH; ecf: PATH; system: READABLE_STRING_8; target: READABLE_STRING_8; uuid: READABLE_STRING_8]]
 
 	failed_compilations_count: INTEGER
 			-- Count of failed compilations
@@ -78,15 +75,15 @@ feature {NONE} -- Implementation: results
 	report_failed (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET)
 			-- Report failed compilation
 		local
-			l_logfn: detachable READABLE_STRING_8
+			l_logfn: detachable PATH
 		do
 			if arguments.is_log_verbose then
 				l_logfn := logs_filename (a_action_mode, a_target)
 			end
-			failed_compilations.extend ([l_logfn, a_target.system.file_name, a_target.system.name, a_target.name, a_target.system.uuid.out])
+			failed_compilations.extend ([l_logfn, a_target.system.file_path, a_target.system.name, a_target.name, a_target.system.uuid.out])
 		end
 
-	report_ignored (a_ecf: READABLE_STRING_8; a_target: detachable CONF_TARGET)
+	report_ignored (a_ecf: PATH; a_target: detachable CONF_TARGET)
 			-- Report skipped or ignored compilation
 		do
 			ignored_compilations_count := ignored_compilations_count + 1
@@ -97,19 +94,19 @@ feature {NONE} -- Implementation
 	arguments: ARGUMENT_PARSER
 			-- Command line arguments.
 
-	base_location: detachable READABLE_STRING_8
+	base_location: detachable PATH
 			-- Base location where to look for .ecf files.
 
-	ignores: HASH_TABLE [SEARCH_TABLE [STRING], STRING]
+	ignores: STRING_TABLE [STRING_TABLE [BOOLEAN]]
 			-- Ignored files/targets.
 
-	directory_ignores: SEARCH_TABLE [STRING]
+	directory_ignores: STRING_TABLE [READABLE_STRING_GENERAL]
 			-- Ignored directories
 
-	regexp_ignores: ARRAYED_LIST [RX_REGULAR_EXPRESSION]
+	regexp_ignores: ARRAYED_LIST [REGULAR_EXPRESSION]
 			-- Ignored regexp
 
-	path_regexp_ignored (p: STRING): BOOLEAN
+	path_regexp_ignored (p: READABLE_STRING_32): BOOLEAN
 			-- Is path ignored in relation with `regexp_ignores'?
 		do
 			if
@@ -135,63 +132,65 @@ feature {NONE} -- Implementation
 		require
 			arguments_attached: arguments /= Void
 		local
-			loc: READABLE_STRING_8
+			loc: PATH
+			l_env: EXECUTION_ENVIRONMENT
 		do
-			if arguments.ignore /= Void then
-				load_ignores (arguments.ignore)
+			if attached arguments.ignore as l_ignore then
+				load_ignores (l_ignore)
 			end
 			if arguments.is_ecb then
-				execution_environment.set_variable_value ("EC_NAME", "ecb")
+				create l_env
+				l_env.put ("ecb", "EC_NAME")
 			end
 			set_interface_texts_from_argument (arguments)
 			loc := arguments.location
 
 			set_base_location (loc)
-			io.put_string ("Base location: %"" + loc + "%"")
+			localized_print ({STRING_32} "Base location: %"" + loc.name + "%"")
 			io.put_new_line
 			io.put_new_line
 			process_directory (loc)
 
 			io.put_new_line
-			io.put_string ("Passed: ")
+			localized_print("Passed: ")
 			io.put_integer (passed_compilations_count)
-			io.put_string (" / ")
+			localized_print (" / ")
 			io.put_integer (total_count)
-			io.put_string ("  (")
+			localized_print("  (")
 			io.put_integer (((passed_compilations_count / total_count) * 100).truncated_to_integer)
-			io.put_string ("%%)")
+			localized_print ("%%)")
 			io.put_new_line
 
-			io.put_string ("Failed: ")
+			localized_print ("Failed: ")
 			io.put_integer (failed_compilations_count)
-			io.put_string (" / ")
+			localized_print (" / ")
 			io.put_integer (total_count)
-			io.put_string ("  (")
+			localized_print ("  (")
 			io.put_integer (((failed_compilations_count / total_count) * 100).truncated_to_integer)
-			io.put_string ("%%)")
+			localized_print ("%%)")
 			io.put_new_line
 
-			io.put_string ("Ignored: ")
+			localized_print ("Ignored: ")
 			io.put_integer (ignored_compilations_count)
-			io.put_string (" / ")
+			localized_print (" / ")
 			io.put_integer (total_count)
-			io.put_string ("  (")
+			localized_print ("  (")
 			io.put_integer (((ignored_compilations_count / total_count) * 100).truncated_to_integer)
-			io.put_string ("%%)")
+			localized_print ("%%)")
 			io.put_new_line
 
 			io.put_new_line
 			if arguments.list_failures then
 				io.put_new_line
 				if failed_compilations_count > 0 then
-					io.put_string (failed_compilations_count.out + " failure(s):")
+					localized_print (failed_compilations_count.out + " failure(s):")
 					io.put_new_line
 					across
 						failed_compilations as c
 					loop
-						io.put_string (c.item.system + "-" + c.item.uuid + "-" + c.item.target + " (" + c.item.ecf + ")")
+						localized_print ({STRING_32} "" + c.item.system + "-" + c.item.uuid + "-" + c.item.target + " (" + c.item.ecf.name + ")")
 						if attached c.item.log as l_logfn then
-							io.put_string (": " + l_logfn)
+							localized_print ({STRING_32} ": " + l_logfn.name)
 						end
 						io.put_new_line
 					end
@@ -199,22 +198,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_base_location (loc: READABLE_STRING_8)
+	set_base_location (loc: PATH)
 			-- Set `base_location' to `loc'
 		require
 			loc_not_empty: not loc.is_empty
-		local
-			sep: CHARACTER
 		do
-			sep := operating_environment.directory_separator
-			if loc.item (loc.count) /= sep then
-				base_location := loc + sep.out
-			else
-				base_location := loc
-			end
+			base_location := loc
+		ensure
+			base_location_set: base_location = loc
 		end
 
-	load_ignores (a_file: STRING)
+	load_ignores (a_file: READABLE_STRING_GENERAL)
 			-- Retrieve list of ignored files/targets from `a_file'.
 		require
 			a_file_ok: a_file /= Void
@@ -225,12 +219,12 @@ feature {NONE} -- Implementation
 			l_ignored_files: ARRAYED_LIST [INI_SECTION]
 			l_ini_section: INI_SECTION
 			l_ignored_targets: ARRAYED_LIST [INI_LITERAL]
-			l_ig_target: SEARCH_TABLE [STRING]
+			l_ig_target: STRING_TABLE [BOOLEAN]
 			l_actual_path: STRING
 			l_label: STRING
-			rexp: RX_PCRE_REGULAR_EXPRESSION
+			rexp: REGULAR_EXPRESSION
 		do
-			create l_file.make (a_file)
+			create l_file.make_with_name (a_file)
 			if not l_file.exists or else not l_file.is_readable then
 				display_error ("Could not open ignore file "+a_file)
 			else
@@ -258,7 +252,7 @@ feature {NONE} -- Implementation
 						l_ini_section := l_ignored_files.item
 						l_label := l_ini_section.label
 						if l_label.starts_with ("regexp=") then
-							create rexp.make
+							create rexp
 							l_label := l_label.substring (("regexp=").count + 1, l_label.count)
 							l_label.left_adjust
 							l_label.right_adjust
@@ -268,22 +262,22 @@ feature {NONE} -- Implementation
 							end
 						else
 							l_label := translated_platform_path (l_label)
-							l_actual_path := execution_environment.interpreted_string (l_label)
-							create l_file.make (l_actual_path)
+							l_actual_path := (create {ENV_INTERP}).interpreted_string_32 (l_label)
+							create l_file.make_with_name (l_actual_path)
 							if not l_file.exists then
 								display_error ("Could not read file/path "+l_label+"!")
 							elseif l_file.is_directory then
-								directory_ignores.force (l_actual_path.as_lower)
+								directory_ignores.force (l_actual_path, l_actual_path)
 							else
 									-- no literals implies the whole configuration file is ignored, else each literal represents an ignored target
 								from
 									l_ignored_targets := l_ini_section.literals
-									create l_ig_target.make (l_ignored_targets.count)
+									create l_ig_target.make_caseless (l_ignored_targets.count)
 									l_ignored_targets.start
 								until
 									l_ignored_targets.after
 								loop
-									l_ig_target.force (l_ignored_targets.item.name)
+									l_ig_target.force (True, l_ignored_targets.item.name)
 									l_ignored_targets.forth
 								end
 								ignores.force (l_ig_target, l_actual_path)
@@ -295,72 +289,59 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_directory (a_directory: STRING)
+	process_directory (a_directory: PATH)
 			-- Process `a_directory'.
 		require
 			a_directory_ok: a_directory /= Void and then not a_directory.is_empty
 		local
-			l_dir: KL_DIRECTORY
-			dn: STRING
+			l_dir: DIRECTORY
+			l_file: RAW_FILE
+			l_fn: PATH
 		do
-			dn := a_directory.string
-			if not path_regexp_ignored (dn) then
-				create l_dir.make (dn)
+			if not path_regexp_ignored (a_directory.name) then
+				create l_dir.make_with_path (a_directory)
 				if not l_dir.is_readable then
-					display_error ("Could not read "+a_directory+"!")
-				elseif directory_ignores = Void or else not directory_ignores.has (dn.as_lower) then
+					display_error ({STRING_32} "Could not read "+a_directory.name+"!")
+				elseif directory_ignores = Void or else not directory_ignores.has (a_directory.name) then
 						-- Process only if the directory is not excluded.
 						-- 1 - process config files with an ecf extension
-					l_dir.filenames.do_if (
-						agent (a_dir, a_file: STRING)
-							local
-								l_fn: FILE_NAME
-							do
-								create l_fn.make_from_string (a_dir)
-								l_fn.set_file_name (a_file)
-								process_configuration (l_fn, a_dir)
-							end (a_directory, ?),
-						agent (a_file: STRING): BOOLEAN
-							local
-								l_cnt: INTEGER
-							do
-								l_cnt := a_file.count
-								Result := l_cnt > 4 and then a_file.substring (l_cnt-3, l_cnt).is_equal (".ecf")
-							end)
-						-- 2 - process subdirs
-					l_dir.directory_names.do_all (agent (a_dir, a_subdir: STRING)
-						local
-							l_dirname: DIRECTORY_NAME
-						do
-							create l_dirname.make_from_string (a_dir)
-							l_dirname.extend (a_subdir)
-							process_directory (l_dirname)
-						end (dn, ?)
-					)
+					across l_dir.entries as l_entry loop
+						if not l_entry.item.is_current_symbol and not l_entry.item.is_parent_symbol then
+							l_fn := a_directory.extended_path (l_entry.item)
+							create l_file.make_with_path (l_fn)
+							if l_file.exists then
+								if l_file.is_directory then
+									process_directory (l_fn)
+								elseif l_fn.has_extension ("ecf") and l_file.is_plain then
+									process_configuration (l_fn, a_directory)
+								end
+							end
+						end
+					end
 				end
 			end
 		end
 
-	process_configuration (a_file, a_dir: STRING)
+	process_configuration (a_file, a_dir: PATH)
 			-- Process configuration file `a_file' located in `a_dir'
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 			a_dir_ok: a_dir /= Void and then not a_dir.is_empty
 		local
 			l_loader: CONF_LOAD
-			l_ignored_targets: SEARCH_TABLE [STRING]
+			l_ignored_targets: STRING_TABLE [BOOLEAN]
 			l_skip_dotnet: BOOLEAN
 			l_target: CONF_TARGET
 		do
 			if attached ignores as l_ignores then
-				l_ignored_targets := l_ignores.item (a_file.string.as_lower)
+				l_ignored_targets := l_ignores.item (a_file.name)
 			end
 				--| if the file is not listed in the excludes or explicitely lists excluded targets
 			if l_ignored_targets = Void or else not l_ignored_targets.is_empty then
 				create l_loader.make (create {CONF_PARSE_FACTORY})
-				l_loader.retrieve_configuration (a_file)
+				l_loader.retrieve_configuration (a_file.name)
 				if l_loader.is_error then
-					display_error ("Could not retrieve configuration "+a_file+"!")
+					display_error ({STRING_32} "Could not retrieve configuration "+a_file.name+"!")
 				else
 					l_skip_dotnet := arguments.skip_dotnet
 					across l_loader.last_system.compilable_targets as l_cursor loop
@@ -383,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_target (a_target: CONF_TARGET; a_dir: STRING)
+	process_target (a_target: CONF_TARGET; a_dir: PATH)
 			-- Compile `a_target' located in `a_dir'.
 		require
 			a_target_ok: a_target /= Void
@@ -421,26 +402,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clean_after (a_using_ecf_dir: BOOLEAN; a_dir: READABLE_STRING_8; a_target_name: READABLE_STRING_8)
+	clean_after (a_using_ecf_dir: BOOLEAN; a_dir: PATH; a_target_name: READABLE_STRING_8)
 			-- Clean compilation directory
 		local
-			dn: DIRECTORY_NAME
+			dn: PATH
 			d: DIRECTORY
 		do
-			create dn.make_from_string (a_dir)
-			dn.extend ("EIFGENs")
-			dn.extend (a_target_name)
-			create d.make (dn.string)
+			dn := a_dir.extended ("EIFGENs").extended (a_target_name)
+			create d.make_with_path (dn)
 			rmdir (d) --| Safe to delete under EIFGENs
 
-			dn.make_from_string (a_dir)
-			dn.extend ("EIFGENs")
-			d.make (dn.string)
+			dn := a_dir.extended ("EIFGENs")
+			d.make_with_path (dn)
 			if d.exists and then d.is_empty then
 				if a_using_ecf_dir then
 					rmdir (d) --| Safe to delete EIFGENs
 				else
-					d.make (a_dir)
+					d.make_with_path (a_dir)
 					safe_rmdir (d) --| Try to delete parent of EIFGENs
 				end
 			end
@@ -474,7 +452,8 @@ feature {NONE} -- Implementation
 
 			if l_vis.is_error then
 				if arguments.is_log_verbose then
-					create l_file.make_open_write (logs_filename ("parse", a_target))
+					create l_file.make_with_path (logs_filename ("parse", a_target))
+					l_file.open_write
 					l_vis.last_errors.do_all (agent (a_error: CONF_ERROR; a_file: PLAIN_TEXT_FILE)
 						do
 							a_file.put_string (a_error.out)
@@ -490,7 +469,7 @@ feature {NONE} -- Implementation
 			io.new_line
 		end
 
-	compilation (a_action_mode: STRING; a_clean: BOOLEAN;  a_target: CONF_TARGET; a_dir: STRING): BOOLEAN
+	compilation (a_action_mode: STRING; a_clean: BOOLEAN;  a_target: CONF_TARGET; a_dir: PATH): BOOLEAN
 			-- Compile `a_target' located in `a_dir' according to `a_action_mode' clean before compilation if `a_clean'.
 			-- and return True if compilation was Ok, and False if it failed.
 		require
@@ -499,14 +478,14 @@ feature {NONE} -- Implementation
 			a_target_ok: a_target /= Void
 			a_dir_ok: a_dir /= Void and then not a_dir.is_empty
 		local
-			l_args: ARRAYED_LIST [STRING]
+			l_args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 			l_system, l_target: STRING
-			l_file: STRING
-			l_dir: KL_DIRECTORY
+			l_file: PATH
+			l_dir: DIRECTORY
 			l_info_file: RAW_FILE
-			l_info_filename: FILE_NAME
+			l_info_filename: PATH
 			l_action: READABLE_STRING_8
 			rescued: BOOLEAN
 		do
@@ -537,18 +516,18 @@ feature {NONE} -- Implementation
 
 				l_args.extend ("-project_path")
 				if attached arguments.compilation_dir as l_compile_dir then
-					create l_dir.make (compilation_directory (a_target, l_compile_dir, a_dir))
+					l_info_filename := compilation_directory (a_target, l_compile_dir, a_dir)
+					create l_dir.make_with_path (l_info_filename)
 					mkdir (l_dir)
-					create l_info_filename.make_from_string (l_dir.name)
-					l_info_filename.set_file_name ("ecf_location")
-					create l_info_file.make_create_read_write (l_info_filename)
+					create l_info_file.make_with_path (l_info_filename.extended ("ecf_location"))
+					l_info_file.create_read_write
 					l_info_file.put_string (a_target.system.file_name)
 					l_info_file.close
 
-					l_args.extend (l_dir.name)
+					l_args.extend (l_info_filename.name)
 				else
 						-- We always use the directory of the ECF by default
-					l_args.extend (compilation_directory (a_target, Void, a_dir))
+					l_args.extend (compilation_directory (a_target, Void, a_dir).name)
 				end
 
 				if a_action_mode.is_equal ("melt") then
@@ -590,7 +569,7 @@ feature {NONE} -- Implementation
 				if arguments.is_log_verbose then
 					l_file := logs_filename (a_action_mode, a_target)
 					add_data_to_file (l_file, a_target.system.file_name, a_target.name, l_args)
-					l_prc_launcher.redirect_output_to_file (l_file)
+					l_prc_launcher.redirect_output_to_file (l_file.name)
 				else
 					l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING)
 						do
@@ -625,41 +604,39 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	compilation_directory (a_target: CONF_TARGET; a_compilation_dir: detachable READABLE_STRING_8; a_ecf_dir: READABLE_STRING_8): READABLE_STRING_8
+	compilation_directory (a_target: CONF_TARGET; a_compilation_dir: detachable PATH; a_ecf_dir: PATH): PATH
 			-- Compilation directory
-		local
-			dn: DIRECTORY_NAME
 		do
 			if a_compilation_dir /= Void then
-				create dn.make_from_string (a_compilation_dir)
-				dn.extend (a_target.system.name + "-" + a_target.system.uuid.out)
-				Result := dn.string
+				Result := a_compilation_dir
+				Result := Result.extended (a_target.system.name + "-" + a_target.system.uuid.out)
 			else
 					-- We always use the directory of the ECF by default
-				Result := a_ecf_dir.string
+				Result := a_ecf_dir
 			end
 		end
 
-	logs_filename (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET): READABLE_STRING_8
+	logs_filename (a_action_mode: READABLE_STRING_GENERAL; a_target: CONF_TARGET): PATH
 		require
 			is_log_verbose: arguments.is_log_verbose
 		local
-			l_logs_file_name: FILE_NAME
+			l_logs_file_name: STRING_32
 		do
-			Result := a_target.system.name + "-" + a_target.system.uuid.out + "-" + a_target.name + "-" + a_action_mode + ".log"
+			l_logs_file_name := a_target.system.name + "-" + a_target.system.uuid.out + "-" + a_target.name + "-" + a_action_mode + ".log"
 			if attached arguments.logs_dir as l_logs_dir then
-				create l_logs_file_name.make_from_string (l_logs_dir)
-				l_logs_file_name.set_file_name (Result)
-				Result := l_logs_file_name.string
+				Result := l_logs_dir
+			else
+				create Result.make_current
 			end
+			Result := Result.extended (l_logs_file_name)
 		end
 
-	ISE_EC_FLAGS_environment_variable_value: detachable READABLE_STRING_8
+	ISE_EC_FLAGS_environment_variable_value: detachable READABLE_STRING_32
 		local
 			e: EXECUTION_ENVIRONMENT
 		once
 			create e
-			if attached e.get ("ISE_EC_FLAGS") as v then
+			if attached e.item ("ISE_EC_FLAGS") as v then
 				v.left_adjust
 				if not v.is_empty then
 					Result := v
@@ -667,7 +644,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_data_to_file (a_file_name: STRING; a_config, a_target: STRING; ec_args: ITERABLE [READABLE_STRING_8])
+	add_data_to_file (a_file_name: PATH; a_config, a_target: STRING; ec_args: ITERABLE [READABLE_STRING_GENERAL])
 			-- Insert some data in `a_file_name' saying what we are compiling and when.
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -677,10 +654,12 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			l_file: PLAIN_TEXT_FILE
 			l_date: DATE_TIME
+			u: UTF_CONVERTER
 		do
 			if not retried then
 				create l_date.make_now
-				create l_file.make_open_append (a_file_name)
+				create l_file.make_with_path (a_file_name)
+				l_file.open_append
 				l_file.put_string ("**********************************************************************%N")
 				l_file.put_string ("Date: ")
 				l_file.put_string (l_date.out)
@@ -689,11 +668,11 @@ feature {NONE} -- Implementation
 				l_file.put_string ("%" from config %"")
 				l_file.put_string (a_config)
 				l_file.put_string ("%"%N%N")
-				l_file.put_string ("Compiler's arguments: ")
+				l_file.put_string ("Compiler's arguments in UTF-8 encoding: ")
 				across
 					ec_args as c
 				loop
-					l_file.put_string (c.item + " ")
+					l_file.put_string (u.utf_32_string_to_utf_8_string_8 (c.item) + " ")
 				end
 				l_file.put_string ("%N")
 				if attached ISE_EC_FLAGS_environment_variable_value as v then
@@ -709,30 +688,30 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Error handling
 
-	display_error (a_message: STRING)
+	display_error (a_message: READABLE_STRING_GENERAL)
 			-- Process `a_message'.
 		require
 			a_message_ok: a_message /= Void and then not a_message.is_empty
 		do
-			io.error.put_string (a_message)
+			localized_print_error (a_message)
 			io.error.new_line
 		end
 
 feature {NONE} -- Interface text
 
-	interface_output_action_template: READABLE_STRING_8
+	interface_output_action_template: READABLE_STRING_32
 
-	interface_text_target: READABLE_STRING_8
+	interface_text_target: READABLE_STRING_32
 
-	interface_text_error: READABLE_STRING_8
-	interface_text_passed: READABLE_STRING_8
-	interface_text_failed: READABLE_STRING_8
-	interface_text_ignored: READABLE_STRING_8
+	interface_text_error: READABLE_STRING_32
+	interface_text_passed: READABLE_STRING_32
+	interface_text_failed: READABLE_STRING_32
+	interface_text_ignored: READABLE_STRING_32
 
-	interface_text_parsing: READABLE_STRING_8
-	interface_text_melting: READABLE_STRING_8
-	interface_text_freezing: READABLE_STRING_8
-	interface_text_finalizing: READABLE_STRING_8
+	interface_text_parsing: READABLE_STRING_32
+	interface_text_melting: READABLE_STRING_32
+	interface_text_freezing: READABLE_STRING_32
+	interface_text_finalizing: READABLE_STRING_32
 
 	initialize_interface_texts
 			-- Initialize interface_text_* with default values
@@ -773,34 +752,35 @@ feature {NONE} -- Interface text
 
 	output_status_internal_error
 		do
-			io.put_string (interface_text_error)
+			localized_print (interface_text_error)
 		end
 
 	output_status_passed
 		do
-			io.put_string (interface_text_passed)
+			localized_print (interface_text_passed)
 		end
 
 	output_status_failed
 		do
-			io.put_string (interface_text_failed)
+			localized_print (interface_text_failed)
 		end
 
 	output_status_ignored
 		do
-			io.put_string (interface_text_ignored)
+			localized_print (interface_text_ignored)
 		end
 
 	output_action (a_action: READABLE_STRING_8; a_target: CONF_TARGET)
 			-- Display in the console the output progress report for compilations
 		local
 			l_system: CONF_SYSTEM
-			l_target_name, l_system_name, l_uuid, l_ecf: READABLE_STRING_8
-			t: STRING
+			l_target_name, l_system_name, l_uuid: READABLE_STRING_8
+			l_ecf: PATH
+			t: STRING_32
 		do
 			l_system := a_target.system
 			l_system_name := l_system.name
-			l_ecf := l_system.file_name
+			l_ecf := l_system.file_path
 			l_uuid := l_system.uuid.out
 			l_target_name := a_target.name
 
@@ -809,18 +789,22 @@ feature {NONE} -- Interface text
 			t.replace_substring_all ("#system", l_system_name)
 			t.replace_substring_all ("#target", l_target_name)
 			t.replace_substring_all ("#uuid", l_uuid)
-			t.replace_substring_all ("#absolute_ecf", l_ecf)
+			t.replace_substring_all ("#absolute_ecf", l_ecf.name)
 			if arguments.is_log_verbose then
-				t.replace_substring_all ("#log_filename", logs_filename (a_action, a_target))
+				t.replace_substring_all ("#log_filename", logs_filename (a_action, a_target).name)
 			else
 				t.replace_substring_all ("#log_filename", "")
 			end
 
-			if attached base_location as loc and then l_ecf.starts_with (loc) then
-				t.replace_substring_all ("#ecf", l_ecf.substring (loc.count + 1, l_ecf.count))
+				-- To avoid a lot of display, we try to only display the part after
+				-- `base_location'.
+			if l_ecf.name.substring_index (base_location.name, 1) = 1 then
+				t.replace_substring_all ("#ecf", l_ecf.name.substring (base_location.name.count + 2, l_ecf.name.count))
+			else
+				t.replace_substring_all ("#ecf", l_ecf.name)
 			end
 
-			io.put_string (t)
+			localized_print (t)
 		end
 
 feature {NONE} -- Directory manipulation
@@ -860,17 +844,17 @@ feature {NONE} -- Directory manipulation
 			if not rescued then
 				if not d.exists then
 					d.recursive_create_dir
-					directories_created_by_application.force (d.name)
+					directories_created_by_application.force (d.path)
 				end
 			else
-				io.error.put_string ("ERROR: unable to create directory %"" + d.name + "%".%N")
+				io.error.put_string ("ERROR: unable to create directory %"" + d.path.name + "%".%N")
 			end
 		rescue
 			rescued := True
 			retry
 		end
 
-	directories_created_by_application: ARRAYED_LIST [READABLE_STRING_8]
+	directories_created_by_application: ARRAYED_LIST [PATH]
 			-- List of directories created by this application execution
 		once
 			create Result.make (25)
@@ -887,7 +871,7 @@ feature {NONE} -- Directory manipulation
 					d.recursive_delete
 				end
 			else
-				io.error.put_string ("ERROR: unable to remove directory %"" + d.name + "%".%N")
+				io.error.put_string ("ERROR: unable to remove directory %"" + d.path.name + "%".%N")
 			end
 		rescue
 			rescued := True
@@ -899,7 +883,7 @@ feature {NONE} -- Directory manipulation
 			-- mainly to avoid removing user folders ...
 		do
 			if d.exists then
-				if directories_created_by_application.has (d.name) then
+				if directories_created_by_application.has (d.path) then
 					rmdir (d)
 				else
 					check not_created_by_application: False end
@@ -908,7 +892,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -28,10 +28,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	name: STRING = "Compile-All Tool"
+	name: STRING_32 = "Compile-All Tool"
 			-- Application name
 
-	version: STRING
+	version: STRING_32
 			-- Application version
 		once
 			create Result.make (5)
@@ -40,7 +40,7 @@ feature {NONE} -- Access
 			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 2006-2011. All Rights Reserved."
+	copyright: STRING_32 = "Copyright Eiffel Software 2006-2011. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -78,54 +78,54 @@ feature -- Status Report
 		local
 			l_file: RAW_FILE
 		once
-			create l_file.make (location)
+			create l_file.make_with_path (location)
 			Result := l_file.is_directory
 		ensure
-			result_not_directory: Result /= (create {DIRECTORY}.make (location)).exists
+			result_not_directory: Result /= (create {DIRECTORY}.make_with_path (location)).exists
 		end
 
 feature -- Access
 
-	location: STRING
+	location: PATH
 			-- Location of files to use
 		once
 			if has_option (location_switch) then
-				Result := option_of_name (location_switch).value
+				create Result.make_from_string (option_of_name (location_switch).value)
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_path
 			end
 		ensure
 			location_not_void: Result /= Void
 			location_not_empty: not Result.is_empty
-			result_exists: (create {RAW_FILE}.make (Result)).exists or (create {DIRECTORY}.make (Result)).exists
+			result_exists: (create {RAW_FILE}.make_with_path (Result)).exists or (create {DIRECTORY}.make_with_path (Result)).exists
 		end
 
-	compilation_dir: STRING
+	compilation_dir: detachable PATH
 			-- Location where the projects are compiled.
 		once
-			if has_option (eifgen_switch) then
-				Result := option_of_name (eifgen_switch).value
-			elseif has_option (compdir_switch) then
-				Result := option_of_name (compdir_switch).value
+			if attached option_of_name (eifgen_switch) as l_option then
+				create Result.make_from_string (l_option.value)
+			elseif attached option_of_name (compdir_switch) as l_option then
+				create Result.make_from_string (l_option.value)
 			end
 		end
 
-	logs_dir: STRING
+	logs_dir: detachable PATH
 			-- Location where the logs are stored.
 		once
-			if has_option (logdir_switch) then
-				Result := option_of_name (logdir_switch).value
+			if attached option_of_name (logdir_switch) as l_option then
+				create Result.make_from_string (l_option.value)
 			end
 		end
 
-	ignore: STRING
+	ignore: detachable IMMUTABLE_STRING_32
 			-- File with the ignores.
 		once
 			if has_option (ignore_switch) then
 				Result := option_of_name (ignore_switch).value
 			end
 		ensure
-			Result_ok: Result /= Void implies not Result.is_empty and then (create {RAW_FILE}.make (Result)).exists or (create {DIRECTORY}.make (Result)).exists
+			Result_ok: Result /= Void implies not Result.is_empty and then (create {RAW_FILE}.make_with_name (Result)).exists or (create {DIRECTORY}.make (Result)).exists
 		end
 
 	is_ecb: BOOLEAN
@@ -232,21 +232,21 @@ feature -- Access
 
 feature -- Access: -interface
 
-	interface_output_action_template: detachable READABLE_STRING_8
-			-- Template for output action 
+	interface_output_action_template: detachable IMMUTABLE_STRING_32
+			-- Template for output action
 		once
 			if attached interface_item ("template") as s then
 				Result := s
 			end
 		end
 
-	interface_text (m: READABLE_STRING_8): READABLE_STRING_8
+	interface_text (m: READABLE_STRING_GENERAL): IMMUTABLE_STRING_32
 			-- Value for -options text.`m'=value
 		do
 			if attached interface_item ("text." + m) as s then
 				Result := s
 			else
-				Result := m
+				create Result.make_from_string_general (m)
 			end
 		end
 
@@ -258,98 +258,98 @@ feature -- Access: -options
 			Result := options_has_false ("dotnet")
 		end
 
-	ec_options: READABLE_STRING_8
+	ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option for any action
 		once
 			if attached options_item ("ec") as l_opt then
 				Result := l_opt
 			else
-				create {STRING_8} Result.make_empty
+				create Result.make_empty
 			end
 		end
 
-	melt_ec_options: READABLE_STRING_8
+	melt_ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option when melting
 		once
 			if attached options_item ("ec.melt") as l_opt then
 				Result := l_opt
 			else
-				create {STRING_8} Result.make_empty
+				create Result.make_empty
 			end
 		end
 
-	freeze_ec_options: READABLE_STRING_8
+	freeze_ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option when freezing
 		once
 			if attached options_item ("ec.freeze") as l_opt then
 				Result := l_opt
 			else
-				create {STRING_8} Result.make_empty
+				create Result.make_empty
 			end
 		end
 
-	finalize_ec_options: READABLE_STRING_8
+	finalize_ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option when finalizing
 		once
 			if attached options_item ("ec.finalize") as l_opt then
 				Result := l_opt
 			else
-				create {STRING_8} Result.make_empty
+				create Result.make_empty
 			end
 		end
 
 feature {NONE} -- Implementation: -interface	
 
-	interface_item (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
+	interface_item (a_name: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
 		do
-			Result := interface_options.item (a_name.as_lower)
+			Result := interface_options.item (a_name)
 		end
 
-	interface_options: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	interface_options: STRING_TABLE [IMMUTABLE_STRING_32]
 		once
 			Result := concatenated_multiple_options (interface_switch, ',')
 		end
 
 feature {NONE} -- Implementation: -options		
 
-	options_has_true (a_name: READABLE_STRING_8): BOOLEAN
+	options_has_true (a_name: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			if attached options_item (a_name) as v then
 				Result := v.is_case_insensitive_equal ("true")
 			end
 		end
 
-	options_has_false (a_name: READABLE_STRING_8): BOOLEAN
+	options_has_false (a_name: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			if attached options_item (a_name) as v then
 				Result := v.is_case_insensitive_equal ("false")
 			end
 		end
 
-	options_item (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
+	options_item (a_name: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
 		do
-			Result := options.item (a_name.as_lower)
+			Result := options.item (a_name)
 		end
 
-	options: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	options: STRING_TABLE [IMMUTABLE_STRING_32]
 		once
 			Result := concatenated_multiple_options (options_switch, ',')
 		end
 
 feature {NONE} -- Concatenated value for multiple switch		
 
-	concatenated_multiple_options (a_switch: READABLE_STRING_8; a_separator: CHARACTER): HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	concatenated_multiple_options (a_switch: READABLE_STRING_GENERAL; a_separator: CHARACTER): STRING_TABLE [IMMUTABLE_STRING_32]
 			-- Table of options related to multiple option
 		local
-			sep: CHARACTER
-			s,k,v: STRING
+			sep: CHARACTER_32
+			s,k,v: STRING_32
 			p: INTEGER
 		do
 			if
 				has_option (a_switch) and then
 			 	attached options_of_name (a_switch) as lst and then not lst.is_empty
 			then
-				create Result.make (lst.count)
+				create Result.make_caseless (lst.count)
 				Result.compare_objects
 				across
 					lst as lst_cursor
@@ -381,10 +381,8 @@ feature {NONE} -- Concatenated value for multiple switch
 									then
 										v := v.substring (2, v.count - 1)
 									end
-									k.to_lower
 									Result.force (v, k)
 								else
-									s.to_lower
 									Result.force ("true", s)
 								end
 							end
@@ -419,7 +417,7 @@ feature {NONE} -- Switch names
 	;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,6 @@
-
 test_name string-table-duplicate-caseless-insertion
 test_description {STRING_TABLE}.item with caseless duplicates 
-.
+
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 

@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Window class name to create
 		once
-			Result := "Button"
+			Result := {STRING_32} "Button"
 		end
 
 note

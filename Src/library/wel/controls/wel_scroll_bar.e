@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Window class name to create
 		once
-			Result := "ScrollBar"
+			Result := {STRING_32} "ScrollBar"
 		end
 
 	default_style: INTEGER

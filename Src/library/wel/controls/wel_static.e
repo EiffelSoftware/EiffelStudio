@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Window class name to create
 		once
-			Result := "Static"
+			Result := {STRING_32} "Static"
 		end
 
 	default_style: INTEGER

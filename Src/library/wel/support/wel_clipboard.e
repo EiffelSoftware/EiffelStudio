@@ -55,7 +55,7 @@ feature -- Element Change
 				l_string := shared_string.last_string
 			end
 			if l_string = Void then
-				last_string := ""
+				create last_string.make_empty
 			else
 				last_string := l_string
 			end
@@ -80,7 +80,7 @@ feature -- Element Change
 				l_string := shared_string.last_string
 			end
 			if l_string = Void then
-				last_string := ""
+				create last_string.make_empty
 			else
 				last_string := l_string
 			end

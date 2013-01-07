@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Window class name to create
 		once
-			Result := "ComboBox"
+			Result := {STRING_32} "ComboBox"
 		end
 
 note
@@ -431,8 +431,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class WEL_COMBO_BOX
-

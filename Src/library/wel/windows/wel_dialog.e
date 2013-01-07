@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			name_not_empty: not a_name.is_empty
 		do
 			parent := a_parent
-			resource_name := a_name.as_string_32.twin
+			create resource_name.make_from_string_general (a_name)
 			create dialog_children.make
 		ensure
 			parent_set: parent = a_parent

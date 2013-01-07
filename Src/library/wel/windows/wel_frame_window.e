@@ -129,7 +129,7 @@ feature -- Standard window class values
 			-- Window class name used to create the window class.
 			-- Can be redefined to return a user-defined class name.
 		do
-			Result := generator
+			create Result.make_from_string_general (generator)
 		end
 
 	class_window_procedure: POINTER

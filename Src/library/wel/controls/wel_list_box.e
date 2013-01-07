@@ -55,7 +55,7 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			create Result.make_filled ("", 0, count - 1)
+			create Result.make_filled ({STRING_32} "", 0, count - 1)
 			from
 				i := Result.lower
 			until
@@ -203,7 +203,7 @@ feature -- Status setting
 		do
 			{WEL_API}.send_message (item, Lb_settopindex, to_wparam (index), to_lparam (0))
 		ensure
-			index_visible: top_index <= index  
+			index_visible: top_index <= index
 		end
 
 	select_item (index: INTEGER)
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Window class name to create
 		once
-			Result := "LISTBOX"
+			Result := {STRING_32} "LISTBOX"
 		end
 
 invariant

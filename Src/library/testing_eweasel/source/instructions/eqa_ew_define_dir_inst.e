@@ -66,16 +66,10 @@ feature -- Command
 	execute (a_test: EQA_EW_SYSTEM_TEST_SET)
 			-- Execute `Current' as one of the
 			-- instructions of `a_test'.  Always successful.
-		local
-			l_var, l_val: like variable
 		do
-			l_var := variable
-			check attached l_var end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-
-			l_val := value
-			check attached l_val end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-
-			a_test.environment.put (l_val, l_var)
+			if attached variable as l_var and attached value as l_val then
+				a_test.environment.put (l_val, l_var)
+			end
 		end
 
 feature -- Query
@@ -91,17 +85,17 @@ feature {NONE} -- Implementation
 	variable: detachable STRING
 			-- Name of environment value
 
-	value: detachable STRING
+	value: detachable STRING_32
 			-- Value to be given to environment value
 
-	make_dir_value (a_args: LIST [STRING]; l_file_system: EQA_FILE_SYSTEM): STRING
+	make_dir_value (a_args: LIST [READABLE_STRING_GENERAL]; l_file_system: EQA_FILE_SYSTEM): STRING_32
 			-- Directory name derived from arguments of `a_args'
 		do
 			from
-				create Result.make (0)
+				create Result.make_empty
 				a_args.start
 				a_args.forth
-				Result.append (a_args.item)
+				Result.append_string_general (a_args.item)
 				a_args.forth
 			until
 				a_args.after

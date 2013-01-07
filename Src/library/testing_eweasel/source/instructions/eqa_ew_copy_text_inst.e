@@ -1,7 +1,7 @@
 note
 	description: "[
 					Ancestor class for all copy text instructions
-			
+
 																								]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,10 +18,10 @@ inherit
 
 feature {NONE} -- Implementation
 
-	new_file (a_file_name: STRING): PLAIN_TEXT_FILE
+	new_file (a_file_name: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
 			-- <Precursor>
 		do
-			create Result.make (a_file_name)
+			create Result.make_with_name (a_file_name)
 		end
 
 ;note

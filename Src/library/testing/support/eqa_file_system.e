@@ -71,7 +71,7 @@ feature -- Command
 
 feature -- Query: Path
 
-	build_path (a_dir: READABLE_STRING_8; a_path: detachable EQA_SYSTEM_PATH): STRING
+	build_path (a_dir: READABLE_STRING_GENERAL; a_path: detachable EQA_SYSTEM_PATH): STRING_32
 			-- Build an absolute path name given a base directory and an optional path
 			--
 			-- `a_dir': A base dir in form of an absolute path.
@@ -86,7 +86,7 @@ feature -- Query: Path
 			result_attached: Result /= Void
 		end
 
-	build_path_from_key (a_key: READABLE_STRING_8; a_path: detachable EQA_SYSTEM_PATH): STRING
+	build_path_from_key (a_key: READABLE_STRING_GENERAL; a_path: detachable EQA_SYSTEM_PATH): STRING_32
 			-- Build an absolte path name given the key of an defined absolte path
 			--
 			-- Note: will raise exception if value for `a_key' is not defined.
@@ -98,17 +98,15 @@ feature -- Query: Path
 			a_key_attached: a_key /= Void
 			a_key_not_empty: not a_key.is_empty
 		local
-			l_base: READABLE_STRING_8
 			l_environment: EQA_ENVIRONMENT
 		do
 			create l_environment
-			l_base := l_environment.get_attached (a_key, asserter)
-			Result := build_partial_path (a_path, l_base, 0)
+			Result := build_partial_path (a_path, l_environment.item_attached (a_key, asserter), 0)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	build_source_path (a_path: detachable EQA_SYSTEM_PATH): STRING
+	build_source_path (a_path: detachable EQA_SYSTEM_PATH): STRING_32
 			-- Build the actual path name relative to the source directory for given path
 			--
 			-- Note: will raise exception if {EQA_SYSTEM_TEST_SET}.source_path_key is not defined.
@@ -121,7 +119,7 @@ feature -- Query: Path
 			result_attached: Result /= Void
 		end
 
-	build_target_path (a_path: detachable EQA_SYSTEM_PATH): STRING
+	build_target_path (a_path: detachable EQA_SYSTEM_PATH): STRING_32
 			-- Build the actual path name relative to the target directory for given path.
 			--
 			-- Note: will raise exception if {EQA_SYSTEM_TEST_SET}.target_path_key is not defined.
@@ -222,37 +220,35 @@ feature -- Query: Content
 			l_file2.close
 		end
 
-	executable_file_exists (s: STRING): detachable STRING
+	executable_file_exists (s: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- If file `s' does not exist or is not a file or
 			-- is not executable, string describing the
 			-- problem.  Void otherwise
 		local
 			f: RAW_FILE
-			l_fname: STRING
 		do
 			if s /= Void then
-				l_fname := s
+				create f.make_with_name (s)
+				if not f.exists then
+					Result := {STRING_32} "file " + s + " not found"
+				elseif not f.is_plain then
+					Result := {STRING_32} "file " + s + " not a plain file"
+				elseif not f.is_executable then
+					Result := {STRING_32} "file " + s + " not executable"
+				end
 			else
-				l_fname := "(Void file name)"
-			end
-			create f.make_with_name (l_fname)
-			if not f.exists then
-				Result := "file " + l_fname + " not found"
-			elseif not f.is_plain then
-				Result := "file " + l_fname + " not a plain file"
-			elseif not f.is_executable then
-				Result := "file " + l_fname + " not executable"
+				Result := {STRING_32} "file (Void file name) not found"
 			end
 		end
 
 feature {NONE} -- Query
 
-	build_partial_path (a_path: detachable EQA_SYSTEM_PATH; a_prefix: READABLE_STRING_8; a_strip: INTEGER): DIRECTORY_NAME
+	build_partial_path (a_path: detachable EQA_SYSTEM_PATH; a_prefix: READABLE_STRING_GENERAL; a_strip: INTEGER): STRING_32
 			-- Build a partial path name relative to to a given directory.
 			--
 			-- `a_path': Path for which path name should be built
 			-- `a_prefix': Absolute directory name to which `a_path' is relative.
-			-- `a_strip': Numer of items at the end of `a_path' to be neglected.
+			-- `a_strip': Number of items at the end of `a_path' to be neglected.
 			-- `Result': Path name relative to target directory.
 		require
 			a_prefix_attached: a_prefix /= Void
@@ -260,8 +256,9 @@ feature {NONE} -- Query
 			a_stip_not_too_large: a_strip > 0 implies (attached a_path and then a_strip <= a_path.count)
 		local
 			i, l_count: INTEGER
+			l_path: PATH
 		do
-			create Result.make_from_string (a_prefix)
+			create l_path.make_from_string (a_prefix)
 			if a_path /= Void then
 				from
 					l_count := a_path.count - a_strip
@@ -269,17 +266,18 @@ feature {NONE} -- Query
 				until
 					i > l_count
 				loop
-					Result.extend (a_path.item (i))
+					l_path := l_path.extended (a_path.item (i))
 					i := i + 1
 				end
 			end
+			create Result.make_from_string (l_path.name)
 		ensure
 			result_attached: Result /= Void
 		end
 
 feature -- Basic
 
-	delete_directory_tree (a_dir_name: READABLE_STRING_8)
+	delete_directory_tree (a_dir_name: READABLE_STRING_GENERAL)
 			-- Try to delete the directory tree rooted at
 			-- `a_dir_name'.  Ignore any errors
 		require
@@ -299,7 +297,7 @@ feature -- Basic
 
 feature {NONE} -- Implementation
 
-	frozen assert (a_tag: STRING; a_condition: BOOLEAN)
+	frozen assert (a_tag: READABLE_STRING_GENERAL; a_condition: BOOLEAN)
 			-- Assert `a_condition' using asserter from current test set.
 		require
 			a_tag_attached: a_tag /= Void
@@ -309,9 +307,9 @@ feature {NONE} -- Implementation
 
 feature -- Constants
 
-	source_directory_key: STRING = "SOURCE_DIRECTORY"
+	source_directory_key: STRING_32 = "SOURCE_DIRECTORY"
 
-	target_directory_key: STRING = "EQA_TARGET_DIRECTORY"
+	target_directory_key: STRING_32 = "EQA_TARGET_DIRECTORY"
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

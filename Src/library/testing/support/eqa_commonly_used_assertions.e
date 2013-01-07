@@ -13,7 +13,7 @@ inherit
 
 feature -- Equality
 
-	assert_equal (a_tag: STRING; expected, actual: detachable ANY)
+	assert_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable ANY)
 			-- Check that `expected ~ actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -21,7 +21,7 @@ feature -- Equality
 			assert (assert_equal_message (a_tag, expected, actual), expected ~ actual)
 		end
 
-	assert_not_equal (a_tag: STRING; expected, actual: detachable ANY)
+	assert_not_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable ANY)
 			-- Check that `expected /~ actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -29,7 +29,7 @@ feature -- Equality
 			disassert (assert_not_equal_message (a_tag, expected, actual), expected ~ actual)
 		end
 
-	assert_reference_equal (a_tag: STRING; expected, actual: detachable ANY)
+	assert_reference_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable ANY)
 			-- Check that `expected = actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -37,7 +37,7 @@ feature -- Equality
 			assert (assert_equal_message (a_tag, expected, actual), expected = actual)
 		end
 
-	assert_not_reference_equal (a_tag: STRING; expected, actual: detachable ANY)
+	assert_not_reference_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable ANY)
 			-- Check that `expected /= actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -45,7 +45,7 @@ feature -- Equality
 			disassert (assert_not_equal_message (a_tag, expected, actual), expected = actual)
 		end
 
-	assert_integers_equal (a_tag: STRING; expected, actual: INTEGER)
+	assert_integers_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: INTEGER)
 			-- Check that `expected = actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -53,7 +53,7 @@ feature -- Equality
 			assert (assert_strings_equal_message (a_tag, expected.out, actual.out), expected = actual)
 		end
 
-	assert_integers_not_equal (a_tag: STRING; expected, actual: INTEGER)
+	assert_integers_not_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: INTEGER)
 			-- Check that `expected /= actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -61,7 +61,7 @@ feature -- Equality
 			disassert (assert_strings_not_equal_message (a_tag, expected.out, actual.out), expected = actual)
 		end
 
-	assert_strings_equal (a_tag: STRING; expected, actual: detachable STRING)
+	assert_strings_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable READABLE_STRING_GENERAL)
 			-- Check that `expected' and `actual' are the same string.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -71,7 +71,7 @@ feature -- Equality
 			assert (assert_strings_equal_message (a_tag, expected, actual), expected.same_string (actual))
 		end
 
-	assert_strings_not_equal (a_tag: STRING; expected, actual: detachable STRING)
+	assert_strings_not_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable READABLE_STRING_GENERAL)
 			-- Check that `expected' and `actual' are not the same string.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -81,7 +81,7 @@ feature -- Equality
 			disassert (assert_strings_not_equal_message (a_tag, expected, actual), expected.same_string (actual))
 		end
 
-	assert_strings_case_insensitive_equal (a_tag: STRING; expected, actual: STRING)
+	assert_strings_case_insensitive_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: READABLE_STRING_GENERAL)
 			-- Check that `expected' and `actual' are the same string (case insensitive).
 		require
 			a_tag_not_void: a_tag /= Void
@@ -91,7 +91,7 @@ feature -- Equality
 			assert (assert_strings_equal_message (a_tag, expected, actual), expected.is_case_insensitive_equal (actual))
 		end
 
-	assert_characters_equal (a_tag: STRING; expected, actual: CHARACTER)
+	assert_characters_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: CHARACTER)
 			-- Check that `expected = actual'
 		require
 			a_tag_not_void: a_tag /= Void
@@ -99,7 +99,7 @@ feature -- Equality
 			assert (assert_strings_equal_message (a_tag, expected.out, actual.out), expected = actual)
 		end
 
-	assert_characters_not_equal (a_tag: STRING; expected, actual: CHARACTER)
+	assert_characters_not_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: CHARACTER)
 			-- Check that `expected /= actual'
 		require
 			a_tag_not_void: a_tag /= Void
@@ -107,7 +107,7 @@ feature -- Equality
 			disassert (assert_strings_not_equal_message (a_tag, expected.out, actual.out), expected = actual)
 		end
 
-	assert_booleans_equal (a_tag: STRING; expected, actual: BOOLEAN)
+	assert_booleans_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: BOOLEAN)
 			-- Check that `expected = actual'
 		require
 			a_tag_not_void: a_tag /= Void
@@ -115,7 +115,7 @@ feature -- Equality
 			assert (assert_strings_equal_message (a_tag, expected.out, actual.out), expected = actual)
 		end
 
-	assert_booleans_not_equal (a_tag: STRING; expected, actual: BOOLEAN)
+	assert_booleans_not_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: BOOLEAN)
 			-- Check that `expected /= actual'
 		require
 			a_tag_not_void: a_tag /= Void
@@ -123,7 +123,7 @@ feature -- Equality
 			disassert (assert_strings_not_equal_message (a_tag, expected.out, actual.out), expected = actual)
 		end
 
-	assert_attached (a_tag: STRING; object: detachable ANY)
+	assert_attached (a_tag: READABLE_STRING_GENERAL; object: detachable ANY)
 			-- Check that `object' is attached.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -131,7 +131,7 @@ feature -- Equality
 			assert (a_tag, object /= Void)
 		end
 
-	assert_void (a_tag: STRING; object: detachable ANY)
+	assert_void (a_tag: READABLE_STRING_GENERAL; object: detachable ANY)
 			-- Check that `object' is detached.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -139,7 +139,7 @@ feature -- Equality
 			assert (a_tag, object = Void)
 		end
 
-	assert_predicate (a_tag: STRING; pred: PREDICATE [ANY, TUPLE])
+	assert_predicate (a_tag: READABLE_STRING_GENERAL; pred: PREDICATE [ANY, TUPLE])
 			-- Check that `pred' evaluates to True.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -151,7 +151,7 @@ feature -- Equality
 
 feature -- Containers
 
-	assert_arrays_equal (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
+	assert_arrays_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: ARRAY [detachable ANY])
 			-- Check that `expected' and `actual' have the same items
 			-- in the same order (use `equal' for item comparison).
 		require
@@ -161,12 +161,13 @@ feature -- Containers
 		local
 			i, nb: INTEGER
 			i1, i2: INTEGER
-			new_tag, a_message: detachable STRING
+			new_tag: STRING_32
+			a_message: detachable STRING_32
 			expected_item, actual_item: detachable ANY
 		do
 			if expected.count /= actual.count then
 				create new_tag.make (15)
-				new_tag.append_string (a_tag)
+				new_tag.append_string_general (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
 			else
@@ -178,7 +179,7 @@ feature -- Containers
 					actual_item := actual.item (i1)
 					if expected_item /~ actual_item then
 						create new_tag.make (15)
-						new_tag.append_string (a_tag)
+						new_tag.append_string_general (a_tag)
 						new_tag.append_string ("-item #")
 						new_tag.append_integer (i)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
@@ -195,7 +196,7 @@ feature -- Containers
 			end
 		end
 
-	assert_arrays_reference_equal (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
+	assert_arrays_reference_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: ARRAY [detachable ANY])
 			-- Check that `expected' and `actual' have the same items
 			-- in the same order (use '=' for item comparison).
 		require
@@ -205,12 +206,13 @@ feature -- Containers
 		local
 			i, nb: INTEGER
 			i1, i2: INTEGER
-			new_tag, a_message: detachable STRING
+			new_tag: STRING_32
+			a_message: detachable STRING_32
 			expected_item, actual_item: detachable ANY
 		do
 			if expected.count /= actual.count then
 				create new_tag.make (15)
-				new_tag.append_string (a_tag)
+				new_tag.append_string_general (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
 			else
@@ -222,7 +224,7 @@ feature -- Containers
 					actual_item := actual.item (i1)
 					if expected_item /= actual_item then
 						create new_tag.make (15)
-						new_tag.append_string (a_tag)
+						new_tag.append_string_general (a_tag)
 						new_tag.append_string ("-item #")
 						new_tag.append_integer (i)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
@@ -241,15 +243,19 @@ feature -- Containers
 
 feature {NONE} -- Messages
 
-	void_or_out (an_any: detachable ANY): detachable STRING
+	void_or_out (an_any: detachable ANY): detachable STRING_32
 			-- Return `an_any.out' or Void if `an_any' is Void.
 		do
 			if an_any /= Void then
-				Result := an_any.out
+				if attached {READABLE_STRING_GENERAL} an_any as l_str then
+					create Result.make_from_string_general (l_str)
+				else
+					create Result.make_from_string_general (an_any.out)
+				end
 			end
 		end
 
-	assert_equal_message (a_tag: STRING; expected, actual: detachable ANY): STRING
+	assert_equal_message (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable ANY): STRING_32
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -257,7 +263,7 @@ feature {NONE} -- Messages
 			Result := assert_strings_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
-	assert_not_equal_message (a_tag: STRING; expected, actual: detachable ANY): STRING
+	assert_not_equal_message (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable ANY): STRING_32
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -265,47 +271,47 @@ feature {NONE} -- Messages
 			Result := assert_strings_not_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
-	assert_strings_equal_message (a_tag: STRING; expected, actual: detachable STRING): STRING
+	assert_strings_equal_message (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable READABLE_STRING_GENERAL): STRING_32
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
 		do
 			create Result.make (50)
-			Result.append_string (a_tag)
+			Result.append_string_general (a_tag)
 			Result.append_string ("%N   expected: ")
 			if expected = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (expected)
+				Result.append_string_general (expected)
 			end
 			Result.append_string ("%N   but  got: ")
 			if actual = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (actual)
+				Result.append_string_general (actual)
 			end
 		ensure
 			message_not_void: Result /= Void
 		end
 
-	assert_strings_not_equal_message (a_tag: STRING; expected, actual: detachable STRING): STRING
+	assert_strings_not_equal_message (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable READABLE_STRING_GENERAL): STRING_32
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
 		do
 			create Result.make (50)
-			Result.append_string (a_tag)
+			Result.append_string_general (a_tag)
 			Result.append_string ("%N   got actual value: ")
 			if actual = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (actual)
+				Result.append_string_general (actual)
 			end
 			Result.append_string ("%N   should not match: ")
 			if expected = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (expected)
+				Result.append_string_general (expected)
 			end
 		ensure
 			message_not_void: Result /= Void

@@ -37,7 +37,7 @@ feature {NONE} -- Query
 		do
 			check attached current_execution as l_execution and then attached l_execution.output_file_name as l_output then
 				l_path := << l_output >>
-				assert ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
+				assert_32 ("identical_output", file_system.has_same_content_as_string (l_path, a_output))
 			end
 		end
 
@@ -54,7 +54,7 @@ feature {NONE} -- Query
 		do
 			check attached current_execution as l_execution and then attached l_execution.output_file_name as l_output then
 				l_path := << l_output >>
-				assert ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
+				assert_32 ("identical_output", file_system.has_same_content_as_path (l_path, a_output_path))
 			end
 		end
 
@@ -114,7 +114,7 @@ feature {NONE} -- Events
 	frozen on_prepare_frozen
 			-- <Precursor>
 		do
-			assert ("multithreaded", (create {PLATFORM}).is_thread_capable)
+			assert_32 ("multithreaded", (create {PLATFORM}).is_thread_capable)
 			on_prepare
 		ensure then
 			prepared: is_prepared

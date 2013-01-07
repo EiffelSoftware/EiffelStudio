@@ -16,10 +16,12 @@ inherit
 		end
 
 create
-	make_empty, make, make_from_path
+	make_empty, make, make_from_path,
+	make_from_path_object
 
 convert
-	make ({ARRAY [STRING_8], ARRAY [READABLE_STRING_8], ARRAY [IMMUTABLE_STRING_8]})
+	make ({ARRAY [STRING_8], ARRAY [READABLE_STRING_8], ARRAY [IMMUTABLE_STRING_8], ARRAY [STRING_32],
+		ARRAY [READABLE_STRING_32], ARRAY [IMMUTABLE_STRING_32], ARRAY [READABLE_STRING_GENERAL]})
 
 feature {NONE} -- Initialization
 
@@ -31,7 +33,7 @@ feature {NONE} -- Initialization
 			empty: is_empty
 		end
 
-	make (a_items: FINITE [READABLE_STRING_8])
+	make (a_items: FINITE [READABLE_STRING_GENERAL])
 			-- Initialize `Current' with given items.
 			--
 			-- `a_items': Items representing relative path.
@@ -40,7 +42,7 @@ feature {NONE} -- Initialization
 			a_items_valid: has_valid_names (a_items.linear_representation)
 		do
 			make_empty
-			a_items.linear_representation.do_all (agent items.force)
+			a_items.linear_representation.do_all (agent extend)
 		end
 
 	make_from_path (a_path: EQA_SYSTEM_PATH)
@@ -55,6 +57,12 @@ feature {NONE} -- Initialization
 			equal: Current ~ a_path
 		end
 
+	make_from_path_object (a_path: PATH)
+		do
+			make_empty
+			extend (a_path.name)
+		end
+
 feature -- Access
 
 	count: INTEGER
@@ -63,7 +71,7 @@ feature -- Access
 			Result := items.count
 		end
 
-	item alias "[]", at alias "@" (i: INTEGER): READABLE_STRING_8
+	item alias "[]", at alias "@" (i: INTEGER): READABLE_STRING_GENERAL
 			-- Item at index `i'
 		require
 			valid_index: i > 0 and i <= count
@@ -76,7 +84,7 @@ feature -- Access
 
 feature {EQA_SYSTEM_PATH} -- Access
 
-	items: ARRAYED_LIST [like item]
+	items: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Items representing path
 
 feature -- Status report
@@ -95,16 +103,15 @@ feature -- Query
 			Result := items ~ a_other.items
 		end
 
-	is_valid_name (a_name: READABLE_STRING_8): BOOLEAN
+	is_valid_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid path component?
 		require
 			a_name_attached: a_name /= Void
 		do
-			Result := a_name /= Void and then not a_name.is_empty and then
-			          (create {DIRECTORY_NAME}.make).is_directory_name_valid (a_name)
+			Result := a_name /= Void and then not a_name.is_empty
 		end
 
-	has_valid_names (a_linear: LINEAR [READABLE_STRING_8]): BOOLEAN
+	has_valid_names (a_linear: LINEAR [READABLE_STRING_GENERAL]): BOOLEAN
 			-- Items of `a_linear' has valid name as specified by `is_valid_name'
 		require
 			a_linear_attached: a_linear /= Void
@@ -122,7 +129,7 @@ feature -- Query
 
 feature -- Element change
 
-	extend (a_item: READABLE_STRING_8)
+	extend (a_item: READABLE_STRING_GENERAL)
 			-- Add `a_item' to `items'.
 		require
 			a_item_attached: a_item /= Void

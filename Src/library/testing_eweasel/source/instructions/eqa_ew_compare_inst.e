@@ -40,15 +40,15 @@ feature -- Command
 			-- instructions of `a_test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			l_act_name, l_exp_name: STRING
+			l_act_name, l_exp_name: STRING_32
 			l_actual, l_expected: PLAIN_TEXT_FILE
 			l_diff: like equal_files
 		do
 			execute_ok := False
 			l_act_name := a_test.file_system.build_path_from_key ({EQA_EXECUTION}.output_path_key, << actual_output_file >>)
 			l_exp_name := a_test.file_system.build_source_path (<< expected_output_file >>)
-			create l_actual.make (l_act_name)
-			create l_expected.make (l_exp_name)
+			create l_actual.make_with_name (l_act_name)
+			create l_expected.make_with_name (l_exp_name)
 			if (l_actual.exists and then l_actual.is_plain) and
 			   (l_expected.exists and then l_expected.is_plain) then
 			   	l_diff := equal_files (l_actual, l_expected)

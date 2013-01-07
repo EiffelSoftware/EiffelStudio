@@ -52,7 +52,7 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_compilation: detachable EQA_EW_EIFFEL_COMPILATION
-			l_path: READABLE_STRING_8
+			l_path: STRING_32
 		do
 			l_compilation := a_test.e_compilation
 			if l_compilation = Void then
@@ -81,29 +81,25 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	delete_project_files (a_dir_name: STRING; a_file_system: EQA_FILE_SYSTEM)
+	delete_project_files (a_dir_name: STRING_32; a_file_system: EQA_FILE_SYSTEM)
 			-- Delete all Eiffel project files (.epr files)
 			-- found in directory `a_dir_name'
 		local
 			l_dir: DIRECTORY
-			l_dir_entries: ARRAYED_LIST [STRING]
-			l_name, l_ext: STRING
-			l_len: INTEGER
+			l_dir_entries: ARRAYED_LIST [PATH]
+			l_name: PATH
 			l_f: RAW_FILE
 		do
-			l_ext := {EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_project_extension
-			l_len := l_ext.count
 			create l_dir.make (a_dir_name)
-			l_dir_entries := l_dir.linear_representation
+			l_dir_entries := l_dir.entries
 			from
 				l_dir_entries.start
 			until
 				l_dir_entries.after
 			loop
-				l_name := l_dir_entries.item.twin
-				l_name.keep_tail (l_len)
-				if l_name.is_equal (l_ext) then
-					create l_f.make (a_file_system.build_path (a_dir_name, << l_dir_entries.item >>))
+				l_name := l_dir_entries.item
+				if l_name.has_extension ({EQA_EW_EIFFEL_TEST_CONSTANTS}.Eiffel_project_extension) then
+					create l_f.make_with_name (a_file_system.build_path (a_dir_name, create {EQA_SYSTEM_PATH}.make_from_path_object (l_name)))
 					l_f.delete
 				end
 				l_dir_entries.forth

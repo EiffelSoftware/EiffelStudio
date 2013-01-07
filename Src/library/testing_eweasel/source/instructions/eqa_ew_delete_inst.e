@@ -46,7 +46,7 @@ feature -- Command
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			del_name: STRING
+			del_name: STRING_32
 			dir, file: RAW_FILE
 		do
 			execute_ok := False
@@ -54,8 +54,8 @@ feature -- Command
 			del_directory := test.environment.substitute (del_directory)
 
 			del_name := test.file_system.build_path (del_directory, << del_file >>)
-			create dir.make (del_directory)
-			create file.make (del_name)
+			create dir.make_with_name (del_directory)
+			create file.make_with_name (del_name)
 			if (dir.exists and then dir.is_directory) and
 			   (file.exists and then file.is_plain) then
 				from
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 	del_file: STRING
 			-- Name of file to be deleted
 
-	del_directory: STRING
+	del_directory: STRING_32
 			-- Name of directory in which file to be deleted
 			-- resides
 

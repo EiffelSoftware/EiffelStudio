@@ -21,29 +21,29 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			l_exec_env: EXECUTION_ENVIRONMENT
-			l_name, l_exec_dir: READABLE_STRING_8
-			l_directory: detachable DIRECTORY
-			l_target_path: detachable READABLE_STRING_8
+			l_exec_dir: PATH
+			l_directory: DIRECTORY
+			l_target_path: PATH
 		do
 			create environment
 			file_system := new_file_system
 
 			create l_exec_env
 
-			l_name := environment.get_attached ({EQA_TEST_SET}.test_name_key, asserter)
-			if attached environment.get ({EQA_TEST_SET}.target_path_key) as l_target then
-				l_target_path := l_target
+			if attached environment.item ({EQA_TEST_SET}.target_path_key) as l_target then
+				create l_target_path.make_from_string (l_target)
 			else
-				if attached environment.get ({EQA_TEST_SET}.execution_directory_key) as l_exec then
-					l_exec_dir := l_exec
+				if attached environment.item ({EQA_TEST_SET}.execution_directory_key) as l_exec then
+					create l_exec_dir.make_from_string (l_exec)
 				else
-					l_exec_dir := l_exec_env.current_working_directory
+					l_exec_dir := l_exec_env.current_working_path
 				end
-				l_target_path := file_system.build_path (l_exec_dir, << l_name >>)
-				environment.put (l_target_path, {EQA_TEST_SET}.target_path_key)
+
+				l_target_path := l_exec_dir.extended (environment.item_attached ({EQA_TEST_SET}.test_name_key, asserter))
+				environment.put (l_target_path.name, {EQA_TEST_SET}.target_path_key)
 			end
 
-			create l_directory.make (l_target_path)
+			create l_directory.make_with_path (l_target_path)
 				-- We cannot assume that the directory does not already exist which sometimes
 				-- happen since EiffelStudio let users keep their testing directory via a preference.
 				-- This is why we do not assert its non-existence anymore, we will create it only if
@@ -54,8 +54,8 @@ feature {NONE} -- Initialization
 					-- Remove existing file which could prevent a proper re-execution of the test
 				l_directory.delete_content
 			end
-			assert ("testing_directory_exists " + l_target_path, l_directory.exists)
-			l_exec_env.change_working_directory (l_target_path)
+			assert_32 ({STRING_32} "testing_directory_exists " + l_target_path.name, l_directory.exists)
+			l_exec_env.change_working_path (l_target_path)
 
 			on_prepare
 		ensure then
@@ -93,9 +93,13 @@ feature -- Access
 	current_test_name: IMMUTABLE_STRING_32
 			-- Name of test currently being executed
 		obsolete
-			"Use {EQA_EVALUATION_INFO}.test_name"
+			"Use `environment.item ({EQA_TEST_SET}.test_name_key)' instead"
 		do
-			Result := (create {EQA_EVALUATION_INFO}).test_name
+			if attached environment.item ({EQA_TEST_SET}.test_name_key) as l_name then
+				Result := l_name
+			else
+				create Result.make_empty
+			end
 		end
 
 feature -- Status report
@@ -138,6 +142,14 @@ feature {EQA_TEST_EVALUATOR} -- Status setting
 		end
 
 feature -- Basic operations
+
+	assert_32 (a_tag: READABLE_STRING_GENERAL; a_condition: BOOLEAN)
+			-- Assert `a_condition'.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			asserter.assert (a_tag, a_condition)
+		end
 
 	assert (a_tag: STRING; a_condition: BOOLEAN)
 			-- Assert `a_condition'.

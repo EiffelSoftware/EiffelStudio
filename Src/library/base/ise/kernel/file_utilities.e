@@ -199,7 +199,7 @@ feature {NONE} -- Query
 					loop
 						l_path := l_dn.extended (e)
 						create f.make_with_path (l_path)
-						if f.exists and then f.is_readable and then f.is_plain and then e.as_lower.ends_with (a_end_with.as_lower.as_string_32) then
+						if f.exists and then f.is_readable and then f.is_plain and then e.as_lower.ends_with_general (a_end_with.as_lower) then
 							Result.extend (l_path)
 						else
 							if

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_class: READABLE_STRING_8; a_file1, a_file2, a_config: READABLE_STRING_32)
 			-- Create.
 		do
-			text := {STRING_32} "Duplicate class: " + a_class.as_string_32 + {STRING_32} "%N" + a_file1 + {STRING_32} "%N" + a_file2 + {STRING_32} "%NConfiguration: " + a_config
+			text := {STRING_32} "Duplicate class: " + a_class.as_string_32 + "%N" + a_file1 + "%N" + a_file2 + "%NConfiguration: " + a_config
 		end
 
 feature -- Access

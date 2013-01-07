@@ -18,7 +18,7 @@ feature -- Query
 		deferred
 		end
 
-	failure_explanation: detachable STRING
+	failure_explanation: detachable STRING_32
 			-- Explanation of why last `initialize' or
 			-- `execute' which was not OK failed (Void
 			-- if no explanation available)

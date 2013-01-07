@@ -1349,12 +1349,12 @@ feature {BYTE_NODE} -- Visitor
 		do
 			if a_node.is_string_32 then
 				dv := Debugger_manager.Dump_value_factory.new_manifest_string_32_value (
-							a_node.value,
+							a_node.value_32,
 							debugger_manager.compiler_data.string_32_class_c
 						)
 			else
 				dv := Debugger_manager.Dump_value_factory.new_manifest_string_value (
-							a_node.value,
+							a_node.value_8,
 							debugger_manager.compiler_data.string_8_class_c
 						)
 			end
@@ -2470,7 +2470,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

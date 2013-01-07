@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class, a_location, a_first, a_second: STRING)
+	make (a_class, a_location, a_first, a_second: READABLE_STRING_GENERAL)
 			-- Create.
 		require
 			a_class_not_void: a_class /= Void
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			a_first_not_void: a_first /= Void
 			a_second_not_void: a_second /= Void
 		do
-			text := "Found multiple overrides for class "+a_class+"%N"
+			text := {STRING_32} "Found multiple overrides for class "+a_class+"%N"
 						+"Original: "+a_location+"%N"
 						+"First override: "+a_first+"%N"
 						+"Second override:"+a_second+"%N"

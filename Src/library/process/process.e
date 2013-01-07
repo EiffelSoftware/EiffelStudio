@@ -80,7 +80,7 @@ feature -- IO redirection
 			a_file_name_not_empty: not a_file_name.is_empty
 		do
 			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_file
-			input_file_name := a_file_name.as_string_32
+			create input_file_name.make_from_string_general (a_file_name)
 		ensure
 			input_redirectd_to_file:
 				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file
@@ -93,7 +93,7 @@ feature -- IO redirection
 			process_not_running: not is_running
 		do
 			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			input_file_name := ""
+			create input_file_name.make_empty
 		ensure
 			input_redirection_canceled:
 				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
@@ -145,12 +145,12 @@ feature -- IO redirection
 			process_not_running: not is_running
 		do
 			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_file_name := ""
+			create output_file_name.make_empty
 			output_handler := Void
 		ensure
 			output_redirection_canceled:
 				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_file_name_set: attached output_file_name as l_file_name and then l_file_name.same_string ("")
+			output_file_name_set: attached output_file_name as l_file_name and then l_file_name.is_empty
 			output_handler_set: output_handler = Void
 		end
 
@@ -216,12 +216,12 @@ feature -- IO redirection
 			process_not_running: not is_running
 		do
 			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_file_name := ""
+			create error_file_name.make_empty
 			error_handler := Void
 		ensure
 			error_redirection_canceled:
 				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_file_name_set: attached error_file_name as l_file_name and then l_file_name.same_string ("")
+			error_file_name_set: attached error_file_name as l_file_name and then l_file_name.is_empty
 			error_handler_set: error_handler = Void
 		end
 
@@ -783,7 +783,7 @@ feature {NONE} -- Implementation
 			-- Setup `working_directory' according to `a_working_directory'.
 		do
 			if a_working_directory /= Void then
-				working_directory := a_working_directory.as_string_32
+				create working_directory.make_from_string_general (a_working_directory)
 			else
 				working_directory := Void
 			end
@@ -825,9 +825,9 @@ feature {NONE} -- Implementation
 			    (input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
-				(attached input_file_name as l_ifn and then l_ifn.same_string ("")) and
-				(attached output_file_name as l_ofn and then l_ofn.same_string ("")) and
-				(attached error_file_name as l_efn and then l_efn.same_string ("")) and
+				(attached input_file_name as l_ifn and then l_ifn.same_string_general ("")) and
+				(attached output_file_name as l_ofn and then l_ofn.same_string_general ("")) and
+				(attached error_file_name as l_efn and then l_efn.same_string_general ("")) and
 				(output_handler = Void) and
 				(error_handler = Void) and
 				(not hidden) and

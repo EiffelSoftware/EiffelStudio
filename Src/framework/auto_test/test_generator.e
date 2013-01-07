@@ -357,7 +357,7 @@ feature {NONE} -- Implementation: preparation
 			-- Prepare test generation
 		local
 			l_file_name: FILE_NAME
-			l_file: KL_TEXT_OUTPUT_FILE
+			l_file: KL_TEXT_OUTPUT_FILE_32
 			l_error_handler: AUT_ERROR_HANDLER
 		do
 			eiffel_layout.check_environment_variable
@@ -484,7 +484,7 @@ feature {NONE} -- Constants
 			-- Maximal number of test routines in a single class
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

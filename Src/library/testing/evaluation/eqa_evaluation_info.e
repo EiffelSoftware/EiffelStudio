@@ -70,7 +70,7 @@ feature {EQA_TEST_EVALUATOR} -- Element change
 		local
 			l_name: like test_name
 		do
-			create l_name.make_from_string (a_name.as_string_32)
+			create l_name.make_from_string_general (a_name)
 			test_name_cell.put (l_name)
 		ensure
 			test_name_set: test_name.same_string_general (a_name)
@@ -85,7 +85,7 @@ feature {EQA_TEST_EVALUATOR} -- Element change
 		local
 			l_name: like test_directory
 		do
-			create l_name.make_from_string (a_name.as_string_32)
+			create l_name.make_from_string_general (a_name)
 			test_directory_cell.put (l_name)
 		ensure
 			test_directory_set: test_directory.same_string_general (a_name)

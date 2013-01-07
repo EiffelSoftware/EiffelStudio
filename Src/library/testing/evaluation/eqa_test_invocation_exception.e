@@ -60,25 +60,25 @@ feature {NONE} -- Initialization
 			a_feature_name_not_empty: a_feature_name /= Void implies not a_feature_name.is_empty
 		do
 			code := a_exception.code
-			if attached {like class_name} a_exception.type_name as l_type then
+			if attached a_exception.type_name as l_type then
 				class_name := l_type.string
 			else
 				create {STRING_8} class_name.make_empty
 			end
-			if attached {like recipient_name} a_exception.recipient_name as l_rec then
+			if attached a_exception.recipient_name as l_rec then
 				recipient_name := l_rec.string
 			else
 				create {STRING_8} recipient_name.make_empty
 			end
-			if attached {like tag_name} a_exception.message as l_tag then
-				tag_name := l_tag.string
+			if attached a_exception.description as l_tag then
+				create {IMMUTABLE_STRING_32} tag_name.make_from_string_general (l_tag)
 			else
-				create {STRING_8} tag_name.make_empty
+				create {IMMUTABLE_STRING_32} tag_name.make_empty
 			end
-			if attached {like trace} a_exception.exception_trace as l_trace and then not l_trace.is_empty then
+			if attached a_exception.trace as l_trace and then not l_trace.is_empty then
 				parse_trace (l_trace, a_class_name, a_feature_name)
 			else
-				create {STRING_8} trace.make_empty
+				create {IMMUTABLE_STRING_32} trace.make_empty
 			end
 		end
 
@@ -173,10 +173,10 @@ feature -- Access
 	class_name: READABLE_STRING_8
 			-- Name of the class in which the exception occurred
 
-	tag_name: READABLE_STRING_8
+	tag_name: READABLE_STRING_32
 			-- Tag describing the exception
 
-	trace: READABLE_STRING_8
+	trace: READABLE_STRING_32
 			-- Text based representation of the stack trace
 
 	break_point_slot: INTEGER
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			i, j, l_count, l_bp: INTEGER
 			l_done: BOOLEAN
 			l_substring: like trace
-			c: CHARACTER
+			c: CHARACTER_32
 		do
 			last_class_name := Void
 			last_routine_name := Void
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	dash_line: STRING = "-------------------------------------------------------------------------------%N"
+	dash_line: STRING_32 = "-------------------------------------------------------------------------------%N"
 
 	class_attribute_name: STRING = "class_name"
 	recipient_attribute_name: STRING = "internal_exception"
@@ -324,10 +324,10 @@ feature -- Mismatch Correnction
 				attached {like tag_name} mismatch_information.item (tag_attribute_name) as l_tag and
 				attached {like trace} mismatch_information.item (trace_attribute_name) as l_trace
 			then
-				class_name := create {STRING}.make_from_string (l_class)
-				recipient_name := create {STRING}.make_from_string (l_recipient)
-				tag_name := create {STRING}.make_from_string (l_tag)
-				trace := create {STRING}.make_from_string (l_trace)
+				create {STRING_8} class_name.make_from_string (l_class)
+				create {STRING_8} recipient_name.make_from_string (l_recipient)
+				create {IMMUTABLE_STRING_32} tag_name.make_from_string (l_tag)
+				create {IMMUTABLE_STRING_32} trace.make_from_string (l_trace)
 			else
 				Precursor
 			end

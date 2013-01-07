@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 	initial_strings: ARRAY [STRING_8]
 			-- Initial list items.
 		once
-			create Result.make (1, 11)
+			create Result.make_filled ("", 1, 11)
 			Result.put ("1000%%", 1)
 			Result.put ("500%%", 2)
 			Result.put ("250%%", 3)

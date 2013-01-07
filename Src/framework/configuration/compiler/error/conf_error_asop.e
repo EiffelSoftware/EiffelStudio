@@ -16,12 +16,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_assembly: STRING)
+	make (an_assembly: READABLE_STRING_GENERAL)
 			-- Create.
 		require
 			an_assembly_not_void: an_assembly /= Void
 		do
-			text := "Could not open assembly: "+an_assembly
+			text := {STRING_32} "Could not open assembly: " + an_assembly
 		end
 
 feature -- Access

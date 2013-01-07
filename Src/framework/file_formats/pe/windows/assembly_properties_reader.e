@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_runtime_version: STRING)
+	make (a_runtime_version: READABLE_STRING_GENERAL)
 			-- Initialize Current. Initialize `exists' accordingly.
 		require
 			a_runtime_version_not_void: a_runtime_version /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialize
 			l_reg: WEL_REGISTRY
 			l_val: WEL_REGISTRY_KEY_VALUE
 			l_p: POINTER
-			l_dir: STRING
+			l_dir: STRING_32
 			l_dll: WEL_DLL
 			l_dis: like dispenser
 			l_cache: like assembly_cache

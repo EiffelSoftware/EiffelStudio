@@ -47,13 +47,13 @@ feature -- Element change
 		require
 			i_in_range: i > 0
 		local
-			tmp: like strings_8
+			tmp: like strings
 			l_text: like text
 		do
 			create l_text.make (5)
 			l_text.append_integer (i)
 			l_text.append_character ('%%')
-			tmp := strings_8
+			tmp := strings
 			tmp.compare_objects
 			if tmp.has (l_text) then
 				tmp.prune_all (l_text)
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

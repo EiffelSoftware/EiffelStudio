@@ -47,23 +47,13 @@ feature -- File operations
 	make_binary_input_file (n: READABLE_STRING_GENERAL): KL_BINARY_INPUT_FILE
 			-- New {KL_BINARY_INPUT_FILE} for file name `n'.
 		do
-			if attached {READABLE_STRING_32} n as s then
-				create {KL_BINARY_INPUT_FILE_32} Result.make (s)
-			else
-				create Result.make (n.as_string_8)
-			end
+			create {KL_BINARY_INPUT_FILE_32} Result.make (n)
 		end
 
 	make_text_output_file (n: READABLE_STRING_GENERAL): KL_TEXT_OUTPUT_FILE
 			-- New {KL_TEXT_OUTPUT_FILE} for file `n'.
-		local
-			p: READABLE_STRING_GENERAL
 		do
-			if attached {READABLE_STRING_32} n as s then
-				create {KL_TEXT_OUTPUT_FILE_32} Result.make (s)
-			else
-				create Result.make (p.as_string_8)
-			end
+			create {KL_TEXT_OUTPUT_FILE_32} Result.make (n)
 		end
 
 	make_text_output_file_in (n, d: READABLE_STRING_GENERAL): KL_TEXT_OUTPUT_FILE

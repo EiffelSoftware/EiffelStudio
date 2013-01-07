@@ -168,7 +168,7 @@ feature -- Containers
 			if expected.count /= actual.count then
 				create new_tag.make (15)
 				new_tag.append_string_general (a_tag)
-				new_tag.append_string ("-count")
+				new_tag.append_string_general ("-count")
 				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
 			else
 				i1 := expected.lower
@@ -180,7 +180,7 @@ feature -- Containers
 					if expected_item /~ actual_item then
 						create new_tag.make (15)
 						new_tag.append_string_general (a_tag)
-						new_tag.append_string ("-item #")
+						new_tag.append_string_general ("-item #")
 						new_tag.append_integer (i)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
 						i := nb + 1
@@ -213,7 +213,7 @@ feature -- Containers
 			if expected.count /= actual.count then
 				create new_tag.make (15)
 				new_tag.append_string_general (a_tag)
-				new_tag.append_string ("-count")
+				new_tag.append_string_general ("-count")
 				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
 			else
 				i1 := expected.lower
@@ -225,7 +225,7 @@ feature -- Containers
 					if expected_item /= actual_item then
 						create new_tag.make (15)
 						new_tag.append_string_general (a_tag)
-						new_tag.append_string ("-item #")
+						new_tag.append_string_general ("-item #")
 						new_tag.append_integer (i)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
 						i := nb + 1
@@ -278,15 +278,15 @@ feature {NONE} -- Messages
 		do
 			create Result.make (50)
 			Result.append_string_general (a_tag)
-			Result.append_string ("%N   expected: ")
+			Result.append_string_general ("%N   expected: ")
 			if expected = Void then
-				Result.append_string ("Void")
+				Result.append_string_general ("Void")
 			else
 				Result.append_string_general (expected)
 			end
-			Result.append_string ("%N   but  got: ")
+			Result.append_string_general ("%N   but  got: ")
 			if actual = Void then
-				Result.append_string ("Void")
+				Result.append_string_general ("Void")
 			else
 				Result.append_string_general (actual)
 			end
@@ -301,15 +301,15 @@ feature {NONE} -- Messages
 		do
 			create Result.make (50)
 			Result.append_string_general (a_tag)
-			Result.append_string ("%N   got actual value: ")
+			Result.append_string_general ("%N   got actual value: ")
 			if actual = Void then
-				Result.append_string ("Void")
+				Result.append_string_general ("Void")
 			else
 				Result.append_string_general (actual)
 			end
-			Result.append_string ("%N   should not match: ")
+			Result.append_string_general ("%N   should not match: ")
 			if expected = Void then
-				Result.append_string ("Void")
+				Result.append_string_general ("Void")
 			else
 				Result.append_string_general (expected)
 			end

@@ -20,14 +20,8 @@ inherit
 			{NONE} all
 		undefine
 			is_equal
-		end;
-	CHARACTER_ROUTINES
-		export
-			{NONE} all
-		undefine
-			is_equal
 		end
-
+		
 create {DEBUG_VALUE_EXPORTER}
 
 	make, make_attribute
@@ -204,7 +198,7 @@ feature {NONE} -- Property
 			-- Saved class
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

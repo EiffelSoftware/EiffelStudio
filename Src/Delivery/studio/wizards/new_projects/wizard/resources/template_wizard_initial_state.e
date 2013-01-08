@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			message.set_text ("Describe here what your wizard does.")
 		end
 	
-	pixmap_icon_location: FILE_NAME
+	pixmap_icon_location: PATH
 			-- Icon for the Eiffel Store Wizard
 		once
 			create Result.make_from_string ("eiffel_wizard_icon.png")

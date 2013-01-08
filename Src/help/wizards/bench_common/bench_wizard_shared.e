@@ -10,7 +10,7 @@ class
 	BENCH_WIZARD_SHARED
 
 inherit
-	ARGUMENTS
+	ARGUMENTS_32
 
 	EIFFEL_LAYOUT
 		export

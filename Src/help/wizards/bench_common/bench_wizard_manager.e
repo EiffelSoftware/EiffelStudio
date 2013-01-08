@@ -69,13 +69,11 @@ feature {NONE} -- Initialization
 			-- Setup locale.
 		local
 			l_manager: I18N_LOCALE_MANAGER
-			l_arg: STRING
 			l_locale: detachable like locale
 		do
 			create l_manager.make (eiffel_layout.language_path.name)
 			if argument_count >= 2 then
-				l_arg := argument (2)
-				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))
+				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (argument (2)))
 			end
 			locale_cell.put (l_locale)
 		end

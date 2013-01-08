@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			Result := Precursor
 			if (once_button.is_selected or do_button.is_selected) and then type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
-				Result.append ("%T%T%TResult := ({like " + feature_name_field.text + "}).default -- Remove line when Void Safety is properly set.%N")
+				Result.append ("%T%T%Tcheck False then end end" + " --| Remove line when `Result' is initialized in body.%N")
 			end
 		end
 
@@ -111,7 +111,7 @@ feature -- Status report
 			-- Is `Current' a function editor?
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,29 +9,28 @@ class
 	IL_ENVIRONMENT
 
 inherit
-	ANY
+	OPERATING_ENVIRONMENT
 		redefine
 			default_create
 		end
 
 create
-	make,
-	default_create
+	make, default_create
 
 feature {NONE} -- Initialization
 
-	make (a_version: STRING)
+	make (a_version: READABLE_STRING_GENERAL)
 			-- Create an instance of IL_ENVIRONMENT targeting a specific .NET version `a_version'.
 			-- If `a_version' is not specified we currently take `default_version'.
 			-- Set `version' with `a_version'.
 		do
 			if a_version /= Void then
-				version := a_version
+				create version.make_from_string_general (a_version)
 			else
 				version := default_version
 			end
 		ensure
-			version_set: version /= Void and (a_version /= Void implies version = a_version)
+			version_set: version /= Void and (a_version /= Void implies version.same_string_general (a_version))
 		end
 
 	default_create
@@ -39,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			version := default_version
 		ensure then
-			version_set: version /= Void and then version.is_equal (default_version)
+			version_set: version /= Void and then version.same_string (default_version)
 		end
 
 feature -- Initialization
@@ -49,24 +48,50 @@ feature -- Initialization
 		local
 			l_exec: EXECUTION_ENVIRONMENT
 		do
-			if is_dotnet_installed then
+			if is_dotnet_installed and then attached dotnet_framework_path as l_path then
 				create l_exec
-				l_exec.put (dotnet_framework_path.string, "ISE_DOTNET_FRAMEWORK")
+				l_exec.put (l_path.name, ise_dotnet_framework_env)
 			end
 		end
 
 feature -- Access
 
-	default_version: STRING
+	ise_dotnet_framework_env: STRING = "ISE_DOTNET_FRAMEWORK"
+			-- .NET framework environment variable
+
+	version: IMMUTABLE_STRING_32
+			-- Currently selected version, if none `default_version'.
+
+	default_version: IMMUTABLE_STRING_32
 			-- Default runtime version if `version' was not specified.
-			-- Semantic is to take `v1_0' if present, `v1_1' otherwise.
+			-- Semantic is to take the most recent version of the run-time.
 		do
 			Result := "v1.0"
 		ensure
 			default_version_not_void: Result /= Void
 		end
 
-	dotnet_framework_path: STRING
+	is_dotnet_installed: BOOLEAN
+			-- Is dotnet version `version' installed?
+		do
+			Result := installed_runtimes.has (version)
+		end
+
+	is_version_installed (a_version: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_version' installed?
+		do
+			Result := across installed_runtimes as l_runtime some l_runtime.item.same_string_general (a_version) end
+		end
+
+	installed_runtimes: ARRAYED_LIST [IMMUTABLE_STRING_32]
+			-- List all installed version of the runtime.
+		do
+			create Result.make (1)
+		ensure
+			installed_runtimes_not_void: Result /= Void
+		end
+
+	dotnet_framework_path: detachable PATH
 			-- Path to .NET Framework of version `version'.
 		require
 			is_dotnet_installed: is_dotnet_installed
@@ -74,55 +99,40 @@ feature -- Access
 			create Result.make_empty
 		end
 
-	dotnet_framework_sdk_bin_path: STRING
-			-- Path to bin directory of .NET Framework SDK of version `version'.
-		do
-			create Result.make_empty
-		end
-
-	dotnet_framework_sdk_path: STRING
+	dotnet_framework_sdk_path: like dotnet_framework_path
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		do
 			create Result.make_empty
 		end
 
-	installed_runtimes: ARRAYED_LIST [STRING]
-			-- List all installed version of the runtime.
+	dotnet_framework_sdk_bin_path: like dotnet_framework_path
+			-- Path to bin directory of .NET Framework SDK of version `version'.
 		do
-			create {ARRAYED_LIST [STRING]} Result.make (1)
-		ensure
-			installed_runtimes_not_void: Result /= Void
+			create Result.make_empty
 		end
-
-	is_dotnet_installed: BOOLEAN
-			-- Is dotnet version `version' installed?
-		do
-		end
-
-	ise_dotnet_framework_env: STRING = "ISE_DOTNET_FRAMEWORK"
-		-- .NET framework environment variable
-
-	version: STRING
-			-- Currently selected version, if none `default_version'.
 
 feature -- Query
 
-	use_cordbg (a_string: STRING): BOOLEAN
+	use_cordbg (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Should Current use cordbg.exe?
-		require
-			a_string_not_void: a_string /= Void
 		do
+			Result := a_string /= Void and then a_string.same_string ("cordbg")
 		end
 
-	use_dbgclr (a_string: STRING): BOOLEAN
+	use_dbgclr (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Should Current use DbgCLR.exe?
-		require
-			a_string_not_void: a_string /= Void
 		do
+			Result := a_string /= Void and then a_string.same_string ("DbgCLR")
 		end
 
-	Dotnet_debugger_path (a_debug: STRING): STRING
+	use_mdbg (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Should current use MDbg.exe?
+		do
+			Result := a_string /= Void and then a_string.same_string ("MDbg")
+		end
+
+	dotnet_debugger_path (a_debug: READABLE_STRING_GENERAL): detachable PATH
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
 			a_debug_not_void: a_debug /= Void

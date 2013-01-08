@@ -10,13 +10,8 @@
 			<exclude>/include$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
 			<assertions precondition="true"/>
-			<warning name="export_class_missing" enabled="false"/>
-			<warning name="old_verbatim_strings" enabled="false"/>
-			<warning name="syntax" enabled="false"/>
-			<warning name="vjrv" enabled="false"/>
-			<warning name="vweq" enabled="false"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)/library/i18n/spec/include">

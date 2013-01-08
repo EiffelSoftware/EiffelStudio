@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_file (a_file_name: STRING; a_signing: MD_STRONG_NAME)
+	make_from_file (a_file_name: PATH; a_signing: MD_STRONG_NAME)
 			-- Create a public key from private key stored in `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -74,7 +74,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	read_key_pair_from_file (a_file_name: STRING): MANAGED_POINTER
+	read_key_pair_from_file (a_file_name: PATH): MANAGED_POINTER
 			-- Read key pair from file `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -88,7 +88,8 @@ feature {NONE} -- Implementation
 				is_valid := True
 
 					-- Read key pair data from `a_file_name'.
-				create l_file.make_open_read (a_file_name)
+				create l_file.make_with_path (a_file_name)
+				l_file.open_read
 				create Result.make (l_file.count)
 				l_file.read_to_managed_pointer (Result, 0, Result.count)
 				l_file.close
@@ -111,7 +112,7 @@ invariant
 	key_pair_not_void: key_pair /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -124,22 +125,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MD_PUBLIC_KEY

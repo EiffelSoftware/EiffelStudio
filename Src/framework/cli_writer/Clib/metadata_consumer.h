@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0365 */
-/* at Fri Mar 06 20:08:11 2009
+/* at Mon Dec 31 14:54:43 2012
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)
@@ -71,7 +71,7 @@ void __RPC_USER MIDL_user_free( void * );
 #define __EiffelSoftware_MetadataConsumer_LIBRARY_DEFINED__
 
 /* library EiffelSoftware_MetadataConsumer */
-/* [version][uuid] */ 
+/* [custom][version][uuid] */ 
 
 
 
@@ -81,14 +81,14 @@ EXTERN_C const IID LIBID_EiffelSoftware_MetadataConsumer;
 #define __EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_INTERFACE_DEFINED__
 
 /* interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER */
-/* [object][oleautomation][dual][version][uuid] */ 
+/* [object][custom][oleautomation][dual][version][uuid] */ 
 
 
 EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("E1FFE1AC-8466-4E95-9C3F-3FEB392F8F32")
+    MIDL_INTERFACE("2C108F65-24F1-4E93-BFAE-3262937B5D31")
     EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER : public IDispatch
     {
     public:
@@ -398,7 +398,7 @@ EXTERN_C const CLSID CLSID_EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MAN
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("E1FFE1AC-C88F-4CD5-BBCB-1B1B82308654")
+class DECLSPEC_UUID("64E0AD08-417E-4243-B533-561A05F4B5E6")
 EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER;
 #endif
 #endif /* __EiffelSoftware_MetadataConsumer_LIBRARY_DEFINED__ */

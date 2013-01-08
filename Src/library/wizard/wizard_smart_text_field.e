@@ -267,6 +267,9 @@ feature {NONE} -- Implementation
 			create file_selector
 			file_selector.filters.extend ([browse_file_filter, browse_file_filter])
 			file_selector.open_actions.extend (agent file_selected (file_selector))
+			if not text_32.is_empty then
+				file_selector.set_start_directory (text_32)
+			end
 			file_selector.show_modal_to_window (caller.first_window)
 		end
 

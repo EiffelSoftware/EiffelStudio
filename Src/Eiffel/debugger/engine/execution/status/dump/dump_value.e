@@ -1176,9 +1176,12 @@ feature {NONE} -- Private Constants
 	count_name: STRING = "count"
 	area_lower_name: STRING = "area_lower"
 
-	character_routines: CHARACTER_ROUTINES
+feature {NONE} -- Implementation
+
+	Character_routines: DBG_CHARACTER_ROUTINES
 			-- To have a printable output of Eiffel strings that have
 			-- non-printable characters.
+			--| In addition for the debugger, escape the `escaped_character' character used for PATH			
 		once
 			create Result
 		ensure
@@ -1186,7 +1189,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

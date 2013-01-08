@@ -100,16 +100,12 @@ feature -- Helper functions
 
 	is_date_code_character(c: CHARACTER_32): BOOLEAN
 			--
-		require
-			c /= Void
 		do
 			Result := c = 'd' or  c = 'M' or c = 'y' or c = 'g'
 		end
 
 	is_time_code_character(c: CHARACTER_32): BOOLEAN
 			--
-		require
-			c /= Void
 		do
 			Result := c = 'm' or  c = 's' or c = 't' or c = 'h' or c = 'H'
 		end

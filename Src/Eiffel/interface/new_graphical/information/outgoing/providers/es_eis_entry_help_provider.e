@@ -27,7 +27,7 @@ feature {NONE} -- Variable expansion
 	last_entry: detachable EIS_ENTRY
 			-- Last shown entry.
 
-	context_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
+	context_variables: STRING_TABLE [READABLE_STRING_32]
 			-- A table of context variables, indexed by a variable name
 		do
 			if attached last_entry as l_entry then
@@ -39,7 +39,7 @@ feature {NONE} -- Variable expansion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

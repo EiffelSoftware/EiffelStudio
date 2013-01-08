@@ -17,10 +17,10 @@ create
 
 feature -- Initialization
 
-	Wizard_title: STRING
+	Wizard_title: STRING_32
 			-- Window title for this wizard.
 		once
-			Result := "New ${FL_WIZARD_NAME} Application Wizard"
+			Result := {STRING_32} "New ${FL_WIZARD_NAME} Application Wizard"
 		end
 
 	wizard_factory: APPLICATION_FACTORY

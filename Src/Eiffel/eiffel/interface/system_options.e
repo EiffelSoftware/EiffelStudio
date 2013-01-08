@@ -138,7 +138,7 @@ feature -- Access: IL code generation
 	il_verifiable: BOOLEAN
 			-- Should generated IL code be verifiable?
 
-	clr_runtime_version: STRING
+	clr_runtime_version: STRING_32
 			-- Version of IL runtime available.
 
 	metadata_cache_path: STRING_32
@@ -167,7 +167,7 @@ feature -- Access: IL code generation
 	msil_assembly_compatibility: STRING
 			-- Compatibility of current assembly with other assemblies.
 
-	msil_key_file_name: STRING_32
+	msil_key_file_name: PATH
 			-- Location of key pair used to sign current generated assembly.
 
 	cls_compliant, dotnet_naming_convention: BOOLEAN
@@ -227,19 +227,19 @@ feature -- Update
 			il_verifiable_set: il_verifiable = b
 		end
 
-	set_clr_runtime_version (version: like clr_runtime_version)
+	set_clr_runtime_version (version: READABLE_STRING_GENERAL)
 			-- Set `clr_runtime_version' to `version'.
 		require
 			version_not_void: version /= Void
 			version_not_empty: not version.is_empty
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
-				clr_runtime_version := version
+				create clr_runtime_version.make_from_string_general (version)
 			end
 		ensure
 			clr_runtime_version_set:
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
-				clr_runtime_version = version
+				clr_runtime_version.same_string_general (version)
 		end
 
 	set_metadata_cache_path (s: like metadata_cache_path)
@@ -524,11 +524,11 @@ feature -- Update
 			external_runtime_set: external_runtime = v
 		end
 
-	set_dynamic_def_file (f: detachable READABLE_STRING_GENERAL)
+	set_dynamic_def_file (f: detachable PATH)
 			-- Set `dynamic_def_file' to `f'.
 		do
 			if f /= Void then
-				create dynamic_def_file.make_from_string (f)
+				dynamic_def_file := f
 			else
 				dynamic_def_file := Void
 			end
@@ -611,7 +611,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Is the system a multithreaded one?
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

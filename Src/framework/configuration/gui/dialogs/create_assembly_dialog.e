@@ -216,7 +216,7 @@ feature {NONE} -- Actions
 				create l_il_env.make (target.setting_msil_clr_version)
 			end
 			if l_il_env.is_dotnet_installed then
-				create l_alb.make (l_il_env.dotnet_framework_path, l_il_env.version)
+				create l_alb.make (l_il_env.dotnet_framework_path.name, l_il_env.version)
 				l_properties := l_alb.assemblies_properties
 				l_assemblies.set_row_count_to (l_properties.count)
 				from
@@ -271,7 +271,7 @@ feature {NONE} -- Actions
 			location_ok: location /= Void
 		local
 			l_il_env: IL_ENVIRONMENT
-			l_loc: STRING
+			l_loc: STRING_32
 			l_parts: LIST [STRING]
 		do
 			l_parts := a_name.split (',')
@@ -282,8 +282,8 @@ feature {NONE} -- Actions
 			else
 				create l_il_env.make (target.setting_msil_clr_version)
 			end
-			l_loc := a_path.twin
-			l_loc.replace_substring_all (l_il_env.dotnet_framework_path, "$ISE_DOTNET_FRAMEWORK")
+			create l_loc.make_from_string_general (a_path)
+			l_loc.replace_substring_all (l_il_env.dotnet_framework_path.name, "$ISE_DOTNET_FRAMEWORK")
 			location.set_text (l_loc)
 		end
 

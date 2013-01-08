@@ -98,7 +98,7 @@ feature -- Generation
 			deletion_successful: BOOLEAN
 			output_file: RAW_FILE
 			l_last_error_msg: STRING
-			l_key_file_name: STRING
+			l_key_file_name: PATH
 			l_public_key: MD_PUBLIC_KEY
 			l_res: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 		do
@@ -1156,7 +1156,7 @@ invariant
 	system_exists: System /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

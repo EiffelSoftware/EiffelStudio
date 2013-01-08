@@ -12,7 +12,7 @@ class
 inherit
 	EV_LAYOUT_CONSTANTS
 
-	ARGUMENTS
+	ARGUMENTS_32
 
 feature -- Access
 

@@ -485,11 +485,11 @@ feature {NONE} -- retrieving information from cache
 				end
 				-- is it a local assembly
 			else
-				Result := consumed_local_assembly (an_assembly.location.evaluated_path)
+				Result := consumed_local_assembly (create {PATH}.make_from_string (an_assembly.location.evaluated_path))
 				if Result = Void then
 					-- (re)consume all local assemblies
 					consume_local_assemblies (new_assemblies)
-					Result := consumed_local_assembly (an_assembly.location.evaluated_path)
+					Result := consumed_local_assembly (create {PATH}.make_from_string (an_assembly.location.evaluated_path))
 				end
 			end
 			if Result = Void or else not Result.is_consumed then
@@ -503,18 +503,18 @@ feature {NONE} -- retrieving information from cache
 			Result_not_void: Result /= Void
 		end
 
-	consumed_local_assembly (a_location: STRING): CONSUMED_ASSEMBLY
+	consumed_local_assembly (a_location: PATH): CONSUMED_ASSEMBLY
 			-- Retrieve the consumed assembly for a local assembly in `a_location' if we have up to date information in the cache.
 		require
 			cache_content_set: cache_content /= Void
 			a_location_set: a_location /= Void and then not a_location.is_empty
 		local
-			l_formated_location: STRING
+			l_formated_location: PATH
 			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_as: CONSUMED_ASSEMBLY
 		do
 				-- find the assembly in the cache
-			l_formated_location := format_path (a_location)
+			l_formated_location := a_location.canonical_path
 			from
 				l_assemblies := cache_content.assemblies
 				l_assemblies.start
@@ -522,7 +522,7 @@ feature {NONE} -- retrieving information from cache
 				l_assemblies.after
 			loop
 				l_as := l_assemblies.item
-				if l_as.has_same_ready_formatted_path (l_formated_location) then
+				if l_as.has_same_path (l_formated_location) then
 					Result := l_as
 					l_assemblies.finish
 				end
@@ -577,13 +577,12 @@ feature {NONE} -- Consuming
 			an_assemblies_not_void: an_assemblies /= Void
 		local
 			l_a: CONF_ASSEMBLY
-			l_paths: STRING
-			l_path: STRING
-			l_unique_paths: ARRAYED_LIST [STRING]
+			l_paths: STRING_32
+			l_path: READABLE_STRING_GENERAL
+			l_unique_paths: STRING_TABLE [BOOLEAN]
 			l_emitter: like il_emitter
 		do
-			create l_unique_paths.make (10)
-			l_unique_paths.compare_objects
+			create l_unique_paths.make_caseless (10)
 
 			on_consume_assemblies
 			from
@@ -597,10 +596,11 @@ feature {NONE} -- Consuming
 				if l_a.is_non_local_assembly then
 					l_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token, True)
 				else
-					l_path := l_a.location.evaluated_path.as_lower
+					l_path := l_a.location.evaluated_path
 					if not l_unique_paths.has (l_path) then
-						l_unique_paths.extend (l_path)
-						l_paths.append (l_path + ";")
+						l_unique_paths.force (True, l_path)
+						l_paths.append_string_general (l_path)
+						l_paths.append_character (';')
 					end
 				end
 				an_assemblies.forth
@@ -623,13 +623,12 @@ feature {NONE} -- Consuming
 			an_assemblies_not_void: an_assemblies /= Void
 		local
 			l_a: CONF_ASSEMBLY
-			l_paths: STRING
-			l_path: STRING
-			l_unique_paths: ARRAYED_LIST [STRING]
+			l_paths: STRING_32
+			l_path: READABLE_STRING_GENERAL
+			l_unique_paths: STRING_TABLE [BOOLEAN]
 			l_emitter: like il_emitter
 		do
-			create l_unique_paths.make (10)
-			l_unique_paths.compare_objects
+			create l_unique_paths.make_caseless (10)
 
 			on_consume_assemblies
 			from
@@ -640,10 +639,11 @@ feature {NONE} -- Consuming
 			loop
 				l_a := an_assemblies.item_for_iteration
 				if not l_a.is_non_local_assembly then
-					l_path := l_a.location.evaluated_path.as_lower
+					l_path := l_a.location.evaluated_path
 					if not l_unique_paths.has (l_path) then
-						l_unique_paths.extend (l_path)
-						l_paths.append (l_path + ";")
+						l_unique_paths.force (True, l_path)
+						l_paths.append_string_general (l_path)
+						l_paths.append_character (';')
 					end
 				end
 				an_assemblies.forth
@@ -794,13 +794,13 @@ feature {NONE} -- helpers
 		do
 			if an_assembly.is_consumed then
 					-- date of last modification to the assembly
-				l_mod_date := file_modified_date (an_assembly.location)
+				l_mod_date := file_path_modified_date (an_assembly.location)
 				if l_mod_date = -1 then
-					l_mod_date := file_modified_date (an_assembly.gac_path)
+					l_mod_date := file_path_modified_date (an_assembly.gac_path)
 				end
 					-- date of the cached information
-				l_cache_mod_date := file_modified_date (full_cache_path.extended
-					(an_assembly.folder_name).extended (types_info_file).name)
+				l_cache_mod_date := file_path_modified_date (full_cache_path.extended
+					(an_assembly.folder_name).extended (types_info_file))
 
 				Result := l_mod_date /= -1 and then l_cache_mod_date > l_mod_date
 			end

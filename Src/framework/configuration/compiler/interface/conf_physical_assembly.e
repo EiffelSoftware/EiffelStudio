@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			name := assembly_name.as_lower
 			target := a_target
 			cache_path := a_cache_path
-			create location.make (a_consumed.location, a_target)
+			create location.make (a_consumed.location.name, a_target)
 			create assemblies.make (0)
 			initialize_conditions
 				-- be default we assume that an assembly is only used as a dependency

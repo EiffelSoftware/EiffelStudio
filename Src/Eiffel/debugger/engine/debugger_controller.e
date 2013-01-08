@@ -99,7 +99,7 @@ feature -- Debug Operation
 
 							create l_il_env.make (Eiffel_system.System.clr_runtime_version)
 							if dotnet_debugger /= Void then
-								l_app_string := safe_path (l_il_env.Dotnet_debugger_path (dotnet_debugger.as_string_8)) -- FIXME: unicode truncated to ascii
+								l_app_string := safe_path (l_il_env.Dotnet_debugger_path (dotnet_debugger).name)
 							end
 							if l_app_string /= Void then
 									--| This means we are using either dbgclr or cordbg

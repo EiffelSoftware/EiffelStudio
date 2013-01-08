@@ -65,7 +65,7 @@ feature {NONE} -- Status report
 					s := path.string
 					if attached l_il_env.dotnet_framework_path as l_dotnet_framework_path then
 						s.prepend (";")
-						s.prepend (l_dotnet_framework_path)
+						s.prepend_string (l_dotnet_framework_path.name)
 					end
 					create path.make (s)
 					success := set_environment_variable (path_name.item, path.item)
@@ -333,7 +333,7 @@ invariant
 	runtime_version_not_void: runtime_version /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

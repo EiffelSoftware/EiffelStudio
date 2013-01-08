@@ -1,25 +1,31 @@
 // Generated .IDL file (by the OLE/COM Object Viewer)
 // 
-// typelib filename: EiffelSoftware.MetadataConsumer.tlb
+// typelib filename: <could not determine filename>
 
 [
-  uuid(7D31F607-90E3-3281-9917-B6A798492F76),
-  version(6.4)
+  uuid(8E61CD57-7F8F-3AB5-B3BB-76952253802B),
+  version(7.2),
+  custom(90883F05-3D28-11D2-8F17-00A0C9A6186D, "EiffelSoftware.MetadataConsumer, Version=7.2.9.376, Culture=neutral, PublicKeyToken=def26f296efef469")
+
 ]
 library EiffelSoftware_MetadataConsumer
 {
+    // TLib :     // TLib : mscorlib.dll : {BED7F4EA-1A96-11D2-8F08-00A0C9A6186D}
+    importlib("mscorlib.tlb");
     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
-    importlib("STDOLE2.TLB");
+    importlib("stdole2.tlb");
 
     // Forward declare all types defined in this typelib
     interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
 
     [
       odl,
-      uuid(E1FFE1AC-8466-4E95-9C3F-3FEB392F8F32),
+      uuid(2C108F65-24F1-4E93-BFAE-3262937B5D31),
       version(1.0),
       dual,
-      oleautomation
+      oleautomation,
+      custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "EiffelSoftware.MetadataConsumer.Interop.I_COM_CACHE_MANAGER")    
+
     ]
     interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER : IDispatch {
         [id(0x60020000)]
@@ -50,11 +56,14 @@ library EiffelSoftware_MetadataConsumer
     };
 
     [
-      uuid(E1FFE1AC-C88F-4CD5-BBCB-1B1B82308654),
-      version(1.0)
+      uuid(64E0AD08-417E-4243-B533-561A05F4B5E6),
+      version(1.0),
+      custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER")
     ]
     coclass EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER {
+        interface _Object;
         [default] interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
+        interface ISponsor;
     };
 };
 

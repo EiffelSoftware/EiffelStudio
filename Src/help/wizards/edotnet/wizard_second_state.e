@@ -43,7 +43,7 @@ feature -- Basic Operation
 			l_vert: EV_VERTICAL_BOX
 			l_lab: EV_LABEL
 			l_il_env: IL_ENVIRONMENT
-			l_runtimes: LIST [STRING]
+			l_runtimes: ARRAYED_LIST [READABLE_STRING_32]
 			l_item: EV_LIST_ITEM
 		do
 			create rb_project_type_exe.make_with_text (interface_names.l_Exe_type)
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	most_recent_clr_version: STRING
+	most_recent_clr_version: STRING_32
 			-- The most recent clr version found on this system
 
 	console_app_b: EV_CHECK_BUTTON

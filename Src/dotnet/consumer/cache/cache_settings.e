@@ -23,7 +23,7 @@ feature -- Access
 			l_result: detachable SYSTEM_STRING
 		once
 			create l_cr
-			l_result := l_cr.eiffel_assembly_cache_path
+			l_result := l_cr.eiffel_assembly_cache_path.name.to_cil
 			check l_result_attached: l_result /= Void end
 			l_result := l_result.replace_character (':', '!')
 			check l_result_attached: l_result /= Void end

@@ -62,14 +62,14 @@ feature -- Access
 			end
 		end
 
-	consumed_assembly_from_path (a_path: STRING): detachable CONSUMED_ASSEMBLY
+	consumed_assembly_from_path (a_path: PATH): detachable CONSUMED_ASSEMBLY
 			-- Find a consumed assembly in cache that matches `a_path'.
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 			is_initialized: is_initialized
 		local
-			l_path: detachable STRING
+			l_path: detachable PATH
 			l_consumed_assemblies: like assemblies
 			l_assembly: CONSUMED_ASSEMBLY
 			l_info: like info
@@ -84,12 +84,9 @@ feature -- Access
 			loop
 				l_assembly := l_consumed_assemblies.item
 				if l_path = Void then
-					l_path := l_assembly.format_path (a_path)
-					if attached {SYSTEM_PATH}.get_full_path (l_path) as l_full_path then
-						l_path := l_full_path
-					end
+					l_path := l_assembly.format_path (a_path).canonical_path
 				end
-				if l_assembly.has_same_ready_formatted_path (l_path) then
+				if l_assembly.has_same_path (l_path) then
 					Result := l_assembly
 				end
 				l_consumed_assemblies.forth
@@ -105,7 +102,7 @@ feature -- Access
 			des: EIFFEL_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + assembly_types_file_name, 0)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (assembly_types_file_name).name, 0)
 			Result ?= des.deserialized_object
 		end
 
@@ -118,14 +115,12 @@ feature -- Access
 			not_a_type_empty: not a_type.is_empty
 		local
 			l_des: EIFFEL_DESERIALIZER
-			l_type_path: STRING
 			l_pos: INTEGER
 		do
 			l_pos := type_position_from_type_name (a_assembly, a_type)
 			if l_pos >= 0 then
 				create l_des
-				l_type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_file_name
-				l_des.deserialize (l_type_path, l_pos)
+				l_des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (classes_file_name).name, l_pos)
 				Result ?= l_des.deserialized_object
 			end
 		end
@@ -162,7 +157,7 @@ feature -- Access
 			des: EIFFEL_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name, 0)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (Assembly_mapping_file_name).name, 0)
 			Result ?= des.deserialized_object
 		end
 
@@ -181,7 +176,7 @@ feature -- Access
 				l_ca := consumed_assembly_from_path (assembly_location (a_type))
 				if l_ca /= Void then
 					create l_des
-					l_des.deserialize (absolute_type_path (l_ca), l_pos)
+					l_des.deserialize (absolute_type_path (l_ca).name, l_pos)
 					Result ?= l_des.deserialized_object
 				end
 			end
@@ -219,10 +214,10 @@ feature -- Status Report
 	is_initialized: BOOLEAN
 			-- Is EAC correctly installed?
 		do
-			Result := (create {RAW_FILE}.make (Absolute_info_path)).exists
+			Result := (create {RAW_FILE}.make_with_path (Absolute_info_path)).exists
 		end
 
-	is_assembly_in_cache (a_path: STRING; a_consumed: BOOLEAN): BOOLEAN
+	is_assembly_in_cache (a_path: PATH; a_consumed: BOOLEAN): BOOLEAN
 			-- Is `a_path' in cache and if `a_consumed' has it been consumed
 		require
 			non_void_path: a_path /= Void
@@ -240,7 +235,7 @@ feature -- Status Report
 			non_void_type: a_type /= Void
 		local
 			l_ca: detachable CONSUMED_ASSEMBLY
-			l_type_path: STRING
+			l_type_path: PATH
 			l_pos: INTEGER
 		do
 			l_pos := type_position_from_type (a_type)
@@ -248,14 +243,14 @@ feature -- Status Report
 				l_ca := consumed_assembly_from_path (assembly_location (a_type))
 				if l_ca /= Void then
 					l_type_path := absolute_type_path (l_ca)
-					if l_type_path /= Void and not l_type_path.is_empty then
-						Result := (create {RAW_FILE}.make (l_type_path)).exists
+					if not l_type_path.is_empty then
+						Result := (create {RAW_FILE}.make_with_path (l_type_path)).exists
 					end
 				end
 			end
 		end
 
-	is_assembly_stale (a_path: STRING): BOOLEAN
+	is_assembly_stale (a_path: PATH): BOOLEAN
 			-- Is assembly `a_path' out of date
 			-- Returns false if assembly has not already been consumed.
 		require
@@ -263,7 +258,7 @@ feature -- Status Report
 			valid_path: not a_path.is_empty
 		local
 			l_ca: detachable CONSUMED_ASSEMBLY
-			l_consume_path: STRING
+			l_consume_path: PATH
 			l_file_info: SYSTEM_FILE_INFO
 			l_dir_info: DIRECTORY_INFO
 			l_so: detachable SYSTEM_OBJECT
@@ -274,15 +269,15 @@ feature -- Status Report
 			if l_ca /= Void and then l_ca.is_consumed then
 				l_consume_path := absolute_assembly_path_from_consumed_assembly (l_ca)
 
-				create l_dir_info.make (l_consume_path)
-				create l_file_info.make (l_ca.location)
+				create l_dir_info.make (l_consume_path.name)
+				create l_file_info.make (l_ca.location.name)
 				Result := not l_dir_info.exists or {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
 				if not Result then
 						-- now check in consumer is newer
 					l_so := Current
 					l_type := l_so.get_type
 					check l_type_attached: l_type /= Void end
-					create l_file_info.make (assembly_location (l_type))
+					create l_file_info.make (assembly_location (l_type).name)
 					Result := {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
 					if Result then
 						l_reason := "The consumer is newer than the generate contents."
@@ -300,7 +295,7 @@ feature -- Status Report
 				check
 					l_reason_not_void: l_reason /= Void
 				end
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is considered stale.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is considered stale.", a_path.name.to_cil))
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("%TReason: {0}.", l_reason))
 			end
 		end
@@ -321,7 +316,7 @@ feature {CACHE_WRITER} -- Implementation
 				if internal_info.item = Void then
 					if is_initialized then
 						create des
-						des.deserialize (Absolute_info_path, 0)
+						des.deserialize (Absolute_info_path.name, 0)
 						if des.successful then
 							l_ci ?= des.deserialized_object
 							if l_ci /= Void then
@@ -424,7 +419,7 @@ feature {NONE} -- Implementation
 			valid_result: Result =-1 or Result >= 0
 		end
 
-	assembly_location (a_type: SYSTEM_TYPE): STRING
+	assembly_location (a_type: SYSTEM_TYPE): PATH
 			-- Get the location of assembly  in which `a_type' belongs.
 		require
 			a_type_attached: a_type /= Void
@@ -436,7 +431,7 @@ feature {NONE} -- Implementation
 			check l_ass_attached: l_ass /= Void end
 			l_path := l_ass.location
 			check l_path_attached: l_path /= Void end
-			Result := l_path
+			create Result.make_from_string (create {STRING_32}.make_from_cil (l_path))
 		end
 
 note

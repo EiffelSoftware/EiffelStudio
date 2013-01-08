@@ -13,7 +13,7 @@ feature -- Access
 	status_querier: detachable FUNCTION [ANY, TUPLE[], BOOLEAN]
 			-- Check whether to stop process
 
-	status_printer, error_printer: detachable ROUTINE [ANY, TUPLE [STRING]]
+	status_printer, error_printer: detachable ROUTINE [ANY, TUPLE [READABLE_STRING_GENERAL]]
 			-- Print status and error messages
 
 feature -- Element settings

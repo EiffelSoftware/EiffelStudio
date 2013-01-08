@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
-		<version major="6" minor="4" release="7" build="7751"/>
+		<version major="7" minor="2" release="9" build="376"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
@@ -23,7 +23,7 @@
 		<setting name="use_all_cluster_name_as_namespace" value="false"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
 		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
-		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver-safe.ecf"/>
+		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver-safe.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper-safe.ecf" readonly="false">
 			<condition>
@@ -31,8 +31,8 @@
 			</condition>
 		</library>
 		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker-safe.ecf" readonly="false"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
-		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger-safe.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf" readonly="false"/>
+		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger-safe.ecf" readonly="false"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
@@ -79,9 +79,13 @@
 	</target>
 	<target name="emdc" extends="consumer_library">
 		<root cluster="main" class="APPLICATION" feature="make"/>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
+		</option>
 		<setting name="executable_name" value="emdc"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser-safe.ecf"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser-safe.ecf" readonly="false"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf" readonly="false"/>
 		<cluster name="main" location="$EIFFEL_SRC\dotnet\consumer\main\"/>
 	</target>
 	<target name="consumer_20" extends="consumer_library">

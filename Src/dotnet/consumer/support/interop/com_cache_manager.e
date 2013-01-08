@@ -7,7 +7,7 @@ note
 	metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
 		create {CLASS_INTERFACE_ATTRIBUTE}.make ({CLASS_INTERFACE_TYPE}.none) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-C88F-4CD5-BBCB-1B1B82308654") end
+		create {GUID_ATTRIBUTE}.make ("64E0AD08-417E-4243-B533-561A05F4B5E6") end
 
 frozen class
 	COM_CACHE_MANAGER
@@ -43,7 +43,7 @@ feature -- Basic Exportations
 			l_current_domain: detachable APP_DOMAIN
 		do
 			create l_sub.make
-			create l_resolver.make_with_name ("Initializing Resolver")
+			create l_resolver.make_with_name ({STRING_32} "Initializing Resolver")
 			l_current_domain := {APP_DOMAIN}.current_domain
 			check l_current_domainattached: l_current_domain /= Void end
 			l_sub.subscribe (l_current_domain, l_resolver)
@@ -63,13 +63,13 @@ feature -- Basic Exportations
 		do
 			eac_path := a_path
 			create cr
-			cr.set_internal_eiffel_cache_path (a_path)
+			cr.set_internal_eiffel_cache_path (create {PATH}.make_from_string (create {STRING_32}.make_from_cil (a_path)))
 
 			initialize
 			if not cr.is_initialized then
 				(create {EIFFEL_SERIALIZER}).serialize (
 					cr.new_cache_info (cr.absolute_info_path),
-					cr.absolute_info_path, False)
+					cr.absolute_info_path.name, False)
 			end
 			is_initialized := True
 		end

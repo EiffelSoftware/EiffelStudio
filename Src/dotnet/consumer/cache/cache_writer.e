@@ -70,41 +70,36 @@ feature -- Clean Up
 
 feature -- Basic Operations
 
-	add_assembly (a_path: STRING; a_info_only: BOOLEAN)
+	add_assembly (a_path: READABLE_STRING_32; a_info_only: BOOLEAN)
 			-- Add assembly at `a_path' and its dependencies into cache.
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-			path_exists: (create {RAW_FILE}.make (a_path)).exists
+			path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
 		local
-			l_processed: ARRAYED_LIST [STRING]
+			l_processed: ARRAYED_LIST [READABLE_STRING_32]
 		do
 			create l_processed.make (0)
 			l_processed.compare_objects
 			add_assembly_ex (a_path, a_info_only, Void, l_processed)
 		end
 
-	add_assembly_ex (a_path: STRING; a_info_only: BOOLEAN; a_other_assemblies: detachable LIST [STRING]; a_processed: ARRAYED_LIST [STRING])
+	add_assembly_ex (a_path: READABLE_STRING_32; a_info_only: BOOLEAN; a_other_assemblies: detachable LIST [READABLE_STRING_32]; a_processed: ARRAYED_LIST [READABLE_STRING_32])
 			-- Add assembly at `a_path' and its dependencies into cache.
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-			path_exists: (create {RAW_FILE}.make (a_path)).exists
+			path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
 			a_other_assemblies_contains_valid_items: a_other_assemblies /= Void implies a_other_assemblies.is_empty or else
-				a_other_assemblies.for_all (agent (a_item: STRING): BOOLEAN
-					do
-						Result := a_item /= Void and then a_item.as_lower.is_equal (a_item)
-					end)
+				across a_other_assemblies as l_ass all l_ass.item /= Void and then l_ass.item.is_case_insensitive_equal (l_ass.item) end
 			a_other_assemblies_compares_objects: a_other_assemblies /= Void implies a_other_assemblies.object_comparison
 			a_processed_attached: a_processed /= Void
 			a_processed_compares_objects: a_processed.object_comparison
-			a_processed_contains_valid_items: a_processed.is_empty or else a_processed.for_all (agent (a_item: STRING): BOOLEAN
-					do
-						Result := a_item /= Void and then a_item.as_lower.is_equal (a_item)
-					end)
+			a_processed_contains_valid_items: a_processed.is_empty or else
+				across a_processed as l_item all l_item.item /= Void and then l_item.item.is_case_insensitive_equal (l_item.item) end
 		local
-			l_string_tuple: TUPLE [STRING]
-			l_assembly_folder: STRING
+			l_string_tuple: TUPLE [STRING_32]
+			l_assembly_folder: PATH
 			l_ca: detachable CONSUMED_ASSEMBLY
 			l_assembly: detachable ASSEMBLY
 			l_old_assembly: ASSEMBLY
@@ -113,9 +108,10 @@ feature -- Basic Operations
 			l_dir: DIRECTORY
 			l_names: detachable NATIVE_ARRAY [detachable ASSEMBLY_NAME]
 			l_info: detachable CACHE_INFO
-			l_assembly_path: STRING
+			l_assembly_path: PATH
+			l_assembly_location: STRING_32
 			l_assembly_info_updated: BOOLEAN
-			l_lower_path: detachable SYSTEM_STRING
+			l_lower_path: detachable PATH
 			l_reader: like cache_reader
 			l_reason: SYSTEM_STRING
 			retried: BOOLEAN
@@ -124,15 +120,16 @@ feature -- Basic Operations
 			if not retried then
 				guard.lock
 
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Adding assembly (does not mean consuming) '{0}'.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Adding assembly (does not mean consuming) '{0}'.", a_path.to_cil))
 				l_reason := "New entry"
 
 				l_reader := cache_reader
 				if l_reader.is_initialized then
-					l_ca := l_reader.consumed_assembly_from_path (a_path)
+					l_ca := l_reader.consumed_assembly_from_path (create {PATH}.make_from_string (a_path))
 				end
 				if l_ca = Void then
-					l_lower_path := {SYSTEM_PATH}.get_full_path (a_path.as_lower)
+					create l_lower_path.make_from_string (a_path.as_lower)
+					l_lower_path := l_lower_path.canonical_path
 				else
 					l_lower_path := l_ca.location
 					if l_ca.has_info_only and not a_info_only then
@@ -140,17 +137,12 @@ feature -- Basic Operations
 					end
 				end
 
-				if l_lower_path /= Void then
-					l_assembly := assembly_loader.load_from_gac_or_path (l_lower_path)
-				else
-					l_lower_path := a_path.as_lower
-				end
+				l_assembly := assembly_loader.load_from_gac_or_path (l_lower_path.name)
 				if l_assembly /= Void and then attached l_assembly.location as l_location then
 					create l_consumer.make (Current)
-					a_processed.extend (l_lower_path)
+					a_processed.extend (l_lower_path.name)
 
-					l_assembly_path := l_location
-					l_assembly_path.to_lower
+					create l_assembly_path.make_from_string (create {STRING_32}.make_from_cil (l_location.to_lower))
 
 					if l_ca = Void and l_reader.is_initialized then
 							-- This case presents itself either when the assembly has never been consumed,
@@ -164,11 +156,11 @@ feature -- Basic Operations
 					end
 
 					if l_ca /= Void and then l_ca.is_consumed then
-						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("'{0}' has already been consumed. Checking...", a_path))
+						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("'{0}' has already been consumed. Checking...", a_path.to_cil))
 
 							-- Examine existing data and modify
 						if l_assembly.global_assembly_cache then
-							if not l_ca.gac_path.is_equal (l_assembly_path) then
+							if not l_ca.gac_path.same_as (l_assembly_path) then
 								l_ca.set_gac_path (l_assembly_path)
 								l_ca.set_is_in_gac (True)
 								l_assembly_info_updated := True
@@ -180,7 +172,7 @@ feature -- Basic Operations
 								l_assembly_info_updated := True
 								{SYSTEM_DLL_TRACE}.write_line_string ("Assembly location path changed.")
 							end
-						elseif not l_ca.location.is_equal (l_assembly_path) then
+						elseif not l_ca.location.same_as (l_assembly_path) then
 							l_ca.set_location (l_assembly_path)
 							l_ca.set_is_in_gac (False)
 							l_assembly_info_updated := True
@@ -192,7 +184,7 @@ feature -- Basic Operations
 
 						if l_assembly_info_updated then
 								-- The assembly information requires updating
-							{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Storing changed assembly information for '{0}'.", a_path))
+							{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Storing changed assembly information for '{0}'.", a_path.to_cil))
 							l_info := l_reader.info
 							if l_info /= Void then
 								l_info.update_assembly (l_ca)
@@ -224,21 +216,21 @@ feature -- Basic Operations
 					l_assembly_info_updated := False
 
 					if l_ca /= Void and then l_ca.is_consumed then
-						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is not being consumed because it is up-to-date.", a_path))
+						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is not being consumed because it is up-to-date.", a_path.to_cil))
 						l_reason := "Out of date"
 						if attached status_printer as l_status_printer then
 							create l_string_tuple
-							l_string_tuple.put ("Up-to-date check: '" +	a_path +
+							l_string_tuple.put ({STRING_32} "Up-to-date check: '" +	a_path +
 								"' has not been modified since last consumption.%N", 1)
 							l_status_printer.call (l_string_tuple)
 						end
 					else
 						if l_ca = Void then
-							l_ca := consumed_assembly_from_path (l_lower_path)
+							l_ca := consumed_assembly_from_path (l_lower_path.name)
 						end
 						if l_ca /= Void then
 							l_assembly_folder := l_reader.absolute_assembly_path_from_consumed_assembly (l_ca)
-							create l_dir.make (l_assembly_folder)
+							create l_dir.make_with_path (l_assembly_folder)
 							if not l_dir.exists then
 								l_dir.create_dir
 							end
@@ -246,12 +238,12 @@ feature -- Basic Operations
 							l_consumer.set_status_printer (status_printer)
 							l_consumer.set_error_printer (error_printer)
 							l_consumer.set_status_querier (status_querier)
-							l_consumer.set_destination_path (l_dir.name)
+							l_consumer.set_destination_path (l_dir.path)
 
 							if attached notifier as l_notifier then
 								l_notifier.notify_consume (
 									create {NOTIFY_MESSAGE}.make (l_ca,
-										a_path, l_reason, cache_reader.absolute_consume_path))
+										a_path, create {STRING_32}.make_from_cil (l_reason), cache_reader.absolute_consume_path))
 							end
 
 								-- Load assembly from path, so path assembly is consumed.
@@ -259,7 +251,7 @@ feature -- Basic Operations
 								-- assemblies with no implementation
 								-- in a local path and the implementation in the GAC.
 							l_old_assembly := l_assembly
-							l_assembly := assembly_loader.load_from (l_lower_path)
+							l_assembly := assembly_loader.load_from (l_lower_path.name)
 							if l_assembly = Void then
 								l_assembly := l_old_assembly
 							end
@@ -280,7 +272,7 @@ feature -- Basic Operations
 					end
 
 					if l_consumer.successful then
-						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Processing assembly dependencies...%N%NAssembly: {0}.", a_path))
+						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Processing assembly dependencies...%N%NAssembly: {0}.", a_path.to_cil))
 						if attached notifier as l_notifier then
 							l_notifier.notify_info ("Synchronizing cache...")
 						end
@@ -295,17 +287,22 @@ feature -- Basic Operations
 								l_name := l_names.item (i)
 								if l_name /= Void then
 									l_assembly := assembly_loader.load (l_name)
-									if
-										l_assembly /= Void and then attached l_assembly.location as l_ass_location and then
-										not a_processed.has (l_ass_location) and then not (l_reader.is_assembly_in_cache (l_ass_location, True) or else cache_reader.is_assembly_stale (l_ass_location)) then
-											-- Adds only lookup info
-										l_assembly_path := l_ass_location
-										add_assembly_ex (l_assembly_path,
-											a_info_only or else
-												(a_other_assemblies = Void or else
-												not a_other_assemblies.has (l_assembly_path.as_lower)),
-											a_other_assemblies, a_processed)
-										l_assembly_info_updated := True
+									if l_assembly /= Void and then attached l_assembly.location as l_ass_location then
+										l_assembly_location := l_ass_location
+										create l_assembly_path.make_from_string (l_assembly_location)
+										if
+											not a_processed.has (l_assembly_location) and then
+											not (l_reader.is_assembly_in_cache (l_assembly_path, True) or else
+											cache_reader.is_assembly_stale (l_assembly_path))
+										then
+												-- Adds only lookup info
+											add_assembly_ex (l_assembly_location,
+												a_info_only or else
+													(a_other_assemblies = Void or else
+													not a_other_assemblies.has (l_assembly_location.as_lower)),
+												a_other_assemblies, a_processed)
+											l_assembly_info_updated := True
+										end
 									end
 								end
 								i := i + 1
@@ -314,7 +311,7 @@ feature -- Basic Operations
 						if l_assembly_info_updated and l_ca /= Void then
 							if
 								attached notifier as l_notifier and then
-								attached {SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.absolute_consume_path) as l_msg
+								attached {SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.absolute_consume_path.name.to_cil) as l_msg
 							then
 								l_notifier.notify_info (l_msg)
 							end
@@ -328,12 +325,12 @@ feature -- Basic Operations
 					end
 				end
 			else
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path.to_cil))
 
 				if l_name /= Void and then attached l_name.to_string as l_error_msg then
-					set_error (Assembly_not_found_error, l_error_msg)
+					set_error (Assembly_not_found_error, create {STRING_32}.make_from_cil (l_error_msg))
 				elseif l_assembly /= Void and then attached l_assembly.full_name as l_ass_full_name then
-					set_error (Assembly_dependancies_not_found_error, l_ass_full_name)
+					set_error (Assembly_dependancies_not_found_error, create {STRING_32}.make_from_cil (l_ass_full_name))
 				else
 					set_error (Assembly_not_found_error, a_path)
 				end
@@ -349,7 +346,7 @@ feature -- Basic Operations
 			end
 		end
 
-	unconsume_assembly (a_path: STRING)
+	unconsume_assembly (a_path: PATH)
 			-- Unconsumes assembly at `a_path'. This means all consumed metadata in removed
 			-- and the consumed assembly entry is_consumed attribute is set to false.
 			-- Note: Does not update any assembly reference mappings. Call `update_client_assembly_mapppings' to
@@ -358,7 +355,7 @@ feature -- Basic Operations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_string_tuple: TUPLE [STRING]
+			l_string_tuple: TUPLE [STRING_32]
 			l_dir: DIRECTORY
 			l_ca: detachable CONSUMED_ASSEMBLY
 			l_info: detachable CACHE_INFO
@@ -370,12 +367,12 @@ feature -- Basic Operations
 			end
 			if not retried then
 				guard.lock
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'", a_path.name.to_cil))
 
 				l_reader := cache_reader
 				if attached status_printer as l_status_printer then
 					create l_string_tuple
-					l_string_tuple.put ("Updating assembly consumed metadata: '" + a_path +
+					l_string_tuple.put ({STRING_32} "Updating assembly consumed metadata: '" + a_path.name +
 						"' has been modified since last consumption.%N", 1)
 					l_status_printer.call (l_string_tuple)
 				end
@@ -383,7 +380,7 @@ feature -- Basic Operations
 				l_info := l_reader.info
 				if l_ca /= Void and l_info /= Void then
 						-- Remove consumed metadata
-					create l_dir.make (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
+					create l_dir.make_with_path (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
 					if l_dir.exists then
 						l_dir.recursive_delete
 					end
@@ -393,7 +390,7 @@ feature -- Basic Operations
 					update_info (l_info)
 				end
 			else
-				set_error (Update_error, a_path)
+				set_error (Update_error, a_path.name)
 			end
 			guard.unlock
 		rescue
@@ -406,7 +403,7 @@ feature -- Basic Operations
 			end
 		end
 
-	remove_recursive_assembly (a_path: STRING)
+	remove_recursive_assembly (a_path: PATH)
 			-- Remove assembly identified by `a_path' and its clients from cache.
 		require
 			non_void_path: a_path /= Void
@@ -421,7 +418,7 @@ feature -- Basic Operations
 				guard.lock
 				l_reader := cache_reader
 				remove_assembly_internal (a_path)
-				l_ca := consumed_assembly_from_path (a_path)
+				l_ca := consumed_assembly_from_path (a_path.name)
 				if l_ca /= Void and then attached l_reader.client_assemblies (l_ca) as l_assemblies then
 					from
 						i := 1
@@ -435,7 +432,7 @@ feature -- Basic Operations
 					end
 				end
 			else
-				set_error (Remove_error, a_path)
+				set_error (Remove_error, a_path.name)
 			end
 			guard.unlock
 		rescue
@@ -460,9 +457,9 @@ feature -- Basic Operations
 		do
 			if not retried then
 				guard.lock
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Cleaning EAC '{0}'.", cache_reader.eac_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Cleaning EAC '{0}'.", cache_reader.eac_path.to_cil))
 
-				create l_cache_folder.make (cache_reader.eiffel_assembly_cache_path)
+				create l_cache_folder.make_with_path (cache_reader.eiffel_assembly_cache_path)
 				if l_cache_folder.exists and attached cache_reader.info as l_info then
 					l_assemblies := l_info.assemblies
 
@@ -474,8 +471,8 @@ feature -- Basic Operations
 					loop
 						l_ca := l_assemblies.item
 						l_remove := not l_ca.is_consumed
-						if not l_remove and then not (create {RAW_FILE}.make (l_ca.location)).exists then
-							if not (create {RAW_FILE}.make (l_ca.gac_path)).exists then
+						if not l_remove and then not (create {RAW_FILE}.make_with_path (l_ca.location)).exists then
+							if not (create {RAW_FILE}.make_with_path (l_ca.gac_path)).exists then
 								l_remove := True
 							end
 						end
@@ -512,7 +509,7 @@ feature -- Basic Operations
 			if not retried then
 				guard.lock
 
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Compacting EAC '{0}'.", cache_reader.eac_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Compacting EAC '{0}'.", cache_reader.eac_path.to_cil))
 
 				l_info := cache_reader.info
 				if l_info /= Void then
@@ -545,33 +542,32 @@ feature -- Basic Operations
 			end
 		end
 
-	consumed_assembly_from_path (a_path: STRING): detachable CONSUMED_ASSEMBLY
+	consumed_assembly_from_path (a_path: READABLE_STRING_32): detachable CONSUMED_ASSEMBLY
 			-- retrieve a consumed assembly for `a_path' and store in cache info for retrieval
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 			valid_assembly_path: assembly_loader.load_from_gac_or_path (a_path) /= Void
 		local
-			l_id_upper: STRING
-			l_path: detachable SYSTEM_STRING
+			l_id_upper: STRING_32
+			l_path: PATH
 			retried: BOOLEAN
 		do
 			if not retried then
 				guard.lock
-				l_path := {SYSTEM_PATH}.get_full_path (a_path)
-				if l_path /= Void then
-					if cache_reader.is_initialized then
-						Result := cache_reader.consumed_assembly_from_path (l_path)
-					end
-					if Result = Void then
-						if attached {GUID}.new_guid.to_string as l_id then
-							l_id_upper := l_id
-							l_id_upper.to_upper
-							Result := create_consumed_assembly_from_path (l_id_upper, l_path)
-							if Result /= Void and attached cache_reader.info as l_info then
-								l_info.add_assembly (Result)
-								update_info (l_info)
-							end
+				create l_path.make_from_string (a_path)
+				l_path := l_path.canonical_path
+				if cache_reader.is_initialized then
+					Result := cache_reader.consumed_assembly_from_path (l_path)
+				end
+				if Result = Void then
+					if attached {GUID}.new_guid.to_string as l_id then
+						l_id_upper := l_id
+						l_id_upper.to_upper
+						Result := create_consumed_assembly_from_path (l_id_upper, l_path)
+						if Result /= Void and attached cache_reader.info as l_info then
+							l_info.add_assembly (Result)
+							update_info (l_info)
 						end
 					end
 				end
@@ -592,7 +588,7 @@ feature -- Basic Operations
 		require
 			non_void_info: a_info /= Void
 		local
-			l_absolute_xml_info_path: STRING
+			l_absolute_xml_info_path: PATH
 			serializer: EIFFEL_SERIALIZER
 			retried: BOOLEAN
 		do
@@ -602,7 +598,7 @@ feature -- Basic Operations
 					a_info.set_is_dirty (False)
 					l_absolute_xml_info_path := cache_reader.Absolute_info_path
 					create serializer
-					serializer.serialize (a_info, l_absolute_xml_info_path, False)
+					serializer.serialize (a_info, l_absolute_xml_info_path.name, False)
 				end
 			end
 			guard.unlock
@@ -620,7 +616,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation	
 
-	remove_assembly_internal (a_path: STRING)
+	remove_assembly_internal (a_path: PATH)
 			-- Remove assembly identified by `a_path' and its clients from cache.
 		require
 			non_void_path: a_path /= Void
@@ -635,10 +631,10 @@ feature {NONE} -- Implementation
 			if not retried then
 				guard.lock
 				l_reader := cache_reader
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Removing assembly '{0}'.", a_path))
-				l_ca := consumed_assembly_from_path (a_path)
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Removing assembly '{0}'.", a_path.name.to_cil))
+				l_ca := consumed_assembly_from_path (a_path.name)
 				if l_ca /= Void then
-					create l_dir.make (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
+					create l_dir.make_with_path (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
 					if l_dir.exists then
 						l_dir.recursive_delete
 					end
@@ -651,7 +647,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				set_error (Remove_error, a_path)
+				set_error (Remove_error, a_path.name)
 			end
 			guard.unlock
 		rescue
@@ -664,25 +660,26 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_consumed_assembly_from_path (a_id: STRING; a_path: STRING): detachable CONSUMED_ASSEMBLY
+	create_consumed_assembly_from_path (a_id: READABLE_STRING_32; a_path: PATH): detachable CONSUMED_ASSEMBLY
 			-- Creates a new CONSUMED_ASSEMBLY
 		require
 			non_void_id: a_id /= Void
 			valid_id: not a_id.is_empty
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-			valid_assembly_path: assembly_loader.load_from_gac_or_path (a_path) /= Void
+			valid_assembly_path: assembly_loader.load_from_gac_or_path (a_path.name) /= Void
 		local
 			l_assembly: detachable ASSEMBLY
 			l_name: detachable ASSEMBLY_NAME
 			l_ass_name: detachable SYSTEM_STRING
-			l_key: STRING
-			l_culture: STRING
-			l_version: STRING
+			l_assembly_name: STRING_32
+			l_key: STRING_32
+			l_culture: STRING_32
+			l_version: STRING_32
 			l_is_in_gac: BOOLEAN
-			folder_name: STRING
+			folder_name: STRING_32
 		do
-			l_assembly := assembly_loader.load_from_gac_or_path (a_path)
+			l_assembly := assembly_loader.load_from_gac_or_path (a_path.name)
 			if l_assembly /= Void and then attached l_assembly.location as l_location then
 				l_name := l_assembly.get_name
 				check l_name_attached: l_name /= Void end
@@ -695,17 +692,18 @@ feature {NONE} -- Implementation
 				l_version := version_from_info (l_name.version)
 				l_ass_name := l_name.name
 				check l_ass_name_attached: l_ass_name /= Void end
+				create l_assembly_name.make_from_cil (l_ass_name)
 
 				if conservative_mode then
-					folder_name := a_id.twin
+					create folder_name.make_from_string (a_id)
 				else
-					create folder_name.make (l_ass_name.length + a_id.count + 1)
-					folder_name.append (create {STRING_8}.make_from_cil (l_ass_name))
+					create folder_name.make (l_assembly_name.count + a_id.count + 1)
+					folder_name.append (l_assembly_name)
 					folder_name.append_character ('!')
-					folder_name.append (a_id)
+					folder_name.append_string_general (a_id)
 				end
 
-				create Result.make (a_id, folder_name, l_ass_name, l_version, l_culture, l_key, a_path, l_location, l_is_in_gac)
+				create Result.make (a_id, folder_name, l_assembly_name, l_version, l_culture, l_key, a_path, create {PATH}.make_from_string (create {STRING_32}.make_from_cil (l_location)), l_is_in_gac)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -726,7 +724,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				guard.lock
 
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating assembly mappings for '{0}'.", a_assembly.out))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating assembly mappings for '{0}'.", a_assembly.text.to_cil))
 
 				create l_serializer
 				l_mappings := cache_reader.assembly_mapping_from_consumed_assembly (a_assembly)
@@ -737,7 +735,7 @@ feature {NONE} -- Implementation
 					until
 						l_assemblies.after
 					loop
-						l_ref_ca := consumed_assembly_from_path (l_assemblies.item.location)
+						l_ref_ca := consumed_assembly_from_path (l_assemblies.item.location.name)
 						if l_ref_ca /= Void then
 							l_assemblies.replace (l_ref_ca)
 						else
@@ -745,7 +743,7 @@ feature {NONE} -- Implementation
 						end
 						l_assemblies.forth
 					end
-					l_serializer.serialize (l_mappings, cache_reader.absolute_assembly_mapping_path_from_consumed_assembly (a_assembly), False)
+					l_serializer.serialize (l_mappings, cache_reader.absolute_assembly_mapping_path_from_consumed_assembly (a_assembly).name, False)
 				end
 			end
 			guard.unlock
@@ -770,7 +768,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				guard.lock
 
-				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating client mappings for '{0}'.", a_assembly.out))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating client mappings for '{0}'.", a_assembly.text.to_cil))
 
 				l_clients := cache_reader.client_assemblies (a_assembly)
 				if l_clients /= Void then
@@ -798,7 +796,7 @@ feature {NONE} -- Implementation
 	cache_reader: CACHE_READER
 			-- associated cache reader
 
- 	culture_from_info (a_info: detachable CULTURE_INFO): STRING
+ 	culture_from_info (a_info: detachable CULTURE_INFO): STRING_32
  			-- Returns culture string from `a_info'
  		local
  			l_info_name: detachable SYSTEM_STRING
@@ -818,10 +816,10 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
  		end
 
-	neutral_culture: STRING = "neutral"
+	neutral_culture: STRING_32 = "neutral"
 			-- neutral culture
 
-	version_from_info (a_info: detachable VERSION): STRING
+	version_from_info (a_info: detachable VERSION): STRING_32
  			-- Returns culture string from `a_info'
   		local
  			l_info_name: detachable SYSTEM_STRING
@@ -831,13 +829,13 @@ feature {NONE} -- Implementation
  				check l_info_attached: l_info_name /= Void end
  				Result := l_info_name
  			else
- 				Result := ""
+ 				create Result.make_empty
  			end
 		ensure
 			result_not_void: Result /= Void
  		end
 
- 	public_key_token_from_array (a_array: detachable NATIVE_ARRAY [NATURAL_8]): STRING
+ 	public_key_token_from_array (a_array: detachable NATIVE_ARRAY [NATURAL_8]): STRING_32
  			-- Returns culture string from `a_info'
  		do
 			if a_array = Void or else a_array.length = 0 then
@@ -850,7 +848,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
  		end
 
-	null_public_key_token: STRING = "null"
+	null_public_key_token: STRING_32 = "null"
 			-- Null public key tokens
 
 feature {NONE} -- Notification

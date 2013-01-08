@@ -34,7 +34,7 @@ feature -- Cleanup
 		do
 			if not retried then
 				if attached internal_loaded_assemblies as l_assemblies then
-					l_assemblies.clear
+					l_assemblies.wipe_out
 				end
 				if attached internal_gac_loader as l_gac_loader then
 					l_dom := l_gac_loader.my_domain
@@ -85,28 +85,24 @@ feature -- Element change
 
 feature -- Basic operations
 
-	load_from (a_path: SYSTEM_STRING): detachable ASSEMBLY
+	load_from (a_path: READABLE_STRING_GENERAL): detachable ASSEMBLY
 			-- Attempts to load an assembly from `a_path'
 		require
 			a_path_attached: a_path /= Void
-			not_a_path_is_empty: a_path.length > 0
-			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
+			not_a_path_is_empty: not a_path.is_empty
+			a_path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
 		local
-			l_path: detachable SYSTEM_STRING
 			l_asms: like loaded_assemblies
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_path := a_path.to_lower
-				check l_path_attached: l_path /= Void end
 				l_asms := loaded_assemblies
-				if not l_asms.contains (l_path) then
+				if not l_asms.has (a_path) then
 						-- Loads assembly in reflection only mode.
-					l_asms.set_item (l_path, Result)
-					Result := dotnet_load_from (l_path)
-					l_asms.set_item (l_path, Result)
+					Result := dotnet_load_from (a_path)
+					l_asms.force (Result, a_path)
 				else
-					Result ?= l_asms.item (l_path)
+					Result := l_asms.item (a_path)
 				end
 			end
 		rescue
@@ -144,7 +140,7 @@ feature -- Basic operations
 			l_asms: like loaded_assemblies
 			l_domain: detachable APP_DOMAIN
 			l_resolver: like resolver
-			l_fn: detachable STRING
+			l_fn: detachable READABLE_STRING_GENERAL
 			retried: BOOLEAN
 			retried_again: BOOLEAN
 		do
@@ -152,8 +148,8 @@ feature -- Basic operations
 				l_asms := loaded_assemblies
 				l_name := a_name.full_name
 				check l_name_attached: l_name /= Void end
-				if l_asms.contains (l_name) then
-					Result ?= l_asms.item (l_name)
+				if attached l_asms.item (create {STRING_32}.make_from_cil (l_name)) as l_item then
+					Result := l_item
 				else
 					l_resolver := resolver
 					retried := l_resolver = Void
@@ -161,19 +157,17 @@ feature -- Basic operations
 							-- Use resolver to find best path possible	
 						l_domain := {APP_DOMAIN}.current_domain
 						check l_domain_attached: l_domain /= Void end
-						l_fn := l_resolver.resolve_by_assembly_name (l_domain, a_name)
-						if l_fn /= Void then
-							l_asms.set_item (l_fn, Result)
+						if attached l_resolver.resolve_by_assembly_name (l_domain, a_name) as l_path then
+							l_fn := l_path.name
 							Result := load_from (l_fn)
-							l_asms.set_item (l_fn, Result)
 						end
 						retried := True
 					end
 					if Result = Void and retried then
 							-- Fail safe.
-						l_asms.set_item (l_name, Result)
+						create {STRING_32} l_fn.make_from_cil (l_name)
 						Result := dotnet_load (l_name)
-						l_asms.set_item (l_name, Result)
+						l_asms.force (Result, l_fn)
 					end
 				end
 			end
@@ -183,13 +177,13 @@ feature -- Basic operations
 			retry
 		end
 
-	load_from_gac_or_path (a_path: SYSTEM_STRING): detachable ASSEMBLY
+	load_from_gac_or_path (a_path: READABLE_STRING_GENERAL): detachable ASSEMBLY
 			-- Attempts to load an assembly `a_path' from the GAC. Failure to find an assembly in the GAC will
 			-- load the assembly from the specified path.
 		require
 			a_path_attached: a_path /= Void
-			not_a_path_is_empty: a_path.length > 0
-			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
+			not_a_path_is_empty: not a_path.is_empty
+			a_path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
 		local
 			l_result: detachable ASSEMBLY
 			l_name: detachable ASSEMBLY_NAME
@@ -292,16 +286,13 @@ feature {NONE} -- Lifetime service sponsorship
 
 feature {NONE} -- Implementation
 
-	loaded_assemblies: HASHTABLE
+	loaded_assemblies: STRING_TABLE [detachable ASSEMBLY]
 			-- Table of loaded assemblies
-		local
-			l_comparer: CONSUMER_STRING_COMPARER
 		do
 			if attached internal_loaded_assemblies as l_assemblies then
 				Result := l_assemblies
 			else
-				create l_comparer.make (True)
-				create Result.make (30, l_comparer, l_comparer)
+				create Result.make_caseless (30)
 				internal_loaded_assemblies := Result
 			end
 		ensure

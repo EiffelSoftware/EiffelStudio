@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 	interface_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-8466-4E95-9C3F-3FEB392F8F32") end
+		create {GUID_ATTRIBUTE}.make ("2C108F65-24F1-4e93-BFAE-3262937B5D31") end
 
 deferred class
 	I_COM_CACHE_MANAGER

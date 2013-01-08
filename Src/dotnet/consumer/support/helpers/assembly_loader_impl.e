@@ -30,18 +30,18 @@ feature {NONE}
 			end
 		end
 
-	dotnet_load_from (a_path: SYSTEM_STRING): detachable ASSEMBLY
+	dotnet_load_from (a_path: READABLE_STRING_GENERAL): detachable ASSEMBLY
 			-- Attempts to load from a full path `a_path'
 		require
 			a_path_attached: a_path /= Void
-			not_a_path_is_empty: a_path.length > 0
+			not_a_path_is_empty: not a_path.is_empty
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := {ASSEMBLY}.load_from (a_path)
+				Result := {ASSEMBLY}.load_from (a_path.to_cil)
 			elseif not attached {FILE_NOT_FOUND_EXCEPTION} {ISE_RUNTIME}.last_exception then
-				Result := {ASSEMBLY}.reflection_only_load_from (a_path)
+				Result := {ASSEMBLY}.reflection_only_load_from (a_path.to_cil)
 			end
 		rescue
 			if not retried then

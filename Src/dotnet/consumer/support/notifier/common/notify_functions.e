@@ -32,33 +32,29 @@ feature {NONE} -- Contants
 
 feature {NONE} -- Implementation
 
-	functions: LIST [STRING]
+	functions: STRING_TABLE [BOOLEAN]
 			-- List of message functions
-		local
-			l_result: ARRAYED_LIST [STRING]
 		once
-			create l_result.make (12)
-			l_result.compare_objects
-			l_result.extend (new_function (module_namespace, name_function))
-			l_result.extend (new_function (module_namespace, version_function))
-			l_result.extend (new_function (module_namespace, culture_function))
-			l_result.extend (new_function (module_namespace, key_function))
-			l_result.extend (new_function (module_namespace, path_function))
-			l_result.extend (new_function (module_namespace, full_name_function))
-			l_result.extend (new_function (module_namespace, clr_function))
+			create Result.make (12)
+			Result.compare_objects
+			Result.put (True, new_function (module_namespace, name_function))
+			Result.put (True, new_function (module_namespace, version_function))
+			Result.put (True, new_function (module_namespace, culture_function))
+			Result.put (True, new_function (module_namespace, key_function))
+			Result.put (True, new_function (module_namespace, path_function))
+			Result.put (True, new_function (module_namespace, full_name_function))
+			Result.put (True, new_function (module_namespace, clr_function))
 
-			l_result.extend (new_function (assembly_namespace, name_function))
-			l_result.extend (new_function (assembly_namespace, version_function))
-			l_result.extend (new_function (assembly_namespace, culture_function))
-			l_result.extend (new_function (assembly_namespace, key_function))
-			l_result.extend (new_function (assembly_namespace, full_name_function))
-			l_result.extend (new_function (assembly_namespace, path_function))
+			Result.put (True, new_function (assembly_namespace, name_function))
+			Result.put (True, new_function (assembly_namespace, version_function))
+			Result.put (True, new_function (assembly_namespace, culture_function))
+			Result.put (True, new_function (assembly_namespace, key_function))
+			Result.put (True, new_function (assembly_namespace, full_name_function))
+			Result.put (True, new_function (assembly_namespace, path_function))
 
-			l_result.extend (new_function (consume_namespace, reason_function))
-			l_result.extend (new_function (consume_namespace, cache_id_function))
-			l_result.extend (new_function (consume_namespace, cache_path_function))
-
-			Result := l_result
+			Result.put (True, new_function (consume_namespace, reason_function))
+			Result.put (True, new_function (consume_namespace, cache_id_function))
+			Result.put (True, new_function (consume_namespace, cache_path_function))
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

@@ -25,8 +25,12 @@ feature -- Validation
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		do
-			if assembly_loader.load_from (a_value.to_cil) = Void then
-				invalidate_option ("The specified assembly cannot be loaded.")
+			if (create {RAW_FILE}.make_with_name (a_value)).exists then
+				if assembly_loader.load_from (a_value) = Void then
+					invalidate_option ("The specified assembly cannot be loaded.")
+				end
+			else
+				invalidate_option ("The specified assembly cannot be found.")
 			end
 		end
 

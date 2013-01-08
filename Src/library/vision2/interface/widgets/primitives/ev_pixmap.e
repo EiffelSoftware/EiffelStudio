@@ -183,8 +183,6 @@ feature -- Status setting
 			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.
 			-- See `supported_image_formats' in EV_ENVIRONMENT for valid file formats.
-		obsolete
-			"Use `set_with_named_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			file_name_not_void: file_name /= Void
@@ -259,8 +257,6 @@ feature -- Duplication
 
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
 			-- Save `Current' to `a_filename' in format `a_format'.
-		obsolete
-			"Use `save_to_named_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			a_format_not_void: a_format /= Void

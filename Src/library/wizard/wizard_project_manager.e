@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialize and launch application
 		do
 			if argument_count < 1 then
-				io.put_string("wizard -arg1 [resource_path] [-arg2 [locale_id]]%N")
+				io.put_string("wizard resource_path [locale_id]%N")
 			else
 				default_create
 				set_help_engine (wizard_help_engine)

@@ -65,7 +65,7 @@ feature -- Clean up
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING)
+	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: READABLE_STRING_GENERAL)
 			-- Consume local assembly `a_assembly' and all of its dependencies into EAC
 		require
 			exists: exists
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			-- Com object to get information about assemblies and emitting them.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

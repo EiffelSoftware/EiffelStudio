@@ -22,8 +22,6 @@ feature {NONE} -- Implementation
 			--
 			-- Note: You can remove this feature if you don't need
 			--       a progress bar.
-		local
-			h1: EV_HORIZONTAL_BOX
 		do
 			choice_box.wipe_out
 			choice_box.set_border_width (10)

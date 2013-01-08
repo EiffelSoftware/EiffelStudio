@@ -45,7 +45,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	context_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
+	context_variables: STRING_TABLE [READABLE_STRING_32]
 			-- <Precursor>
 		do
 			if attached internal_context_variables as l_result then

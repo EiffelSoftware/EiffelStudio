@@ -11,7 +11,7 @@ inherit
 
 feature -- Access
 
-	all_supported_variables_from_entry (a_entry: EIS_ENTRY): HASH_TABLE [STRING_32, READABLE_STRING_32]
+	all_supported_variables_from_entry (a_entry: EIS_ENTRY): STRING_TABLE [READABLE_STRING_32]
 			-- All variables
 		require
 			a_entry_not_void: a_entry /= Void
@@ -23,7 +23,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	all_supported_variables_for_auto_entry (a_target: CONF_TARGET): HASH_TABLE [STRING_32, READABLE_STRING_32]
+	all_supported_variables_for_auto_entry (a_target: CONF_TARGET): STRING_TABLE [READABLE_STRING_32]
 			-- All variables available for auto entry.
 			-- If that variable needs specific information from the context,
 			-- an empty string is put.
@@ -53,7 +53,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	eis_variables_from_entry (a_entry: EIS_ENTRY): HASH_TABLE [STRING_32, READABLE_STRING_32]
+	eis_variables_from_entry (a_entry: EIS_ENTRY): STRING_TABLE [READABLE_STRING_32]
 			-- Variables
 			--
 			-- component names
@@ -115,16 +115,16 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	es_built_in_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
+	es_built_in_variables: STRING_TABLE [READABLE_STRING_32]
 			-- ES built-in variables.
 			-- These variables should ideally be built into a configure file.
 		once
 			create Result.make (5)
-			Result.put ("http://dev.eiffel.com", "ISE_WIKI")
-			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
-			Result.put ("http://doc.eiffel.com", "ISE_DOC")
-			Result.put ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
-			Result.put ("http://doc.eiffel.com/isedoc/eis", "ISE_DOC_REF")
+			Result.put ({STRING_32} "http://dev.eiffel.com", "ISE_WIKI")
+			Result.put ({STRING_32} "http://www.eiffelroom.com", "EIFFELROOM")
+			Result.put ({STRING_32} "http://doc.eiffel.com", "ISE_DOC")
+			Result.put ({STRING_32} "http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
+			Result.put ({STRING_32} "http://doc.eiffel.com/isedoc/eis", "ISE_DOC_REF")
 		ensure
 			result_attached: Result /= Void
 		end

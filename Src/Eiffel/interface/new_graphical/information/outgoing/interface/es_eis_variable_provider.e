@@ -55,7 +55,7 @@ feature -- Access
 					create l_string.make (100)
 					l_string.append_character ({ES_EIS_TOKENS}.variable_start)
 					l_string.append_character ({ES_EIS_TOKENS}.left_paranthsis)
-					l_string.append (l_variables.key_for_iteration)
+					l_string.append_string_general (l_variables.key_for_iteration)
 					l_string.append_character ({ES_EIS_TOKENS}.right_paranthsis)
 					create l_name.make (l_string)
 					Result.put (l_name, i)

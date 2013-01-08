@@ -109,16 +109,16 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	required_environment_variables: ARRAYED_LIST [TUPLE [var: STRING_32; is_directory: BOOLEAN]]
+	required_environment_variables: ARRAYED_LIST [TUPLE [var: READABLE_STRING_GENERAL; is_directory: BOOLEAN]]
 			-- List of required environment variables.
 		once
 			create Result.make (4)
 			if not is_unix_layout then
-				Result.extend ([{EIFFEL_CONSTANTS}.ise_eiffel_env.as_string_32, True])
-				Result.extend ([{EIFFEL_CONSTANTS}.ise_platform_env.as_string_32, False])
+				Result.extend ([{EIFFEL_CONSTANTS}.ise_eiffel_env, True])
+				Result.extend ([{EIFFEL_CONSTANTS}.ise_platform_env, False])
 			end
 			if {PLATFORM}.is_windows then
-				Result.extend ([{EIFFEL_CONSTANTS}.ise_c_compiler_env.as_string_32, False])
+				Result.extend ([{EIFFEL_CONSTANTS}.ise_c_compiler_env, False])
 			end
 		end
 
@@ -158,10 +158,10 @@ feature -- Status update
 		local
 			l_product_names: PRODUCT_NAMES
 			l_op_env: like operating_environment
-			l_ise_library, l_eiffel_library,
+			l_ise_library, l_eiffel_library: detachable READABLE_STRING_GENERAL
 			l_value: detachable STRING_32
 			l_variables: like required_environment_variables
-			l_variable: TUPLE [var: STRING_32; is_directory: BOOLEAN]
+			l_variable: TUPLE [var: READABLE_STRING_GENERAL; is_directory: BOOLEAN]
 			l_is_valid: like is_valid_environment
 			u: FILE_UTILITIES
 		do
@@ -185,7 +185,7 @@ feature -- Status update
 
 				if
 					l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then
-					({PLATFORM}.is_windows or else not (l_value.same_string ("/") or l_value.same_string ("~/")))
+					({PLATFORM}.is_windows or else not (l_value.same_string_general ("/") or l_value.same_string_general ("~/")))
 				then
 						-- Remove trailing directory separator
 					l_value.prune_all_trailing (l_op_env.directory_separator)
@@ -337,7 +337,6 @@ feature -- Status setting
 			l_source_file, l_target_file: detachable RAW_FILE
 			l_path: PATH
 			retried: BOOLEAN
-			l_ecf_name: STRING_32
 		do
 			if not retried then
 					-- Get the path for the precompiled libraries
@@ -363,12 +362,7 @@ feature -- Status setting
 							l_files.after
 						loop
 								-- Only pickup properly formatted ECF project name.
-							l_ecf_name := l_files.item.name
-							if
-								l_ecf_name.count > 3 and then
-								l_ecf_name.substring (l_ecf_name.count - 3,
-									l_ecf_name.count).is_case_insensitive_equal ({STRING_32} ".ecf")
-							then
+							if l_files.item.has_extension ("ecf") then
 								l_path := l_precompilation_path.extended_path (l_files.item)
 								create l_target_file.make_with_path (l_path)
 								if not l_target_file.exists then
@@ -409,7 +403,7 @@ feature -- Status setting
 
 feature {NONE} -- Helpers
 
-	path_under_compiler_profile (a_path: STRING_32): STRING_32
+	path_under_compiler_profile (a_path: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- To avoid editing value of variable (like ISE_LIBRARY) when compiling against specific compiler profile
 			-- modify the value of the related environment variable.
 		local
@@ -445,17 +439,16 @@ feature -- Query
 			a_file_name_attached: a_file_path /= Void
 			not_a_file_is_empty: not a_file_path.is_empty
 		local
-			l_install: STRING_32
-			l_extension: STRING_32
+			l_install: READABLE_STRING_32
+			l_extension: READABLE_STRING_32
 			l_actual_file: RAW_FILE
-			l_file_name: STRING_32
+			l_file_name: READABLE_STRING_32
 		do
 			l_file_name := a_file_path.name
 			l_install := install_path.name
 			if l_install.count < l_file_name.count then
 				if l_file_name.substring (1, l_install.count).same_string (l_install) then
 					l_extension := l_file_name.substring (l_install.count + 1, l_file_name.count)
-					l_extension.prune_all_leading (operating_environment.directory_separator)
 					Result := user_files_path.extended (l_extension)
 					create l_actual_file.make_with_path (Result)
 					if a_must_exist and then (not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory)) then
@@ -564,7 +557,7 @@ feature -- Directories (top-level)
 		require
 			is_valid_environment: is_valid_environment
 		local
-			l_name_wb: STRING_32
+			l_wk_path: PATH
 			u: FILE_UTILITIES
 		once
 			if is_unix_layout then
@@ -574,12 +567,10 @@ feature -- Directories (top-level)
 			end
 			check result_attached: Result /= Void end
 			if is_workbench then
-				l_name_wb := Result.name
-				l_name_wb.append_character ('_')
-				l_name_wb.append (wkbench_suffix)
-				if u.directory_exists (l_name_wb) then
+				l_wk_path := Result.appended ("_").appended (wkbench_suffix)
+				if u.directory_path_exists (l_wk_path) then
 						-- The workbench version exists, so use that directory instead.
-					create Result.make_from_string (l_name_wb)
+					Result := l_wk_path
 				end
 			end
 			check
@@ -619,15 +610,17 @@ feature -- Directories (top-level)
 		local
 			l_dn_name: STRING_32
 		do
+			Result := shared_path.extended (precomp_name).extended (spec_name)
 			if a_is_dotnet then
 					-- Append '-dotnet' to platform name
 				create l_dn_name.make (eiffel_platform.count + 7)
-				l_dn_name.append (eiffel_platform)
-				l_dn_name.append ("-dotnet")
+				l_dn_name.append_string_general (eiffel_platform)
+				l_dn_name.append_string_general ("-dotnet")
+				Result := Result.extended (l_dn_name)
 			else
-				l_dn_name := eiffel_platform
+				Result := Result.extended (eiffel_platform)
 			end
-			Result := shared_path.extended (precomp_name).extended (spec_name).extended (l_dn_name)
+
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -651,15 +644,16 @@ feature -- Directories (top-level)
 			l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_precomp_env)
 			if l_value = Void or else l_value.is_empty then
 				if is_user_files_supported then
+					Result := user_files_path.extended (precomp_name).extended (spec_name)
 					if a_is_dotnet then
 							-- Append '-dotnet' to platform name
 						create l_dn_name.make (eiffel_platform.count + 7)
-						l_dn_name.append (eiffel_platform)
-						l_dn_name.append ("-dotnet")
+						l_dn_name.append_string_general (eiffel_platform)
+						l_dn_name.append_string_general ("-dotnet")
+						Result := Result.extended (l_dn_name)
 					else
-						l_dn_name := eiffel_platform
+						Result := Result.extended (eiffel_platform)
 					end
-					Result := user_files_path.extended (precomp_name).extended (spec_name).extended (l_dn_name)
 				else
 						-- No user file is specified, we use the installation
 						-- directory and if this is not writable, users will
@@ -1036,16 +1030,16 @@ feature -- Directories (top-level user)
 						-- On Unix platform only, we use a lower case version of the directory
 						-- without space.
 					if not {PLATFORM}.is_windows and then not {PLATFORM}.is_mac then
-						l_dir.append (product_name.as_lower)
-						l_dir.append ("_user_files")
+						l_dir.append_string_general (product_name.as_lower)
+						l_dir.append_string_general ("_user_files")
 					else
-						l_dir.append (product_name)
-						l_dir.append (" User Files")
+						l_dir.append_string_general (product_name)
+						l_dir.append_string_general (" User Files")
 					end
 					if is_workbench and l_needs_suffix then
 						l_dir.append_character (' ')
 						l_dir.append_character ('(')
-						l_dir.append (wkbench_suffix)
+						l_dir.append_string_general (wkbench_suffix)
 						l_dir.append_character (')')
 					end
 					Result := Result.extended (l_dir)
@@ -1294,7 +1288,7 @@ feature -- Files (user)
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			Result := user_files_path.extended (a_file_name.as_string_32 + ".ini")
+			Result := user_files_path.extended (a_file_name).appended_with_extension ("ini")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1308,7 +1302,7 @@ feature -- Directories (platform independent)
 		require
 			is_valid_environment: is_valid_environment
 		local
-			l_name_wb: STRING_32
+			l_wk_path: PATH
 			u: FILE_UTILITIES
 		once
 			if is_unix_layout then
@@ -1317,12 +1311,10 @@ feature -- Directories (platform independent)
 				Result := eiffel_install
 			end
 			if is_workbench then
-				l_name_wb := Result.name
-				l_name_wb.append_character ('_')
-				l_name_wb.append (wkbench_suffix)
-				if u.directory_exists (l_name_wb) then
+				l_wk_path := Result.appended ("_").appended (wkbench_suffix)
+				if u.directory_path_exists (l_wk_path) then
 						-- The workbench version exists, so use that directory instead.
-					create Result.make_from_string (l_name_wb)
+					Result := l_wk_path
 				end
 			end
 			check
@@ -2006,10 +1998,10 @@ feature {NONE} -- Implementation
 	hidden_directory_name: STRING_32
 			-- Name of the hidden_directory where settings will be stored on unix based platforms.
 		once
-			Result := ".es"
+			create Result.make_from_string_general (".es")
 			if is_workbench then
 				Result.append_character ('_')
-				Result.append (wkbench_suffix)
+				Result.append_string_general (wkbench_suffix)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -2033,15 +2025,15 @@ feature -- Preferences
 			p: PATH
 		once
 			if {PLATFORM}.is_windows then
-				create Result.make_from_string ("HKEY_CURRENT_USER\Software\ISE\" + product_version_name + "\" + application_name + "\Preferences")
+				create Result.make_from_string_general ("HKEY_CURRENT_USER\Software\ISE\" + product_version_name + "\" + application_name + "\Preferences")
 				if is_workbench then
 					Result.append_character ('_')
-					Result.append (wkbench_suffix)
+					Result.append_string_general (wkbench_suffix)
 				end
 			else
 				p := hidden_files_path
 				p := p.extended (application_name + "rc" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out)
-				Result := p.name
+				create Result.make_from_string_general (p.name)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

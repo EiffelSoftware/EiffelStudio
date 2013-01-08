@@ -42,15 +42,15 @@ feature -- Status Setting
 			notify_info (a_message.message)
 		end
 
-	notify_info (a_messge: STRING)
+	notify_info (a_messge: READABLE_STRING_GENERAL)
 			-- Notifier user of an event
 		local
-			l_message: STRING
+			l_message: READABLE_STRING_GENERAL
 		do
 			l_message := a_messge
 			if l_message.count > 255 then
 				l_message := l_message.substring (1, 252)
-				l_message.append ("...")
+				l_message := l_message + "..."
 			end
 			Precursor (l_message)
 		end
@@ -75,7 +75,7 @@ feature -- Events
 			if show_ballon then
 				if notify_string /= Void and then notify_string.count > 0 then
 
-					notify_icon.balloon_tip_text := notify_string
+					notify_icon.balloon_tip_text := notify_string.to_cil
 					notify_icon.show_balloon_tip (1)
 				else
 					notify_icon.balloon_tip_text := "The Eiffel Metadata Consumer has no queued jobs to process."

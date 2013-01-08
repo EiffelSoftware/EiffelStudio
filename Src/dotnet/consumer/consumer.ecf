@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
-		<version major="6" minor="4" release="7" build="7751"/>
+		<version major="7" minor="2" release="7" build="376"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -80,7 +80,8 @@
 		<root cluster="main" class="APPLICATION" feature="make"/>
 		<setting name="executable_name" value="emdc"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser-safe.ecf"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<cluster name="main" location="$EIFFEL_SRC\dotnet\consumer\main\"/>
 	</target>
 	<target name="consumer_20" extends="consumer_library">

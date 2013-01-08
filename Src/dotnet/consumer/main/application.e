@@ -21,6 +21,11 @@ inherit
 			{NONE} all
 		end
 
+	LOCALIZED_PRINTER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -44,10 +49,10 @@ feature {NONE} -- Initialization
 		local
 			l_manager: CACHE_MANAGER
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
-			l_assemblies: ARRAYED_LIST [STRING]
-			l_references: ARRAYED_LIST [STRING]
+			l_assemblies: ARRAYED_LIST [IMMUTABLE_STRING_32]
+			l_references: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			l_info_only: BOOLEAN
-			l_assembly: STRING
+			l_assembly: READABLE_STRING_32
 			l_verbose: BOOLEAN
 			l_cache_writer: CACHE_WRITER
 			l_writer: like writer
@@ -64,7 +69,7 @@ feature {NONE} -- Initialization
 			l_verbose := a_parser.show_verbose_output
 			if l_verbose then
 				l_cache_writer.set_error_printer (agent display_error)
-				l_cache_writer.set_status_printer (agent display_status)
+				l_cache_writer.set_status_printer (agent display_message_with_new_line)
 			end
 
 			l_writer := writer
@@ -84,17 +89,12 @@ feature {NONE} -- Initialization
 
 				create l_resolver.make (l_assemblies)
 				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
-					l_resolver.add_resolve_path (l_runtime_dir)
+					l_resolver.add_resolve_path (create {STRING_32}.make_from_cil (l_runtime_dir))
 				end
 				if not l_references.is_empty then
-					l_references.do_all (agent (a_resolver: AR_RESOLVER; a_path: STRING)
-						require
-							a_resolver_attached: a_resolver /= Void
-							a_path_attached: a_path /= Void
-							not_a_path_is_empty: not a_path.is_empty
-						do
-							a_resolver.add_resolve_path (a_path)
-						end (l_resolver, ?))
+					across l_references as l_ref loop
+						l_resolver.add_resolve_path (l_ref.item)
+					end
 				end
 				l_domain := {APP_DOMAIN}.current_domain
 				check domain_attached: l_domain /= Void end
@@ -110,17 +110,16 @@ feature {NONE} -- Initialization
 					-- Consume assemblies
 				from l_assemblies.start until l_assemblies.after loop
 					l_assembly := l_assemblies.item
-					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Requesting consumption of assembly '{0}'.", l_assembly), "Info")
-					l_writer.put_string ("Requesting consumption of assembly '" + l_assembly + "' into '")
-					l_writer.put_string (cache_reader.absolute_consume_path)
-					l_writer.put_string ("'...%N")
+					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Requesting consumption of assembly '{0}'.", l_assembly.to_cil), "Info")
+					display_message ({STRING_32} "Requesting consumption of assembly '" + l_assembly + "' into '")
+					display_message_with_new_line (cache_reader.absolute_consume_path.name + "' ...")
 					l_cache_writer.add_assembly (l_assembly, l_info_only)
 					if not l_cache_writer.successful then
 						display_error ("   Warning: Assembly '" + l_assembly + "' could not be consumed!")
 						if l_cache_writer.error_message /= Void then
 							display_error ("   Reason: " + l_cache_writer.error_message)
 						end
-						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be consumed.", l_assembly), "Warning")
+						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be consumed.", l_assembly.to_cil), "Warning")
 						l_error := True
 					end
 					l_assemblies.forth
@@ -132,17 +131,16 @@ feature {NONE} -- Initialization
 
 				from l_assemblies.start until l_assemblies.after loop
 					l_assembly := l_assemblies.item
-					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'.", l_assembly), "Info")
-					l_writer.put_string ("Unconsuming assembly '" + l_assembly + "' from '")
-					l_writer.put_string (cache_reader.absolute_consume_path)
-					l_writer.put_string ("'...%N")
-					l_cache_writer.unconsume_assembly (l_assembly)
+					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'.", l_assembly.to_cil), "Info")
+					display_message ({STRING_32} "Unconsuming assembly '" + l_assembly + "' from '")
+					display_message_with_new_line (cache_reader.absolute_consume_path.name + "'...")
+					l_cache_writer.unconsume_assembly (create {PATH}.make_from_string (l_assembly))
 					if not l_manager.is_successful then
 						display_error ("   Warning: Assembly '" + l_assembly + "' could not be removed (unconsumed)!")
 						if l_cache_writer.error_message /= Void then
 							display_error ("   Reason: " + l_cache_writer.error_message)
 						end
-						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be removed (unconsumed).", l_assembly), "Warning")
+						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be removed (unconsumed).", l_assembly.to_cil), "Warning")
 						l_error := True
 					end
 					l_assemblies.forth
@@ -151,13 +149,12 @@ feature {NONE} -- Initialization
 				display_cache_content (l_manager, a_parser.show_verbose_output)
 			elseif a_parser.clean_cache then
 				l_writer.put_string ("Cleaning and compacting cache '")
-				l_writer.put_string (cache_reader.absolute_consume_path)
-				l_writer.put_string ("'...%N")
+				display_message_with_new_line (cache_reader.absolute_consume_path.name + "'...")
 				l_manager.cache_writer.clean_cache
 			end
 
 			l_manager.unload
-			display_status ("%NCompleted.%N")
+			display_message_with_new_line ("%NCompleted.%N")
 
 			if a_parser.wait_for_user_interaction then
 				io.put_string ("Please press enter to exit...")
@@ -208,8 +205,7 @@ feature {NONE} -- Output
 			l_writer := writer
 
 			l_writer.put_string ("Displaying contents of Eiffel Assembly Cache%N")
-			l_writer.put_string (cache_reader.absolute_consume_path)
-			l_writer.put_string (":%N")
+			display_message_with_new_line (cache_reader.absolute_consume_path.name + ":")
 
 			create l_cp
 			create l_corrupted.make (0)
@@ -234,23 +230,22 @@ feature {NONE} -- Output
 						l_writer.put_string (once ": ")
 						if a_verbose then
 							l_writer.put_character ('{')
-							l_writer.put_string (l_assembly.unique_id)
+							display_message (l_assembly.unique_id)
 							l_writer.put_character ('}')
 							l_writer.new_line
 							l_writer.put_string (l_prefix)
 						end
-						l_writer.put_string (l_assembly.name)
+						display_message (l_assembly.name)
 						l_writer.put_string (once ", Version=")
-						l_writer.put_string (l_assembly.version)
+						display_message (l_assembly.version)
 						l_writer.put_string (once ", Culture=")
-						l_writer.put_string (l_assembly.culture)
+						display_message (l_assembly.culture)
 						l_writer.put_string (once ", PublicKeyToken=")
-						l_writer.put_string (l_assembly.key)
+						display_message (l_assembly.key)
 						if a_verbose then
 							l_writer.new_line
 							l_writer.put_string (l_prefix)
-							l_writer.put_string (l_assembly.location)
-							l_writer.new_line
+							display_message_with_new_line (l_assembly.location.name)
 							l_writer.put_string (l_prefix)
 							l_writer.put_string (once "Consumed status: ")
 							if l_assembly.is_consumed then
@@ -259,14 +254,14 @@ feature {NONE} -- Output
 								else
 									l_writer.put_string (once "full")
 								end
-								if {SYSTEM_DIRECTORY}.exists (l_cp.absolute_assembly_path_from_consumed_assembly (l_assembly)) then
-									if not {SYSTEM_FILE}.exists (l_cp.absolute_type_mapping_path (l_assembly)) then
+								if {SYSTEM_DIRECTORY}.exists (l_cp.absolute_assembly_path_from_consumed_assembly (l_assembly).name) then
+									if not {SYSTEM_FILE}.exists (l_cp.absolute_type_mapping_path (l_assembly).name) then
 										l_writer.put_string (once ", corrupted! - Missing .NET type name mapping information.")
 										l_corrupted.extend (l_assembly)
-									elseif not {SYSTEM_FILE}.exists (l_cp.absolute_assembly_mapping_path_from_consumed_assembly (l_assembly)) then
+									elseif not {SYSTEM_FILE}.exists (l_cp.absolute_assembly_mapping_path_from_consumed_assembly (l_assembly).name) then
 										l_writer.put_string (once ", corrupted! - Missing reference assembly information.")
 										l_corrupted.extend (l_assembly)
-									elseif not l_assembly.has_info_only and then not {SYSTEM_FILE}.exists (l_cp.absolute_type_path (l_assembly)) then
+									elseif not l_assembly.has_info_only and then not {SYSTEM_FILE}.exists (l_cp.absolute_type_path (l_assembly).name) then
 										l_writer.put_string (once ", corrupted! - Missing class member name mapping information.")
 										l_corrupted.extend (l_assembly)
 									else
@@ -325,15 +320,15 @@ feature {NONE} -- Output
 							l_writer.put_string (l_sindex)
 							l_writer.put_string ("Entry: ")
 							l_writer.put_character ('{')
-							l_writer.put_string (l_assembly.unique_id)
+							display_message (l_assembly.unique_id)
 							l_writer.put_string ("} - ")
-							l_writer.put_string (l_assembly.name)
+							display_message (l_assembly.name)
 							l_writer.put_string (once ", ")
-							l_writer.put_string (l_assembly.version)
+							display_message (l_assembly.version)
 							l_writer.put_string (once ", ")
-							l_writer.put_string (l_assembly.culture)
+							display_message (l_assembly.culture)
 							l_writer.put_string (once ", ")
-							l_writer.put_string (l_assembly.key)
+							display_message (l_assembly.key)
 							l_corrupted.forth
 						end
 					end
@@ -345,7 +340,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	display_status (a_msg: STRING)
+	display_message (a_msg: READABLE_STRING_GENERAL)
 			-- Displays a status message
 		require
 			a_msg_attached: a_msg /= Void
@@ -353,11 +348,30 @@ feature {NONE} -- Output
 			l_writer: like writer
 		do
 			l_writer := writer
-			l_writer.put_string (a_msg)
+			if attached utf32_to_console_encoding (Console_encoding, a_msg) as l_string then
+				l_writer.put_string (l_string)
+			else
+				l_writer.put_string (a_msg.as_string_8)
+			end
+		end
+
+	display_message_with_new_line (a_msg: READABLE_STRING_GENERAL)
+			-- Displays a status message
+		require
+			a_msg_attached: a_msg /= Void
+		local
+			l_writer: like writer
+		do
+			l_writer := writer
+			if attached utf32_to_console_encoding (Console_encoding, a_msg) as l_string then
+				l_writer.put_string (l_string)
+			else
+				l_writer.put_string (a_msg.as_string_8)
+			end
 			l_writer.new_line
 		end
 
-	display_error (a_msg: STRING)
+	display_error (a_msg: READABLE_STRING_GENERAL)
 			-- Displays a status error message
 		require
 			a_msg_attached: a_msg /= Void
@@ -365,7 +379,11 @@ feature {NONE} -- Output
 			l_writer: like error_writer
 		do
 			l_writer := error_writer
-			l_writer.put_string (a_msg)
+			if attached utf32_to_console_encoding (Console_encoding, a_msg) as l_string then
+				l_writer.put_string (l_string)
+			else
+				l_writer.put_string (a_msg.as_string_8)
+			end
 			l_writer.new_line
 		end
 

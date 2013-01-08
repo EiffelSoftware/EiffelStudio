@@ -11,7 +11,7 @@ feature {NONE} -- Implementation
 	types: ARRAY [STRING]
 			-- types to be serialized.
 		once
-			create Result.make (1, 20)
+			create Result.make_filled ("", 1, 20)
 			Result.put ("CONSUMED_TYPE", 1)
 			Result.put ("CONSUMED_PROPERTY", 2)
 			Result.put ("CONSUMED_EVENT", 3)

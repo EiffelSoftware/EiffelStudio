@@ -18,16 +18,17 @@ feature -- Access
 	last_error: INTEGER
 			-- Last error code
 
-	last_error_context: detachable STRING
+	last_error_context: detachable READABLE_STRING_GENERAL
 			-- Additional information on last error
 
-	error_message: STRING
+	error_message: STRING_32
 			-- Error message for `last_error'
 		do
 			if attached error_message_table.item (last_error) as l_error_message then
-				Result := l_error_message.twin
+				create Result.make_from_string_general (l_error_message)
 				if attached last_error_context as l_error_context then
-					Result.append (": " + l_error_context)
+					Result.append_string_general (": ")
+					Result.append_string_general (l_error_context)
 				end
 			else
 				create Result.make_empty
@@ -72,7 +73,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	error_message_table: HASH_TABLE [STRING, INTEGER]
+	error_message_table: HASH_TABLE [READABLE_STRING_GENERAL, INTEGER]
 			-- Error messages keyed by error codes
 		deferred
 		end

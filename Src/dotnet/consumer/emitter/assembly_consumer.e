@@ -61,20 +61,20 @@ feature -- Basic Operations
 		require
 			non_void_assembly: ass /= Void
 			non_void_destination_path: destination_path /= Void
-			valid_destination_path: (create {DIRECTORY}.make (destination_path)).exists
+			valid_destination_path: (create {DIRECTORY}.make_with_path (destination_path)).exists
 			a_loader_attached: a_loader /= Void
 		local
 			count: INTEGER
 		do
 			{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Beginning consumption for assembly '{0}'.", ass.to_string))
-			{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Consuming into '{0}'.", destination_path))
+			{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Consuming into '{0}'.", destination_path.name.to_cil))
 
 			reset_assembly_mapping
 			if
 				attached ass.get_referenced_assemblies as referenced_assemblies and then
 				attached ass.location as l_ass_location and then
 				attached ass.full_name as l_ass_full_name and then
-				attached cache_writer.consumed_assembly_from_path (l_ass_location) as ca
+				attached cache_writer.consumed_assembly_from_path (create {STRING_32}.make_from_cil (l_ass_location)) as ca
 			then
 				count := referenced_assemblies.count
 				assembly_ids.wipe_out
@@ -90,17 +90,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	file_name (i: INTEGER): STRING
-			-- File name where `type' will be serialized.
-		require
-			i_is_positive: i > 0
-		do
-			create Result.make (10)
-			Result.append_integer (i)
-			Result.append_string (once ".info")
-		end
-
-	destination_path: STRING
+	destination_path: PATH
 			-- Path where XML files are generated
 
 	cache_writer: CACHE_WRITER
@@ -108,11 +98,11 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_destination_path (path: STRING)
+	set_destination_path (path: PATH)
 			-- Set `destination_path' with `path'.
 		require
 			non_void_path: path /= Void
-			valid_path: (create {DIRECTORY}.make (path)).exists
+			valid_path: (create {DIRECTORY}.make_with_path (path)).exists
 		do
 			destination_path := path
 		ensure
@@ -168,7 +158,7 @@ feature {NONE} -- Implementation
 						attached l_ref_ass.location as l_ref_ass_location and then
 						attached l_ref_ass.full_name as l_ref_ass_full_name
 					then
-						ca := cache_writer.consumed_assembly_from_path (l_ref_ass_location)
+						ca := cache_writer.consumed_assembly_from_path (create {STRING_32}.make_from_cil (l_ref_ass_location))
 						if ca /= Void and then not assembly_mapping.has (l_ref_ass_full_name) then
 							last_index := last_index + 1
 							assembly_ids.extend (ca)
@@ -287,8 +277,8 @@ feature {NONE} -- Implementation
 
 					type_consumers.put (type_consumer, type_name.eiffel_name)
 					if attached status_printer as l_status_printer then
-						l_string_tuple.put ("Analyzed " +
-							create {STRING}.make_from_cil (type_name.internal_type.full_name), 1)
+						l_string_tuple.put ({STRING_32} "Analyzed " +
+							create {STRING_32}.make_from_cil (type_name.internal_type.full_name), 1)
 						l_status_printer.call (l_string_tuple)
 					end
 					if attached status_querier as l_status_querier then
@@ -308,7 +298,7 @@ feature {NONE} -- Implementation
 		local
 			type_consumer: TYPE_CONSUMER
 			serializer: EIFFEL_SERIALIZER
-			s: STRING
+			s: PATH
 			done: BOOLEAN
 			type: CONSUMED_TYPE
 			parent: detachable CONSUMED_REFERENCED_TYPE
@@ -337,9 +327,9 @@ feature {NONE} -- Implementation
 							-- An error occured during the initialization of type.
 							-- Notice the problem on this specific type and try the next type.
 						if type_consumer.consumed_type.dotnet_name /= Void then
-							set_error (Type_initialization_error, "One of the features of " + type_consumer.consumed_type.dotnet_name +" is invalid.")
+							set_error (Type_initialization_error, {STRING_32} "One of the features of " + type_consumer.consumed_type.dotnet_name +" is invalid.")
 						else
-							set_error (Type_initialization_error, "")
+							set_error (Type_initialization_error, {STRING_32} "")
 						end
 					else
 						type := type_consumer.consumed_type
@@ -357,19 +347,17 @@ feature {NONE} -- Implementation
 							if type.dotnet_name.is_equal (once "System.Object") then
 								type.set_constructors (create {ARRAYED_LIST [CONSUMED_CONSTRUCTOR]}.make (0))
 							end
-							create s.make (destination_path.count + classes_file_name.count)
-							s.append (destination_path)
-							s.append (classes_file_name)
+							s := destination_path.extended (classes_file_name)
 
-							serializer.serialize (type, s, True)
+							serializer.serialize (type, s.name, True)
 							l_file_position := serializer.last_file_position
 							if not serializer.successful and attached error_printer as l_error_printer then
-								set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
+								set_error (Serialization_error,{STRING_32} "" + type.eiffel_name + ", " + serializer.error_message)
 								l_string_tuple.put (error_message, 1)
 								l_error_printer.call (l_string_tuple)
 							else
 								if attached status_printer as l_status_printer then
-									l_string_tuple.put ("Written " + s, 1)
+									l_string_tuple.put ({STRING_32} "Written " + s.name, 1)
 									l_status_printer.call (l_string_tuple)
 								end
 								if attached status_querier as l_status_querier then
@@ -388,8 +376,8 @@ feature {NONE} -- Implementation
 			end
 
 			create mapping.make (assembly_ids)
-			serializer.serialize (types, destination_path + Assembly_types_file_name, False)
-			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name, False)
+			serializer.serialize (types, destination_path.extended (Assembly_types_file_name).name, False)
+			serializer.serialize (mapping, destination_path.extended (Assembly_mapping_file_name).name, False)
 		end
 
 	create_consumed_assembly_folders
@@ -400,19 +388,19 @@ feature {NONE} -- Implementation
 		local
 			l_dir: DIRECTORY
 		do
-			create l_dir.make (destination_path)
+			create l_dir.make_with_path (destination_path)
 			if not l_dir.exists then
 				l_dir.create_dir
 			end
 		end
 
-	type_consumers: HASH_TABLE [TYPE_CONSUMER, STRING]
+	type_consumers: STRING_TABLE [TYPE_CONSUMER]
 			-- Assembly type consumers
 
 	assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY]
 			-- Assembly ids
 
-	is_base_type (a_type_name: STRING): BOOLEAN
+	is_base_type (a_type_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- is `a_type_name' a base type?
 		require
 			non_void_a_type_name: a_type_name /= Void
@@ -423,32 +411,31 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	string_tuple: TUPLE [STRING]
+	string_tuple: TUPLE [STRING_32]
 			-- Tuple that contain only a string object.
 		once
 			create Result
 		end
 
-	base_types: ARRAY [STRING]
+	base_types: STRING_TABLE [BOOLEAN]
 			-- base types.
 		once
-			create Result.make_filled ("", 1, 15)
-			Result.put ("System.Byte", 1)
-			Result.put ("System.Int16", 2)
-			Result.put ("System.Int32", 3)
-			Result.put ("System.Int64", 4)
-			Result.put ("System.IntPtr", 5)
-			Result.put ("System.UInt16", 6)
-			Result.put ("System.UInt32", 7)
-			Result.put ("System.UInt64", 8)
-			Result.put ("System.UIntPtr", 9)
-			Result.put ("System.Single", 10)
-			Result.put ("System.Double", 11)
-			Result.put ("System.Char", 12)
-			Result.put ("System.Boolean", 13)
-			Result.put ("System.SByte", 14)
-			Result.put ("EiffelSoftware.Runtime.ANY", 15)
-			Result.compare_objects
+			create Result.make (15)
+			Result.put (True, "System.Byte")
+			Result.put (True, "System.Int16")
+			Result.put (True, "System.Int32")
+			Result.put (True, "System.Int64")
+			Result.put (True, "System.IntPtr")
+			Result.put (True, "System.UInt16")
+			Result.put (True, "System.UInt32")
+			Result.put (True, "System.UInt64")
+			Result.put (True, "System.UIntPtr")
+			Result.put (True, "System.Single")
+			Result.put (True, "System.Double")
+			Result.put (True, "System.Char")
+			Result.put (True, "System.Boolean")
+			Result.put (True, "System.SByte")
+			Result.put (True, "EiffelSoftware.Runtime.ANY")
 		end
 
 note

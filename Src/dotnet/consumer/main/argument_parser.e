@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	assemblies: ARRAYED_LIST [STRING]
+	assemblies: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			-- List of assemblies to add to cache
 		require
 			successful: is_successful
@@ -42,22 +42,19 @@ feature -- Access
 			create Result.make (0)
 			if add_assemblies then
 				across options_values_of_name (add_switch) as l_item loop
-					Result.extend (l_item.item.as_string_8)
+					Result.extend (l_item.item)
 				end
 			else
 				across options_values_of_name (remove_switch) as l_item loop
-					Result.extend (l_item.item.as_string_8)
+					Result.extend (l_item.item)
 				end
 			end
-	ensure
+		ensure
 			result_attached: Result /= Void
-			result_contains_attached_valid_items: Result.for_all (agent (a_item: STRING): BOOLEAN
-				do
-					Result := a_item /= Void and then not a_item.is_empty
-				end)
+			result_contains_attached_valid_items: across Result as l_item all not l_item.item.is_empty end
 		end
 
-	reference_paths: ARRAYED_LIST [STRING]
+	reference_paths: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			-- List of assembly reference paths used in resolution
 		require
 			successful: is_successful
@@ -65,26 +62,23 @@ feature -- Access
 		once
 			create Result.make (10)
 			across options_values_of_name (reference_switch) as l_item loop
-				Result.extend (l_item.item.as_string_8)
+				Result.extend (l_item.item)
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_valid_items: Result.for_all (agent (a_item: STRING): BOOLEAN
-				do
-					Result := a_item /= Void and then not a_item.is_empty
-				end)
+			result_contains_attached_valid_items: across Result as l_item all not l_item.item.is_empty end
 		end
 
-	cache_path: STRING
+	cache_path: PATH
 			-- A location of a cache
 		require
 			successful: is_successful
 			use_specified_cache: use_specified_cache
 		do
 			if attached option_of_name (output_switch) as l_name then
-				Result := l_name.value.as_string_8
+				create Result.make_from_string (l_name.value)
 			else
-				Result := "."
+				create Result.make_current
 			end
 		ensure
 			result_attached: Result /= Void

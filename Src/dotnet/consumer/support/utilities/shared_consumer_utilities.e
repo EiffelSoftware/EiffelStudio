@@ -10,26 +10,18 @@ class
 
 feature -- Formatting
 
-	format_path (a_path: STRING): STRING
+	format_path (a_path: PATH): PATH
 			-- Formats `a_path' to produce a comparable path.
 		require
 			a_path_not_void: a_path /= Void
 			not_path_is_empty: not a_path.is_empty
-		local
-			l_unc_path: BOOLEAN
 		do
-			l_unc_path := a_path.count > 2 and then a_path.substring (1, 2).is_equal ("\\")
-			Result := a_path.as_lower
-			Result.replace_substring_all ("\\", "\")
-			if l_unc_path then
-				Result.prepend_character ('\')
-			end
+			Result := a_path.canonical_path
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_still_unc_path: a_path.count > 2 implies (a_path.substring (1, 2).is_equal ("\\") implies Result.substring (1, 2).is_equal ("\\"))
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -61,5 +53,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-		
+
 end

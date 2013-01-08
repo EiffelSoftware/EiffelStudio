@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	add_assembly_to_eac (a_path: STRING)
+	add_assembly_to_eac (a_path: PATH)
 			-- Consume assembly `a_path' and put results in EAC
 		require
 			non_void_path: a_path /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			non_void_clr_version: clr_version /= Void
 			non_void_cache_writer: cache_writer /= Void
 		do
-			cache_writer.add_assembly (a_path, False)
+			cache_writer.add_assembly (a_path.name, False)
 		rescue
 			debug ("log_exceptions")
 				log_last_exception
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			cache_writer.clean_cache
 		end
 
-	remove_assembly_from_eac (a_path: STRING)
+	remove_assembly_from_eac (a_path: PATH)
 			-- Remove assembly `a_path' from EAC
 		require
 			non_void_path: a_path /= Void

@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	encoded_key (a_key: NATIVE_ARRAY [NATURAL_8]): STRING
+	encoded_key (a_key: NATIVE_ARRAY [NATURAL_8]): STRING_32
 			-- Printable representation of `a_key'
 		require
 			a_key_not_void: a_key /= Void
@@ -23,7 +23,7 @@ feature -- Access
 			until
 				i >= l_special.count
 			loop
-				Result.append (l_special.item (i).to_hex_string)
+				Result.append_string_general (l_special.item (i).to_hex_string)
 				i := i + 1
 			end
 			Result.to_lower

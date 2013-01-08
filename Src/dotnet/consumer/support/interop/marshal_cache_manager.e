@@ -56,8 +56,11 @@ feature -- Basic Exportations
 			not_already_initialized: not is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
+		local
+			l_path: PATH
 		do
-			create implementation.make_with_path (a_path)
+			create l_path.make_from_string (create {STRING_32}.make_from_cil (a_path))
+			create implementation.make_with_path (l_path)
 		ensure
 			current_initialized: is_initialized
 		end
@@ -70,7 +73,7 @@ feature -- Basic Exportations
 			non_void_name: a_name /= Void
 			valid_name: a_name.length > 0
 		local
-			l_version, l_culture, l_key: detachable STRING
+			l_version, l_culture, l_key: detachable STRING_32
 		do
 			if attached implementation as l_imp then
 				if a_version /= Void then
@@ -82,7 +85,7 @@ feature -- Basic Exportations
 				if a_key /= Void then
 					l_key := a_key
 				end
-				l_imp.consume_assembly (a_name, l_version, l_culture, l_key, a_info_only)
+				l_imp.consume_assembly (create {STRING_32}.make_from_cil (a_name), l_version, l_culture, l_key, a_info_only)
 			end
 		end
 
@@ -93,13 +96,13 @@ feature -- Basic Exportations
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
 		local
-			l_references: detachable STRING
+			l_references: detachable STRING_32
 		do
 			if attached implementation as l_imp then
 				if a_references /= Void then
 					l_references := a_references
 				end
-				l_imp.consume_assembly_from_path (a_path, a_info_only, l_references)
+				l_imp.consume_assembly_from_path (create {STRING_32}.make_from_cil (a_path), a_info_only, l_references)
 			end
 		end
 

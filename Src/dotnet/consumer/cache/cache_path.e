@@ -39,149 +39,108 @@ inherit
 
 feature -- Access
 
-	absolute_consume_path: STRING
-			-- Absolute path to EAC assemblies file info
+	absolute_consume_path: PATH
+			-- Absolute path to EAC assemblies
 		require
 			non_void_clr_version: clr_version /= Void
 		once
-			create Result.make (eiffel_assembly_cache_path.count + eac_info_file_name.count + 1)
-			Result.append (eiffel_assembly_cache_path)
-			Result.append (relative_executing_env_path)
-			Result.prune_all_trailing ((create {OPERATING_ENVIRONMENT}).directory_separator)
+			Result := eiffel_assembly_cache_path.extended_path (relative_executing_env_path)
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
 		end
 
-	absolute_info_path: STRING
+	absolute_info_path: PATH
 			-- Absolute path to EAC assemblies file info
 		require
 			non_void_clr_version: clr_version /= Void
 		once
-			create Result.make (eiffel_assembly_cache_path.count + eac_info_file_name.count + 1)
-			Result.append (eiffel_assembly_cache_path)
-			Result.append (relative_executing_env_path)
-			Result.append (eac_info_file_name)
+			Result := absolute_consume_path.extended (eac_info_file_name)
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
 		end
 
-	absolute_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING
+	absolute_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): PATH
 			-- Absolute path to folder containing `a_assembly' types.
 		require
 			non_void_assembly: a_assembly /= Void
 			valid_assembly: a_assembly.key /= Void
 			non_void_clr_version: clr_version /= Void
-		local
-			relative_path: STRING
 		do
-			relative_path := relative_assembly_path_from_consumed_assembly (a_assembly)
-			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
-			Result.append (eiffel_assembly_cache_path)
-			Result.append (relative_path)
+			Result := eiffel_assembly_cache_path.extended_path (relative_assembly_path_from_consumed_assembly (a_assembly))
 		ensure
 			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
-	absolute_assembly_mapping_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING
+	absolute_assembly_mapping_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): PATH
 			-- Absolute path to folder containing `a_assembly' types.
 		require
 			non_void_assembly: a_assembly /= Void
 			valid_assembly: a_assembly.key /= Void
 			non_void_clr_version: clr_version /= Void
-		local
-			l_assembly_path: STRING
 		do
-			l_assembly_path := absolute_assembly_path_from_consumed_assembly (a_assembly)
-			create Result.make (l_assembly_path.count + assembly_mapping_file_name.count + 1)
-			Result.append (l_assembly_path)
-			Result.append (assembly_mapping_file_name)
+			Result := absolute_assembly_path_from_consumed_assembly (a_assembly).extended (assembly_mapping_file_name)
 		ensure
 			non_void_path: Result /= Void
 		end
 
-	absolute_type_path (a_assembly: CONSUMED_ASSEMBLY): STRING
+	absolute_type_path (a_assembly: CONSUMED_ASSEMBLY): PATH
 			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
 			-- Always return a value even if `a_type' in not in EAC
 		require
 			a_assembly_not_void: a_assembly /= Void
 			clr_version_not_void: clr_version /= Void
 			not_clr_version_empty: not clr_version.is_empty
-		local
-			relative_path: STRING
 		do
-			relative_path := relative_type_path (a_assembly)
-			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
-			Result.append (eiffel_assembly_cache_path)
-			Result.append (relative_path)
+			Result := eiffel_assembly_cache_path.extended_path (relative_type_path (a_assembly))
 		ensure
 			non_void_path: Result /= Void
 		end
 
-	absolute_type_mapping_path (a_assembly: CONSUMED_ASSEMBLY): STRING
+	absolute_type_mapping_path (a_assembly: CONSUMED_ASSEMBLY): PATH
 			-- Path to file, describing `a_assembly' .NET type name to class mappings
 			-- Always return a value even if `a_assembly' in not in EAC
 		require
 			a_assembly_not_void: a_assembly /= Void
 			clr_version_not_void: clr_version /= Void
 			not_clr_version_empty: not clr_version.is_empty
-		local
-			relative_path: STRING
 		do
-			relative_path := relative_type_mapping_path (a_assembly)
-			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
-			Result.append (eiffel_assembly_cache_path)
-			Result.append (relative_path)
+			Result := eiffel_assembly_cache_path.extended_path (relative_type_mapping_path (a_assembly))
 		ensure
 			non_void_path: Result /= Void
 		end
 
 feature {CACHE_READER} -- Access
 
-	relative_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING
+	relative_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): PATH
 			-- Path to folder containing `a_assembly' types relative to `Eac_path'
 		require
 			non_void_assembly: a_assembly /= Void
 		do
-			create Result.make (a_assembly.folder_name.count + relative_executing_env_path.count + 1)
-			Result.append (relative_executing_env_path)
-			Result.append (a_assembly.folder_name)
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+			Result := relative_executing_env_path.extended (a_assembly.folder_name)
 		ensure
 			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
-	relative_type_path (a_assembly: CONSUMED_ASSEMBLY): STRING
+	relative_type_path (a_assembly: CONSUMED_ASSEMBLY): PATH
 			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
 			-- Always return a value even if `a_type' in not in EAC
 		require
 			a_assembly_not_void: a_assembly /= Void
-		local
-			l_path: STRING
 		do
-			l_path := relative_assembly_path_from_consumed_assembly (a_assembly)
-			create Result.make (l_path.count + classes_file_name.count)
-			Result.append (l_path)
-			Result.append (classes_file_name)
+			Result := relative_assembly_path_from_consumed_assembly (a_assembly).extended (classes_file_name)
 		ensure
 			non_void_path: Result /= Void
 		end
 
-	relative_type_mapping_path (a_assembly: CONSUMED_ASSEMBLY): STRING
+	relative_type_mapping_path (a_assembly: CONSUMED_ASSEMBLY): PATH
 			-- Path to file, describing `a_assembly' .NET type name to class mappings, relative to `Eac_path'
 			-- Always return a value even if `a_assembly' in not in EAC
 		require
 			a_assembly_not_void: a_assembly /= Void
-		local
-			l_path: STRING
 		do
-			l_path := relative_assembly_path_from_consumed_assembly (a_assembly)
-			create Result.make (l_path.count + assembly_types_file_name.count)
-			Result.append (l_path)
-			Result.append (assembly_types_file_name)
+			Result := relative_assembly_path_from_consumed_assembly (a_assembly).extended (assembly_types_file_name)
 		ensure
 			non_void_path: Result /= Void
 		end
@@ -189,35 +148,27 @@ feature {CACHE_READER} -- Access
 	eac_info_file_name: STRING = "eac.info"
 			-- Path to EAC info file relative to `Eac_path'.
 
-	eiffel_assembly_cache_path: STRING
+	eiffel_assembly_cache_path: PATH
 			-- Path to versioned Eiffel Assembly Cache installation
 		require
 			clr_version_not_void: clr_version /= Void
 			clr_version_not_empty: not clr_version.is_empty
 		local
 			retried: BOOLEAN
-			l_dir_sep: CHARACTER
-			l_result: detachable PATH
 		once
 			if not retried then
-				l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 				if attached internal_eiffel_cache_path.item as l_cache then
 					Result := l_cache
 				else
 					if is_eiffel_layout_defined then
-						l_result := eiffel_layout.install_path
+						Result := eiffel_layout.install_path
+					else
+						create Result.make_current
 					end
-					if l_result = Void then
-						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_path
-					end
-					l_result := l_result.extended (eac_path)
-					Result := l_result.name.as_string_8
+					Result := Result.extended (eac_path)
 
 						-- set internal EAC path to registry key
 					internal_eiffel_cache_path.put (Result)
-				end
-				if Result.item (Result.count) /= l_dir_sep then
-					Result.append_character (l_dir_sep)
 				end
 			else
 					-- FIXME: Manu 05/14/2002: we should raise an error here.
@@ -226,7 +177,6 @@ feature {CACHE_READER} -- Access
 			end
 		ensure
 			exist: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		rescue
 			debug ("log_exceptions")
 				log_last_exception
@@ -235,39 +185,26 @@ feature {CACHE_READER} -- Access
 			retry
 		end
 
-	eac_path: STRING = "dotnet\assemblies"
+	eac_path: STRING_32 = "dotnet\assemblies"
 			-- EAC path relative to $ISE_EIFFEL
 
 feature {EMITTER} -- Access
 
-	relative_executing_env_path: STRING
+	relative_executing_env_path: PATH
 			-- retrieve relative path for execting environment
-		local
-			l_name: STRING
-			l_dir_sep: CHARACTER
 		once
-			l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
-
 			if conservative_mode then
-				l_name := short_cache_name
+				create Result.make_from_string (short_cache_name)
 			else
-				l_name := cache_name
+				create Result.make_from_string (cache_name)
 			end
-
-			create Result.make (l_name.count + clr_version.count + 3)
-			Result.append (l_name)
-			Result.append_character (l_dir_sep)
-			Result.append (cache_bit_platform)
-			Result.append_character (l_dir_sep)
-			Result.append (clr_version)
-			Result.append_character (l_dir_sep)
+			Result := Result.extended (cache_bit_platform).extended (clr_version)
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
-	internal_eiffel_cache_path: CELL [detachable STRING]
+	internal_eiffel_cache_path: CELL [detachable PATH]
 			-- internal eiffel cache path
 		once
 			create Result.put (Void)
@@ -275,7 +212,7 @@ feature {EMITTER} -- Access
 
 feature {EMITTER} -- Element Change
 
-	set_internal_eiffel_cache_path (a_path: STRING)
+	set_internal_eiffel_cache_path (a_path: PATH)
 			-- set `internal_eiffel_cache_path' to 'a_path'
 		require
 			non_void_path: a_path /= Void

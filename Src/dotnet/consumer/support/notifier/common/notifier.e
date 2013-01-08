@@ -24,8 +24,6 @@ feature {NONE} -- Initialization
 			l_thread: detachable SYSTEM_THREAD
 			l_start: THREAD_START
 		do
-			create notify_form.make
-
 				-- To make void-safe happy.
 			l_thread := {SYSTEM_THREAD}.current_thread
 			check l_thread_attached: l_thread /= Void end
@@ -43,7 +41,7 @@ feature {NONE} -- Initialization
 				l_thread := {SYSTEM_THREAD}.current_thread
 				check l_thread_attached: l_thread /= Void end
 			until
-				notify_form.visible
+				attached notify_form as l_form and then l_form.visible
 			loop
 				l_thread.sleep (10)
 			end
@@ -56,11 +54,22 @@ feature {NONE} -- Initialization
 			-- Initialize worker application thread.
 		local
 			l_context: WINFORMS_APPLICATION_CONTEXT
+			l_notify_form: like notify_form
 		do
-			create l_context.make_from_main_form (notify_form)
+			create l_notify_form.make
+			notify_form := l_notify_form
+			create l_context.make_from_main_form (l_notify_form)
+			{WINFORMS_APPLICATION}.add_idle (create {EVENT_HANDLER}.make (Current, $on_idle))
 			{WINFORMS_APPLICATION}.run (l_context)
-			check notify_form_attached: notify_form /= Void end
-			notify_form.dispose
+			l_notify_form.dispose
+		end
+
+	on_idle (a_sender: detachable SYSTEM_OBJECT; a_args: detachable EVENT_ARGS)
+			-- Action to be called on idle to refresh the content of the ballon if needed.
+		do
+			if attached notify_form as l_form then
+				l_form.on_idle (a_sender, a_args)
+			end
 		end
 
 feature -- Clean Up
@@ -68,7 +77,7 @@ feature -- Clean Up
 	dispose
 			-- Disposes of notifier
 		do
-			if notify_form /= Void then
+			if attached notify_form then
 				{WINFORMS_APPLICATION}.exit
 			end
 			if application_thread.is_alive then
@@ -89,11 +98,12 @@ feature -- Status Setting
 	notify_consume (a_message: NOTIFY_MESSAGE)
 			-- Notifies user of a consume
 		require
-			notify_form_attached: notify_form /= Void
 			a_message_attached: a_message /= Void
 			not_is_zombie: not is_zombie
 		do
-			notify_form.notify_consume (a_message)
+			if attached notify_form as l_form then
+				l_form.notify_consume (a_message)
+			end
 		end
 
 	notify_info (a_message: STRING)
@@ -102,27 +112,32 @@ feature -- Status Setting
 			a_message_attached: a_message /= Void
 			not_a_message_is_empty: not a_message.is_empty
 		do
-			notify_form.notify_info (a_message)
+			if attached notify_form as l_form then
+				l_form.notify_info (a_message)
+			end
 		end
 
 	restore_last_notification
 			-- Restores last message
 		do
-			notify_form.restore_last_notification
+			if attached notify_form as l_form then
+				l_form.restore_last_notification
+			end
 		end
 
 	clear_notification
 			-- Clears last notification message.
 		require
-			notify_form_attached: notify_form /= Void
 			not_is_zombie: not is_zombie
 		do
-			notify_form.clear_notification
+			if attached notify_form as l_form then
+				l_form.clear_notification
+			end
 		end
 
 feature -- Implementation
 
-	notify_form: NOTIFY_FORM;
+	notify_form: detachable NOTIFY_FORM;
 			-- Windows form used to notify users of consumption
 
 	application_thread: SYSTEM_THREAD

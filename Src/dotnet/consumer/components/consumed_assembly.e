@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (id, fn, n, v, c, k, loc, gp: STRING; a_in_gac: BOOLEAN)
+	make (id, fn, n, v, c, k: READABLE_STRING_32; loc, gp: PATH; a_in_gac: BOOLEAN)
 			-- Set `unique_id' with `id'
 			-- Set `folder_name' with 'fn'
 			-- Set `name' with `n'.
@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 			version := v
 			culture := c
 			key := k
-			location := format_path (loc)
-			gac_path := format_path (gp)
+			location := loc.canonical_path
+			gac_path := gp.canonical_path
 			unique_id := id
 			is_in_gac := a_in_gac
 			has_info_only := True
@@ -63,8 +63,8 @@ feature {NONE} -- Initialization
 			version_set: version = v
 			culture_set: culture = c
 			key_set: key = k
-			location_set: format_path (loc).is_equal (location)
-			gac_path_set: format_path (gp).is_equal (gac_path)
+			location_set: loc.canonical_path.same_as (location)
+			gac_path_set: gp.canonical_path.same_as (gac_path)
 			unique_id_set: unique_id = id
 			is_in_gac_set: is_in_gac = a_in_gac
 			has_info_only: has_info_only
@@ -73,28 +73,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	unique_id: STRING
+	unique_id: READABLE_STRING_32
 			-- Unique id for consumed assembly
 
-	folder_name: STRING
+	folder_name: READABLE_STRING_32
 			-- name of folder where consumed assembly metadata is stored
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Assembly path (local) or fullname (in GAC)
 
-	version: STRING
+	version: READABLE_STRING_32
 			-- Assembly version number
 
-	culture: STRING
+	culture: READABLE_STRING_32
 			-- Assembly culture
 
-	key: STRING
+	key: READABLE_STRING_32
 			-- Assembly public key token
 
-	location: STRING
+	location: PATH
 			-- Assembly location (path loaded from)
 
-	gac_path: STRING
+	gac_path: PATH
 			-- Assembly code base (path of loaded assembly)
 
 	is_consumed: BOOLEAN
@@ -106,12 +106,29 @@ feature -- Access
 	has_info_only: BOOLEAN
 			-- Indicates if only assembly info has been consumed (no types)
 
+	text: STRING_32
+			-- New string containing terse printable representation
+			-- of current object
+			-- Eg: "A, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+		do
+			create Result.make (name.count + location.name.count + 11)
+			Result.append_string (name)
+			Result.append_string_general (", Version=")
+			Result.append_string (version)
+			Result.append_string_general (", Culture=")
+			Result.append_string (culture)
+			Result.append_string_general (", PublicKeyToken=")
+			Result.append_string (key)
+			Result.append_string_general (", CodeBase=")
+			Result.append_string (location.name)
+		end
+
 	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
 			-- Eg: "A, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 		do
-			create Result.make (name.count + location.count + 11)
+			create Result.make (name.count + location.name.count + 11)
 			Result.append (name)
 			Result.append (", Version=")
 			Result.append (version)
@@ -120,7 +137,7 @@ feature -- Access
 			Result.append (", PublicKeyToken=")
 			Result.append (key)
 			Result.append (", CodeBase=")
-			Result.append (location)
+			Result.append (location.utf_8_name)
 		end
 
 feature -- Status Setting
@@ -139,26 +156,26 @@ feature -- Status Setting
 			not_has_info_only: (not a_consumed implies not has_info_only) or a_consumed implies has_info_only = a_only_info
 		end
 
-	set_location (a_location: STRING)
+	set_location (a_location: like location)
 			-- Set `location' with `a_location'
 		require
 			non_void_location: a_location /= Void
 			valid_location: not a_location.is_empty
 		do
-			location := a_location.as_lower
+			location := a_location
 		ensure
-			location_set: location = a_location.as_lower
+			location_set: location = a_location
 		end
 
-	set_gac_path (a_gac_path: STRING)
+	set_gac_path (a_gac_path: like gac_path)
 			-- Set `gac_path' with `a_gac_path'
 		require
 			non_void_gac_path: a_gac_path /= Void
 			valid_gac_path: not a_gac_path.is_empty
 		do
-			gac_path := a_gac_path.as_lower
+			gac_path := a_gac_path
 		ensure
-			gac_path_set: gac_path = a_gac_path.as_lower
+			gac_path_set: gac_path = a_gac_path
 		end
 
 	set_is_in_gac (a_in_gac: BOOLEAN)
@@ -220,38 +237,18 @@ feature -- Comparison
 						culture.is_equal (other.culture) and then key.is_equal (other.key)
 		end
 
-	has_same_path (a_path: STRING): BOOLEAN
+	has_same_path (a_path: PATH): BOOLEAN
 			-- does current instance have a path that equals `a_path'
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_path: STRING
-			l_file: RAW_FILE
+			l_path: PATH
 		do
-			l_path := format_path (a_path)
-			Result := l_path.is_equal (location) or l_path.is_equal (gac_path)
+			l_path := a_path.canonical_path
+			Result := l_path.same_as (location) or l_path.same_as (gac_path)
 			if not Result then
-				create l_file.make (l_path)
-				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
-			end
-		end
-
-	has_same_ready_formatted_path (a_path: STRING): BOOLEAN
-			-- does current instance have a path that equals `a_path'.
-			-- This is an optimized version of `has_same_path' that assumes `a_path' has already
-			-- been converted to lower case
-		require
-			not_a_path_is_empty: a_path /= Void
-			a_path_not_void: not a_path.is_empty
-			a_path_is_formatted: a_path.is_equal (format_path (a_path))
-		local
-			l_file: RAW_FILE
-		do
-			Result := a_path.is_equal (location) or a_path.is_equal (gac_path)
-			if not Result then
-				create l_file.make_with_name (a_path)
-				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
+				Result := l_path.is_same_file_as (location) or else l_path.is_same_file_as (gac_path)
 			end
 		end
 
@@ -273,7 +270,7 @@ feature -- Comparison
 
 feature {NONE} -- Constants
 
-	neutral_culture: STRING = "neutral"
+	neutral_culture: STRING_32 = "neutral"
 			-- Neutral culture name.
 
 invariant

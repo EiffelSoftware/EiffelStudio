@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize form.
 		do
-			notify_string := ""
+			create notify_string.make_empty
 			initialize_component
 		end
 
@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			check l_icon_attached: l_icon /= Void end
 
 			create notify_icon.make
-			{WINFORMS_APPLICATION}.add_idle (create {EVENT_HANDLER}.make (Current, $on_idle))
 
 			create l_location.make_from_x_and_y (-1000, -1000)
 			set_location (l_location)
@@ -72,25 +71,22 @@ feature -- Status Setting
 		require
 			a_message_attached: a_message /= Void
 		do
-			if attached {SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path) as l_msg then
-				notify_info (l_msg)
+			if attached {SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path.to_cil) as l_msg then
+				notify_info (create {STRING_32}.make_from_cil (l_msg))
 			end
 		ensure
 			last_notification_set: last_notification ~ old notify_string.to_cil
 		end
 
-	notify_info (a_message: STRING)
+	notify_info (a_message: READABLE_STRING_GENERAL)
 			-- Notifier user of an event
 		require
 			a_message_attached: a_message /= Void
 			not_a_message_is_empty: not a_message.is_empty
 		do
-			last_notification := notify_string.to_cil
-			if a_message.count > 64 then
-				notify_string := a_message.substring (0, 63)
-			else
-				notify_string := a_message
-			end
+			last_notification := notify_string
+			notify_string.wipe_out
+			notify_string.append_string_general (a_message)
 		ensure
 			last_notification_set: last_notification ~ old notify_string.to_cil
 		end
@@ -98,7 +94,7 @@ feature -- Status Setting
 	restore_last_notification
 			-- Restores last message
 		do
-			if attached last_notification as l_notification and then l_notification.length > 0 then
+			if attached last_notification as l_notification and then not l_notification.is_empty then
 				notify_info (l_notification)
 			else
 				clear_notification
@@ -108,7 +104,8 @@ feature -- Status Setting
 	clear_notification
 			-- Clears last notification message.
 		do
-			notify_string := "No current jobs to process."
+			notify_string.wipe_out
+			notify_string.append_string_general ("No current jobs to process.")
 			last_notification := Void
 		ensure
 			last_notification_set: last_notification = Void
@@ -119,7 +116,7 @@ feature -- Access
 	notify_icon: WINFORMS_NOTIFY_ICON
 			-- Notify icon
 
-	notify_string: STRING
+	notify_string: STRING_32
 			-- String used to populate notify icon ballon
 
 feature -- Events
@@ -127,7 +124,7 @@ feature -- Events
 	on_idle (a_sender: detachable SYSTEM_OBJECT; a_args: detachable EVENT_ARGS)
 			-- Processes application idle events.
 		do
-			notify_icon.text := notify_string
+			notify_icon.text := notify_string.to_cil
 		end
 
 feature {NONE} -- Constants
@@ -140,7 +137,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	last_notification: detachable SYSTEM_STRING;
+	last_notification: detachable READABLE_STRING_GENERAL;
 			-- Last set notification
 
 note

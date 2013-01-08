@@ -19,7 +19,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	error_message_table: HASH_TABLE [STRING, INTEGER]
+	error_message_table: HASH_TABLE [READABLE_STRING_GENERAL, INTEGER]
 			-- Error messages
 		once
 			create Result.make (2)

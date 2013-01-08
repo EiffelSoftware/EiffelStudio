@@ -45,18 +45,18 @@ feature {NONE}-- Initialization
 			guard.set_notifier (notifier)
 
 			is_successful := True
-			last_error_message := ""
+			create last_error_message.make_empty
 			create cache_writer.make
 		end
 
-	make_with_path (a_path: STRING)
+	make_with_path (a_path: PATH)
 			-- create instance of CACHE_MANAGER with ISE_EIFFEL path set to `a_path'
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-			path_exists: (create {DIRECTORY}.make (a_path)).exists
+			path_exists: (create {DIRECTORY}.make_with_path (a_path)).exists
 		do
-			set_internal_eiffel_cache_path (a_path.twin)
+			set_internal_eiffel_cache_path (a_path)
 			make
 		end
 
@@ -80,12 +80,12 @@ feature -- Access
 
 	is_successful: BOOLEAN
 
-	last_error_message: STRING
+	last_error_message: STRING_32
 		-- last error message
 
 feature -- Basic Oprtations
 
-	consume_assembly (a_name: STRING; a_version, a_culture, a_key: detachable STRING; a_info_only: BOOLEAN)
+	consume_assembly (a_name: READABLE_STRING_32; a_version, a_culture, a_key: detachable READABLE_STRING_32; a_info_only: BOOLEAN)
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -95,22 +95,24 @@ feature -- Basic Oprtations
 			l_assembly: detachable ASSEMBLY
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
 			l_current_domain: detachable APP_DOMAIN
+			l_loc: STRING_32
 		do
 			is_successful := True
-			last_error_message := ""
+			create last_error_message.make_empty
 
 			l_assembly := assembly_loader.load_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
 			if l_assembly /= Void and then attached l_assembly.location as l_location then
-				create l_resolver.make (create {ARRAYED_LIST [STRING]}.make (0))
+				create l_loc.make_from_cil (l_location)
+				create l_resolver.make (create {ARRAYED_LIST [STRING_32]}.make (0))
 				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
-					l_resolver.add_resolve_path (l_runtime_dir)
+					l_resolver.add_resolve_path (create {STRING_32}.make_from_cil (l_runtime_dir))
 				end
-				l_resolver.add_resolve_path_from_file_name (l_location)
+				l_resolver.add_resolve_path_from_file_name (l_loc)
 				l_current_domain := {APP_DOMAIN}.current_domain
 				check l_current_domain_attached: l_current_domain /= Void end
 				resolve_subscriber.subscribe (l_current_domain, l_resolver)
 				assembly_loader.set_resolver (l_resolver)
-				cache_writer.add_assembly_ex (l_location, a_info_only, Void, create {ARRAYED_LIST [STRING]}.make (0))
+				cache_writer.add_assembly_ex (l_loc, a_info_only, Void, create {ARRAYED_LIST [READABLE_STRING_32]}.make (0))
 				assembly_loader.set_resolver (Void)
 				resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
 			end
@@ -118,28 +120,28 @@ feature -- Basic Oprtations
 			successful: is_successful
 		end
 
-	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: detachable STRING)
+	consume_assembly_from_path (a_path: READABLE_STRING_32; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_32)
 			-- Consume assembly located `a_path'
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_paths: LIST [STRING]
+			l_paths: LIST [READABLE_STRING_32]
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
-			l_processed: ARRAYED_LIST [STRING]
-			l_refs: LIST [STRING]
-			l_files: ARRAYED_LIST [STRING]
+			l_processed: ARRAYED_LIST [READABLE_STRING_32]
+			l_refs: LIST [READABLE_STRING_32]
+			l_files: ARRAYED_LIST [READABLE_STRING_32]
 			l_current_domain: detachable APP_DOMAIN
 		do
 			is_successful := True
-			last_error_message := ""
+			create last_error_message.make_empty
 
 			l_paths := a_path.split (';')
 			l_paths.compare_objects
 
 			create l_files.make (30)
 			if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
-				l_files.extend (l_runtime_dir)
+				l_files.extend (create {STRING_32}.make_from_cil (l_runtime_dir))
 			end
 			l_files.append (l_paths)
 
@@ -183,7 +185,7 @@ feature -- Basic Oprtations
 			successful: is_successful
 		end
 
-	relative_folder_name (a_name: STRING; a_version, a_culture, a_key: detachable STRING): detachable STRING
+	relative_folder_name (a_name: READABLE_STRING_32; a_version, a_culture, a_key: detachable READABLE_STRING_32): detachable PATH
 			-- returns the relative path to an assembly using at least `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -194,11 +196,10 @@ feature -- Basic Oprtations
 			l_ca := assembly_info (a_name, a_version, a_culture, a_key)
 			if l_ca /= Void then
 				Result := relative_assembly_path_from_consumed_assembly (l_ca)
-				Result.prune_all_trailing ('\')
 			end
 		end
 
-	relative_folder_name_from_path (a_path: STRING): detachable STRING
+	relative_folder_name_from_path (a_path: READABLE_STRING_32): detachable PATH
 			-- Relative path to consumed assembly metadata given `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -209,22 +210,21 @@ feature -- Basic Oprtations
 		do
 			l_assembly := assembly_loader.load_from (a_path)
 			if l_assembly /= Void and then attached l_assembly.location as l_location then
-				l_ca := cache_writer.consumed_assembly_from_path (l_location)
+				l_ca := cache_writer.consumed_assembly_from_path (create {STRING_32}.make_from_cil (l_location))
 			end
 			if l_ca = Void then
 					-- Try load assembly from GAC
 				l_assembly := assembly_loader.load_from_gac_or_path (a_path)
 				if l_assembly /= Void and then attached l_assembly.location as l_location then
-					l_ca := cache_writer.consumed_assembly_from_path (l_location)
+					l_ca := cache_writer.consumed_assembly_from_path (create {STRING_32}.make_from_cil (l_location))
 				end
 			end
 			if l_ca /= Void then
 				Result := relative_assembly_path_from_consumed_assembly (l_ca)
-				Result.prune_all_trailing ('\')
 			end
 		end
 
-	assembly_info_from_path (a_path: STRING): detachable CONSUMED_ASSEMBLY
+	assembly_info_from_path (a_path: PATH): detachable CONSUMED_ASSEMBLY
 			-- retrieve a local assembly's information.
 			-- If assembly has already been consumed then function will
 			-- return found matching CONSUMED_ASSEMBLY.
@@ -235,10 +235,10 @@ feature -- Basic Oprtations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		do
-			Result := cache_writer.consumed_assembly_from_path (a_path)
+			Result := cache_writer.consumed_assembly_from_path (a_path.name)
 		end
 
-	assembly_info (a_name: STRING; a_version, a_culture, a_key: detachable STRING): detachable CONSUMED_ASSEMBLY
+	assembly_info (a_name: READABLE_STRING_32; a_version, a_culture, a_key: detachable READABLE_STRING_32): detachable CONSUMED_ASSEMBLY
 			-- retrieve a assembly's information.
 			-- If assembly has already been consumed then function will
 			-- return found matching CONSUMED_ASSEMBLY.
@@ -253,28 +253,31 @@ feature -- Basic Oprtations
 		do
 			l_assembly := assembly_loader.load_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
 			if l_assembly /= Void and then attached l_assembly.location as l_location then
-				Result := cache_writer.consumed_assembly_from_path (l_location)
+				Result := cache_writer.consumed_assembly_from_path (create {STRING_32}.make_from_cil (l_location))
 			end
 		end
 
 feature {NONE} -- Basic Operations
 
-	fully_quantified_name (a_name: STRING; a_version, a_culture, a_key: detachable STRING): STRING
+	fully_quantified_name (a_name: READABLE_STRING_32; a_version, a_culture, a_key: detachable READABLE_STRING_32): STRING_32
 			-- returns "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			Result := a_name.twin
+			create Result.make_from_string (a_name)
 			if a_version /= Void and then not a_version.is_empty then
-				Result.append (", Version=" + a_version)
+				Result.append_string_general (", Version=")
+				Result.append_string (a_version)
 				if a_culture /= Void and then not a_culture.is_empty then
 					if not a_culture.is_case_insensitive_equal (neutral_culture) then
-						Result.append (", Culture=" + a_culture)
+						Result.append_string_general (", Culture=")
+						Result.append (a_culture)
 					end
 				end
 				if a_key /= Void and then not a_key.is_empty then
-					Result.append (", PublicKeyToken=" + a_key)
+					Result.append_string_general (", PublicKeyToken=")
+					Result.append (a_key)
 				end
 			end
 		ensure
@@ -284,7 +287,7 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Constants
 
-	neutral_culture: STRING = "neutral"
+	neutral_culture: STRING_32 = "neutral"
 
 feature {NONE} -- Implementation
 

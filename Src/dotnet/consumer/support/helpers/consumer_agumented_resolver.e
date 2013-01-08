@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_paths: LIST [STRING])
+	make (a_paths: ARRAYED_LIST [READABLE_STRING_32])
 			-- Initialize instance
 		require
 			a_paths_attached: a_paths /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			names_table_compares_objects: names_table.object_comparison
 		end
 
-	make_with_name (a_paths: LIST [STRING]; a_name: attached like friendly_name)
+	make_with_name (a_paths: ARRAYED_LIST [READABLE_STRING_32]; a_name: attached like friendly_name)
 			-- Initialize instance and set `friendly_name' with `a_name'
 		require
 			a_paths_attached: a_paths /= Void
@@ -69,12 +69,12 @@ feature {NONE} -- Initialization
 			names_table_compares_objects: names_table.object_comparison
 		end
 
-	common_initialization (a_paths: LIST [STRING])
+	common_initialization (a_paths: ARRAYED_LIST [READABLE_STRING_32])
 			-- Additional initialization.
 		require
 			a_paths_attached: a_paths /= Void
 		local
-			l_paths: ARRAYED_LIST [STRING]
+			l_paths: ARRAYED_LIST [READABLE_STRING_32]
 		do
 			if a_paths.count > 0 then
 				create l_paths.make (a_paths.count)
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 
 feature -- Resolution
 
-	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version, a_culture, a_key: detachable STRING): detachable STRING
+	resolve_by_name (a_domain: APP_DOMAIN; a_name: READABLE_STRING_32; a_version, a_culture, a_key: detachable READABLE_STRING_32): detachable PATH
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
 		local
@@ -115,7 +115,7 @@ feature -- Resolution
 				end
 				if l_name /= Void then
 					if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
-						Result := look_up_file_names.item
+						create Result.make_from_string (look_up_file_names.item)
 					end
 				end
 				look_up_file_names.forth
@@ -130,13 +130,13 @@ feature -- Resolution
 
 feature {NONE} -- Implementation
 
-	load_assembly (a_path: STRING): detachable ASSEMBLY
+	load_assembly (a_path: PATH): detachable ASSEMBLY
 			-- Attempts to load assembly from `a_path'
 		do
-			Result := assembly_loader.load_from (a_path)
+			Result := assembly_loader.load_from (a_path.name)
 		end
 
-	get_assembly_name (a_path: STRING): detachable ASSEMBLY_NAME
+	get_assembly_name (a_path: READABLE_STRING_32): detachable ASSEMBLY_NAME
 			-- Retrieve an assembly name from `a_path'
 		do
 			Result := names_table.item (a_path)
@@ -148,10 +148,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	look_up_file_names: LIST [STRING]
+	look_up_file_names: ARRAYED_LIST [READABLE_STRING_32]
 			-- Lookup files names
 
-	names_table: HASH_TABLE [ASSEMBLY_NAME, STRING]
+	names_table: STRING_TABLE [ASSEMBLY_NAME]
 			-- Table of path/assembly names
 			-- Key: assembly file name path
 			-- Value: Assembly name

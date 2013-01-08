@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	context_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
+	context_variables: STRING_TABLE [READABLE_STRING_32]
 			-- Custom table of context variables
 		require
 			is_interface_usable: is_interface_usable

@@ -436,7 +436,7 @@ feature -- Basic operations: Degrees
 
 feature -- Basic operations
 
-	put_string (a_message: STRING_32)
+	put_string (a_message: READABLE_STRING_GENERAL)
 			-- Puts a string and new line to the output
 			--
 			-- `a_message': The message to write.
@@ -702,7 +702,7 @@ feature {NONE} -- Internationalization
 	lb_case_cluster_message: STRING = "Analyzing Cluster "
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

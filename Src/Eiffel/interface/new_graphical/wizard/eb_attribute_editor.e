@@ -101,7 +101,7 @@ feature -- Access
 			Result.append (comments_code)
 
 			if type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
-				Result.append ("%T%Tattribute Result := ({like " + feature_name_field.text + "}).default end --| Remove line when Void Safety is properly set%N")
+				Result.append ("%T%Tattribute check False then end end" + " --| Remove line when `" + feature_name_field.text + "' is initialized in creation procedure.%N")
 			end
 			Result.append ("%N")
 		end
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			-- generated preconditions or type her own.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

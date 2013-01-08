@@ -99,9 +99,9 @@ feature -- Access
 			if generated then
 				Result := textfield.text
 			elseif attached textfield_string as t then
-				Result := t
+				Result := t.as_string_32
 			else
-				Result := {STRING_32} ""
+				create Result.make_empty
 			end
 		end
 
@@ -151,9 +151,9 @@ feature -- Settings
 			-- Set the text of the text field to `txt'.
 		do
 			if generated then
-				textfield.set_text (a_string.as_string_32)
+				textfield.set_text (a_string)
 			else
-				textfield_string := a_string.as_string_32
+				textfield_string := a_string
 			end
 		end
 
@@ -172,10 +172,10 @@ feature -- Settings
 			-- the label to `a_size'.
 		do
 			if generated then
-				label.set_text (a_string.as_string_32+":")
+				label.set_text (a_string+":")
 				label.set_minimum_width (a_size)
 			else
-				label_string := a_string.as_string_32+":"
+				label_string := a_string+":"
 				label_size := a_size
 			end
 		end
@@ -188,7 +188,7 @@ feature -- Settings
 				textfield.set_text (a_string)
 				textfield.set_capacity (a_capacity)
 			else
-				textfield_string := a_string.as_string_32
+				textfield_string := a_string
 				textfield_capacity := a_capacity
 			end
 		end
@@ -330,13 +330,13 @@ feature {NONE} -- Implementation
 	label_size: INTEGER
 			-- Requested size for the label.
 
-	label_string: detachable STRING_32
+	label_string: detachable READABLE_STRING_GENERAL
 			-- Requested Text for the Label.
 
 	textfield_capacity: INTEGER
 			-- Requested capacity for the text field.
 
-	textfield_string: detachable STRING_32
+	textfield_string: detachable READABLE_STRING_GENERAL
 			-- Requested text for the text field.
 
 	browse_button: detachable EV_BUTTON

@@ -137,7 +137,7 @@ feature -- Basic Operations
 
 feature -- Settings
 
-	set_updatable_entries (a_table: ARRAY [ACTION_SEQUENCE [TUPLE[]]])
+	set_updatable_entries (a_table: ARRAY [ACTION_SEQUENCE [TUPLE]])
 			-- Set the actions which imply a change
 			-- in the user entries, so that we know that going forward
 			-- will be done by re-computed the data.

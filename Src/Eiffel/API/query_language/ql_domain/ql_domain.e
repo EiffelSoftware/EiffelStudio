@@ -284,7 +284,9 @@ feature -- Sorting
 			if not is_empty then
 				create l_sorted_list.make (count)
 				l_content := content
-				l_content.do_all (agent l_sorted_list.extend)
+				across l_content as l_item loop
+					l_sorted_list.extend (l_item.item)
+				end
 				l_content.wipe_out
 				create l_agent_tester.make (a_test_agent)
 				create l_sorter.make (l_agent_tester)
@@ -654,7 +656,7 @@ invariant
 	domain_valid: is_domain_valid
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

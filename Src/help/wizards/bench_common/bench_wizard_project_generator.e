@@ -78,14 +78,13 @@ feature {NONE} -- Implementation
 			u.copy_file_path (wizard_resources_path.extended (name), destination.extended (name))
 		end
 
-	from_template_to_project (template_path: PATH; template_name: STRING_32; resource_path: PATH; resource_name: STRING_32; map_list: LINKED_LIST [TUPLE [STRING, STRING_32]])
+	from_template_to_project (template_path: PATH; template_name: STRING_32; resource_path: PATH; resource_name: STRING_32; map_list: HASH_TABLE [STRING_32, STRING_8])
 			-- Take a template_name (name of the file) and its template_path
 			-- Then change the FL Tag with strings according to the map_list
 			-- Copy the modified template in a new file resource_name in the resource_path.
 		require
 			is_target_file: target_files.has (resource_name)
 		local
-			tup: TUPLE [s1: STRING; s2: STRING_32]
 			s: STRING
 			fi: PLAIN_TEXT_FILE
 			u: UTF_CONVERTER
@@ -100,8 +99,7 @@ feature {NONE} -- Implementation
 				until
 					map_list.after
 				loop
-					tup:= map_list.item
-					s.replace_substring_all (tup.s1, u.string_32_to_utf_8_string_8 (tup.s2))
+					s.replace_substring_all (map_list.key_for_iteration, u.string_32_to_utf_8_string_8 (map_list.item_for_iteration))
 					map_list.forth
 				end
 			end
@@ -112,11 +110,10 @@ feature {NONE} -- Implementation
 			fi.close
 		end
 
-	add_common_parameters (map_list: LINKED_LIST [TUPLE [STRING, STRING_32]])
+	add_common_parameters (map_list: HASH_TABLE [STRING_32, STRING])
 			-- Add the common parameters to the replacement pattern.
 		local
 			current_time: DATE_TIME
-			tuple: TUPLE [name: STRING; value: STRING_32]
 			project_name: STRING_32
 			project_name_lowercase: STRING_32
 			project_name_uppercase: STRING_32
@@ -124,46 +121,28 @@ feature {NONE} -- Implementation
 		do
 				-- Add the project name.
 			project_name := wizard_information.project_name
-			create tuple
-			tuple.name := "${FL_PROJECT_NAME}"
-			tuple.value := project_name
-			map_list.extend (tuple)
+			map_list.force (project_name, "${FL_PROJECT_NAME}")
 
 				-- Add the project name (in uppercase)
 			project_name_uppercase := project_name.as_upper
-			create tuple
-			tuple.name := "${FL_PROJECT_NAME_UPPERCASE}"
-			tuple.value := project_name_uppercase
-			map_list.extend (tuple)
+			map_list.force (project_name_uppercase, "${FL_PROJECT_NAME_UPPERCASE}")
 
 				-- Add the project name (in lowercase)
 			project_name_lowercase := project_name.as_lower
-			create tuple
-			tuple.name := "${FL_PROJECT_NAME_LOWERCASE}"
-			tuple.value := project_name_lowercase
-			map_list.extend (tuple)
+			map_list.force (project_name_lowercase, "${FL_PROJECT_NAME_LOWERCASE}")
 
 				-- Add the project location
-			create tuple
-			tuple.name := "${FL_LOCATION}"
-			tuple.value := wizard_information.project_location.name
-			map_list.extend (tuple)
+			map_list.force (wizard_information.project_location.name, "${FL_LOCATION}")
 
 				-- Add UUID for project
 			create l_uuid
-			create tuple
-			tuple.name := "${FL_UUID}"
-			tuple.value := l_uuid.generate_uuid.out.as_string_32
-			map_list.extend (tuple)
+			map_list.force (l_uuid.generate_uuid.out.as_string_32, "${FL_UUID}")
 
 				-- Add the date for indexing clause.
 			create current_time.make_now
-			create tuple
-			tuple.name := "${FL_DATE}"
-			tuple.value :=
+			map_list.force (
 				{STRING_32} "$Date: "+current_time.year.out+"/"+current_time.month.out+"/"+current_time.day.out+" "+
-				current_time.hour.out+":"+current_time.minute.out+":"+current_time.second.out+" $"
-			map_list.extend (tuple)
+				current_time.hour.out+":"+current_time.minute.out+":"+current_time.second.out+" $", "${FL_DATE}")
 		end
 
 feature {NONE} -- Implementation / private attributes

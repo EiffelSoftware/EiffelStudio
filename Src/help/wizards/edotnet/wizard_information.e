@@ -39,7 +39,7 @@ feature -- Setting
 			-- Set `root_class_name' with `a_name'.
 		do
 			if attached a_name then
-				root_class_name := a_name.as_upper.as_string_8
+				root_class_name := a_name.as_upper
 			else
 				root_class_name := Void
 			end
@@ -49,7 +49,7 @@ feature -- Setting
 			-- Set `creation_routine_name' with `a_name'.
 		do
 			if attached a_name then
-				creation_routine_name := a_name.as_string_8
+				creation_routine_name := a_name
 			else
 				creation_routine_name := Void
 			end
@@ -69,11 +69,10 @@ feature -- Setting
 			-- set `clr_version' with `a_version'
 		require
 			non_void_version: a_version /= Void
-			valid_version: is_valid_clr_version (a_version)
 		do
-			clr_version := clone (a_version)
+			clr_version := a_version.twin
 		ensure
-			clr_version_set: equal (clr_version, a_version)
+			clr_version_set: clr_version.same_string_general (a_version)
 		end
 
 	set_is_most_recent_clr_version (a_flag: BOOLEAN)
@@ -90,10 +89,10 @@ feature -- Access
 			-- Should the compiler generate a DLL?
 			-- If set to False, it will generate an EXE.
 
-	root_class_name: STRING
+	root_class_name: STRING_32
 			-- Name of the root class of the Eiffel.NET project
 
-	creation_routine_name: STRING
+	creation_routine_name: STRING_32
 			-- Name of the creation routine of the root class
 
 	application_type: STRING
@@ -112,22 +111,11 @@ feature -- Access
 	is_most_recent_clr_version: BOOLEAN
 			-- Should we target the most recent CLR version available on the users system?
 
-	clr_version: STRING
+	clr_version: STRING_32
 			-- version of clr to target
 
-	is_valid_clr_version (a_version: STRING): BOOLEAN
-			-- is `a_version' a valid clr version?
-		require
-			non_void_version: a_version /= Void
-		do
-			Result := not a_version.is_empty and then a_version.is_equal (clr_version_10) or a_version.is_equal (clr_version_11)
-		end
-
-	clr_version_10: STRING = "v1.0.3705"
+	clr_version_10: STRING_32 = "v1.0.3705"
 			-- version 1.0 of CLR
-
-	clr_version_11: STRING = "v1.1.4322"
-			-- version 1.1 of CLR
 
 feature {NONE} -- Implementation
 
@@ -155,7 +143,6 @@ invariant
 	non_void_root_class_name: root_class_name /= Void
 	non_void_creation_routine_name: creation_routine_name /= Void
 	non_void_clr_version: clr_version /= Void
-	valid_clr_version: is_valid_clr_version (clr_version)
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

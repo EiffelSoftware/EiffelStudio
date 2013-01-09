@@ -19,12 +19,11 @@ feature -- Basic Operations
 	generate_code
 			-- Generate the code for a new vision2-application project
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
-			tuple: TUPLE [STRING, STRING_32]
+			map_list: HASH_TABLE [STRING_32, STRING]
 			project_name_lowercase: STRING_32
 			project_location: PATH
 			ace_location: PATH
-			root_class_name_lowercase: STRING
+			root_class_name_lowercase: STRING_32
 		do
 				-- cached variables
 			project_name_lowercase := wizard_information.project_name.as_lower
@@ -34,73 +33,43 @@ feature -- Basic Operations
 			ace_location := project_location.extended (project_name_lowercase + Config_extension)
 			wizard_information.set_ace_location (ace_location)
 
-			create map_list.make
+			create map_list.make (10)
 			add_common_parameters (map_list)
 				-- Add the project type
-			create tuple
-			tuple.put (Application_type_template, 1)
-			tuple.put (wizard_information.application_type.as_string_32, 2)
-			map_list.extend (tuple)
+			map_list.force (wizard_information.application_type, application_type_template)
 
 				-- Add the root class name
 			root_class_name_lowercase := wizard_information.root_class_name.as_lower
-			if not root_class_name_lowercase.is_equal (None_class) then
-				create tuple
-				tuple.put (Root_class_name_template, 1)
-				tuple.put (wizard_information.root_class_name.as_string_32, 2)
-				map_list.extend (tuple)
+			if not root_class_name_lowercase.same_string_general (None_class) then
+				map_list.force (wizard_information.root_class_name, Root_class_name_template)
 
 					-- Add the creation routine name
-				create tuple
-				tuple.put (Creation_routine_name_template, 1)
-				tuple.put (wizard_information.creation_routine_name.as_string_32, 2)
-				map_list.extend (tuple)
-
-				create tuple
-				tuple.put (all_classes_template, 1)
-				tuple.put ({STRING_32} "", 2)
-				map_list.extend (tuple)
+				map_list.force (wizard_information.creation_routine_name, Creation_routine_name_template)
+				map_list.force ({STRING_32} "", all_classes_template)
 			else
-				create tuple
-				tuple.put (Root_class_name_template, 1)
-				tuple.put ({STRING_32} "ROOT_CLASS", 2)
-				map_list.extend (tuple)
+				map_list.force ({STRING_32} "ROOT_CLASS", Root_class_name_template)
 
 					-- Add the creation routine name
-				create tuple
-				tuple.put (Creation_routine_name_template, 1)
-				tuple.put ({STRING_32} "make", 2)
-				map_list.extend (tuple)
-
-
-				create tuple
-				tuple.put (all_classes_template, 1)
-				tuple.put ({STRING_32} "all_classes=%"true%"", 2)
-				map_list.extend (tuple)
+				map_list.force ({STRING_32} "make", Creation_routine_name_template)
+				map_list.force ({STRING_32} "all_classes=%"true%"", all_classes_template)
 			end
 
 				-- Add console application (yes\no)
-			create tuple
-			tuple.put (Console_application, 1)
 			if wizard_information.console_application then
-				tuple.put ({STRING_32} "true", 2)
+				map_list.force ({STRING_32} "true", Console_application)
 			else
-				tuple.put ({STRING_32} "false", 2)
+				map_list.force ({STRING_32} "false", Console_application)
 			end
-			map_list.extend (tuple)
 
 				-- Add target clr version
-			create tuple
-			tuple.put (clr_version_template, 1)
 			if not wizard_information.is_most_recent_clr_version then
-				tuple.put ({STRING_32} "<setting name=%"msil_clr_version%" value=%"" + wizard_information.clr_version + "%"/>", 2)
+				map_list.force ({STRING_32} "<setting name=%"msil_clr_version%" value=%"" + wizard_information.clr_version + "%"/>", clr_version_template)
 			else
-				tuple.put ({STRING_32} "", 2)
+				map_list.force ({STRING_32} "", clr_version_template)
 			end
-			map_list.extend (tuple)
 
 				-- Generation
-			if not root_class_name_lowercase.is_equal (None_class) then
+			if not root_class_name_lowercase.same_string_general (None_class) then
 				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
 			end
 			from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
@@ -150,7 +119,7 @@ feature {NONE} -- Constants
 	Eiffel_extension: STRING = ".e"
 			-- Eiffel classes extension
 
-	Ace_template_filename: STRING = "template_config.ecf"
+	Ace_template_filename: STRING_32 = "template_config.ecf"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Application_template_filename: STRING_32 = "template_application.e"

@@ -116,10 +116,10 @@ feature {NONE} -- Initialization
 			libraries_grid.enable_single_row_selection
 			libraries_grid.set_column_count_to (location_column)
 			l_col := libraries_grid.column (name_column)
-			l_col.set_title ("Name")
+			l_col.set_title (conf_interface_names.dialog_create_library_name)
 			l_col.set_width (100)
 			l_col := libraries_grid.column (location_column)
-			l_col.set_title ("Location")
+			l_col.set_title (conf_interface_names.dialog_create_library_location)
 			l_col.set_width (100)
 			libraries_grid.disable_column_separators
 			libraries_grid.disable_row_separators

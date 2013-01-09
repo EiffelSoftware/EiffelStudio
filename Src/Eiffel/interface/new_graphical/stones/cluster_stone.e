@@ -87,7 +87,7 @@ feature -- Access
 			Result := Interface_names.l_cluster_header (eiffel_system.name,
 															eiffel_universe.target_name,
 															stone_signature,
-															group.location.evaluated_path)
+															group.location.evaluated_path.name)
 		end
 
 	history_name: STRING_32
@@ -214,7 +214,7 @@ invariant
 	path_not_void: path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

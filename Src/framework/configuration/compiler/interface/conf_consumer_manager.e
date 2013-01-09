@@ -485,18 +485,18 @@ feature {NONE} -- retrieving information from cache
 				end
 				-- is it a local assembly
 			else
-				Result := consumed_local_assembly (create {PATH}.make_from_string (an_assembly.location.evaluated_path))
+				Result := consumed_local_assembly (an_assembly.location.evaluated_path)
 				if Result = Void then
 					-- (re)consume all local assemblies
 					consume_local_assemblies (new_assemblies)
-					Result := consumed_local_assembly (create {PATH}.make_from_string (an_assembly.location.evaluated_path))
+					Result := consumed_local_assembly (an_assembly.location.evaluated_path)
 				end
 			end
 			if Result = Void or else not Result.is_consumed then
 				if an_assembly.is_non_local_assembly then
 					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name))
 				else
-					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.location.evaluated_path))
+					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.location.evaluated_path.name))
 				end
 			end
 		ensure
@@ -596,7 +596,7 @@ feature {NONE} -- Consuming
 				if l_a.is_non_local_assembly then
 					l_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token, True)
 				else
-					l_path := l_a.location.evaluated_path
+					l_path := l_a.location.evaluated_path.name
 					if not l_unique_paths.has (l_path) then
 						l_unique_paths.force (True, l_path)
 						l_paths.append_string_general (l_path)
@@ -639,7 +639,7 @@ feature {NONE} -- Consuming
 			loop
 				l_a := an_assemblies.item_for_iteration
 				if not l_a.is_non_local_assembly then
-					l_path := l_a.location.evaluated_path
+					l_path := l_a.location.evaluated_path.name
 					if not l_unique_paths.has (l_path) then
 						l_unique_paths.force (True, l_path)
 						l_paths.append_string_general (l_path)

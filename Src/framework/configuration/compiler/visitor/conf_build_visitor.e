@@ -318,9 +318,9 @@ feature -- Visit nodes
 
 				-- if it is a local assembly, check that the file exists
 			if state.is_dotnet and then not an_assembly.is_non_local_assembly then
-				create l_file.make_with_name (an_assembly.location.evaluated_path)
+				create l_file.make_with_path (an_assembly.location.evaluated_path)
 				if not l_file.exists or else not l_file.is_readable then
-					add_and_raise_error (create {CONF_ERROR_FILE}.make_with_config (an_assembly.location.evaluated_path, an_assembly.location.original_path, current_system.file_name))
+					add_and_raise_error (create {CONF_ERROR_FILE}.make_with_config (an_assembly.location.evaluated_path.name, an_assembly.location.original_path, current_system.file_name))
 				end
 			end
 			new_assemblies.force (an_assembly)
@@ -642,10 +642,10 @@ feature {NONE} -- Implementation
 	handle_class (a_file, a_path: READABLE_STRING_32; a_cluster: CONF_CLUSTER)
 			-- Put the class in `a_path' `a_file' into `current_classes'.
 		local
-			l_file: KL_BINARY_INPUT_FILE
+			l_file: KL_BINARY_INPUT_FILE_32
 			l_class: CONF_CLASS
 			l_name: STRING
-			l_full_file: STRING_32
+			l_full_file: PATH
 			l_pc: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_file_name: STRING_32
 			l_done: BOOLEAN
@@ -654,7 +654,6 @@ feature {NONE} -- Implementation
 			l_old_group: like old_group
 			l_old_group_classes_by_filename: like old_group.classes_by_filename
 			l_classname_finder: like classname_finder
-			gobo: GOBO_FILE_UTILITIES
 		do
 			l_current_classes := current_classes
 			l_old_group := old_group
@@ -688,7 +687,7 @@ feature {NONE} -- Implementation
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
 						if l_current_classes.has_key (l_name) then
-							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
+							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name.name, l_class.full_file_name.name, a_cluster.target.system.file_name))
 						else
 							l_current_classes.force (l_class, l_name)
 							current_classes_by_filename.force (l_class, l_file_name)
@@ -706,8 +705,8 @@ feature {NONE} -- Implementation
 							end
 							added_classes.force (l_class)
 							if l_current_classes.has_key (l_name) then
-								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name,
-									l_class.full_file_name, a_cluster.target.system.file_name))
+								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name.name,
+									l_class.full_file_name.name, a_cluster.target.system.file_name))
 							else
 								l_current_classes.force (l_class, l_name)
 								current_classes_by_filename.force (l_class, l_file_name)
@@ -721,12 +720,11 @@ feature {NONE} -- Implementation
 						-- need to make sure that the class name we read from a class in an override
 						-- cluster is really the one intended. Fixes eweasel test#incr263.
 					if is_full_class_name_analysis or a_cluster.is_override then
-						l_full_file := a_cluster.location.evaluated_directory
-						l_full_file.append (l_file_name)
-						l_file := gobo.make_binary_input_file (l_full_file)
+						l_full_file := a_cluster.location.evaluated_directory.extended (l_file_name)
+						create l_file.make_with_path (l_full_file)
 						l_file.open_read
 						if not l_file.is_open_read then
-							add_and_raise_error (create {CONF_ERROR_FILE}.make (l_full_file))
+							add_and_raise_error (create {CONF_ERROR_FILE}.make (l_full_file.name))
 						else
 								-- get class name
 							l_classname_finder := classname_finder
@@ -749,7 +747,7 @@ feature {NONE} -- Implementation
 									if l_pc = Void then
 										create l_pc.make (1)
 									end
-									l_pc.extend (l_full_file)
+									l_pc.extend (l_full_file.name)
 									partial_classes.force (l_pc, l_name)
 								else
 										-- normal classes
@@ -759,8 +757,8 @@ feature {NONE} -- Implementation
 									end
 									added_classes.force (l_class)
 									if l_current_classes.has_key (l_name) then
-										add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name,
-											l_class.full_file_name, a_cluster.target.system.file_name))
+										add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name.name,
+											l_class.full_file_name.name, a_cluster.target.system.file_name))
 									else
 										l_current_classes.force (l_class, l_name)
 										current_classes_by_filename.force (l_class, l_file_name)
@@ -781,8 +779,8 @@ feature {NONE} -- Implementation
 							end
 							added_classes.force (l_class)
 							if l_current_classes.has_key (l_name) then
-								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name,
-									l_class.full_file_name, a_cluster.target.system.file_name))
+								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name.name,
+									l_class.full_file_name.name, a_cluster.target.system.file_name))
 							else
 								l_current_classes.force (l_class, l_name)
 								current_classes_by_filename.force (l_class, l_file_name)
@@ -800,13 +798,13 @@ feature {NONE} -- Implementation
 						-- Check file name against class name
 					if not a_file.substring (1, a_file.count - 1 - eiffel_file_extension.count).is_case_insensitive_equal (l_name) then
 							-- We propose the correct file name. The file name construction follows the same schema as above
-						l_suggested_filename := a_path + "/" + l_name.as_lower + "." + eiffel_file_extension
-						l_suggested_filename := a_cluster.location.evaluated_directory + l_suggested_filename
+						create l_suggested_filename.make (25)
+						l_suggested_filename.append_string (a_cluster.location.evaluated_directory.name)
+						l_suggested_filename.append_string ({STRING_32} "/" + a_path + "/" + l_name.as_lower + "." + eiffel_file_extension)
 						if l_full_file = Void then
-							l_full_file := a_cluster.location.evaluated_directory
-							l_full_file.append (l_file_name)
+							l_full_file := a_cluster.location.evaluated_directory.extended (l_file_name)
 						end
-						add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file, l_name, l_suggested_filename))
+						add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file.name, l_name, l_suggested_filename))
 					end
 				end
 			end
@@ -911,7 +909,7 @@ feature {NONE} -- Implementation
 							-- remove partial class files
 						l_partial ?= l_cl
 						if l_partial /= Void then
-							create l_file.make_with_name (l_partial.full_file_name)
+							create l_file.make_with_path (l_partial.full_file_name)
 							if l_file.exists then
 								l_file.delete
 							end

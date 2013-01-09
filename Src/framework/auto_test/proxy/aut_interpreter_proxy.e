@@ -78,7 +78,6 @@ feature {NONE} -- Initialization
 			interpreter_root_class_attached: interpreter_root_class /= Void
 		local
 			l_itp_class: CLASS_C
-			u: GOBO_FILE_UTILITIES
 		do
 			make_event_producer
 			create variable_table.make (a_system)
@@ -104,9 +103,10 @@ feature {NONE} -- Initialization
 			request_printer.extend (socket_data_printer)
 
 			executable_file_name := an_executable_file_name
-			melt_path := u.file_directory_path (an_executable_file_name)
+			create melt_path.make_from_string (an_executable_file_name)
+			melt_path := melt_path.parent
 			interpreter_log_filename := an_interpreter_log_filename
-			proxy_log_file := u.make_text_output_file (a_proxy_log_filename)
+			create proxy_log_file.make (a_proxy_log_filename)
 			proxy_log_file.open_write
 
 			create response_printer.make_with_prefix (proxy_log_file, interpreter_log_prefix)
@@ -182,13 +182,15 @@ feature -- Access
 	variable_table: AUT_VARIABLE_TABLE
 			-- Table for index and types of object in object pool
 
-	proxy_log_filename: STRING
+	proxy_log_filename: PATH
 			-- File name of proxy log
+		local
+			u: FILE_UTILITIES
 		do
-			Result := proxy_log_file.name
+			create Result.make_from_string (u.file_name (proxy_log_file))
 		ensure
 			filename_not_void: Result /= Void
-			valid_filename: Result.is_equal (proxy_log_file.name)
+			valid_filename: Result.name.same_string (proxy_log_file.name)
 		end
 
 feature -- Settings
@@ -227,7 +229,7 @@ feature -- Settings
 			if proxy_log_file.is_open_write then
 				proxy_log_file.close
 			end
-			create proxy_log_file.make (a_filename)
+			create proxy_log_file.make_with_path (a_filename)
 			proxy_log_file.open_write
 			log_line ("-- An existing proxy has switched to this log file.")
 		end
@@ -674,7 +676,7 @@ feature{NONE} -- Process scheduling
 			l_workdir: STRING_32
 		do
 				-- $MELT_PATH needs to be set here in only to allow debugging.
-			put (melt_path, "MELT_PATH")
+			put (melt_path.name, "MELT_PATH")
 			create stdout_reader.make
 
 				-- We need `injected_feature_body_id'-1 because the underlying C array is 0-based.
@@ -932,7 +934,7 @@ feature {NONE} -- Implementation
 	interpreter_log_filename: READABLE_STRING_GENERAL
 			-- File name of the interpreters log
 
-	melt_path: READABLE_STRING_GENERAL
+	melt_path: PATH
 			-- Path where melt file of test client resides
 
 	request_printer: AUT_REQUEST_PROCESSORS
@@ -959,7 +961,7 @@ feature {NONE} -- Implementation
 	proxy_start_time: DT_DATE_TIME
 			-- Time when Current proxy started.
 
-	proxy_log_file: KL_TEXT_OUTPUT_FILE
+	proxy_log_file: KL_TEXT_OUTPUT_FILE_32
 			-- Proxy log file
 
 	default_timeout: INTEGER = 5

@@ -31,6 +31,28 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 		end
 
+feature -- Access
+
+	build_path (a_directory, a_file: like original_path): like evaluated_path
+			-- Add `a_directory' and `a_filename' to current directory.
+			-- `a_directory' can be in any format.
+		local
+			l_dir: like original_path
+		do
+			Result := evaluated_path
+			if not a_directory.is_empty then
+				l_dir := a_directory.twin
+					-- PATH handles Unix path. This is necessary in the case
+					-- `l_dir' contains a windows separator which could not be
+					-- understood as a separator on Unix.
+				update_path_to_unix (l_dir)
+				Result := Result.extended (l_dir)
+			end
+			if not a_file.is_empty then
+				Result := Result.extended (a_file)
+			end
+		end
+
 feature {CONF_ACCESS} -- Update stored in configuration file.
 
 	set_path (a_path: like original_path)
@@ -41,7 +63,7 @@ feature {CONF_ACCESS} -- Update stored in configuration file.
 		require
 			a_path_not_void: a_path /= Void
 		do
-			original_path := to_internal (a_path)
+			original_path := to_internal_format (a_path)
 			if original_path.count = 0 then
 				original_path.append_character ('.')
 			end

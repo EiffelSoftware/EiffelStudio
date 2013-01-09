@@ -60,7 +60,7 @@ feature -- Access
 	path: STRING
 			-- Relative path to `cluster' of current fold
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of the folder
 
 feature -- Comparison
@@ -100,26 +100,15 @@ feature {NONE} -- Implementation
 
 	build_name
 			-- Build name.
-		local
-			l_string : STRING
-			l_start, l_end: INTEGER
 		do
-			l_string := cluster.location.build_path (path, "")
-			if l_string.item (l_string.count) = operating_environment.directory_separator then
-				l_end := l_string.count - 1
-			else
-				l_end := l_string.count
-			end
-			l_start := l_string.last_index_of (operating_environment.directory_separator, l_end)
-			l_start := l_start + 1
-			name := l_string.substring (l_start, l_end)
+			name := cluster.location.build_path (path, "").entry.name
 		end
 
 invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

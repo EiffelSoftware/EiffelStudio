@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 		do
 			if is_folder_hierarchy_displayed then
 				l_class_table := class_table (a_group.classes)
-				display_folder ("", a_group.location.evaluated_path + operating_environment.directory_separator.out, l_class_table, a_tab_count, a_is_class_displayed)
+				display_folder ({STRING_32} "", a_group.location.evaluated_path, l_class_table, a_tab_count, a_is_class_displayed)
 			else
 				if a_is_class_displayed then
 					if a_group.classes_set then
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_folder (a_path: STRING; a_directory: STRING; a_class_table: like class_table; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN)
+	display_folder (a_path: READABLE_STRING_32; a_directory: PATH; a_class_table: like class_table; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN)
 			-- Dispaly information of a folder whose location is `a_directory' starting with `a_tab_count' tabs.
 			-- `a_path' is used to find classes in `a_class_table'.
 			-- If `a_is_class_displayed' is True, display classes in that folder.
@@ -213,30 +213,29 @@ feature {NONE} -- Implementation
 			l_list: LIST [CONF_CLASS]
 			l_dir: DIRECTORY
 			l_file: RAW_FILE
-			l_dir_list: PART_SORTED_TWO_WAY_LIST [STRING]
-			l_new_dir: STRING
-			l_new_path: STRING
-			l_separator: STRING
+			l_dir_list: PART_SORTED_TWO_WAY_LIST [STRING_32]
+			l_new_dir: PATH
+			l_new_path: READABLE_STRING_32
 			l_has_class: BOOLEAN
 		do
 				-- Find folder hierarchy
-			create l_dir.make_open_read (a_directory)
+			create l_dir.make_with_path (a_directory)
+			l_dir.open_read
 			create l_dir_list.make
 			from
 				l_dir.readentry
 			until
-				l_dir.lastentry = Void
+				l_dir.last_entry_32 = Void
 			loop
-				if not l_dir.lastentry.is_equal (once ".") and not l_dir.lastentry.is_equal (once "..") then
-					create l_file.make (a_directory + l_dir.lastentry)
+				if not l_dir.last_entry_32.same_string_general (once ".") and not l_dir.last_entry_32.same_string_general (once "..") then
+					create l_file.make_with_path (a_directory.extended (l_dir.last_entry_32))
 					if l_file.is_directory then
-						l_dir_list.put_front (l_dir.lastentry)
+						l_dir_list.put_front (l_dir.last_entry_32)
 					end
 				end
 				l_dir.readentry
 			end
 			if not l_dir_list.is_empty then
-				l_separator := directory_separator.out
 				l_dir_list.sort
 				from
 					l_dir_list.start
@@ -249,7 +248,7 @@ feature {NONE} -- Implementation
 					until
 						a_class_table.after or l_has_class
 					loop
-						if a_class_table.key_for_iteration.substring (1, l_new_path.count).is_equal (l_new_path) then
+						if a_class_table.key_for_iteration.substring (1, l_new_path.count).same_string (l_new_path) then
 							l_has_class := True
 						end
 						a_class_table.forth
@@ -278,7 +277,7 @@ feature {NONE} -- Implementation
 							text_formatter.add (output_interface_names.rparan)
 							text_formatter.add_new_line
 						end
-						l_new_dir := a_directory + l_dir_list.item + l_separator
+						l_new_dir := a_directory.extended (l_dir_list.item)
 						display_folder (l_new_path, l_new_dir, a_class_table, a_tab_count + 1, a_is_class_displayed)
 					end
 					l_dir_list.forth
@@ -299,8 +298,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_table (a_classes: HASH_TABLE [CONF_CLASS, STRING]): HASH_TABLE [ARRAYED_LIST [CONF_CLASS], STRING]
-			-- Table of classes.
+	class_table (a_classes: HASH_TABLE [CONF_CLASS, STRING]): STRING_TABLE [ARRAYED_LIST [CONF_CLASS]]
+			-- Table of classes from `a_classes' indexed by renamed name.
 			-- Key is `path', value are list of classes with the same `path'.
 		require
 			a_classes_attached: a_classes /= Void
@@ -520,7 +519,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

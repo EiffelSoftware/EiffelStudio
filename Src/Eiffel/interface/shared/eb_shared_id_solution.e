@@ -191,7 +191,7 @@ feature -- Access (Folder)
 				l_path := decode (strings.i_th (folder_id_sections))
 				last_folder_path := l_path
 				if l_cluster /= Void then
-					create l_dir.make (l_cluster.location.build_path (l_path, ""))
+					create l_dir.make_with_path (l_cluster.location.build_path (l_path, ""))
 					if l_dir.exists then
 						create Result.make (l_cluster, l_path)
 					end
@@ -778,7 +778,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

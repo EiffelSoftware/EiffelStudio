@@ -604,8 +604,7 @@ feature {NONE} -- Implementation
 					check_valid_creation_procedure
 				end
 				if aok then
-					create f_name.make_from_string (cluster.location.build_path (path, ""))
-					f_name := f_name.extended_path (file_name)
+					f_name := cluster.location.build_path (path, "").extended_path (file_name)
 					base_name := file_name
 					create file.make_with_path (f_name)
 					if file.exists then

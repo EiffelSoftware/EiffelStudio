@@ -905,9 +905,12 @@ feature -- Element change
 				elseif l_cluster_stone /= Void then
 					a_content.set_description (interface_names.l_eiffel_cluster)
 
-					l_name := l_cluster_stone.group.location.evaluated_path
-					if l_name /= Void and l_cluster_stone.path /= Void then
-						l_name := l_name + l_cluster_stone.path
+					if attached l_cluster_stone.group.location.evaluated_path as l_path then
+						if attached l_cluster_stone.path as l_cluster_path and then not l_cluster_path.is_empty then
+							l_name := l_path.extended (l_cluster_stone.path).name
+						else
+							l_name := l_path.name
+						end
 					end
 
 					if l_name /= Void then
@@ -1894,7 +1897,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

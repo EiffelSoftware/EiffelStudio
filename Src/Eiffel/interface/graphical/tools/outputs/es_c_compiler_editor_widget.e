@@ -108,14 +108,12 @@ feature {NONE} -- Query
 			l_mapper: ES_EIFFEL_TO_C_FUNCTION_MAPPER
 			l_class_c: CLASS_C
 			l_ctrl: BOOLEAN
-			u: GOBO_FILE_UTILITIES
-			l_result: READABLE_STRING_GENERAL
 		do
 				-- Should the generated F_code information be shown?
 			l_ctrl := ev_application.ctrl_pressed
 
 			if attached {CLUSTER_STONE} a_stone as l_group then
-				l_result := l_group.group.location.evaluated_directory
+				Result := l_group.group.location.evaluated_directory
 			elseif attached {CLASSC_STONE} a_stone as l_class then
 				if attached {FEATURE_STONE} a_stone as l_feature then
 						-- Retrieve the feature specific information.
@@ -127,7 +125,7 @@ feature {NONE} -- Query
 							-- Request to view the external C code.
 						create l_mapper.make (l_class_c, l_class_type)
 						l_mapper.is_for_finalized := l_ctrl
-						l_result := l_mapper.c_class_path.name
+						Result := l_mapper.c_class_path
 					end
 				else
 						-- Not a feature
@@ -137,22 +135,20 @@ feature {NONE} -- Query
 					if attached l_class_type then
 						create l_mapper.make (l_class_c, l_class_type)
 						l_mapper.is_for_finalized := l_ctrl
-						l_result := l_mapper.c_class_path.name
+						Result := l_mapper.c_class_path
 					end
 				end
 			elseif attached {CLASSI_STONE} a_stone as l_class then
 				if not l_ctrl then
 						-- The class is not compiled so there will be no externally generated code.
-					l_result := l_class.group.location.evaluated_directory
+					Result := l_class.group.location.evaluated_directory
 				end
 			elseif attached {FILED_STONE} a_stone as l_filed then
 					-- Unknown stone type but it has a file associated with it.
 				if not l_ctrl then
-					l_result := u.file_directory_path (l_filed.file_name)
+					create Result.make_from_string (l_filed.file_name)
+					Result := Result.parent
 				end
-			end
-			if l_result /= Void then
-				create Result.make_from_string (l_result)
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty

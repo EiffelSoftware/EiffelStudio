@@ -156,7 +156,7 @@ feature {NONE} -- Actions
 			l_dir: DIRECTORY
 		once
 			create Result
-			create l_dir.make (target.system.directory)
+			create l_dir.make_with_path (target.system.directory)
 			if l_dir.exists then
 				Result.set_start_directory (l_dir.name)
 			end
@@ -172,10 +172,10 @@ feature {NONE} -- Actions
 		do
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
-				create l_dir.make (l_loc.evaluated_directory)
-			end
-			if l_dir /= Void and then l_dir.exists then
-				browser_dialog.set_start_directory (l_dir.name)
+				create l_dir.make_with_path (l_loc.evaluated_directory)
+				if l_dir.exists then
+					browser_dialog.set_start_path (l_dir.path)
+				end
 			end
 
 			browser_dialog.ok_actions.extend (agent fill_fields)

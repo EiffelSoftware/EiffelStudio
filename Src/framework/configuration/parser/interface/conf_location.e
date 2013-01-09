@@ -38,66 +38,140 @@ feature -- Access, stored in configuration file
 
 	original_path: STRING_32
 			-- Path without resolved variables and parent cluster path.
+			-- Directory separators are always using the Windows one, i.e. '\'.
 
 feature -- Access queries
 
-	original_directory: like original_path
-			-- The directory part of `original_path' (without trailing '\').
-		do
-			Result := directory (original_path)
-		ensure
-			Result_not_void: Result /= Void
-		end
-
 	original_file: like original_path
 			-- The file part of `original_path'.
-		do
-			Result := file (original_path)
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	evaluated_path: like original_path
-			-- The fully resolved path with file name.
 		local
-			l_file_system: like file_system
-			u: UTF_CONVERTER
+			cnt, i: INTEGER
 		do
-			l_file_system := file_system
-				-- {KI_FILE_SYSTEM}.canonical_pathname works on {STRING_8}
-				-- therefore the original path is converted from {STRING_32} to {STRING_8}
-				-- and after the normalization back to {STRING_32}. This works because
-				-- all non-ASCII codes of UTF-8 stay untouched during normalization.
-			Result := u.utf_8_string_8_to_string_32
-				(l_file_system.canonical_pathname (l_file_system.pathname_from_file_system
-					(u.string_32_to_utf_8_string_8 (internal_evaluated_path), windows_file_system)))
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	evaluated_directory: like original_path
-			-- The directory part of `evaluated_path' (without trailing '\' or '/').
-		local
-			l_file_system: like file_system
-			u: UTF_CONVERTER
-		do
-			l_file_system := file_system
-				-- If call to 'pathname_from_file_system' is empty that means we only got a '\' or '/' which got removed because we remove
-				-- trailing separators
-			Result := u.utf_8_string_8_to_string_32
-				(l_file_system.canonical_pathname (l_file_system.pathname_from_file_system
-					(u.string_32_to_utf_8_string_8 (directory (internal_evaluated_path)), windows_file_system)))
-			if Result.count = 0 then
-				Result := operating_environment.directory_separator.out
+			cnt := original_path.count
+			if cnt > 0 then
+				i := original_path.last_index_of ('\', cnt)
+				if i /= cnt then
+					Result := original_path.substring (i + 1, cnt)
+				end
+			end
+			if Result = Void then
+				create Result.make_empty
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	evaluated_file: like original_path
+	evaluated_path: PATH
+			-- The fully resolved path with file name.
+		local
+			i, j, k: INTEGER
+			l_old_i: INTEGER
+			l_key: like original_path
+			l_value: like original_path
+			l_relative_base: like original_path
+			l_offset: INTEGER
+			l_stop: BOOLEAN
+			l_result: like original_path
+			l_root: PATH
+		do
+			create l_result.make_from_string (original_path)
+
+				-- Replace $| with parent path
+			if
+				parent /= Void and then
+				l_result.count >= 2 and then l_result.item (1) = '$' and then l_result.item (2) = '|'
+			then
+				l_relative_base := parent.evaluated_path.name
+				l_result.replace_substring (l_relative_base, 1, 2)
+				l_result.insert_character ('\', l_relative_base.count + 1)
+			end
+
+				-- Replace $ABC and ${ABC} with user defined or environment variables
+			from
+				l_offset := 1
+				i := l_result.index_of ('$', l_offset)
+			until
+				i = 0 or l_stop
+			loop
+				l_key := Void
+				l_old_i := i
+
+					-- in each loop we decrease the number of $ by 1, except if it is a $(ABC), then we increase the offset
+				if i /= 0 and then l_result.item (i+1) = '{' then
+					j := l_result.index_of ('}', i)
+					if j /= 0 and j > i+2 then
+						l_key := l_result.substring (i+2, j-1)
+					end
+				elseif i /= 0 and then l_result.item (i+1) = '(' then
+					l_offset := l_result.index_of (')', i) + 2
+				elseif i /= 0 then
+					j := l_result.index_of (' ', i) - 1
+					k := l_result.index_of ('\', i) - 1
+					if j < i then
+						j := l_result.count
+					end
+					if k > i then
+						j := j.min (k)
+					end
+					l_key := l_result.substring (i+1, j)
+				end
+
+				if l_key /= Void then
+					l_value := target.variables.item (l_key.as_lower)
+					if l_value = Void then
+						l_value := execution_environment.item (l_key)
+						if l_value = Void then
+							l_value := once {STRING_32} ""
+						end
+							-- we don't want to update stored values, this is done when the project is loaded
+						target.environ_variables.put (l_value, l_key)
+					end
+					l_result.replace_substring (to_internal_format (l_value), i, j)
+				end
+
+				i := l_result.index_of ('$', l_offset)
+				if i > 0 then
+						-- Check if last variable was extracted correctly
+					l_stop := l_old_i = i
+				end
+			end
+
+				-- Handle file incasesensitivity under windows
+			if operating_system.is_windows then
+				l_result.to_lower
+			else
+					-- The above computation is done using the internal format which is using `\' as
+					-- directory separator, so we need to convert those to `/' for Unix.
+				update_path_to_unix (l_result)
+			end
+			create Result.make_from_string (l_result)
+
+				-- Handle relative path
+			if Result.is_relative then
+				l_root := target.library_root
+				if l_root = Void then
+					create l_root.make_from_string ("/")
+				end
+				Result := Result.absolute_path_in (l_root).canonical_path
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	evaluated_directory: PATH
+			-- The directory part of `evaluated_path'.
+		do
+			Result := evaluated_path
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	evaluated_file: STRING_32
 			-- The file part of `evaluated_path'.
 		do
-			Result := file (internal_evaluated_path)
+			if attached evaluated_path.entry as l_entry then
+				create Result.make_from_string (l_entry.name)
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -112,39 +186,13 @@ feature -- Access queries
 			end
 		end
 
-	build_path (a_directory, a_file: like original_path): like original_path
-			-- Add directories and filename to current directory.
+	build_path (a_directory, a_file: like original_path): like evaluated_path
+			-- Add `a_directory' and `a_filename' to current directory.
 			-- `a_directory' can be in any format.
 		require
 			a_directory_not_void: a_directory /= Void
 			a_file_not_void: a_file /= Void
-		local
-			l_dir: like original_path
-			l_cluster_separator: CHARACTER_8
-			u: GOBO_FILE_UTILITIES
-		do
-			l_cluster_separator := '\'
-			Result := evaluated_directory
-			if Result.is_empty then
-				Result.append_character (operating_environment.directory_separator)
-			end
-			if not a_directory.is_empty then
-				l_dir := u.adapt_unix_to_windows (a_directory)
-				if l_dir.item (1) /= l_cluster_separator then
-					l_dir.prepend_character (l_cluster_separator)
-				end
-			else
-				create l_dir.make_empty
-			end
-			if a_file.is_empty and then not l_dir.is_empty and then l_dir.item (l_dir.count) = l_cluster_separator then
-				l_dir.remove_tail (1)
-			end
-			if not a_file.is_empty then
-				l_dir.append_character (l_cluster_separator)
-				l_dir.append_string (a_file)
-			end
-			l_dir := u.adapt_windows_to_current (l_dir)
-			Result.append (l_dir)
+		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -187,171 +235,36 @@ feature {NONE} -- Implementation, attributes stored in configuration file
 
 feature {NONE} -- Implementation
 
-	--| The internal format uses the windows format (because we would otherwise lose the drive letter)
-	--| directories are always terminated by a \
-
-	to_internal (a_path: like original_path): like original_path
+	to_internal_format (a_path: like original_path): like original_path
 			-- Convert `a_path' into the internal representation.
+			--| The internal format uses the windows format for directory separator.
 		require
 			a_path_not_void: a_path /= Void
-		local
-			l_net_share: BOOLEAN
-			u: UTF_CONVERTER
 		do
-			a_path.left_adjust
-			a_path.right_adjust
-			l_net_share := a_path.count >= 2 and then (a_path.item (1) = '/' and a_path.item (2) = '/')
-				-- always works, even if a_path is already in windows file format
-			Result := u.utf_8_string_8_to_string_32 (windows_file_system.pathname_from_file_system
-				(u.string_32_to_utf_8_string_8 (a_path), unix_file_system))
-			if l_net_share then
-				Result.precede ('\')
-			end
+			Result := a_path.twin
 
-				-- convert $\ ($/ was converted into $\) at the beginning into $| because
+				-- Remove white spaces if any.
+			Result.left_adjust
+			Result.right_adjust
+
+				-- Internally we always save using Windows file separator.
+			Result.replace_substring_all ("/", "\")
+
+				-- Convert all $\ ($/ was converted into $\) at the beginning into $| because
 				-- internally we only accept this as indicator for the parent path.
-			if Result.count >= 2 and then Result.item (1) = '$' then
-				if Result.item (2) = '\' or Result.item (2) = '/' then
-					Result.put ('|', 2)
-				end
+			if Result.count >= 2 and then Result.item (1) = '$' and then Result.item (2) = '\' then
+				Result.put ('|', 2)
 			end
 		end
 
-	internal_evaluated_path: like original_path
-			-- The fully resolved path with file name in internal format.
-		local
-			i, j, k: INTEGER
-			l_old_i: INTEGER
-			l_key: like original_path
-			l_value: like original_path
-			l_relative_base: like original_path
-			l_offset: INTEGER
-			l_stop: BOOLEAN
-		do
-			create Result.make_from_string (original_path)
-
-				-- replace $| with parent path
-			if parent /= Void then
-				if Result.count >= 2 and then Result.item (1) = '$' and then Result.item (2) = '|' then
-					Result.replace_substring (parent.evaluated_directory+"\", 1, 2)
-				end
-			end
-
-				-- replace $ABC and ${ABC} with user defined or environment variables
-			from
-				l_offset := 1
-				i := Result.index_of ('$', l_offset)
-			until
-				i = 0 or l_stop
-			loop
-				l_key := Void
-				l_old_i := i
-
-					-- in each loop we decrease the number of $ by 1, except if it is a $(ABC), then we increase the offset
-				if i /= 0 and then Result.item (i+1) = '{' then
-					j := Result.index_of ('}', i)
-					if j /= 0 and j > i+2 then
-						l_key := Result.substring (i+2, j-1)
-					end
-				elseif i /= 0 and then Result.item (i+1) = '(' then
-					l_offset := Result.index_of (')', i) + 2
-				elseif i /= 0 then
-					j := Result.index_of (' ', i) - 1
-					k := Result.index_of ('\', i) - 1
-					if j < i then
-						j := Result.count
-					end
-					if k > i then
-						j := j.min (k)
-					end
-					l_key := Result.substring (i+1, j)
-				end
-
-				if l_key /= Void then
-					l_value := target.variables.item (l_key.as_lower)
-					if l_value = Void then
-						l_value := execution_environment.item (l_key)
-						if l_value = Void then
-							l_value := once {STRING_32} ""
-						end
-							-- we don't want to update stored values, this is done when the project is loaded
-						target.environ_variables.put (l_value, l_key)
-					end
-					Result.replace_substring (to_internal (l_value), i, j)
-				end
-
-				i := Result.index_of ('$', l_offset)
-				if i > 0 then
-						-- Check if last variable was extracted correctly
-					l_stop := l_old_i = i
-				end
-			end
-
-				-- handle relative path
-			if (Result.count >= 2 and then
-					Result [1].is_character_8 and then
-					Result [1].to_character_8.is_alpha_numeric and then
-					Result [2] /= ':') or else
-				Result [1] = '.'
-			then
-				l_relative_base := target.library_root
-				if l_relative_base /= Void then
-					Result.prepend (l_relative_base)
-				else
-					Result.prepend ("\")
-				end
-			end
-
-				-- handle file incasesensitivity under windows
-			if operating_system.is_windows then
-				Result.to_lower
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	directory (a_path: like original_path): like original_path
-			-- Get the directory of `a_path' that is in the internal format.
-			-- a_path = directory + '\' + path
+	update_path_to_unix (a_path: STRING_32)
+			-- Update `a_path' to Unix by changing all windows separator to Unix one.
 		require
 			a_path_not_void: a_path /= Void
-		local
-			cnt, i: INTEGER
 		do
-			cnt := a_path.count
-			if cnt > 0 then
-				i := a_path.last_index_of ('\', cnt)
-				if i /= 0 then
-					Result := a_path.substring (1, i-1)
-				end
-			end
-			if Result = Void then
-				create Result.make_empty
-			end
+			a_path.replace_substring_all ("\", "/")
 		ensure
-			Result_not_void: Result /= Void
-		end
-
-	file (a_path: like original_path): like original_path
-			-- Get the file of `a_path' that is in the internal format.
-			-- a_path = directory + '\' + path
-		require
-			a_path_not_void: a_path /= Void
-		local
-			cnt, i: INTEGER
-		do
-			cnt := a_path.count
-			if cnt > 0 then
-				i := a_path.last_index_of ('\', cnt)
-				if i /= cnt then
-					Result := a_path.substring (i+1, cnt)
-				end
-			end
-			if Result = Void then
-				create Result.make_empty
-			end
-		ensure
-			Result_not_void: Result /= Void
+			a_path_has_not_windows_separator: not a_path.has ('\')
 		end
 
 invariant

@@ -66,7 +66,7 @@ feature -- Access
 	is_read_only: BOOLEAN = True
 			-- Is the class read only?
 
-	full_file_name: like path
+	full_file_name: PATH
 			-- The full file name of the class (including path).
 		do
 			Result := base_location.build_path (path, file_name)
@@ -172,11 +172,12 @@ feature {NONE} -- Implementation
 				else
 					path := group.target.system.uuid.out + "/" + group.name
 
-					u.create_directory (base_location.build_path (path, {STRING_32} ""))
+					u.create_directory_path (base_location.build_path (path, {STRING_32} ""))
 
 						-- Use temporary file to get name of class.
 					file_name := {STRING_32} "tmp.e"
-					create l_file.make_open_write (full_file_name)
+					create l_file.make_with_path (full_file_name)
+					l_file.open_write
 					l_file.put_string (epc_merger.class_text)
 					l_file.close
 
@@ -188,7 +189,7 @@ feature {NONE} -- Implementation
 
 						-- rename file to class name
 					file_name := name.as_lower + {STRING_32} ".e"
-					l_file.rename_file (full_file_name)
+					l_file.rename_path (full_file_name)
 				end
 			end
 		ensure

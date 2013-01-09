@@ -104,7 +104,7 @@ feature -- Basic operation
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
 		end
 
-	retrieve_uuid (a_file: STRING_32)
+	retrieve_uuid (a_file: READABLE_STRING_32)
 			-- Retrieve the uuid of the configuration in `a_file' and make it available in `last_uuid'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty

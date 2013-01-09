@@ -24,13 +24,13 @@ feature -- Status
 
 feature -- Access
 
-	resolved_library_path (path: STRING_32): STRING_32
+	resolved_library_path (path: READABLE_STRING_32): READABLE_STRING_32
 			-- Library path computed under current conditions.
 		local
 			extension: STRING_32
 			file: RAW_FILE
+			l_result: detachable STRING_32
 		do
-			Result := path
 				-- Check if "-safe" may need to be added.
 			if is_safe_preferred and then path.count > 4 then
 				extension := path.substring (path.count - 3, path.count)
@@ -39,17 +39,22 @@ feature -- Access
 					create file.make_with_name (path)
 						-- Check if the original file really exists.
 					if file.exists and then file.is_readable then
-						Result := path.substring (1, path.count - 4)
-						Result.append_string ("-safe")
-						Result.append_string (extension)
+						create l_result.make_from_string (path.substring (1, path.count - 4))
+						l_result.append_string ("-safe")
+						l_result.append_string (extension)
 						file.reset (path)
 							-- Check if the "safe" version of the file exists.
 						if not file.exists or else not file.is_readable then
 								-- Rollback to the original path.
-							Result := path
+							l_result := Void
 						end
 					end
 				end
+			end
+			if l_result = Void then
+				Result := path
+			else
+				Result := l_result
 			end
 		end
 

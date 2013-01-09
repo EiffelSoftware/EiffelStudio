@@ -39,7 +39,7 @@ feature {NONE} -- Query
 	is_matching (a_cluster: attached CONF_CLUSTER): BOOLEAN
 			-- <Precursor>
 		do
-			Result := a_cluster.location.evaluated_directory.same_string (directory.name)
+			Result := a_cluster.location.evaluated_directory.same_as (directory)
 		end
 
 note

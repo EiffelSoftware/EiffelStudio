@@ -85,7 +85,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	environ_variables: HASH_TABLE [STRING_32, STRING_32]
 			-- Saved environment variables.
 
-	library_root: STRING_32
+	library_root: PATH
 			-- Root location to use for relative paths, defaults to the location of the configuration file.
 		require
 			location_set: system.is_location_set
@@ -102,9 +102,6 @@ feature -- Access, in compiled only, not stored to configuration file
 				Result := l_dir.evaluated_path
 			else
 				Result := system.directory
-			end
-			if Result.item (Result.count) /= operating_environment.directory_separator then
-				Result.append_character (operating_environment.directory_separator)
 			end
 		ensure
 			Result_not_void: Result /= Void

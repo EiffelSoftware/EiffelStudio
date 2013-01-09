@@ -665,7 +665,7 @@ feature{NONE} -- Actions
 			l_feature_stone: FEATURE_STONE
 			l_group_stone: CLUSTER_STONE
 			l_done: BOOLEAN
-			l_new_text: STRING
+			l_new_text: READABLE_STRING_GENERAL
 		do
 			l_feature_stone ?= a_pebble
 			if l_feature_stone /= Void then
@@ -682,7 +682,7 @@ feature{NONE} -- Actions
 			if not l_done then
 				l_group_stone ?= a_pebble
 				if l_group_stone /= Void then
-					l_new_text := l_group_stone.group.location.evaluated_path
+					l_new_text := l_group_stone.group.location.evaluated_path.name
 				end
 			end
 			if l_new_text /= Void then

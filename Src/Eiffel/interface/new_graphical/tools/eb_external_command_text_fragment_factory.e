@@ -334,7 +334,7 @@ feature{NONE} -- Implementation
 			if dev /= Void then
 				cv_cst ?= dev.stone
 				if cv_cst /= Void then
-					Result := cv_cst.class_i.group.location.evaluated_directory.twin
+					Result := cv_cst.class_i.group.location.evaluated_directory.name
 					l_path := cv_cst.class_i.config_class.path.twin
 					l_path.replace_substring_all ("/", operating_environment.directory_separator.out)
 					Result.append (l_path)
@@ -358,7 +358,7 @@ feature{NONE} -- Implementation
 		do
 			l_group := group_from_current_class
 			if l_group /= Void then
-				Result := l_group.location.evaluated_directory.twin
+				Result := l_group.location.evaluated_directory.name
 			end
 			if Result = Void then
 				Result := a_text.twin

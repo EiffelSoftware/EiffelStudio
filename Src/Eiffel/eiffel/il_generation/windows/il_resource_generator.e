@@ -70,7 +70,7 @@ feature -- Generation
 				if l_res.is_enabled (universe.conf_state) then
 					create l_loc.make (l_res.location, universe.target)
 
-					l_name := l_loc.evaluated_path
+					l_name := l_loc.evaluated_path.name
 					l_fn := l_loc.original_file
 					if l_fn.is_case_insensitive_equal (l_loc.evaluated_file) then
 							-- Ensure the resource name case is preserved
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 		local
 			l_env: IL_ENVIRONMENT
 			l_rc: PATH
-			l_cmd: STRING_32
+			l_cmd: READABLE_STRING_32
 			l_launch: WEL_PROCESS_LAUNCHER
 			l_dir: detachable PATH
 			l_virc: VIRC
@@ -139,24 +139,28 @@ feature {NONE} -- Implementation
 			create l_env.make (System.clr_runtime_version)
 			l_rc := l_env.resource_compiler
 
-			if l_rc /= Void and then is_file_readable (l_rc) then
-				if not is_file_readable (a_resource) then
-					create l_virc.make_resource_file_not_found (a_resource.name)
-				else
-					create l_launch
-					l_cmd := l_rc.name + " %"" + a_resource.name + "%" %"" + a_target.name + "%""
-					if attached a_resource.parent as l_parent then
-						l_dir := l_parent
+			if l_rc /= Void then
+				if is_file_readable (l_rc) then
+					if not is_file_readable (a_resource) then
+						create l_virc.make_resource_file_not_found (a_resource.name)
 					else
-						create l_dir.make_current
+						create l_launch
+						l_cmd := l_rc.name + " %"" + a_resource.name + "%" %"" + a_target.name + "%""
+						if attached a_resource.parent as l_parent then
+							l_dir := l_parent
+						else
+							create l_dir.make_current
+						end
+						l_launch.launch (l_cmd, l_dir.name, Void)
+						if l_launch.last_process_result /= 0 then
+							create l_virc.make_failed (a_resource.name)
+						end
 					end
-					l_launch.launch (l_cmd, l_dir.name, Void)
-					if l_launch.last_process_result /= 0 then
-						create l_virc.make_failed (a_resource.name)
-					end
+				else
+					create l_virc.make_rc_not_found (l_rc.name)
 				end
 			else
-				create l_virc.make_rc_not_found (l_rc.name)
+				create l_virc.make_rc_not_present
 			end
 
 			if l_virc /= Void then
@@ -273,7 +277,7 @@ invariant
 	resources_not_void: resources /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

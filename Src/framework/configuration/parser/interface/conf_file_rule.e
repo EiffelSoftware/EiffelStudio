@@ -140,7 +140,7 @@ feature -- Comparison
 
 feature -- Basic operation
 
-	is_included (a_location: STRING): BOOLEAN
+	is_included (a_location: READABLE_STRING_32): BOOLEAN
 			-- Test if `a_location' is included according to the exclude/include rules.
 			-- That means it is either not excluded or it is included.
 		local

@@ -81,12 +81,12 @@ feature -- File creation
 			internal_metric_file_name := Void
 		end
 
-	create_metric_file (name: STRING)
+	create_metric_file (name: READABLE_STRING_GENERAL)
 			-- Create `metric_file' if not yet created.
 		require
 			name_not_empty: name /= Void and then not name.is_empty
 		do
-			create metric_file.make (name)
+			create metric_file.make_with_name (name)
 			if not metric_file.exists then
 				metric_file.create_read_write
 				metric_file.close
@@ -354,7 +354,7 @@ feature -- Observer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

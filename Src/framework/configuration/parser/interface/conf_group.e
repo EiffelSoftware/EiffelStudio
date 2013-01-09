@@ -568,8 +568,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 						if l_overridee.is_overriden then
 							set_error (
 								create {CONF_ERROR_MULOVER}.make (l_overridee.name,
-								l_overridee.full_file_name,
-								l_overridee.actual_class.full_file_name, l_overrider.full_file_name))
+								l_overridee.full_file_name.name,
+								l_overridee.actual_class.full_file_name.name, l_overrider.full_file_name.name))
 						else
 							l_overridee.set_overriden_by (l_overrider)
 							l_overrider.add_does_override (l_overridee)

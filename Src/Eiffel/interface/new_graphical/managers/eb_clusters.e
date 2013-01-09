@@ -377,7 +377,7 @@ feature -- Element change
 			fname: PATH
 			tdirsrc, tdirdes: DIRECTORY
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
-			l_src_path, l_dst_path: STRING_32
+			l_src_path, l_dst_path: PATH
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_old_relative_path: STRING_32
 		do
@@ -394,18 +394,15 @@ feature -- Element change
 					end
 					l_src_path := old_group.location.build_path (a_class.path, "")
 					l_dst_path := new_cluster.location.build_path (new_path, "")
-					create tdirsrc.make (l_src_path)
-					create tdirdes.make (l_dst_path)
+					create tdirsrc.make_with_path (l_src_path)
+					create tdirdes.make_with_path (l_dst_path)
 					if
 						tdirsrc.exists and then
 						tdirdes.exists
 					then
-						if
-							not l_src_path.is_equal (l_dst_path)
-						then
-							create old_file.make_with_name (a_class.full_file_name)
-							create fname.make_from_string (l_dst_path)
-							fname := fname.extended (a_class.file_name)
+						if not l_src_path.same_as (l_dst_path) then
+							create old_file.make_with_path (a_class.full_file_name)
+							fname := l_dst_path.extended (a_class.file_name)
 							create new_file.make_with_path (fname)
 							if
 								old_file.exists and then

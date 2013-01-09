@@ -313,7 +313,7 @@ feature -- Visit nodes
 		do
 			append_pre_group ("precompile", a_precompile)
 			if a_precompile.eifgens_location /= Void then
-				append_text_attribute ("eifgens_location", a_precompile.eifgens_location.original_directory)
+				append_text_attribute ("eifgens_location", a_precompile.eifgens_location.original_path)
 			end
 			append_val_group (a_precompile)
 			append_post_group ("precompile")

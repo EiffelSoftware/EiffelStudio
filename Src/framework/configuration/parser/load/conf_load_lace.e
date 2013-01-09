@@ -353,8 +353,7 @@ feature {NONE} -- Implementation of data retrieval
 					if l_path.is_empty then
 						set_error (create {CONF_ERROR_FILE}.make (l_path))
 					else
-						create l_file_path.make_from_string (l_location.evaluated_directory)
-						l_file_path := l_file_path.extended (l_path)
+						l_file_path := l_location.evaluated_directory.extended (l_path)
 						create l_file.make_with_path (l_file_path)
 						if not l_file.exists or else l_file.is_directory or else not l_file.is_readable then
 							set_error (create {CONF_ERROR_FILE}.make (l_file_path.name))

@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			end
 			if value /= Void then
 				create l_loc.make (value, target)
-				Result := l_loc.evaluated_directory
+				Result := l_loc.evaluated_directory.name
 			else
 				create Result.make_empty
 			end

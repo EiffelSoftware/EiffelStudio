@@ -75,10 +75,7 @@ feature -- Status
 			-- Did the date on any configuration file used in this system change?
 		require
 			fully_parsed: is_fully_parsed
-			filenames_set: all_libraries.linear_representation.for_all (agent (a_target: CONF_TARGET): BOOLEAN
-				do
-					 Result := attached a_target.system.file_name as l_fn and then not l_fn.is_empty
-				end)
+			filenames_set: across all_libraries as l_libs all attached l_libs.item.system.file_name as l_fn and then not l_fn.is_empty end
 		do
 			from
 				all_libraries.start
@@ -123,7 +120,7 @@ feature -- Access, stored in configuration file
 
 feature -- Access, in compiled only
 
-	directory: like file_name
+	directory: PATH
 			-- Directory where the configuration file is stored in platform specific format.
 
 	file_name: STRING_32
@@ -176,7 +173,7 @@ feature -- Update, in compiled only
 				i := cnt
 			end
 
-			directory := file_name.substring (1, i-1)
+			create directory.make_from_string (file_name.substring (1, i - 1))
 		ensure
 			is_location_set: is_location_set
 			name_set: file_name = a_file_name

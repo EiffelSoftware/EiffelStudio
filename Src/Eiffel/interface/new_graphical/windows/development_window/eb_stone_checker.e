@@ -665,7 +665,7 @@ feature {NONE} -- Implementation functions
 			l_format_context.set_without_tabs
 			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
-			l_format_context.put_quoted_string_item (a_group.location.evaluated_path)
+			l_format_context.put_quoted_string_item (a_group.location.evaluated_path.name)
 
 				-- path/namespace
 			if a_path /= Void and then not a_path.is_empty then

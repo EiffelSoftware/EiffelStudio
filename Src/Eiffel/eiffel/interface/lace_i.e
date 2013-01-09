@@ -182,9 +182,9 @@ feature -- Status setting
 				-- check if it needs to be (re)precompiled
 			if precompile /= Void and then not is_precompile_invalid then
 				if precompile.eifgens_location /= Void then
-					create l_project_location.make (create {PATH}.make_from_string (precompile.eifgens_location.evaluated_path), l_load.last_system.library_target.name)
+					create l_project_location.make (precompile.eifgens_location.evaluated_path, l_load.last_system.library_target.name)
 				else
-					create l_project_location.make (create {PATH}.make_from_string (precompile.location.build_path ("", "")), l_load.last_system.library_target.name)
+					create l_project_location.make (precompile.location.evaluated_path.parent, l_load.last_system.library_target.name)
 				end
 				create l_epr.make (l_project_location.target_path.extended (project_file_name))
 				l_epr.check_version_number (0)
@@ -1016,7 +1016,7 @@ feature {NONE} -- Implementation
 				l_s := overridden_metadata_cache_path
 			end
 			if l_s /= Void then
-				l_s := l_factory.new_location_from_path (l_s, a_target).evaluated_directory
+				l_s := l_factory.new_location_from_path (l_s, a_target).evaluated_directory.name
 			end
 				-- value can't change from a precompile or in a compiled system
 			if
@@ -1114,7 +1114,7 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_msil_key_file_name)
 			if l_s /= Void then
-				system.set_msil_key_file_name (create {PATH}.make_from_string (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path))
+				system.set_msil_key_file_name (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
 			end
 
 			l_s := l_settings.item (s_msil_use_optimized_precompile)
@@ -1194,7 +1194,7 @@ feature {NONE} -- Implementation
 				-- If the release doesn't generate DLL's,
 				-- we do not take the option into account in the Ace.
 			if l_s /= Void and then eiffel_layout.has_dll_generation then
-				create l_p.make_from_string (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
+				l_p := l_factory.new_location_from_full_path (l_s, a_target).evaluated_path
 				if system.dynamic_def_file = Void or else not system.dynamic_def_file.same_as (l_p) or else
 					shared_library_definition_stamp /= file_path_modified_date (l_p)
 				then
@@ -1323,9 +1323,9 @@ feature {NONE} -- Implementation
 
 				-- retrieve precompile project (use EIFGENs location if specified, else next to the config file)
 			if l_pre.eifgens_location /= Void then
-				create l_project_location.make (create {PATH}.make_from_string (l_pre.eifgens_location.evaluated_path), l_system.library_target.name)
+				create l_project_location.make (l_pre.eifgens_location.evaluated_path, l_system.library_target.name)
 			else
-				create l_project_location.make (create {PATH}.make_from_string (l_pre.location.build_path ("", "")), l_system.library_target.name)
+				create l_project_location.make (l_pre.location.evaluated_path.parent, l_system.library_target.name)
 			end
 			create l_precomp_r
 			l_precomp_r.retrieve_precompiled (l_project_location)

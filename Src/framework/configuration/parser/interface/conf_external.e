@@ -75,13 +75,8 @@ feature -- Access, stored in configuration file
 		do
 			Result := internal_location.twin
 			l_path := target.library_root
-				-- Remove trailing directory separator.
-			if not l_path.is_empty and then l_path.item (l_path.count) = operating_environment.directory_separator then
-				l_path := l_path.twin
-				l_path.remove_tail (1)
-			end
-			Result.replace_substring_all ("$ECF_CONFIG_PATH", l_path)
-			Result.replace_substring_all ("$(ECF_CONFIG_PATH)", l_path)
+			Result.replace_substring_all ("$ECF_CONFIG_PATH", l_path.name)
+			Result.replace_substring_all ("$(ECF_CONFIG_PATH)", l_path.name)
 		ensure
 			Result_not_void: Result /= Void
 		end

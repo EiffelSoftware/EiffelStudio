@@ -277,7 +277,7 @@ feature {NONE} -- GUI elements
 			l_dir: DIRECTORY
 		once
 			create Result
-			create l_dir.make (target.system.directory)
+			create l_dir.make_with_path (target.system.directory)
 			if l_dir.is_readable then
 				Result.set_start_directory (l_dir.name)
 			end
@@ -302,14 +302,14 @@ feature {NONE} -- Access
 			l_dirs: like lookup_directories
 			l_libraries: SEARCH_TABLE [STRING_32]
 			l_dir: DIRECTORY
-			l_path: READABLE_STRING_32
+			l_path: IMMUTABLE_STRING_32
 			l_location: CONF_DIRECTORY_LOCATION
 		do
 			l_dirs := lookup_directories
 			create Result.make (l_dirs.count)
 			from l_dirs.start until l_dirs.after loop
 				create l_location.make (l_dirs.item_for_iteration.path, target)
-				l_path := l_location.evaluated_path
+				l_path := l_location.evaluated_path.name
 				create l_dir.make (l_path)
 				if l_dir.is_readable then
 					create l_libraries.make (10)
@@ -343,7 +343,7 @@ feature {NONE} -- Access
 			from l_libs.start until l_libs.after loop
 				create l_loader.make (l_factory)
 				create l_location.make (l_libs.item_for_iteration, target)
-				l_loader.retrieve_configuration (l_location.evaluated_path)
+				l_loader.retrieve_configuration (l_location.evaluated_path.name)
 				if
 					not l_loader.is_error and then
 					attached l_loader.last_system as l_system and then
@@ -401,7 +401,7 @@ feature {NONE} -- Actions
 		do
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
-				create l_dir.make (l_loc.evaluated_directory)
+				create l_dir.make_with_path (l_loc.evaluated_directory)
 			end
 			if l_dir /= Void and then l_dir.exists then
 				browse_dialog.set_start_directory (l_dir.name)
@@ -573,13 +573,11 @@ feature {NONE} -- Basic operation
 			l_col: EV_GRID_COLUMN
 			l_name_width: INTEGER
 			l_path: STRING
-			l_key: STRING
 			l_description: STRING_32
 			l_void_safe_check: like void_safe_check
 			l_show_void_safe_only: BOOLEAN
 			l_filter: detachable STRING
 			l_filter_engine: detachable KMP_WILD
-			l_matched: BOOLEAN
 		do
 			l_libraries_grid := libraries_grid
 			l_libraries_grid.remove_and_clear_all_rows
@@ -682,7 +680,6 @@ feature {NONE} -- Basic operation
 			a_libraries_attached: attached a_libraries
 		local
 			l_dir_name: PATH
-			l_count, i: INTEGER
 			l_lib_file: STRING_32
 			l_file_name: PATH
 			l_file_string: STRING

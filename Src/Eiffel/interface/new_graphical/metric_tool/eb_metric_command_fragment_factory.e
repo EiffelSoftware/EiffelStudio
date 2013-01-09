@@ -145,7 +145,7 @@ feature{NONE} -- Implementation
 				end
 			elseif a_item.is_group then
 				l_group ?= a_item
-				Result := l_group.group.location.evaluated_path.twin
+				Result := l_group.group.location.evaluated_path.name
 			else
 				Result := a_text.twin
 			end
@@ -217,7 +217,7 @@ feature{NONE} -- Implementation
 				l_conf_group := l_group.group
 			end
 			if l_conf_group /= Void then
-				Result := l_conf_group.location.evaluated_directory.twin
+				Result := l_conf_group.location.evaluated_directory.name
 			else
 				Result := a_text.twin
 			end
@@ -268,20 +268,51 @@ feature{NONE} -- Implementation
 			if a_item.is_code_structure then
 				l_code_item ?= a_item
 				l_conf_class := l_code_item.class_i.config_class
-				Result := l_conf_class.group.location.build_path (l_conf_class.path, "")
+				Result := l_conf_class.group.location.build_path (l_conf_class.path, "").name
 			elseif a_item.is_line then
 				l_line ?= a_item
 				l_code_item ?= l_line.parent
 				if l_code_item /= Void then
 					l_conf_class := l_code_item.class_i.config_class
-					Result := l_conf_class.group.location.build_path (l_conf_class.path, "")
+					Result := l_conf_class.group.location.build_path (l_conf_class.path, "").name
 				end
 			elseif a_item.is_group then
 				l_group ?= a_item
-				Result := l_group.group.location.evaluated_directory.twin
+				Result := l_group.group.location.evaluated_directory.name
 			else
 				Result := a_text.twin
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

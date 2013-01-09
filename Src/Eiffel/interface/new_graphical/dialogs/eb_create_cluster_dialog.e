@@ -484,15 +484,14 @@ feature {NONE} -- Implementation
 				aok := False
 				prompts.show_error_prompt (warning_messages.w_cluster_path_not_valid, target.window, Void)
 			elseif cp.is_empty then
-				create chosen_dir.make_from_string (group.location.build_path (path, ""))
-				chosen_dir := chosen_dir.extended (cluster_name)
+				chosen_dir := group.location.build_path (path, "").extended (cluster_name)
 				original_path := chosen_dir
 			else
 				create l_loc.make (cp.name, Eiffel_universe.target)
 				if not is_top_level and then group.is_cluster then
 					l_loc.set_parent (group.location)
 				end
-				create icp.make_from_string (l_loc.evaluated_directory)
+				icp := l_loc.evaluated_directory
 				aok := Eiffel_universe.cluster_of_location (icp).is_empty
 				if not aok then
 					prompts.show_error_prompt (Warning_messages.w_cluster_path_already_exists (icp.name), target.window, Void)

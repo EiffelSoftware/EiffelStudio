@@ -449,8 +449,7 @@ feature -- Status report
 	file_name: PATH
 			-- Full file name of the class.
 		do
-			create Result.make_from_string (group.location.build_path (path, {STRING_32} ""))
-			Result := Result.extended (base_name)
+			Result := group.location.build_path (path, {STRING_32} "").extended (base_name)
 		ensure
 			file_name_not_void: Result /= Void
 		end

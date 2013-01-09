@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 
-	backup_directory: READABLE_STRING_32
+	backup_directory: PATH
 			-- Location of the backup.
 
 	is_il_generation: BOOLEAN
@@ -66,7 +66,7 @@ feature -- Visit nodes
 		do
 			create l_loc.make (a_cluster.name, a_cluster.target)
 			a_cluster.set_location (l_loc)
-			u.create_directory (l_loc.evaluated_path)
+			u.create_directory_path (l_loc.evaluated_path)
 		end
 
 	process_override (an_override: CONF_OVERRIDE)
@@ -100,7 +100,8 @@ feature -- Visit nodes
 	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		local
-			l_as, l_new_as: STRING_32
+			l_as: PATH
+			l_new_as: STRING_32
 			l_loc: CONF_FILE_LOCATION
 			f: FILE_UTILITIES
 		do
@@ -116,7 +117,7 @@ feature -- Visit nodes
 						create l_loc.make ({STRING_32} "..\" + l_new_as, an_assembly.target)
 						an_assembly.set_location (l_loc)
 							-- copy assembly
-						f.copy_file (l_as, (create {PATH}.make_from_string (backup_directory)).extended (l_new_as).name)
+						f.copy_file_path (l_as, backup_directory.extended (l_new_as))
 					end
 				end
 			end

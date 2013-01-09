@@ -167,7 +167,7 @@ feature -- Debug purpose
 			i, nb: INTEGER
 		do
 			io.error.put_character ('[')
-			io.error.put_string (System.class_of_id (written_in).group.location.evaluated_path)
+			io.error.put_string (System.class_of_id (written_in).group.location.evaluated_path.utf_8_name)
 			io.error.put_string ("] : ")
 			from
 				i := 1
@@ -214,7 +214,7 @@ invariant
 	written_in_positive: written_in > 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

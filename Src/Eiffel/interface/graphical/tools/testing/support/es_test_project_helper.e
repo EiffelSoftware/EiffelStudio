@@ -139,7 +139,7 @@ feature -- Element change
 				then
 					l_cluster := a_cluster
 				else
-					l_list := manager.eiffel_universe.cluster_of_location (create {PATH}.make_from_string (a_cluster.location.evaluated_directory))
+					l_list := manager.eiffel_universe.cluster_of_location (a_cluster.location.evaluated_directory)
 					if not l_list.is_empty then
 						l_cluster := l_list.first
 					end

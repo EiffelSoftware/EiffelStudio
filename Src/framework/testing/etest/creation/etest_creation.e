@@ -182,7 +182,7 @@ feature {NONE} -- Basic operations
 		do
 			l_cluster := cluster
 			if l_cluster /= Void then
-				create l_location.make_from_string (l_cluster.location.build_path (path.name, ""))
+				l_location := l_cluster.location.build_path (path.name, "")
 			else
 				l_location := etest_suite.project_access.project.project_directory.eifgens_cluster_path
 			end

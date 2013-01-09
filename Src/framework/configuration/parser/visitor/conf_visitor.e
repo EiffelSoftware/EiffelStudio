@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	configuration_error_tag: STRING = "Configuration error";
+	configuration_error_tag: STRING_32 = "Configuration error";
 			-- Tag used when raising an exception error.
 
 note

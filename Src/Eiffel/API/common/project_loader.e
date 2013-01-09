@@ -744,31 +744,17 @@ feature {NONE} -- Settings
 					l_path := l_target.setting_metadata_cache_path
 				end
 				if l_path /= Void and then not l_path.is_empty then
-						-- remove trailing \ as it makes problem with the escaping of arguments
-					from
-					until
-						l_path.is_empty or else l_path.item (l_path.count) /= '\'
-					loop
-						l_path.remove_tail (1)
-					end
 					l_args.extend ("-metadata_cache_path")
 					l_args.extend (l_path)
 				end
 			end
 			l_args.extend ("-project_path")
 			if a_precompile.eifgens_location /= Void then
-				l_path := a_precompile.eifgens_location.evaluated_path
-				from
-				until
-					l_path.is_empty or else l_path.item (l_path.count) /= '\'
-				loop
-					l_path.remove_tail (1)
-				end
+				l_args.extend (a_precompile.eifgens_location.evaluated_path.name)
 			else
 					-- If no path is specified we default to the location of the ecf.
-				l_path := a_precompile.location.evaluated_directory
+				l_args.extend (a_precompile.location.evaluated_path.parent.name)
 			end
-			l_args.extend (l_path)
 			launch_precompile_process (l_args)
 		end
 

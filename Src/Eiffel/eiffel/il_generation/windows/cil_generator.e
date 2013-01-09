@@ -292,7 +292,7 @@ feature -- Generation
 						physical_assembly: l_as /= Void
 					end
 					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-						copy_to_local (create {PATH}.make_from_string (l_as.location.build_path ("", l_as.location.original_file)), assembly_location (is_finalizing), Void)
+						copy_to_local (l_as.location.build_path ("", l_as.location.original_file), assembly_location (is_finalizing), Void)
 						l_has_local := True
 					end
 					l_assemblies.forth

@@ -40,7 +40,7 @@ feature -- Access
 			Result.force (once "", {ES_EIS_TOKENS}.unique_id_var_name)
 				-- Add `system_path'
 			if attached a_target.system.directory as l_directory then
-				Result.force (l_directory, {ES_EIS_TOKENS}.system_path_var_name)
+				Result.force (l_directory.name, {ES_EIS_TOKENS}.system_path_var_name)
 			end
 				-- Add variables defined in the target.
 			Result.merge (a_target.variables)
@@ -104,7 +104,7 @@ feature -- Access
 				if l_target /= Void then
 						-- Add `system_path'
 					if attached l_target.system.directory as l_directory then
-						Result.force (l_directory, {ES_EIS_TOKENS}.system_path_var_name)
+						Result.force (l_directory.name, {ES_EIS_TOKENS}.system_path_var_name)
 					end
 
 						-- Add variables defined in the target.

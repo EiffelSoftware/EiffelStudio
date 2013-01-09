@@ -16,13 +16,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_first_location, a_second_location: STRING_32)
+	make (a_first_target_context, a_first_location, a_second_target_context, a_second_location: STRING_32)
 			-- Create.
 		require
+			a_first_context_not_void: a_first_target_context /= Void
 			a_first_location_not_void: a_first_location /= Void
+			a_second_context_not_void: a_second_target_context /= Void
 			a_second_location_not_void: a_second_location /= Void
+		local
+			l_text: STRING_32
 		do
-			text := {STRING_32} "Two different configuration files have the same uuid:%N" + a_first_location + {STRING_32} "%N" + a_second_location
+			create l_text.make (256)
+			l_text.append_string_general ("Two different configuration files share the same UUID. In configuration:%N ")
+			l_text.append (a_first_target_context)
+			l_text.append_string_general ("%Nthe following reference:%N ")
+			l_text.append (a_first_location)
+			l_text.append_string_general ("%Nhas the same UUID as the configuration file:%N ")
+			l_text.append (a_second_location)
+			l_text.append_string_general ("%Nreferenced from:%N ")
+			l_text.append (a_second_target_context)
+			l_text.append_string_general (".")
+			text := l_text
 		end
 
 feature -- Access

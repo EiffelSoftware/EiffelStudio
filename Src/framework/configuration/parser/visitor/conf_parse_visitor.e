@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			application_target := an_application_target
 
 				-- add the application target to the libraries list
-			libraries.force (application_target, application_target.system.uuid)
+			libraries.force ([application_target, application_target], application_target.system.uuid)
 		end
 
 feature -- Visit nodes
@@ -54,12 +54,11 @@ feature -- Visit nodes
 			-- Visit `a_target'.
 		local
 			l_pre: CONF_PRECOMPILE
+			l_libs: HASH_TABLE [CONF_TARGET, UUID]
 		do
 			if not is_error then
 					-- set application target
 				a_target.system.set_application_target (application_target)
-					-- set all libraries
-				a_target.system.set_all_libraries (libraries)
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
@@ -67,6 +66,14 @@ feature -- Visit nodes
 				end
 
 				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
+
+					-- set `all_libraries' from `libraries' but discarding the 
+					-- parent information which is only used internally to report nice errors.
+				create l_libs.make (libraries.count)
+				across libraries as l_library loop
+					l_libs.put (l_library.item.base, l_library.key)
+				end
+				a_target.system.set_all_libraries (l_libs)
 			end
 		ensure then
 			all_libraries_set: not is_error implies a_target.system.all_libraries /= Void
@@ -80,6 +87,7 @@ feature -- Visit nodes
 	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		local
+			l_existing_target: TUPLE [parent, base: CONF_TARGET]
 			l_target: CONF_TARGET
 			l_load: CONF_LOAD
 			l_uuid: UUID
@@ -127,16 +135,16 @@ feature -- Visit nodes
 				end
 
 				l_uuid := l_load.last_uuid
-				l_target := libraries.item (l_uuid)
-				if l_target /= Void then
-					a_library.set_library_target (l_target)
-					if level + 1 < l_target.system.level then
-						l_target.system.set_level (level + 1)
+				l_existing_target := libraries.item (l_uuid)
+				if l_existing_target /= Void then
+					a_library.set_library_target (l_existing_target.base)
+					if level + 1 < l_existing_target.base.system.level then
+						l_existing_target.base.system.set_level (level + 1)
 					end
 
 					create l_comparer
-					if application_target.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_target.system.file_name) then
-						add_warning (create {CONF_ERROR_UUIDFILE}.make (l_path, l_target.system.file_name))
+					if application_target.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_existing_target.base.system.file_name) then
+						add_warning (create {CONF_ERROR_UUIDFILE}.make (a_library.target.system.file_name, l_path, l_existing_target.parent.system.file_name, l_existing_target.base.system.file_name))
 					end
 				else
 					l_load.retrieve_configuration (l_path)
@@ -155,7 +163,7 @@ feature -- Visit nodes
 									-- set environment to our global environment
 								l_target.set_environ_variables (application_target.environ_variables)
 
-								libraries.force (l_target, l_uuid)
+								libraries.force ([a_library.target, l_target], l_uuid)
 
 								level := level + 1
 								a_library.set_library_target (l_target)
@@ -173,23 +181,18 @@ feature -- Visit nodes
 
 	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
-		local
-			l_libs: like libraries
 		do
 				-- if precompile has all_libraries set, use those
-			if a_precompile.library_target /= Void then
-				l_libs := a_precompile.library_target.system.all_libraries
-			end
-			if l_libs /= Void then
+			if attached a_precompile.library_target as l_precomp_target and then attached l_precomp_target.system.all_libraries as l_libs then
 				from
 					l_libs.start
 				until
 					l_libs.after
 				loop
 					l_libs.item_for_iteration.system.set_application_target (application_target)
+					libraries.force ([application_target, l_libs.item_for_iteration], l_libs.key_for_iteration)
 					l_libs.forth
 				end
-				libraries.merge (l_libs)
 			end
 			process_library (a_precompile)
 		end
@@ -202,7 +205,7 @@ feature {NONE} -- Implementation
 	application_target: CONF_TARGET
 			-- The application target of the system.
 
-	libraries: HASH_TABLE [CONF_TARGET, UUID]
+	libraries: HASH_TABLE [TUPLE [parent, base: CONF_TARGET], UUID]
 			-- Mapping of processed library targets, mapped with their uuid.
 
 	level: NATURAL_32

@@ -17,6 +17,7 @@ inherit
 
 create
 	make_rc_not_found,
+	make_rc_not_present,
 	make_resource_file_not_found,
 	make_failed
 
@@ -29,6 +30,15 @@ feature {NONE} -- Initialization
 			resource_compiler := a_rc
 		ensure
 			resource_compiler_set: resource_compiler = a_rc
+		end
+
+	make_rc_not_present
+			-- Create warning when resource compiler is not available.
+		do
+			has_resource_compiler := False
+			resource_compiler := Void
+		ensure
+			resource_compiler_set: resource_compiler = Void
 		end
 
 	make_resource_file_not_found (a_file: like resource_file)
@@ -64,7 +74,7 @@ feature -- Access
 	has_resource_file: BOOLEAN
 			-- Does `resource_file' exist?
 
-	resource_compiler: READABLE_STRING_GENERAL
+	resource_compiler: detachable READABLE_STRING_GENERAL
 			-- Name of resource compiler.
 
 	resource_file: READABLE_STRING_GENERAL
@@ -105,7 +115,7 @@ invariant
 	resource_file_set: has_resource_compiler implies resource_file /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

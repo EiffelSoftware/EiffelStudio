@@ -138,10 +138,10 @@ feature -- Access queries
 			end
 		end
 
-	path: STRING_32
+	path: READABLE_STRING_32
 			-- Path to the configuration file.
 		do
-			Result := resolver.resolved_library_path (location.evaluated_path)
+			Result := resolver.resolved_library_path (location.evaluated_path.name)
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file

@@ -31,7 +31,7 @@ feature -- Processing
 			a_path_not_void: a_path /= Void
 		local
 			l_name: STRING_32
-			l_path: STRING_32
+			l_path: PATH
 			l_cluster_separator: READABLE_STRING_32
 			l_full_path: STRING_32
 			u: FILE_UTILITIES
@@ -41,9 +41,9 @@ feature -- Processing
 			l_path := a_cluster.location.build_path (a_path, {STRING_32} "")
 			create l_full_path.make (128)
 
-			if not attached u.file_names (l_path) as l_files then
+			if not attached u.file_names (l_path.name) as l_files then
 				if not a_cluster.is_test_cluster then
-					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
+					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path.name, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
 				end
 			else
 					-- look for classes in directory itself.
@@ -62,7 +62,7 @@ feature -- Processing
 				end
 
 					-- if we check recursive
-				if a_cluster.is_recursive and then attached u.directory_names (l_path) as l_subdirs then
+				if a_cluster.is_recursive and then attached u.directory_names (l_path.name) as l_subdirs then
 					across
 						l_subdirs as d
 					loop

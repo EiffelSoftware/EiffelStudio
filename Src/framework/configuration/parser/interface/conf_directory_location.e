@@ -37,11 +37,11 @@ feature -- Access
 			-- Add `a_directory' and `a_filename' to current directory.
 			-- `a_directory' can be in any format.
 		local
-			l_dir: like original_path
+			l_dir: STRING_32
 		do
 			Result := evaluated_path
 			if not a_directory.is_empty then
-				l_dir := a_directory.twin
+				create l_dir.make_from_string (a_directory)
 					-- PATH handles Unix path. This is necessary in the case
 					-- `l_dir' contains a windows separator which could not be
 					-- understood as a separator on Unix.

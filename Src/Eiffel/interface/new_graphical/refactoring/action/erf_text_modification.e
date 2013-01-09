@@ -35,7 +35,7 @@ feature -- Status report
 	undo_managed: BOOLEAN
 			-- Are there undo informations associated?
 		do
-			Result := undo_redo /= void
+			Result := undo_redo /= Void
 		end
 
 	is_modified: BOOLEAN
@@ -51,7 +51,7 @@ feature -- Prepare/Commit
 		do
 			load_text
 			original_text := text.twin
-			is_modified := false
+			is_modified := False
 		ensure
 			text_managed: text_managed
 			not_modified: not is_modified
@@ -81,7 +81,7 @@ feature -- Prepare/Commit
 					file.close
 					undo_redo := file_path.out
 				else
-					create undo_redo.make_empty
+					undo_redo := Void
 				end
 
 				save_text
@@ -117,7 +117,7 @@ feature -- Element change
 		do
 			original_text := Void
 			text := Void
-			is_modified := false
+			is_modified := False
 		ensure
 			not_text_managed: not text_managed
 			not_modified: not is_modified
@@ -128,13 +128,13 @@ feature -- Element change
 		local
 			file: RAW_FILE
 		do
-			if not undo_redo.is_empty then
-				create file.make (undo_redo)
+			if attached undo_redo as l_undo_redo and then not l_undo_redo.is_empty then
+				create file.make_with_name (l_undo_redo)
 				if file.exists then
 					file.delete
 				end
 			end
-			undo_redo := void
+			undo_redo := Void
 		ensure
 			not_undo_managed: not undo_managed
 		end
@@ -143,10 +143,10 @@ feature -- Element change
 			-- Set the changed text.
 		require
 			text_managed: text_managed
-			a_text_not_void: a_text /= void
+			a_text_not_void: a_text /= Void
 		do
 			text := a_text
-			is_modified := true
+			is_modified := True
 		ensure
 			modified: is_modified
 		end
@@ -159,7 +159,7 @@ feature -- Basic operations
 			diff: DIFF_TEXT
 			file: RAW_FILE
 		do
-			if undo_managed and then not undo_redo.is_empty then
+			if attached undo_redo as l_undo_redo and then not l_undo_redo.is_empty then
 				if text_managed then
 					discard_text
 				end
@@ -171,7 +171,7 @@ feature -- Basic operations
 				create diff
 				create file.make_open_read (undo_redo)
 				file.read_stream (file.count)
-				text := diff.patch (text, file.last_string, false)
+				text := diff.patch (text, file.last_string, False)
 				file.close
 
 				save_text
@@ -185,7 +185,7 @@ feature -- Basic operations
 			diff: DIFF_TEXT
 			file: RAW_FILE
 		do
-			if undo_managed and then not undo_redo.is_empty then
+			if attached undo_redo as l_undo_redo and then not l_undo_redo.is_empty then
 				if text_managed then
 					discard_text
 				end
@@ -197,7 +197,7 @@ feature -- Basic operations
 				create diff
 				create file.make_open_read (undo_redo)
 				file.read_stream (file.count)
-				text := diff.patch (text, file.last_string, true)
+				text := diff.patch (text, file.last_string, True)
 				file.close
 
 				save_text
@@ -224,14 +224,14 @@ feature {NONE} -- Implementation
 			-- Text to work on.
 			-- Treat text as bytes stream. Normally UTF-8 encoded.
 
-	undo_redo: STRING_8
+	undo_redo: detachable STRING_8
 			-- Undo/redo informations
 
 invariant
 	modified_needs_text_managed: is_modified implies text_managed
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

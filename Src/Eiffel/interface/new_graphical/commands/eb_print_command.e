@@ -168,7 +168,7 @@ feature {NONE} -- implementation
 	saved: BOOLEAN
 			-- If saved?
 
-	save_to_file (a_text: STRING; a_filename: STRING)
+	save_to_file (a_text: STRING; a_filename: READABLE_STRING_GENERAL)
 			-- Save `a_text' in `a_filename'.
 		require
 			a_text_not_void: a_text /= Void
@@ -179,13 +179,13 @@ feature {NONE} -- implementation
 		do
 			saved := False
 			if not a_filename.is_empty then
-				create new_file.make (a_filename)
+				create new_file.make_with_name (a_filename)
 				if new_file.exists and then not new_file.is_plain then
-					prompts.show_error_prompt (Warning_messages.w_Not_a_plain_file (new_file.name), dev_window.window, Void)
+					prompts.show_error_prompt (Warning_messages.w_Not_a_plain_file (a_filename), dev_window.window, Void)
 				elseif new_file.exists and then not new_file.is_writable then
-					prompts.show_error_prompt (Warning_messages.w_Not_writable (new_file.name), dev_window.window, Void)
+					prompts.show_error_prompt (Warning_messages.w_Not_writable (a_filename), dev_window.window, Void)
 				elseif not new_file.exists and then not new_file.is_creatable then
-					prompts.show_error_prompt (Warning_messages.w_Not_creatable (new_file.name), dev_window.window, Void)
+					prompts.show_error_prompt (Warning_messages.w_Not_creatable (a_filename), dev_window.window, Void)
 				else
 					new_file.create_read_write
 					if not a_text.is_empty then
@@ -241,7 +241,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -254,22 +254,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_PRINT_COMMAND

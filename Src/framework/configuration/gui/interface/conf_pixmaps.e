@@ -495,6 +495,18 @@ feature -- Access
 			-- Return pixmap based on `a_group'.
 		require
 			a_group_not_void: a_group /= Void
+		do
+			Result := pixmap_from_group_path (a_group, "")
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	pixmap_from_group_path (a_group: CONF_GROUP; a_path: READABLE_STRING_GENERAL): EV_PIXMAP
+			-- Return pixmap based on `a_group' and `a_path'.
+		require
+			a_group_not_void: a_group /= Void
+			a_path_not_void: a_path /= Void
+			path_implies_not_library: not a_path.is_empty implies not a_group.is_library
 		local
 			l_cluster: CONF_CLUSTER
 		do

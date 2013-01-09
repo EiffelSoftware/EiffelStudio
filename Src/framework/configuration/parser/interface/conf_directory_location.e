@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	build_path (a_directory, a_file: like original_path): like evaluated_path
+	build_path (a_directory, a_file: READABLE_STRING_32): like evaluated_path
 			-- Add `a_directory' and `a_filename' to current directory.
 			-- `a_directory' can be in any format.
 		local

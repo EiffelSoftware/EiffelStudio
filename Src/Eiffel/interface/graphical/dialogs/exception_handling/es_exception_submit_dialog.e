@@ -825,7 +825,7 @@ feature {NONE} -- Reporting
 					l_exception_code := l_exception.original.code
 				end
 				if l_exception_tag = Void then
-					l_exception_tag := (" " + l_exception_code.out + " Unknown exception code")
+					l_exception_tag := {STRING_32} " " + l_exception_code.out + " Unknown exception code"
 				end
 				Result.append_string_general (l_exception_tag)
 				Result.prune_all_trailing ('.')

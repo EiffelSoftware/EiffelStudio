@@ -23,8 +23,7 @@ feature -- Basic Operations
 			-- Generate code for the project.
 		local
 			dir: DIRECTORY
-			l: LINKED_LIST [TUPLE [STRING, STRING_32]]
-			l_tuple: TUPLE [STRING, STRING_32]
+			map: HASH_TABLE [STRING_32, STRING]
 			class_name: STRING
 			i: INTEGER
 			next_state: STRING
@@ -51,21 +50,13 @@ feature -- Basic Operations
 			create dir.make_with_path (rsc_location)
 			dir.create_dir
 
-			create l.make
-			create l_tuple
-			l_tuple.put ("${FL_WIZARD_NAME}", 1)
-			l_tuple.put (project_name, 2)
-			l.extend (l_tuple)
-			create l_tuple
-			l_tuple.put ("${FL_WIZARD_PATH}", 1)
-			l_tuple.put (project_location, 2)
-			l.extend (l_tuple)
+			create map.make (10)
+			map.force (project_name, "${FL_WIZARD_NAME}")
+			map.force (project_location.name, "${FL_WIZARD_PATH}")
 			create l_uuid
-			create l_tuple
-			l_tuple.put ("${FL_UUID}", 1)
-			l_tuple.put (l_uuid.generate_uuid.out, 2)
-			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path, "template_config.ecf", project_location, project_name.as_lower + ".ecf", l)
+			map.force (l_uuid.generate_uuid.out.as_string_32, "${FL_UUID}")
+
+			from_template_to_project (wizard_resources_path, "template_config.ecf", project_location, project_name.as_lower + ".ecf", map)
 
 			from
 				i := 1
@@ -79,20 +70,9 @@ feature -- Basic Operations
 				class_name := "WIZARD_" + list_of_name.item + "_STATE"
 				class_name.to_lower
 
-				create l.make
-				create l_tuple
-				l_tuple.put ("${FL_WIZARD_CLASS_NAME}", 1)
-				l_tuple.put (class_name, 2)
-
-				create l_tuple
-				l_tuple.put ("${FL_WIZARD_CLASS_NAME}", 1)
-				l_tuple.put (class_name, 2)
-				l.extend (l_tuple)
-
-				create l_tuple
-				l_tuple.put ("${FL_STATE_NUMBER}", 1)
-				l_tuple.put (i.out, 2)
-				l.extend (l_tuple)
+				create map.make (10)
+				map.force (class_name, "${FL_WIZARD_CLASS_NAME}")
+				map.force (i.out.as_string_32, "${FL_STATE_NUMBER}")
 
 					-- Prepare next step
 				list_of_name.forth
@@ -103,24 +83,17 @@ feature -- Basic Operations
 				else
 					next_state := "WIZARD_"+list_of_name.item+"_STATE"
 				end
+				map.force (next_state, "${FL_NEXT_STATE}")
 
-				create l_tuple
-				l_tuple.put ("${FL_NEXT_STATE}", 1)
-				l_tuple.put (next_state, 2)
-				l.extend (l_tuple)
-
-				from_template_to_project (wizard_resources_path, "template_wizard_state.e", project_location, class_name + ".e", l)
+				from_template_to_project (wizard_resources_path, "template_wizard_state.e", project_location, class_name + ".e", map)
 			end
 
-			create l_tuple
-			l_tuple.put ("${FL_WIZARD_NAME}", 1)
-			l_tuple.put (project_name, 2)
-			create l.make
-			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path, "template_wizard_initial_state.e", project_location, "wizard_initial_state.e", l)
-			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e",   project_location, "wizard_final_state.e", l)
-			from_template_to_project (wizard_resources_path, "application_factory.e",   project_location, "application_factory.e", l)
-			from_template_to_project (wizard_resources_path, "application.e",   project_location, "application.e", l)
+			create map.make (10)
+			map.force (project_name, "${FL_WIZARD_NAME}")
+			from_template_to_project (wizard_resources_path, "template_wizard_initial_state.e", project_location, "wizard_initial_state.e", map)
+			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e",   project_location, "wizard_final_state.e", map)
+			from_template_to_project (wizard_resources_path, "application_factory.e",   project_location, "application_factory.e", map)
+			from_template_to_project (wizard_resources_path, "application.e",   project_location, "application.e", map)
 
 			copy_file ("wizard_information.e",   project_location)
 			copy_file ("wizard_project_shared.e",   project_location)

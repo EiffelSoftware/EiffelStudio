@@ -20,7 +20,7 @@ feature -- Basic Operations
 	generate_code
 			-- Generate code for the project.
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
+			map_list: HASH_TABLE [STRING_32, STRING]
 			project_name_lowercase: STRING_32
 			project_location: PATH
 			source_prefix: STRING
@@ -32,7 +32,7 @@ feature -- Basic Operations
 				map_list := map_for_frame
 				source_prefix := "frame"
 			end
-			map_list.extend (["${FL_MAIN_CLASS}", {STRING_32} "MAIN_WINDOW"])
+			map_list.force ({STRING_32} "MAIN_WINDOW", "${FL_MAIN_CLASS}")
 			add_common_parameters (map_list)
 				-- Cached variables
 			project_name_lowercase := wizard_information.project_name.as_lower
@@ -69,30 +69,30 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	map_for_dialog: LINKED_LIST [TUPLE [STRING, STRING_32]]
+	map_for_dialog: HASH_TABLE [STRING_32, STRING]
 			-- Mapping for a new dialog-application project
 		local
 			main_dialog_id: STRING_32
 		do
-			create Result.make
-			Result.extend (["${FL_APPLICATION_TYPE}", {STRING_32} "WEL_MAIN_DIALOG"])
+			create Result.make (5)
+			Result.force ({STRING_32} "WEL_MAIN_DIALOG", "${FL_APPLICATION_TYPE}")
 
 			create main_dialog_id.make (0)
 			main_dialog_id.append (wizard_information.project_name)
 			main_dialog_id.to_lower
 			main_dialog_id.prepend ("Idd_")
 			main_dialog_id.append ("_dialog")
-			Result.extend (["${FL_CREATION}", {STRING_32} "make_by_id (" + main_dialog_id + ")"])
+			Result.force ({STRING_32} "make_by_id (" + main_dialog_id + ")", "${FL_CREATION}")
 		end
 
 
-	map_for_frame: LINKED_LIST [TUPLE [STRING, STRING_32]]
+	map_for_frame: HASH_TABLE [STRING_32, STRING]
 			-- Mapping for a new frame-application project
 		do
 				-- Create the replacement strings.
-			create Result.make
-			Result.extend (["${FL_ICON_NAME}", wizard_information.project_name.as_lower + ".ico"])
-			Result.extend (["${FL_APPLICATION_TYPE}", {STRING_32} "WEL_FRAME_WINDOW"])
+			create Result.make (2)
+			Result.force (wizard_information.project_name.as_lower + ".ico", "${FL_ICON_NAME}")
+			Result.force ({STRING_32} "WEL_FRAME_WINDOW", "${FL_APPLICATION_TYPE}")
 		end
 
 	copy_icon

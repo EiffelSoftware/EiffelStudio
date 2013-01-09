@@ -116,6 +116,7 @@ feature -- Basic Operation
 			h1.extend (add_your_own_b)
 			h1.disable_item_expand (add_your_own_b)
 			choice_box.extend (h1)
+			choice_box.disable_item_expand (h1)
 
 				-- Fill lists.
 			if wizard_information.l_to_precompile /= Void then
@@ -135,9 +136,13 @@ feature -- Basic Operation
 			add_b.disable_sensitive
 			remove_b.disable_sensitive
 
-			set_updatable_entries(<<precompilable_libraries.select_actions,
-									to_precompile_libraries.select_actions>>)
-
+				-- This is the code of `set_updatable_entries' that is inlined here because
+				-- the `select_actions' here expects an argument and `set_updatable_entries'
+				-- does not.
+			precompilable_libraries.select_actions.extend (agent (a_row: EV_MULTI_COLUMN_LIST_ROW) do change_entries end)
+			precompilable_libraries.select_actions.extend (agent (a_row: EV_MULTI_COLUMN_LIST_ROW) do check_wizard_status end)
+			to_precompile_libraries.select_actions.extend (agent (a_row: EV_MULTI_COLUMN_LIST_ROW) do change_entries end)
+			to_precompile_libraries.select_actions.extend (agent (a_row: EV_MULTI_COLUMN_LIST_ROW) do check_wizard_status end)
 		end
 
 	proceed_with_current_info
@@ -246,7 +251,7 @@ feature {NONE} -- Tools
 			-- 'dir/lib' is the directory where the ace file should be
 			-- for the ISE precompile libraries
 		local
-			info_lib: TUPLE [STRING_32, BOOLEAN]
+			info_lib: TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]
 			path_name: PATH
 			l_conf: CONF_LOAD
 			l_factory: CONF_PARSE_FACTORY
@@ -264,21 +269,18 @@ feature {NONE} -- Tools
 			end
 			if l_targets /= Void and l_targets.count = 1 then
 				create Result
-				create info_lib
-				info_lib.put (path_name.name, 1)
-
 				l_targets.start
 				l_target_name := l_targets.item_for_iteration.name
 				create path_name.make_from_string (path_lib)
-				path_name := path_name.extended ("EIFGENs").extended (l_target_name).extended ("project.epr")
-				create l_file.make_with_path (path_name)
+				path_name := path_name.extended (ace_name)
+				create l_file.make_with_path (path_name.parent.extended ("EIFGENs").extended (l_target_name).extended ("project.epr"))
 
 				if l_file.exists then
-					info_lib.put (True, 2)
+					info_lib := [path_name.name, True]
 					Result.extend (l_conf.last_system.name)
 					Result.extend (Interface_names.l_Yes)
 				else
-					info_lib.put (False, 2)
+					info_lib := [path_name.name, False]
 					Result.extend (l_conf.last_system.name)
 					Result.extend (Interface_names.l_No)
 				end
@@ -454,18 +456,15 @@ feature {NONE} -- Tools
 			-- Is the row `a_row' represent the same row as a row found in `a_mc_list'?
 		local
 			cur_row: EV_MULTI_COLUMN_LIST_ROW
-			cur_info_lib: TUPLE [STRING_32, BOOLEAN]
-			ref_info_lib: TUPLE [STRING_32, BOOLEAN]
-			ref_ace: STRING_32
-			cur_ace: STRING_32
+			cur_info_lib, ref_info_lib: TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]
+			ref_ace: READABLE_STRING_GENERAL
+			cur_ace: READABLE_STRING_GENERAL
 			retried: BOOLEAN
 		do
 			if not retried then
 				ref_info_lib ?= a_row.data
 				check ref_info_lib_not_void: ref_info_lib /= Void end
-				ref_ace ?= ref_info_lib.item (1)
-				check ref_ace_not_void: ref_ace /= Void end
-				ref_ace := ref_ace.as_lower
+				ref_ace := ref_info_lib.path
 				from
 					a_mc_list.start
 				until
@@ -474,10 +473,9 @@ feature {NONE} -- Tools
 					cur_row := a_mc_list.item
 					cur_info_lib ?= cur_row.data
 					check cur_info_lib_not_void: cur_info_lib /= Void end
-					cur_ace ?= cur_info_lib.item (1)
+					cur_ace := cur_info_lib.path
 					check cur_ace_not_void: cur_ace /= Void end
-					Result := ref_ace.is_equal (cur_ace.as_lower)
-
+					Result := ref_ace.is_case_insensitive_equal (cur_ace)
 					a_mc_list.forth
 				end
 			else
@@ -518,13 +516,8 @@ feature {NONE} -- Implementation
 				if l_item.x_position <= a_x and l_item.y_position <= (a_y - l_header_height) and
 					 (l_item.x_position + l_item.width) > a_x and
 					 (l_item.y_position + l_item.height) > (a_y - l_header_height) then
-					if attached {TUPLE [STRING_32, BOOLEAN]} l_item.data as l_info_lib then
-						if attached {STRING_32} l_info_lib.at (1) as l_path_name then
-							a_list.set_tooltip (l_path_name)
-						else
-							check False end -- Implied by string set by `fill_ev_list_items' should not void
-						end
-
+					if attached {TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]} l_item.data as l_info_lib then
+						a_list.set_tooltip (l_info_lib.path)
 					else
 						check False end -- Implied by data set by `fill_ev_list_items' should not void
 					end

@@ -121,10 +121,10 @@ feature {NONE} -- Implementation
 			-- Launch all the choosen precompilations
 		local
 			current_it: EV_MULTI_COLUMN_LIST_ROW
-			lib_info: TUPLE [STRING_32, BOOLEAN]
-			sys_name: STRING_32
-			ace_path: STRING_32
-			already_precompiled: BOOLEAN_REF
+			lib_info: TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]
+			sys_name: READABLE_STRING_GENERAL
+			ace_path: READABLE_STRING_GENERAL
+			already_precompiled: BOOLEAN
 			rescued: BOOLEAN
 			error_dialog: EV_ERROR_DIALOG
 		do
@@ -144,10 +144,10 @@ feature {NONE} -- Implementation
 					current_it:= wizard_information.l_to_precompile.item
 					sys_name := current_it.i_th (1)
 					lib_info ?= current_it.data
-					ace_path ?= lib_info.item (1)
-					already_precompiled ?= lib_info.item (2)
+					ace_path := lib_info.path
+					already_precompiled := lib_info.path_exists
 
-					precompile (sys_name, ace_path, already_precompiled.item)
+					precompile (sys_name.as_string_32, ace_path.as_string_32, already_precompiled)
 					wizard_information.l_to_precompile.forth
 				end
 			end
@@ -166,31 +166,23 @@ feature {NONE} -- Implementation
 		require
 			lib_exists: lib_name /= Void and then lib_ace /= Void
 		local
-			to_end: BOOLEAN
-			time_left, n_dir: INTEGER
+			time_left: INTEGER
 			new_time_left: INTEGER
-			proj_path, command: STRING_32
+			command: STRING_32
 			total_prog: INTEGER
 			progress_file_path: PATH
 			eifgen_path: PATH
+			l_process_factory: PROCESS_FACTORY
+			l_process: PROCESS
 		do
-				-- We need to find the path, the exact name and the full name of the Ace file
-				-- knowing the full name. (Can be fixed .. )
-			lib_ace.mirror
-			n_dir := lib_ace.index_of (operating_environment.directory_separator, 1)
-			proj_path:= lib_ace.substring (n_dir + 1 , lib_ace.count)
-			proj_path.mirror
-			lib_ace.mirror
-
 				-- Create the callback file
-			create eifgen_path.make_from_string (proj_path)
-			eifgen_path := eifgen_path.extended ("EIFGENs")
-			progress_file_path := eifgen_path.extended (Progress_filename)
+			create eifgen_path.make_from_string (lib_ace)
+			eifgen_path := eifgen_path.parent
+			progress_file_path := eifgen_path.extended ("EIFGENs").extended (Progress_filename)
 
 				-- Launch the precompilation and update the progress bars.
 			from
 				compt := 1 -- Not needed if the file is used....
-				to_end := False
 				time_left := 0
 				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name))
 				create command.make (50)
@@ -200,28 +192,32 @@ feature {NONE} -- Implementation
 				command.append (" -precompile -config %"")
 				command.append (lib_ace)
 				command.append ("%" -project_path %"")
-				command.append (proj_path)
+				command.append (eifgen_path.name)
 				command.append ("%" -output_file %"")
 				command.append (progress_file_path.name)
 				command.append ("%" -c_compile -clean")
-				launch (command)
+				create l_process_factory
+				l_process := l_process_factory.process_launcher_with_command_line (command, Void)
+				l_process.set_hidden (True)
+				l_process.launch
 			until
-				to_end = True
+				l_process.has_exited
 			loop
 				new_time_left := find_time (progress_file_path)
 				if new_time_left /= -1 then
 					if new_time_left >= 100 then
-						to_end := True
 						time_left := 100
 					else
-						time_left := time_left.max(new_time_left)
+						time_left := time_left.max (new_time_left)
 					end
 				end
-				progress_2.set_proportion ((time_left / 100).truncated_to_real)
-				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name) + time_left.out + "%%")
+					-- We truncate percentage to 0.9 because the remaining 0.1 are for the C compilation which is
+					-- not included.
+				progress_2.set_proportion (((time_left / 100) * 0.9).truncated_to_real)
+				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name) + ((time_left * 90) // 100).out + "%%")
 
-				total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
-				progress.set_proportion (((time_left + 100*n_lib_done)/(100*n_lib_to_precompile)).truncated_to_real)
+				total_prog := ((time_left * 0.9 + 100*n_lib_done)/(n_lib_to_precompile)).floor
+				progress.set_proportion (((time_left * 0.9 + 100*n_lib_done)/(100*n_lib_to_precompile)).truncated_to_real)
 				progress_text.set_text (interface_names.l_total_progress_is (total_prog.out))
 			end
 			n_lib_done := n_lib_done + 1
@@ -246,8 +242,6 @@ feature {NONE} -- Implementation
 				create fi.make_with_path (progress_file_path)
 				if fi.exists then
 					fi.open_read
-				end
-				if not fi.is_closed and then fi.is_readable then
 					fi.read_stream (fi.count)
 					s := fi.last_string
 					fi.close
@@ -266,6 +260,8 @@ feature {NONE} -- Implementation
 				else
 					Result := -1
 				end
+			else
+				Result := -1
 			end
 		rescue
 			retried := True
@@ -372,8 +368,6 @@ note
 	source: "[
 			 Eiffel Software
 			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
 

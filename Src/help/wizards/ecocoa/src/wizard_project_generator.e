@@ -18,8 +18,7 @@ feature -- Basic Operations
 	generate_code
 			-- Generate the code for a new cocoa-application project.
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
-			tuple: TUPLE [STRING, STRING]
+			map_list: HASH_TABLE [STRING_32, STRING_8]
 			project_name_lowercase: STRING
 			project_location: PATH
 			tuple2: TUPLE [STRING, STRING]
@@ -32,7 +31,7 @@ feature -- Basic Operations
 				-- Update the ace file location.
 			wizard_information.set_ace_location (project_location.extended (wizard_information.project_name.as_lower + ".ecf"))
 
-			create map_list.make
+			create map_list.make (10)
 			add_common_parameters (map_list)
 
 			from_template_to_project (wizard_resources_path, "application.e", project_location, "application.e", map_list)

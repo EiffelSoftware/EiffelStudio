@@ -20,11 +20,9 @@ feature -- Basic Operations
 	generate_code
 			-- Generate the code for a new vision2-application project
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
-			tuple: TUPLE [STRING, STRING_32]
+			map_list: HASH_TABLE [STRING_32, STRING]
 			project_name_lowercase: STRING_32
 			project_location: PATH
-			tuple2: TUPLE [STRING, STRING_32]
 			a_string: STRING
 			a_string2: STRING
 		do
@@ -35,46 +33,45 @@ feature -- Basic Operations
 				-- Update the ace file location.
 			wizard_information.set_ace_location (wizard_information.project_location.extended (project_name_lowercase + ".ecf"))
 
-			create map_list.make
+			create map_list.make (5)
 			add_common_parameters (map_list)
 
 			if wizard_information.has_menu_bar then
-				map_list.extend (tuple_from_file_content ("${FL_MENUBAR_ADD}", "template_menubar_add.e"))
-				tuple := tuple_from_file_content ("${FL_MENUBAR_INIT}", "template_menubar_init.e")
+				map_list.force (string_from_file_content ("template_menubar_add.e"), "${FL_MENUBAR_ADD}")
+				a_string := string_from_file_content ("template_menubar_init.e")
 				if wizard_information.has_about_dialog then
-					tuple2 := tuple_from_file_content ("${FL_HELP_ABOUT_ADD}", "template_menu_help_about_add.e")
+					a_string2 := string_from_file_content ("template_menu_help_about_add.e")
 				else
-					tuple2 := empty_tuple ("${FL_HELP_ABOUT_ADD}")
+					a_string2 := {STRING_32} ""
 				end
-				a_string ?= tuple.item(2); check a_string_not_void: a_string /= Void end;
-				a_string2 ?= tuple2.item(2); check a_string2_not_void: a_string2 /= Void end;
 				a_string.replace_substring_all ("${FL_HELP_ABOUT_ADD}", a_string2)
-				map_list.extend (tuple)
+
+				map_list.force (a_string, "${FL_MENUBAR_INIT}")
 			else
-				map_list.extend (empty_tuple ("${FL_MENUBAR_INIT}"))
-				map_list.extend (empty_tuple ("${FL_MENUBAR_ADD}"))
+				map_list.force ({STRING_32} "", "${FL_MENUBAR_ADD}")
+				map_list.force ({STRING_32} "", "${FL_MENUBAR_INIT}")
 			end
 
 			if wizard_information.has_status_bar then
-				map_list.extend (tuple_from_file_content ("${FL_STATUSBAR_ADD}", "template_statusbar_add.e"))
-				map_list.extend (tuple_from_file_content ("${FL_STATUSBAR_INIT}", "template_statusbar_init.e"))
+				map_list.force (string_from_file_content ("template_statusbar_add.e"), "${FL_STATUSBAR_ADD}")
+				map_list.force (string_from_file_content ("template_statusbar_init.e"), "${FL_STATUSBAR_INIT}")
 			else
-				map_list.extend (empty_tuple ("${FL_STATUSBAR_ADD}"))
-				map_list.extend (empty_tuple ("${FL_STATUSBAR_INIT}"))
+				map_list.force ({STRING_32} "", "${FL_STATUSBAR_ADD}")
+				map_list.force ({STRING_32} "", "${FL_STATUSBAR_INIT}")
 			end
 
 			if wizard_information.has_tool_bar then
-				map_list.extend (tuple_from_file_content ("${FL_TOOLBAR_ADD}", "template_toolbar_add.e"))
-				map_list.extend (tuple_from_file_content ("${FL_TOOLBAR_INIT}", "template_toolbar_init.e"))
+				map_list.force (string_from_file_content ("template_toolbar_add.e"), "${FL_TOOLBAR_ADD}")
+				map_list.force (string_from_file_content ("template_toolbar_init.e"), "${FL_TOOLBAR_INIT}")
 			else
-				map_list.extend (empty_tuple ("${FL_TOOLBAR_ADD}"))
-				map_list.extend (empty_tuple ("${FL_TOOLBAR_INIT}"))
+				map_list.force ({STRING_32} "", "${FL_TOOLBAR_ADD}")
+				map_list.force ({STRING_32} "", "${FL_TOOLBAR_INIT}")
 			end
 
 			if wizard_information.has_about_dialog then
-				map_list.extend (tuple_from_file_content ("${FL_ABOUTDIALOG_INIT}", "template_aboutdialog_init.e"))
+				map_list.force (string_from_file_content ("template_aboutdialog_init.e"), "${FL_ABOUTDIALOG_INIT}")
 			else
-				map_list.extend (empty_tuple ("${FL_ABOUTDIALOG_INIT}"))
+				map_list.force ({STRING_32} "", "${FL_ABOUTDIALOG_INIT}")
 			end
 
 			from_template_to_project (wizard_resources_path, "template_main_window.e", 	project_location, "main_window.e", map_list)
@@ -90,30 +87,19 @@ feature -- Basic Operations
 			end
 		end
 
-	tuple_from_file_content (an_index: STRING; a_content_file: STRING_32): TUPLE [STRING, STRING_32]
+	string_from_file_content (a_content_file: STRING_32): STRING_32
 		local
-			file_content: STRING
 			file: RAW_FILE
 		do
 			create file.make_with_path (wizard_resources_path.extended (a_content_file))
 			file.open_read
 			file.read_stream (file.count)
 
-			file_content := file.last_string.twin
-			file_content.replace_substring_all ("%R%N", "%N")
-
-			create Result
-			Result.put (an_index, 1)
-			Result.put (file_content, 2)
+			create Result.make (file.last_string.count)
+			Result.append_string_general (file.last_string)
+			Result.replace_substring_all ({STRING_32} "%R%N", {STRING_32} "%N")
 
 			file.close
-		end
-
-	empty_tuple (an_index: STRING): TUPLE [STRING, STRING_32]
-		do
-			create Result
-			Result.put (an_index, 1)
-			Result.put ("", 2)
 		end
 
 feature {NONE} -- Access

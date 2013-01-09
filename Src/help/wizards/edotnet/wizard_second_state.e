@@ -237,7 +237,7 @@ feature -- Basic Operation
 			if clr_version_check.is_selected then
 				wizard_information.set_clr_version (most_recent_clr_version)
 			else
-				wizard_information.set_clr_version (clr_version_cb.text.as_string_8)
+				wizard_information.set_clr_version (clr_version_cb.text)
 			end
 			Precursor
 		end

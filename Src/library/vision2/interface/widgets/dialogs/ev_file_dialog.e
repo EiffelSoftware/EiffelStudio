@@ -20,8 +20,6 @@ feature -- Access
 	file_name: STRING_32
 			-- Full name of currently selected file including path.
 			-- `empty' if user did not click "OK".
-		obsolete
-			"Use `full_file_path' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -71,8 +69,6 @@ feature -- Access
 
 	start_directory: STRING_32
 			-- Base directory where browsing will start.
-		obsolete
-			"Use `start_path' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -94,8 +90,6 @@ feature -- Status report
 	file_title: STRING_32
 			-- `file_name' without its path.
 			-- is_empty if user did not click "OK".
-		obsolete
-			"Use `full_file_path.entry' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -111,16 +105,10 @@ feature -- Status report
 	file_path: STRING_32
 			-- Path of `file_name'.
 			-- is_empty if user did not click "OK".
-		obsolete
-			"Use `full_file_path.parent' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
-			if attached full_file_path.parent as l_parent then
-				Result := l_parent.name
-			else
-				Result := ""
-			end
+			Result := full_file_path.parent.name
 		ensure
 			file_path_not_void: Result /= Void
 		end
@@ -133,7 +121,7 @@ feature -- Status report
 		do
 			Result := implementation.selected_filter_index
 		ensure
-			result_zero_when_no_filters: filters.is_empty implies result = 0
+			result_zero_when_no_filters: filters.is_empty implies Result = 0
 			valid_result_when_filters_set: not filters.is_empty implies Result >= 1 and Result <= filters.count
 		end
 
@@ -153,8 +141,6 @@ feature -- Element change
 
 	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
-		obsolete
-			"Use `set_full_file_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			a_name_not_void: a_name /= Void
@@ -176,8 +162,6 @@ feature -- Element change
 
 	set_start_directory (a_path: READABLE_STRING_GENERAL)
 			-- Make `a_path' the base directory.
-		obsolete
-			"Use `set_start_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			a_path_not_void: a_path /= Void

@@ -142,8 +142,6 @@ feature {NONE} -- Basic Operations
 			interior_box.extend (message_box)
 			interior_box.disable_item_expand (message_box)
 			interior_box.extend (actions_box)
-			interior_box.disable_item_expand (actions_box)
-			interior_box.extend (create {EV_CELL}) -- Expandable item.
 
 			--------------------------------------------
 			-- Create the main box from the other box.

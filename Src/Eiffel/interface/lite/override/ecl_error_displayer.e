@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	application_name: STRING assign set_application_name
+	application_name: READABLE_STRING_GENERAL
 			-- Name of application to use when displaying errors
 
 feature -- Element change
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Description
-			create l_file.make (short_help_file_name (a_error))
+			create l_file.make_with_path (short_help_file_name (a_error))
 			if l_file.exists and not l_file.is_empty then
 				a_window.put_string (": ")
 
@@ -197,33 +197,28 @@ feature {NONE} -- Implementation
 			tracer.trace (a_window, a_error, {ERROR_TRACER}.context)
 		end
 
-	short_help_file_name (a_error: ERROR): STRING
+	short_help_file_name (a_error: ERROR): PATH
 			-- Retrieve's short help file name from `a_error'
-		local
-			l_fn: FILE_NAME
 		do
-			create l_fn.make_from_string (eiffel_layout.error_path);
-			l_fn.extend ("short");
-			l_fn.set_file_name (a_error.help_file_name);
-			create Result.make_from_string (l_fn)
+			Result := eiffel_layout.error_path.extended ("short").extended (a_error.help_file_name)
 			if a_error.subcode /= 0 then
-				Result.append_integer (a_error.subcode)
+				Result := Result.appended (a_error.subcode.out)
 			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	relative_file_path (a_path: STRING): STRING
+	relative_file_path (a_path: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- Retrieve relative file path to project ECF.
 		local
 			l_project: E_PROJECT
-			l_dir: STRING
+			l_dir: READABLE_STRING_32
 			l_count: INTEGER
 			l_pos: INTEGER
 		do
 			l_project := shared_project.eiffel_project
-			l_dir := l_project.project_directory.path.out.as_lower
+			l_dir := l_project.project_directory.path.name.as_lower
 			l_count := l_dir.count
 			if l_count < a_path.count + 1 then
 				l_pos := a_path.as_lower.substring_index (l_dir, 1)
@@ -262,7 +257,7 @@ invariant
 	not_application_name_is_empty: not application_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

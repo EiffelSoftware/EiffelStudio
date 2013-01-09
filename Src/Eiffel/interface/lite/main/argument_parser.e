@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	configuration_file: STRING
+	configuration_file: IMMUTABLE_STRING_32
 			-- Eiffel compiler configuration file
 		require
 			successful: is_successful
@@ -55,14 +55,14 @@ feature -- Access
 			l_opt: ARGUMENT_OPTION
 		do
 			l_opt := option_of_name (target_switch)
-			if l_opt /= Void then
-				Result := l_opt.value
+			if l_opt /= Void and then l_opt.value.is_valid_as_string_8 then
+				Result := l_opt.value.as_string_8
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	project_location: STRING
+	project_location: IMMUTABLE_STRING_32
 			-- Location to compile Eiffel project in
 		require
 			successful: is_successful
@@ -88,7 +88,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	project_alias: STRING
+	project_alias: IMMUTABLE_STRING_32
 			-- Project alias name (hidden switch value)
 		require
 			successful: is_successful
@@ -146,7 +146,7 @@ feature -- Status report
 			Result := has_option (c_compile_switch)
 		end
 
-	configuration_settings: HASH_TABLE [STRING, STRING]
+	configuration_settings: HASH_TABLE [IMMUTABLE_STRING_32, IMMUTABLE_STRING_32]
 			-- Table of override configuration settings
 			-- Key: Setting nane
 			-- Value: Value
@@ -237,7 +237,7 @@ feature {NONE} -- Usage
 	switches: ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- Retrieve a list of available switch
 		local
-			l_optimize_flags: HASH_TABLE [attached STRING_8, CHARACTER]
+			l_optimize_flags: HASH_TABLE [attached IMMUTABLE_STRING_32, CHARACTER_32]
 		once
 			create l_optimize_flags.make (1)
 			l_optimize_flags.put ("Keep assertions", {OPTIMIZED_ARGUMENT_SWITCH}.keep_flag)
@@ -320,7 +320,7 @@ feature {NONE} -- Option names
 	alias_switch: STRING = "alias"
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

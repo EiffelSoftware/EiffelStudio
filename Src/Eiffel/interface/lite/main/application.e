@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 
 				-- Initialization of compiler resources.
 			create l_preference_access.make_with_defaults_and_location (
-				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
+				<<eiffel_layout.general_preferences.name, eiffel_layout.platform_preferences.name>>, eiffel_layout.eiffel_preferences)
 			create l_ec_preferences.make (l_preference_access)
 			create l_compiler_setting
 			l_compiler_setting.set_preferences (l_ec_preferences)
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			l_window: OUTPUT_WINDOW_STREAM
 			l_err_window: OUTPUT_WINDOW_STREAM
 			l_degree_out: ECL_DEGREE_OUTPUT
-			l_name: STRING
+			l_name: IMMUTABLE_STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -198,10 +198,10 @@ feature {NONE} -- Query
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_visitor: CONF_PRINT_VISITOR
-			l_settings: HASH_TABLE [STRING, STRING]
+			l_settings: HASH_TABLE [IMMUTABLE_STRING_32, IMMUTABLE_STRING_32]
 			l_loader: EC_PROJECT_LOADER
 			l_file: PLAIN_TEXT_FILE
-			l_file_name: STRING
+			l_file_name: PATH
 			l_cursor: CURSOR
 		do
 			create l_loader
@@ -217,8 +217,8 @@ feature {NONE} -- Query
 					if inject_src_configuration_file (a_parser.configuration_file, l_file) then
 						l_file.close
 
-						l_file_name := l_file.name
-						l_loader.open_project_file (l_file_name, a_parser.target, a_parser.project_location, a_parser.clean_project)
+						l_file_name := l_file.path
+						l_loader.open_project_file (l_file_name, a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
 						if not l_loader.has_error then
 
 								-- Retrieve applicable target.
@@ -244,7 +244,7 @@ feature {NONE} -- Query
 
 								-- Write configuration text.
 							create l_visitor.make
-							l_system.set_file_name (l_file_name)
+							l_system.set_file_name (l_file_name.name)
 							l_visitor.process_system (l_system)
 
 								-- Reset file so we can rewrite from the beginning
@@ -258,17 +258,17 @@ feature {NONE} -- Query
 
 								-- Source configuration file was probably not locatable, so let the configuration systen
 								-- handle the error.
-							l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
+							l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
 						end
 					end
 				else
 						-- Source configuration file was probably not locatable, so let the configuration systen
 						-- handle the error.	
-					l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
+					l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
 				end
 			else
 					-- No setting set, use regular configuration file.
-				l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
+				l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
 			end
 
 			Result := l_loader
@@ -282,40 +282,28 @@ feature {NONE} -- Query
 			a_parser_attached: a_parser /= Void
 			a_parser_successful: a_parser.is_successful
 		local
-			l_cfg_file: STRING
-			l_file_name: FILE_NAME
-			l_project_location: STRING
-			l_slash_pos: INTEGER
-			l_count: INTEGER
+			l_cfg_file: PATH
+			l_file_name: PATH
+			l_project_location: IMMUTABLE_STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
 				l_project_location := a_parser.project_location
 				if l_project_location /= Void then
 						-- Store project configuration file in project location
-					l_cfg_file := a_parser.configuration_file.twin
-					l_cfg_file.prune_all_trailing (operating_environment.directory_separator)
-					l_count := l_cfg_file.count
-
-						-- Retrieve file name			
-					l_slash_pos := l_cfg_file.last_index_of (operating_environment.directory_separator, l_count)
-					if l_slash_pos < l_count then
-						l_cfg_file := l_cfg_file.substring (l_slash_pos + 1, l_count)
-					end
-
+					create l_cfg_file.make_from_string (a_parser.configuration_file)
 					create l_file_name.make_from_string (l_project_location)
-					l_file_name.set_file_name (l_cfg_file)
+					l_file_name := l_file_name.extended_path (l_cfg_file.entry)
 				else
 						-- Store project configuration file next to ecf
 					create l_file_name.make_from_string (a_parser.configuration_file)
 				end
-				l_file_name.add_extension ("ecl")
+				l_file_name := l_file_name.appended_with_extension ("ecl")
 
-				create Result.make_open_write (l_file_name.out)
+				create Result.make_with_path (l_file_name)
+				Result.open_write
 			else
-					-- Use temporary file location
-				create l_file_name.make_temporary_name
-				create Result.make_open_write (l_file_name.out)
+				Result := Void
 			end
 		ensure
 			result_opened_for_writing: Result /= Void implies Result.is_open_write
@@ -326,7 +314,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	inject_src_configuration_file (a_src_file: STRING; a_dest_file: PLAIN_TEXT_FILE): BOOLEAN
+	inject_src_configuration_file (a_src_file: READABLE_STRING_32; a_dest_file: PLAIN_TEXT_FILE): BOOLEAN
 			-- Injects a source file `a_src_file' into open file `a_dest_file'.
 		require
 			a_src_file_attached: a_src_file /= Void
@@ -357,7 +345,7 @@ feature {NONE} -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

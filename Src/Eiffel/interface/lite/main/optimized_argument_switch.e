@@ -26,22 +26,18 @@ feature {ARGUMENT_PARSER} -- Factory functions
 	new_option: attached OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option for switch
 		do
-			create Result.make ("", create {ARRAYED_LIST [CHARACTER_8]}.make (0), is_case_sensitive, Current)
+			create Result.make ("", create {ARRAYED_LIST [CHARACTER_32]}.make (0), is_case_sensitive, Current)
 		end
 
-	new_value_option (a_value: attached STRING_8): attached OPTIMIZED_ARGUMENT_OPTION
+	new_value_option (a_value: STRING_32): attached OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option given a value `a_value'
 		local
-			l_flags: ARRAYED_LIST [CHARACTER_8]
+			l_flags: ARRAYED_LIST [CHARACTER_32]
 		do
 			create l_flags.make (a_value.count)
-			a_value.linear_representation.do_all (agent (a_item: CHARACTER_8; a_flags: ARRAYED_LIST [CHARACTER_8])
-				require
-					not_a_item_is_null: a_item /= '%U'
-					a_flags_attached: a_flags /= Void
-				do
-					a_flags.extend (a_item)
-				end (?, l_flags))
+			across a_value as l_item loop
+				l_flags.extend (l_item.item)
+			end
 			create Result.make (a_value, l_flags, is_case_sensitive, Current)
 		end
 
@@ -51,7 +47,7 @@ feature -- Flags
 			-- Flag used to keep assertions
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

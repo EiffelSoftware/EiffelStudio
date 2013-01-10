@@ -573,7 +573,6 @@ feature {NONE} -- Basic operation
 			l_col: EV_GRID_COLUMN
 			l_name_width: INTEGER
 			l_path: READABLE_STRING_GENERAL
-			l_key: STRING_32
 			l_description: STRING_32
 			l_void_safe_check: like void_safe_check
 			l_show_void_safe_only: BOOLEAN

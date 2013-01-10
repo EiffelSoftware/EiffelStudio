@@ -57,6 +57,9 @@ feature {NONE} -- Duplication
 			-- <Precursor>
 		do
 			create Result.make_with_key_tester (n, key_tester)
+			if object_comparison then
+				Result.compare_objects
+			end
 		end
 
 feature -- Comparison

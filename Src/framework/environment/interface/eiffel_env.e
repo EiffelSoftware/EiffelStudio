@@ -581,16 +581,6 @@ feature -- Directories (top-level)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	dotnet_path: PATH
-			-- Location of .NET specific data
-		require
-			is_valid_environment: is_valid_environment
-		once
-			Result := install_path.extended (dotnet_name)
-		ensure
-			not_result_is_empty: not Result.is_empty
-		end
-
 	library_path: PATH
 			-- Eiffel library path
 		require
@@ -671,10 +661,25 @@ feature  -- Directories (dotnet)
 
 	assemblies_path: PATH
 			-- Location of Eiffel Assembly Cache.
+			-- If `is_user_files_supported':
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\7.x\dotnet\assemblies
+			--   On Mac: ~/Eiffel User Files/7.x/dotnet/assemblies
+			--   On Unix: ~/.es/Eiffel User Files/7.x/dotnet/assemblies
+			-- Otherwise
+			--   $ISE_EIFFEL/dotnet/assemblies
+
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := dotnet_path.extended (assemblies_name)
+			if is_user_files_supported then
+				Result := user_files_path
+			else
+					-- No user file is specified, we use the installation
+					-- directory and if this is not writable, users will
+					-- get an error.
+				Result := install_path
+			end
+			Result := Result.extended (dotnet_name).extended (assemblies_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -2082,7 +2087,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

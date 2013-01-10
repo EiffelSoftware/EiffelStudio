@@ -75,7 +75,6 @@ feature {NONE} -- Implementation
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
 			c: detachable CONF_VALUE_CHOICE
-			l_string_prop: STRING_PROPERTY
 		do
 				-- General section.
 			properties.add_section (conf_interface_names.section_general)

@@ -69,7 +69,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: attached CONF_SYSTEM; a_location: attached STRING)
+	on_library_selected (a_library: CONF_SYSTEM; a_location: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			name.set_text (a_library.library_target.name + "_precompile")

@@ -265,7 +265,7 @@ feature{NONE} -- Initialization
 
 feature -- Basic operation
 
-	synchronize_on_process_starts (cmd_line: STRING)
+	synchronize_on_process_starts (cmd_line: READABLE_STRING_GENERAL)
 			-- Synchronize states of relative widgets when process starts.
 		do
 			force_display
@@ -327,7 +327,7 @@ feature -- Basic operation
 			output_text.set_text ("")
 		end
 
-	print_command_name (name: STRING)
+	print_command_name (name: READABLE_STRING_GENERAL)
 			-- Print command `name' to text fielad in command list box.
 		require
 			name_not_null: name /= Void
@@ -369,7 +369,7 @@ feature -- Basic operation
 			ms: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 			ext_cmd: EB_EXTERNAL_COMMAND
 			lst_item: EV_LIST_ITEM
-			str: STRING
+			str: STRING_32
 			text_set: BOOLEAN
 		do
 			if cmd_lst.is_sensitive then
@@ -440,7 +440,7 @@ feature{NONE} -- Actions
 	on_cmd_lst_text_change
 			-- Agent called when text in command list box changed.
 		local
-			str: STRING
+			str: STRING_32
 			eb: EB_EXTERNAL_COMMAND
 		do
 			create str.make_from_string (cmd_lst.text)
@@ -476,7 +476,7 @@ feature{NONE} -- Actions
 			-- Called when user selected `edit_cmd_detail_btn' to
 			-- modify command external in detail.
 		local
-			str: STRING
+			str: STRING_32
 			ec: EB_EXTERNAL_COMMAND
 		do
 			ec := corresponding_external_command
@@ -510,7 +510,7 @@ feature{NONE} -- Actions
 	on_run_process
 			-- Agent called when launching a process
 		local
-			str: STRING
+			str: STRING_32
 			e_cmd: EB_EXTERNAL_COMMAND
 			temp_cmd: EB_EXTERNAL_COMMAND
 		do
@@ -531,6 +531,7 @@ feature{NONE} -- Actions
 
 	on_input_to_process (str: STRING)
 			-- Called when user press enter in simulated console.
+			-- In console encoding.
 		do
 			if external_launcher.launched and then not external_launcher.has_exited then
 				external_launcher.put_string (str)
@@ -551,18 +552,15 @@ feature{NONE} -- Actions
 			found: BOOLEAN
 			l_text: STRING_32
 			l_input_text: STRING
-			l_string: STRING_GENERAL
 		do
 			l_text := input_field.text.twin
 			l_text.append ("%N")
 			if source_encoding /= Void then
-				l_string := utf32_to_console_encoding (source_encoding, l_text)
+				l_input_text := utf32_to_console_encoding (source_encoding, l_text)
 			end
-			if l_string = Void then
+			if l_input_text = Void then
 					-- Conversion fails.
 				l_input_text := l_text.as_string_8
-			else
-				l_input_text := l_string.as_string_8
 			end
 			on_input_to_process (l_input_text)
 
@@ -573,7 +571,7 @@ feature{NONE} -- Actions
 				until
 					input_field.after or found
 				loop
-					if l_text.is_equal (input_field.item.text) then
+					if l_text.same_string (input_field.item.text) then
 						found := True
 					end
 					input_field.forth
@@ -669,13 +667,13 @@ feature{NONE} -- Actions
 		do
 			l_feature_stone ?= a_pebble
 			if l_feature_stone /= Void then
-				l_new_text := "{" + l_feature_stone.class_name + "}." + l_feature_stone.feature_name
+				l_new_text := {STRING_32} "{" + l_feature_stone.class_name + "}." + l_feature_stone.feature_name
 				l_done := True
 			end
 			if not l_done then
 				l_classi_stone ?= a_pebble
 				if l_classi_stone /= Void then
-					l_new_text := "{" + l_classi_stone.class_name + "}"
+					l_new_text := {STRING_32} "{" + l_classi_stone.class_name + "}"
 					l_done := True
 				end
 			end
@@ -701,7 +699,7 @@ feature -- Status reporting
 			-- already exists, return corresponding EB_EXTERNAL_COMMAND object,
 			-- otherwise return Void.
 		local
-			str: STRING
+			str: STRING_32
 			e_cmd: EB_EXTERNAL_COMMAND
 			done: BOOLEAN
 			l_commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
@@ -737,7 +735,7 @@ feature -- Status reporting
 
 feature -- State setting
 
-	display_state (s: STRING_GENERAL; warning: BOOLEAN)
+	display_state (s: READABLE_STRING_GENERAL; warning: BOOLEAN)
 			-- Display state `s' in state bar of this output tool
 			-- If this is a `warning' state, display in red color,
 			-- otherwise in black color.
@@ -752,7 +750,7 @@ feature -- State setting
 
 feature{NONE}
 
-	show_warning_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW)
+	show_warning_dialog (msg: READABLE_STRING_GENERAL; a_window: EV_WINDOW)
 			-- Show a warning dialog containing message `msg' in `a_window'.
 		require
 			msg_not_void: msg /= Void
@@ -879,7 +877,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

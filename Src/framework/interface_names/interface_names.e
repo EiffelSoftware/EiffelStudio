@@ -2848,20 +2848,20 @@ feature -- Translation (unrecommended to use)
 
 feature -- String escape
 
-	escaped_string_for_menu_item (a_str: STRING): STRING
+	escaped_string_for_menu_item (a_str: READABLE_STRING_GENERAL): STRING_32
 			-- Escaped string for menu item.
 			-- "&" is escaped by "&&" because in menu item, "&" is used as accelerator indicator.
 		require
 			a_str_attached: a_str /= Void
 		do
-			Result := a_str.twin
+			create Result.make_from_string_general (a_str)
 			Result.replace_substring_all ("&", "&&")
 		ensure
 			result_attached: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

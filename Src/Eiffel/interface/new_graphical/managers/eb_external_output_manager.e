@@ -88,7 +88,7 @@ feature -- Basic Operations
 			end
 		end
 
-	synchronize_on_process_starts (cmd_line: STRING)
+	synchronize_on_process_starts (cmd_line: READABLE_STRING_GENERAL)
 			-- Synchronize states when launch external command `cmd_line'.
 		local
 			eo: ES_CONSOLE_TOOL_PANEL
@@ -125,7 +125,7 @@ feature -- Basic Operations
 			end
 		end
 
-	display_state (s: STRING_GENERAL; warning: BOOLEAN)
+	display_state (s: READABLE_STRING_GENERAL; warning: BOOLEAN)
 			-- Display process state `s' to external command output panel.
 			-- If `warning' is True, display in red color, otherwise in black color.
 		local
@@ -282,7 +282,7 @@ feature  -- Implementation / Private attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

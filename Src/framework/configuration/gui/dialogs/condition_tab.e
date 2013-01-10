@@ -85,7 +85,6 @@ feature {NONE} -- Initialization
 			l_frame: EV_FRAME
 			li: EV_LIST_ITEM
 			l_btn: EV_BUTTON
-			l_cell: EV_CELL
 		do
 			Precursor
 
@@ -587,8 +586,6 @@ feature {NONE} -- Actions
 
 	add_custom
 			-- Add a new custom condition.
-		local
-			v: TUPLE [READABLE_STRING_32, BOOLEAN]
 		do
 			data.add_custom (conf_interface_names.dial_cond_new_custom, Conf_interface_names.dial_cond_new_custom_value, False)
 			fill_custom
@@ -674,7 +671,6 @@ feature {NONE} -- Implementation
 			l_choice: STRING_CHOICE_PROPERTY
 			i: INTEGER
 			l_key: READABLE_STRING_32
-			l_list: ARRAYED_LIST [STRING]
 			l_values: HASH_TABLE [BOOLEAN, READABLE_STRING_32]
 		do
 			custom.wipe_out

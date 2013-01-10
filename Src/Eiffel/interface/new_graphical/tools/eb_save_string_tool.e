@@ -19,6 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_and_save
@@ -36,7 +41,7 @@ feature{NONE} -- Initialization
 			owner_window_set: owner_window = win
 		end
 
-	make_and_save (str: STRING; win: EV_WINDOW)
+	make_and_save (str: STRING_32; win: EV_WINDOW)
 			-- Save `str' to a file.
 			-- Display warning dialog in `win' if necessary.
 		require
@@ -69,7 +74,7 @@ feature {NONE} -- Implementation
 	owner_window: EV_WINDOW
 		-- Onwer window.
 
-	text: STRING
+	text: STRING_32
 		-- Text to be saved.
 
 	title: STRING_GENERAL
@@ -153,7 +158,7 @@ feature -- Save
 			if not retried then
 				create f.make_with_path (file_name)
 				f.create_read_write
-				f.put_string (text)
+				save_string_in_file (f, text)
 				f.close
 			end
 		rescue
@@ -163,7 +168,7 @@ feature -- Save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

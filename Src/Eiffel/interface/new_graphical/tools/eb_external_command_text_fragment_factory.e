@@ -123,6 +123,7 @@ feature -- Access
 			l_selection: STRING_32
 			l_class_name: STRING
 			l_class_i: CLASS_I
+			u: UTF_CONVERTER
 		do
 			l_class_name := class_selected_text_normalizer (a_scanner.text)
 			l_class_i := class_with_name (l_class_name)
@@ -144,7 +145,7 @@ feature -- Access
 						a_scanner.text,
 						agent new_buffer_file_name,
 						agent is_class_buffer_name_valid,
-						create {EB_BUFFER}.make (l_selection, temporary_file_name (l_class_name + ".sel"))
+						create {EB_BUFFER}.make (u.utf_32_string_to_utf_8_string_8 (l_selection), temporary_file_name (l_class_name + ".sel"))
 					)
 					Result.set_location (a_scanner.position)
 				end
@@ -518,7 +519,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,5 +1,28 @@
-note
-	description: "A command that calls an external executable"
+﻿note
+	description: "[
+					A command that calls an external executable.
+					
+					`name', `index', `external_command' and `working_directory'
+					are serialized by `resource' query. Each attribute 
+					is separated by `separator': '{'. The serialized string is written
+					into .ini file later. In order to make it possible to have  
+					'{' in the attributes, a `escape_character' is used: '!'.
+					
+					When reading from .ini file, `parse_command' parses the stored 
+					string and set back to above attributes. Those '{' preceded by '!'
+					are translated into '{' instead of being treated as separator.
+					
+					For example, an external command with name "copy unicode", with 1 as index,
+					with "copy @{CALCULATOR} c:\work\中文文件夹" as the command and with empty
+					working directory are stored as following:
+						copy unicode{1{copy @!{CALCULATOR} c:\work\中文文件夹{
+
+					The `parse_command' routine segments it into a list when retrieving:
+						- copy unicode
+						- 1
+						- copy @{CALCULATOR} c:\work\中文文件夹
+						- [empty_string]
+					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
@@ -77,7 +100,7 @@ feature {NONE} -- Initialization
 			external_output_manager.synchronize_command_list (Current)
 		end
 
-	make_from_new_command_line (w: EV_WINDOW; cmd_line: STRING)
+	make_from_new_command_line (w: EV_WINDOW; cmd_line: READABLE_STRING_GENERAL)
 			-- Use command line indicated by `cmd_line' to make a new
 			-- external command object.
 		require
@@ -109,47 +132,37 @@ feature {NONE} -- Initialization
 			external_output_manager.synchronize_command_list (Current)
 		end
 
-	make_from_string (a_editor: like editor; a_command: STRING)
+	make_from_string (a_editor: like editor; a_command: READABLE_STRING_GENERAL)
 			-- Create with `a_command'
 		require
 			command_not_void: a_command /= Void
 		local
-			tok: STRING
-			i, i1 ,i2: INTEGER
-			u: UTF_CONVERTER
+			tok: READABLE_STRING_GENERAL
+			l_sections: like parse_command
 		do
 			editor := a_editor
 
-			i := a_command.index_of (separator, 1)
-			name := a_command.substring (1, i - 1)
-			i1 := a_command.index_of (separator, i + 1)
-			tok := a_command.substring (i + 1, i1 - 1)
-			if tok.is_integer then
-				index := tok.to_integer
-			else
-				index := -1
+			l_sections := parse_command (a_command)
+			if l_sections.count = 4 then
+				name := l_sections.i_th (1)
+				tok := l_sections.i_th (2)
+				if tok.is_integer then
+					index := tok.to_integer
+				else
+					index := -1
+				end
+				external_command := l_sections.i_th (3)
+				create working_directory.make_from_string (l_sections.i_th (4))
 			end
-			i2 := a_command.index_of (separator, i1 + 1)
 
-			external_command := a_command.substring (i1 + 1, i2 - 1)
-			if i2 = a_command.count then
-				create working_directory.make_empty
-			else
-				create working_directory.make_from_string (u.utf_8_string_8_to_string_32 (a_command.substring (i2 + 1, a_command.count)))
-			end
 				-- Check validity before inserting.
-				-- This is a bit redundant with the precondition, but
-				-- you never know what a David Hollenberg is capable of ^.^;;
-			if
-				is_valid
-			then
+			if is_valid then
 				commands.put (Current, index)
-
 				enable_sensitive
 			end
 		end
 
-	make_and_run_only (cmd: STRING; dir: detachable PATH)
+	make_and_run_only (cmd: READABLE_STRING_GENERAL; dir: detachable PATH)
 			-- Create for running `cmd' in directory `dir'.
 			-- Do not save external command and its working directory to preference.
 		require
@@ -175,7 +188,7 @@ feature -- Basic operations
 
 feature {NONE} -- Command substitution
 
-	show_warning_dialog (msg: STRING_GENERAL)
+	show_warning_dialog (msg: READABLE_STRING_GENERAL)
 			-- Show a warning dialog to display `msg'.
 		do
 			prompts.show_warning_prompt (msg, Void, Void)
@@ -200,6 +213,7 @@ feature -- Execution
 			l_replacer: EB_TEXT_REPLACER
 			l_factory: EB_EXTERNAL_COMMAND_TEXT_FRAGMENT_FACTORY
 			l_fragments: LINKED_LIST [EB_TEXT_FRAGMENT]
+			u: UTF_CONVERTER
 		do
 			if external_launcher.launched and then not external_launcher.has_exited then
 				show_warning_dialog (interface_names.e_external_command_is_running)
@@ -212,12 +226,13 @@ feature -- Execution
 				else
 					create wd.make_empty
 				end
-				cl.append (external_command)
+				cl.append_string_general (external_command)
 				external_launcher.set_original_command_name (cl)
 
 					-- Substitute placeholders in execute command `cl'.
 				create l_factory
-				create l_scanner.make (l_factory, create {YY_BUFFER}.make (cl))
+					-- The scanner convert UTF-8 to UTF-32 when done.
+				create l_scanner.make (l_factory, create {YY_BUFFER}.make (u.utf_32_string_to_utf_8_string_8 (cl)))
 				create l_replacer
 				create l_fragments.make
 
@@ -279,23 +294,23 @@ feature -- Execution
 
 feature -- Properties
 
-	menu_name: STRING_GENERAL
+	menu_name: STRING_32
 			-- Representation of `Current' in menus.
 		do
-			create {STRING_32}Result.make (name.count + 15)
-			Result.append (("&").as_string_32)
-			Result.append (index.out.as_string_32)
-			Result.append ((" ").as_string_32)
-			Result.append (interface_names.escaped_string_for_menu_item (name).as_string_32)
+			create Result.make (name.count + 15)
+			Result.append_string_general ("&")
+			Result.append (index.out)
+			Result.append_string_general (" ")
+			Result.append_string_general (interface_names.escaped_string_for_menu_item (name))
 		end
 
-	name: STRING
+	name: READABLE_STRING_GENERAL
 			-- Name that the user gave to this command.
 
 	index: INTEGER
 			-- Index of `Current' in the global list of known external commands.
 
-	external_command: STRING_32
+	external_command: READABLE_STRING_GENERAL
 			-- Command line that is invoked when `Current' is executed.
 
 	working_directory: detachable PATH
@@ -349,15 +364,15 @@ feature -- Status setting
 
 feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 
-	set_command (cmd: STRING)
+	set_command (cmd: READABLE_STRING_GENERAL)
 			-- Set `external_command' with `cmd'.
 		require
 			cmd_not_void: cmd /= Void
 			cmd_not_empty: not cmd.is_empty
 		do
-			create external_command.make_from_string (cmd)
+			external_command := cmd.twin
 		ensure
-			external_command_set: external_command.is_equal (cmd)
+			external_command_set: external_command.same_string (cmd)
 		end
 
 	set_working_directory (dir: detachable PATH)
@@ -378,20 +393,23 @@ feature -- Status report
 
 	resource: STRING
 			-- Save `Current's information to a string representation.
+			-- In UTF-8
 		local
+			l_result: STRING_32
 			u: UTF_CONVERTER
 		do
-			create Result.make (menu_name.count + external_command.count + 10)
-			Result.append (name)
-			Result.append_character (separator)
-			Result.append (index.out)
-			Result.append_character (separator)
-			Result.append (external_command)
+			create l_result.make (menu_name.count + external_command.count + 10)
+			l_result.append (escape (name))
+			l_result.append_character (separator)
+			l_result.append (escape (index.out))
+			l_result.append_character (separator)
+			l_result.append (escape (external_command))
 				-- Store `working_directory' to preference.
-			Result.append_character (separator)
+			l_result.append_character (separator)
 			if attached working_directory as wd then
-				Result.append (u.string_32_to_utf_8_string_8 (wd.name))
+				l_result.append (escape (wd.name))
 			end
+			Result := u.string_32_to_utf_8_string_8 (l_result)
 		ensure
 			not_void: Result /= Void
 			valid: valid_resource (Result)
@@ -399,10 +417,15 @@ feature -- Status report
 
 	valid_resource (r: STRING): BOOLEAN
 			-- Is `r' a valid resource representation of an external command?
+			-- `r' is in UTF-8.
 		require
 			not_void_resource: r /= Void
+		local
+			l_str: STRING_32
+			u: UTF_CONVERTER
 		do
-			Result := r.occurrences (separator) = 3
+			l_str := u.utf_8_string_8_to_string_32 (r)
+			Result := parse_command (l_str).count = 4
 		end
 
 	is_valid: BOOLEAN
@@ -433,8 +456,11 @@ feature {NONE} -- Widgets
 
 feature {NONE} -- Implementation
 
-	separator: CHARACTER = '{'
+	separator: CHARACTER_32 = '{'
 			-- Separator in resource representation.
+
+	escape_character: CHARACTER_32 = '!'
+			-- Escape character. "!{" represents `{'
 
 	commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 			-- Abstract representation of external commands.
@@ -635,11 +661,57 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	parse_command (a_str: READABLE_STRING_GENERAL): ARRAYED_LIST [STRING_32]
+			-- Parse the command from stored string
+		local
+			i, l_count: INTEGER
+			l_str: STRING_32
+			l_item: CHARACTER_32
+		do
+			from
+				i := 1
+				create Result.make (4)
+				create l_str.make (a_str.count)
+				l_count := a_str.count
+			until
+				i > l_count
+			loop
+				l_item := a_str.item (i)
+				if l_item = separator then
+					if a_str.valid_index (i - 1) and then a_str.item (i - 1) = escape_character then
+						l_str.put (separator, l_str.count)
+					else
+						Result.extend (l_str)
+						create l_str.make (a_str.count)
+					end
+				else
+					l_str.append_character (l_item)
+				end
+				i := i + 1
+			end
+			Result.extend (l_str)
+		end
+
+	escape (a_str: READABLE_STRING_GENERAL): STRING_32
+			-- Escape the separater character
+		do
+			create Result.make_from_string_general (a_str)
+			Result.replace_substring_all (create {STRING_32}.make_filled (Separator, 1), escaped_string)
+		end
+
+	escaped_string: STRING_32
+			-- Escaped string
+		once
+			create Result.make (2)
+			Result.append_character (escape_character)
+			Result.append_character (separator)
+		end
+
 	editor: EB_EXTERNAL_COMMANDS_EDITOR
 			-- External commands edtitor
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -57,15 +57,15 @@ feature -- Status setting
 			is_launch_session_over_set: is_launch_session_over = b
 		end
 
-	set_original_command_name (name: STRING)
+	set_original_command_name (name: READABLE_STRING_GENERAL)
 			-- Set `original_command_name' with `name'.
 		require
 			name_not_void: name /= Void
 			name_not_empty: not name.is_empty
 		do
-			create original_command_name.make_from_string (name)
+			original_command_name := name.twin
 		ensure
-			original_command_name_set: original_command_name.is_equal (name)
+			original_command_name_set: original_command_name.same_string (name)
 		end
 
 feature -- External commands status setting
@@ -171,7 +171,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation
 
-	original_command_name: STRING
+	original_command_name: READABLE_STRING_GENERAL
 			-- Original external name
 
 	commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
@@ -206,7 +206,7 @@ feature{NONE} -- Process data storage
 			Result := external_storage
 		end
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -146,17 +146,21 @@ feature -- Basic operation
 		local
 			l_exclude_regexp: like exclude_regexp
 			l_include_regexp: like include_regexp
+			u: UTF_CONVERTER
+			l_loc: STRING_8
 		do
 			Result := True
 			l_exclude_regexp := exclude_regexp
 			if l_exclude_regexp /= Void then
-				l_exclude_regexp.match (a_location)
+					-- FIXME: We currently perform the match on the UTF-8 version of the string.
+				l_loc := u.utf_32_string_to_utf_8_string_8 (a_location)
+				l_exclude_regexp.match (l_loc)
 				if l_exclude_regexp.has_matched then
 					Result := False
 					l_include_regexp := include_regexp
 					if l_include_regexp /= Void then
 							-- it's excluded, check if there is an include that matches
-						l_include_regexp.match (a_location)
+						l_include_regexp.match (l_loc)
 						Result := l_include_regexp.has_matched
 					end
 				end
@@ -177,6 +181,7 @@ feature {NONE} -- Implementation
 		local
 			l_regexp_str: STRING
 			l_left_paren, l_right_paren_and_bar: STRING
+			u: UTF_CONVERTER
 		do
 			if a_list /= Void and then not a_list.is_empty then
 				debug ("fixme")
@@ -190,7 +195,10 @@ feature {NONE} -- Implementation
 				until
 					a_list.after
 				loop
-					l_regexp_str.append (l_left_paren + a_list.item_for_iteration + l_right_paren_and_bar)
+					l_regexp_str.append (l_left_paren)
+						-- FIXME: We currently perform the match on the UTF-8 version of the string.
+					u.utf_32_string_into_utf_8_string_8 (a_list.item_for_iteration, l_regexp_str)
+					l_regexp_str.append (l_right_paren_and_bar)
 					a_list.forth
 				end
 				l_regexp_str.remove_tail (1)

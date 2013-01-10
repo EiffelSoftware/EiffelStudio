@@ -40,11 +40,11 @@ feature {NONE} -- Implementation
 			l_over: ARRAYED_LIST [CONF_GROUP]
 			l_over_list: ARRAYED_LIST [STRING_32]
 			l_over_dialog: GROUPS_LIST_DIALOG
-			l_rename_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING_32, STRING_32]]
-			l_mapping_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING_32, STRING_32]]
+			l_rename_prop: DIALOG_PROPERTY [HASH_TABLE [STRING_32, STRING_32]]
+			l_mapping_prop: DIALOG_PROPERTY [HASH_TABLE [STRING_32, STRING_32]]
 			l_class_opt_prop: DIALOG_PROPERTY [HASH_TABLE [CONF_OPTION, STRING_32]]
 			l_class_opt_dial: CLASS_OPTION_DIALOG
-			l_vis_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]]
+			l_vis_prop: DIALOG_PROPERTY [HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
 			l_precompile: CONF_PRECOMPILE
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 					l_rename_prop.set_value (l_virtual_group.renaming_32)
 				end
 				l_rename_prop.change_value_actions.extend (agent l_virtual_group.set_renaming_32)
-				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING_32, STRING_32]}?, agent handle_value_changes (True)))
+				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [STRING_32, STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_rename_prop)
 			end
 
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 					l_mapping_prop.set_value (l_cluster.mapping_32)
 				end
 				l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping_32)
-				l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING_32, STRING_32]}?, agent handle_value_changes (True)))
+				l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [STRING_32, STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_mapping_prop)
 			elseif l_assembly /= Void then
 					-- assembly culture
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 				l_vis_prop.set_display_agent (agent output_visible)
 				l_vis_prop.set_value (l_visible.visible)
 				l_vis_prop.change_value_actions.extend (agent l_visible.set_visible)
-				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]}?, agent handle_value_changes (False)))
+				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING, HASH_TABLE [STRING, STRING]]], STRING]}?, agent handle_value_changes (False)))
 				properties.add_property (l_vis_prop)
 			end
 
@@ -493,7 +493,7 @@ feature {NONE} -- Configuration settings
 
 feature {NONE} -- Output generation
 
-	output_renaming (a_table: EQUALITY_HASH_TABLE [STRING_32, STRING_32]): STRING_32
+	output_renaming (a_table: HASH_TABLE [STRING_32, STRING_32]): STRING_32
 			-- Generate a text representation of `a_table'.
 		do
 			if a_table /= Void and then not a_table.is_empty then
@@ -535,7 +535,7 @@ feature {NONE} -- Output generation
 			end
 		end
 
-	output_visible (a_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]): STRING_32
+	output_visible (a_visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]): STRING_32
 			-- Generate a text representation for `a_visible'.
 		do
 			if a_visible /= Void and then not a_visible.is_empty then

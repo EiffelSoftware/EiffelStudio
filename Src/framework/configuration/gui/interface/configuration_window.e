@@ -831,7 +831,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			if current_target.extends /= Void then
 				l_inh_vars := current_target.extends.variables
 			else
-				create l_inh_vars.make (0)
+				create l_inh_vars.make_equal (0)
 			end
 			from
 				l_vars := current_target.variables
@@ -894,7 +894,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_vars, l_inh_vars: HASH_TABLE [STRING, STRING]
 			i: INTEGER
 			l_item: STRING_PROPERTY
 			l_var_key: STRING
@@ -911,7 +911,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			if current_target.extends /= Void then
 				l_inh_vars := current_target.extends.mapping
 			else
-				create l_inh_vars.make (0)
+				create l_inh_vars.make_equal (0)
 			end
 			from
 				l_vars := current_target.mapping

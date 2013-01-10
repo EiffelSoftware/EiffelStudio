@@ -8,35 +8,21 @@ note
 class
 	EQUALITY_HASH_TABLE [G -> detachable ANY, H -> HASHABLE]
 
+obsolete
+	"[2013/01/10] Use `{HASH_TABLE}.make_equal'"
+
 inherit
 	HASH_TABLE [G, H]
-		redefine
-			is_equal
+		rename
+			make as table_make,
+			make_equal as make
 		end
 
 create
 	make
 
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN
-			-- Does table contain the same information as `other'?
-		local
-			a, b: like Current
-		do
-			a := Current
-			b := other
-
-			from
-				Result := a.count = b.count
-				a.start
-			until
-				not Result or a.after
-			loop
-				Result := equal (a.item_for_iteration, b.item (a.key_for_iteration))
-				a.forth
-			end
-		end
+create {EQUALITY_HASH_TABLE}
+	table_make
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"

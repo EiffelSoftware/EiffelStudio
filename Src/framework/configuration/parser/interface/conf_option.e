@@ -279,10 +279,10 @@ feature {NONE} -- Access: void safety
 
 feature -- Access, stored in configuration file.
 
-	debugs: EQUALITY_HASH_TABLE [BOOLEAN, STRING]
+	debugs: HASH_TABLE [BOOLEAN, STRING]
 			-- Debug settings.
 
-	warnings: EQUALITY_HASH_TABLE [BOOLEAN, STRING]
+	warnings: HASH_TABLE [BOOLEAN, STRING]
 			-- Warning settings.
 
 feature -- Access queries
@@ -318,14 +318,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			a_name_lower: a_name.is_equal (a_name.as_lower)
 		do
 			if debugs = Void then
-				create debugs.make (1)
+				create debugs.make_equal (1)
 			end
 			debugs.force (an_enabled, a_name)
 		ensure
 			added: debugs.has (a_name) and then debugs.item (a_name) = an_enabled
 		end
 
-	add_warning (a_name: STRING_8; an_enabled: BOOLEAN)
+	add_warning (a_name: READABLE_STRING_32; an_enabled: BOOLEAN)
 			-- Add a warning.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -336,7 +336,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 		do
 			w := warnings
 			if w = Void then
-				create w.make (1)
+				create w.make_equal (1)
 				warnings := w
 			end
 			w.force (an_enabled, a_name)
@@ -661,6 +661,8 @@ invariant
 	local_namespace_not_empty: local_namespace = Void or else not local_namespace.is_empty
 	syntax_attached: syntax /= Void
 	void_safety_attached: void_safety /= Void
+	warnings_compare_objects: attached warnings as l_w implies l_w.object_comparison
+	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software"

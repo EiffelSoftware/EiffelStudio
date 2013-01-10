@@ -9,7 +9,7 @@ class
 	VISIBLE_DIALOG
 
 inherit
-	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]]
+	PROPERTY_DIALOG [HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]]
 		redefine
 			initialize
 		end
@@ -156,7 +156,7 @@ feature {NONE} -- Agents
 	remove
 			-- Remove `current_class' or `current_feature'.
 		local
-			l_features: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_features: HASH_TABLE [STRING, STRING]
 		do
 			if value /= Void then
 				if current_feature /= Void then
@@ -188,10 +188,10 @@ feature {NONE} -- Agents
 			end
 			if is_valid_class_name (l_name) and then is_valid_class_name (l_vis_name) and then (value = Void or else not value.has (l_name)) then
 				if value = Void then
-					create value.make (1)
+					create value.make_equal (1)
 				end
 
-				value.force (create {EQUALITY_TUPLE [TUPLE [STRING_8, EQUALITY_HASH_TABLE [STRING_8, STRING_8]]]}.make ([l_vis_name, Void]), l_name)
+				value.force (create {EQUALITY_TUPLE [TUPLE [STRING_8, HASH_TABLE [STRING_8, STRING_8]]]}.make ([l_vis_name, Void]), l_name)
 				original_name.set_text ("")
 				renamed_name.set_text ("")
 				current_class := l_name
@@ -203,7 +203,7 @@ feature {NONE} -- Agents
 			-- Add a new feature.
 		local
 			l_name, l_vis_name: STRING
-			l_feats: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_feats: HASH_TABLE [STRING, STRING]
 		do
 			if current_class /= Void and then value /= Void and then value.has (current_class) then
 				l_name := original_name.text.as_lower
@@ -214,7 +214,7 @@ feature {NONE} -- Agents
 				l_feats := value.item (current_class).item.features
 				if is_valid_feature_name (l_name) and then is_valid_feature_name (l_vis_name) and then (l_feats = Void or else not l_feats.has (l_name)) then
 					if l_feats = Void then
-						create l_feats.make (1)
+						create l_feats.make_equal (1)
 						value.item (current_class).item.features := l_feats
 					end
 
@@ -240,8 +240,8 @@ feature {NONE} -- Implementation
 		local
 			l_sorted_list: ARRAYED_LIST [STRING]
 			l_class_item, l_feat_item: EV_TREE_ITEM
-			l_rena: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
-			l_feat: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_rena: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
+			l_feat: HASH_TABLE [STRING, STRING]
 			l_class, l_feat_name, l_vis_name: STRING
 			l_cur_class: BOOLEAN
 			l_sorter: QUICK_SORTER [STRING]

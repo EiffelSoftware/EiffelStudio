@@ -16,17 +16,17 @@ inherit
 
 feature -- Access, stored in configuration file
 
-	renaming: EQUALITY_HASH_TABLE [STRING, STRING]
+	renaming: HASH_TABLE [STRING, STRING]
 			-- Mapping of renamed classes from the old name to the new name.
 
-	renaming_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32]
+	renaming_32: HASH_TABLE [STRING_32, STRING_32]
 			-- Same as `renaming' but with STRING_32.
 		local
 			l_renaming: like renaming
 		do
 			l_renaming := renaming
 			if l_renaming /= Void then
-				create Result.make (l_renaming.count)
+				create Result.make_equal (l_renaming.count)
 				from
 					l_renaming.start
 				until
@@ -68,7 +68,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			if a_renaming_32 = Void then
 				renaming := Void
 			else
-				create renaming.make (a_renaming_32.count)
+				create renaming.make_equal (a_renaming_32.count)
 				from
 					a_renaming_32.start
 				until
@@ -89,7 +89,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_new_name_upper: a_new_name.is_equal (a_new_name.as_upper)
 		do
 			if renaming = Void then
-				create renaming.make (1)
+				create renaming.make_equal (1)
 			end
 			renaming.force (a_new_name, an_old_name)
 		ensure

@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create internal_external_make.make (1)
 			create internal_pre_compile_action.make (1)
 			create internal_post_compile_action.make (1)
-			create internal_variables.make (1)
+			create internal_variables.make_equal (1)
 			create environ_variables.make (1)
 			create internal_settings.make (1)
 			system := a_system
@@ -398,7 +398,7 @@ feature -- Access queries
 				if internal_mapping /= Void then
 					Result := internal_mapping
 				else
-					create Result.make (5)
+					create Result.make_equal (5)
 				end
 			end
 		ensure
@@ -1339,7 +1339,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 		do
 			if internal_mapping = Void then
-				create internal_mapping.make (15)
+				create internal_mapping.make_equal (15)
 			end
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 		end
@@ -1495,7 +1495,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this target itself.
 
-	internal_mapping: EQUALITY_HASH_TABLE [STRING, STRING]
+	internal_mapping: HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
 	changeable_internal_options: like internal_options
@@ -1539,7 +1539,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_post_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- Actions to be executed after compilation of this target itself.
 
-	internal_variables: EQUALITY_HASH_TABLE [STRING_32, STRING_32]
+	internal_variables: HASH_TABLE [STRING_32, STRING_32]
 			-- User defined variables of this target itself.
 
 feature {NONE} -- Implementation

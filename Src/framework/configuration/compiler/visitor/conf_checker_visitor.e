@@ -29,7 +29,7 @@ feature -- Visit nodes
 	process_group (a_group: CONF_GROUP)
 			-- Visit `a_group'.
 		local
-			l_ren: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_ren: HASH_TABLE [STRING, STRING]
 			l_name: STRING
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]

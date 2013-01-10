@@ -181,7 +181,7 @@ feature -- Access
 	visible_level: VISIBLE_I
 			-- Visible level
 		local
-			l_vis: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_vis: HASH_TABLE [STRING, STRING]
 			l_sel: VISIBLE_SELEC_I
 			l_ren: HASH_TABLE [STRING, STRING]
 			l_vis_feat: SEARCH_TABLE [STRING]
@@ -382,7 +382,7 @@ feature -- Access
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
+	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
 			-- The visible features.
 		deferred
 		end
@@ -648,7 +648,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

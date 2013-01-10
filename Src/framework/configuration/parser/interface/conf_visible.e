@@ -18,7 +18,7 @@ feature -- Basic commands
 		require
 			a_added_classes_not_void: a_added_classes /= Void
 		local
-			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
+			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
 			l_class: CONF_CLASS
 			l_error: BOOLEAN
 			l_map: HASH_TABLE [STRING, STRING]
@@ -62,7 +62,7 @@ feature -- Status
 
 feature {CONF_ACCESS} -- Access, stored in configuration file
 
-	visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]
+	visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]
 			-- Table of table of features of classes that are visible.
 			-- Mapped to their rename (if any).
 			-- CLASS_NAME => [CLASS_RENAMED, feature_name => feature_renamed]
@@ -87,13 +87,13 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			a_feature_rename_ok: a_feature_rename /= Void implies not a_feature_rename.is_empty
 			a_feature_rename_implies_feature: a_feature_rename /= Void implies a_feature /= Void
 		local
-			l_v_cl: EQUALITY_HASH_TABLE [STRING, STRING]
-			l_tpl: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
+			l_v_cl: HASH_TABLE [STRING, STRING]
+			l_tpl: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
 			l_visible_name, l_feature_name: STRING
 			l_class, l_feature: STRING
 		do
 			if visible = Void then
-				create visible.make (1)
+				create visible.make_equal (1)
 			end
 			l_class := a_class.as_upper
 			if a_feature /= Void then
@@ -118,7 +118,7 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			if l_feature /= Void then
 				l_v_cl := l_tpl.item.features
 				if l_v_cl = Void then
-					create l_v_cl.make (1)
+					create l_v_cl.make_equal (1)
 					l_tpl.item.features := l_v_cl
 				end
 				l_v_cl.force (l_feature_name, l_feature)
@@ -128,7 +128,7 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 
 feature {NONE} -- Implementation
 
-	mapping: EQUALITY_HASH_TABLE [STRING_8, STRING_8]
+	mapping: HASH_TABLE [STRING_8, STRING_8]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		deferred
 		ensure

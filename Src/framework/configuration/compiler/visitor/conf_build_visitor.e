@@ -348,7 +348,7 @@ feature -- Visit nodes
 			l_target: CONF_TARGET
 			l_uuid: UUID
 			l_vis: like Current
-			l_ren: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_ren: HASH_TABLE [STRING, STRING]
 			l_prefixed_classes: like current_classes
 			l_pre: STRING
 			l_old_library: CONF_LIBRARY

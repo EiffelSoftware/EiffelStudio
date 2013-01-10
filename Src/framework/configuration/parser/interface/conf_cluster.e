@@ -483,7 +483,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 		do
 			if internal_mapping = Void then
-				create internal_mapping.make (1)
+				create internal_mapping.make_equal (1)
 			end
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 			cached_mapping := Void
@@ -504,7 +504,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			if a_mapping_32 = Void then
 				internal_mapping := Void
 			else
-				create internal_mapping.make (a_mapping_32.count)
+				create internal_mapping.make_equal (a_mapping_32.count)
 				from
 					a_mapping_32.start
 				until
@@ -554,7 +554,7 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
 			-- Rules for files to be included or excluded of this cluster itself.
 
-	internal_mapping: EQUALITY_HASH_TABLE [STRING, STRING]
+	internal_mapping: HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this cluster itself.
 
 feature {NONE} -- Cached informations

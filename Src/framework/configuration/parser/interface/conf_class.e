@@ -87,7 +87,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result_assertions: Result.assertions /= Void
 		end
 
-	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
+	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
 			-- The visible features.
 
 	is_valid: BOOLEAN
@@ -261,7 +261,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_vis_not_void: a_vis /= Void
 			a_renamed_not_void: a_vis.item.class_renamed /= Void
 		local
-			l_vis_check, l_vis_other: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_vis_check, l_vis_other: HASH_TABLE [STRING, STRING]
 			l_other: STRING
 			l_error: BOOLEAN
 		do

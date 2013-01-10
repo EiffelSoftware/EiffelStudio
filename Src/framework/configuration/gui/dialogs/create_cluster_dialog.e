@@ -186,7 +186,6 @@ feature {NONE} -- Actions
 			-- Set location from `browser_dialog'.
 		local
 			l_dir: PATH
-			i: INTEGER
 		do
 			l_dir := browser_dialog.path
 			location.set_text (l_dir.name)

@@ -93,9 +93,6 @@ feature {NONE} -- Agents
 			-- Called if we add a new renaming.
 		require
 			initialized: is_initialized
-		local
-			l_last_row: INTEGER
-			l_tp: STRING_PROPERTY
 		do
 			if value = Void then
 				create value.make (1)

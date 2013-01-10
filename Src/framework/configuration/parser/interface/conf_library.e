@@ -65,13 +65,13 @@ feature -- Access, in compiled only, not stored to configuration file
 	library_target: CONF_TARGET
 			-- The library target.
 
-	mapping: EQUALITY_HASH_TABLE [STRING, STRING]
+	mapping: HASH_TABLE [STRING, STRING]
 			-- We use the one from the target.
 		do
 			if library_target /= Void then
 				Result := library_target.mapping
 			else
-				create Result.make (0)
+				create Result.make_equal (0)
 			end
 		end
 

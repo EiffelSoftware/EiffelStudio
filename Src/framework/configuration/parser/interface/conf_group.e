@@ -178,17 +178,17 @@ feature -- Access queries
 			Result := overriders /= Void and then not overriders.is_empty
 		end
 
-	mapping: EQUALITY_HASH_TABLE [STRING, STRING]
+	mapping: HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	mapping_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32]
+	mapping_32: HASH_TABLE [STRING_32, STRING_32]
 			-- Same as `mapping' but with STRING_32.
 		do
-			create Result.make (mapping.count)
+			create Result.make_equal (mapping.count)
 			from
 				mapping.start
 			until

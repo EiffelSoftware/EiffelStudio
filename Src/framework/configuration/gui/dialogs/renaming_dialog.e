@@ -9,7 +9,7 @@ class
 	RENAMING_DIALOG
 
 inherit
-	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [STRING_32, STRING_32]]
+	PROPERTY_DIALOG [HASH_TABLE [STRING_32, STRING_32]]
 		redefine
 			initialize,
 			dialog_key_press_action
@@ -95,7 +95,7 @@ feature {NONE} -- Agents
 			initialized: is_initialized
 		do
 			if value = Void then
-				create value.make (1)
+				create value.make_equal (1)
 			end
 			if not (value.has (conf_interface_names.dialog_renaming_create_old) or value.has_item (conf_interface_names.dialog_renaming_create_new)) then
 				value.force (conf_interface_names.dialog_renaming_create_new, conf_interface_names.dialog_renaming_create_old)

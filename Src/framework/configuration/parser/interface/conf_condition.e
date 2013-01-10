@@ -71,7 +71,7 @@ feature -- Queries
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_vars: EQUALITY_HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
+			l_vars: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
 			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 			l_ver_state: CONF_VERSION

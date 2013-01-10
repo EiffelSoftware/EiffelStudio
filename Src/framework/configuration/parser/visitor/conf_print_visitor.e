@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 			indent_back: indent = old indent
 		end
 
-	append_mapping (a_mapping: EQUALITY_HASH_TABLE [STRING, STRING])
+	append_mapping (a_mapping: HASH_TABLE [STRING, STRING])
 			-- Append `a_mapping'.
 		do
 			if a_mapping /= Void then
@@ -955,12 +955,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING])
+	append_visible (a_visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING])
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
 		local
-			l_vis_feat: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_vis_feat: HASH_TABLE [STRING, STRING]
 			l_class: STRING
 			l_feat, l_feat_rename, l_class_rename: STRING
 		do
@@ -1111,7 +1111,7 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_deps: SEARCH_TABLE [CONF_GROUP]
-			l_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING_8, EQUALITY_HASH_TABLE [STRING_8, STRING_8]]], STRING_8]
+			l_visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING_8, HASH_TABLE [STRING_8, STRING_8]]], STRING_8]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)

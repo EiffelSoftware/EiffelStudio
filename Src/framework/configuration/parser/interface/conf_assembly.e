@@ -109,11 +109,11 @@ feature -- Access queries
 			Result := physical_assembly.accessible_groups
 		end
 
-	mapping: EQUALITY_HASH_TABLE [STRING, STRING]
+	mapping: HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		once
 				-- There are no mappings for assemblies
-			create Result.make (0)
+			create Result.make_equal (0)
 		end
 
 	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type]

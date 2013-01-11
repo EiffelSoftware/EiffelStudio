@@ -12,6 +12,9 @@ note
 class
 	PREFERENCE_FACTORY [G, H -> TYPED_PREFERENCE [G] create make, make_from_string_value end]
 
+inherit
+	PREFERENCE_EXPORTER
+
 feature -- Commands
 
 	new_preference (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: G): H

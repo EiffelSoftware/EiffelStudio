@@ -456,7 +456,7 @@ feature -- Storage access
 			Result := preferences_storage.exists
 		end
 
-feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_STORAGE_I} -- Implementation
+feature {PREFERENCE_EXPORTER} -- Implementation
 
 	default_values: HASH_TABLE [TUPLE [description: detachable STRING_32; value: detachable STRING_32; hidden: BOOLEAN; restart: BOOLEAN], STRING]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
@@ -574,14 +574,14 @@ feature {NONE} -- Implementation
 
 									l_attribute := node.attribute_by_name (once "HIDDEN")
 									if l_attribute /= Void then
-										pref_hidden := l_attribute.value.is_case_insensitive_equal (once "true")
+										pref_hidden := l_attribute.value.is_case_insensitive_equal_general (once "true")
 									else
 										pref_hidden := False
 									end
 
 									l_attribute := node.attribute_by_name (once "RESTART")
 									if l_attribute /= Void then
-										pref_restart := l_attribute.value.is_case_insensitive_equal (once "true")
+										pref_restart := l_attribute.value.is_case_insensitive_equal_general (once "true")
 									else
 										pref_restart := False
 									end
@@ -596,21 +596,21 @@ feature {NONE} -- Implementation
 											if l_attribute /= Void then
 												att_pref_value.append (l_attribute.value.as_lower + "+")
 											else
-												att_pref_value.append ("false+")
+												att_pref_value.append_string_general ("false+")
 											end
 
 											l_attribute := sub_node.attribute_by_name (once "Ctrl")
 											if l_attribute /= Void then
 												att_pref_value.append (l_attribute.value.as_lower + "+")
 											else
-												att_pref_value.append ("false+")
+												att_pref_value.append_string_general ("false+")
 											end
 
 											l_attribute := sub_node.attribute_by_name (once "Shift")
 											if l_attribute /= Void then
 												att_pref_value.append (l_attribute.value.as_lower  + "+")
 											else
-												att_pref_value.append ("false+")
+												att_pref_value.append_string_general ("false+")
 											end
 										else
 											att_pref_value := Void

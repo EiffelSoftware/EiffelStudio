@@ -8,6 +8,9 @@ note
 deferred class
 	PREFERENCE
 
+inherit
+	PREFERENCE_EXPORTER
+
 feature -- Status setting
 
 	set_name (new_name: STRING)
@@ -139,7 +142,7 @@ feature -- Access
 	auto_preference: detachable like Current
 			-- Preference to use for auto color.
 
-feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
+feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
 			-- String value for this preference.

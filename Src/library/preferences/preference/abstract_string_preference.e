@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			Precursor {TYPED_PREFERENCE} (v)
 		end
 
-feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
+feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
 			-- String representation of `value'.

@@ -14,7 +14,7 @@ inherit
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
-feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
+feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
 			-- String representation of `value'.		

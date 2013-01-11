@@ -10,6 +10,9 @@ note
 deferred class
 	PREFERENCE_WIDGET
 
+inherit
+	PREFERENCE_EXPORTER
+
 feature {NONE} -- Initialization
 
 	make_with_preference (a_preference: like preference)

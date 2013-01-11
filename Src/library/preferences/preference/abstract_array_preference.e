@@ -12,7 +12,7 @@ inherit
 
 	ABSTRACT_CHOICE_PREFERENCE [G]
 
-feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
+feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
 			-- String representation of `value'.				
@@ -35,7 +35,7 @@ feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} 
 							Result.append (escaped_string (l_item.to_string_32))
 						end
 						if not (index = l_array.count) then
-							Result.append (";")
+							Result.append_string_general (";")
 						end
 					end
 					index := index + 1

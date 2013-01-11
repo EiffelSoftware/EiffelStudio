@@ -19,7 +19,7 @@ inherit
 
 	ABSTRACT_CHOICE_PREFERENCE [G]
 
-feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
+feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
 			-- String representation of `value'.				
@@ -95,7 +95,6 @@ feature -- Change
 	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		local
-			values: ARRAYED_LIST [G]
 			l_value: like value
 			s: STRING_32
 			i: INTEGER

@@ -11,6 +11,9 @@ note
 deferred class
 	PREFERENCE_VIEW
 
+inherit
+	PREFERENCE_EXPORTER
+
 feature -- Initialization
 
 	make (a_preferences: like preferences)

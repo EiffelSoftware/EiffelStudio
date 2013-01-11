@@ -10,6 +10,9 @@ note
 class
 	PREFERENCE_MANAGER
 
+inherit
+	PREFERENCE_EXPORTER
+
 create {PREFERENCES}
 	make
 

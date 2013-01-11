@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 	make_empty
 		do
-			make ("")
+			make ({STRING_32} "")
 		end
 
 feature -- Access

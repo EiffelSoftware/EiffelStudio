@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: detachable STRING
+	file_name: detachable PATH
 			-- File name of the active document
 
 	tool_bar: detachable WEL_TOOL_BAR
@@ -168,10 +168,11 @@ feature {NONE} -- Implementation
 			when Cmd_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
-					l_file_name := open_file_dialog.file_name.twin
+					l_file_name := open_file_dialog.file_path
 					file_name := l_file_name
-					create file.make_open_read (l_file_name)
-					if l_file_name.substring_index ("txt", 1) > 0 then
+					create file.make_with_path (l_file_name)
+					file.open_read
+					if l_file_name.has_extension ("txt") then
 						l_rich_edit.load_text_file (file)
 					else
 						l_rich_edit.load_rtf_file (file)
@@ -182,8 +183,9 @@ feature {NONE} -- Implementation
 			when Cmd_save then
 				l_file_name := file_name
 				if l_file_name /= Void then
-					create file.make_create_read_write (l_file_name)
-					if l_file_name.substring_index ("txt", 1) > 0 then
+					create file.make_with_path (l_file_name)
+					file.create_read_write
+					if l_file_name.has_extension ("txt") then
 						l_rich_edit.save_text_file (file)
 					else
 						l_rich_edit.save_rtf_file (file)
@@ -194,11 +196,12 @@ feature {NONE} -- Implementation
 			when Cmd_save_as then
 				save_file_dialog.activate (Current)
 				if save_file_dialog.selected then
-					l_file_name := save_file_dialog.file_name
+					l_file_name := save_file_dialog.file_path
 					file_name := l_file_name
 					set_window_title
-					create file.make_create_read_write (l_file_name)
-					if l_file_name.substring_index ("txt", 1) > 0 then
+					create file.make_with_path (l_file_name)
+					file.create_read_write
+					if l_file_name.has_extension ("txt") then
 						l_rich_edit.save_text_file (file)
 					else
 						l_rich_edit.save_rtf_file (file)
@@ -362,14 +365,14 @@ feature {NONE} -- Implementation
 	set_window_title
 			-- Set the window's title with `file_name'.
 		local
-			s: STRING
+			s: STRING_32
 		do
 			s := Title.twin
-			s.append (" - ")
+			s.append_string_general (" - ")
 			if attached file_name as l_file_name then
-				s.append (l_file_name)
+				s.append (l_file_name.name)
 			else
-				s.append ("Untitled")
+				s.append_string_general ("Untitled")
 			end
 			set_text (s)
 		end
@@ -388,7 +391,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	Title: STRING = "WEL Rich edit";
+	Title: STRING_32 = "WEL Rich edit";
 			-- Window's title
 
 note

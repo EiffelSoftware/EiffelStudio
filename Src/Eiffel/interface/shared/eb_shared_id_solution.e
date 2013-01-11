@@ -15,20 +15,20 @@ inherit
 
 feature -- Access names
 
-	last_target_uuid: STRING
-	last_target_name: STRING
-	last_group_name: STRING
-	last_folder_path: STRING
-	last_class_name: STRING
-	last_feature_name: STRING
+	last_target_uuid: STRING_32
+	last_target_name: STRING_32
+	last_group_name: STRING_32
+	last_folder_path: STRING_32
+	last_class_name: STRING_32
+	last_feature_name: STRING_32
 			-- Last names extracted from ids when retrieving XXX_of_id
 			-- It is possible not valid in the system if XXX_of_id returns void.
 
-	last_folder_name: STRING
+	last_folder_name: STRING_32
 			-- The outer most folder name in `last_folder_path' if possible
 			-- Void if no folder name can be retrieved from `last_folder_path'.
 		local
-			l_last_folder_path: STRING
+			l_last_folder_path: STRING_32
 			l_cnt: INTEGER
 			l_index: INTEGER
 		do
@@ -62,9 +62,9 @@ feature -- Access (Target)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			uuid: STRING
+			uuid: STRING_32
 			l_target: CONF_TARGET
-			l_target_name: STRING
+			l_target_name: STRING_32
 			l_uuid: UUID
 		do
 			last_target_uuid := Void
@@ -75,7 +75,7 @@ feature -- Access (Target)
 				last_target_uuid := uuid
 				l_target_name := decode (strings.i_th (target_id_sections))
 				last_target_name := l_target_name
-				if universe.target.system.uuid.out.is_equal (uuid) then
+				if universe.target.system.uuid.out.same_string_general (uuid) then
 						-- Get the target from current system by name.
 					l_target := universe.target.system.targets.item (l_target_name)
 				else
@@ -131,9 +131,9 @@ feature -- Access (Group)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			group_name: STRING
+			group_name: STRING_32
 			l_target: CONF_TARGET
-			l_ass_id: STRING
+			l_ass_id: STRING_32
 		do
 			last_group_name := Void
 			strings := split_by_string (a_id, name_sep)
@@ -181,7 +181,7 @@ feature -- Access (Folder)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			l_path: STRING
+			l_path: STRING_32
 			l_cluster: CONF_CLUSTER
 			l_dir: DIRECTORY
 		do
@@ -222,7 +222,7 @@ feature -- Access (Class)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			class_name: STRING
+			class_name: STRING_32
 			l_group: CONF_GROUP
 		do
 			last_class_name := Void
@@ -245,7 +245,7 @@ feature -- Access (Feature)
 		local
 			l_class: CLASS_I
 			l_class_c: CLASS_C
-			l_feature_name: STRING
+			l_feature_name: STRING_32
 		do
 			last_feature_name := Void
 			l_class ?= class_of_id (a_id)
@@ -255,7 +255,7 @@ feature -- Access (Feature)
 				if l_class /= Void then
 					l_class_c := l_class.compiled_representation
 					if l_class_c /= Void and then l_class_c.has_feature_table then
-						Result := l_class_c.feature_with_name_32 (encoding_converter.utf8_to_utf32 (l_feature_name))
+						Result := l_class_c.feature_with_name_32 (l_feature_name)
 					end
 				end
 			end
@@ -272,7 +272,7 @@ feature -- Access (Feature)
 			l_class ?= a_feature.associated_class.lace_class
 			Result := id_of_class (l_class)
 			Result.append (name_sep)
-			Result.append (encode (a_feature.name_8))
+			Result.append (encode (a_feature.name_32))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -286,7 +286,7 @@ feature -- Access (Feature)
 		do
 			Result := id_of_class (a_class)
 			Result.append (name_sep)
-			Result.append (encode (a_ast.feature_name.name_8))
+			Result.append (encode (a_ast.feature_name.name_32))
 		end
 
 feature  -- Element Change
@@ -313,7 +313,7 @@ feature  -- Element Change
 
 feature -- ID modification
 
-	substitute_target_uuid (a_id: STRING; a_target_uuid: STRING): STRING
+	substitute_target_uuid (a_id: STRING; a_target_uuid: READABLE_STRING_GENERAL): STRING
 			-- Substitute uuid of `a_id' to `a_target_uuid'.
 		require
 			a_id_not_void: a_id /= Void
@@ -321,7 +321,7 @@ feature -- ID modification
 		local
 			l_strings: like last_split_strings
 		do
-			if last_id = Void or else not last_id.is_equal (a_id) then
+			if last_id = Void or else not last_id.same_string (a_id) then
 				last_id := a_id
 				last_split_strings := split_by_string (a_id, name_sep)
 			end
@@ -329,7 +329,7 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if not decode (l_strings.i_th (1)).is_equal (assembly_prefix) then
+			if not decode (l_strings.i_th (1)).same_string (assembly_prefix) then
 				if l_strings.count >= target_id_sections then
 					create Result.make (40)
 					Result.append (encode (a_target_uuid))
@@ -346,7 +346,7 @@ feature -- ID modification
 			end
 		end
 
-	substitute_target_name (a_id: STRING; a_target_name: STRING): STRING
+	substitute_target_name (a_id: STRING; a_target_name: READABLE_STRING_GENERAL): STRING
 			-- Substitute target name of `a_id' to `a_target_name'.
 		require
 			a_id_not_void: a_id /= Void
@@ -354,7 +354,7 @@ feature -- ID modification
 		local
 			l_strings: like last_split_strings
 		do
-			if last_id = Void or else not last_id.is_equal (a_id) then
+			if last_id = Void or else not last_id.same_string (a_id) then
 				last_id := a_id
 				last_split_strings := split_by_string (a_id, name_sep)
 			end
@@ -362,7 +362,7 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if not decode (l_strings.i_th (1)).is_equal (assembly_prefix) then
+			if not decode (l_strings.i_th (1)).same_string (assembly_prefix) then
 				if last_split_strings.count >= target_id_sections then
 					create Result.make (40)
 					Result.append (l_strings.first)
@@ -383,7 +383,7 @@ feature -- ID modification
 			end
 		end
 
-	substitute_group (a_id: STRING; a_group_name: STRING): STRING
+	substitute_group (a_id: STRING; a_group_name: READABLE_STRING_GENERAL): STRING
 			-- Substitute group name of `a_id' to `a_group_name'.
 		require
 			a_id_not_void: a_id /= Void
@@ -391,7 +391,7 @@ feature -- ID modification
 		local
 			l_strings: like last_split_strings
 		do
-			if last_id = Void or else not last_id.is_equal (a_id) then
+			if last_id = Void or else not last_id.same_string (a_id) then
 				last_id := a_id
 				last_split_strings := split_by_string (a_id, name_sep)
 			end
@@ -399,7 +399,7 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if not decode (l_strings.i_th (1)).is_equal (assembly_prefix) then
+			if not decode (l_strings.i_th (1)).same_string (assembly_prefix) then
 				if last_split_strings.count >= group_id_sections then
 					create Result.make (40)
 					Result.append (l_strings.first)
@@ -467,30 +467,35 @@ feature -- Querry
 			end
 		end
 
-	possible_name_of_id (a_id: attached STRING): attached STRING
+	possible_name_of_id (a_id: STRING): STRING_32
 			-- Extracted name from `a_id'
 			-- Despite of id type, the last section is extracted as name.
 			-- Target id is not appliable.
 		require
+			a_id_not_void: a_id /= Void
 			not_target_id: most_possible_type_of_id (a_id) /= target_type
 		local
 			l_strings: like strings
 		do
 			l_strings := split_by_string (a_id, name_sep)
-			if attached {STRING} decode (l_strings.last) as lt_name then
+			if attached decode (l_strings.last) as lt_name then
 				Result := lt_name
 			else
 				create Result.make_empty
 			end
+		ensure
+			Result_set: Result /= Void
 		end
 
-	most_possible_type_of_id (a_id: attached STRING): NATURAL
+	most_possible_type_of_id (a_id: STRING): NATURAL
 			-- Most possible type of the given `a_id'
 			-- target, group, folder, class or feature.
 			-- This querry can not distinguish folder and class.
 			-- In this case, `class_type' is returned by default.
+		require
+			a_id_not_void: a_id /= Void
 		local
-			l_strings: LIST [STRING]
+			l_strings: like split_by_string
 			l_count: INTEGER
 		do
 			l_strings := split_by_string (a_id, name_sep)
@@ -567,16 +572,16 @@ feature {NONE} -- Implementation
 	last_id: STRING
 			-- Last id modified
 
-	last_split_strings: LIST [STRING]
+	last_split_strings: ARRAYED_LIST [STRING]
 			-- Last split strings from `last_id'
 
-	split_by_string (a_source_string: STRING; a_separator: STRING): LIST [STRING]
+	split_by_string (a_source_string: STRING; a_separator: STRING): ARRAYED_LIST [STRING]
 			-- Split a string by a string separator.
 		require
 			a_source_string_attached: a_source_string /= Void
 			a_separator_atatched: a_separator /= Void
 		local
-			l_list: ARRAYED_LIST [STRING]
+			l_list: like split_by_string
 			part: STRING
 			i, j, c, sc: INTEGER_32
 		do
@@ -599,7 +604,7 @@ feature {NONE} -- Implementation
 				end
 				if j + sc - 1 = c then
 					check
-						last_character_is_a_separator: a_source_string.substring (j, c) ~ a_separator
+						last_character_is_a_separator: a_source_string.substring (j, c).same_string_general (a_separator)
 					end
 					l_list.extend (create {STRING}.make_empty)
 				end
@@ -624,11 +629,11 @@ feature {NONE} -- Implementation. Encoding/Decoding
 
 	internal_name_sep: STRING
 
-	escape_char: CHARACTER = '%%'
+	escape_char: CHARACTER_32 = '%%'
 
-	place_holder_string: STRING = "ph"
+	place_holder_string: STRING_32 = "ph"
 
-	assembly_prefix: STRING = "assembly"
+	assembly_prefix: STRING_32 = "assembly"
 
 	escape_char_code: NATURAL_32
 		once
@@ -673,22 +678,26 @@ feature {NONE} -- Implementation. Encoding/Decoding
   			>>
   		end
 
-	encode (a_string: STRING): STRING
+	encode (a_string: READABLE_STRING_GENERAL): STRING
 			-- Encode `a_string' so that it does not contain characters rather than
 			-- [%_-a-zA-Z0-9]
+			-- First convert to UTF-8, then encode it using [%_-a-zA-Z0-9].
 		require
 			a_string_not_void: a_string /= Void
 		local
 			l_code : NATURAL_32
 			i : INTEGER
+			l_utf8_string: STRING
+			u: UTF_CONVERTER
 		do
-			create Result.make (a_string.count)
+			l_utf8_string := u.utf_32_string_to_utf_8_string_8 (a_string)
+			create Result.make (l_utf8_string.count)
 			from
 				i := 1
 			until
-				i > a_string.count
+				i > l_utf8_string.count
 			loop
-				l_code := a_string.code (i)
+				l_code := l_utf8_string.code (i)
 
 				if ('A').natural_32_code <= l_code and l_code <= ('Z').natural_32_code then -- A...Z
 					Result.append_code (l_code)
@@ -709,7 +718,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			result_not_void: Result /= Void
 		end
 
-	decode (a_string: STRING): STRING
+	decode (a_string: STRING): STRING_32
 			-- Decode `a_string' to be original one.
 			-- Hex presentations are converted back to what it was.
 		require
@@ -717,8 +726,10 @@ feature {NONE} -- Implementation. Encoding/Decoding
 		local
 			i: INTEGER
 			l_code, c, hc, lc: NATURAL_32
+			l_result: STRING
+			u: UTF_CONVERTER
 		do
-			create Result.make (a_string.count)
+			create l_result.make (a_string.count)
 			from
 				i := 1
 			until
@@ -731,12 +742,13 @@ feature {NONE} -- Implementation. Encoding/Decoding
 						i := i + 1
 						lc := a_string.code (i)
 						c := natural_of_code (hc, lc)
-						Result.append_code (c)
+						l_result.append_code (c)
 				else
-					Result.append_code (l_code)
+					l_result.append_code (l_code)
 				end
 				i := i + 1
 			end
+			Result := u.utf_8_string_8_to_string_32 (l_result)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -758,7 +770,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 
 feature {NONE} -- Implementation
 
-	strings: LIST [STRING]
+	strings: ARRAYED_LIST [STRING]
 			-- Strings splitted
 
 	uuid_gen: UUID_GENERATOR

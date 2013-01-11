@@ -137,16 +137,16 @@ feature -- Basic operations
 			if db_spec.support_stored_proc then
 				sql_temp := db_spec.sql_adapt_db_32 (sql.as_string_32)
 				private_string.wipe_out
-				private_string.append(db_spec.sql_creation)
+				private_string.append_string_general(db_spec.sql_creation)
 				private_string.append(name)
 				if arguments_set then
 					append_in_args_type (private_string)
 				else
 					append_no_args (private_string)
 				end
-				private_string.append (db_spec.sql_as)
+				private_string.append_string_general (db_spec.sql_as)
 				private_string.append (sql_temp)
-				private_string.append (db_spec.sql_end)
+				private_string.append_string_general (db_spec.sql_end)
 				private_change.modify (private_string)
 			else
 				db_spec.store_proc_not_supported
@@ -163,13 +163,13 @@ feature -- Basic operations
 		do
 			if db_spec.support_proc then
 				private_string.wipe_out
-				private_string.append (db_spec.sql_execution)
+				private_string.append_string_general (db_spec.sql_execution)
 				private_string.append (proc_name)
 
 				if arguments_set then
 					append_in_args_value (private_string)
 				end
-				private_string.append (db_spec.sql_after_exec)
+				private_string.append_string_general (db_spec.sql_after_exec)
 				destination.set_query (private_string)
 				destination.execute_query
 			else
@@ -191,7 +191,7 @@ feature -- Basic operations
 		do
 			if db_spec.support_drop_proc then
 				private_string.wipe_out
-				private_string.append ("drop procedure ")
+				private_string.append_string_general ("drop procedure ")
 				private_string.append (name)
 				if (handle.execution_type.immediate_execution) then
 					private_change.modify (private_string)
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_arguments_name_32: like arguments_name_32
 		do
-			s.append (db_spec.map_var_before)
+			s.append_string_general (db_spec.map_var_before)
 			from
 				l_arguments_name_32 := arguments_name_32
 				check l_arguments_name_32 /= Void end -- implied by precondition `arguments_set'
@@ -369,9 +369,9 @@ feature {NONE} -- Implementation
 				i > l_arguments_name_32.upper
 			loop
 				if db_spec.proc_args then
-					s.append (db_spec.map_var_between)
+					s.append_string_general (db_spec.map_var_between)
 					s.append (l_arguments_name_32.item (i))
-					s.append (" = ")
+					s.append_string_general (" = ")
 				end
 				s.append (db_spec.map_var_name_32 (l_arguments_name_32.item (i)))
 				i := i + 1
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 					s.extend (',')
 				end
 			end
-			s.append (db_spec.map_var_after)
+			s.append_string_general (db_spec.map_var_after)
 		ensure
 			s_larger: s.count > old s.count
 		end
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 			l_all_types: DB_ALL_TYPES
 			l_obj: ANY
 		do
-			s.append (db_spec.map_var_before)
+			s.append_string_general (db_spec.map_var_before)
 			from
 				l_arguments_name_32 := arguments_name_32
 				check l_arguments_name_32 /= Void end -- implied by precondition `arguments_set'	
@@ -407,30 +407,30 @@ feature {NONE} -- Implementation
 			until
 				i > l_arguments_name_32.upper
 			loop
-				s.append (db_spec.map_var_between)
+				s.append_string_general (db_spec.map_var_between)
 				s.append (l_arguments_name_32.item (i))
-				s.append (db_spec.map_var_between_2)
+				s.append_string_general (db_spec.map_var_between_2)
 				l_obj := l_arguments_type.item (i)
 				if attached {INTEGER_16_REF}l_obj then
-					s.append (db_spec.sql_name_integer_16)
+					s.append_string_general (db_spec.sql_name_integer_16)
 				elseif attached {INTEGER_64_REF}l_obj then
-					s.append (db_spec.sql_name_integer_64)
+					s.append_string_general (db_spec.sql_name_integer_64)
 				elseif attached {IMMUTABLE_STRING_8} l_obj then
-					s.append (l_all_types.db_type (string_8_for_type).sql_name)
+					s.append_string_general (l_all_types.db_type (string_8_for_type).sql_name)
 				elseif attached {IMMUTABLE_STRING_32} l_obj then
-					s.append (l_all_types.db_type (string_32_for_type).sql_name)
+					s.append_string_general (l_all_types.db_type (string_32_for_type).sql_name)
 				elseif is_decimal_used and then is_decimal_function.item ([l_obj]) then
-					s.append (db_spec.sql_name_decimal)
-					s.append (" (")
-					s.append (default_decimal_presicion.out)
-					s.append (", ")
-					s.append (default_decimal_scale.out)
-					s.append (")")
+					s.append_string_general (db_spec.sql_name_decimal)
+					s.append_string_general (" (")
+					s.append_string_general (default_decimal_presicion.out)
+					s.append_string_general (", ")
+					s.append_string_general (default_decimal_scale.out)
+					s.append_string_general (")")
 				else
 					if l_all_types.is_registered (l_obj) then
-						s.append (l_all_types.db_type (l_obj).sql_name)
+						s.append_string_general (l_all_types.db_type (l_obj).sql_name)
 					else
-						s.append (" Unknown type")
+						s.append_string_general (" Unknown type")
 					end
 				end
 				i := i + 1
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 					s.extend (',')
 				end
 			end
-			s.append (db_spec.map_var_after)
+			s.append_string_general (db_spec.map_var_after)
 		ensure
 			s_larger: s.count > old s.count
 		end
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 	append_no_args (s: STRING_32)
 			-- Append no argument
 		do
-			s.append (db_spec.no_args)
+			s.append_string_general (db_spec.no_args)
 		end
 
 	string_8_for_type: STRING_8 = ""
@@ -494,7 +494,7 @@ feature {NONE} -- Status report
 				Result.append(quoter)
 			end
 			if ((attached owner as l_owner and then l_owner.count > 0) or (attached qualifier as l_qualifier and then l_qualifier.count > 0)) then
-				Result.append(".")
+				Result.append_string_general(".")
 			end
 			Result.append(quoter)
 			Result.append(name)

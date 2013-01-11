@@ -100,24 +100,24 @@ feature -- Basic operations
 			check l_repository /= Void end -- implied by precondition `owns_repository'
 			if (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0) then
 				sql_string.append(quoter)
-				sql_string.append(l_repository.rep_qualifier)
+				sql_string.append_string_general(l_repository.rep_qualifier)
 				sql_string.append(quoter)
 			end
 			if (l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) then
 				sql_string.append(sep)
 				sql_string.append(quoter)
-				sql_string.append(l_repository.rep_owner)
+				sql_string.append_string_general(l_repository.rep_owner)
 				sql_string.append(quoter)
 			end
 			if ((l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) or (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0)) then
 				sql_string.append_character ({CHARACTER_32} '.')
 			end
 			sql_string.append(quoter)
-			sql_string.append (l_repository.repository_name)
+			sql_string.append_string_general (l_repository.repository_name)
 			sql_string.append(quoter)
 			l_map_table := map_table
 			check l_map_table /= Void end -- FIXME: implied by ...bug?			
-			sql_string.append(db_spec.put_column_name(l_repository, l_map_table, object))
+			sql_string.append_string_general(db_spec.put_column_name(l_repository, l_map_table, object))
 			sql_string.append ({STRING_32} " VALUES ( :XZ7Hj0sb5UU )")
 			set_map_name (object, {STRING_32} "XZ7Hj0sb5UU")
 			tmp_string := parse_32 (sql_string)

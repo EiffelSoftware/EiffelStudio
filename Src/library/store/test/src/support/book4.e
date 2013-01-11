@@ -123,63 +123,30 @@ feature
 		do
 			create Result.make (100)
 			if author /= Void then
-				Result.append ("Author:")
+				Result.append_string_general ("Author:")
 				Result.append (author)
 				Result.extend ('%N')
 			end
 			if title /= Void then
-				Result.append ("Title:")
+				Result.append_string_general ("Title:")
 				Result.append (title)
 				Result.extend ('%N')
 			end
-			Result.append ("Quantity:")
-			Result.append (quantity.out)
-			Result.append ("%N")
-			Result.append ("Price:")
-			Result.append (price.out)
-			Result.append ("%N")
-			Result.append ("double_value:")
-			Result.append (double_value.out)
+			Result.append_string_general ("Quantity:")
+			Result.append_string_general (quantity.out)
+			Result.append_string_general ("%N")
+			Result.append_string_general ("Price:")
+			Result.append_string_general (price.out)
+			Result.append_string_general ("%N")
+			Result.append_string_general ("double_value:")
+			Result.append_string_general (double_value.out)
 			Result.extend ('%N')
 			if year /= Void then
-				Result.append ("First publication:")
-				Result.append (year.out)
-				Result.extend ('%N')
-			end
-			Result.extend ('%N')
-		end
-
-	out: STRING
-			-- Display contents
-		do
-			create Result.make (100)
-			if author /= Void then
-				Result.append ("Author:")
-				Result.append (author)
-				Result.extend ('%N')
-			end
-			if title /= Void then
-				Result.append ("Title:")
-				Result.append (title.as_string_8)
-				Result.extend ('%N')
-			end
-			Result.append ("Quantity:")
-			Result.append (quantity.out)
-			Result.append ("%N")
-			Result.append ("Price:")
-			Result.append (price.out)
-			Result.append ("%N")
-			Result.append ("double_value:")
-			Result.append (double_value.out)
-			Result.extend ('%N')
-			if year /= Void then
-				Result.append ("First publication:")
-				Result.append (year.out)
+				Result.append_string_general ("First publication:")
+				Result.append_string_general (year.out)
 				Result.extend ('%N')
 			end
 			Result.extend ('%N')
 		end
 
 end
-
-

@@ -37,7 +37,7 @@ feature
 			l_s := s.as_string_32
 			prepare_32 (l_s)
 			s.wipe_out
-			s.append (l_s)
+			s.append_string_general (l_s)
 		end
 
 	prepare_32 (s: STRING_32)

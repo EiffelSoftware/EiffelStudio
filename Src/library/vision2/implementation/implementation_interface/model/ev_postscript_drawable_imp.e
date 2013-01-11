@@ -427,19 +427,19 @@ feature -- Drawing operations
 			font_name.put (font_name.item (1).as_upper, 1)
 			font_style := ""
 			if font.weight = 8 then
-				font_style.append ("Bold")
+				font_style.append_string_general ("Bold")
 			end
 			if font_name.is_equal ("Times") then
 				if font.shape = 11 then
-					font_style.append ("Italic")
+					font_style.append_string_general ("Italic")
 				end
 			else
 				if font.shape = 11 then
-					font_style.append ("Oblique")
+					font_style.append_string_general ("Oblique")
 				end
 			end
 			if font_style.count = 0 then
-				font_style.append ("Roman")
+				font_style.append_string_general ("Roman")
 			end
 			add_ps ("/" + font_name + "-" + font_style + " findfont")
 			add_ps (font.height.out + " scalefont")

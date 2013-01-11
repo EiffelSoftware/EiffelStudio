@@ -81,9 +81,9 @@ feature -- Element change
 			then
 				filter_name.remove_head (2)
 				filter_name.put (filter_name.item (1).upper, 1)
-				filter_name.append (" Files (")
+				filter_name.append_string_general (" Files (")
 				filter_name.append_string_general (a_filter)
-				filter_name.append (")")
+				filter_name.append_character (')')
 			end
 			if a_filter.same_string ("*.*") then
 				wel_set_filter (<<"All files">>, <<"*.*">>)

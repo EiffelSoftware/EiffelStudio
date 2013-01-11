@@ -207,8 +207,8 @@ feature -- Element change
 			l_text := text
 				-- Add a space before and after `l_text'.
 				-- Adding it dynamically inline will result in a STRING_8 object being created.
-			l_text.prepend (" ")
-			l_text.append (" ")
+			l_text.prepend_character (' ')
+			l_text.append_character (' ')
 				-- `l_text' is a copy of `text'.
 			if private_font /= Void then
 				font_imp ?= private_font.implementation

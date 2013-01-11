@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: PATH; a_runtime_version: STRING)
+	make (a_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
 			-- Create new instance of IL_EMITTER
 		require
 			a_path_not_void: a_path /= Void
@@ -85,7 +85,7 @@ feature -- XML generation
 			end
 		end
 
-	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN)
+	consume_assembly (a_name, a_version, a_culture, a_key: READABLE_STRING_GENERAL; a_info_only: BOOLEAN)
 			-- consume an assembly into the EAC from assemblyy defined by
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require

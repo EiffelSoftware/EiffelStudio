@@ -273,7 +273,7 @@ feature -- Status report
 				if loc_selected_item /= Void then
 					Result := loc_selected_item.text
 				else
-					Result := ""
+					create Result.make_empty
 				end
 			else
 				Result := wel_text

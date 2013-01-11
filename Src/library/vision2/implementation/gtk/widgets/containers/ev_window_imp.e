@@ -142,11 +142,11 @@ feature  -- Access
 			if p /= NULL then
 				create a_cs.share_from_pointer (p)
 				Result := a_cs.string
-				if Result.is_equal ("%T") then
-					Result := ""
+				if Result.same_string_general ("%T") then
+					create Result.make_empty
 				end
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -290,15 +290,14 @@ feature -- Element change
 	set_title (new_title: READABLE_STRING_GENERAL)
 			-- Set `title' to `new_title'.
 		local
-			a_title: STRING_32
 			a_cs: EV_GTK_C_STRING
 		do
-			a_title := new_title.as_string_32
-			if a_title.is_empty then
+			if new_title.is_empty then
 				-- Some window managers do not like empty strings as titles and show it as an error.
-				a_title := "%T"
+				a_cs := "%T"
+			else
+				a_cs := new_title
 			end
-			a_cs := a_title
 			{GTK}.gtk_window_set_title (c_object, a_cs.item)
 		end
 

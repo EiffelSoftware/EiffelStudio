@@ -58,8 +58,7 @@ feature -- Status Setting
 			create font_offset.make (default_structure_size)
 
 				-- Reset all other attributes used by buffering.			
-			internal_text := ""
-			internal_text.resize (default_string_size)
+			create internal_text.make (default_structure_size)
 			is_current_format_underlined := False
 			is_current_format_striked_through := False
 			is_current_format_bold := False
@@ -69,7 +68,7 @@ feature -- Status Setting
 			font_text := font_table_start.twin
 			font_count := 0
 			color_count := 0
-			buffered_text := ""
+			create buffered_text.make_empty
 		end
 
 	initialize_for_saving
@@ -92,21 +91,21 @@ feature -- Status Setting
 		do
 			hashed_character_format := a_format.attached_interface.hash_value
 			check hashed_character_format /= Void end
-			if not hashed_formats.has (hashed_character_format) then
-				hashed_formats.put (a_format.attached_interface, hashed_character_format)
+			if not hashed_formats.has (hashed_character_format.as_string_32_conversion) then
+				hashed_formats.put (a_format.attached_interface, hashed_character_format.as_string_32_conversion)
 				formats.extend (a_format.attached_interface)
 
 					-- Rich text requires font heights to be in half points, so
 					-- multiply by 2.
 				heights.extend (a_format.height_in_points * 2)
-				format_offsets.put (hashed_formats.count, hashed_character_format)
+				format_offsets.put (hashed_formats.count, hashed_character_format.as_string_32_conversion)
 
 				build_color_from_format (a_format)
 
 				build_font_from_format (a_format)
 			end
 
-			format_index := format_offsets.item (hashed_character_format)
+			format_index := format_offsets.item (hashed_character_format.as_string_32_conversion)
 
 			create temp_string.make (128)
 			if a_format.bcolor_set then
@@ -484,7 +483,7 @@ feature {NONE} -- Implementation
 			check all_formats /= Void end
 			check all_colors /= Void end
 
-			if not all_formats.has (l_current_format.character_format_out) then
+			if not all_formats.has (l_current_format.character_format_out.as_string_32_conversion) then
 					-- Only create a new character format if an equivalent one does not already
 					-- exist in `all_formats'.
 				create character_format
@@ -523,10 +522,10 @@ feature {NONE} -- Implementation
 						-- RTF uses half points to specify font heights so divide by 2.
 					a_font.set_height_in_points (l_current_format.font_height // 2)
 					character_format.set_font (a_font)
-					all_formats.put (character_format, l_current_format.character_format_out)
+					all_formats.put (character_format, l_current_format.character_format_out.as_string_32_conversion)
 				end
 			end
-			if attached all_paragraph_formats and then (all_paragraph_formats.is_empty or else not all_paragraph_formats.has (l_current_format.paragraph_format_out)) then
+			if attached all_paragraph_formats and then (all_paragraph_formats.is_empty or else not all_paragraph_formats.has (l_current_format.paragraph_format_out.as_string_32_conversion)) then
 				create paragraph_format
 				paragraph_format.set_alignment (l_current_format.alignment)
 				paragraph_format.set_left_margin (l_current_format.left_margin)
@@ -534,14 +533,14 @@ feature {NONE} -- Implementation
 				paragraph_format.set_top_spacing (l_current_format.top_spacing)
 				paragraph_format.set_bottom_spacing (l_current_format.bottom_spacing)
 
-				all_paragraph_formats.put (paragraph_format, l_current_format.paragraph_format_out)
+				all_paragraph_formats.put (paragraph_format, l_current_format.paragraph_format_out.as_string_32_conversion)
 			end
-			if attached all_paragraph_format_keys and then attached all_paragraph_indexes and then (all_paragraph_format_keys.is_empty or else not all_paragraph_format_keys.last.is_equal (l_current_format.paragraph_format_out)) then
-				all_paragraph_format_keys.extend (l_current_format.paragraph_format_out)
+			if attached all_paragraph_format_keys and then attached all_paragraph_indexes and then (all_paragraph_format_keys.is_empty or else not all_paragraph_format_keys.last.same_string_general (l_current_format.paragraph_format_out)) then
+				all_paragraph_format_keys.extend (l_current_format.paragraph_format_out.as_string_32_conversion)
 				all_paragraph_indexes.extend (number_of_characters_opened + 1)
 			end
 
-			character_format := all_formats.item (l_current_format.character_format_out)
+			character_format := all_formats.item (l_current_format.character_format_out.as_string_32_conversion)
 			check character_format /= Void end
 			l_rich_text.buffered_append (a_text, character_format)
 			number_of_characters_opened := number_of_characters_opened + a_text.count
@@ -589,8 +588,8 @@ feature {NONE} -- Implementation
 			l_current_format := current_format
 			check l_current_format /= Void end
 			tag_start_position := index
-			tag := ""
-			tag_value := ""
+			create tag.make_empty
+			create tag_value.make_empty
 				-- Set to space as default.
 			current_character := ' '
 			from
@@ -647,7 +646,7 @@ feature {NONE} -- Implementation
 					l_current_format.set_bold (True)
 				else
 					check
-						tag_is_zero: tag_value.is_equal ("0")
+						tag_is_zero: tag_value.same_string_general ("0")
 					end
 					l_current_format.set_bold (False)
 				end
@@ -656,7 +655,7 @@ feature {NONE} -- Implementation
 					l_current_format.set_italic (True)
 				else
 					check
-						tag_is_zero: tag_value.is_equal ("0")
+						tag_is_zero: tag_value.same_string_general ("0")
 					end
 					l_current_format.set_italic (False)
 				end
@@ -665,7 +664,7 @@ feature {NONE} -- Implementation
 					l_current_format.set_striked_out (True)
 				else
 					check
-						tag_is_zero: tag_value.is_equal ("0")
+						tag_is_zero: tag_value.same_string_general ("0")
 					end
 					l_current_format.set_striked_out (False)
 				end
@@ -674,7 +673,7 @@ feature {NONE} -- Implementation
 					l_current_format.set_underlined (True)
 				else
 					check
-						tag_is_zero: tag_value.is_equal ("0")
+						tag_is_zero: tag_value.same_string_general ("0")
 					end
 					l_current_format.set_underlined (False)
 				end
@@ -717,17 +716,17 @@ feature {NONE} -- Implementation
 				buffer_formatting (new_line_string)
 			elseif tag.is_equal (rtf_user_props) then
 				check
-					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).is_equal ("{\*")
+					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).same_string_general ("{\*")
 				end
 				move_to_end_of_tag (rtf_text, tag_start_position - 1)
 			elseif tag.is_equal (rtf_info) then
 				check
-					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).is_equal ("{\")
+					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).same_string_general ("{\")
 				end
 				move_to_end_of_tag (rtf_text, tag_start_position - 1)
 			elseif tag.is_equal (rtf_stylesheet) then
 				check
-					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).is_equal ("{\")
+					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).same_string_general ("{\")
 				end
 				move_to_end_of_tag (rtf_text, tag_start_position - 1)
 			elseif tag.is_equal (rtf_new_paragraph) then
@@ -764,34 +763,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_string: STRING_32
-		once
-			Result := "%N"
-		ensure
-			not_void: Result /= Void
-		end
-
-	tab_string: STRING_32
-		once
-			Result := "%T"
-		ensure
-			not_void: Result /= Void
-		end
-
-	tab_tag_string: STRING_32
-		once
-			Result := "tab"
-		ensure
-			not_void: Result /= Void
-		end
-
-	line_string: STRING_32
+	new_line_string: STRING_32 = "TN"
+	tab_string: STRING_32 = "%T"
+	tab_tag_string: STRING_32 = "tab"
+	line_string: STRING_32 = "line"
 			-- String constants
-		once
-			Result := "line"
-		ensure
-			not_void: Result /= Void
-		end
 
 	move_to_end_of_tag (rtf_text: STRING_32; start_index: INTEGER)
 			-- Move `main_iterator' to the next character immediately following the closing brace
@@ -831,7 +807,7 @@ feature {NONE} -- Implementation
 			-- Process fonttable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
-			pointing_to_fonttable: rtf_text.substring (main_iterator, main_iterator + rtf_fonttable.count).is_equal (rtf_control_character.out + rtf_fonttable)
+			pointing_to_fonttable: rtf_text.substring (main_iterator, main_iterator + rtf_fonttable.count).same_string_general (rtf_control_character.out + rtf_fonttable)
 		local
 			depth: INTEGER
 			current_character: WIDE_CHARACTER
@@ -899,7 +875,7 @@ feature {NONE} -- Implementation
 			-- Process colortable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
-			pointing_to_colortable: rtf_text.substring (main_iterator, main_iterator + rtf_colortbl.count).is_equal (rtf_control_character.out + rtf_colortbl)
+			pointing_to_colortable: rtf_text.substring (main_iterator, main_iterator + rtf_colortbl.count).same_string_general (rtf_control_character.out + rtf_colortbl)
 		local
 			depth: INTEGER
 			current_character: WIDE_CHARACTER
@@ -985,7 +961,7 @@ feature {NONE} -- Implementation
 			current_text: STRING_32
 			current_character: WIDE_CHARACTER
 		do
-			current_text := ""
+			create current_text.make (50)
 			from
 			until
 				text_completed
@@ -1147,7 +1123,8 @@ feature {NONE} -- Implementation
 			else
 				family := rtf_family_nill
 			end
-			temp_string := "\"
+			create temp_string.make (50)
+			temp_string.append_character ('\')
 			temp_string.append (family)
 			temp_string.append_string_general ("\fcharset")
 			temp_string.append_integer (a_format.char_set)
@@ -1176,7 +1153,7 @@ feature {NONE} -- Implementation
 			red, green, blue: INTEGER
 		do
 			l_color := a_format.fcolor
-			hashed_color := ""
+			create hashed_color.make_empty
 			add_rtf_keyword (hashed_color, rtf_red)
 			red := l_color & 0x000000ff
 			l_color := l_color |>> 8
@@ -1205,7 +1182,7 @@ feature {NONE} -- Implementation
 			end
 
 			l_color := a_format.bcolor
-			hashed_back_color := ""
+			create hashed_back_color.make_empty
 			add_rtf_keyword (hashed_back_color, rtf_red)
 			red := l_color & 0x000000ff
 			l_color := l_color |>> 8

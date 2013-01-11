@@ -293,11 +293,11 @@ feature -- Figure drawing
 				add_ps_line (text_figure.foreground_color.out + " setrgbcolor")
 				font_name := text_figure.font.name.twin
 				font_name.put (font_name.item (1).as_upper, 1)
-				font_style := ""
+				create font_style.make (10)
 				if text_figure.font.weight = 8 then
 					font_style.append_string_general ("Bold")
 				end
-				if font_name.is_equal ("Times") then
+				if font_name.same_string_general ("Times") then
 					if text_figure.font.shape = 11 then
 						font_style.append_string_general ("Italic")
 					end

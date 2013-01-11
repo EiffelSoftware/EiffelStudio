@@ -529,14 +529,14 @@ feature {NONE} -- Implementation
 
 	page_type_combo: EV_COMBO_BOX
 
-	Letter: STRING = "Letter"
-	Legal: STRING = "Legal"
-	Executive: STRING = "Executive"
-	Ledger: STRING = "Ledger"
-	A4: STRING = "A4"
-	A5: STRING = "A5"
-	B5: STRING = "B5"
-	C5: STRING = "C5"
+	Letter: STRING_32 = "Letter"
+	Legal: STRING_32 = "Legal"
+	Executive: STRING_32 = "Executive"
+	Ledger: STRING_32 = "Ledger"
+	A4: STRING_32 = "A4"
+	A5: STRING_32 = "A5"
+	B5: STRING_32 = "B5"
+	C5: STRING_32 = "C5"
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

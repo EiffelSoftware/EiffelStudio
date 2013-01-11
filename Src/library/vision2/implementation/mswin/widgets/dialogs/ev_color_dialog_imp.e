@@ -95,9 +95,8 @@ feature -- Access
 		do
 			l_result := internal_title
 			if l_result = Void then
-				l_result := "Color"
+				l_result := {STRING_32} "Color"
 			end
-			check l_result /= Void end
 			Result := l_result
 		end
 

@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			if attached real_text as l_real_text then
 				Result := l_real_text.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -393,12 +393,12 @@ feature {EV_MENU_IMP} -- WEL Implementation
 				tab_index := text.index_of ('%T', 1)
 				if tab_index = 0 then
 						-- No accelerator
-					Result := ""
+					create Result.make_empty
 				else
 					Result := text.substring (tab_index + 1, text.count)
 				end
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -422,7 +422,7 @@ feature {NONE} -- WEL Implementation
 					Result := remove_ampersands (Result)
 				end
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		ensure
 			Result_not_void: Result /= Void

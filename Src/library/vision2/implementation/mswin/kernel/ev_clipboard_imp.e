@@ -33,7 +33,7 @@ feature -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			last_string := ""
+			create last_string.make_empty
 			set_is_initialized (True)
 		end
 
@@ -59,7 +59,7 @@ feature -- Access
 				close_clipboard
 			end
 			if l_result = Void then
-				Result := ""
+				create Result.make_empty
 			else
 				Result := l_result
 			end

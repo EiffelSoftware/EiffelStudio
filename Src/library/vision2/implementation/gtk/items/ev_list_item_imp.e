@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
-			internal_text := once ""
+			create internal_text.make_empty
 			set_is_initialized (True)
 		end
 
@@ -198,7 +198,7 @@ feature -- Element change
 			if attached internal_tooltip as l_internal_tooltip then
 				Result := l_internal_tooltip.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

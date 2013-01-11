@@ -96,7 +96,7 @@ feature -- Status report
 			if attached full_file_path.entry as l_entry then
 				Result := l_entry.name
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		ensure
 			file_title_not_void: Result /= Void

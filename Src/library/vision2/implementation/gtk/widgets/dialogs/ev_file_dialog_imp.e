@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 
-			filter := "*.*"
+			filter := {STRING_32} "*.*"
 
 			a_cancel_button := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_cancel_enum, {GTK2}.gtk_response_cancel_enum)
 			a_ok_button := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_ok_enum, {GTK2}.gtk_response_accept_enum)
@@ -134,9 +134,9 @@ feature -- Element change
 			then
 				filter_name.remove_head (2)
 				filter_name.put (filter_name.item (1).upper, 1)
-				filter_name.append (" Files (")
+				filter_name.append_string_general (" Files (")
 				filter_name.append_string_general (a_filter)
-				filter_name.append (")")
+				filter_name.append_character (')')
 			end
 
 			remove_file_filters
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 						until
 							filter_string_list.off
 						loop
-							if filter_string_list.item.is_equal ("*.*") then
+							if filter_string_list.item.same_string_general ("*.*") then
 								a_cs := "*"
 							else
 								a_cs := filter_string_list.item

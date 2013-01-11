@@ -40,8 +40,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
-			Result := Precursor {EV_GAUGE} and then
-				text.is_equal ("0")
+			Result := Precursor {EV_GAUGE} and then text.same_string_general ("0")
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

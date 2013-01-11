@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create the linked lists.
 		do
-			tooltip := ""
+			create tooltip.make_empty
 			set_is_initialized (True)
 		end
 

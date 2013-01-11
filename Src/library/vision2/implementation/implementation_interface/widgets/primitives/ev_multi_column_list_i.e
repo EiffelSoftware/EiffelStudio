@@ -87,7 +87,7 @@ feature -- Status report
 				check l_result /= Void end
 				Result := l_result.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		ensure
 			column_title_not_void: Result /= Void

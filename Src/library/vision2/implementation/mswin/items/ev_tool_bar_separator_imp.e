@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			-- Text displayed in textable.
 			-- For separators, it must always be empty.
 		do
-			Result := ""
+			create Result.make_empty
 		end
 
 	has_pixmap: BOOLEAN = False

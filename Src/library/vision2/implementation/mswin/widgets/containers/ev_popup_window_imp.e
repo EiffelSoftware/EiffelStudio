@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Class name for current type of window.
 		do
-			Result := generator
+			create Result.make_from_string_general (generator)
 			if has_shadow then
 				Result.append_string_general ("_with_shadow")
 			end

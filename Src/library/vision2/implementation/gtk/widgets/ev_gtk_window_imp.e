@@ -383,11 +383,11 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					if a_key /= Void and then a_key.out.count /= 1 and then not a_key.is_numpad then
 						inspect a_key.code
 						when {EV_KEY_CONSTANTS}.key_space then
-							l_key_string := once " "
+							l_key_string := once {STRING_32} " "
 						when {EV_KEY_CONSTANTS}.key_enter then
-							l_key_string := once "%N"
+							l_key_string := once {STRING_32} "%N"
 						when {EV_KEY_CONSTANTS}.key_tab then
-							l_key_string := once "%T"
+							l_key_string := once {STRING_32} "%T"
 						else
 							l_key_string := Void
 						end

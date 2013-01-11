@@ -61,7 +61,9 @@ feature -- Access
 			-- Default `identifier_name' if no specific name is set.
 		do
 			if attached parent as l_parent then
-				Result := "#" + l_parent.index_of (Current, 1).out
+				create Result.make (5)
+				Result.append_character ('#')
+				Result.append_integer (l_parent.index_of (Current, 1))
 			else
 				Result := Precursor {EV_ITEM}
 			end

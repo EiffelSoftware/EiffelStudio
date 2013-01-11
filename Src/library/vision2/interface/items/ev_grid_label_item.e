@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 	create_interface_objects
 			-- <Precursor>
 		do
-			text := ""
+			create text.make_empty
 		end
 
 	internal_left_border: INTEGER

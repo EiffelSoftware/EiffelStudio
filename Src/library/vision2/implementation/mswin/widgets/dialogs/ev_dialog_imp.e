@@ -46,7 +46,7 @@ feature -- Initialization
 	make
 		do
 			internal_class_name := new_class_name + "_AS_DIALOG"
-			internal_icon_name := ""
+			create internal_icon_name.make_empty
 			create accel_list.make (10)
 			apply_center_dialog := True
 			Precursor {EV_TITLED_WINDOW_IMP}

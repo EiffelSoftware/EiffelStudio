@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			copies := 1
 			output_to_file := False
 			create file_path.make_empty
-			printer_name := "Default"
+			printer_name := {STRING_32} "Default"
 			portrait := True
 			horizontal_resolution := 575
 			vertical_resolution := 759

@@ -671,7 +671,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 				a_cs.share_from_pointer ({GTK2}.g_value_get_string (a_g_value_string_struct))
 				Result := a_cs.string
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

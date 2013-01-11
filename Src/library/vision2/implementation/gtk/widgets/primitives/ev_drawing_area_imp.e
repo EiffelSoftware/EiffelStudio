@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			real_set_background_color (c_object, background_color)
 
 				-- Initialize tooltip.
-			internal_tooltip := ""
+			create internal_tooltip.make_empty
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_to
 			disable_tabable_from

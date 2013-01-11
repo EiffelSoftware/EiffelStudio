@@ -468,18 +468,17 @@ feature {NONE} -- Implementation
 
 			if column_titles.count >= wel_column_count + 1 then
 				col_text := column_titles @ (wel_column_count + 1)
-				if col_text = Void then
-					col_text := ""
-				end
-			else
-				col_text := ""
 			end
 
 			col_index := wel_column_count
 
 			create wel_column.make
 			wel_column.set_width (col_width)
-			wel_column.set_text (col_text)
+			if col_text /= Void then
+				wel_column.set_text (col_text)
+			else
+				wel_column.remove_text
+			end
 			insert_column (wel_column, col_index)
 		end
 
@@ -611,7 +610,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			from
 				list.start
 				if list.after then
-					first_string := ""
+					create first_string.make_empty
 				else
 					first_string := list.item
 					list.forth

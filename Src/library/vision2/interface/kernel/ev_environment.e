@@ -62,7 +62,7 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		local
 			l_list: like font_families
-			l_family: STRING
+			l_family: STRING_32
 			l_result: ARRAYED_LIST [STRING]
 		do
 			l_list := implementation.font_families

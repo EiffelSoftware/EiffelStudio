@@ -418,18 +418,18 @@ feature -- Drawing operations
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
 			font_name, font_style, line: STRING_32
-			l_char_code: NATURAL_32
+			l_char_code: CHARACTER_32
 			nb, i, line_nr, font_height: INTEGER
 		do
 			add_ps ("gsave")
 			translate_to (0, 0)
 			font_name := font.name.twin
 			font_name.put (font_name.item (1).as_upper, 1)
-			font_style := ""
+			create font_style.make (20)
 			if font.weight = 8 then
 				font_style.append_string_general ("Bold")
 			end
-			if font_name.is_equal ("Times") then
+			if font_name.same_string_general ("Times") then
 				if font.shape = 11 then
 					font_style.append_string_general ("Italic")
 				end
@@ -449,21 +449,23 @@ feature -- Drawing operations
 				nb := a_text.count
 				font_height := font.height
 				line_nr := 0
-				line := ""
+				create line.make (nb)
 			until
 				i > nb
 			loop
-				l_char_code := a_text.code (i)
-				if l_char_code = ('%N').natural_32_code or i = nb then
+				l_char_code := a_text.item (i)
+				if l_char_code = '%N' or i = nb then
 					if i = nb then
 						line.append_character (l_char_code.to_character_32)
 					end
 					add_ps (x.out + " " + ( - y - font.ascent - line_nr * font_height).out + " moveto")
-					add_ps ("(" + line + ") show")
+					line.prepend_character ('(')
+					line.append_string_general (") show)")
+					add_ps (line)
 					line_nr := line_nr + 1
-					line := ""
+					line.wipe_out
 				else
-					line.append_character (l_char_code.to_character_32)
+					line.append_character (l_char_code)
 				end
 				i := i + 1
 			end
@@ -733,8 +735,11 @@ feature {EV_POSTSCRIPT_DRAWABLE} -- Write line
 
 	add_ps (a_code: READABLE_STRING_GENERAL)
 			-- Add `a_code' to postscript data.
+		require
+			a_code_is_string_8: a_code.is_valid_as_string_8
 		do
-			postscript_result.append ("      "+a_code.to_string_8)
+			postscript_result.append ("      ")
+			postscript_result.append_string_general (a_code)
 			postscript_result.append_character ('%N')
 		end
 

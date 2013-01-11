@@ -131,7 +131,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 				))
 				Result := a_cs.string
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

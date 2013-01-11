@@ -20,7 +20,7 @@ feature -- Initialization
 			-- Text of tooltip assigned to `Current'.
 		do
 			if internal_tooltip_string = Void then
-				Result := ""
+				create Result.make_empty
 			else
 				Result := internal_tooltip_string.twin
 			end

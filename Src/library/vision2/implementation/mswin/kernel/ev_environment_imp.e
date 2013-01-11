@@ -44,9 +44,9 @@ feature {NONE} -- Implementation
 			res: ARRAYED_LIST [STRING_32]
 		do
 			create res.make (3)
-			res.extend ("BMP")
-			res.extend ("PNG")
-			res.extend ("ICO")
+			res.extend ({STRING_32} "BMP")
+			res.extend ({STRING_32} "PNG")
+			res.extend ({STRING_32} "ICO")
 			res.compare_objects
 			Result := res
 		end

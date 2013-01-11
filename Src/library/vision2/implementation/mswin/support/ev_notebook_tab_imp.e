@@ -81,7 +81,7 @@ feature -- Element change
 					-- Although when `notebook' is Void it is not possible to query
 					-- `text' from the interface, this must be set to an empty string as
 					-- otherwise assertions fail during creation.
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

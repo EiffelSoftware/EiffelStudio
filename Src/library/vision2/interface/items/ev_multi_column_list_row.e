@@ -76,6 +76,8 @@ feature -- Element change
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current structure
 			-- need not be the same.
+		obsolete
+			"Use `fill_with_strings_8' for Unicode support."
 		local
 			lin_rep: LINEAR [STRING]
 			l_cursor: CURSOR
@@ -87,7 +89,7 @@ feature -- Element change
 			until
 				not extendible or else lin_rep.off
 			loop
-				extend (lin_rep.item)
+				extend (lin_rep.item.as_string_32_conversion)
 				finish
 				lin_rep.forth
 			end

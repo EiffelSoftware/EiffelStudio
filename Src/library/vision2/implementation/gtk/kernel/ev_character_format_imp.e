@@ -407,7 +407,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_red := (fcolor & 0x000000FF) |<< 16
 				a_green := (fcolor & 0x0000FF00)
 				a_blue := fcolor |>> 16
-				temp_string := (a_red + a_green + a_blue).to_hex_string
+				create temp_string.make_from_string_general ((a_red + a_green + a_blue).to_hex_string)
 				temp_string.keep_tail (6)
 				propvalue := once "#" +  temp_string
 				{GTK2}.g_object_set_string (Result, foreground_string.item, propvalue.item)
@@ -423,7 +423,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_red := (bcolor & 0x000000FF) |<< 16
 				a_green := (bcolor & 0x0000FF00)
 				a_blue := bcolor |>> 16
-				temp_string := (a_red + a_green + a_blue).to_hex_string
+				create temp_string.make_from_string_general ((a_red + a_green + a_blue).to_hex_string)
 				temp_string.keep_tail (6)
 				propvalue := once "#" +  temp_string
 				{GTK2}.g_object_set_string (Result, background_string.item, propvalue.item)

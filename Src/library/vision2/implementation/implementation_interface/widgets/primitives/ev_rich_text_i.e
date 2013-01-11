@@ -485,7 +485,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			check l_text /= Void end
 			text_file.close
 			create buffer.set_rich_text (Current)
-			buffer.set_with_rtf (l_text)
+			buffer.set_with_rtf (l_text.as_string_32_conversion)
 			last_load_successful := buffer.last_load_successful
 			complete_loading
 			set_caret_position (1)

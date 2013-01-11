@@ -93,7 +93,7 @@ feature -- Access
 		do
 			l_result := internal_title
 			if l_result = Void then
-				l_result := "Print"
+				l_result := {STRING_32} "Print"
 			end
 			Result := l_result
 		end
@@ -224,14 +224,14 @@ feature -- Access
 		do
 			--| FIXME it appears that to implement this, you
 			--| need to handle WIN32 StartDoc and DOCINFO
-			Result:="Not yet implemented."
+			Result := {STRING_32} "Not yet implemented."
 		end
 
 	printer_name: STRING_32
 		do
 			--| FIXME Need to add WEL support for DEVNAMES
 			--| structure, to implement this feature.
-			Result:="Not yet implemented"
+			Result := {STRING_32} "Not yet implemented"
 		end
 
 feature -- Element change

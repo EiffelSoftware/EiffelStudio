@@ -147,7 +147,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_cancel
 			-- Close window and call action sequence.
 		do
-			selected_button := ev_cancel
+			selected_button := ev_cancel.as_string_32_conversion
 			hide
 		end
 

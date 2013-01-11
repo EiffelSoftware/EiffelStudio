@@ -369,12 +369,11 @@ feature {EV_ANY_I} -- Implementation
 			-- Find a font face based on properties
 			-- `preferred_face' and `family'.
 		local
-			found_face: STRING_32
+			found_face: detachable STRING_32
 			found: BOOLEAN
 			dc: WEL_MEMORY_DC
 			text_metric: WEL_TEXT_METRIC
 		do
-			found_face := once ""
 				-- First, set the family
 			inspect family
 			when family_screen then
@@ -411,7 +410,7 @@ feature {EV_ANY_I} -- Implementation
 					found := Font_enumerator.font_faces.has (found_face)
 					preferred_families.forth
 				end
-				if found then
+				if found and found_face /= Void then
 					Wel_log_font.set_face_name (found_face)
 					if attached font_enumerator.text_metrics as l_text_metrics then
 						if attached l_text_metrics.item (found_face) as l_text_metric then

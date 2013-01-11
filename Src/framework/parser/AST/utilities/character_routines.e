@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 					(code > {ASCII}.Last_printable.to_natural_32 and code <= iso_8859_1_apc)
 				then
 					Result.grow (Result.count + 6)
-					Result.append ("%%/")
+					Result.append_string_general ("%%/")
 					Result.append_natural_32 (code);
 					Result.append_character ('/')
 				else
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			-- APC, the last character in the second unprintable section in ISO-8859-1.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

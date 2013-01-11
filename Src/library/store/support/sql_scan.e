@@ -116,7 +116,7 @@ feature -- Basic operations
 						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer.as_integer_8 then
 							str.append (null_string)
 						else
-							str.append (r_int.out)
+							str.append_string_general (r_int.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -126,7 +126,7 @@ feature -- Basic operations
 						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer then
 							str.append (null_string)
 						else
-							str.append (r_int.out)
+							str.append_string_general (r_int.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -136,7 +136,7 @@ feature -- Basic operations
 						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer.as_integer_16 then
 							str.append (null_string)
 						else
-							str.append (r_int.out)
+							str.append_string_general (r_int.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -146,7 +146,7 @@ feature -- Basic operations
 						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer_64 then
 							str.append (null_string)
 						else
-							str.append (r_int.out)
+							str.append_string_general (r_int.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -156,7 +156,7 @@ feature -- Basic operations
 						if map_zero_null_value and then na_8.item = numeric_null_value.truncated_to_integer.to_natural_8 then
 							str.append (null_string)
 						else
-							str.append (na_8.out)
+							str.append_string_general (na_8.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -166,7 +166,7 @@ feature -- Basic operations
 						if map_zero_null_value and then na_16.item = numeric_null_value.truncated_to_integer.as_natural_16 then
 							str.append (null_string)
 						else
-							str.append (na_16.out)
+							str.append_string_general (na_16.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -176,7 +176,7 @@ feature -- Basic operations
 						if map_zero_null_value and then na_32.item = numeric_null_value.truncated_to_integer.as_natural_32 then
 							str.append (null_string)
 						else
-							str.append (na_32.out)
+							str.append_string_general (na_32.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -186,7 +186,7 @@ feature -- Basic operations
 						if map_zero_null_value and then na_64.item = numeric_null_value.truncated_to_integer_64.as_natural_64 then
 							str.append (null_string)
 						else
-							str.append (na_64.out)
+							str.append_string_general (na_64.out)
 						end
 					else
 						check False end -- implied by `is_integer'
@@ -196,7 +196,7 @@ feature -- Basic operations
 						if map_zero_null_value and then r_double.item = numeric_null_value then
 							str.append (null_string)
 						else
-							str.append (r_double.out)
+							str.append_string_general (r_double.out)
 						end
 					else
 						check False end -- implied by `is_double'
@@ -206,7 +206,7 @@ feature -- Basic operations
 						if map_zero_null_value and then r_real.item = numeric_null_value.truncated_to_real then
 							str.append (null_string)
 						else
-							str.append (r_real.out)
+							str.append_string_general (r_real.out)
 						end
 					else
 						check False end -- implied by `is_real'
@@ -228,18 +228,18 @@ feature -- Basic operations
 					end
 				elseif is_boolean (obj) then
 					if attached {BOOLEAN_REF} obj as r_bool then
-						str.append (boolean_format (r_bool.item))
+						str.append_string_general (boolean_format (r_bool.item))
 					else
 						check False end -- implied by `is_boolean'
 					end
 				elseif is_date (obj) then
 					if attached {DATE_TIME} obj as r_date then
-						str.append (date_format (r_date))
+						str.append_string_general (date_format (r_date))
 					else
 						check False end -- implied by `is_date'
 					end
 				elseif is_decimal_used and then attached obj as l_o and then is_decimal (l_o) then
-					str.append (decimal_output_function.item ([l_o]))
+					str.append_string_general (decimal_output_function.item ([l_o]))
 				else
 					l_obj := obj
 					check l_obj /= Void end -- implied by previous `if is_void (obj)'

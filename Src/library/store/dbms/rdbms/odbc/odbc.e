@@ -115,7 +115,7 @@ feature -- For DATABASE_FORMAT
 			if object /= Void and then not object.is_empty then
 				if not is_binary (object) then
 					create Result.make_from_string (object.as_string_32)
-					Result.replace_substring_all ("'", "''")
+					Result.replace_substring_all ({STRING_32} "'", {STRING_32} "''")
 					Result.prepend_character ('%'')
 					Result.append_character ('%'')
 				else
@@ -135,7 +135,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_32]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			tmp_str: STRING_32
 			c_temp: SQL_STRING
@@ -1415,7 +1415,7 @@ feature {NONE} -- External features
 
 	para: detachable DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_32])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -1424,8 +1424,8 @@ feature {NONE} -- External features
 		local
 			i,
 			type: INTEGER
-			tmp_str,
-			l_string: STRING
+			tmp_str: STRING_32
+			l_string: READABLE_STRING_GENERAL
 			l_any: detachable ANY
 			tmp_date: DATE_TIME
 			l_managed_pointer: detachable MANAGED_POINTER

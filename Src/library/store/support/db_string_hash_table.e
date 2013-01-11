@@ -9,21 +9,10 @@ class
 	DB_STRING_HASH_TABLE [G]
 
 inherit
-	HASH_TABLE [G, READABLE_STRING_32]
-		redefine
-			same_keys
-		end
+	STRING_TABLE [G]
 
 create
-	make
-
-feature -- Comparison
-
-	same_keys (a_search_key, a_key: READABLE_STRING_32): BOOLEAN
-			-- See if `a_search_key' and `a_key' have the same content.
-		do
-			Result := a_search_key.same_string (a_key)
-		end
+	make, make_caseless
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

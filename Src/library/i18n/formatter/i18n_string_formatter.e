@@ -107,7 +107,7 @@ feature -- Basic operations
 							if attached {READABLE_STRING_GENERAL} l_object as test then
 								Result.append_string_general (test)
 							else
-								Result.append (l_object.out)
+								Result.append_string_general (l_object.out)
 							end
 						else
 								-- Report an error here if needed later.

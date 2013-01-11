@@ -86,9 +86,11 @@ feature --Access
 		do
 			create name.make_from_string(id.language)
 			if (attached id.script as l_script) and then not l_script.is_equal (("euro").as_string_32) then
-				name.append ("-"+l_script)
+				name.append_character ('-')
+				name.append (l_script)
 			end
-			name.append ("-"+id.region)
+			name.append_character ('-')
+			name.append (id.region)
 				-- locales is sorted by iso_code, so we can use etienne's well-contracted binary search
 
 			from

@@ -182,8 +182,10 @@ feature {NONE} -- Implementation
 			name := language.twin
 			full_name := language.twin
 			if not region.is_empty then
-				name.append ("_"+region)
-				full_name.append ("_"+region)
+				name.append_character ('_')
+				name.append (region)
+				full_name.append_character ('_')
+				full_name.append (region)
 			end
 			if encoding /= Void then
 				full_name.append_character ('.')

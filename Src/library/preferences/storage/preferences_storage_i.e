@@ -9,6 +9,9 @@ note
 deferred class
 	PREFERENCES_STORAGE_I
 
+inherit
+	PREFERENCE_EXPORTER
+
 feature {NONE} -- Initialization
 
 	make_empty

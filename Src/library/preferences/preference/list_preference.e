@@ -38,12 +38,10 @@ feature -- Access
 			same: not value.is_empty implies (across value as c all c.item ~ Result[Result.lower + c.target_index - c.first_index] end)
 		end
 
-feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
+feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
 			-- String representation of `value'.				
-		local
-			index: INTEGER
 		do
 			create Result.make_empty
 			if attached value as lst then
@@ -165,7 +163,6 @@ feature -- Change
 			-- Parse the string value `a_value' and set `value'.
 		local
 			lst: LIST [STRING_32]
-			values: ARRAYED_LIST [G]
 			l_value: like value
 		do
 			l_value := new_value

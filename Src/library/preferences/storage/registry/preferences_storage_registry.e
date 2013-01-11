@@ -24,18 +24,20 @@ feature {PREFERENCES} -- Initialization
 			-- Create preferences storage in the registry.  Registry key created base on name of application
 			-- in `HKEY_CURRENT_USER\Software\'.  So location will be `HKEY_CURRENT_USER\Software\APPLICATION_NAME_HERE'
 		local
-			l_loc, l_prog: STRING
+			l_loc: STRING_32
 			l_exec: EXECUTION_ENVIRONMENT
+			l_path: PATH
 		do
 			create l_exec
-			l_loc := "HKEY_CURRENT_USER\Software\"
-			l_prog := l_exec.command_line.argument (0)
-			if l_prog /= Void then
-				l_prog := l_prog.substring (l_prog.last_index_of ('\', l_prog.count) + 1, l_prog.count) + "\"
+			create l_loc.make_from_string_general ("HKEY_CURRENT_USER\Software\")
+			create l_path.make_from_string (l_exec.arguments.command_name)
+			if attached l_path.entry as l_entry then
+				l_loc.append_string (l_entry.name)
+				l_loc.append_string_general ("\")
 			else
-				l_prog := "\"
+					-- Very unlikely there will be no name, but who knows.
+				l_loc.append_string_general ("EiffelDefaultApplication\")
 			end
-			l_loc.append (l_prog)
 			make_with_location (l_loc)
 		end
 

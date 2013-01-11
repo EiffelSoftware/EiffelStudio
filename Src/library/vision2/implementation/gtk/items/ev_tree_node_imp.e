@@ -497,7 +497,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			if attached internal_tooltip as l_internal_tooltip then
 				Result := l_internal_tooltip.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		ensure then
 			tooltip_not_void: Result /= Void
@@ -506,7 +506,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_internal_text
 			-- Make `internal_text' Void
 		do
-			internal_text := once ""
+			create internal_text.make_empty
 		end
 
 	set_internal_text (a_text: READABLE_STRING_GENERAL)
@@ -530,7 +530,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_tooltip
 			-- Remove text of `tooltip'.
 		do
-			internal_tooltip := ""
+			create internal_tooltip.make_empty
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP)

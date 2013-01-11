@@ -87,7 +87,7 @@ feature -- Access
 			if attached real_text as l_real_text then
 				Result := l_real_text.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

@@ -107,17 +107,17 @@ feature -- Access
 			split_values.compare_objects
 			font_imp.set_height_in_points (split_values.last.to_integer)
 
-			if split_values.has ("italic") or else split_values.has ("oblique") then
+			if split_values.has ({STRING_32} "italic") or else split_values.has ({STRING_32} "oblique") then
 				font_imp.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 			else
 				font_imp.set_shape ({EV_FONT_CONSTANTS}.shape_regular)
 			end
 
-			if split_values.has ("bold") then
+			if split_values.has ({STRING_32} "bold") then
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-			elseif split_values.has ("light") then
+			elseif split_values.has ({STRING_32} "light") then
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_thin)
-			elseif split_values.has ("superbold") then
+			elseif split_values.has ({STRING_32} "superbold") then
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_black)
 			else
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_regular)

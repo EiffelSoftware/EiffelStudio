@@ -374,11 +374,11 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 			end
 		end
 
-	monospace_string: STRING = "monospace"
-	serif_string: STRING = "serif"
-	courier_string: STRING ="courier"
-	sans_string: STRING = "sans"
-	lucida_string: STRING = "lucida"
+	monospace_string: STRING_32 = "monospace"
+	serif_string: STRING_32 = "serif"
+	courier_string: STRING_32 ="courier"
+	sans_string: STRING_32 = "sans"
+	lucida_string: STRING_32 = "lucida"
 		-- Font string constants
 
 	pango_style: INTEGER

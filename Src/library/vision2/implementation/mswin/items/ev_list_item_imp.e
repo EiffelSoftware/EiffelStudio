@@ -90,7 +90,7 @@ feature -- Access
 			if attached internal_text as l_internal_text then
 				Result := l_internal_text.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 						attached column_titles.i_th (i) as l_temp_title then
 					temp_title := l_temp_title
 				else
-					temp_title := once ""
+					temp_title := once {STRING_32} ""
 				end
 
 				if column_widths /= Void and then
@@ -671,7 +671,7 @@ feature -- Element change
 				a_column_not_null: a_column_ptr /= default_pointer
 			end
 			l_txt := a_txt.as_string_32
-			l_txt.replace_substring_all (once "_", once "__")
+			l_txt.replace_substring_all (once {STRING_32} "_", once {STRING_32} "__")
 			a_cs := l_txt
 			{GTK2}.gtk_tree_view_column_set_title (a_column_ptr, a_cs.item)
 		end
@@ -1104,12 +1104,12 @@ feature {NONE} -- Implementation
 			loop
 					-- Set the text in the cell
 				if list.after then
-					txt := ""
+					txt := Void
 				else
 					txt := list.item
-					if txt = Void then
-						txt := ""
-					end
+				end
+				if txt = Void then
+					create txt.make_empty
 				end
 				set_text_on_position (column_counter, a_row, txt)
 					-- Pixmap gets updated when the text does.

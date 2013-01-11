@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 			create window_oids.make
 
-			default_font_name_internal := ""
+			create default_font_name_internal.make_empty
 
 			if gtk_is_launchable then
 				initialize_threading
@@ -989,8 +989,8 @@ feature -- Basic operation
 				a_selection := {GTK}.gdk_drag_get_selection (a_context)
 				a_time := {GTK}.gdk_event_dnd_struct_time (a_event)
 				a_target_list := {GTK}.gdk_drag_context_struct_targets (a_context)
-				l_string := "STRING"
-				l_file := "file://"
+				l_string := {STRING_32} "STRING"
+				l_file := {STRING_32} "file://"
 			until
 				a_target_list = {GTK}.null_pointer
 			loop

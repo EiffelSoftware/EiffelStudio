@@ -107,7 +107,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					l_text := l_interface.text
 					if l_text.is_empty then
 						l_empty := True
-						l_text:= " "
+						l_text:= {STRING_32} " "
 					end
 					l_font := l_interface.font
 					if l_font = Void then

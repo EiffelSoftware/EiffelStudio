@@ -76,7 +76,7 @@ feature -- Access
 					-- Free existing text by resetting with a new string
 				utf8_string.set_with_eiffel_string (once "")
 			else
-				Result := ""
+				create Result.make_empty
 					-- We return an empty string if there is nothing present in the clipboard.
 			end
 		end

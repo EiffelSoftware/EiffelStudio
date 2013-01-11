@@ -114,7 +114,7 @@ feature -- Access
 				create a_cs.share_from_pointer (a_txt)
 				Result := a_cs.string
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -127,7 +127,7 @@ feature -- Access
 			if attached internal_tooltip as l_internal_tooltip then
 				Result := l_internal_tooltip.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

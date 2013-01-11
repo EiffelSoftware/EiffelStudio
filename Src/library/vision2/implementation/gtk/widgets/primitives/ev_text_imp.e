@@ -167,10 +167,10 @@ feature -- Status report
 				if l_char /= default_pointer then
 					create Result.make_from_c (l_char)
 				else
-					Result := ""
+					create Result.make_empty
 				end
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

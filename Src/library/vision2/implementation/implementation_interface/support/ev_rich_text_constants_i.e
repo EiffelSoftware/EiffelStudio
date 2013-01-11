@@ -12,378 +12,148 @@ class
 
 feature -- Access
 
-	color_table_start: STRING_32
+	color_table_start: STRING_32 = "{\colortbl ;"
 		-- RTF string denoting start of color table.
-		once
-			Result := "{\colortbl ;"
-		ensure
-			not_void: Result /= Void
-		end
 
-	font_table_start: STRING_32
+	font_table_start: STRING_32 = "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
 		-- RTF string denoting start of font table.
-		once
-			Result := "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_highlight_string: STRING_32
+	rtf_highlight_string: STRING_32 = "highlight"
 		-- String denoting highlighting color in RFT.
-		once
-			Result := "highlight"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_color_string: STRING_32
+	rtf_color_string: STRING_32 = "cf"
 		-- String denoting color in RTF.
-		once
-			Result := "cf"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_unicode_string: STRING_32
+	rtf_unicode_string: STRING_32 = "u"
 		-- String denoting underlined in RTF.
-		once
-			Result := "u"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_underline_string: STRING_32
+	rtf_underline_string: STRING_32 = "ul"
 		-- String denoting underlined in RTF.
-		once
-			Result := "ul"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_underline_none_string: STRING_32
+	rtf_underline_none_string: STRING_32 = "ulnone"
 		-- String denoting end of underlined in RTF.
-		once
-			Result := "ulnone"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_strikeout_string: STRING_32
+	rtf_strikeout_string: STRING_32 = "strike"
 		-- String denoting striked out in RTF.
-		once
-			Result := "strike"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_bold_string: STRING_32
+	rtf_bold_string: STRING_32 = "b"
 		-- String denoting bold in RTF.
-		once
-			Result := "b"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_italic_string: STRING_32
+	rtf_italic_string: STRING_32 = "i"
 		-- String denoting italic in RTF.
-		once
-			Result := "i"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_vertical_offset: STRING_32
+	rtf_vertical_offset: STRING_32 = "up"
 		-- String denoting start of vertical offset in RTF.
-		once
-			Result := "up"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_font_string: STRING_32
+	rtf_font_string: STRING_32 = "f"
 		-- String denoting font index in RTF.
-		once
-			Result := "f"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_font_size_string: STRING_32
+	rtf_font_size_string: STRING_32 = "fs"
 		-- String denoting font size in RTF.
-		once
-			Result := "fs"
-		ensure
-			not_void: Result /= Void
-		end
 
-	space_string: STRING_32
+	space_string: STRING_32 = " "
 		-- String denoting empty space.
-		once
-			Result := " "
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_new_paragraph: STRING_32
+	rtf_new_paragraph: STRING_32 = "pard"
 		-- String denoting start of standard paragraph.
-		once
-			Result := "pard"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_left_aligned: STRING_32
+	rtf_paragraph_left_aligned: STRING_32 = "ql"
 		-- String denoting start of left aligned paragraph.
-		once
-			Result := "ql"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_center_aligned: STRING_32
+	rtf_paragraph_center_aligned: STRING_32 = "qc"
 		-- String denoting start of center aligned paragraph.
-		once
-			Result := "qc"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_right_aligned: STRING_32
+	rtf_paragraph_right_aligned: STRING_32 = "qr"
 		-- String denoting start of right aligned paragraph.
-		once
-			Result := "qr"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_justified: STRING_32
+	rtf_paragraph_justified: STRING_32 = "qj"
 		-- String denoting start of justified paragraph.
-		once
-			Result := "qj"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_left_indent: STRING_32
+	rtf_paragraph_left_indent: STRING_32 = "li"
 		-- String denoting left indent of paragraph.
-		once
-			Result := "li"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_right_indent: STRING_32
+	rtf_paragraph_right_indent: STRING_32 = "ri"
 		-- String denoting right indent of paragraph.
-		once
-			Result := "ri"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_space_before: STRING_32
+	rtf_paragraph_space_before: STRING_32 = "sb"
 		-- String denoting space before paragraph.
-		once
-			Result := "sb"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_paragraph_space_after: STRING_32
+	rtf_paragraph_space_after: STRING_32 = "sa"
 		-- String denoting space after paragraph.
-		once
-			Result := "sa"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_family_tech: STRING_32
+	rtf_family_tech: STRING_32 = "ftech"
 
-		once
-			Result := "ftech"
-		ensure
-			not_void: Result /= Void
-		end
 	rtf_family_tech_int: INTEGER = 1
 
-	rtf_family_roman: STRING_32
+	rtf_family_roman: STRING_32 = "froman"
 
-		once
-			Result := "froman"
-		ensure
-			not_void: Result /= Void
-		end
 	rtf_family_roman_int: INTEGER = 2
 
-	rtf_family_swiss: STRING_32
+	rtf_family_swiss: STRING_32 = "fswiss"
 
-		once
-			Result := "fswiss"
-		ensure
-			not_void: Result /= Void
-		end
 	rtf_family_swiss_int: INTEGER = 3
 
-	rtf_family_script: STRING_32
+	rtf_family_script: STRING_32 = "fscript"
 
-		once
-			Result := "fscript"
-		ensure
-			not_void: Result /= Void
-		end
 	rtf_family_script_int: INTEGER = 4
 
-	rtf_family_modern: STRING_32
+	rtf_family_modern: STRING_32 = "fmodern"
 
-		once
-			Result := "fmodern"
-		ensure
-			not_void: Result /= Void
-		end
 	rtf_family_modern_int: INTEGER = 5
 
-	rtf_family_nill: STRING_32
+	rtf_family_nill: STRING_32 = "fnill"
 
-		once
-			Result := "fnill"
-		ensure
-			not_void: Result /= Void
-		end
 	rtf_family_nill_int: INTEGER = 6
 
-	rtf_newline: STRING_32
+	rtf_newline: STRING_32 = "par"
 		-- String denoting RTF newline.
-		once
-			Result := "par"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_backslash: STRING_32
+	rtf_backslash: STRING_32 = "\\"
 		-- String denoting RTF backslash.
-		once
-			Result := "\\"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_open_brace: STRING_32
+	rtf_open_brace: STRING_32 = "\{"
 		-- String denoting RTF open brace.
-		once
-			Result := "\{"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_close_brace: STRING_32
+	rtf_close_brace: STRING_32 = "\}"
 		-- String denoting RTF close brace.
-		once
-			Result := "\}"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_unicode_character: STRING_32
+	rtf_unicode_character: STRING_32 = "\u"
 			-- String denoting starting of a unicode character.
-		once
-			Result := "\u"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_red: STRING_32
+	rtf_red: STRING_32 = "red"
 		-- String denoting red component of a RTF color.
-		once
-			Result := "red"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_green: STRING_32
+	rtf_green: STRING_32 = "green"
 		-- String denoting green component of a RTF color.
-		once
-			Result := "green"
-		ensure
-			not_void: Result /= Void
-		end
 
-	rtf_blue: STRING_32
+	rtf_blue: STRING_32 = "blue"
 		-- String denoting blue component of a RTF color.
-		once
-			Result := "blue"
-		ensure
-			not_void: Result /= Void
-		end
 
-	view_text: STRING_32
+	view_text: STRING_32 = "\viewkind4\uc1\pard"
 		-- A STRING constant representing the view type of the RTF document.
-		once
-			Result := "\viewkind4\uc1\pard"
-		ensure
-			not_void: Result /= Void
-		end
 
-	default_font: STRING_32
+	default_font: STRING_32 = "\cf1\highlight2\f0\fs"
 
-		once
-			Result := "\cf1\highlight2\f0\fs"
-		ensure
-			not_void: Result /= Void
-		end
 	rtf_control_character: CHARACTER = '\'
 
 	rtf_open_brace_character: CHARACTER = '{'
 
 	rtf_close_brace_character: CHARACTER = '}'
 
-	rtf_fonttable: STRING_32
+	rtf_fonttable: STRING_32 = "fonttbl"
 
-		once
-			Result := "fonttbl"
-		ensure
-			not_void: Result /= Void
-		end
-	rtf_colortbl: STRING_32
+	rtf_colortbl: STRING_32 = "colortbl"
 
-		once
-			Result := "colortbl"
-		ensure
-			not_void: Result /= Void
-		end
-	rtf_charset: STRING_32
+	rtf_charset: STRING_32 = "fcharset"
 
-		once
-			Result := "fcharset"
-		ensure
-			not_void: Result /= Void
-		end
-	rtf_user_props: STRING_32
+	rtf_user_props: STRING_32 = "*"
 
-		once
-			Result := "*"
-		ensure
-			not_void: Result /= Void
-		end
-	rtf_info: STRING_32
+	rtf_info: STRING_32 = "info"
 
-		once
-			Result := "info"
-		ensure
-			not_void: Result /= Void
-		end
-	rtf_stylesheet: STRING_32
+	rtf_stylesheet: STRING_32 = "stylesheet"
 
-		once
-			Result := "stylesheet"
-		ensure
-			not_void: Result /= Void
-		end
-	rtf_font_charset: STRING_32
+	rtf_font_charset: STRING_32 = "fcharset";
 
-		once
-			Result := "fcharset";
-		ensure
-			not_void: Result /= Void
-		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

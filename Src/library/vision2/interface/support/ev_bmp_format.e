@@ -17,7 +17,7 @@ feature {EV_PIXMAP_I} -- Access
 	file_extension: STRING_32
 			-- Three character file extension associated with format.
 		do
-			Result := "bmp"
+			Result := {STRING_32} "bmp"
 		end
 
 	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filepath: PATH)

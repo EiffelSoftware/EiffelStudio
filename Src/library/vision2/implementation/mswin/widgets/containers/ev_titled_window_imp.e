@@ -61,7 +61,7 @@ feature -- Initialization
 			-- Create and initialize `Current'
 		do
 			internal_class_name := new_class_name
-			internal_icon_name := ""
+			create internal_icon_name.make_empty
 			Precursor
 		end
 
@@ -80,7 +80,7 @@ feature -- Access
 			if attached internal_title as l_internal_title then
 				Result := l_internal_title.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -96,7 +96,7 @@ feature -- Access
 			if internal_icon_name /= Void then
 				Result := internal_icon_name.twin
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -282,7 +282,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Can be redefined to return a user-defined icon.
 		do
 			make_id
-			Result := "EV_TITLED_WINDOW_IMP"
+			Result := {STRING_32} "EV_TITLED_WINDOW_IMP"
 		end
 
 	internal_icon_name: STRING_32

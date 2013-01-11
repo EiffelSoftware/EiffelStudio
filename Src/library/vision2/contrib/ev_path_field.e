@@ -346,7 +346,7 @@ feature {NONE} -- Interface names
 		require
 			f_not_void: f /= Void
 		do
-			Result := "Files of type ("
+			create Result.make_from_string_general ("Files of type (")
 			Result.append_string_general (f)
 			Result.append_character (')')
 		end

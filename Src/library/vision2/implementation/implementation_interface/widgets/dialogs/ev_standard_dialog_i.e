@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			-- to `internal_select' without having to redfine the
 			-- feature in which this setting takes place.
 		do
-			Result := ev_ok
+			Result := ev_ok.as_string_32_conversion
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -919,8 +919,8 @@ feature -- Status setting
 				format_out := ""
 			end
 			formats_index.put (formats.index_of (format, 1), start_pos)
-			start_formats.put (format_out, start_pos)
-			end_formats.put (format_out, end_pos)
+			start_formats.put (format_out.as_string_32_conversion, start_pos)
+			end_formats.put (format_out.as_string_32_conversion, end_pos)
 		end
 
 	buffered_append (a_text: READABLE_STRING_GENERAL; format: EV_CHARACTER_FORMAT)
@@ -1057,7 +1057,7 @@ feature -- Status setting
 				loop
 					if start_formats.item (counter) /= Void then
 						format_index := formats_index.item (counter)
-						temp_string := ""
+						create temp_string.make_empty
 						add_rtf_keyword (temp_string, rtf_highlight_string)
 
 						temp_string.append_integer (back_color_offset.i_th (format_index))
@@ -1212,7 +1212,7 @@ feature -- Status setting
 				-- It appears that streaming rtf adds an extra new line character which we must now remove.
 			select_region (text_length, text_length)
 			check
-				selected_text_is_newline: selected_text.is_empty or selected_text.is_equal ("%N")
+				selected_text_is_newline: selected_text.is_empty or selected_text.same_string_general ("%N")
 			end
 			delete_selection
 
@@ -1625,9 +1625,10 @@ feature {NONE} -- Implementation
 			a_font_imp: detachable EV_FONT_IMP
 			log_font: WEL_LOG_FONT
 			current_family: INTEGER
-			family: STRING_32
+			family: STRING
 		do
-			Result := "{"
+			create Result.make (100)
+			Result.append_character ('{')
 			a_font_imp ?= a_font.implementation
 			check
 				font_imp_not_void: a_font_imp /= Void
@@ -1652,7 +1653,7 @@ feature {NONE} -- Implementation
 			Result.append_string_general ("\f")
 			Result.append_integer (index)
 			Result.append_string_general ("\")
-			Result.append (family)
+			Result.append_string_general (family)
 			Result.append_string_general ("\fcharset")
 			Result.append_integer (log_font.char_set)
 			Result.append_character (' ')

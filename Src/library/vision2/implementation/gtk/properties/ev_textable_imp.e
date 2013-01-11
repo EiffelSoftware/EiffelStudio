@@ -39,7 +39,7 @@ feature -- Access
 				if a_str /= default_pointer then
 					Result := (create{EV_GTK_C_STRING}.share_from_pointer (a_str)).string
 				else
-					Result := ""
+					create Result.make_empty
 				end
 			end
 		end
@@ -149,7 +149,7 @@ feature {EV_ANY_IMP} -- Implementation
 				end
 				i := i + 1
 			end
-			s.replace_substring_all (once "&&", once "&")
+			s.replace_substring_all (once {STRING_32} "&&", once {STRING_32} "&")
 		end
 
 	u_lined_filter (s: READABLE_STRING_GENERAL): STRING_32
@@ -163,7 +163,7 @@ feature {EV_ANY_IMP} -- Implementation
 				if Result = s then
 					Result := Result.twin
 				end
-				Result.replace_substring_all (once  "_", once  "__")
+				Result.replace_substring_all (once  {STRING_32} "_", once  {STRING_32} "__")
 				filter_ampersand (Result, '_')
 			end
 		end

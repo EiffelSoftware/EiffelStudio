@@ -18,7 +18,7 @@ feature -- Access
 			if attached internal_name as l_internal_name then
 				Result := l_internal_name
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

@@ -30,7 +30,7 @@ feature -- Initialization
 				a_cs.share_from_pointer ({GTK}.gtk_tooltips_data_struct_tip_text (tip_ptr))
 				Result := a_cs.string
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

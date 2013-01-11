@@ -108,8 +108,8 @@ feature -- Implementation
 				pixbuf_format := {GTK}.g_slist_nth_data (formats, i)
 				a_cs.share_from_pointer ({GTK2}.gdk_pixbuf_format_get_name (pixbuf_format))
 				format_name := a_cs.string
-				if format_name.is_equal (once "jpeg") then
-					format_name := once "jpg"
+				if format_name.is_equal (once {STRING_32} "jpeg") then
+					format_name := once {STRING_32} "jpg"
 				end
 				if a_writeable then
 					if {GTK2}.gdk_pixbuf_format_is_writable (pixbuf_format) then
@@ -141,7 +141,7 @@ feature -- Implementation
 				i := 1
 				l_font_names_count := font_names.count
 					-- A default is needed should no enumerable fonts be found on the system.
-				l_sans := once "Sans"
+				l_sans := once {STRING_32} "Sans"
 				default_font_name_internal := l_sans
 			until
 				exit_loop or else i > l_font_names_count
@@ -161,17 +161,17 @@ feature -- Implementation
 			split_values.compare_objects
 			default_font_point_height_internal := split_values.last.to_integer
 
-			if split_values.has (once "italic") or else split_values.has (once "oblique") then
+			if split_values.has (once {STRING_32} "italic") or else split_values.has (once {STRING_32} "oblique") then
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_italic
 			else
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_regular
 			end
 
-			if split_values.has (once "bold") then
+			if split_values.has (once {STRING_32} "bold") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_bold
-			elseif split_values.has (once "light") then
+			elseif split_values.has (once {STRING_32} "light") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_thin
-			elseif split_values.has (once "superbold") then
+			elseif split_values.has (once {STRING_32} "superbold") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_black
 			else
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_regular
@@ -278,7 +278,7 @@ feature -- Implementation
 			end
 					-- Sometimes when gtk isn't setup correctly the 'gtk-font-name' setting cannot be found, so the default is used instead.
 			if l_result = Void or else l_result.is_empty then
-				Result := once "Sans 10"
+				Result := once {STRING_32} "Sans 10"
 			else
 				Result := l_result
 			end

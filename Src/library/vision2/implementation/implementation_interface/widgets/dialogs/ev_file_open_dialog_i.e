@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			-- e.g. not the cancel button.
 			-- See comment in EV_STANDARD_DIALOG_I.
 		do
-			Result := ev_open
+			Result := ev_open.as_string_32_conversion
 		end
 
 note

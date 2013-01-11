@@ -7,7 +7,7 @@ note
 
 class
 	EV_DIALOG_CONSTANTS
-	
+
 feature -- Button Texts
 
 	ev_ok: STRING
@@ -15,13 +15,13 @@ feature -- Button Texts
 		do
 			Result := "OK"
 		end
-		
+
 	ev_open: STRING
 			-- Text displayed on "open" buttons.
 		do
 			Result := "Open"
 		end
-		
+
 	ev_save: STRING
 			-- Text displayed on "save" buttons.
 		do
@@ -39,69 +39,69 @@ feature -- Button Texts
 		do
 			Result := "Cancel"
 		end
-		
+
 	ev_yes: STRING
 			-- Text displayed on "yes" buttons.
 		do
 			Result := "Yes"
 		end
-		
+
 	ev_no: STRING
 			-- Text displayed on "no" buttons.
 		do
 			Result := "No"
 		end
-		
+
 	ev_abort: STRING
 			-- Text displayed on "abort" buttons.
 		do
 			Result := "Abort"
 		end
-		
+
 	ev_retry: STRING
 			-- Text displayed on "retry" buttons.
 		do
 			Result := "Retry"
 		end
-		
+
 	ev_ignore: STRING
 			-- Text displayed on "ignore" buttons.
 		do
 			Result := "Ignore"
 		end
-		
+
 feature -- Titles
-		
+
 	ev_warning_dialog_title: STRING
 			-- Title of EV_WARNING_DIALOG.
 		do
 			Result := "Warning"
 		end
-	
+
 	ev_question_dialog_title: STRING
 			-- Title of EV_QUESTION_DIALOG.
 		do
 			Result := "Question"
 		end
-		
+
 	ev_information_dialog_title: STRING
 			-- Title of EV_INFORMATION_DIALOG.
 		do
 			Result := "Information"
 		end
-		
+
 	ev_error_dialog_title: STRING
 			-- Title of EV_ERROR_DIALOG.
 		do
 			Result := "Error"
 		end
-		
+
 	ev_confirmation_dialog_title: STRING
 			-- Title of EV_CONFIRMATION_DIALOG.
 		do
 			Result := "Confirmation"
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

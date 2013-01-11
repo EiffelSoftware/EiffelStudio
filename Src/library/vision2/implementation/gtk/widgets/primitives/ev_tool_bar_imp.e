@@ -169,7 +169,7 @@ feature -- Implementation
 					i > count
 				loop
 					tbb_imp ?= i_th (i).implementation
-					if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
+					if tbb_imp /= Void and then not tbb_imp.text.is_empty then
 						has_text := True
 					end
 					if tbb_imp /= Void and then tbb_imp.internal_pixmap /= Void then

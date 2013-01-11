@@ -49,7 +49,7 @@ feature -- Status setting
 					ok_actions_internal.call (Void)
 				end
 			else
-				selected_button := ev_cancel
+				selected_button := ev_cancel.as_string_32_conversion
 				if cancel_actions_internal /= Void then
 					cancel_actions_internal.call (Void)
 				end

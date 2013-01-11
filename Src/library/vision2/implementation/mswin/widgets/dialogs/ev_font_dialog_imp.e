@@ -106,9 +106,8 @@ feature -- Access
 		do
 			l_result := internal_title
 			if l_result = Void then
-				l_result := "Font"
+				l_result := {STRING_32} "Font"
 			end
-			check l_result /= Void end
 			Result := l_result
 		end
 
@@ -129,7 +128,7 @@ feature -- Element change
 		do
 			font_imp ?= a_font.implementation
 			check font_imp /= Void end
-			font_imp.update_preferred_faces ("")
+			font_imp.update_preferred_faces ({STRING_32} "")
 			set_log_font (font_imp.wel_log_font)
 		end
 

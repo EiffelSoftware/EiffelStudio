@@ -247,7 +247,7 @@ feature {EV_COLOR} -- Conversion
 
 feature -- Implementation
 
-	Default_name: STRING = "noname"
+	Default_name: STRING_32 = "noname"
 			-- To be used as `name' when none is supplied.
 
 	interface: detachable EV_COLOR note option: stable attribute end

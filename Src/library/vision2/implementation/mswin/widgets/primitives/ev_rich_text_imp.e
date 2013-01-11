@@ -1004,7 +1004,7 @@ feature -- Status setting
 				buffered_text := text.twin
 					-- Generate an insertion string to use for default font
 				default_font_format := default_font
-				default_font_format.append ((font.height * 2).out)
+				default_font_format.append_integer ((font.height * 2))
 				default_font_format.append (space_string)
 
 					-- Generate FRT Header corresponding to all fonts used in formatting.			
@@ -1025,7 +1025,7 @@ feature -- Status setting
 					build_font_from_format (character_format_i)
 					formats.forth
 				end
-				font_text.append ("}")
+				font_text.append_character ('}')
 
 					-- Generate RTF Header corresponding to all colors used in formatting.
 					--	{\colortbl ;\red255\green0\blue0;\red0\green255\blue0;}
@@ -1041,12 +1041,12 @@ feature -- Status setting
 					formats.forth
 				end
 
-				color_text.append ("}")
+				color_text.append_character ('}')
 
 				internal_text := font_text.twin
-				internal_text.append ("%R%N")
+				internal_text.append_string_general ("%R%N")
 				internal_text.append (color_text)
-				internal_text.append ("%R%N")
+				internal_text.append_string_general ("%R%N")
 				internal_text.append (view_text)
 				last_end_value := 1
 				internal_text.resize (default_string_size)
@@ -1060,9 +1060,9 @@ feature -- Status setting
 						temp_string := ""
 						add_rtf_keyword (temp_string, rtf_highlight_string)
 
-						temp_string.append (back_color_offset.i_th (format_index).out)
+						temp_string.append_integer (back_color_offset.i_th (format_index))
 						add_rtf_keyword (temp_string, rtf_color_string)
-						temp_string.append (color_offset.i_th (format_index).out)
+						temp_string.append_integer (color_offset.i_th (format_index))
 						format_underlined := formats.i_th (format_index).effects.is_underlined
 						if not is_current_format_underlined and format_underlined then
 							add_rtf_keyword (temp_string, rtf_underline_string)
@@ -1099,14 +1099,14 @@ feature -- Status setting
 						if vertical_offset /= current_vertical_offset then
 							add_rtf_keyword (temp_string, rtf_vertical_offset)
 								-- We must specify the vertical offset in half points.
-							temp_string.append ((pixel_to_point (screen_dc, vertical_offset) * 2).out)
+							temp_string.append_integer ((pixel_to_point (screen_dc, vertical_offset) * 2))
 							current_vertical_offset := vertical_offset
 						end
 
 						add_rtf_keyword (temp_string, rtf_font_string)
-						temp_string.append (format_index.out)
+						temp_string.append_integer (format_index)
 						add_rtf_keyword (temp_string, rtf_font_size_string)
-						temp_string.append (heights.i_th (format_index).out)
+						temp_string.append_integer (heights.i_th (format_index))
 						temp_string.append (space_string)
 						internal_text.append_string (temp_string)
 						screen_dc.release
@@ -1128,7 +1128,7 @@ feature -- Status setting
 					end
 					counter := counter + 1
 				end
-				internal_text.append ("}")
+				internal_text.append_character ('}')
 				set_selection (lowest_buffered_value - 1, highest_buffered_value - 1)
 				create stream.make (internal_text)
 				insert_rtf_stream_in (stream)
@@ -1649,15 +1649,15 @@ feature {NONE} -- Implementation
 			else
 				family := "fnil"
 			end
-			Result.append ("\f")
-			Result.append (index.out)
-			Result.append ("\")
+			Result.append_string_general ("\f")
+			Result.append_integer (index)
+			Result.append_string_general ("\")
 			Result.append (family)
-			Result.append ("\fcharset")
-			Result.append (log_font.char_set.out)
-			Result.append (" ")
+			Result.append_string_general ("\fcharset")
+			Result.append_integer (log_font.char_set)
+			Result.append_character (' ')
 			Result.append (a_font.name)
-			Result.append (";}")
+			Result.append_string_general (";}")
 		ensure
 			Result_not_void: Result /= Void
 		end

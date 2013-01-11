@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 		do
 			Result := generator
 			if has_shadow then
-				Result.append ("_with_shadow")
+				Result.append_string_general ("_with_shadow")
 			end
 		end
 

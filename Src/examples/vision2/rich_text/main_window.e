@@ -24,12 +24,12 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			environment: EV_ENVIRONMENT
-			font_families: LINEAR [STRING]
+			font_families: LINEAR [STRING_32]
 			list_item: EV_LIST_ITEM
 			counter: INTEGER
 			font: EV_FONT
 			tab_positioner: EV_RICH_TEXT_TAB_POSITIONER
-			a_file_name: FILE_NAME
+			l_file_name: PATH
 			format: EV_CHARACTER_FORMAT
 		do
 				-- Initialize color display to black.
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 					-- Now load all available fonts into `font_selection' combo box.
 			create environment
-			font_families := environment.font_families_8
+			font_families := environment.font_families
 			from
 				font_families.start
 			until
@@ -83,9 +83,9 @@ feature {NONE} -- Initialization
 			end
 
 				-- Load contents of `rich_text' from rich text file "welcome.rtf"
-			create a_file_name.make_from_string (rich_text_example_root)
-			a_file_name.extend ("welcome.rtf")
-			rich_text.set_with_named_file (a_file_name)
+			create l_file_name.make_from_string (rich_text_example_root)
+			l_file_name := l_file_name.extended ("welcome.rtf")
+			rich_text.set_with_named_path (l_file_name)
 
 				-- Now we must add an example of every available font to `rich_text'.
 			format := rich_text.character_format (1)
@@ -264,14 +264,14 @@ feature {NONE} -- Event handling
 			end
 			if rich_text.has_selection then
 				format := rich_text.character_format (rich_text.selection_start)
-				if color_dialog.selected_button.is_equal ("OK") then
+				if color_dialog.selected_button_name.same_string ((create {EV_DIALOG_NAMES}).ev_ok) then
 					format.set_color (color_dialog.color)
 					create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
 					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 				end
 			else
 				format := rich_text.character_format (rich_text.caret_position)
-				if color_dialog.selected_button.is_equal ("OK") then
+				if color_dialog.selected_button_name.same_string ((create {EV_DIALOG_NAMES}).ev_ok) then
 					format.set_color (color_dialog.color)
 					rich_text.set_current_format (format)
 				end
@@ -292,14 +292,14 @@ feature {NONE} -- Event handling
 			end
 			if rich_text.has_selection then
 				format := rich_text.character_format (rich_text.selection_start)
-				if color_dialog.selected_button.is_equal ("OK") then
+				if color_dialog.selected_button_name.same_string ((create {EV_DIALOG_NAMES}).ev_ok) then
 					format.set_background_color (color_dialog.color)
 					create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
 					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 				end
 			else
 				format := rich_text.character_format (rich_text.caret_position)
-				if color_dialog.selected_button.is_equal ("OK") then
+				if color_dialog.selected_button_name.same_string ((create {EV_DIALOG_NAMES}).ev_ok) then
 					format.set_background_color (color_dialog.color)
 					rich_text.set_current_format (format)
 				end
@@ -671,13 +671,13 @@ feature {NONE} -- Implementation
 				if formatting.font_height then
 						-- Font height is consistent throughout complete selection so display this size.
 					current_value := format.font.height_in_points.out
-					if not size_selection.text.is_equal (current_value) then
+					if not size_selection.text.same_string_general (current_value) then
 						from
 							size_selection.start
 						until
 							size_selection.off or current_value = Void
 						loop
-							if size_selection.item.text.is_equal (current_value) then
+							if size_selection.item.text.same_string_general (current_value) then
 								size_selection.select_actions.block
 								size_selection.item.enable_select
 								size_selection.select_actions.resume
@@ -698,13 +698,13 @@ feature {NONE} -- Implementation
 				if formatting.font_family then
 						-- Font family is consistent throughout compelete selection so display the family.
 					current_value := format.font.name.out
-					if not font_selection.text.is_equal (current_value) then
+					if not font_selection.text.same_string_general (current_value) then
 						from
 							font_selection.start
 						until
 							font_selection.off or current_value = Void
 						loop
-							if font_selection.item.text.is_equal (current_value) then
+							if font_selection.item.text.same_string_general (current_value) then
 								font_selection.select_actions.block
 								font_selection.item.enable_select
 								font_selection.select_actions.resume
@@ -1087,7 +1087,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	current_file_name: STRING
+	current_file_name: PATH
 		-- File name currently used for Loading and saving files.
 
 	exit
@@ -1123,7 +1123,7 @@ feature {NONE} -- Implementation
 				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 100))
 				general_label.hide
 				save_progress.show
-				rich_text.set_with_named_file (create {FILE_NAME}.make_from_string (current_file_name))
+				rich_text.set_with_named_path (current_file_name)
 				save_progress.hide
 				general_label.show
 			end
@@ -1139,7 +1139,7 @@ feature {NONE} -- Implementation
 				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 100))
 				general_label.hide
 				save_progress.show
-				rich_text.save_to_named_file (create {FILE_NAME}.make_from_string (current_file_name))
+				rich_text.save_to_named_path (current_file_name)
 				save_progress.hide
 				general_label.show
 			end
@@ -1160,7 +1160,6 @@ feature {NONE} -- Implementation
 			opening_or_saving_file: file_operation = opening_file or file_operation = saving_file
 		local
 			file_dialog: EV_FILE_DIALOG
-			extension: STRING
 		do
 			if file_operation = saving_file then
 				create {EV_FILE_SAVE_DIALOG} file_dialog
@@ -1169,23 +1168,13 @@ feature {NONE} -- Implementation
 			end
 			file_dialog.filters.extend (["*.rtf", "Rtf Files (*.rtf)"])
 			file_dialog.show_modal_to_window (Current)
-			if file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel)  then
-
+			if file_dialog.selected_button_name.same_string ((create {EV_DIALOG_NAMES}).ev_cancel)  then
 				file_dialog_cancelled := True
 			else
-				current_file_name := file_dialog.file_name
+				current_file_name := file_dialog.full_file_path
 					-- We now add the ".rtf" extension if one has not been added.
-				if current_file_name.count > 4 then
-					extension := current_file_name.substring (current_file_name.count - 3, current_file_name.count)
-					extension.to_lower
-					if not extension.is_equal (".rtf") then
-						current_file_name.append (".rtf")
-					end
-				else
-						-- If the original filename had less than 4 characters
-						-- it is not possible for it to have an extension, so
-						-- we add one.
-					current_file_name.append (".rtf")
+				if not current_file_name.has_extension ("rtf") then
+					current_file_name := current_file_name.appended_with_extension ("rtf")
 				end
 				file_dialog_cancelled := False
 			end

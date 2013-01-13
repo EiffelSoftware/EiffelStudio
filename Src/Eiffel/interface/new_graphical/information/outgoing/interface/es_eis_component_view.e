@@ -974,7 +974,7 @@ feature {NONE} -- Grid items
 			l_feature: E_FEATURE
 			l_editor_token_item: ES_GRID_LIST_ITEM
 		do
-			if attached {STRING} a_entry.id as lt_id then
+			if attached a_entry.id as lt_id then
 				token_writer.new_line
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.target_type then

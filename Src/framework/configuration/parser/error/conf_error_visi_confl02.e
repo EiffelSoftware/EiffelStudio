@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			text := "Visibility conflict (conflicting feature renamings) for class: "+a_class
+			text := {STRING_32} "Visibility conflict (conflicting feature renamings) for class: "+a_class
 		end
 
 feature -- Access

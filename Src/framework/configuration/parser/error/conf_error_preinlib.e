@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_library: STRING)
 			-- Create
 		do
-			text := "A system that was used as a library has a precompiled library in it: "+a_library
+			text := {STRING_32} "A system that was used as a library has a precompiled library in it: " + a_library
 		end
 
 feature -- Access

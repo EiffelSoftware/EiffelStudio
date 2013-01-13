@@ -77,7 +77,7 @@ feature -- Access
 		obsolete
 			"Use `default_start_path' instead."
 		do
-			Result := default_start_path.name
+			create Result.make_from_string (default_start_path.name)
 		end
 
 	default_start_path: PATH
@@ -92,7 +92,7 @@ feature -- Status
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := file_path.name
+			create Result.make_from_string (file_path.name)
 		ensure
 			result_not_void: Result /= Void
 		end

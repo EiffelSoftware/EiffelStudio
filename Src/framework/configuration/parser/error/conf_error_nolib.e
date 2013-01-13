@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_library: STRING)
 			-- Create
 		do
-			text := "A system was used as a library and has no library target specified: "+a_library
+			text := {STRING_32} "A system was used as a library and has no library target specified: "+a_library
 		end
 
 feature -- Access

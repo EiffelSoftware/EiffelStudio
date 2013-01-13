@@ -11,10 +11,10 @@ class
 create
 	default_create,
 	make_from_string
-	
+
 feature {NONE} -- Initialization
 
-	make_from_string (vers: STRING)
+	make_from_string (vers: READABLE_STRING_GENERAL)
 			-- Create a new version object with its string representation `vers'.
 		require
 			version_valid: is_version_valid (vers)
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_version (vers: STRING)
+	set_version (vers: READABLE_STRING_GENERAL)
 			-- Update current with `vers' string representation of a version.
 		require
 			version_valid: is_version_valid (vers)
@@ -48,7 +48,7 @@ feature -- Settings
 			l_new_pos := vers.index_of ('.', l_pos)
 			if l_new_pos > 0 then
 				build := vers.substring (l_pos, l_new_pos - 1).to_integer
-	
+
 				l_pos := l_new_pos + 1
 				revision := vers.substring (l_pos, vers.count).to_integer
 			else
@@ -56,10 +56,10 @@ feature -- Settings
 				revision := 0
 			end
 		end
-		
+
 feature -- Checking
 
-	is_version_valid (vers: STRING): BOOLEAN
+	is_version_valid (vers: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `vers' a valid version number?
 			-- I.e. a sequence of four integers separated by colon.
 		local
@@ -70,9 +70,9 @@ feature -- Checking
 					-- State:
 					-- 1 means that we should read a sequence of digits
 					-- 2 means that we should read a colon or a digit
-	
+
 				from
-					state := 1	
+					state := 1
 					i := 1
 					Result := True
 					nb := vers.count
@@ -106,7 +106,7 @@ invariant
 	positive_composants: major >= 0 and minor >= 0 and build >= 0 and revision >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -119,22 +119,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class VERSION

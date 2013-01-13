@@ -63,7 +63,7 @@ feature -- Access
 			if is_set then
 				Result := content [index]
 			else
-				Result := ""
+				Result := {STRING_32} ""
 			end
 		end
 

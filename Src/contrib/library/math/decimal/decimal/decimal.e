@@ -2269,7 +2269,6 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
 		local
 		 	user, cosval, sinval, final: DECIMAL
-		 	q: DCM_PRECOMPUTED_VALUES
 		 do
 		 	create Result.make_from_string_ctx ("0", ctx)
 			create final.make_from_string_ctx ("0", ctx)
@@ -2298,7 +2297,6 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
 		local
 		 	user, cosval, sinval, final: DECIMAL
-		 	q: DCM_PRECOMPUTED_VALUES
 		 do
 		 	create Result.make_from_string_ctx ("0", ctx)
 			create final.make_from_string_ctx ("0", ctx)
@@ -2327,7 +2325,6 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
 		local
 		 	user, cosval, one1, final: DECIMAL
-		 	q: DCM_PRECOMPUTED_VALUES
 		 do
 		 	create Result.make_from_string_ctx ("0", ctx)
 			create final.make_from_string_ctx ("0", ctx)
@@ -2356,7 +2353,6 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
 		local
 		 	user, one1, sinval, final: DECIMAL
-		 	q: DCM_PRECOMPUTED_VALUES
 		 do
 		 	create Result.make_from_string_ctx ("0", ctx)
 			create final.make_from_string_ctx ("0", ctx)

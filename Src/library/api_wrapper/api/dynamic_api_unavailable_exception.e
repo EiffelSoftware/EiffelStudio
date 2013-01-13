@@ -34,9 +34,9 @@ feature {NONE} -- Initialization
 			create api_feature_name.make_from_string (a_name)
 
 			create l_str.make (40)
-			l_str.append ("The API function or variable `")
+			l_str.append_string_general ("The API function or variable `")
 			l_str.append_string_general (api_feature_name)
-			l_str.append ("' is not available.")
+			l_str.append_string_general ("' is not available.")
 			set_description (l_str)
 		ensure
 			api_feature_name_set: api_feature_name.same_string (a_name)

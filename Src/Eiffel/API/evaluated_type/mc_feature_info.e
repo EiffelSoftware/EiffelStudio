@@ -106,7 +106,7 @@ feature -- Command
 				if feature_name /= Void  then
 					l_output := "The feature `"
 					l_output.append (encoding_converter.utf8_to_utf32 (feature_name))
-					l_output.append ("' occurs in the following set of constraint classes:%N")
+					l_output.append_string_general ("' occurs in the following set of constraint classes:%N")
 				else
 					-- This error report might have been computed over a routine id.
 					-- That's why feature_name is Void.
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

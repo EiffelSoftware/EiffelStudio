@@ -602,21 +602,21 @@ feature {NONE} -- Implementation
 				a_text_formatter.add ("  ")
 				if attached a_error.previous_line_32 as l_line then
 					if not l_line.is_empty then
-						l_line.replace_substring_all ("%T", "  ")
+						l_line.replace_substring_all ({STRING_32} "%T", {STRING_32} "  ")
 					end
 					a_text_formatter.add (l_line)
 					a_text_formatter.add_new_line
 				end
 				a_text_formatter.add ("->")
 				if attached a_error.current_line_32 as l_c_line and then not l_c_line.is_empty then
-					l_c_line.replace_substring_all ("%T", "  ")
+					l_c_line.replace_substring_all ({STRING_32} "%T", {STRING_32} "  ")
 					a_text_formatter.add (l_c_line)
 				end
 				a_text_formatter.add_new_line
 				if attached a_error.next_line_32 as l_n_line then
 					a_text_formatter.add ("  ")
 					if not l_n_line.is_empty then
-						l_n_line.replace_substring_all ("%T", "  ")
+						l_n_line.replace_substring_all ({STRING_32} "%T", {STRING_32} "  ")
 					end
 					a_text_formatter.add (l_n_line)
 					a_text_formatter.add_new_line
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -112,8 +112,8 @@ feature {NONE} -- Output
 			obsolete_class.append_name (a_text_formatter)
 			l_message := obsolete_class.obsolete_message_32
 			if l_message /= Void and then not l_message.is_empty then
-				l_message.replace_substring_all ("%T", "")
-				l_message.replace_substring_all ("%N", " ")
+				l_message.replace_substring_all ({STRING_32} "%T", {STRING_32} "")
+				l_message.replace_substring_all ({STRING_32} "%N", {STRING_32} " ")
 				a_text_formatter.add (": ")
 				a_text_formatter.add (l_message)
 			else
@@ -149,7 +149,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

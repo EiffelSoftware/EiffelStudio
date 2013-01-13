@@ -191,7 +191,7 @@ feature -- Access (Folder)
 				l_path := decode (strings.i_th (folder_id_sections))
 				last_folder_path := l_path
 				if l_cluster /= Void then
-					create l_dir.make_with_path (l_cluster.location.build_path (l_path, ""))
+					create l_dir.make_with_path (l_cluster.location.build_path (l_path, {STRING_32} ""))
 					if l_dir.exists then
 						create Result.make (l_cluster, l_path)
 					end

@@ -677,7 +677,7 @@ feature -- Output
 			put_string_item (new)
 		end
 
-	put_string_item (s: STRING_32)
+	put_string_item (s: READABLE_STRING_GENERAL)
 			-- Append `s' as string text to `text_formatter'. Emit tabs if needed.
 			-- If `in_indexing_clause', we seperate string.
 		require
@@ -1150,7 +1150,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -136,7 +136,7 @@ feature {NONE} -- Update
 					s := io.last_string;
 					if not s.is_empty then
 						create file_name.make (s.count)
-						file_name.append (s)
+						file_name.append_string_general (s)
 						Eiffel_ace.set_file_name (file_name);
 					else
 						create file.make_with_name ("Ace.ace");
@@ -160,7 +160,7 @@ feature {NONE} -- Update
 						exit := True
 					else
 						create file_name.make (s.count)
-						file_name.append (s)
+						file_name.append_string_general (s)
 						u.copy_file (eiffel_layout.default_config_file_name.name, file_name)
 						Eiffel_ace.set_file_name (file_name.twin)
 						edit (Eiffel_ace.file_name)
@@ -287,7 +287,7 @@ feature {NONE} -- Compilation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

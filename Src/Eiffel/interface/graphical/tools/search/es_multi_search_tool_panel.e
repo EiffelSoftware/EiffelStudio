@@ -1619,7 +1619,7 @@ feature -- Custom search scope
 			l_item := scope_list.retrieve_item_by_data (a_folder, True)
 			if l_item = Void then
 				create l_item.make_with_text (a_folder.name)
-				l_item.set_tooltip (group_name_presentation (".", "", a_folder.cluster) + " (" + a_folder.path + ")")
+				l_item.set_tooltip (group_name_presentation ({STRING_32} ".", {STRING_32} "", a_folder.cluster) + " (" + a_folder.path + ")")
 				l_item.set_pixmap (pixmap_from_group_path (a_folder.cluster, a_folder.path))
 				scope_list.extend (l_item)
 				l_item.set_data (a_folder)
@@ -2101,7 +2101,7 @@ invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

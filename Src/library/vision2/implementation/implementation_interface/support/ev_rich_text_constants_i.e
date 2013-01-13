@@ -15,7 +15,7 @@ feature -- Access
 	color_table_start: STRING_32 = "{\colortbl ;"
 		-- RTF string denoting start of color table.
 
-	font_table_start: STRING_32 = "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
+	font_table_start: STRING_32 = "{\rtf1\ansi\ansicpg1252\uc1\deff0\deflang1033{\fonttbl"
 		-- RTF string denoting start of font table.
 
 	rtf_highlight_string: STRING_32 = "highlight"

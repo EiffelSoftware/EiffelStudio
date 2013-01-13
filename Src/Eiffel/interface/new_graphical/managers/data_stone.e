@@ -56,7 +56,7 @@ feature -- Properties
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		do
-			Result := stone_signature.as_string_32
+			Result := stone_signature
 		end
 
 	history_name: STRING_32
@@ -108,7 +108,7 @@ feature -- Setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

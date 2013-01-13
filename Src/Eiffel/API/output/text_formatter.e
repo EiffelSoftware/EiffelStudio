@@ -512,8 +512,8 @@ feature -- Text operator
 			if l_is_prefix_infix then
 				process_keyword_text (ti_prefix_keyword, Void)
 				add_space
-				l_prefix_infix.prepend (ti_quote)
-				l_prefix_infix.append (ti_quote)
+				l_prefix_infix.prepend_string_general (ti_quote)
+				l_prefix_infix.append_string_general (ti_quote)
 				process_operator_text (l_prefix_infix, e_feature)
 			else
 				add_feature_name (e_feature.name_32, e_feature.written_class)
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -123,7 +123,7 @@ feature -- Access
 	header: STRING_GENERAL
 			-- Header's string.
 		do
-			Result := "Stop point in "
+			create {STRING_32} Result.make_from_string_general ("Stop point in ")
 			Result.append (routine.name_32)
 			Result.append (" at line " + index.out)
 		end
@@ -424,7 +424,7 @@ feature {NONE} -- Internationalization
 	e_break_point_in: STRING = "Breakpoint in "
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

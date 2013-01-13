@@ -121,7 +121,7 @@ feature -- Optional initialization
 			a_suffix_not_void: a_suffix /= Void
 		do
 			class_suffix := a_suffix.twin
-			class_suffix.append (".")
+			class_suffix.append_string_general (".")
 			class_suffix.append (file_suffix)
 		end
 
@@ -275,7 +275,7 @@ feature -- Text processing
 				loop
 					char := str.code (i)
 					if char.is_valid_character_8_code and then attached escape_characters.item (char.as_integer_32) as l_esc then
-						buffer.append (l_esc)
+						buffer.append_string_general (l_esc)
 					else
 						buffer.extend (char.to_character_32)
 					end
@@ -572,11 +572,11 @@ feature -- Text processing
 					format := format_table.found_item
 					image_append (format.item1);
 					if format.item2 /= Void then
-						image.append ("%N")
+						image.append_string_general ("%N")
 						image_append (format.item2)
 					end
 				else
-					image.append ("%N")
+					image.append_string_general ("%N")
 				end
 			end
 		end;
@@ -597,7 +597,7 @@ feature -- Text processing
 					loop
 						image_append (format.item1);
 						if format.item2 /= Void then
-							image.append ("%T");
+							image.append_string_general ("%T");
 							image_append (format.item2)
 						end;
 						i := i + 1
@@ -1105,7 +1105,7 @@ feature -- Text processing
 			if not skipping then
 				format_item := f_Menu_item.twin
 				if link = Void then
-					format_item.append ("_disabled")
+					format_item.append_string_general ("_disabled")
 				else
 					set_keyword (kw_File, link.as_string_32 + "." + file_suffix)
 				end
@@ -1129,9 +1129,9 @@ feature -- Text processing
 		do
 			if not skipping then
 				format_item := f_Menu_item.twin
-				format_item.prepend ("class_")
+				format_item.prepend_string_general ("class_")
 				if link = Void then
-					format_item.append ("_disabled")
+					format_item.append_string_general ("_disabled")
 				else
 					set_keyword (kw_File, link.as_string_32 + "." + file_suffix)
 				end
@@ -1232,7 +1232,7 @@ invariant
 	image_not_void: image /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

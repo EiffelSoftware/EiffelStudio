@@ -47,46 +47,33 @@ feature {NONE} -- Initialization
 			data_5_set: data_5 = d5
 		end
 
-	make_from_string (a_uuid: READABLE_STRING_8)
+	make_from_string (a_uuid: READABLE_STRING_GENERAL)
 			-- Initialize UUID from a string.
 			-- `a_uuid' must be in the form of FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF
 		require
 			a_uuid_attached: a_uuid /= Void
 			is_valid_uuid: is_valid_uuid (a_uuid)
 		local
-			l_parts: LIST [READABLE_STRING_8]
 			l_segs: ARRAY [NATURAL_8]
-			l_part: READABLE_STRING_8
-			l_index: INTEGER
-			l_count: INTEGER
-			i: INTEGER
+			i, nb, l_index: INTEGER
 		do
 			create l_segs.make_filled ({NATURAL_8} 0, 1, 16)
 
-			l_parts := a_uuid.split (separator_char)
 			from
-				l_parts.start
+				i := 1
+				nb := a_uuid.count
+				l_index := 1
 			until
-				l_parts.after
+				i > nb
 			loop
-				l_part := l_parts.item
-				check
-					factor_of_2: l_part.count \\ 2 = 0
-				end
-				from
-					i := 1
-					l_count := l_part.count
-				until
-					i > l_count
-				loop
-					check
-						l_index_small_enough: l_index < 16
-					end
+				if a_uuid.item (i) = separator_char then
+					i := i + 1
+				else
+					check enough_char_to_read: i + 1 <= nb end
+					l_segs [l_index] := (hex_to_natural_8 (a_uuid.item (i)) |<< 4) | hex_to_natural_8 (a_uuid.item (i + 1))
 					l_index := l_index + 1
-					l_segs[l_index] := (hex_to_natural_8 (l_part.item (i)).bit_shift_left (4) + hex_to_natural_8 (l_part.item (i + 1)))
 					i := i + 2
 				end
-				l_parts.forth
 			end
 			make_from_array (l_segs)
 		end
@@ -228,7 +215,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	out: STRING
+	string: STRING_32
 			-- New string containing terse printable representation
 		do
 			create Result.make (37)
@@ -241,6 +228,24 @@ feature -- Conversion
 			Result.append_string_general (data_4.to_hex_string)
 			Result.append_character (separator_char)
 			Result.append_string_general (data_5.to_hex_string.substring (5, 16))
+		ensure
+			result_attached: Result /= Void
+			result_is_valid_uuid: is_valid_uuid (Result)
+		end
+
+	out: STRING
+			-- New string containing terse printable representation
+		do
+			create Result.make (37)
+			Result.append_string_general (data_1.to_hex_string)
+			Result.append_character (separator_char_8)
+			Result.append_string_general (data_2.to_hex_string)
+			Result.append_character (separator_char_8)
+			Result.append_string_general (data_3.to_hex_string)
+			Result.append_character (separator_char_8)
+			Result.append_string_general (data_4.to_hex_string)
+			Result.append_character (separator_char_8)
+			Result.append_string_general (data_5.to_hex_string.substring (5, 16))
 		ensure then
 			result_attached: Result /= Void
 			result_is_valid_uuid: is_valid_uuid (Result)
@@ -248,14 +253,14 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	hex_to_natural_8 (a_char: CHARACTER): NATURAL_8
+	hex_to_natural_8 (a_char: CHARACTER_32): NATURAL_8
 			-- Converts hex character `a_char' to a NATURAL_8
 		require
 			a_char_is_hexa_digit: a_char.is_hexa_digit
 		local
 			n: INTEGER
 		do
-			if a_char.is_digit then
+			if '0' <= a_char and a_char <= '9'  then
 				n := a_char.code - ('0').code
 			elseif a_char >= 'a' then
 				n := a_char.code - (('a').code - 10)
@@ -265,7 +270,8 @@ feature {NONE} -- Implementation
 			Result := n.to_natural_8
 		end
 
-	separator_char: CHARACTER = '-'
+	separator_char: CHARACTER_32 = '-'
+	separator_char_8: CHARACTER = '-'
 			-- UUID separator character
 
 ;note

@@ -431,7 +431,7 @@ feature -- Routines
 						end
 						if s /= Void and then not s.is_empty then
 							create s.make_from_string (s)
-							s.replace_substring_all ("_", " ")
+							s.replace_substring_all ({STRING_32} "_", {STRING_32} " ")
 							text.add_indent
 							text.process_assertion_tag_text (s)
 							text.add_new_line
@@ -532,12 +532,12 @@ feature -- Routines
 			end
 			wc := f.written_class
 			if wc = current_class then
-				Result.append ("is declared in `Current'")
+				Result.append_string_general ("is declared in `Current'")
 			else
 				Result.append ({STRING_32}"was declared in ")
-				Result.append (wc.name_in_upper)
+				Result.append_string_general (wc.name_in_upper)
 				if not real_name.same_string (f.name_32) then
-					Result.append (" as `")
+					Result.append_string_general (" as `")
 					Result.append (real_name)
 					Result.append_character ({CHARACTER_32}'%'')
 				end
@@ -571,10 +571,10 @@ feature {NONE} -- Implementation
 						create s.make_from_string (s)
 						s.remove (1)
 						s.remove (s.count)
-						s.replace_substring_all ("%%T", "")
-						s.replace_substring_all ("%%R", "")
-						s.replace_substring_all ("%%%'", "%'")
-						s.replace_substring_all ("%%%"", "%"")
+						s.replace_substring_all ({STRING_32} "%%T", {STRING_32} "")
+						s.replace_substring_all ({STRING_32} "%%R", {STRING_32} "")
+						s.replace_substring_all ({STRING_32} "%%%'", {STRING_32} "%'")
+						s.replace_substring_all ({STRING_32} "%%%"", {STRING_32} "%"")
 						append_comment (text, s)
 					end
 					text.add_new_line
@@ -618,8 +618,8 @@ feature {NONE} -- Implementation
 				ind := 2
 				text.add_new_line
 				text.add_indents (ind)
-				s.replace_substring_all ("%%T", "")
-				s.replace_substring_all ("%%R", "")
+				s.replace_substring_all ({STRING_32} "%%T", {STRING_32} "")
+				s.replace_substring_all ({STRING_32} "%%R", {STRING_32} "")
 				n := s.substring_index ("%%N", 1)
 				text.add_indexing_string (s.substring (1, n - 1))
 				text.add_new_line
@@ -751,7 +751,7 @@ feature {NONE} -- Indexing clauses
 			if l_description /= Void then
 				t := "description"
 				content := l_description
-				content.replace_substring_all ("%%N", " ")
+				content.replace_substring_all ({STRING_32} "%%N", {STRING_32} " ")
 				content.prune_all ('%%')
 				content.prune_all ('"')
 				Result.append (indexing_tuple_to_string (t, content))
@@ -759,8 +759,8 @@ feature {NONE} -- Indexing clauses
 
 			if attached a_group.target.version as l_version and then attached l_version.copyright as l_version_copyright then
 				t := "copyright"
-				create content.make_from_string (l_version_copyright)
-				content.replace_substring_all ("%%N", " ")
+				create content.make_from_string_general (l_version_copyright)
+				content.replace_substring_all ({STRING_32} "%%N", {STRING_32} " ")
 				content.prune_all ('%%')
 				content.prune_all ('"')
 				Result.append (indexing_tuple_to_string (t, content))
@@ -796,11 +796,11 @@ feature {NONE} -- Indexing clauses
 			loop
 				t := ic.key_for_iteration
 				content := ic.item_for_iteration.twin
-				content.replace_substring_all ("%%N", " ")
+				content.replace_substring_all ({STRING_32} "%%N", {STRING_32} " ")
 				content.prune_all ('%%')
 				content.prune_all ('"')
 				if t.same_string_general ("keywords") and added_keywords /= Void then
-					content.prepend (", ")
+					content.prepend_string_general (", ")
 					content.prepend (added_keywords)
 				end
 				Result.append (indexing_tuple_to_string (t, content))
@@ -815,11 +815,11 @@ feature {NONE} -- Indexing clauses
 			-- Create HTML meta string.
 		do
 			create Result.make (20)
-			Result.append ("<meta name=%"")
+			Result.append_string_general ("<meta name=%"")
 			Result.append (tag)
-			Result.append ("%" content=%"")
+			Result.append_string_general ("%" content=%"")
 			Result.append (content)
-			Result.append ("%"/>%N")
+			Result.append_string_general ("%"/>%N")
 		end
 
 	indexes_to_table (indexes: detachable EIFFEL_LIST [INDEX_AS]): HASH_TABLE [STRING_32, STRING_32]
@@ -941,7 +941,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

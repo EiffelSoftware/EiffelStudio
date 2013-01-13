@@ -498,8 +498,8 @@ feature {NONE} -- Implementation
 				end
 				l_classes.forth
 				if l_add and then not l_classes.after then
-					class_array.append (",%N")
-					location_array.append (",%N")
+					class_array.append_string_general (",%N")
+					location_array.append_string_general (",%N")
 					l_add := False
 				end
 			end
@@ -641,7 +641,7 @@ feature -- Access
 
 			l_filter := filter
 			if l_filter.file_separator /= Void and then not l_filter.file_separator.is_equal ("%U") then
-				Result.replace_substring_all (operating_environment.directory_separator.out, l_filter.file_separator)
+				Result.replace_substring_all (operating_environment.directory_separator.out.as_string_32_conversion, l_filter.file_separator)
 			end
 		end
 
@@ -923,7 +923,7 @@ feature {NONE} -- Menu bars
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

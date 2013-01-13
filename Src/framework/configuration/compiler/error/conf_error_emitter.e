@@ -16,7 +16,7 @@ feature -- Access
 	text: READABLE_STRING_32
 			-- Error text.
 		once
-			Result := "Could not load ISE Eiffel Metadata Consumer tool."
+			Result := {STRING_32} "Could not load ISE Eiffel Metadata Consumer tool."
 		end
 
 note

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create.
 		do
-			text := "Metadata cache corrupt or changed during incremental recompilation or since building a precompile!"
+			text := {STRING_32} "Metadata cache corrupt or changed during incremental recompilation or since building a precompile!"
 		end
 
 feature -- Access

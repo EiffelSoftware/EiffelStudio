@@ -42,7 +42,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_id: STRING)
+	make (a_id: like id)
 			-- Initialize `id' with `a_id'.
 		require
 			a_id_attached: a_id /= Void
@@ -314,7 +314,7 @@ invariant
 	sorting_order_index_valid: is_sorting_order_index_valid (sorting_order_index)
 
 note
-        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- <Precursor>
 		once
-			Result := generator
+			create Result.make_from_string_general (generator)
 		end
 
 	default_style: INTEGER

@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_id: STRING)
+	make (a_id: like id)
 			-- Initialize `id' with `a_id'.
 		do
 			Precursor (a_id)
@@ -161,7 +161,7 @@ feature{NONE} -- Implemenation
 			-- Implementation of `query_language_item'
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

@@ -75,8 +75,8 @@ feature -- Access, stored in configuration file
 		do
 			Result := internal_location.twin
 			l_path := target.library_root
-			Result.replace_substring_all ("$ECF_CONFIG_PATH", l_path.name)
-			Result.replace_substring_all ("$(ECF_CONFIG_PATH)", l_path.name)
+			Result.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", l_path.name)
+			Result.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", l_path.name)
 		ensure
 			Result_not_void: Result /= Void
 		end

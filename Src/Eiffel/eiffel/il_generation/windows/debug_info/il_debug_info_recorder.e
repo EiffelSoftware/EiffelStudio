@@ -1192,24 +1192,24 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 	loading_errors_message: STRING_32
 		do
 			create Result.make (50)
-			Result.append_string (" ERROR while retrieving IL DEBUG INFO data ...%N")
+			Result.append_string_general (" ERROR while retrieving IL DEBUG INFO data ...%N")
 			if loading_errors /= Void then
-				Result.append_string ("%N")
+				Result.append_string_general ("%N")
 				from
 					loading_errors.start
 				until
 					loading_errors.after
 				loop
-					Result.append_string ("   - ")
-					Result.append_string (loading_errors.item.as_string_32)
-					Result.append_string ("%N")
+					Result.append_string_general ("   - ")
+					Result.append_string_general (loading_errors.item)
+					Result.append_string_general ("%N")
 					loading_errors.forth
 				end
 			end
-			Result.append_string ("%N")
-			Result.append_string ("   Debugging will be disabled.%N")
-			Result.append_string ("   Please reload, until you do not get this message.%N")
-			Result.append_string ("%N")
+			Result.append_string_general ("%N")
+			Result.append_string_general ("   Debugging will be disabled.%N")
+			Result.append_string_general ("   Please reload, until you do not get this message.%N")
+			Result.append_string_general ("%N")
 		end
 
 feature {NONE}-- Implementation for save and load task
@@ -1575,7 +1575,7 @@ feature {NONE} -- Module indexer implementation
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

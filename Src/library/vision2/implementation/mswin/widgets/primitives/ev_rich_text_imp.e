@@ -919,8 +919,8 @@ feature -- Status setting
 				format_out := ""
 			end
 			formats_index.put (formats.index_of (format, 1), start_pos)
-			start_formats.put (format_out.as_string_32_conversion, start_pos)
-			end_formats.put (format_out.as_string_32_conversion, end_pos)
+			start_formats.put (format_out, start_pos)
+			end_formats.put (format_out, end_pos)
 		end
 
 	buffered_append (a_text: READABLE_STRING_GENERAL; format: EV_CHARACTER_FORMAT)
@@ -988,7 +988,7 @@ feature -- Status setting
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
 			character_format_i: detachable EV_CHARACTER_FORMAT_I
-			current_character: WIDE_CHARACTER
+			current_character: CHARACTER_32
 		do
 				-- Store original caret position.
 			original_position := caret_position

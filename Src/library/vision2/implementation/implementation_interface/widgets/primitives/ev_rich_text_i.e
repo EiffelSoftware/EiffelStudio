@@ -364,7 +364,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			l_text: like text
 			current_format: EV_CHARACTER_FORMAT_I
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-			text_file: PLAIN_TEXT_FILE
+			text_file: RAW_FILE
 			paragraph_indexes: detachable ARRAYED_LIST [INTEGER]
 			paragraph_formats: detachable ARRAYED_LIST [STRING_32]
 			paragraphs_exhausted: BOOLEAN
@@ -485,7 +485,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			check l_text /= Void end
 			text_file.close
 			create buffer.set_rich_text (Current)
-			buffer.set_with_rtf (l_text.as_string_32_conversion)
+			buffer.set_with_rtf (l_text)
 			last_load_successful := buffer.last_load_successful
 			complete_loading
 			set_caret_position (1)

@@ -79,7 +79,7 @@ feature -- Access
 		obsolete
 			"Use `file_path' instead."
 		do
-			Result := file_path.name
+			create Result.make_from_string (file_path.name)
 		end
 
 	portrait: BOOLEAN

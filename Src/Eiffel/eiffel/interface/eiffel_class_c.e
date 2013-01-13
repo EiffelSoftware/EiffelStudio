@@ -1335,7 +1335,7 @@ feature
 			end
 
 			create subdirectory.make (5)
-			subdirectory.append_string (packet_name (C_prefix, packet_number))
+			subdirectory.append_string_general (packet_name (C_prefix, packet_number))
 
 			dir_name := dir_name.extended (subdirectory)
 			create dir.make_with_path (dir_name)
@@ -1344,10 +1344,10 @@ feature
 			end
 
 			create base_name.make (12)
-			base_name.append (base_file_name)
+			base_name.append_string_general (base_file_name)
 			base_name.append_integer (feature_table_file_id)
 			base_name.append_character (feature_table_file_suffix)
-			base_name.append (Dot_c)
+			base_name.append_string_general (Dot_c)
 			Result := dir_name.extended (base_name)
 
 			create finished_file.make_with_path (dir_name.extended (Finished_file_for_make))

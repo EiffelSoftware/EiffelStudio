@@ -279,7 +279,7 @@ feature {NONE} -- GUI elements
 			create Result
 			create l_dir.make_with_path (target.system.directory)
 			if l_dir.is_readable then
-				Result.set_start_directory (l_dir.name)
+				Result.set_start_path (l_dir.path)
 			end
 			Result.filters.extend ([config_files_filter, config_files_description])
 			Result.filters.extend ([all_files_filter, all_files_description])
@@ -686,7 +686,7 @@ feature {NONE} -- Basic operation
 			l_file: RAW_FILE
 			s32: STRING_32
 		do
-			if attached a_dir.linear_representation as l_items then
+			if attached a_dir.linear_representation_32 as l_items then
 				across l_items as l_files loop
 					l_lib_file := l_files.item
 					if valid_config_extension (l_lib_file) then

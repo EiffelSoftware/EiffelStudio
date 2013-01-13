@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_code: INTEGER)
 			-- Create error message with COM error `a_code'.
 		do
-			text := "Unable to initialize Eiffel Assembly Cache (COM error: 0x" + a_code.to_hex_string + ")."
+			text := {STRING_32} "Unable to initialize Eiffel Assembly Cache (COM error: 0x" + a_code.to_hex_string + ")."
 		end
 
 feature -- Access

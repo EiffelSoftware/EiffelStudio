@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create.
 		do
-			text := "A configuration in the precompiled library changed, please rebuild the precompiled library and project."
+			text := {STRING_32} "A configuration in the precompiled library changed, please rebuild the precompiled library and project."
 		end
 
 feature -- Access

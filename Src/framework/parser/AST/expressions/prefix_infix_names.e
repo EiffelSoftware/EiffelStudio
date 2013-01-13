@@ -89,9 +89,9 @@ feature -- Basic operations
 				-- Allocate enough space for Result
 				-- 9 = count of 'Prefix_str' + 'Quote_str'
 			create Result.make (9 + symbol.count)
-			Result.append (Prefix_str)
+			Result.append_string_general (Prefix_str)
 			Result.append_string_general (symbol)
-			Result.append (Quote_str)
+			Result.append_string_general (Quote_str)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -105,9 +105,9 @@ feature -- Basic operations
 				-- Allocate enough space for Result
 				-- 8 = count of 'Infix_str' + 'Quote_str'
 			create Result.make (8 + symbol.count)
-			Result.append (Infix_str)
+			Result.append_string_general (Infix_str)
 			Result.append_string_general (symbol)
-			Result.append (Quote_str)
+			Result.append_string_general (Quote_str)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

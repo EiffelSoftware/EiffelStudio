@@ -29,7 +29,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := path.name
+			create Result.make_from_string (path.name)
 		ensure
 			directory_not_void: Result /= Void
 		end
@@ -53,7 +53,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := start_path.name
+			create Result.make_from_string (start_path.name)
 		end
 
 	start_path: PATH

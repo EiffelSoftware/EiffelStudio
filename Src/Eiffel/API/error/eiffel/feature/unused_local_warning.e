@@ -121,10 +121,10 @@ feature {NONE} -- Output
 			l_cursor := l_locals.cursor
 			from l_locals.start until l_locals.after loop
 				l_text.append_character ('`')
-				l_text.append (l_locals.item.name)
+				l_text.append_string_general (l_locals.item.name)
 				l_text.append_character ('%'')
 				if not l_locals.islast then
-					l_text.append (", ")
+					l_text.append_string_general (", ")
 				end
 				l_locals.forth
 			end
@@ -152,7 +152,7 @@ invariant
 	unused_locals_not_void: unused_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

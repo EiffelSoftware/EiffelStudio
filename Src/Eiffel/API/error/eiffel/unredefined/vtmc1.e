@@ -40,9 +40,9 @@ feature -- Output
 		local
 			l_output: STRING_32
 		do
-			l_output := "The feature with name `"
+			create l_output.make_from_string_general ("The feature with name `")
 			l_output.append (encoding_converter.utf8_to_utf32 (feature_call_name))
-			l_output.append ("' does not occur in the following type set:%N   ")
+			l_output.append_string_general ("' does not occur in the following type set:%N   ")
 			a_text_formatter.add (l_output)
 			type_set.ext_append_to (a_text_formatter, class_c)
 			a_text_formatter.add_new_line
@@ -69,7 +69,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

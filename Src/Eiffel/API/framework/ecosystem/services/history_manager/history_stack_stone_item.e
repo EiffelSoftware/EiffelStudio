@@ -64,13 +64,13 @@ feature {HISTORY_OWNER_I} -- Status report
 
 feature {NONE} -- Query
 
-	stone_description (a_stone: detachable STONE): attached STRING_32
+	stone_description (a_stone: detachable STONE): STRING_32
 			-- Creates a stone description
 		do
 			if a_stone = Void then
 				create Result.make_from_string ("No information")
 			else
-				create Result.make_from_string (a_stone.stone_name)
+				create Result.make_from_string_general (a_stone.stone_name)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -132,7 +132,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

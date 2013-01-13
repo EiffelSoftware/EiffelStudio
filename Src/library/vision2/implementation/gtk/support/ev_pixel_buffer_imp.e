@@ -128,49 +128,45 @@ feature -- Command
 			l_cs, l_file_type: EV_GTK_C_STRING
 			g_error: POINTER
 			l_writeable_formats: ARRAYED_LIST [STRING_32]
-			l_extension: STRING_32
-			l_format: detachable STRING_32
+			l_extension: READABLE_STRING_32
+			l_format: detachable READABLE_STRING_32
 			l_app_imp: detachable EV_APPLICATION_IMP
 			i: INTEGER
 		do
 			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
 			check l_app_imp /= Void end
 			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
-			if
-				attached a_file_name.name.split ('.') as l_list and then
-				not l_list.is_empty
-			then
-				l_extension := l_list.last.as_upper
-				if l_extension.is_equal ({STRING_32} "JPEG") then
-					l_extension := {STRING_32} "JPG"
-				end
+			if a_file_name.has_extension ("jpeg") then
+				l_extension := {STRING_32} "jpg"
+			elseif attached a_file_name.extension as l_ext then
+				l_extension := l_ext
 			else
-				l_extension := {STRING_32} "PNG"
+				l_extension := {STRING_32} "png"
 			end
 			from
 				i := 1
 			until
 				i > l_writeable_formats.count
 			loop
-				if l_writeable_formats [i].as_upper.is_equal (l_extension) then
+				if l_writeable_formats [i].is_case_insensitive_equal (l_extension) then
 					l_format := l_extension
 				end
 				i := i + 1
 			end
 			if l_format /= Void then
-				if l_format.is_equal ({STRING_32} "JPG") then
+				if l_format.is_case_insensitive_equal ({STRING_32} "jpg") then
 					l_format := {STRING_32} "jpeg"
 				end
 				if {GTK}.gtk_maj_ver >= 2 then
 					create l_cs.make_from_path (a_file_name)
-					l_file_type := l_format
+					create l_file_type.set_with_eiffel_string (l_format)
 					{GTK2}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $g_error)
 					if g_error /= default_pointer then
 							-- GdkPixbuf could not save the image so we raise an exception.
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
 				else
-					if l_format.is_equal ({STRING_32} "PNG") and then attached internal_pixmap as l_internal_pixmap then
+					if l_format.is_case_insensitive_equal ({STRING_32} "jpg") and then attached internal_pixmap as l_internal_pixmap then
 						l_internal_pixmap.save_to_named_path (create {EV_PNG_FORMAT}, a_file_name)
 					else
 						(create {EXCEPTIONS}).raise ("Could not save image file.")

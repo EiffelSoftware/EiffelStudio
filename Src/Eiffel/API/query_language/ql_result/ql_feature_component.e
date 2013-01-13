@@ -32,7 +32,7 @@ feature -- Access
 		do
 			if internal_hash_code = 0 then
 				create l_hash_name.make (50)
-				l_hash_name.append (class_c.name)
+				l_hash_name.append_string_general (class_c.name)
 				l_hash_name.append (e_feature.name_32)
 				l_hash_name.append (name)
 				internal_hash_code := l_hash_name.hash_code

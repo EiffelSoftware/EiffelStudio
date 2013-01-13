@@ -191,7 +191,7 @@ feature {NONE} -- Internal access
 
 feature {NONE} -- Output
 
-	print_string (s: READABLE_STRING_32)
+	print_string (s: READABLE_STRING_GENERAL)
 			-- Print `s' to the output stream.
 		local
 			i: INTEGER
@@ -233,7 +233,7 @@ feature {NONE} -- Output
 			print_string (indent)
 		end
 
-	safe_process_and_print (l_as: AST_EIFFEL; pre, post: READABLE_STRING_32)
+	safe_process_and_print (l_as: AST_EIFFEL; pre, post: READABLE_STRING_GENERAL)
 			-- Process `l_as' safely while printing `pre' before and `post' after processing.
 		do
 			if l_as /= Void then
@@ -1946,7 +1946,7 @@ invariant
 	indent_attached: attached indent
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -248,7 +248,7 @@ feature {NONE} -- Access: syntax
 	syntax_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `syntax' option
 		once
-			Result := <<"obsolete", "transitional", "standard", "provisional">>
+			Result := <<{STRING_32} "obsolete", {STRING_32} "transitional", {STRING_32} "standard", {STRING_32} "provisional">>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -272,7 +272,7 @@ feature {NONE} -- Access: void safety
 	void_safety_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `void_safety' option
 		once
-			Result := <<"none", "initialization", "all">>
+			Result := <<{STRING_32} "none", {STRING_32} "initialization", {STRING_32} "all">>
 		ensure
 			result_attached: Result /= Void
 		end

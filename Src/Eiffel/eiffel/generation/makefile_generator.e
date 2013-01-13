@@ -828,9 +828,9 @@ feature {NONE} -- Generate externals
 					end
 					if a_is_mask_dollar then
 							-- Mask all remaining '$'.
-						l_path.replace_substring_all ("$", "\$")
+						l_path.replace_substring_all ({STRING_32} "$", {STRING_32} "\$")
 							-- Correct double masking if '$' were already masked.
-						l_path.replace_substring_all ("\\$", "\$")
+						l_path.replace_substring_all ({STRING_32} "\\$", {STRING_32} "\$")
 					end
 						-- Don't add the same items multiple times.
 					if not l_added_items.has (l_path) then
@@ -1377,7 +1377,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -18,23 +18,25 @@ feature -- Access
 	system_code_page: STRING
 			-- System code page
 			-- Take oem as default
+		local
+			l_result: STRING_32
 		do
-			Result := extract_locale_string (system_locale,
+			l_result := extract_locale_string (system_locale,
 											LOCALE_IDEFAULTANSICODEPAGE,
 											locale_idefaultansicodepage_maxlen)
+			check valid_string_8: l_result.is_valid_as_string_8 end
+			create Result.make (l_result.count)
+			Result.append_string_general (l_result)
 		end
 
 	console_code_page: STRING
 			-- Console code page
 		do
-			Result := c_console_code_page.out
+			create Result.make (10)
+			Result.append_natural_32 (c_console_code_page)
 		end
 
-	iso_8859_1_code_page: STRING
-			-- ISO-8859-1 code page.
-		do
-			Result := "28591"
-		end
+	iso_8859_1_code_page: STRING = "28591"
 
 feature {NONE} -- NLS LC CTYPE CONSTANTS
 
@@ -76,13 +78,13 @@ feature {NONE} -- Implementation
 			"return sizeof(TCHAR);"
 		end
 
-	c_console_code_page: INTEGER
+	c_console_code_page: NATURAL
 			-- Output codepage of the console
 		external
 			"C inline use <windows.h>"
 		alias
 			"[
-				return (EIF_INTEGER_32)GetConsoleOutputCP ();
+				return (EIF_NATURAL_32)GetConsoleOutputCP ();
 			]"
 		end
 

@@ -74,9 +74,10 @@ feature -- Access
 
 	header: STRING_GENERAL
 		do
-			Result := code.as_string_32
-			if Result = Void then
-				create {STRING_32}Result.make (0)
+			if attached code as l_code then
+				Result := l_code
+			else
+				create {STRING_32} Result.make_empty
 			end
 		end
 
@@ -109,7 +110,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

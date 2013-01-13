@@ -603,7 +603,7 @@ feature -- Automatic backup
 			temp: STRING_32
 		do
 			create temp.make (9)
-			temp.append (Comp)
+			temp.append_string_general (Comp)
 			temp.append_integer (backup_counter)
 			Result := project_location.backup_path.extended (temp)
 		end

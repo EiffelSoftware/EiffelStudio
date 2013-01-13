@@ -33,7 +33,7 @@ feature -- Callbacks
 					-- check version
 				check_version (a_namespace)
 
-				is_system := a_local_part.is_case_insensitive_equal ("system")
+				is_system := a_local_part.is_case_insensitive_equal_general ("system")
 			end
 		end
 
@@ -42,7 +42,7 @@ feature -- Callbacks
 		do
 			if not is_error then
 				if
-					is_system and a_local_part.is_case_insensitive_equal ("uuid") and then is_valid_uuid (a_value)
+					is_system and a_local_part.is_case_insensitive_equal_general ("uuid") and then is_valid_uuid (a_value)
 				then
 					create last_uuid.make_from_string (a_value.as_string_8)
 				end

@@ -35,12 +35,12 @@ feature -- Access
 			if is_safe_preferred and then path.count > 4 then
 				extension := path.substring (path.count - 3, path.count)
 					-- Apply translation only for "*.ecf" files.
-				if extension.is_case_insensitive_equal (".ecf") then
+				if extension.is_case_insensitive_equal_general (".ecf") then
 					create file.make_with_name (path)
 						-- Check if the original file really exists.
 					if file.exists and then file.is_readable then
 						create l_result.make_from_string (path.substring (1, path.count - 4))
-						l_result.append_string ("-safe")
+						l_result.append_string_general ("-safe")
 						l_result.append_string (extension)
 						file.reset (path)
 							-- Check if the "safe" version of the file exists.

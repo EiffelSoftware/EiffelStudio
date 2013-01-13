@@ -122,8 +122,8 @@ feature -- Value
 				l_target := ""
 			end
 			check l_target_not_void: l_target /= Void end
-			Result.replace_substring_all ("$target", l_target.as_string_32)
-			Result.replace_substring_all ("$line", a_line.out)
+			Result.replace_substring_all ({STRING_32} "$target", l_target.as_string_32_conversion)
+			Result.replace_substring_all ({STRING_32} "$line", a_line.out.as_string_32_conversion)
 		ensure
 			external_editor_cli_not_void: Result /= Void
 			external_editor_cli_not_empty: not Result.is_empty
@@ -384,7 +384,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

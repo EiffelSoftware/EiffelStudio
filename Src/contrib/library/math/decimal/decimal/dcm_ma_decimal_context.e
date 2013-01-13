@@ -344,7 +344,7 @@ feature -- Basic operations
 				exception_message.append_string (" : ")
 				exception_message.append_string (a_message)
 				create l_exception
-				l_exception.set_message (exception_message)
+				l_exception.set_description (exception_message)
 				l_exception.raise
 			end
 		ensure

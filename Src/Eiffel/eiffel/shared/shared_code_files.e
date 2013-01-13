@@ -102,7 +102,7 @@ feature -- C code generation
 		require
 			file_name_not_void: file_name /= Void
 		local
-			l_name: STRING_32
+			l_name: STRING
 		do
 				-- Has side effect: creating a folder
 			Result := validated_dir_name (final_mode, sub_dir)
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

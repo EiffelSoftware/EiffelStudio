@@ -19,7 +19,7 @@ feature {NONE} -- Creation
 		require
 			f_is_open_write: f.is_open_write
 		do
-			output := agent (s: READABLE_STRING_32; o: FILE; c: ENCODING)
+			output := agent (s: READABLE_STRING_GENERAL; o: FILE; c: ENCODING)
 				local
 					u: UTF_CONVERTER
 				do
@@ -29,7 +29,7 @@ feature {NONE} -- Creation
 						o.put_string (utf32.last_converted_string_8)
 					else
 							-- Write in UTF-8 by default.
-						o.put_string (u.string_32_to_utf_8_string_8 (s))
+						o.put_string (u.utf_32_string_to_utf_8_string_8 (s))
 					end
 				end
 			(?, f, e)
@@ -39,7 +39,7 @@ feature {NONE} -- Creation
 	make_standard_output
 			-- Associate output with standard output.
 		do
-			output := agent (s: READABLE_STRING_32)
+			output := agent (s: READABLE_STRING_GENERAL)
 				do
 					localized_print (s)
 				end
@@ -49,7 +49,7 @@ feature {NONE} -- Creation
 	make_string (s: STRING_32)
 			-- Associate output with a string `s'.
 		do
-			output := agent s.append_string (?)
+			output := agent s.append_string_general (?)
 			is_open_query := agent: BOOLEAN do Result := True end
 		end
 
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Output
 
-	put_string (s: READABLE_STRING_32)
+	put_string (s: READABLE_STRING_GENERAL)
 			-- Write string `s' to output.
 		require
 			is_open: is_open
@@ -73,7 +73,7 @@ feature -- Output
 
 feature {NONE} -- Access
 
-	output: PROCEDURE [ANY, TUPLE [READABLE_STRING_32]]
+	output: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]
 			-- Procedure to write.
 
 	is_open_query: PREDICATE [ANY, TUPLE]
@@ -82,7 +82,7 @@ feature {NONE} -- Access
 ;note
 	revision: "$Revision$"
 	date: "$Date$"
-	copyright: "Copyright (c) 2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

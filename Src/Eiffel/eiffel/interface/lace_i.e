@@ -1100,7 +1100,7 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_msil_generation_type)
 			if l_s /= Void then
-				if l_s.is_case_insensitive_equal ("exe") or l_s.is_case_insensitive_equal ("dll") then
+				if l_s.is_case_insensitive_equal_general ("exe") or l_s.is_case_insensitive_equal_general ("dll") then
 					system.set_msil_generation_type (l_s.as_lower)
 				else
 					create vd15

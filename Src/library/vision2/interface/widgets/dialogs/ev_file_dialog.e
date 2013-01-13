@@ -23,7 +23,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := full_file_path.name
+			create Result.make_from_string (full_file_path.name)
 		ensure
 			file_name_not_void: Result /= Void
 		end
@@ -72,7 +72,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := start_path.name
+			create Result.make_from_string (start_path.name)
 		end
 
 	start_path: PATH
@@ -94,7 +94,7 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			if attached full_file_path.entry as l_entry then
-				Result := l_entry.name
+				create Result.make_from_string (l_entry.name)
 			else
 				create Result.make_empty
 			end
@@ -108,7 +108,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := full_file_path.parent.name
+			create Result.make_from_string (full_file_path.parent.name)
 		ensure
 			file_path_not_void: Result /= Void
 		end

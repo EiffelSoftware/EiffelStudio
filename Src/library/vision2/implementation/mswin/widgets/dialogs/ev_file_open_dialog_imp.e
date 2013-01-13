@@ -78,7 +78,7 @@ feature -- Status report
 				create l_result.make (1)
 				if not full_file_path.is_empty then
 						-- if `file_name' is empty then cancel was selected and `Result' must be empty.
-					l_result.extend (full_file_path.name)
+					l_result.extend (full_file_path.name.as_string_32_conversion)
 				end
 			end
 			check l_result /= Void end

@@ -49,7 +49,7 @@ feature -- Status setting
 					ok_actions_internal.call (Void)
 				end
 			else
-				selected_button := ev_cancel.as_string_32_conversion
+				selected_button := ev_cancel
 				if cancel_actions_internal /= Void then
 					cancel_actions_internal.call (Void)
 				end
@@ -64,7 +64,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	selected_button: detachable STRING_32
+	selected_button: detachable IMMUTABLE_STRING_32
 			-- Label of last clicked button.
 
 feature -- Deferred

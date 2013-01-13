@@ -70,13 +70,27 @@ feature -- Status report
 
 	selected_button: detachable STRING_32
 			-- Label of last clicked button.
+		obsolete
+			"Use `selected_button_name' instead and {EV_DIALOG_NAMES} for comparison."
+		require
+			not_destroyed: not is_destroyed
+		do
+			if attached implementation.selected_button as l_button then
+				Result := l_button.as_string_32_conversion
+			end
+		ensure
+			bridge_ok: Result /= Void implies (attached implementation.selected_button as l_button and then
+				Result.same_string (l_button))
+		end
+
+	selected_button_name: detachable IMMUTABLE_STRING_32
+			-- Label of last clicked button.
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selected_button
 		ensure
-			bridge_ok: Result /= Void implies
-				Result ~ (implementation.selected_button)
+			bridge_ok: Result /= Void implies Result = implementation.selected_button
 		end
 
 feature -- Status setting

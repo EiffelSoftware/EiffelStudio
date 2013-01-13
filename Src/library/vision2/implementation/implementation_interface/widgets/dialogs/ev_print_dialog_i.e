@@ -314,12 +314,12 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_accept: STRING_32
+	internal_accept: IMMUTABLE_STRING_32
 			-- The text of the "ok" type button of `Current'.
 			-- e.g. not the cancel button.
 			-- See comment in EV_STANDARD_DIALOG_I.
 		do
-			Result := ev_print.as_string_32_conversion
+			Result := ev_print
 		end
 
 note

@@ -17,9 +17,9 @@ feature {NONE} -- Initialization
 		require
 			a_uri_not_void: a_uri /= Void
 		do
-			uri := a_uri.to_string_32
+			create uri.make_from_string_general (a_uri)
 		ensure
-			uri_set: uri.is_equal(a_uri.as_string_32)
+			uri_set: uri.same_string_general(a_uri)
 		end
 
 feature -- Access

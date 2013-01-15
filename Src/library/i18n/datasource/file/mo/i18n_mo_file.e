@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		local
 			l_list: detachable LIST [STRING_32]
 		do
-			create {RAW_FILE} file.make (a_path.to_string_8)
+			create {RAW_FILE} file.make_with_name (a_path)
 			last_translated := [0, l_list]
 			last_original := [0, l_list]
 		ensure then
@@ -185,24 +185,18 @@ feature -- Access
 	locale: detachable STRING_32
 			-- Best guess at locale of the file. This could also be a language.
 		local
-			file_name: STRING_32
-			ending: STRING_32
-			possible: STRING_32
-			separator_index: INTEGER
+			l_name: READABLE_STRING_GENERAL
 		do
-			-- The only inherent locale identifier in a .mo file is the name.
-			-- Any other way to identify it is project dependant, see FILE_MANAGER for more details
-			file_name := file.name.as_string_32
-			ending := file_name.twin
-			ending.keep_tail (3)
-			separator_index := file_name.last_index_of (Operating_environment.Directory_separator, file_name.count)
-			possible := file_name.substring(separator_index+1, file_name.count-3)
-
-			if ending.is_equal (".mo") then
-				if possible.count = 2 or
-					possible.count = 5 and (possible.item (3) = '_' or possible.item (3) = '-')
+				-- The only inherent locale identifier in a .mo file is the name.
+				-- Any other way to identify it is project dependant, see FILE_MANAGER for more details
+			if attached file.path.entry as l_entry and then l_entry.has_extension ("mo") then
+				l_name := l_entry.name
+				if
+					l_name.count = 5 or
+					(l_name.count = 8 and (l_name.item (3) = '_' or l_name.item (3) = '-'))
 				then
-					Result := possible
+					create Result.make_from_string_general (l_name)
+					Result.remove_tail (3)
 				end
 			end
 		end

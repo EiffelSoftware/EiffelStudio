@@ -130,8 +130,6 @@ feature {NONE} -- help functions
 						implies (attached array.item (right + 1) as l_item1 and then attached array.item (last_index) as l_item2 and then l_item1 <= l_item2)
 				left <= last_index and left > min_index
 						implies (attached array.item (left - 1) as l_item3 and then attached array.item (last_index) as l_item4 and then l_item3 <= l_item4)
-			variant
-				right - left + 1
 			until
 				left > right or found
 			loop
@@ -154,6 +152,8 @@ feature {NONE} -- help functions
 					Result := middle
 					left := left + 1 -- not nice but required to decrease variant
 				end
+			variant
+				right - left + 1
 			end
 			if found = False then
 				Result := -1

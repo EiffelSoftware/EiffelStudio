@@ -61,12 +61,12 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		do
-			Result := line_number.out
+			create {IMMUTABLE_STRING_32} Result.make_from_string_general (line_number.out)
 		ensure then
-			good_result: Result.is_equal (line_number.out)
+			good_result: Result.same_string_general (line_number.out)
 		end
 
 	hash_code: INTEGER
@@ -386,7 +386,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

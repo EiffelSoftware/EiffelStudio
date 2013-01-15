@@ -27,7 +27,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING_32)
+	make (a_name: READABLE_STRING_GENERAL)
 			-- Initialize `name' with `a_name'.
 			-- Set `is_recursive' to True by default.
 		do
@@ -37,7 +37,7 @@ feature{NONE} -- Initialization
 			is_recursive_set: is_recursive
 		end
 
-	make_with_flag (a_name: STRING_32; a_recursive: BOOLEAN)
+	make_with_flag (a_name: READABLE_STRING_GENERAL; a_recursive: BOOLEAN)
 			-- Initialize `name' with `a_name' and `is_recursive' with `a_recursive'.
 		do
 			make (a_name)
@@ -107,7 +107,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

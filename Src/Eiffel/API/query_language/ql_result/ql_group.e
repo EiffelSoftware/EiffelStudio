@@ -49,25 +49,25 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_name (a_name: like name)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
 			a_name_is_not_empty: not a_name.is_empty
 		do
-			create name_internal.make_from_string (a_name.as_lower)
+			create name_internal.make_from_string_general (a_name.as_lower)
 		ensure
-			name_internal_set: name_internal /= Void and then name.is_equal (a_name.as_lower)
-			name_set: name.is_equal (a_name.as_lower)
+			name_internal_set: name_internal /= Void
+			name_set: name.same_string_general (a_name.as_lower)
 		end
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		do
 			if name_internal = Void then
-				Result := group.name
+				create {IMMUTABLE_STRING_32} Result.make_from_string_general (group.name)
 			else
 				Result := name_internal
 			end
@@ -220,7 +220,7 @@ feature -- Comparison
 
 feature{NONE} -- Implementation
 
-	name_internal: like name
+	name_internal: IMMUTABLE_STRING_32
 			-- Implementation of `name'
 
 invariant
@@ -258,7 +258,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

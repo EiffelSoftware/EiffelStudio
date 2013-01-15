@@ -192,35 +192,35 @@ feature -- Assertion type names
 
 feature -- Path marker
 
-	ql_target_path_opener: STRING = ""
-	ql_target_path_closer: STRING = ""
+	ql_target_path_opener: STRING_32 = ""
+	ql_target_path_closer: STRING_32 = ""
 
-	ql_group_path_opener: STRING = ""
-	ql_group_path_closer: STRING = ""
+	ql_group_path_opener: STRING_32 = ""
+	ql_group_path_closer: STRING_32 = ""
 
-	ql_class_path_opener: STRING = "{"
-	ql_class_path_closer: STRING = "}"
+	ql_class_path_opener: STRING_32 = "{"
+	ql_class_path_closer: STRING_32 = "}"
 
-	ql_feature_path_opener: STRING = ""
-	ql_feature_path_closer: STRING = ""
+	ql_feature_path_opener: STRING_32 = ""
+	ql_feature_path_closer: STRING_32 = ""
 
-	ql_generic_path_opener: STRING = "["
-	ql_generic_path_closer: STRING = "]"
+	ql_generic_path_opener: STRING_32 = "["
+	ql_generic_path_closer: STRING_32 = "]"
 
-	ql_argument_path_opener: STRING = "argument "
-	ql_argument_path_closer: STRING = ""
+	ql_argument_path_opener: STRING_32 = "argument "
+	ql_argument_path_closer: STRING_32 = ""
 
-	ql_local_path_opener: STRING = "local "
-	ql_local_path_closer: STRING = ""
+	ql_local_path_opener: STRING_32 = "local "
+	ql_local_path_closer: STRING_32 = ""
 
-	ql_assertion_path_opener: STRING = "assertion "
-	ql_assertion_path_closer: STRING = ""
+	ql_assertion_path_opener: STRING_32 = "assertion "
+	ql_assertion_path_closer: STRING_32 = ""
 
-	ql_line_path_opener: STRING = "line "
-	ql_line_path_closer: STRING = ""
+	ql_line_path_opener: STRING_32 = "line "
+	ql_line_path_closer: STRING_32 = ""
 
-	ql_quantity_path_opener: STRING = "quantity "
-	ql_quantity_path_closer: STRING = ""
+	ql_quantity_path_opener: STRING_32 = "quantity "
+	ql_quantity_path_closer: STRING_32 = ""
 
 feature -- Feature caller types
 
@@ -568,7 +568,7 @@ feature -- AST node match
 
 feature -- Access
 
-	ql_no_tag: STRING = "no tag";
+	ql_no_tag: STRING_32 = "no tag";
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
@@ -601,7 +601,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

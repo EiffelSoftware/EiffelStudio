@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	path_name (a_base_name: STRING): STRING
+	path_name (a_base_name: READABLE_STRING_GENERAL): STRING_32
 			-- Path name of `a_base_name'
 		do
 			create Result.make (a_base_name.count + opener.count + closer.count)
@@ -30,14 +30,14 @@ feature -- Access
 			if a_base_name.is_empty then
 				Result.append (empty_assertion_name)
 			else
-				Result.append (a_base_name)
+				Result.append_string_general (a_base_name)
 			end
 			if not closer.is_empty then
 				Result.append (closer)
 			end
 		end
 
-	empty_assertion_name: STRING = "%"%"";
+	empty_assertion_name: STRING_32 = "%"%"";
 			-- Virtual name for an assertion without tag
 
 note
@@ -71,7 +71,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

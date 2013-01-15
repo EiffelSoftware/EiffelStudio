@@ -99,7 +99,7 @@ feature -- Setting
 			a_name_attached: a_name /= Void
 			a_name_is_not_empty: not a_name.is_empty
 		do
-			create name_internal.make_from_string (a_name.as_upper)
+			create {IMMUTABLE_STRING_32} name_internal.make_from_string (a_name.as_upper)
 		ensure
 			name_internal_set: name_internal /= Void and then name.is_equal (a_name.as_upper)
 			name_set: name.is_equal (a_name.as_upper)
@@ -115,11 +115,11 @@ feature -- Setting
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		do
 			if name_internal = Void then
-				Result := conf_class.name
+				create {IMMUTABLE_STRING_32} Result.make_from_string_general (conf_class.name)
 			else
 				Result := name_internal
 			end
@@ -390,7 +390,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 end

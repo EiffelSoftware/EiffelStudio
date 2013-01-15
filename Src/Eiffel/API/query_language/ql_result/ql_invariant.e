@@ -62,12 +62,12 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		once
-			Result := "invariant"
+			Result := {STRING_32} "invariant"
 		ensure then
-			good_result: Result /= Void and then Result.is_equal ("invariant")
+			good_result: Result /= Void and then Result.same_string_general ("invariant")
 		end
 
 	description: STRING_32
@@ -174,7 +174,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

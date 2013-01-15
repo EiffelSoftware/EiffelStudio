@@ -725,7 +725,7 @@ feature{NONE} -- Implementation/Sorting
 			-- Bind `a_domain_item' in `grid'.
 		local
 			l_grid_row: EV_GRID_ROW
-			l_tooltip: STRING_GENERAL
+			l_tooltip: READABLE_STRING_GENERAL
 			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
 		do
 			create l_editor_token_item
@@ -744,7 +744,7 @@ feature{NONE} -- Implementation/Sorting
 			l_grid_row.set_item (1, l_editor_token_item)
 		end
 
-	tooltip (a_domain_item: EB_METRIC_DOMAIN_ITEM): STRING_GENERAL
+	tooltip (a_domain_item: EB_METRIC_DOMAIN_ITEM): READABLE_STRING_GENERAL
 			-- Tooltip of current scope
 		require
 			a_domain_item_attached: a_domain_item /= Void
@@ -795,7 +795,7 @@ invariant
 	grid_support_attached: grid_support /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

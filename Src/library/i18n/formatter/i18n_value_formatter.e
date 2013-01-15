@@ -148,8 +148,6 @@ feature {NONE} -- Implementation
 			from
 				i := grouping.lower
 				pos := a_string.count
-			variant
-				 grouping.upper - i + 1
 			until
 				i > grouping.upper or pos < 1
 			loop
@@ -168,8 +166,6 @@ feature {NONE} -- Implementation
 				elseif i - 1 >= grouping.lower then
 						-- The previous element has to be repeatedly used for the remainder of the digits.
 					from
-					variant
-						pos
 					until
 						pos < 1	-- no more digits
 					loop
@@ -183,6 +179,8 @@ feature {NONE} -- Implementation
 							Result.prepend (a_string.substring (1, pos))
 							pos := 0
 						end
+					variant
+						pos
 					end
 					i := grouping.upper -- to terminate loop
 				else	-- grouping.item (i) <= 0 and i-1 < grouping.lower
@@ -191,6 +189,8 @@ feature {NONE} -- Implementation
 					i := grouping.upper -- to terminate loop
 				end
 				i := i + 1
+			variant
+				 grouping.upper - i + 1
 			end
 		ensure
 			Result_exists: Result /= Void

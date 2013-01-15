@@ -26,7 +26,7 @@ feature -- Interface
 			end
 		end
 
-	extract_dictionary (a_path: STRING_32): I18N_DICTIONARY
+	extract_dictionary (a_path: READABLE_STRING_GENERAL): I18N_DICTIONARY
 		local
 			i: INTEGER
 			temp: I18N_DICTIONARY_ENTRY

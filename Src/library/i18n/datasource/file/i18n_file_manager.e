@@ -25,7 +25,7 @@ feature	{NONE} -- Creation
 				-- Initialize chain-of-responsability
 			create {I18N_MO_HANDLER} chain
 				-- There is no next element for now
-			create directory.make (an_uri.to_string_8)
+			create directory.make (an_uri)
 			populate_file_lists
 		ensure then
 			at_least_one_handler: chain /= Void
@@ -65,10 +65,10 @@ feature	-- Access
 
 feature {NONE} -- Internal data
 
-	locale_file_list: HASH_TABLE[STRING_8, I18N_LOCALE_ID]
-	locale_list: ARRAYED_LIST[I18N_LOCALE_ID]
-	language_file_list: HASH_TABLE[STRING_8, I18N_LANGUAGE_ID]
-	language_list: ARRAYED_LIST[I18N_LANGUAGE_ID]
+	locale_file_list: HASH_TABLE [READABLE_STRING_GENERAL, I18N_LOCALE_ID]
+	locale_list: ARRAYED_LIST [I18N_LOCALE_ID]
+	language_file_list: HASH_TABLE [READABLE_STRING_GENERAL, I18N_LANGUAGE_ID]
+	language_list: ARRAYED_LIST [I18N_LANGUAGE_ID]
 
 feature {NONE} --Implementation
 
@@ -81,8 +81,10 @@ feature {NONE} --Implementation
 		require
 			directory_not_void: directory /= Void
 		local
-			temp: LIST[STRING_8]
+			temp: like directory.entries
 			scope: detachable I18N_FILE_SCOPE_INFORMATION
+			l_fn: IMMUTABLE_STRING_32
+			l_path: PATH
 		do
 			create locale_file_list.make(16)
 			create locale_list.make(16)
@@ -94,35 +96,33 @@ feature {NONE} --Implementation
 			language_list.compare_objects
 			if directory.exists and then directory.is_readable then
 				directory.open_read
-				temp := directory.linear_representation
+				temp := directory.entries
 				from
+					l_path := directory.path
 					temp.start
 				until
 					temp.after
 				loop
-					scope := chain.file_scope (
-							uri + Operating_environment.directory_separator.out + temp.item)
-
-					if scope /= Void then
-						if scope.scope = scope.scope_locale_specific then
-								--have we already encountered this locale?
-								--policy on duplicate locales: ignore the second one.
-							locale_file_list.put(
-									uri+Operating_environment.directory_separator.out+
-									temp.item,scope.get_locale)
-							if  locale_file_list.inserted then
-								locale_list.extend(scope.get_locale)
+					if not temp.item.is_parent_symbol and then not temp.item.is_current_symbol then
+						l_fn := l_path.extended_path (temp.item).name
+						scope := chain.file_scope (l_fn)
+						if scope /= Void then
+							if scope.scope = scope.scope_locale_specific then
+									--have we already encountered this locale?
+									--policy on duplicate locales: ignore the second one.
+								locale_file_list.put (l_fn ,scope.get_locale)
+								if locale_file_list.inserted then
+									locale_list.extend (scope.get_locale)
+								end
+							elseif scope.scope = scope.scope_language_specific then
+									-- policy on duplicate languages: ignore
+								language_file_list.put (l_fn, scope.get_language)
+								if language_file_list.inserted then
+									language_list.extend (scope.get_language)
+								end
 							end
-						elseif scope.scope = scope.scope_language_specific then
-								-- policy on duplicate languages: ignore
-							language_file_list.put (
-									uri+Operating_environment.directory_separator.out+
-									temp.item,scope.get_language)
-							if language_file_list.inserted then
-								language_list.extend(scope.get_language)
-							end
-						end
-					end -- end scope /= void
+						end -- end scope /= void
+					end
 					temp.forth
 				end -- end loop
 			end -- end directory.exists and directory.is_readable

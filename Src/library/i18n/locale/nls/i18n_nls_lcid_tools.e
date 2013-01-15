@@ -101,8 +101,6 @@ feature --Access
 						implies locales.item(right + 1).iso_code <= locales.item(locales.upper).iso_code
 				left <= locales.upper and left > locales.lower
 						implies locales.item(left - 1).iso_code <= locales.item(locales.upper).iso_code
-			variant
-				right - left + 1
 			until
 				left > right or found
 			loop
@@ -118,6 +116,8 @@ feature --Access
 					Result := locales.item (middle).lcid
 					left := left + 1 -- not nice but required to decrease variant
 				end
+			variant
+				right - left + 1
 			end
 		end
 

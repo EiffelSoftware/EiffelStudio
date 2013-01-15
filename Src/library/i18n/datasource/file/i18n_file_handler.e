@@ -56,7 +56,7 @@ feature -- Locale
 		require
 			a_path_not_void: a_path /= Void
 		do
-			if can_handle (a_path.as_string_32) then
+			if can_handle (a_path) then
 				Result := extract_scope (a_path)
 				handled := True
 			else
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 feature -- Dictionary
 
-	get_file_dictionary (a_path: STRING_32): detachable I18N_DICTIONARY
+	get_file_dictionary (a_path: READABLE_STRING_GENERAL): detachable I18N_DICTIONARY
 			-- get appropriate dictionary for the file at `a_path'
 		require
 			a_path_exists: a_path /= Void
@@ -110,7 +110,7 @@ feature -- Dictionary
 							implies not handled
 		end
 
-	extract_dictionary (a_path: STRING_32): I18N_DICTIONARY
+	extract_dictionary (a_path: READABLE_STRING_GENERAL): I18N_DICTIONARY
 			-- Current handler can handle the file at `a_path',
 			-- get appropriate dictionary
 		require

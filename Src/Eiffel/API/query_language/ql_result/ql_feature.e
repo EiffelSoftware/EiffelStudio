@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		deferred
 		end
@@ -27,7 +27,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code of current
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
 			if internal_hash_code = 0 then
 				if parent /= Void then
@@ -144,7 +144,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

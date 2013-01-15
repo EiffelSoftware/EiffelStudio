@@ -14,24 +14,24 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_opener: STRING; a_closer: STRING)
+	make (a_opener: READABLE_STRING_GENERAL ; a_closer: READABLE_STRING_GENERAL)
 			-- Initialize `opener' with `a_opener' and `closer' with `a_closer'.
 		require
 			a_opener_attached: a_opener /= Void
 			a_closer_attached: a_closer /= Void
 		do
-			create opener.make_from_string (a_opener)
-			create closer.make_from_string (a_closer)
+			create opener.make_from_string_general (a_opener)
+			create closer.make_from_string_general (a_closer)
 		ensure
 			opener_attached: opener /= Void
-			opener_set: opener.is_equal (a_opener)
+			opener_set: opener.same_string_general (a_opener)
 			closer_attached: closer /= Void
-			closer_set: closer.is_equal (a_closer)
+			closer_set: closer.same_string_general (a_closer)
 		end
 
 feature -- Access
 
-	path_name (a_base_name: STRING): STRING
+	path_name (a_base_name: READABLE_STRING_GENERAL): STRING_32
 			-- Path name of `a_base_name'
 		require
 			a_base_name_attached: a_base_name /= Void
@@ -40,13 +40,13 @@ feature -- Access
 			if not opener.is_empty then
 				Result.append (opener)
 			end
-			Result.append (a_base_name)
+			Result.append_string_general (a_base_name)
 			if not closer.is_empty then
 				Result.append (closer)
 			end
 		end
 
-	base_name (a_path_name: STRING): STRING
+	base_name (a_path_name: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- Base name from `a_path_name'
 		require
 			a_path_name_attached: a_path_name /= Void
@@ -61,15 +61,15 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	opener: STRING
+	opener: IMMUTABLE_STRING_32
 			-- Opener for path name
 
-	closer: STRING
+	closer: IMMUTABLE_STRING_32
 			-- Closer for path name
 
 feature -- Status report
 
-	is_equipped_with_marker (a_path_component: STRING): BOOLEAN
+	is_equipped_with_marker (a_path_component: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_path_component' equipped with current path marker?
 		require
 			a_path_component_attached: a_path_component /= Void
@@ -77,29 +77,26 @@ feature -- Status report
 		local
 			l_opener: like opener
 			l_closer: like closer
-			l_head: STRING
-			l_tail: STRING
+			l_head: READABLE_STRING_GENERAL
+			l_tail: READABLE_STRING_GENERAL
 		do
 			l_opener := opener
 			l_closer := closer
 			Result := a_path_component.count > l_opener.count + l_closer.count
 			if Result and then not l_opener.is_empty then
-				l_head := a_path_component.substring (1, l_opener.count).as_lower
-				if not l_head.is_equal (l_opener) then
-					Result := False
-				end
+				l_head := a_path_component.substring (1, l_opener.count)
+				Result := l_head.is_case_insensitive_equal (l_opener)
 			end
 			if Result and then not l_closer.is_empty then
-				l_tail := a_path_component.substring (a_path_component.count - l_closer.count + 1, a_path_component.count).as_lower
-				if not l_tail.is_equal (l_closer) then
-					Result := False
-				end
+				l_tail := a_path_component.substring (a_path_component.count - l_closer.count + 1, a_path_component.count)
+				Result := l_tail.is_case_insensitive_equal (l_closer)
 			end
 		end
 
 invariant
 	opener_attached: opener /= Void
 	closer_attached: closer /= Void
+
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -131,7 +128,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

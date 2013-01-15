@@ -17,7 +17,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: like name)
+	make (a_name: READABLE_STRING_GENERAL)
 			-- Initialize `name' with `a_name'.
 		require
 			a_name_valid: a_name /= Void
@@ -27,7 +27,7 @@ feature{NONE} -- Initialization
 			set_name (a_name)
 		end
 
-	make_with_setting (a_name: like name; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER)
+	make_with_setting (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER)
 			-- Initialize `name' with `a_name', `is_case_sensitive' with `a_case_sensitive' and `matching_strategy' with `a_matching_strategy'.
 		require
 			a_name_valid: a_name /= Void
@@ -37,14 +37,14 @@ feature{NONE} -- Initialization
 			matching_strategy := a_matching_strategy
 			make (a_name)
 		ensure
-			name_set: name /= Void and then name.is_equal (a_name)
+			name_set: name /= Void and then name.same_string_general (a_name)
 			is_case_sensitive_set: is_case_sensitive = a_case_sensitive
 			matching_strategy_set: matching_strategy = a_matching_strategy
 		end
 
 feature -- Access
 
-	name: STRING_32
+	name: IMMUTABLE_STRING_32
 			-- Name used to compare with an item's name
 
 	lower_name: like name
@@ -88,17 +88,17 @@ feature -- Status report
 
 feature -- Setting
 
-	set_name (a_name: like name)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name' with `a_name'.
 		require
 			a_name_valid: a_name /= Void
 		do
-			create name.make_from_string (a_name)
-			create lower_name.make_from_string (a_name.as_lower)
+			create name.make_from_string_general (a_name)
+			lower_name := name.as_lower
 			prepare_matching_strategy
 		ensure
-			name_set: name /= Void and then name.is_equal (a_name)
-			lower_name_set: lower_name /= Void and then lower_name.is_equal (a_name.as_lower)
+			name_set: name /= Void and then name.same_string_general (a_name)
+			lower_name_set: lower_name /= Void and then lower_name.same_string_general (a_name.as_lower)
 		end
 
 	enable_case_sensitive
@@ -132,7 +132,7 @@ feature -- Setting
 
 feature -- Evaluate
 
-	is_name_same_as (a_name: STRING_32): BOOLEAN
+	is_name_same_as (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' same as `name'?
 			-- If `is_case_sensitive' is True, compare names case-sensitively.
 		require
@@ -156,6 +156,7 @@ feature{NONE} -- Implementation
 			not_name_is_empty: not name.is_empty
 		local
 			l_search_engine: like regexp_match_engine
+			u: UTF_CONVERTER
 		do
 			l_search_engine := regexp_match_engine
 			l_search_engine.set_anchored (False)
@@ -163,7 +164,8 @@ feature{NONE} -- Implementation
 			l_search_engine.set_empty_allowed (False)
 			l_search_engine.set_multiline (False)
 			l_search_engine.set_caseless (not is_case_sensitive)
-			l_search_engine.compile (name)
+				-- FIXME: We search on the UTF-8 version of the name.
+			l_search_engine.compile (u.utf_32_string_to_utf_8_string_8 (name))
 		end
 
 	initialize_wildcard_match_engine
@@ -179,7 +181,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Matchers
 
-	identity_matcher (a_string: STRING_32): BOOLEAN
+	identity_matcher (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Identity matcher
 		require
 			a_string_attached: a_string /= Void
@@ -188,14 +190,14 @@ feature{NONE} -- Matchers
 				Result := name.is_empty
 			else
 				if is_case_sensitive then
-					Result := a_string.is_equal (name)
+					Result := a_string.same_string (name)
 				else
 					Result := a_string.is_case_insensitive_equal (name)
 				end
 			end
 		end
 
-	containing_matcher (a_string: STRING_32): BOOLEAN
+	containing_matcher (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Containing matcher
 		require
 			a_string_attached: a_string /= Void
@@ -211,7 +213,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	wildcard_matcher (a_string: STRING_32): BOOLEAN
+	wildcard_matcher (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Wildcard matcher
 		require
 			a_string_attached: a_string /= Void
@@ -224,15 +226,18 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	regexp_matcher (a_string: STRING_32): BOOLEAN
+	regexp_matcher (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Wildcard matcher
 		require
 			a_string_attached: a_string /= Void
+		local
+			u: UTF_CONVERTER
 		do
 			if a_string.is_empty then
 				Result := name.is_empty
 			else
-				regexp_match_engine.match (a_string)
+					-- FIXME: We search on the UTF-8 version of the name.
+				regexp_match_engine.match (u.utf_32_string_to_utf_8_string_8 (a_string))
 				Result := regexp_match_engine.has_matched
 			end
 		end
@@ -266,7 +271,7 @@ feature{NONE} -- Matchers
 			string_matcher_set: string_matcher /= Void
 		end
 
-	string_matcher: FUNCTION [ANY, TUPLE [a_string: STRING_32], BOOLEAN]
+	string_matcher: FUNCTION [ANY, TUPLE [a_string: READABLE_STRING_GENERAL], BOOLEAN]
 			-- String matcher used to match `a_string'
 
 	set_string_matcher (a_matcher: like string_matcher)
@@ -314,7 +319,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

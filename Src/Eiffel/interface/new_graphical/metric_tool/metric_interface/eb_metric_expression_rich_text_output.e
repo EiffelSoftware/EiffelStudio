@@ -36,9 +36,9 @@ feature -- Access
 	string_representation: STRING_GENERAL
 			-- String representation of generated output
 		local
-			l_list: LIST [STRING_GENERAL]
+			l_list: LIST [READABLE_STRING_GENERAL]
 		do
-			create {STRING} Result.make (100)
+			create {STRING_32} Result.make (100)
 			l_list := text_list
 			from
 				l_list.start
@@ -58,7 +58,7 @@ feature -- Operations
 			l_text_list: like text_list
 			l_format_list: like format_list
 			l_pos: INTEGER
-			l_text: STRING_GENERAL
+			l_text: READABLE_STRING_GENERAL
 		do
 			a_text.set_text ("")
 			l_text_list := text_list
@@ -251,7 +251,7 @@ feature -- Metric element output
 
 feature{NONE} -- Implementation
 
-	safe_put (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT)
+	safe_put (a_text: READABLE_STRING_GENERAL; a_format: EV_CHARACTER_FORMAT)
 			-- Put `a_text' whose format is `a_format' into `text_list' and `format_list'
 			-- only if `a_text' is not empty.
 		require
@@ -264,7 +264,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	text_list: LIST [STRING_GENERAL]
+	text_list: LIST [READABLE_STRING_GENERAL]
 			-- List of text
 
 	format_list: LIST [EV_CHARACTER_FORMAT]
@@ -372,7 +372,7 @@ invariant
 	error_format_attached: error_format /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

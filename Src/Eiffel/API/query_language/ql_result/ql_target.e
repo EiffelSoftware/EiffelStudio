@@ -50,12 +50,12 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		do
-			Result := target.name.as_lower
+			create {IMMUTABLE_STRING_32} Result.make_from_string_general (target.name.as_lower)
 		ensure then
-			good_result: Result.is_equal (target.name.as_lower)
+			good_result: Result.same_string_general (target.name.as_lower)
 		end
 
 	description: STRING_32
@@ -211,7 +211,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

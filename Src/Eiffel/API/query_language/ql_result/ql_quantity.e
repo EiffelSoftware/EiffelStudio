@@ -46,11 +46,10 @@ feature -- Access
 	value: DOUBLE
 			-- Value of current quantity item
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		do
-			create Result.make (0)
-			Result.append_double (value)
+			create {IMMUTABLE_STRING_32} Result.make_from_string_general (value.out)
 		ensure then
 			good_result: Result /= Void and then not Result.is_empty
 		end
@@ -165,7 +164,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

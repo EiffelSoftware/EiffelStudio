@@ -20,7 +20,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: like parent; a_written_class: like written_class)
+	make (a_name: READABLE_STRING_GENERAL; a_parent: like parent; a_written_class: like written_class)
 			-- Initialize `name' with `a_name' and `parent' with `a_parent'.
 		require
 			a_name_attached: a_name /= Void
@@ -33,11 +33,11 @@ feature{NONE} -- Initialization
 			set_parent (a_parent)
 			written_class := a_written_class
 		ensure
-			name_set: name.is_equal (a_name.as_lower)
+			name_set: name.same_string_general (a_name.as_lower)
 			parent_set: parent = a_parent
 		end
 
-	make_with_ast (a_name: STRING; a_ast: like ast; a_parent: like parent; a_written_class: like written_class)
+	make_with_ast (a_name: READABLE_STRING_GENERAL; a_ast: like ast; a_parent: like parent; a_written_class: like written_class)
 			-- Initialize `ast' with `a_ast' and `parent' with `a_parent'.
 		require
 			a_name_attached: a_name /= Void
@@ -50,27 +50,27 @@ feature{NONE} -- Initialization
 			internal_ast := a_ast
 			make (a_name, a_parent, a_written_class)
 		ensure
-			name_set: name.is_equal (a_name.as_lower)
+			name_set: name.same_string_general (a_name.as_lower)
 			parent_set: parent = a_parent
 		end
 
 feature -- Setting
 
-	set_name (a_name: like name)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
 			a_name_is_not_empty: not a_name.is_empty
 		do
-			create name.make_from_string (a_name.as_lower)
+			create {IMMUTABLE_STRING_32} name.make_from_string_general (a_name.as_lower)
 		ensure
 			name_attached: name /= Void
-			name_set: name.is_equal (a_name.as_lower)
+			name_set: name.same_string_general (a_name.as_lower)
 		end
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 
 	ast: TYPE_DEC_AS
@@ -180,7 +180,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

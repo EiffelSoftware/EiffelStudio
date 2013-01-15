@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	path_separator: CHARACTER
+	path_separator: CHARACTER_32
 			-- Path separator
 		once
 			Result := '.'
@@ -72,7 +72,7 @@ feature -- Domain
 	system_target_path: STRING = "%"%""
 			-- Path for `syatem_target_domain', an quoted empty string
 
-	empty_assertion_name: STRING = "#";
+	empty_assertion_name: STRING_32 = "#";
 			-- Name for an empty assertion
 
 	dummy_domain: QL_DOMAIN
@@ -215,7 +215,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

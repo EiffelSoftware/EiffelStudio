@@ -56,30 +56,30 @@ feature{NONE} -- Implementation
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 			-- `name' can be empty for an assertion that has no tag attached to it.
 		do
 			if ast.tag = Void then
 				Result := query_language_names.ql_no_tag
 			else
-				Result := ast.tag.name
+				Result := ast.tag.name_32
 			end
 		ensure then
-			good_result: (ast.tag = Void implies Result.is_equal (query_language_names.ql_no_tag)) and
-						 (ast.tag /= Void implies Result.is_equal (ast.tag.name))
+			good_result: (ast.tag = Void implies Result.same_string_general (query_language_names.ql_no_tag)) and
+						 (ast.tag /= Void implies Result.same_string_general (ast.tag.name_32))
 		end
 
-	path_name: STRING
+	path_name: STRING_32
 			-- Name used in `path'.
 			-- For an assertion, `path_name' is "assertion "`name', e.g., is "assertion a_arg" for example.
 			-- If an assertion doesn't has a tag attached to it, it's path name will be
 			-- assertion "" (the word "assertion" followed by a quoted empty string)
 		local
 			l_path_marker: like path_name_marker
-			l_name: STRING
-			l_opener: STRING
-			l_closer: STRING
+			l_name: READABLE_STRING_32
+			l_opener: IMMUTABLE_STRING_32
+			l_closer: IMMUTABLE_STRING_32
 		do
 			l_path_marker := path_name_marker
 			l_name := name
@@ -272,7 +272,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

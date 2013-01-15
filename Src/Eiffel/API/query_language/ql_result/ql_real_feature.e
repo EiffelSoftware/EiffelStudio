@@ -63,13 +63,12 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of current item
 		do
-			-- |FIXME: name should be in STRING_32
-			Result := e_feature.name_32.as_string_8
+			Result := e_feature.name_32
 		ensure then
-			good_result: Result /= Void and then Result.is_equal (e_feature.name_32.as_string_8)
+			good_result: Result /= Void and then Result.same_string (e_feature.name_32)
 		end
 
 	description: STRING_32

@@ -724,7 +724,7 @@ feature {NONE} -- Settings
 		local
 			l_path: STRING_32
 			l_target: CONF_TARGET
-			l_args: ARRAYED_LIST [READABLE_STRING_32]
+			l_args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
 			l_target := a_precompile.target
 			create l_args.make (10)
@@ -758,7 +758,7 @@ feature {NONE} -- Settings
 			launch_precompile_process (l_args)
 		end
 
-	launch_precompile_process (a_arguments: LIST [READABLE_STRING_32])
+	launch_precompile_process (a_arguments: LIST [READABLE_STRING_GENERAL])
 			-- Launch precompile process `a_command'.
 		require
 			a_arguments_ok: a_arguments /= Void
@@ -1003,7 +1003,7 @@ feature {NONE} -- User interaction
 		deferred
 		end
 
-	ask_environment_update (a_key, a_old_val: READABLE_STRING_32; a_new_val: detachable READABLE_STRING_32)
+	ask_environment_update (a_key, a_old_val: READABLE_STRING_GENERAL; a_new_val: detachable READABLE_STRING_GENERAL)
 			-- Should new environment values be accepted?
 		require
 			a_key_ok: a_key /= Void and then not a_key.is_empty and then not a_key.has ('%U')
@@ -1189,7 +1189,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

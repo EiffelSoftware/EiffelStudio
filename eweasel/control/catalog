@@ -617,6 +617,7 @@ test	svalid-generic-rename-with-alias	svalid028 tcf fail system-validity generic
 test	svalid-inherited-renamed-prefix		svalid029 tcf fail system-validity rename
 test	svalid-generic-creation			svalid030 tcf fail system-validity generic
 test	svalid-remove-bracket-alias-via-rename	svalid031 tcf fail system-validity bracket_expression
+test	svalid-inherit-like-argument	svalid032 tcf fail system-validity anchored_type
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall
@@ -1910,7 +1911,7 @@ test	crash-when-calling-out-on-a-formal	term162 tcf pass termination dotnet
 test    bad_formal_types                        term163 tcf pass validity
 test    crash-in-conversion-clause 	term164 tcf pass validity
 test    crash-in-checking-inherited-code	term165 tcf pass validity
-test    catcall-and-full-class-checking	term166 tcf fail termination
+test    catcall-and-full-class-checking	term166 tcf fail termination system-validity
 test	single-constraint-with-renaming-crash	term167	tcf fail termination
 test	inline-agent-with-attribute-body	term168	tcf fail termination agents
 test	self-init-attribute-returning-current	term169	tcf pass termination self_init void_safe

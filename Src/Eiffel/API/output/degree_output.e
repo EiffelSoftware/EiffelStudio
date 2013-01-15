@@ -72,22 +72,22 @@ feature {NONE} -- Query
 		require
 			a_degree_valid: a_degree >= -3 and then a_degree <= 6
 		local
-			l_degree_str: STRING_32
+			l_degree_str: like degree_short_description
 		do
 			create Result.make (35)
 			l_degree_str := degree_short_description (a_degree)
 			if a_degree /= 0 then
-				Result.append (translate (lb_degree, Void))
+				Result.append_string_general (translate (lb_degree, Void))
 				Result.append_character (' ')
 				Result.append_integer (a_degree)
 				Result.append_string_general (": ")
 			end
-			Result.append (l_degree_str)
+			Result.append_string_general (l_degree_str)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	degree_short_description (a_degree: INTEGER): STRING_32
+	degree_short_description (a_degree: INTEGER): READABLE_STRING_GENERAL
 			-- Retrieves a terse description for a given degree.
 			--
 			-- `a_degree': The degree index to retrieve a description for.
@@ -131,14 +131,14 @@ feature {NONE} -- Query
 			-- `Result': A human readable message relating to the degree.
 		do
 			create Result.make (30)
-			Result.append (translate (lb_degree, Void))
+			Result.append_string_general (translate (lb_degree, Void))
 			Result.append_character (' ')
 			Result.append_integer (a_degree)
 			Result.append_character (' ')
 			if a_degree = 6 then
-				Result.append (translate (lb_group, Void))
+				Result.append_string_general (translate (lb_group, Void))
 			else
-				Result.append (translate (lb_class, Void))
+				Result.append_string_general (translate (lb_class, Void))
 			end
 		ensure
 			result_attached: Result /= Void
@@ -192,7 +192,7 @@ feature {NONE} -- Query
 				Result.extend (' ')
 			end
 			Result.append_integer (l_percent)
-			Result.append_string (once "%% - ");
+			Result.append_string_general ("%% - ");
 
 			create l_two_spaces.make_filled (' ', 2)
 			l_to_go := a_to_go.out
@@ -201,22 +201,22 @@ feature {NONE} -- Query
 			when 1 then
 				Result.extend (' ')
 			when 2 then
-				Result.append (l_two_spaces)
+				Result.append_string_general (l_two_spaces)
 			when 3 then
 					-- Limit is about 99000
-				Result.append (l_two_spaces)
+				Result.append_string_general (l_two_spaces)
 				Result.extend (' ')
 			else
 			end;
 
-			Result.append (l_to_go)
+			Result.append_string_general (l_to_go)
 			Result.extend (']')
 			Result.extend (' ')
 		ensure
 			result_attached: Result /= Void
 		end
 
-	translate (a_string: STRING; a_args: detachable TUPLE): STRING_32
+	translate (a_string: READABLE_STRING_GENERAL; a_args: detachable TUPLE): READABLE_STRING_GENERAL
 			-- Translate a string for internationalization.
 			--
 			-- `a_string': A string to translate.
@@ -226,23 +226,28 @@ feature {NONE} -- Query
 			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
 		local
 			i, nb: INTEGER
-			l_arg: STRING
+			l_arg: detachable ANY
+			l_result: STRING_32
 		do
-			Result := a_string.as_string_32
-			if a_args /= Void then
-				if Result = a_string then
-					create Result.make_from_string (a_string)
-				end
+			if a_args = Void then
+				Result := a_string
+			else
+				create l_result.make_from_string_general (a_string)
 				from
 					i := 1
 					nb := a_args.count
 				until
 					i > nb
 				loop
-					l_arg := a_args.item (i).out
-					Result.replace_substring_all ("$" + i.out, l_arg)
+					l_arg := a_args.item (i)
+					if attached {READABLE_STRING_32} l_arg as l_str then
+						l_result.replace_substring_all ({STRING_32} "$" + i.out, l_str)
+					elseif l_arg /= Void then
+						l_result.replace_substring_all ({STRING_32} "$" + i.out, l_arg.out.as_string_32)
+					end
 					i := i + 1
 				end
+				Result := l_result
 			end
 		end
 
@@ -501,7 +506,7 @@ feature -- Basic operations
 			last_degree_unchanged: last_degree = old last_degree
 		end
 
-	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_32)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_GENERAL)
 			-- Puts a degree line message to the output.
 			--
 			-- `a_degree': A degree message string (or prefix).
@@ -525,7 +530,7 @@ feature -- Basic operations
 				l_msg.append (a_degree)
 				if not a_name.is_empty then
 					l_msg.append_character (' ')
-					l_msg.append (a_name)
+					l_msg.append_string_general (a_name)
 				end
 				put_message (l_msg)
 				put_new_line

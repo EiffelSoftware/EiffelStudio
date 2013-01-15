@@ -59,7 +59,7 @@ feature {NONE} -- Query
 		do
 			create Result.make (4)
 			Result.append_integer (calculate_percentage (a_to_go))
-			Result.append_string ("%%")
+			Result.append_string_general ("%%")
 		end
 
 feature -- Basic operations
@@ -111,7 +111,7 @@ feature -- Basic operations: Eiffel compiler
 
 feature {NONE} -- Basic operations
 
-	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_32)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			open_file

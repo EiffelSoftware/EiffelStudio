@@ -52,15 +52,15 @@ feature -- Access
 			create Result
 		end
 
-	path_domain_generator (a_item: QL_CLASS; a_path: STRING): QL_DOMAIN_GENERATOR
+	path_domain_generator (a_item: QL_CLASS; a_path: READABLE_STRING_GENERAL): QL_DOMAIN_GENERATOR
 			-- Domain generator for current scope
 		local
-			l_assert_name: STRING
+			l_assert_name: READABLE_STRING_GENERAL
 		do
 			if assertion_path_marker.is_equipped_with_marker (a_path) then
 				create {QL_ASSERTION_DOMAIN_GENERATOR}Result
 				l_assert_name := assertion_path_marker.base_name (a_path)
-				if not l_assert_name.is_equal (empty_assertion_name) then
+				if not l_assert_name.same_string (empty_assertion_name) then
 					Result.set_criterion (create{QL_ASSERTION_NAME_IS_CRI}.make_with_setting (l_assert_name, False, {QL_NAME_CRITERION}.identity_matching_strategy))
 				else
 					Result.set_criterion (create{QL_ASSERTION_NAME_IS_CRI}.make_with_setting ("", False, {QL_NAME_CRITERION}.identity_matching_strategy))
@@ -134,7 +134,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

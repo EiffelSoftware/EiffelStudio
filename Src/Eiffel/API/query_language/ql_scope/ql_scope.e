@@ -59,7 +59,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	path_domain_generator (a_item: QL_ITEM; a_path: STRING): QL_DOMAIN_GENERATOR
+	path_domain_generator (a_item: QL_ITEM; a_path: READABLE_STRING_GENERAL): QL_DOMAIN_GENERATOR
 			-- Domain generator for current scope
 		require
 			a_item_attached: a_item /= Void
@@ -144,7 +144,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

@@ -47,7 +47,7 @@ feature -- Access
 			create Result
 		end
 
-	path_domain_generator (a_item: QL_LINE; a_path: STRING): QL_DOMAIN_GENERATOR
+	path_domain_generator (a_item: QL_LINE; a_path: READABLE_STRING_GENERAL): QL_DOMAIN_GENERATOR
 			-- Domain generator for current scope
 		do
 		ensure then
@@ -107,7 +107,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

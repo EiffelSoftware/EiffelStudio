@@ -37,7 +37,7 @@ feature {NONE} -- Settings
 			-- Nothing to be done, as it is handled later in batch mode.
 		end
 
-	launch_precompile_process (a_arguments: LIST [READABLE_STRING_32])
+	launch_precompile_process (a_arguments: LIST [READABLE_STRING_GENERAL])
 			-- Launch precompile process `a_command'.
 		local
 			l_prc_factory: PROCESS_FACTORY
@@ -61,10 +61,10 @@ feature {NONE} -- Settings
 					l_cmd_line.append_character (' ')
 					if not l_args.item.is_empty and then l_args.item [1] /= '-' then
 						l_cmd_line.append_character ('%"')
-						l_cmd_line.append (l_args.item)
+						l_cmd_line.append_string_general (l_args.item)
 						l_cmd_line.append_character ('%"')
 					else
-						l_cmd_line.append (l_args.item)
+						l_cmd_line.append_string_general (l_args.item)
 					end
 				end
 				create l_exec
@@ -411,7 +411,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_environment_update (a_key, a_old_val: READABLE_STRING_32; a_new_val: detachable READABLE_STRING_32)
+	ask_environment_update (a_key, a_old_val: READABLE_STRING_GENERAL; a_new_val: detachable READABLE_STRING_GENERAL)
 			-- Should new environment values be accepted?
 		local
 			l_answered: BOOLEAN
@@ -439,7 +439,7 @@ feature {NONE} -- User interaction
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

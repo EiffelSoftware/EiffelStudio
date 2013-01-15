@@ -94,7 +94,7 @@ feature {NONE} -- Basic operations
 	put_start_degree (a_degree: INTEGER; a_total: INTEGER)
 			-- <Precursor>
 		local
-			l_degree_str: STRING_32
+			l_degree_str: READABLE_STRING_GENERAL
 		do
 			total_number := a_total
 			degree := a_degree
@@ -126,7 +126,7 @@ feature {NONE} -- Basic operations
 			window_manager.display_percentage (100)
 		end
 
-	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_32)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_desc: STRING_32
@@ -141,15 +141,15 @@ feature {NONE} -- Basic operations
 
 			create l_msg.make_from_string (l_desc)
 			if total_number > 1 then
-				l_msg.append (" (")
-				l_msg.append ((total_number - a_to_go + 1).out)
-				l_msg.append ("/")
-				l_msg.append (total_number.out)
-				l_msg.append ("): ")
-				l_msg.append (a_name)
+				l_msg.append_string_general (" (")
+				l_msg.append_integer (total_number - a_to_go + 1)
+				l_msg.append_string_general ("/")
+				l_msg.append_integer (total_number)
+				l_msg.append_string_general ("): ")
+				l_msg.append_string_general (a_name)
 			else
-				l_msg.append (": ")
-				l_msg.append (a_name)
+				l_msg.append_string_general (": ")
+				l_msg.append_string_general (a_name)
 			end
 			window_manager.display_message_and_percentage (l_msg, calculate_percentage (a_to_go))
 			flush_output
@@ -208,7 +208,7 @@ feature {NONE} -- Internationalization
 	lb_removing_dead_features_2: STRING = "Removing unused (dead) code ($1/$2)"
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

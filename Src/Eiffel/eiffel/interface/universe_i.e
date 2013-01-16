@@ -340,7 +340,7 @@ feature -- Access
 			l_buffered_classes.search (a_class_name)
 			if not l_buffered_classes.found then
 				create l_vis.make (conf_state)
-				l_vis.set_name (a_class_name)
+				l_vis.set_name (a_class_name.as_string_8_conversion)
 				target.process (l_vis)
 				Result := l_vis.found_classes
 				if Result.count = 1 then

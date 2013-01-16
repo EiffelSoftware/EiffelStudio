@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 				current_item := expanded_filenames.item;
 debug("SHOW_PROF_QUERY")
 	io.error.put_string ("current_item: ");
-	io.error.put_string (current_item);
+	io.error.put_string (current_item.as_string_8_conversion);
 	io.error.put_new_line
 end;
 				if not current_item.same_string_general ("last_output") then
@@ -237,10 +237,10 @@ end;
 						loop
 debug("SHOW_PROF_QUERY")
 	io.error.put_string ("Entry from the directory: ");
-	io.error.put_string (entries.item.name.as_string_8);
+	io.error.put_string (entries.item.name.as_string_8_conversion);
 	io.error.put_new_line;
 	io.error.put_string ("Wildcarded name: ");
-	io.error.put_string (wc_name);
+	io.error.put_string (wc_name.as_string_8_conversion);
 	io.error.put_new_line;
 end;
 							entries_name := entries.item.name
@@ -793,7 +793,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -323,7 +323,7 @@ feature -- Properties
 
 feature -- Access
 
-	classes_with_name (a_class_name: STRING): LIST [CLASS_I]
+	classes_with_name (a_class_name: READABLE_STRING_GENERAL): LIST [CLASS_I]
 			-- Classes with a local name of `class_name' found in the Universe.
 			-- That means renamings on the cluster of the class itself are taken into
 			-- account, but not renamings because of the use as a library.
@@ -633,7 +633,7 @@ feature -- Update
 
 feature {COMPILER_EXPORTER} -- Implementation
 
-	buffered_classes: HASH_TABLE [CLASS_I, STRING]
+	buffered_classes: STRING_TABLE [CLASS_I]
 			-- Hash table that contains recent results of calls to `classes_with_name'.
 		once
 			create Result.make (200)

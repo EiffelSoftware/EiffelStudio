@@ -33,7 +33,7 @@ inherit
 
 feature -- Initialization
 
-	make (cn, fn, filter: STRING)
+	make (cn: like class_name; fn: like feature_name; filter: like filter_name)
 			-- Initialize Current with class_name `class_name',
 			-- feature_name `feature_name', and filter `filter_name'.
 		require
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	feature_name: STRING;
+	feature_name: STRING_32
 			-- Feature_name for current menu selection
 
 	want_compiled_class (class_i: CLASS_I): BOOLEAN
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 				feature_name := command_line_io.last_input;
 			end;
 			if not command_line_io.abort then
-				e_feature := e_class.feature_with_name (feature_name);
+				e_feature := e_class.feature_with_name_32 (feature_name);
 				if e_feature = Void then
 					localized_print_error (ewb_names.feature_is_not_of_class (feature_name, class_name))
 					io.error.put_new_line
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

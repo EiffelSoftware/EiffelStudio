@@ -10,6 +10,9 @@ class
 
 inherit
 	ABSTRACT_ARRAY_PREFERENCE [STRING]
+		redefine
+			valid_value_string
+		end
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
@@ -49,12 +52,21 @@ feature -- Status Setting
 						is_choice := True
 						set_selected_index (cnt)
 					end
+						-- Per precondition, `s' should be valid as a STRING_8.
 					l_value.force (unescaped_string (s).to_string_8, cnt)
 					values.forth
 					cnt := cnt + 1
 				end
 			end
 			set_value (internal_value)
+		end
+
+feature -- Status Report
+
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_string' valid?
+		do
+			Result := a_string.is_valid_as_string_8
 		end
 
 feature {NONE} -- Implementation

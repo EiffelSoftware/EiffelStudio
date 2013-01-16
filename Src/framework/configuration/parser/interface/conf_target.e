@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create internal_external_make.make (1)
 			create internal_pre_compile_action.make (1)
 			create internal_post_compile_action.make (1)
-			create internal_variables.make_equal (1)
+			create internal_variables.make_equal_caseless (1)
 			create environ_variables.make (1)
 			create internal_settings.make (1)
 			system := a_system
@@ -82,7 +82,7 @@ feature -- Access, stored in configuration file
 
 feature -- Access, in compiled only, not stored to configuration file
 
-	environ_variables: HASH_TABLE [STRING_32, STRING_32]
+	environ_variables: STRING_TABLE [READABLE_STRING_32]
 			-- Saved environment variables.
 
 	library_root: PATH
@@ -638,7 +638,7 @@ feature -- Access queries for settings
 			l_settings := settings
 			l_settings.search (s_msil_generation_type)
 			if l_settings.found then
-				check l_settings.found_item.is_case_insensitive_equal ("exe") or l_settings.found_item.is_case_insensitive_equal ("dll") end
+				check l_settings.found_item.is_case_insensitive_equal_general ("exe") or l_settings.found_item.is_case_insensitive_equal_general ("dll") end
 				Result := l_settings.found_item
 			else
 				Result := "exe"
@@ -789,7 +789,7 @@ feature {NONE} -- Access: concurrency setting
 	setting_concurrency_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `setting_concurrency'.
 		once
-			Result := <<concurrency_none_name, concurrency_multithreaded_name, concurrency_scoop_name>>
+			Result := <<concurrency_none_name.as_string_32_conversion, concurrency_multithreaded_name.as_string_32_conversion, concurrency_scoop_name.as_string_32_conversion>>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1311,25 +1311,25 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 					not internal_post_compile_action.has (an_action)
 		end
 
-	add_variable (a_name, a_value: STRING_32)
+	add_variable (a_name: READABLE_STRING_GENERAL; a_value: READABLE_STRING_32)
 			-- Add a variable with `a_name' and `a_value'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_value_not_void: a_value /= Void
 		do
-			internal_variables.force (a_value, a_name.as_lower)
+			internal_variables.force (a_value, a_name)
 		ensure
-			variable_added: internal_variables.has (a_name.as_lower) and then internal_variables.item (a_name.as_lower) = a_value
+			variable_added: internal_variables.has (a_name) and then internal_variables.item (a_name) = a_value
 		end
 
-	remove_variable (a_name: STRING_32)
+	remove_variable (a_name: READABLE_STRING_GENERAL)
 			-- Remove a variable with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
-			internal_variables.remove (a_name.as_lower)
+			internal_variables.remove (a_name)
 		ensure
-			variable_removed: not internal_variables.has (a_name.as_lower)
+			variable_removed: not internal_variables.has (a_name)
 		end
 
 	add_mapping (a_old_name, a_new_name: STRING)
@@ -1539,7 +1539,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_post_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- Actions to be executed after compilation of this target itself.
 
-	internal_variables: HASH_TABLE [STRING_32, STRING_32]
+	internal_variables: STRING_TABLE [READABLE_STRING_32]
 			-- User defined variables of this target itself.
 
 feature {NONE} -- Implementation

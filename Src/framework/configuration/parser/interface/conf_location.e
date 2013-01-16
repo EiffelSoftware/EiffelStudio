@@ -67,7 +67,7 @@ feature -- Access queries
 			i, j, k: INTEGER
 			l_old_i: INTEGER
 			l_key: like original_path
-			l_value: like original_path
+			l_value: READABLE_STRING_32
 			l_relative_base: like original_path
 			l_offset: INTEGER
 			l_stop: BOOLEAN
@@ -235,20 +235,20 @@ feature {NONE} -- Implementation, attributes stored in configuration file
 
 feature {NONE} -- Implementation
 
-	to_internal_format (a_path: like original_path): like original_path
+	to_internal_format (a_path: READABLE_STRING_GENERAL): like original_path
 			-- Convert `a_path' into the internal representation.
 			--| The internal format uses the windows format for directory separator.
 		require
 			a_path_not_void: a_path /= Void
 		do
-			Result := a_path.twin
+			create Result.make_from_string_general (a_path)
 
 				-- Remove white spaces if any.
 			Result.left_adjust
 			Result.right_adjust
 
 				-- Internally we always save using Windows file separator.
-			Result.replace_substring_all ("/", "\")
+			Result.replace_substring_all ({STRING_32} "/", {STRING_32} "\")
 
 				-- Convert all $\ ($/ was converted into $\) at the beginning into $| because
 				-- internally we only accept this as indicator for the parent path.
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 		require
 			a_path_not_void: a_path /= Void
 		do
-			a_path.replace_substring_all ("\", "/")
+			a_path.replace_substring_all ({STRING_32} "\", {STRING_32} "/")
 		ensure
 			a_path_has_not_windows_separator: not a_path.has ('\')
 		end

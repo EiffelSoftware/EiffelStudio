@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			-- Create.
 		do
 			create version.make (1)
-			create custom.make (1)
+			create custom.make_caseless (1)
 		end
 
 feature -- Access
@@ -59,7 +59,7 @@ feature -- Access
 	version: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
-	custom: HASH_TABLE [HASH_TABLE [BOOLEAN, READABLE_STRING_32], READABLE_STRING_32]
+	custom: STRING_TABLE [STRING_TABLE [BOOLEAN]]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
 			-- Values having the same name are indexed by the value.
 			-- [[invert, value], key]
@@ -71,12 +71,12 @@ feature -- Queries
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_vars: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
+			l_vars: STRING_TABLE [READABLE_STRING_GENERAL]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
 			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 			l_ver_state: CONF_VERSION
-			l_var_key, l_var_val: READABLE_STRING_32
-			l_values: HASH_TABLE [BOOLEAN, READABLE_STRING_32]
+			l_var_key, l_var_val: READABLE_STRING_GENERAL
+			l_values: STRING_TABLE [BOOLEAN]
 		do
 			Result := True
 
@@ -148,7 +148,7 @@ feature -- Queries
 			end
 		end
 
-	exclusion_value (a_key, a_value: READABLE_STRING_32): BOOLEAN
+	exclusion_value (a_key, a_value: READABLE_STRING_GENERAL): BOOLEAN
 			-- Exclusion value of `a_key' and `a_value' pair
 		require
 			a_key_ok: a_key /= Void and then custom.has (a_key.as_lower)
@@ -287,44 +287,34 @@ feature -- Update
 			dynamic_runtime := Void
 		end
 
-	add_custom (a_name, a_value: READABLE_STRING_32; a_exclude: BOOLEAN)
+	add_custom (a_name, a_value: READABLE_STRING_GENERAL; a_exclude: BOOLEAN)
 			-- Add requirement that `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		local
-			l_values: HASH_TABLE [BOOLEAN, READABLE_STRING_32]
-			l_name: READABLE_STRING_32
+			l_values: STRING_TABLE [BOOLEAN]
 		do
-			l_name := a_name.as_lower
-			custom.search (l_name)
-			if not custom.found then
-				create l_values.make (1)
-				l_values.force (a_exclude, a_value)
-				custom.force (l_values, l_name)
+			if attached custom.item (a_name) as l_val then
+				l_values := l_val
 			else
-				l_values := custom.found_item
-				l_values.force (a_exclude, a_value)
+				create l_values.make (1)
+				custom.force (l_values, a_name)
 			end
+			l_values.force (a_exclude, a_value)
 		end
 
-	remove_custom (a_name, a_value: READABLE_STRING_32)
+	remove_custom (a_name, a_value: READABLE_STRING_GENERAL)
 			-- Remove custom attribute `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
-		local
-			l_name: READABLE_STRING_32
 		do
-			l_name := a_name.as_lower
-			custom.search (l_name)
-			if custom.found then
-				check attached custom.found_item as l_values then
-					l_values.remove (a_value)
-					if l_values.is_empty then
-							-- Remove the empty one
-						custom.remove (l_name)
-					end
+			if attached custom.item (a_name) as l_values then
+				l_values.remove (a_value)
+				if l_values.is_empty then
+						-- Remove the empty one
+					custom.remove (a_name)
 				end
 			end
 		end

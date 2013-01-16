@@ -121,25 +121,25 @@ feature -- Backup
 
 feature -- XML parsing/printing
 
-	Lt_string: STRING
+	Lt_string: STRING_32
 		once
 			create Result.make (1)
 			Result.append_character (lt_char)
 		end
 
-	Gt_string: STRING
+	Gt_string: STRING_32
 		once
 			create Result.make (1)
 			Result.append_character (gt_char)
 		end
 
-	Amp_string: STRING
+	Amp_string: STRING_32
 		once
 			create Result.make (1)
 			Result.append_character (amp_char)
 		end
 
-	Quot_string: STRING
+	Quot_string: STRING_32
 		once
 			create Result.make (1)
 			Result.append_character (quot_char)

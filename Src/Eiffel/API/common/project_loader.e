@@ -620,8 +620,8 @@ feature {NONE} -- Settings
 	check_used_environemnt
 			-- Check if the current environment values still have the same values as the ones stored in the project settings.
 		local
-			l_envs: HASH_TABLE [STRING_32, STRING_32]
-			l_key, l_old_val, l_new_val: STRING_32
+			l_envs: STRING_TABLE [READABLE_STRING_GENERAL]
+			l_key, l_old_val, l_new_val: READABLE_STRING_GENERAL
 		do
 			if
 				eiffel_project.system_defined and then eiffel_project.initialized and then
@@ -638,9 +638,9 @@ feature {NONE} -- Settings
 					l_old_val := l_envs.item_for_iteration
 					l_new_val := eiffel_layout.get_environment_32 (l_key)
 					if {PLATFORM}.is_windows then
-						l_old_val.to_lower
+						l_old_val := l_old_val.as_lower
 						if l_new_val /= Void then
-							l_new_val.to_lower
+							l_new_val := l_new_val.as_lower
 						end
 					end
 					if

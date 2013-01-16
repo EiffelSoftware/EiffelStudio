@@ -141,7 +141,7 @@ feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
 	spit_info
 		do
 			io.error.put_string ("Name: ");
-			io.error.put_string (configuration_name);
+			io.error.put_string (configuration_name.as_string_8_conversion);
 			io.error.put_new_line;
 			io.error.put_string ("Number of columns: ");
 			io.error.put_integer (number_of_columns);
@@ -173,7 +173,7 @@ feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

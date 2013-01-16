@@ -14,6 +14,8 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	TTY_CONSTANTS
 
+	LOCALIZED_PRINTER
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
@@ -53,7 +55,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			if error_msg /= Void then
-				io.error.put_string (error_msg)
+				localized_print_error (error_msg)
 				error_occurred := True
 			else
 				error_occurred := False
@@ -69,7 +71,7 @@ feature -- Status report
 			-- Did an error occur while reading the default preferences file ?
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

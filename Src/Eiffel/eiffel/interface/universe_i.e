@@ -73,7 +73,7 @@ feature -- Properties
 			a_target_not_void: a_target /= Void
 		local
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
-			l_ver: STRING
+			l_ver: STRING_32
 			l_clr_version: CONF_VERSION
 		do
 			create l_version.make (1)

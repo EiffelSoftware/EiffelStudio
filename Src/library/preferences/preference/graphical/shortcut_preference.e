@@ -176,8 +176,7 @@ feature -- Status Setting
 			-- Parse the string value `a_value' and set `value'.
 			-- String format: "Alt+Ctrl+Shift+KeyString"		
 		local
-			s: STRING
-			l_string: STRING
+			l_string: READABLE_STRING_GENERAL
 			l_value: like value
 			l_cnt: INTEGER
 			l_key_code: INTEGER
@@ -187,25 +186,24 @@ feature -- Status Setting
 		do
 			l_value := [False, False, False, ""]
 
-			create s.make_from_string (a_value.as_string_8)
-
 			from
 				l_cnt := 1
 				l_start_index := 1
 			until
 				l_cnt > 4
 			loop
-				l_end_index := s.index_of ('+', l_start_index)
+				l_end_index := a_value.index_of ('+', l_start_index)
 				if l_cnt /= 4 and l_end_index /= 0 then
-					l_string := s.substring (l_start_index, l_end_index - 1)
+					l_string := a_value.substring (l_start_index, l_end_index - 1)
 				else
-					l_string := s.substring (l_start_index, s.count)
+					l_string := a_value.substring (l_start_index, a_value.count)
 				end
 				if l_string.is_case_insensitive_equal (str_true) then
 					l_value.put_boolean (True, l_cnt)
 				elseif l_cnt = 4 then
-						-- Last one is assumed to be key
-					l_value.key_string := l_string
+						-- Last one is assumed to be key and per precondition `l_string' is valid
+						-- as a STRING_8.
+					l_value.key_string := l_string.to_string_8
 				end
 				l_start_index := l_end_index + 1
 				l_cnt := l_cnt + 1
@@ -252,7 +250,7 @@ feature -- Query
 	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
-			Result := a_string.as_string_8.split ('+').count >= 4
+			Result := a_string.is_valid_as_string_8 and then a_string.split ('+').count >= 4
 		end
 
 	is_default_value: BOOLEAN

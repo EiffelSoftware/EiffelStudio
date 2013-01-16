@@ -38,13 +38,8 @@ feature -- Query
 
 	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
-		local
-			s: STRING_8
 		do
-			if a_string.is_valid_as_string_8 then
-				s := a_string.as_string_8.as_lower
-				Result := s.same_string ("true") or s.same_string ("false")
-			end
+			Result := a_string.is_case_insensitive_equal ("true") or a_string.is_case_insensitive_equal ("false")
 		end
 
 feature -- settings
@@ -70,7 +65,7 @@ feature -- Status Setting
 	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		do
-			set_value (a_value.as_string_8.is_case_insensitive_equal ("true"))
+			set_value (a_value.is_case_insensitive_equal ("true"))
 		end
 
 feature {NONE} -- Implementation

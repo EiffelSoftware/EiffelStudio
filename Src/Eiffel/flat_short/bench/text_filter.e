@@ -275,7 +275,7 @@ feature -- Text processing
 				loop
 					char := str.code (i)
 					if char.is_valid_character_8_code and then attached escape_characters.item (char.as_integer_32) as l_esc then
-						buffer.append_string_general (l_esc)
+						buffer.append_string (l_esc)
 					else
 						buffer.extend (char.to_character_32)
 					end

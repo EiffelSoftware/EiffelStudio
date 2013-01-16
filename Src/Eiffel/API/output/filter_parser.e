@@ -16,7 +16,7 @@ feature {NONE} -- Formats
 	format_table: HASH_TABLE [CELL2 [STRING_32, STRING_32], STRING_32];
 			-- User-specified formats
 
-	escape_characters: ARRAY [STRING];
+	escape_characters: ARRAY [STRING_32];
 			-- User-specified escape characters
 
 	read_formats (filename: PATH)
@@ -131,21 +131,9 @@ feature {NONE} -- Formats
 									then
 										create new_format.make (before, after);
 										format_table.force (new_format, construct)
-debug ("FILTERS")
-	io.error.put_string (construct);
-	io.error.put_string (" -> ");
-	io.error.put_string (before);
-	if after /= Void then
-		io.error.put_string (" @ ");
-		io.error.put_string (after)
-	end;
-	io.error.put_new_line
-end
 									elseif construct.is_empty and before /= Void then
 										syntax_error ("Construct expected")
-									elseif
-										not construct.is_empty and before = Void
-									then
+									elseif not construct.is_empty and before = Void then
 										syntax_error ("Appearance expected")
 									end
 								end;
@@ -303,7 +291,7 @@ invariant
 	escape_characters_capacity_valid: escape_characters.capacity > {CHARACTER}.max_value
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

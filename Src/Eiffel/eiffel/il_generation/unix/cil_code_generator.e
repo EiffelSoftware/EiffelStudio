@@ -507,7 +507,7 @@ feature -- Once manifest string manipulation
 		do
 		end
 
-	generate_once_string (number: INTEGER; value: STRING; type: INTEGER)
+	generate_once_string (number: INTEGER; value: READABLE_STRING_32; type: INTEGER)
 			-- Generate code for once string in a current routine with the given
 			-- `number' and `value' using CIL string type if `is_cil_string' is `true'
 			-- or Eiffel string type otherwise.
@@ -723,7 +723,7 @@ feature -- Constants generation
 		do
 		end
 
-	put_manifest_string (s: STRING)
+	put_manifest_string (s: READABLE_STRING_GENERAL)
 			-- Put `s' on IL stack.
 		do
 		end
@@ -734,18 +734,18 @@ feature -- Constants generation
 		do
 		end
 
-	put_manifest_string_32 (s: STRING)
+	put_manifest_string_32 (s: READABLE_STRING_32)
 			-- Put `s' on IL stack.
 			-- `s' is in UTF-8
 		do
 		end
 
-	put_system_string (s: STRING)
+	put_system_string (s: READABLE_STRING_GENERAL)
 			-- Put instance of platform String object corresponding to `s' on IL stack.
 		do
 		end
 
-	put_system_string_32 (s: STRING)
+	put_system_string_32 (s: READABLE_STRING_32)
 			-- Put `System.String' object corresponding to `s' on IL stack.
 			-- `s' is in UTF-8 encoding.
 		do
@@ -1017,7 +1017,7 @@ feature {CIL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom attribute def
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

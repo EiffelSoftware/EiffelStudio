@@ -120,8 +120,8 @@ feature -- Basic operation
 					if attached current_target.description as d then
 						l_desc := l_desc + d
 					end
-					l_desc.replace_substring_all ("<", "&lt;")
-					l_desc.replace_substring_all (">", "&gt;")
+					l_desc.replace_substring_all ({STRING_32} "<", {STRING_32} "&lt;")
+					l_desc.replace_substring_all ({STRING_32} ">", {STRING_32} "&gt;")
 					current_target.set_description (l_desc)
 				end
 				if current_options = Void then

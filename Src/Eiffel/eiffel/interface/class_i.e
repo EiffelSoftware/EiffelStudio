@@ -403,7 +403,7 @@ feature -- Status report
 			il_generation: System.il_generation
 			compiled_class: is_compiled
 		local
-			l_path: STRING
+			l_path: like path
 			l_cluster: CLUSTER_I
 		do
 			if compiled_class.is_precompiled then
@@ -420,7 +420,7 @@ feature -- Status report
 
 				if target.setting_use_all_cluster_name_as_namespace then
 					l_path := path.twin
-					l_path.replace_substring_all ("/", ".")
+					l_path.replace_substring_all ({STRING_32} "/", {STRING_32} ".")
 					if not l_path.is_empty and then l_path.item (1) = '.' then
 						l_path.remove_head (1)
 					end

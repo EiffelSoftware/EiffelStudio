@@ -43,7 +43,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Factory
 
-	create_folder_item_with_options (a_cluster: EB_SORTED_CLUSTER; a_path: STRING_8): ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM
+	create_folder_item_with_options (a_cluster: EB_SORTED_CLUSTER; a_path: READABLE_STRING_32): ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM
 			-- Create new folder item.
 		do
 			create Result.make_with_all_options (a_cluster, a_path, is_show_classes)
@@ -56,7 +56,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

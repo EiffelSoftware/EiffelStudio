@@ -113,7 +113,7 @@ feature -- Access
 			Result := interface_names.l_from (l_from_feat, e_class.class_signature)
 		end
 
-	stone_name: STRING_GENERAL
+	stone_name: READABLE_STRING_GENERAL
 			-- Name of Current stone
 		do
 			if is_valid then
@@ -191,9 +191,9 @@ feature -- dragging
 			l_file_name: PATH
 		do
 			create l_feature_name.make (20)
-			l_feature_name.append ("{")
-			l_feature_name.append (e_class.name_in_upper)
-			l_feature_name.append ("}.")
+			l_feature_name.append_string_general ("{")
+			l_feature_name.append_string_general (e_class.name_in_upper)
+			l_feature_name.append_string_general ("}.")
 			l_feature_name.append (feature_name)
 			if class_i /= Void then
 				l_file_name := class_i.file_name
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

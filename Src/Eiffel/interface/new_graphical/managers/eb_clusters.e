@@ -363,7 +363,7 @@ feature -- Element change
 			system.force_rebuild
 		end
 
-	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CONF_CLUSTER; new_path: STRING)
+	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CONF_CLUSTER; new_path: READABLE_STRING_32)
 			-- Move `a_class' from `old_group' to `new_cluster'/`new_path'.
 		require
 			valid_class: a_class /= Void
@@ -945,7 +945,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

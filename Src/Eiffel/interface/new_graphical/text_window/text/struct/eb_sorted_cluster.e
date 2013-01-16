@@ -208,10 +208,10 @@ feature -- Access
 	clusters: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
 			-- sub-clusters in a sorted order.
 
-	sub_classes: HASH_TABLE [DS_ARRAYED_LIST [CLASS_I], STRING]
+	sub_classes: STRING_TABLE [DS_ARRAYED_LIST [CLASS_I]]
 			-- classes mapping for sub folders
 
-	sub_folders: HASH_TABLE [DS_HASH_SET [STRING], STRING];
+	sub_folders: STRING_TABLE [DS_HASH_SET [READABLE_STRING_32]];
 			-- subfolder mapping for sub folders (for assembly namespaces)
 
 	overrides: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
@@ -380,9 +380,9 @@ feature {NONE} -- Implementation
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_cl: CLASS_I
 			l_lst: DS_ARRAYED_LIST [CLASS_I]
-			l_folders: DS_HASH_SET [STRING]
-			l_path_comp: LIST [STRING]
-			l_path, l_part_path: STRING
+			l_folders: DS_HASH_SET [READABLE_STRING_32]
+			l_path_comp: LIST [STRING_32]
+			l_path, l_part_path: STRING_32
 		do
 			-- we build a classesmapping for paths on normal systems and namespaces on dotnet that looks like this
 			--
@@ -462,7 +462,7 @@ invariant
 	name_prefxi_not_void: is_initialized implies name_prefix /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -486,11 +486,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

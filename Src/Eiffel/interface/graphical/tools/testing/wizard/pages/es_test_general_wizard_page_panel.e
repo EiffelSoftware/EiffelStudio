@@ -185,7 +185,7 @@ feature {NONE} -- Access
 	selected_cluster: detachable STRING
 			-- Name of selected cluster, Void if no cluster is selected
 
-	selected_path: detachable STRING
+	selected_path: detachable IMMUTABLE_STRING_32
 			-- Selected relative path, Void if no path selected
 
 	launch_wizard_checkbox: EV_CHECK_BUTTON
@@ -297,7 +297,7 @@ feature {NONE} -- Internationalization
 	launch_wizard_text: STRING = "Always show wizard before launching test creation"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -49,7 +49,7 @@ feature -- Initialization
 			make_sub (a_cluster, "")
 		end
 
-	make_sub (a_cluster: EB_SORTED_CLUSTER; a_path: STRING)
+	make_sub (a_cluster: EB_SORTED_CLUSTER; a_path: READABLE_STRING_32)
 			-- Create a tree item representing a subfolder of `a_cluster'.
 		require
 			a_path_ok: a_path /= Void
@@ -71,7 +71,7 @@ feature -- Initialization
 			is_show_classes := True
 		end
 
-	make_with_all_options (a_cluster: EB_SORTED_CLUSTER; a_path: STRING; a_show_classes: BOOLEAN)
+	make_with_all_options (a_cluster: EB_SORTED_CLUSTER; a_path: READABLE_STRING_32; a_show_classes: BOOLEAN)
 			-- Create with various options
 		require
 			a_cluster_ok: a_cluster /= Void
@@ -99,10 +99,10 @@ feature -- Status report
 	data: EB_SORTED_CLUSTER
 			-- cluster represented by `Current'.
 
-	path: STRING
-			-- relativ path to cluster location (for recursive clusters).
+	path: IMMUTABLE_STRING_32
+			-- Relative path to cluster location (for recursive clusters).
 
-	name: STRING
+	name: IMMUTABLE_STRING_32
 			-- name of the item.
 
 feature -- Access
@@ -238,10 +238,10 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			orig_count: INTEGER
 			i, up: INTEGER
 			l_set: LIST [STRING_32]
-			l_hash_set: DS_HASH_SET [STRING]
+			l_hash_set: DS_HASH_SET [READABLE_STRING_32]
 			cluster: CLUSTER_I
 			group: CONF_GROUP
-			l_sub_path: STRING
+			l_sub_path: IMMUTABLE_STRING_32
 			l_fr: CONF_FILE_RULE
 			l_name: STRING
 			l_agents: like classes_double_click_agents
@@ -473,7 +473,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			end
 		end
 
-	cluster_separator: STRING = "/"
+	cluster_separator: STRING_32 = "/"
 			-- Cluster sub path separator
 
 	on_class_drop (cstone: CLASSI_STONE)
@@ -688,7 +688,7 @@ feature {EB_CLASSES_TREE} -- Implementation
 			l_has_children: BOOLEAN
 			l_sub_dirs: ARRAYED_LIST [STRING_32]
 			l_fr: CONF_FILE_RULE
-			l_sub_path: STRING
+			l_sub_path: READABLE_STRING_32
 			u: FILE_UTILITIES
 			l_sorter: QUICK_SORTER [STRING_32]
 		do
@@ -736,28 +736,31 @@ feature {EB_CLASSES_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	physical_assembly_tooltip_text (a_assembly: CONF_PHYSICAL_ASSEMBLY): STRING
+	physical_assembly_tooltip_text (a_assembly: CONF_PHYSICAL_ASSEMBLY): STRING_32
 			-- Generate tooltip text for `a_assembly'.
 		local
-			l_tmp: STRING
+			l_tmp: STRING_32
 		do
 			create Result.make_empty
 			if a_assembly /= Void then
 				Result.append (a_assembly.assembly_name)
 				if not path.is_empty then
-					l_tmp := path.twin
-					l_tmp.replace_substring_all (cluster_separator, ".")
+					create l_tmp.make_from_string_general (path)
+					l_tmp.replace_substring_all (cluster_separator, {STRING_32} ".")
 					Result.append (l_tmp)
 				end
-				Result.append ("%N")
-				if a_assembly.assembly_culture /= Void then
-					Result.append (a_assembly.assembly_culture+"%N")
+				Result.append_string_general ("%N")
+				if attached a_assembly.assembly_culture as l_culture then
+					Result.append (l_culture)
+					Result.append_string_general ("%N")
 				end
-				if a_assembly.assembly_version /= Void then
-					Result.append (a_assembly.assembly_version+"%N")
+				if attached a_assembly.assembly_version as l_version then
+					Result.append (l_version)
+					Result.append_string_general ("%N")
 				end
-				if a_assembly.assembly_public_key_token /= Void then
-					Result.append (a_assembly.assembly_public_key_token+"%N")
+				if attached a_assembly.assembly_public_key_token as l_token then
+					Result.append (l_token )
+					Result.append_string_general ("%N")
 				end
 			end
 		ensure
@@ -794,7 +797,7 @@ feature {NONE} -- Implementation
 			elseif data.is_cluster then
 				Result.append (data.actual_group.name)
 				if not path.is_empty then
-					Result.append (path)
+					Result.append_string_general (path)
 				end
 				Result.append_character ('%N')
 				Result.append (data.actual_group.location.build_path (path, "").name)
@@ -874,19 +877,16 @@ feature {NONE} -- Implementation
 	print_name
 			-- Print class name in textable, the associated text component.
 		local
-			l_tmp: STRING
-			l_current_cluster: STRING
+			l_tmp, l_current_cluster: READABLE_STRING_GENERAL
 		do
 			l_tmp := path
 			if associated_textable /= Void then
 				if l_tmp /= Void and not l_tmp.is_empty then
-					l_current_cluster := l_tmp.twin
 					check noly_one: cluster_separator.count = 1 end
-					l_current_cluster := data.actual_cluster.cluster_name + l_current_cluster
+					l_current_cluster := data.actual_cluster.cluster_name + l_tmp
 				elseif data.is_cluster then
 					l_current_cluster := data.actual_cluster.cluster_name
 				else
-
 				end
 
 				if l_current_cluster /= Void then
@@ -912,7 +912,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	create_folder_item_with_options (a_cluster: EB_SORTED_CLUSTER; a_path: STRING_8): EB_CLASSES_TREE_FOLDER_ITEM
+	create_folder_item_with_options (a_cluster: EB_SORTED_CLUSTER; a_path: READABLE_STRING_32): EB_CLASSES_TREE_FOLDER_ITEM
 			-- Create new folder item.
 		do
 			create Result.make_with_all_options (a_cluster, a_path, is_show_classes)

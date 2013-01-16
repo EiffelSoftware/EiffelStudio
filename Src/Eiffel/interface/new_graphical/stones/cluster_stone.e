@@ -36,12 +36,12 @@ feature {NONE} -- Initialization
 			valid_cluster: clu /= Void
 		do
 			group := clu
-			create path.make_empty
+			create {STRING_32} path.make_empty
 		ensure
 			group_set: group = clu
 		end
 
-	make_subfolder (clu: CONF_GROUP; a_path: STRING; a_name: STRING)
+	make_subfolder (clu: CONF_GROUP; a_path: READABLE_STRING_32; a_name: READABLE_STRING_32)
 			-- Create for a subfolder `path' of `clu'.
 		require
 			valid_cluster: clu /= Void
@@ -71,10 +71,10 @@ feature -- Access
 	group: CONF_GROUP
 			-- Underlying group for the stone.
 
-	path: STRING
+	path: READABLE_STRING_32
 			-- Subfolder path in unix format eg "/test/a/b"
 
-	folder_name: STRING
+	folder_name: READABLE_STRING_32
 			-- Subfolder name
 
 	stone_signature: STRING_32
@@ -153,7 +153,7 @@ feature -- Access
  			end
  		end
 
-	stone_name: STRING_GENERAL
+	stone_name: READABLE_STRING_GENERAL
 			-- Name of Current stone
 		do
 			if is_valid then
@@ -214,7 +214,7 @@ invariant
 	path_not_void: path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

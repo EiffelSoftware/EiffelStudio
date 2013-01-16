@@ -144,7 +144,7 @@ feature -- Access, in compiled only
 	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- All libraries in current system.
 
-	all_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
+	all_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			-- All assemblies in current system.
 
 	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]

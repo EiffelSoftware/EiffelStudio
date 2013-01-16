@@ -30,7 +30,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET)
+	make_from_gac (a_name: STRING; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET)
 			-- Create.
 		require
 			a_name_not_void: a_name /= Void
@@ -84,16 +84,16 @@ feature -- Access, stored in configuration file
 	location: CONF_FILE_LOCATION
 			-- Location of the assembly.
 
-	assembly_name: STRING
+	assembly_name: READABLE_STRING_32
 			-- Name of the assembly.
 
-	assembly_version: STRING
+	assembly_version: READABLE_STRING_32
 			-- Version of the assembly.
 
-	assembly_culture: STRING
+	assembly_culture: READABLE_STRING_32
 			-- Culture of the assembly.
 
-	assembly_public_key_token: STRING
+	assembly_public_key_token: READABLE_STRING_32
 			-- Public key of the assembly.
 
 feature -- Access, in compiled only

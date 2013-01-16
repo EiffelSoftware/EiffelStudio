@@ -174,12 +174,12 @@ feature -- Code generation
 			-- Generate IL code for string constant value.
 		do
 			if is_dotnet_string then
-				il_generator.put_system_string_32 (string_value)
+				il_generator.put_system_string_32 (string_value_32)
 			else
 				if is_string_32 then
-					il_generator.put_manifest_string_32 (string_value)
+					il_generator.put_manifest_string_32 (string_value_32)
 				else
-					il_generator.put_manifest_string (string_value_8)
+					il_generator.put_manifest_string (string_value_32)
 				end
 			end
 		end
@@ -246,7 +246,7 @@ invariant
 	string_value_set: string_value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

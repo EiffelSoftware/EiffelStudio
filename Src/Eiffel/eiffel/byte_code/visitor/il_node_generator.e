@@ -2819,11 +2819,11 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		do
 			if a_node.is_dotnet_string then
-				il_generator.generate_once_string (a_node.number - 1, a_node.value, string_type_cil)
+				il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_cil)
 			elseif a_node.is_string_32 then
-				il_generator.generate_once_string (a_node.number - 1, a_node.value, string_type_string_32)
+				il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_string_32)
 			else
-				il_generator.generate_once_string (a_node.number - 1, a_node.value, string_type_string)
+				il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_string)
 			end
 		end
 
@@ -3062,12 +3062,12 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		do
 			if a_node.is_dotnet_string then
-				il_generator.put_system_string_32 (a_node.value)
+				il_generator.put_system_string_32 (a_node.value_32)
 			else
 				if a_node.is_string_32 then
-					il_generator.put_manifest_string_32 (a_node.value)
+					il_generator.put_manifest_string_32 (a_node.value_32)
 				else
-					il_generator.put_manifest_string (a_node.value_8)
+					il_generator.put_manifest_string (a_node.value_32)
 				end
 			end
 		end
@@ -4884,7 +4884,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

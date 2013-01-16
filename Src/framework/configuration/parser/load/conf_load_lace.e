@@ -176,7 +176,11 @@ feature {NONE} -- Implementation of data retrieval
 			l_assembly: CONF_ASSEMBLY
 		do
 			if an_assembly.version /= Void then
-				l_assembly := factory.new_assembly_from_gac (mask_special_characters_config (an_assembly.cluster_name.as_lower), an_assembly.assembly_name, an_assembly.version, an_assembly.culture, an_assembly.public_key_token, current_target)
+				l_assembly := factory.new_assembly_from_gac (mask_special_characters_config (an_assembly.cluster_name.as_lower),
+					an_assembly.assembly_name.as_string_32,
+					an_assembly.version.as_string_32,
+					an_assembly.culture.as_string_32,
+					an_assembly.public_key_token.as_string_32, current_target)
 			else
 				if is_library_conversions then
 						-- correct path of mscorlib, system and system_xml

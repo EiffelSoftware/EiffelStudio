@@ -982,20 +982,19 @@ feature -- Generation Structure
 			class_type_not_void: class_type /= Void
 		local
 			l_assert_ca: MD_CUSTOM_ATTRIBUTE
-			l_type_name: STRING
+			l_type_name: STRING_32
 		do
 			check
 				main_module_not_void: main_module /= Void
 			end
 			create l_assert_ca.make
 			if class_type.implementation_id /= class_type.static_type_id then
-				l_type_name := class_type.full_il_implementation_type_name
+				create l_type_name.make_from_string_general (escape_type_name (class_type.full_il_implementation_type_name))
 			else
-				l_type_name := class_type.full_il_type_name
+				create l_type_name.make_from_string_general (escape_type_name (class_type.full_il_type_name))
 			end
-			l_type_name := escape_type_name (l_type_name)
 			if class_type.is_precompiled then
-				l_type_name.append (", ")
+				l_type_name.append_string_general (", ")
 				l_type_name.append (class_type.assembly_info.full_name)
 			end
 			l_assert_ca.put_string (l_type_name)
@@ -1012,12 +1011,12 @@ feature -- Generation Structure
 			class_type_not_void: class_type /= Void
 		local
 			l_assert_ca: MD_CUSTOM_ATTRIBUTE
-			l_type_name: STRING
+			l_type_name: STRING_32
 		do
 			create l_assert_ca.make
-			l_type_name := escape_type_name (class_type.full_il_type_name)
+			create l_type_name.make_from_string_general (escape_type_name (class_type.full_il_type_name))
 			if class_type.is_precompiled then
-				l_type_name.append (", ")
+				l_type_name.append_string_general (", ")
 				l_type_name.append (class_type.assembly_info.full_name)
 			end
 			l_assert_ca.put_string (l_type_name)
@@ -1294,7 +1293,7 @@ feature -- Class info
 			l_type_field_token: INTEGER
 			l_class_token: INTEGER
 			l_ca: MD_CUSTOM_ATTRIBUTE
-			l_class_name: STRING
+			l_class_name: STRING_32
 			l_meth_attr: INTEGER
 			l_gen_type: GEN_TYPE_A
 			i, nb: INTEGER
@@ -1305,7 +1304,7 @@ feature -- Class info
 			l_feature: FEATURE_I
 		do
 			l_class_token := actual_class_type_token (class_type.implementation_id)
-			l_class_name := class_type.associated_class.name_in_upper
+			create l_class_name.make_from_string_general (class_type.associated_class.name_in_upper)
 
 			create l_ca.make
 			l_ca.put_string (l_class_name)
@@ -1350,14 +1349,14 @@ feature -- Class info
 							check
 								has_assembly_info: l_class_type.assembly_info /= Void
 							end
-							l_class_name.append (", ")
+							l_class_name.append_string_general (", ")
 							l_class_name.append (l_class_type.assembly_info.full_name)
 						end
 					else
 							-- External class, add assembly full name only when it is
 							-- not `mscorlib'.
-						if not l_ext_class.assembly.assembly_name.is_equal ("mscorlib") then
-							l_class_name.append (", ")
+						if not l_ext_class.assembly.assembly_name.same_string_general ("mscorlib") then
+							l_class_name.append_string_general (", ")
 							l_class_name.append (l_ext_class.assembly.full_name)
 						end
 					end
@@ -5851,7 +5850,7 @@ feature -- Once manifest string manipulation
 			end
 		end
 
-	generate_once_string (number: INTEGER; value: STRING; type: INTEGER)
+	generate_once_string (number: INTEGER; value: READABLE_STRING_32; type: INTEGER)
 			-- Generate code for once string in a current routine with the given
 			-- `number' and `value' using CIL string type if `is_cil_string' is `True'
 			-- or Eiffel string type otherwise.
@@ -5883,7 +5882,7 @@ feature -- Once manifest string manipulation
 			method_body.put_opcode ({MD_OPCODES}.dup)
 			put_integer_32_constant (number)
 			if type = string_type_cil then
-				put_system_string (value)
+				put_system_string_32 (value)
 			else
 				if type = string_type_string_32 then
 					put_manifest_string_32 (value)
@@ -6560,7 +6559,7 @@ feature -- Constants generation
 			internal_generate_feature_access (string_implementation_id, string_make_feat_id, 1, False, True)
 		end
 
-	put_manifest_string (s: STRING)
+	put_manifest_string (s: READABLE_STRING_GENERAL)
 			-- Put `s' on IL stack.
 		do
 			create_object (string_implementation_id)
@@ -6579,9 +6578,8 @@ feature -- Constants generation
 			internal_generate_feature_access (string_32_implementation_id, string_32_make_feat_id, 1, False, True)
 		end
 
-	put_manifest_string_32 (s: STRING)
+	put_manifest_string_32 (s: READABLE_STRING_32)
 			-- Put `s' on IL stack.
-			-- `s' is in UTF-8
 		do
 			create_object (string_32_implementation_id)
 			duplicate_top
@@ -6590,7 +6588,7 @@ feature -- Constants generation
 			internal_generate_feature_access (string_32_implementation_id, string_32_make_feat_id, 1, False, True)
 		end
 
-	put_system_string (s: STRING)
+	put_system_string (s: READABLE_STRING_GENERAL)
 			-- Put `System.String' object corresponding to `s' on IL stack.
 		local
 			l_string_token: INTEGER
@@ -6600,13 +6598,12 @@ feature -- Constants generation
 			method_body.put_string (l_string_token)
 		end
 
-	put_system_string_32 (s: STRING)
+	put_system_string_32 (s: READABLE_STRING_32)
 			-- Put `System.String' object corresponding to `s' on IL stack.
-			-- `s' is in UTF-8 encoding.
 		local
 			l_string_token: INTEGER
 		do
-			uni_string.set_string (encoding_converter.utf8_to_utf16 (s))
+			uni_string.set_string (s)
 			l_string_token := md_emit.define_string (uni_string)
 			method_body.put_string (l_string_token)
 		end
@@ -8282,7 +8279,7 @@ feature -- Inline agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

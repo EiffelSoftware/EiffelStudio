@@ -383,7 +383,7 @@ feature {BYTE_NODE} -- Visitors
 			l_gen_type: GEN_TYPE_A
 			l_actual_type: CL_TYPE_A
 			l_class_type: CLASS_TYPE
-			l_type_name: STRING
+			l_type_name: STRING_32
 			l_ext_class: EXTERNAL_CLASS_C
 		do
 			check is_constant_expression: a_node.is_constant_expression end
@@ -405,11 +405,11 @@ feature {BYTE_NODE} -- Visitors
 				end
 			end
 			if l_class_type /= Void then
-				create l_type_name.make_from_string (l_class_type.full_il_type_name)
+				create l_type_name.make_from_string_general (l_class_type.full_il_type_name)
 				if l_class_type.is_precompiled and then not l_class_type.is_external then
 					l_type_name.append_character (',')
 					l_type_name.append_character (' ')
-					l_type_name.append (l_class_type.assembly_info.full_name)
+					l_type_name.append_string_general (l_class_type.assembly_info.full_name)
 				else
 					l_ext_class ?= l_class_type.associated_class
 					if l_ext_class /= Void  then
@@ -649,11 +649,11 @@ feature {NONE} -- Implemention
 		require
 			a_cl_type_not_void: a_cl_type /= Void
 		local
-			l_type_name: STRING
+			l_type_name: STRING_32
 			l_ext_class: EXTERNAL_CLASS_C
 		do
 			ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_enum)
-			create l_type_name.make_from_string (a_cl_type.il_type_name (Void, cil_generator.current_class_type.type))
+			create l_type_name.make_from_string_general (a_cl_type.il_type_name (Void, cil_generator.current_class_type.type))
 			l_type_name.append_character (',')
 			l_type_name.append_character (' ')
 			l_ext_class ?= a_cl_type.base_class
@@ -666,7 +666,7 @@ invariant
 	is_dotnet_compilation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

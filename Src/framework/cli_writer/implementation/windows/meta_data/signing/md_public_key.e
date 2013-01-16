@@ -50,7 +50,7 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Did an error occurred in `read_key_pair_from_file'?
 
-	public_key_token_string: STRING
+	public_key_token_string: STRING_32
 			-- String representation of `public_key_token'.
 		require
 			key_is_valid: is_valid
@@ -66,7 +66,7 @@ feature -- Access
 			until
 				i > nb
 			loop
-				Result.append (public_key_token.read_integer_8 (i).to_hex_string)
+				Result.append_string_general (public_key_token.read_integer_8 (i).to_hex_string)
 				i := i + 1
 			end
 			Result.to_lower
@@ -112,7 +112,7 @@ invariant
 	key_pair_not_void: key_pair /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

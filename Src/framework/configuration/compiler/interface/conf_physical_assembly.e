@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			a_target_not_void: a_target /= Void
 		do
 			consumed_assembly := a_consumed
+				-- FIXME: It would be better if {CONF_GROUP}.name was a READABLE_STRING_32 instance.
 			name := assembly_name.as_lower
 			target := a_target
 			cache_path := a_cache_path
@@ -116,7 +117,7 @@ feature -- Access, in compiled only
 	dotnet_classes: HASH_TABLE [like class_type, STRING]
 			-- Same as `classes' but indexed by the dotnet name.
 
-	guid: STRING
+	guid: READABLE_STRING_32
 			-- A unique id.
 		do
 			check
@@ -142,7 +143,7 @@ feature -- Access, in compiled only
 
 feature -- Access queries
 
-	assembly_name: STRING
+	assembly_name: READABLE_STRING_32
 			-- Assembly name.
 		require
 			consumed_assembly /= Void
@@ -152,7 +153,7 @@ feature -- Access queries
 			result_ok: Result /= Void and then not Result.is_empty
 		end
 
-	assembly_version: STRING
+	assembly_version: READABLE_STRING_32
 			-- Assembly version.
 		require
 			consumed_assembly /= Void
@@ -162,7 +163,7 @@ feature -- Access queries
 			result_ok: Result /= Void and then not Result.is_empty
 		end
 
-	assembly_culture: STRING
+	assembly_culture: READABLE_STRING_32
 			-- Assembly culture.
 		require
 			consumed_assembly /= Void
@@ -172,7 +173,7 @@ feature -- Access queries
 			result_ok: Result /= Void
 		end
 
-	assembly_public_key_token: STRING
+	assembly_public_key_token: READABLE_STRING_32
 			-- Assembly public key token.
 		require
 			consumed_assembly /= Void

@@ -55,7 +55,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_name: STRING
+	get_name: STRING_32
 			-- GetName returns the name of the assembly
 		local
 			p_cchname: NATURAL_32
@@ -65,7 +65,7 @@ feature {ICOR_EXPORTER} -- Access
 
 			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
 			if mp_name.item /= default_pointer then
-				create Result.make_from_string ((create {UNI_STRING}.make_by_pointer (mp_name.item)).string)
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string_32
 			end
 		ensure
 --			success: last_call_success = 0

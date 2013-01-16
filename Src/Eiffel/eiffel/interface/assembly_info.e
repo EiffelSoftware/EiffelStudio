@@ -13,23 +13,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: like assembly_name)
+	make (n: READABLE_STRING_GENERAL)
 			-- Initialize current with `n'
 		require
 			n_not_void: n /= Void
 			n_not_empty: not n.is_empty
 		do
-			assembly_name := n
+			create {IMMUTABLE_STRING_32} assembly_name.make_from_string_general (n)
 		ensure
 			assembly_name_set: assembly_name = n
 		end
 
 feature -- Access
 
-	assembly_name: STRING
+	assembly_name: READABLE_STRING_32
 			-- Assembly name or file location of assembly if local assembly.
 
-	version, culture, public_key_token: STRING
+	version, culture, public_key_token: READABLE_STRING_32
 			-- Specification of current assembly.
 
 feature -- Settings
@@ -89,23 +89,23 @@ feature -- Output
 			end
 		end
 
-	full_name: STRING
+	full_name: STRING_32
 			-- Output name of Current
 		do
 			create Result.make (64)
 			Result.append (assembly_name)
 			if version /= Void then
-				Result.append (", Version=")
+				Result.append_string_general (", Version=")
 				Result.append (version)
 			end
 			if culture /= Void then
-				Result.append (", Culture=")
+				Result.append_string_general (", Culture=")
 				Result.append (culture)
 			else
-				Result.append (", Culture=neutral")
+				Result.append_string_general (", Culture=neutral")
 			end
 			if public_key_token /= Void then
-				Result.append (", PublicKeyToken=")
+				Result.append_string_general (", PublicKeyToken=")
 				Result.append (public_key_token)
 			end
 		ensure
@@ -116,7 +116,7 @@ invariant
 	assembly_name_not_void: assembly_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,22 +129,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ASSEMBLY_INFO

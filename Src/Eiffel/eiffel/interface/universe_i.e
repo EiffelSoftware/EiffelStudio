@@ -498,7 +498,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	class_from_assembly (an_assembly, a_dotnet_name: STRING): EXTERNAL_CLASS_I
+	class_from_assembly (an_assembly: READABLE_STRING_32; a_dotnet_name: STRING): EXTERNAL_CLASS_I
 			-- Associated EXTERNAL_CLASS_I instance for `a_dotnet_name' external class name
 			-- from given assembly `an_assembly'. If more than one assembly with
 			-- `an_assembly' as name, look only in first found item.
@@ -514,7 +514,7 @@ feature -- Access
 			a_dotnet_name_not_empty: not a_dotnet_name.is_empty
 			target_not_void: target /= Void
 		local
-			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
+			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			l_assembly: CONF_PHYSICAL_ASSEMBLY
 		do
 			from
@@ -935,7 +935,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

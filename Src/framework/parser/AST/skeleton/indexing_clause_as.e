@@ -156,7 +156,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			Result := string_value (Description_header)
 		end
 
-	assembly_name: detachable ARRAY [STRING]
+	assembly_name: detachable ARRAY [STRING_32]
 			-- Assembly name (for external classes only)
 			-- Name, Version, Culture and Public key in that order
 		local
@@ -169,12 +169,12 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 				list := i.index_list
 				from
 					list.start
-					create Result.make_filled ("", 1, list.count)
+					create Result.make_filled ({STRING_32} "", 1, list.count)
 				until
 					list.after
 				loop
 					if attached {STRING_AS} list.item as l_string then
-						Result.put (l_string.value, list.index)
+						Result.put (l_string.value_32, list.index)
 					end
 					list.forth
 				end
@@ -532,7 +532,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

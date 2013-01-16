@@ -2154,7 +2154,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			class_token_valid: Result /= 0
 		end
 
-	define_assembly_reference (a_name, a_version, a_culture, a_key: STRING): INTEGER
+	define_assembly_reference (a_name, a_version, a_culture, a_key: READABLE_STRING_32): INTEGER
 			-- Define an assembly reference matching given parameters
 		require
 			a_name_not_void: a_name /= Void
@@ -2167,9 +2167,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			if defined_assemblies.has_key (a_name) then
 				Result := defined_assemblies.found_item
 			else
-				if a_name.is_equal ("mscorlib") then
+				if a_name.same_string_general ("mscorlib") then
 					Result := mscorlib_token
-				elseif a_name.is_equal (runtime_namespace) then
+				elseif a_name.same_string_general (runtime_namespace) then
 					Result := ise_runtime_token
 				else
 					create l_ass_info.make
@@ -2188,7 +2188,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						l_ass_info.set_revision_number (l_revision.to_natural_16)
 					end
 
-					if a_key /= Void and then not a_key.is_equal ("null") then
+					if a_key /= Void and then not a_key.same_string_general ("null") then
 						create l_key_token.make_from_string (a_key)
 					end
 
@@ -2834,8 +2834,8 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_token: INTEGER
 			l_id: INTEGER
 			l_indexes: INDEXING_CLAUSE_AS
-			l_info: ARRAY [STRING]
-			l_name, l_key_string, l_culture, l_version_string: STRING
+			l_info: ARRAY [STRING_32]
+			l_name, l_key_string, l_culture, l_version_string: READABLE_STRING_32
 			l_external_class: EXTERNAL_CLASS_C
 			l_assembly: ASSEMBLY_I
 			l_precompiled_assembly: ASSEMBLY_INFO
@@ -2900,7 +2900,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				(is_used_as_external implies internal_assemblies.item (a_class_type.external_id) /= 0)
 		end
 
-	defined_assemblies: HASH_TABLE [INTEGER, STRING]
+	defined_assemblies: STRING_TABLE [INTEGER]
 			-- In order to avoid calling `define_assembly_ref' twice on same assemblies.
 
 feature {NONE} -- Once per modules being generated.
@@ -3694,7 +3694,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

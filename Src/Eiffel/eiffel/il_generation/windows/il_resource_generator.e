@@ -55,9 +55,9 @@ feature -- Generation
 			nb: INTEGER
 			l_not_is_resource_generated: BOOLEAN
 			l_res: CONF_EXTERNAL_RESOURCE
-			l_res_added: SEARCH_TABLE [STRING]
+			l_res_added: SEARCH_TABLE [STRING_32]
 			l_loc: CONF_FILE_LOCATION
-			l_fn: STRING
+			l_fn: STRING_32
 		do
 			from
 				last_resource_offset := 0
@@ -75,7 +75,7 @@ feature -- Generation
 					if l_fn.is_case_insensitive_equal (l_loc.evaluated_file) then
 							-- Ensure the resource name case is preserved
 						l_name.keep_head (l_name.count - l_fn.count)
-						l_name.append (l_fn)
+						l_name.append_string_general (l_fn)
 					end
 
 					if not l_res_added.has (l_name) then
@@ -90,7 +90,7 @@ feature -- Generation
 							if is_file_readable (l_new_name) then
 								l_name := resource_name (create {PATH}.make_from_string (l_name), True)
 								l_name.append_character ('.')
-								l_name.append (resources_extension)
+								l_name.append_string_general (resources_extension)
 								define_resource (module, l_new_name, l_name)
 							else
 								Error_handler.insert_warning (create {VIRC}.make_failed (l_name))

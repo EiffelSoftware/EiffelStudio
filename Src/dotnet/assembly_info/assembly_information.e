@@ -104,7 +104,7 @@ feature {NONE} -- Access
 
 feature -- Basic Operations
 
-	find_type (assembly_type_name: STRING; a_full_dotnet_type: STRING): MEMBER_INFORMATION
+	find_type (assembly_type_name, a_full_dotnet_type: READABLE_STRING_32): MEMBER_INFORMATION
 			-- Find comments relative to `a_full_dotnet_type'.
 		require
 			non_void_assembly_type_name: assembly_type_name /= Void
@@ -112,7 +112,7 @@ feature -- Basic Operations
 			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
 			not_empty_a_full_dotnet_type: not a_full_dotnet_type.is_empty
 		local
-			l_full_dotnet_type: STRING
+			l_full_dotnet_type: STRING_32
 		do
 			if not Member_parser_table.has (assembly_type_name) then
 				initialize (assembly_type_name)
@@ -130,7 +130,7 @@ feature -- Basic Operations
 			end
 		end
 
-	find_feature (assembly_type_name: STRING; a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION
+	find_feature (assembly_type_name, a_full_dotnet_type: READABLE_STRING_32; a_member_signature: STRING): MEMBER_INFORMATION
 			-- Find comments of feature of `a_full_dotnet_type' corresponding to `a_feature_signature'.
 			-- Constructor signature: #ctor[(TYPE,TYPE,...)]
 			-- Feature signature: feature_name[(TYPE,TYPE,...)]
@@ -143,7 +143,7 @@ feature -- Basic Operations
 			not_empty_a_member_signature: not a_member_signature.is_empty
 			valid_dotnet_signature: is_valid_dotnet_signature (a_member_signature)
 		local
-			l_full_dotnet_type: STRING
+			l_full_dotnet_type: STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then

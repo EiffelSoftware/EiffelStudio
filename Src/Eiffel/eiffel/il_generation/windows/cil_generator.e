@@ -126,7 +126,7 @@ feature -- Generation
 					-- Set information about current assembly.
 				create assembly_info.make (System.name)
 				if System.msil_version /= Void and then not System.msil_version.is_empty then
-					assembly_info.set_version (System.msil_version)
+					assembly_info.set_version (System.msil_version.as_string_32_conversion)
 				end
 
 				create signing.make_with_version (System.clr_runtime_version)
@@ -271,7 +271,7 @@ feature -- Generation
 			l_precomp: REMOTE_PROJECT_DIRECTORY
 			l_viop: VIOP
 			l_use_optimized_precomp: BOOLEAN
-			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
+			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			l_as: CONF_PHYSICAL_ASSEMBLY
 			l_state: CONF_STATE
 		do
@@ -292,7 +292,7 @@ feature -- Generation
 						physical_assembly: l_as /= Void
 					end
 					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-						copy_to_local (l_as.location.build_path ("", l_as.location.original_file), assembly_location (is_finalizing), Void)
+						copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), assembly_location (is_finalizing), Void)
 						l_has_local := True
 					end
 					l_assemblies.forth

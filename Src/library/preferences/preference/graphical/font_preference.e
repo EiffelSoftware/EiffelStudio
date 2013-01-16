@@ -180,62 +180,53 @@ feature {NONE} -- Implementation
 			face := s.as_string_32
 		end
 
-	set_shape (s: STRING)
+	set_shape (s: READABLE_STRING_GENERAL)
 			-- Set shape according to `s'.
 		require
 			not_void: s /= Void
-		local
-			s1: STRING
 		do
-			s1 := s.as_lower
-			if s1.same_string ("i") or s1.same_string ("italic") then
+			if s.is_case_insensitive_equal ("i") or s.is_case_insensitive_equal ("italic") then
 				shape := shape_italic
-			elseif s1.same_string ("r") or s1.same_string ("regular") then
+			elseif s.is_case_insensitive_equal ("r") or s.is_case_insensitive_equal ("regular") then
 				shape := shape_regular
 			end
 		end
 
-	set_weight (s: STRING)
+	set_weight (s: READABLE_STRING_GENERAL)
 			-- Set `weight' according to `s'.
 		require
 			not_void: s /= Void
-		local
-			s1: STRING
 		do
-			s1 := s.as_lower
-			if s1.same_string ("thin") then
+			if s.is_case_insensitive_equal ("thin") then
 				weight := weight_thin
-			elseif s1.same_string ("regular") then
+			elseif s.is_case_insensitive_equal ("regular") then
 				weight := weight_regular
-			elseif s1.same_string ("bold") then
+			elseif s.is_case_insensitive_equal ("bold") then
 				weight := weight_bold
-			elseif s1.same_string ("black") then
+			elseif s.is_case_insensitive_equal ("black") then
 				weight := weight_black
 			end
 		end
 
-	set_family (s: STRING)
+	set_family (s: READABLE_STRING_GENERAL)
 			-- Set `family' according to `s'.
 		require
 			not_void: s /= Void
-		local
-			s1: STRING
 		do
-			s1 := s.as_lower
-			if s1.same_string ("screen") then
+			if s.is_case_insensitive_equal ("screen") then
 				family := family_screen
-			elseif s1.same_string ("roman") then
+			elseif s.is_case_insensitive_equal ("roman") then
 				family := family_roman
-			elseif s1.same_string ("sans") then
+			elseif s.is_case_insensitive_equal ("sans") then
 				family := family_sans
-			elseif s1.same_string ("typewriter") then
+			elseif s.is_case_insensitive_equal ("typewriter") then
 				family := family_typewriter
-			elseif s1.same_string ("modern") then
+			elseif s.is_case_insensitive_equal ("modern") then
 				family := family_modern
 			end
 		end
 
-	set_height (s: STRING)
+	set_height (s: READABLE_STRING_GENERAL)
 			-- Set `height' according to `s'
 		require
 			not_void: s /= Void

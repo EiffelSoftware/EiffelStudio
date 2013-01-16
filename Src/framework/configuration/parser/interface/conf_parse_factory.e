@@ -218,7 +218,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assembly_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY
+	new_assembly_from_gac (a_name: STRING; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET): CONF_ASSEMBLY
 			-- Create a `CONF_ASSEMBLY' object from gac.
 		require
 			a_name_not_void: a_name /= Void

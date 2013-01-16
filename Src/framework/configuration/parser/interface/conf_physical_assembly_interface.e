@@ -22,7 +22,7 @@ feature -- Access, in compiled only
 	dependencies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER];
 			-- Dependencies on other assemblies indexed by their assembly ID.
 
-	guid: STRING
+	guid: READABLE_STRING_32
 			-- A unique id.
 		deferred
 		ensure

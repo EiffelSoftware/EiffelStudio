@@ -173,11 +173,12 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
-			l_libraries, l_clusters, l_overrides, l_assemblies: HASH_TABLE [CONF_GROUP, STRING]
+			l_libraries, l_clusters, l_overrides: HASH_TABLE [CONF_GROUP, STRING]
+			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			l_pre, l_old_pre: CONF_PRECOMPILE
 			l_old_group: CONF_GROUP
 			l_consumer_manager: CONF_CONSUMER_MANAGER
-			l_old_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
+			l_old_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			l_retried: BOOLEAN
 			l_error_count: INTEGER
 		do
@@ -270,7 +271,7 @@ feature -- Visit nodes
 							end
 						end
 					else
-						a_target.system.set_all_assemblies (create {HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]}.make (0))
+						a_target.system.set_all_assemblies (create {STRING_TABLE [CONF_PHYSICAL_ASSEMBLY]}.make (0))
 					end
 
 						-- overrides can only be in the application target, must be done at the very end

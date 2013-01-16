@@ -1621,25 +1621,25 @@ feature {NONE} -- Implementation
 		local
 			l_emitter: IL_EMITTER
 			l_man: CONF_CONSUMER_MANAGER
-			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING_8]
+			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			l_assembly: CONF_PHYSICAL_ASSEMBLY
 			l_path: STRING_32
-			l_asm: STRING
-			l_key: STRING
+			l_asm: STRING_32
+			l_key: READABLE_STRING_32
 		do
 				-- Create message
 			create l_asm.make (128)
 			l_asm.append (assembly.assembly_name)
-			l_asm.append (once ", Version=")
+			l_asm.append_string_general (once ", Version=")
 			l_asm.append (assembly.assembly_version)
-			l_asm.append (once ", Culture=")
+			l_asm.append_string_general (once ", Culture=")
 			l_asm.append (assembly.assembly_culture)
 			l_key := assembly.assembly_public_key_token
-			l_asm.append (once ", PublicKeyToken=")
+			l_asm.append_string_general (once ", PublicKeyToken=")
 			if l_key /= Void and then not l_key.is_empty then
 				l_asm.append (l_key)
 			else
-				l_asm.append ("null")
+				l_asm.append_string_general ("null")
 			end
 			degree_output.put_string ("   Consuming required assembly '" + l_asm + "'...")
 

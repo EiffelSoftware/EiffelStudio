@@ -83,7 +83,7 @@ feature -- Access
 	application_target: CONF_TARGET
 			-- Application target of the system.
 
-	il_version: STRING
+	il_version: STRING_32
 			-- IL version to use.
 
 	metadata_cache_path: PATH
@@ -95,8 +95,8 @@ feature -- Access
 			Result := metadata_cache_path.extended (short_cache_name).extended (cache_bit_platform).extended (il_version)
 		end
 
-	assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
-		-- Assemblies in the system after compilation.
+	assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY]
+		-- Assemblies in the system after compilation indexed by their UUID.
 
 feature -- Observers
 
@@ -105,7 +105,7 @@ feature -- Observers
 
 feature -- Commands
 
-	build_assemblies (a_new_assemblies: like new_assemblies; an_old_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING])
+	build_assemblies (a_new_assemblies: like new_assemblies; an_old_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE])
 			-- Build information about `a_new_assemblies' from the metadata cache and `an_old_assemblies' and store them in `assemblies'.
 		require
 			a_new_assemblies_not_void: a_new_assemblies /= Void
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 	cache_content: CACHE_INFO
 		-- Content of the metadata cache.
 
-	old_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
+	old_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 		-- Old assemblies from previous compilation.
 
 	new_assemblies: SEARCH_TABLE [CONF_ASSEMBLY]
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			a_consumed_ok: a_consumed /= Void
 		local
 			l_as_i: CONF_PHYSICAL_ASSEMBLY_INTERFACE
-			l_guid: STRING
+			l_guid: READABLE_STRING_32
 		do
 				-- see if we already have information about this assembly
 			l_guid := a_consumed.unique_id
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 		require
 			an_assembly_ok: an_assembly /= Void
 		local
-			l_guid, l_dep_guid: STRING
+			l_guid, l_dep_guid: READABLE_STRING_32
 			l_reader: EIFFEL_DESERIALIZER
 			l_referenced_assemblies_mapping: CONSUMED_ASSEMBLY_MAPPING
 			l_referenced_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 					l_cons_ass := l_referenced_assemblies.i_th (i)
 					l_dep_guid := l_cons_ass.unique_id
 						-- if it's not the assembly itself
-					if not l_dep_guid.is_equal (l_guid) then
+					if not l_dep_guid.same_string (l_guid) then
 						an_assembly.add_dependency (get_physical_assembly (l_cons_ass), i)
 					end
 					i := i + 1
@@ -541,7 +541,7 @@ feature {NONE} -- retrieving information from cache
 			cache_content_set: cache_content /= Void
 			an_assembly_ok: an_assembly /= Void and then an_assembly.is_non_local_assembly
 		local
-			l_name, l_version, l_culture, l_key: STRING
+			l_name, l_version, l_culture, l_key: READABLE_STRING_32
 			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_as: CONSUMED_ASSEMBLY
 		do
@@ -758,7 +758,7 @@ feature {NONE} -- helpers
 			cache_content_not_void: cache_content /= Void
 		local
 			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
-			l_guids: SEARCH_TABLE [STRING]
+			l_guids: SEARCH_TABLE [READABLE_STRING_32]
 		do
 				-- build list of guids in cache
 			from

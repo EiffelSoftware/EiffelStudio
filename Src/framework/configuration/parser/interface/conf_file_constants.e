@@ -184,7 +184,7 @@ feature -- Comparison
 
 feature {NONE} -- Ordering
 
-	namespace_order: HASH_TABLE [NATURAL, STRING_32]
+	namespace_order: STRING_TABLE [NATURAL]
 			-- Order numbers associated with namespaces.
 		once
 			create Result.make (10)

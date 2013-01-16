@@ -325,7 +325,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			added: debugs.has (a_name) and then debugs.item (a_name) = an_enabled
 		end
 
-	add_warning (a_name: READABLE_STRING_32; an_enabled: BOOLEAN)
+	add_warning (a_name: STRING; an_enabled: BOOLEAN)
 			-- Add a warning.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty

@@ -112,15 +112,15 @@ feature -- Callbacks
 			-- Start of attribute.
 		local
 			l_attribute: INTEGER
-			l_local: STRING_8
+			l_local: READABLE_STRING_32
 		do
 			if not is_error then
 				if
-					not a_local_part.is_case_insensitive_equal ("xmlns") and not
-					a_local_part.is_case_insensitive_equal ("xsi") and not
-					a_local_part.is_case_insensitive_equal ("schemaLocation")
+					not a_local_part.is_case_insensitive_equal_general ("xmlns") and
+					not a_local_part.is_case_insensitive_equal_general ("xsi") and
+					not a_local_part.is_case_insensitive_equal_general ("schemaLocation")
 				then
-					l_local := a_local_part.to_string_8.as_lower
+					l_local := a_local_part.as_lower
 
 					if note_level = 0 then
 							-- check if the attribute is valid for the current state
@@ -970,7 +970,7 @@ feature {NONE} -- Implementation attribute processing
 					l_location /= Void and
 					not group_list.has (l_name_8)
 				then
-					if l_location.same_string ("none") then
+					if l_location.same_string_general ("none") then
 						if
 							attached current_attributes.item (at_assembly_name) as l_assembly_name and
 							attached current_attributes.item (at_assembly_version) as l_assembly_version and
@@ -1937,13 +1937,13 @@ feature {NONE} -- Processing of options
 			end
 		end
 
-	non_client_options: ARRAY [TUPLE [name: STRING; id: INTEGER]]
+	non_client_options: ARRAY [TUPLE [name: READABLE_STRING_GENERAL; id: INTEGER]]
 			-- Non-client option names with their IDs
 		local
 			ids: like non_client_option_ids
 			i: INTEGER
 			o: like at_syntax
-			a: HASH_TABLE [like at_syntax, STRING]
+			a: STRING_TABLE [like at_syntax]
 		once
 			a := tag_attributes.item (t_option)
 			ids := non_client_option_ids
@@ -2132,29 +2132,19 @@ feature {NONE} -- Note Implementation
 
 feature {NONE} -- Implementation
 
-	lt_gt_escaped_string (s: READABLE_STRING_GENERAL): STRING_GENERAL
+	lt_gt_escaped_string (s: READABLE_STRING_32): STRING_32
 		do
-			if attached {STRING_32} s as s32 then
-				create {STRING_32} Result.make (s.count)
-				Result.append (s)
-			else
-				create {STRING_8} Result.make (s.count)
-				Result.append (s)
-			end
+			create Result.make (s.count)
+			Result.append (s)
 			lt_gt_escape_string (Result)
 		end
 
-	lt_gt_escape_string (s: STRING_GENERAL)
+	lt_gt_escape_string (s: STRING_32)
 		require
-			is_string_8_or_32: attached {STRING_32} s or attached {STRING_8} s
+			s_attached: s /= Void
 		do
-			if attached {STRING_32} s as s32 then
-				s32.replace_substring_all (lt_entity, lt_string)
-				s32.replace_substring_all (gt_entity, gt_string)
-			elseif attached {STRING_8} s as s8 then
-				s8.replace_substring_all (lt_entity, lt_string)
-				s8.replace_substring_all (gt_entity, gt_string)
-			end
+			s.replace_substring_all (lt_entity, lt_string)
+			s.replace_substring_all (gt_entity, gt_string)
 		end
 
 feature {NONE} -- Implementation state transitions
@@ -2353,7 +2343,7 @@ feature {NONE} -- Implementation state transitions
 			Result_not_void: Result /= Void
 		end
 
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING_8], INTEGER]
+	tag_attributes: HASH_TABLE [STRING_TABLE [INTEGER], INTEGER]
 			-- Mapping of possible attributes of tags.
 		local
 			l_attr: like tag_attributes.item

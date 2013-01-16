@@ -667,7 +667,7 @@ feature {NONE} -- Implementation
 			if valid_eiffel_extension (a_file) then
 				create l_file_name.make (a_path.count + 1 + a_file.count)
 				l_file_name.append_string_general (a_path)
-				l_file_name.append (once "/")
+				l_file_name.append_character ('/')
 				l_file_name.append_string_general (a_file)
 					-- try to get it directly from old_group by filename
 				if
@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 						-- l_name is set by all execution paths since the ones where it is not set raise an error.
 					check l_name /= Void end
 						-- Check file name against class name
-					if not a_file.substring (1, a_file.count - 1 - eiffel_file_extension.count).is_case_insensitive_equal (l_name) then
+					if not a_file.substring (1, a_file.count - 1 - eiffel_file_extension.count).is_case_insensitive_equal_general (l_name) then
 							-- We propose the correct file name. The file name construction follows the same schema as above
 						create l_suggested_filename.make (25)
 						l_suggested_filename.append_string (a_cluster.location.evaluated_directory.name)

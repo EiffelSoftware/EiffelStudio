@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_text_attribute (n: READABLE_STRING_GENERAL; v: READABLE_STRING_32)
+	append_text_attribute (n: READABLE_STRING_GENERAL; v: READABLE_STRING_GENERAL)
 			-- Append XML attribute of name `n' with value `v'
 			-- in the form ' n="v"'.
 		require
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
 			l_custs: like {CONF_CONDITION}.custom
-			l_custom: HASH_TABLE [BOOLEAN, READABLE_STRING_32]
+			l_custom: STRING_TABLE [BOOLEAN]
 			l_versions: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			l_name: STRING
 			l_ver: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
@@ -1170,7 +1170,7 @@ feature {NONE} -- Implementation
 		do
 			if not a_note.element_name.is_empty then
 				append_text_indent ("<")
-				append_text (a_note.element_name)
+				append_text_escaped (a_note.element_name)
 				indent := indent + 1
 				l_attr := a_note.attributes
 				from

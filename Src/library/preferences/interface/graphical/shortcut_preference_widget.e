@@ -208,17 +208,17 @@ feature {NONE} -- Implementation
             Result := valid_shortcut_text
         end
 
-	converted_saveable_string (a_string: STRING): STRING
+	converted_saveable_string (a_string: READABLE_STRING_32): STRING_32
 			-- Convert `a_string' into saveable format.
 			-- `Alt+Ctrl+Shift+Key' becomes `True+True+True+Key'
 		local
-			values: LIST [STRING]
+			values: LIST [READABLE_STRING_32]
 			l_cnt: INTEGER
 			is_alt,
 			is_ctrl,
 			is_shift: BOOLEAN
 			l_string,
-			l_key: detachable STRING
+			l_key: detachable READABLE_STRING_32
 		do
 			values := a_string.split ('+')
 			create Result.make_empty

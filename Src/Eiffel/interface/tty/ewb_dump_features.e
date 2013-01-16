@@ -33,7 +33,7 @@ create
 
 feature
 
-	make (a_type_name: STRING)
+	make (a_type_name: like class_name)
 			-- Initialize class_name from `a_type_name'.
 		local
 			i: INTEGER
@@ -48,7 +48,7 @@ feature
 			class_name.to_upper
 		end
 
-	make_verbose (s: STRING)
+	make_verbose (s: like class_name)
 			-- Make with `operand_dump' set True.
 		do
 			make (s)
@@ -170,7 +170,7 @@ feature {NONE} -- Properties
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

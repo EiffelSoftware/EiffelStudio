@@ -4613,7 +4613,7 @@ feature {NONE} -- Implementation: helpers
 		local
 			i, l_count: INTEGER
 			item: FEATURE_NAME
-			creators: HASH_TABLE [FEATURE_ADAPTER, STRING]
+			creators: STRING_TABLE [FEATURE_ADAPTER]
 			feat_adapter: FEATURE_ADAPTER
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
@@ -4627,7 +4627,7 @@ feature {NONE} -- Implementation: helpers
 				i > l_count
 			loop
 				item := a_list.i_th (i)
-				feat_adapter := creators.item (item.internal_name.name_8)
+				feat_adapter := creators.item (item.internal_name.name_32)
 				if feat_adapter /= Void then
 					feat_adapter.format (l_text_formatter_decorator)
 					l_text_formatter_decorator.put_new_line
@@ -5031,7 +5031,7 @@ invariant
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

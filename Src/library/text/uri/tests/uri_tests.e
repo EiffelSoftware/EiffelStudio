@@ -10,13 +10,70 @@ inherit
 
 feature -- Tests
 
+	test_misc
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("file:/foo/bar")
+			assert ("scheme", uri.scheme.same_string ("file"))
+			assert ("no authority", same_string (uri.authority, Void))
+			assert ("path", uri.path.same_string ("/foo/bar"))
+
+			create uri.make_from_string ( "foo://bar/")
+			assert ("scheme", uri.scheme.same_string ("foo"))
+			assert ("authority", same_string (uri.authority, "bar"))
+			assert ("path", uri.path.same_string ("/"))
+
+			create uri.make_from_string ( "foo://bar/")
+			assert ("scheme", uri.scheme.same_string ("foo"))
+			assert ("authority", same_string (uri.authority, "bar"))
+			assert ("path", uri.path.same_string ("/"))
+
+			create uri.make_from_string ( "foo:///path")
+			assert ("scheme", uri.scheme.same_string ("foo"))
+			assert ("authority", same_string (uri.authority, ""))
+			assert ("path", uri.path.same_string ("/path"))
+		end
+
+	test_resolve
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("foo://example.com/a/b/c/./d")
+			uri := uri.resolved_uri
+			assert ("resolved path", same_string (uri.path, "/a/b/c/d"))
+
+			create uri.make_from_string ("foo://example.com/a/b/c/../d")
+			uri := uri.resolved_uri
+			assert ("resolved path", same_string (uri.path, "/a/b/d"))
+
+			create uri.make_from_string ("foo://example.com/a/b/c/.././././../../d")
+			uri := uri.resolved_uri
+			assert ("resolved path", same_string (uri.path, "/d"))
+
+			create uri.make_from_string ("foo://example.com/a/b/c/.././././../../../../d")
+			uri := uri.resolved_uri
+			assert ("resolved path", same_string (uri.path, "/d"))
+
+			create uri.make_from_string ("foo://example.com/a/b/c/.././././../../../../d/../..")
+			uri := uri.resolved_uri
+			assert ("resolved path", same_string (uri.path, ""))
+		end
+
 	test_urls
 		local
 			uri: URI
 		do
+			create uri.make_from_string ("http://user:pass@foo.com:8888/path%%20to%%20foo")
+			assert ("path", uri.path.same_string ("/path%%20to%%20foo"))
+
+			create uri.make_from_string ("http://user:pass@foo.com:8888/path to foo")
+			assert ("path", uri.path.same_string ("/path%%20to%%20foo"))
+
+
 			create uri.make_from_string ("http://www.example.com/foo/bar?id=123&abc=def#page-1")
 			assert ("scheme", uri.scheme.same_string ("http"))
-			assert ("hostname", same_string (uri.hostname, "www.example.com"))
+			assert ("host", same_string (uri.host, "www.example.com"))
 			assert ("path", uri.path.same_string ("/foo/bar"))
 			assert ("query", same_string (uri.query, "id=123&abc=def"))
 			assert ("fragment", same_string (uri.fragment, "page-1"))
@@ -26,7 +83,7 @@ feature -- Tests
 
 			create uri.make_from_string ("http://www.example.com:8080/foo/bar?id=123&abc=def#page-1")
 			assert ("scheme", uri.scheme.same_string ("http"))
-			assert ("hostname", same_string (uri.hostname, "www.example.com"))
+			assert ("host", same_string (uri.host, "www.example.com"))
 			assert ("port", uri.port = 8080)
 			assert ("path", uri.path.same_string ("/foo/bar"))
 			assert ("query", same_string (uri.query, "id=123&abc=def"))
@@ -35,7 +92,7 @@ feature -- Tests
 			create uri.make_from_string ("http://john:smith@www.example.com:8080/foo/bar?id=123&abc=def#page-1")
 			assert ("scheme", uri.scheme.same_string ("http"))
 			assert ("authority", same_string (uri.authority, "john:smith@www.example.com:8080"))
-			assert ("hostname", same_string (uri.hostname, "www.example.com"))
+			assert ("host", same_string (uri.host, "www.example.com"))
 			assert ("username", same_string (uri.username, "john"))
 			assert ("password", same_string (uri.password, "smith"))
 			assert ("port", uri.port = 8080)
@@ -45,10 +102,52 @@ feature -- Tests
 
 			create uri.make_from_string ("ftp://ftp.is.co.za/rfc/rfc1808.txt")
 			assert ("scheme", uri.scheme.same_string ("ftp"))
-			assert ("hostname", same_string (uri.hostname, "ftp.is.co.za"))
+			assert ("host", same_string (uri.host, "ftp.is.co.za"))
 			assert ("path", uri.path.same_string ("/rfc/rfc1808.txt"))
 			assert ("query", same_string (uri.query, Void))
 			assert ("fragment", same_string (uri.fragment, Void))
+		end
+
+	test_queries
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://www.example.com/foo/bar")
+
+			assert ("query", same_string (uri.query, Void))
+
+			uri.add_query_parameter ("a", "b")
+			assert ("query", same_string (uri.query, "a=b"))
+
+			uri.add_query_parameter ("a", "b")
+			assert ("query", same_string (uri.query, "a=b&a=b"))
+
+			uri.add_query_parameter ("a=b", "b=a")
+			assert ("query", same_string (uri.query, "a=b&a=b&a%%3Db=b%%3Da"))
+
+			uri.remove_query
+			assert ("query", same_string (uri.query, Void))
+
+			uri.remove_query
+			uri.add_query_parameter ("?", "&")
+			assert ("query", same_string (uri.query, "%%3F=%%26"))
+
+			uri.remove_query
+			uri.add_query_parameter ("&", "?")
+			assert ("query", same_string (uri.query, "%%26=%%3F"))
+
+			uri.remove_query
+			uri.add_query_parameter ("?a=b", "xyz")
+			assert ("query", same_string (uri.query, "%%3Fa%%3Db=xyz"))
+
+
+			uri.remove_query
+			uri.add_query_parameter ("lst[a]", "b")
+			assert ("query", same_string (uri.query, "lst%%5Ba%%5D=b"))
+
+			uri.remove_query
+			uri.add_query_parameter ("lst[a][b]", "c")
+			assert ("query", same_string (uri.query, "lst%%5Ba%%5D%%5Bb%%5D=c"))
 		end
 
 	test_mailto
@@ -77,7 +176,7 @@ feature -- Tests
 		do
 			create uri.make_from_string ("file:///etc/hosts")
 			assert ("scheme", uri.scheme.same_string ("file"))
-			assert ("hostname", same_string (uri.hostname, ""))
+			assert ("host", same_string (uri.host, ""))
 			assert ("authority", same_string (uri.authority, ""))
 			assert ("path", uri.path.same_string ("/etc/hosts"))
 			assert ("query", same_string (uri.query, Void))
@@ -105,7 +204,89 @@ feature -- Tests
 --			urn:oasis:names:specification:docbook:dtd:xml:4.1.2
 		end
 
+	test_opaque
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("a:b:c:d:e")
+			print (uri_split_to_string (uri) + "%N")
+		end
+
+	test_host
+			-- IP-literal / IPv4address / reg-name			
+		local
+			uri: URI
+		do
+			-- IP v4
+			create uri.make_from_string ("http://192.168.1.1:8080/path")
+			print (uri_split_to_string (uri) + "%N")
+
+			-- IP v6
+			create uri.make_from_string ("http://[::]")
+			assert ("host", same_string (uri.host, "[::]"))
+			print (uri_split_to_string (uri) + "%N")
+
+			create uri.make_from_string ("http://[::1]")
+			assert ("host", same_string (uri.host, "[::1]"))
+			print (uri_split_to_string (uri) + "%N")
+
+			create uri.make_from_string ("http://[1::]")
+			assert ("host", same_string (uri.host, "[1::]"))
+			print (uri_split_to_string (uri) + "%N")
+
+			create uri.make_from_string ("http://[::192.168.0.1]")
+			assert ("host", same_string (uri.host, "[::192.168.0.1]"))
+			print (uri_split_to_string (uri) + "%N")
+
+			create uri.make_from_string ("http://[::ffff:192.168.0.1]")
+			assert ("host", same_string (uri.host, "[::ffff:192.168.0.1]"))
+			print (uri_split_to_string (uri) + "%N")
+
+			create uri.make_from_string ("http://[000:01:02:003:004:5:6:007]")
+			assert ("host", same_string (uri.host, "[000:01:02:003:004:5:6:007]"))
+			print (uri_split_to_string (uri) + "%N")
+
+			create uri.make_from_string ("http://[A:b:c:DE:fF:0:1:aC]")
+			assert ("host", same_string (uri.host, "[A:b:c:DE:fF:0:1:aC]"))
+			print (uri_split_to_string (uri) + "%N")
+
+			create uri.make_from_string ("http://user:pass@[000:01:02:003:004:5:6:007]:8080/foo/bar")
+			assert ("host", same_string (uri.host, "[000:01:02:003:004:5:6:007]"))
+			assert ("port", uri.port = 8080)
+			assert ("userinfo", same_string (uri.userinfo, "user:pass"))
+			assert ("path", same_string (uri.path, "/foo/bar"))
+			print (uri_split_to_string (uri) + "%N")
+
+			-- reg-name
+
+
+		end
+
 feature --
+
+	uri_split_to_string (uri: URI): STRING
+		do
+			create Result.make (10)
+			Result.append_character ('[')
+			across
+				uri.split as c
+			loop
+				if Result.count > 1 then
+					Result.append_character (',')
+					Result.append_character (' ')
+				end
+				Result.append_string_general (c.key)
+				Result.append_character ('=')
+				if attached c.item as s then
+					Result.append_character ('"')
+					Result.append (s)
+					Result.append_character ('"')
+				else
+					Result.append ("Void")
+				end
+			end
+			Result.append_character (']')
+		end
 
 	same_string (s1, s2: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do

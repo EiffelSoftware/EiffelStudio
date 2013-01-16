@@ -110,6 +110,12 @@ feature -- Status report
 
 feature -- Standard output
 
+	name: STRING_32
+			-- Readable representation of `code'.
+		do
+			Result := (key_strings @ code)
+		end
+
 	out: STRING
 			-- Readable representation of `code'.
 		do

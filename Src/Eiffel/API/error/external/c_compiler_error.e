@@ -154,7 +154,7 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- <Precursor>
 		local
-			l_message: STRING
+			l_message: like message
 		do
 			l_message := message
 			if not l_message.is_empty then
@@ -187,7 +187,7 @@ feature {NONE} -- Output
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

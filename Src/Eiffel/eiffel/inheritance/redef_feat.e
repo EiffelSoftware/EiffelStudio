@@ -157,35 +157,10 @@ feature {NONE} -- Implementation
 			end
 
 			new_feat.set_assert_id_set (new_assert_id_set)
-			debug ("ASSERTION")
-				trace (new_feat)
-				io.put_new_line
-			end
-		end
-
-	trace (new_feat: FEATURE_I)
-		local
-			assert_set: ASSERT_ID_SET
-			i: INTEGER
-		do
-			io.put_string ("Feature joined or merged: ")
-			io.put_string (new_feat.feature_name_32)
-			io.put_new_line
-			assert_set := new_feat.assert_id_set
-			if assert_set /= Void then
-				from
-					i := 1
-				until
-					i > assert_set.count
-				loop
-					assert_set.item (i).trace
-					i := i + 1
-				end
-			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

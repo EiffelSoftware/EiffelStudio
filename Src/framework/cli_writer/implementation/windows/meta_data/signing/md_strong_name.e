@@ -13,11 +13,11 @@ create
 
 feature {NONE} -- Initialize
 
-	make_with_version (a_runtime_version: STRING)
+	make_with_version (a_runtime_version: STRING_32)
 			-- Initialize Current. Initialize `exists' accordingly.
 		require
 			a_runtime_version_not_void: a_runtime_version /= Void
-			has_version: (create {IL_ENVIRONMENT}).installed_runtimes.has (a_runtime_version)
+			has_version: (create {IL_ENVIRONMENT}).is_version_installed (a_runtime_version)
 		local
 			l_dll: WEL_DLL
 		do
@@ -36,7 +36,7 @@ feature -- Status report
 	exists: BOOLEAN
 			-- Is `mscorsn.dll' available?
 
-	runtime_version: STRING
+	runtime_version: STRING_32
 			-- Version for which we are signing.
 
 feature {NONE} -- Status report

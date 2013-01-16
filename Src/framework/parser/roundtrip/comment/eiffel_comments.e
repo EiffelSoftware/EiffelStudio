@@ -131,24 +131,8 @@ feature -- Comparison
 			valid_result: Result /= Void
 		end;
 
-feature -- Debug
-
-	trace
-		do
-			from
-				start
-			until
-				after
-			loop
-				io.error.put_string (item.content_32);
-				io.error.put_new_line
-				forth
-			end
-			io.error.put_new_line;
-		end
-
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

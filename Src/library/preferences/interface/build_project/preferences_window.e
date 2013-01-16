@@ -52,10 +52,7 @@ feature {NONE} -- Initialization
 			view_make_with_hidden (a_preferences, a_show_hidden_flag)
 			create grid
 
-			check
-				preferenese_root_is_valid_as_string_8: preferences_root.is_valid_as_string_8
-			end
-			root_node_text := preferences_root.as_string_8
+			root_node_text := preferences_root
 			display_update_agent := agent on_preference_changed_externally
 
 			default_create
@@ -343,18 +340,18 @@ feature {NONE} -- Implementation
 		local
  			it,
  			l_parent: EV_TREE_ITEM
-			l_pref_hash: HASH_TABLE [EV_TREE_ITEM, STRING]
-			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
+			l_pref_hash: STRING_TABLE [EV_TREE_ITEM]
+			l_known_pref_hash: STRING_TABLE [PREFERENCE]
 			l_pref_name,
-			l_pref_parent_name,
 			l_pref_parent_full_name,
-			l_prev_parent_name: detachable STRING
-			l_pref_parent_short_name: STRING
+			l_prev_parent_name: detachable READABLE_STRING_GENERAL
+			l_pref_parent_name: STRING_32
+			l_pref_parent_short_name: READABLE_STRING_GENERAL
 			l_node_count,
 			l_index: INTEGER
 
-			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
-			l_split_string: LIST [STRING]
+			l_sorted_preferences: SORTED_TWO_WAY_LIST [READABLE_STRING_GENERAL]
+			l_split_string: LIST [READABLE_STRING_GENERAL]
 		do
 				-- Retrieve known preferences
 			l_known_pref_hash := preferences.preferences
@@ -365,7 +362,7 @@ feature {NONE} -- Implementation
 					-- Alphabetically sort the known preferences
 				create l_sorted_preferences.make
 				l_sorted_preferences.compare_objects
-				l_sorted_preferences.append (create {ARRAYED_LIST [STRING]}.make_from_array (l_known_pref_hash.current_keys))
+				l_sorted_preferences.append (create {ARRAYED_LIST [READABLE_STRING_GENERAL]}.make_from_array (l_known_pref_hash.current_keys))
 				l_sorted_preferences.sort
 
 					-- Generate a root node
@@ -403,7 +400,7 @@ feature {NONE} -- Implementation
 								if not l_pref_parent_name.is_empty then
 									l_pref_parent_name.extend ('.')
 								end
-								l_pref_parent_name.append (l_pref_parent_short_name)
+								l_pref_parent_name.append_string_general (l_pref_parent_short_name)
 								l_index := l_index + 1
 								create l_parent.make_with_text (formatted_name (l_pref_parent_short_name))
 								if folder_icon /= Void then
@@ -458,14 +455,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_right_list (a_pref_name: STRING)
+	fill_right_list (a_pref_name: READABLE_STRING_GENERAL)
 			-- Fill right list.
 		require
 			pref_name_not_void: a_pref_name /= Void
 			pref_name_not_empty: not a_pref_name.is_empty
 		local
-			l_names: SORTED_TWO_WAY_LIST [STRING]
-			l_pref_name: STRING
+			l_names: SORTED_TWO_WAY_LIST [READABLE_STRING_GENERAL]
+			l_pref_name: READABLE_STRING_GENERAL
 			grid_name_item,
 			grid_default_item,
 			grid_type_item: detachable EV_GRID_LABEL_ITEM
@@ -482,7 +479,7 @@ feature {NONE} -- Implementation
 				-- Retrieve known preferences
 			create l_names.make
 
-			l_names.append (create {ARRAYED_LIST [STRING]}.make_from_array (preferences.preferences.current_keys))
+			l_names.append (create {ARRAYED_LIST [READABLE_STRING_GENERAL]}.make_from_array (preferences.preferences.current_keys))
 			l_names.sort
 			from
 				l_names.start
@@ -602,10 +599,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	should_display_preference (a_pref_name, b_pref_name: STRING): BOOLEAN
+	should_display_preference (a_pref_name, b_pref_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Should we display the preference in the right list?
 		do
-			Result := a_pref_name.substring (1, b_pref_name.count).is_equal (b_pref_name)
+			Result := a_pref_name.substring (1, b_pref_name.count).same_string (b_pref_name)
 			if Result then
 				Result := not (a_pref_name.substring (b_pref_name.count + 2, a_pref_name.count).has ('.'))
 			end
@@ -753,12 +750,12 @@ feature {NONE} -- Implementation
 			Result := a_name.substring (a_name.last_index_of ('.', a_name.count) + 1, a_name.count)
 		end
 
-	formatted_name (a_name: STRING): STRING
+	formatted_name (a_name: READABLE_STRING_GENERAL): STRING_32
 			-- Formatted name for display
 		do
-			create Result.make_from_string (a_name)
-			Result.replace_substring_all ("_", " ")
-			Result.replace_substring (Result.item (1).upper.out, 1, 1)
+			create Result.make_from_string_general (a_name)
+			Result.replace_substring_all ({STRING_32} "_", {STRING_32} " ")
+			Result.put (Result.item (1).upper, 1)
 		end
 
 	grid_remove_and_clear_all_rows (g: EV_GRID)
@@ -807,10 +804,10 @@ feature {NONE} -- Private attributes
 	show_full_preference_name: BOOLEAN
 			-- Show the full name of the preference in the list?
 
-	root_node_text: STRING
+	root_node_text: STRING_32
 			-- Text for the top level node.
 
-	selected_preference_name: detachable STRING
+	selected_preference_name: detachable READABLE_STRING_GENERAL
 			-- Name of preference selected in tree.  Used to programatically to update the right-side list.
 
 	root_icon: detachable EV_PIXMAP note option: stable attribute end

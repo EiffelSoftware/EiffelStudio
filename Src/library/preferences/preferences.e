@@ -174,7 +174,7 @@ feature -- Importation
 			a_storage_not_void: a_storage /= Void
 		local
 			vals: like session_values
-			k: STRING_8
+			k: READABLE_STRING_GENERAL
 			v: STRING_32
 			p: detachable PREFERENCE
 		do
@@ -185,7 +185,7 @@ feature -- Importation
 			until
 				vals.after
 			loop
-				k := vals.key_for_iteration.string
+				k := vals.key_for_iteration
 				v := vals.item_for_iteration.string
 				session_values.force (v, k)
 				p := preferences.item (k)
@@ -218,12 +218,14 @@ feature -- Status report
 feature -- Access
 
 	error_message: detachable STRING_8
-			-- Message explaining why `Current' could not be initialized.	
+			-- Message explaining why `Current' could not be initialized.
+		obsolete
+			"Use `error_message_32' instead."
 		require
 			error_message_is_valid_as_string_8: error_message_is_valid_as_string_8
 		do
 			if attached error_message_32 as err then
-				Result := err.as_string_8
+				Result := err.to_string_8
 			end
 		end
 
@@ -458,14 +460,14 @@ feature -- Storage access
 
 feature {PREFERENCE_EXPORTER} -- Implementation
 
-	default_values: HASH_TABLE [TUPLE [description: detachable STRING_32; value: detachable STRING_32; hidden: BOOLEAN; restart: BOOLEAN], STRING]
+	default_values: STRING_TABLE [TUPLE [description: detachable STRING_32; value: detachable STRING_32; hidden: BOOLEAN; restart: BOOLEAN]]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
 
-	session_values: HASH_TABLE [STRING_32, STRING_8]
+	session_values: STRING_TABLE [STRING_32]
 			-- Hash table of user-defined values retrieved from the underlying data store.
 			-- Depending upon the chosen implementation this will be the Windows registry or an XML file.
 
-	preferences: HASH_TABLE [PREFERENCE, STRING]
+	preferences: STRING_TABLE [PREFERENCE]
 			-- Preferences part of Current.
 
 	resources: like preferences
@@ -624,7 +626,7 @@ feature {NONE} -- Implementation
 										if att_pref_value /= Void and then not att_pref_value.is_empty then
 											pref_value.prepend (att_pref_value)
 										end
-										default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name.to_string_8)
+										default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name)
 									end
 								else
 									pref_name := Void

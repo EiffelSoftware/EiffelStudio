@@ -61,7 +61,7 @@ feature {PREFERENCES} -- Initialization
 					until
 						l_key_values.after
 					loop
-						l_name := l_key_values.item.to_string_8 -- FIXME: preference does not support unicode pref name
+						l_name := l_key_values.item
 						if attached key_value (l_keyp, l_name) as l_key_value then
 							l_value := l_key_value.string_value
 							if l_name.has ('_') then

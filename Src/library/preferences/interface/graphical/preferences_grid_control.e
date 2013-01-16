@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	build_full_name_to_display (a_pref_name: STRING): STRING_32
+	build_full_name_to_display (a_pref_name: READABLE_STRING_GENERAL): STRING_32
 			-- Name to show on display for a preference name
 		do
 			Result := a_pref_name.as_string_32
@@ -716,9 +716,9 @@ feature {NONE} -- Implementation
 	build_structured
 			-- Fill with preferences structured hierarchically.
 		local
-			l_pref_hash: HASH_TABLE [EV_GRID_ROW, STRING]
+			l_pref_hash: STRING_TABLE [EV_GRID_ROW]
 			l_pref_name,
-			l_pref_parent_full_name: STRING
+			l_pref_parent_full_name: READABLE_STRING_GENERAL
 			l_sorted_preferences: like sorted_known_preferences_by
 			l_row: detachable EV_GRID_ROW
 			l_pref: PREFERENCE
@@ -772,13 +772,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_parent_structure_preference_row (a_pref_parent_full_name: STRING; a_grid_structure: HASH_TABLE [EV_GRID_ROW, STRING])
+	add_parent_structure_preference_row (a_pref_parent_full_name: READABLE_STRING_GENERAL; a_grid_structure: STRING_TABLE [EV_GRID_ROW])
 		require
 			structured_mode: grid.is_tree_enabled
 			no_row_for_pref: not a_grid_structure.has (a_pref_parent_full_name)
 		local
-			l_parent_name: STRING
-			l_short_name: STRING
+			l_parent_name: READABLE_STRING_GENERAL
+			l_short_name: READABLE_STRING_GENERAL
 			l_row: detachable EV_GRID_ROW
 			l_grid_label: EV_GRID_LABEL_ITEM
 		do
@@ -865,7 +865,7 @@ feature {NONE} -- Implementation
 			-- Exclude hidden preferences when `a_show_hidden' is False.
 		local
 			l_prefs_to_sort: detachable LIST [PREFERENCE]
-			l_known_pref_ht: HASH_TABLE [PREFERENCE, STRING]
+			l_known_pref_ht: STRING_TABLE [PREFERENCE]
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]]
 			l_compare_agent: PREDICATE [ANY, TUPLE [TUPLE [STRING_32, STRING_32], TUPLE [STRING_32, STRING_32]]]
 			l_proxy_comparable: PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]
@@ -1284,7 +1284,7 @@ feature {NONE} -- Implementation
 			description_text.remove_text
 		end
 
-	short_preference_name (a_name: STRING): STRING
+	short_preference_name (a_name: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- The short, non-unique name of a preference
 		require
 			name_not_void: a_name /= Void
@@ -1294,7 +1294,7 @@ feature {NONE} -- Implementation
 			a_name /= Result
 		end
 
-	parent_preference_name (a_name: STRING): STRING
+	parent_preference_name (a_name: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- The short, non-unique name of a preference
 		require
 			name_not_void: a_name /= Void
@@ -1305,12 +1305,12 @@ feature {NONE} -- Implementation
 			a_name /= Result
 		end
 
-	formatted_name (a_name: STRING): STRING
+	formatted_name (a_name: READABLE_STRING_GENERAL): STRING_32
 			-- Formatted name for display
 		do
-			create Result.make_from_string (a_name)
-			Result.replace_substring_all ("_", " ")
-			Result.replace_substring (Result.item (1).upper.out, 1, 1)
+			create Result.make_from_string_general (a_name)
+			Result.replace_substring_all ({STRING_32} "_", {STRING_32} " ")
+			Result.put (Result.item (1).upper, 1)
 		ensure
 			a_name /= Result
 		end
@@ -1446,7 +1446,8 @@ feature {NONE} -- Filtering
 		require
 			in_flat_mode: not grid.is_tree_enabled
 		local
-			s, l_match_text: STRING
+			s: STRING_32
+			l_match_text: STRING
 			s32: STRING_32
 			l_matched: BOOLEAN
 			l_preference: PREFERENCE
@@ -1461,7 +1462,8 @@ feature {NONE} -- Filtering
 			matches := Void
 			if not grid.is_tree_enabled and not update_matches_requested then
 				l_prefs := preferences.preferences.linear_representation
-				l_match_text := filter_text_box.text.as_string_8  --| Keep only CHARACTER_8 values
+					--| FIXME: We only keep CHARACTER_8 values for the time being
+				l_match_text := filter_text_box.text.as_string_8_conversion
 				l_filter_also_value := filter_value_check_box.is_selected
 				if l_match_text.is_empty then
 					matches := l_prefs
@@ -1487,7 +1489,7 @@ feature {NONE} -- Filtering
 						l_matched := False
 						if l_filter_engine /= Void then
 							if not s32.is_empty	then
-								l_filter_engine.set_text (s32.as_string_8)
+								l_filter_engine.set_text (s32)
 								l_matched := l_filter_engine.pattern_matches
 							end
 							if not l_matched and l_filter_also_value then

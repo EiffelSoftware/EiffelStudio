@@ -61,7 +61,7 @@ feature -- Properties
 	current_feature_table: FEATURE_TABLE;
 			-- Feature table for for current_ast structure
 
-	creation_table: HASH_TABLE [FEATURE_ADAPTER, STRING];
+	creation_table: STRING_TABLE [FEATURE_ADAPTER];
 			-- Table of feature adapter for a given feature name
 
 	categories:	PART_SORTED_TWO_WAY_LIST [CATEGORY];
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 			-- Array of ordered feature clause comments
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

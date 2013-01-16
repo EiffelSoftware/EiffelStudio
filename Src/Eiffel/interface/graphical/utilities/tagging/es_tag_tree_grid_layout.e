@@ -157,10 +157,10 @@ feature {EC_TAG_TREE_NODE} -- Basic operations
 	process_directory_node (a_node: EC_TAG_TREE_DIRECTORY_NODE [G])
 			-- <Precursor>
 		local
-			l_name: STRING
+			l_name: READABLE_STRING_32
 		do
 			if attached a_node.item (project_access) as l_cluster then
-				l_name := a_node.name.as_string_8
+				l_name := a_node.name
 				last_pixmap := pixmap_from_group_path (l_cluster, l_name)
 				token_writer.add_group (l_cluster, l_name)
 			else
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

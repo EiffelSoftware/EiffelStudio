@@ -23,7 +23,7 @@ feature -- Query (Pixmap)
 			result_not_void: Result /= Void
 		end
 
-	pixmap_from_group_path (a_group: CONF_GROUP; a_path: STRING): EV_PIXMAP
+	pixmap_from_group_path (a_group: CONF_GROUP; a_path: READABLE_STRING_GENERAL): EV_PIXMAP
 		require
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
@@ -692,7 +692,7 @@ feature {NONE} -- Implementation
 		-- Class icon state flags		
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

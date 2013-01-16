@@ -116,7 +116,7 @@ feature -- Access
 		require
 			has_value: has_value
 		do
-			Result := text_value.to_string_8
+			Result := text_value.as_string_8_conversion
 		ensure
 			not_void: Result /= Void
 		end

@@ -249,7 +249,7 @@ feature -- Status Report
 	cluster: CONF_CLUSTER
 			-- Selected cluster
 
-	path: STRING
+	path: IMMUTABLE_STRING_32
 			-- Selected subfolder path
 
 feature -- Status Settings
@@ -914,7 +914,7 @@ invariant
 	cluster_implies_path: cluster /= Void implies path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

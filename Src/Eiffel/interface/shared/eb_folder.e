@@ -21,22 +21,20 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_cluster: CONF_CLUSTER; a_path: STRING)
+	make (a_cluster: CONF_CLUSTER; a_path: like path)
 			-- Initialize
 		require
 			a_cluster_not_void: a_cluster /= Void
 			a_path_valid: a_path /= Void and then not a_path.is_empty
 		do
-			cluster := a_cluster
-			path := a_path
-			build_name
+			make_with_name (a_cluster, a_path, cluster.location.build_path (path, {STRING_32} "").entry.name)
 		ensure
 			a_cluster_not_void: cluster = a_cluster
 			a_path_valid: path = a_path and then not path.is_empty
 			a_name_not_void: name /= Void
 		end
 
-	make_with_name (a_cluster: CONF_CLUSTER; a_path: STRING; a_name: STRING)
+	make_with_name (a_cluster: CONF_CLUSTER; a_path: like path; a_name: like name)
 			-- Initialize with name
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -57,10 +55,10 @@ feature -- Access
 	cluster: CONF_CLUSTER
 			-- Cluster in which current is
 
-	path: STRING
+	path: IMMUTABLE_STRING_32
 			-- Relative path to `cluster' of current fold
 
-	name: READABLE_STRING_32
+	name: IMMUTABLE_STRING_32
 			-- Name of the folder
 
 feature -- Comparison
@@ -70,8 +68,8 @@ feature -- Comparison
 			-- equal to current object?
 		do
 			Result := (cluster = other.cluster and then
-						path.is_equal (other.path)) and then
-						name.is_equal (other.name)
+						path.same_string (other.path)) and then
+						name.same_string (other.name)
 		end
 
 feature -- Element change
@@ -96,19 +94,11 @@ feature -- Element change
 			path_not_void: path = a_path
 		end
 
-feature {NONE} -- Implementation
-
-	build_name
-			-- Build name.
-		do
-			name := cluster.location.build_path (path, "").entry.name
-		end
-
 invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

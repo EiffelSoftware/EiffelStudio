@@ -323,7 +323,7 @@ feature -- Activation
 			end
 		end
 
-	show_subfolder (a_group: CONF_GROUP; a_path: STRING)
+	show_subfolder (a_group: CONF_GROUP; a_path: READABLE_STRING_32)
 			-- Expand all parents of `a_group' and `a_path' and show the folder.
 		require
 			a_group_not_void: a_group /= Void
@@ -331,7 +331,7 @@ feature -- Activation
 		local
 			path: LINKED_LIST [CONF_GROUP]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			l_sub: LIST [STRING]
+			l_sub: LIST [READABLE_STRING_32]
 		do
 			path := cluster_parents (a_group)
 			from
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 			result_not_empty: not Result.is_empty
 		end
 
-	find_subfolder_in (a_name: STRING; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM
+	find_subfolder_in (a_name: READABLE_STRING_32; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM
 			-- Fint the tree item associated to `a_name' in `parent_cluster'.
 		require
 			parent_cluster_not_void: parent_cluster /= Void
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 				parent_cluster.after or Result /= Void
 			loop
 				l_folder ?= parent_cluster.item
-				if l_folder /= Void and then l_folder.name.is_equal (a_name) then
+				if l_folder /= Void and then l_folder.name.same_string (a_name) then
 					Result := l_folder
 				end
 				parent_cluster.forth
@@ -1144,7 +1144,7 @@ invariant
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -86,7 +86,7 @@ feature  -- Access
 			end
 		end
 
-	stone_name: STRING_GENERAL
+	stone_name: READABLE_STRING_GENERAL
 			-- Name of Current stone
 		do
 			Result := ""
@@ -95,7 +95,7 @@ feature  -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

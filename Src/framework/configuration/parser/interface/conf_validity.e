@@ -66,6 +66,7 @@ feature -- Basic validity queries
 			-- is `a_regexp' a valid regular expression?
 		local
 			l_regexp: REGULAR_EXPRESSION
+			u: UTF_CONVERTER
 		do
 			if a_regexp /= Void then
 				create l_regexp

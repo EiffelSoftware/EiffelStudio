@@ -164,7 +164,7 @@ feature -- Value
 			Result := pnd_preference.value
 		end
 
-	eis_path: STRING
+	eis_path: STRING_32
 			-- EIS path for project searching of incoming location
 		do
 			Result := eis_path_preference.value

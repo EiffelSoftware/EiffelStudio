@@ -145,8 +145,11 @@ feature -- Code generation
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	string_value: STRING
+			-- UTF-8 version of the character.
+		local
+			u: UTF_CONVERTER
 		do
-			Result := wchar_text (character_value)
+			Result := u.utf_32_string_to_utf_8_string_8 (wchar_text (character_value))
 		end
 
 feature -- Multi-branch instruction processing
@@ -161,7 +164,7 @@ invariant
 	consistent_type: is_character_8 xor is_character_32
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -808,6 +808,7 @@ feature {NONE} -- Generate externals
 			l_added_items: SEARCH_TABLE [STRING_32]
 			l_path: STRING_32
 			l_state: CONF_STATE
+			u: UTF_CONVERTER
 		do
 			if not a_is_generated then
 				make_file.put_string (a_name)
@@ -836,7 +837,7 @@ feature {NONE} -- Generate externals
 					if not l_added_items.has (l_path) then
 						l_added_items.force (l_path)
 						make_file.put_string (a_prefix)
-						make_file.put_string (l_path)
+						make_file.put_string (u.utf_32_string_to_utf_8_string_8 (l_path))
 					end
 				end
 			end

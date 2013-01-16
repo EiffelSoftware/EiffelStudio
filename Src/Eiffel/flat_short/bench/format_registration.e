@@ -562,7 +562,7 @@ feature {NONE} -- Implementation
 			valid_array: array /= Void
 		local
 			cat: like current_category;
-			feature_clause_order_table: HASH_TABLE [INTEGER, STRING];
+			feature_clause_order_table: STRING_TABLE [INTEGER];
 			default_feature_clause_order: INTEGER;
 			order, i, c: INTEGER;
 			comment: STRING_32;

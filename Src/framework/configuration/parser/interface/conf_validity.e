@@ -62,14 +62,15 @@ feature -- Basic validity queries
 			Result := w.has (a_warning)
 		end
 
-	valid_regexp (a_regexp: STRING): BOOLEAN
+	valid_regexp (a_regexp: READABLE_STRING_GENERAL): BOOLEAN
 			-- is `a_regexp' a valid regular expression?
 		local
 			l_regexp: REGULAR_EXPRESSION
 		do
 			if a_regexp /= Void then
 				create l_regexp
-				l_regexp.compile (a_regexp)
+					-- FIXME: We currently perform the match on the UTF-8 version of the string.
+				l_regexp.compile (u.utf_32_string_to_utf_8_string_8 (a_regexp))
 				Result := l_regexp.is_compiled
 			end
 		end

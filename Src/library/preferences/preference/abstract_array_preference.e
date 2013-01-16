@@ -110,7 +110,7 @@ feature -- Status Setting
 --			index_set: selected_index = a_index
 		end
 
-feature -- Query
+feature -- Status report
 
 	is_choice: BOOLEAN
 			-- Is this preference a single choice or the full list?

@@ -46,14 +46,14 @@ feature {NONE} -- Initialization
 			build := a_build
 		end
 
-	make_from_string (a_version: STRING)
+	make_from_string (a_version: READABLE_STRING_GENERAL)
 			-- Parse `a_version' or set an error
 			-- Has to be of format XXX.XXX.XXX.XXX where only the first part is obligatory.
 			-- regexp to match it is \d*(\.\d*){0,3}
 		require
 			a_version_not_void: a_version /= Void
 		local
-			l_parts: LIST [STRING]
+			l_parts: LIST [READABLE_STRING_GENERAL]
 			l_version: ARRAY [NATURAL_16]
 		do
 			create l_version.make_filled ({NATURAL_16}0, 1, 4)

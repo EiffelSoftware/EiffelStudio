@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	read_config_file (prof: STRING)
+	read_config_file (prof: READABLE_STRING_GENERAL)
 			-- Reads the values from the configuration file
 		local
 			file_name: PATH
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation: Access
 		-- Eiffel installation directory under "bench/profiler".
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

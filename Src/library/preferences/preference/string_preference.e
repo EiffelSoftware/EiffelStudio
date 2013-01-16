@@ -32,6 +32,7 @@ feature {NONE} -- Implementation
 	to_value (a_value: READABLE_STRING_GENERAL): STRING
 			-- `a_value' to type of `value'.
 		do
+				-- Ok to truncate per precondition `is_value_compatible'.
 			Result := a_value.to_string_8
 		end
 

@@ -485,7 +485,7 @@ feature {NONE} -- Grid event
 			-- If ever you drop an 'xml' file inside the grid
 		do
 			if is_file_dropping_enabled then
-				load_xml_file (files.first.as_string_8)
+				load_xml_file (files.first)
 			end
 		end
 

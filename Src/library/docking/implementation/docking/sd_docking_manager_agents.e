@@ -585,7 +585,7 @@ feature {SD_DEBUG_ACCESS} -- For debug
 			not_destroyed: not is_destroyed
 		do
 			if attached {SD_DOCKING_ZONE} a_container as l_docking_zone then
-				io.put_string ("%N " + a_indent + a_container.generating_type + " " + l_docking_zone.content.unique_title.as_string_8)
+				io.put_string ("%N " + a_indent + a_container.generating_type + " " + l_docking_zone.content.unique_title)
 			else
 				if a_container /= Void then
 					io.put_string ("%N " + a_indent + a_container.generating_type)

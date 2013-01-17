@@ -120,6 +120,28 @@ feature -- Access
 			read_immutable_string_8_not_void: Result /= Void
 		end
 
+	read_string_32: STRING_32
+			-- Read next sequence of characters encoded in UTF-8.
+		require
+			is_ready: is_ready_for_reading
+		local
+			u: UTF_CONVERTER
+		do
+			Result := u.utf_8_string_8_to_string_32 (read_string_8)
+		ensure
+			read_string_8_not_void: Result /= Void
+		end
+
+	read_immutable_string_32: IMMUTABLE_STRING_32
+			-- Read next sequence of characters encoded in UTF-8 as an IMMUTABLE_STRING_32.
+		require
+			is_ready: is_ready_for_reading
+		do
+			create Result.make_from_string (read_string_32)
+		ensure
+			read_string_8_not_void: Result /= Void
+		end
+
 	read_boolean: BOOLEAN
 			-- Read next boolean
 		require
@@ -281,7 +303,7 @@ feature -- Element change
 			write_natural_32 (v.natural_32_code)
 		end
 
-	write_string_8 (v: STRING)
+	write_string_8 (v: READABLE_STRING_8)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
@@ -301,24 +323,26 @@ feature -- Element change
 			end
 		end
 
-	write_immutable_string_8 (v: IMMUTABLE_STRING_8)
-			-- Write `v'.
+	write_string_32 (v: READABLE_STRING_GENERAL)
+			-- Write `v' in UTF-8 format.
 		require
 			is_ready: is_ready_for_writing
 			v_not_void: v /= Void
 		local
-			i, nb: INTEGER
+			u: UTF_CONVERTER
 		do
-			write_compressed_natural_32 (v.count.to_natural_32)
-			from
-				i := 1
-				nb := v.count + 1
-			until
-				i = nb
-			loop
-				write_character_8 (v.item (i))
-				i := i + 1
-			end
+			write_string_8 (u.utf_32_string_to_utf_8_string_8 (v))
+		end
+
+	write_immutable_string_8 (v: IMMUTABLE_STRING_8)
+			-- Write `v'.
+		obsolete
+			"Use `write_string_8' instead."
+		require
+			is_ready: is_ready_for_writing
+			v_not_void: v /= Void
+		do
+			write_string_8 (v)
 		end
 
 	write_boolean (v: BOOLEAN)

@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_regexp: STRING)
+	make (a_regexp: READABLE_STRING_GENERAL)
 			-- Create.
 		do
 			regexp := a_regexp
@@ -40,7 +40,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	regexp: STRING;
+	regexp: READABLE_STRING_GENERAL;
 		-- Incorrect regular expression.
 
 note

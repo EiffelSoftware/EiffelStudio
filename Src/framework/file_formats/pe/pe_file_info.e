@@ -12,12 +12,12 @@ class
 
 feature -- Initialization
 
-	is_com2_pe_file (a_file_name: STRING): BOOLEAN
+	is_com2_pe_file (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if `a_file_name' is a COM2 (.NET) PE file.
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: (create {RAW_FILE}.make (a_file_name)).exists
+			a_file_name_exists: (create {RAW_FILE}.make_with_name (a_file_name)).exists
 		local
 			l_pe_file: RAW_FILE
 			l_offset: NATURAL_32
@@ -25,7 +25,8 @@ feature -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_pe_file.make_open_read (a_file_name)
+				create l_pe_file.make_with_name (a_file_name)
+				l_pe_file.open_read
 				l_pe_file.move (0x3c)
 
 				l_pe_file.read_natural_32 -- PE header (PEH) offset
@@ -76,7 +77,7 @@ feature {NONE} -- Constants
 			-- Size of 64bit optional header
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -89,22 +90,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {PE_FILE_INFO}

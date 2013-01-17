@@ -216,16 +216,14 @@ feature {NONE} -- Implementation
 			icon_down := icon_pixmaps.sort_descending_icon
 		end
 
-	build_full_name_to_display (a_pref: STRING): STRING_32
+	build_full_name_to_display (a_pref: READABLE_STRING_GENERAL): STRING_32
 			-- Build a translated full name of a preference.
 		local
 			l_str_32: STRING_32
-			l_string: STRING
-			l_list: LIST [STRING]
+			l_list: LIST [READABLE_STRING_GENERAL]
 		do
-			l_string := a_pref
-			create l_str_32.make (l_string.count)
-			l_list := l_string.split ('.')
+			create l_str_32.make (a_pref.count)
+			l_list := a_pref.split ('.')
 			if not l_list.is_empty then
 				from
 					l_list.start
@@ -336,7 +334,7 @@ feature {NONE} -- Widget initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

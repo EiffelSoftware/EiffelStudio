@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	generate_key (a_filename, a_runtime_version: STRING)
+	generate_key (a_filename: READABLE_STRING_GENERAL; a_runtime_version: STRING_32)
 			-- Generate a new key pair with 'a_filename' as filename for the specified
 			-- .NET version
 		require
@@ -32,7 +32,7 @@ feature -- Initialization
 				create l_signing.make_with_version (a_runtime_version)
 				if l_signing.exists then
 					l_public_key := l_signing.new_public_private_key_pair
-					create a_file.make (a_filename)
+					create a_file.make_with_name (a_filename)
 					l_status := 2
 					a_file.open_write
 					l_status := 3

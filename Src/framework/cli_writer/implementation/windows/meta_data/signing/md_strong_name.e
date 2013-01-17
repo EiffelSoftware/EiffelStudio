@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make_with_version (a_runtime_version: STRING_32)
+	make_with_version (a_runtime_version: like runtime_version)
 			-- Initialize Current. Initialize `exists' accordingly.
 		require
 			a_runtime_version_not_void: a_runtime_version /= Void

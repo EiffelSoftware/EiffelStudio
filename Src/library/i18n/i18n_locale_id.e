@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			script_set: script /= Void implies script ~ a_script
 		end
 
-	make_from_string (identifier: STRING_32)
+	make_from_string (identifier: READABLE_STRING_GENERAL)
 			-- Initialize locale id with identifier.
 			--
 			-- There are several ways this identifier could look
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			index: INTEGER
 			splits: LIST [STRING_32]
 		do
-			create temp.make_from_string(identifier)
+			create temp.make_from_string_general (identifier)
 				-- remove @ and keep SS if there
 			index := temp.index_of ('@',1)
 			if index > 0 then

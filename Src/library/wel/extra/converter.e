@@ -144,7 +144,8 @@ feature {NONE} -- Implementation
 			if l_utf8 then
 				a_file.put_string (u.utf_32_string_to_utf_8_string_8 (input_file))
 			else
-				a_file.putstring (input_file.as_string_8)
+					-- Per earlier check, it is safe to truncate.
+				a_file.putstring (input_file.to_string_8)
 			end
 			a_file.putstring (".%"%N%N")
 			a_file.putstring ("class%N%T")

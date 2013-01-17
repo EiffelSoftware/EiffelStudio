@@ -64,7 +64,7 @@ feature -- Access (Target)
 		local
 			uuid: STRING_32
 			l_target: CONF_TARGET
-			l_target_name: STRING_32
+			l_target_name: STRING
 			l_uuid: UUID
 		do
 			last_target_uuid := Void
@@ -73,7 +73,7 @@ feature -- Access (Target)
 			if strings.count >= target_id_sections then
 				uuid := decode (strings.i_th (target_id_sections - 1))
 				last_target_uuid := uuid
-				l_target_name := decode (strings.i_th (target_id_sections))
+				l_target_name := decode_string_8 (strings.i_th (target_id_sections))
 				last_target_name := l_target_name
 				if universe.target.system.uuid.out.same_string_general (uuid) then
 						-- Get the target from current system by name.
@@ -131,7 +131,7 @@ feature -- Access (Group)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			group_name: STRING_32
+			group_name: STRING
 			l_target: CONF_TARGET
 			l_ass_id: STRING_32
 		do
@@ -149,7 +149,7 @@ feature -- Access (Group)
 			if Result = Void then
 				l_target := target_of_id (a_id)
 				if strings.count >= group_id_sections then
-					group_name := decode (strings.i_th (group_id_sections))
+					group_name := decode_string_8 (strings.i_th (group_id_sections))
 					last_group_name := group_name
 					if l_target /= Void then
 						Result := l_target.groups.item (group_name)
@@ -222,13 +222,13 @@ feature -- Access (Class)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			class_name: STRING_32
+			class_name: STRING
 			l_group: CONF_GROUP
 		do
 			last_class_name := Void
 			l_group ?= group_of_id (a_id)
 			if strings.count >= class_id_sections then
-				class_name := decode (strings.i_th (class_id_sections))
+				class_name := decode_string_8 (strings.i_th (class_id_sections))
 				last_class_name := class_name
 				if l_group /= Void and then l_group.classes /= Void then
 					Result := l_group.classes.item (class_name)
@@ -301,7 +301,7 @@ feature  -- Element Change
 				end
 			else
 				if is_for_url then
-					internal_name_sep := decode (name_sep)
+					internal_name_sep := decode_string_8 (name_sep)
 				end
 			end
 			is_for_url := a_b
@@ -718,18 +718,14 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			result_not_void: Result /= Void
 		end
 
-	decode (a_string: STRING): STRING_32
-			-- Decode `a_string' to be original one.
+	decode_string_8 (a_string: STRING): STRING
+			-- Decode `a_string' to the original one.
 			-- Hex presentations are converted back to what it was.
-		require
-			a_string_not_void: a_string /= Void
 		local
 			i: INTEGER
 			l_code, c, hc, lc: NATURAL_32
-			l_result: STRING
-			u: UTF_CONVERTER
 		do
-			create l_result.make (a_string.count)
+			create Result.make (a_string.count)
 			from
 				i := 1
 			until
@@ -742,13 +738,24 @@ feature {NONE} -- Implementation. Encoding/Decoding
 						i := i + 1
 						lc := a_string.code (i)
 						c := natural_of_code (hc, lc)
-						l_result.append_code (c)
+						Result.append_code (c)
 				else
-					l_result.append_code (l_code)
+					Result.append_code (l_code)
 				end
 				i := i + 1
 			end
-			Result := u.utf_8_string_8_to_string_32 (l_result)
+		end
+
+	decode (a_string: STRING): STRING_32
+			-- Decode `a_string' to the Unicode original one.
+			-- Hex presentations are converted back to what it was.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			u: UTF_CONVERTER
+		do
+				-- Decode the UTF-8 sequence first and then convert it back to STRING_32.
+			Result := u.utf_8_string_8_to_string_32 (decode_string_8 (a_string))
 		ensure
 			result_not_void: Result /= Void
 		end

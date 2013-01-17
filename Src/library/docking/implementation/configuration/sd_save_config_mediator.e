@@ -325,10 +325,6 @@ feature {NONE} -- Implementation
 						check valid: l_zone.content.state.last_floating_height > 0 end
 						a_config_data.set_width (l_zone.content.state.last_floating_width)
 						a_config_data.set_height (l_zone.content.state.last_floating_height)
-						debug ("docking")
-							io.put_string ("%N SD_DOCKING_MANAGER zone")
-							io.put_string ("%N  zone: " + l_zone.content.unique_title.as_string_8)
-						end
 						if attached {SD_UPPER_ZONE} a_widget as l_upper_zone then
 							a_config_data.set_is_minimized (l_upper_zone.is_minimized)
 						end

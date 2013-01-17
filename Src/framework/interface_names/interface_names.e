@@ -286,9 +286,9 @@ feature -- Choices
 			result_not_void: Result /= Void
 		end
 
-	c_compiler_errors_all: STRING 		do Result := locale.translation ("Errors and Warnings") end
-	c_compiler_errors_errors: STRING 	do Result := locale.translation ("Errors Only") end
-	c_compiler_errors_none: STRING 		do Result := locale.translation ("None") end
+	c_compiler_errors_all: STRING_32 		do Result := locale.translation ("Errors and Warnings") end
+	c_compiler_errors_errors: STRING_32 	do Result := locale.translation ("Errors Only") end
+	c_compiler_errors_none: STRING_32 		do Result := locale.translation ("None") end
 
 feature -- Choice original (No translation)
 
@@ -551,7 +551,7 @@ feature -- Accelerator, focus label and menu name
 	m_Exec_into: STRING_32				do Result := locale.translation("Step In&to")	end
 	m_Exit_project: STRING_32			do Result := locale.translation("E&xit")	end
 	m_Explorer_bar: STRING_32			do Result := locale.translation("&Tools")	end
-	m_Explorer_bar_item: STRING 			do Result := locale.translation ("Explorer bar item") end
+	m_Explorer_bar_item: STRING_32 			do Result := locale.translation ("Explorer bar item") end
 	m_Export_to: STRING_32				do Result := locale.translation("Save Cop&y As...")	end
 	m_Export_XMI: STRING_32 				do Result := locale.translation("E&xport XMI...")	end
 	m_Expression_evaluation: STRING_32	do Result := locale.translation("Expression Evaluation")	end
@@ -944,7 +944,7 @@ feature -- Menu mnenomics
 	m_Remove_condition: STRING_32		do Result := locale.translation("Remove Condition")	end
 	m_Remove_this_bkpt: STRING_32		do Result := locale.translation("&Remove This Breakpoint")	end
 	m_Edit_this_bkpt: STRING_32			do Result := locale.translation("&Edit This Breakpoint")	end
-	m_Eidt_in_external_editor: STRING	do Result := locale.translation("&Edit in External Editor") end
+	m_Eidt_in_external_editor: STRING_32	do Result := locale.translation("&Edit in External Editor") end
 	m_Run_to_this_point: STRING_32		do Result := locale.translation("&Run to This Point")	end
 	m_Send_stone_to_context: STRING_32	do Result := locale.translation("S&ynchronize Context Tool")	end
 	m_Set_conditional_breakpoint: STRING_32 do Result := locale.translation("Set &Conditional Breakpoint")	end
@@ -1148,7 +1148,7 @@ feature -- Label texts
 	l_Clickable: STRING_32				do Result := locale.translation("Clickable view")	end
 	l_cluster: STRING_32					do Result := locale.translation ("Cluster") end
 	l_cluster_colon: STRING_32			do Result := locale.translation("Cluster:")	end
-	l_cluster_is_not_in_the_system_anymore (a_cluster: STRING): STRING
+	l_cluster_is_not_in_the_system_anymore (a_cluster: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Cluster $1 is not in the system anymore."), [a_cluster])
 		end
@@ -2697,13 +2697,13 @@ feature -- Description texts
 	e_Save_dynamic_lib_definition: STRING_32 do Result := locale.translation("Save this dynamic library definition")	end
 	e_Show_class_cluster: STRING_32		do Result := locale.translation("Locate currently edited class or cluster")	end
 	e_Send_stone_to_context: STRING_32	do Result := locale.translation("Synchronize context")	end
-	e_description: STRING do Result := "Separator" end
+	e_description: STRING_32 do Result := "Separator" end
 	e_Separate_stone: STRING_32			do Result := locale.translation("Unlink the context tool from the other components")	end
 	e_Set_stack_depth: STRING_32			do Result := locale.translation("Set maximum call stack depth")	end
 	e_Shell: STRING_32					do Result := locale.translation("Send to external editor")	end
 	e_Switch_num_format_to_hex: STRING_32 do Result := locale.translation("Switch to hexadecimal format")	end
 	e_Switch_num_format_to_dec: STRING_32 do Result := locale.translation("Switch to decimal format")	end
-	e_Switch_num_formating: STRING		do Result := locale.translation ("Hexadecimal/Decimal formating") end
+	e_Switch_num_formating: STRING_32		do Result := locale.translation ("Hexadecimal/Decimal formating") end
 	e_Toggle_state_of_expressions: STRING_32		do Result := locale.translation("Enable/Disable expressions")	end
 	e_Toggle_stone_management: STRING_32 do Result := locale.translation("Link or not the context tool to other components")	end
 	e_Undo: STRING_32					do Result := locale.translation("Undo")	end

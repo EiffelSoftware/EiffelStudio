@@ -162,7 +162,7 @@ feature -- Titles
 	t_setup_feature_domain: STRING_32 do Result := locale.translation ("Setup feature domain") end
 	l_to_do_dialog: STRING_32 do Result := locale.translation ("To do information") end
 	t_add_new_value_evaluator: STRING_32 do Result := locale.translation ("Add new value evaluator") end
-	t_add_new_constant_value_retriever: STRING do Result := locale.translation ("Add new constant value retriever") end
+	t_add_new_constant_value_retriever: STRING_32 do Result := locale.translation ("Add new constant value retriever") end
 	t_remove_value_retriever: STRING_32 do Result := locale.translation ("Remove selected value retriever") end
 	t_remove_all_value_retriever: STRING_32 do Result := locale.translation ("Remove all value retriever") end
 	t_setup_value_criterion: STRING_32 do Result := locale.translation ("Setup value criterion") end

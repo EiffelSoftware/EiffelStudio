@@ -33,9 +33,8 @@ feature -- Match
 					l_pattern.extend ('*')
 				end
 			end
-				-- |FIXME: We need to ensure Unicode wildcard matching.
-			wild_matcher.set_pattern (l_pattern.as_string_8)
-			wild_matcher.set_text (a_string.as_string_8.as_lower)
+			wild_matcher.set_pattern (l_pattern)
+			wild_matcher.set_text (a_string.as_lower)
 			if wild_matcher.pattern_matches then
 				Result := True
 			end

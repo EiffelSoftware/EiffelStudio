@@ -29,11 +29,11 @@ feature {NONE} -- Creation
 			alias_name_not_void: f.alias_name /= Void
 		do
 			set_class (system.current_class)
-			set_feature_name (f.visual_name)
+			set_feature_name (f.visual_name_32)
 			set_location (f.alias_name)
 		ensure
 			class_c_set: class_c /= Void
-			feature_name_set: feature_name = f.visual_name
+			feature_name_set: feature_name.same_string (f.visual_name_32)
 			location_set: line = f.alias_name.start_location.line and column = f.alias_name.start_location.column
 		end
 
@@ -43,7 +43,7 @@ feature -- Access
 			-- Error code
 
 ; note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

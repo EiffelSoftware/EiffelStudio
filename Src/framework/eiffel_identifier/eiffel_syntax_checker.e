@@ -10,10 +10,7 @@ class
 	EIFFEL_SYNTAX_CHECKER
 
 inherit
-
 	SYNTAX_STRINGS
-
-	SHARED_ENCODING_CONVERTER
 
 feature -- Status report
 
@@ -41,10 +38,12 @@ feature -- Status report
 			Result := is_valid_config_identifier (gn)
 		end
 
-	is_valid_feature_name_32 (fn: STRING_32): BOOLEAN
+	is_valid_feature_name_32 (fn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `fn' a valid feature name?
+		local
+			u: UTF_CONVERTER
 		do
-			Result := is_valid_feature_name (encoding_converter.utf32_to_utf8 (fn))
+			Result := is_valid_feature_name (u.utf_32_string_to_utf_8_string_8 (fn))
 		end
 
 	is_valid_target_name (tn: READABLE_STRING_GENERAL): BOOLEAN

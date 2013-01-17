@@ -77,11 +77,14 @@ feature -- Access, in compiled only, not stored to configuration file
 
 feature -- Access queries
 
-	sub_group_by_name (a_name: STRING): CONF_GROUP
+	sub_group_by_name (a_name: READABLE_STRING_GENERAL): CONF_GROUP
 			-- Return sub group with `a_name' if there is any.
 		do
 			if library_target /= Void then
-				Result := library_target.groups.item (a_name)
+					-- It is ok for the time being to use `as_string_8_conversion' since
+					-- names are just STRING_8 instances, but it would be better to update
+					-- the configuration library to accept STRING_32 too.
+				Result := library_target.groups.item (a_name.as_string_8_conversion)
 			end
 		end
 

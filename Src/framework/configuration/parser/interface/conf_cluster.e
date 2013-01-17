@@ -351,7 +351,7 @@ feature -- Access queries
 			Result := accessible_groups_cache
 		end
 
-	sub_group_by_name (a_name: STRING): CONF_GROUP
+	sub_group_by_name (a_name: READABLE_STRING_GENERAL): CONF_GROUP
 			-- Return sub cluster with `a_name' if there is any.
 		do
 			if children /= Void then
@@ -360,7 +360,7 @@ feature -- Access queries
 				until
 					Result /= Void or children.after
 				loop
-					if children.item.name.is_equal (a_name) then
+					if children.item.name.same_string_general (a_name) then
 						Result := children.item
 					end
 					children.forth

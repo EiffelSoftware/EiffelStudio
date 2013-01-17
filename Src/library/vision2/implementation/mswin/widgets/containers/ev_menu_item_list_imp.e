@@ -48,61 +48,6 @@ feature -- Initialization
 			Precursor
 		end
 
-feature -- Standard output
-
-	print_radio_groups
-		local
-			cur: CURSOR
-			sep_imp: detachable EV_MENU_SEPARATOR_IMP
-			list_imp: detachable EV_MENU_ITEM_LIST_IMP
-		do
-			cur := ev_children.cursor
-			from
-				io.put_string ("Menu:%N")
-				print_radio_group (radio_group)
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				sep_imp ?= ev_children.item
-				if sep_imp /= Void then
-					io.put_string ("Separator:%N")
-					print_radio_group (sep_imp.radio_group)
-				end
-				list_imp ?= ev_children.item
-				if list_imp /= Void then
-					list_imp.print_radio_groups
-				end
-				ev_children.forth
-			end
-			ev_children.go_to (cur)
-		end
-
-	print_radio_group (g: like radio_group)
-		local
-			cur: CURSOR
-		do
-			if g = Void then
-				io.put_string ("%T(no radio-group)%N")
-			elseif g.is_empty then
-				io.put_string ("%T(empty group)%N")
-			else
-				cur := g.cursor
-				from
-					g.start
-				until
-					g.off
-				loop
-					if g.item.is_selected then
-						io.put_string ("->")
-					end
-					io.put_string ("%T" + g.item.text.as_string_8 + "%N")
-					g.forth
-				end
-				g.go_to (cur)
-			end
-		end
-
 feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL Implementation
 
 	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER

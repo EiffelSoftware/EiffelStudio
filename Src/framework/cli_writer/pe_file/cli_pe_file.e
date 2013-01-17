@@ -235,7 +235,6 @@ feature -- Saving
 			l_strong_name_location, l_size: INTEGER
 			l_uni_string: UNI_STRING
 			l_meta_data_file_name: like file_name
-			u: FILE_UTILITIES
 		do
 				-- First compute size of PE file headers and sections.
 			compute_sizes
@@ -244,7 +243,8 @@ feature -- Saving
 			update_rvas
 
 				-- Write to file now.
-			l_pe_file := u.open_write_raw_file (file_name)
+			create l_pe_file.make_with_name (file_name)
+			l_pe_file.open_write
 
 				-- First the headers
 			l_pe_file.put_managed_pointer (dos_header, 0, dos_header.count)
@@ -299,7 +299,8 @@ feature -- Saving
 				-- to make an IStream from an Eiffel FILE.
 			l_meta_data_file_name := file_name + ".pe"
 			emitter.save (create {UNI_STRING}.make (l_meta_data_file_name))
-			l_meta_data_file := u.open_read_raw_file (l_meta_data_file_name)
+			create l_meta_data_file.make_with_name (l_meta_data_file_name)
+			l_meta_data_file.open_read
 			check valid_size: l_meta_data_file.count = meta_data_size end
 			l_meta_data_file.copy_to (l_pe_file)
 			l_meta_data_file.close
@@ -327,7 +328,8 @@ feature -- Saving
 			is_valid := False
 
 			if has_strong_name then
-				l_pe_file := u.open_read_raw_file (file_name)
+				create l_pe_file.make_with_name (file_name)
+				l_pe_file.open_read
 				create l_padding.make (l_pe_file.count)
 				l_pe_file.read_to_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
@@ -337,7 +339,8 @@ feature -- Saving
 				(l_padding.item + l_strong_name_location).memory_copy (l_signature.item,
 					l_signature.count)
 
-				l_pe_file := u.open_write_raw_file (file_name)
+				create l_pe_file.make_with_name (file_name)
+				l_pe_file.open_write
 				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
 			end
@@ -567,7 +570,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

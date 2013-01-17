@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			new_compiled_resource_file_name_not_void: Result /= Void
 		end
 
-	define_resource (a_module: IL_MODULE; a_file: PATH; a_name: STRING)
+	define_resource (a_module: IL_MODULE; a_file: PATH; a_name: STRING_32)
 			-- Add resource file `a_file' with name `a_name' to `a_module'.
 		require
 			a_module_not_void: a_module /= Void

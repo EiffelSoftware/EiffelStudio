@@ -358,10 +358,11 @@ feature {NONE} -- Implementation
 			a_code_not_void: a_code /= Void
 		local
 			l_ps_result: like postscript_result
+			u: UTF_CONVERTER
 		do
 			l_ps_result := postscript_result
 			check l_ps_result /= Void end
-			l_ps_result.append (a_code.to_string_8)
+			u.utf_32_string_into_utf_8_string_8 (a_code, l_ps_result)
 			l_ps_result.append_character ('%N')
 		end
 
@@ -371,10 +372,11 @@ feature {NONE} -- Implementation
 			a_code_not_void: a_code /= Void
 		local
 			l_ps_result: like postscript_result
+			u: UTF_CONVERTER
 		do
 			l_ps_result := postscript_result
 			check l_ps_result /= Void end
-			l_ps_result.append (a_code.to_string_8)
+			u.utf_32_string_into_utf_8_string_8 (a_code, l_ps_result)
 		end
 
 	append_line_styles (a_figure: EV_ATOMIC_FIGURE)

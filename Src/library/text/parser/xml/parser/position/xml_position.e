@@ -11,15 +11,7 @@ note
 class XML_POSITION
 
 inherit
-	ANY
-		redefine
-			out
-		end
-
 	DEBUG_OUTPUT
-		undefine
-			out
-		end
 
 create
 	make
@@ -68,12 +60,6 @@ feature -- Access
 
 feature -- Output
 
-	out: STRING
-			-- Textual representation
-		do
-			Result := to_string_32.as_string_8 -- FIXME: unicode
-		end
-
 	to_string_32: STRING_32
 			-- Textual representation
 		do
@@ -92,10 +78,10 @@ feature -- Output
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := out
+			Result := to_string_32
 		end
 
 invariant

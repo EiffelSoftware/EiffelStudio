@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_library: STRING)
+	make (a_library: READABLE_STRING_GENERAL)
 			-- Create
 		do
 			text := {STRING_32} "A system that was used as a library has a precompiled library in it: " + a_library

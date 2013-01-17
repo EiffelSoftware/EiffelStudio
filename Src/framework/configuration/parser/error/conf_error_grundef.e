@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	set_group (a_group: STRING)
+	set_group (a_group: READABLE_STRING_GENERAL)
 			-- Set the undefined group to `a_group'.
 		do
 			group := a_group
@@ -39,7 +39,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	group: STRING;
+	group: READABLE_STRING_GENERAL;
 		-- Undefined group.
 
 note

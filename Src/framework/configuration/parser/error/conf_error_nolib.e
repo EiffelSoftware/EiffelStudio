@@ -16,10 +16,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_library: STRING)
+	make (a_library: READABLE_STRING_GENERAL)
 			-- Create
 		do
-			text := {STRING_32} "A system was used as a library and has no library target specified: "+a_library
+			text := {STRING_32} "A system was used as a library and has no library target specified: " + a_library
 		end
 
 feature -- Access

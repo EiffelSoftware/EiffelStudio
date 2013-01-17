@@ -105,12 +105,11 @@ feature {PREFERENCES} -- Resource Management
 			l_preference: PREFERENCE
 			l_file: PLAIN_TEXT_FILE
 			pref_string1, pref_string2, pref_string3: STRING
-			u: FILE_UTILITIES
 		do
 			pref_string1 := "%N%T<PREFERENCE NAME=%""
 			pref_string2 := "%" VALUE=%""
 			pref_string3 := "%"/>"
-			l_file := u.make_text_file (location)
+			create l_file.make_with_name (location)
 			safe_open_write (l_file)
 			if l_file.is_open_write then
 				l_file.put_string ("<EIFFEL_DOCUMENT>")
@@ -160,13 +159,12 @@ feature {NONE} -- Implementation
 			l_tree: XML_CALLBACKS_DOCUMENT
 			l_root_element: XML_ELEMENT
 			t_preference, t_name, t_value: STRING
-			u: FILE_UTILITIES
 		do
 			create parser.make
 			create l_tree.make_null
 			parser.set_callbacks (l_tree)
 
-			l_file := u.make_text_file (location)
+			create l_file.make_with_name (location)
 			if l_file.exists and then l_file.is_readable then
 				safe_open_read (l_file)
 				if l_file.is_open_read then

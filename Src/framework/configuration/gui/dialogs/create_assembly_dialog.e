@@ -262,7 +262,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	fill_assembly (a_name, a_path: STRING)
+	fill_assembly (a_name, a_path: READABLE_STRING_GENERAL)
 			-- Fill location and name from `a_path' and `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -272,7 +272,7 @@ feature {NONE} -- Actions
 		local
 			l_il_env: IL_ENVIRONMENT
 			l_loc: STRING_32
-			l_parts: LIST [STRING]
+			l_parts: LIST [READABLE_STRING_GENERAL]
 		do
 			l_parts := a_name.split (',')
 			name.set_text (l_parts.first.as_lower)

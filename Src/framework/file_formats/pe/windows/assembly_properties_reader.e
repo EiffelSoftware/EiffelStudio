@@ -81,7 +81,7 @@ feature -- Clean up
 
 feature -- Basic operations
 
-	retrieve_assembly_properties (a_file_name: STRING): ASSEMBLY_PROPERTIES
+	retrieve_assembly_properties (a_file_name: READABLE_STRING_GENERAL): ASSEMBLY_PROPERTIES
 			-- Retrieves assembly properties for `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -137,12 +137,12 @@ feature -- Basic operations
 					create Result.make (a_file_name, l_name.string, l_hash, l_key, l_flags, l_amd)
 					if l_cache /= default_pointer and Result.is_signed then
 
-						create l_name.make (Result.out)
+						create l_name.make (Result.full_name)
 						if c_is_in_cache (l_cache, l_name.item) then
 							Result.set_is_locatable_in_gac
 						else
 								-- Check 1.x
-							create l_name.make (Result.out_v1x)
+							create l_name.make (Result.full_name_v1x)
 							if c_is_in_cache (l_cache, l_name.item) then
 								Result.set_is_locatable_in_gac
 							end
@@ -412,7 +412,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

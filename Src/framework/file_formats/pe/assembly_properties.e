@@ -12,9 +12,6 @@ class
 
 inherit
 	COMPARABLE
-		redefine
-			out
-		end
 
 create
 	make
@@ -52,10 +49,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	location: STRING
+	location: READABLE_STRING_GENERAL
 			-- Location of assembly that properties were retrieved from.
 
-	name: STRING
+	name: STRING_32
 			-- Assembly name
 
 	hash_algorithim: NATURAL_64
@@ -202,15 +199,15 @@ feature -- Comparison
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
-			Result := out.as_lower < other.out.as_lower
+			Result := name.as_lower < other.name.as_lower
 		end
 
 feature -- Output
 
-	out_v1x: STRING_8
+	full_name_v1x: STRING_32
 			-- Full assembly fusion name for 1.x version of CLR
 		do
-			Result := internal_out
+			Result := internal_full_name
 			if Result = Void then
 				create Result.make (256)
 				Result.append (name)
@@ -220,14 +217,14 @@ feature -- Output
 				Result.append (locale_string)
 				Result.append (once ", PublicKeyToken=")
 				Result.append (public_key_token_string)
-				internal_out := Result
+				internal_full_name := Result
 			end
 		end
 
-	out: STRING_8
+	full_name: STRING_32
 			-- Full assembly fusion name
 		do
-			Result := internal_out
+			Result := internal_full_name
 			if Result = Void then
 				create Result.make (256)
 				Result.append (name)
@@ -239,7 +236,7 @@ feature -- Output
 				Result.append (public_key_token_string)
 				Result.append (once ", ProcessorArchitecture=")
 				Result.append (architecture_string)
-				internal_out := Result
+				internal_full_name := Result
 			end
 		end
 
@@ -268,8 +265,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internal implementation cache
 
-	internal_out: like out
-			-- Cached version of `out'
+	internal_full_name: like name
+			-- Cached version of `full_name'
 
 feature {NONE} -- Flag values
 
@@ -305,7 +302,7 @@ invariant
 	x86_x64_exclusive: (is_x64 and not is_x86) or (not is_x64 and is_x86)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

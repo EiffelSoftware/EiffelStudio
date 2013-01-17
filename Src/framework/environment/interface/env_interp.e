@@ -8,10 +8,12 @@ feature -- Access
 	interpreted_string (s: STRING): STRING
 			-- Interpretation of string `s' where the environment variables
 			-- are interpreted
+		obsolete
+			"Use `interpreted_string_32' instead."
 		require
 			good_argument: s /= Void
 		do
-			Result := interpreted_string_32 (s).to_string_8
+			Result := interpreted_string_32 (s).as_string_8_conversion
 		ensure
 			good_result: Result /= Void
 		end
@@ -20,15 +22,17 @@ feature -- Access
 			-- Interpretation of string `s' where the environment variables
 			-- are replaced by "$(VARIABLE)"
 			--| Useful when writing makefiles.
+		obsolete
+			"Use `translated_string_32' instead."
 		require
 			good_argument: s /= Void
 		do
-			Result := translated_string_32 (s).to_string_8
+			Result := translated_string_32 (s).as_string_8_conversion
 		ensure
 			good_result: Result /= Void
 		end
 
-	interpreted_string_32 (s: READABLE_STRING_32): STRING_32
+	interpreted_string_32 (s: READABLE_STRING_GENERAL): STRING_32
 			-- Interpretation of string `s' where the environment variables
 			-- are interpreted
 		require
@@ -39,7 +43,7 @@ feature -- Access
 			good_result: Result /= Void
 		end
 
-	translated_string_32 (s: READABLE_STRING_32): STRING_32
+	translated_string_32 (s: READABLE_STRING_GENERAL): STRING_32
 			-- Interpretation of string `s' where the environment variables
 			-- are replaced by "$(VARIABLE)"
 			--| Useful when writing makefiles.
@@ -176,7 +180,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

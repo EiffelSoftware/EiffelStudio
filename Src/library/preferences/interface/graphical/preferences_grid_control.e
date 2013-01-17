@@ -1447,7 +1447,7 @@ feature {NONE} -- Filtering
 			in_flat_mode: not grid.is_tree_enabled
 		local
 			s: STRING_32
-			l_match_text: STRING
+			l_match_text: STRING_32
 			s32: STRING_32
 			l_matched: BOOLEAN
 			l_preference: PREFERENCE
@@ -1462,8 +1462,7 @@ feature {NONE} -- Filtering
 			matches := Void
 			if not grid.is_tree_enabled and not update_matches_requested then
 				l_prefs := preferences.preferences.linear_representation
-					--| FIXME: We only keep CHARACTER_8 values for the time being
-				l_match_text := filter_text_box.text.as_string_8_conversion
+				l_match_text := filter_text_box.text
 				l_filter_also_value := filter_value_check_box.is_selected
 				if l_match_text.is_empty then
 					matches := l_prefs

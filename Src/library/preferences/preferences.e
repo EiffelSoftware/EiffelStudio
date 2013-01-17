@@ -494,19 +494,18 @@ feature {NONE} -- Implementation
 		local
 			parser: XML_STOPPABLE_PARSER
 			ns: XML_NAMESPACE_RESOLVER
-			l_file: FILE
+			l_file: PLAIN_TEXT_FILE
 			l_tree: XML_CALLBACKS_DOCUMENT
 			xml_data: detachable XML_ELEMENT
 			l_document: detachable XML_DOCUMENT
 			has_error: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			create parser.make
 			create l_tree.make_null
 			create ns.set_next (l_tree)
 			parser.set_callbacks (ns)
 
-			l_file := u.make_text_file (a_default_file_name)
+			create l_file.make_with_name (a_default_file_name)
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read
 				if l_file.is_open_read then

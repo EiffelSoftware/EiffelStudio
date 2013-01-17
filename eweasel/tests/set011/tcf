@@ -1,6 +1,5 @@
-
-test_name subset-strategy-generic-disjoint
-test_description A few assertion violations and side effect of `disjoint'.
+test_name subset-strategy-hashable
+test_description A few assertion violations and side effect of `disjoint' and `sym_diff'.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

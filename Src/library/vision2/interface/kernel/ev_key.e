@@ -110,7 +110,7 @@ feature -- Status report
 
 feature -- Standard output
 
-	name: STRING_32
+	text: STRING_32
 			-- Readable representation of `code'.
 		do
 			Result := (key_strings @ code)
@@ -118,8 +118,10 @@ feature -- Standard output
 
 	out: STRING
 			-- Readable representation of `code'.
+		obsolete
+			"Use `text' instead."
 		do
-			Result := (key_strings @ code).as_string_8
+			Result := (key_strings @ code).as_string_8_conversion
 		end
 
 invariant

@@ -18,7 +18,7 @@ inherit
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	feature_name:  STRING
+	feature_name:  STRING_32
 			-- Feature involved in the error
 			-- (if Void it is in the invariant)
 
@@ -32,7 +32,7 @@ feature -- Output
 			a_text_formatter.add_new_line;
 			if feature_name /= Void then
 				a_text_formatter.add ("Feature name: ");
-				a_text_formatter.add (encoding_converter.utf8_to_utf32 (feature_name))
+				a_text_formatter.add (feature_name)
 			else
 				a_text_formatter.add ("Feature: invariant")
 			end;
@@ -45,14 +45,14 @@ feature -- Output
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
-	set_feature_name (s: STRING)
+	set_feature_name (s: like feature_name)
 			-- Assign `f' to `feature'.
 		do
 			feature_name := s
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

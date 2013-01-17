@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 				else
 					if l_routine.is_attribute then
 						error_handler.insert_error (create {VFFD1}.make_attribute_without_query_mark
-							(current_class, names_heap.item (feature_name_id), node.start_location)
+							(current_class, names_heap.item_32 (feature_name_id), node.start_location)
 						)
 					end
 					create {DYN_PROC_I} l_proc
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 					if l_routine.is_attribute then
 						if l_as.arguments /= Void then
 							error_handler.insert_error (create {VFFD1}.make_attribute_with_arguments
-								(current_class, names_heap.item (feature_name_id), node.start_location)
+								(current_class, names_heap.item_32 (feature_name_id), node.start_location)
 							)
 						end
 						create l_attr.make
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

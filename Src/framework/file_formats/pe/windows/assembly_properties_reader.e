@@ -121,7 +121,7 @@ feature -- Basic operations
 						if strong_name_token_from_assembly (l_fn.item, $l_p, $l_bytes_len) then
 							create l_bytes.make_from_pointer (l_p, l_bytes_len.to_integer_32)
 							l_len := l_bytes_len.to_integer_32
-							create l_key.make (1, l_len)
+							create l_key.make_filled (0, 1, l_len)
 							from until i = l_len  loop
 								l_key.put (l_bytes.read_natural_8 (i), i + 1)
 								i := i + 1
@@ -170,7 +170,7 @@ feature -- Status report
 
 feature {NONE} -- Caching
 
-	add_runtime_path (a_path: STRING)
+	add_runtime_path (a_path: STRING_32)
 			-- Add's `a_path' to PATH environment variable, if it has not already been added
 		require
 			a_path_attached: a_path /= Void
@@ -203,13 +203,13 @@ feature {NONE} -- Caching
 				create l_wpath.make (l_new_path)
 				l_done := c_set_environment_variable (l_wname.item, l_wpath.item)
 
-				added_paths.extend (a_path)
+				added_paths.force (True, a_path)
 			end
 		ensure
 			has_path: added_paths.has (a_path)
 		end
 
-	added_paths: ARRAYED_LIST [STRING]
+	added_paths: STRING_TABLE [BOOLEAN]
 			-- List of paths added to PATH environment variable
 		once
 			create Result.make (1)

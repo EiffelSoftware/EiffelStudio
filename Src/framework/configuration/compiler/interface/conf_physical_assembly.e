@@ -307,7 +307,7 @@ feature -- Access queries
 				-- classes in assemblies have no options
 		end
 
-	sub_group_by_name (a_name: STRING): CONF_GROUP
+	sub_group_by_name (a_name: READABLE_STRING_GENERAL): CONF_GROUP
 			-- Return assembly dependency with `a_name' if there is any.
 		do
 			if dependencies /= Void then
@@ -316,7 +316,7 @@ feature -- Access queries
 				until
 					Result /= Void or dependencies.after
 				loop
-					if dependencies.item_for_iteration.name.is_equal (a_name) then
+					if dependencies.item_for_iteration.name.same_string_general (a_name) then
 						Result := dependencies.item_for_iteration
 					end
 					dependencies.forth

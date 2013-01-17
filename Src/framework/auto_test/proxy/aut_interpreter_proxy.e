@@ -184,10 +184,8 @@ feature -- Access
 
 	proxy_log_filename: PATH
 			-- File name of proxy log
-		local
-			u: FILE_UTILITIES
 		do
-			create Result.make_from_string (u.file_name (proxy_log_file))
+			Result := proxy_log_file.path
 		ensure
 			filename_not_void: Result /= Void
 			valid_filename: Result.name.same_string (proxy_log_file.name)
@@ -1031,7 +1029,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

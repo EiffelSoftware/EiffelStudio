@@ -109,7 +109,7 @@ feature -- Project file/directory warnings
 	w_no_compilable_target: STRING_32 do Result := locale.translation ("Cannot compile project: no valid target found.") end
 			-- Error when no compilable target was found.
 
-	w_None_system: STRING do Result := locale.translation ("A system with an all classes root is not runnable.") end
+	w_None_system: STRING_32 do Result := locale.translation ("A system with an all classes root is not runnable.") end
 
 	w_unable_to_retrieve_wizard_list: STRING_32 do Result := locale.translation ("Unable to retrieve the list of installed wizard.") end
 
@@ -1000,7 +1000,7 @@ feature -- Warning messages
 
 	w_No_feature_to_display: STRING_32 do Result := locale.translation ("No features in this file") end
 
-	w_No_such_feature_in_this_class (feature_name, class_name: STRING): STRING
+	w_No_such_feature_in_this_class (feature_name, class_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("No feature named $1 could be found in class $2."), [feature_name, class_name])
 		end
@@ -1143,7 +1143,7 @@ feature -- Warning messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

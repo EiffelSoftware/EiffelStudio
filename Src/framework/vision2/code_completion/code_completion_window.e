@@ -126,7 +126,7 @@ feature -- Access
 	sorted_names: SORTABLE_ARRAY [like name_type]
 			-- list of possible names sorted alphabetically
 
-	before_complete: detachable STRING note option: stable attribute end
+	before_complete: detachable STRING_32 note option: stable attribute end
 			-- Insertion string
 
 	remainder: INTEGER

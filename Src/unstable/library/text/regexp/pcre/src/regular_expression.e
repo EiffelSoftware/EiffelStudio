@@ -253,7 +253,7 @@ feature {NONE} -- Matching
 			stop: BOOLEAN
 			l_start_bits: like start_bits
 		do
-			subject := a_subject
+			create subject.make_from_string (a_subject)
 			subject_next_start := a_start
 			subject_end := a_end
 			match_count := 0

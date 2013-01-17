@@ -212,11 +212,10 @@ feature {NONE} -- Implementation: Internal cache
 			l_ts: like time_stamp
 			l_refresh: BOOLEAN
 			l_count: INTEGER
-			u: FILE_UTILITIES
 		do
 			l_result := internal_contents
 			l_refresh := is_contents_auto_refreshed or l_result = Void
-			l_file := u.make_text_file (file_name)
+			create l_file.make_with_name (file_name)
 			if l_refresh and then l_file.exists and then l_file.is_readable then
 				l_ts := time_stamp
 				if l_file.date /= l_ts then
@@ -264,7 +263,7 @@ invariant
 	contents_has_eol: internal_contents /= Void implies internal_contents.is_empty or else internal_contents.item (internal_contents.count) = '%N'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

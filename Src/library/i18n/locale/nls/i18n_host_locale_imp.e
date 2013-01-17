@@ -96,9 +96,9 @@ feature {NONE} -- fill
 			Result.set_value_group_separator (get_value_group_separator)
 			Result.set_value_number_list_separator (get_value_number_list_separator)
 			Result.set_value_numbers_after_decimal_separator (get_value_numbers_after_decimal_separator)
-			Result.set_ansi_code_page (ansi_code_page)
-			Result.set_oem_code_page (oem_code_page)
-			Result.set_mac_code_page (mac_code_page)
+			Result.set_ansi_code_page (ansi_code_page.as_string_8_conversion)
+			Result.set_oem_code_page (oem_code_page.as_string_8_conversion)
+			Result.set_mac_code_page (mac_code_page.as_string_8_conversion)
 		end
 
 feature -- Code page

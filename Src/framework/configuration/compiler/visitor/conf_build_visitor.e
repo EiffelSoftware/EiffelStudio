@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 	assembly_cache_folder: PATH
 			-- Assembly cache folder.
 
-	il_version: STRING
+	il_version: STRING_32
 			-- Version of il to use. (If not set, use latest)
 
 	application_target: CONF_TARGET

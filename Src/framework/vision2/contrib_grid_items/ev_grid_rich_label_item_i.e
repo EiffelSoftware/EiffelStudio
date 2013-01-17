@@ -30,7 +30,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			l_font: detachable EV_FONT
 			l_offset: INTEGER
 			l_text,
-			l_subtext: STRING
+			l_subtext: STRING_32
 			l_width: INTEGER
 			l_height: INTEGER
 			l_text_dimensions: TUPLE [w:INTEGER; h:INTEGER]
@@ -91,7 +91,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		local
 			l_format: TUPLE [offset: INTEGER; color: detachable EV_COLOR; font: detachable EV_FONT]
 			l_formats: LIST [TUPLE [offset: INTEGER; color: detachable EV_COLOR; font: detachable EV_FONT]]
-			l_subtext: STRING
+			l_subtext: STRING_32
 			l_subwidth: INTEGER
 			l_color_dft: EV_COLOR
 			l_color: detachable EV_COLOR

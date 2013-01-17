@@ -209,10 +209,10 @@ feature -- Status report
 				control_required = other.control_required
 		end
 
-	out: STRING
+	text: STRING_32
 			-- String representation of key combination.
 		local
-			a_key: STRING
+			a_key: STRING_32
 		do
 			create Result.make (0)
 			if control_required then
@@ -224,7 +224,7 @@ feature -- Status report
 			if shift_required then
 				Result.append ("Shift+")
 			end
-			a_key := key.out.twin
+			a_key := key.text
 				--| We only need to convert the key to upper case if
 				--| it is one character long such as 'a'. Other keys
 				--| do not need to be converted.
@@ -234,6 +234,14 @@ feature -- Status report
 			Result.append (a_key)
 		ensure then
 			Result_attached: Result /= Void
+		end
+
+	out: STRING
+			-- <Precursor>
+		obsolete
+			"Use `text' instead."
+		do
+			Result := text.as_string_8_conversion
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ACCELERATOR_LIST} -- Implementation
@@ -246,7 +254,7 @@ feature {NONE} -- Implementation
 	create_interface_objects
 			-- <Precursor>
 		do
-			
+
 		end
 
 	create_implementation
@@ -257,10 +265,10 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- <Precursor>
 		do
-			Result := out
+			Result := text
 		end
 
 invariant

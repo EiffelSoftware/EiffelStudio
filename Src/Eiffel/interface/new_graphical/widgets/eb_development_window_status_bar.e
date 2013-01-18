@@ -309,7 +309,7 @@ feature -- Access
 	current_project_name: STRING_32
 			-- Current project name
 		local
-			l_name, l_target_name: STRING
+			l_name, l_target_name: READABLE_STRING_GENERAL
 		do
 			if eiffel_project.initialized then
 				l_target_name := eiffel_ace.lace.target_name
@@ -321,12 +321,12 @@ feature -- Access
 			end
 			if l_name /= Void then
 				if l_name.is_equal (l_target_name) then
-					Result := l_name
+					create Result.make_from_string_general (l_name)
 				else
 					create Result.make (l_name.count + 1 + l_target_name.count)
-					Result.append (l_name)
+					Result.append_string_general (l_name)
 					Result.append_character (':')
-					Result.append (l_target_name)
+					Result.append_string_general (l_target_name)
 				end
 			else
 				Result := interface_names.l_no_project
@@ -619,7 +619,7 @@ invariant
 	running_icon_index_positive: running_icon_index > 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

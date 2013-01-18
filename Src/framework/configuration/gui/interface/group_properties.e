@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 						s_not_void: s /= Void
 						a_ass_not_void: a_ass /= Void
 					do
-						a_ass.set_assembly_name (s.as_string_8)
+						a_ass.set_assembly_name (s)
 					end (?, l_assembly))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 						s_not_void: s /= Void
 						a_ass_not_void: a_ass /= Void
 					do
-						a_ass.set_assembly_culture (s.as_string_8)
+						a_ass.set_assembly_culture (s)
 					end (?, l_assembly))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 						s_not_void: s /= Void
 						a_ass_not_void: a_ass /= Void
 					do
-						a_ass.set_assembly_version (s.as_string_8)
+						a_ass.set_assembly_version (s)
 					end (?, l_assembly))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 						s_not_void: s /= Void
 						a_ass_not_void: a_ass /= Void
 					do
-						a_ass.set_assembly_public_key (s.as_string_8)
+						a_ass.set_assembly_public_key (s)
 					end (?, l_assembly))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)

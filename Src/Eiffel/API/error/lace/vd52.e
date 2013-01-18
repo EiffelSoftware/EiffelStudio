@@ -21,10 +21,10 @@ feature -- Access
 	path: READABLE_STRING_GENERAL
 			-- Path of precompiled project
 
-	compiler_version: STRING
+	compiler_version: STRING_32
 			-- Compiler version
 
-	precompiled_version: STRING
+	precompiled_version: STRING_32
 			-- Precompile version
 
 	is_defined: BOOLEAN
@@ -93,7 +93,7 @@ feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

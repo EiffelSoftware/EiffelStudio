@@ -145,7 +145,6 @@ feature {NONE} -- Implementation
 			l_end_tag_checker: XML_END_TAG_CHECKER
 			l_pos: XML_POSITION
 			l_retried: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if not l_retried then
 				is_error := False
@@ -162,7 +161,7 @@ feature {NONE} -- Implementation
 					l_ns_cb.set_associated_parser (l_parser)
 					l_parser.set_callbacks (l_ns_cb)
 
-					l_file := u.make_text_file (a_file)
+					create l_file.make_with_name (a_file)
 					if l_file.exists and then l_file.is_readable then
 						l_file.open_read
 					end

@@ -540,7 +540,7 @@ feature -- Cleanup
 feature -- Generation Structure
 
 	start_assembly_generation (
-			a_assembly_name, a_file_name: STRING;
+			a_assembly_name: STRING; a_file_name: READABLE_STRING_GENERAL;
 			a_public_key: like public_key;
 			location: PATH;
 			assembly_info: ASSEMBLY_INFO;

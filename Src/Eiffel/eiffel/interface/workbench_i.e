@@ -287,7 +287,7 @@ feature -- Commands
 			l_prc_factory:  PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 			l_success: BOOLEAN
-			l_wd: PATH
+			l_wd: IMMUTABLE_STRING_32
 			l_cmd: STRING_32
 			l_args: ARRAYED_LIST [STRING_8]
 			l_state: CONF_STATE
@@ -302,17 +302,17 @@ feature -- Commands
 				l_action := an_actions.item
 				if l_action.is_enabled (l_state) then
 					if l_action.working_directory /= Void then
-						l_wd := l_action.working_directory.evaluated_path
+						l_wd := l_action.working_directory.evaluated_path.name
 					end
 					if platform_constants.is_windows then
 						l_cmd := l_action.command
-						l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, l_wd.name)
+						l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, l_wd)
 					else
 						l_cmd := {STRING_32} "/bin/sh"
 						create l_args.make (2)
 						l_args.extend ("-c")
 						l_args.extend ("%'%'"+l_action.command+"%'%'")
-						l_prc_launcher := l_prc_factory.process_launcher (l_cmd, l_args, l_wd.name)
+						l_prc_launcher := l_prc_factory.process_launcher (l_cmd, l_args, l_wd)
 					end
 					l_prc_launcher.set_separate_console (is_gui)
 
@@ -618,12 +618,13 @@ feature -- Automatic backup
 			-- Save the information about this compilation
 		local
 			file: PLAIN_TEXT_FILE
+			u: UTF_CONVERTER
 		do
 			create file.make_with_path (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
 				file.open_append
 				file.put_string ("Compiler version: ")
-				file.put_string (Version_number)
+				file.put_string (u.utf_32_string_to_utf_8_string_8 (Version_number))
 				file.put_new_line
 				file.put_string ("Type: ")
 				file.put_string (compilation_modes.string_representation)

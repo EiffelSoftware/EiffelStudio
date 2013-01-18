@@ -204,7 +204,7 @@ feature {NONE} -- Actions
 			l_property: ASSEMBLY_PROPERTIES
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_LABEL_ITEM
-			l_value: STRING
+			l_value: STRING_32
 			l_assemblies: like assemblies
 		do
 			l_assemblies := assemblies
@@ -234,7 +234,7 @@ feature {NONE} -- Actions
 					l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_property.version_string))
 
 					if l_property.is_neutral_locale then
-						l_value := once "Netural"
+						l_value := {STRING_32} "Netural"
 					else
 						l_value := l_property.locales.first
 					end
@@ -245,13 +245,13 @@ feature {NONE} -- Actions
 					end
 
 					if l_property.is_msil then
-						l_value := once "MSIL"
+						l_value := {STRING_32} "MSIL"
 					elseif l_property.is_x86 then
-						l_value := once "x86"
+						l_value := {STRING_32} "x86"
 					elseif l_property.is_x64 then
-						l_value := once "x64"
+						l_value := {STRING_32} "x64"
 					else
-						l_value := once "Unknown"
+						l_value := {STRING_32} "Unknown"
 					end
 					l_row.set_item (5, create {EV_GRID_LABEL_ITEM}.make_with_text (l_value))
 					l_row.set_item (6, create {EV_GRID_LABEL_ITEM}.make_with_text (l_property.location))

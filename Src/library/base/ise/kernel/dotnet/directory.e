@@ -335,8 +335,6 @@ feature -- Conversion
 			-- The entries, in sequential format. Entries
 			-- that cannot be expressed in UTF-32 are excluded from
 			-- the list and one has to use `entries' to get them.
-		obsolete
-			"Use `entries' instead."
 		local
 			i, c, dc: INTEGER
 			l_string: detachable SYSTEM_STRING

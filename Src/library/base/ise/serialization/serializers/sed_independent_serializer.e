@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 				if version >= {SED_VERSIONS}.recoverable_version_6_6 then
 					if attached l_int.storable_version_of_type (l_dtype) as l_version and then not l_version.is_empty then
 						l_ser.write_boolean (True)
-						l_ser.write_immutable_string_8 (l_version)
+						l_ser.write_string_8 (l_version)
 					else
 						l_ser.write_boolean (False)
 					end

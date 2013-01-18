@@ -97,12 +97,13 @@ feature -- Basic operations
 		require
 			repository_name: repository_name /= Void
 			connected: is_connected
+		local
+			u: UTF_CONVERTER
 		do
 			implementation.load
 			loaded := true
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		ensure
@@ -140,11 +141,12 @@ feature -- Basic operations
 			connected: is_connected
 			obj_exists: object /= Void
 			is_ok: is_ok
+		local
+			u: UTF_CONVERTER
 		do
 			implementation.allocate (object, repository_name)
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		end

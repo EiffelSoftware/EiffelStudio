@@ -52,11 +52,12 @@ feature -- Basic operations
 			object_exists: object /= Void
 			is_ok: is_ok
 			owns_repository: owns_repository
+		local
+			u: UTF_CONVERTER
 		do
 			implementation.put (object)
 			if is_tracing and then not is_ok then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		end
@@ -68,11 +69,12 @@ feature -- Basic operations
 			object_exists: object /= Void
 			is_ok: is_ok
 			owns_repository: owns_repository
+		local
+			u: UTF_CONVERTER
 		do
 			implementation.force (object)
 			if is_tracing and then not is_ok then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		end

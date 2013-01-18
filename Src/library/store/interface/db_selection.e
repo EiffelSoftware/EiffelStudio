@@ -368,13 +368,13 @@ feature -- Basic operations
 			is_allocatable: is_allocatable
 		local
 			l_last_query_32: STRING_32
+			u: UTF_CONVERTER
 		do
 			l_last_query_32 := s.as_string_32
 			last_query_32 := l_last_query_32
 			implementation.query (l_last_query_32)
 			if is_tracing and then not is_ok then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		ensure

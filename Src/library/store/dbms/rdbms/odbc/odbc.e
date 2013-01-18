@@ -106,7 +106,7 @@ feature -- For DATABASE_FORMAT
 		obsolete
 			"Use `string_format_32' instead."
 		do
-			Result := string_format_32 (object)
+			Result := string_format_32 (object).as_string_8_conversion
 		end
 
 	string_format_32 (object: detachable READABLE_STRING_GENERAL): STRING_32
@@ -424,7 +424,7 @@ feature -- For DATABASE_PROC
 
 	support_sql_of_proc: BOOLEAN = True
 
-	text_not_supported: STRING
+	text_not_supported: STRING_32
 		local
 			driver_name: SQL_STRING
 		do
@@ -434,7 +434,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (Result)
+			io.put_string (Result.as_string_8_conversion)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("=====================================================================")
@@ -467,7 +467,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string)
+			io.put_string (driver_name.string.as_string_8_conversion)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("======================================================================")
@@ -491,7 +491,7 @@ feature -- For DATABASE_PROC
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string)
+			io.put_string (driver_name.string.as_string_8_conversion)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 		end
@@ -516,7 +516,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string)
+			io.put_string (driver_name.string.as_string_8_conversion)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("====================================================================")

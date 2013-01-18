@@ -99,19 +99,19 @@ feature -- Access
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
 			create Result.make (10)
-			Result.append_string (" (body_index=")
+			Result.append_string_general (" (body_index=")
 			Result.append_integer (body_index)
 			Result.append_character (')')
 
-			Result.append_string (" written_in=")
+			Result.append_string_general (" written_in=")
 			Result.append_integer (written_in)
 
 			if attached result_type as t then
-				Result.append_string (" : ")
-				Result.append_string (t.dump)
+				Result.append_string_general (" : ")
+				Result.append_string_general (t.dump)
 			end
 		end
 
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

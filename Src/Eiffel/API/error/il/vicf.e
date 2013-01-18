@@ -28,11 +28,10 @@ feature {NONE} -- Initialization
 			valid_target_file_name: not a_target_file_name.is_empty
 		local
 			l_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 			source_file_name := a_source_file_name.twin
 			target_file_name := a_target_file_name.twin
-			l_file := u.make_raw_file (a_source_file_name)
+			create l_file.make_with_name (a_source_file_name)
 			if not l_file.exists then
 				is_missing_source := True
 			else
@@ -105,7 +104,7 @@ invariant
 	valid_target_file_name: not target_file_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

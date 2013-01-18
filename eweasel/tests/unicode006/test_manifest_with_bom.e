@@ -58,52 +58,28 @@ feature -- Run time
 			l_char_32 := '%/35797/'
 		end
 
-	test_string_32
+	test_string
 		local
 			l_str: STRING_32
+			l_str_8: STRING_8
 		do
 			l_str := {STRING_32} "测试"
 			l_str := {STRING_32} "%/27979/%/35797/"
-			l_str :=
-				{STRING_32}
+			l_str := {STRING_32}
 				"[
 					测试
 				]"
 				
 			l_str := (once {STRING_32} "测试")
 			
-			l_str := "测试"	-- Error
-			l_str := "%/27979/%/35797/"	-- Error
-			l_str :=	-- Error
+			l_str_8 := "测试"	-- Error
+			l_str_8 := "%/27979/%/35797/"	-- Error
+			l_str_8 :=	-- Error
 				"[
 					测试
 				]"
 				
-			l_str := (once "测试") 	-- Error
-		end
-
-	test_string_8
-		local
-			l_str: STRING_8
-		do
-			l_str := {STRING_32} "测试"
-			l_str := {STRING_32} "%/27979/%/35797/"
-			l_str :=
-				{STRING_32}
-				"[
-					测试
-				]"
-				
-			l_str := (once {STRING_32} "测试")
-			
-			l_str := "测试" 	-- Error
-			l_str := "%/27979/%/35797/" 	-- Error
-			l_str := 	-- Error
-				"[
-					测试
-				]"
-
-			l_str := (once "测试") 	-- Error
+			l_str_8 := (once "测试") 	-- Error
 		end
 
 end

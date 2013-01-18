@@ -35,12 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
 			Result := Precursor
-				-- When `debug_output' supports READABLE_STRING_GENERAL we will remove
-				-- the call to `as_string_8_conversion'.
-			Result.prepend (enclosing_feature.feature_name_32.as_string_8_conversion)
+			Result.prepend (enclosing_feature.feature_name_32)
 		end
 
 feature {NONE} -- Implementation

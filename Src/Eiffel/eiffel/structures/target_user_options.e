@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: like name)
 			-- Initialize user specific option for target `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: STRING_32
 			-- Name for current target.
 
 	last_location: PATH
@@ -83,7 +83,7 @@ invariant
 	name_not_void: name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -64,51 +64,6 @@ feature -- Query
 			end
 		end
 
-	frozen file_extension (a_file_name: READABLE_STRING_GENERAL): STRING
-			-- Extracts a real file extension from a file, taking into consideration Unix file names
-			-- and directories beginning starting with a '.'.
-			--
-			-- `a_file_name': The name or path of the file to extract an extension from.
-			-- `Result': A file extension or an empty string if no extension was found.
-		require
-			not_a_file_name_is_empty: not a_file_name.is_empty
-		local
-			l_file_name: STRING
-			l_extension: detachable STRING
-			l_separator_i: INTEGER
-			l_non_dot_i: INTEGER
-			l_count: INTEGER
-		do
-			l_file_name := a_file_name.as_string_8
-			l_count := l_file_name.count
-
-				-- Find loop up terminating directory separator
-			l_separator_i := l_file_name.last_index_of (operating_environment.directory_separator, l_count)
-
-				-- Find the first non-dot character, used to determine the next termination lookup point.
-			l_non_dot_i := l_separator_i + 1
-			from until
-				l_non_dot_i > l_count or
-				l_file_name.item (l_non_dot_i) /= '.'
-			loop
-				l_non_dot_i := l_non_dot_i + 1
-			end
-			if l_non_dot_i < l_count then
-					-- There is at least one character after the dot
-				l_separator_i := l_file_name.last_index_of ('.', l_count)
-				if l_separator_i > l_non_dot_i and then l_separator_i < l_count then
-						-- Not a . at the beginning of the file name, so we have an extension
-					l_extension := l_file_name.substring (l_separator_i + 1, l_count)
-				end
-			end
-			if l_extension = Void then
-				create l_extension.make_empty
-			end
-			Result := l_extension
-		ensure
-			result_contains_no_extension_qualifier: not Result.has ('.')
-		end
-
 	ends_with (a_folder: PATH; a_end_with: READABLE_STRING_GENERAL a_levels: INTEGER_32): ARRAYED_LIST [PATH]
 			-- Scans a folder for matching files.
 			--
@@ -123,46 +78,6 @@ feature -- Query
 		end
 
 feature {NONE} -- Query
-
-	frozen internal_indexed_path (a_base_path: READABLE_STRING_GENERAL; a_separator: detachable READABLE_STRING_GENERAL; a_index: NATURAL): STRING
-			-- Suffixes an index to an existing file name.
-			--
-			-- `a_base_path': The original path to index.
-			-- `a_separator': An optional separator between the file name and index number.
-			-- `a_index': An index value to suffix to the base path.
-			-- `Result': A resulting indexed path.
-		require
-			not_a_base_path_is_empty: not a_base_path.is_empty
-			not_a_separator_is_empty: a_separator /= Void implies not a_separator.is_empty
-			a_index_positive: a_index > 0
-		local
-			l_extension: like file_extension
-			l_count: INTEGER
-		do
-			Result := a_base_path.as_string_8
-			if Result = a_base_path then
-				Result := Result.twin
-			end
-			l_count := Result.count
-			l_extension := file_extension (Result)
-			if not l_extension.is_empty then
-					-- Remove the extension and . for indexing.
-				l_count := l_count - (l_extension.count - 1)
-				Result.keep_head (l_count)
-			end
-
-			if a_separator /= Void then
-				Result.append_string_general (a_separator)
-			end
-			Result.append_natural_32 (a_index)
-
-			if not l_extension.is_empty then
-				Result.append_character ('.')
-				Result.append (l_extension)
-			end
-		ensure
-			result_count_is_bigger: Result.count > a_base_path.count
-		end
 
 	frozen internal_files_end_with (a_folder: PATH; a_end_with: READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_recursive: BOOLEAN): ARRAYED_LIST [PATH]
 			-- Scans a folder for matching files.
@@ -381,30 +296,6 @@ feature -- Directory operations
 
 feature -- File operations
 
-	make_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
-			-- New {RAW_FILE} for file name `n'.
-		do
-			create Result.make_with_name (n)
-		end
-
-	make_raw_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): RAW_FILE
-			-- New {RAW_FILE} for file `name' in directory `location'.
-		do
-			Result := make_raw_file (make_file_name_in (name, location))
-		end
-
-	make_text_file (n: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
-			-- New {PLAIN_TEXT_FILE} for file name `n'.
-		do
-			create Result.make_with_name (n)
-		end
-
-	make_text_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
-			-- New {PLAIN_TEXT_FILE} for file `name' in directory `location'.
-		do
-			Result := make_text_file (make_file_name_in (name, location))
-		end
-
 	copy_file (old_name, new_name: READABLE_STRING_GENERAL)
 			-- Copy file named `old_name' to `new_name'.
 		local
@@ -420,9 +311,9 @@ feature -- File operations
 					t.close
 				end
 			else
-				f := make_raw_file (old_name)
+				create f.make_with_name (old_name)
 				f.open_read
-				t := make_raw_file (new_name)
+				create t.make_with_name (new_name)
 				t.open_write
 				f.copy_to (t)
 				f.close
@@ -483,51 +374,6 @@ feature -- File operations
 			f.rename_path (new_path)
 		end
 
-
-	open_read_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
-			-- Open {RAW_FILE} of name `n' for reading.
-		do
-			Result := make_raw_file (n)
-			Result.open_read
-		ensure
-			file_open: Result.is_open_read
-		end
-
-	open_write_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
-			-- Open {RAW_FILE} of name `n' for writing.
-		do
-			Result := make_raw_file (n)
-			Result.open_write
-		ensure
-			file_open: Result.is_open_write
-		end
-
-	open_write_raw_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): RAW_FILE
-			-- Open {RAW_FILE} of name `name' in `location'.
-		do
-			Result := make_raw_file_in (name, location)
-			Result.open_write
-		ensure
-			file_open: Result.is_open_write
-		end
-
-	open_write_text_file (n: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
-			-- Open {PLAIN_TEXT_FILE} of name `n'.
-		do
-			Result := make_text_file (n)
-			Result.open_write
-		ensure
-			file_open: Result.is_open_write
-		end
-
-	file_name (f: FILE): READABLE_STRING_GENERAL
-			-- Name associated with `f'.
-		obsolete
-			"Try to store the name used to create the file `f' rather than trying to retrieve it."
-		do
-			Result := f.path.name
-		end
-
 	file_exists (n: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does file of name `n' exist?
 		local
@@ -535,7 +381,7 @@ feature -- File operations
 			is_retried: BOOLEAN
 		do
 			if not n.is_empty and then not is_retried then
-				f := make_raw_file (n)
+				create f.make_with_name (n)
 				Result := f.exists and then f.is_plain
 			end
 		rescue

@@ -64,10 +64,8 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 			d_attached: attached d
-		local
-			u: FILE_UTILITIES
 		do
-			file := u.make_raw_file_in (fn, d)
+			create file.make_with_path ((create {PATH}.make_from_string (d)).extended (fn))
 		ensure
 			file_named: attached name -- name.is_equal (d + fn)
 			file_closed: not is_open
@@ -326,7 +324,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

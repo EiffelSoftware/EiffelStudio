@@ -122,8 +122,8 @@ feature -- Value
 				l_target := ""
 			end
 			check l_target_not_void: l_target /= Void end
-			Result.replace_substring_all ({STRING_32} "$target", l_target.as_string_32_conversion)
-			Result.replace_substring_all ({STRING_32} "$line", a_line.out.as_string_32_conversion)
+			Result.replace_substring_all ({STRING_32} "$target", l_target.as_string_32)
+			Result.replace_substring_all ({STRING_32} "$line", a_line.out.as_string_32)
 		ensure
 			external_editor_cli_not_void: Result /= Void
 			external_editor_cli_not_empty: not Result.is_empty

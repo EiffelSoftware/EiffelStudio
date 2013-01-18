@@ -190,12 +190,11 @@ feature {NONE} -- Implementation
 			a_short_name_not_void: a_short_name /= Void
 		local
 			l_generator: PO_GENERATOR
-			l_u: FILE_UTILITIES
 			l_file: PLAIN_TEXT_FILE
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_file := l_u.make_text_file (a_name)
+				create l_file.make_with_name (a_name)
 				l_file.open_read
 				if l_file.is_readable then
 					l_file.read_stream (l_file.count)
@@ -467,7 +466,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

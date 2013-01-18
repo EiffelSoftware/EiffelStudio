@@ -53,22 +53,18 @@ feature{NONE} -- Initialization
 					args.forth
 				end
 			end
-			command_line := c
+			create command_line.make_from_string (c)
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		end
 
 	make_with_command_line (cmd_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
-		local
-			c: STRING_32
 		do
 			create child_process.make
 			create input_buffer.make_empty
 			create input_mutex.make
 
-			create c.make (cmd_line.count)
-			c.append_string_general (cmd_line)
-			command_line := c
+			create command_line.make_from_string_general (cmd_line)
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		end

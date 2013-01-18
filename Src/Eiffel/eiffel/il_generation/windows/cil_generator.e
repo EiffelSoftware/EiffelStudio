@@ -92,7 +92,7 @@ feature -- Generation
 	generate
 			-- Generate a .NET assembly
 		local
-			file_name: STRING
+			file_name: STRING_32
 			location: like {PROJECT_DIRECTORY}.path
 			retried, is_assembly_loaded, is_error_available: BOOLEAN
 			deletion_successful: BOOLEAN
@@ -115,7 +115,10 @@ feature -- Generation
 				is_error_available := True
 
 					-- Compute name of generated file if any.
-				file_name := System.name + "." + System.msil_generation_type
+				create file_name.make (System.name.count + 1 + system.msil_generation_type.count)
+				file_name.append_string_general (System.name)
+				file_name.append_character ('.')
+				file_name.append (system.msil_generation_type)
 
 				if is_finalizing then
 					location := project_location.final_path
@@ -126,7 +129,7 @@ feature -- Generation
 					-- Set information about current assembly.
 				create assembly_info.make (System.name)
 				if System.msil_version /= Void and then not System.msil_version.is_empty then
-					assembly_info.set_version (System.msil_version.as_string_32_conversion)
+					assembly_info.set_version (System.msil_version)
 				end
 
 				create signing.make_with_version (System.clr_runtime_version)
@@ -341,7 +344,7 @@ feature -- Generation
 					end
 						-- Compute name of configuration file: It is `system_name.xxx.config'
 						-- where `xxx' is either `exe' or `dll'.
-					copy_to_local (l_source_name, l_target_name, System.name + "." + System.msil_generation_type + ".config")
+					copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
 				end
 			else
 					-- An error occurred, let's raise an Eiffel compilation
@@ -842,7 +845,7 @@ feature {NONE} -- Type description
 			l_decl_type: CL_TYPE_A
 		do
 			if
-				System.msil_generation_type.is_equal ("exe") and then
+				System.msil_generation_type.same_string_general ("exe") and then
 				not System.root_creation_name.is_empty
 			then
 					-- Update the root class info

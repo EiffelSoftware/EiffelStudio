@@ -155,13 +155,12 @@ feature {NONE} -- Status Settings
 			-- Update `file_name' using information from `s'.
 		local
 			f: RAW_FILE
-			u: FILE_UTILITIES
 		do
 			if (s = Void) or else (s.file_name = Void) then
 				set_file_name (Void)
 			else
 				set_file_name (s.file_name)
-				f := u.make_raw_file (file_name)
+				create f.make_with_name (file_name)
 				if f.exists then
 					set_last_saving_date (f.date)
 				else
@@ -257,10 +256,9 @@ feature {NONE} -- Execution
 			-- This function is called when mouse cames on tool window.
 		local
 			f: PLAIN_TEXT_FILE
-			u: FILE_UTILITIES
 		do
 			if file_name /= Void then
-				f := u.make_text_file (file_name)
+				create f.make_with_name (file_name)
 				if f.exists and then f.date > last_saving_date then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (interface_names.l_file_changed_by_other_tool, Void, agent revert, Void)
 					set_last_saving_date (f.date)
@@ -272,9 +270,8 @@ feature {NONE} -- Execution
 			-- Upload text from file associated with Current
 		local
 			f: PLAIN_TEXT_FILE
-			u: FILE_UTILITIES
 		do
-			f := u.make_text_file (file_name)
+			create f.make_with_name (file_name)
 			show_file (f)
 			refresh
 		end
@@ -285,7 +282,7 @@ feature {NONE} -- Implementation
 			-- Date of last save
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

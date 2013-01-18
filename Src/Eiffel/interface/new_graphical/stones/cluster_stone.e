@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			group_set: group = clu
 		end
 
-	make_subfolder (clu: CONF_GROUP; a_path: READABLE_STRING_32; a_name: READABLE_STRING_32)
+	make_subfolder (clu: CONF_GROUP; a_path, a_name: READABLE_STRING_GENERAL)
 			-- Create for a subfolder `path' of `clu'.
 		require
 			valid_cluster: clu /= Void
@@ -49,8 +49,8 @@ feature {NONE} -- Initialization
 			path_implies_recursive_cluster: not a_path.is_empty implies is_recursive_cluster (clu)
 		do
 			group := clu
-			path := a_path
-			folder_name := a_name
+			path := a_path.as_string_32
+			folder_name := a_name.as_string_32
 		ensure
 			group_set: group = clu
 			path_set: path = a_path
@@ -71,10 +71,10 @@ feature -- Access
 	group: CONF_GROUP
 			-- Underlying group for the stone.
 
-	path: READABLE_STRING_32
+	path: STRING_32
 			-- Subfolder path in unix format eg "/test/a/b"
 
-	folder_name: READABLE_STRING_32
+	folder_name: STRING_32
 			-- Subfolder name
 
 	stone_signature: STRING_32

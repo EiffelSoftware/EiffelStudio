@@ -564,7 +564,7 @@ feature -- Text processing
 		do
 			create l_token.make_with_appearance (a_folder_name.to_string_32, [editor_font_id, folder_text_color_id, folder_background_color_id])
 				-- Use `as_string_8' until we finish adapting {CLUSTER_STONE}.
-			l_token.set_pebble (create {CLUSTER_STONE}.make_subfolder (a_group, a_path.as_string_8, a_folder_name.as_string_8))
+			l_token.set_pebble (create {CLUSTER_STONE}.make_subfolder (a_group, a_path, a_folder_name))
 			last_line.append_token (l_token)
 		end
 
@@ -670,7 +670,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

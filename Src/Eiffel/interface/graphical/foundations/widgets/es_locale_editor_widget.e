@@ -47,7 +47,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	locale_table: HASH_TABLE [STRING_32, READABLE_STRING_8]
+	locale_table: STRING_TABLE [STRING_32]
 			-- Table of locales, indexed by a locale ID.
 			--
 			-- Key: Locale ID.
@@ -65,14 +65,14 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	locale_id_table: HASH_TABLE [READABLE_STRING_8, STRING_32]
+	locale_id_table: HASH_TABLE [READABLE_STRING_GENERAL, STRING_32]
 			-- Table of locales, indexed by a locale description.
 			--
 			-- Key: Locale description.
 			-- Value: Locale ID.
 		local
 			l_locale_table: like locale_table
-			l_value: READABLE_STRING_8
+			l_value: READABLE_STRING_GENERAL
 			l_key: STRING_32
 		once
 			l_locale_table := locale_table
@@ -113,7 +113,7 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		local
 			l_locale: I18N_LOCALE
-			l_id: STRING
+			l_id: READABLE_STRING_GENERAL
 			l_text: STRING_32
 		do
 			encoding := Void
@@ -203,7 +203,7 @@ feature {NONE} -- Internationalization
 	lb_locale: STRING = "Locale"
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

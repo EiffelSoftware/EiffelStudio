@@ -1123,7 +1123,7 @@ feature {NONE} -- Debugger Info List Access
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
 		local
-			l_module_key: STRING
+			l_module_key: STRING_32
 		do
 			if a_create_if_not_found then
 					--| This means we are recording, so we need to record
@@ -1137,7 +1137,7 @@ feature {NONE} -- Debugger Info List Access
 			end
 			if
 				last_info_from_module /= Void and then
-				last_info_from_module.module_filename.is_equal (l_module_key)
+				last_info_from_module.module_filename.same_string (l_module_key)
 			then
 				Result := last_info_from_module
 			else
@@ -1154,7 +1154,7 @@ feature {NONE} -- Debugger Info List Access
 
 feature {NONE} -- Debugger Info List
 
-	dbg_info_modules: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
+	dbg_info_modules: STRING_TABLE [IL_DEBUG_INFO_FROM_MODULE]
 			-- [module_key] => [IL_DEBUG_INFO_FROM_MODULE]
 
 	dbg_info_class_types: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
@@ -1516,7 +1516,7 @@ feature {NONE} -- Module indexer implementation
 			a_mod_key_not_void: a_mod_key /= Void
 			a_mod_key_is_lower_case: a_mod_key.as_lower.is_equal (a_mod_key)
 		local
-			l_module_id: STRING
+			l_module_id: STRING_32
 			l_pos_dll, l_pos_sep: INTEGER
 			l_item: IL_DEBUG_INFO_FROM_MODULE
 			l_item_mod_id: STRING
@@ -1551,7 +1551,7 @@ feature {NONE} -- Module indexer implementation
 						loop
 							l_item := dbg_info_modules.item_for_iteration
 							l_item_mod_id := l_item.module_name
-							if l_item_mod_id.is_equal (l_module_id) then
+							if l_item_mod_id.same_string_general (l_module_id) then
 								last_info_from_module := l_item
 								Result := last_info_from_module.module_filename --| Should contain .dll
 								internal_module_key_table.force (Result, a_mod_key)

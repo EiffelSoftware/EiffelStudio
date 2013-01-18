@@ -29,7 +29,7 @@ feature -- Data
 
 	project_path: STRING_32
 
-	modules_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
+	modules_debugger_info: STRING_TABLE [IL_DEBUG_INFO_FROM_MODULE]
 
 	class_types_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
 
@@ -64,7 +64,7 @@ feature -- Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

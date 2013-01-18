@@ -37,12 +37,12 @@ feature -- Clean up
 
 feature -- Basic operations
 
-	retrieve_assembly_properties (a_file_name: STRING): ASSEMBLY_PROPERTIES
+	retrieve_assembly_properties (a_file_name: READABLE_STRING_GENERAL): ASSEMBLY_PROPERTIES
 			-- Retrieves assembly properties for `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: (create {RAW_FILE}.make (a_file_name)).exists
+			a_file_name_exists: (create {RAW_FILE}.make_with_name (a_file_name)).exists
 			a_file_name_is_pe_file: (create {PE_FILE_INFO}).is_com2_pe_file (a_file_name)
 			exists: exists
 		do

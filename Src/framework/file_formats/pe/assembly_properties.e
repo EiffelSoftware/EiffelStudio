@@ -76,7 +76,7 @@ feature -- Access
 	revision_number: NATURAL_16
 			-- The revision number of the referenced assembly
 
-	locales: LIST [STRING]
+	locales: LIST [STRING_32]
 			-- A list of locale names conforming to the RFC1766 specification specifying the locales.
 
 feature -- Status report
@@ -144,11 +144,11 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	locale_string: STRING
+	locale_string: STRING_32
 			-- Locale as a string
 		do
 			if is_neutral_locale then
-				Result := once "Neutral"
+				Result := once {STRING_32} "Neutral"
 			else
 				Result := locales.first
 			end

@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	languages: HASH_TABLE [STRING_32, STRING]
+	languages: STRING_TABLE [STRING_32]
 		once
 			create Result.make (130)
 			Result.force (locale.translation ("Afrikaans"), "af")
@@ -139,7 +139,7 @@ feature -- Access
 			Result.force (locale.translation ("Zulu/isiZulu"), "zu")
 		end
 
-	locales: HASH_TABLE [STRING_32, STRING]
+	locales: STRING_TABLE [STRING_32]
 		once
 			create Result.make (300)
 			Result.force (locale.translation ("Afrikaans (South Africa)"), "af_za")
@@ -359,9 +359,9 @@ feature -- Access
 			a_array_of_id_not_void: a_array_of_id /= Void
 		local
 			i: INTEGER
-			l_displayed_name: detachable STRING_GENERAL
-			l_langs, l_locales: HASH_TABLE [STRING_32, STRING]
-			l_value: STRING
+			l_displayed_name: STRING_32
+			l_langs, l_locales: STRING_TABLE [STRING_32]
+			l_original_value, l_value: STRING
 		do
 			create Result.make (a_array_of_id.count)
 			l_langs := languages
@@ -371,7 +371,8 @@ feature -- Access
 			until
 				i > a_array_of_id.upper
 			loop
-				l_value := a_array_of_id.item (i).as_lower
+				l_original_value := a_array_of_id.item (i)
+				l_value := l_original_value.as_lower
 				if l_locales.has_key (l_value) then
 					l_displayed_name := l_locales.found_item
 					check l_displayed_name /= Void end -- Implied from `has_key'.
@@ -379,9 +380,9 @@ feature -- Access
 					l_displayed_name := l_langs.found_item
 					check l_displayed_name /= Void end -- Implied from `has_key'.
 				else
-					l_displayed_name := a_array_of_id.item (i)
+					l_displayed_name := l_original_value.as_string_32
 				end
-				Result.force (l_displayed_name, a_array_of_id.item (i))
+				Result.force (l_displayed_name, l_original_value)
 				i := i + 1
 			end
 		ensure
@@ -395,9 +396,9 @@ feature -- Access
 			a_list_of_id_not_void: a_list_of_id /= Void
 		local
 			i: INTEGER
-			l_displayed_name: detachable READABLE_STRING_GENERAL
-			l_langs, l_locales: HASH_TABLE [STRING_32, STRING]
-			k: STRING_8
+			l_displayed_name: STRING_32
+			l_langs, l_locales: STRING_TABLE [STRING_32]
+			k: READABLE_STRING_GENERAL
 		do
 			create Result.make (a_list_of_id.count)
 			l_langs := languages
@@ -405,7 +406,7 @@ feature -- Access
 			across
 				a_list_of_id as c
 			loop
-				k := c.item.to_string_8.as_lower
+				k := c.item.as_lower
 				if l_locales.has_key (k) then
 					l_displayed_name := l_locales.found_item
 					check l_displayed_name /= Void end -- Implied from `has_key'.
@@ -413,9 +414,9 @@ feature -- Access
 					l_displayed_name := l_langs.found_item
 					check l_displayed_name /= Void end -- Implied from `has_key'.
 				else
-					l_displayed_name := c.item
+					l_displayed_name := c.item.as_string_32
 				end
-				Result.force (l_displayed_name.to_string_32,c.item.to_string_8)
+				Result.force (l_displayed_name, c.item)
 				i := i + 1
 			end
 		ensure
@@ -423,7 +424,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -316,7 +316,7 @@ feature {NONE} -- Widget initialization
 
 	new_choice_widget (a_pref: ABSTRACT_CHOICE_PREFERENCE [ANY]): CHOICE_PREFERENCE_WIDGET
 		local
-			l_displayed_names: HASH_TABLE [STRING_32, STRING]
+			l_displayed_names: STRING_TABLE [STRING_32]
 		do
 			Result := Precursor (a_pref)
 				-- Set display names for preferences of type LIST.

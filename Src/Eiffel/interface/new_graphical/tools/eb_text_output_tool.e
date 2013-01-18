@@ -96,7 +96,7 @@ feature{NONE} -- Actions
 			-- Action to be peroformed when selected encoding changes
 		local
 			l_locale: I18N_LOCALE
-			l_id: STRING
+			l_id: READABLE_STRING_GENERAL
 		do
 			l_id := locale_id_table.item (locale_combo.text)
 			if l_id /= Void then
@@ -130,7 +130,7 @@ feature{NONE} -- Implementation
 	internal_output_text: like output_text
 			-- Implementation of `output_text'
 
-	locale_table: HASH_TABLE [STRING_GENERAL, STRING]
+	locale_table: STRING_TABLE [STRING_32]
 			-- Table of locales: [locale_displayed_name, locale_id]
 		do
 			if locale_table_internal = Void then
@@ -143,7 +143,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	locale_id_table: HASH_TABLE [STRING, STRING_32]
+	locale_id_table: HASH_TABLE [READABLE_STRING_GENERAL, STRING_32]
 			-- Table of locale ids: [locale_id, locale_displayed_name]
 		local
 			l_locale_table: like locale_table
@@ -158,7 +158,7 @@ feature{NONE} -- Implementation
 				until
 					l_locale_table.after
 				loop
-					l_locale_id_table.put (l_locale_table.key_for_iteration, l_locale_table.item_for_iteration.as_string_32)
+					l_locale_id_table.put (l_locale_table.key_for_iteration, l_locale_table.item_for_iteration)
 					l_locale_table.forth
 				end
 			end
@@ -194,7 +194,7 @@ feature -- Process
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -207,22 +207,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

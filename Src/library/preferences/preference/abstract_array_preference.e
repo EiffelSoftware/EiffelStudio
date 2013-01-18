@@ -42,7 +42,7 @@ feature {PREFERENCE_EXPORTER} -- Access
 				end
 			else
 				check has_value: False end
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

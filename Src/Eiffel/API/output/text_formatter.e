@@ -450,12 +450,10 @@ feature -- Text operator
 	add_class (class_i: CLASS_I)
 			-- Append class item.
 		local
-			l_name: STRING
-			l_list: LINKED_LIST [STRING]
+			l_name: READABLE_STRING_GENERAL
 		do
 			if context_group /= Void and then class_i.is_valid then
-				l_list := context_group.name_by_class (class_i.config_class, True)
-				if not l_list.is_empty then
+				if attached context_group.name_by_class (class_i.config_class, True) as l_list and then not l_list.is_empty then
 					l_name := l_list.first
 				end
 			end

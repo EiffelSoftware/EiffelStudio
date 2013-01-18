@@ -5,7 +5,7 @@ class
 	PARSER_TEST
 
 inherit
-	ARGUMENTS
+	ARGUMENTS_32
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			until
 				i > argument_count
 			loop
-				l_dir := Execution_environment.interpreted_string (argument (i))
+				l_dir := Execution_environment.interpreted_string (argument (i).as_string_8_conversion)
 				create dir.make (l_dir)
 				if dir.exists then
 					test_recursive (l_dir)

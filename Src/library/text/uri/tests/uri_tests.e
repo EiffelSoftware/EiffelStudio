@@ -65,13 +65,16 @@ feature -- Tests
 			uri: URI
 		do
 			create uri.make_from_string ("http://user:pass@foo.com:8888/path%%20to%%20foo")
+			assert ("is_valid", uri.is_valid)
 			assert ("path", uri.path.same_string ("/path%%20to%%20foo"))
 
 			create uri.make_from_string ("http://user:pass@foo.com:8888/path to foo")
+			assert ("is_valid", uri.is_valid)
 			assert ("path", uri.path.same_string ("/path%%20to%%20foo"))
 
 
 			create uri.make_from_string ("http://www.example.com/foo/bar?id=123&abc=def#page-1")
+			assert ("is_valid", uri.is_valid)
 			assert ("scheme", uri.scheme.same_string ("http"))
 			assert ("host", same_string (uri.host, "www.example.com"))
 			assert ("path", uri.path.same_string ("/foo/bar"))
@@ -82,6 +85,7 @@ feature -- Tests
 			assert ("query", same_string (uri.query, "id=123&abc=def&foo=bar&one=more"))
 
 			create uri.make_from_string ("http://www.example.com:8080/foo/bar?id=123&abc=def#page-1")
+			assert ("is_valid", uri.is_valid)
 			assert ("scheme", uri.scheme.same_string ("http"))
 			assert ("host", same_string (uri.host, "www.example.com"))
 			assert ("port", uri.port = 8080)
@@ -90,6 +94,7 @@ feature -- Tests
 			assert ("fragment", same_string (uri.fragment, "page-1"))
 
 			create uri.make_from_string ("http://john:smith@www.example.com:8080/foo/bar?id=123&abc=def#page-1")
+			assert ("is_valid", uri.is_valid)
 			assert ("scheme", uri.scheme.same_string ("http"))
 			assert ("authority", same_string (uri.authority, "john:smith@www.example.com:8080"))
 			assert ("host", same_string (uri.host, "www.example.com"))
@@ -101,19 +106,28 @@ feature -- Tests
 			assert ("fragment", same_string (uri.fragment, "page-1"))
 
 			create uri.make_from_string ("ftp://ftp.is.co.za/rfc/rfc1808.txt")
+			assert ("is_valid", uri.is_valid)
 			assert ("scheme", uri.scheme.same_string ("ftp"))
 			assert ("host", same_string (uri.host, "ftp.is.co.za"))
 			assert ("path", uri.path.same_string ("/rfc/rfc1808.txt"))
 			assert ("query", same_string (uri.query, Void))
 			assert ("fragment", same_string (uri.fragment, Void))
+
+			-- Invalid !!			
+			create uri.make_from_string ("http://foo.com/un/été")
+			assert ("is not valid", not uri.is_valid)
+
 		end
 
 	test_queries
 		local
 			uri: URI
 		do
-			create uri.make_from_string ("http://www.example.com/foo/bar")
+			create uri.make_from_string ("http://foo.com/when/")
+			uri.add_query_parameter ("un", "été")
+			assert ("query", same_string (uri.query, "un=%%C3%%A9t%%C3%%A9"))
 
+			create uri.make_from_string ("http://www.example.com/foo/bar")
 			assert ("query", same_string (uri.query, Void))
 
 			uri.add_query_parameter ("a", "b")
@@ -131,6 +145,11 @@ feature -- Tests
 			uri.remove_query
 			uri.add_query_parameter ("?", "&")
 			assert ("query", same_string (uri.query, "%%3F=%%26"))
+
+			uri.remove_query
+			uri.add_query_parameter ("abc", "a+b+c")
+			assert ("query", same_string (uri.query, "abc=a%%2Bb%%2Bc"))
+
 
 			uri.remove_query
 			uri.add_query_parameter ("&", "?")
@@ -262,29 +281,17 @@ feature -- Tests
 
 		end
 
-feature --
+feature {NONE} -- Implementation
 
 	uri_split_to_string (uri: URI): STRING
 		do
 			create Result.make (10)
 			Result.append_character ('[')
-			across
-				uri.split as c
-			loop
-				if Result.count > 1 then
-					Result.append_character (',')
-					Result.append_character (' ')
-				end
-				Result.append_string_general (c.key)
-				Result.append_character ('=')
-				if attached c.item as s then
-					Result.append_character ('"')
-					Result.append (s)
-					Result.append_character ('"')
-				else
-					Result.append ("Void")
-				end
-			end
+			Result.append_string ("scheme")
+			Result.append_string (uri.scheme)
+			Result.append_string (", ")
+			Result.append_string ("path")
+			Result.append_string (uri.path)
 			Result.append_character (']')
 		end
 

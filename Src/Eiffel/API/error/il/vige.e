@@ -41,13 +41,13 @@ feature {NONE} -- Initialization
 				%See http://docs.eiffel.com/technologies/dotnet for more details.%N"
 		end
 
-	make_output_in_use (t: STRING)
+	make_output_in_use (t: READABLE_STRING_GENERAL)
 			-- Error when trying to delete file `t'.
 		require
 			t_not_void: t /= Void
 			t_not_empty: not t.is_empty
 		do
-			internal_error_string := "File: " + t + " is in use.%NSystem compilation aborted.%N"
+			internal_error_string := {STRING_32} "File: " + t + " is in use.%NSystem compilation aborted.%N"
 		end
 
 	make_pdb_in_use (module_name: READABLE_STRING_GENERAL)
@@ -115,7 +115,7 @@ invariant
 	internal_error_string_not_void: internal_error_string /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

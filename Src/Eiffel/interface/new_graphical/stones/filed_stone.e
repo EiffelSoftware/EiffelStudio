@@ -30,10 +30,9 @@ feature -- Access
 			-- Void if unreadable file.
 		local
 			a_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 			if is_valid then
-				a_file := u.make_raw_file (file_name)
+				create a_file.make_with_name (file_name)
 				if a_file.exists and then a_file.is_readable then
 					a_file.open_read
 					a_file.read_stream (a_file.count)
@@ -46,9 +45,10 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Does `Current' still represent a valid file?
 		local
-			u: FILE_UTILITIES
+			f: RAW_FILE
 		do
-			Result := u.make_raw_file (file_name).exists
+			create f.make_with_name (file_name)
+			Result := f.exists
 		end
 
 	synchronized_stone: STONE
@@ -61,7 +61,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -85,11 +85,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FILED_STONE

@@ -37,7 +37,7 @@ create {EB_CLASS_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class; a_viewable_name: detachable STRING_32)
+	make (a_class: like associated_class; a_viewable_name: detachable READABLE_STRING_GENERAL)
 			-- Creates and initializes a new class completion item
 		require
 			a_class_not_void: a_class /= Void
@@ -47,8 +47,8 @@ feature {NONE} -- Initialization
 				a_class.append_name (token_writer)
 				insert_name := token_writer.last_line.wide_image
 			else
-				insert_name := a_viewable_name
-				viewable_name := a_viewable_name
+				insert_name := a_viewable_name.as_string_32
+				viewable_name := insert_name
 			end
 			make_old (insert_name)
 			associated_class := a_class
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			-- Corresponding class
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

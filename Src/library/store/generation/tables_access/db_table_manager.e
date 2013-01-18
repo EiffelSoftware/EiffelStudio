@@ -924,7 +924,7 @@ feature {NONE} -- Error messages
 			Result := {STRING_32}"Table row creation failed:%N"
 		end
 
-	Deletion_failed: STRING
+	Deletion_failed: STRING_32
 			-- Database deletion failed.
 		do
 			Result := {STRING_32}"Table row deletion failed:%N"

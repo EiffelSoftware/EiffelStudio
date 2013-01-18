@@ -132,7 +132,7 @@ feature -- For DATABASE_FORMAT
 		obsolete
 			"Use `string_format_32' instead."
 		do
-			Result := string_format_32 (object)
+			Result := string_format_32 (object).as_string_8_conversion
 		end
 
 	string_format_32 (object: detachable READABLE_STRING_GENERAL): STRING_32

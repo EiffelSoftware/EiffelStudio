@@ -201,10 +201,10 @@ feature -- Status setting
 		local
 			i: INTEGER
 			ft: INTEGER
-			r_string: STRING
+			r_string: STRING_32
 			t_int: INTEGER
-			quoter: STRING
-			sep: STRING
+			quoter: STRING_32
+			sep: STRING_32
 			l_obj: detachable ANY
 			l_string_count, l_string_capacity: INTEGER
 			l_is_string_8: BOOLEAN

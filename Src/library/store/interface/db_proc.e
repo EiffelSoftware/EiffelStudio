@@ -109,12 +109,13 @@ feature -- Basic operations
 			-- Load stored procedure `name'
 		require
 			is_connected: is_connected
+		local
+			u: UTF_CONVERTER
 		do
 			implementation.load
 			loaded := True
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		ensure

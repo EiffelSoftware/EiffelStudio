@@ -46,7 +46,6 @@ feature -- Status setting and report
 					end
 				else
 					if is_tracing then
-						fixme ("Unicode support for output tracing.")
 						trace_output.putstring ("Current implementation does not support connection string.")
 						trace_output.new_line
 					end

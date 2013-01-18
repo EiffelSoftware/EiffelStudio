@@ -71,12 +71,13 @@ feature -- Basic operations
 			connected: is_connected
 			request_exists: request /= Void
 			is_ok: is_ok
+		local
+			u: UTF_CONVERTER
 		do
 			last_query_32 := request.as_string_32
 			implementation.modify (request)
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		ensure

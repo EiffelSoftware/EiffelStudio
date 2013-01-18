@@ -54,13 +54,14 @@ feature -- Element change
 			meaning_full_statement: s.count > 0
 			is_ok: is_ok
 			is_allocatable: is_allocatable
+		local
+			u: UTF_CONVERTER
 		do
 			set_executed (False)
 			implementation.prepare_32 (s)
 			set_prepared (True)
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		ensure
@@ -72,6 +73,8 @@ feature -- Element change
 			-- Execute the sql statement
 		require
 			prepared_statement: is_prepared
+		local
+			u: UTF_CONVERTER
 		do
 			if is_ok then
 				if is_executed then
@@ -82,8 +85,7 @@ feature -- Element change
 				implementation.execute
 			end
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32)
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
 				trace_output.new_line
 			end
 		ensure

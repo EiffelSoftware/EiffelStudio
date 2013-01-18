@@ -21,7 +21,7 @@ feature -- Properties
 	root_type_as: CLASS_TYPE_AS
 			-- Actual root class description
 
-	group_name: STRING
+	group_name: STRING_32
 			-- Root type involved in the error
 
 feature	-- Output
@@ -32,7 +32,8 @@ feature	-- Output
 			a_text_formatter.add (root_type_as.dump)
 			a_text_formatter.add (" is based on an unknown class.")
 			a_text_formatter.add_new_line
-			a_text_formatter.add ("List classes that are reachable from the following group: " + group_name)
+			a_text_formatter.add ("List classes that are reachable from the following group: ")
+			a_text_formatter.add (group_name)
 			a_text_formatter.add_new_line
 		end
 
@@ -57,7 +58,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

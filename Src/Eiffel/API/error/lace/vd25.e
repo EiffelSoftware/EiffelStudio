@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: STRING)
+	make (a_target: like target_name)
 			-- Create.
 		require
 			a_target_not_void: a_target /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	target_name: STRING
+	target_name: STRING_32
 			-- Missing target.
 
 feature -- Output
@@ -36,12 +36,14 @@ feature -- Output
 	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
-			st.add ("Target with name "+target_name+" does not specify a root class.")
+			st.add ("Target with name ")
+			st.add (target_name)
+			st.add (" does not specify a root class.")
 			st.add_new_line
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

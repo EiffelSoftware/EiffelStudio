@@ -557,7 +557,7 @@ feature {NONE} -- Graphic interface
 			bd.ok_actions.extend (agent set_path (bd))
 			l_dir_text := folder_entry.text
 			if not l_dir_text.is_empty then
-				l_dir_text := (create {ENV_INTERP}).interpreted_string (l_dir_text)
+				l_dir_text := (create {ENV_INTERP}).interpreted_string_32 (l_dir_text)
 				create l_path.make_from_string (l_dir_text)
 				if not (create {DIRECTORY}.make_with_path (l_path)).exists then
 					l_path := Void
@@ -642,7 +642,7 @@ invariant
 	group_implies_path: group /= Void implies path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

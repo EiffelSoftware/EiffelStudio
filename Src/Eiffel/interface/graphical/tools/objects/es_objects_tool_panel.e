@@ -1051,7 +1051,7 @@ feature {NONE} -- grid Layout Implementation
 			-- for normal debug usage as it is only cleared immediately before
 			-- being rebuilt, unless the timer period has been exceeded.
 
-	current_stack_class_feature_identification: STRING
+	current_stack_class_feature_identification: STRING_32
 		local
 			cse: CALL_STACK_ELEMENT
 		do
@@ -1537,7 +1537,7 @@ invariant
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

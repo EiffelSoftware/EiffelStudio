@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: STRING
+	id: STRING_32
 
 	subrows: detachable LIST [detachable ES_GRID_LAYOUT_ITEM]
 
@@ -54,7 +54,7 @@ feature -- Element change
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
 			create Result.make (100)
 			Result.append_character ('[')

@@ -53,45 +53,10 @@ feature {PROFILE_CONVERTER} -- analyzing
 		do
 			from
 				init_analyse
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Done initializing the analyzation.")
-	io.error.put_new_line
-	io.error.put_string ("String_token: ")
-	io.error.put_integer (String_token)
-	io.error.put_new_line
-	io.error.put_string ("Number_token: ")
-	io.error.put_integer (Number_token)
-	io.error.put_new_line
-	io.error.put_string ("Real_token: ")
-	io.error.put_integer (Real_token)
-	io.error.put_new_line
-	io.error.put_string ("Index_token: ")
-	io.error.put_integer (Index_token)
-	io.error.put_new_line
-	io.error.put_string ("Newline_token: ")
-	io.error.put_integer (Newline_token)
-	io.error.put_new_line
-	io.error.put_string ("Whitespace_token: ")
-	io.error.put_integer (Whitespace_token)
-	io.error.put_new_line
-	io.error.put_string ("Error_token: ")
-	io.error.put_integer (Error_token)
-	io.error.put_new_line
-	io.error.put_string ("Profile string is: ")
-	io.error.put_string (profile_string)
-	io.error.put_new_line
-	io.error.put_string ("Configuration:%N==============%N")
-	config.spit_info
-end
 			until
 				string_idx >= profile_string.count
 			loop
 				retrieve_first_next_token
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Token type of first next token: ")
-	io.error.put_integer (token_type)
-	io.error.put_new_line
-end
 				if token_type = Error_token then
 					resync_line
 				elseif token_type = Whitespace_token then
@@ -130,17 +95,6 @@ end
 			io_except: IO_FAILURE
 		do
 			redo_cyclics
-
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Ready with analysis.%N%N")
-	io.error.put_string ("Cyclics are re-done.")
-	io.error.put_new_line
-	io.error.put_string ("About to store the information on disk.")
-	io.error.put_new_line
-	io.error.put_string ("Will use `independent_store'.")
-	io.error.put_new_line
-end
-
 			out_file_name := profilename.appended ("." + Dot_profile_information)
 			create file.make_with_path (out_file_name)
 			if
@@ -148,19 +102,7 @@ end
 				or else file.is_creatable
 			then
 				file.open_write
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Calling `spit_info' on `profile_information'.")
-	io.error.put_new_line
-	profile_information.spit_info
-	io.error.put_string ("Store is called right now ...%N")
-end
 				file.independent_store (profile_information)
-debug("PROFILE_CONVERT")
-	io.error.put_string ("`")
-	io.error.put_string (profilename.out)
-	io.error.put_string ("' successfully stored on disk.")
-	io.error.put_new_line
-end
 				file.close
 			else
 				create io_except
@@ -312,28 +254,7 @@ end
 						else
 							class_n := dtype.out
 						end
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Dynamic type id: ")
-	io.error.put_integer (dtype)
-	io.error.put_new_line
-	io.error.put_string ("Dynamic type id is ")
-	if not Eiffel_system.valid_dynamic_id (dtype) then
-		io.error.put_string ("not")
-	end
-	io.error.put_string (" valid.")
-	io.error.put_new_line
-	io.error.put_string ("The class name of dtype is: ")
-	io.error.put_string (class_n)
-	io.error.put_new_line
 
-	io.error.put_string ("Cluster name: ")
-	if a_group = Void then
-		io.error.put_string ("<unknown_cluster>")
-	else
-		io.error.put_string (a_group.name)
-	end
-	io.error.put_new_line
-end
 						create e_function.make (Void, class_n, feature_n)
 						if eclass /= Void then
 							e_function.set_class_id (eclass.class_id)
@@ -880,7 +801,7 @@ feature {NONE} -- Constants
 	Error_token: INTEGER = 7;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

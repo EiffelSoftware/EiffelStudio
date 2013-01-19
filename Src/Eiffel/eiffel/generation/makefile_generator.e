@@ -1364,7 +1364,7 @@ feature {NONE} -- Constants
 	boehm_library: STRING
 			-- Addition library if boehm is selected
 		do
-			if not system.uses_ise_gc_runtime and then system.external_runtime.as_lower.is_equal ("boehm") then
+			if not system.uses_ise_gc_runtime and then system.external_runtime.is_case_insensitive_equal ("boehm") then
 				Result := " %"\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib-boehm/"
 				Result.append ("$prefix")
 				Result.append ("$boehmgclib")

@@ -120,16 +120,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				current_item := expanded_filenames.item;
-debug("SHOW_PROF_QUERY")
-	io.error.put_string ("current_item: ");
-	io.error.put_string (current_item.as_string_8_conversion);
-	io.error.put_new_line
-end;
 				if not current_item.same_string_general ("last_output") then
-debug("SHOW_PROF_QUERY")
-	io.error.put_string ("current_item /= last_output");
-	io.error.put_new_line
-end;
 					create profile_file.make_with_name (current_item)
 					if profile_file.exists and then profile_file.is_readable then
 						profile_file.open_read
@@ -137,10 +128,6 @@ end;
 						profile_file.close
 					end
 					if profile_information /= Void then
-debug("SHOW_PROF_QUERY")
-	io.error.put_string ("profile information not VOID");
-	io.error.put_new_line
-end;
 						if text_formatter /= Void then
 							text_formatter.add (current_item);
 							text_formatter.add_new_line;
@@ -151,10 +138,6 @@ end;
 							text_formatter.add_new_line
 						end
 					else
-debug("SHOW_PROF_QUERY")
-	io.error.put_string ("profile information VOID");
-	io.error.put_new_line
-end;
 					end
 				else
 					if text_formatter /= Void then
@@ -235,22 +218,9 @@ end;
 						until
 							entries.after
 						loop
-debug("SHOW_PROF_QUERY")
-	io.error.put_string ("Entry from the directory: ");
-	io.error.put_string (entries.item.name.as_string_8_conversion);
-	io.error.put_new_line;
-	io.error.put_string ("Wildcarded name: ");
-	io.error.put_string (wc_name.as_string_8_conversion);
-	io.error.put_new_line;
-end;
 							entries_name := entries.item.name
 							entries_name.to_lower
 							wildcard_matcher.set_text (entries_name);
-debug("SHOW_PROF_QUERY")
-	io.error.put_string ("Did it match: ");
-	io.error.put_boolean (wildcard_matcher.found)
-	io.error.put_new_line;
-end;
 							if wildcard_matcher.pattern_matches then
 								entries_name := dir_name.twin
 								-- entries_name.append_character (Operating_environment.Directory_separator)
@@ -265,21 +235,8 @@ end;
 					expanded_filenames.extend (name)
 				end;
 				i := i + 1
-debug("SHOW_PROF_QUERY")
-	io.error.put_string ("prof_options.filenames.count: ");
-	io.error.put_integer (prof_options.filenames.count);
-	io.error.put_new_line;
-	io.error.put_string ("index (i): ");
-	io.error.put_integer (i);
-	io.error.put_new_line;
-end;
 			end;
 
-debug("SHOW_PROF_QUERY")
-	io.error.put_string("DONE expanding filenames%Nexpanded_filenames.count: ")
-	io.error.put_integer (expanded_filenames.count)
-	io.error.put_new_line;
-end;
 				-- Copy filenames back in the original array
 				-- to keep them for the next run as default.
 			from
@@ -292,13 +249,6 @@ end;
 				prof_options.filenames.force (expanded_filenames.item, prof_options.filenames.count + 1);
 				expanded_filenames.forth
 			end
-debug("SHOW_PROF_QUERY")
-	io.error.put_string("DONE copying the names back into `prof_options.filenames'")
-	io.error.put_new_line;
-	io.error.put_string ("prof_options.filenames.count: ");
-	io.error.put_integer (prof_options.filenames.count)
-	io.error.put_new_line;
-end;
 		end;
 
 	has_wildcards(name: STRING_32): BOOLEAN

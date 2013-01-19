@@ -56,21 +56,6 @@ debug ("SERVER")
 end
 		end
 
-feature -- Initialization
-
-	file_make_in (fn: READABLE_STRING_GENERAL; d: READABLE_STRING_GENERAL)
-			-- Create file object with `fn' as file name in directory `d'.
-		require
-			string_exists: fn /= Void
-			string_not_empty: not fn.is_empty
-			d_attached: attached d
-		do
-			create file.make_with_path ((create {PATH}.make_from_string (d)).extended (fn))
-		ensure
-			file_named: attached name -- name.is_equal (d + fn)
-			file_closed: not is_open
-		end
-
 feature -- Access
 
 	name: READABLE_STRING_GENERAL

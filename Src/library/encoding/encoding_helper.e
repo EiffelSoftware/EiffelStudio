@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			a_string_not_void: a_string /= Void
 		do
 			if a_string.is_string_8 then
-				Result := a_string.as_string_8
+				Result := a_string.to_string_8
 			else
 				Result := string_32_to_stream (a_string.as_string_32)
 			end

@@ -136,41 +136,7 @@ feature -- Access
 		-- to retrieve the Eiffel feature names from any supported
 		-- profiler.
 
-feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
-
-	spit_info
-		do
-			io.error.put_string ("Name: ");
-			io.error.put_string (configuration_name.as_string_8_conversion);
-			io.error.put_new_line;
-			io.error.put_string ("Number of columns: ");
-			io.error.put_integer (number_of_columns);
-			io.error.put_new_line;
-			io.error.put_string ("Index column: ");
-			io.error.put_integer (index_column);
-			io.error.put_new_line;
-			io.error.put_string ("Function time column: ");
-			io.error.put_integer (function_time_column);
-			io.error.put_new_line;
-			io.error.put_string ("descendant time column: ");
-			io.error.put_integer (descendant_time_column);
-			io.error.put_new_line;
-			io.error.put_string ("Number of calls column: ");
-			io.error.put_integer (number_of_calls_column);
-			io.error.put_new_line;
-			io.error.put_string ("Function name column: ");
-			io.error.put_integer (function_name_column);
-			io.error.put_new_line;
-			io.error.put_string ("Percentage column: ");
-			io.error.put_integer (percentage_column);
-			io.error.put_new_line;
-			io.error.put_string ("Leading underscore: ");
-			io.error.put_boolean (leading_underscore);
-			io.error.put_new_line;
-			io.error.put_string ("Columns of interest: ");
-			io.error.put_integer (columns_of_interest);
-			io.error.put_new_line;
-		end
+invariant
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

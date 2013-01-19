@@ -560,44 +560,10 @@ feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 	total_max_cycle,
 	total_avg_cycle: REAL_64
 
-feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
-
-	spit_info
-			-- Spits all kinds of information.
-			--| For dbugging purposes only.
-			--| See also `spit_info' in `PROFILE_INFORMATION'.
-		do
-			from
-				io.error.put_string ("Contents of `eiffel_profiling_list':%N");
-				eiffel_profiling_list.start
-			until
-				eiffel_profiling_list.after
-			loop
-				eiffel_profiling_list.item.spit_info;
-				eiffel_profiling_list.forth
-			end;
-			from
-				io.error.put_string ("Contents of `c_profiling_list':%N");
-				c_profiling_list.start
-			until
-				c_profiling_list.after
-			loop
-				c_profiling_list.item.spit_info;
-				c_profiling_list.forth
-			end;
-			from
-				io.error.put_string ("Contents of `cycle_profiling_list':%N");
-				cycle_profiling_list.start
-			until
-				cycle_profiling_list.after
-			loop
-				cycle_profiling_list.item.spit_info;
-				cycle_profiling_list.forth
-			end
-		end;
+invariant
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -610,22 +576,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class PROFILE_SET

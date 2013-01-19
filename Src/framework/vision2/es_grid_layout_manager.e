@@ -179,7 +179,7 @@ feature -- Access
 		local
 			r: INTEGER
 			lst: like subrows
-			gid: STRING
+			gid: STRING_32
 		do
 			if enabled then
 				debug ("es_grid_layout")
@@ -219,9 +219,9 @@ feature -- Access
 
 	restore
 		local
-			s: STRING
+			s: STRING_32
 			r: INTEGER
-			gid: STRING
+			gid: STRING_32
 		do
 			if enabled then
 				debug ("es_grid_layout")
@@ -321,18 +321,18 @@ feature {NONE} -- Implementation
 			Result := a_row.item (1) /= Void
 		end
 
-	global_identification: STRING
+	global_identification: STRING_32
 		do
 			Result := name.twin
 			if attached global_identification_agent as l_global_identification_agent then
 				if attached l_global_identification_agent.item (Void) as s then
-					Result.append_string ("::")
+					Result.append_string_general ("::")
 					Result.append_string (s)
 				end
 			end
 		end
 
-	row_identification (a_row: EV_GRID_ROW): detachable STRING
+	row_identification (a_row: EV_GRID_ROW): detachable STRING_32
 		do
 			if attached identification_agent as l_identification_agent then
 				Result := l_identification_agent.item ([a_row])
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_identification (a_row: EV_GRID_ROW): detachable STRING
+	default_identification (a_row: EV_GRID_ROW): detachable STRING_32
 		require
 			a_row /= Void
 		do
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			lay_not_void: lay /= Void
 			row_is_ready_for_identification: row_is_ready_for_identification (a_row)
 		local
-			ts: STRING
+			ts: STRING_32
 			tv, l_val: detachable ANY
 			tfvr: BOOLEAN
 			r: INTEGER
@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Debugging
 
-	string_id_for_lay (lay: attached like layout): STRING
+	string_id_for_lay (lay: attached like layout): STRING_32
 		do
 			if attached lay.id as s then
 				Result := s
@@ -657,7 +657,7 @@ feature {NONE} -- Debugging
 
 	grid_layout_output (a_layout: attached like layout; off: STRING): STRING
 		local
-			tu_s: STRING
+			tu_s: STRING_32
 			tu_v: detachable ANY
 			tu_v_s: STRING
 			tu_lst: like subrows
@@ -705,9 +705,9 @@ feature {NONE} -- Agent
 
 	row_is_ready_for_evaluation_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]
 
-	global_identification_agent: detachable FUNCTION [ANY, TUPLE, STRING]
+	global_identification_agent: detachable FUNCTION [ANY, TUPLE, STRING_32]
 
-	identification_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], STRING]
+	identification_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], STRING_32]
 
 	value_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW, BOOLEAN], ANY]
 

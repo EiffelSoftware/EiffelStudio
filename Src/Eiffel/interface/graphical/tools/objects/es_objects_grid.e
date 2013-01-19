@@ -799,7 +799,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 			end
 		end
 
-	grid_objects_id_name_from_row (a_row: EV_GRID_ROW): STRING
+	grid_objects_id_name_from_row (a_row: EV_GRID_ROW): STRING_32
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
@@ -1019,7 +1019,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

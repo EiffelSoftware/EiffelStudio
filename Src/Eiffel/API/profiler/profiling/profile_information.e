@@ -165,28 +165,10 @@ feature {NONE} -- Attributes
 	available: BOOLEAN
 		-- Is total execution time available
 
-feature {PROFILE_CONVERTER} -- Spit Information for debugging.
-
-	spit_info
-			-- Spits all kinds of information about Current.
-			--| For debugging purposes only.
-			--| Will be called from `PROFILE_CONVERTER'.
-		do
-			if available then
-				io.error.put_string ("Total execution time is: ");
-				io.error.put_double (total_exec_time);
-				io.error.put_new_line
-			else
-				io.error.put_string ("Total execution time is not available.");
-				io.error.put_new_line
-			end
-			io.error.put_string ("Printing information from the `profile_data'.");
-			io.error.put_new_line;
-			profile_data.spit_info
-		end;
+invariant
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

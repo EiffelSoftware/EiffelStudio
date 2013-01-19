@@ -95,15 +95,6 @@ feature -- attributes
 	int_function: LANGUAGE_FUNCTION
 		-- The function where all is about.
 
-feature {PROFILE_SET} -- Spit Information (for debugging)
-
-	spit_info
-		-- Spits all kinds of information about Current.
-		do
-			io.error.put_string (out);
-			io.error.put_new_line
-		end
-
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

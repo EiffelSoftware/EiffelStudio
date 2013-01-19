@@ -243,7 +243,7 @@ feature -- Status setting
 					r_string.wipe_out
 					r_string.append (field_name (i, object))
 					r_string.append (" can't be Void")
-					raise (r_string)
+					raise (r_string.as_string_8_conversion)
 				end
 				inspect ft
 				when Integer_type then

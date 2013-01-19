@@ -51,8 +51,7 @@ feature
 							-- Must be incompatible version
 						create vd52
 						vd52.set_path (project_dir.name)
-						vd52.set_precompiled_version
-								(project_eif.project_version_number)
+						vd52.set_precompiled_version (project_eif.project_version_number)
 						vd52.set_compiler_version (version_number)
 						Error_handler.insert_error (vd52)
 						Error_handler.raise_error
@@ -164,8 +163,7 @@ feature {NONE} -- Implementation
 						-- Must be incompatible version
 						create vd52;
 						vd52.set_path (project_dir.name)
-						vd52.set_precompiled_version
-							(project_eif.project_version_number)
+						vd52.set_precompiled_version (project_eif.project_version_number)
 						vd52.set_compiler_version (version_number)
 						Error_handler.insert_error (vd52)
 						Error_handler.raise_error
@@ -210,7 +208,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

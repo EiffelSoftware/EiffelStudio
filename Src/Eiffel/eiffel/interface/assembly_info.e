@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		do
 			create {IMMUTABLE_STRING_32} assembly_name.make_from_string_general (n)
 		ensure
-			assembly_name_set: assembly_name = n
+			assembly_name_set: assembly_name.same_string_general (n)
 		end
 
 feature -- Access

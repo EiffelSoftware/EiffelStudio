@@ -25,7 +25,7 @@ feature -- Makefile generation
 
 feature -- Action
 
-	force_c_compilation_in_sub_dir (final_mode: BOOLEAN; sub_dir: detachable STRING)
+	force_c_compilation_in_sub_dir (final_mode: BOOLEAN; sub_dir: detachable READABLE_STRING_GENERAL)
 			-- Delete file `finished'.
 		local
 			finished_file: PLAIN_TEXT_FILE
@@ -42,7 +42,7 @@ feature -- Action
 
 feature -- C code generation
 
-	gen_file_name (final_mode: BOOLEAN; base_name: STRING): PATH
+	gen_file_name (final_mode: BOOLEAN; base_name: READABLE_STRING_GENERAL): PATH
 			-- Generate a file name either in workbench or final mode with
 			-- a `.c' extension in the E1 directory.
 		require
@@ -53,7 +53,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	x_gen_file_name (final_mode: BOOLEAN; base_name: STRING): PATH
+	x_gen_file_name (final_mode: BOOLEAN; base_name: READABLE_STRING_GENERAL): PATH
 			-- Generate a file name either in workbench or final mode with
 			-- a `.x' extension in the E1 directory.
 		require
@@ -68,7 +68,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	final_file_name (base_name, extension: STRING; n: INTEGER): PATH
+	final_file_name (base_name, extension: READABLE_STRING_GENERAL; n: INTEGER): PATH
 			-- Generate a file name in final_mode with file `extension'
 			-- in system directory E`n'.
 		require
@@ -81,7 +81,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	workbench_file_name (base_name, extension: STRING; n: INTEGER): PATH
+	workbench_file_name (base_name, extension: READABLE_STRING_GENERAL; n: INTEGER): PATH
 			-- Generate a file in workbench_mode with file `extension'
 			-- in system directory E1.
 		require
@@ -94,7 +94,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	full_file_name (final_mode: BOOLEAN; sub_dir: detachable STRING; file_name: STRING; extension: detachable STRING): PATH
+	full_file_name (final_mode: BOOLEAN; sub_dir: detachable READABLE_STRING_GENERAL; file_name: READABLE_STRING_GENERAL; extension: detachable READABLE_STRING_GENERAL): PATH
 			-- Generated file name for `final_mode' creating a subdirectory
 			-- if `sub_dir' is not Void or empty, using `file_name'+`extension' as filename.
 			-- Side effect: Create the corresponding subdirectory if it
@@ -102,18 +102,18 @@ feature -- C code generation
 		require
 			file_name_not_void: file_name /= Void
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
 				-- Has side effect: creating a folder
 			Result := validated_dir_name (final_mode, sub_dir)
 			if extension /= Void then
 				create l_name.make (file_name.count + extension.count)
-				l_name.append (file_name)
-				l_name.append (extension)
+				l_name.append_string_general (file_name)
+				l_name.append_string_general (extension)
+				Result := Result.extended (l_name)
 			else
-				l_name := file_name
+				Result := Result.extended (file_name)
 			end
-			Result := Result.extended (l_name)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -132,7 +132,7 @@ feature -- C code generation
 
 feature {NONE} -- Implementation
 
-	validated_dir_name (final_mode: BOOLEAN; sub_dir: detachable STRING): PATH
+	validated_dir_name (final_mode: BOOLEAN; sub_dir: detachable READABLE_STRING_GENERAL): PATH
 			-- Validated dir, create it if not exist.
 		local
 			dir: DIRECTORY

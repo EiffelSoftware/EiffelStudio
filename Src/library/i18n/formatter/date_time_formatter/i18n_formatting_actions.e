@@ -42,9 +42,9 @@ feature -- Time related actions
 			a_time_exists: a_time /= Void
 		do
 			if a_time.hour > 12 then
-				Result :=  (a_time.hour-12).out
+				create Result.make_from_string_general ((a_time.hour-12).out)
 			else
-				Result :=  a_time.hour.out
+				create Result.make_from_string_general (a_time.hour.out)
 			end
 		ensure
 			result_exists: Result /= Void
@@ -57,7 +57,7 @@ feature -- Time related actions
 		require
 			a_time_exists: a_time /= Void
 		do
-			Result := a_time.hour.out
+			create Result.make_from_string_general (a_time.hour.out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -82,7 +82,7 @@ feature -- Time related actions
 		require
 			a_time_exists: a_time /= Void
 		do
-			Result := a_time.minute.out
+			create Result.make_from_string_general (a_time.minute.out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -105,7 +105,7 @@ feature -- Time related actions
 		require
 			a_time_exists: a_time /= Void
 		do
-			Result := a_time.second.out
+			create Result.make_from_string_general (a_time.second.out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -128,14 +128,14 @@ feature -- Time related actions
 			a_time_exists: a_time /= Void
 		do
 			if a_time.hour > 12 then
-				Result :=  "p"
+				Result :=  {STRING_32} "p"
 			else
-				Result :=  "m"
+				Result :=  {STRING_32} "m"
 			end
 		ensure
 			result_exists: Result /= Void
-			correct_result: (a_time.hour <= 12 implies Result.is_equal ("a")) xor
-							(a_time.hour > 12 implies Result.is_equal ("p"))
+			correct_result: (a_time.hour <= 12 implies Result.same_string_general ("a")) xor
+							(a_time.hour > 12 implies Result.same_string_general ("p"))
 		end
 
 	am_pm_lowercase_action (a_time: TIME; a_locale_info: I18N_LOCALE_INFO): STRING_32
@@ -187,7 +187,7 @@ feature -- Date related actions
 		require
 			a_date_exists: a_date /= Void
 		do
-			Result := a_date.day.out
+			create Result.make_from_string_general (a_date.day.out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -245,7 +245,7 @@ feature -- Date related actions
 		require
 			a_date_exists: a_date /= Void
 		do
-			Result := (a_date.day_of_the_week+1).out
+			create Result.make_from_string_general ((a_date.day_of_the_week+1).out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -257,7 +257,7 @@ feature -- Date related actions
 		require
 			a_date_exists: a_date /= Void
 		do
-			Result := a_date.day_of_the_week.out
+			create Result.make_from_string_general (a_date.day_of_the_week.out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -268,7 +268,7 @@ feature -- Date related actions
 		require
 			a_date_exists: a_date /= Void
 		do
-			Result := a_date.month.out
+			create Result.make_from_string_general (a_date.month.out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -314,7 +314,7 @@ feature -- Date related actions
 		require
 			a_date_exists: a_date /= Void
 		do
-			Result := (a_date.year // 100).out
+			create Result.make_from_string_general ((a_date.year // 100).out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -360,7 +360,7 @@ feature -- Date related actions
 		require
 			a_date_exists: a_date /= Void
 		do
-			Result := a_date.year.out
+			create Result.make_from_string_general (a_date.year.out)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -406,7 +406,7 @@ feature -- Date related actions
 		require
 			a_date_exists: a_date /= Void
 		do
-			Result := a_date.year.out
+			create Result.make_from_string_general (a_date.year.out)
 		ensure
 			result_exists: Result /= Void
 		end

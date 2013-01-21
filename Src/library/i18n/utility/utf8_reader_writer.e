@@ -28,14 +28,14 @@ feature -- Reading
 			l_read: detachable STRING
 		do
 			if n_bytes = 0 then
-				Result := ""
+				create Result.make_empty
 			else
 				a_file.read_stream (n_bytes)
 				l_read := a_file.last_string
 				if l_read /= Void then
 					Result := utf8_to_utf32 (l_read)
 				else
-					Result := ""
+					create Result.make_empty
 				end
 			end
 		ensure

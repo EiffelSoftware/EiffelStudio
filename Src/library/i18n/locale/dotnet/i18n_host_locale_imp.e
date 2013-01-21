@@ -165,8 +165,6 @@ feature -- Informations
 			if l_list /= Void then
 				from
 					i := l_list.lower
-				variant
-					l_list.count-i+1
 				until
 					i > l_list.upper
 				loop
@@ -178,6 +176,8 @@ feature -- Informations
 						Result.extend (l_locale_id.twin)
 					end
 					i := i + 1
+				variant
+					l_list.count-i+1
 				end
 			end
 		end
@@ -236,7 +236,7 @@ feature -- Date and time formatting
 			if attached date_time_format.am_designator as l_am then
 				Result := l_am
 			else
-				Result := "AM"
+				Result := {STRING_32} "AM"
 			end
 		ensure
 			result_exists: Result /= Void
@@ -248,7 +248,7 @@ feature -- Date and time formatting
 			if attached date_time_format.pm_designator as l_pm then
 				Result := l_pm
 			else
-				Result := "PM"
+				Result := {STRING_32} "PM"
 			end
 		ensure
 			result_exists: Result /= Void
@@ -260,7 +260,7 @@ feature -- Date and time formatting
 			if attached date_time_format.date_separator as l_sep then
 				Result := l_sep
 			else
-				Result := "/"
+				Result := {STRING_32} "/"
 			end
 		ensure
 			result_exists: Result /= Void
@@ -272,7 +272,7 @@ feature -- Date and time formatting
 			if attached date_time_format.time_separator as l_sep then
 				Result := l_sep
 			else
-				Result := ":"
+				Result := {STRING_32} ":"
 			end
 		ensure
 			result_exists: Result /= Void
@@ -323,7 +323,7 @@ feature -- day/months names
 		local
 			i : INTEGER
 		do
-			create Result.make_filled ("", 1, {DATE_CONSTANTS}.Days_in_week)
+			create Result.make_filled ({STRING_32} "", 1, {DATE_CONSTANTS}.Days_in_week)
 			if attached date_time_format.day_names as l_array then
 				from
 					i := Result.lower
@@ -346,7 +346,7 @@ feature -- day/months names
 		local
 			i : INTEGER
 		do
-			create Result.make_filled ("", 1, {DATE_CONSTANTS}.Months_in_year)
+			create Result.make_filled ({STRING_32} "", 1, {DATE_CONSTANTS}.Months_in_year)
 			if attached date_time_format.month_names as l_array then
 				from
 					i := l_array.lower
@@ -369,7 +369,7 @@ feature -- day/months names
 		local
 			i : INTEGER
 		do
-			create Result.make_filled ("", 1, {DATE_CONSTANTS}.Days_in_week)
+			create Result.make_filled ({STRING_32} "", 1, {DATE_CONSTANTS}.Days_in_week)
 			if attached date_time_format.abbreviated_day_names as l_array then
 				from
 					i := Result.lower
@@ -392,7 +392,7 @@ feature -- day/months names
 		local
 			i : INTEGER
 		do
-			create Result.make_filled ("", 1, {DATE_CONSTANTS}.Months_in_year)
+			create Result.make_filled ({STRING_32} "", 1, {DATE_CONSTANTS}.Months_in_year)
 			if attached date_time_format.abbreviated_month_names as l_array then
 				from
 					i := l_array.lower
@@ -417,7 +417,7 @@ feature	-- number formatting
 			if attached number_format.number_decimal_separator as l_sep then
 				Result := l_sep
 			else
-				Result := "."
+				Result := {STRING_32} "."
 			end
 		ensure
 			result_exists: Result /= Void
@@ -437,7 +437,7 @@ feature	-- number formatting
 			if attached number_format.number_group_separator as l_sep then
 				Result := l_sep
 			else
-				Result := ","
+				Result := {STRING_32} ","
 			end
 		ensure
 			result_exists: Result /= Void
@@ -459,7 +459,7 @@ feature	-- currency formatting
 			if attached number_format.currency_symbol as l_symbol then
 				Result := l_symbol
 			else
-				Result := "$"
+				Result := {STRING_32} "$"
 			end
 		ensure
 			result_exists: Result /= Void
@@ -471,7 +471,7 @@ feature	-- currency formatting
 			if attached number_format.currency_decimal_separator as l_sep then
 				Result := l_sep
 			else
-				Result := "."
+				Result := {STRING_32} "."
 			end
 		ensure
 			result_exists: Result /= Void
@@ -491,7 +491,7 @@ feature	-- currency formatting
 			if attached number_format.currency_group_separator as l_sep then
 				Result := l_sep
 			else
-				Result := ","
+				Result := {STRING_32} ","
 			end
 		ensure
 			result_exists: Result /= Void
@@ -514,7 +514,7 @@ feature -- International currency formatting
 			if attached invariant_culture_number_format.currency_symbol as l_symbol then
 				Result := l_symbol
 			else
-				Result := "USD"
+				Result := {STRING_32} "USD"
 			end
 		ensure
 			result_exists: Result /= Void
@@ -526,7 +526,7 @@ feature -- International currency formatting
 			if attached invariant_culture_number_format.currency_decimal_separator as l_sep then
 				Result := l_sep
 			else
-				Result := "."
+				Result := {STRING_32} "."
 			end
 		ensure
 			result_exists: Result /= Void
@@ -546,7 +546,7 @@ feature -- International currency formatting
 			if attached invariant_culture_number_format.currency_group_separator as l_sep then
 				Result := l_sep
 			else
-				Result := ","
+				Result := {STRING_32} ","
 			end
 		ensure
 			result_exists: Result /= Void
@@ -554,8 +554,6 @@ feature -- International currency formatting
 
 	get_int_currency_grouping: ARRAY [INTEGER_32]
 			-- Gropuing rules for currency
-		local
-			l_culture_info: detachable CULTURE_INFO
 		do
 			Result := native_array_to_array (invariant_culture_number_format.currency_group_sizes)
 		ensure
@@ -570,7 +568,7 @@ feature -- General Information
 			if attached culture_info.name as l_culture_name then
 				Result := l_culture_name
 			else
-				Result := "en-US"
+				Result := {STRING_32}"en-US"
 			end
 		end
 
@@ -651,7 +649,7 @@ feature {NONE} -- Help fuction
 			i, dif: INTEGER
 		do
 			if a_native_array /= Void then
-				create Result.make (1, a_native_array.count)
+				create Result.make_filled (0, 1, a_native_array.count)
 				from
 					dif := 1-a_native_array.lower
 					i := a_native_array.lower
@@ -662,16 +660,16 @@ feature {NONE} -- Help fuction
 					i := i + 1
 				end
 			else
-				create Result.make (1, 0)
+				create Result.make_empty
 			end
 		end
 
-	format_id_to_dotnet (a_id: STRING): STRING
+	format_id_to_dotnet (a_id: READABLE_STRING_GENERAL): STRING_32
 			-- Format id to dotnet style.
 			-- Replace "_", "@" and "." with "-"
 		local
 			i: INTEGER
-			l_c: CHARACTER
+			l_c: CHARACTER_32
 		do
 			create Result.make (a_id.count)
 			from

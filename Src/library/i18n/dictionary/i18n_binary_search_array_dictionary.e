@@ -138,7 +138,7 @@ feature {NONE} -- help functions
 					m_string := l_m.identifier
 				else
 					check always_has_item: False end
-					m_string := ""
+					create m_string.make_empty
 				end
 
 				if l_id < m_string then

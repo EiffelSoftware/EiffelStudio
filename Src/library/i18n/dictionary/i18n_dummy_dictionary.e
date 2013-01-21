@@ -43,13 +43,13 @@ feature -- Retrieval
 	singular_in_context (original_singular: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
 			-- This should never be called because we garantee the precondition is false
 		do
-			Result := ""
+			create Result.make_empty
 		end
 
 	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
 			-- This should never be called because we garantee the precondition is false
 		do
-			Result := ""
+			create Result.make_empty
 		end
 
 note

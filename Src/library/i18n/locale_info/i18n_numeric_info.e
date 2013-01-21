@@ -39,29 +39,29 @@ feature -- Access: Default values
 
 	default_value_decimal_separator: STRING_32
 		once
-			Result := "."
+			Result := {STRING_32} "."
 		end
 
 	default_value_numbers_after_decimal_separator: INTEGER = 2
 
 	default_value_group_separator: STRING_32
 		once
-			Result := ","
+			Result := {STRING_32} ","
 		end
 
 	default_value_number_list_separator: STRING_32
 		once
-			Result := ";"
+			Result := {STRING_32} ";"
 		end
 
 	default_positive_sign: STRING_32
 		once
-			Result := ""
+			Result := {STRING_32} ""
 		end
 
 	default_negative_sign: STRING_32
 		once
-			Result := "-"
+			Result := {STRING_32} "-"
 		end
 
 	default_value_grouping: ARRAY[INTEGER]

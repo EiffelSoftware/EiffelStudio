@@ -16,12 +16,12 @@ create {I18N_FORMAT_STRING_PARSER}
 
 feature {NONE} -- Initialization
 
-	make (a_string: STRING_32)
+	make (a_string: READABLE_STRING_GENERAL)
 			-- set the `user_string'
 		require
 			a_string_not_void: a_string /= Void
 		do
-			user_string := a_string
+			user_string := a_string.as_string_32
 		end
 
 feature -- Output

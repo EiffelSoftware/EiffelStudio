@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_format_string: STRING_32; a_locale_info: I18N_LOCALE_INFO)
+	make (a_format_string: READABLE_STRING_GENERAL; a_locale_info: I18N_LOCALE_INFO)
 			-- parse `a_format_string' and put parsed data
 			-- in `element_list', this can than be filled
 			-- with `filled()'

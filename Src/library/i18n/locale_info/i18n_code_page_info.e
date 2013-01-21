@@ -31,19 +31,43 @@ feature -- Access: Code pages
 
 feature {I18N_HOST_LOCALE} -- Element change: Code pages
 
-	set_ansi_code_page (a_value: like ansi_code_page)
+	set_ansi_code_page (a_value: READABLE_STRING_GENERAL)
+		require
+			a_value_string_8: a_value /= Void implies a_value.is_valid_as_string_8
 		do
-			ansi_code_page := a_value
+			if a_value /= Void  then
+				ansi_code_page := a_value.to_string_8
+			else
+				ansi_code_page := Void
+			end
+		ensure
+			ansi_code_page_set: a_value /= Void implies (attached ansi_code_page as l_page and then l_page.same_string_general (a_value))
 		end
 
-	set_oem_code_page (a_value: like oem_code_page)
+	set_oem_code_page (a_value: READABLE_STRING_GENERAL)
+		require
+			a_value_string_8: a_value /= Void implies a_value.is_valid_as_string_8
 		do
-			oem_code_page := a_value
+			if a_value /= Void then
+				oem_code_page := a_value.to_string_8
+			else
+				oem_code_page := Void
+			end
+		ensure
+			oem_code_page_set: a_value /= Void implies (attached oem_code_page as l_page and then l_page.same_string_general (a_value))
 		end
 
-	set_mac_code_page (a_value: like mac_code_page)
+	set_mac_code_page (a_value: READABLE_STRING_GENERAL)
+		require
+			a_value_string_8: a_value /= Void implies a_value.is_valid_as_string_8
 		do
-			mac_code_page := a_value
+			if a_value /= Void then
+				mac_code_page := a_value.to_string_8
+			else
+				mac_code_page := Void
+			end
+		ensure
+			mac_code_page_set: a_value /= Void implies (attached mac_code_page as l_page and then l_page.same_string_general (a_value))
 		end
 
 note

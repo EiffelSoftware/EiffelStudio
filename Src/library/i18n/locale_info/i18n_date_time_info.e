@@ -259,14 +259,14 @@ feature -- Access: Default Values
 
 	Default_am_suffix: STRING_32
 		once
-			Result := "am"
+			Result := {STRING_32} "am"
 		ensure
 			result_exists: Result /= Void
 		end
 
 	Default_pm_suffix: STRING_32
 		once
-			Result := "pm"
+			Result := {STRING_32} "pm"
 		ensure
 			result_exists: Result /= Void
 		end
@@ -335,14 +335,14 @@ feature -- Access: Default Values
 
 	Default_date_separator: STRING_32
 		once
-			Result := "/"
+			Result := {STRING_32} "/"
 		ensure
 			result_exists: Result /= Void
 		end
 
 	Default_time_separator: STRING_32
 		once
-			Result := ":"
+			Result := {STRING_32} ":"
 		ensure
 			result_exists: Result /= Void
 		end

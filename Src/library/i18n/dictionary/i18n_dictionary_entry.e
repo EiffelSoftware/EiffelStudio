@@ -46,7 +46,7 @@ feature {NONE} --creation
 		do
 			make (an_original_singular, a_translated_singular)
 			original_plural := an_original_plural.to_string_32
-			create plural_translations.make_filled ("", 0, 3) -- there are at most 4 forms, INDEX IS 0-BASED!!!!!!!!!!!!
+			create plural_translations.make_filled ({STRING_32} "", 0, 3) -- there are at most 4 forms, INDEX IS 0-BASED!!!!!!!!!!!!
 			has_plural := True
 		ensure
 			original_singular_set: original_singular.is_equal (an_original_singular.as_string_32)

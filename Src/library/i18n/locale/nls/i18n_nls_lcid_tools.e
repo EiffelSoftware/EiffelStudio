@@ -25,25 +25,18 @@ feature --Access
 			Result := is_valid_locale(lcid, 2)
 		end
 
-	supported_locales: LIST[I18N_LOCALE_ID]
+	supported_locales: ARRAYED_LIST [I18N_LOCALE_ID]
 			--  List all installed locales
-		local
-			i: INTEGER
 		do
-			create {LINKED_LIST[I18N_LOCALE_ID]} Result.make
-			from
-				i := 1
-			until
-				i > locales.upper
-			loop
-				if is_supported_locale (locales.item (i).lcid) then
-					Result.extend (lcid_to_locale_id (locales.item (i).lcid))
+			create Result.make (locales.count)
+			across locales as l_locale loop
+				if is_supported_locale (l_locale.item.lcid) then
+					Result.extend (lcid_to_locale_id (l_locale.item.lcid))
 				end
-				i := i + 1
 			end
 		end
 
-	lcid_to_locale_id(lcid: INTEGER):I18N_LOCALE_ID
+	lcid_to_locale_id(lcid: INTEGER): I18N_LOCALE_ID
 			-- Only Windows Vista can manage to give you the correct identifier in one query.
 			-- Everyone else needs to take a crash course on how these identifiers are composed:
 			-- Typically we have: ll-RR where ll is a lowercase language code from ISO 639-1 (or 639-2/T)
@@ -54,7 +47,7 @@ feature --Access
 		local
 			iso639: STRING_32
 			iso3166: STRING_32
-			script: detachable STRING_32
+			script: detachable STRING
 			i: INTEGER
 		do
 			iso639 := extract_locale_string (lcid, nls_constants.locale_siso639langname)
@@ -74,50 +67,24 @@ feature --Access
 			create Result.make (iso639, iso3166, script)
 		end
 
-	locale_id_to_lcid(id: I18N_LOCALE_ID):INTEGER
+	locale_id_to_lcid (id: I18N_LOCALE_ID): INTEGER
 			-- takes an locale id and returns corresponding LCID
 			-- if it returns 0 Something Is Wrong
 		require
 			argument_not_void: id /= Void
 		local
-			left, right, middle: INTEGER
-			found: BOOLEAN
-			name, t_string: STRING_32
+			name: STRING_32
 		do
-			create name.make_from_string(id.language)
+			create name.make_from_string (id.language)
 			if (attached id.script as l_script) and then not l_script.is_equal (("euro").as_string_32) then
 				name.append_character ('-')
 				name.append (l_script)
 			end
 			name.append_character ('-')
 			name.append (id.region)
-				-- locales is sorted by iso_code, so we can use etienne's well-contracted binary search
 
-			from
-				left := locales.lower
-				right := locales.upper
-			invariant
-				right < locales.upper
-						implies locales.item(right + 1).iso_code <= locales.item(locales.upper).iso_code
-				left <= locales.upper and left > locales.lower
-						implies locales.item(left - 1).iso_code <= locales.item(locales.upper).iso_code
-			until
-				left > right or found
-			loop
-				middle := ((left + right).as_natural_32 |>> 1).as_integer_32
-				t_string := locales.item(middle).iso_code
-				if name < t_string then
-					right := middle - 1
-				elseif name > t_string then
-					left := middle + 1
-				else
-						-- Found
-					found := True
-					Result := locales.item (middle).lcid
-					left := left + 1 -- not nice but required to decrease variant
-				end
-			variant
-				right - left + 1
+			if attached locales.item (name) as l_info then
+				Result := l_info.lcid
 			end
 		end
 
@@ -130,7 +97,9 @@ feature {NONE}  -- LCIDS
 -- unless you have "Windows Vista or later". So we do it by hand with this thing.
 -- full_name isn't used but is potentially useful.
 
-	locales: ARRAY[TUPLE[full_name:STRING_8; iso_code:STRING_8; lcid:INTEGER]]
+	locales: STRING_TABLE [TUPLE [full_name: STRING_8; lcid: INTEGER]]
+			-- Table indexed by ISO code giving the full name and the Windows LCID.
+
 	scripts: ARRAY[TUPLE[script: STRING_8; lcid:INTEGER]]
 
 feature -- Initialisation
@@ -138,215 +107,215 @@ feature -- Initialisation
 	initialize_locales
 			-- populate locales array and scripts array
 		do
-			locales := <<
-				["Afrikaans (South Africa)",	"af-ZA",	0x0436],
-				["Amharic (Ethiopia)",		"am-ET",	0x045e],
-				["Arabic (U.A.E.)",		"ar-AE",	0x3801],
-				["Arabic (Bahrain)",		"ar-BH",	0x3c01],
-				["Arabic (Algeria)",		"ar-DZ",	0x1401],
-				["Arabic (Egypt)",		"ar-EG",	0x0c01],
-				["Arabic (Iraq)",		"ar-IQ",	0x0801],
-				["Arabic (Jordan)",		"ar-JO",	0x2c01],
-				["Arabic (Kuwait)",		"ar-KW",	0x3401],
-				["Arabic (Lebanon)",		"ar-LB",	0x3001],
-				["Arabic (Libya)",		"ar-LY",	0x1001],
-				["Arabic (Morocco)",		"ar-MA",	0x1801],
-				["Arabic (Oman)",		"ar-OM",	0x2001],
-				["Arabic (Qatar)",		"ar-QA",	0x4001],
-				["Arabic (Saudi Arabia)",	"ar-SA",	0x0401],
-				["Arabic (Syria)",		"ar-SY",	0x2801],
-				["Arabic (Tunisia)",		"ar-TN",	0x1c01],
-				["Arabic (Yemen)",		"ar-YE",	0x2401],
-				["Mapudungun (Chile)",		"arn-CL",	0x047a],
-				["Assamese (India)",		"as-IN",	0x044d],
-				["Azeri (Azerbaijan, Cyrillic)",	"az-Cyrl-AZ",	0x082c],
-				["Azeri (Azerbaijan, Latin)",		"az-Latn-AZ",	0x042c],
-				["Bashkir (Russia)",		"ba-RU",	0x046d],
-				["Belarusian (Belarus)",	"be-BY",	0x0423],
-				["Bulgarian (Bulgaria)",	"bg-BG",	0x0402],
-				["Bengali (India)",		"bn-IN",	0x0445],
-				["Tibetan (Bhutan)",		"bo-BT", 	0x0851],
-				["Tibetan (PRC)", 		"bo-CN",	0x0451],
-				["Breton (France)", 		"br-FR",	0x047e],
-				["Bosnian (Bosnia and Herzegovina, Cyrillic)",	"bs-Cyrl-BA",	0x201a],
-				["Bosnian (Bosnia and Herzegovina, Latin)",	"bs-Latn-BA",	0x141a],
-				["Catalan (Catalan)", 		"ca-ES",	0x0403],
-				["Corsican (France)", 		"co-FR",	0x0000], -- Note: Corsican is in the msdn table, but has no LCID - maybe in future releases it will get one (corsican nationalists might threaten to blow up Microsoft HQ)
-				["Czech (Czech Republic)",	"cs-CZ",	0x0405],
-				["Welsh (United Kingdom)",	"cy-GB",	0x0452],
-				["Danish (Denmark)", 		"da-DK",	0x0406],
-				["German (Austria)", 		"de-AT",	0x0c07],
-				["German (Switzerland)", 	"de-CH",	0x0807],
-				["German (Germany)",		"de-DE",	0x0407],
-				["German (Liechtenstein)",	"de-LI",	0x1407],
-				["German (Luxembourg)",		"de-LU",	0x1007],
-				["Lower Sorbian (Germany)",	"dsb-DE",	0x082e],
-				["Divehi (Maldives)",		"dv-MV",	0x0465],
-				["Greek (Greece)",		"el-GR",	0x0408],
-				["English (Caribbean)",		"en-029",	0x2409],
-				["English (Australia)",		"en-AU",	0x0c09],
-				["English (Belize)",		"en-BZ",	0x2809],
-				["English (Canada)",		"en-CA",	0x1009],
-				["English (United Kingdom)","en-GB",	0x0809],
-				["English (Ireland)",		"en-IE",	0x1809],
-				["English (India)",		"en-IN",	0x4009],
-				["English (Jamaica)",		"en-JM",	0x2009],
-				["English (Malaysia)",		"en-MY",	0x4409],
-				["English (New Zealand)",	"en-NZ",	0x1409],
-				["English (Philippines)",	"en-PH",	0x3409],
-				["English (Singapore)",		"en-SG",	0x4809],
-				["English (Trinidad and Tobago)",	"en-TT",	0x2c09],
-				["English (United States)",	"en-US",	0x0409],
-				["English (South Africa)",	"en-ZA",	0x1c09],
-				["English (Zimbabwe)",		"en-ZW",	0x3009],
-				["Spanish (Argentina)",		"es-AR",	0x2c0a],
-				["Spanish (Bolivia)",		"es-BO",	0x400a],
-				["Spanish (Chile)",			"es-CL",	0x340a],
-				["Spanish (Colombia)",		"es-CO",	0x240a],
-				["Spanish (Costa Rica)",	"es-CR",	0x140a],
-				["Spanish (Dominican Republic)",	"es-DO",	0x1c0a],
-				["Spanish (Ecuador)", 		"es-EC",	0x300a],
-				["Spanish (Spain)",			"es-ES",	0x0c0a],
-				["Spanish (Guatemala)",		"es-GT",	0x100a],
-				["Spanish (Honduras)",		"es-HN",	0x480a],
-				["Spanish (Mexico)",		"es-MX",	0x080a],
-				["Spanish (Nicaragua)",		"es-NI",	0x4c0a],
-				["Spanish (Panama)",		"es-PA",	0x180a],
-				["Spanish (Peru)",			"es-PE",	0x280a],
-				["Spanish (Puerto Rico)",	"es-PR",	0x500a],
-				["Spanish (Paraguay)",		"es-PY",	0x3c0a],
-				["Spanish (El Salvador)",	"es-SV",	0x440a],
-				["Spanish (United States)",	"es-US",	0x540a],
-				["Spanish (Uruguay)",		"es-UY",	0x380a],
-				["Spanish (Venezuela)",		"es-VE",	0x200a],
-				["Estonian (Estonia)",		"et-EE",	0x0425],
-				["Basque (Basque)",			"eu-ES",	0x042d],
-				["Persian (Iran)",			"fa-IR",	0x0429],
-				["Finnish (Finland)",		"fi-FI",	0x040b],
-				["Filipino (Philippines)",	"fil-PH",	0x0464],
-				["Faroese (Faroe Islands)",	"fo-FO",	0x0438],
-				["French (Belgium)",		"fr-BE",	0x080c],
-				["French (Canada)",			"fr-CA",	0x0c0c],
-				["French (Switzerland)",	"fr-CH",	0x100c],
-				["French (France)",			"fr-FR",	0x040c],
-				["French (Luxembourg)",		"fr-LU",	0x140c],
-				["French (Monaco)",			"fr-MC",	0x180c],
-				["Frisian (Netherlands)",	"fy-NL",	0x0462],
-				["Irish (Ireland)",			"ga-IE",	0x083c],
-				["Dari (Afghanistan)",		"gbz-AF",	0x048c],
-				["Galician (Spain)",		"gl-ES",	0x0456],
-				["Alsatian (France)",		"gsw-FR",	0x0484],
-				["Gujarati (India)",		"gu-IN",	0x0447],
-				["Hausa (Nigeria, Latin)",	"ha-Latn-NG",	0x0468],
-				["Hebrew (Israel)",			"he-IL",	0x040d],
-				["Hindi (India)",			"hi-IN",	0x0439],
-				["Croatian (Bosnia and Herzegovina, Latin)",	"hr-BA",	0x101a],
-				["Croatian (Croatia)",		"hr-HR",	0x041a],
-				["Hungarian (Hungary)",		"hu-HU",	0x040e],
-				["Armenian (Armenia)",		"hy-AM",	0x042b],
-				["Indonesian (Indonesia)",	"id-ID",	0x0421],
-				["Igbo (Nigeria)",			"ig-NG",	0x0470],
-				["Yi (PRC)",				"ii-CN",	0x0478],
-				["Icelandic (Iceland)",		"is-IS",	0x040f],
-				["Italian (Switzerland)",	"it-CH",	0x0810],
-				["Italian (Italy)",			"it-IT",	0x0410],
-				["Inuktitut (Canada, Syllabics)",	"iu-Cans-CA",	0x045d],
-				["Inuktitut (Canada, Latin)",		"iu-Latn-CA",	0x085d],
-				["Japanese (Japan)",		"ja-JP",	0x0411],
-				["Georgian (Georgia)",		"ka-GE",	0x0437],
-				["Khmer (Cambodia)",		"kh-KH",	0x0453],
-				["Kazakh (Kazakhstan)",		"kk-KZ",	0x043f],
-				["Greenlandic (Greenland)",	"kl-GL",	0x046f],
-				["Kannada (India)",			"kn-IN",	0x044b],
-				["Korean (Korea)",			"ko-KR",	0x0412],
-				["Konkani (India)",			"kok-IN",	0x0457],
-				["Kyrgyz (Kyrgyzstan)",		"ky-KG",	0x0440],
-				["Luxembourgish (Luxembourg)",		"lb-LU",	0x046e],
-				["Lao (Lao PDR)",			"lo-LA",	0x0454],
-				["Lithuanian (Lithuania)",	"lt-LT",	0x0427],
-				["Latvian (Latvia)",		"lv-LV",	0x0426],
-				["Maori (New Zealand)",		"mi-NZ",	0x0481],
-				["Macedonian (Macedonia, FYROM)",	"mk-MK",	0x042f],
-				["Malayalam (India)",		"ml-IN",	0x044c],
-				["Mongolian (Mongolia)",	"mn-Cyrl-MN",	0x0450],
-				["Mongolian (PRC)",			"mn-Mong-CN",	0x0850],
-				["Mohawk (Canada)",			"moh-CA",	0x047c],
-				["Marathi (India)",			"mr-IN",	0x044e],
-				["Malay (Brunei Darussalam)",		"ms-BN",	0x083e],
-				["Malay (Malaysia)",		"ms-MY",	0x043e],
-				["Maltese (Malta)",			"mt-MT",	0x043a],
-				["Norwegian (Bokmål, Norway)",		"nb-NO",	0x0414],
-				["Nepali (India)",			"ne-IN",	0x0000], --also missing	
-				["Nepali (Nepal)",			"ne-NP",	0x0461],
-				["Dutch (Belgium)",			"nl-BE",	0x0813],
-				["Dutch (Netherlands)",		"nl-NL",	0x0413],
-				["Norwegian (Nynorsk, Norway)",		"nn-NO",	0x0814],
-				["Sesotho sa Leboa/Northern Sotho (South Africa)",		"ns-ZA",	0x046c],
-				["Occitan (France)",		"oc-FR",	0x0482],
-				["Oriya (India)",			"or-IN",	0x0448],
-				["Punjabi (India)",			"pa-IN",	0x0446],
-				["Polish (Poland)",			"pl-PL",	0x0415],
-				["Pashto (Afghanistan)",	"ps-AF",	0x0463],
-				["Portuguese (Brazil)",		"pt-BR",	0x0416],
-				["Portuguese (Portugal)",	"pt-PT",	0x0816],
-				["K'iche (Guatemala)",		"qut-GT",	0x0486],
-				["Quechua (Bolivia)",		"quz-BO",	0x046b],
-				["Quechua (Ecuador)",		"quz-EC",	0x086b],
-				["Quechua (Peru)",			"quz-PE",	0x0c6b],
-				["Romansh (Switzerland)",	"rm-CH",	0x0417],
-				["Romanian (Romania)",		"ro-RO",	0x0418],
-				["Russian (Russia)",		"ru-RU",	0x0419],
-				["Kinyarwanda (Rwanda)",	"rw-RW",	0x0487],
-				["Sanskrit (India)",		"sa-IN",	0x044f],
-				["Yakut (Russia)",			"sah-RU",	0x0485],
-				["Sami (Northern, Finland)","se-FI",	0x0c3b],
-				["Sami (Northern, Norway)",	"se-NO",	0x043b],
-				["Sami (Northern, Sweden)",	"se-SE",	0x083b],
-				["Sinhala (Sri Lanka)",		"si-LK",	0x045b],
-				["Slovak (Slovakia)",		"sk-SK",	0x041b],
-				["Slovenian (Slovenia)",	"sl-SI",	0x0424],
-				["Sami (Southern, Norway)",	"sma-NO",	0x183b],
-				["Sami (Southern, Sweden)",	"sma-SE",	0x1c3b],
-				["Sami (Lule, Norway)",		"smj-NO",	0x103b],
-				["Sami (Lule, Sweden)",		"smj-SE",	0x143b],
-				["Sami (Inari, Finland)",	"smn-FI",	0x243b],
-				["Sami (Skolt, Finland)",	"sms-FI",	0x203b],
-				["Albanian (Albania)",		"sq-AL",	0x041c],
-				["Serbian (Bosnia and Herzegovina, Cyrillic)",	"sr-Cyrl-BA",	0x1c1a],
-				["Serbian (Serbia and Montenegro, Cyrillic)",	"sr-Cyrl-CS",	0x0c1a],
-				["Serbian (Bosnia and Herzegovina, Latin)",		"sr-Latn-BA",	0x181a],
-				["Serbian (Serbia and Montenegro, Latin)",		"sr-Latn-CS",	0x081a],
-				["Swedish (Finland)",		"sv-FI",	0x081d],
-				["Swedish (Sweden)",		"sv-SE",	0x041d],
-				["Swahili (Kenya)",			"sw-KE",	0x0441],
-				["Syriac (Syria)",			"syr-SY",	0x045a],
-				["Tamil (India)",			"ta-IN",	0x0449],
-				["Telugu (India)",			"te-IN",	0x044a],
-				["Tajik (Tajikistan)",		"tg-Cyrl-TJ",	0x0428],
-				["Thai (Thailand)",			"th-TH",	0x041e],
-				["Turkmen (Turkmenistan)",	"tk-TM",	0x0442],
-				["Tamazight (Algeria, Latin)",		"tmz-Latn-DZ",	0x085f],
-				["Setswana/Tswana (South Africa)",	"tn-ZA",	0x0432],
-				["Urdu (India)",			"tr-IN",	0x0820],
-				["Turkish (Turkey)",		"tr-TR",	0x041f],
-				["Tatar (Russia)",			"tt-RU",	0x0444],
-				["Uighur (PRC)",			"ug-CN",	0x0480],
-				["Ukrainian (Ukraine)",		"uk-UA",	0x0422],
-				["Urdu (Pakistan)",			"ur-PK",	0x0420],
-				["Uzbek (Uzbekistan, Cyrillic)",	"uz-Cyrl-UZ",	0x0843],
-				["Uzbek (Uzbekistan, Latin)",		"uz-Latn-UZ",	0x0443],
-				["Vietnamese (Vietnam)",	"vi-VN",	0x042a],
-				["Upper Sorbian (Germany)",	"wen-DE",	0x042e],
-				["Wolof (Senegal)",			"wo-SN",	0x0488],
-				["Xhosa/isiXhosa (South Africa)",	"xh-ZA",	0x0434],
-				["Yoruba (Nigeria)",				"yo-NG",	0x046a],
-				["Chinese (PRC)",			"zh-CN",	0x0804],
-				["Chinese (Hong Kong SAR, PRC)",	"zh-HK",	0x0c04],
-				["Chinese (Macao SAR)",		"zh-MO",	0x1404],
-				["Chinese (Singapore)",		"zh-SG",	0x1004],
-				["Chinese (Taiwan)",		"zh-TW",	0x0404],
-				["Zulu/isiZulu (South Africa)",		"zu-ZA",	0x0435]
-			>>
+			create locales.make_caseless (250)
+			locales.put (["Afrikaans (South Africa)", 0x0436], "af-ZA")
+			locales.put (["Amharic (Ethiopia)", 0x045e], "am-ET")
+			locales.put (["Arabic (U.A.E.)", 0x3801], "ar-AE")
+			locales.put (["Arabic (Bahrain)", 0x3c01], "ar-BH")
+			locales.put (["Arabic (Algeria)", 0x1401], "ar-DZ")
+			locales.put (["Arabic (Egypt)", 0x0c01], "ar-EG")
+			locales.put (["Arabic (Iraq)", 0x0801], "ar-IQ")
+			locales.put (["Arabic (Jordan)", 0x2c01], "ar-JO")
+			locales.put (["Arabic (Kuwait)", 0x3401], "ar-KW")
+			locales.put (["Arabic (Lebanon)", 0x3001], "ar-LB")
+			locales.put (["Arabic (Libya)", 0x1001], "ar-LY")
+			locales.put (["Arabic (Morocco)", 0x1801], "ar-MA")
+			locales.put (["Arabic (Oman)", 0x2001], "ar-OM")
+			locales.put (["Arabic (Qatar)", 0x4001], "ar-QA")
+			locales.put (["Arabic (Saudi Arabia)", 0x0401], "ar-SA")
+			locales.put (["Arabic (Syria)", 0x2801], "ar-SY")
+			locales.put (["Arabic (Tunisia)", 0x1c01], "ar-TN")
+			locales.put (["Arabic (Yemen)", 0x2401], "ar-YE")
+			locales.put (["Mapudungun (Chile)", 0x047a], "arn-CL")
+			locales.put (["Assamese (India)", 0x044d], "as-IN")
+			locales.put (["Azeri (Azerbaijan, Cyrillic)", 0x082c], "az-Cyrl-AZ")
+			locales.put (["Azeri (Azerbaijan, Latin)", 0x042c], "az-Latn-AZ")
+			locales.put (["Bashkir (Russia)", 0x046d], "ba-RU")
+			locales.put (["Belarusian (Belarus)", 0x0423], "be-BY")
+			locales.put (["Bulgarian (Bulgaria)", 0x0402], "bg-BG")
+			locales.put (["Bengali (India)", 0x0445], "bn-IN")
+			locales.put (["Tibetan (Bhutan)", 0x0851], "bo-BT")
+			locales.put (["Tibetan (PRC)", 0x0451], "bo-CN")
+			locales.put (["Breton (France)", 0x047e], "br-FR")
+			locales.put (["Bosnian (Bosnia and Herzegovina, Cyrillic)", 0x201a], "bs-Cyrl-BA")
+			locales.put (["Bosnian (Bosnia and Herzegovina, Latin)", 0x141a], "bs-Latn-BA")
+			locales.put (["Catalan (Catalan)", 0x0403], "ca-ES")
+			locales.put (["Corsican (France)", 0x0000], "co-FR") -- Note: Corsican is in the msdn table, but has no LCID - maybe in future releases it will get one (corsican nationalists might threaten to blow up Microsoft HQ)
+			locales.put (["Czech (Czech Republic)", 0x0405], "cs-CZ")
+			locales.put (["Welsh (United Kingdom)", 0x0452], "cy-GB")
+			locales.put (["Danish (Denmark)", 0x0406], "da-DK")
+			locales.put (["German (Austria)", 0x0c07], "de-AT")
+			locales.put (["German (Switzerland)", 0x0807], "de-CH")
+			locales.put (["German (Germany)", 0x0407], "de-DE")
+			locales.put (["German (Liechtenstein)", 0x1407], "de-LI")
+			locales.put (["German (Luxembourg)", 0x1007], "de-LU")
+			locales.put (["Lower Sorbian (Germany)", 0x082e], "dsb-DE")
+			locales.put (["Divehi (Maldives)", 0x0465], "dv-MV")
+			locales.put (["Greek (Greece)", 0x0408], "el-GR")
+			locales.put (["English (Caribbean)", 0x2409], "en-029")
+			locales.put (["English (Australia)", 0x0c09], "en-AU")
+			locales.put (["English (Belize)", 0x2809], "en-BZ")
+			locales.put (["English (Canada)", 0x1009], "en-CA")
+			locales.put (["English (United Kingdom)", 0x0809], "en-GB")
+			locales.put (["English (Ireland)", 0x1809], "en-IE")
+			locales.put (["English (India)", 0x4009], "en-IN")
+			locales.put (["English (Jamaica)", 0x2009], "en-JM")
+			locales.put (["English (Malaysia)", 0x4409], "en-MY")
+			locales.put (["English (New Zealand)", 0x1409], "en-NZ")
+			locales.put (["English (Philippines)", 0x3409], "en-PH")
+			locales.put (["English (Singapore)", 0x4809], "en-SG")
+			locales.put (["English (Trinidad and Tobago)", 0x2c09], "en-TT")
+			locales.put (["English (United States)", 0x0409], "en-US")
+			locales.put (["English (South Africa)", 0x1c09], "en-ZA")
+			locales.put (["English (Zimbabwe)", 0x3009], "en-ZW")
+			locales.put (["Spanish (Argentina)", 0x2c0a], "es-AR")
+			locales.put (["Spanish (Bolivia)", 0x400a], "es-BO")
+			locales.put (["Spanish (Chile)", 0x340a], "es-CL")
+			locales.put (["Spanish (Colombia)", 0x240a], "es-CO")
+			locales.put (["Spanish (Costa Rica)", 0x140a], "es-CR")
+			locales.put (["Spanish (Dominican Republic)", 0x1c0a], "es-DO")
+			locales.put (["Spanish (Ecuador)", 0x300a], "es-EC")
+			locales.put (["Spanish (Spain)", 0x0c0a], "es-ES")
+			locales.put (["Spanish (Guatemala)", 0x100a], "es-GT")
+			locales.put (["Spanish (Honduras)", 0x480a], "es-HN")
+			locales.put (["Spanish (Mexico)", 0x080a], "es-MX")
+			locales.put (["Spanish (Nicaragua)", 0x4c0a], "es-NI")
+			locales.put (["Spanish (Panama)", 0x180a], "es-PA")
+			locales.put (["Spanish (Peru)", 0x280a], "es-PE")
+			locales.put (["Spanish (Puerto Rico)", 0x500a], "es-PR")
+			locales.put (["Spanish (Paraguay)", 0x3c0a], "es-PY")
+			locales.put (["Spanish (El Salvador)", 0x440a], "es-SV")
+			locales.put (["Spanish (United States)", 0x540a], "es-US")
+			locales.put (["Spanish (Uruguay)", 0x380a], "es-UY")
+			locales.put (["Spanish (Venezuela)", 0x200a], "es-VE")
+			locales.put (["Estonian (Estonia)", 0x0425], "et-EE")
+			locales.put (["Basque (Basque)", 0x042d], "eu-ES")
+			locales.put (["Persian (Iran)", 0x0429], "fa-IR")
+			locales.put (["Finnish (Finland)", 0x040b], "fi-FI")
+			locales.put (["Filipino (Philippines)", 0x0464], "fil-PH")
+			locales.put (["Faroese (Faroe Islands)", 0x0438], "fo-FO")
+			locales.put (["French (Belgium)", 0x080c], "fr-BE")
+			locales.put (["French (Canada)", 0x0c0c], "fr-CA")
+			locales.put (["French (Switzerland)", 0x100c], "fr-CH")
+			locales.put (["French (France)", 0x040c], "fr-FR")
+			locales.put (["French (Luxembourg)", 0x140c], "fr-LU")
+			locales.put (["French (Monaco)", 0x180c], "fr-MC")
+			locales.put (["Frisian (Netherlands)", 0x0462], "fy-NL")
+			locales.put (["Irish (Ireland)", 0x083c], "ga-IE")
+			locales.put (["Dari (Afghanistan)", 0x048c], "gbz-AF")
+			locales.put (["Galician (Spain)", 0x0456], "gl-ES")
+			locales.put (["Alsatian (France)", 0x0484], "gsw-FR")
+			locales.put (["Gujarati (India)", 0x0447], "gu-IN")
+			locales.put (["Hausa (Nigeria, Latin)", 0x0468], "ha-Latn-NG")
+			locales.put (["Hebrew (Israel)", 0x040d], "he-IL")
+			locales.put (["Hindi (India)", 0x0439], "hi-IN")
+			locales.put (["Croatian (Bosnia and Herzegovina, Latin)", 0x101a], "hr-BA")
+			locales.put (["Croatian (Croatia)", 0x041a], "hr-HR")
+			locales.put (["Hungarian (Hungary)", 0x040e], "hu-HU")
+			locales.put (["Armenian (Armenia)", 0x042b], "hy-AM")
+			locales.put (["Indonesian (Indonesia)", 0x0421], "id-ID")
+			locales.put (["Igbo (Nigeria)", 0x0470], "ig-NG")
+			locales.put (["Yi (PRC)", 0x0478], "ii-CN")
+			locales.put (["Icelandic (Iceland)", 0x040f], "is-IS")
+			locales.put (["Italian (Switzerland)", 0x0810], "it-CH")
+			locales.put (["Italian (Italy)", 0x0410], "it-IT")
+			locales.put (["Inuktitut (Canada, Syllabics)", 0x045d], "iu-Cans-CA")
+			locales.put (["Inuktitut (Canada, Latin)", 0x085d], "iu-Latn-CA")
+			locales.put (["Japanese (Japan)", 0x0411], "ja-JP")
+			locales.put (["Georgian (Georgia)", 0x0437], "ka-GE")
+			locales.put (["Khmer (Cambodia)", 0x0453], "kh-KH")
+			locales.put (["Kazakh (Kazakhstan)", 0x043f], "kk-KZ")
+			locales.put (["Greenlandic (Greenland)", 0x046f], "kl-GL")
+			locales.put (["Kannada (India)", 0x044b], "kn-IN")
+			locales.put (["Korean (Korea)", 0x0412], "ko-KR")
+			locales.put (["Konkani (India)", 0x0457], "kok-IN")
+			locales.put (["Kyrgyz (Kyrgyzstan)", 0x0440], "ky-KG")
+			locales.put (["Luxembourgish (Luxembourg)", 0x046e], "lb-LU")
+			locales.put (["Lao (Lao PDR)", 0x0454], "lo-LA")
+			locales.put (["Lithuanian (Lithuania)", 0x0427], "lt-LT")
+			locales.put (["Latvian (Latvia)", 0x0426], "lv-LV")
+			locales.put (["Maori (New Zealand)", 0x0481], "mi-NZ")
+			locales.put (["Macedonian (Macedonia, FYROM)", 0x042f], "mk-MK")
+			locales.put (["Malayalam (India)", 0x044c], "ml-IN")
+			locales.put (["Mongolian (Mongolia)", 0x0450], "mn-Cyrl-MN")
+			locales.put (["Mongolian (PRC)", 0x0850], "mn-Mong-CN")
+			locales.put (["Mohawk (Canada)", 0x047c], "moh-CA")
+			locales.put (["Marathi (India)", 0x044e], "mr-IN")
+			locales.put (["Malay (Brunei Darussalam)", 0x083e], "ms-BN")
+			locales.put (["Malay (Malaysia)", 0x043e], "ms-MY")
+			locales.put (["Maltese (Malta)", 0x043a], "mt-MT")
+			locales.put (["Norwegian (Bokmål, Norway)", 0x0414], "nb-NO")
+			locales.put (["Nepali (India)", 0x0000], "ne-IN") --also missing	
+			locales.put (["Nepali (Nepal)", 0x0461], "ne-NP")
+			locales.put (["Dutch (Belgium)", 0x0813], "nl-BE")
+			locales.put (["Dutch (Netherlands)", 0x0413], "nl-NL")
+			locales.put (["Norwegian (Nynorsk, Norway)", 0x0814], "nn-NO")
+			locales.put (["Sesotho sa Leboa/Northern Sotho (South Africa)", 0x046c], "ns-ZA")
+			locales.put (["Occitan (France)", 0x0482], "oc-FR")
+			locales.put (["Oriya (India)", 0x0448], "or-IN")
+			locales.put (["Punjabi (India)", 0x0446], "pa-IN")
+			locales.put (["Polish (Poland)", 0x0415], "pl-PL")
+			locales.put (["Pashto (Afghanistan)", 0x0463], "ps-AF")
+			locales.put (["Portuguese (Brazil)", 0x0416], "pt-BR")
+			locales.put (["Portuguese (Portugal)", 0x0816], "pt-PT")
+			locales.put (["K'iche (Guatemala)", 0x0486], "qut-GT")
+			locales.put (["Quechua (Bolivia)", 0x046b], "quz-BO")
+			locales.put (["Quechua (Ecuador)", 0x086b], "quz-EC")
+			locales.put (["Quechua (Peru)", 0x0c6b], "quz-PE")
+			locales.put (["Romansh (Switzerland)", 0x0417], "rm-CH")
+			locales.put (["Romanian (Romania)", 0x0418], "ro-RO")
+			locales.put (["Russian (Russia)", 0x0419], "ru-RU")
+			locales.put (["Kinyarwanda (Rwanda)", 0x0487], "rw-RW")
+			locales.put (["Sanskrit (India)", 0x044f], "sa-IN")
+			locales.put (["Yakut (Russia)", 0x0485], "sah-RU")
+			locales.put (["Sami (Northern, Finland)", 0x0c3b], "se-FI")
+			locales.put (["Sami (Northern, Norway)", 0x043b], "se-NO")
+			locales.put (["Sami (Northern, Sweden)", 0x083b], "se-SE")
+			locales.put (["Sinhala (Sri Lanka)", 0x045b], "si-LK")
+			locales.put (["Slovak (Slovakia)", 0x041b], "sk-SK")
+			locales.put (["Slovenian (Slovenia)", 0x0424], "sl-SI")
+			locales.put (["Sami (Southern, Norway)", 0x183b], "sma-NO")
+			locales.put (["Sami (Southern, Sweden)", 0x1c3b], "sma-SE")
+			locales.put (["Sami (Lule, Norway)", 0x103b], "smj-NO")
+			locales.put (["Sami (Lule, Sweden)", 0x143b], "smj-SE")
+			locales.put (["Sami (Inari, Finland)", 0x243b], "smn-FI")
+			locales.put (["Sami (Skolt, Finland)", 0x203b], "sms-FI")
+			locales.put (["Albanian (Albania)", 0x041c], "sq-AL")
+			locales.put (["Serbian (Bosnia and Herzegovina, Cyrillic)", 0x1c1a], "sr-Cyrl-BA")
+			locales.put (["Serbian (Serbia and Montenegro, Cyrillic)", 0x0c1a], "sr-Cyrl-CS")
+			locales.put (["Serbian (Bosnia and Herzegovina, Latin)", 0x181a], "sr-Latn-BA")
+			locales.put (["Serbian (Serbia and Montenegro, Latin)", 0x081a], "sr-Latn-CS")
+			locales.put (["Swedish (Finland)", 0x081d], "sv-FI")
+			locales.put (["Swedish (Sweden)", 0x041d], "sv-SE")
+			locales.put (["Swahili (Kenya)", 0x0441], "sw-KE")
+			locales.put (["Syriac (Syria)", 0x045a], "syr-SY")
+			locales.put (["Tamil (India)", 0x0449], "ta-IN")
+			locales.put (["Telugu (India)", 0x044a], "te-IN")
+			locales.put (["Tajik (Tajikistan)", 0x0428], "tg-Cyrl-TJ")
+			locales.put (["Thai (Thailand)", 0x041e], "th-TH")
+			locales.put (["Turkmen (Turkmenistan)", 0x0442], "tk-TM")
+			locales.put (["Tamazight (Algeria, Latin)", 0x085f], "tmz-Latn-DZ")
+			locales.put (["Setswana/Tswana (South Africa)", 0x0432], "tn-ZA")
+			locales.put (["Urdu (India)", 0x0820], "tr-IN")
+			locales.put (["Turkish (Turkey)", 0x041f], "tr-TR")
+			locales.put (["Tatar (Russia)", 0x0444], "tt-RU")
+			locales.put (["Uighur (PRC)", 0x0480], "ug-CN")
+			locales.put (["Ukrainian (Ukraine)", 0x0422], "uk-UA")
+			locales.put (["Urdu (Pakistan)", 0x0420], "ur-PK")
+			locales.put (["Uzbek (Uzbekistan, Cyrillic)", 0x0843], "uz-Cyrl-UZ")
+			locales.put (["Uzbek (Uzbekistan, Latin)", 0x0443], "uz-Latn-UZ")
+			locales.put (["Vietnamese (Vietnam)", 0x042a], "vi-VN")
+			locales.put (["Upper Sorbian (Germany)", 0x042e], "wen-DE")
+			locales.put (["Wolof (Senegal)", 0x0488], "wo-SN")
+			locales.put (["Xhosa/isiXhosa (South Africa)", 0x0434], "xh-ZA")
+			locales.put (["Yoruba (Nigeria)", 0x046a], "yo-NG")
+			locales.put (["Chinese (PRC)", 0x0804], "zh-CN")
+			locales.put (["Chinese (Hong Kong SAR, PRC)", 0x0c04], "zh-HK")
+			locales.put (["Chinese (Macao SAR)", 0x1404], "zh-MO")
+			locales.put (["Chinese (Singapore)", 0x1004], "zh-SG")
+			locales.put (["Chinese (Taiwan)", 0x0404], "zh-TW")
+			locales.put (["Zulu/isiZulu (South Africa)", 0x0435], "zu-ZA")
+
 			scripts := <<
 				["Cyrl", 0x0428],
 				["Latn", 0x042c],

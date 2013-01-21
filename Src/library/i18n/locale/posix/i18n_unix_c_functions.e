@@ -113,10 +113,11 @@ feature -- nl_langinfo
 
 feature -- Available locales
 
-	unix_is_available (a_locale: STRING): BOOLEAN
+	unix_is_available (a_locale: READABLE_STRING_GENERAL): BOOLEAN
 			-- see: `is_available'
 		require
 			a_locale_not_void: a_locale /= Void
+			a_locale_is_ascii: a_locale.is_valid_as_string_8
 		local
 			l_str: C_STRING
 			l_null: POINTER

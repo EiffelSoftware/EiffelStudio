@@ -96,9 +96,9 @@ feature {NONE} -- fill
 			Result.set_value_group_separator (get_value_group_separator)
 			Result.set_value_number_list_separator (get_value_number_list_separator)
 			Result.set_value_numbers_after_decimal_separator (get_value_numbers_after_decimal_separator)
-			Result.set_ansi_code_page (ansi_code_page.as_string_8_conversion)
-			Result.set_oem_code_page (oem_code_page.as_string_8_conversion)
-			Result.set_mac_code_page (mac_code_page.as_string_8_conversion)
+			Result.set_ansi_code_page (ansi_code_page)
+			Result.set_oem_code_page (oem_code_page)
+			Result.set_mac_code_page (mac_code_page)
 		end
 
 feature -- Code page
@@ -208,7 +208,7 @@ feature {NONE} -- Currency formatting
 		do
 		--	Result := extract_locale_string (current_lcid, nls_constants.locale_snegativesign,
 		--									nls_constants.locale_snegativesign_maxlen)
-			Result := ""
+			create Result.make_empty
 		end
 
 	get_currency_negative_sign: STRING_32

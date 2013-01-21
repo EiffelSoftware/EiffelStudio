@@ -320,7 +320,7 @@ feature -- Access
 				end
 			end
 			if l_name /= Void then
-				if l_name.is_equal (l_target_name) then
+				if l_name.same_string (l_target_name) then
 					create Result.make_from_string_general (l_name)
 				else
 					create Result.make (l_name.count + 1 + l_target_name.count)

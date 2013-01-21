@@ -82,18 +82,20 @@ feature -- Element Settings
 
 feature -- Basic Operations
 
-	save (a_file_name: STRING)
+	save (a_file_name: READABLE_STRING_GENERAL)
 			-- Save content to `a_file_name'.
 		require
 			non_void_file_name: a_file_name /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_retried: BOOLEAN
+			u: UTF_CONVERTER
 		do
 			if not l_retried then
-				create l_file.make (a_file_name)
+				create l_file.make_with_name (a_file_name)
 				l_file.open_write
-				l_file.put_string (wel_text_edit.text)
+				l_file.put_string (u.utf_8_bom_to_string_8)
+				l_file.put_string (u.utf_32_string_to_utf_8_string_8 (wel_text_edit.text))
 				l_file.close
 			end
 		rescue
@@ -133,7 +135,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

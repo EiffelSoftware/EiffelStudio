@@ -181,7 +181,7 @@ feature -- Basic Operations
 			resource_file_generated: resource_file_generated
 		local
 			l_directory: DIRECTORY
-			l_local_folder, l_cmd: STRING
+			l_cmd: STRING_32
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			if a_folder.is_equal (Client) or component_empty (a_folder) then
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 			-- Lace `visible' keyword
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

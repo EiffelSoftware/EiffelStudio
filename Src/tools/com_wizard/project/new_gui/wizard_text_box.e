@@ -76,7 +76,7 @@ feature -- Access
 	value: STRING
 			-- Combo box selected entry
 		do
-			Result := text_combo.text
+			Result := text_combo.text.as_string_8_conversion
 		end
 
 	profile_item: WIZARD_PROFILE_ITEM
@@ -122,7 +122,7 @@ feature -- Basic Operations
 	save_combo_text
 			-- Save content to combo text as new combo entry.
 		local
-			l_text: STRING
+			l_text: STRING_32
 		do
 			l_text := text_combo.text
 			if not l_text.is_empty then
@@ -179,14 +179,14 @@ feature {NONE} -- Events Handling
 			-- Called by `change_actions' of `path_combo'.
 		local
 			l_status: WIZARD_VALIDITY_STATUS
-			l_text: STRING
+			l_text: STRING_32
 		do
 			if not excluded then
 				Profile_manager.save_active_profile
 			end
 			l_text := text_combo.text
 			if text_processor /= Void then
-				l_status := text_processor.item ([l_text])
+				l_status := text_processor.item ([l_text.as_string_8_conversion])
 				if l_status.is_error then
 					text_combo.set_foreground_color (Invalid_value_color)
 					text_combo.set_tooltip (l_status.error_message)
@@ -281,7 +281,7 @@ feature {NONE} -- Private Access
 			-- Cell for `save_on_return'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -294,22 +294,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class WIZARD_TEXT_BOX
 

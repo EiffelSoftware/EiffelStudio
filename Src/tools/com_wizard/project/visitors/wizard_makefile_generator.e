@@ -80,10 +80,7 @@ feature -- Basic operations
 			if not obj_list.is_empty then
 				save_file (make_file (files, a_library_name, "msc", False), "Makefile.msc")
 				save_file (make_file (files, a_library_name, "msc", True), "Makefile-mt.msc")
-				save_file (make_file (files, a_library_name, "bcb", False), "Makefile.bcb")
-				save_file (make_file (files, a_library_name, "bcb", True), "Makefile-mt.bcb")
 				save_file (environment_set_string (msc_compiler) + "%Nnmake /f Makefile.msc%Nnmake /f Makefile-mt.msc", "make_msc.bat")
-				save_file (environment_set_string (bcb_compiler) + "%N%"%%ISE_EIFFEL%%\BCC55\bin\make%" /f Makefile.bcb%N%"%%ISE_EIFFEL%%\BCC55\bin\make%" /f Makefile-mt.bcb", "make_bcb.bat")
 			end
 			Env.change_working_directory (a_working_directory)
 		end
@@ -100,8 +97,7 @@ feature {NONE} -- Basic operations
 			not_a_library_name_is_empty: not a_library_name.is_empty
 			a_c_compiler_attached: a_c_compiler /= Void
 			not_a_c_compiler_is_empty: not a_c_compiler.is_empty
-			a_c_compiler_is_valid: a_c_compiler.is_equal (msc_compiler) or
-				a_c_compiler.is_equal (bcb_compiler)
+			a_c_compiler_is_valid: a_c_compiler.is_equal (msc_compiler)
 		local
 			l_cursor: CURSOR
 			l_file: STRING
@@ -110,23 +106,12 @@ feature {NONE} -- Basic operations
 			Result.append ("# ecom.lib - Makefile for EiffelCOM Generated C/C++ Object File%N%NMV = copy%N")
 
 				-- Basic macros
-			if a_c_compiler.is_equal (msc_compiler) then
-				Result.append (makefile_macros_msc)
-			else
-				check
-					a_c_compiler.is_equal (bcb_compiler)
-				end
-				Result.append (makefile_macros_bcb)
-			end
+			Result.append (makefile_macros_msc)
 
 				-- C flags
 			Result.append (	"CFLAGS = ")
-			if a_c_compiler.is_equal ("msc") then
-					-- Note, we always compile in multithreaded mode
-				Result.append (msc_compiler_flags)
-			else
-				Result.append (bcb_compiler_flags)
-			end
+				-- Note, we always compile in multithreaded mode
+			Result.append (msc_compiler_flags)
 			Result.append_character (' ')
 			if a_multi_threaded then
 					-- Add multi-threaded define
@@ -158,7 +143,7 @@ feature {NONE} -- Basic operations
 			valid_make_file: not Result.is_empty
 		end
 
-	save_file (a_content, a_file_name: STRING)
+	save_file (a_content: READABLE_STRING_GENERAL; a_file_name: STRING)
 			-- Save file with content `content' and file name `a_file_name'.
 		require
 			a_content_attached: a_content /= Void
@@ -168,14 +153,13 @@ feature {NONE} -- Basic operations
 		local
 			retried: BOOLEAN
 			l_file: PLAIN_TEXT_FILE
-			l_string: STRING
+			l_path: PATH
 		do
 			if not retried then
-				l_string := Env.current_working_directory.twin
-				l_string.append_character (Directory_separator)
-				l_string.append (a_file_name)
-				create l_file.make_open_write (l_string)
-				l_file.put_string (a_content)
+				l_path := env.current_working_path.extended (a_file_name)
+				create l_file.make_with_path (l_path)
+				l_file.open_write
+				l_file.put_string (a_content.as_string_8_conversion)
 				l_file.close
 			else
 				environment.set_abort (Makefile_write_error)
@@ -216,8 +200,7 @@ feature {NONE} -- Query
 			a_obj_name_attached: a_obj_name /= Void
 			not_a_obj_name_is_empty: not a_obj_name.is_empty
 			a_c_compiler_attached: a_c_compiler /= Void
-			a_c_compiler_is_valid: a_c_compiler.is_equal (msc_compiler) or
-				a_c_compiler.is_equal (bcb_compiler)
+			a_c_compiler_is_valid: a_c_compiler.is_equal (msc_compiler)
 		local
 			l_lib_name: STRING
 		do
@@ -226,14 +209,7 @@ feature {NONE} -- Query
 			l_lib_name := a_library_name.twin
 			Result.append (a_library_name + ".lib: $(" + a_obj_name+ ")%N%
 					%	if exist $@ del $@%N")
-			if a_c_compiler.is_equal ("msc") then
-				Result.append ("	lib -OUT:$@ $(" + a_obj_name+ ")%N")
-			else
-				check
-					a_c_compiler.is_equal ("bcb")
-				end
-				Result.append ("	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe %"$@%" /p256 +-$**%N")
-			end
+			Result.append ("	lib -OUT:$@ $(" + a_obj_name+ ")%N")
 
 			Result.append ("	del *.obj%N%
 					%	if not exist " + a_c_compiler + " mkdir " + a_c_compiler + "%N%
@@ -318,7 +294,7 @@ feature {NONE} -- Query
 		require
 			layout_defined: is_eiffel_layout_defined
 			a_compile_attached: a_compile /= Void
-			a_compile_is_valid: a_compile = msc_compiler or a_compile = bcb_compiler
+			a_compile_is_valid: a_compile = msc_compiler
 		do
 			create Result.make (512)
 			Result.append ("@ECHO OFF%N")
@@ -336,18 +312,12 @@ feature {NONE} -- Query
 feature {NONE} -- Constants
 
 	msc_compiler: STRING = "msc"
-	bcb_compiler: STRING = "bcb"
 			-- C compiler constants
 
 	makefile_macros_msc: STRING =
 			-- Makefile macros for msc compiler
 		"CC = cl%N%
 		%OUTPUT_CMD = -Fo%N"
-
-	makefile_macros_bcb: STRING =
-			-- Makefile macros for msc compiler
-		"CC = %"$(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe%"%N OUTPUT_CMD = -o%N"
-
 
 	c_compiler_flags: STRING =
 			-- C compiler options to compile generated code.
@@ -357,14 +327,8 @@ feature {NONE} -- Constants
 		%$(ISE_LIBRARY)\library\com\spec\windows\include%" "
 
 	msc_compiler_flags: STRING =
-			-- Additional Borland C flags.
+			-- Additional Microsoft C flags.
 			"-MT -W0 -Ox"
-
-	bcb_compiler_flags: STRING =
-			-- Additional Borland C flags.
-		"-w- -I%"%
-		%$(ISE_EIFFEL)\BCC55\include%" -L%"%
-		%$(ISE_EIFFEL)\BCC55\lib%""
 
 	workbench_prefix: STRING = "w";
 			-- Library workbench prefix
@@ -373,7 +337,7 @@ feature {NONE} -- Constants
 			-- Multithreaded library name suffix
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

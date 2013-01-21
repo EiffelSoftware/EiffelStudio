@@ -327,7 +327,7 @@ feature {NONE} -- Actions
 			l_il_env: IL_ENVIRONMENT
 			l_reader: ASSEMBLY_PROPERTIES_READER
 			l_properties: ASSEMBLY_PROPERTIES
-			l_file_name: STRING
+			l_file_name: STRING_32
 			l_added: BOOLEAN
 		do
 				-- get clr version
@@ -361,7 +361,7 @@ feature {NONE} -- Actions
 	on_ok
 			-- Add group and close the dialog.
 		local
-			l_local: STRING
+			l_local: STRING_32
 		do
 			if not name.text.is_empty then
 				l_local := location.text
@@ -374,7 +374,7 @@ feature {NONE} -- Actions
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.assembly_no_location, Current, Void)
 				else
 					last_group := factory.new_assembly (name.text, location.text, target)
-					last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
+					last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
 					target.add_assembly (last_group)
 
 					is_ok := True

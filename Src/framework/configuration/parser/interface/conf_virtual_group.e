@@ -16,29 +16,10 @@ inherit
 
 feature -- Access, stored in configuration file
 
-	renaming: HASH_TABLE [STRING, STRING]
+	renaming: STRING_TABLE [STRING_32]
 			-- Mapping of renamed classes from the old name to the new name.
 
-	renaming_32: HASH_TABLE [STRING_32, STRING_32]
-			-- Same as `renaming' but with STRING_32.
-		local
-			l_renaming: like renaming
-		do
-			l_renaming := renaming
-			if l_renaming /= Void then
-				create Result.make_equal (l_renaming.count)
-				from
-					l_renaming.start
-				until
-					l_renaming.after
-				loop
-					Result.extend (l_renaming.item_for_iteration, l_renaming.key_for_iteration)
-					l_renaming.forth
-				end
-			end
-		end
-
-	name_prefix: STRING
+	name_prefix: STRING_32
 			-- An optional name prefix for this group.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
@@ -62,25 +43,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			renaming_set: renaming = a_renaming
 		end
 
-	set_renaming_32 (a_renaming_32: like renaming_32)
-			-- Set `renaming_32' to `a_renaming_32'.
-		do
-			if a_renaming_32 = Void then
-				renaming := Void
-			else
-				create renaming.make_equal (a_renaming_32.count)
-				from
-					a_renaming_32.start
-				until
-					a_renaming_32.after
-				loop
-					renaming.extend (a_renaming_32.item_for_iteration, a_renaming_32.key_for_iteration)
-					a_renaming_32.forth
-				end
-			end
-		end
-
-	add_renaming (an_old_name, a_new_name: STRING)
+	add_renaming (an_old_name: READABLE_STRING_GENERAL; a_new_name: STRING_32)
 			-- Add a renaming.
 		require
 			an_old_name_ok: an_old_name /= Void and then not an_old_name.is_empty

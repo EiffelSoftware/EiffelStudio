@@ -357,7 +357,7 @@ feature -- Class names completion
 		local
 			cname				: STRING
 			class_list			: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
-			classes				: HASH_TABLE [CONF_CLASS, STRING]
+			classes				: STRING_TABLE [CONF_CLASS]
 			token				: EDITOR_TOKEN
 			show_all	: BOOLEAN
 			class_name			: EB_CLASS_FOR_COMPLETION
@@ -439,12 +439,12 @@ feature -- Class names completion
 			calculate_insertion (a_token)
 		end
 
-	accessible_classes_from_group (a_group: CONF_GROUP): HASH_TABLE [CONF_CLASS, STRING]
+	accessible_classes_from_group (a_group: CONF_GROUP): STRING_TABLE [CONF_CLASS]
 			-- Accessible classes from `a_group', including old classes of mappings.
 		require
 			a_group_not_void: a_group /= Void
 		local
-			l_mapping_names: HASH_TABLE [STRING_8, STRING_8]
+			l_mapping_names: STRING_TABLE [STRING_32]
 			l_item: STRING
 		do
 			Result := group.accessible_classes
@@ -843,30 +843,28 @@ feature {NONE} -- Implementation
 			Result := not (a_feat.is_infix or a_feat.is_prefix) and (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
 		end
 
-	matches (str, pat: STRING): BOOLEAN
+	matches (str, pat: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `pat' the beginning of `str'?
 		require
 			valid_strings: str /= Void and pat /= Void
 		local
 			i: INTEGER
 			minc: INTEGER
-			pat_area, str_area: SPECIAL [CHARACTER]
 		do
-			str_area := str.area
-			pat_area := pat.area
 			minc := pat.count
 			if str.count >= minc then
 				from
 					Result := True
+					i := 1
 				until
-					i = minc or not Result
+					i > minc or not Result
 				loop
-					Result := (pat_area.item (i)) = (str_area.item (i))
+					Result := (pat.item (i)) = (str.item (i))
 					i := i + 1
 				end
 			end
 		ensure
-			Result = str.substring (1, pat.count).is_equal (pat)
+			Result = str.substring (1, pat.count).same_string (pat)
 		end
 
 	external_features (cl: CLASS_C): ARRAYED_LIST [E_FEATURE]

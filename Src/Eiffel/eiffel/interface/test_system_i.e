@@ -29,7 +29,7 @@ feature -- Access
 			-- Cluster added to universe target pointing to "Cluster" directory in "EIFGENs", Void if cluster
 			-- has not been added yet.
 		local
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_clusters: STRING_TABLE [CONF_CLUSTER]
 		do
 			l_clusters := universe.target.clusters
 			l_clusters.search (eifgens_cluster_name)
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

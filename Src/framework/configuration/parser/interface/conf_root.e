@@ -11,8 +11,7 @@ class
 inherit
 	ANY
 		redefine
-			is_equal,
-			out
+			is_equal
 		end
 
 create
@@ -20,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cluster, a_class_type, a_feature: STRING; a_all_root: BOOLEAN)
+	make (a_cluster, a_class_type, a_feature: STRING_32; a_all_root: BOOLEAN)
 			-- Create with `a_cluster', `a_class' and `a_feature'.
 			-- `a_all_root' indicates that all classes are considered to be root.
 		require
@@ -66,32 +65,34 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING
+	text: STRING_32
 			-- New string with printable representation.
 		do
 			if is_all_root then
-				Result := "All classes"
+				Result := {STRING_32} "All classes"
 			else
 				create Result.make_empty
 				if cluster_name /= Void then
-					Result.append (cluster_name+".")
+					Result.append (cluster_name)
+					Result.append_character ('.')
 				end
 				Result.append (class_type_name)
 				if feature_name /= Void then
-					Result.append ("."+feature_name)
+					Result.append_character ('.')
+					Result.append (feature_name)
 				end
 			end
 		end
 
 feature -- Access, stored in configuration file
 
-	cluster_name: STRING
+	cluster_name: STRING_32
 			-- The name of the root cluster.
 
-	class_type_name: STRING
+	class_type_name: STRING_32
 			-- The name of the root type.
 
-	feature_name: STRING
+	feature_name: STRING_32
 			-- The name of the root feature.
 
 	is_all_root: BOOLEAN

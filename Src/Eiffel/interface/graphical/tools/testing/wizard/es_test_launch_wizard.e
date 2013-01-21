@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 				l_name := testing_library_name
 			end
 			l_library := l_factory.new_library (l_name, l_location, l_target)
-			l_library.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
+			l_library.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
 			l_system := l_factory.new_system_generate_uuid ("temp")
 			l_system.set_application_target (l_target)
 			l_library.set_library_target (l_factory.new_target ("temp", l_system))
@@ -352,7 +352,7 @@ feature {NONE} -- Internationalization
 	cancel_text: STRING = "Cancel"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

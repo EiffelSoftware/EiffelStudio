@@ -357,7 +357,7 @@ feature -- Option names and descriptions
 	option_syntax_standard_name: STRING_32 do Result := locale.translation ("Standard syntax") end
 	option_syntax_provisional_name: STRING_32 do Result := locale.translation ("Provisional syntax") end
 
-	warning_names: HASH_TABLE [STRING_32, STRING]
+	warning_names: STRING_TABLE [STRING_32]
 			-- Warning names.
 		once
 			create Result.make (12)
@@ -375,7 +375,7 @@ feature -- Option names and descriptions
 			Result.force (locale.translation ("Classname/filename mismatch"), w_classname_filename_mismatch)
 		end
 
-	warning_descriptions: HASH_TABLE [STRING_32, STRING]
+	warning_descriptions: STRING_TABLE [STRING_32]
 			-- Warning descriptions.
 		once
 			create Result.make (12)

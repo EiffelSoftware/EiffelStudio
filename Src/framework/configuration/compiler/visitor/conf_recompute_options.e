@@ -123,7 +123,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	process_with_new (an_old_groups, a_new_groups: HASH_TABLE [CONF_GROUP, STRING])
+	process_with_new (an_old_groups, a_new_groups: STRING_TABLE [CONF_GROUP])
 			-- Process `a_old_groups' and set `new_group' to the corresponding group of `a_new_groups'.
 		local
 			l_group: CONF_GROUP

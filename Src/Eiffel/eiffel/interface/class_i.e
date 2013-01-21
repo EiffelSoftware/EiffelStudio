@@ -152,8 +152,9 @@ feature -- Access
 	debug_level: DEBUG_I
 			-- Debug level
 		local
-			l_d: HASH_TABLE [BOOLEAN, STRING]
+			l_d: STRING_TABLE [BOOLEAN]
 			l_options: like options
+			u: UTF_CONVERTER
 		do
 			l_options := options
 			l_d := l_options.debugs
@@ -165,10 +166,11 @@ feature -- Access
 					l_d.after
 				loop
 					if l_d.item_for_iteration then
-						if l_d.key_for_iteration.is_equal (unnamed_debug) then
+						if l_d.key_for_iteration.same_string (unnamed_debug) then
 							Result.enable_unnamed
 						else
-							Result.enable_tag (l_d.key_for_iteration)
+								-- We encode Unicode keys into UTF-8 since that's what the compiler parse.
+							Result.enable_tag (u.utf_32_string_to_utf_8_string_8 (l_d.key_for_iteration))
 						end
 					end
 					l_d.forth
@@ -181,11 +183,12 @@ feature -- Access
 	visible_level: VISIBLE_I
 			-- Visible level
 		local
-			l_vis: HASH_TABLE [STRING, STRING]
+			l_vis: STRING_TABLE [STRING_32]
 			l_sel: VISIBLE_SELEC_I
 			l_ren: HASH_TABLE [STRING, STRING]
 			l_vis_feat: SEARCH_TABLE [STRING]
 			l_feat, l_ren_feat: STRING
+			u: UTF_CONVERTER
 		do
 			if visible /= Void then
 				l_vis := visible.item.features
@@ -199,9 +202,11 @@ feature -- Access
 					until
 						l_vis.after
 					loop
-						l_feat := l_vis.key_for_iteration
+							-- We encode Unicode feature names into UTF-8 since that's what the compiler parse.
+						l_feat := u.utf_32_string_to_utf_8_string_8 (l_vis.key_for_iteration)
 						if l_feat /= Void then
-							l_ren_feat := l_vis.item_for_iteration
+								-- We encode Unicode feature names into UTF-8 since that's what the compiler parse.							
+							l_ren_feat := u.utf_32_string_to_utf_8_string_8 (l_vis.item_for_iteration)
 							if l_ren_feat /= Void then
 								l_ren.force (l_ren_feat, l_feat)
 							end
@@ -382,7 +387,7 @@ feature -- Access
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
+	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
 			-- The visible features.
 		deferred
 		end
@@ -428,7 +433,7 @@ feature -- Status report
 						if not Result.is_empty then
 							Result.append_character ('.')
 						end
-						Result.append (l_path)
+						Result.append (l_path.as_string_8_conversion)
 					end
 				end
 

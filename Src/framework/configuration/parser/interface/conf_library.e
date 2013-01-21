@@ -65,7 +65,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	library_target: CONF_TARGET
 			-- The library target.
 
-	mapping: HASH_TABLE [STRING, STRING]
+	mapping: STRING_TABLE [STRING_32]
 			-- We use the one from the target.
 		do
 			if library_target /= Void then
@@ -84,16 +84,16 @@ feature -- Access queries
 					-- It is ok for the time being to use `as_string_8_conversion' since
 					-- names are just STRING_8 instances, but it would be better to update
 					-- the configuration library to accept STRING_32 too.
-				Result := library_target.groups.item (a_name.as_string_8_conversion)
+				Result := library_target.groups.item (a_name)
 			end
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
+	class_by_name (a_class: READABLE_STRING_GENERAL; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
 			-- Get the class with the final (after renaming/prefix) name `a_class'
 			-- (if `a_dependencies' then we check dependencies)
 		local
 			l_conf_class: CONF_CLASS
-			l_class: STRING
+			l_class: READABLE_STRING_GENERAL
 			l_mapping: like mapping
 		do
 			l_mapping := mapping
@@ -132,7 +132,7 @@ feature -- Access queries
 			end
 		end
 
-	class_options: HASH_TABLE [CONF_OPTION, STRING]
+	class_options: STRING_TABLE [CONF_OPTION]
 			-- Options for classes.
 		do
 				-- get local options

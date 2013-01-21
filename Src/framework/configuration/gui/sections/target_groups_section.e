@@ -165,7 +165,7 @@ feature -- Element update
 			order_headers
 		end
 
-	set_clusters (a_groups: HASH_TABLE [CONF_CLUSTER, STRING])
+	set_clusters (a_groups: STRING_TABLE [CONF_CLUSTER])
 			-- Set groups.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -177,7 +177,7 @@ feature -- Element update
 			end
 		end
 
-	set_overrides (a_groups: HASH_TABLE [CONF_OVERRIDE, STRING])
+	set_overrides (a_groups: STRING_TABLE [CONF_OVERRIDE])
 			-- Set overrides.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -189,7 +189,7 @@ feature -- Element update
 			end
 		end
 
-	set_assemblies (a_groups: HASH_TABLE [CONF_ASSEMBLY, STRING])
+	set_assemblies (a_groups: STRING_TABLE [CONF_ASSEMBLY])
 			-- Set assemblies.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -201,7 +201,7 @@ feature -- Element update
 			end
 		end
 
-	set_libraries (a_groups: HASH_TABLE [CONF_LIBRARY, STRING])
+	set_libraries (a_groups: STRING_TABLE [CONF_LIBRARY])
 			-- Set libraries.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -216,7 +216,7 @@ feature -- Element update
 	set_precompile (a_group: CONF_PRECOMPILE)
 			-- Set precompile.
 		local
-			l_ht: HASH_TABLE [CONF_PRECOMPILE, STRING]
+			l_ht: STRING_TABLE [CONF_PRECOMPILE]
 		do
 			if a_group /= Void then
 				create internal_precompile.make (target, configuration_window)

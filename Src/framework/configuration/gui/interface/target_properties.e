@@ -590,7 +590,7 @@ feature {NONE} -- Validation and warning generation
 			current_target: current_target /= Void
 			a_name_not_void: a_name /= Void
 		local
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_targets: STRING_TABLE [CONF_TARGET]
 		do
 			l_targets := conf_system.targets
 			l_targets.search (a_name.as_lower)

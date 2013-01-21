@@ -10,7 +10,7 @@ class
 
 feature
 
-	new_system_generate_uuid (a_name: STRING): CONF_SYSTEM
+	new_system_generate_uuid (a_name: STRING_32): CONF_SYSTEM
 			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -20,7 +20,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_system (a_name: STRING; an_uuid: UUID): CONF_SYSTEM
+	new_system (a_name: STRING_32; an_uuid: UUID): CONF_SYSTEM
 			-- Create a `CONF_SYSTEM' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -31,7 +31,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_target (a_name: STRING; a_system: CONF_SYSTEM): CONF_TARGET
+	new_target (a_name: STRING_32; a_system: CONF_SYSTEM): CONF_TARGET
 			-- Create a `CONF_TARGET' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -72,7 +72,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_root (a_cluster, a_class, a_feature: STRING; a_all_root: BOOLEAN): CONF_ROOT
+	new_root (a_cluster, a_class, a_feature: STRING_32; a_all_root: BOOLEAN): CONF_ROOT
 			-- Create a `CONF_ROOT' object.
 		require
 			a_cluster_ok: a_cluster /= Void implies not a_cluster.is_empty
@@ -203,7 +203,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assembly (a_name: STRING; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_ASSEMBLY
+	new_assembly (a_name: STRING_32; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_ASSEMBLY
 			-- Create a `CONF_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -218,7 +218,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assembly_from_gac (a_name: STRING; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET): CONF_ASSEMBLY
+	new_assembly_from_gac (a_name: STRING_32; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET): CONF_ASSEMBLY
 			-- Create a `CONF_ASSEMBLY' object from gac.
 		require
 			a_name_not_void: a_name /= Void
@@ -233,7 +233,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_library (a_name: STRING; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_LIBRARY
+	new_library (a_name: STRING_32; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_LIBRARY
 			-- Create a `CONF_LIBRARY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -245,7 +245,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_precompile (a_name: STRING; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_PRECOMPILE
+	new_precompile (a_name: STRING_32; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_PRECOMPILE
 			-- Create a `CONF_PRECOMPILE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -257,7 +257,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_CLUSTER
+	new_cluster (a_name: STRING_32; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_CLUSTER
 			-- Create a `CONF_CLUSTER' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -269,7 +269,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_TEST_CLUSTER
+	new_test_cluster (a_name: STRING_32; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_TEST_CLUSTER
 			-- Create a `CONF_TEST_CLUSTER' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -281,7 +281,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_OVERRIDE
+	new_override (a_name: STRING_32; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_OVERRIDE
 			-- Create a `CONF_OVERRIDE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty

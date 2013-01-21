@@ -173,8 +173,8 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
-			l_libraries, l_clusters, l_overrides: HASH_TABLE [CONF_GROUP, STRING]
-			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+			l_libraries, l_clusters, l_overrides: STRING_TABLE [CONF_GROUP]
+			l_assemblies: STRING_TABLE [CONF_ASSEMBLY]
 			l_pre, l_old_pre: CONF_PRECOMPILE
 			l_old_group: CONF_GROUP
 			l_consumer_manager: CONF_CONSUMER_MANAGER
@@ -309,7 +309,7 @@ feature -- Visit nodes
 		local
 			l_file: RAW_FILE
 			l_old_assembly: CONF_ASSEMBLY
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			l_cl: CONF_CLASS
 		do
 			l_old_assembly ?= old_group
@@ -349,9 +349,9 @@ feature -- Visit nodes
 			l_target: CONF_TARGET
 			l_uuid: UUID
 			l_vis: like Current
-			l_ren: HASH_TABLE [STRING, STRING]
+			l_ren: STRING_TABLE [STRING_32]
 			l_prefixed_classes: like current_classes
-			l_pre: STRING
+			l_pre: STRING_32
 			l_old_library: CONF_LIBRARY
 			l_cl: CONF_CLASS
 			l_current_classes: like current_classes
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 	old_libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets of the old target, mapped with their uuid.
 
-	current_classes: HASH_TABLE [CONF_CLASS, STRING]
+	current_classes: STRING_TABLE [CONF_CLASS]
 			-- The classes of the group we are currently processing.
 
 	current_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING_32]
@@ -824,13 +824,13 @@ feature {NONE} -- Implementation
 			current_classes.merge (a_group.classes)
 		end
 
-	process_removed (a_groups: HASH_TABLE [CONF_GROUP, STRING])
+	process_removed (a_groups: STRING_TABLE [CONF_GROUP])
 			-- Add the classes that have been removed to `removed_classes'
 		local
 			l_group: CONF_GROUP
 			l_library: CONF_LIBRARY
 			l_done: BOOLEAN
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 		do
 			if a_groups /= Void then
 				from
@@ -889,7 +889,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_removed_classes (a_classes: HASH_TABLE [CONF_CLASS, STRING])
+	process_removed_classes (a_classes: STRING_TABLE [CONF_CLASS])
 			-- Add compiled classes from `a_classes' that are not in `reused_classes' to `removed_classes'.
 		local
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
@@ -942,7 +942,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_with_old (a_new_groups, an_old_groups: HASH_TABLE [CONF_GROUP, STRING])
+	process_with_old (a_new_groups, an_old_groups: STRING_TABLE [CONF_GROUP])
 			-- Process `a_new_groups' and set `old_group' to the corresponding group of `an_old_groups'.
 		require
 			old_group_void: old_group = Void

@@ -45,7 +45,7 @@ feature -- Statusupdate
 			not_initialized: not is_initialized
 		local
 			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
-			l_sub_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_sub_classes: STRING_TABLE [CONF_CLASS]
 			l_classes: LIST [CONF_CLASS]
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
@@ -55,7 +55,7 @@ feature -- Statusupdate
 			l_lib_target: CONF_TARGET
 			l_ass_dep: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER]
 			l_libs: LIST [CONF_GROUP]
-			l_cls: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_cls: STRING_TABLE [CONF_CLUSTER]
 			l_cls_lst: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			create libraries.make (0)
@@ -257,7 +257,7 @@ feature -- Access
 	name_prefix: STRING
 			-- Name prefix to be added to classes.
 
-	renaming: HASH_TABLE [STRING, STRING]
+	renaming: STRING_TABLE [STRING_32]
 			-- Renamings to be applied to classes.
 
 	actual_group: CONF_GROUP

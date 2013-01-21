@@ -43,7 +43,7 @@ feature -- Element change
 			gr_not_void: gr /= Void
 			not_is_universe_completed: not is_universe_completed
 		local
-			cl: HASH_TABLE [CONF_CLASS, STRING]
+			cl: STRING_TABLE [CONF_CLASS]
 			l_class_i: CLASS_I
 		do
 			if not groups.has (gr) then
@@ -74,7 +74,7 @@ feature -- Element change
 			not_is_universe_completed: not is_universe_completed
 		local
 			gr: ARRAYED_LIST [CONF_GROUP]
-			cl: HASH_TABLE [CONF_CLASS, STRING]
+			cl: STRING_TABLE [CONF_CLASS]
 			l_class_i: CLASS_I
 		do
 			gr := Universe.groups
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 		require
 			group_not_void: group /= Void
 		local
-			cl: HASH_TABLE [CONF_CLASS, STRING]
+			cl: STRING_TABLE [CONF_CLASS]
 			l_class_i: CLASS_I
 		do
 			create Result.make (100)
@@ -311,7 +311,7 @@ invariant
 	groups_not_void: groups /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

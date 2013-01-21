@@ -542,7 +542,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
 			l_libs: ARRAYED_LIST [CONF_LIBRARY]
-			l_libs_tar: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_libs_tar: STRING_TABLE [CONF_LIBRARY]
 			l_parent_found: BOOLEAN
 		do
 			if a_parent /= Void then
@@ -961,7 +961,7 @@ invariant
 	client_supplier_links_lookup_not_void: client_supplier_links_lookup /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

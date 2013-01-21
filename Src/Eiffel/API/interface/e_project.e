@@ -337,7 +337,7 @@ feature -- Error status
 						error_status = retrieve_corrupt_error_status
 		end
 
-	incompatible_version_number: STRING
+	incompatible_version_number: STRING_32
 			-- Incompatible version number of project
 		require
 			is_project_incompatible: is_incompatible
@@ -1045,7 +1045,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

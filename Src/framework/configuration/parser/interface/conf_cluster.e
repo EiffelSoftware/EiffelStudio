@@ -214,14 +214,14 @@ feature -- Access queries
 			Result_cached: Result = cached_mapping
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
+	class_by_name (a_class: READABLE_STRING_GENERAL; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
 			-- Get the class with the final (after renaming/prefix) name `a_class'.
 			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency.
 		local
 			l_groups: like accessible_groups
 			l_class: CONF_CLASS
 			l_grp: CONF_GROUP
-			l_name: STRING
+			l_name: READABLE_STRING_GENERAL
 		do
 				-- apply mapping
 			if mapping.has_key (a_class) then
@@ -260,7 +260,7 @@ feature -- Access queries
 			end
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [READABLE_STRING_GENERAL]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		local
 			l_groups: like accessible_groups
@@ -295,7 +295,7 @@ feature -- Access queries
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else everything except `Current'.
 		local
-			l_grps: HASH_TABLE [CONF_GROUP, STRING]
+			l_grps: STRING_TABLE [CONF_GROUP]
 		do
 			if accessible_groups_cache = Void then
 				if dependencies = Void then
@@ -476,7 +476,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rule_set: internal_file_rule = a_file_rule
 		end
 
-	add_mapping (a_old_name, a_new_name: STRING)
+	add_mapping (a_old_name, a_new_name: STRING_32)
 			-- Add a new mapping from `a_old_name' to `a_new_name'.
 		require
 			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
@@ -496,25 +496,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			cached_mapping := Void
 		ensure
 			internal_mapping_set: internal_mapping = a_mapping
-		end
-
-	set_mapping_32 (a_mapping_32: like mapping_32)
-			-- Set `mapping' to `a_mapping_32'.
-		do
-			if a_mapping_32 = Void then
-				internal_mapping := Void
-			else
-				create internal_mapping.make_equal (a_mapping_32.count)
-				from
-					a_mapping_32.start
-				until
-					a_mapping_32.after
-				loop
-					internal_mapping.extend (a_mapping_32.item_for_iteration, a_mapping_32.key_for_iteration)
-					a_mapping_32.forth
-				end
-			end
-			cached_mapping := Void
 		end
 
 feature {CONF_ACCESS} -- Update, not stored in configuration file
@@ -554,12 +535,12 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
 			-- Rules for files to be included or excluded of this cluster itself.
 
-	internal_mapping: HASH_TABLE [STRING, STRING]
+	internal_mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this cluster itself.
 
 feature {NONE} -- Cached informations
 
-	class_by_name_cache: HASH_TABLE [like class_by_name, STRING]
+	class_by_name_cache: STRING_TABLE [like class_by_name]
 			-- Cached version of `class_by_name' lookup.
 	name_by_class_cache: HASH_TABLE [like name_by_class, CONF_CLASS]
 			-- Cached version of `name_by_class' lookup.

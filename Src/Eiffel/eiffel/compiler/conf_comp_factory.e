@@ -41,19 +41,19 @@ feature -- Factory
 			create Result.make_from_partial (a_partial_classes, a_group, a_base_location, Current)
 		end
 
-	new_cluster (a_name: STRING_8; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CLUSTER_I
+	new_cluster (a_name: STRING_32; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CLUSTER_I
 			-- Create a `CONF_CLUSTER' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
 		end
 
-	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): TEST_CLUSTER_I
+	new_test_cluster (a_name: STRING_32; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): TEST_CLUSTER_I
 			-- Create a `CONF_CLUSTER' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
 		end
 
-	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): OVERRIDE_I
+	new_override (a_name: STRING_32; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): OVERRIDE_I
 			-- Create a `CONF_OVERRIDE' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
@@ -72,7 +72,7 @@ feature -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

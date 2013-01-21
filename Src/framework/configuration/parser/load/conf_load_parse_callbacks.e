@@ -522,11 +522,11 @@ feature {NONE} -- Implementation attribute processing
 					(l_uuid = Void or else is_valid_uuid (l_uuid))
 				then
 					if l_uuid /= Void then
-						create l_uu.make_from_string (l_uuid.to_string_8)
+						create l_uu.make_from_string (l_uuid)
 					else
 						l_uu := factory.uuid_generator.generate_uuid
 					end
-					last_system := factory.new_system (l_name.to_string_8.as_lower, l_uu)
+					last_system := factory.new_system (l_name.as_lower, l_uu)
 					if attached current_attributes.item (at_readonly) as l_readonly then
 						if l_readonly.is_boolean then
 							last_system.set_readonly (l_readonly.to_boolean)
@@ -550,17 +550,17 @@ feature {NONE} -- Implementation attribute processing
 			last_system_not_void: last_system /= Void
 		local
 			l_target: CONF_TARGET
-			l_name_8: STRING_8
+			l_lower_name: STRING_32
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
-				if not is_valid_target_name (l_name_8) then
+				l_lower_name := l_name.as_lower
+				if not is_valid_target_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_target_invalid_name (l_name))
 				end
-				if last_system.targets.has (l_name_8) then
+				if last_system.targets.has (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_multiple_target_with_name (l_name))
 				end
-				current_target := factory.new_target (l_name_8, last_system)
+				current_target := factory.new_target (l_lower_name, last_system)
 				if attached current_attributes.item (at_abstract) as l_abstract then
 					if l_abstract.is_boolean then
 						current_target.set_abstract (l_abstract.to_boolean)
@@ -568,7 +568,7 @@ feature {NONE} -- Implementation attribute processing
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("abstract"))
 					end
 				end
-				if current_library_target /= Void and then l_name_8.same_string (current_library_target) then
+				if current_library_target /= Void and then l_name.same_string_general (current_library_target) then
 					last_system.set_library_target (current_target)
 					current_library_target := Void
 				end
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation attribute processing
 				if attached current_attributes.item (at_extends) as l_extends then
 						-- Target are known internally in lower case,
 						-- so we should respect this (see bug#12698).
-					l_target := last_system.targets.item (l_extends.to_string_8.as_lower)
+					l_target := last_system.targets.item (l_extends.as_lower)
 					if l_target /= Void and then l_target /= current_target then
 						current_target.set_parent (l_target)
 						group_list := l_target.groups
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_cluster_8, l_class_8, l_feature_8: detachable STRING_8
+			l_cluster_lower, l_class_lower, l_feature_lower: detachable STRING_32
 			l_all_b: BOOLEAN
 		do
 			if attached current_attributes.item (at_all_classes) as l_all then
@@ -607,25 +607,25 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 			if attached current_attributes.item (at_cluster) as l_cluster then
-				l_cluster_8 := l_cluster.to_string_8.as_lower
-				if not is_valid_group_name (l_cluster_8) then
+				l_cluster_lower := l_cluster.as_lower
+				if not is_valid_group_name (l_cluster_lower) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_root_cluster)
 				end
 			end
 			if attached current_attributes.item (at_class) as l_class then
-				l_class_8 := l_class.to_string_8.as_lower
-				if not is_valid_class_type_name (l_class_8) then
+				l_class_lower := l_class.as_lower
+				if not is_valid_class_type_name (l_class_lower) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_root_class)
 				end
 			end
 			if attached current_attributes.item (at_feature) as l_feature then
-				l_feature_8 := l_feature.to_string_8.as_lower
-				if not is_valid_feature_name (l_feature_8) then
+				l_feature_lower := l_feature.as_lower
+				if not is_valid_feature_name (l_feature_lower) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_root_feature)
 				end
 			end
-			if (l_all_b and l_cluster_8 = Void and l_class_8 = Void and l_feature_8 = Void) or else l_class_8 /= Void then
-				current_target.set_root (factory.new_root (l_cluster_8, l_class_8, l_feature_8, l_all_b))
+			if (l_all_b and l_cluster_lower = Void and l_class_lower = Void and l_feature_lower = Void) or else l_class_lower /= Void then
+				current_target.set_root (factory.new_root (l_cluster_lower, l_class_lower, l_feature_lower, l_all_b))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_root)
 			end
@@ -655,16 +655,16 @@ feature {NONE} -- Implementation attribute processing
 			l_version := factory.new_version (l_i_major, l_i_minor, l_i_release, l_i_build)
 
 			if attached current_attributes.item (at_product) as l_product then
-				l_version.set_product (l_product.to_string_8)
+				l_version.set_product (l_product)
 			end
 			if attached current_attributes.item (at_company) as l_company then
-				l_version.set_company (l_company.to_string_8)
+				l_version.set_company (l_company)
 			end
 			if attached current_attributes.item (at_copyright) as l_copyright then
-				l_version.set_copyright (l_copyright.to_string_8)
+				l_version.set_copyright (l_copyright)
 			end
 			if attached current_attributes.item (at_trademark) as l_trademark then
-				l_version.set_trademark (l_trademark.to_string_8)
+				l_version.set_trademark (l_trademark)
 			end
 			current_target.set_version (l_version)
 		end
@@ -673,15 +673,12 @@ feature {NONE} -- Implementation attribute processing
 			-- Process attributes of a setting tag.
 		require
 			current_target_not_void: current_target /= Void
-		local
-			l_name_8: STRING_8
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
 				if attached current_attributes.item (at_value) as l_value then
-					if not valid_setting (l_name_8) then
+					if not valid_setting (l_name) then
 						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
-					elseif l_name_8.same_string (s_multithreaded) then
+					elseif l_name.same_string (s_multithreaded) then
 							-- Translate "multithreaded" setting into "concurrency" setting.
 						if includes_this_or_before (namespace_1_6_0) then
 								-- The setting is allowed.
@@ -700,7 +697,7 @@ feature {NONE} -- Implementation attribute processing
 								-- The setting is not available in this XML schema.
 							set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
 						end
-					elseif l_name_8.same_string (s_concurrency) then
+					elseif l_name.same_string (s_concurrency) then
 							-- Process "concurrency" setting.
 						if includes_this_or_after (namespace_1_7_0) then
 								-- The setting is allowed.
@@ -716,7 +713,7 @@ feature {NONE} -- Implementation attribute processing
 							set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
 						end
 					else
-						current_target.add_setting (l_name_8.to_string_32, l_value)
+						current_target.add_setting (l_name, l_value)
 					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
@@ -860,16 +857,16 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_name_8: detachable STRING_8
+			l_lower_name: STRING_32
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
+				l_lower_name := l_name.as_lower
 				if
-					is_valid_group_name (l_name_8) and
+					is_valid_group_name (l_lower_name) and
 					attached current_attributes.item (at_location) as l_location and
-					not group_list.has (l_name_8)
+					not group_list.has (l_lower_name)
 				then
-					current_library := factory.new_library (l_name_8, l_location, current_target)
+					current_library := factory.new_library (l_lower_name, l_location, current_target)
 					current_group := current_library
 					if attached current_attributes.item (at_readonly) as l_readonly then
 						if l_readonly.is_boolean then
@@ -888,11 +885,11 @@ feature {NONE} -- Implementation attribute processing
 					if attached current_attributes.item (at_prefix) as l_prefix then
 						current_library.set_name_prefix (l_prefix)
 					end
-					group_list.force (current_group, l_name_8)
+					group_list.force (current_group, l_lower_name)
 					current_target.add_library (current_library)
-				elseif not is_valid_group_name (l_name_8) then
+				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_library_name (l_name))
-				elseif group_list.has (l_name_8) then
+				elseif group_list.has (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_library_conflict (l_name))
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_library (l_name))
@@ -909,18 +906,18 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_name_8: detachable STRING_8
+			l_lower_name: STRING_32
 			l_pre: CONF_PRECOMPILE
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
+				l_lower_name := l_name.as_lower
 				if
-					is_valid_group_name (l_name_8) and
+					is_valid_group_name (l_lower_name) and
 					attached current_attributes.item (at_location) as l_location and
-					not group_list.has (l_name_8) and
+					not group_list.has (l_lower_name) and
 					current_target.precompile = Void
 				then
-					l_pre := factory.new_precompile (l_name_8, l_location, current_target)
+					l_pre := factory.new_precompile (l_lower_name, l_location, current_target)
 					current_library := l_pre
 					current_group := current_library
 					if attached current_attributes.item (at_readonly) as l_readonly then
@@ -936,11 +933,11 @@ feature {NONE} -- Implementation attribute processing
 					if attached current_attributes.item (at_eifgens_location) as l_eifgen then
 						l_pre.set_eifgens_location (factory.new_location_from_path (l_eifgen, current_target))
 					end
-					group_list.force (current_group, l_name_8)
+					group_list.force (current_group, l_lower_name)
 					current_target.set_precompile (l_pre)
-				elseif not is_valid_group_name (l_name_8) then
+				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_name (l_name))
-				elseif group_list.has (l_name_8) then
+				elseif group_list.has (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_conflict (l_name))
 				elseif current_target.precompile /= Void then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_multiple (l_name, current_target.precompile.name))
@@ -959,16 +956,16 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_name_8: detachable STRING_8
+			l_lower_name: STRING_32
 			l_location: like current_attributes.item
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
+				l_lower_name := l_name.as_lower
 				l_location := current_attributes.item (at_location)
 				if
-					is_valid_group_name (l_name_8) and
+					is_valid_group_name (l_lower_name) and
 					l_location /= Void and
-					not group_list.has (l_name_8)
+					not group_list.has (l_lower_name)
 				then
 					if l_location.same_string_general ("none") then
 						if
@@ -977,10 +974,10 @@ feature {NONE} -- Implementation attribute processing
 							attached current_attributes.item (at_assembly_culture) as l_assembly_culture and
 							attached current_attributes.item (at_assembly_key) as l_assembly_key
 						then
-							current_assembly := factory.new_assembly_from_gac (l_name_8,l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_key, current_target )
+							current_assembly := factory.new_assembly_from_gac (l_lower_name,l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_key, current_target )
 						end
 					else
-						current_assembly := factory.new_assembly (l_name_8, l_location, current_target)
+						current_assembly := factory.new_assembly (l_lower_name, l_location, current_target)
 					end
 					current_group := current_assembly
 					if attached current_attributes.item (at_readonly) as l_readonly then
@@ -993,13 +990,13 @@ feature {NONE} -- Implementation attribute processing
 					if attached current_attributes.item (at_prefix) as l_prefix then
 						current_assembly.set_name_prefix (l_prefix)
 					end
-					group_list.force (current_group, l_name_8)
+					group_list.force (current_group, l_lower_name)
 					current_target.add_assembly (current_assembly)
-				elseif not is_valid_group_name (l_name_8) then
+				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_name (l_name))
 				elseif l_location = Void then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly (l_name))
-				elseif group_list.has (l_name_8) then
+				elseif group_list.has (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_conflict (l_name))
 				else
 					check should_not_reach: False end
@@ -1018,25 +1015,25 @@ feature {NONE} -- Implementation attribute processing
 		require
 			target: current_target /= Void
 		local
-			l_name_8: detachable STRING_8
+			l_lower_name: STRING_32
 			l_location: like current_attributes.item
 			l_parent: CONF_CLUSTER
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
+				l_lower_name := l_name.as_lower
 				l_location := current_attributes.item (at_location)
 				if
-					is_valid_group_name (l_name_8) and
+					is_valid_group_name (l_lower_name) and
 					l_location /= Void and
-					not group_list.has (l_name_8)
+					not group_list.has (l_lower_name)
 				then
 					l_parent := current_cluster
 					l_loc := factory.new_location_from_path (l_location, current_target)
 					if a_is_test_cluster then
-						current_cluster := factory.new_test_cluster (l_name_8, l_loc, current_target)
+						current_cluster := factory.new_test_cluster (l_lower_name, l_loc, current_target)
 					else
-						current_cluster := factory.new_cluster (l_name_8, l_loc, current_target)
+						current_cluster := factory.new_cluster (l_lower_name, l_loc, current_target)
 					end
 					current_group := current_cluster
 					if attached current_attributes.item (at_readonly) as l_readonly then
@@ -1066,9 +1063,9 @@ feature {NONE} -- Implementation attribute processing
 						l_loc.set_parent (l_parent.location)
 					end
 
-					group_list.force (current_group, l_name_8)
+					group_list.force (current_group, l_lower_name)
 					current_target.add_cluster (current_cluster)
-				elseif not is_valid_group_name (l_name_8) then
+				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster_name (l_name))
 				elseif l_location /= Void then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster_conflict (l_name))
@@ -1087,20 +1084,20 @@ feature {NONE} -- Implementation attribute processing
 		require
 			target: current_target /= Void
 		local
-			l_name_8: detachable STRING_8
+			l_lower_name: STRING_32
 			l_location: like current_attributes.item
 			l_parent: detachable CONF_CLUSTER
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
+				l_lower_name := l_name.as_lower
 				l_location := current_attributes.item (at_location)
 				if
-					is_valid_group_name (l_name_8) and
+					is_valid_group_name (l_lower_name) and
 					l_location /= Void and
-					not group_list.has (l_name_8)
+					not group_list.has (l_lower_name)
 				then
 					l_parent := current_cluster
-					current_override := factory.new_override (l_name_8, factory.new_location_from_path (l_location, current_target), current_target)
+					current_override := factory.new_override (l_lower_name, factory.new_location_from_path (l_location, current_target), current_target)
 					current_cluster := current_override
 					current_group := current_cluster
 					if attached current_attributes.item (at_readonly) as l_readonly then
@@ -1128,11 +1125,11 @@ feature {NONE} -- Implementation attribute processing
 						l_parent.add_child (current_cluster)
 						current_cluster.set_parent (l_parent)
 					end
-					group_list.force (current_group, l_name_8)
+					group_list.force (current_group, l_lower_name)
 					current_target.add_override (current_override)
-				elseif not is_valid_group_name (l_name_8) then
+				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_override_name (l_name))
-				elseif group_list.has (l_name_8) then
+				elseif group_list.has (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_override_conflict (l_name))
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_override (l_name))
@@ -1149,13 +1146,13 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_option_not_void: current_option /= Void
 		local
-			l_name_8: detachable STRING_8
+			l_lower_name: STRING_32
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
+				l_lower_name := l_name.as_lower
 				if attached current_attributes.item (at_enabled) as l_enabled then
 					if l_enabled.is_boolean then
-						current_option.add_debug (l_name_8, l_enabled.to_boolean)
+						current_option.add_debug (l_lower_name, l_enabled.to_boolean)
 					elseif not l_enabled.is_boolean then
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value (at_enabled_string))
 					end
@@ -1172,18 +1169,18 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_option_not_void: current_option /= Void
 		local
-			l_name_8: detachable STRING_8
+			l_lower_name: STRING_32
 			l_enabled: like current_attributes.item
 		do
 			if attached current_attributes.item (at_name) as l_name then
-				l_name_8 := l_name.to_string_8.as_lower
+				l_lower_name := l_name.as_lower
 				l_enabled := current_attributes.item (at_enabled)
 				if l_enabled = Void then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_warning (l_name))
 				elseif not l_enabled.is_boolean then
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value (at_enabled_string))
-				elseif valid_warning (l_name_8, current_namespace) then
-					current_option.add_warning (l_name_8, l_enabled.to_boolean)
+				elseif valid_warning (l_lower_name, current_namespace) then
+					current_option.add_warning (l_lower_name, l_enabled.to_boolean)
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_warning (l_name))
 				end
@@ -1444,26 +1441,26 @@ feature {NONE} -- Implementation attribute processing
 		require
 			cluster_or_library: current_cluster /= Void or current_library /= Void
 		local
-			l_class, l_feature, l_class_rename, l_feature_rename: detachable STRING_8
+			l_class, l_feature, l_class_rename, l_feature_rename: detachable STRING_32
 		do
 			if attached current_attributes.item (at_class) as cl then
-				l_class := cl.to_string_8.as_lower
+				l_class := cl.as_lower
 			end
 			if l_class /= Void and then is_valid_class_name (l_class) then
 				if attached current_attributes.item (at_feature) as f then
-					l_feature := f.to_string_8.as_lower
+					l_feature := f.as_lower
 					if not is_valid_feature_name (l_feature) then
 						set_parse_error_message (conf_interface_names.e_parse_incorrect_visible_feature (l_feature))
 					end
 				end
 				if attached current_attributes.item (at_class_rename) as cl_r then
-					l_class_rename := cl_r.to_string_8.as_lower
+					l_class_rename := cl_r.as_lower
 					if not is_valid_class_name (l_class_rename) then
 						set_parse_error_message (conf_interface_names.e_parse_incorrect_visible_class (l_class_rename))
 					end
 				end
 				if attached current_attributes.item (at_feature_rename) as ft_r then
-					l_feature_rename := ft_r.to_string_8.as_lower
+					l_feature_rename := ft_r.as_lower
 					if not is_valid_feature_name (l_feature_rename) then
 						set_parse_error_message (conf_interface_names.e_parse_incorrect_visible_feature (l_feature_rename))
 					end
@@ -1487,7 +1484,7 @@ feature {NONE} -- Implementation attribute processing
 		require
 			cluster: current_cluster /= Void
 		local
-			l_group: STRING
+			l_group: STRING_32
 			ll: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			l_group := current_attributes.item (at_group)
@@ -1512,7 +1509,7 @@ feature {NONE} -- Implementation attribute processing
 		require
 			override: current_override /= Void
 		local
-			l_group: STRING
+			l_group: STRING_32
 			ll: ARRAYED_LIST [CONF_OVERRIDE]
 		do
 			l_group := current_attributes.item (at_group)
@@ -1995,7 +1992,7 @@ feature {NONE} -- Implementation
 	factory: CONF_PARSE_FACTORY
 			-- Factory for node creation.
 
-	current_library_target: STRING
+	current_library_target: STRING_32
 	current_target: CONF_TARGET
 	current_cluster: CONF_CLUSTER
 	current_override: CONF_OVERRIDE
@@ -2009,15 +2006,15 @@ feature {NONE} -- Implementation
 	current_content: STRING_32
 	current_condition: CONF_CONDITION
 
-	uses_list: HASH_TABLE [ARRAYED_LIST [CONF_CLUSTER], STRING_8]
+	uses_list: STRING_TABLE [ARRAYED_LIST [CONF_CLUSTER]]
 			-- The list of classes, that have a uses clause on something.
 			-- Entries will be handled at the end.
 
-	overrides_list: HASH_TABLE [ARRAYED_LIST [CONF_OVERRIDE], STRING_8]
+	overrides_list: STRING_TABLE [ARRAYED_LIST [CONF_OVERRIDE]]
 			-- The list of classes, that have an overrides clause on something.
 			-- Entries will be handled at the end.
 
-	group_list: HASH_TABLE [CONF_GROUP, STRING_8]
+	group_list: STRING_TABLE [CONF_GROUP]
 			-- All groups of `current_target', to check for name conflicts and to compute dependencies and overrides.
 
 	current_tag: LINKED_STACK [INTEGER]
@@ -2090,7 +2087,7 @@ feature {NONE} -- Note Implementation
 		do
 			if note_level = 0 then
 				if attached state_transitions_tag.item (a_tag) as l_trans then
-					Result := l_trans.item (a_local_part.to_string_8)
+					Result := l_trans.item (a_local_part)
 				end
 			else
 					-- In note, we allow anything.
@@ -2149,7 +2146,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation state transitions
 
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING_8], INTEGER]
+	state_transitions_tag: HASH_TABLE [STRING_TABLE [INTEGER], INTEGER]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		local
 			l_trans: like state_transitions_tag.item

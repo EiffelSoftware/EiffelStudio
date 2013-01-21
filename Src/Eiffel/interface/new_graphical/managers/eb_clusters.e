@@ -75,9 +75,9 @@ feature -- Initialization
 			-- Load all clusters and classes.
 		local
 			l_target: CONF_TARGET
-			l_libs: HASH_TABLE [CONF_GROUP, STRING]
-			l_cls: HASH_TABLE [CONF_CLUSTER, STRING]
-			l_cls_lst: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_libs: STRING_TABLE [CONF_GROUP]
+			l_cls: STRING_TABLE [CONF_CLUSTER]
+			l_cls_lst: STRING_TABLE [CONF_CLUSTER]
 			l_cluster: CONF_CLUSTER
 		do
 			if workbench.universe_defined then
@@ -378,7 +378,7 @@ feature -- Element change
 			tdirsrc, tdirdes: DIRECTORY
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
 			l_src_path, l_dst_path: PATH
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			l_old_relative_path: STRING_32
 		do
 			if
@@ -616,7 +616,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	create_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]): DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+	create_groups (a_groups: STRING_TABLE [CONF_GROUP]): DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
 			-- Create sorted groups out of `a_groups'.
 		require
 			a_groups_not_void: a_groups /= Void

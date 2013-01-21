@@ -411,7 +411,7 @@ feature{NONE} -- Implementation
 			a_parent_valid: a_parent.is_valid_domain_item
 			a_action_attached: a_action /= Void
 		local
-			l_groups: HASH_TABLE [CONF_GROUP, STRING]
+			l_groups: STRING_TABLE [CONF_GROUP]
 			l_cursor: CURSOR
 			l_group: QL_GROUP
 		do
@@ -441,7 +441,7 @@ feature{NONE} -- Implementation
 			a_action_attached: a_action /= Void
 		local
 			l_class: QL_CLASS
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			l_cursor: CURSOR
 			l_require_compiled: BOOLEAN
 			l_conf_class: CONF_CLASS

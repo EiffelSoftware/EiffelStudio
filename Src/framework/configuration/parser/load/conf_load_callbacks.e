@@ -85,18 +85,11 @@ feature {NONE} -- Implementation
 		require
 			a_value_not_void: a_value /= Void
 		local
-			l_regexp: REGULAR_EXPRESSION
+			l_uuid_checker: UUID
 		do
-			if not a_value.is_empty and then a_value.is_valid_as_string_8 then
-				create l_regexp
-				l_regexp.compile ("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
-				l_regexp.match (a_value.to_string_8)
-				if l_regexp.has_matched then
-					Result := True
-				else
-					set_error (create {CONF_ERROR_UUID})
-				end
-			else
+			create l_uuid_checker
+			Result := l_uuid_checker.is_valid_uuid (a_value)
+			if not Result then
 				set_error (create {CONF_ERROR_UUID})
 			end
 		ensure

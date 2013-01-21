@@ -48,7 +48,7 @@ feature -- Element update
 			end
 		end
 
-	set_groups (a_groups: HASH_TABLE [like conf_item_type, STRING])
+	set_groups (a_groups: STRING_TABLE [like conf_item_type])
 			-- Set groups.
 		require
 			a_groups_ok: a_groups /= Void and then not a_groups.is_empty

@@ -65,7 +65,7 @@ feature -- Actions
 			-- Exports XMI, according to the user selection.
 		local
 			current_compiled_class: CLASS_C
-			current_cluster: HASH_TABLE [CONF_CLASS, STRING]
+			current_cluster: STRING_TABLE [CONF_CLASS]
 			current_cluster_id: INTEGER
 			new_xmi_cluster: XMI_CLUSTER
 			new_xmi_class: XMI_CLASS
@@ -1178,7 +1178,7 @@ feature {NONE} -- Implementation
 			-- Name of topmost multiple type
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

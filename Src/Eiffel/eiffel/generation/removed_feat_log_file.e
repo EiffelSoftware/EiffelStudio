@@ -1,6 +1,8 @@
 note
+	description: "Content of file is in UTF-8 format"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class REMOVED_FEAT_LOG_FILE
 
 inherit
@@ -16,8 +18,10 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 		require
 			class_type_not_void: class_type /= Void
 			feature_name_not_void: feature_name /= Void
+		local
+			u: UTF_CONVERTER
 		do
-			put_string (class_type.associated_class.group.name)
+			put_string (u.utf_32_string_to_utf_8_string_8 (class_type.associated_class.group.name))
 			put_character ('%T')
 			put_string (class_type.type.dump)
 			put_character ('%T')
@@ -26,7 +30,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

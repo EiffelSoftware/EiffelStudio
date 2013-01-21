@@ -39,13 +39,13 @@ feature -- Access
 	found_classes: LINKED_SET [CLASS_I]
 			-- Classes with `name' retrieved during last process.
 
-	name: STRING
+	name: READABLE_STRING_GENERAL
 			-- Name to look for.
 			-- Class name is ASCII compatible.
 
 feature -- Update
 
-	set_name (a_name: STRING)
+	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -144,7 +144,7 @@ invariant
 	targets_done_not_void: targets_done /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

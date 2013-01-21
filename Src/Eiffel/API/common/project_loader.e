@@ -73,7 +73,7 @@ inherit
 
 feature -- Loading
 
-	open_project_file (a_file_name: PATH; a_target_name: STRING; a_project_path: PATH; from_scratch: BOOLEAN)
+	open_project_file (a_file_name: PATH; a_target_name: STRING_32; a_project_path: PATH; from_scratch: BOOLEAN)
 			-- Initialize current project using `a_file_name'.
 		local
 			l_default_file_name: PATH
@@ -241,7 +241,7 @@ feature -- Loading
 		do
 				-- First split the class name into components. A possible classname is
 				-- 'path/to/file/hello_world.e' and we will extract just `hello_world' in `l_target_name'.
-			l_target_name := a_class_filename.entry.name.as_string_32
+			l_target_name := a_class_filename.entry.name
 			l_target_name.remove_tail (2)
 
 			create l_factory
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation: access
 	config_file_name: detachable PATH
 			-- Name of new format config file chosen by user.
 
-	target_name: STRING
+	target_name: STRING_32
 			-- Name of a target chose by user.
 
 	project_location: PATH
@@ -765,19 +765,19 @@ feature {NONE} -- Settings
 		deferred
 		end
 
-	find_target_name (a_proposed_target: STRING; a_system: CONF_SYSTEM)
+	find_target_name (a_proposed_target: STRING_32; a_system: CONF_SYSTEM)
 			-- Given `a_proposed_target', try to find it in `a_targets'. If not found or if `a_proposed_target'
 			-- is not valid, ask the user to choose a target among `a_targets'.
 		require
 			a_system_not_void: a_system /= Void
 		local
 			l_not_found: BOOLEAN
-			l_list: ARRAYED_LIST [STRING]
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_targets: STRING_TABLE [CONF_TARGET]
 			l_user_options_factory: USER_OPTIONS_FACTORY
-			l_last_target: STRING
+			l_last_target: READABLE_STRING_GENERAL
 			l_last_target_matched: BOOLEAN
-			l_sorter: QUICK_SORTER [STRING]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			l_targets := a_system.compilable_targets
 			if a_proposed_target /= Void then
@@ -819,7 +819,7 @@ feature {NONE} -- Settings
 					end
 					l_targets.forth
 				end
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_list)
 				if l_last_target_matched then
 						-- Set the last used target as first in the list.
@@ -978,7 +978,7 @@ feature {NONE} -- User interaction
 		deferred
 		end
 
-	ask_for_target_name (a_target: STRING; a_targets: ARRAYED_LIST [STRING])
+	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		require
@@ -1081,7 +1081,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	add_single_file_compilation_target (a_system: CONF_SYSTEM; a_target_name, a_root_class_name, a_root_feature_name: STRING; a_libraries: LIST [PATH])
+	add_single_file_compilation_target (a_system: CONF_SYSTEM; a_target_name, a_root_class_name: STRING_32; a_root_feature_name: STRING; a_libraries: LIST [PATH])
 			-- Add a target to `a_system' consisting of given parameters.
 			--
 			-- `a_system': The configuration system which the target will be added to

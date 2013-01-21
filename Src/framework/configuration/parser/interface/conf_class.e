@@ -87,7 +87,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result_assertions: Result.assertions /= Void
 		end
 
-	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
+	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
 			-- The visible features.
 
 	is_valid: BOOLEAN
@@ -261,8 +261,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_vis_not_void: a_vis /= Void
 			a_renamed_not_void: a_vis.item.class_renamed /= Void
 		local
-			l_vis_check, l_vis_other: HASH_TABLE [STRING, STRING]
-			l_other: STRING
+			l_vis_check, l_vis_other: STRING_TABLE [STRING_32]
+			l_other: STRING_32
 			l_error: BOOLEAN
 		do
 				-- easy case first, most of the time this will be the only thing that is needed to do
@@ -314,7 +314,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 								l_error or l_vis_check.after
 							loop
 								l_other := l_vis_other.item (l_vis_check.key_for_iteration)
-								l_error := not (l_other = Void or l_other.is_equal (l_vis_check.item_for_iteration))
+								l_error := not (l_other = Void or l_other.same_string (l_vis_check.item_for_iteration))
 								l_vis_check.forth
 							end
 							if l_error then

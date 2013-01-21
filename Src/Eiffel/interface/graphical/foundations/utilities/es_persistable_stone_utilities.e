@@ -263,7 +263,7 @@ feature {NONE} -- Specifics
 			a_session_is_per_project: a_session.is_per_project
 			not_a_base_id_is_empty: not a_base_id.is_empty
 		local
-			l_groups: HASH_TABLE [CONF_GROUP, STRING_8]
+			l_groups: STRING_TABLE [CONF_GROUP]
 			l_group: CONF_GROUP
 			l_group_name: detachable STRING
 			l_class_name: detachable STRING
@@ -381,7 +381,7 @@ feature {NONE} -- Constants
 	group_name_session_id: STRING = "group_name"
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

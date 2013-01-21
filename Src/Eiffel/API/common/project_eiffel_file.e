@@ -46,7 +46,7 @@ feature -- Access
 	precompilation_id: INTEGER;
 			-- Precompilation id when checking for precompilation validity
 
-	project_version_number: STRING;
+	project_version_number: STRING_32;
 			-- Version number of project eiffel file
 
 feature -- Store/Retrieval
@@ -84,7 +84,6 @@ feature -- Store/Retrieval
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_serializer: SED_INDEPENDENT_SERIALIZER
 			retried: BOOLEAN
-			utf: UTF_CONVERTER
 		do
 			if not retried then
 				storage.open_write
@@ -93,13 +92,13 @@ feature -- Store/Retrieval
 				create l_writer.make (storage)
 				create l_serializer.make (l_writer)
 				l_writer.write_header
-				l_writer.write_string_8 (version_number)
+				l_writer.write_string_32 (version_number)
 				l_writer.write_integer_32 (a_precompilation_id)
 					-- The following information is not used on retrieval, but may help
 					-- users finding out which version of the Eiffel compiler and from where
 					-- this Eiffel compiler was coming from.
-				l_writer.write_string_8 (utf.string_32_to_utf_8_string_8 (eiffel_layout.ec_command_name.name))
-				l_writer.write_string_8 (compiler_version_number.version.out)
+				l_writer.write_string_32 (eiffel_layout.ec_command_name.name)
+				l_writer.write_string_32 (compiler_version_number.version)
 
 				if is_c_storable then
 					l_writer.write_footer
@@ -227,7 +226,7 @@ feature -- Update
 				if not has_error then
 					read_project_header (l_reader)
 					if not has_error then
-						if not project_version_number.is_equal (version_number) then
+						if not project_version_number.same_string (version_number) then
 							error_value := incompatible_value;
 						elseif precomp_id /= 0 and then precomp_id /= precompilation_id then
 							error_value := invalid_precompilation_value;
@@ -356,16 +355,16 @@ feature {NONE} -- Implementation
 			no_error: not has_error
 		local
 			retried: BOOLEAN
-			l_str: STRING
+			l_str: STRING_32
 		do
 			if not retried then
 				a_reader.read_header
-				project_version_number := a_reader.read_string_8
+				project_version_number := a_reader.read_string_32
 				precompilation_id := a_reader.read_integer_32
 					-- Compiler command name
-				l_str := a_reader.read_string_8
+				l_str := a_reader.read_string_32
 					-- Compiler version number
-				l_str := a_reader.read_string_8
+				l_str := a_reader.read_string_32
 			else
 				error_value := corrupt_value
 			end
@@ -413,7 +412,7 @@ invariant
 	storage_not_void: storage /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

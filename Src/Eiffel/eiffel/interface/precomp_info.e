@@ -49,14 +49,14 @@ feature -- Access
 	compilation_id: INTEGER
 			-- Precompilation identifier
 
-	compiler_version: STRING
+	compiler_version: STRING_32
 			-- Compiler version
 
 	name: STRING;
 			-- Name of the precompiled system
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

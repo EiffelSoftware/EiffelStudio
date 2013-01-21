@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 		require
 			a_group_attached: a_group /= Void
 		local
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			l_library: CONF_LIBRARY
 			l_class_cnt: INTEGER
 		do
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			l_library: CONF_LIBRARY
 			l_assembly: CONF_ASSEMBLY
 			l_phys_as: CONF_PHYSICAL_ASSEMBLY
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			l_processed: BOOLEAN
 			l_assembly_processed: BOOLEAN
 		do
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_table (a_classes: HASH_TABLE [CONF_CLASS, STRING]): STRING_TABLE [ARRAYED_LIST [CONF_CLASS]]
+	class_table (a_classes: STRING_TABLE [CONF_CLASS]): STRING_TABLE [ARRAYED_LIST [CONF_CLASS]]
 			-- Table of classes from `a_classes' indexed by renamed name.
 			-- Key is `path', value are list of classes with the same `path'.
 		require
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			a_tab_count_non_negative: a_tab_count >= 0
 		local
 			l_sorted_list: ARRAYED_LIST [CONF_CLASS]
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 		do
 			l_classes := a_group.classes
 			if l_classes /= Void and then not l_classes.is_empty then
@@ -494,7 +494,7 @@ feature{NONE} -- Implementation
 			Result := l_op.directory_separator
 		end
 
-	sorted_classes (a_table: HASH_TABLE [CONF_CLASS, STRING]): ARRAYED_LIST [CONF_CLASS]
+	sorted_classes (a_table: STRING_TABLE [CONF_CLASS]): ARRAYED_LIST [CONF_CLASS]
 			-- Classes from `a_class_table' that are sorted using `class_name_tester'
 		require
 			a_table_attached: a_table /= Void

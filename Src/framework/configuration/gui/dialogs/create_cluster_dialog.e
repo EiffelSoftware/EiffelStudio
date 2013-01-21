@@ -158,7 +158,7 @@ feature {NONE} -- Actions
 			create Result
 			create l_dir.make_with_path (target.system.directory)
 			if l_dir.exists then
-				Result.set_start_directory (l_dir.name)
+				Result.set_start_directory (target.system.directory.name)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -215,7 +215,7 @@ feature {NONE} -- Actions
 					last_group := factory.new_cluster (name.text, l_loc, target)
 					if parent_cluster /= Void then
 						last_group.set_parent (parent_cluster)
-						last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
+						last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
 						parent_cluster.add_child (last_group)
 					end
 					last_group.set_recursive (True)

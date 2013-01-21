@@ -11,8 +11,7 @@ class
 inherit
 	ARRAYED_LIST [CONF_CONDITION]
 		redefine
-			make,
-			out
+			make
 		end
 
 create
@@ -32,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	out: STRING
+	text: STRING_32
 			-- Text representation of the conditions.
 		local
 			l_cursor: ARRAYED_LIST_CURSOR
@@ -45,7 +44,7 @@ feature -- Output
 				after
 			loop
 				Result.append ("(")
-				Result.append (item.out)
+				Result.append (item.text)
 				Result.append (") or ")
 				forth
 			end

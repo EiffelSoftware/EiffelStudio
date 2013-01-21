@@ -144,10 +144,10 @@ feature -- Access: IL code generation
 	metadata_cache_path: STRING_32
 			-- Alternative EAC metadata path
 
-	msil_generation_type: STRING
+	msil_generation_type: STRING_32
 			-- Type of IL generation?
 
-	msil_culture: STRING
+	msil_culture: STRING_32
 			-- Culture of current assembly.
 
 	msil_classes_per_module: INTEGER
@@ -161,10 +161,10 @@ feature -- Access: IL code generation
 			msil_classes_per_module_nonnegative: Result > 0
 		end
 
-	msil_version: STRING
+	msil_version: STRING_32
 			-- Version of current assembly.
 
-	msil_assembly_compatibility: STRING
+	msil_assembly_compatibility: STRING_32
 			-- Compatibility of current assembly with other assemblies.
 
 	msil_key_file_name: PATH
@@ -205,7 +205,7 @@ feature -- Update
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
 				java_generation := v
 				il_generation := v
-				set_msil_generation_type ("dll")
+				set_msil_generation_type ({STRING_32} "dll")
 			end
 		ensure
 			java_generation_set:
@@ -216,7 +216,7 @@ feature -- Update
 				il_generation = v
 			msil_generation_type_set:
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started
-				or else msil_generation_type.is_equal ("dll")
+				or else msil_generation_type.same_string_general ("dll")
 		end
 
 	set_il_verifiable (b: BOOLEAN)
@@ -255,15 +255,15 @@ feature -- Update
 			metadata_cache_path_set: (create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else s.is_equal (metadata_cache_path)
 		end
 
-	set_msil_generation_type (s: STRING)
+	set_msil_generation_type (s: STRING_32)
 			-- Set `msil_generation_type' to `s'
 		require
 			s_not_void: s /= Void
-			s_equal_exe_or_dll: s.is_equal ("exe") or s.is_equal ("dll")
+			s_equal_exe_or_dll: s.same_string_general ("exe") or s.same_string_general ("dll")
 		do
 			msil_generation_type := s
 		ensure
-			msil_generation_type_set : msil_generation_type.is_equal (s)
+			msil_generation_type_set : msil_generation_type = s
 		end
 
 	set_il_generation (v: BOOLEAN)
@@ -292,7 +292,7 @@ feature -- Update
 				msil_classes_per_module = nb
 		end
 
-	set_msil_culture (cult: STRING)
+	set_msil_culture (cult: like msil_culture)
 			-- Set `msil_culture' with `cult'.
 		do
 			msil_culture := cult
@@ -300,7 +300,7 @@ feature -- Update
 			msil_culture_set: msil_culture = cult
 		end
 
-	set_msil_version (vers: STRING)
+	set_msil_version (vers: like msil_version)
 			-- Set `msil_version' with `vers'.
 		require
 			valid_version: (create {VERSION}).is_version_valid (vers)
@@ -310,7 +310,7 @@ feature -- Update
 			msil_version_set: msil_version = vers
 		end
 
-	set_msil_assembly_compatibility (comp: STRING)
+	set_msil_assembly_compatibility (comp: like msil_assembly_compatibility)
 			-- Set `msil_assembly_compatibility' with `comp'.
 		require
 			comp_not_void: comp /= Void

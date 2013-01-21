@@ -12,7 +12,7 @@ deferred class PROFILE_DATA
 inherit
 	ANY
 		redefine
-			out, is_equal, copy
+			is_equal, copy
 		end;
 
 feature -- Creation feature
@@ -29,19 +29,19 @@ feature -- Creation feature
 
 feature -- Output
 
-	out : STRING
+	text : STRING_32
 			-- Representation for output.
 		do
 			create Result.make (0);
-			Result.append_string ("|%T")
-			Result.append_string (calls.out)
-			Result.append_string ("%T|%T")
-			Result.append_string (self.out)
-			Result.append_string ("%T|%T")
-			Result.append_string (descendants.out)
-			Result.append_string ("%T|%T")
-			Result.append_string (percentage.out)
-			Result.append_string ("%T|%T")
+			Result.append_string_general ("|%T")
+			Result.append_integer (calls)
+			Result.append_string_general ("%T|%T")
+			Result.append_double (self)
+			Result.append_string_general ("%T|%T")
+			Result.append_double (descendants)
+			Result.append_string_general ("%T|%T")
+			Result.append_double (percentage)
+			Result.append_string_general ("%T|%T")
 			Result.append_string (int_function.name)
 		end
 
@@ -96,7 +96,7 @@ feature -- attributes
 		-- The function where all is about.
 
 invariant
-	
+
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

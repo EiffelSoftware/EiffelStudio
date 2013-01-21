@@ -446,7 +446,7 @@ feature{QL_CRITERION} -- Implementation
 			a_group_valid: a_group.is_valid_domain_item
 			a_class_table_attached: a_class_table /= Void
 		local
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			l_class_table: HASH_TABLE [QL_CLASS, CONF_CLASS]
 			l_conf_class: CONF_CLASS
 		do

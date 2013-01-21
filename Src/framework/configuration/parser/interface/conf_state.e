@@ -59,7 +59,7 @@ feature -- Access
 	is_dynamic_runtime: BOOLEAN
 			-- Dynamic runtime?
 
-	version: HASH_TABLE [CONF_VERSION, STRING]
+	version: STRING_TABLE [CONF_VERSION]
 			-- Versions?
 
 	custom_variables: like {CONF_TARGET}.variables

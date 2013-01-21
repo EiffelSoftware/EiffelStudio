@@ -84,7 +84,7 @@ feature -- Access
 	directory_name: STRING_32
 			-- Full path to the universe/system description parent directory.
 
-	target_name: STRING
+	target_name: STRING_32
 			-- Target to use. (optional, if only one target).
 
 	project_path: PATH
@@ -209,7 +209,7 @@ feature -- Status setting
 			directory_name := p.parent.name
 		end
 
-	set_target_name (s: STRING)
+	set_target_name (s: like target_name)
 			-- Assign `s' to `target_name'.
 		require
 			s_ok: s /= Void and then not s.is_empty
@@ -914,7 +914,7 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_external_runtime)
 			if l_s /= Void then
-				system.set_external_runtime (l_s)
+				system.set_external_runtime (l_s.as_string_8_conversion)
 			end
 
 			l_s := l_settings.item (s_executable_name)
@@ -927,8 +927,8 @@ feature {NONE} -- Implementation
 				Error_handler.insert_error (vd15)
 				l_s := Void
 			end
-			if l_s /= Void and then (system.name = Void or else not system.name.is_equal (l_s)) then
-				system.set_name (l_s)
+			if l_s /= Void and then (system.name = Void or else not system.name.same_string_general (l_s)) then
+				system.set_name (l_s.as_string_8_conversion)
 				system.request_freeze
 			end
 
@@ -1109,7 +1109,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd15)
 				end
 			else
-				system.set_msil_generation_type ("exe")
+				system.set_msil_generation_type ({STRING_32} "exe")
 			end
 
 			l_s := l_settings.item (s_msil_key_file_name)
@@ -1345,9 +1345,9 @@ feature {NONE} -- Implementation
 
 				-- Update the system name
 			if not a_target.setting_executable_name.is_empty then
-				system.set_name (a_target.setting_executable_name)
+				system.set_name (a_target.setting_executable_name.as_string_8_conversion)
 			else
-				system.set_name (a_target.system.name)
+				system.set_name (a_target.system.name.as_string_8_conversion)
 			end
 		ensure
 			valid_system: workbench.system /= Void

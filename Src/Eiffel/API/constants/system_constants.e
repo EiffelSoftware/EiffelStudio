@@ -183,7 +183,7 @@ feature-- Versioning
 				(svn_revision \\ (9999 + 1).as_natural_32).as_natural_16)
 		end
 
-	Version_number: STRING
+	Version_number: STRING_32
 			-- Version number composed of
 			-- `Major' . `Minor' . `Release' . `Build'.
 		local
@@ -192,17 +192,17 @@ feature-- Versioning
 			create Result.make (30)
 			Result.append (compiler_version_number.version)
 			Result.append_character (' ')
-			Result.append_string (version_type_name)
+			Result.append_string_general (version_type_name)
 			Result.append_character (' ')
 			Result.append_character ('-')
 			Result.append_character (' ')
-			Result.append_string (eiffel_layout.eiffel_platform)
+			Result.append_string_general (eiffel_layout.eiffel_platform)
 			create l_profile
 			if not l_profile.is_default_mode then
 				Result.append_character (' ')
 				Result.append_character ('-')
 				Result.append_character (' ')
-				Result.append_string (l_profile.version_mode)
+				Result.append_string_general (l_profile.version_mode)
 			end
 		end
 
@@ -234,7 +234,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- Tags used in project file header.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

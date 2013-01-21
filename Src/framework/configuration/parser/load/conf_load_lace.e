@@ -321,7 +321,7 @@ feature {NONE} -- Implementation of data retrieval
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			a_class_lower: a_class.is_equal (a_class.as_lower)
 		do
-			a_cluster.add_visible (a_class, a_rename.old_name.as_lower, a_visible_class, a_rename.new_name.as_lower)
+			a_cluster.add_visible (a_class, a_rename.old_name.as_lower.as_string_32, a_visible_class, a_rename.new_name.as_lower.as_string_32)
 		end
 
 	process_cluster_properties (a_properties: CLUST_PROP_SD)
@@ -466,7 +466,9 @@ feature {NONE} -- Implementation of data retrieval
 						if l_vis.export_restriction = Void then
 							current_cluster.add_visible (l_class, Void, l_class_vis, Void)
 						else
-							l_vis.export_restriction.do_all (agent current_cluster.add_visible (l_class, {ID_SD}?, l_class_vis, Void))
+							across l_vis.export_restriction as l_export loop
+								current_cluster.add_visible (l_class, l_export.item.as_string_32, l_class_vis, Void)
+							end
 						end
 
 						if l_vis.renamings /= Void then
@@ -512,7 +514,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_regexp: REGULAR_EXPRESSION
 			l_rename: LACE_LIST [TWO_NAME_SD]
 			l_loader: CONF_LOAD
-			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_libs: STRING_TABLE [CONF_LIBRARY]
 			l_pre_lib: CONF_LIBRARY
 		do
 			if a_defaults /= Void then
@@ -623,7 +625,7 @@ feature {NONE} -- Implementation of data retrieval
 								until
 									l_rename.after
 								loop
-									l_conf_pre.add_renaming (l_rename.item.old_name, l_rename.item.new_name)
+									l_conf_pre.add_renaming (l_rename.item.old_name, l_rename.item.new_name.as_string_32)
 									l_rename.forth
 								end
 							end
@@ -653,24 +655,24 @@ feature {NONE} -- Implementation of data retrieval
 							if l_conf_vers = Void then
 								create l_conf_vers.make
 							end
-							l_conf_vers.set_company (l_value.value)
+							l_conf_vers.set_company (l_value.value.as_string_32)
 						elseif l_name.is_equal ("copyright") then
 							if l_conf_vers = Void then
 								create l_conf_vers.make
 							end
-							l_conf_vers.set_copyright (l_value.value)
+							l_conf_vers.set_copyright (l_value.value.as_string_32)
 						elseif l_name.is_equal ("namespace") then
 							if current_options = Void then
 								create current_options
 							end
-							current_options.set_local_namespace (l_value.value)
+							current_options.set_local_namespace (l_value.value.as_string_32)
 						elseif l_name.is_equal ("override_cluster") then
 							current_overrides.force (l_value.value)
 						elseif l_name.is_equal ("product") then
 							if l_conf_vers = Void then
 								create l_conf_vers.make
 							end
-							l_conf_vers.set_product (l_value.value)
+							l_conf_vers.set_product (l_value.value.as_string_32)
 						elseif l_name.is_equal ("profile") then
 							if current_options = Void then
 								create current_options
@@ -680,7 +682,7 @@ feature {NONE} -- Implementation of data retrieval
 							if l_conf_vers = Void then
 								create l_conf_vers.make
 							end
-							l_conf_vers.set_trademark (l_value.value)
+							l_conf_vers.set_trademark (l_value.value.as_string_32)
 						elseif l_name.is_equal ("version") then
 								-- there is no format for this, we try to parse it if it is in the format
 								-- w.x.y.z (x, y and z are optional)

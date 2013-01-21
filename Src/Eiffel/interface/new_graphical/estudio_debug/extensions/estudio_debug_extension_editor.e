@@ -148,7 +148,7 @@ feature {NONE} -- Actions
 		local
 			l_window: detachable EB_DEVELOPMENT_WINDOW
 			l_target: detachable CONF_TARGET
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING_8]
+			l_clusters: STRING_TABLE [CONF_CLUSTER]
 			l_classes_in_cluster: PROCEDURE [ANY, TUPLE [CONF_CLUSTER]]
 			l_stone: detachable STONE
 		do
@@ -162,7 +162,7 @@ feature {NONE} -- Actions
 				l_classes_in_cluster :=
 				agent (a_cluster: detachable CONF_CLUSTER; a_window: EB_DEVELOPMENT_WINDOW)
 					local
-						l_classes: HASH_TABLE [CONF_CLASS, STRING_8]
+						l_classes: STRING_TABLE [CONF_CLASS]
 						l_class_stone: CLASSI_STONE
 						l_editor: EB_SMART_EDITOR
 					do
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

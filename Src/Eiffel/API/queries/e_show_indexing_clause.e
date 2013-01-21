@@ -47,8 +47,8 @@ feature -- Execution
 
 	display_a_cluster (a_group: CONF_GROUP)
 		local
-			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
-			classes: HASH_TABLE [CONF_CLASS, STRING];
+			sorted_class_names: SORTED_TWO_WAY_LIST [READABLE_STRING_GENERAL];
+			classes: STRING_TABLE [CONF_CLASS];
 			a_classi: CLASS_I;
 			a_class: CLASS_C;
 			l_precompile: CONF_PRECOMPILE
@@ -182,7 +182,7 @@ feature -- Execution
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

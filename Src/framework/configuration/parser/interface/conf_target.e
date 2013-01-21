@@ -29,7 +29,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_system: CONF_SYSTEM)
+	make (a_name: STRING_32; a_system: CONF_SYSTEM)
 			-- Create with `a_name'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access, stored in configuration file
 
-	name: STRING
+	name: STRING_32
 			-- Name of the target.
 
 	description: STRING_32
@@ -112,7 +112,7 @@ feature -- Access queries
 	child_targets: LIST [CONF_TARGET]
 			-- Targets that extend this target.
 		local
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_targets: STRING_TABLE [CONF_TARGET]
 			l_target: CONF_TARGET
 		do
 			create {ARRAYED_LIST [CONF_TARGET]}Result.make (5)
@@ -204,7 +204,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	groups: HASH_TABLE [CONF_GROUP, STRING]
+	groups: STRING_TABLE [CONF_GROUP]
 			-- All groups of this target (union of clusters, assemblies, overrides and libraries)
 		do
 			create Result.make (libraries.count + assemblies.count + clusters.count + overrides.count + 1)
@@ -789,7 +789,7 @@ feature {NONE} -- Access: concurrency setting
 	setting_concurrency_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `setting_concurrency'.
 		once
-			Result := <<concurrency_none_name.as_string_32_conversion, concurrency_multithreaded_name.as_string_32_conversion, concurrency_scoop_name.as_string_32_conversion>>
+			Result := <<concurrency_none_name.as_string_32, concurrency_multithreaded_name.as_string_32, concurrency_scoop_name.as_string_32>>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -904,7 +904,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			override_added: internal_overrides.has (an_override.name)
 		end
 
-	remove_library (a_name: STRING)
+	remove_library (a_name: READABLE_STRING_GENERAL)
 			-- Remove a library with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -913,7 +913,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_libraries.remove (a_name)
 		end
 
-	remove_assembly (a_name: STRING)
+	remove_assembly (a_name: READABLE_STRING_GENERAL)
 			-- Remove an assembly with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -922,7 +922,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_assemblies.remove (a_name)
 		end
 
-	remove_cluster (a_name: STRING)
+	remove_cluster (a_name: READABLE_STRING_GENERAL)
 			-- Remove a cluster with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -931,7 +931,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_clusters.remove (a_name)
 		end
 
-	remove_override (a_name: STRING)
+	remove_override (a_name: READABLE_STRING_GENERAL)
 			-- Remove an override with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -1332,28 +1332,29 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			variable_removed: not internal_variables.has (a_name)
 		end
 
-	add_mapping (a_old_name, a_new_name: STRING)
+	add_mapping (a_old_name: READABLE_STRING_GENERAL; a_new_name: STRING_32)
 			-- Add/replace  mapping from `a_old_name' to `a_new_name'.
 		require
 			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 		do
 			if internal_mapping = Void then
-				create internal_mapping.make_equal (15)
+				create internal_mapping.make_equal_caseless (15)
 			end
+				-- Eventhough we are caseless, we do store mapping in upper.
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 		end
 
-	remove_mapping (a_name: STRING)
+	remove_mapping (a_name: READABLE_STRING_GENERAL)
 			-- Remove a mapping with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
 			if internal_mapping /= Void then
-				internal_mapping.remove (a_name.as_upper)
+				internal_mapping.remove (a_name)
 			end
 		ensure
-			mapping_removed: not internal_mapping.has (a_name.as_upper)
+			mapping_removed: not internal_mapping.has (a_name)
 		end
 
 	set_abstract (an_enabled: like is_abstract)
@@ -1414,7 +1415,7 @@ feature -- Equality
 		require
 			a_processed_libraries: a_processed_libraries /= Void
 		local
-			l_libs, l_other_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_libs, l_other_libs: like libraries
 			l_lib, l_other_lib: CONF_LIBRARY
 		do
 			Result := is_group_equivalent (other)
@@ -1460,7 +1461,7 @@ feature -- Visit
 
 feature -- Output
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := system.name + "/" + name
@@ -1477,16 +1478,16 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_precompile: CONF_PRECOMPILE
 			-- Precompile of this target itself.
 
-	internal_libraries: HASH_TABLE [CONF_LIBRARY, STRING]
+	internal_libraries: STRING_TABLE [CONF_LIBRARY]
 			-- The used libraries of this target itself.
 
-	internal_overrides: HASH_TABLE [CONF_OVERRIDE, STRING]
+	internal_overrides: STRING_TABLE [CONF_OVERRIDE]
 			-- The override clusters of this target itself.
 
-	internal_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+	internal_clusters: STRING_TABLE [CONF_CLUSTER]
 			-- The normal clusters of this target itself.
 
-	internal_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+	internal_assemblies: STRING_TABLE [CONF_ASSEMBLY]
 			-- The assemblies of this target itself.
 
 	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
@@ -1495,7 +1496,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this target itself.
 
-	internal_mapping: HASH_TABLE [STRING, STRING]
+	internal_mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
 	changeable_internal_options: like internal_options
@@ -1544,7 +1545,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 
 feature {NONE} -- Implementation
 
-	is_group_equal_check (a, b: HASH_TABLE [CONF_GROUP, STRING]): BOOLEAN
+	is_group_equal_check (a, b: STRING_TABLE [CONF_GROUP]): BOOLEAN
 			-- Check if `a' and `b' are group equivalent.
 		do
 			if a.count = b.count then

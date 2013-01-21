@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 		local
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 			parent: ES_CLUSTER
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			l_cluster, es_cluster : ES_CLUSTER
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			nr_of_items: INTEGER
@@ -1062,7 +1062,7 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 			a_cluster_is_cluster: a_cluster.group.is_cluster
 		local
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 			new_class: ES_CLASS
 			l_item: CLASS_I
 			a_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
@@ -1278,7 +1278,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

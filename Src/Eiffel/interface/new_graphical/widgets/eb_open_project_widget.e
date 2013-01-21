@@ -252,7 +252,7 @@ feature {NONE} -- State information
 			-- Selection status of `clean_button'. Needed to restore the proper status
 			-- when changing action between `precompiled_action_item' and other actions.
 
-	last_state: TUPLE [system: CONF_SYSTEM; options: USER_OPTIONS; target_name: STRING
+	last_state: TUPLE [system: CONF_SYSTEM; options: USER_OPTIONS; target_name: READABLE_STRING_GENERAL;
 		has_system_error: BOOLEAN; has_missing_target_error: BOOLEAN;
 		last_error_message: STRING_32]
 			-- Information about last project we have selected.
@@ -580,8 +580,8 @@ feature {NONE} -- Implementation
 			l_pixmap: EV_PIXMAP
 			l_tooltip: READABLE_STRING_32
 			l_last_location: PATH
-			l_last_target: STRING
-			l_targets: DS_ARRAYED_LIST [STRING]
+			l_last_target: READABLE_STRING_GENERAL
+			l_targets: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_force_clean: BOOLEAN
 		do
 			ln ?= a_row.item (name_column_index)
@@ -748,56 +748,55 @@ feature {NONE} -- Implementation
 			a_item_not_void: a_item /= Void
 			not_has_error: not has_error
 		local
-			l_list: DS_ARRAYED_LIST [STRING]
-			l_array: ARRAYED_LIST [STRING]
+			l_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_has_target: BOOLEAN
 		do
 				-- Targets in alphabetical order.
 			l_list := available_targets (last_state.system)
 
 			from
-				create l_array.make (l_list.count)
 				l_list.start
 			until
 				l_list.after
 			loop
-				l_array.extend (l_list.item_for_iteration)
 				if
 					not l_has_target and then
 					last_state.options /= Void and then
-					l_list.item_for_iteration.is_case_insensitive_equal (last_state.options.target_name)
+					l_list.item.is_case_insensitive_equal (last_state.options.target_name)
 				then
 					l_has_target := True
 					a_item.set_text (last_state.options.target_name)
 				end
 				l_list.forth
 			end
-			a_item.set_item_strings (l_array)
+			a_item.set_item_strings (l_list)
 			if not l_has_target and not l_list.is_empty then
-				a_item.set_text (l_array.first)
+				a_item.set_text (l_list.first)
 			end
 		end
 
-	available_targets (a_config: CONF_SYSTEM): DS_ARRAYED_LIST [STRING]
+	available_targets (a_config: CONF_SYSTEM): ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- List of targets of `a_config'.
 		require
 			a_config_not_void: a_config /= Void
 		local
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_targets: STRING_TABLE [CONF_TARGET]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 				-- Order targets in alphabetical order.
 			from
 				l_targets := a_config.compilable_targets
-				create Result.make_equal (l_targets.count)
+				create Result.make (l_targets.count)
+				Result.compare_objects
 				l_targets.start
 			until
 				l_targets.after
 			loop
-				Result.put_last (l_targets.key_for_iteration)
+				Result.extend (l_targets.key_for_iteration)
 				l_targets.forth
 			end
-			Result.sort (
-				create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+			create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
+			l_sorter.sort (Result)
 		ensure
 			available_targets_not_void: Result /= Void
 		end
@@ -1139,7 +1138,7 @@ feature {NONE} -- Actions
 		do
 			if
 				last_state.target_name = Void or else
-				not last_state.target_name.is_equal (selected_target)
+				not last_state.target_name.same_string (selected_target)
 			then
 					-- Target has changed, we need to clear `clean_button'.
 				clean_button.disable_select
@@ -1279,7 +1278,7 @@ invariant
 	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

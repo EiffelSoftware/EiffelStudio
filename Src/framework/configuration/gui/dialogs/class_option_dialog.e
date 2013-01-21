@@ -9,7 +9,7 @@ class
 	CLASS_OPTION_DIALOG
 
 inherit
-	PROPERTY_DIALOG [HASH_TABLE [CONF_OPTION, STRING_32]]
+	PROPERTY_DIALOG [STRING_TABLE [CONF_OPTION]]
 		redefine
 			initialize
 		end
@@ -177,7 +177,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	show_options (a_class: STRING)
+	show_options (a_class: READABLE_STRING_GENERAL)
 			-- Show options for `a_class'
 		require
 			properties_set: properties /= Void
@@ -219,15 +219,15 @@ feature {NONE} -- Implementation
 	group_options: CONF_OPTION
 			-- Options of the group this classes belong to.
 
-	current_class: STRING
+	current_class: READABLE_STRING_GENERAL
 			-- Currently selected class.
 
 	refresh
 			-- Refresh the displayed values.
 		local
-			l_sorted_list: ARRAYED_LIST [STRING]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_item: EV_LIST_ITEM
-			l_sorter: QUICK_SORTER [STRING]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			class_list.wipe_out
 			properties.reset
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 					create l_item.make_with_text (l_sorted_list.item_for_iteration)
 					l_item.select_actions.extend (agent show_options (l_sorted_list.item_for_iteration))
 					class_list.extend (l_item)
-					if current_class /= Void and then current_class.is_equal (l_sorted_list.item_for_iteration) then
+					if current_class /= Void and then current_class.same_string (l_sorted_list.item_for_iteration) then
 						l_item.enable_select
 					end
 					l_sorted_list.forth

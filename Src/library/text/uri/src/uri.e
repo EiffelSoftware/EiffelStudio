@@ -279,14 +279,17 @@ feature -- Access
 
 feature -- Access
 
-	decoded_path: STRING_32
+	decoded_path: READABLE_STRING_32
 			-- Decoded `path'
+		local
+			s: STRING_32
 		do
-			create Result.make (path.count)
-			append_decoded_www_form_urlencoded_string_to (path, Result)
+			create s.make (path.count)
+			append_decoded_www_form_urlencoded_string_to (path, s)
+			Result := s
 		end
 
-	path_segments: LIST [IMMUTABLE_STRING_8]
+	path_segments: LIST [READABLE_STRING_8]
 			-- Segments composing `path'.
 		do
 			Result := path.split ('/')
@@ -347,20 +350,23 @@ feature -- Access
 
 feature -- Query
 
-	hier: STRING_8
+	hier: READABLE_STRING_8
 			-- Hier part.
 			-- hier-part   = "//" authority path-abempty
             --      / path-absolute
             --      / path-rootless
             --      / path-empty
+		local
+			s: STRING_8
 		do
-			create Result.make (10)
+			create s.make (10)
 			if attached authority as l_authority then
-				Result.append_character ('/')
-				Result.append_character ('/')
-				Result.append (l_authority)
+				s.append_character ('/')
+				s.append_character ('/')
+				s.append (l_authority)
 			end
-			Result.append (path)
+			s.append (path)
+			Result := s
 		end
 
 	username_password: detachable TUPLE [username: READABLE_STRING_8; password: detachable READABLE_STRING_8]
@@ -399,22 +405,25 @@ feature -- Query
 			end
 		end
 
-	authority: detachable STRING_8
+	authority: detachable READABLE_STRING_8
 			-- Hierarchical element for naming authority.
 			--| RFC3986: authority   = [ userinfo "@" ] host [ ":" port ]
+		local
+			s: STRING_8
 		do
 			if attached host as h then
 				if attached userinfo as u then
-					create Result.make_from_string (u)
-					Result.append_character ('@')
-					Result.append (h)
+					create s.make_from_string (u)
+					s.append_character ('@')
+					s.append (h)
 				else
-					create Result.make_from_string (h)
+					create s.make_from_string (h)
 				end
 				if port /= 0 then
-					Result.append_character (':')
-					Result.append_integer (port)
+					s.append_character (':')
+					s.append_integer (port)
 				end
+				Result := s
 			else
 				check not is_valid or else (userinfo = Void and port = 0) end
 			end
@@ -422,25 +431,28 @@ feature -- Query
 
 feature -- Conversion
 
-	string: STRING_8
+	string: READABLE_STRING_8
 			-- String representation.
 			-- scheme://username:password@hostname/path?query#fragment
+		local
+			s: STRING_8
 		do
-			if attached scheme as s and then not s.is_empty then
-				create Result.make_from_string (scheme)
-				Result.append_character (':')
+			if attached scheme as l_scheme and then not l_scheme.is_empty then
+				create s.make_from_string (l_scheme)
+				s.append_character (':')
 			else
-				create Result.make_empty
+				create s.make_empty
 			end
-			Result.append (hier)
+			s.append (hier)
 			if attached query as q then
-				Result.append_character ('?')
-				Result.append (q)
+				s.append_character ('?')
+				s.append (q)
 			end
 			if attached fragment as f then
-				Result.append_character ('#')
-				Result.append (f)
+				s.append_character ('#')
+				s.append (f)
 			end
+			Result := s
 		end
 
 	resolved_uri: URI
@@ -516,7 +528,7 @@ feature -- Element Change
 			scheme_set: scheme.same_string (v)
 		end
 
-	set_userinfo (v: detachable READABLE_STRING_GENERAL)
+	set_userinfo (v: detachable READABLE_STRING_8)
 		require
 			is_valid_userinfo (v)
 		do
@@ -931,11 +943,14 @@ feature -- Assertion helper
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_GENERAL
 			-- String that should be displayed in debugger to represent `Current'.
+		local
+			s: STRING
 		do
-			create Result.make_empty
-			Result.append (string)
+			create s.make_empty
+			s.append (string)
+			Result := s
 		end
 
 ;note

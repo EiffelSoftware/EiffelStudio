@@ -16,7 +16,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_chm_url (a_chm_url: STRING): BOOLEAN
+	is_valid_chm_url (a_chm_url: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_chm_url' a valid Microsoft HTML Help URL?
 		do
 			Result := True
@@ -30,7 +30,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show (a_chm_url: STRING)
+	show (a_chm_url: READABLE_STRING_GENERAL)
 			-- Display help page page with url `a_chm_url'.
 		require
 			valid_chm_url: is_valid_chm_url (a_chm_url)

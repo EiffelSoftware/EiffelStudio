@@ -475,7 +475,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [STRING])
+	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local
@@ -492,7 +492,7 @@ feature {NONE} -- User interaction
 			if a_targets.count = 1 then
 				a_targets.start
 				if a_target = Void or else a_target.is_equal (a_targets.item_for_iteration) then
-					target_name := a_targets.item_for_iteration.twin
+					create target_name.make_from_string_general (a_targets.item_for_iteration)
 					l_need_choice := False
 				end
 			end

@@ -53,7 +53,7 @@ feature -- Command
 			loop
 				a_src.read_line
 				if a_substitute then
-					l_line := a_env.substitute (a_src.last_string)
+					l_line := a_env.substitute (a_src.last_string).as_string_8_conversion
 				else
 					l_line := a_src.last_string
 				end

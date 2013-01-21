@@ -134,7 +134,7 @@ feature -- Status update
 
 feature -- Access, stored in configuration file
 
-	name: STRING
+	name: STRING_32
 			-- The name of the group.
 
 	description: STRING_32
@@ -157,7 +157,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	overriders: ARRAYED_LIST [CONF_OVERRIDE]
 			-- The overriders that override this group.
 
-	classes: HASH_TABLE [like class_type, STRING]
+	classes: STRING_TABLE [like class_type]
 			-- All the classes in this group, indexed by the renamed class name.
 
 	hash_code: INTEGER
@@ -178,27 +178,11 @@ feature -- Access queries
 			Result := overriders /= Void and then not overriders.is_empty
 		end
 
-	mapping: HASH_TABLE [STRING, STRING]
+	mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		deferred
 		ensure
 			result_not_void: Result /= Void
-		end
-
-	mapping_32: HASH_TABLE [STRING_32, STRING_32]
-			-- Same as `mapping' but with STRING_32.
-		do
-			create Result.make_equal (mapping.count)
-			from
-				mapping.start
-			until
-				mapping.after
-			loop
-				Result.extend (mapping.item_for_iteration, mapping.key_for_iteration)
-				mapping.forth
-			end
-		ensure
-			mapping_32_not_void: Result /= Void
 		end
 
 	options: CONF_OPTION
@@ -208,38 +192,17 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	class_options: HASH_TABLE [CONF_OPTION, STRING]
+	class_options: STRING_TABLE [CONF_OPTION]
 			-- Options for classes.
 		deferred
 		ensure
 			Result_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-	class_options_32: HASH_TABLE [CONF_OPTION, STRING_32]
-			-- Classes with specific options of this group itself.
-		local
-			l_options: like class_options
-		do
-			l_options := class_options
-			if l_options /= Void then
-				create Result.make (l_options.count)
-				from
-					l_options.start
-				until
-					l_options.after
-				loop
-					Result.extend (l_options.item_for_iteration, l_options.key_for_iteration)
-					l_options.forth
-				end
-			end
-		ensure
-			class_options_32_not_empty: Result /= Void implies not Result.is_empty
-		end
-
 	get_class_options (a_class: STRING): CONF_OPTION
 			-- Get the options for `a_class'.
 		local
-			l_name: STRING
+			l_name: READABLE_STRING_GENERAL
 			l_map: like mapping
 			l_class_options: like class_options
 		do
@@ -266,7 +229,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
+	class_by_name (a_class: READABLE_STRING_GENERAL; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
 			-- Get the class with the final (after renaming/prefix) name `a_class'
 			-- (if `a_dependencies' then we check dependencies)
 		require
@@ -285,7 +248,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [READABLE_STRING_GENERAL]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		require
 			a_class_ok: a_class /= Void and then a_class.is_valid
@@ -473,25 +436,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			class_options_set: internal_class_options = a_options
 		end
 
-	set_class_options_32 (a_options_32: like class_options_32)
-			-- Set `a_options'.
-		do
-			if a_options_32 = Void then
-				internal_class_options := Void
-			else
-				create internal_class_options.make (a_options_32.count)
-				from
-					a_options_32.start
-				until
-					a_options_32.after
-				loop
-					internal_class_options.extend (a_options_32.item_for_iteration, a_options_32.key_for_iteration)
-					a_options_32.forth
-				end
-			end
-		end
-
-	add_class_options (a_option: CONF_OPTION; a_class: STRING)
+	add_class_options (a_option: CONF_OPTION; a_class: READABLE_STRING_GENERAL)
 			-- Add class options.
 		require
 			a_option_not_void: a_option /= Void
@@ -499,7 +444,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_class_upper: a_class.is_equal (a_class.as_upper)
 		do
 			if internal_class_options = Void then
-				create internal_class_options.make (1)
+				create internal_class_options.make_caseless (1)
 			end
 			internal_class_options.force (a_option, a_class)
 		ensure
@@ -619,7 +564,7 @@ feature -- Visit
 
 feature -- Output
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- Generate a nice representation of Current to be seen
 			-- in debugger.
 		do
@@ -634,7 +579,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this group itself.
 
-	internal_class_options: HASH_TABLE [CONF_OPTION, STRING]
+	internal_class_options: STRING_TABLE [CONF_OPTION]
 			-- Classes with specific options of this group itself.
 
 	changeable_internal_options: like internal_options
@@ -680,7 +625,7 @@ feature {NONE} -- Implementation
 	internal_hash_code: INTEGER
 			-- Cached value of the hash_code
 
-	reverse_classes_cache: HASH_TABLE [STRING, like class_type]
+	reverse_classes_cache: HASH_TABLE [READABLE_STRING_GENERAL, like class_type]
 			-- Cache for speedup of `name_by_class' lookups.
 
 	accessible_groups_cache: like accessible_groups

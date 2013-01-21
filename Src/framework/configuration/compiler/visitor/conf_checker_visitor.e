@@ -29,11 +29,11 @@ feature -- Visit nodes
 	process_group (a_group: CONF_GROUP)
 			-- Visit `a_group'.
 		local
-			l_ren: HASH_TABLE [STRING, STRING]
-			l_name: STRING
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
-			l_map: HASH_TABLE [STRING, STRING]
+			l_ren: STRING_TABLE [STRING_32]
+			l_name: READABLE_STRING_GENERAL
+			l_classes: STRING_TABLE [CONF_CLASS]
+			l_c_opt: STRING_TABLE [CONF_OPTION]
+			l_map: STRING_TABLE [STRING_32]
 			l_vg: CONF_VIRTUAL_GROUP
 			l_options: CONF_OPTION
 		do
@@ -58,7 +58,7 @@ feature -- Visit nodes
 							l_name := l_ren.key_for_iteration
 								-- do not use mapping because renaming already deals with changing names in the system,
 								-- also applying mapping would make things too confusing
-							if not l_classes.has_key (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_name) then
+							if not l_classes.has_key (l_ren.item_for_iteration) or else not l_classes.found_item.name.same_string_general (l_name) then
 								add_error (create {CONF_ERROR_RENAM}.make (l_name, a_group.target.system.file_name))
 							end
 							l_ren.forth

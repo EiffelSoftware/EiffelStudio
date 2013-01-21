@@ -187,10 +187,10 @@ feature -- Access, stored in configuration file
 	assertions: CONF_ASSERTIONS
 			-- The assertion settings.
 
-	namespace: STRING
+	namespace: STRING_32
 			-- .NET namespace that is computed on demand.
 
-	local_namespace: STRING
+	local_namespace: STRING_32
 			-- .NET namespace set in configuration file
 
 	is_profile: BOOLEAN
@@ -279,10 +279,10 @@ feature {NONE} -- Access: void safety
 
 feature -- Access, stored in configuration file.
 
-	debugs: HASH_TABLE [BOOLEAN, STRING]
+	debugs: STRING_TABLE [BOOLEAN]
 			-- Debug settings.
 
-	warnings: HASH_TABLE [BOOLEAN, STRING]
+	warnings: STRING_TABLE [BOOLEAN]
 			-- Warning settings.
 
 feature -- Access queries
@@ -293,7 +293,7 @@ feature -- Access queries
 			Result := is_debug and then debugs /= Void and then debugs.item (a_debug)
 		end
 
-	is_warning_enabled (a_warning: STRING): BOOLEAN
+	is_warning_enabled (a_warning: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_warning' enabled?
 		require
 			a_warning_valid: is_warning_known (a_warning)
@@ -311,7 +311,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			assertions_set: assertions = an_assertions
 		end
 
-	add_debug (a_name: STRING; an_enabled: BOOLEAN)
+	add_debug (a_name: READABLE_STRING_GENERAL; an_enabled: BOOLEAN)
 			-- Add a debug.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -325,11 +325,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			added: debugs.has (a_name) and then debugs.item (a_name) = an_enabled
 		end
 
-	add_warning (a_name: STRING; an_enabled: BOOLEAN)
+	add_warning (a_name: READABLE_STRING_GENERAL; an_enabled: BOOLEAN)
 			-- Add a warning.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
+			a_name_lower: a_name.same_string (a_name.as_lower)
 			known_warning: is_warning_known (a_name)
 		local
 			w: like warnings
@@ -565,6 +565,7 @@ feature -- Merging
 			-- Apply this only for options that can be overridden by the client.
 		local
 			l_tmp: like debugs
+			l_warnings: like warnings
 		do
 			if other /= Void then
 				if assertions = Void then
@@ -580,9 +581,9 @@ feature -- Merging
 				if warnings = Void then
 					warnings := other.warnings
 				elseif other.warnings /= Void then
-					l_tmp := other.warnings.twin
-					l_tmp.merge (warnings)
-					warnings := l_tmp
+					l_warnings := other.warnings.twin
+					l_warnings.merge (warnings)
+					warnings := l_warnings
 				end
 				if not is_profile_configured then
 					is_profile_configured := other.is_profile_configured or else is_profile /~ other.is_profile

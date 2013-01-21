@@ -118,7 +118,7 @@ feature -- Access
 			du_not_void: du /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			l_groups: HASH_TABLE [CONF_GROUP, STRING]
+			l_groups: STRING_TABLE [CONF_GROUP]
 			l_grp: CONF_GROUP
 			l_cluster: CONF_CLUSTER
 		do

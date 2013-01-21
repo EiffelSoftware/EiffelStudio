@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 		require
 			current_state_is_valid: aok
 		local
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes: STRING_TABLE [CONF_CLASS]
 		do
 			l_classes := cluster.accessible_classes
 			if l_classes.has_key (class_name) and then l_classes.found_item.is_valid then

@@ -486,7 +486,7 @@ feature {NONE} -- Actions
 	on_compiler_version
 			-- Compiler version was changed.
 		local
-			l_ver: STRING
+			l_ver: STRING_32
 			l_min, l_max: CONF_VERSION
 		do
 			l_ver := version_min_compiler.text
@@ -514,7 +514,7 @@ feature {NONE} -- Actions
 	on_msil_clr_version
 			-- MSIL CLR version was changed.
 		local
-			l_ver: STRING
+			l_ver: STRING_32
 			l_min, l_max: CONF_VERSION
 		do
 			l_ver := version_min_msil_clr.text

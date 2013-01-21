@@ -9,7 +9,7 @@ class
 	VISIBLE_DIALOG
 
 inherit
-	PROPERTY_DIALOG [HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]]
+	PROPERTY_DIALOG [STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]]]
 		redefine
 			initialize
 		end
@@ -128,26 +128,26 @@ feature {NONE} -- Agents
 			refresh
 		end
 
-	show_class (a_class: STRING)
+	show_class (a_class: READABLE_STRING_GENERAL)
 			-- Show information about `a_class'.
 		require
 			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
 		do
-			current_class := a_class
+			current_class := a_class.as_string_32
 			current_feature := Void
 		ensure
 			current_class_set: current_class = a_class
 			current_feature_not_set: current_feature = Void
 		end
 
-	show_feature (a_class, a_feature: STRING)
+	show_feature (a_class, a_feature: READABLE_STRING_GENERAL)
 			-- Show information about `a_feature' in `a_class'.
 		require
 			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
 			a_feature_ok: a_feature /= Void and then value.item (a_class).item.features /= Void and then value.item (a_class).item.features.has (a_feature)
 		do
-			current_class := a_class
-			current_feature := a_feature
+			current_class := a_class.as_string_32
+			current_feature := a_feature.as_string_32
 		ensure
 			current_class_set: current_class = a_class
 			current_feature_set: current_feature = a_feature
@@ -156,7 +156,7 @@ feature {NONE} -- Agents
 	remove
 			-- Remove `current_class' or `current_feature'.
 		local
-			l_features: HASH_TABLE [STRING, STRING]
+			l_features: STRING_TABLE [STRING_32]
 		do
 			if value /= Void then
 				if current_feature /= Void then
@@ -179,7 +179,7 @@ feature {NONE} -- Agents
 	add_class
 			-- Add a new class.
 		local
-			l_name, l_vis_name: STRING
+			l_name, l_vis_name: STRING_32
 		do
 			l_name := original_name.text.as_upper
 			l_vis_name := renamed_name.text.as_upper
@@ -191,7 +191,7 @@ feature {NONE} -- Agents
 					create value.make_equal (1)
 				end
 
-				value.force (create {EQUALITY_TUPLE [TUPLE [STRING_8, HASH_TABLE [STRING_8, STRING_8]]]}.make ([l_vis_name, Void]), l_name)
+				value.force (create {EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]}.make ([l_vis_name, Void]), l_name)
 				original_name.set_text ("")
 				renamed_name.set_text ("")
 				current_class := l_name
@@ -202,8 +202,8 @@ feature {NONE} -- Agents
 	add_feature
 			-- Add a new feature.
 		local
-			l_name, l_vis_name: STRING
-			l_feats: HASH_TABLE [STRING, STRING]
+			l_name, l_vis_name: STRING_32
+			l_feats: STRING_TABLE [STRING_32]
 		do
 			if current_class /= Void and then value /= Void and then value.has (current_class) then
 				l_name := original_name.text.as_lower
@@ -229,22 +229,24 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	current_class: STRING
+	current_class: STRING_32
 			-- Currently displayed class.
 
-	current_feature: STRING
+	current_feature: STRING_32
 			-- Currently displayed feature.
 
 	refresh
 			-- Refresh the displayed values.
 		local
-			l_sorted_list: ARRAYED_LIST [STRING]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_class_item, l_feat_item: EV_TREE_ITEM
-			l_rena: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
-			l_feat: HASH_TABLE [STRING, STRING]
-			l_class, l_feat_name, l_vis_name: STRING
+			l_rena: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
+			l_feat: STRING_TABLE [STRING_32]
+			l_class: READABLE_STRING_GENERAL
+			l_vis_name: STRING_32
+			l_feat_name: READABLE_STRING_GENERAL
 			l_cur_class: BOOLEAN
-			l_sorter: QUICK_SORTER [STRING]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			tree.wipe_out
 			if value /= Void then
@@ -258,7 +260,7 @@ feature {NONE} -- Implementation
 					l_sorted_list.extend (value.key_for_iteration)
 					value.forth
 				end
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_sorted_list)
 
 				from
@@ -268,7 +270,7 @@ feature {NONE} -- Implementation
 				loop
 					l_class := l_sorted_list.item_for_iteration
 					l_vis_name := value.item (l_class).item.class_renamed
-					if l_vis_name /= Void and then not l_vis_name.is_equal (l_class) then
+					if l_vis_name /= Void and then not l_vis_name.same_string_general (l_class) then
 						create l_class_item.make_with_text (l_class+" ("+l_vis_name+")")
 					else
 						create l_class_item.make_with_text (l_class)
@@ -278,7 +280,7 @@ feature {NONE} -- Implementation
 
 					tree.extend (l_class_item)
 					l_rena := value.item (l_class)
-					if current_class /= Void and then current_class.is_equal (l_class) then
+					if current_class /= Void and then current_class.same_string_general (l_class) then
 						if current_feature = Void then
 							l_class_item.enable_select
 						else
@@ -294,7 +296,7 @@ feature {NONE} -- Implementation
 						loop
 							l_vis_name := l_feat.item_for_iteration
 							l_feat_name := l_feat.key_for_iteration
-							if l_vis_name /= Void and then not l_vis_name.is_equal (l_feat_name) then
+							if l_vis_name /= Void and then not l_vis_name.same_string_general (l_feat_name) then
 								create l_feat_item.make_with_text (l_feat_name+" ("+l_vis_name+")")
 							else
 								create l_feat_item.make_with_text (l_feat_name)
@@ -302,7 +304,7 @@ feature {NONE} -- Implementation
 
 							l_class_item.extend (l_feat_item)
 							l_feat_item.select_actions.extend (agent show_feature (l_class, l_feat_name))
-							if l_cur_class and current_feature.is_equal (l_feat_name) then
+							if l_cur_class and current_feature.same_string_general (l_feat_name) then
 								l_feat_item.enable_select
 								l_cur_class := False
 							end

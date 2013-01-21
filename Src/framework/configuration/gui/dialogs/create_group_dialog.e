@@ -59,15 +59,15 @@ feature {NONE} -- Implementation
 	factory: CONF_PARSE_FACTORY
 			-- Factory to create a group.
 
-	group_exists (a_group: STRING; a_target: CONF_TARGET): BOOLEAN
+	group_exists (a_group: READABLE_STRING_GENERAL; a_target: CONF_TARGET): BOOLEAN
 			-- Check if `a_target' or any child of `a_target' already has `a_group'.
 		require
 			a_group_ok: a_group /= Void and then not a_group.is_empty
 		local
-			l_groups: HASH_TABLE [CONF_GROUP, STRING_8]
+			l_groups: STRING_TABLE [CONF_GROUP]
 		do
 			l_groups := a_target.groups
-			Result := l_groups.has_key (a_group.as_lower) and then l_groups.found_item.name.is_equal (a_group.as_lower)
+			Result := l_groups.has_key (a_group.as_lower) and then l_groups.found_item.name.same_string_general (a_group.as_lower)
 			if not Result then
 				Result := a_target.child_targets.there_exists (agent group_exists(a_group.as_lower, ?))
 			end

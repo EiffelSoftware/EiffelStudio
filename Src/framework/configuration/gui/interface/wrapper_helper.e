@@ -18,14 +18,13 @@ feature {NONE} -- Wrappers
 			a_call.call (Void)
 		end
 
-	simple_wrapper (a_string: STRING_GENERAL; a_call: PROCEDURE [ANY, TUPLE [STRING]])
+	simple_wrapper (a_string: READABLE_STRING_GENERAL; a_call: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
 			-- Wrapper to allow to call agents that only accept STRING.
 		require
-			valid_8_string: a_string /= Void implies a_string.is_valid_as_string_8
 			a_call_not_void: a_call /= Void
 		do
 			if a_string /= Void then
-				a_call.call ([a_string.to_string_8])
+				a_call.call ([a_string])
 			else
 				a_call.call (Void)
 			end

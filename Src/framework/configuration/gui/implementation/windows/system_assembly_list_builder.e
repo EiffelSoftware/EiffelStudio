@@ -62,20 +62,18 @@ feature -- Access
 			internal_assembly_folders_set: internal_assembly_folders = Result
 		end
 
-	assemblies: ARRAYED_LIST [STRING_8]
+	assemblies: ARRAYED_LIST [STRING_32]
 			-- Flat list of all assemblies in all `assembly_folders'.
 		local
 			l_folders: like assembly_folders
-			l_folder: STRING
+			l_folder: STRING_32
 			l_cursor: CURSOR
 			l_dir: DIRECTORY
-			l_content: LIST [STRING_8]
-			l_item: STRING_8
+			l_content: ARRAYED_LIST [PATH]
+			l_item: PATH
 			l_pe_info: PE_FILE_INFO
-			l_fn: FILE_NAME
+			l_fn: PATH
 			l_file: RAW_FILE
-			l_ext: STRING
-			l_count: INTEGER_32
 		do
 			create Result.make (30)
 			l_folders := assembly_folders
@@ -83,26 +81,19 @@ feature -- Access
 				create l_pe_info
 				l_cursor := l_folders.cursor
 				from l_folders.start until l_folders.after loop
-					check string_8: l_folders.item.is_valid_as_string_8 end
-					l_folder := l_folders.item.to_string_8
-					check l_folder_has_no_trailing_separator: l_folder.item (l_folder.count) /= operating_environment.directory_separator end
+					l_folder := l_folders.item
 					create l_dir.make (l_folder)
 					if l_dir.exists then
-						l_content := l_dir.linear_representation
+						l_content := l_dir.entries
 						from l_content.start until l_content.after loop
 							l_item := l_content.item
-							l_count := l_item.count
-							if l_count > 4 then
-								l_ext := l_item.substring (l_count - 3, l_count)
-								l_ext.to_lower
-								if l_ext.is_equal (dll_extension) then
-										-- Must have .dll
-									create l_fn.make_from_string (l_folder)
-									l_fn.set_file_name (l_item)
-									create l_file.make (l_fn)
-									if l_file.exists and then not l_file.is_directory and then l_pe_info.is_com2_pe_file (l_fn) then
-										Result.extend (l_fn)
-									end
+							if l_item.has_extension (dll_extension) then
+									-- Must have .dll
+								create l_fn.make_from_string (l_folder)
+								l_fn := l_fn.extended_path (l_item)
+								create l_file.make_with_path (l_fn)
+								if l_file.exists and then not l_file.is_directory and then l_pe_info.is_com2_pe_file (l_fn.name) then
+									Result.extend (l_fn.name)
 								end
 							end
 							l_content.forth
@@ -128,8 +119,7 @@ feature -- Access
 			l_files := assemblies
 			create l_result.make
 			if not l_files.is_empty then
-				check string_8: clr_version.is_valid_as_string_8 end
-				create l_reader.make (clr_version.to_string_8)
+				create l_reader.make (clr_version)
 				l_cursor := l_files.cursor
 				from l_files.start until l_files.after loop
 					l_props := l_reader.retrieve_assembly_properties (l_files.item)

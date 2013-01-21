@@ -57,7 +57,7 @@ feature {NONE} -- Execution
 			class_i: CLASS_I;
 			e_class: CLASS_C;
 			at_pos: INTEGER;
-			cluster_name: STRING;
+			cluster_name: STRING_32
 			cluster: CLUSTER_I;
 			class_list: LIST [CLASS_I]
 		do
@@ -81,7 +81,7 @@ feature {NONE} -- Execution
 						io.error.put_character ('%T');
 						localized_print (class_name)
 						io.error.put_character ('@');
-						io.error.put_string (class_i.group.name);
+						localized_print_error (class_i.group.name)
 						io.error.put_new_line;
 						class_list.forth
 					end;

@@ -390,17 +390,17 @@ feature {NONE} -- Implementation
 	current_is_subcluster: BOOLEAN
 			-- Is the current cluster/override a subcluster?
 
-	process_in_alphabetic_order (a_groups: HASH_TABLE [CONF_GROUP, STRING])
+	process_in_alphabetic_order (a_groups: STRING_TABLE [CONF_GROUP])
 			-- Process `a_groups' in alphabetic order corresponding to their key.
 		require
 			a_groups_not_void: a_groups /= Void
 		local
-			l_sorted_list: ARRAYED_LIST [STRING]
-			l_sorter: QUICK_SORTER [STRING]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			from
 				create l_sorted_list.make_from_array (a_groups.current_keys)
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_sorted_list)
 				l_sorted_list.start
 			until
@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 			l_done: BOOLEAN
 			l_custs: like {CONF_CONDITION}.custom
 			l_custom: STRING_TABLE [BOOLEAN]
-			l_versions: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
+			l_versions: STRING_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]]
 			l_name: STRING
 			l_ver: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 		do
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 			indent_back: indent = old indent
 		end
 
-	append_mapping (a_mapping: HASH_TABLE [STRING, STRING])
+	append_mapping (a_mapping: STRING_TABLE [STRING_32])
 			-- Append `a_mapping'.
 		do
 			if a_mapping /= Void then
@@ -816,16 +816,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_options (an_options: CONF_OPTION; a_class: STRING)
+	append_options (an_options: CONF_OPTION; a_class: READABLE_STRING_GENERAL)
 			-- Append `an_options', optionally for `a_class'.
 		local
-			l_str: STRING
-			l_debugs, l_warnings: HASH_TABLE [BOOLEAN, STRING]
+			l_str: STRING_32
+			l_debugs, l_warnings: STRING_TABLE [BOOLEAN]
 			l_assertions: CONF_ASSERTIONS
 			l_a_name: ARRAYED_LIST [STRING]
 			l_a_val: ARRAYED_LIST [STRING_32]
-			l_sorted_list: ARRAYED_LIST [STRING]
-			l_sorter: QUICK_SORTER [STRING]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			if an_options /= Void and then not an_options.is_empty then
 				if a_class /= Void and then not a_class.is_empty then
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 				l_debugs := an_options.debugs
 				if l_debugs /= Void and then not l_debugs.is_empty then
 					create l_sorted_list.make_from_array (l_debugs.current_keys)
-					create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+					create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 					l_sorter.sort (l_sorted_list)
 					from
 						l_sorted_list.start
@@ -955,14 +955,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING])
+	append_visible (a_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]])
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
 		local
-			l_vis_feat: HASH_TABLE [STRING, STRING]
-			l_class: STRING
-			l_feat, l_feat_rename, l_class_rename: STRING
+			l_vis_feat: STRING_TABLE [STRING_32]
+			l_class: READABLE_STRING_GENERAL
+			l_feat: READABLE_STRING_GENERAL l_feat_rename, l_class_rename: STRING_32
 		do
 			from
 				a_visible.start
@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 					loop
 						l_feat := l_vis_feat.key_for_iteration
 						l_feat_rename := l_vis_feat.item_for_iteration
-						if l_feat.is_equal ("*") then
+						if l_feat.same_string ("*") then
 							l_feat := Void
 						end
 						append_text_indent ("<visible")
@@ -988,10 +988,10 @@ feature {NONE} -- Implementation
 						if l_feat /= Void then
 							append_text_attribute ("feature", l_feat)
 						end
-						if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
+						if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.same_string_general (l_class) then
 							append_text_attribute ("class_rename", l_class_rename)
 						end
-						if l_feat_rename /= Void and then not l_feat_rename.is_empty and then not l_feat_rename.is_equal (l_feat) then
+						if l_feat_rename /= Void and then not l_feat_rename.is_empty and then not l_feat_rename.same_string_general (l_feat) then
 							append_text_attribute ("feature_rename", l_feat_rename)
 						end
 						append_text ("/>%N")
@@ -1000,7 +1000,7 @@ feature {NONE} -- Implementation
 				else
 					append_text_indent ("<visible")
 					append_text_attribute ("class", l_class)
-					if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
+					if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.same_string_general (l_class) then
 						append_text_attribute ("class_rename", l_class_rename)
 					end
 					append_text ("/>%N")
@@ -1111,7 +1111,7 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_deps: SEARCH_TABLE [CONF_GROUP]
-			l_visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING_8, HASH_TABLE [STRING_8, STRING_8]]], STRING_8]
+			l_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)

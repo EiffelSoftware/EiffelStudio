@@ -94,7 +94,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make_for_target (a_system: like conf_system; a_target: STRING; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command)
+	make_for_target (a_system: like conf_system; a_target: STRING_32; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command)
 			-- Create and select `a_target'.
 		require
 			a_target_ok: a_target /= Void and then not a_target.is_empty
@@ -236,7 +236,7 @@ feature -- Access
 	conf_factory: CONF_PARSE_FACTORY
 			-- Factory to create new nodes.
 
-	selected_target: STRING
+	selected_target: STRING_32
 			-- Target to select on startup.
 
 	external_editor_command: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL, INTEGER], READABLE_STRING_GENERAL]
@@ -882,10 +882,10 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			l_vars, l_inh_vars: HASH_TABLE [STRING, STRING]
+			l_vars, l_inh_vars: STRING_TABLE [STRING_32]
 			i: INTEGER
 			l_item: STRING_PROPERTY
-			l_var_key: STRING
+			l_var_key: READABLE_STRING_GENERAL
 		do
 			current_target := a_target
 			is_refreshing := True
@@ -913,25 +913,13 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				l_item.set_value (l_var_key)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent (s: STRING_32; a_var_key: STRING)
-					require
-						s_not_void: s /= Void
-						a_var_key_not_void: a_var_key /= Void
-					do
-						update_mapping_key (a_var_key, s.as_string_8)
-					end (?, l_var_key))
+				l_item.change_value_actions.extend (agent update_mapping_key (l_var_key, ?))
 				grid.set_item (1, i + 1, l_item)
 				create l_item.make ("")
 				l_item.set_value (l_vars.item_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent (s: STRING_32; a_var_key: STRING)
-					require
-						s_not_void: s /= Void
-						a_var_key_not_void: a_var_key /= Void
-					do
-						update_mapping_key (a_var_key, s.as_string_8)
-					end (?, l_var_key))
+				l_item.change_value_actions.extend (agent update_mapping_value (l_var_key, ?))
 				grid.set_item (2, i + 1, l_item)
 				l_inh_vars.search (l_var_key)
 				if l_inh_vars.found then
@@ -1088,14 +1076,9 @@ feature {NONE} -- Implementation
 				require
 					s_not_void: s /= Void
 				do
-					Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_system_name (s.as_string_8)
+					Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_system_name (s)
 				end)
-			l_string_prop.change_value_actions.extend (agent (s: STRING_32)
-				require
-					s_not_void: s /= Void
-				do
-					conf_system.set_name (s.as_string_8)
-				end)
+			l_string_prop.change_value_actions.extend (agent conf_system.set_name)
 			l_string_prop.change_value_actions.extend (agent (s: STRING_32)
 				require
 					s_not_void: s /= Void
@@ -1412,12 +1395,12 @@ feature {NONE} -- Configuration setting
 				check
 					valid_item: l_item /= Void
 				end
-				current_target.remove_mapping (l_item.text.as_string_8)
+				current_target.remove_mapping (l_item.text)
 				show_properties_target_mapping (current_target)
 			end
 		end
 
-	update_mapping_key (an_old_key: STRING; a_new_key: STRING)
+	update_mapping_key (an_old_key: READABLE_STRING_GENERAL; a_new_key: STRING_32)
 			-- Update key part of a mapping.
 		require
 			current_target: current_target /= Void
@@ -1430,7 +1413,7 @@ feature {NONE} -- Configuration setting
 			show_properties_target_mapping (current_target)
 		end
 
-	update_mapping_value (a_key: STRING; a_value: STRING)
+	update_mapping_value (a_key: READABLE_STRING_GENERAL; a_value: STRING_32)
 			-- Update value part of a mapping.
 		require
 			current_target: current_target /= Void
@@ -1438,7 +1421,7 @@ feature {NONE} -- Configuration setting
 			a_key_valid: current_target.mapping.has (a_key)
 		do
 			if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_value) then
-				current_target.add_mapping (a_key, a_value.as_upper)
+				current_target.add_mapping (a_key, a_value)
 			end
 			show_properties_target_mapping (current_target)
 		end
@@ -1462,30 +1445,6 @@ feature {NONE} -- Validation and warning generation
 			else
 				Result := True
 			end
-		end
-
-feature {NONE} -- Wrappers
-
-	list_wrapper (a_list: LIST [STRING_GENERAL]; a_call: PROCEDURE [ANY, TUPLE [LIST [STRING]]])
-			-- Wrapper to allow to call agents that only accept LIST [STRING].
-		require
-			valid_8_string: a_list.for_all (agent {STRING_GENERAL}.is_valid_as_string_8)
-			a_call_not_void: a_call /= Void
-		local
-			l_lst: ARRAYED_LIST [STRING]
-		do
-			if a_list /= Void then
-				create l_lst.make (a_list.count)
-				from
-					a_list.start
-				until
-					a_list.after
-				loop
-					l_lst.extend (a_list.item.to_string_8)
-					a_list.forth
-				end
-			end
-			a_call.call ([l_lst])
 		end
 
 feature {NONE} -- Contract support

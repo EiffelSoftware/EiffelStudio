@@ -475,7 +475,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_target: STRING; a_targets: ARRAYED_LIST [STRING])
+	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [STRING])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local

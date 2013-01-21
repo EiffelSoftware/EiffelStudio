@@ -18,11 +18,11 @@ feature -- Basic commands
 		require
 			a_added_classes_not_void: a_added_classes /= Void
 		local
-			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
+			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
 			l_class: CONF_CLASS
 			l_error: BOOLEAN
-			l_map: HASH_TABLE [STRING, STRING]
-			l_name: STRING
+			l_map: like mapping
+			l_name: READABLE_STRING_GENERAL
 		do
 			if classes /= Void and visible /= Void then
 				create last_warnings.make
@@ -62,7 +62,7 @@ feature -- Status
 
 feature {CONF_ACCESS} -- Access, stored in configuration file
 
-	visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]
+	visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]]
 			-- Table of table of features of classes that are visible.
 			-- Mapped to their rename (if any).
 			-- CLASS_NAME => [CLASS_RENAMED, feature_name => feature_renamed]
@@ -78,7 +78,7 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			visible_set: visible = a_visible
 		end
 
-	add_visible (a_class, a_feature, a_class_rename, a_feature_rename: STRING)
+	add_visible (a_class, a_feature, a_class_rename, a_feature_rename: STRING_32)
 			-- Add a visible.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
@@ -87,10 +87,10 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			a_feature_rename_ok: a_feature_rename /= Void implies not a_feature_rename.is_empty
 			a_feature_rename_implies_feature: a_feature_rename /= Void implies a_feature /= Void
 		local
-			l_v_cl: HASH_TABLE [STRING, STRING]
-			l_tpl: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
-			l_visible_name, l_feature_name: STRING
-			l_class, l_feature: STRING
+			l_v_cl: STRING_TABLE [STRING_32]
+			l_tpl: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
+			l_visible_name, l_feature_name: STRING_32
+			l_class, l_feature: STRING_32
 		do
 			if visible = Void then
 				create visible.make_equal (1)
@@ -128,14 +128,14 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 
 feature {NONE} -- Implementation
 
-	mapping: HASH_TABLE [STRING_8, STRING_8]
+	mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	classes: HASH_TABLE [CONF_CLASS, STRING]
+	classes: STRING_TABLE [CONF_CLASS]
 			-- List of classes.
 		deferred
 		end

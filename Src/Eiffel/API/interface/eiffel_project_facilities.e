@@ -57,7 +57,7 @@ feature -- Helper
 		local
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
-			l_name: STRING
+			l_name: STRING_32
 			l_sep: BOOLEAN
 			l_target: CONF_TARGET
 			l_libs: ARRAYED_LIST [CONF_LIBRARY]
@@ -143,7 +143,7 @@ feature -- Helper
 		local
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_clusters: STRING_TABLE [CONF_CLUSTER]
 			l_clu: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			create Result.make (10)
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

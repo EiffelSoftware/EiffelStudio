@@ -114,7 +114,7 @@ feature -- Access, in compiled only
 	cache_path: PATH
 			-- Path to the metadata cache.
 
-	dotnet_classes: HASH_TABLE [like class_type, STRING]
+	dotnet_classes: STRING_TABLE [like class_type]
 			-- Same as `classes' but indexed by the dotnet name.
 
 	guid: READABLE_STRING_32
@@ -222,14 +222,14 @@ feature -- Access queries
 			Result := accessible_groups_cache
 		end
 
-	mapping: HASH_TABLE [STRING, STRING]
+	mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		once
 				-- there are no mappings for assemblies
 			create Result.make_equal (0)
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type]
+	class_by_name (a_class: READABLE_STRING_GENERAL; a_dependencies: BOOLEAN): LINKED_SET [like class_type]
 			-- Get class by name.
 		local
 			l_dep: CONF_GROUP
@@ -252,7 +252,7 @@ feature -- Access queries
 			end
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [READABLE_STRING_GENERAL]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		local
 			l_dep: CONF_GROUP
@@ -301,7 +301,7 @@ feature -- Access queries
 			Result.void_safety.put_index ({CONF_OPTION}.Void_safety_index_all)
 		end
 
-	class_options: HASH_TABLE [CONF_OPTION, STRING]
+	class_options: STRING_TABLE [CONF_OPTION]
 			-- Options of classes in the assembly.
 		do
 				-- classes in assemblies have no options

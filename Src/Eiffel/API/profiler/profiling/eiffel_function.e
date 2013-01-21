@@ -140,26 +140,26 @@ feature -- Output
 			end;
 		end;
 
-	name: STRING
+	name: STRING_32
 			-- The name of the feature.
 		local
 			l_class: CLASS_C
 		do
 			create Result.make (0);
 			if class_id = 0 then
-				Result.append ("<cluster_tag>")
+				Result.append_string_general ("<cluster_tag>")
 			else
 				l_class := class_c
 				if l_class /= Void then
 					Result.append (l_class.group.name)
 				else
-					Result.append ("<class_tag>")
+					Result.append_string_general ("<class_tag>")
 				end
 			end
 			Result.extend ('.');
-			Result.append_string (int_class_name);
+			Result.append_string_general (int_class_name);
 			Result.extend ('.');
-			Result.append_string (feature_name);
+			Result.append_string_general (feature_name);
 		end;
 
 feature --{NONE} -- Access
@@ -177,7 +177,7 @@ feature --{NONE} -- Access
 		-- Eiffel feature name as declared in source code.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

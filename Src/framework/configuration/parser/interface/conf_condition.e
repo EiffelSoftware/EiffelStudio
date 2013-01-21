@@ -11,19 +11,16 @@ class
 inherit
 	CONF_VALIDITY
 		redefine
-			out,
 			is_equal
 		end
 
 	SHARED_EXECUTION_ENVIRONMENT
 		redefine
-			out,
 			is_equal
 		end
 
 	SHARED_LOCALE
 		undefine
-			out,
 			is_equal
 		end
 
@@ -56,7 +53,7 @@ feature -- Access
 	dynamic_runtime: CELL [BOOLEAN]
 			-- Enabled for dynamic runtime?
 
-	version: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
+	version: STRING_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
 	custom: STRING_TABLE [STRING_TABLE [BOOLEAN]]
@@ -72,7 +69,7 @@ feature -- Queries
 			a_state_not_void: a_state /= Void
 		local
 			l_vars: STRING_TABLE [READABLE_STRING_GENERAL]
-			l_version: HASH_TABLE [CONF_VERSION, STRING]
+			l_version: STRING_TABLE [CONF_VERSION]
 			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 			l_ver_state: CONF_VERSION
 			l_var_key, l_var_val: READABLE_STRING_GENERAL
@@ -337,7 +334,7 @@ feature -- Update
 			unset: not version.has (a_type)
 		end
 
-	add_version (a_min, a_max: CONF_VERSION; a_type: STRING)
+	add_version (a_min, a_max: CONF_VERSION; a_type: STRING_32)
 			-- Set version constraint.
 		require
 			min_or_max: a_min /= Void or a_max /= Void
@@ -361,12 +358,12 @@ feature -- Equality
 			-- equal to current object?
 		do
 				-- we consider them equal if the textual representation is equal
-			Result := out.is_equal (other.out)
+			Result := text.is_equal (other.text)
 		end
 
 feature -- Output
 
-	out: STRING
+	text: STRING_32
 			-- Text representation for the conditions.
 		do
 			create Result.make_empty
@@ -381,29 +378,31 @@ feature -- Output
 				version.after
 			loop
 				if version.item_for_iteration.item.min /= Void then
-					Result.append (version.item_for_iteration.item.min.version + " <= ")
+					Result.append (version.item_for_iteration.item.min.version)
+					Result.append_string_general (" <= ")
 				end
-				Result.append (version.key_for_iteration + " version")
+				Result.append_string_general (version.key_for_iteration + " version")
 				if version.item_for_iteration.item.max /= Void then
-					Result.append (" <= " + version.item_for_iteration.item.max.version)
+					Result.append_string_general (" <= ")
+					Result.append (version.item_for_iteration.item.max.version)
 				end
-				Result.append (" and ")
+				Result.append_string_general (" and ")
 				version.forth
 			end
 
 			if dotnet /= Void then
 				if dotnet.item then
-					Result.append (".NET and ")
+					Result.append_string_general (".NET and ")
 				else
-					Result.append ("not .NET and ")
+					Result.append_string_general ("not .NET and ")
 				end
 			end
 
 			if dynamic_runtime /= Void then
 				if dynamic_runtime.item then
-					Result.append ("dynamic_runtime and ")
+					Result.append_string_general ("dynamic_runtime and ")
 				else
-					Result.append ("not dynamic_runtime and ")
+					Result.append_string_general ("not dynamic_runtime and ")
 				end
 			end
 
@@ -412,22 +411,17 @@ feature -- Output
 			until
 				custom.after
 			loop
-				check
-					is_valid_as_string_8: custom.key_for_iteration.is_valid_as_string_8
-				end
 				across
 					custom.item_for_iteration as l_c
 				loop
-					check
-						is_valid_as_string_8: l_c.key.is_valid_as_string_8
-					end
-					Result.append (custom.key_for_iteration.as_string_8)
+					Result.append_string_general (custom.key_for_iteration)
 					if l_c.item then
-						Result.append (" /= ")
+						Result.append_string_general (" /= ")
 					else
-						Result.append (" = ")
+						Result.append_string_general (" = ")
 					end
-					Result.append (l_c.key.as_string_8 + " and ")
+					Result.append_string_general (l_c.key)
+					Result.append_string_general (" and ")
 				end
 				custom.forth
 			end
@@ -442,7 +436,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	append_list (data: like platform; names: like platform_names; output: STRING)
+	append_list (data: like platform; names: like platform_names; output: STRING_32)
 			-- Append `data' (if any) to `output' using specified `names'.
 		require
 			names_attached: attached names
@@ -453,7 +447,7 @@ feature {NONE} -- Output
 			if attached data then
 				check attached data.item as i and then attached i.value as v then
 					if i.invert then
-						output.append ("not ")
+						output.append_string_general ("not ")
 						c := " and "
 					else
 						c := " or "
@@ -465,11 +459,11 @@ feature {NONE} -- Output
 						v.after
 					loop
 						output.append (names.item (v.item))
-						output.append (c)
+						output.append_string_general (c)
 						v.forth
 					end
 					output.remove_tail (c.count)
-					output.append (") and ")
+					output.append_string_general (") and ")
 				end
 			end
 		end

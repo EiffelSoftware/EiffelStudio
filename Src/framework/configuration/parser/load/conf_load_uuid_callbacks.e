@@ -44,7 +44,7 @@ feature -- Callbacks
 				if
 					is_system and a_local_part.is_case_insensitive_equal_general ("uuid") and then is_valid_uuid (a_value)
 				then
-					create last_uuid.make_from_string (a_value.as_string_8)
+					create last_uuid.make_from_string (a_value)
 				end
 			end
 		end

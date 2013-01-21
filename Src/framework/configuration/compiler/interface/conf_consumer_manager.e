@@ -272,11 +272,11 @@ feature {NONE} -- Implementation
 			a_assembly_ok: a_assembly /= Void and then a_assembly.is_valid
 			a_assembly_physical_assembly_set: a_assembly.physical_assembly /= Void
 		local
-			l_classes, l_new_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes, l_new_classes: STRING_TABLE [CONF_CLASS]
 			l_class: CONF_CLASS_ASSEMBLY
-			l_renamings: HASH_TABLE [STRING, STRING]
-			l_prefix: STRING
-			l_name: STRING
+			l_renamings: STRING_TABLE [STRING_32]
+			l_prefix: STRING_32
+			l_name: STRING_32
 		do
 			l_classes := a_assembly.physical_assembly.classes
 			l_renamings := a_assembly.renaming
@@ -365,13 +365,13 @@ feature {NONE} -- Implementation
 		require
 			a_assembly_ok: a_assembly /= Void
 		local
-			l_old_dotnet_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_old_dotnet_classes: STRING_TABLE [CONF_CLASS]
 			l_reader: EIFFEL_DESERIALIZER
 			l_types: CONSUMED_ASSEMBLY_TYPES
 			i, cnt: INTEGER
 			l_name, l_dotnet_name: STRING
 			l_pos: INTEGER
-			l_new_classes, l_new_dotnet_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_new_classes, l_new_dotnet_classes: STRING_TABLE [CONF_CLASS]
 			l_class: CONF_CLASS_ASSEMBLY
 		do
 			create l_reader

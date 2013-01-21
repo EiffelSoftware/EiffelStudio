@@ -46,7 +46,7 @@ feature -- Access
 			target_not_void: target /= Void
 		end
 
-	target_of_name (a_name: STRING): like target
+	target_of_name (a_name: READABLE_STRING_GENERAL): like target
 			-- Options associated with target of name `a_name'.
 			-- Void if no target of name `a_name' exists.
 		require
@@ -55,20 +55,12 @@ feature -- Access
 			Result := targets.item (a_name)
 		end
 
-	target_name: STRING
+	target_name: STRING_32
 			-- Name of last chosen target.
-
-	target_names: LIST [STRING]
-			-- List of available target names
-		do
-			create {ARRAYED_LIST [STRING]}Result.make_from_array (targets.current_keys)
-		ensure
-			result_attached: Result /= Void
-		end
 
 feature {USER_OPTIONS, USER_OPTIONS_FACTORY} -- Implementation: Access
 
-	targets: HASH_TABLE [TARGET_USER_OPTIONS, STRING]
+	targets: STRING_TABLE [TARGET_USER_OPTIONS]
 			-- Set of options indexed by target.
 
 feature -- Update
@@ -90,7 +82,7 @@ invariant
 	target_name_not_empty: not target_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

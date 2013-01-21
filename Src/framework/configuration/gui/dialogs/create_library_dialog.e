@@ -485,7 +485,7 @@ feature {NONE} -- Action handlers
 				else
 					last_group := factory.new_library (name.text, location.text, target)
 						-- add an empty classes list that it get's displayed in the classes tree
-					last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
+					last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
 					l_sys := factory.new_system_generate_uuid ("dummy")
 					l_sys.set_application_target (target)
 					last_group.set_library_target (factory.new_target ("dummy", l_sys))

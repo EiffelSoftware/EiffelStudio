@@ -29,7 +29,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_with_uuid (a_name: STRING; a_uuid: UUID)
+	make_with_uuid (a_name: like name; a_uuid: UUID)
 			-- Creation with `a_name' and `a_uuid'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
@@ -100,7 +100,7 @@ feature -- Status
 
 feature -- Access, stored in configuration file
 
-	name: STRING
+	name: STRING_32
 			-- Name of the system.
 
 	description: STRING_32
@@ -112,7 +112,7 @@ feature -- Access, stored in configuration file
 	is_readonly: BOOLEAN
 			-- Is this system readonly per default if it is used as a library?
 
-	targets: HASH_TABLE [CONF_TARGET, STRING]
+	targets: STRING_TABLE [CONF_TARGET]
 			-- The configuration targets.
 
 	library_target: CONF_TARGET
@@ -494,7 +494,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			target_order.force (a_target)
 		end
 
-	remove_target (a_name: STRING)
+	remove_target (a_name: READABLE_STRING_GENERAL)
 			-- Remove the target with name `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -506,7 +506,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 				targets.remove (a_name)
 			end
 
-			if library_target /= Void and then library_target.name.is_equal (a_name) then
+			if library_target /= Void and then library_target.name.same_string_general (a_name) then
 				library_target := Void
 			end
 		end
@@ -565,7 +565,7 @@ feature -- Visit
 
 feature -- Output
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := name

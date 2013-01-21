@@ -225,7 +225,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name: PATH; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [PATH]])
+	ask_for_config_name (a_dir_name: PATH; a_file_name: READABLE_STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE [PATH]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -243,7 +243,7 @@ feature {NONE} -- User interaction
 				until
 					l_answered
 				loop
-					io.put_string (ewb_names.save_new_configuration_as (a_file_name).as_string_32 + ewb_names.yes_or_no)
+					localized_print (ewb_names.save_new_configuration_as (a_file_name) + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
 						a_action.call ([l_path.extended (a_file_name)])
@@ -266,11 +266,11 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_target: STRING; a_targets: ARRAYED_LIST [STRING])
+	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local
-			l_answer: STRING
+			l_answer: READABLE_STRING_GENERAL
 			l_answered: BOOLEAN
 			l_need_choice: BOOLEAN
 			i: INTEGER
@@ -279,7 +279,7 @@ feature {NONE} -- User interaction
 			if a_targets.count = 1 then
 				a_targets.start
 				if a_target = Void or else a_target.is_equal (a_targets.item_for_iteration) then
-					target_name := a_targets.item_for_iteration.twin
+					create target_name.make_from_string_general (a_targets.item_for_iteration)
 					l_need_choice := False
 				end
 			end
@@ -307,7 +307,7 @@ feature {NONE} -- User interaction
 					io.put_string (" [")
 					io.put_integer (i)
 					io.put_string ("] ")
-					io.put_string (a_targets.item_for_iteration)
+					localized_print (a_targets.item_for_iteration)
 					io.put_new_line
 					i := i + 1
 					a_targets.forth
@@ -338,7 +338,7 @@ feature {NONE} -- User interaction
 							--| probably user cancellation
 						elseif a_targets.has (l_answer) then
 							l_answered := True
-							target_name := l_answer.twin
+							create target_name.make_from_string_general (l_answer)
 						else
 							localized_print (ewb_names.invalid_target)
 						end

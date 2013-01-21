@@ -9,7 +9,7 @@ class
 	RENAMING_DIALOG
 
 inherit
-	PROPERTY_DIALOG [HASH_TABLE [STRING_32, STRING_32]]
+	PROPERTY_DIALOG [STRING_TABLE [STRING_32]]
 		redefine
 			initialize,
 			dialog_key_press_action
@@ -170,7 +170,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	update_key (an_old_key, a_new_key: STRING_32)
+	update_key (an_old_key: READABLE_STRING_GENERAL; a_new_key: STRING_32)
 			-- Update `an_old_key' with `a_new_key'.
 		require
 			an_old_key_ok: value /= Void and then value.has (an_old_key)
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_value (a_key, a_new_value: STRING_32)
+	update_value (a_key: READABLE_STRING_GENERAL; a_new_value: STRING_32)
 			-- Update value of `a_key' to `a_new_value'
 		require
 			a_key_ok: value /= Void and then value.has (a_key)

@@ -30,7 +30,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_from_gac (a_name: STRING; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET)
+	make_from_gac (a_name: STRING_32; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET)
 			-- Create.
 		require
 			a_name_not_void: a_name /= Void
@@ -109,14 +109,14 @@ feature -- Access queries
 			Result := physical_assembly.accessible_groups
 		end
 
-	mapping: HASH_TABLE [STRING, STRING]
+	mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		once
 				-- There are no mappings for assemblies
 			create Result.make_equal (0)
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type]
+	class_by_name (a_class: READABLE_STRING_GENERAL; a_dependencies: BOOLEAN): LINKED_SET [like class_type]
 			-- Get class by name.
 		local
 			l_dep: CONF_GROUP
@@ -139,7 +139,7 @@ feature -- Access queries
 			end
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [READABLE_STRING_GENERAL]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		local
 			l_dep: CONF_GROUP
@@ -171,7 +171,7 @@ feature -- Access queries
 			create Result
 		end
 
-	class_options: HASH_TABLE [CONF_OPTION, STRING]
+	class_options: STRING_TABLE [CONF_OPTION]
 			-- Options of classes in the assembly.
 		do
 		end

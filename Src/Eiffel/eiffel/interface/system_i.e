@@ -2555,7 +2555,7 @@ end
 		local
 			file_pointer: POINTER
 			melted_file: RAW_FILE
-			l_name: STRING
+			l_name: STRING_32
 			l_ba: BYTE_ARRAY
 
 			cs: CURSOR
@@ -5720,7 +5720,7 @@ feature -- Access: Testing
 
 feature {NONE} -- Access: Root creators
 
-	explicit_roots: LINKED_LIST [TUPLE [cluster_name: STRING; class_name: STRING; feature_name: STRING]]
+	explicit_roots: LINKED_LIST [TUPLE [cluster_name: STRING_32; class_name: STRING; feature_name: STRING]]
 			-- Root creation procedures added internally.
 			--
 			-- cluster_name: Cluster name in which root class is located
@@ -5737,7 +5737,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER, TEST_SYSTEM_I} -- Status report: Roo
 			-- `Result': True if explicit root exists for class and feature name, False otherwise.
 		do
 			Result := explicit_roots.there_exists (
-				agent (a_tuple: TUPLE [clst: STRING; clss: STRING; ft: STRING]; a_cl, a_ft: STRING): BOOLEAN
+				agent (a_tuple: TUPLE [clst: STRING_32; clss: STRING; ft: STRING]; a_cl, a_ft: STRING): BOOLEAN
 					do
 						Result := a_tuple.clss.is_equal (a_cl) and a_tuple.ft.is_equal (a_ft)
 					end (?, a_class_name, a_feature_name))
@@ -5797,13 +5797,13 @@ feature -- Query: Root creators
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER, TEST_SYSTEM_I} -- Element change: Root creators
 
-	add_explicit_root (a_cluster_name, a_class_name, a_feature_name: READABLE_STRING_8)
+	add_explicit_root (a_cluster_name: STRING_32; a_class_name, a_feature_name: STRING_8)
 			-- Add an explicit root class
 		require
 			a_class_name_not_empty: a_class_name /= Void and then not a_class_name.is_empty
 			a_feature_name_not_void: a_feature_name /= Void
 		local
-			l_tpl: TUPLE [clst: STRING; clss: STRING; ft: STRING]
+			l_tpl: TUPLE [clst: STRING_32; clss: STRING; ft: STRING]
 			l_added: BOOLEAN
 		do
 			from
@@ -5818,11 +5818,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER, TEST_SYSTEM_I} -- Element change: Ro
 				explicit_roots.forth
 			end
 			if not l_added then
-				if attached a_cluster_name as l_cluster then
-					explicit_roots.force ([l_cluster.as_string_8, a_class_name.as_string_8, a_feature_name.as_string_8])
-				else
-					explicit_roots.force ([Void, a_class_name.as_string_8, a_feature_name.as_string_8])
-				end
+				explicit_roots.force ([a_cluster_name, a_class_name, a_feature_name])
 			end
 		ensure
 			added: is_explicit_root (a_class_name, a_feature_name)
@@ -5831,7 +5827,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER, TEST_SYSTEM_I} -- Element change: Ro
 	remove_explicit_root (a_class_name, a_feature_name: READABLE_STRING_8)
 			-- Remove an explicit root class
 		local
-			l_tpl: TUPLE [clst: STRING; clss: STRING; ft: STRING]
+			l_tpl: TUPLE [clst: STRING_32; clss: STRING; ft: STRING]
 		do
 			from
 				explicit_roots.start
@@ -5861,17 +5857,20 @@ feature {NONE} -- Element change: Root creators
 			l_target: CONF_TARGET
 			l_root: CONF_ROOT
 			l_root_type_name: STRING
-			l_tpl: TUPLE [clst: STRING; clss: STRING; ft: STRING]
+			l_tpl: TUPLE [clst: STRING_32; clss: STRING; ft: STRING]
 			l_feat: STRING
+			u: UTF_CONVERTER
 		do
 			root_creators.wipe_out
 
 			l_target := universe.target
 				-- update root class/feature
 			l_root := l_target.root
-			l_root_type_name := l_root.class_type_name.as_upper
-			l_feat := l_root.feature_name
-			if l_feat = Void then
+				-- Compiler keeps its internal data in UTF-8.
+			l_root_type_name := u.utf_32_string_to_utf_8_string_8 (l_root.class_type_name.as_upper)
+			if attached l_root.feature_name as l_feat_name then
+				l_feat := u.utf_32_string_to_utf_8_string_8 (l_root.feature_name)
+			else
 				create l_feat.make_empty
 			end
 			add_root_feature (l_root.cluster_name, l_root_type_name, l_feat, False)
@@ -5888,7 +5887,7 @@ feature {NONE} -- Element change: Root creators
 			root_creators_added: not root_creators.is_empty
 		end
 
-	add_root_feature (a_cluster_name, a_class_name, a_feature_name: STRING; a_explicit: BOOLEAN)
+	add_root_feature (a_cluster_name: detachable STRING_32; a_class_name, a_feature_name: STRING; a_explicit: BOOLEAN)
 			-- Add root creation procedure for given class and feature name.
 			--
 			-- `a_cluster_name': Name of cluster in which class is located (can be Void).
@@ -5899,6 +5898,7 @@ feature {NONE} -- Element change: Root creators
 		require
 			universe_not_void: universe /= Void
 			target_not_void: universe.target /= Void
+			a_class_name_not_void: a_class_name /= Void
 			a_class_name_in_upper: a_class_name.is_equal (a_class_name.as_upper)
 			a_feature_name_not_void: a_feature_name /= Void
 		local
@@ -6312,7 +6312,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

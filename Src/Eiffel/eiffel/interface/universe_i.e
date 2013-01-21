@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	target_name: STRING
+	target_name: STRING_32
 			-- Name of the universe target.
 		require
 			target_not_void: target /= Void
@@ -72,7 +72,7 @@ feature -- Properties
 		require
 			a_target_not_void: a_target /= Void
 		local
-			l_version: HASH_TABLE [CONF_VERSION, STRING]
+			l_version: STRING_TABLE [CONF_VERSION]
 			l_ver: STRING_32
 			l_clr_version: CONF_VERSION
 		do
@@ -340,7 +340,7 @@ feature -- Access
 			l_buffered_classes.search (a_class_name)
 			if not l_buffered_classes.found then
 				create l_vis.make (conf_state)
-				l_vis.set_name (a_class_name.as_string_8_conversion)
+				l_vis.set_name (a_class_name)
 				target.process (l_vis)
 				Result := l_vis.found_classes
 				if Result.count = 1 then
@@ -422,7 +422,7 @@ feature -- Access
 			end
 		end
 
-	cluster_of_name (cluster_name: STRING): CLUSTER_I
+	cluster_of_name (cluster_name: READABLE_STRING_GENERAL): CLUSTER_I
 			-- Cluster whose name is `cluster_name' (Void if none)
 		require
 			good_argument: cluster_name /= Void
@@ -430,7 +430,7 @@ feature -- Access
 			Result ?= group_of_name (cluster_name)
 		end
 
-	group_of_name (group_name: STRING): CONF_GROUP
+	group_of_name (group_name: READABLE_STRING_GENERAL): CONF_GROUP
 			-- Group whose name is `group_name' (Void if none)
 		require
 			good_argument: group_name /= Void
@@ -913,7 +913,7 @@ feature {NONE} -- Implementation
 			-- Search for library whose UUID matches the known one for EiffelBase. This library
 			-- is the one that should include all the known classes of the compiler.
 		local
-			l_libraries: HASH_TABLE [CONF_LIBRARY, STRING_8]
+			l_libraries: STRING_TABLE [CONF_LIBRARY]
 			l_uuid: UUID
 		do
 			from

@@ -211,8 +211,8 @@ feature {NONE} -- Actions
 			-- Given two selected groups compare them.
 		local
 			l_cluster1, l_cluster2: CONF_GROUP
-			l_classes1, l_classes2, l_new_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_name: STRING
+			l_classes1, l_classes2, l_new_classes: STRING_TABLE [CONF_CLASS]
+			l_name: READABLE_STRING_GENERAL
 		do
 			if library_1.selected_item /= Void and then library_2.selected_item /= Void then
 				if not split.full then
@@ -258,7 +258,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	show_cluster_only_classes (a_cluster1: CONF_GROUP; a_classes1, a_classes2: HASH_TABLE [CONF_CLASS, STRING])
+	show_cluster_only_classes (a_cluster1: CONF_GROUP; a_classes1, a_classes2: STRING_TABLE [CONF_CLASS])
 			-- Show classes that are only in `a_classes1'.
 		require
 			a_cluster1_attached: a_cluster1 /= Void
@@ -281,7 +281,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	show_different_classes (a_classes1, a_classes2: HASH_TABLE [CONF_CLASS, STRING])
+	show_different_classes (a_classes1, a_classes2: STRING_TABLE [CONF_CLASS])
 			-- Show classes that are both in `a_classes1' and `a_classes2' and different.
 		require
 			a_classes1_attached: a_classes1 /= Void
@@ -427,7 +427,7 @@ invariant
 	library_2_pref_attached: library_2_pref /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

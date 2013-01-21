@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Element update
 
-	set_groups (a_groups: HASH_TABLE [like conf_item_type, STRING])
+	set_groups (a_groups: STRING_TABLE [like conf_item_type])
 			-- Set groups.
 		local
 			l_sorted_list: ARRAYED_LIST [like conf_item_type]

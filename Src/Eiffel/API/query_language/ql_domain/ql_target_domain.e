@@ -129,7 +129,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- otherwise return Void.
 		local
 			l_cursor: CURSOR
-			l_groups: HASH_TABLE [CONF_GROUP, STRING]
+			l_groups: STRING_TABLE [CONF_GROUP]
 			l_target: like item
 			l_class_table: like class_table
 			l_conf_group: CONF_GROUP

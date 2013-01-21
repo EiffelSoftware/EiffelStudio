@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_location: like location; a_target: like target)
+	make (a_location: like location; a_target: READABLE_STRING_GENERAL)
 			-- Initialize Current project location at `a_location' for a target `a_target'.
 		require
 			a_location_not_void: a_location /= Void
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 			a_target_not_empty: not a_target.is_empty
 		do
 			location := a_location
-			target := a_target
+			target := a_target.as_string_32
 		ensure
 			location_set: location = a_location
-			target_set: target = a_target
+			target_set: target.same_string_general (a_target)
 		end
 
 feature -- Access
@@ -45,7 +45,7 @@ feature -- Access
 	location: PATH
 			-- Location of project
 
-	target: STRING
+	target: STRING_32
 			-- Name of project's target
 
 feature -- Directory creation
@@ -450,7 +450,7 @@ feature -- Locking
 				l_file.put_string (utf.string_32_to_utf_8_string_8 (eiffel_layout.ec_command_name.name))
 				l_file.put_new_line
 				l_file.put_string ("version=")
-				l_file.put_string (compiler_version_number.version)
+				l_file.put_string (utf.string_32_to_utf_8_string_8 (compiler_version_number.version))
 				l_file.put_new_line
 				l_file.put_string ("date=")
 				l_file.put_string ((create {DATE_TIME}.make_now).out)
@@ -573,7 +573,7 @@ invariant
 	target_not_empty: not target.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

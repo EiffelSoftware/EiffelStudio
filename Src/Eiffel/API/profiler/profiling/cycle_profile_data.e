@@ -63,7 +63,7 @@ feature -- Status report
 			Result := int_function.cycle_number;
 		end;
 
-	name: STRING
+	name: STRING_32
 			-- The name of this cycle.
 		do
 			Result := int_function.name;
@@ -75,7 +75,7 @@ feature {NONE} -- Attributes
 		-- Functions in this cycle
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

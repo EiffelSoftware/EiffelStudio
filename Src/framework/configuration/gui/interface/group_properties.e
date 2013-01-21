@@ -40,11 +40,11 @@ feature {NONE} -- Implementation
 			l_over: ARRAYED_LIST [CONF_GROUP]
 			l_over_list: ARRAYED_LIST [STRING_32]
 			l_over_dialog: GROUPS_LIST_DIALOG
-			l_rename_prop: DIALOG_PROPERTY [HASH_TABLE [STRING_32, STRING_32]]
-			l_mapping_prop: DIALOG_PROPERTY [HASH_TABLE [STRING_32, STRING_32]]
-			l_class_opt_prop: DIALOG_PROPERTY [HASH_TABLE [CONF_OPTION, STRING_32]]
+			l_rename_prop: DIALOG_PROPERTY [STRING_TABLE [STRING_32]]
+			l_mapping_prop: DIALOG_PROPERTY [STRING_TABLE [STRING_32]]
+			l_class_opt_prop: DIALOG_PROPERTY [STRING_TABLE [CONF_OPTION]]
 			l_class_opt_dial: CLASS_OPTION_DIALOG
-			l_vis_prop: DIALOG_PROPERTY [HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]]
+			l_vis_prop: DIALOG_PROPERTY [STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
 			l_precompile: CONF_PRECOMPILE
@@ -100,13 +100,7 @@ feature {NONE} -- Implementation
 			l_text_prop.set_description (conf_interface_names.group_name_description)
 			l_text_prop.set_value (a_group.name)
 			l_text_prop.validate_value_actions.extend (agent check_group_name ({STRING_32} ?, a_group, a_target))
-			l_text_prop.change_value_actions.extend (agent (s: STRING_32; a_grp: CONF_GROUP)
-				require
-					s_not_void: s /= Void
-					a_grp_not_void: a_grp /= Void
-				do
-					a_grp.set_name (s.as_string_8)
-				end (?, a_group))
+			l_text_prop.change_value_actions.extend (agent a_group.set_name)
 			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (True)))
 			properties.add_property (l_text_prop)
 
@@ -213,15 +207,9 @@ feature {NONE} -- Implementation
 					require
 						a_name_not_void: a_name /= Void
 					do
-						Result := a_name = Void or a_name.is_empty or (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_name.as_string_8)
+						Result := a_name = Void or a_name.is_empty or (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_name)
 					end)
-				l_text_prop.change_value_actions.extend (agent (s: STRING_32; a_grp: CONF_VIRTUAL_GROUP)
-					require
-						s_not_void: s /= Void
-						a_grp_not_void: a_grp /= Void
-					do
-						a_grp.set_name_prefix (s.as_string_8)
-					end (?, l_virtual_group))
+				l_text_prop.change_value_actions.extend (agent l_virtual_group.set_name_prefix)
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (True)))
 				properties.add_property (l_text_prop)
 
@@ -230,10 +218,10 @@ feature {NONE} -- Implementation
 				l_rename_prop.set_description (conf_interface_names.group_renaming_description)
 				l_rename_prop.set_display_agent (agent output_renaming)
 				if l_virtual_group.renaming /= Void then
-					l_rename_prop.set_value (l_virtual_group.renaming_32)
+					l_rename_prop.set_value (l_virtual_group.renaming)
 				end
-				l_rename_prop.change_value_actions.extend (agent l_virtual_group.set_renaming_32)
-				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [STRING_32, STRING_32]}?, agent handle_value_changes (True)))
+				l_rename_prop.change_value_actions.extend (agent l_virtual_group.set_renaming)
+				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_rename_prop)
 			end
 
@@ -246,10 +234,10 @@ feature {NONE} -- Implementation
 				l_class_opt_prop.set_description (conf_interface_names.group_class_option_description)
 				l_class_opt_prop.set_display_agent (agent output_class_options)
 				if a_group.internal_class_options /= Void then
-					l_class_opt_prop.set_value (a_group.class_options_32)
+					l_class_opt_prop.set_value (a_group.class_options)
 				end
-				l_class_opt_prop.change_value_actions.extend (agent a_group.set_class_options_32)
-				l_class_opt_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [CONF_OPTION, STRING_32]}?, agent handle_value_changes (False)))
+				l_class_opt_prop.change_value_actions.extend (agent a_group.set_class_options)
+				l_class_opt_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [CONF_OPTION]}?, agent handle_value_changes (False)))
 				properties.add_property (l_class_opt_prop)
 			end
 
@@ -319,23 +307,17 @@ feature {NONE} -- Implementation
 				l_mapping_prop.set_description (conf_interface_names.cluster_mapping_description)
 				l_mapping_prop.set_display_agent (agent output_renaming)
 				if l_cluster.mapping /= Void then
-					l_mapping_prop.set_value (l_cluster.mapping_32)
+					l_mapping_prop.set_value (l_cluster.mapping)
 				end
-				l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping_32)
-				l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [STRING_32, STRING_32]}?, agent handle_value_changes (True)))
+				l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping)
+				l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_mapping_prop)
 			elseif l_assembly /= Void then
 					-- assembly culture
 				create l_text_prop.make (conf_interface_names.assembly_name_name)
 				l_text_prop.set_description (conf_interface_names.assembly_name_description)
 				l_text_prop.set_value (l_assembly.assembly_name)
-				l_text_prop.change_value_actions.extend (agent (s: STRING_32; a_ass: CONF_ASSEMBLY)
-					require
-						s_not_void: s /= Void
-						a_ass_not_void: a_ass /= Void
-					do
-						a_ass.set_assembly_name (s)
-					end (?, l_assembly))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_name ({STRING_32} ?))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 
@@ -343,13 +325,7 @@ feature {NONE} -- Implementation
 				create l_text_prop.make (conf_interface_names.assembly_culture_name)
 				l_text_prop.set_description (conf_interface_names.assembly_culture_description)
 				l_text_prop.set_value (l_assembly.assembly_culture)
-				l_text_prop.change_value_actions.extend (agent (s: STRING_32; a_ass: CONF_ASSEMBLY)
-					require
-						s_not_void: s /= Void
-						a_ass_not_void: a_ass /= Void
-					do
-						a_ass.set_assembly_culture (s)
-					end (?, l_assembly))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_culture ({STRING_32} ?))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 
@@ -357,13 +333,7 @@ feature {NONE} -- Implementation
 				create l_text_prop.make (conf_interface_names.assembly_version_name)
 				l_text_prop.set_description (conf_interface_names.assembly_version_description)
 				l_text_prop.set_value (l_assembly.assembly_version)
-				l_text_prop.change_value_actions.extend (agent (s: STRING_32; a_ass: CONF_ASSEMBLY)
-					require
-						s_not_void: s /= Void
-						a_ass_not_void: a_ass /= Void
-					do
-						a_ass.set_assembly_version (s)
-					end (?, l_assembly))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_version ({STRING_32} ?))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 
@@ -371,13 +341,7 @@ feature {NONE} -- Implementation
 				create l_text_prop.make (conf_interface_names.assembly_public_key_token_name)
 				l_text_prop.set_description (conf_interface_names.assembly_public_key_token_description)
 				l_text_prop.set_value (l_assembly.assembly_public_key_token)
-				l_text_prop.change_value_actions.extend (agent (s: STRING_32; a_ass: CONF_ASSEMBLY)
-					require
-						s_not_void: s /= Void
-						a_ass_not_void: a_ass /= Void
-					do
-						a_ass.set_assembly_public_key (s)
-					end (?, l_assembly))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_public_key ({STRING_32} ?))
 				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 			end
@@ -390,7 +354,7 @@ feature {NONE} -- Implementation
 				l_vis_prop.set_display_agent (agent output_visible)
 				l_vis_prop.set_value (l_visible.visible)
 				l_vis_prop.change_value_actions.extend (agent l_visible.set_visible)
-				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING, HASH_TABLE [STRING, STRING]]], STRING]}?, agent handle_value_changes (False)))
+				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]]}?, agent handle_value_changes (False)))
 				properties.add_property (l_vis_prop)
 			end
 
@@ -454,7 +418,7 @@ feature {NONE} -- Configuration settings
 		require
 			a_target_not_void: a_target /= Void
 		local
-			l_grps: HASH_TABLE [CONF_GROUP, STRING]
+			l_grps: STRING_TABLE [CONF_GROUP]
 		do
 			a_cluster.set_dependencies (Void)
 			if a_dependencies /= Void and then not a_dependencies.is_empty then
@@ -475,7 +439,7 @@ feature {NONE} -- Configuration settings
 		require
 			a_target_not_void: a_target /= Void
 		local
-			l_grps: HASH_TABLE [CONF_GROUP, STRING]
+			l_grps: STRING_TABLE [CONF_GROUP]
 		do
 			an_override.set_override (Void)
 			if an_overriding /= Void and then not an_overriding.is_empty then
@@ -485,7 +449,7 @@ feature {NONE} -- Configuration settings
 				until
 					an_overriding.after
 				loop
-					an_override.add_override (l_grps.item (an_overriding.item.as_string_8))
+					an_override.add_override (l_grps.item (an_overriding.item))
 					an_overriding.forth
 				end
 			end
@@ -493,7 +457,7 @@ feature {NONE} -- Configuration settings
 
 feature {NONE} -- Output generation
 
-	output_renaming (a_table: HASH_TABLE [STRING_32, STRING_32]): STRING_32
+	output_renaming (a_table: STRING_TABLE [STRING_32]): STRING_32
 			-- Generate a text representation of `a_table'.
 		do
 			if a_table /= Void and then not a_table.is_empty then
@@ -503,7 +467,7 @@ feature {NONE} -- Output generation
 				until
 					a_table.after
 				loop
-					Result.append (a_table.key_for_iteration+"=>"+a_table.item_for_iteration+";")
+					Result.append_string_general (a_table.key_for_iteration+"=>"+a_table.item_for_iteration+";")
 					a_table.forth
 				end
 				Result.remove_tail (1)
@@ -512,7 +476,7 @@ feature {NONE} -- Output generation
 			end
 		end
 
-	output_class_options (a_table: HASH_TABLE [CONF_OPTION, STRING_32]): STRING_32
+	output_class_options (a_table: STRING_TABLE [CONF_OPTION]): STRING_32
 			-- Generate a text representation of class options table `a_table'.
 		do
 			if a_table /= Void and then not a_table.is_empty then
@@ -523,7 +487,7 @@ feature {NONE} -- Output generation
 					a_table.after
 				loop
 					if not a_table.item_for_iteration.is_empty then
-						Result.append (a_table.key_for_iteration+";")
+						Result.append_string_general (a_table.key_for_iteration+";")
 					end
 					a_table.forth
 				end
@@ -535,7 +499,7 @@ feature {NONE} -- Output generation
 			end
 		end
 
-	output_visible (a_visible: HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]], STRING]): STRING_32
+	output_visible (a_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]]): STRING_32
 			-- Generate a text representation for `a_visible'.
 		do
 			if a_visible /= Void and then not a_visible.is_empty then
@@ -545,7 +509,8 @@ feature {NONE} -- Output generation
 				until
 					a_visible.after
 				loop
-					Result.append (a_visible.key_for_iteration+";")
+					Result.append_string_general (a_visible.key_for_iteration)
+					Result.append_character (';')
 					a_visible.forth
 				end
 				Result.remove_tail (1)
@@ -563,12 +528,12 @@ feature {NONE} -- Validation and warning generation
 			a_name_not_void: a_name /= Void
 			a_name_valid_as_string_8: a_name.is_valid_as_string_8
 		local
-			l_groups: HASH_TABLE [CONF_GROUP, STRING]
-			l_name: STRING_8
+			l_groups: STRING_TABLE [CONF_GROUP]
+			l_name: STRING_GENERAL
 		do
 			l_groups := a_target.groups
-			l_name := a_name.as_string_8.as_lower
-			l_groups.search (l_name.as_lower)
+			l_name := a_name.as_lower
+			l_groups.search (l_name)
 			if not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_group_name (l_name) then
 				prompts.show_error_prompt (conf_interface_names.group_name_invalid, window, Void)
 			elseif l_groups.found and then l_groups.found_item /= a_group then

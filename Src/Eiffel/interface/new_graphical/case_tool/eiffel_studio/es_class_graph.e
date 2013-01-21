@@ -516,7 +516,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 		require
 			cluster_i_not_void: cluster_i /= Void
 		local
-			l_classes:  HASH_TABLE [CONF_CLASS, STRING]
+			l_classes:  STRING_TABLE [CONF_CLASS]
 			l_class: CLASS_I
 		do
 			l_classes := cluster_i.classes
@@ -753,7 +753,7 @@ invariant
 	center_class_Void_implies_empty: center_class = Void implies is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

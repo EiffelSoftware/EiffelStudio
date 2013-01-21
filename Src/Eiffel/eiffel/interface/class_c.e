@@ -2035,11 +2035,13 @@ feature -- Convenience features
 	external_name: STRING
 			-- External name
 		local
-			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]]]
+			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
+			u: UTF_CONVERTER
 		do
 			l_vis := lace_class.visible
 			if l_vis /= Void then
-				Result := l_vis.item.class_renamed
+					-- Compile keeps its internal data in UTF-8.
+				Result := u.utf_32_string_to_utf_8_string_8 (l_vis.item.class_renamed)
 			else
 				Result := name
 			end
@@ -4343,6 +4345,8 @@ feature -- Anchored types
 			l_type_set: SEARCH_TABLE [INTEGER]
 			l_select: SELECT_TABLE
 			l_type: TYPE_A
+			l_anchor_name: STRING_32
+			u: UTF_CONVERTER
 		do
 				-- Get all inherited anchored features.
 			from
@@ -4421,7 +4425,8 @@ feature -- Anchored types
 						l_anchor.set_is_origin (True)
 						l_anchor.set_origin_class_id (class_id)
 						l_anchor.set_origin_feature_id (l_anchor.feature_id)
-						l_anchor.set_feature_name ("_" + System.name + "_type_" + l_rout_id.out)
+						l_anchor_name := {STRING_32} "_" + System.name + "_type_" + l_rout_id.out
+						l_anchor.set_feature_name (u.utf_32_string_to_utf_8_string_8 (l_anchor_name))
 					end
 
 					l_anchored_features.put (l_anchor, l_rout_id)

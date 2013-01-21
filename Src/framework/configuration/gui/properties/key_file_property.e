@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	il_version: STRING
+	il_version: STRING_32
 			-- Il version to use if we create a new key file.
 
 feature -- Update
@@ -46,10 +46,10 @@ feature {NONE} -- Actions
 				il_version_set: il_version /= Void and then not il_version.is_empty
 			end
 			Precursor {FILE_PROPERTY}(a_dial)
-			create l_file.make (value.to_string_8)
+			create l_file.make_with_name (value)
 			if not l_file.exists and l_file.is_creatable then
 				create l_key_generator
-				l_key_generator.generate_key (value.to_string_8, il_version)
+				l_key_generator.generate_key (value, il_version)
 			end
 		end
 

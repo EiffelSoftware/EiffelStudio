@@ -37,7 +37,7 @@ feature -- Basic validity queries
 			Result := concurrency_names.has (a_concurrency)
 		end
 
-	is_warning_known (a_warning: STRING_8): BOOLEAN
+	is_warning_known (a_warning: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_warning' known?
 		require
 			a_warning_not_void: a_warning /= Void
@@ -46,7 +46,7 @@ feature -- Basic validity queries
 			Result := known_warnings.has (a_warning)
 		end
 
-	valid_warning (a_warning: STRING_8; a_namespace: like latest_namespace): BOOLEAN
+	valid_warning (a_warning: READABLE_STRING_GENERAL; a_namespace: like latest_namespace): BOOLEAN
 			-- Is `a_warning' a valid warning in `a_namespace'?
 		require
 			a_warning_not_void: a_warning /= Void
@@ -79,10 +79,10 @@ feature -- Basic validity queries
 	valid_setting (a_setting: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_setting' a valid setting?
 		do
-			Result := a_setting /= Void and then (a_setting.is_valid_as_string_8 and then valid_settings.has (a_setting.as_string_8))
+			Result := a_setting /= Void and then (a_setting.is_valid_as_string_8 and then valid_settings.has (a_setting.to_string_8))
 		end
 
-	valid_version_type (a_version_type: STRING_8): BOOLEAN
+	valid_version_type (a_version_type: STRING_32): BOOLEAN
 			-- Is `a_version_type' valid?
 		do
 			Result := a_version_type /= Void and then valid_version_types.has (a_version_type)
@@ -239,48 +239,48 @@ feature {NONE} -- Onces
 
 feature {NONE} -- Implementation
 
-	known_warnings: SEARCH_TABLE [STRING]
+	known_warnings: STRING_TABLE [BOOLEAN]
 			-- The codes of known warnings.
 		once
 			Result := valid_warnings_1_10_0
 		end
 
-	valid_warnings_default: SEARCH_TABLE [STRING]
+	valid_warnings_default: STRING_TABLE [BOOLEAN]
 			-- The codes of valid warnings in a namespace below `namespace_1_10_0'.
 		once
 			create Result.make (13)
-			Result.force (w_unused_local)
-			Result.force (w_obsolete_class)
-			Result.force (w_obsolete_feature)
-			Result.force (w_once_in_generic)
-			Result.force (w_syntax)
-			Result.force (w_old_verbatim_strings)
-			Result.force (w_same_uuid)
-			Result.force (w_export_class_missing)
-			Result.force (w_vweq)
-			Result.force (w_vjrv)
-			Result.force (w_renaming_unknown_class)
-			Result.force (w_option_unknown_class)
-			Result.force (w_classname_filename_mismatch)
+			Result.force (True, w_unused_local)
+			Result.force (True, w_obsolete_class)
+			Result.force (True, w_obsolete_feature)
+			Result.force (True, w_once_in_generic)
+			Result.force (True, w_syntax)
+			Result.force (True, w_old_verbatim_strings)
+			Result.force (True, w_same_uuid)
+			Result.force (True, w_export_class_missing)
+			Result.force (True, w_vweq)
+			Result.force (True, w_vjrv)
+			Result.force (True, w_renaming_unknown_class)
+			Result.force (True, w_option_unknown_class)
+			Result.force (True, w_classname_filename_mismatch)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	valid_warnings_1_10_0: SEARCH_TABLE [STRING]
+	valid_warnings_1_10_0: STRING_TABLE [BOOLEAN]
 			-- The codes of valid warnings in `namespace_1_10_0' and above.
 		once
 			Result := valid_warnings_default.twin
-			Result.force (w_vwab)
+			Result.force (True, w_vwab)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	valid_version_types: SEARCH_TABLE [STRING]
+	valid_version_types: STRING_TABLE [BOOLEAN]
 			-- The codes of valid version types.
 		once
 			create Result.make (2)
-			Result.force (v_compiler)
-			Result.force (v_msil_clr)
+			Result.force (True, v_compiler)
+			Result.force (True, v_msil_clr)
 		ensure
 			Result_not_void: Result /= Void
 		end

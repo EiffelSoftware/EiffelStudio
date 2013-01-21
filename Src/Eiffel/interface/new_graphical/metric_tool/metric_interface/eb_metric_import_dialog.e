@@ -872,11 +872,11 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	library_uuid_table: HASH_TABLE [STRING, STRING]
+	library_uuid_table: STRING_TABLE [READABLE_STRING_GENERAL]
 			-- Table of UUIDs from all referenced libraries of current application			
 			-- Key is string representation of a UUID, value is the library name with that UUID.
 		local
-			l_libraries: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_libraries: STRING_TABLE [CONF_LIBRARY]
 		do
 			if library_uuid_table_internal = Void then
 				create library_uuid_table_internal.make (16)
@@ -888,7 +888,7 @@ feature{NONE} -- Implementation
 						l_libraries.after
 					loop
 						if l_libraries.item_for_iteration.library_target /= Void then
-							library_uuid_table_internal.force (l_libraries.key_for_iteration, l_libraries.item_for_iteration.library_target.system.uuid.out)
+							library_uuid_table_internal.force (l_libraries.key_for_iteration, l_libraries.item_for_iteration.library_target.system.uuid.string)
 						end
 						l_libraries.forth
 					end
@@ -1115,7 +1115,7 @@ invariant
 	backup_metrics_dialog_attached: backup_metrics_dialog /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -193,7 +193,7 @@ feature {NONE} -- Initialization
 			hb.extend (condition)
 			condition.disable_edit
 			if data.internal_conditions /= Void then
-				condition.set_text (data.internal_conditions.out)
+				condition.set_text (data.internal_conditions.text)
 			end
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_file_rule_edit_condition, agent edit_condition)
@@ -297,7 +297,7 @@ feature {NONE} -- Actions
 				data.set_conditions (l_dial.value)
 			end
 			if data.internal_conditions /= Void then
-				condition.set_text (data.internal_conditions.out)
+				condition.set_text (data.internal_conditions.text)
 			else
 				condition.set_text ("")
 			end

@@ -12,14 +12,9 @@ inherit
 	COMPARABLE
 		undefine
 			is_equal
-		redefine
-			out
 		end
 
 	ANY
-		redefine
-			out
-		end
 
 create
 	make,
@@ -99,7 +94,7 @@ feature -- Access, stored in configuration file
 	build: NATURAL_16
 			-- The build version.
 
-	version: STRING
+	version: STRING_32
 			-- The complete version.
 		do
 			create Result.make_empty
@@ -112,16 +107,16 @@ feature -- Access, stored in configuration file
 			Result.append_integer (build)
 		end
 
-	company: STRING
+	company: STRING_32
 			-- The company.
 
-	product: STRING
+	product: STRING_32
 			-- The product.
 
-	trademark: STRING
+	trademark: STRING_32
 			-- The trademark.
 
-	copyright: STRING
+	copyright: STRING_32
 			-- The copyright
 
 feature {CONF_ACCESS}  -- Update, stored in configuration file
@@ -235,10 +230,10 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING
+	name: STRING_32
 			-- New string with printable representation.
 		local
-			l_ext: STRING
+			l_ext: STRING_32
 		do
 			Result := version
 

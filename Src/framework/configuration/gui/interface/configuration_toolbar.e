@@ -291,16 +291,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	name_with_key (a_name: STRING_GENERAL; a_key: EV_ACCELERATOR): STRING_GENERAL
+	name_with_key (a_name: STRING_32; a_key: EV_ACCELERATOR): STRING_32
 			-- Format text with `a_name' and `a_key'.
 		require
 			a_name_not_void: a_name /= Void
 		do
 			Result := a_name.twin
 			if a_key /= Void then
-				Result.append (" (")
-				Result.append (a_key.out)
-				Result.append (")")
+				Result.append_string_general (" (")
+				Result.append (a_key.text)
+				Result.append_character (')')
 			end
 		ensure
 			Result_not_void: Result /= Void

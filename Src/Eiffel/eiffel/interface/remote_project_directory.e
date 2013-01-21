@@ -60,7 +60,7 @@ feature -- Status setting
 			has_precompiled_preobj := b
 		end
 
-	set_system_name (n: STRING)
+	set_system_name (n: like system_name)
 			-- Set `system_name' to `n'
 		do
 			system_name := n
@@ -74,15 +74,15 @@ feature -- Status setting
 			il_generation_set: il_generation = v
 		end
 
-	set_msil_generation_type (s: STRING)
+	set_msil_generation_type (s: like msil_generation_type)
 			-- Set `msil_generation_type' to `s'
 		require
 			non_void_s: s /= Void
-			valid_s: s.is_equal ("dll") or s.is_equal ("exe")
+			valid_s: s.same_string_general ("dll") or s.same_string_general ("exe")
 		do
 			msil_generation_type := s
 		ensure
-			msil_generation_type_set: s.is_equal (msil_generation_type)
+			msil_generation_type_set: s = msil_generation_type
 		end
 
 	set_is_precompile_finalized (v: BOOLEAN)
@@ -204,7 +204,7 @@ feature -- Access
 	il_generation: BOOLEAN
 			-- Is current project made for IL code generation?
 
-	msil_generation_type: STRING
+	msil_generation_type: STRING_32
 			-- Type of assembly to generate
 
 	is_precompile_finalized: BOOLEAN
@@ -388,7 +388,7 @@ invariant
 	project_location_not_void: project_location /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

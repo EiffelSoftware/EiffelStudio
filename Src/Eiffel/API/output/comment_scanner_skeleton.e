@@ -210,10 +210,8 @@ feature {NONE} -- Implementation
 					-- so we need to remove 3 characters from the end.
 				l_class_name := l_text.substring (2, l_text.count - 3)
 			end
-			if l_class_name.is_valid_as_string_8 then
-				l_class_name.to_upper
-				l_class := class_by_name (l_class_name)
-			end
+			l_class_name.to_upper
+			l_class := class_by_name (l_class_name)
 			if l_class /= Void then
 				if a_with_brace then
 					text_formatter.process_symbol_text (ti_l_curly)
@@ -345,7 +343,7 @@ feature {NONE} -- Helpers
 			last_type := Void
 		end
 
-	class_by_name (name: STRING): CLASS_I
+	class_by_name (name: READABLE_STRING_GENERAL): CLASS_I
 			-- Return class with `name'. `Void' if not in system.
 		require
 			name_not_void: name /= Void
@@ -396,7 +394,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

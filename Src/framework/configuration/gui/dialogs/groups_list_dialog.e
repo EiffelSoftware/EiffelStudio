@@ -49,8 +49,8 @@ feature -- Update
 		require
 			a_target_not_void: a_target /= Void
 		local
-			l_sorted_groups: ARRAYED_LIST [STRING]
-			l_sorter: QUICK_SORTER [STRING]
+			l_sorted_groups: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			conf_target := a_target
 			create l_sorted_groups.make_from_array (a_target.groups.current_keys)

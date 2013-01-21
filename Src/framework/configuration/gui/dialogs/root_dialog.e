@@ -141,18 +141,17 @@ feature {NONE} -- Agents
 			-- Ok was pressed.
 		local
 			l_root: CONF_ROOT
-			l_cluster, l_class: STRING
-			l_feature: STRING
+			l_cluster, l_class: STRING_32
+			l_feature: STRING_32
 			l_checker: EIFFEL_SYNTAX_CHECKER
 		do
 			if all_classes.is_selected then
 				create l_root.make (Void, Void, Void, True)
 			else
-				l_cluster := cluster_name.text.to_string_8
-				l_class := class_name.text.to_string_8
+				l_cluster := cluster_name.text
+				l_class := class_name.text
 				if attached feature_name.text as l_f then
-						-- |FIXME: Unicode support
-					l_feature := l_f.as_string_8
+					l_feature := l_f
 				end
 
 					-- Check validity of l_cluster, l_class and l_feature.

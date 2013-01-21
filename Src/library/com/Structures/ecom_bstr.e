@@ -22,7 +22,7 @@ feature -- Access
 		do
 			if item /= default_pointer then
 				create l_string.share_from_pointer_and_count (item, count * character_32_bytes)
-				Result := l_string.string
+				Result := l_string.string.as_string_8_conversion
 			end
 		end
 

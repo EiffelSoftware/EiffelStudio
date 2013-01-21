@@ -37,7 +37,7 @@ feature -- Access
 			l_string: WEL_STRING
 		do
 			create l_string.make_by_pointer (c_name (item))
-			Result := l_string.string
+			Result := l_string.string.as_string_8_conversion
 		end
 
 	is_same_name (other_name: STRING): BOOLEAN

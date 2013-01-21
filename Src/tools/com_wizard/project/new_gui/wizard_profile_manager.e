@@ -34,14 +34,14 @@ feature -- Access
 	Default_profile: STRING = "default"
 			-- Name of default profile
 
-	available_profiles: LIST [STRING]
+	available_profiles: LIST [STRING_32]
 			-- List of available profiles
 		do
 			if is_saved_list (Profiles_key) then
 				Result := saved_list (Profiles_key)
 				Result.compare_objects
 			else
-				create {ARRAYED_LIST [STRING]} Result.make (0)
+				create {ARRAYED_LIST [STRING_32]} Result.make (0)
 			end
 		end
 
@@ -125,8 +125,8 @@ feature -- Basic Operations
 		require
 			non_void_name: a_name /= Void
 		local
-			l_stored_list: LIST [STRING]
-			l_name: STRING
+			l_stored_list: LIST [STRING_32]
+			l_name: STRING_32
 		do
 			found_item := Void
 			found := False
@@ -159,7 +159,7 @@ feature -- Basic Operations
 	remove_active_profile
 			-- Remove active profile from profiles list.
 		local
-			l_stored_list: LIST [STRING]
+			l_stored_list: LIST [STRING_32]
 		do
 			if active_profile /= Void then
 				if is_saved_list (Profiles_key) then
@@ -195,8 +195,8 @@ feature {NONE} -- Implementation
 			unblocked_save: not save_blocked
 		local
 			l_item: WIZARD_PROFILE_ITEM
-			l_stored_list: ARRAYED_LIST [STRING]
-			l_profiles: LIST [STRING]
+			l_stored_list: ARRAYED_LIST [STRING_32]
+			l_profiles: LIST [STRING_32]
 		do
 			create l_stored_list.make (active_profile_save_actions.count)
 			from
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			if is_saved_list (Profiles_key) then
 				l_profiles := saved_list (Profiles_key)
 			else
-				create {ARRAYED_LIST [STRING]} l_profiles.make (1)
+				create {ARRAYED_LIST [STRING_32]} l_profiles.make (1)
 			end
 			if not l_profiles.has (a_profile) then
 				l_profiles.extend (a_profile)
@@ -227,7 +227,7 @@ invariant
 	non_void_active_profile_change_actions: active_profile_change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -240,22 +240,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class WIZARD_PROFILE_MANAGER
 

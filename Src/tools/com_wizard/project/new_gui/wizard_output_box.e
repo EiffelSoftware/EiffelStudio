@@ -248,7 +248,7 @@ feature {NONE} -- GUI Events Handling
 			-- Save rich text content.
 		local
 			l_dialog: EV_FILE_SAVE_DIALOG
-			l_file_name: STRING
+			l_file_name: STRING_32
 		do
 			create l_dialog.make_with_title ("Browse for log file")
 			l_dialog.filters.extend (["*.log", "Log File (*.log)"])
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			if l_directory.exists then
 				l_file_list := u.ends_with (l_directory.path, ".ecf", 0)
 				if not l_file_list.is_empty then
-					Result := eiffel_layout.studio_command_line (l_file_list.first, Void, Void, True, False)
+					Result := eiffel_layout.studio_command_line (l_file_list.first, Void, Void, True, False).as_string_8_conversion
 				end
 			end
 		end
@@ -424,7 +424,7 @@ feature {NONE} -- Private Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

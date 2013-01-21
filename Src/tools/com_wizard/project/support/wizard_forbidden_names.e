@@ -992,7 +992,8 @@ feature -- Access
 		local
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
-			tmp_path, a_line: STRING_32
+			tmp_path: STRING_32
+			a_line: STRING
 		once
 			create Result.make (500)
 			Result.compare_objects
@@ -1038,7 +1039,7 @@ feature -- Status report
 
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

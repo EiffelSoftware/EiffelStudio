@@ -53,7 +53,7 @@ feature -- Basic Operations
 		require
 			non_void_combo: a_combo /= Void
 		local
-			l_list: LIST [STRING]
+			l_list: LIST [STRING_32]
 		do
 			a_combo.set_data (agent save_list (?, a_name))
 			if is_saved_list (a_name) then
@@ -62,28 +62,26 @@ feature -- Basic Operations
 			end
 		end
 
-	add_combo_item (a_entry: STRING; a_combo: EV_COMBO_BOX)
+	add_combo_item (a_entry: STRING_32; a_combo: EV_COMBO_BOX)
 			-- Add entry `a_entry' to combo box `a_combo' if not there already.
 			-- Persist combo box strings.
 		local
 			l_save_routine: ROUTINE [ANY, TUPLE [LIST [STRING]]]
-			l_list: LIST [STRING]
 			l_item: EV_LIST_ITEM
-			l_entry: STRING
+			l_entry: STRING_32
+			l_has_entry: BOOLEAN
 		do
 			if not a_entry.is_empty then
+				l_entry := a_entry.as_lower
 				from
-					create {ARRAYED_LIST [STRING]} l_list.make (a_combo.count)
 					a_combo.start
 				until
-					a_combo.after
+					l_has_entry or a_combo.after
 				loop
-					l_list.extend (a_combo.item.text.as_lower)
+					l_has_entry := a_combo.item.text.same_string (l_entry)
 					a_combo.forth
 				end
-				l_entry := a_entry.as_lower
-				l_list.compare_objects
-				if not l_list.has (l_entry) then
+				if not l_has_entry then
 					if a_combo.count >= max_count then
 						a_combo.finish
 						a_combo.remove
@@ -100,7 +98,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	fill_combo (a_combo: EV_COMBO_BOX; a_list: LIST [STRING])
+	fill_combo (a_combo: EV_COMBO_BOX; a_list: LIST [STRING_32])
 			-- Fill `a_combo' with strings in `a_list'.
 		require
 			non_void_combo: a_combo /= Void
@@ -131,7 +129,7 @@ feature {NONE} -- Private Access
 			-- Maximum combo entries
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -144,22 +142,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class WIZARD_SAVED_SETTINGS
 

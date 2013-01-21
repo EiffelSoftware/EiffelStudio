@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	C_compiler_command_line (a_file_name: STRING): STRING
 			-- Cl command line used to compile Proxy Stub
 		do
-			Result := Common_c_compiler_options.twin
+			Result := Common_c_compiler_options.twin.as_string_8_conversion
 			Result.append (" /nologo ")
 			Result.append (Env.current_working_directory.twin)
 			Result.append_character (Directory_separator)
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

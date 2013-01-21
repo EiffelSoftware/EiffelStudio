@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			l_dir: PATH
 			l_fn: PATH
 			l_dest_dir: PATH
-			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_libs: STRING_TABLE [CONF_LIBRARY]
 			l_as: CONF_ASSERTIONS
 		do
 			if environment.is_client then
@@ -170,7 +170,9 @@ feature {NONE} -- Implementation
 					if l_vis.exported_features.is_empty then
 						a_visible.add_visible (l_vis.name, Void, Void, Void)
 					else
-						l_vis.exported_features.do_all (agent a_visible.add_visible (l_vis.name, ?, Void, Void))
+						across l_vis.exported_features as l_feature loop
+							a_visible.add_visible (l_vis.name, l_feature.item, Void, Void)
+						end
 					end
 					a_classes.forth
 				end
@@ -299,7 +301,7 @@ feature {NONE} -- Onces
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

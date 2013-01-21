@@ -104,7 +104,7 @@ feature -- Conversion
 			if c_guid_to_string (item, l_string.item, 39) = 0 then
 				Result := ""
 			else
-				Result := l_string.string
+				Result := l_string.string.as_string_8_conversion
 			end
 		ensure
 			non_void_representation: Result /= Void

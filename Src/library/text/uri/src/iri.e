@@ -50,13 +50,14 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_uri (a_uri: URI)
+			-- Make Current Internationalized resource identifier from `uri' object
 		do
 			make_from_uri_string (a_uri.string)
 		end
 
 feature -- Access
 
-	userinfo: detachable STRING_32
+	userinfo: detachable READABLE_STRING_32
 			-- User information.
 			--| username:password
 			--|	RFC3986: userinfo    = *( unreserved / pct-encoded / sub-delims / ":" )
@@ -64,19 +65,19 @@ feature -- Access
 			Result := to_internationalized_percent_encoded_string (uri_userinfo)
 		end
 
-	path: STRING_32
+	path: READABLE_STRING_32
 			-- Path component containing data, usually organized in hierarchical form.
 		do
 			Result := to_attached_internationalized_percent_encoded_string (uri_path)
 		end
 
-	query: detachable STRING_32
+	query: detachable READABLE_STRING_32
 			-- Query string.
 		do
 			Result := to_internationalized_percent_encoded_string (uri_query)
 		end
 
-	fragment: detachable STRING_32
+	fragment: detachable READABLE_STRING_32
 			-- The fragment identifier component of a URI allows indirect
 			-- identification of a secondary resource by reference to a primary
 			-- resource and additional identifying information.
@@ -86,7 +87,7 @@ feature -- Access
 
 feature -- Access
 
-	path_segments: LIST [STRING_32]
+	path_segments: LIST [READABLE_STRING_32]
 			-- Segments composing `path'.
 		do
 			Result := path.split ('/')
@@ -94,25 +95,45 @@ feature -- Access
 
 	query_items: detachable LIST [TUPLE [name: READABLE_STRING_32; value: detachable READABLE_STRING_32]]
 			-- Query items composing the `query'.
+		local
+			lst: LIST [READABLE_STRING_32]
+			i: INTEGER
 		do
+			if attached query as q then
+				lst := q.split ('&')
+				create {ARRAYED_LIST [like query_items.item]} Result.make (lst.count)
+				across
+					lst as e
+				loop
+					i := e.item.index_of ('=', 1)
+					if i > 0 then
+						Result.force ([e.item.substring (1, i - 1), e.item.substring (i + 1, e.item.count)])
+					else
+						Result.force ([e.item, Void])
+					end
+				end
+			end
 		end
 
 feature -- Query
 
-	hier: STRING_32
+	hier: READABLE_STRING_32
 			-- Hier part.
 			-- hier-part   = "//" authority path-abempty
             --      / path-absolute
             --      / path-rootless
             --      / path-empty
+		local
+			s: STRING_32
 		do
-			create Result.make (10)
+			create s.make (10)
 			if attached authority as l_authority then
-				Result.append_character ('/')
-				Result.append_character ('/')
-				Result.append (l_authority)
+				s.append_character ('/')
+				s.append_character ('/')
+				s.append (l_authority)
 			end
-			Result.append (path)
+			s.append (path)
+			Result := s
 		end
 
 	username_password: detachable TUPLE [username: READABLE_STRING_32; password: detachable READABLE_STRING_32]
@@ -151,22 +172,25 @@ feature -- Query
 			end
 		end
 
-	authority: detachable STRING_32
+	authority: detachable READABLE_STRING_32
 			-- Hierarchical element for naming authority.
 			--| RFC3986: authority   = [ userinfo "@" ] host [ ":" port ]
+		local
+			s: STRING_32
 		do
 			if attached host as h then
 				if attached userinfo as u then
-					create Result.make_from_string (u)
-					Result.append_character ('@')
-					Result.append_string_general (h)
+					create s.make_from_string (u)
+					s.append_character ('@')
+					s.append_string_general (h)
 				else
-					create Result.make_from_string_general (h)
+					create s.make_from_string_general (h)
 				end
 				if port /= 0 then
-					Result.append_character (':')
-					Result.append_integer (port)
+					s.append_character (':')
+					s.append_integer (port)
 				end
+				Result := s
 			else
 				check not is_valid or else (userinfo = Void and port = 0) end
 			end
@@ -174,25 +198,28 @@ feature -- Query
 
 feature -- Conversion	
 
-	string: STRING_32
+	string: READABLE_STRING_32
 			-- String representation.
 			-- scheme://username:password@hostname/path?query#fragment
+		local
+			s: STRING_32
 		do
-			if attached scheme as s and then not s.is_empty then
-				create Result.make_from_string_general (scheme)
-				Result.append_character (':')
+			if attached scheme as l_scheme and then not l_scheme.is_empty then
+				create s.make_from_string_general (l_scheme)
+				s.append_character (':')
 			else
-				create Result.make_empty
+				create s.make_empty
 			end
-			Result.append (hier)
+			s.append (hier)
 			if attached query as q then
-				Result.append_character ('?')
-				Result.append (q)
+				s.append_character ('?')
+				s.append (q)
 			end
 			if attached fragment as f then
-				Result.append_character ('#')
-				Result.append (f)
+				s.append_character ('#')
+				s.append (f)
 			end
+			Result := s
 		end
 
 	to_uri: URI
@@ -200,7 +227,7 @@ feature -- Conversion
 			create Result.make_from_string (uri_string)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation: Internationalization
 
 	iri_into_uri (a_string: READABLE_STRING_GENERAL; a_result: STRING_8)
 		require
@@ -238,6 +265,8 @@ feature {NONE} -- Implementation
 		end
 
 	to_internationalized_percent_encoded_string (s: detachable READABLE_STRING_8): detachable STRING_32
+			-- Convert string `s' to Internationalized Resource Identifier string
+			-- Result is Void if `s' is Void.
 		do
 			if s /= Void then
 				create Result.make (s.count)
@@ -246,6 +275,7 @@ feature {NONE} -- Implementation
 		end
 
 	to_attached_internationalized_percent_encoded_string (s: READABLE_STRING_8): STRING_32
+			-- Convert string `s' to Internationalized Resource Identifier string
 		do
 			create Result.make (s.count)
 			append_percent_encoded_string_into_internationalized_percent_encoded_string (s, Result)

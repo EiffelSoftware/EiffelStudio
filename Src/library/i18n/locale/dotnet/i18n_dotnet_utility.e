@@ -74,79 +74,102 @@ feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 						l_char
 					when 'd' then
 						if count = 1 then -- The day of the month. Single-digit days will not have a leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Day_of_month.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Day_of_month)
 						elseif count = 2 then -- The day of the month. Single-digit days will have a leading zero.			
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Day_of_month_padded.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.day_of_month_padded)
 						elseif count = 3 then -- The abbreviated name of the day of the week,
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Abbreviated_day_name.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Abbreviated_day_name)
 						else -- The full name of the day of the week (count = 4)
 							next := i + 4 -- max lenght of a format specifier is 4
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Day_name.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Day_name)
 						end
 					when 'h' then
 						if count = 1 then -- The hour in a 12-hour clock.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Hour_12.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Hour_12)
 						else -- The hour in a 12-hour clock. Single-digit hours will have a leading zero. (count = 2)
 							next := i + 2
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Hour_12_padded.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Hour_12_padded)
 						end
 					when 'H' then
 						if count = 1 then
 							-- The hour in a 24-hour clock. Single-digit hours will not have a leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Hour_24.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Hour_24)
 						else -- The hour in a 24-hour clock. Single-digit hours will have a leading zero. (count = 2)
 							next := i + 2
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Hour_24_padded.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Hour_24_padded)
 						end
 					when 'm' then
 						if count = 1 then -- The minute. Single-digit minutes will not have a leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Minutes.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Minutes)
 						else -- The minute. Single-digit minutes will have a leading zero. (count = 2)
 							next := i + 2
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Minutes_padded.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Minutes_padded)
 						end
 					when 'M' then
 						if count = 1 then
 								-- The numeric month. Single-digit months will not have a leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Month.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Month)
 						elseif count = 2 then -- The numeric month. Single-digit months will have a leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Month_padded.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Month_padded)
 						elseif count = 3 then -- The abbreviated name of the month,
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Abbreviated_month_name1.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Abbreviated_month_name1)
 						else -- The full name of the month. (count = 4)
 							next := i + 4
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Month_name.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Month_name)
 						end
 					when 's' then
 						if count = 1 then -- The second. Single-digit seconds will not have a leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Seconds.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Seconds)
 						else -- The second. Single-digit seconds will have a leading zero. (count = 2)
 							next := i + 2
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Seconds_padded.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Seconds_padded)
 						end
 					when 't' then
 						if count = 1 then -- The first character in the AM/PM designator.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Am_pm_1.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Am_pm_1)
 						else -- The AM/PM designator defined in AMDesignator or PMDesignator, if any. (count = 2)
 							next := i + 2
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Am_pm_uppercase.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Am_pm_uppercase)
 						end
 					when 'y' then
 						if count = 1 then -- The year without the century. If the year without the century is less than 10, the year is displayed with no leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Year_1.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Year_1)
 						elseif count = 2 then --The year without the century. If the year without the century is less than 10, the year is displayed with a leading zero.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Year_2.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Year_2)
 						else -- The year in four digits
 								-- We do not support years with more than 4 digits!
 								-- including the century. Will pad with leading zeroes to get four digits.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Year_4.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Year_4)
 						end
 					when ':' then
 								-- The default time separator defined in TimeSeparator.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Time_separator.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Time_separator)
 					when '/' then
 								-- The default date separator defined in DateSeparator.
-							Result.append ({I18N_FORMATTING_CHARACTERS}.Escape_character.out+{I18N_FORMATTING_CHARACTERS}.Date_separator.out)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Escape_character)
+							Result.append_character ({I18N_FORMATTING_CHARACTERS}.Date_separator)
 					when 'z', 'k', 'g' then
 						-- One of the not supproted fotmat specifier:
 						--		. z: time zone offset
@@ -154,7 +177,7 @@ feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 						--		. g:The period or era.
 						-- Ignore them
 					else
-						Result.append (l_char.out)
+						Result.append_character (l_char)
 					end
 					i := next
 				end
@@ -166,12 +189,12 @@ feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 		do
 			from
 				Result := index + 1
-			variant
-				s.count - Result + 1
 			until
 				Result > s.count or else a_char /= s.item (Result)
 			loop
 				Result := Result + 1
+			variant
+				s.count - Result + 1
 			end
 		end
 note

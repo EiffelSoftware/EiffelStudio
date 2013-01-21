@@ -30,7 +30,7 @@ feature {I18N_MO_FILE} -- parsing
 				Result := one_plural_form
 			when 2 then
 				if
-					conditional.is_equal ("n != 1;")
+					conditional.same_string_general ("n != 1;")
 				then
 					Result := two_plural_forms_singular_one
 				else

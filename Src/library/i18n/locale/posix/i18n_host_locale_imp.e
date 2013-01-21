@@ -72,7 +72,7 @@ feature -- Informations
 		local
 			l_locale_id: I18N_LOCALE_ID
 			directory: DIRECTORY
-			dir_entries: ARRAYED_LIST[STRING]
+			dir_entries: ARRAYED_LIST [STRING_32]
 		do
 			create Result.make
 				-- This is the Linux location.
@@ -84,7 +84,7 @@ feature -- Informations
 			if directory.exists then
 					-- if it does not exist, unfortunately the system
 					-- does not follow POSIX
-				dir_entries := directory.linear_representation
+				dir_entries := directory.linear_representation_32
 				from
 					dir_entries.start
 				until
@@ -206,7 +206,7 @@ feature {NONE} -- Date and time formatting
 			-- according the current locale setting
 		do
 			Result := utf8_pointer_to_string (unix_get_locale_info_managed (D_fmt))
-			Result.replace_substring_all ("%%","&")
+			Result.replace_substring_all ({STRING_32} "%%", {STRING_32} "&")
 		ensure
 			result_exists: Result /= Void
 		end
@@ -216,7 +216,7 @@ feature {NONE} -- Date and time formatting
 			-- according the current locale setting
 		do
 			Result := utf8_pointer_to_string (unix_get_locale_info_managed (T_fmt))
-			Result.replace_substring_all ("%%","&")
+			Result.replace_substring_all ({STRING_32} "%%", {STRING_32} "&")
 		--	io.put_string(Result)
 		ensure
 			result_exists: Result /= Void
@@ -244,14 +244,14 @@ feature {NONE} -- Date and time formatting
 			-- time and date in a locale-specific way.
 		do
 			Result := utf8_pointer_to_string (unix_get_locale_info_managed (D_t_fmt))
-			Result.replace_substring_all ("%%","&")
+			Result.replace_substring_all ({STRING_32} "%%", {STRING_32} "&")
 		ensure
 			result_exists: Result /= Void
 		end
 
 feature {NONE} -- day/months names
 
-	get_day_names: ARRAY[STRING_32]
+	get_day_names: ARRAY [STRING_32]
 			-- array with the full weekday names
 			-- according the current locale settings
 		local
@@ -259,17 +259,17 @@ feature {NONE} -- day/months names
 			l_string : STRING_32
 		do
 			upper := {DATE_CONSTANTS}.Days_in_week
-			create Result.make(1,upper)
+			create Result.make_filled ({STRING_32} "", 1, upper)
 			from
 				i := Result.lower
-			variant
-				Result.count - i + 1
 			until
 				i > Result.upper
 			loop
 				l_string := utf8_pointer_to_string (unix_get_locale_info_managed (Day_1 +((i-1)\\upper)))
 				Result.put (l_string, i)
 				i := i + 1
+			variant
+				Result.count - i + 1
 			end
 		ensure
 			result_exists: Result /= Void
@@ -283,17 +283,17 @@ feature {NONE} -- day/months names
 			i : INTEGER
 			l_string : STRING_32
 		do
-			create Result.make(1,{DATE_CONSTANTS}.Months_in_year)
+			create Result.make_filled ({STRING_32} "", 1, {DATE_CONSTANTS}.Months_in_year)
 			from
 				i := Result.lower
-			variant
-				Result.count - i + 1
 			until
 				i > Result.upper
 			loop
 				l_string := utf8_pointer_to_string  (unix_get_locale_info_managed (Mon_1 +i-1))
 				Result.put (l_string, i)
 				i := i + 1
+			variant
+				Result.count - i + 1
 			end
 		ensure
 			result_exists: Result /= Void
@@ -308,18 +308,17 @@ feature {NONE} -- day/months names
 			l_string : STRING_32
 		do
 			upper := {DATE_CONSTANTS}.Days_in_week
-			create Result.make(1,upper)
-			create Result.make(1,7)
+			create Result.make_filled ({STRING_32} "", 1, upper)
 			from
 				i := Result.lower
-			variant
-				Result.count - i + 1
 			until
 				i > Result.upper
 			loop
 				l_string := utf8_pointer_to_string (unix_get_locale_info_managed (Abday_1 +((i-1)\\upper)))
 				Result.put (l_string, i)
 				i := i + 1
+			variant
+				Result.count - i + 1
 			end
 		ensure
 			result_exists: Result /= Void
@@ -333,17 +332,17 @@ feature {NONE} -- day/months names
 			i : INTEGER
 			l_string : STRING_32
 		do
-			create Result.make(1,{DATE_CONSTANTS}.Months_in_year)
+			create Result.make_filled ({STRING_32} "", 1, {DATE_CONSTANTS}.Months_in_year)
 			from
 				i := Result.lower
-			variant
-				Result.count - i + 1
 			until
 				i > Result.upper
 			loop
 				l_string := utf8_pointer_to_string  (unix_get_locale_info_managed (Abmon_1 +i-1))
 				Result.put (l_string, i)
 				i := i + 1
+			variant
+				Result.count - i + 1
 			end
 		ensure
 			result_exists: Result /= Void
@@ -514,7 +513,7 @@ feature {NONE} --Implementation
 			i, t: INTEGER
 		do
 			create l_string.make_from_c (a_pointer)
-			create Result.make (1, l_string.count)
+			create Result.make_filled (0, 1, l_string.count)
 			from
 				i := 1
 			until

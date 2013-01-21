@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 		local
 			l_string: STRING_32
 		do
-			Result := a_integer.out
+			create Result.make_from_string_general (a_integer.out)
 			if Result.count < length then
 				create l_string.make_filled (padder, length - Result.count)
 				Result.prepend (l_string)
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 		local
 			l_string: STRING_32
 		do
-			Result := a_integer.out
+			create Result.make_from_string_general (a_integer.out)
 			if Result.count < length then
 				create l_string.make_filled (padder, length - Result.count)
 				Result.append (l_string)

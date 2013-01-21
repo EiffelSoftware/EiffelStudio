@@ -91,7 +91,7 @@ feature -- Dictionary
 		require
 			a_path_exists: a_path /= Void
 		do
-			if can_handle(a_path.as_string_32) then
+			if can_handle(a_path) then
 				Result := extract_dictionary(a_path)
 				handled := True
 			else

@@ -340,7 +340,7 @@ feature -- Output
 						i := i + 1
 					end
 				else
-					Result := "Empty node%N"
+					Result := {STRING_32} "Empty node%N"
 				end
 			end
 		end

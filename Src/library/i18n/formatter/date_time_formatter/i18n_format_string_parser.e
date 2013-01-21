@@ -37,7 +37,7 @@ feature -- Parser
 			locale_info := a_locale_info
 		end
 
-	parse (a_string: STRING_32): LINKED_LIST [I18N_FORMATTING_ELEMENT]
+	parse (a_string: READABLE_STRING_GENERAL): LINKED_LIST [I18N_FORMATTING_ELEMENT]
 			-- parse `a_string', for every format character, create
 			-- appropriate formatting_element and put it in the list
 			-- returned as result

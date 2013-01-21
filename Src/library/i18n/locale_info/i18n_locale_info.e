@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			initialize_code_page_info
 
 				-- Set an empty id
-			create id.make_from_string ("")
+			create id.make_from_string ({STRING_32} "")
 		end
 
 feature	-- Access

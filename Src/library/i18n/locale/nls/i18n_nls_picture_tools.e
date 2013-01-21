@@ -117,40 +117,40 @@ feature -- Helper functions
 			argument_not_void: code /= Void
 		do
 			create Result.make_empty
-			if code.is_equal ("d") then
+			if code.same_string_general ("d") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.day_of_month)
-			elseif code.is_equal ("dd") then
+			elseif code.same_string_general ("dd") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.day_of_month_padded)
-			elseif code.is_equal ("ddd") then
+			elseif code.same_string_general ("ddd") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.abbreviated_day_name)
-			elseif code.is_equal ("dddd") then
+			elseif code.same_string_general ("dddd") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.day_name)
-			elseif code.is_equal ("M") then
+			elseif code.same_string_general ("M") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.month)
-			elseif code.is_equal ("MM") then
+			elseif code.same_string_general ("MM") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.month_padded)
-			elseif code.is_equal ("MMM") then
+			elseif code.same_string_general ("MMM") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.abbreviated_month_name1)
-			elseif code.is_equal ("MMMM") then
+			elseif code.same_string_general ("MMMM") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.month_name)
-			elseif code.is_equal ("y") then
+			elseif code.same_string_general ("y") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.year_1)
-			elseif code.is_equal ("yy") then
+			elseif code.same_string_general ("yy") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.year_2)
-			elseif code.is_equal ("yyy") or code.is_equal("yyyy") then
+			elseif code.same_string_general ("yyy") or code.same_string_general("yyyy") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.year_4)
-			elseif code.is_equal ("gg") then
+			elseif code.same_string_general ("gg") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.era)
 			else
@@ -166,34 +166,34 @@ feature -- Helper functions
 			argument_not_void: code /= Void
 		do
 			create Result.make_empty
-			if code.is_equal ("h") then
+			if code.same_string_general ("h") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.hour_12)
-			elseif code.is_equal ("hh") then
+			elseif code.same_string_general ("hh") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.hour_12_padded)
-			elseif code.is_equal ("H") then
+			elseif code.same_string_general ("H") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.hour_24)
-			elseif code.is_equal ("HH") then
+			elseif code.same_string_general ("HH") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.hour_24_padded)
-			elseif code.is_equal ("m") then
+			elseif code.same_string_general ("m") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.minutes)
-			elseif code.is_equal ("mm") then
+			elseif code.same_string_general ("mm") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.minutes_padded)
-			elseif code.is_equal ("s") then
+			elseif code.same_string_general ("s") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.seconds)
-			elseif code.is_equal ("ss") then
+			elseif code.same_string_general ("ss") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.seconds_padded)
-			elseif code.is_equal ("t") then
+			elseif code.same_string_general ("t") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.am_pm_1)
-			elseif code.is_equal ("tt") then
+			elseif code.same_string_general ("tt") then
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.escape_character)
 				Result.append_character({I18N_FORMATTING_CHARACTERS}.am_pm_lowercase)
 			else

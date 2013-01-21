@@ -167,7 +167,7 @@ feature -- Access
 			get_translated_entries (i)
 			l_list := last_translated.list
 			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
-			create Result.make_filled ("", 0, 3)
+			create Result.make_filled ({STRING_32} "", 0, 3)
 			from
 				l_list.start
 				counter := 0
@@ -280,14 +280,14 @@ feature {NONE} -- Implementation
 			t_list : LIST [STRING_32]
 			t_string : detachable STRING_32
 			index : INTEGER
-			char0: WIDE_CHARACTER
-			code0: INTEGER
+			char0: CHARACTER_32
+			code0: NATURAL_32
 			conditional: STRING_32
-			nplurals: INTEGER
+			nplurals: INTEGER_32
 			l_list: detachable LIST [STRING_32]
 		do
 			char0 := '0'
-			code0 := char0.code
+			code0 := char0.natural_32_code
 				-- Get the first translated string of the first entry in the .mo file - this is the headers entry (the empty string)
 			get_translated_entries (1)
 			l_list := last_translated.list
@@ -313,7 +313,8 @@ feature {NONE} -- Implementation
 					-- The following code is not very nice.
 				index := t_string.index_of (';', 1)
 				if index > 1 and t_string.has_substring ("nplurals=") then
-					nplurals := (t_string.item_code(index-1) - code0)
+					check greater: t_string.code (index - 1) >= code0 end
+					nplurals := (t_string.code(index-1) - code0).to_integer_32
 						-- ?????? Does this find out the integer value of the represented character???
 					index := t_string.index_of ('=', index)+1
 				    conditional := t_string.substring (index, t_string.count)

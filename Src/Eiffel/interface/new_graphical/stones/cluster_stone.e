@@ -53,8 +53,8 @@ feature {NONE} -- Initialization
 			folder_name := a_name.as_string_32
 		ensure
 			group_set: group = clu
-			path_set: path = a_path
-			folder_name_set: folder_name = a_name
+			path_set: path.same_string_general (a_path)
+			folder_name_set: folder_name.same_string_general (a_name)
 		end
 
 feature -- Access

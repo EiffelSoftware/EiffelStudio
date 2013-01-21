@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation: results
 
-	failed_compilations: LINKED_LIST [TUPLE [log: detachable PATH; ecf: PATH; system: READABLE_STRING_8; target: READABLE_STRING_8; uuid: READABLE_STRING_8]]
+	failed_compilations: LINKED_LIST [TUPLE [log: detachable PATH; ecf: PATH; system, target, uuid: READABLE_STRING_32]]
 
 	failed_compilations_count: INTEGER
 			-- Count of failed compilations
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation: results
 			if arguments.is_log_verbose then
 				l_logfn := logs_filename (a_action_mode, a_target)
 			end
-			failed_compilations.extend ([l_logfn, a_target.system.file_path, a_target.system.name, a_target.name, a_target.system.uuid.out])
+			failed_compilations.extend ([l_logfn, a_target.system.file_path, a_target.system.name, a_target.name, a_target.system.uuid.string])
 		end
 
 	report_ignored (a_ecf: PATH; a_target: detachable CONF_TARGET)
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			l_ini_section: INI_SECTION
 			l_ignored_targets: ARRAYED_LIST [INI_LITERAL]
 			l_ig_target: STRING_TABLE [BOOLEAN]
-			l_actual_path: STRING
+			l_actual_path: STRING_32
 			l_label: STRING
 			rexp: REGULAR_EXPRESSION
 		do
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clean_after (a_using_ecf_dir: BOOLEAN; a_dir: PATH; a_target_name: READABLE_STRING_8)
+	clean_after (a_using_ecf_dir: BOOLEAN; a_dir: PATH; a_target_name: READABLE_STRING_32)
 			-- Clean compilation directory
 		local
 			dn: PATH
@@ -431,8 +431,8 @@ feature {NONE} -- Implementation
 		local
 			l_state: CONF_STATE
 			l_vis: CONF_PARSE_VISITOR
-			l_version: HASH_TABLE [CONF_VERSION, STRING]
-			l_system, l_target: STRING
+			l_version: STRING_TABLE [CONF_VERSION]
+			l_system, l_target: STRING_32
 			l_file: PLAIN_TEXT_FILE
 		do
 				-- create state for conditioning
@@ -481,13 +481,14 @@ feature {NONE} -- Implementation
 			l_args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
-			l_system, l_target: STRING
+			l_system, l_target: STRING_32
 			l_file: PATH
 			l_dir: DIRECTORY
 			l_info_file: RAW_FILE
 			l_info_filename: PATH
 			l_action: READABLE_STRING_8
 			rescued: BOOLEAN
+			u: UTF_CONVERTER
 		do
 			if not rescued then
 				l_system := a_target.system.name
@@ -521,7 +522,8 @@ feature {NONE} -- Implementation
 					mkdir (l_dir)
 					create l_info_file.make_with_path (l_info_filename.extended ("ecf_location"))
 					l_info_file.create_read_write
-					l_info_file.put_string (a_target.system.file_name)
+					l_info_file.put_string (u.utf_8_bom_to_string_8)
+					l_info_file.put_string (u.utf_32_string_to_utf_8_string_8 (a_target.system.file_name))
 					l_info_file.close
 
 					l_args.extend (l_info_filename.name)
@@ -644,7 +646,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_data_to_file (a_file_name: PATH; a_config, a_target: STRING; ec_args: ITERABLE [READABLE_STRING_GENERAL])
+	add_data_to_file (a_file_name: PATH; a_config, a_target: READABLE_STRING_GENERAL; ec_args: ITERABLE [READABLE_STRING_GENERAL])
 			-- Insert some data in `a_file_name' saying what we are compiling and when.
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -659,14 +661,17 @@ feature {NONE} -- Implementation
 			if not retried then
 				create l_date.make_now
 				create l_file.make_with_path (a_file_name)
+				if l_file.is_empty then
+					l_file.put_string ({UTF_CONVERTER}.utf_8_bom_to_string_8)
+				end
 				l_file.open_append
 				l_file.put_string ("**********************************************************************%N")
 				l_file.put_string ("Date: ")
 				l_file.put_string (l_date.out)
 				l_file.put_string ("%NCompiling target %"")
-				l_file.put_string (a_target)
+				l_file.put_string (u.utf_32_string_to_utf_8_string_8 (a_target))
 				l_file.put_string ("%" from config %"")
-				l_file.put_string (a_config)
+				l_file.put_string (u.utf_32_string_to_utf_8_string_8 (a_config))
 				l_file.put_string ("%"%N%N")
 				l_file.put_string ("Compiler's arguments in UTF-8 encoding: ")
 				across
@@ -774,7 +779,7 @@ feature {NONE} -- Interface text
 			-- Display in the console the output progress report for compilations
 		local
 			l_system: CONF_SYSTEM
-			l_target_name, l_system_name, l_uuid: READABLE_STRING_8
+			l_target_name, l_system_name, l_uuid: READABLE_STRING_32
 			l_ecf: PATH
 			t: STRING_32
 		do

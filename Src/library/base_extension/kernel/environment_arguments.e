@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 						when ' ', '%T' then
 							if not s.is_empty then
 								r := r + 1
-								Result.force (s, r)
+								Result.force (create {IMMUTABLE_STRING_32}.make_from_string (s), r)
 								s.wipe_out
 							end
 						else
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 					Result := Result.subarray (Result.lower, r)
 				elseif not s.is_empty then
 					r := r + 1
-					Result.force (s, r)
+					Result.force (create {IMMUTABLE_STRING_32}.make_from_string (s), r)
 					Result := Result.subarray (Result.lower, r)
 				end
 			else

@@ -72,7 +72,7 @@ feature {CONF_ACCESS} -- Element Change
 		require
 			a_name_valid_string_8: a_name.is_valid_as_string_8
 		do
-			attributes.force (a_value.to_string_32, a_name.as_string_8.as_lower)
+			attributes.force (a_value.to_string_32, a_name.as_lower)
 		end
 
 feature -- Access

@@ -256,8 +256,8 @@ feature {NONE} -- Tools
 			l_conf: CONF_LOAD
 			l_factory: CONF_PARSE_FACTORY
 			l_file: RAW_FILE
-			l_target_name: STRING
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_target_name: STRING_32
+			l_targets: STRING_TABLE [CONF_TARGET]
 		do
 			create path_name.make_from_string (path_lib)
 			path_name := path_name.extended (ace_name)

@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create validate_value_actions.make (1)
 			create change_value_actions
+			create change_actions
 			create force_inherit_actions
 			create use_inherited_actions
 		end
@@ -70,9 +71,11 @@ feature -- Update
 			-- Refresh current data.
 		do
 			if attached refresh_action as l_action then
+				change_actions.block
 				change_value_actions.block
 				set_value (l_action.item (Void))
 				change_value_actions.resume
+				change_actions.resume
 			end
 		end
 
@@ -81,13 +84,17 @@ feature -- Event handling
 	validate_value_actions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [like value], BOOLEAN]]
 			-- Actions called to validate a value.
 
+	change_actions: ACTION_SEQUENCE [TUPLE]
+			-- Actions called if the value has been changed. Use `change_value_actions' when you need
+			-- to know the new value.
+
 	change_value_actions: ACTION_SEQUENCE [TUPLE [like value]]
 			-- Actions called if the value has been changed. A value of `Void' means the value has been unset.
 
 	force_inherit_actions: ACTION_SEQUENCE [TUPLE [like value]]
 			-- Actions called if we force inheritance on child properties.
 
-	use_inherited_actions: ACTION_SEQUENCE [TUPLE[]]
+	use_inherited_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called if we should use the inherited value instead of our own.
 
 feature {NONE} -- Agents
@@ -123,6 +130,7 @@ feature -- Update
 		do
 			if value /~ a_value then
 				value := a_value
+				change_actions.call (Void)
 				change_value_actions.call ([a_value])
 			end
 		end

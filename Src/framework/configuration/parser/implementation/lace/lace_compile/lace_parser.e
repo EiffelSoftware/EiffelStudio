@@ -322,6 +322,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	yy_run_geyacc
+			-- You must run geyacc to regenerate this class.
+		do
+		end
+
 feature {NONE} -- Semantic actions
 
 	yy_do_action (yy_act: INTEGER)

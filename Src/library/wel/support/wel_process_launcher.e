@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Launch processes and redirect output:
 					  - Use `spawn' to launch a process asynchronously.
@@ -225,6 +225,8 @@ feature {NONE} -- Implementation
 
 	spawn_with_flags (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_flags: INTEGER)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
+			-- The new process is passed environment variables from `environment_variables' if set
+			-- or from the environment of the current process, in which case it is assumed to be in Unicode rather than ANSI.
 		require
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty
@@ -245,12 +247,12 @@ feature {NONE} -- Implementation
 			if a_working_directory /= Void and then not a_working_directory.is_empty then
 				create l_ws_working_directory.make (a_working_directory)
 				last_launch_successful := {WEL_API}.create_process (default_pointer, l_ws_command_line.item,
-							default_pointer, default_pointer, True, a_flags,
+							default_pointer, default_pointer, True, a_flags | create_unicode_environment,
 							l_envs_ptr, l_ws_working_directory.item,
 							startup_info.item, l_process_info.item)
 			else
 				last_launch_successful := {WEL_API}.create_process (default_pointer, l_ws_command_line.item,
-							default_pointer, default_pointer, True, a_flags,
+							default_pointer, default_pointer, True, a_flags | create_unicode_environment,
 							l_envs_ptr, default_pointer,
 							startup_info.item, l_process_info.item)
 			end
@@ -404,7 +406,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

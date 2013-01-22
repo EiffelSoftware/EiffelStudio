@@ -133,14 +133,14 @@ feature -- Access
 			last_output_is_valid_as_string_8: last_output_is_valid_as_string_8
 		do
 			if attached internal_last_output as o then
-				Result := o.as_string_8
+				Result := o.to_string_8 -- last_output_is_valid_as_string_8
 			end
 		end
 
 	last_output_32: detachable STRING_32
 		do
 			if attached internal_last_output as o then
-				Result := o.as_string_32
+				Result := o.to_string_32
 			end
 		end
 

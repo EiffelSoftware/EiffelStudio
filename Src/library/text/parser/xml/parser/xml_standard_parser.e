@@ -40,7 +40,7 @@ feature -- Parsing
 			set_buffer (empty_buffer)
 		end
 
-	parse_from_string_8 (a_string: STRING_8)
+	parse_from_string_8 (a_string: READABLE_STRING_8)
 			-- Parse string `a_string'
 		local
 			s: XML_STRING_INPUT_STREAM
@@ -50,7 +50,7 @@ feature -- Parsing
 			s.close
 		end
 
-	parse_from_string_32 (a_string: STRING_32)
+	parse_from_string_32 (a_string: READABLE_STRING_32)
 			-- Parse string `a_string'
 		local
 			s: XML_STRING_32_INPUT_STREAM
@@ -748,17 +748,7 @@ feature {NONE} -- Implementation: parse
 			create s.make (a_message.count)
 			s.append_string_general (a_message)
 
-			error_message := s.twin
-
-			s.append_character (' ')
-			s.append_character ('(')
-			s.append_string ({STRING_32} "position=")
-			s.append_string (p.to_string_32)
-
-			debug ("xml_parser")
-				io.put_string (s.as_string_8) -- FIXME: unicode
-				io.put_new_line
-			end
+			create error_message.make_from_string (s)
 
 			if error_position = Void then
 					-- record only first error's position
@@ -766,6 +756,11 @@ feature {NONE} -- Implementation: parse
 			end
 			parsing_stopped := True
 
+				--| The following won't be part of `error_message'
+			s.append_character (' ')
+			s.append_character ('(')
+			s.append_string ({STRING_32} "position=")
+			s.append_string (p.to_string_32)
 			callbacks.on_error (s)
 		ensure
 			error_occurred: error_occurred
@@ -784,17 +779,7 @@ feature {NONE} -- Implementation: parse
 			create s.make (a_message.count)
 			s.append_string_general (a_message)
 
-			warning_message := s.twin
-
-			s.append_character (' ')
-			s.append_character ('(')
-			s.append_string ({STRING_32} "position=")
-			s.append_string (p.to_string_32)
-
-			debug ("xml_parser")
-				io.put_string (s.as_string_8) -- FIXME: unicode
-				io.put_new_line
-			end
+			warning_message := s
 		end
 
 	report_unexpected_content (a_content: STRING)
@@ -898,7 +883,7 @@ feature {NONE} -- Implementation: Byte Order Mark
 				if i > 1 then
 					s32 := s.substring (1, i - 1)
 					if s32.is_valid_as_string_8 then
-						Result := s32.as_string_8
+						Result := s32.to_string_8
 					end
 				end
 			end

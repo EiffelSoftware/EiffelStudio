@@ -18,7 +18,7 @@ feature -- Conversion
 			Result := xml_encoder.encoded_string_32 (s)
 		end
 
-	unescaped_xml (s: STRING_8): STRING_32
+	unescaped_xml (s: READABLE_STRING_8): STRING_32
 		do
 			Result := xml_encoder.decoded_string (s)
 		end

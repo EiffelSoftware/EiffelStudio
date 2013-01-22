@@ -14,6 +14,8 @@ class
 inherit
 	XML_NODE_VISITOR
 
+	LOCALIZED_PRINTER
+
 	XML_SHARED_UTILITIES
 
 feature -- Processing
@@ -45,8 +47,9 @@ feature -- Processing
 				s.append_string (ns.uri)
 				s.append_character (')')
 			end
-			-- FIXME: use localized console			
-			print (offset (e.level) + "element: " + s.to_string_8 + "%N")
+			print (offset (e.level) + "element: ")
+			localized_print (s)
+			print ("%N")
 			process_nodes (e)
 		end
 
@@ -54,17 +57,23 @@ feature -- Processing
 			-- Process character data `c'.
 		do
 			if not is_blank_content (c.content) then
-				-- FIXME: use localized console
-				print (offset (c.level) + "content: " + single_line (c.content).as_string_8 + "%N")
+				print (offset (c.level))
+				print ("content: ")
+				localized_print (single_line (c.content))
+				print ("%N")
 			end
 		end
 
 	process_xml_declaration (a_decl: XML_DECLARATION)
 			-- Process xml declaration `a_decl'
 		do
-			print ("<?xml version=%"" + a_decl.version.to_string_8 + "%"")
+			print ("<?xml version=%"")
+			localized_print (a_decl.version)
+			print ("%"")
 			if attached a_decl.encoding as enc then
-				print (" encoding=%"" + enc.to_string_8 + "%"")
+				print (" encoding=%"")
+				localized_print (enc)
+				print ("%"")
 			end
 			if a_decl.standalone then
 				print (" standalone=%"yes%"")
@@ -75,8 +84,11 @@ feature -- Processing
 	process_processing_instruction (a_pi: XML_PROCESSING_INSTRUCTION)
 			-- Process processing instruction `a_pi'.
 		do
-			-- FIXME: use localized console
-			print ("<?" + a_pi.target.as_string_8 + " " + a_pi.data.as_string_8 + "?>%N")
+			print ("<?")
+			localized_print (a_pi.target)
+			print (" ")
+			localized_print (a_pi.data)
+			print ("?>%N")
 		end
 
 	process_document (doc: XML_DOCUMENT)
@@ -89,7 +101,9 @@ feature -- Processing
 			-- Process comment `com'.
 		do
 			-- FIXME: use localized console
-			print (offset (com.level) + "comment: " + single_line (com.data).as_string_8 + "%N")
+			print (offset (com.level) + "comment: ")
+			localized_print (single_line (com.data))
+			print ("%N")
 		end
 
 	process_attributes (e: XML_ELEMENT)
@@ -116,12 +130,16 @@ feature -- Processing
 				s.append_character (')')
 			end
 			-- FIXME: use localized console
-			print (offset (att.level) + "+ attribute: " + s.to_string_8 + "=%"" + xml_utilities.escaped_xml (att.value) + "%"%N")
+			print (offset (att.level) + "+ attribute: ")
+			localized_print (s)
+			print ("=%"")
+			print (xml_utilities.escaped_xml (att.value))
+			print ("%"%N")
 		end
 
 feature {NONE} -- Formatter
 
-	is_blank_content (s: STRING): BOOLEAN
+	is_blank_content (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' containing only space?
 		require
 			s_attached: s /= Void
@@ -144,9 +162,9 @@ feature {NONE} -- Formatter
 			end
 		end
 
-	single_line (s: STRING_32): STRING_32
+	single_line (s: READABLE_STRING_GENERAL): STRING_32
 		do
-			create Result.make_from_string (s)
+			create Result.make_from_string_general (s)
 			Result.replace_substring_all ({STRING_32} "%R%N", {STRING_32} "%%N")
 			Result.replace_substring_all ({STRING_32} "%N", {STRING_32} "%%N")
 		end

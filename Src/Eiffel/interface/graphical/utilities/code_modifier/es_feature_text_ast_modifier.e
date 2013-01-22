@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			context_feature := find_actual_context_feature (a_feature, a_class)
 			make_with_class (a_class)
 		ensure
-			context_feature_set: context_feature = find_actual_context_feature (a_feature, a_class)
+			context_feature_set: context_feature.same_as (find_actual_context_feature (a_feature, a_class))
 			context_class_set: context_class = a_class
 		end
 
@@ -132,7 +132,7 @@ invariant
 	modified_data_attached: attached modified_data
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -254,7 +254,7 @@ feature -- Access
 			end
 		end
 
-	name_prefix: STRING
+	name_prefix: STRING_32
 			-- Name prefix to be added to classes.
 
 	renaming: STRING_TABLE [STRING_32]

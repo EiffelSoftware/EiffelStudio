@@ -21,6 +21,8 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 feature -- Validation
 
 	validate_feature_name (a_feature_name: STRING_32)
@@ -43,9 +45,8 @@ feature -- Validation
 			-- `a_class': Class in which new feature will be created.
 		local
 			l_ast: detachable CLASS_AS
-			l_file: KL_BINARY_INPUT_FILE
 			b: BOOLEAN
-			u: GOBO_FILE_UTILITIES
+			l_wrapper: EIFFEL_PARSER_WRAPPER
 		do
 			validate_feature_name (a_feature_name)
 			if is_valid then
@@ -58,10 +59,9 @@ feature -- Validation
 						error_handler_empty: error_handler.error_list.is_empty and
 								error_handler.warning_list.is_empty
 					end
-					l_file := u.make_binary_input_file (a_class.file_name.name)
-					l_file.open_read
-					if l_file.is_open_read then
-						entity_feature_parser.parse (l_file)
+					if attached a_class.text_8 as l_text then
+						create l_wrapper
+						l_wrapper.parse_with_option (entity_feature_parser, l_text, a_class.options, True, Void)
 						l_ast := entity_feature_parser.root_node
 						error_handler.wipe_out
 						if l_ast /= Void then
@@ -86,7 +86,7 @@ feature {NONE} -- Internationalization
 	e_class_file_not_valid: STRING = "Class file {$1} can not be parsed."
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,8 @@
 note
     description: "A JSON converter for HASH_TABLE [ANY, HASHABLE]"
     author: "Paul Cohen"
-    date: "$Date$"
-    revision: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
     file: "$HeadURL: $"
 
 class JSON_HASH_TABLE_CONVERTER
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Conversion
 
-    from_json (j: attached  like to_json): like object
+    from_json (j: attached like to_json): like object
         local
             keys: ARRAY [JSON_STRING]
             i: INTEGER
@@ -41,7 +41,7 @@ feature -- Conversion
             until
                 i > keys.count
             loop
-                h ?= json.object (keys [i], void)
+                h ?= json.object (keys [i], Void)
                 check h /= Void end
                 jv := j.item (keys [i])
                 if jv /= Void then
@@ -71,7 +71,11 @@ feature -- Conversion
             until
                 c.after
             loop
-                create js.make_json (c.key.out)
+                if attached {JSON_STRING} json.value (c.key) as l_key then
+                    js := l_key
+                else
+                    create js.make_json (c.key.out)
+                end
                 jv := json.value (c.item)
                 if jv /= Void then
                     Result.put (jv, js)

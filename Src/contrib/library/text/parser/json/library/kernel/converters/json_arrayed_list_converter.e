@@ -1,11 +1,11 @@
 note
-	description: "A JSON converter for LINKED_LIST [ANY]"
+	description: "A JSON converter for ARRAYED_LIST [ANY]"
 	author: "Paul Cohen"
 	date: "$Date$"
 	revision: "$Revision$"
 	file: "$HeadURL: $"
 
-class JSON_LINKED_LIST_CONVERTER
+class JSON_ARRAYED_LIST_CONVERTER
 
 inherit
     JSON_LIST_CONVERTER
@@ -18,13 +18,13 @@ create
 
 feature -- Access
 
-    object: LINKED_LIST [detachable ANY]
+    object: ARRAYED_LIST [detachable ANY]
 
 feature {NONE} -- Factory
 
 	new_object (nb: INTEGER): like object
 		do
-			create Result.make
+			create Result.make (nb)
 		end
 
-end -- class JSON_LINKED_LIST_CONVERTER
+end -- class JSON_ARRAYED_LIST_CONVERTER

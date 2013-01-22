@@ -39,7 +39,7 @@ compatibility is not guranteed for changes in minor numbers!
 
 Currently the only documentation on eJSON is available at:
 
-  http://ejson.origo.ethz.ch/wiki/user_guide
+  https://github.com/eiffelhub/json/wiki/User-guide
 
 5. Requirements and installation
 --------------------------------

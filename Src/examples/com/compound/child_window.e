@@ -75,7 +75,7 @@ create
 
 feature -- Initialization
 
-	make (p: WEL_MDI_FRAME_WINDOW; name: STRING)
+	make (p: WEL_MDI_FRAME_WINDOW; name: READABLE_STRING_GENERAL)
 			-- Create MDI child window with parent `p' and
 			-- title `name', then build associated tree view.
 		local
@@ -83,13 +83,13 @@ feature -- Initialization
 			tvitem: WEL_TREE_VIEW_ITEM
 			tvinss: WEL_TREE_VIEW_INSERT_STRUCT
 			retried: BOOLEAN
-			file_name: FILE_NAME
+			file_name: PATH
 		do
 			if not retried then
 				create tvitem_table.make (5)
-				if is_compound_file (name) then
-					create file_name.make_from_string (name)
-					create storage.make_open_file (file_name, Stgm_share_deny_write)
+				create file_name.make_from_string (name)
+				if is_compound_file_path (file_name) then
+					create storage.make_open_file_path (file_name, Stgm_share_deny_write)
 					mdi_child_window_make (p, name)
 					create tree_view.make (Current, 0, 0, width, height, Tree_view_id)
 					create tvitem.make

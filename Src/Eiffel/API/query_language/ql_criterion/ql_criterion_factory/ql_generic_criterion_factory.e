@@ -130,7 +130,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_NAME_IS_CRI
+	new_name_is_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_NAME_IS_CRI
 			-- New {QL_GENERIC_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -140,7 +140,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_TEXT_CONTAIN_CRI
+	new_text_contain_criterion (a_text: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_TEXT_CONTAIN_CRI
 			-- New {QL_GENERIC_TEXT_CONTAIN_CRI} criterion.
 		require
 			a_text_attached: a_text /= Void

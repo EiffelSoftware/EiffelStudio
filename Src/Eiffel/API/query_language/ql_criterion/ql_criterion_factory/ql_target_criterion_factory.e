@@ -78,7 +78,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_TARGET_NAME_IS_CRI
+	new_name_is_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_TARGET_NAME_IS_CRI
 			-- New {QL_TARGET_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void

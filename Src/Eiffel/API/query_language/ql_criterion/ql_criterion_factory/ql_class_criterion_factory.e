@@ -325,7 +325,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_NAME_IS_CRI
+	new_name_is_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_NAME_IS_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -335,7 +335,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_top_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_HAS_TAG_CRI
+	new_top_indexing_has_tag_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_HAS_TAG_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -345,7 +345,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_bottom_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_HAS_TAG_CRI
+	new_bottom_indexing_has_tag_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_HAS_TAG_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -355,7 +355,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_HAS_TAG_CRI
+	new_indexing_has_tag_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_HAS_TAG_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -365,7 +365,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_top_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_CONTAIN_CRI
+	new_top_indexing_contain_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_CONTAIN_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -375,7 +375,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_bottom_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_CONTAIN_CRI
+	new_bottom_indexing_contain_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_CONTAIN_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -385,7 +385,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_CONTAIN_CRI
+	new_indexing_contain_criterion (a_name: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_CONTAIN_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -415,7 +415,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TEXT_CONTAIN_CRI
+	new_text_contain_criterion (a_text: READABLE_STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TEXT_CONTAIN_CRI
 			-- New {QL_CLASS_TEXT_CONTAIN_CRI} criterion.
 		require
 			a_text_attached: a_text /= Void

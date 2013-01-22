@@ -54,12 +54,14 @@ feature -- Output string
 			is_open_write: is_open_write
 			a_string_not_void: s /= Void
 		do
-			if attached {READABLE_STRING_32} s as s32 then
-				put_string_32 (s32)
-			elseif attached {READABLE_STRING_8} s as s8 then
+			if attached {READABLE_STRING_8} s as s8 then
 				put_string_8 (s8)
+			elseif attached {READABLE_STRING_32} s as s32 then
+				put_string_32 (s32)
 			else
-				put_string_8 (s.as_string_8)
+					-- should not occurs
+				check is_either_string_8_or_string_32: False end
+				put_string_32 (s.as_string_32)
 			end
 		end
 
@@ -79,12 +81,14 @@ feature -- Output escaped string
 			is_open_write: is_open_write
 			a_string_not_void: s /= Void
 		do
-			if attached {READABLE_STRING_32} s as s32 then
-				put_string_32_escaped (s32)
-			elseif attached {READABLE_STRING_8} s as s8 then
+			if attached {READABLE_STRING_8} s as s8 then
 				put_string_8_escaped (s8)
+			elseif attached {READABLE_STRING_32} s as s32 then
+				put_string_32_escaped (s32)
 			else
-				put_string_8_escaped (s.as_string_8)
+					-- should not occurs
+				check is_either_string_8_or_string_32: False end
+				put_string_32_escaped (s.as_string_32)
 			end
 		end
 

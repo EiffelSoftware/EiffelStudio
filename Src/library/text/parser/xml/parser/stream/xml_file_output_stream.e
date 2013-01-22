@@ -84,7 +84,7 @@ feature -- Output
 			n := a_string.count
 			if n >= default_chunk_size then
 				flush
-				target.put_string (a_string)
+				target.put_string (a_string.to_string_8)
 			else
 				if current_chunk.count + n > default_chunk_size then
 					flush

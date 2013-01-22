@@ -9,14 +9,12 @@ class
 inherit
 	HASHABLE
 		redefine
-			is_equal,
-			out
+			is_equal
 		end
 
 	DEBUG_OUTPUT
 		redefine
-			is_equal,
-			out
+			is_equal
 		end
 
 create
@@ -63,6 +61,22 @@ feature -- Access
 	uri: READABLE_STRING_32
 			-- Namespace URI
 
+feature -- Conversion			
+
+	string_representation: STRING_32
+			-- String representation of Current.
+		do
+			create Result.make_from_string (uri)
+		end
+
+	utf_8_string_representation: STRING_8
+			-- UTF-8 String representation of Current.
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := utf.utf_32_string_to_utf_8_string_8 (uri)
+		end
+
 feature -- Element change
 
 	set_ns_prefix (a_ns_prefix: detachable READABLE_STRING_32)
@@ -95,12 +109,6 @@ feature -- Status report
 			-- Hash code of URI
 		do
 			Result := uri.hash_code
-		end
-
-	out: STRING
-			-- Out
-		do
-			Result := uri.as_string_8 -- FIXME: truncated...
 		end
 
 	debug_output: STRING

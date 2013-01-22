@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 
 	source_index: INTEGER
 
-	source: STRING_32
+	source: READABLE_STRING_32
 
 invariant
 	source_attached: source /= Void

@@ -38,14 +38,14 @@ feature -- Parsing
 			end
 		end
 
-	parse_from_string_8 (a_string: STRING_8)
+	parse_from_string_8 (a_string: READABLE_STRING_8)
 			-- Parse string_8 `a_string'
 		require
 			a_string_attached: a_string /= Void
 		deferred
 		end
 
-	parse_from_string_32 (a_string: STRING_32)
+	parse_from_string_32 (a_string: READABLE_STRING_32)
 			-- Parse string_32 `a_string'
 		require
 			a_string_attached: a_string /= Void

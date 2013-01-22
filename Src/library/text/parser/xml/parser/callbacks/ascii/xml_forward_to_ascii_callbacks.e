@@ -44,26 +44,27 @@ feature -- Setting
 
 feature {NONE} -- Conversion
 
-	to_string_8 (s: READABLE_STRING_32): STRING_8
+	to_string_8 (s: READABLE_STRING_32): READABLE_STRING_8
 			-- `s' as compatible STRING_8
 		local
+			s8: STRING_8
 			i, nb: INTEGER_32
 			l_code: like {READABLE_STRING_32}.code
 			h: STRING
 		do
-			if attached {READABLE_STRING_8} s as s8 then
-				Result := s8.as_string_8
+			if attached {READABLE_STRING_8} s as l_string_8 then
+				Result := l_string_8
 			else
 				nb := s.count
-				create Result.make (nb)
+				create s8.make (nb)
 				from
 					i := 1
 				until
 					i > nb
 				loop
 					l_code := s.code (i)
-					if Result.valid_code (l_code) then
-						Result.append_code (l_code)
+					if s8.valid_code (l_code) then
+						s8.append_code (l_code)
 					else
 						-- FIXME: UNICODE/ASCII
 						-- Possibilities
@@ -72,18 +73,19 @@ feature {NONE} -- Conversion
 						-- 3) convert to UTF8 ...
 						-- 4) replace unicode character by %U
 						h := l_code.out
-						Result.grow (nb + h.count + 2)
-						Result.extend ('&')
-						Result.extend ('#')
-						Result.append (h)
-						Result.extend (';')
+						s8.grow (nb + h.count + 2)
+						s8.extend ('&')
+						s8.extend ('#')
+						s8.append (h)
+						s8.extend (';')
 					end
 					i := i + 1
 				end
+				Result := s8
 			end
 		end
 
-	to_detachable_string_8 (s: detachable READABLE_STRING_32): detachable STRING_8
+	to_detachable_string_8 (s: detachable READABLE_STRING_32): detachable READABLE_STRING_8
 		do
 			if s /= Void then
 				Result := to_string_8 (s)

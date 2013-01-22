@@ -235,7 +235,7 @@ feature {NONE} -- Action handler
 		do
 			check not_error_handler_has_error: not error_handler.has_error end
 			l_str := contract_editor.wide_text
-			l_str.prepend (once "check ")
+			l_str.prepend_string_general (once "check ")
 			expression_parser.parse_from_string_32 (l_str, Void)
 			if expression_parser.syntax_error then
 				create l_error.make_standard (interface_messages.e_contract_tool_expression_error)
@@ -278,7 +278,7 @@ invariant
 	contract_tag_is_valid: contract /= Void implies not contract.contract.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

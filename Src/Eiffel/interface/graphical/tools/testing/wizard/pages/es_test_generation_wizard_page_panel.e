@@ -327,14 +327,14 @@ feature {NONE} -- Events
 	on_validate_type (a_input: STRING_32): TUPLE [valid: BOOLEAN; error: detachable STRING_32]
 			-- Called when input of `types' has to be validated.
 		local
-			l_types: STRING
+			l_types: STRING_32
 			l_system: SYSTEM_I
 			l_error: like validate_type
 		do
 			create Result
 			Result.valid := True
 			if not a_input.is_empty then
-				l_types := a_input.to_string_8
+				l_types := a_input
 				l_types.to_upper
 				if not (l_types.has ('!') or l_types.has ('?')) then
 					type_parser.parse_from_string_32 ({STRING_32} "type " + l_types, Void)

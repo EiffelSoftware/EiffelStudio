@@ -289,7 +289,7 @@ feature {NONE} -- Status report
 			l_options := context_class.options
 			check l_options_attached: l_options /= Void end
 
-			l_wrapper.parse_with_option_32 (l_parser, a_license.as_string_32, l_options, True, Void)
+			l_wrapper.parse_with_option_32 (l_parser, a_license, l_options, True, Void)
 			if not l_wrapper.has_error then
 				Result := l_wrapper.ast_node /= Void
 			end
@@ -317,7 +317,7 @@ feature {NONE} -- Basic operations: Modifications
 			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			l_wrapper := eiffel_parser_wrapper
-			l_wrapper.parse_with_option_32 (round_trip_indexing_parser, a_license.as_string_32, context_class.options, True, Void)
+			l_wrapper.parse_with_option_32 (round_trip_indexing_parser, a_license, context_class.options, True, Void)
 			if not l_wrapper.has_error then
 				l_indexing ?= l_wrapper.ast_node
 				l_match_list := l_wrapper.ast_match_list
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

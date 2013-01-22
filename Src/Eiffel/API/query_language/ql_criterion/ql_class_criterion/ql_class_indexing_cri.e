@@ -52,12 +52,14 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 		local
 			l_retried: BOOLEAN
+			l_wrapper: EIFFEL_PARSER_WRAPPER
 		do
 			if not l_retried then
 				if a_item.is_compiled then
 					Result := a_item.class_c.ast
-				else
-					roundtrip_eiffel_parser.parse_class (a_item.class_c)
+				elseif attached a_item.class_i.text as l_class_text then
+					create l_wrapper
+					l_wrapper.parse_with_option (roundtrip_eiffel_parser, l_class_text, a_item.class_i.options, True, Void)
 					Result := roundtrip_eiffel_parser.root_node
 				end
 			end

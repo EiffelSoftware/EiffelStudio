@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: CLASS_I; a_name: STRING)
+	make (a_class: CLASS_I; a_name: STRING_32)
 			-- Create a tree item representing class `a_class' with `a_name' in its context.
 		require
 			a_class_ok: a_class /= Void and then a_class.is_valid
@@ -50,7 +50,7 @@ feature -- Status report
 	data: CLASS_I
 			-- Class represented by `Current'.
 
-	name: STRING
+	name: STRING_32
 			-- Renamed name in the context of this item in the classes tree.
 
 	stone: CLASSI_STONE

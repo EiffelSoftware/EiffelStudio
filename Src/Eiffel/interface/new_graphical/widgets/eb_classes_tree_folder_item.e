@@ -176,7 +176,7 @@ feature -- Status setting
 			conv_class_item: EB_CLASSES_TREE_CLASS_ITEM
 			found: BOOLEAN
 			new_class: EB_CLASSES_TREE_CLASS_ITEM
-			l_name: STRING
+			l_name: STRING_32
 		do
 			from
 				start

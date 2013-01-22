@@ -56,7 +56,7 @@ feature{NONE} -- Initialization
 			a_parent_valid: a_parent.is_group and a_parent.is_valid_domain_item
 		do
 			make_with_parent (a_class, a_parent)
-			is_compiled_internal := True
+			create is_compiled_internal.put (True)
 		ensure
 			class_item_set: conf_class = a_class
 			parent_set: parent = a_parent
@@ -251,9 +251,9 @@ feature -- Status report
 			-- Is Current item compiled?
 		do
 			if is_compiled_internal = Void then
-				is_compiled_internal := is_class_compiled (conf_class)
+				create is_compiled_internal.put (is_class_compiled (conf_class))
 			end
-			Result := is_compiled_internal
+			Result := is_compiled_internal.item
 		end
 
 	is_visible: BOOLEAN
@@ -297,7 +297,7 @@ feature{NONE} -- Implementation
 	name_internal: like name
 			-- Implementation of `name'
 
-	is_compiled_internal: BOOLEAN_REF
+	is_compiled_internal: CELL [BOOLEAN]
 			-- Implementation of `is_compiled'
 
 	text_internal: like text
@@ -335,14 +335,10 @@ feature{NONE} -- Implementation
 			not_compiled: not is_compiled
 		local
 			l_retried: BOOLEAN
-			l_text: STRING
 		do
 			if not l_retried then
-				l_text := class_i.text
-				if l_text /= Void then
-					roundtrip_eiffel_parser.parse_class (class_c)
-					Result := roundtrip_eiffel_parser.root_node.original_text (roundtrip_eiffel_parser.match_list)
-				else
+				Result := class_i.text
+				if Result = Void then
 					Result := ""
 				end
 			end

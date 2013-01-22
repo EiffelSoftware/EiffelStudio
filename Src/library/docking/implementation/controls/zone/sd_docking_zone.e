@@ -132,7 +132,7 @@ feature {NONE} -- For redocker
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Forward pointer motion data to SD_DOCKER_MEDIATOR
 		do
-			if attached docker_mediator as l_docker_mediator then
+			if attached docker_mediator as l_docker_mediator and then l_docker_mediator.is_tracing then
 				l_docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)
 			end
 		end

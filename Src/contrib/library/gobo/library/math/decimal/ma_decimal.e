@@ -237,7 +237,7 @@ feature {NONE} -- Initialization
 			a_decimal_parser_not_void: a_decimal_parser /= Void
 			a_context_not_void: a_context /= Void
 		do
-			if a_decimal_parser.error then
+			if not attached a_decimal_parser.last_parsed as l_last_parsed or else a_decimal_parser.error then
 				if a_context.is_extended then
 					make_nan
 				else
@@ -272,7 +272,7 @@ feature {NONE} -- Initialization
 						exponent := exponent - a_decimal_parser.fractional_part_count
 					end
 					create {MA_DECIMAL_COEFFICIENT_IMP} coefficient.make ((a_context.digits + 1).max (a_decimal_parser.coefficient_count))
-					coefficient.set_from_substring (a_decimal_parser.last_parsed, a_decimal_parser.coefficient_begin, a_decimal_parser.coefficient_end)
+					coefficient.set_from_substring (l_last_parsed, a_decimal_parser.coefficient_begin, a_decimal_parser.coefficient_end)
 					clean_up (a_context)
 				end
 			end
@@ -681,6 +681,7 @@ feature -- Basic operations
 			-- Current decimal to the power `other'
 		do
 				--| TODO
+				Result := nan
 		end
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -949,6 +950,8 @@ feature -- Basic operations
 							Result := negative_infinity
 						end
 					end
+				else
+					Result := nan
 				end
 			else
 				if is_zero or else other.is_zero then
@@ -1021,6 +1024,8 @@ feature -- Basic operations
 					if is_negative then
 						Result.set_negative
 					end
+				else
+					Result := nan
 				end
 			else
 				if other.is_zero then
@@ -1400,6 +1405,8 @@ feature -- Basic operations
 							-- compare (x, +inf) : x < Inf
 						Result := minus_one
 					end
+				else
+					Result := nan
 				end
 			else
 				create operand_a.make_copy (Current)
@@ -1535,6 +1542,8 @@ feature {MA_DECIMAL} -- Basic operations
 						Result := infinity
 					end
 				end
+			else
+				Result := nan
 			end
 		ensure
 			add_special_not_void: Result /= Void
@@ -1582,6 +1591,8 @@ feature {MA_DECIMAL} -- Basic operations
 						Result := infinity
 					end
 				end
+			else
+				Result := nan
 			end
 		ensure
 			subtract_special_not_void: Result /= Void
@@ -2202,6 +2213,7 @@ feature {MA_DECIMAL} -- Basic operations
 		local
 			e_tiny, shared_digits, subnormal_count, count_upto_elimit, saved_digits: INTEGER
 			l_is_zero, l_was_rounded: BOOLEAN
+			l_reason : detachable STRING
 			value: INTEGER
 		do
 			l_is_zero := is_zero
@@ -2209,6 +2221,7 @@ feature {MA_DECIMAL} -- Basic operations
 				ctx.signal (Signal_subnormal, "")
 			else
 				l_was_rounded := ctx.is_flagged (Signal_rounded)
+				l_reason := ctx.reason
 			end
 				-- Rescale to `e_tiny'.
 			e_tiny := ctx.e_tiny
@@ -2271,8 +2284,8 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 				exponent := e_tiny
 				if l_is_zero then
-					if l_was_rounded then
-						ctx.signal (Signal_rounded, ctx.reason)
+					if l_was_rounded and then l_reason /= Void then
+						ctx.signal (Signal_rounded, l_reason)
 					else
 						ctx.reset_flag (Signal_rounded)
 					end
@@ -2321,6 +2334,8 @@ feature {MA_DECIMAL} -- Basic operations
 					else
 						Result := negative_zero
 					end
+				else
+					Result := nan
 				end
 			else
 				if other.is_zero then

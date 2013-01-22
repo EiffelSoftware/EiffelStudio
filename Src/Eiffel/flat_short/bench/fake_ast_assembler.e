@@ -106,11 +106,9 @@ feature {NONE} -- Implementation
 	deferred_content: ROUT_BODY_AS
 			-- Deferred content
 		local
-			l_feat_text: STRING
 			l_routine_as: ROUTINE_AS
 		once
-			l_feat_text := "feature feature_name is deferred end"
-			entity_feature_parser.parse_from_string_32 (l_feat_text, Void)
+			entity_feature_parser.parse_from_string_32 ({STRING_32} "feature feature_name is deferred end", Void)
 			l_routine_as ?= entity_feature_parser.feature_node.body.content
 			Result := l_routine_as.routine_body
 		ensure

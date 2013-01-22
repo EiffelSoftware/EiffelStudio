@@ -337,7 +337,7 @@ feature {NONE} -- Events
 				l_types := a_input.to_string_8
 				l_types.to_upper
 				if not (l_types.has ('!') or l_types.has ('?')) then
-					type_parser.parse_from_string_32 ("type " + l_types, Void)
+					type_parser.parse_from_string_32 ({STRING_32} "type " + l_types, Void)
 					error_handler.wipe_out
 					if attached type_parser.type_node as l_type_as then
 						if test_suite.is_service_available then
@@ -584,7 +584,7 @@ feature {NONE} -- Internationalization
 	e_recursive_generics_not_supported: STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

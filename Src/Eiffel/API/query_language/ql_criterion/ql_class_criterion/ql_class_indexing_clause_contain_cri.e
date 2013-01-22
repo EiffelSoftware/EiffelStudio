@@ -64,15 +64,20 @@ feature{NONE} -- Implementation
 			-- CLASS_AS of `a_item'.
 		local
 			l_retried: BOOLEAN
+			l_wrapper: EIFFEL_PARSER_WRAPPER
 		do
 			if not l_retried then
 				if a_item.is_compiled then
 					Result := a_item.class_c.ast
 					match_list := match_list_server.item (a_item.class_c.class_id)
-				else
-					roundtrip_eiffel_parser.parse_class (a_item.class_c)
+				elseif attached a_item.class_i.text as l_text then
+					create l_wrapper
+					l_wrapper.parse_with_option (roundtrip_eiffel_parser, l_text, a_item.class_i.options, True, Void)
 					Result := roundtrip_eiffel_parser.root_node
 					match_list := roundtrip_eiffel_parser.match_list
+				else
+					Result := Void
+					match_list := Void
 				end
 			end
 		rescue

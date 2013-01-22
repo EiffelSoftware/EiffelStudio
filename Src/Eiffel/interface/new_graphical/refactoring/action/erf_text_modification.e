@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 
 	text: STRING_8
 			-- Text to work on.
-			-- Treat text as bytes stream. Normally UTF-8 encoded.
+			-- Treat text as bytes stream. UTF-8 encoded.
 
 	undo_redo: detachable STRING_8
 			-- Undo/redo informations

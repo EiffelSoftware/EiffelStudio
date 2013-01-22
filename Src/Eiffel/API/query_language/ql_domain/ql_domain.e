@@ -353,7 +353,9 @@ feature -- Set operation
 			l_cursor: CURSOR
 		do
 			create l_other_set.make (other.count)
-			other.content.do_all (agent l_other_set.put)
+			across other.content as l_other_content_item loop
+				l_other_set.put (l_other_content_item.item)
+			end
 			l_cur_content := content
 			l_cursor := l_cur_content.cursor
 			from
@@ -514,7 +516,9 @@ feature{NONE} -- Implementation/Set operations
 			else
 				create l_tester.make (agent are_items_equivalent)
 				create l_item_set.make_with_key_tester (count, l_tester)
-				content.do_all (agent l_item_set.put)
+				across content as l_content_item loop
+					l_item_set.put (l_content_item.item)
+				end
 				l_content := a_other_domain.content
 				l_content2 := a_new_domain.content
 				from
@@ -550,7 +554,9 @@ feature{NONE} -- Implementation/Set operations
 			if not a_other_domain.is_empty then
 				create l_tester.make (agent are_items_equivalent)
 				create l_item_set.make_with_key_tester (count, l_tester)
-				content.do_all (agent l_item_set.put)
+				across content as l_content_item loop
+					l_item_set.put (l_content_item.item)
+				end
 				l_content := a_other_domain.content
 				l_content2 := a_new_domain.content
 				from
@@ -587,7 +593,9 @@ feature{NONE} -- Implementation/Set operations
 			else
 				create l_tester.make (agent are_items_equivalent)
 				create l_item_set.make_with_key_tester (count, l_tester)
-				content.do_all (agent l_item_set.put)
+				across content as l_content_item loop
+					l_item_set.put (l_content_item.item)
+				end
 				l_content := a_other_domain.content
 				l_content2 := a_new_domain.content
 				from
@@ -621,7 +629,9 @@ feature{NONE} -- Implementation/Set operations
 		do
 			create l_hash_set.make (count)
 			l_content := content
-			l_content.do_all (agent l_hash_set.force)
+			across l_content as l_content_item loop
+				l_hash_set.force (l_content_item.item)
+			end
 			from
 				l_domain_content := a_domain.content
 				l_hash_set.start

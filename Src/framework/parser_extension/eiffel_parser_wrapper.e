@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Basic operation
 
-	parse_32 (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_32; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+	parse_32 (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_GENERAL; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
@@ -74,11 +74,13 @@ feature -- Basic operation
 		require
 			a_parser_attached: a_parser /= Void
 			a_text_attached: a_text /= Void
+		local
+			u: UTF_CONVERTER
 		do
-			parse (a_parser, encoding_converter.utf32_to_utf8 (a_text), a_ignore_errors, a_context_class)
+			parse (a_parser, u.utf_32_string_to_utf_8_string_8 (a_text), a_ignore_errors, a_context_class)
 		end
 
-	parse_with_option_32 (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_32; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+	parse_with_option_32 (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_GENERAL; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
@@ -89,8 +91,10 @@ feature -- Basic operation
 		require
 			a_parser_attached: a_parser /= Void
 			a_text_attached: a_text /= Void
+		local
+			u: UTF_CONVERTER
 		do
-			parse_with_option (a_parser, encoding_converter.utf32_to_utf8 (a_text), a_options, a_ignore_errors, a_context_class)
+			parse_with_option (a_parser, u.utf_32_string_to_utf_8_string_8 (a_text), a_options, a_ignore_errors, a_context_class)
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
@@ -182,7 +186,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

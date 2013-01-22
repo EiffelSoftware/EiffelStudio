@@ -23,8 +23,10 @@ inherit
 
 create
 	make_new_doc_file,
+	make_new_doc_file_path,
 	make_temporary_doc_file,
 	make_open_file,
+	make_open_file_path,
 	make_from_other,
 	make_from_pointer
 
@@ -49,6 +51,24 @@ feature {NONE} -- Initialization
 		do
 			initializer := ccom_create_c_storage;
 			create l_string.make (filename)
+			ccom_create_doc_file (initializer, l_string.item, a_mode)
+			item := ccom_item (initializer)
+		ensure
+			compound_file_created: exists
+		end
+
+	make_new_doc_file_path (file_path: PATH; a_mode: INTEGER)
+			-- Create new compound file with path `file_path'
+			-- and mode `a_mode' in file system.
+			-- See class ECOM_STGM for `mode' values.
+		require
+			valid_file_path: file_path /= Void
+			valid_mode: is_valid_stgm (a_mode)
+		local
+			l_string: WEL_STRING
+		do
+			initializer := ccom_create_c_storage;
+			create l_string.make (file_path.name)
 			ccom_create_doc_file (initializer, l_string.item, a_mode)
 			item := ccom_item (initializer)
 		ensure
@@ -81,6 +101,25 @@ feature {NONE} -- Initialization
 		do
 			initializer := ccom_create_c_storage;
 			create l_string.make (filename)
+			ccom_open_root_storage (initializer, l_string.item, a_mode)
+			item := ccom_item (initializer)
+		ensure
+			compound_file_open: exists
+		end
+
+	make_open_file_path (file_path: PATH; a_mode: INTEGER)
+			-- Open existing root compound file with path `file_path'
+			-- and mode `mode' in file system.
+			-- excluding block pointed by `exclude' (can be default_pointer)
+			-- See class ECOM_STGM for `a_mode' values.
+		require
+			valid_file: file_path /= Void and then is_compound_file_path (file_path)
+			valid_mode: is_valid_stgm (a_mode)
+		local
+			l_string: WEL_STRING
+		do
+			initializer := ccom_create_c_storage;
+			create l_string.make (file_path.name)
 			ccom_open_root_storage (initializer, l_string.item, a_mode)
 			item := ccom_item (initializer)
 		ensure

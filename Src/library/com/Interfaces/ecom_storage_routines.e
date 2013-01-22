@@ -22,6 +22,15 @@ feature -- Basic Operations
 			Result := ccom_is_compound_file (initializer_routines, l_string.item) = 1
 		end
 
+	is_compound_file_path (a_path: PATH): BOOLEAN
+			-- Does file `a_name' contain a storage object?
+		local
+			l_string: WEL_STRING
+		do
+			create l_string.make (a_path.name)
+			Result := ccom_is_compound_file (initializer_routines, l_string.item) = 1
+		end
+
 feature {NONE} -- Externals
 
 	ccom_is_compound_file (cpp_obj: POINTER; a_name: POINTER): INTEGER

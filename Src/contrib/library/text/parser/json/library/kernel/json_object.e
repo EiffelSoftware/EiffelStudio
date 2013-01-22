@@ -21,7 +21,9 @@ class
 
 inherit
     JSON_VALUE
-        
+
+	TABLE_ITERABLE [JSON_VALUE, JSON_STRING]
+
 create
     make
 
@@ -41,13 +43,26 @@ feature -- Change Element
         require
             key_not_present: not has_key (key)
         local
-            l_value: detachable JSON_VALUE
+            l_value: like value
         do
             l_value := value
             if l_value = Void then
                 create {JSON_NULL} l_value
             end
             object.extend (l_value, key)
+        end
+
+    replace (value: detachable JSON_VALUE; key: JSON_STRING)
+            -- Assuming there is no item of key `key',
+            -- insert `value' with `key'.
+        local
+            l_value: like value
+        do
+            l_value := value
+            if l_value = Void then
+                create {JSON_NULL} l_value
+            end
+            object.force (l_value, key)
         end
 
 feature -- Access
@@ -93,10 +108,34 @@ feature -- Access
                 t.forth
                 if not t.after then
                     Result.append_character (',')
-                end 
+                end
             end
             Result.append_character ('}')
         end
+
+feature -- Mesurement
+
+	count: INTEGER
+			-- Number of field
+		do
+			Result := object.count
+		end
+
+feature -- Access
+
+	new_cursor: TABLE_ITERATION_CURSOR [JSON_VALUE, JSON_STRING]
+			-- Fresh cursor associated with current structure
+		do
+			Result := object.new_cursor
+		end
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is empty object?
+		do
+			Result := object.is_empty
+		end
 
 feature -- Visitor pattern
 
@@ -122,7 +161,7 @@ feature -- Report
         do
             from
                 object.start
-                Result := object.item_for_iteration.hash_code
+                Result := object.out.hash_code
             until
                 object.off
             loop

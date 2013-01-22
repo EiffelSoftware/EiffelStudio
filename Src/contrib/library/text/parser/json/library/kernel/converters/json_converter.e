@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Conversion
 
-    from_json (j: attached  like to_json): detachable like object
+    from_json (j: attached like to_json): detachable like object
             -- Convert from JSON value. 
 			-- Returns Void if unable to convert
         deferred

@@ -3,7 +3,6 @@ note
     author: "Paul Cohen"
     date: "$Date$"
     revision: "$Revision$"
-    file: "$HeadURL: https://svn.origo.ethz.ch/ejson/branches/POC-converters-factory/test/json_book_converter.e $"
 
 class JSON_BOOK_CONVERTER
 

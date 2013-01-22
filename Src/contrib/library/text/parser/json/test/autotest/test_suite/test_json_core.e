@@ -632,7 +632,7 @@ feature -- Test
             jrep := "%"foo\\bar%""
 			create parser.make_parser (jrep)
 			if attached {JSON_STRING} parser.parse as jstring then
-				assert ("unescaped string %"foo\\bar%" to %"foo\bar%"", jstring.unescaped_string.same_string ("foo\bar"))
+				assert ("unescaped string %"foo\\bar%" to %"foo\bar%"", jstring.unescaped_string_8.same_string ("foo\bar"))
 			end
 
             create js.make_json_from_string_32 ({STRING_32}"%/20320/%/22909/")
@@ -776,6 +776,17 @@ feature -- Test
             	assert ("jrep.is_equal (jo.representation)", jrep.is_equal (jo.representation))
             end
 
+        end
+
+    test_json_object_hash_code
+        local
+            ht: HASH_TABLE [ANY, JSON_VALUE]
+            jo: JSON_OBJECT
+        do
+            create ht.make (1)
+            create jo.make
+            ht.force ("", jo)
+            assert ("ht.has_key (jo)", ht.has_key (jo))
         end
 
     test_json_failed_json_conversion

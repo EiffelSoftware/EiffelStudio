@@ -27,40 +27,42 @@ create
 	make_with_escaped_json
 
 convert
-	make_json ({READABLE_STRING_8, STRING_8, IMMUTABLE_STRING_8})
+	make_json ({READABLE_STRING_8, STRING_8, IMMUTABLE_STRING_8}),
+	make_json_from_string_32 ({READABLE_STRING_32, STRING_32, IMMUTABLE_STRING_32})
 
 feature {NONE} -- Initialization
 
-    make_json (an_item: READABLE_STRING_8)
+    make_json (s: READABLE_STRING_8)
             -- Initialize.
         require
-            item_not_void: an_item /= Void
+            item_not_void: s /= Void
         do
-            make_with_escaped_json (escaped_json_string (an_item))
+            make_with_escaped_json (escaped_json_string (s))
         end
 
-    make_json_from_string_32 (an_item: READABLE_STRING_32)
-            -- Initialize.
+    make_json_from_string_32 (s: READABLE_STRING_32)
+            -- Initialize from STRING_32 `s'.
         require
-            item_not_void: an_item /= Void
+            item_not_void: s /= Void
         do
-            make_with_escaped_json (escaped_json_string_32 (an_item))
+            make_with_escaped_json (escaped_json_string_32 (s))
         end
 
-    make_with_escaped_json (an_item: READABLE_STRING_8)
+    make_with_escaped_json (s: READABLE_STRING_8)
             -- Initialize with an_item already escaped
         require
-            item_not_void: an_item /= Void
+            item_not_void: s /= Void
         do
-            item := an_item
+            item := s
         end
 
 feature -- Access
 
     item: STRING
-            -- Contents
+            -- Contents with escaped entities if any
 
-	unescaped_string: STRING_8
+	unescaped_string_8: STRING_8
+			-- Unescaped string from `item'
 		local
 			s: like item
 			i, n: INTEGER
@@ -106,6 +108,7 @@ feature -- Access
 		end
 
 	unescaped_string_32: STRING_32
+			-- Unescaped string 32 from `item'
 		local
 			s: like item
 			i, n: INTEGER
@@ -154,8 +157,10 @@ feature -- Access
 		end
 
     representation: STRING
+			-- String representation of `item' with escaped entities if any
         do
-            Result := "%""
+            create Result.make (item.count + 2)
+            Result.append_character ('%"')
             Result.append (item)
             Result.append_character ('%"')
         end
@@ -175,13 +180,13 @@ feature -- Comparison
             -- Is JSON_STRING  made of same character sequence as `other'
             -- (possibly with a different capacity)?
         do
-            Result := item.is_equal (other.item)
+            Result := item.same_string (other.item)
         end
 
 feature -- Change Element
 
     append (a_string: STRING)
-            -- Add an_item
+            -- Add a_string
         require
             a_string_not_void: a_string /= Void
         do
@@ -207,6 +212,7 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	is_hexadecimal (s: READABLE_STRING_8): BOOLEAN
+			-- Is `s' an hexadecimal value?	
 		do
 			Result := across s as scur all scur.item.is_hexa_digit end
 		end
@@ -318,6 +324,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-    value_not_void: item /= Void
+    item_not_void: item /= Void
 
 end

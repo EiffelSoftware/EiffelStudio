@@ -77,7 +77,6 @@ feature -- Process operations
 			elseif has_detached_console then
 				l_flag := detached_process
 			end
-			l_flag := l_flag + create_unicode_environment
 			spawn_with_flags (a_cmd, a_working_directory, l_flag)
 			l_success := file_handle.close (child_input)
 			l_success := file_handle.close (child_output)
@@ -439,7 +438,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

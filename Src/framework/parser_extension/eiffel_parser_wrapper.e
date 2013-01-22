@@ -19,8 +19,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_ENCODING_CONVERTER
-
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 feature -- Access

@@ -20,7 +20,7 @@ inherit
 
 feature -- Basic operations
 
-	translation (a_string: READABLE_STRING_GENERAL): attached STRING_32
+	translation (a_string: READABLE_STRING_GENERAL): STRING_32
 			-- Translation of `a_string' in locale
 			--
 			-- `a_string': String to translate
@@ -31,7 +31,7 @@ feature -- Basic operations
 			Result := translation_in_context (a_string, Void)
 		end
 
-	plural_translation (a_singular: READABLE_STRING_GENERAL; a_plural: READABLE_STRING_GENERAL; a_plural_number: INTEGER): attached STRING_32
+	plural_translation (a_singular: READABLE_STRING_GENERAL; a_plural: READABLE_STRING_GENERAL; a_plural_number: INTEGER): STRING_32
 			-- Translation of `a_singular' or `a_plural' in locale depending on `a_plural_number'
 			--
 			-- `a_singular': String to translate if singular is used
@@ -46,7 +46,7 @@ feature -- Basic operations
 			Result := plural_translation_in_context (a_singular, a_plural, Void, a_plural_number)
 		end
 
-	translation_in_context (a_string: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): attached STRING_32
+	translation_in_context (a_string: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
 			-- Translation of `a_string' in locale
 			--
 			-- `a_string': String to translate
@@ -54,7 +54,7 @@ feature -- Basic operations
 		require
 			a_string_attached: a_string /= Void
 		do
-			if attached {STRING_32} locale.translation_in_context (a_string.as_string_8, a_context) as l_result then
+			if attached locale.translation_in_context (a_string, a_context) as l_result then
 				Result := l_result
 			else
 				check False end
@@ -62,7 +62,7 @@ feature -- Basic operations
 			end
 		end
 
-	plural_translation_in_context (a_singular: READABLE_STRING_GENERAL; a_plural: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL; a_plural_number: INTEGER): attached STRING_32
+	plural_translation_in_context (a_singular: READABLE_STRING_GENERAL; a_plural: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL; a_plural_number: INTEGER): STRING_32
 			-- Translation of `a_singular' or `a_plural' in locale depending on `a_plural_number'
 			--
 			-- `a_singular': String to translate if singular is used
@@ -74,7 +74,7 @@ feature -- Basic operations
 			a_plural_attached: a_plural /= Void
 			a_plural_number_non_negative: a_plural_number >= 0
 		do
-			if attached {STRING_32} locale.plural_translation_in_context (a_singular.as_string_8, a_plural.as_string_8, a_context, a_plural_number) as l_result then
+			if attached locale.plural_translation_in_context (a_singular, a_plural, a_context, a_plural_number) as l_result then
 				Result := l_result
 			else
 				check False end
@@ -82,7 +82,7 @@ feature -- Basic operations
 			end
 		end
 
-	formatted_translation (a_string: READABLE_STRING_GENERAL; a_values: TUPLE): attached STRING_32
+	formatted_translation (a_string: READABLE_STRING_GENERAL; a_values: TUPLE): STRING_32
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders in the form of '$1'
@@ -99,7 +99,7 @@ feature -- Basic operations
 			a_string_attached: a_string /= Void
 			a_values_attached: a_values /= Void
 		do
-			if attached {STRING_32} locale.formatted_string (a_string.as_string_8, a_values) as l_result then
+			if attached locale.formatted_string (a_string, a_values) as l_result then
 				Result := l_result
 			else
 				check False end
@@ -108,7 +108,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

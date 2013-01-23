@@ -177,15 +177,12 @@ feature -- Basic Operations
 		require
 			file_no_void: f /= Void
 			valid_file: f.exists and then f.is_readable and then f.is_plain
-		local
-			filename: FILE_NAME
 		do
 			f.open_read
 			f.read_stream (f.count)
 			f.close
 			update_save_symbol
-			create filename.make_from_string (f.name)
-			set_file_name (filename)
+			set_file_name (f.path.name)
 			set_last_saving_date (f.date)
 			reset_stone
 		ensure

@@ -751,7 +751,7 @@ feature -- Save/Restore
 			create root.make_root (create {XML_DOCUMENT}.make, "VIEW", xml_namespace)
 			view_output := xml_element (root)
 			diagram_output.root_element.force_first (view_output)
-			Xml_routines.save_xml_document (ptf.name, diagram_output)
+			Xml_routines.save_xml_document_with_path (ptf.path, diagram_output)
 		end
 
 	retrieve (f: RAW_FILE)

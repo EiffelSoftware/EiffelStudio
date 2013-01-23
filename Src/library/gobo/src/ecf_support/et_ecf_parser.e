@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		require
 			application_target_ok: application_target /= Void
 		local
-			l_version: HASH_TABLE [CONF_VERSION, STRING]
+			l_version: STRING_TABLE [CONF_VERSION]
 			l_plat: PLATFORM
 			l_platform: INTEGER
 			l_build: INTEGER
@@ -246,13 +246,13 @@ feature {NONE} -- Implementation
 			application_target_not_void: application_target /= Void
 		local
 			l_target: CONF_TARGET
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_clusters: STRING_TABLE [CONF_CLUSTER]
 			l_cluster: CONF_CLUSTER
 			l_state: CONF_STATE
 			l_et_clusters: ET_ECF_CLUSTERS
 			l_et_cluster: ET_ECF_CLUSTER
 		do
-			create last_system.make (last_conf_system.name, last_conf_system.file_name)
+			create last_system.make (last_conf_system.name.as_string_8_conversion, last_conf_system.file_name.as_string_8_conversion)
 			l_et_clusters := ast_factory.new_clusters
 			l_state := state
 
@@ -297,9 +297,9 @@ feature {NONE} -- Implementation
 
 				-- Create a universe from the clusters
 			last_system.set_clusters (l_et_clusters)
-			last_system.set_system_name (application_target.system.name)
-			last_system.set_root_class_name (application_target.root.class_type_name)
-			last_system.set_creation_procedure_name (application_target.root.feature_name)
+			last_system.set_system_name (application_target.system.name.as_string_8_conversion)
+			last_system.set_root_class_name (application_target.root.class_type_name.as_string_8_conversion)
+			last_system.set_creation_procedure_name (application_target.root.feature_name.as_string_8_conversion)
 		ensure
 			last_system_set: last_system /= Void
 		end
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			l_file_rule: CONF_FILE_RULE
 			l_excludes, l_includes: DS_HASH_SET [STRING_8]
 		do
-			Result := ast_factory.new_cluster (a_cluster.name, a_cluster.location.evaluated_directory, last_system)
+			Result := ast_factory.new_cluster (a_cluster.name.as_string_8_conversion, a_cluster.location.evaluated_directory.name.as_string_8_conversion, last_system)
 			l_file_rule := a_cluster.active_file_rule (state)
 			if l_file_rule.exclude /= Void then
 					-- Perform conversion from SEARCH_TABLE to DS_HASH_SET.
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 				until
 					l_file_rule.exclude.after
 				loop
-					l_excludes.put (l_file_rule.exclude.item_for_iteration)
+					l_excludes.put (l_file_rule.exclude.item_for_iteration.as_string_8_conversion)
 					l_file_rule.exclude.forth
 				end
 			end
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 				until
 					l_file_rule.include.after
 				loop
-					l_includes.put (l_file_rule.include.item_for_iteration)
+					l_includes.put (l_file_rule.include.item_for_iteration.as_string_8_conversion)
 					l_file_rule.include.forth
 				end
 			end

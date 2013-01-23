@@ -701,9 +701,7 @@ feature -- Features info
 		local
 			p: PAIR [INTEGER, STRING]
 		do
-			create p
-			p.set_first (type_id)
-			p.set_second (name)
+			create p.make (type_id, name)
 			current_parameters.force (p)
 			debug ("JVM_GEN2")
 				print ("; ")

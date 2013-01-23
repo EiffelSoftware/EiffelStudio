@@ -67,12 +67,12 @@ feature -- Properties
 	file_name: like {ERROR}.file_name
 			-- File associated with `file'.
 		do
-			Result := file.name.twin
+			Result := file.path.name
 		end
 
 	stone_signature: STRING_32
 		do
-			Result := file.name
+			Result := file.path.name
 		end
 
 	history_name: STRING_32
@@ -95,7 +95,7 @@ feature -- Access
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
-			Result := interface_names.l_not_eiffel_class_file (stone_signature, file.name)
+			Result := interface_names.l_not_eiffel_class_file (stone_signature, file.path.name)
 		end
 
 	is_valid: BOOLEAN
@@ -135,7 +135,7 @@ feature -- Access
 --	actual_class_i: CLASS_I
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

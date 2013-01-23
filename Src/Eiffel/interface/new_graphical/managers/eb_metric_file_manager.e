@@ -114,8 +114,7 @@ feature -- File creation
 			end
 		rescue
 			retried := True
-			create error_dialog.make_with_text ("Unable to write file:%N"
-								+ metric_file.name )
+			create error_dialog.make_with_text ({STRING_32} "Unable to write file:%N" + metric_file.path.name )
 			error_dialog.show
 			retry
 		end

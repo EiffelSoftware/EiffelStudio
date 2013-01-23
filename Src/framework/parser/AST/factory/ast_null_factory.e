@@ -94,7 +94,7 @@ feature -- Buffer operation
 		do
 		end
 
-	new_string (a_count: INTEGER): STRING
+	new_string (a_count: INTEGER): detachable STRING
 		do
 		end
 
@@ -242,11 +242,11 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
 		do
 		end
 
-	new_semicolon_symbol_as (a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
+	new_semicolon_symbol_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
 			-- New symbol AST node for ";"
 		do
 		end
@@ -256,7 +256,7 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_keyword_as_without_extending_list (a_code:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
+	new_keyword_as_without_extending_list (a_code:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node, but don't extend `internal_match_list'.
 		do
 		end
@@ -906,7 +906,7 @@ feature -- Access
 
 	new_loop_as (t: detachable ITERATION_AS; f: detachable EIFFEL_LIST [INSTRUCTION_AS]; i: detachable EIFFEL_LIST [TAGGED_AS];
 			v: VARIANT_AS; s: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS];
-			e, f_as, i_as, u_as, l_as: KEYWORD_AS): LOOP_AS
+			e, f_as, i_as, u_as, l_as: KEYWORD_AS): detachable LOOP_AS
 
 			-- New LOOP AST node
 		do

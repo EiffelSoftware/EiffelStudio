@@ -93,12 +93,12 @@ feature -- Access
 
 feature -- Update
 
-	set_workbench_build (a_bool: BOOLEAN)
-			-- Set if we do a workbench build.
+	set_finalize_mode (a_bool: BOOLEAN)
+			-- Set if we do a finalization build.
 		do
-			is_workbench_build := a_bool
+			is_workbench_build := not a_bool
 		ensure
-			workbench_build_set: is_workbench_build = a_bool
+			workbench_build_set: is_workbench_build = not a_bool
 		end
 
 	set_compiler_version (a_version: like compiler_version)

@@ -18,13 +18,15 @@ class
 	EIFFEL_MAKE
 
 inherit
-	ARGUMENTS
+	ARGUMENTS_32
 
 	THREAD_CONTROL
 
 	EXCEPTIONS
 
 	PROCESS_FACTORY
+
+	LOCALIZED_PRINTER
 
 create
 	make
@@ -37,7 +39,7 @@ feature -- Initialization
 				-- By default initialize number of CPU to 1.
 			create actions.make
 			create failed_actions.make
-			create {ARRAYED_LIST [STRING]} make_flags.make (0)
+			create {ARRAYED_LIST [IMMUTABLE_STRING_32]} make_flags.make (0)
 
 			parse_arguments
 			if not has_error then
@@ -62,7 +64,7 @@ feature -- Status report
 	make_utility: STRING
 			-- Name/path of `make' utility.
 
-	make_flags: LIST [STRING]
+	make_flags: LIST [READABLE_STRING_32]
 			-- Flags for `make_utility'.
 
 	actions, failed_actions: MT_ACTION_QUEUE
@@ -73,10 +75,10 @@ feature {NONE} -- Implementation
 	parse_arguments
 			-- Parse arguments and report errors, if any.
 		local
-			l_nb_cpu, l_make, l_make_flags, l_target: STRING
+			l_nb_cpu, l_make, l_make_flags, l_target: IMMUTABLE_STRING_32
 			l_has_error: BOOLEAN
 			l_dir: DIRECTORY
-			l_help: STRING
+			l_help: IMMUTABLE_STRING_32
 			l_index: INTEGER
 		do
 			l_help := separate_word_option_value ("help")
@@ -193,7 +195,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			io.error.put_string ("Command line was: %N")
-			io.error.put_string (command_line)
+			localized_print (command_line)
 			io.error.put_string ("%N%NExpected: eiffel_make [-target DIR] [-make MAKE] [-make_flags FLAGS] [-cpu N]%N%N%
 				%Default option for make is  : `nmake'. %N%
 				%Default option for make_flags is: `-s -nologo'.%N%
@@ -317,7 +319,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compile_directory (a_dir: PATH; l_flags: LIST [STRING]): BOOLEAN
+	compile_directory (a_dir: PATH; l_flags: LIST [READABLE_STRING_32]): BOOLEAN
 			-- Compile in `a_dir'.
 		require
 			target_not_void: target /= Void
@@ -396,7 +398,7 @@ invariant
 	make_flags_not_void: make_flags /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

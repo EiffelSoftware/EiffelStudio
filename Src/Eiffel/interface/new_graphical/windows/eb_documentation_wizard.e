@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 
 	add_groups_to_cluster_grid (ie: like cluster_include; cg: LIST [CONF_GROUP]; a_exclusion: LIST [STRING_32]; a_parent: detachable CONF_GROUP; rec: BOOLEAN)
 		local
-			cg_name: STRING
+			cg_name: STRING_32
 			g: detachable CONF_GROUP
 			p: detachable CONF_GROUP
 			subs: detachable LIST [CONF_GROUP]
@@ -916,7 +916,7 @@ feature {NONE} -- Implementation
 		-- Nicest value for height of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

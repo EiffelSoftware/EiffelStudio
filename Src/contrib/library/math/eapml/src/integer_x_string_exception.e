@@ -11,10 +11,14 @@ class
 inherit
 	DEVELOPER_EXCEPTION
 		redefine
-			internal_meaning
+			tag
 		end
 
-feature
-	internal_meaning: STRING = "Erorr parsing string as INTEGER_X"
+feature -- Access
+
+	tag: IMMUTABLE_STRING_32
+		once
+			create Result.make_from_string_8 ("Error parsing string as INTEGER_X.")
+		end
 
 end

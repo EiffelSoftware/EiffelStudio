@@ -11,9 +11,14 @@ class
 inherit
 	DEVELOPER_EXCEPTION
 		redefine
-			internal_meaning
+			tag
 		end
 
-feature
-	internal_meaning: STRING = "Divide by zero"
+feature -- Access
+
+	tag: IMMUTABLE_STRING_32
+		once
+			create Result.make_from_string_8 ("Divide by zero.")
+		end
+
 end

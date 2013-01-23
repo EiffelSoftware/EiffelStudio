@@ -136,7 +136,7 @@ feature -- Leaf Nodes
 			end
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)

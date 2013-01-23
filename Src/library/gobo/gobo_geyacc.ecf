@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_all" uuid="CCB152F0-2D87-42AF-AD4A-0D5514133C1A" library_target="gobo">
-	<target name="gobo">
-		<description>gobo library</description>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_parse" uuid="83AE3463-E9D0-4556-AA38-58E946D12592" library_target="gobo_parse">
+	<target name="gobo_parse">
+		<description>gobo parse library</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
@@ -19,21 +19,21 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_argument" location="gobo_argument.ecf"/>
-		<library name="gobo_gelex" location="gobo_gelex.ecf"/>
-		<library name="gobo_geyacc" location="gobo_geyacc.ecf"/>
+		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
-		<library name="gobo_lexical" location="gobo_lexical.ecf"/>
-		<library name="gobo_math" location="gobo_math.ecf"/>
 		<library name="gobo_parse" location="gobo_parse.ecf"/>
+		<library name="gobo_lexical" location="gobo_lexical.ecf"/>
 		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
-		<library name="gobo_regexp" location="gobo_regexp.ecf"/>
-		<library name="gobo_string" location="gobo_string.ecf"/>
 		<library name="gobo_structure" location="gobo_structure.ecf"/>
-		<library name="gobo_time" location="gobo_time.ecf"/>
-		<library name="gobo_tools" location="gobo_tools.ecf"/>
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
-		<library name="gobo_xml" location="gobo_xml.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="override_generated" location="override\generated\library\parse\" recursive="true"/>
+		<cluster name="parse" location="$ISE_LIBRARY\contrib\library\gobo\library\parse\" recursive="true">
+			<option namespace="Parse">
+			</option>
+			<file_rule>
+				<exclude>/skeleton$</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

@@ -15,15 +15,18 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/Documentation$</exclude>
 		</file_rule>
-		<option namespace="Gobo.Library">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="Gobo.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="gobo_kernel" location="gobo_kernel-safe.ecf"/>
 		<cluster name="parse" location="$ISE_LIBRARY\contrib\library\gobo\library\parse\skeleton" recursive="true">
 			<option namespace="Parse">
 			</option>
+			<file_rule>
+				<exclude>/yy_old_parser_skeleton.e$</exclude>
+			</file_rule>
 		</cluster>
 	</target>
 </system>

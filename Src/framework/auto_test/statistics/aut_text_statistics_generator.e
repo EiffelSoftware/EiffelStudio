@@ -25,9 +25,6 @@ inherit
 	AUT_SHARED_FILE_SYSTEM_ROUTINES
 		export {NONE} all end
 
-	UT_SHARED_TEMPLATE_EXPANDER
-		export {NONE} all end
-
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 

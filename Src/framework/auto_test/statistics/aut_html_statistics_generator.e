@@ -25,9 +25,6 @@ inherit
 	AUT_SHARED_FILE_SYSTEM_ROUTINES
 		export {NONE} all end
 
-	UT_SHARED_TEMPLATE_EXPANDER
-		export {NONE} all end
-
 	KL_SHARED_STREAMS
 		export {NONE} all end
 
@@ -945,6 +942,12 @@ feature {NONE} -- Implementation constants
 	explain_link_template: STRING = "[
 <a href="JavaScript: explain ('${1}')">${2}</a>
 ]"
+
+	template_expander: AUT_TEMPLATE_EXPANDER
+			-- Shared template expander
+		once
+			create Result.make
+		end
 
 invariant
 

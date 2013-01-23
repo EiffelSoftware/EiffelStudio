@@ -98,7 +98,7 @@ feature -- Attributes
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Attributes
 
-	access_name: STRING
+	access_name: detachable STRING
 		do
 			-- Void because a Precursor call is like a client call but without
 			-- a client, so there is no variable which is accessing the feature.

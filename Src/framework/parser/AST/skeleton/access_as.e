@@ -12,14 +12,14 @@ inherit
 
 feature -- Properties
 
-	access_name_32: STRING_32
+	access_name_32: detachable STRING_32
 		do
 			if attached access_name as l_name then
 				Result := encoding_converter.utf8_to_utf32 (l_name)
 			end
 		end
 
-	access_name_8: STRING
+	access_name_8: detachable STRING
 			-- Expose UTF-8 access name.
 			-- This is useful and faster as a key.
 		do
@@ -33,7 +33,7 @@ feature -- Properties
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	access_name: STRING
+	access_name: detachable STRING
 		deferred
 		end
 

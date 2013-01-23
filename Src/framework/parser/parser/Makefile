@@ -15,8 +15,6 @@ all: eiffel_scanner.e eiffel_parser.e
 
 eiffel_scanner.e: eiffel.l
 	$(GOBO_LEX) -o $@ $?
-	$(SYNTAX_UPDATER) .
 
 eiffel_parser.e: eiffel.y
 	$(GOBO_YACC) -t EIFFEL_TOKENS -o $@ $?
-	$(SYNTAX_UPDATER) .

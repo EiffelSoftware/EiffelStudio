@@ -59,6 +59,8 @@ class
 inherit
 	ANY
 
+	PREFERENCES_VERSIONS
+
 	XML_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all
@@ -241,7 +243,28 @@ feature -- Access
 			Result := preferences_storage.location
 		end
 
+	version: IMMUTABLE_STRING_32
+			-- Version format used by storage.
+		do
+			if attached preferences_storage.version as l_version then
+				Result := l_version
+			else
+				Result := version_1_0
+			end
+		end
+
 feature -- Change
+
+	set_version (a_version: like version)
+			-- Set `version' with `a_version'.
+		require
+			a_version_not_void: a_version /= Void
+			a_version_valid: valid_version (a_version)
+		do
+			preferences_storage.set_version (a_version)
+		ensure
+			version_set: version.same_string (a_version)
+		end
 
 	report_error (m: READABLE_STRING_GENERAL)
 		local

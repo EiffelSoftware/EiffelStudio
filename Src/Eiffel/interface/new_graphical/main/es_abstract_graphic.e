@@ -45,6 +45,8 @@ inherit
 			{NONE} all
 		end
 
+	PREFERENCES_VERSIONS
+
 feature {NONE} -- Initialization
 
 	initialize_services
@@ -112,6 +114,7 @@ feature {NONE} -- Initialization
 				-- Initialization of compiler resources.
 			create preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences.name, eiffel_layout.platform_preferences.name>>, eiffel_layout.eiffel_preferences)
+			preference_access.set_version (version_2_0)
 			create l_studio_preferences.make (preference_access, True, True)
 			l_compiler_setting.set_preferences (l_studio_preferences)
 
@@ -356,7 +359,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

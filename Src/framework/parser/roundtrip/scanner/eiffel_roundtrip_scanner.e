@@ -44,7 +44,7 @@ feature -- Scann
 			-- Scan `input_buffer' until end of file is found
 			-- or an error occurs.
 		local
-			l_as: AST_EIFFEL
+			l_as: detachable AST_EIFFEL
 			l_error_level: NATURAL_32
 		do
 			l_error_level := error_handler.error_level
@@ -120,7 +120,7 @@ feature
 	process_id_as
 			-- Process current token which is an identifier
 		local
-			l_as: ID_AS
+			l_as: detachable ID_AS
 		do
 			l_as := ast_factory.new_filled_id_as (Current)
 		end

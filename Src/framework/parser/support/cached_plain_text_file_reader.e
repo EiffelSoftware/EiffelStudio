@@ -260,7 +260,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 	last_read_line_non_negative: last_read_line >= 0
 	last_read_position_non_negative: last_read_position >= 0
-	contents_has_eol: internal_contents /= Void implies internal_contents.is_empty or else internal_contents.item (internal_contents.count) = '%N'
+	contents_has_eol: attached internal_contents as l_contents implies l_contents.is_empty or else l_contents.item (l_contents.count) = '%N'
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

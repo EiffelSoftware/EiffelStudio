@@ -121,7 +121,7 @@ feature -- Settings
 			a_list_not_void: a_list /= Void
 		do
 			internal_match_list := a_list
-			end_index := internal_match_list.count
+			end_index := a_list.count
 		ensure
 			match_list_set: internal_match_list = a_list
 		end
@@ -303,7 +303,7 @@ feature
 			safe_process (l_as.agent_keyword (match_list))
 			if l_as.target /= Void then
 				safe_process (l_as.lparan_symbol (match_list))
-				l_as.target.process (Current)
+				safe_process (l_as.target)
 				safe_process (l_as.rparan_symbol (match_list))
 				safe_process (l_as.dot_symbol (match_list))
 			end
@@ -796,8 +796,8 @@ feature
 				safe_process (l_as.name)
 			else
 				safe_process (l_as.lcurly_symbol (match_list))
-				l_as.name.process (Current)
-				l_as.type.process (Current)
+				safe_process (l_as.name)
+				safe_process (l_as.type)
 				l_as.expression.process (Current)
 			end
 		end
@@ -932,6 +932,7 @@ feature
 		local
 			l_until: detachable KEYWORD_AS
 			l_variant_processing_after: BOOLEAN
+			l_variant_part: detachable VARIANT_AS
 		do
 			safe_process (l_as.iteration)
 			safe_process (l_as.from_keyword (match_list))
@@ -941,7 +942,8 @@ feature
 				-- Special code to handle the old or new ordering of the `variant'
 				-- clause in a loop.
 			l_until := l_as.until_keyword (match_list)
-			if attached l_as.variant_part as l_variant_part and l_until /= Void then
+			l_variant_part := l_as.variant_part
+			if l_variant_part /= Void and l_until /= Void then
 				if l_variant_part.start_position > l_until.start_position then
 					l_variant_processing_after := True
 				else
@@ -954,8 +956,8 @@ feature
 			safe_process (l_as.stop)
 			safe_process (l_as.loop_keyword (match_list))
 			safe_process (l_as.compound)
-			if l_variant_processing_after then
-				l_as.variant_part.process (Current)
+			if l_variant_part /= Void and l_variant_processing_after then
+				l_variant_part.process (Current)
 			end
 			safe_process (l_as.end_keyword)
 		end

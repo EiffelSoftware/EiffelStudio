@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (l: like left; r: like right; k_as, s_as: KEYWORD_AS)
+	make (l: like left; r: like right; k_as, s_as: detachable KEYWORD_AS)
 		require
 			l_not_void: l /= Void
 			r_not_void: r /= Void

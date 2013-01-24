@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			ast_factory.set_parser (Current)
 		ensure
 			ast_factory_set: ast_factory = a_factory
+			ast_factory_set_with_parser: ast_factory.parser = Current
 		end
 
 feature -- Initialization
@@ -463,7 +464,7 @@ feature {NONE} -- Implementation
 			else
 				last_detachable_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
 				if has_syntax_warning then
-					if last_detachable_id_as_value /= Void and then attached last_detachable_id_as_value.name as l_name then
+					if attached last_detachable_id_as_value as l_value and then attached l_value.name as l_name then
 						message := once "Keyword `" + l_name
 						message.append_string ("' is used as identifier.")
 					else
@@ -473,11 +474,11 @@ feature {NONE} -- Implementation
 						create {SYNTAX_WARNING}.make (token_line (keyword), token_column (keyword),
 							filename, message))
 				end
-				if last_detachable_id_as_value /= Void then
+				if attached last_detachable_id_as_value as l_value then
 					if is_lower then
-						last_detachable_id_as_value.to_lower
+						l_value.to_lower
 					else
-						last_detachable_id_as_value.to_upper
+						l_value.to_upper
 					end
 				end
 			end
@@ -501,7 +502,7 @@ feature {NONE} -- Implementation
 	process_simple_string_as (a_token: INTEGER)
 			-- Set `last_string_as_value' accordingly to the current scanner input of a manifest string and set `last_token' with `a_token'
 		local
-			l_str: STRING
+			l_str: detachable STRING
 			n: INTEGER
 		do
 			n := text_count
@@ -685,7 +686,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

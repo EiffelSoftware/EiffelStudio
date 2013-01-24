@@ -45,23 +45,23 @@ feature -- Comparison
 			i: INTEGER;
 			txt, other_item: like item
 		do
-			if other /= Void then
-				from
-					i := 1
-				until
-					different or else i > count or else i > other.count
-				loop
-					txt := i_th (i);
-					other_item := other.i_th (i);
-					different := not (txt.is_equal (other_item))
-					i := i + 1
-				end;
+			from
+				i := 1
+			until
+				different or else i > count or else i > other.count
+			loop
+				txt := i_th (i);
+				other_item := other.i_th (i);
+				different := not (txt.is_equal (other_item))
+				if different then
+						-- Let's compute the order
+					Result := txt < other_item
+				end
+				i := i + 1
 			end;
 
 			if not different then
 				Result := count < other.count
-			else
-				Result := txt < other_item
 			end;
 		end;
 
@@ -70,17 +70,15 @@ feature -- Comparison
 		local
 			i : INTEGER;
 		do
-			if other /= void then
-				if other.count = count then
-					Result := True;
-					from
-						i := 1
-					until
-						not Result or else i > count
-					loop
-						Result := (i_th (i)).is_equal (other.i_th (i));
-						i := i + 1
-					end;
+			if other.count = count then
+				Result := True;
+				from
+					i := 1
+				until
+					not Result or else i > count
+				loop
+					Result := (i_th (i)).is_equal (other.i_th (i));
+					i := i + 1
 				end;
 			end;
 		end;

@@ -89,11 +89,11 @@ feature -- Roundtrip/Token
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if target /= Void then
-					Result := target.first_token (a_list)
+				if attached target as l_target then
+					Result := l_target.first_token (a_list)
 				end
-				if Result = Void or else Result.is_null then
-					Result := feature_name.first_token (a_list)
+				if (Result = Void or else Result.is_null) and then attached feature_name as l_name then
+					Result := l_name.first_token (a_list)
 				end
 			elseif agent_keyword_index /= 0 then
 				Result := agent_keyword (a_list)
@@ -103,16 +103,16 @@ feature -- Roundtrip/Token
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if operands /= Void then
-					Result := operands.last_token (a_list)
-				else
-					Result := feature_name.last_token (a_list)
+				if attached operands as l_operands then
+					Result := l_operands.last_token (a_list)
+				elseif attached feature_name as l_name then
+					Result := l_name.last_token (a_list)
 				end
 			else
-				if internal_operands /= Void then
-					Result := internal_operands.last_token (a_list)
-				else
-					Result := feature_name.last_token (a_list)
+				if attached internal_operands as l_operands then
+					Result := l_operands.last_token (a_list)
+				elseif attached feature_name as l_name then
+					Result := l_name.last_token (a_list)
 				end
 			end
 		end

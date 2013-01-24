@@ -37,8 +37,10 @@ feature -- Access
 		do
 			if i = 1 then
 				Result := first
+			elseif attached area as l_area then
+				Result := l_area.item (i - 2)
 			else
-				Result := area.item (i - 2)
+				check False end
 			end
 		end
 
@@ -58,8 +60,8 @@ feature -- Status report
 	count: INTEGER
 			-- Number of routine IDs.
 		do
-			if area /= Void then
-				Result := 1 + area.count
+			if attached area as l_area then
+				Result := 1 + l_area.count
 					-- `first' plus items in 'area'
 			else
 				if first /= Dead_value then
@@ -177,8 +179,8 @@ feature -- Duplication
 		do
 			if other /= Current then
 				first := other.first
-				if other.area /= Void then
-					area := other.area.twin
+				if attached other.area as l_other_area then
+					area := l_other_area.twin
 				else
 					area := Void
 				end
@@ -224,17 +226,21 @@ feature -- Change
 			-- present.
 		require
 			a_id_positive: a_id >= 0
+		local
+			l_area: like area
 		do
 				-- id `a_id' is not present in set.
 			if first = Dead_value then
 				first := a_id
 			else
-				if area /= Void then
-					area := area.aliased_resized_area_with_default (0, area.count + 1)
+				l_area := area
+				if l_area /= Void then
+					l_area := l_area.aliased_resized_area_with_default (0, l_area.count + 1)
 				else
-					create area.make_filled (0, 1)
+					create l_area.make_filled (0, 1)
 				end
-				area.put (a_id, area.count - 1)
+				l_area.put (a_id, l_area.count - 1)
+				area := l_area
 			end
 		ensure
 			inserted: has (a_id)

@@ -70,7 +70,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_sign_symbol (s_as: SYMBOL_AS)
+	set_sign_symbol (s_as: detachable SYMBOL_AS)
 			-- Set `sign_symbol' with `s_as'.
 		do
 			if s_as /= Void then

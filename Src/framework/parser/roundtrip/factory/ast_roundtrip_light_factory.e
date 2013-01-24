@@ -225,7 +225,9 @@ feature -- Leaf nodes
 		do
 			Result := Precursor (a_scn)
 			increase_match_list_count
-			Result.set_index (match_list_count)
+			if Result /= Void then
+				Result.set_index (match_list_count)
+			end
 		end
 
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): detachable ID_AS
@@ -247,7 +249,9 @@ feature -- Leaf nodes
 		do
 			Result := Precursor (a_scn)
 			increase_match_list_count
-			Result.set_index (match_list_count)
+			if Result /= Void then
+				Result.set_index (match_list_count)
+			end
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS
@@ -307,7 +311,7 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
 			-- New KEYWORD AST node
 		local
 			l_id_as: ID_AS

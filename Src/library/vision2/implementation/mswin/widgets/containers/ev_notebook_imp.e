@@ -109,7 +109,8 @@ inherit
 			hide_current_selection,
 			on_tcn_selchange,
 			on_wm_theme_changed,
-			on_erase_background
+			on_erase_background,
+			count
 		end
 
 	WEL_TCIF_CONSTANTS
@@ -169,6 +170,14 @@ feature {EV_ANY_I} --  Access
 
 	tab_pos: INTEGER
 			-- Actual position of the tabs.
+
+feature -- Status report
+
+	count: INTEGER
+			-- <Precursor>
+		do
+			Result := ev_children.count
+		end
 
 feature {EV_ANY_I} -- Status report
 
@@ -245,14 +254,11 @@ feature {EV_ANY_I} -- Status setting
 		do
 			if not is_sensitive /= flag then
 				from
-					counter := 0
+					counter := 1
 				until
-					counter = count
+					counter > count
 				loop
-					child_imp ?= get_item (counter).window
-					check
-						child_imp_not_void: child_imp /= Void
-					end
+					child_imp := ev_children.i_th (counter)
 					if flag then
 						child_imp.disable_sensitive
 					else
@@ -298,14 +304,11 @@ feature {EV_ANY_I} -- Element change
 		do
 			top_level_window_imp := a_window
 			from
-				counter := 0
+				counter := 1
 			until
-				counter = count
+				counter > count
 			loop
-				child_imp ?= get_item (counter).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
+				child_imp := ev_children.i_th (counter)
 				child_imp.set_top_level_window_imp (a_window)
 				counter := counter + 1
 			end
@@ -329,10 +332,7 @@ feature {EV_ANY_I} -- Basic operation
 			until
 				test or else Result = nb
 			loop
-				child_imp ?= get_item (Result).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
+				child_imp := ev_children.i_th (Result + 1)
 				test := a_child = child_imp
 				Result := Result + 1
 			end
@@ -354,14 +354,11 @@ feature -- Assertion features
 			child_imp: detachable EV_WIDGET_IMP
 		do
 			from
-				counter := 0
+				counter := 1
 			until
-				(counter = count) or Result
+				(counter > count) or Result
 			loop
-				child_imp ?= get_item (counter).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
+				child_imp := ev_children.i_th (counter)
 				Result := a_child = child_imp
 				counter := counter + 1
 			end
@@ -382,14 +379,12 @@ feature {NONE} -- Implementation
 			counter, nb, value: INTEGER
 		do
 			from
+				counter := 1
 				nb := count
 			until
-				counter = nb
+				counter > nb
 			loop
-				child_imp ?= get_item (counter).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
+				child_imp := ev_children.i_th (counter)
 				value := child_imp.minimum_width.max (value)
 				counter := counter + 1
 			end
@@ -413,15 +408,12 @@ feature {NONE} -- Implementation
 			value: INTEGER
 		do
 			from
-				counter := 0
+				counter := 1
 				value := 0
 			until
-				counter = count
+				counter > count
 			loop
-				child_imp ?= get_item (counter).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
+				child_imp := ev_children.i_th (counter)
 				value := child_imp.minimum_height.max (value)
 				counter := counter + 1
 			end
@@ -446,15 +438,12 @@ feature {NONE} -- Implementation
 			mw, mh: INTEGER
 		do
 			from
-				counter := 0
+				counter := 1
 				mw := 0; mh := 0
 			until
-				counter = count
+				counter > count
 			loop
-				child_imp ?= (get_item (counter)).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
+				child_imp := ev_children.i_th (counter)
 				mw := child_imp.minimum_width.max (mw)
 				mh := child_imp.minimum_height.max (mh)
 				counter := counter + 1
@@ -496,10 +485,7 @@ feature {NONE} -- Implementation
 			until
 				i > count
 			loop
-				child_imp ?= get_item (i - 1).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
+				child_imp := ev_children.i_th (i)
 				if from_on_size then
 					child_imp.set_move_and_size (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height)
 				else
@@ -671,12 +657,7 @@ feature {NONE} -- Implementation
 			wel_win: detachable WEL_WINDOW
 			v_imp: detachable EV_WIDGET_IMP
 		do
-			wel_win := get_item (i - 1).window
-			v_imp ?= wel_win
-			check
-				v_imp_not_void: v_imp /= Void
-			end
-			Result := v_imp.attached_interface
+			Result := ev_children.i_th (i).attached_interface
 		end
 
 	insert_i_th (v: attached like item; i: INTEGER)
@@ -906,13 +887,8 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 
 	selected_item: detachable like item
 			-- Page displayed topmost.
-		local
-			child_imp: detachable EV_WIDGET_IMP
 		do
-			child_imp ?= get_item (current_selection).window
-			if child_imp /= Void then
-				Result := child_imp.interface
-			end
+			Result := ev_children.i_th (current_selection + 1).interface
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)

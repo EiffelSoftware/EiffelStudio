@@ -504,10 +504,6 @@ feature -- Access
 	invariant_end_position: INTEGER
 			-- End of invariant
 
-	object_test_locals: detachable ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
-			-- List of object test locals found
-			-- in the current feature declaration
-
 	feature_clause_end_position: INTEGER
 			-- End of a feature clause
 
@@ -704,6 +700,23 @@ feature {NONE} -- Implementation
 
 	last_rsqure: ARRAYED_STACK [detachable SYMBOL_AS]
 			-- Stack of ']'s used for parsing named tuples
+
+	object_test_locals: detachable ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
+			-- List of object test locals found
+			-- in the current feature declaration
+
+	insert_object_test_locals (a_item: TUPLE [ID_AS, TYPE_AS])
+			-- Insert `a_item' in `object_test_locals'.
+		local
+			l_locals: like object_test_locals
+		do
+			l_locals := object_test_locals
+			if l_locals = Void then
+				create l_locals.make (1)
+				object_test_locals := l_locals
+			end
+			l_locals.extend (a_item)
+		end
 
 feature {NONE} -- Counters
 
@@ -965,7 +978,9 @@ feature {NONE} -- Type factory
 									-- name from the clickable list instead? (ericb)
 								l_new_formal := ast_factory.new_formal_as (an_id, formal_type.is_reference,
 									formal_type.is_expanded, Void)
-								l_new_formal.set_position (formal_type.position)
+								if l_new_formal /= Void then
+									l_new_formal.set_position (formal_type.position)
+								end
 								Result := l_new_formal
 									-- Jump out of the loop.
 								formal_parameters.finish
@@ -1067,8 +1082,6 @@ feature{NONE} -- Roundtrip
 	temp_string_as1: detachable STRING_AS
 	temp_string_as2: detachable STRING_AS
 	temp_keyword_as: detachable KEYWORD_AS
-	temp_class_type_as: detachable CLASS_TYPE_AS
-	temp_operand_as: detachable OPERAND_AS
 	temp_address_current_as: detachable ADDRESS_CURRENT_AS
 	temp_address_result_as: detachable ADDRESS_RESULT_AS
 

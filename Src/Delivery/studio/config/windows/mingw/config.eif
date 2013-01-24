@@ -79,6 +79,9 @@ rmdir: "%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0/bin/rd%""
 make: "%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0/bin/make.exe%""
 make_utility: "$(ISE_EIFFEL)\gcc\$(ISE_PLATFORM)\msys\1.0\bin\make.exe"
 make_flags: ""
+make_cpu_flags: "-j"
+use_emake: False
+
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -f %%i%""
 
 dpflags: ""

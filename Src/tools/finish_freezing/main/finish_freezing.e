@@ -103,7 +103,7 @@ feature -- Initialization
 					l_translator.translate
 					if not l_gen_only and l_translator.has_makefile_sh then
 							-- We don't want to be launched when there is no Makefile.SH file.
-						l_translator.run_make
+						l_translator.run_make (l_location)
 						c_error := c_compilation_error
 					end
 
@@ -231,7 +231,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

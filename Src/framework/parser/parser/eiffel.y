@@ -302,13 +302,13 @@ Class_declaration:
 		Indexing								-- $18
 		TE_END									-- $19
 			{
-				if $6 /= Void then
-					temp_string_as1 := $6.second
+				if attached $6 as l_external then
+					temp_string_as1 := l_external.second
 				else
 					temp_string_as1 := Void
 				end
-				if $7 /= Void then
-					temp_string_as2 := $7.second
+				if attached $7 as l_obsolete then
+					temp_string_as2 := l_obsolete.second
 				else
 					temp_string_as2 := Void
 				end
@@ -316,21 +316,21 @@ Class_declaration:
 				root_node := new_class_description ($4, temp_string_as1,
 					is_deferred, is_expanded, is_frozen_class, is_external_class, is_partial_class,
 					$1, $18, $5, $9, $11, $13, $14, $15, $17, suppliers, temp_string_as2, $19)
-				if root_node /= Void then
-					root_node.set_text_positions (
+				if attached root_node as l_root_node then
+					l_root_node.set_text_positions (
 						formal_generics_end_position,
 						conforming_inheritance_end_position,
 						non_conforming_inheritance_end_position,
 						features_end_position
 					)
-					if $6 /= Void then
-						root_node.set_alias_keyword ($6.first)
+					if attached $6 as l_external then
+						l_root_node.set_alias_keyword (l_external.first)
 					end
-					if $7 /= Void then
-						root_node.set_obsolete_keyword ($7.first)
+					if attached $7 as l_obsolete then
+						l_root_node.set_obsolete_keyword (l_obsolete.first)
 					end
-					root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
-					root_node.set_class_keyword ($3)
+					l_root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
+					l_root_node.set_class_keyword ($3)
 				end
 			}
 	;
@@ -344,31 +344,30 @@ Indexing: -- Empty
 			-- { $$ := Void }
 	|	TE_INDEXING Add_indexing_counter Index_list Remove_counter
 			{
-				$$ := $3
-				if $$ /= Void then
-					$$.set_indexing_keyword (extract_keyword ($1))
+				if attached $3 as l_list then
+					$$ := l_list
+					l_list.set_indexing_keyword (extract_keyword ($1))
 				end				
 			}
 	|	TE_INDEXING
-			--- { $$ := Void }
 			{
-				$$ := ast_factory.new_indexing_clause_as (0)
-				if $$ /= Void then
-					$$.set_indexing_keyword (extract_keyword ($1))
+				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+					$$ := l_list
+					l_list.set_indexing_keyword (extract_keyword ($1))
 				end
 			}
 	|	TE_NOTE Add_indexing_counter Note_list Remove_counter
 			{
-				$$ := $3
-				if $$ /= Void then
-					$$.set_indexing_keyword (extract_keyword ($1))
+				if attached $3 as l_list then
+					$$ := l_list
+					l_list.set_indexing_keyword (extract_keyword ($1))
 				end				
 			}
 	|	TE_NOTE
 			{
-				$$ := ast_factory.new_indexing_clause_as (0)
-				if $$ /= Void then
-					$$.set_indexing_keyword (extract_keyword ($1))
+				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+					$$ := l_list
+					l_list.set_indexing_keyword (extract_keyword ($1))
 				end
 			}
 	;
@@ -376,12 +375,11 @@ Indexing: -- Empty
 Dotnet_indexing: -- Empty
 			-- { $$ := Void }
 	|	TE_INDEXING TE_END
-		---	{ $$ := Void }
 		{
-				$$ := ast_factory.new_indexing_clause_as (0)
-				if $$ /= Void then
-						$$.set_indexing_keyword (extract_keyword ($1))
-						$$.set_end_keyword ($2)
+				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+						$$ := l_list
+						l_list.set_indexing_keyword (extract_keyword ($1))
+						l_list.set_end_keyword ($2)
 				end		
 				if has_syntax_warning then
 					report_one_warning (
@@ -391,13 +389,13 @@ Dotnet_indexing: -- Empty
 		}
 	|	TE_INDEXING Add_indexing_counter Index_list Remove_counter TE_END
 			{
-				$$ := $3
-				if $$ /= Void then
-					if $1 /= Void then
-						$$.set_indexing_keyword (extract_keyword ($1))
+				if attached $3 as l_list then
+					$$ := l_list
+					if attached $1 as l_indexing then
+						l_list.set_indexing_keyword (extract_keyword (l_indexing))
 					end
-					if $5 /= Void then	
-						$$.set_end_keyword ($5)
+					if attached $5 as l_end then
+						l_list.set_end_keyword (l_end)
 					end
 				end				
 				if has_syntax_warning then
@@ -610,9 +608,12 @@ Features: -- Empty
 			-- { $$ := Void }
 	|	Add_counter Feature_clause_list Remove_counter
 			{
-				$$ := $2
-				if $$ /= Void and then $$.is_empty then
-					$$ := Void
+				if attached $2 as l_list then
+					if l_list.is_empty then
+						$$ := Void
+					else
+						$$ := l_list
+					end
 				end
 			}
 	;
@@ -642,10 +643,10 @@ Feature_clause: Feature_client_clause End_feature_clause_pos
 
 Feature_client_clause: TE_FEATURE
 			{
-				fclause_pos := $1
-				if $1 /= Void then
+				if attached $1 as l_keyword then
 						-- Originally, it was 8, I changed it to 7, delete the following line when fully tested. (Jason)
-					fclause_pos.set_position (line, column, position, 7)
+					l_keyword.set_position (line, column, position, 7)
+					fclause_pos := l_keyword
 				else
 						-- Originally, it was 8, I changed it to 7 (Jason)
 					fclause_pos := ast_factory.new_feature_keyword_as (line, column, position, 7, Current)
@@ -673,10 +674,10 @@ Client_list: TE_LCURLY TE_RCURLY
 			}
 	|	TE_LCURLY Add_counter Class_list Remove_counter TE_RCURLY
 			{
-				$$ := $3
-				if $$ /= Void then
-					$$.set_lcurly_symbol ($1)
-					$$.set_rcurly_symbol ($5)
+				if attached $3 as l_list then
+					$$ := l_list
+					l_list.set_lcurly_symbol ($1)
+					l_list.set_rcurly_symbol ($5)
 				end				
 			}
 	;
@@ -774,9 +775,9 @@ New_feature: Extended_feature_name
 			{ $$ := $1 }
 	|	TE_FROZEN Extended_feature_name
 			{
-				$$ := $2
-				if $$ /= Void then
-					$$.set_frozen_keyword ($1)
+				if attached $2 as l_name then
+					$$ := l_name
+					l_name.set_frozen_keyword ($1)
 				end
 			}
 	;
@@ -785,8 +786,8 @@ Extended_feature_name: Feature_name
 			{ $$ := $1 }
 	|	Identifier_as_lower Alias
 			{
-				if $2 /= Void then
-					$$ := ast_factory.new_feature_name_alias_as ($1, $2.alias_name, has_convert_mark, $2.alias_keyword, $2.convert_keyword)
+				if attached $2 as l_alias then
+					$$ := ast_factory.new_feature_name_alias_as ($1, l_alias.alias_name, has_convert_mark, l_alias.alias_keyword, l_alias.convert_keyword)
 				else
 					$$ := ast_factory.new_feature_name_alias_as ($1, Void, has_convert_mark, Void, Void)
 				end
@@ -856,20 +857,20 @@ Is_keyword: -- Empty
 Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 			{
 					-- Attribute case
-				if $3 = Void then
-					$$ := ast_factory.new_body_as (Void, $2, Void, Void, $1, Void, Void, $4)
+				if attached $3 as l_assigner_mark then
+					$$ := ast_factory.new_body_as (Void, $2, l_assigner_mark.second, Void, $1, Void, l_assigner_mark.first, $4)
 				else
-					$$ := ast_factory.new_body_as (Void, $2, $3.second, Void, $1, Void, $3.first, $4)
+					$$ := ast_factory.new_body_as (Void, $2, Void, Void, $1, Void, Void, $4)
 				end				
 				feature_indexes := $4
 			}
 	|       TE_COLON Type Assigner_mark_opt TE_EQ Constant_attribute Dotnet_indexing
 			{
 					-- Constant case
-				if $3 = Void then
-					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, $4, Void, $6)
+				if attached $3 as l_assigner_mark then
+					$$ := ast_factory.new_body_as (Void, $2, l_assigner_mark.second, $5, $1, $4, l_assigner_mark.first, $6)
 				else
-					$$ := ast_factory.new_body_as (Void, $2, $3.second, $5, $1, $4, $3.first, $6)
+					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, $4, Void, $6)
 				end
 				
 				feature_indexes := $6
@@ -877,10 +878,10 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 	|	TE_COLON Type Assigner_mark_opt TE_IS Constant_attribute Dotnet_indexing
 			{
 					-- Constant case
-				if $3 = Void then
-					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, extract_keyword ($4), Void, $6)
+				if attached $3 as l_assigner_mark then
+					$$ := ast_factory.new_body_as (Void, $2, l_assigner_mark.second, $5, $1, extract_keyword ($4), l_assigner_mark.first, $6)
 				else
-					$$ := ast_factory.new_body_as (Void, $2, $3.second, $5, $1, extract_keyword ($4), $3.first, $6)
+					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, extract_keyword ($4), Void, $6)
 				end
 				
 				feature_indexes := $6
@@ -894,10 +895,10 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 	|	TE_COLON Type Assigner_mark_opt TE_IS Indexing Routine
 		{
 					-- Function without arguments
-				if $3 = Void then
-					$$ := ast_factory.new_body_as (Void, $2, Void, $6, $1, extract_keyword ($4), Void, $5)
+				if attached $3 as l_assigner_mark then
+					$$ := ast_factory.new_body_as (Void, $2, l_assigner_mark.second, $6, $1, extract_keyword ($4), l_assigner_mark.first, $5)
 				else
-					$$ := ast_factory.new_body_as (Void, $2, $3.second, $6, $1, extract_keyword ($4), $3.first, $5)
+					$$ := ast_factory.new_body_as (Void, $2, Void, $6, $1, extract_keyword ($4), Void, $5)
 				end
 				
 				feature_indexes := $5
@@ -905,10 +906,10 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 	|	TE_COLON Type Assigner_mark_opt Indexing Routine
 			{
 					-- Function without arguments
-				if $3 = Void then
-					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, Void, Void, $4)
+				if attached $3 as l_assigner_mark then
+					$$ := ast_factory.new_body_as (Void, $2, l_assigner_mark.second, $5, $1, Void, l_assigner_mark.first, $4)
 				else
-					$$ := ast_factory.new_body_as (Void, $2, $3.second, $5, $1, Void, $3.first, $4)
+					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, Void, Void, $4)
 				end
 				
 				feature_indexes := $4
@@ -922,10 +923,10 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 	|	Formal_arguments TE_COLON Type Assigner_mark_opt Is_keyword Indexing Routine
 			{
 					-- Function with arguments
-				if $4 = Void then
-					$$ := ast_factory.new_body_as ($1, $3, Void, $7, $2, $5, Void, $6)
+				if attached $4 as l_assigner_mark then
+					$$ := ast_factory.new_body_as ($1, $3, l_assigner_mark.second, $7, $2, $5, l_assigner_mark.first, $6)
 				else
-					$$ := ast_factory.new_body_as ($1, $3, $4.second, $7, $2, $5, $4.first, $6)
+					$$ := ast_factory.new_body_as ($1, $3, Void, $7, $2, $5, Void, $6)
 				end				
 				feature_indexes := $6
 			}
@@ -963,8 +964,8 @@ Inheritance: -- Empty
 							once "Use `inherit ANY' or do not specify an empty inherit clause"))
 					end
 					$$ := ast_factory.new_eiffel_list_parent_as (0)
-					if $$ /= Void then
-						$$.set_inheritance_tokens ($1, Void, Void, Void)
+					if attached $$ as l_inheritance then
+						l_inheritance.set_inheritance_tokens ($1, Void, Void, Void)
 					end
 				else
 						-- Raise error as conforming inheritance has already been specified
@@ -980,8 +981,8 @@ Inheritance: -- Empty
 				if not conforming_inheritance_flag then
 						-- Conforming inheritance
 					$$ := $3
-					if $$ /= Void then
-						$$.set_inheritance_tokens ($1, Void, Void, Void)
+					if attached $$ as l_inheritance then
+						l_inheritance.set_inheritance_tokens ($1, Void, Void, Void)
 					end
 				else
 						-- Raise error as conforming inheritance has already been specified
@@ -1011,8 +1012,8 @@ Inheritance: -- Empty
 		Add_counter Parent_list Remove_counter
 			{
 				$$ := $7
-				if $$ /= Void then
-					$$.set_inheritance_tokens ($1, $2, $3, $4)
+				if attached $$ as l_inheritance then
+					l_inheritance.set_inheritance_tokens ($1, $2, $3, $4)
 				end
 			}
 			
@@ -1140,9 +1141,9 @@ Convert_clause: -- Empty
 			-- { $$ := Void }
 	|	TE_CONVERT Add_counter Convert_list Remove_counter
 		{
-			$$ := $3
-			if $$ /= Void then
-				$$.set_convert_keyword ($1)
+			if attached $3 as l_list then
+				$$ := l_list
+				l_list.set_convert_keyword ($1)
 			end
 		}
 	;
@@ -1324,15 +1325,15 @@ Routine:
 		Rescue
 		TE_END
 			{
-				if $1 /= Void then
-					temp_string_as1 := $1.second
-					temp_keyword_as := $1.first
+				if attached $1 as l_pair then
+					temp_string_as1 := l_pair.second
+					temp_keyword_as := l_pair.first
 				else
 					temp_string_as1 := Void
 					temp_keyword_as := Void
 				end
-				if $7 /= Void then
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, $7.first, object_test_locals)
+				if attached $7 as l_rescue then
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, l_rescue.second, $8, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals)
 				else
 					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
@@ -1351,14 +1352,14 @@ Routine_body: Internal
 
 External: TE_EXTERNAL External_language External_name
 			{
-				if $2 /= Void and then $2.is_built_in then
-					if $3 /= Void then 
-						$$ := ast_factory.new_built_in_as ($2, $3.second, $1, $3.first)
+				if attached $2 as l_language and then l_language.is_built_in then
+					if attached $3 as l_name then 
+						$$ := ast_factory.new_built_in_as (l_language, l_name.second, $1, l_name.first)
 					else
-						$$ := ast_factory.new_built_in_as ($2, Void, $1, Void)
+						$$ := ast_factory.new_built_in_as (l_language, Void, $1, Void)
 					end
-				elseif $3 /= Void then
-					$$ := ast_factory.new_external_as ($2, $3.second, $1, $3.first)
+				elseif attached $3 as l_name then
+					$$ := ast_factory.new_external_as ($2, l_name.second, $1, l_name.first)
 				else
 					$$ := ast_factory.new_external_as ($2, Void, $1, Void)
 				end
@@ -1418,9 +1419,9 @@ Instruction_list: Instruction
 
 Instruction: Instruction_impl Optional_semicolons
 			{
-				$$ := $1 
-				if $$ /= Void then
-					$$.set_line_pragma (last_line_pragma)
+				if attached $1 as l_instructions then
+					$$ := l_instructions
+					l_instructions.set_line_pragma (last_line_pragma)
 				end
 			}
 	;
@@ -1504,9 +1505,12 @@ Assertion: -- Empty
 			-- { $$ := Void }
 	|	Add_counter Assertion_list Remove_counter
 			{
-				$$ := $2
-				if $$ /= Void and then $$.is_empty then
-					$$ := Void
+				if attached $2 as l_list then
+					if l_list.is_empty then
+						$$ := Void
+					else
+						$$ := l_list
+					end
 				end
 			}
 	;
@@ -1575,42 +1579,42 @@ Class_or_tuple_type:
 	| TE_DETACHABLE Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 			}
 	| TE_ATTACHED Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 			}
 	| TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($1)
+				if not is_ignoring_separate_mark and then attached $$ as l_type then
+					l_type.set_separate_mark ($1)
 				end
 			}
 	| TE_DETACHABLE TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($2)
+				if not is_ignoring_separate_mark and then attached $$ as l_type then
+					l_type.set_separate_mark ($2)
 				end
 			}
 	| TE_ATTACHED TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($2)
+				if not is_ignoring_separate_mark and then attached $$ as l_type then
+					l_type.set_separate_mark ($2)
 				end
 			}
 	;
@@ -1631,42 +1635,42 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_ATTACHED Unmarked_anchored_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 			}
 	|	TE_DETACHABLE Unmarked_anchored_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 			}
 	|	TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $2
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($1)
+				if not is_ignoring_separate_mark and then attached $$ as l_type then
+					l_type.set_separate_mark ($1)
 				end
 			}
 	|	TE_ATTACHED TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $3
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($2)
+				if not is_ignoring_separate_mark and then attached $$ as l_type then
+					l_type.set_separate_mark ($2)
 				end
 			}
 	|	TE_DETACHABLE TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $3
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark (extract_keyword ($1), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($2)
+				if not is_ignoring_separate_mark and then attached $$ as l_type then
+					l_type.set_separate_mark ($2)
 				end
 			}
 	;
@@ -1714,8 +1718,8 @@ Obsolete_class_or_tuple_type:
 	TE_BANG Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark ($1, True, False)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark ($1, True, False)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -1726,8 +1730,8 @@ Obsolete_class_or_tuple_type:
 	| TE_QUESTION Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark ($1, False, True)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark ($1, False, True)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -1755,8 +1759,8 @@ Obsolete_type: TE_EXPANDED Unmarked_class_type
 	|	TE_BANG Unmarked_unqualified_anchored_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark ($1, True, False)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark ($1, True, False)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -1767,8 +1771,8 @@ Obsolete_type: TE_EXPANDED Unmarked_class_type
 	|	TE_QUESTION Unmarked_unqualified_anchored_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark ($1, False, True)
+				if not is_ignoring_attachment_marks and then attached $$ as l_type then
+					l_type.set_attachment_mark ($1, False, True)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -1788,16 +1792,16 @@ Generics_opt: -- Empty
 
 Generics:	TE_LSQURE Type_list TE_RSQURE
 			{
-				$$ := $2
-				if $$ /= Void then
-					$$.set_positions ($1, $3)
+				if attached $2 as l_list then
+					$$ := l_list
+					l_list.set_positions ($1, $3)
 				end
 			}
 	|	TE_LSQURE TE_RSQURE
 			{
-				$$ := ast_factory.new_eiffel_list_type (0)
-				if $$ /= Void then
-					$$.set_positions ($1, $2)
+				if attached ast_factory.new_eiffel_list_type (0) as l_list then
+					$$ := l_list
+					l_list.set_positions ($1, $2)
 				end	
 			}
 	;
@@ -1838,8 +1842,8 @@ Unmarked_tuple_type: Tuple_identifier
 			}
 	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE Actual_parameter_list
 			{
-				if $5 /= Void then
-					$5.set_positions ($4, last_rsqure.item)
+				if attached $5 as l_list then
+					l_list.set_positions ($4, last_rsqure.item)
 				end
 				$$ := ast_factory.new_class_type_as ($1, $5)
 				last_rsqure.remove
@@ -1872,7 +1876,7 @@ Actual_parameter_list:	Type TE_RSQURE
 					attached new_class_type (l_val, Void) as l_class_type
 				then
 					l_val.to_upper		
-					$$.reverse_extend (l_class_type)
+					l_list.reverse_extend (l_class_type)
 					ast_factory.reverse_extend_separator (l_list, $2)
 				end
 			}
@@ -1890,14 +1894,14 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 			{
 				$$ := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
 				if
-					$$ /= Void and then attached $1 as l_name and then
+					attached $$ as l_named_list and then attached $1 as l_name and then
 					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
 					attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
 				then
 					l_name.to_lower		
 					l_list.reverse_extend (l_name.name_id)
 					ast_factory.reverse_extend_identifier (l_list, l_name)
-					$$.reverse_extend (l_type_dec_as)
+					l_named_list.reverse_extend (l_type_dec_as)
 				end
 				last_rsqure.force ($4)
 			}
@@ -1906,9 +1910,9 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 			{
 				$$ := $4
 				if
-					$$ /= Void and then not $$.is_empty and then
+					attached $$ as l_named_list and then not l_named_list.is_empty and then
 					attached $1 as l_name and then
-					attached $$.reversed_first.id_list as l_list
+					attached l_named_list.reversed_first.id_list as l_list
 				then
 					l_name.to_lower		
 					l_list.reverse_extend (l_name.name_id)
@@ -1921,14 +1925,14 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				remove_counter
 				$$ := $7
 				if
-					$$ /= Void and then attached $1 as l_name and then $3 /= Void and then
+					attached $$ as l_named_list and then attached $1 as l_name and then $3 /= Void and then
 					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
 					attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
 				then
 					l_name.to_lower		
 					l_list.reverse_extend (l_name.name_id)
 					ast_factory.reverse_extend_identifier (l_list, l_name)
-					$$.reverse_extend (l_type_dec_as)
+					l_named_list.reverse_extend (l_type_dec_as)
 				end
 			}
 	;
@@ -1945,17 +1949,17 @@ Formal_generics:
 			{
 				formal_generics_end_position := position
 				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
-				if $$ /= Void then
-					$$.set_squre_symbols ($1, $2)
+				if attached $$ as l_formals then
+					l_formals.set_squre_symbols ($1, $2)
 				end
 			}
 	|	TE_LSQURE Add_counter Disable_supplier_recording Formal_generic_list Enable_supplier_recording Remove_counter TE_RSQURE
 			{
 				formal_generics_end_position := position
 				$$ := $4
-				if $$ /= Void then
-					$$.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
-					$$.set_squre_symbols ($1, $7)
+				if attached $$ as l_formals then
+					l_formals.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
+					l_formals.set_squre_symbols ($1, $7)
 				end
 			}
 	;
@@ -1979,7 +1983,7 @@ Formal_generic_list: Formal_generic
 
 Formal_parameter: TE_REFERENCE Class_identifier
 			{
-				if $2 /= Void and then {PREDEFINED_NAMES}.none_class_name_id = $2.name_id then
+				if attached $2 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -1993,7 +1997,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 			}
 	| TE_EXPANDED Class_identifier
 			{
-				if $2 /= Void and then {PREDEFINED_NAMES}.none_class_name_id = $2.name_id then
+				if attached $2 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -2008,7 +2012,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 
 	|	Class_identifier
 			{
-				if $1 /= Void and then {PREDEFINED_NAMES}.none_class_name_id = $1.name_id then
+				if attached $1 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$1' is not a class name
@@ -2281,8 +2285,8 @@ Loop_instruction:
 						create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
 						once "Loop variant should appear just before the end keyword of the loop."))
 				end
-				if $3 /= Void then
-					$$ := ast_factory.new_loop_as (Void, $2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7)
+				if attached $3 as l_invariant_pair then
+					$$ := ast_factory.new_loop_as (Void, $2, l_invariant_pair.second, $4, $6, $8, $9, $1, l_invariant_pair.first, $5, $7)
 				else
 					$$ := ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
 				end
@@ -2290,8 +2294,8 @@ Loop_instruction:
 			}
 	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant_opt TE_END
 			{
-				if $3 /= Void then
-					$$ := ast_factory.new_loop_as (Void, $2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6)
+				if attached $3 as l_invariant_pair then
+					$$ := ast_factory.new_loop_as (Void, $2, l_invariant_pair.second, $8, $5, $7, $9, $1, l_invariant_pair.first, $4, $6)
 				else
 					$$ := ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
 				end
@@ -2299,15 +2303,15 @@ Loop_instruction:
 			}
 	| Iteration TE_FROM Compound Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
 			{
-				if $4 /= Void then
-					if $5 /= Void then
-						$$ := ast_factory.new_loop_as ($1, $3, $4.second, $8, $5.second, $7, $9, $2, $4.first, $5.first, $6)
+				if attached $4 as l_invariant_pair then
+					if attached $5 as l_until_pair then
+						$$ := ast_factory.new_loop_as ($1, $3, l_invariant_pair.second, $8, l_until_pair.second, $7, $9, $2, l_invariant_pair.first, l_until_pair.first, $6)
 					else
-						$$ := ast_factory.new_loop_as ($1, $3, $4.second, $8, Void, $7, $9, $2, $4.first, Void, $6)
+						$$ := ast_factory.new_loop_as ($1, $3, l_invariant_pair.second, $8, Void, $7, $9, $2, l_invariant_pair.first, Void, $6)
 					end
 				else
-					if $5 /= Void then
-						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, $5.second, $7, $9, $2, Void, $5.first, $6)
+					if attached $5 as l_until_pair then
+						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, l_until_pair.second, $7, $9, $2, Void, l_until_pair.first, $6)
 					else
 						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6)
 					end
@@ -2316,15 +2320,15 @@ Loop_instruction:
 			}
 	| Iteration Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
 			{
-				if $2 /= Void then
-					if $3 /= Void then
-						$$ := ast_factory.new_loop_as ($1, Void, $2.second, $6, $3.second, $5, $7, Void, $2.first, $3.first, $4)
+				if attached $2 as l_invariant_pair then
+					if attached $3 as l_until_pair then
+						$$ := ast_factory.new_loop_as ($1, Void, l_invariant_pair.second, $6, l_until_pair.second, $5, $7, Void, l_invariant_pair.first, l_until_pair.first, $4)
 					else
-						$$ := ast_factory.new_loop_as ($1, Void, $2.second, $6, Void, $5, $7, Void, $2.first, Void, $4)
+						$$ := ast_factory.new_loop_as ($1, Void, l_invariant_pair.second, $6, Void, $5, $7, Void, l_invariant_pair.first, Void, $4)
 					end
 				else
-					if $3 /= Void then
-						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, $3.second, $5, $7, Void, Void, $3.first, $4)
+					if attached $3 as l_until_pair then
+						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, l_until_pair.second, $5, $7, Void, Void, l_until_pair.first, $4)
 					else
 						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4)
 					end
@@ -2336,15 +2340,15 @@ Loop_instruction:
 Loop_expression:
 	Iteration Invariant Exit_condition_opt TE_ALL Expression Variant_opt TE_END
 			{
-				if $2 /= Void then
-					if $3 /= Void then
-						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, $3.first, $3.second, $4, True, $5, $6, $7)
+				if attached $2 as l_invariant_pair then
+					if attached $3 as l_until_pair then
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, $4, True, $5, $6, $7)
 					else
-						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, Void, Void, $4, True, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, Void, Void, $4, True, $5, $6, $7)
 					end
 				else
-					if $3 /= Void then
-						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, $3.first, $3.second, $4, True, $5, $6, $7)
+					if attached $3 as l_until_pair then
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, l_until_pair.first, l_until_pair.second, $4, True, $5, $6, $7)
 					else
 						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, $4, True, $5, $6, $7)
 					end
@@ -2353,15 +2357,15 @@ Loop_expression:
 			}
 	| Iteration Invariant Exit_condition_opt TE_SOME Expression Variant_opt TE_END
 			{
-				if $2 /= Void then
-					if $3 /= Void then
-						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, $3.first, $3.second, extract_keyword ($4), False, $5, $6, $7)
+				if attached $2 as l_invariant_pair then
+					if attached $3 as l_until_pair then
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, extract_keyword ($4), False, $5, $6, $7)
 					else
-						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, Void, Void, extract_keyword ($4), False, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, Void, Void, extract_keyword ($4), False, $5, $6, $7)
 					end
 				else
-					if $3 /= Void then
-						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, $3.first, $3.second, extract_keyword ($4), False, $5, $6, $7)
+					if attached $3 as l_until_pair then
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, l_until_pair.first, l_until_pair.second, extract_keyword ($4), False, $5, $6, $7)
 					else
 						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, extract_keyword ($4), False, $5, $6, $7)
 					end
@@ -2567,11 +2571,11 @@ Agent_call:
 		}
 	|	TE_AGENT Agent_target TE_DOT Feature_name_for_call Delayed_actuals
 		{
-			if $2 /= Void then
-				$$ := ast_factory.new_agent_routine_creation_as ($2.operand, $4, $5, True, $1, $3)
-				if $$ /= Void then
-					$$.set_lparan_symbol ($2.lparan_symbol)
-					$$.set_rparan_symbol ($2.rparan_symbol)
+			if attached $2 as l_target then
+				$$ := ast_factory.new_agent_routine_creation_as (l_target.operand, $4, $5, True, $1, $3)
+				if attached $$ as l_agent then
+					l_agent.set_lparan_symbol (l_target.lparan_symbol)
+					l_agent.set_rparan_symbol (l_target.rparan_symbol)
 				end
 			else
 				$$ := ast_factory.new_agent_routine_creation_as (Void, $4, $5, True, $1, $3)
@@ -2599,11 +2603,12 @@ Agent_target: Identifier_as_lower
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as ($1, Void, Void))}
 	|	TE_QUESTION
 		{
-			temp_operand_as := ast_factory.new_operand_as (Void, Void, Void)
-			if temp_operand_as /= Void then
-				temp_operand_as.set_question_mark_symbol ($1)
+			if attached ast_factory.new_operand_as (Void, Void, Void) as l_temp_operand_as then
+				l_temp_operand_as.set_question_mark_symbol ($1)
+				$$ := ast_factory.new_agent_target_triple (Void, Void, l_temp_operand_as)
+			else
+				$$ := ast_factory.new_agent_target_triple (Void, Void, Void)
 			end
-			$$ := ast_factory.new_agent_target_triple (Void, Void, temp_operand_as)
 		}
 	;
 
@@ -2634,8 +2639,8 @@ Delayed_actual_list: Delayed_actual
 
 Delayed_actual: TE_QUESTION
 			{ $$ := ast_factory.new_operand_as (Void, Void, Void)
-				if $$ /= Void then
-					$$.set_question_mark_symbol ($1)
+				if attached $$ as l_actual then
+					l_actual.set_question_mark_symbol ($1)
 				end
 			}
 -- Manu: 01/19/2005: Due to syntax ambiguity we cannot have 'Typed' only
@@ -2644,8 +2649,8 @@ Delayed_actual: TE_QUESTION
 -- we have invented the new syntax ? Typed.
 	|	Typed TE_QUESTION
 			{ $$ := ast_factory.new_operand_as ($1, Void, Void)
-				if $$ /= Void then
-					$$.set_question_mark_symbol ($2)
+				if attached $$ as l_actual then
+					l_actual.set_question_mark_symbol ($2)
 				end
 			}
 	|	Expression
@@ -2730,9 +2735,9 @@ Guard: TE_CHECK Assertion TE_THEN Compound TE_END
 
 Typed: TE_LCURLY Type TE_RCURLY
 			{ $$ := $2
-				if $$ /= Void then
-					$$.set_lcurly_symbol ($1)
-					$$.set_rcurly_symbol ($3)
+				if attached $$ as l_type then
+					l_type.set_lcurly_symbol ($1)
+					l_type.set_rcurly_symbol ($3)
 				end
 			}
 	;
@@ -2769,9 +2774,9 @@ Expression:
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression %prec TE_NOT
 			{
-				if $3 /= Void then
-					$3.set_lcurly_symbol ($2)
-					$3.set_rcurly_symbol ($4)
+				if attached $3 as l_type then
+					l_type.set_lcurly_symbol ($2)
+					l_type.set_rcurly_symbol ($4)
 				end
 				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, Void, Void)
@@ -2779,18 +2784,15 @@ Expression:
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression TE_AS Identifier_as_lower
 			{
-				if $3 /= Void then
-					$3.set_lcurly_symbol ($2)
-					$3.set_rcurly_symbol ($4)
+				if attached $3 as l_type then
+					l_type.set_lcurly_symbol ($2)
+					l_type.set_rcurly_symbol ($4)
 				end
 				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, $6, $7)
 				has_type := True
 				if attached $7 as l_name and attached $3 as l_type then
-					if object_test_locals = Void then
-						create object_test_locals.make (1)
-					end
-					object_test_locals.extend ([l_name, l_type])
+					insert_object_test_locals ([l_name, l_type])
 				end
 			}
 	|	TE_LCURLY Identifier_as_lower TE_COLON Type TE_RCURLY Expression %prec TE_NOT
@@ -2799,10 +2801,7 @@ Expression:
 				$$ := ast_factory.new_old_syntax_object_test_as ($1, $2, $4, $6)
 				has_type := True
 				if attached $2 as l_name and attached $4 as l_type then
-					if object_test_locals = Void then
-						create object_test_locals.make (1)
-					end
-					object_test_locals.extend ([l_name, l_type])
+					insert_object_test_locals ([l_name, l_type])
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -2908,8 +2907,8 @@ Typed_expression:	Typed
 
 Free_operator: TE_FREE
 			{
-				if $1 /= Void then
-					$1.to_lower
+				if attached $1 as l_free then
+					l_free.to_lower
 				end
 				$$ := $1
 			}
@@ -2939,12 +2938,13 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := ast_factory.new_precursor_as ($1, Void, $2) }
 	|	TE_PRECURSOR TE_LCURLY Class_identifier TE_RCURLY Parameters
 			{
-				temp_class_type_as := ast_factory.new_class_type_as ($3, Void)
-				if temp_class_type_as /= Void then
-					temp_class_type_as.set_lcurly_symbol ($2)
-					temp_class_type_as.set_rcurly_symbol ($4)
+				if attached ast_factory.new_class_type_as ($3, Void) as l_temp_class_type_as then
+					l_temp_class_type_as.set_lcurly_symbol ($2)
+					l_temp_class_type_as.set_rcurly_symbol ($4)
+					$$ := ast_factory.new_precursor_as ($1, l_temp_class_type_as, $5)
+				else
+					$$ := ast_factory.new_precursor_as ($1, Void, $5)
 				end
-				$$ := ast_factory.new_precursor_as ($1, temp_class_type_as, $5)
 			}
 	;
 
@@ -2987,14 +2987,14 @@ Feature_name_for_call: Identifier_as_lower
 			{ $$ := $1}
 	|	Infix
 			{
-				if $1 /= Void then
-					$$ := $1.internal_name
+				if attached $1 as l_infix then
+					$$ := l_infix.internal_name
 				end
 			}
 	|	Prefix
 			{
-				if $1 /= Void then
-					$$ := $1.internal_name
+				if attached $1 as l_prefix then
+					$$ := l_prefix.internal_name
 				end
 			}
 	;
@@ -3074,10 +3074,10 @@ Class_or_tuple_identifier: Tuple_identifier
 
 Class_identifier: TE_ID
 			{
-				if $1 /= Void then
-					$1.to_upper		
+				if attached $1 as l_id then
+					l_id.to_upper		
+					$$ := l_id
 				end
-				$$ := $1
 			}
 	|	TE_ACROSS
 			{
@@ -3113,26 +3113,26 @@ Class_identifier: TE_ID
 
 Tuple_identifier: TE_TUPLE
 			{
-				if $1 /= Void then
-					$1.to_upper
+				if attached $1 as l_tuple then
+					l_tuple.to_upper
+					$$ := l_tuple
 				end
-				$$ := $1
 			}
 	;
 
 Identifier_as_lower: TE_ID
 			{
-				if $1 /= Void then
-					$1.to_lower
+				if attached $1 as l_id then
+					l_id.to_lower
+					$$ := l_id
 				end
-				$$ := $1
 			}
 	|	TE_TUPLE
 			{
-				if $1 /= Void then
-					$1.to_lower
+				if attached $1 as l_tuple then
+					l_tuple.to_lower
+					$$ := l_tuple
 				end
-				$$ := $1
 			}
 	|	TE_ACROSS
 			{
@@ -3210,9 +3210,9 @@ Expression_constant:
 			{ $$ := $1 }
 	|	TE_ONCE_STRING Manifest_string
 			{
-				if $2 /= Void then
-					$2.set_is_once_string (True)
-					$2.set_once_string_keyword ($1)
+				if attached $2 as l_string then
+					l_string.set_is_once_string (True)
+					l_string.set_once_string_keyword ($1)
 				end
 				increment_once_manifest_string_counter
 				$$ := $2
@@ -3357,8 +3357,8 @@ Default_manifest_string: Non_empty_string
 Typed_manifest_string: Typed Default_manifest_string
 			{
 				$$ := $2
-				if $$ /= Void then
-					$$.set_type ($1)
+				if attached $$ as l_string then
+					l_string.set_type ($1)
 				end
 			}
 	;
@@ -3416,18 +3416,18 @@ Prefix_operator: TE_STR_MINUS
 	|	TE_STR_NOT
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_not then
+					l_str_not.value.to_lower
+					$$ := l_str_not
 				end
-				$$ := $1
 			}
 	|	TE_STR_FREE
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_free then
+					l_str_free.value.to_lower
+					$$ := l_str_free
 				end
-				$$ := $1
 			}
 	;
 
@@ -3456,58 +3456,58 @@ Infix_operator: TE_STR_LT
 	|	TE_STR_AND
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_and then
+					l_str_and.value.to_lower
+					$$ := l_str_and
 				end
-				$$ := $1
 			}
 	|	TE_STR_AND_THEN
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_and_then then
+					l_str_and_then.value.to_lower
+					$$ := l_str_and_then
 				end
-				$$ := $1
 			}
 	|	TE_STR_IMPLIES
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_implies then 
+					l_str_implies.value.to_lower
+					$$ := l_str_implies
 				end
-				$$ := $1
 			}
 	|	TE_STR_OR
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_or then
+					l_str_or.value.to_lower
+					$$ := l_str_or
 				end
-				$$ := $1
 			}
 	|	TE_STR_OR_ELSE
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_or_else then
+					l_str_or_else.value.to_lower
+					$$ := l_str_or_else
 				end
-				$$ := $1
 			}
 	|	TE_STR_XOR
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_xor then
+					l_str_xor.value.to_lower
+					$$ := l_str_xor
 				end
-				$$ := $1
 			}
 	|	TE_STR_FREE
 			{
 					-- Alias names should always be taken in their lower case version
-				if $1 /= Void then
-					$1.value.to_lower
+				if attached $1 as l_str_free then
+					l_str_free.value.to_lower
+					$$ := l_str_free
 				end
-				$$ := $1
 			}
 	;
 

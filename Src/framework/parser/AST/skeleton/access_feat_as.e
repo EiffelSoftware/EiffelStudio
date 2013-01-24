@@ -72,8 +72,8 @@ feature -- Attributes
 	parameter_count: INTEGER
 			-- Count of parameters
 		do
-			if parameters /= Void then
-				Result := parameters.count
+			if attached parameters as l_params then
+				Result := l_params.count
 			end
 		end
 
@@ -154,14 +154,14 @@ feature -- Roundtrip/Token
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if parameters /= Void then
-					Result := parameters.last_token (a_list)
+				if attached parameters as l_params then
+					Result := l_params.last_token (a_list)
 				else
 					Result := feature_name.last_token (a_list)
 				end
 			else
-				if internal_parameters /= Void then
-					Result := internal_parameters.last_token (a_list)
+				if attached internal_parameters as l_params then
+					Result := l_params.last_token (a_list)
 				else
 					Result := feature_name.last_token (a_list)
 				end
@@ -283,12 +283,12 @@ invariant
 		is_argument and (not is_local and not is_tuple_access) or
 		is_tuple_access and (not is_local and not is_argument) or
 		not is_local and not is_argument and not is_tuple_access
-	parameters_set: (internal_parameters /= Void implies parameters = internal_parameters.meaningful_content) and
+	parameters_set: (attached internal_parameters as l_parameters implies parameters = l_parameters.meaningful_content) and
 					(internal_parameters = Void implies parameters = Void)
 	parameter_count_correct: (parameters /= Void implies parameter_count > 0) and (parameters = Void implies parameter_count = 0)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -41,9 +41,7 @@ feature -- Properties
 	warning_message_32: STRING_32
 			-- Specify syntax issue message.
 		do
-			if attached warning_message as l_m then
-				Result := encoding_converter.utf8_to_utf32 (l_m)
-			end
+			Result := encoding_converter.utf8_to_utf32 (warning_message)
 		end
 
 	file_name: like {ERROR}.file_name

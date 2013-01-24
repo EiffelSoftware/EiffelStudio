@@ -160,21 +160,24 @@ feature -- Execution
 			translate_sub_makefiles
 		end
 
-	run_make
-			-- run the make utility on the generated Makefile
+	run_make (a_directory: PATH)
+			-- Run the make utility on the generated Makefile in `a_directory'.
 		local
 			command: STRING
 			l_make_flags: STRING_32
 			l_process: PROCESS
 			l_success: BOOLEAN
-			l_flags: LIST [STRING_32]
+			l_flags: detachable LIST [STRING_32]
 			l_file: RAW_FILE
 			input_code_page: NATURAL_32
 			output_code_page: NATURAL_32
+			l_launched_command: READABLE_STRING_32
+			l_cpu: INTEGER
 		do
 				-- Record current code page.
 			input_code_page := {WEL_API}.console_input_code_page
 			output_code_page := {WEL_API}.console_output_code_page
+
 				-- The command to execute the make utility on this platform
 			command := options.get_string_or_default ("make_utility", "")
 			subst_eiffel (command)
@@ -184,65 +187,107 @@ feature -- Execution
 			l_make_flags.left_adjust
 			l_make_flags.right_adjust
 
-				-- Launch building of `E1\estructure.h' and `E1\eoffsets.h' in case it is not built and we are not
-				-- in .NET mode
-			if not is_il_code then
-				create l_file.make_with_name ("E1" + directory_separator + "estructure.x")
-				if l_file.exists then
-					l_flags := l_make_flags.split (' ')
-					l_flags.extend ({STRING_32} "E1" + directory_separator + {STRING_32} "estructure.h")
-					l_process := process_launcher (command, l_flags, Void)
-					l_process.launch
-					l_success := l_process.launched
-					if l_success then
-						l_process.wait_for_exit
-					else
-						io.error.put_string ("ERROR: Cannot start %"" + command + "%".")
+				-- Some Make utility don't know how to execute multiple C compilation at once.
+				-- For those, we have built a tool `emake' that will do the parallelization of the
+				-- C compilation.
+			if options.get_boolean ("use_emake", False) then
+					-- Launch building of `E1\estructure.h' and `E1\eoffsets.h' in case it is not built and we are not
+					-- in .NET mode
+				if not is_il_code then
+					create l_file.make_with_name ("E1" + directory_separator + "estructure.x")
+					if l_file.exists then
+						l_flags := l_make_flags.split (' ')
+						l_flags.extend ({STRING_32} "E1" + directory_separator + {STRING_32} "estructure.h")
+						l_process := process_launcher (command, l_flags, Void)
+						l_process.launch
+						l_success := l_process.launched
+						if l_success then
+							l_process.wait_for_exit
+						else
+							io.error.put_string ("ERROR: Cannot start %"" + command + "%".")
+						end
+					end
+
+					create l_file.make_with_name ("E1" + directory_separator + "eoffsets.x")
+					if l_file.exists then
+						l_flags := l_make_flags.split (' ')
+						l_flags.extend ({STRING_32} "E1" + directory_separator + {STRING_32} "eoffsets.h")
+						l_process := process_launcher (command, l_flags, Void)
+						l_process.launch
+						l_success := l_process.launched
+						if l_success then
+							l_process.wait_for_exit
+						else
+							io.error.put_string ("ERROR: Cannot start %"" + command + "%".")
+						end
 					end
 				end
 
-				create l_file.make_with_name ("E1" + directory_separator + "eoffsets.x")
-				if l_file.exists then
-					l_flags := l_make_flags.split (' ')
-					l_flags.extend ({STRING_32} "E1" + directory_separator + {STRING_32} "eoffsets.h")
-					l_process := process_launcher (command, l_flags, Void)
-					l_process.launch
-					l_success := l_process.launched
-					if l_success then
-						l_process.wait_for_exit
-					else
-						io.error.put_string ("ERROR: Cannot start %"" + command + "%".")
-					end
+					-- Setup arguments of `emake'.
+				create {ARRAYED_LIST [STRING_32]} l_flags.make (8)
+				if processor_count > 0 then
+					l_flags.extend ({STRING_32} "-cpu")
+					l_flags.extend (processor_count.out)
 				end
-			end
+				l_flags.extend ({STRING_32} "-make")
+				l_flags.extend (command)
+				if not l_make_flags.is_empty then
+					l_flags.extend ({STRING_32} "-make_flags")
+					l_flags.extend (l_make_flags)
+				end
 
-				-- Launch emake.
-			create {ARRAYED_LIST [STRING_32]} l_flags.make (8)
-			if processor_count > 0 then
-				l_flags.extend ({STRING_32} "-cpu")
-				l_flags.extend (processor_count.out)
+				l_launched_command := eiffel_layout.emake_command_name.name
+			else
+					-- If our Make utility support launching more jobs, use
+					-- its command line to specify the number of jobs.
+				if attached options.get_string ("make_cpu_flags") as l_cpu_flag and then not l_cpu_flag.is_empty then
+					create {ARRAYED_LIST [STRING_32]} l_flags.make (8)
+					if processor_count = 0 then
+							-- Use all CPUs by default.
+						compute_number_of_cpu ($l_cpu)
+					elseif processor_count > 0 then
+							-- Use only what was specified.
+						l_cpu := processor_count
+					else
+							-- Use just one.
+						l_cpu := 1
+					end
+					l_flags.extend (l_cpu_flag)
+					l_flags.extend (l_cpu.out)
+				end
+				create {IMMUTABLE_STRING_32} l_launched_command.make_from_string_general (command)
 			end
-			l_flags.extend ({STRING_32} "-make")
-			l_flags.extend (command)
-			if not l_make_flags.is_empty then
-				l_flags.extend ({STRING_32} "-make_flags")
-				l_flags.extend (l_make_flags)
-			end
-
-			l_process := process_launcher (eiffel_layout.emake_command_name.name, l_flags, env.current_working_path.name)
+				-- Launch the C compilation process.
+			l_process := process_launcher (l_launched_command, l_flags, a_directory.name)
 			l_process.launch
 			l_success := l_process.launched
 			if l_success then
 				l_process.wait_for_exit
 			else
-				localized_print_error ({STRING_32} "ERROR: Cannot start %"" + eiffel_layout.emake_command_name.name + "%".")
+				localized_print_error ({STRING_32} "ERROR: Cannot start %"" + l_launched_command + "%".")
 			end
+
 				-- Restore original code page in case it has been changed.
 			{WEL_API}.set_console_input_code_page (input_code_page).do_nothing
 			{WEL_API}.set_console_output_code_page (output_code_page).do_nothing
 		end
 
 feature {NONE} -- Translation
+
+	compute_number_of_cpu (a_result: TYPED_POINTER [INTEGER])
+			-- Number of CPUs.
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				{
+					SYSTEM_INFO SysInfo;
+					ZeroMemory (&SysInfo, sizeof (SYSTEM_INFO));
+					GetSystemInfo (&SysInfo);
+					*(EIF_INTEGER *) $a_result = SysInfo.dwNumberOfProcessors;
+				}
+			]"
+		end
 
 	check_for_il
 			-- Read content of first Ace file
@@ -1821,7 +1866,7 @@ invariant
 	empty_string_empty: empty_string.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

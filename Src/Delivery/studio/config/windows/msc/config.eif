@@ -79,6 +79,9 @@ rmdir: "rd"
 make: "nmake -s -nologo"
 make_utility: "nmake"
 make_flags: "-s -nologo"
+make_cpu_flags: ""
+use_emake: True
+
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=%"$(ISE_EIFFEL)%" -f %%i%""
 makefile_bom: True
 echo_link_bom: "%

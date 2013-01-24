@@ -159,54 +159,56 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if internal_arguments /= Void then
-				Result := internal_arguments.first_token (a_list)
+			if attached internal_arguments as l_args then
+				Result := l_args.first_token (a_list)
 			elseif colon_symbol_index /= 0 and a_list /= Void then
 				Result := colon_symbol (a_list)
-			elseif type /= Void then
-				Result := type.first_token (a_list)
+			elseif attached type as l_type then
+				Result := l_type.first_token (a_list)
 			elseif assign_keyword_index /= 0 and a_list /= Void then
 				Result := assign_keyword (a_list)
-			elseif assigner /= Void then
-				Result := assigner.first_token (a_list)
+			elseif attached assigner as l_assigner then
+				Result := l_assigner.first_token (a_list)
 			elseif is_keyword_index /= 0 and a_list /= Void then
 				Result := is_keyword (a_list)
-			elseif indexing_clause /= Void then
-				Result := indexing_clause.first_token (a_list)
-			elseif content /= Void then
-				Result := content.first_token (a_list)
+			elseif attached indexing_clause as l_indexing_clause then
+				Result := l_indexing_clause.first_token (a_list)
+			elseif attached content as l_content then
+				Result := l_content.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if content /= Void then
-					Result := content.last_token (a_list)
-				elseif type /= Void then
-					Result := type.last_token (a_list)
-				elseif arguments /= Void then
-					Result := arguments.last_token (a_list)
+				if attached content as l_content then
+					Result := l_content.last_token (a_list)
+				elseif attached type as l_type then
+					Result := l_type.last_token (a_list)
+				elseif attached arguments as l_args then
+					Result := l_args.last_token (a_list)
 				else
 					Result := Void
 				end
 			else
-				if is_routine then
-					Result := content.last_token (a_list)
-				elseif is_constant then
-					if indexing_clause /= Void then
-						Result := indexing_clause.last_token (a_list)
+				if attached content as l_content then
+					if l_content.is_constant then
+						if attached indexing_clause as l_indexing_clause then
+							Result := l_indexing_clause.last_token (a_list)
+						else
+							Result := l_content.last_token (a_list)
+						end
 					else
-						Result := content.last_token (a_list)
+						Result := l_content.last_token (a_list)
 					end
 				else
 						-- Attribute case
-					if indexing_clause /= Void then
-						Result := indexing_clause.last_token (a_list)
-					elseif assigner /= Void then
-						Result := assigner.last_token (a_list)
-					elseif type /= Void then
-						Result := type.last_token (a_list)
+					if attached indexing_clause as l_indexing_clause then
+						Result := l_indexing_clause.last_token (a_list)
+					elseif attached assigner as l_assigner then
+						Result := l_assigner.last_token (a_list)
+					elseif attached type as l_type then
+						Result := l_type.last_token (a_list)
 					end
 				end
 			end

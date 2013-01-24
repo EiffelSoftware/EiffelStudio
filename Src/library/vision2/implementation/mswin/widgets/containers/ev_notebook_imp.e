@@ -653,9 +653,6 @@ feature {NONE} -- Implementation
 
 	i_th (i: INTEGER): EV_WIDGET
 			-- `Result' is item at `i'-th position.
-		local
-			wel_win: detachable WEL_WINDOW
-			v_imp: detachable EV_WIDGET_IMP
 		do
 			Result := ev_children.i_th (i).attached_interface
 		end

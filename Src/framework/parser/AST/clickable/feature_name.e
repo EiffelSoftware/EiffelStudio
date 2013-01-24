@@ -108,7 +108,7 @@ feature -- Status report
 			has_no_alias: alias_name = Void implies Result = 0
 		end
 
-	internal_alias_name: ID_AS
+	internal_alias_name: detachable ID_AS
 			-- Operator associated with the feature (if any)
 			-- augmented with information about its arity
 		deferred
@@ -116,7 +116,7 @@ feature -- Status report
 			consistent_result: (Result /= Void) = (alias_name /= Void)
 		end
 
-	alias_name: STRING_AS
+	alias_name: detachable STRING_AS
 			-- Operator name associated with the feature (if any)
 		deferred
 		end

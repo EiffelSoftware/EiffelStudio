@@ -73,6 +73,7 @@ feature -- Basic operatons
 			l_mod: ES_CLASS_LICENSE_MODIFIER
 			l_name: detachable STRING_32
 			l_fn: detachable PATH
+			l_parent: detachable PATH
 			l_path: STRING_32
 			l_index: INTEGER
 			l_license: detachable like load_license
@@ -115,28 +116,45 @@ feature -- Basic operatons
 						end
 
 						l_load_default := True
-						if attached l_path then
+						if l_path /= Void then
 							l_index := l_path.last_index_of ('.', l_path.count)
 							if l_index > 1 then
-								l_path.keep_head (l_index - 1)
-								create l_fn.make_from_string (l_path + {STRING_32} "." + license_extension)
-
 									-- Try to load the license
+								l_path.keep_head (l_index - 1)
+
+									-- ecf filename - ".ecf" + ".lic"
+								create l_fn.make_from_string (l_path)
+								l_fn := l_fn.appended_with_extension (license_extension)
 								if (create {RAW_FILE}.make_with_path (l_fn)).exists then
 									l_license := load_license (l_fn, l_use_old_syntax)
 									l_load_default := False
 								else
-									l_path := l_fn.name
-										-- Try the default license file
-									l_index := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
-									if l_index > 1 then
-										l_path.keep_head (l_index - 1)
-										l_fn := l_fn.extended (default_license_filename + {STRING_32} "." + license_extension)
+									l_parent := l_fn.parent
+									if l_parent = Void then
+										create l_parent.make_current
+									end
+										-- ecf filename - "-safe.ecf" + ".lic"
+									if
+										attached l_fn.entry as l_fn_entry and then
+										l_fn_entry.name.ends_with_general ("-safe.lic")
+									then
+										l_path := l_fn_entry.name
+										l_path.remove_tail (("-safe.lic").count)
+										l_fn := l_parent.extended (l_path).appended_with_extension (license_extension)
+										if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+											l_license := load_license (l_fn, l_use_old_syntax)
+											l_load_default := False
+										end
+									end
+									if l_license = Void then
+											-- ecf parent folder name "license.lic"
+										l_fn := l_parent.extended (default_license_filename).appended_with_extension (license_extension)
 										if (create {RAW_FILE}.make_with_path (l_fn)).exists then
 											l_license := load_license (l_fn, l_use_old_syntax)
 											l_load_default := False
 										else
-											l_fn := l_fn.extended (alternative_default_license_filename + {STRING_32} "." + license_extension)
+												-- ecf parent folder name "licence.lic"
+											l_fn := l_parent.extended (alternative_default_license_filename).appended_with_extension (license_extension)
 											if (create {RAW_FILE}.make_with_path (l_fn)).exists then
 												l_license := load_license (l_fn, l_use_old_syntax)
 												l_load_default := False
@@ -322,7 +340,7 @@ feature {NONE} -- Internationalization
 			-- Default invalid license.
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

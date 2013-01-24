@@ -98,10 +98,10 @@ feature -- Match list maintainning
 			match_list: match_list /= Void
 			a_match_not_void: a_match /= Void
 		do
-			if is_match_list_extension_enabled then
+			if attached match_list as l_list and is_match_list_extension_enabled then
 				increase_match_list_count
 				a_match.set_index (match_list_count)
-				match_list.extend (a_match)
+				l_list.extend (a_match)
 			end
 		end
 
@@ -109,10 +109,10 @@ feature -- Match list maintainning
 			-- Extend `internal_match_list' with stub `a_stub',
 			-- and set index in `a_match'.
 		do
-			if is_match_list_extension_enabled then
+			if attached match_list as l_list and is_match_list_extension_enabled then
 				increase_match_list_count
 				a_stub.set_index (match_list_count)
-				match_list.extend (a_stub)
+				l_list.extend (a_stub)
 			end
 		end
 
@@ -230,7 +230,7 @@ feature -- Access
 			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
 			-- New KEYWORD AST node
 		do
 				-- It is ok to create a KEYWORD_STUB_AS because it inherits from LEAF_STUB_AS and thus

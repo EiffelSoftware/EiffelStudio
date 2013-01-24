@@ -10,7 +10,8 @@ inherit
 	YY_FILE_BUFFER
 		redefine
 			fill,
-			compact_left
+			compact_left,
+			make_with_size
 		end
 
 	SYSTEM_ENCODINGS
@@ -19,6 +20,16 @@ create
 	make,
 	make_with_size,
 	make_from_file_buffer
+
+feature {NONE} -- Initialization
+
+	make_with_size (a_file: like file; size: INTEGER)
+			-- <Precursor>
+		do
+			Precursor (a_file, size)
+			create string_buffer.make (1)
+			string_buffer.append_character ('%U')
+		end
 
 feature -- Initialization
 
@@ -178,7 +189,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

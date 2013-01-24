@@ -3632,13 +3632,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs25.item (yyvsp25 - 1) /= Void then
-					temp_string_as1 := yyvs25.item (yyvsp25 - 1).second
+				if attached yyvs25.item (yyvsp25 - 1) as l_external then
+					temp_string_as1 := l_external.second
 				else
 					temp_string_as1 := Void
 				end
-				if yyvs25.item (yyvsp25) /= Void then
-					temp_string_as2 := yyvs25.item (yyvsp25).second
+				if attached yyvs25.item (yyvsp25) as l_obsolete then
+					temp_string_as2 := l_obsolete.second
 				else
 					temp_string_as2 := Void
 				end
@@ -3646,21 +3646,21 @@ end
 				root_node := new_class_description (yyvs2.item (yyvsp2), temp_string_as1,
 					is_deferred, is_expanded, is_frozen_class, is_external_class, is_partial_class,
 					yyvs121.item (yyvsp121 - 1), yyvs121.item (yyvsp121), yyvs119.item (yyvsp119), yyvs129.item (yyvsp129 - 1), yyvs129.item (yyvsp129), yyvs101.item (yyvsp101), yyvs99.item (yyvsp99), yyvs112.item (yyvsp112), yyvs72.item (yyvsp72), suppliers, temp_string_as2, yyvs12.item (yyvsp12))
-				if root_node /= Void then
-					root_node.set_text_positions (
+				if attached root_node as l_root_node then
+					l_root_node.set_text_positions (
 						formal_generics_end_position,
 						conforming_inheritance_end_position,
 						non_conforming_inheritance_end_position,
 						features_end_position
 					)
-					if yyvs25.item (yyvsp25 - 1) /= Void then
-						root_node.set_alias_keyword (yyvs25.item (yyvsp25 - 1).first)
+					if attached yyvs25.item (yyvsp25 - 1) as l_external then
+						l_root_node.set_alias_keyword (l_external.first)
 					end
-					if yyvs25.item (yyvsp25) /= Void then
-						root_node.set_obsolete_keyword (yyvs25.item (yyvsp25).first)
+					if attached yyvs25.item (yyvsp25) as l_obsolete then
+						l_root_node.set_obsolete_keyword (l_obsolete.first)
 					end
-					root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
-					root_node.set_class_keyword (yyvs12.item (yyvsp12 - 1))
+					l_root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
+					l_root_node.set_class_keyword (yyvs12.item (yyvsp12 - 1))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -3894,9 +3894,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval121 := yyvs121.item (yyvsp121)
-				if yyval121 /= Void then
-					yyval121.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
+				if attached yyvs121.item (yyvsp121) as l_list then
+					yyval121 := l_list
+					l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 				end				
 			
 if yy_parsing_status >= yyContinue then
@@ -3917,9 +3917,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval121 := ast_factory.new_indexing_clause_as (0)
-				if yyval121 /= Void then
-					yyval121.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
+				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+					yyval121 := l_list
+					l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -3956,9 +3956,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval121 := yyvs121.item (yyvsp121)
-				if yyval121 /= Void then
-					yyval121.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
+				if attached yyvs121.item (yyvsp121) as l_list then
+					yyval121 := l_list
+					l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 				end				
 			
 if yy_parsing_status >= yyContinue then
@@ -3979,9 +3979,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval121 := ast_factory.new_indexing_clause_as (0)
-				if yyval121 /= Void then
-					yyval121.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
+				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+					yyval121 := l_list
+					l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4052,10 +4052,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval121 := ast_factory.new_indexing_clause_as (0)
-				if yyval121 /= Void then
-						yyval121.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
-						yyval121.set_end_keyword (yyvs12.item (yyvsp12))
+				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+						yyval121 := l_list
+						l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
+						l_list.set_end_keyword (yyvs12.item (yyvsp12))
 				end		
 				if has_syntax_warning then
 					report_one_warning (
@@ -4098,13 +4098,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval121 := yyvs121.item (yyvsp121)
-				if yyval121 /= Void then
-					if yyvs15.item (yyvsp15) /= Void then
-						yyval121.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
+				if attached yyvs121.item (yyvsp121) as l_list then
+					yyval121 := l_list
+					if attached yyvs15.item (yyvsp15) as l_indexing then
+						l_list.set_indexing_keyword (extract_keyword (l_indexing))
 					end
-					if yyvs12.item (yyvsp12) /= Void then	
-						yyval121.set_end_keyword (yyvs12.item (yyvsp12))
+					if attached yyvs12.item (yyvsp12) as l_end then
+						l_list.set_end_keyword (l_end)
 					end
 				end				
 				if has_syntax_warning then
@@ -5196,9 +5196,12 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval112 := yyvs112.item (yyvsp112)
-				if yyval112 /= Void and then yyval112.is_empty then
-					yyval112 := Void
+				if attached yyvs112.item (yyvsp112) as l_list then
+					if l_list.is_empty then
+						yyval112 := Void
+					else
+						yyval112 := l_list
+					end
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -5373,10 +5376,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				fclause_pos := yyvs12.item (yyvsp12)
-				if yyvs12.item (yyvsp12) /= Void then
+				if attached yyvs12.item (yyvsp12) as l_keyword then
 						-- Originally, it was 8, I changed it to 7, delete the following line when fully tested. (Jason)
-					fclause_pos.set_position (line, column, position, 7)
+					l_keyword.set_position (line, column, position, 7)
+					fclause_pos := l_keyword
 				else
 						-- Originally, it was 8, I changed it to 7 (Jason)
 					fclause_pos := ast_factory.new_feature_keyword_as (line, column, position, 7, Current)
@@ -5526,10 +5529,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval120 := yyvs120.item (yyvsp120)
-				if yyval120 /= Void then
-					yyval120.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
-					yyval120.set_rcurly_symbol (yyvs4.item (yyvsp4))
+				if attached yyvs120.item (yyvsp120) as l_list then
+					yyval120 := l_list
+					l_list.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
+					l_list.set_rcurly_symbol (yyvs4.item (yyvsp4))
 				end				
 			
 if yy_parsing_status >= yyContinue then
@@ -5875,9 +5878,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval94 := yyvs94.item (yyvsp94)
-				if yyval94 /= Void then
-					yyval94.set_frozen_keyword (yyvs12.item (yyvsp12))
+				if attached yyvs94.item (yyvsp94) as l_name then
+					yyval94 := l_name
+					l_name.set_frozen_keyword (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -5914,8 +5917,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs17.item (yyvsp17) /= Void then
-					yyval94 := ast_factory.new_feature_name_alias_as (yyvs2.item (yyvsp2), yyvs17.item (yyvsp17).alias_name, has_convert_mark, yyvs17.item (yyvsp17).alias_keyword, yyvs17.item (yyvsp17).convert_keyword)
+				if attached yyvs17.item (yyvsp17) as l_alias then
+					yyval94 := ast_factory.new_feature_name_alias_as (yyvs2.item (yyvsp2), l_alias.alias_name, has_convert_mark, l_alias.alias_keyword, l_alias.convert_keyword)
 				else
 					yyval94 := ast_factory.new_feature_name_alias_as (yyvs2.item (yyvsp2), Void, has_convert_mark, Void, Void)
 				end
@@ -6320,10 +6323,10 @@ debug ("GEYACC")
 end
 
 					-- Attribute case
-				if yyvs23.item (yyvsp23) = Void then
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, Void, yyvs4.item (yyvsp4), Void, Void, yyvs121.item (yyvsp121))
+				if attached yyvs23.item (yyvsp23) as l_assigner_mark then
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), l_assigner_mark.second, Void, yyvs4.item (yyvsp4), Void, l_assigner_mark.first, yyvs121.item (yyvsp121))
 				else
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), yyvs23.item (yyvsp23).second, Void, yyvs4.item (yyvsp4), Void, yyvs23.item (yyvsp23).first, yyvs121.item (yyvsp121))
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, Void, yyvs4.item (yyvsp4), Void, Void, yyvs121.item (yyvsp121))
 				end				
 				feature_indexes := yyvs121.item (yyvsp121)
 			
@@ -6365,10 +6368,10 @@ debug ("GEYACC")
 end
 
 					-- Constant case
-				if yyvs23.item (yyvsp23) = Void then
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, yyvs121.item (yyvsp121))
+				if attached yyvs23.item (yyvsp23) as l_assigner_mark then
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), l_assigner_mark.second, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), l_assigner_mark.first, yyvs121.item (yyvsp121))
 				else
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), yyvs23.item (yyvsp23).second, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), yyvs23.item (yyvsp23).first, yyvs121.item (yyvsp121))
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, yyvs121.item (yyvsp121))
 				end
 				
 				feature_indexes := yyvs121.item (yyvsp121)
@@ -6412,10 +6415,10 @@ debug ("GEYACC")
 end
 
 					-- Constant case
-				if yyvs23.item (yyvsp23) = Void then
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), Void, yyvs121.item (yyvsp121))
+				if attached yyvs23.item (yyvsp23) as l_assigner_mark then
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), l_assigner_mark.second, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), l_assigner_mark.first, yyvs121.item (yyvsp121))
 				else
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), yyvs23.item (yyvsp23).second, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), yyvs23.item (yyvsp23).first, yyvs121.item (yyvsp121))
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs47.item (yyvsp47), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), Void, yyvs121.item (yyvsp121))
 				end
 				
 				feature_indexes := yyvs121.item (yyvsp121)
@@ -6500,10 +6503,10 @@ debug ("GEYACC")
 end
 
 					-- Function without arguments
-				if yyvs23.item (yyvsp23) = Void then
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), Void, yyvs121.item (yyvsp121))
+				if attached yyvs23.item (yyvsp23) as l_assigner_mark then
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), l_assigner_mark.second, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), l_assigner_mark.first, yyvs121.item (yyvsp121))
 				else
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), yyvs23.item (yyvsp23).second, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), yyvs23.item (yyvsp23).first, yyvs121.item (yyvsp121))
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), extract_keyword (yyvs15.item (yyvsp15)), Void, yyvs121.item (yyvsp121))
 				end
 				
 				feature_indexes := yyvs121.item (yyvsp121)
@@ -6548,10 +6551,10 @@ debug ("GEYACC")
 end
 
 					-- Function without arguments
-				if yyvs23.item (yyvsp23) = Void then
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), Void, Void, yyvs121.item (yyvsp121))
+				if attached yyvs23.item (yyvsp23) as l_assigner_mark then
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), l_assigner_mark.second, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), Void, l_assigner_mark.first, yyvs121.item (yyvsp121))
 				else
-					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), yyvs23.item (yyvsp23).second, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), Void, yyvs23.item (yyvsp23).first, yyvs121.item (yyvsp121))
+					yyval42 := ast_factory.new_body_as (Void, yyvs89.item (yyvsp89), Void, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), Void, Void, yyvs121.item (yyvsp121))
 				end
 				
 				feature_indexes := yyvs121.item (yyvsp121)
@@ -6636,10 +6639,10 @@ debug ("GEYACC")
 end
 
 					-- Function with arguments
-				if yyvs23.item (yyvsp23) = Void then
-					yyval42 := ast_factory.new_body_as (yyvs139.item (yyvsp139), yyvs89.item (yyvsp89), Void, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), yyvs12.item (yyvsp12), Void, yyvs121.item (yyvsp121))
+				if attached yyvs23.item (yyvsp23) as l_assigner_mark then
+					yyval42 := ast_factory.new_body_as (yyvs139.item (yyvsp139), yyvs89.item (yyvsp89), l_assigner_mark.second, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), yyvs12.item (yyvsp12), l_assigner_mark.first, yyvs121.item (yyvsp121))
 				else
-					yyval42 := ast_factory.new_body_as (yyvs139.item (yyvsp139), yyvs89.item (yyvsp89), yyvs23.item (yyvsp23).second, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), yyvs12.item (yyvsp12), yyvs23.item (yyvsp23).first, yyvs121.item (yyvsp121))
+					yyval42 := ast_factory.new_body_as (yyvs139.item (yyvsp139), yyvs89.item (yyvsp89), Void, yyvs85.item (yyvsp85), yyvs4.item (yyvsp4), yyvs12.item (yyvsp12), Void, yyvs121.item (yyvsp121))
 				end				
 				feature_indexes := yyvs121.item (yyvsp121)
 			
@@ -6868,8 +6871,8 @@ end
 							once "Use `inherit ANY' or do not specify an empty inherit clause"))
 					end
 					yyval129 := ast_factory.new_eiffel_list_parent_as (0)
-					if yyval129 /= Void then
-						yyval129.set_inheritance_tokens (yyvs12.item (yyvsp12), Void, Void, Void)
+					if attached yyval129 as l_inheritance then
+						l_inheritance.set_inheritance_tokens (yyvs12.item (yyvsp12), Void, Void, Void)
 					end
 				else
 						-- Raise error as conforming inheritance has already been specified
@@ -6918,8 +6921,8 @@ end
 				if not conforming_inheritance_flag then
 						-- Conforming inheritance
 					yyval129 := yyvs129.item (yyvsp129)
-					if yyval129 /= Void then
-						yyval129.set_inheritance_tokens (yyvs12.item (yyvsp12), Void, Void, Void)
+					if attached yyval129 as l_inheritance then
+						l_inheritance.set_inheritance_tokens (yyvs12.item (yyvsp12), Void, Void, Void)
 					end
 				else
 						-- Raise error as conforming inheritance has already been specified
@@ -6949,8 +6952,8 @@ debug ("GEYACC")
 end
 
 				yyval129 := yyvs129.item (yyvsp129)
-				if yyval129 /= Void then
-					yyval129.set_inheritance_tokens (yyvs12.item (yyvsp12), yyvs4.item (yyvsp4 - 1), yyvs2.item (yyvsp2), yyvs4.item (yyvsp4))
+				if attached yyval129 as l_inheritance then
+					l_inheritance.set_inheritance_tokens (yyvs12.item (yyvsp12), yyvs4.item (yyvsp4 - 1), yyvs2.item (yyvsp2), yyvs4.item (yyvsp4))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -7911,9 +7914,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval99 := yyvs99.item (yyvsp99)
-			if yyval99 /= Void then
-				yyval99.set_convert_keyword (yyvs12.item (yyvsp12))
+			if attached yyvs99.item (yyvsp99) as l_list then
+				yyval99 := l_list
+				l_list.set_convert_keyword (yyvs12.item (yyvsp12))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -8830,15 +8833,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs25.item (yyvsp25) /= Void then
-					temp_string_as1 := yyvs25.item (yyvsp25).second
-					temp_keyword_as := yyvs25.item (yyvsp25).first
+				if attached yyvs25.item (yyvsp25) as l_pair then
+					temp_string_as1 := l_pair.second
+					temp_keyword_as := l_pair.first
 				else
 					temp_string_as1 := Void
 					temp_keyword_as := Void
 				end
-				if yyvs21.item (yyvsp21) /= Void then
-					yyval85 := ast_factory.new_routine_as (temp_string_as1, yyvs82.item (yyvsp82), yyvs138.item (yyvsp138), yyvs84.item (yyvsp84), yyvs54.item (yyvsp54), yyvs21.item (yyvsp21).second, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, yyvs21.item (yyvsp21).first, object_test_locals)
+				if attached yyvs21.item (yyvsp21) as l_rescue then
+					yyval85 := ast_factory.new_routine_as (temp_string_as1, yyvs82.item (yyvsp82), yyvs138.item (yyvsp138), yyvs84.item (yyvsp84), yyvs54.item (yyvsp54), l_rescue.second, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals)
 				else
 					yyval85 := ast_factory.new_routine_as (temp_string_as1, yyvs82.item (yyvsp82), yyvs138.item (yyvsp138), yyvs84.item (yyvsp84), yyvs54.item (yyvsp54), Void, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
@@ -9007,14 +9010,14 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs58.item (yyvsp58) /= Void and then yyvs58.item (yyvsp58).is_built_in then
-					if yyvs25.item (yyvsp25) /= Void then 
-						yyval57 := ast_factory.new_built_in_as (yyvs58.item (yyvsp58), yyvs25.item (yyvsp25).second, yyvs12.item (yyvsp12), yyvs25.item (yyvsp25).first)
+				if attached yyvs58.item (yyvsp58) as l_language and then l_language.is_built_in then
+					if attached yyvs25.item (yyvsp25) as l_name then 
+						yyval57 := ast_factory.new_built_in_as (l_language, l_name.second, yyvs12.item (yyvsp12), l_name.first)
 					else
-						yyval57 := ast_factory.new_built_in_as (yyvs58.item (yyvsp58), Void, yyvs12.item (yyvsp12), Void)
+						yyval57 := ast_factory.new_built_in_as (l_language, Void, yyvs12.item (yyvsp12), Void)
 					end
-				elseif yyvs25.item (yyvsp25) /= Void then
-					yyval57 := ast_factory.new_external_as (yyvs58.item (yyvsp58), yyvs25.item (yyvsp25).second, yyvs12.item (yyvsp12), yyvs25.item (yyvsp25).first)
+				elseif attached yyvs25.item (yyvsp25) as l_name then
+					yyval57 := ast_factory.new_external_as (yyvs58.item (yyvsp58), l_name.second, yyvs12.item (yyvsp12), l_name.first)
 				else
 					yyval57 := ast_factory.new_external_as (yyvs58.item (yyvsp58), Void, yyvs12.item (yyvsp12), Void)
 				end
@@ -9491,9 +9494,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval68 := yyvs68.item (yyvsp68) 
-				if yyval68 /= Void then
-					yyval68.set_line_pragma (last_line_pragma)
+				if attached yyvs68.item (yyvsp68) as l_instructions then
+					yyval68 := l_instructions
+					l_instructions.set_line_pragma (last_line_pragma)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10315,9 +10318,12 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval135 := yyvs135.item (yyvsp135)
-				if yyval135 /= Void and then yyval135.is_empty then
-					yyval135 := Void
+				if attached yyvs135.item (yyvsp135) as l_list then
+					if l_list.is_empty then
+						yyval135 := Void
+					else
+						yyval135 := l_list
+					end
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10641,8 +10647,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10663,8 +10669,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10685,8 +10691,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_separate_mark and then attached yyval89 then
-					yyval89.set_separate_mark (yyvs12.item (yyvsp12))
+				if not is_ignoring_separate_mark and then attached yyval89 as l_type then
+					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10707,11 +10713,11 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval89 then
-					yyval89.set_separate_mark (yyvs12.item (yyvsp12))
+				if not is_ignoring_separate_mark and then attached yyval89 as l_type then
+					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10733,11 +10739,11 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval89 then
-					yyval89.set_separate_mark (yyvs12.item (yyvsp12))
+				if not is_ignoring_separate_mark and then attached yyval89 as l_type then
+					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10846,8 +10852,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10868,8 +10874,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10890,8 +10896,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_separate_mark and then attached yyval89 then
-					yyval89.set_separate_mark (yyvs12.item (yyvsp12))
+				if not is_ignoring_separate_mark and then attached yyval89 as l_type then
+					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10912,11 +10918,11 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval89 then
-					yyval89.set_separate_mark (yyvs12.item (yyvsp12))
+				if not is_ignoring_separate_mark and then attached yyval89 as l_type then
+					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10938,11 +10944,11 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval89 then
-					yyval89.set_separate_mark (yyvs12.item (yyvsp12))
+				if not is_ignoring_separate_mark and then attached yyval89 as l_type then
+					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -11237,8 +11243,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (yyvs4.item (yyvsp4), True, False)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (yyvs4.item (yyvsp4), True, False)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -11264,8 +11270,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (yyvs4.item (yyvsp4), False, True)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (yyvs4.item (yyvsp4), False, True)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -11388,8 +11394,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (yyvs4.item (yyvsp4), True, False)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (yyvs4.item (yyvsp4), True, False)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -11415,8 +11421,8 @@ debug ("GEYACC")
 end
 
 				yyval89 := yyvs89.item (yyvsp89)
-				if not is_ignoring_attachment_marks and then yyval89 /= Void then
-					yyval89.set_attachment_mark (yyvs4.item (yyvsp4), False, True)
+				if not is_ignoring_attachment_marks and then attached yyval89 as l_type then
+					l_type.set_attachment_mark (yyvs4.item (yyvsp4), False, True)
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -11493,9 +11499,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval136 := yyvs136.item (yyvsp136)
-				if yyval136 /= Void then
-					yyval136.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				if attached yyvs136.item (yyvsp136) as l_list then
+					yyval136 := l_list
+					l_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -11515,9 +11521,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval136 := ast_factory.new_eiffel_list_type (0)
-				if yyval136 /= Void then
-					yyval136.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				if attached ast_factory.new_eiffel_list_type (0) as l_list then
+					yyval136 := l_list
+					l_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end	
 			
 if yy_parsing_status >= yyContinue then
@@ -11716,8 +11722,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs136.item (yyvsp136) /= Void then
-					yyvs136.item (yyvsp136).set_positions (yyvs4.item (yyvsp4), last_rsqure.item)
+				if attached yyvs136.item (yyvsp136) as l_list then
+					l_list.set_positions (yyvs4.item (yyvsp4), last_rsqure.item)
 				end
 				yyval89 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), yyvs136.item (yyvsp136))
 				last_rsqure.remove
@@ -11851,7 +11857,7 @@ end
 					attached new_class_type (l_val, Void) as l_class_type
 				then
 					l_val.to_upper		
-					yyval136.reverse_extend (l_class_type)
+					l_list.reverse_extend (l_class_type)
 					ast_factory.reverse_extend_separator (l_list, yyvs4.item (yyvsp4))
 				end
 			
@@ -11901,14 +11907,14 @@ end
 
 				yyval137 := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
 				if
-					yyval137 /= Void and then attached yyvs2.item (yyvsp2) as l_name and then
+					attached yyval137 as l_named_list and then attached yyvs2.item (yyvsp2) as l_name and then
 					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
 					attached ast_factory.new_type_dec_as (l_list, yyvs89.item (yyvsp89), yyvs4.item (yyvsp4 - 1)) as l_type_dec_as
 				then
 					l_name.to_lower		
 					l_list.reverse_extend (l_name.name_id)
 					ast_factory.reverse_extend_identifier (l_list, l_name)
-					yyval137.reverse_extend (l_type_dec_as)
+					l_named_list.reverse_extend (l_type_dec_as)
 				end
 				last_rsqure.force (yyvs4.item (yyvsp4))
 			
@@ -11950,9 +11956,9 @@ end
 
 				yyval137 := yyvs137.item (yyvsp137)
 				if
-					yyval137 /= Void and then not yyval137.is_empty and then
+					attached yyval137 as l_named_list and then not l_named_list.is_empty and then
 					attached yyvs2.item (yyvsp2) as l_name and then
-					attached yyval137.reversed_first.id_list as l_list
+					attached l_named_list.reversed_first.id_list as l_list
 				then
 					l_name.to_lower		
 					l_list.reverse_extend (l_name.name_id)
@@ -11982,14 +11988,14 @@ end
 				remove_counter
 				yyval137 := yyvs137.item (yyvsp137)
 				if
-					yyval137 /= Void and then attached yyvs2.item (yyvsp2) as l_name and then yyvs89.item (yyvsp89) /= Void and then
+					attached yyval137 as l_named_list and then attached yyvs2.item (yyvsp2) as l_name and then yyvs89.item (yyvsp89) /= Void and then
 					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
 					attached ast_factory.new_type_dec_as (l_list, yyvs89.item (yyvsp89), yyvs4.item (yyvsp4 - 1)) as l_type_dec_as
 				then
 					l_name.to_lower		
 					l_list.reverse_extend (l_name.name_id)
 					ast_factory.reverse_extend_identifier (l_list, l_name)
-					yyval137.reverse_extend (l_type_dec_as)
+					l_named_list.reverse_extend (l_type_dec_as)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -12050,8 +12056,8 @@ end
 
 				formal_generics_end_position := position
 				yyval119 := ast_factory.new_eiffel_list_formal_dec_as (0)
-				if yyval119 /= Void then
-					yyval119.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				if attached yyval119 as l_formals then
+					l_formals.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -12090,9 +12096,9 @@ end
 
 				formal_generics_end_position := position
 				yyval119 := yyvs119.item (yyvsp119)
-				if yyval119 /= Void then
-					yyval119.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
-					yyval119.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				if attached yyval119 as l_formals then
+					l_formals.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
+					l_formals.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -12177,7 +12183,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void and then {PREDEFINED_NAMES}.none_class_name_id = yyvs2.item (yyvsp2).name_id then
+				if attached yyvs2.item (yyvsp2) as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -12224,7 +12230,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void and then {PREDEFINED_NAMES}.none_class_name_id = yyvs2.item (yyvsp2).name_id then
+				if attached yyvs2.item (yyvsp2) as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -12271,7 +12277,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void and then {PREDEFINED_NAMES}.none_class_name_id = yyvs2.item (yyvsp2).name_id then
+				if attached yyvs2.item (yyvsp2) as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$1' is not a class name
@@ -14096,8 +14102,8 @@ end
 						create {SYNTAX_WARNING}.make (token_line (yyvs93.item (yyvsp93)), token_column (yyvs93.item (yyvsp93)), filename,
 						once "Loop variant should appear just before the end keyword of the loop."))
 				end
-				if yyvs29.item (yyvsp29) /= Void then
-					yyval74 := ast_factory.new_loop_as (Void, yyvs123.item (yyvsp123 - 1), yyvs29.item (yyvsp29).second, yyvs93.item (yyvsp93), yyvs56.item (yyvsp56), yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 3), yyvs29.item (yyvsp29).first, yyvs12.item (yyvsp12 - 2), yyvs12.item (yyvsp12 - 1))
+				if attached yyvs29.item (yyvsp29) as l_invariant_pair then
+					yyval74 := ast_factory.new_loop_as (Void, yyvs123.item (yyvsp123 - 1), l_invariant_pair.second, yyvs93.item (yyvsp93), yyvs56.item (yyvsp56), yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 3), l_invariant_pair.first, yyvs12.item (yyvsp12 - 2), yyvs12.item (yyvsp12 - 1))
 				else
 					yyval74 := ast_factory.new_loop_as (Void, yyvs123.item (yyvsp123 - 1), Void, yyvs93.item (yyvsp93), yyvs56.item (yyvsp56), yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 3), Void, yyvs12.item (yyvsp12 - 2), yyvs12.item (yyvsp12 - 1))
 				end
@@ -14141,8 +14147,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs29.item (yyvsp29) /= Void then
-					yyval74 := ast_factory.new_loop_as (Void, yyvs123.item (yyvsp123 - 1), yyvs29.item (yyvsp29).second, yyvs93.item (yyvsp93), yyvs56.item (yyvsp56), yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 3), yyvs29.item (yyvsp29).first, yyvs12.item (yyvsp12 - 2), yyvs12.item (yyvsp12 - 1))
+				if attached yyvs29.item (yyvsp29) as l_invariant_pair then
+					yyval74 := ast_factory.new_loop_as (Void, yyvs123.item (yyvsp123 - 1), l_invariant_pair.second, yyvs93.item (yyvsp93), yyvs56.item (yyvsp56), yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 3), l_invariant_pair.first, yyvs12.item (yyvsp12 - 2), yyvs12.item (yyvsp12 - 1))
 				else
 					yyval74 := ast_factory.new_loop_as (Void, yyvs123.item (yyvsp123 - 1), Void, yyvs93.item (yyvsp93), yyvs56.item (yyvsp56), yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 3), Void, yyvs12.item (yyvsp12 - 2), yyvs12.item (yyvsp12 - 1))
 				end
@@ -14186,15 +14192,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs29.item (yyvsp29) /= Void then
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), yyvs123.item (yyvsp123 - 1), yyvs29.item (yyvsp29).second, yyvs93.item (yyvsp93), yyvs31.item (yyvsp31).second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 2), yyvs29.item (yyvsp29).first, yyvs31.item (yyvsp31).first, yyvs12.item (yyvsp12 - 1))
+				if attached yyvs29.item (yyvsp29) as l_invariant_pair then
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), yyvs123.item (yyvsp123 - 1), l_invariant_pair.second, yyvs93.item (yyvsp93), l_until_pair.second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 2), l_invariant_pair.first, l_until_pair.first, yyvs12.item (yyvsp12 - 1))
 					else
-						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), yyvs123.item (yyvsp123 - 1), yyvs29.item (yyvsp29).second, yyvs93.item (yyvsp93), Void, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 2), yyvs29.item (yyvsp29).first, Void, yyvs12.item (yyvsp12 - 1))
+						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), yyvs123.item (yyvsp123 - 1), l_invariant_pair.second, yyvs93.item (yyvsp93), Void, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 2), l_invariant_pair.first, Void, yyvs12.item (yyvsp12 - 1))
 					end
 				else
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), yyvs123.item (yyvsp123 - 1), Void, yyvs93.item (yyvsp93), yyvs31.item (yyvsp31).second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 2), Void, yyvs31.item (yyvsp31).first, yyvs12.item (yyvsp12 - 1))
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), yyvs123.item (yyvsp123 - 1), Void, yyvs93.item (yyvsp93), l_until_pair.second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 2), Void, l_until_pair.first, yyvs12.item (yyvsp12 - 1))
 					else
 						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), yyvs123.item (yyvsp123 - 1), Void, yyvs93.item (yyvsp93), Void, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), yyvs12.item (yyvsp12 - 2), Void, Void, yyvs12.item (yyvsp12 - 1))
 					end
@@ -14240,15 +14246,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs29.item (yyvsp29) /= Void then
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), Void, yyvs29.item (yyvsp29).second, yyvs93.item (yyvsp93), yyvs31.item (yyvsp31).second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), Void, yyvs29.item (yyvsp29).first, yyvs31.item (yyvsp31).first, yyvs12.item (yyvsp12 - 1))
+				if attached yyvs29.item (yyvsp29) as l_invariant_pair then
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), Void, l_invariant_pair.second, yyvs93.item (yyvsp93), l_until_pair.second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), Void, l_invariant_pair.first, l_until_pair.first, yyvs12.item (yyvsp12 - 1))
 					else
-						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), Void, yyvs29.item (yyvsp29).second, yyvs93.item (yyvsp93), Void, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), Void, yyvs29.item (yyvsp29).first, Void, yyvs12.item (yyvsp12 - 1))
+						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), Void, l_invariant_pair.second, yyvs93.item (yyvsp93), Void, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), Void, l_invariant_pair.first, Void, yyvs12.item (yyvsp12 - 1))
 					end
 				else
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), Void, Void, yyvs93.item (yyvsp93), yyvs31.item (yyvsp31).second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), Void, Void, yyvs31.item (yyvsp31).first, yyvs12.item (yyvsp12 - 1))
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), Void, Void, yyvs93.item (yyvsp93), l_until_pair.second, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), Void, Void, l_until_pair.first, yyvs12.item (yyvsp12 - 1))
 					else
 						yyval74 := ast_factory.new_loop_as (yyvs122.item (yyvsp122), Void, Void, yyvs93.item (yyvsp93), Void, yyvs123.item (yyvsp123), yyvs12.item (yyvsp12), Void, Void, Void, yyvs12.item (yyvsp12 - 1))
 					end
@@ -14294,15 +14300,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs29.item (yyvsp29) /= Void then
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), yyvs29.item (yyvsp29).first, yyvs29.item (yyvsp29).second, yyvs31.item (yyvsp31).first, yyvs31.item (yyvsp31).second, yyvs12.item (yyvsp12 - 1), True, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
+				if attached yyvs29.item (yyvsp29) as l_invariant_pair then
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, yyvs12.item (yyvsp12 - 1), True, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					else
-						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), yyvs29.item (yyvsp29).first, yyvs29.item (yyvsp29).second, Void, Void, yyvs12.item (yyvsp12 - 1), True, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
+						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), l_invariant_pair.first, l_invariant_pair.second, Void, Void, yyvs12.item (yyvsp12 - 1), True, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					end
 				else
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), Void, Void, yyvs31.item (yyvsp31).first, yyvs31.item (yyvsp31).second, yyvs12.item (yyvsp12 - 1), True, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), Void, Void, l_until_pair.first, l_until_pair.second, yyvs12.item (yyvsp12 - 1), True, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					else
 						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), Void, Void, Void, Void, yyvs12.item (yyvsp12 - 1), True, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					end
@@ -14348,15 +14354,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs29.item (yyvsp29) /= Void then
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), yyvs29.item (yyvsp29).first, yyvs29.item (yyvsp29).second, yyvs31.item (yyvsp31).first, yyvs31.item (yyvsp31).second, extract_keyword (yyvs15.item (yyvsp15)), False, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
+				if attached yyvs29.item (yyvsp29) as l_invariant_pair then
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, extract_keyword (yyvs15.item (yyvsp15)), False, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					else
-						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), yyvs29.item (yyvsp29).first, yyvs29.item (yyvsp29).second, Void, Void, extract_keyword (yyvs15.item (yyvsp15)), False, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
+						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), l_invariant_pair.first, l_invariant_pair.second, Void, Void, extract_keyword (yyvs15.item (yyvsp15)), False, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					end
 				else
-					if yyvs31.item (yyvsp31) /= Void then
-						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), Void, Void, yyvs31.item (yyvsp31).first, yyvs31.item (yyvsp31).second, extract_keyword (yyvs15.item (yyvsp15)), False, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
+					if attached yyvs31.item (yyvsp31) as l_until_pair then
+						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), Void, Void, l_until_pair.first, l_until_pair.second, extract_keyword (yyvs15.item (yyvsp15)), False, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					else
 						yyval73 := ast_factory.new_loop_expr_as (yyvs122.item (yyvsp122), Void, Void, Void, Void, extract_keyword (yyvs15.item (yyvsp15)), False, yyvs56.item (yyvsp56), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12))
 					end
@@ -15964,11 +15970,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			if yyvs32.item (yyvsp32) /= Void then
-				yyval86 := ast_factory.new_agent_routine_creation_as (yyvs32.item (yyvsp32).operand, yyvs2.item (yyvsp2), yyvs128.item (yyvsp128), True, yyvs12.item (yyvsp12), yyvs4.item (yyvsp4))
-				if yyval86 /= Void then
-					yyval86.set_lparan_symbol (yyvs32.item (yyvsp32).lparan_symbol)
-					yyval86.set_rparan_symbol (yyvs32.item (yyvsp32).rparan_symbol)
+			if attached yyvs32.item (yyvsp32) as l_target then
+				yyval86 := ast_factory.new_agent_routine_creation_as (l_target.operand, yyvs2.item (yyvsp2), yyvs128.item (yyvsp128), True, yyvs12.item (yyvsp12), yyvs4.item (yyvsp4))
+				if attached yyval86 as l_agent then
+					l_agent.set_lparan_symbol (l_target.lparan_symbol)
+					l_agent.set_rparan_symbol (l_target.rparan_symbol)
 				end
 			else
 				yyval86 := ast_factory.new_agent_routine_creation_as (Void, yyvs2.item (yyvsp2), yyvs128.item (yyvsp128), True, yyvs12.item (yyvsp12), yyvs4.item (yyvsp4))
@@ -16241,11 +16247,12 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			temp_operand_as := ast_factory.new_operand_as (Void, Void, Void)
-			if temp_operand_as /= Void then
-				temp_operand_as.set_question_mark_symbol (yyvs4.item (yyvsp4))
+			if attached ast_factory.new_operand_as (Void, Void, Void) as l_temp_operand_as then
+				l_temp_operand_as.set_question_mark_symbol (yyvs4.item (yyvsp4))
+				yyval32 := ast_factory.new_agent_target_triple (Void, Void, l_temp_operand_as)
+			else
+				yyval32 := ast_factory.new_agent_target_triple (Void, Void, Void)
 			end
-			yyval32 := ast_factory.new_agent_target_triple (Void, Void, temp_operand_as)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -16452,8 +16459,8 @@ debug ("GEYACC")
 end
 
 yyval76 := ast_factory.new_operand_as (Void, Void, Void)
-				if yyval76 /= Void then
-					yyval76.set_question_mark_symbol (yyvs4.item (yyvsp4))
+				if attached yyval76 as l_actual then
+					l_actual.set_question_mark_symbol (yyvs4.item (yyvsp4))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -16491,8 +16498,8 @@ debug ("GEYACC")
 end
 
 yyval76 := ast_factory.new_operand_as (yyvs89.item (yyvsp89), Void, Void)
-				if yyval76 /= Void then
-					yyval76.set_question_mark_symbol (yyvs4.item (yyvsp4))
+				if attached yyval76 as l_actual then
+					l_actual.set_question_mark_symbol (yyvs4.item (yyvsp4))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -17144,9 +17151,9 @@ debug ("GEYACC")
 end
 
 yyval89 := yyvs89.item (yyvsp89)
-				if yyval89 /= Void then
-					yyval89.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
-					yyval89.set_rcurly_symbol (yyvs4.item (yyvsp4))
+				if attached yyval89 as l_type then
+					l_type.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
+					l_type.set_rcurly_symbol (yyvs4.item (yyvsp4))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -17408,9 +17415,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs89.item (yyvsp89) /= Void then
-					yyvs89.item (yyvsp89).set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
-					yyvs89.item (yyvsp89).set_rcurly_symbol (yyvs4.item (yyvsp4))
+				if attached yyvs89.item (yyvsp89) as l_type then
+					l_type.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
+					l_type.set_rcurly_symbol (yyvs4.item (yyvsp4))
 				end
 				check_object_test_expression (yyvs56.item (yyvsp56))
 				yyval56 := ast_factory.new_object_test_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs89.item (yyvsp89), yyvs56.item (yyvsp56), Void, Void)
@@ -17435,18 +17442,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs89.item (yyvsp89) /= Void then
-					yyvs89.item (yyvsp89).set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
-					yyvs89.item (yyvsp89).set_rcurly_symbol (yyvs4.item (yyvsp4))
+				if attached yyvs89.item (yyvsp89) as l_type then
+					l_type.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
+					l_type.set_rcurly_symbol (yyvs4.item (yyvsp4))
 				end
 				check_object_test_expression (yyvs56.item (yyvsp56))
 				yyval56 := ast_factory.new_object_test_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs89.item (yyvsp89), yyvs56.item (yyvsp56), yyvs12.item (yyvsp12), yyvs2.item (yyvsp2))
 				has_type := True
 				if attached yyvs2.item (yyvsp2) as l_name and attached yyvs89.item (yyvsp89) as l_type then
-					if object_test_locals = Void then
-						create object_test_locals.make (1)
-					end
-					object_test_locals.extend ([l_name, l_type])
+					insert_object_test_locals ([l_name, l_type])
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -17474,10 +17478,7 @@ end
 				yyval56 := ast_factory.new_old_syntax_object_test_as (yyvs4.item (yyvsp4 - 2), yyvs2.item (yyvsp2), yyvs89.item (yyvsp89), yyvs56.item (yyvsp56))
 				has_type := True
 				if attached yyvs2.item (yyvsp2) as l_name and attached yyvs89.item (yyvsp89) as l_type then
-					if object_test_locals = Void then
-						create object_test_locals.make (1)
-					end
-					object_test_locals.extend ([l_name, l_type])
+					insert_object_test_locals ([l_name, l_type])
 				end
 				if has_syntax_warning then
 					report_one_warning (
@@ -18674,8 +18675,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void then
-					yyvs2.item (yyvsp2).to_lower
+				if attached yyvs2.item (yyvsp2) as l_free then
+					l_free.to_lower
 				end
 				yyval2 := yyvs2.item (yyvsp2)
 			
@@ -18866,12 +18867,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				temp_class_type_as := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void)
-				if temp_class_type_as /= Void then
-					temp_class_type_as.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
-					temp_class_type_as.set_rcurly_symbol (yyvs4.item (yyvsp4))
+				if attached ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void) as l_temp_class_type_as then
+					l_temp_class_type_as.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
+					l_temp_class_type_as.set_rcurly_symbol (yyvs4.item (yyvsp4))
+					yyval78 := ast_factory.new_precursor_as (yyvs12.item (yyvsp12), l_temp_class_type_as, yyvs108.item (yyvsp108))
+				else
+					yyval78 := ast_factory.new_precursor_as (yyvs12.item (yyvsp12), Void, yyvs108.item (yyvsp108))
 				end
-				yyval78 := ast_factory.new_precursor_as (yyvs12.item (yyvsp12), temp_class_type_as, yyvs108.item (yyvsp108))
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
@@ -19169,8 +19171,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs94.item (yyvsp94) /= Void then
-					yyval2 := yyvs94.item (yyvsp94).internal_name
+				if attached yyvs94.item (yyvsp94) as l_infix then
+					yyval2 := l_infix.internal_name
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -19207,8 +19209,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs94.item (yyvsp94) /= Void then
-					yyval2 := yyvs94.item (yyvsp94).internal_name
+				if attached yyvs94.item (yyvsp94) as l_prefix then
+					yyval2 := l_prefix.internal_name
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -19811,10 +19813,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void then
-					yyvs2.item (yyvsp2).to_upper		
+				if attached yyvs2.item (yyvsp2) as l_id then
+					l_id.to_upper		
+					yyval2 := l_id
 				end
-				yyval2 := yyvs2.item (yyvsp2)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -20054,10 +20056,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void then
-					yyvs2.item (yyvsp2).to_upper
+				if attached yyvs2.item (yyvsp2) as l_tuple then
+					l_tuple.to_upper
+					yyval2 := l_tuple
 				end
-				yyval2 := yyvs2.item (yyvsp2)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -20075,10 +20077,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void then
-					yyvs2.item (yyvsp2).to_lower
+				if attached yyvs2.item (yyvsp2) as l_id then
+					l_id.to_lower
+					yyval2 := l_id
 				end
-				yyval2 := yyvs2.item (yyvsp2)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -20096,10 +20098,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs2.item (yyvsp2) /= Void then
-					yyvs2.item (yyvsp2).to_lower
+				if attached yyvs2.item (yyvsp2) as l_tuple then
+					l_tuple.to_lower
+					yyval2 := l_tuple
 				end
-				yyval2 := yyvs2.item (yyvsp2)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -21035,9 +21037,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).set_is_once_string (True)
-					yyvs16.item (yyvsp16).set_once_string_keyword (yyvs12.item (yyvsp12))
+				if attached yyvs16.item (yyvsp16) as l_string then
+					l_string.set_is_once_string (True)
+					l_string.set_once_string_keyword (yyvs12.item (yyvsp12))
 				end
 				increment_once_manifest_string_counter
 				yyval39 := yyvs16.item (yyvsp16)
@@ -21883,8 +21885,8 @@ debug ("GEYACC")
 end
 
 				yyval16 := yyvs16.item (yyvsp16)
-				if yyval16 /= Void then
-					yyval16.set_type (yyvs89.item (yyvsp89))
+				if attached yyval16 as l_string then
+					l_string.set_type (yyvs89.item (yyvsp89))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -22313,10 +22315,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_not then
+					l_str_not.value.to_lower
+					yyval16 := l_str_not
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22335,10 +22337,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_free then
+					l_str_free.value.to_lower
+					yyval16 := l_str_free
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22544,10 +22546,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_and then
+					l_str_and.value.to_lower
+					yyval16 := l_str_and
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22566,10 +22568,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_and_then then
+					l_str_and_then.value.to_lower
+					yyval16 := l_str_and_then
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22588,10 +22590,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_implies then 
+					l_str_implies.value.to_lower
+					yyval16 := l_str_implies
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22610,10 +22612,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_or then
+					l_str_or.value.to_lower
+					yyval16 := l_str_or
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22632,10 +22634,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_or_else then
+					l_str_or_else.value.to_lower
+					yyval16 := l_str_or_else
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22654,10 +22656,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_xor then
+					l_str_xor.value.to_lower
+					yyval16 := l_str_xor
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -22676,10 +22678,10 @@ debug ("GEYACC")
 end
 
 					-- Alias names should always be taken in their lower case version
-				if yyvs16.item (yyvsp16) /= Void then
-					yyvs16.item (yyvsp16).value.to_lower
+				if attached yyvs16.item (yyvsp16) as l_str_free then
+					l_str_free.value.to_lower
+					yyval16 := l_str_free
 				end
-				yyval16 := yyvs16.item (yyvsp16)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1

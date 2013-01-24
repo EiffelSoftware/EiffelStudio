@@ -680,7 +680,7 @@ feature -- Access
 			end
 		end
 
-	clickable_item (a_clickable: CLICKABLE_AST): CLICK_AST
+	clickable_item (a_clickable: CLICKABLE_AST): detachable CLICK_AST
 			-- Corresponding click-item for `a_clickable'.
 			-- `Void' if not in `click_list'.
 		require
@@ -973,7 +973,7 @@ invariant
 	date_valid: date >= -1
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

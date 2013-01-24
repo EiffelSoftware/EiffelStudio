@@ -29,8 +29,8 @@ feature -- Update
 			an_id_set_not_void: an_id_set /= Void
 		do
 			first := an_id_set.first
-			if an_id_set.count > 1 then
-				area := an_id_set.area.twin
+			if an_id_set.count > 1 and attached an_id_set.area as l_area then
+				area := l_area.twin
 			else
 				area := Void
 			end

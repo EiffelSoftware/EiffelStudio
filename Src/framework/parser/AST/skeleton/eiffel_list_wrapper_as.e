@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EIFFEL_LIST_WRAPPER_AS [ G -> detachable EIFFEL_LIST [AST_EIFFEL]]
 
 feature -- Content
@@ -34,7 +34,7 @@ feature -- Status reporting
 	valid_meaningful_content (a_meaningful_content: like meaningful_content): BOOLEAN
 			-- Is `a_meaningful_content' valid?
 		do
-			if content /= Void and then not content.is_empty then
+			if attached content as l_content and then not l_content.is_empty then
 				Result := a_meaningful_content = content
 			else
 				Result := a_meaningful_content = Void
@@ -42,7 +42,7 @@ feature -- Status reporting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

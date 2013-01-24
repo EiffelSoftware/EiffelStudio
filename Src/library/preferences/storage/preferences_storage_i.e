@@ -12,6 +12,8 @@ deferred class
 inherit
 	PREFERENCE_EXPORTER
 
+	PREFERENCES_VERSIONS
+
 feature {NONE} -- Initialization
 
 	make_empty
@@ -43,6 +45,17 @@ feature {NONE} -- Initialization
 		end
 
 feature {PREFERENCES} -- Initialization
+
+	set_version (a_version: attached like version)
+			-- Set `format_version' with `a_version'.
+		require
+			a_version_not_void: a_version /= Void
+			a_version_valid: valid_version (a_version)
+		do
+			version := a_version
+		ensure
+			version_set: version = a_version
+		end
 
 	initialize_with_preferences (a_preferences: PREFERENCES)
 			-- Initialize current with `a_preferences'.
@@ -96,6 +109,9 @@ feature {PREFERENCES} -- Access
 
 	preferences: detachable PREFERENCES
 			-- Actual preferences
+
+	version: detachable IMMUTABLE_STRING_32
+			-- Format version.
 
 feature {PREFERENCES} -- Save
 

@@ -41,14 +41,14 @@ feature -- Access
 	feature_name: ID_AS
 			-- Feature name
 
-	internal_alias_name: ID_AS
+	internal_alias_name: detachable ID_AS
 			-- Operator associated with the feature (if any)
 			-- augmented with information about its arity
 		do
 				-- Void here
 		end
 
-	alias_name: STRING_AS
+	alias_name: detachable STRING_AS
 			-- Operator name associated with the feature (if any)
 		do
 				-- Void here

@@ -43,7 +43,7 @@ feature -- Buffer operation
 		do
 		end
 
-	new_string (n: INTEGER): STRING
+	new_string (n: INTEGER): detachable STRING
 			-- New STRING object of size `n'.
 		require
 			n_non_negative: n >= 0
@@ -53,7 +53,7 @@ feature -- Buffer operation
 
 feature -- Roundtrip: Match list maintaining
 
-	match_list: LEAF_AS_LIST
+	match_list: detachable LEAF_AS_LIST
 			-- List of LEAF_AS nodes.
 
 	match_list_count: INTEGER
@@ -473,7 +473,7 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
 			-- New KEYWORD AST node
 		require
 			a_scn_not_void: a_scn /= Void
@@ -2017,7 +2017,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

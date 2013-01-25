@@ -9,7 +9,7 @@ class
 	SHORTCUT_PREFERENCE
 
 inherit
-	TYPED_PREFERENCE [TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: STRING]]
+	TYPED_PREFERENCE [TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: STRING_32]]
 		redefine
 			is_default_value,
 			init_value_from_string
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	init_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Set initial value from String `a_value'
 		do
-			internal_value := [False, False, False, ""]
+			internal_value := [False, False, False, {STRING_32} ""]
 			Precursor (a_value)
 		end
 
@@ -39,11 +39,14 @@ feature {PREFERENCE_EXPORTER} -- Access
 			-- String representation of `value'.
 		do
 			create Result.make_empty
-			Result.append (is_alt.out + shortcut_delimiter)
-			Result.append (is_ctrl.out + shortcut_delimiter)
-			Result.append (is_shift.out + shortcut_delimiter)
+			Result.append_boolean (is_alt)
+			Result.append (shortcut_delimiter)
+			Result.append_boolean (is_ctrl)
+			Result.append (shortcut_delimiter)
+			Result.append_boolean (is_shift)
+			Result.append (shortcut_delimiter)
 			if not is_wiped then
-				Result.append (key.out)
+				Result.append (key.text)
 			end
 		end
 
@@ -184,7 +187,7 @@ feature -- Status Setting
 			l_alt, l_ctrl, l_shift: BOOLEAN
 			l_start_index, l_end_index: INTEGER
 		do
-			l_value := [False, False, False, ""]
+			l_value := [False, False, False, {STRING_32} ""]
 
 			from
 				l_cnt := 1
@@ -201,9 +204,7 @@ feature -- Status Setting
 				if l_string.is_case_insensitive_equal (str_true) then
 					l_value.put_boolean (True, l_cnt)
 				elseif l_cnt = 4 then
-						-- Last one is assumed to be key and per precondition `l_string' is valid
-						-- as a STRING_8.
-					l_value.key_string := l_string.to_string_8
+					l_value.key_string := l_string.as_string_32
 				end
 				l_start_index := l_end_index + 1
 				l_cnt := l_cnt + 1
@@ -271,10 +272,10 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	auto_default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]
+	auto_default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_32]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			Result := [True, False, False, (create {EV_KEY}).out]
+			Result := [True, False, False, (create {EV_KEY}).text]
 		end
 
 	str_true: STRING = "True"

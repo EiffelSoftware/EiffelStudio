@@ -64,7 +64,7 @@ feature -- Access
 	Alt_text: STRING = "Alt"
 	Ctrl_text: STRING = "Ctrl"
 	Shift_text: STRING = "Shift"
-	Shortcut_delimiter: STRING = "+"
+	Shortcut_delimiter: STRING_32 = "+"
 
 	w_preferences_delayed_resources: STRING_32
 			-- Texts used in the dialog that tells the user

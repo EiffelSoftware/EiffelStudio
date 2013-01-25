@@ -323,7 +323,7 @@ feature {NONE} -- Implementation agents
 			-- Handle `internal_label_box' tab key press
 		local
 			l_label: SD_TOOL_BAR_ITEM
-			l_text: STRING
+			l_text: STRING_32
 			l_item: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 		do
 			inspect
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation agents
 				end
 			else
 				if a_key.is_alpha or a_key.is_number or a_key.is_numpad then
-					l_text := a_key.out
+					l_text := a_key.text
 					if a_key.is_numpad then
 						-- Remomve "NumPad " from string
 						l_text.remove_substring (1, 7)

@@ -162,7 +162,7 @@ feature -- Status Setting
 				if a_text.is_empty then
 					set_default_minimum_size
 				else
-					accomodate_text (a_text)
+					accommodate_text (a_text)
 				end
 				Precursor {EV_TEXTABLE_IMP} (a_text)
 				set_title (a_text.as_string_8)
@@ -187,10 +187,10 @@ feature -- Measurement
 		do
 			-- TODO: This is not very smart at the moment!
 			-- Caluclate dynamically (this depends on the button style and the text)
-			accomodate_text (" ")
+			accommodate_text (" ")
 		end
 
-	accomodate_text (a_text: READABLE_STRING_GENERAL)
+	accommodate_text (a_text: READABLE_STRING_GENERAL)
 			-- Change internal minimum size to make `a_text' fit.
 		require
 			a_text_not_void: a_text /= Void

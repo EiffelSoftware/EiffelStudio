@@ -3298,7 +3298,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					current_row_offset := l_row_offsets @ (index)
 				end
 
-					-- Ensure we enlarge our data structures to accomodate the total number of rows.
+					-- Ensure we enlarge our data structures to accommodate the total number of rows.
 					-- We do not reduce the size of these lists to avoid the performance overhead.
 				if l_row_offsets.count < rows.count + 1 then
 					l_row_offsets.resize (rows.count + 1)

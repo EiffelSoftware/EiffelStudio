@@ -170,7 +170,7 @@ feature -- Element change
 				l_font_imp.wel_font.set_indirect (l_log_font)
 				wel_set_font (l_font_imp.wel_font)
 				set_font (l_font)
-				accomodate_text (text)
+				accommodate_text (text)
 				invalidate
 			end
 		end
@@ -182,7 +182,7 @@ feature -- Element change
 				if a_text.count = 0 then
 					set_default_minimum_size
 				else
-					accomodate_text (a_text)
+					accommodate_text (a_text)
 				end
 				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
 				if is_displayed then
@@ -200,7 +200,7 @@ feature -- Element change
 			if private_font = Void or else not internal_font.is_equal (ft) then
 				Precursor {EV_FONTABLE_IMP} (ft)
 				if text_length > 0 then
-					accomodate_text (text)
+					accommodate_text (text)
 				end
 				if is_displayed then
 					invalidate
@@ -277,10 +277,10 @@ feature {EV_ANY_I} -- Initialization
 	set_default_minimum_size
 			-- Resize to a default size.
 		do
-			accomodate_text (once " ")
+			accommodate_text (once " ")
 		end
 
-	accomodate_text (a_text: READABLE_STRING_GENERAL)
+	accommodate_text (a_text: READABLE_STRING_GENERAL)
 			-- Change internal minimum size to make `a_text' fit.
 		require
 			a_text_not_void: a_text /= Void

@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 			position := 1
 			if yyReject_or_variable_trail_context then
 				yy_state_stack := SPECIAL_INTEGER_.make (input_buffer.content.count + 1)
+			else
+					-- For Void-safety.
+				yy_state_stack := SPECIAL_INTEGER_.make (0)
 			end
 		end
 

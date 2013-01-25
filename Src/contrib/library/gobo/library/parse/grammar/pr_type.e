@@ -231,7 +231,7 @@ feature {NONE} -- Initialization
 		ensure
 			id_set: id = an_id
 		end
-		
+
 feature -- Status report
 
 	is_used: BOOLEAN
@@ -354,6 +354,29 @@ feature -- Output
 			INTEGER_.append_decimal_integer (id, a_string)
 		end
 
+	print_precondition (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print precondition ensuring that both "yyvs" and "yyspecial_routines" are
+			-- attached in the generated body.
+		require
+			indent_positive: indent >= 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_indentation (indent, a_file)
+			a_file.put_string ("require")
+			a_file.put_new_line
+			print_indentation (indent + 1, a_file)
+			a_file.put_string ("yyspecial_routines")
+			a_file.put_integer (id)
+			a_file.put_string (" /= Void")
+			a_file.put_new_line
+			print_indentation (indent + 1, a_file)
+			a_file.put_string ("yyvs")
+			a_file.put_integer (id)
+			a_file.put_string (" /= Void")
+			a_file.put_new_line
+		end
+
 	print_yyvs_declaration (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print declaration of "yyvs" to `a_file'.
 		require
@@ -392,9 +415,9 @@ feature -- Output
 			print_indentation (indent, a_file)
 			a_file.put_string ("yyspecial_routines")
 			a_file.put_integer (id)
-			a_file.put_string (": KL_SPECIAL_ROUTINES [")
+			a_file.put_string (": detachable KL_SPECIAL_ROUTINES [")
 			a_file.put_string (name)
-			a_file.put_line ("]")
+			a_file.put_line ("] note option: stable attribute end")
 			print_indentation (indent + 2, a_file)
 			a_file.put_string ("-- Routines that ought to be in SPECIAL [")
 			a_file.put_string (name)
@@ -444,15 +467,18 @@ feature -- Output
 			print_indentation (indent, a_file)
 			a_file.put_string ("if yyvs")
 			a_file.put_integer (id)
-			a_file.put_line (" /= Void then")
+			a_file.put_string (" /= Void and yyspecial_routines")
+			a_file.put_integer (id)
+			a_file.put_string (" /= Void then")
+			a_file.put_new_line
 			print_indentation (indent + 1, a_file)
-			a_file.put_string ("yyvs")
+			a_file.put_string ("yyspecial_routines")
 			a_file.put_integer (id)
-			a_file.put_string (".fill_with (l_yyvs")
+			a_file.put_string (".keep_head (yyvs")
 			a_file.put_integer (id)
-			a_file.put_string ("_default_item, 0, yyvs")
+			a_file.put_string (", 0, yyvsp")
 			a_file.put_integer (id)
-			a_file.put_line (".upper)")
+			a_file.put_line (" + 1)")
 			print_indentation (indent, a_file)
 			a_file.put_line ("end")
 		end
@@ -546,17 +572,29 @@ feature -- Output
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
+		local
+			l_void_check: STRING
 		do
+			create l_void_check.make (10)
+			l_void_check.append ("yyvs")
+			l_void_check.append_integer (id)
+			l_void_check.append (" = Void or ")
+			l_void_check.append ("yyspecial_routines")
+			l_void_check.append_integer (id)
+			l_void_check.append (" = Void")
+
 			print_indentation (indent, a_file)
 			a_file.put_string ("if yyvsp")
 			a_file.put_integer (id)
 			a_file.put_string (" >= yyvsc")
 			a_file.put_integer (id)
+			a_file.put_string (" or ")
+			a_file.put_string (l_void_check)
 			a_file.put_line (" then")
 			print_indentation (indent + 1, a_file)
-			a_file.put_string ("if yyvs")
-			a_file.put_integer (id)
-			a_file.put_line (" = Void then")
+			a_file.put_string ("if ")
+			a_file.put_string (l_void_check)
+			a_file.put_line (" then")
 			print_create_yyvs (indent + 2, a_file)
 			print_indentation (indent + 1, a_file)
 			a_file.put_line ("else")

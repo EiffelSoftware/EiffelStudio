@@ -329,9 +329,9 @@ Type_mark_no_expanded_reference_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-Eiffel_generics: '[' Eiffel_type_list ']'
+Eiffel_generics: '[' {in_generics := in_generics + 1} Eiffel_type_list {in_generics := in_generics - 1 }']'
 		{
-			$$ := $2
+			$$ := $3
 		}
 	;
 

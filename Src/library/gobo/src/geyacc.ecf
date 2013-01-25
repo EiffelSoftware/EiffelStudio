@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="geyacc" uuid="24C23C51-AEA2-4C8A-B454-901AAF40F0FF">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="geyacc" uuid="24C23C51-AEA2-4C8A-B454-901AAF40F0FF">
 	<target name="geyacc">
 		<root class="GEYACC" feature="execute"/>
-		<option trace="false" profile="false" debug="false" warning="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		<option trace="false" profile="false" debug="false" warning="true" is_attached_by_default="false" syntax="transitional">
+			<assertions/>
 		</option>
 		<setting name="address_expression" value="false"/>
 		<setting name="array_optimization" value="false"/>
@@ -19,9 +19,9 @@
 		<setting name="line_generation" value="false"/>
 		<setting name="msil_generation" value="false"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<setting name="multithreaded" value="false"/>
+		<setting name="concurrency" value="none"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_geyacc" location="$ISE_LIBRARY\library\gobo\gobo_geyacc.ecf"/>
+		<library name="gobo_geyacc" location="$ISE_LIBRARY\library\gobo\gobo_geyacc.ecf" readonly="false" use_application_options="true"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>

@@ -253,6 +253,43 @@ feature -- Output
 			end
 		end
 
+	print_precondition (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print precondition if we do not create/resize both "yyvs"
+			-- and "yyspecial_routines" as we assume it was previously created.
+		require
+			indent_positive: indent >= 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_type: PR_TYPE
+			i, nb: INTEGER_32
+			types: DS_HASH_TABLE [INTEGER_32, PR_TYPE]
+		do
+			a_type := lhs.type
+			nb := rhs.count
+			create types.make_map (nb + 1)
+			types.put_new (1, a_type)
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				a_type := rhs.item (i).type
+				types.search (a_type)
+				if types.found then
+					types.replace_found_item (types.found_item - 1)
+				else
+					types.put_new (-1, a_type)
+				end
+				i := i + 1
+			end
+
+			a_type := lhs.type
+			if types.item (a_type) <= 0 then
+				a_type.print_precondition (indent, a_file)
+			end
+		end
+
 	print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print semantic action to `a_file'.
 			-- `input_filename' is the name of the file where
@@ -287,7 +324,6 @@ feature -- Output
 			end
 			a_file.put_line ("%")")
 			a_file.put_line ("end")
-			a_type := lhs.type
 			a_file.put_new_line
 			a_file.put_string (action.out)
 			a_file.put_new_line
@@ -297,6 +333,7 @@ feature -- Output
 			a_file.put_integer (nb)
 			a_file.put_new_line
 			create types.make_map (nb + 1)
+			a_type := lhs.type
 			types.put_new (1, a_type)
 			from
 				i := 1

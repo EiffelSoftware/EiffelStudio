@@ -853,7 +853,7 @@ feature {NONE} -- Constants
 	Initial_max_nb_errors: INTEGER = 10
 			-- Initial capacity for `errors'
 
-	Position_sorter: DS_BUBBLE_SORTER [PR_POSITION]
+	Position_sorter: DS_QUICK_SORTER [PR_POSITION]
 			-- Position sorter
 		local
 			a_comparator: KL_COMPARABLE_COMPARATOR [PR_POSITION]

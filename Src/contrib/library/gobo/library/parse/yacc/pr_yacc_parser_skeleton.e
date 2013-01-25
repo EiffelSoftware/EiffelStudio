@@ -556,8 +556,10 @@ feature {NONE} -- Factory
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make (an_id, a_type_mark, a_name)
-				types.force_new (Result, upper_name)
-				last_grammar.put_type (Result)
+				if in_generics = 0 then
+					types.force_new (Result, upper_name)
+					last_grammar.put_type (Result)
+				end
 			end
 		ensure
 			type_not_void: Result /= Void
@@ -590,8 +592,10 @@ feature {NONE} -- Factory
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create {PR_BASIC_TYPE} Result.make (an_id, a_type_mark, a_name)
-				types.force_new (Result, upper_name)
-				last_grammar.put_type (Result)
+				if in_generics = 0 then
+					types.force_new (Result, upper_name)
+					last_grammar.put_type (Result)
+				end
 			end
 		ensure
 			type_not_void: Result /= Void
@@ -619,8 +623,10 @@ feature {NONE} -- Factory
 				if types.found then
 					Result := types.found_item
 				else
-					types.force_new (Result, upper_name)
-					last_grammar.put_type (Result)
+					if in_generics = 0 then
+						types.force_new (Result, upper_name)
+						last_grammar.put_type (Result)
+					end
 				end
 			else
 				Result := new_type (a_type_mark, a_name)
@@ -651,8 +657,10 @@ feature {NONE} -- Factory
 				if types.found then
 					Result := types.found_item
 				else
-					types.force_new (Result, upper_name)
-					last_grammar.put_type (Result)
+					if in_generics = 0 then
+						types.force_new (Result, upper_name)
+						last_grammar.put_type (Result)
+					end
 				end
 			else
 				Result := new_type (a_type_mark, a_name)
@@ -688,8 +696,10 @@ feature {NONE} -- Factory
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make_anchored (an_id, a_type_mark, a_name)
-				types.force_new (Result, lower_name)
-				last_grammar.put_type (Result)
+				if in_generics = 0 then
+					types.force_new (Result, lower_name)
+					last_grammar.put_type (Result)
+				end
 			end
 		ensure
 			type_not_void: Result /= Void
@@ -720,8 +730,10 @@ feature {NONE} -- Factory
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make_like_current (an_id, a_type_mark)
-				types.force_new (Result, lower_name)
-				last_grammar.put_type (Result)
+				if in_generics = 0 then
+					types.force_new (Result, lower_name)
+					last_grammar.put_type (Result)
+				end
 			end
 		ensure
 			type_not_void: Result /= Void
@@ -748,8 +760,10 @@ feature {NONE} -- Factory
 			if types.found then
 				Result := types.found_item
 			else
-				types.force_new (Result, lower_name)
-				last_grammar.put_type (Result)
+				if in_generics = 0 then
+					types.force_new (Result, lower_name)
+					last_grammar.put_type (Result)
+				end
 			end
 		ensure
 			type_not_void: Result /= Void
@@ -801,7 +815,7 @@ feature {NONE} -- Implementation
 			a_type: PR_TYPE
 		do
 				-- Make sure ANY is the first type in grammar.
-			a_type := new_type (Void, "ANY")
+			a_type := new_type ("detachable", "ANY")
 				-- Error token. The token id value 256
 				-- is specified by POSIX.
 			a_token := new_token ("error")
@@ -1145,6 +1159,9 @@ feature {NONE} -- Access
 
 	last_value_names: DS_HASH_TABLE [PR_TYPE, STRING]
 			-- Types indexed by their 'last_value_name'
+
+	in_generics: INTEGER
+			-- If `0' type is not an actual generic parameter.
 
 feature {NONE} -- Status report
 
@@ -1576,7 +1593,7 @@ feature {NONE} -- Constants
 			-- Type used when no type has been specified:
 			--   %token token_name
 		do
-			Result := new_type (Void, "ANY")
+			Result := new_type ("detachable", "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end
@@ -1584,7 +1601,7 @@ feature {NONE} -- Constants
 	Unknown_type: PR_TYPE
 			-- Type used when type is not known
 		do
-			Result := new_type (Void, "ANY")
+			Result := new_type ("detachable", "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end

@@ -358,7 +358,7 @@ feature -- Insertion, deletion
 feature -- Resizing
 
 	resize (n: INTEGER)
-			-- Resize table to accomodate `n' elements.
+			-- Resize table to accommodate `n' elements.
 		require
 			n_non_negative: n >= 0
 			n_greater_than_count: n >= count

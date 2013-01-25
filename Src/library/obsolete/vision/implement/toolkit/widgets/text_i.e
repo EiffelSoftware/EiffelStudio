@@ -223,7 +223,7 @@ feature -- Status setting
 
 	enable_resize_height
 			-- Enable that current text widget attempts to resize its height to
-			-- accomodate all the text contained.
+			-- accommodate all the text contained.
 		deferred
 		end;
 

@@ -4,12 +4,6 @@ note
 
 class BOOK4
 
-inherit
-	ANY
-		redefine
-			out
-		end
-
 create
 	make
 

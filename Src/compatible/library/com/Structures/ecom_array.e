@@ -299,7 +299,7 @@ feature -- Element change
 
 	force (v: like item; some_indices: ARRAY [INTEGER])
 			-- Assign item `v' at indices `some_indices'.
-			-- Resize if necesary.
+			-- Resize if necessary.
 		require
 			valid_indices: are_indices_large_enough (some_indices)
 		do

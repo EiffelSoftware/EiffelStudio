@@ -39,7 +39,7 @@ feature -- Raise
 
 	raise (a_exception: EXCEPTION)
 			-- Raise `a_exception'.
-			-- Raising `a_exception' by this routine makes `a_exception' accessable by `last_exception'
+			-- Raising `a_exception' by this routine makes `a_exception' accessible by `last_exception'
 			-- in rescue clause. Hence causes removal of original `last_exception'.
 		local
 			p_meaning, p_message: POINTER

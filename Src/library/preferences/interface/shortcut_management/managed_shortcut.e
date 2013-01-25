@@ -22,30 +22,30 @@ feature -- Access
 			a_key_not_void: Result /= Void
 		end
 
-	display_string: STRING
+	display_string: STRING_32
 			-- String representation of key combination.
 		local
-			a_key: STRING
+			a_key: STRING_32
 		do
 			if is_wiped then
 				Result := ""
 			else
 				create Result.make (0)
 				if is_ctrl then
-					Result.append ("Ctrl+")
+					Result.append_string_general ("Ctrl+")
 				end
 				if is_alt then
-					Result.append ("Alt+")
+					Result.append_string_general ("Alt+")
 				end
 				if is_shift then
-					Result.append ("Shift+")
+					Result.append_string_general ("Shift+")
 				end
-				a_key := key.out.twin
+				a_key := key.text
 					--| We only need to convert the key to upper case if
 					--| it is one character long such as 'a'. Other keys
 					--| do not need to be converted.
 				if a_key.count = 1 then
-					a_key.to_upper
+					a_key := a_key.as_upper
 				end
 				Result.append (a_key)
 			end

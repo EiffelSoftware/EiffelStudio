@@ -47,7 +47,7 @@ feature -- Access
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
 
-	new_shortcut_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: STRING]): SHORTCUT_PREFERENCE
+	new_shortcut_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: READABLE_STRING_GENERAL]): SHORTCUT_PREFERENCE
 			-- Add a new shortcut preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
 		require
@@ -56,9 +56,12 @@ feature -- Access
 			value_not_void: a_fallback_value /= Void
 			not_has_preference: not a_manager.known_preference (a_name)
 			valid_fallback_value: a_fallback_value.count = 4
+		local
+			l_fallback_value: TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: STRING_32]
 		do
-			Result := (create {PREFERENCE_FACTORY [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], SHORTCUT_PREFERENCE]}).
-				new_preference (a_manager.preferences, a_manager, a_name, a_fallback_value)
+			l_fallback_value := [a_fallback_value.alt, a_fallback_value.ctrl, a_fallback_value.shift, a_fallback_value.key_string.as_string_32]
+			Result := (create {PREFERENCE_FACTORY [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_32], SHORTCUT_PREFERENCE]}).
+				new_preference (a_manager.preferences, a_manager, a_name, l_fallback_value)
 		ensure
 			has_result: Result /= Void
 			preference_name_set: Result.name.same_string_general (a_name)

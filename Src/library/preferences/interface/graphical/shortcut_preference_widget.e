@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		local
 			l_app: EV_APPLICATION
 			l_string,
-			l_key: STRING
+			l_key: STRING_32
 			tf: detachable EV_TEXT_FIELD
 		do
 			if attached {SHORTCUT_PREFERENCE} preference as l_pref then
@@ -172,11 +172,11 @@ feature {NONE} -- Implementation
 							l_string.append (shortcut_delimiter)
 						end
 						if a_key.is_alpha then
-							l_key := a_key.out.twin
+							l_key := a_key.text.twin
 							l_key.to_upper
 							l_string.append (l_key)
 						else
-							l_string.append (a_key.out)
+							l_string.append (a_key.text)
 						end
 						tf.set_text (l_string)
 					elseif a_key.is_function then
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 							l_string.append (shift_text)
 							l_string.append (shortcut_delimiter)
 						end
-						l_string.append (a_key.out)
+						l_string.append (a_key.text)
 						tf.set_text (l_string)
 					end
 				end
@@ -245,9 +245,12 @@ feature {NONE} -- Implementation
 				l_cnt := l_cnt + 1
 			end
 
-			Result.append (is_alt.out + shortcut_delimiter)
-			Result.append (is_ctrl.out + shortcut_delimiter)
-			Result.append (is_shift.out + shortcut_delimiter)
+			Result.append_boolean (is_alt)
+			Result.append (shortcut_delimiter)
+			Result.append_boolean (is_ctrl)
+			Result.append (shortcut_delimiter)
+			Result.append_boolean (is_shift)
+			Result.append (shortcut_delimiter)
 			if l_key /= Void then
 				Result.append (l_key)
 			else

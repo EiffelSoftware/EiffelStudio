@@ -79,10 +79,10 @@ feature -- Minimum size
 	set_default_minimum_size
 			-- Resize to a default size.
 		do
-			accomodate_text (" ")
+			accommodate_text (" ")
 		end
 
-	accomodate_text (a_text: STRING_GENERAL)
+	accommodate_text (a_text: STRING_GENERAL)
 			-- Change internal minimum size to make `a_text' fit.
 		require
 			a_text_not_void: a_text /= Void
@@ -111,7 +111,7 @@ feature -- Minimum size
 				if a_text.is_empty then
 					set_default_minimum_size
 				else
-					accomodate_text (a_text)
+					accommodate_text (a_text)
 				end
 				Precursor {EV_TEXTABLE_IMP} (a_text)
 				text_field.set_string_value (a_text)

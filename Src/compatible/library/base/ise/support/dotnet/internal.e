@@ -2022,7 +2022,7 @@ feature {TYPE, INTERNAL} -- Implementation
 		end
 
 	resize_arrays (max_type_id: INTEGER)
-			-- Resize all arrays indexed by type_id so that they can accomodate
+			-- Resize all arrays indexed by type_id so that they can accommodate
 			-- `max_type_id'.
 		local
 			l_new_count: INTEGER

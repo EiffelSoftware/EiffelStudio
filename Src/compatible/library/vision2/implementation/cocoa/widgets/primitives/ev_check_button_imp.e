@@ -21,7 +21,7 @@ inherit
 			make,
 			interface,
 			initialize,
-			accomodate_text
+			accommodate_text
 		end
 
 create
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_TOGGLE_BUTTON_IMP}
 		end
 
-	accomodate_text (a_text: STRING_GENERAL)
+	accommodate_text (a_text: STRING_GENERAL)
 			-- Change internal minimum size to make `a_text' fit.
 		local
 			t: TUPLE [width: INTEGER; height: INTEGER]

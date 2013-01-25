@@ -32,6 +32,11 @@ inherit
 			deactivate
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, copy
+		end
+
 create
 	default_create,
 	make_with_text
@@ -70,7 +75,7 @@ feature -- Action
 	deactivate
 			-- Cleanup from previous call to activate.
 		do
-			if attached text_field as l_text_field then
+			if attached text_field as l_text_field and then l_text_field.is_usable then
 				l_text_field.focus_out_actions.wipe_out
 				if not user_cancelled_activation and then (validation_agent = Void or else (attached validation_agent as l_validation_agent and then l_validation_agent.item ([l_text_field.text]))) then
 					set_text (l_text_field.text)
@@ -208,7 +213,7 @@ feature {NONE} -- Implementation
 			-- Setup the action sequences when the item is shown.
 		do
 			if attached text_field as l_text_field then
-				l_text_field.focus_out_actions.extend (agent deactivate)
+				l_text_field.focus_out_actions.extend (agent ev_application.do_once_on_idle (agent deactivate))
 				l_text_field.set_focus
 				l_text_field.set_caret_position (l_text_field.text_length + 1)
 				user_cancelled_activation := False

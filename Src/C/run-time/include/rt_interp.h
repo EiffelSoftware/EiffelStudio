@@ -316,7 +316,6 @@ extern void call_disp(EIF_TYPE_INDEX dtype, char *object);	/* Function to call d
 extern void call_copy (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call copy routines */
 extern EIF_BOOLEAN call_is_equal (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call is_equal routines */
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
-extern void xinitint(void);										/* Initialize the interpreter */
 extern EIF_TYPED_VALUE *otop(void);									/* Top of the stack */
 extern void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 start);	/* Value request from current routine */
 extern void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top);		/* Resynchronize registers on routine */

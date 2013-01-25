@@ -75,6 +75,7 @@ RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 #define it_bit		item.r
 
 /* Interpreter interface to outside world */
+RT_LNK void xinitint(void);										/* Initialize the interpreter */
 RT_LNK void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed);					/* Compound from a given address */
 RT_LNK EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);			/* Push value on operational stack */
 RT_LNK EIF_TYPED_VALUE *opop(void);									/* Remove value from operational stack */

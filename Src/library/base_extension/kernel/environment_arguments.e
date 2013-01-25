@@ -59,7 +59,7 @@ feature -- Status report
 
 	option_sign: CELL [CHARACTER_32]
 			-- The character used to signal options on the command line.
-			-- This can be '%U' if no sign is necesary for the argument
+			-- This can be '%U' if no sign is necessary for the argument
 			-- to be an option
 			-- Default is '-'
 		do
@@ -70,7 +70,7 @@ feature -- Status setting
 
 	set_option_sign (c: CHARACTER_32)
 			-- Make `c' the option sign.
-			-- Use'%U' if no sign is necesary for the argument to
+			-- Use'%U' if no sign is necessary for the argument to
 			-- be an option
 		do
 			base_arguments.set_option_sign (c)

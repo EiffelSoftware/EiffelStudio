@@ -72,7 +72,7 @@ feature -- Access
 			-- Underlying group for the stone.
 
 	path: STRING_32
-			-- Subfolder path in unix format eg "/test/a/b"
+			-- Subfolder path in Unix format eg "/test/a/b"
 
 	folder_name: STRING_32
 			-- Subfolder name

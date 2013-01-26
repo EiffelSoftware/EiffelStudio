@@ -132,7 +132,7 @@ feature -- Exception
 		end
 
 	first_recorded_exception: detachable EXCEPTION
-			-- The first recored exception in Vision2 message loop
+			-- The first recorded exception in Vision2 message loop
 
 end
 

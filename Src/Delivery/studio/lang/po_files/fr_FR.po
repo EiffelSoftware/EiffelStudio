@@ -1155,7 +1155,7 @@ msgid "Cli&ents"
 msgstr "Cli&ents"
 
 msgid "Double click to go to first occurrence"
-msgstr "Double cliquer pour aller à la première occurence"
+msgstr "Double cliquer pour aller à la première occurrence"
 
 msgid "Russian (Russia)"
 msgstr "Russe (Russie)"

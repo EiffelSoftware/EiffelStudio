@@ -47,7 +47,7 @@ feature -- Access
 feature -- Status report
 
 	is_error: BOOLEAN
-			-- Has an error occured
+			-- Has an error occurred
 
 feature -- Basic operations
 

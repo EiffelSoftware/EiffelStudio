@@ -130,7 +130,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 feature {NONE} -- Implementation
 
 	item_text: STRING = "Item_text";
-		-- Constant used for referncing item texts in XML.
+		-- Constant used for referencing item texts in XML.
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -248,7 +248,7 @@ feature {NONE} -- Access
 			-- To store types of local variables.
 
 	uni_string: UNI_STRING
-			-- Buffer for all unicode string conversion.
+			-- Buffer for all Unicode string conversion.
 
 	is_console_application: BOOLEAN
 			-- Is current a console application?
@@ -571,7 +571,7 @@ feature -- Generation Structure
 				l_host_not_void: l_host /= Void
 			end
 
-				-- Create unicode string buffer.
+				-- Create Unicode string buffer.
 			create uni_string.make_empty (1024)
 
 				-- Name of `dll' containing all C externals.

@@ -704,7 +704,7 @@ feature -- Access: types
 feature {NONE} -- Access: code generation
 
 	uni_string: UNI_STRING
-			-- Buffer for all unicode string conversion.
+			-- Buffer for all Unicode string conversion.
 
 feature {NONE} -- Access: metadata generation
 
@@ -922,7 +922,7 @@ feature -- Code generation
 			md_emit := a_dispenser.emitter
 			create method_writer.make
 
-				-- Create unicode string buffer.
+				-- Create Unicode string buffer.
 			create uni_string.make_empty (1024)
 
 				-- Create default signature.

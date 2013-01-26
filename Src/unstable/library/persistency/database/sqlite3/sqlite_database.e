@@ -156,7 +156,7 @@ feature -- Access: Actions
 feature -- Access: Error reporting
 
 	last_exception: detachable SQLITE_EXCEPTION
-			-- Last occuring error, set from a previous interaction with the database.
+			-- Last occurring error, set from a previous interaction with the database.
 			--
 			-- Note: In multi-threaded modes, be sure to obtain a DB lock when performing an
 			--       operation and then retrieving the error

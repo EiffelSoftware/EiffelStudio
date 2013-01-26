@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	is_valid: BOOLEAN
-			-- Is the identfier valid?
+			-- Is the identifier valid?
 		do	
 			Result := identifier /= default_pointer
 		ensure

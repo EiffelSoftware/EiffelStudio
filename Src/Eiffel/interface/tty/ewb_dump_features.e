@@ -1,7 +1,7 @@
 note
 
 	description:
-		"Dumps features of a class that can be refernced by agents to stdout."
+		"Dumps features of a class that can be referenced by agents to stdout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";

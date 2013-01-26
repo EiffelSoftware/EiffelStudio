@@ -42,7 +42,7 @@ feature -- Access
 		end;
 
 	pixel: INTEGER
-			-- Coordinate where selection ocurred
+			-- Coordinate where selection occurred
 		do
 			Result := c_value (handle)
 		end

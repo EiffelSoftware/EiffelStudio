@@ -13,7 +13,7 @@
 		<image>
 			<url>regexpsdialog.png</url>
 		</image>
-		<paragraph>Enter your regular expression in the 'Expression' text field, followed by the text you would like to replace any found occurences with.  Then click the 'Add' button to add this complete expression rule to the list of expressions above.  When you finished you can save the list of expression rules to a file for later use by selecting 'Save', and can re-open previous defined expressions from a file by clicking 'Open'.  Once you are happy with your expressions just click run or apply to have them executed on your documents.</paragraph>
+		<paragraph>Enter your regular expression in the 'Expression' text field, followed by the text you would like to replace any found occurrences with.  Then click the 'Add' button to add this complete expression rule to the list of expressions above.  When you finished you can save the list of expression rules to a file for later use by selecting 'Save', and can re-open previous defined expressions from a file by clicking 'Open'.  Once you are happy with your expressions just click run or apply to have them executed on your documents.</paragraph>
 		<note>
 			<bold>Note: </bold>Regular expressions appearing the list are executed in the order they appear from top to bottom.  Be aware therefore any changes to your text from a previous expression will effect the succeeding expressions.
 		</note>

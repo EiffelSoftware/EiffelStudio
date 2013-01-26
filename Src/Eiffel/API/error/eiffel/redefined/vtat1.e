@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialize
 
 	make (a_type: like type; an_anchor: like anchor_type)
-			-- New error occuring in `a_type' for anchor `an_anchor'.
+			-- New error occurring in `a_type' for anchor `an_anchor'.
 		require
 			a_type_not_void: a_type /= Void
 			an_anchor_not_void: an_anchor /= Void

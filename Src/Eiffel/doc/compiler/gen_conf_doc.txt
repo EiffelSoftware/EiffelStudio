@@ -109,7 +109,7 @@ not be invalid then an immediate consequence is:
 
 Consequence 3:
 
-The set of all possible types occuring in
+The set of all possible types occurring in
 a given system can be infinite.
 
 Of course this does not mean that in one

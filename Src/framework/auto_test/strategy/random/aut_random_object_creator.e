@@ -97,7 +97,7 @@ feature -- Access
 
 	receiver: ITP_VARIABLE
 			-- Variable that will reference created object in interpreter;
-			-- Void if and error occured during creation
+			-- Void if and error occurred during creation
 
 	input_creator: AUT_RANDOM_INPUT_CREATOR
 			-- Input creator used to create arguments for creation procedure call

@@ -726,7 +726,7 @@ feature{NONE} -- Process scheduling
 		end
 
 	stop_process_on_problems (a_response: AUT_RESPONSE)
-			-- Stop `process' if a class invariant has occured in the interpreter or
+			-- Stop `process' if a class invariant has occurred in the interpreter or
 			-- a bad response has been received.
 			-- The interpreter will shut down in case of a class invariant, because the
 			-- system will be in an invalid state.

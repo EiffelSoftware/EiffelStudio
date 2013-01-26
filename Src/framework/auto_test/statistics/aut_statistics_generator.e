@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	has_fatal_error: BOOLEAN
-			-- Has a fatal error occured during generation?
+			-- Has a fatal error occurred during generation?
 
 feature -- Access
 

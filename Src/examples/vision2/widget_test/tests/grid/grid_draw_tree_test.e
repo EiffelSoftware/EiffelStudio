@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_tree_item_motion (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)
-			-- A mouse motion has occured in `grid' so recored the
+			-- A mouse motion has occurred in `grid' so recored the
 			-- positions into `offsets' ready for item building.
 		local
 			distance_down: INTEGER

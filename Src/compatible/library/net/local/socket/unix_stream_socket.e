@@ -1,7 +1,7 @@
 note
 
 	description:
-		"An unix stream socket."
+		"A Unix stream socket."
 	legal: "See notice at end of class.";
 
 	status: "See notice at end of class.";
@@ -37,7 +37,7 @@ create
 feature -- Initialization
 
 	make
-			-- Make an unix socket stream.
+			-- Make a Unix socket stream.
 		do
 			c_reset_error
 			family := af_unix;
@@ -46,7 +46,7 @@ feature -- Initialization
 		end;
 
 	make_client (a_peer: STRING)
-			-- Create an unix stream client socket with peer
+			-- Create a Unix stream client socket with peer
 			-- address set to `a_peer'.
 		require
 			valid_path: a_peer /= Void
@@ -60,7 +60,7 @@ feature -- Initialization
 		end;
 
 	make_server (a_name: STRING)
-			-- Create an unix stream server socket bound to local
+			-- Create a Unix stream server socket bound to local
 			-- address `a_name'.
 		require
 			valid_path: a_name /= Void and then not a_name.is_empty

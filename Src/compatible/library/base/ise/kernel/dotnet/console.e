@@ -54,7 +54,7 @@ create {STD_FILES}
 feature -- Initialization
 
 	make_open_stdin (fn: STRING)
-			-- Create an unix standard input file.
+			-- Create a Unix standard input file.
 		do
 			make (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_input
@@ -62,7 +62,7 @@ feature -- Initialization
 		end
 
 	make_open_stdout (fn: STRING)
-			-- Create an unix standard output file.
+			-- Create a Unix standard output file.
 		do
 			make (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_output
@@ -70,7 +70,7 @@ feature -- Initialization
 		end
 
 	make_open_stderr (fn: STRING)
-			-- Create an unix standard error file.
+			-- Create a Unix standard error file.
 		do
 			make (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_error

@@ -25,7 +25,7 @@ feature -- Access
 			-- Receive socket
 
 	make (a_path : STRING)
-			-- Create an unix socket server bound to address
+			-- Create a Unix socket server bound to address
 			-- `a_path'.
 		do
 			create in.make_server (a_path);

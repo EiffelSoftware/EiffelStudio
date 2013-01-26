@@ -219,7 +219,7 @@ rt_public void trace_event (char* mesg)
 
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s\n",
-		  			dbg_msg_displayed_index, 
+		  			dbg_msg_displayed_index,
 					GetCurrentThreadId(),
 					LOCKED_DBG_STATE_VALUE,
 					mesg
@@ -235,7 +235,7 @@ rt_public void trace_event (char* mesg, char* mesg2)
   dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s %s\n",
-		  			dbg_msg_displayed_index, 
+		  			dbg_msg_displayed_index,
 					GetCurrentThreadId(),
 					LOCKED_DBG_STATE_VALUE,
 					mesg, mesg2
@@ -250,7 +250,7 @@ rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
   dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s %d\n",
-		  			dbg_msg_displayed_index, 
+		  			dbg_msg_displayed_index,
 		  			GetCurrentThreadId(),
 					LOCKED_DBG_STATE_VALUE,
 					mesg,
@@ -266,7 +266,7 @@ rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
   dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s %d \n",
-		  			dbg_msg_displayed_index, 
+		  			dbg_msg_displayed_index,
 		  			GetCurrentThreadId(),
 					LOCKED_DBG_STATE_VALUE,
 					mesg,
@@ -331,7 +331,7 @@ rt_public void reset_dbg_cb_info() {
 */
 
 rt_private void dbg_close_estudio_thread_handle () {
-	DBGTRACE_HR("[ES] CloseHandle of thread : handle = ", (HRESULT)estudio_thread_handle);	
+	DBGTRACE_HR("[ES] CloseHandle of thread : handle = ", (HRESULT)estudio_thread_handle);
 	CloseHandle (estudio_thread_handle);
 	estudio_thread_handle = (HANDLE) 0;
 }
@@ -380,10 +380,10 @@ rt_private void dbg_resume_estudio_thread () {
 
 #ifdef DBGTRACE_ENABLED
 #define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ();
-#define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread (); 
+#define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread ();
 #else
 #define DBG_SUSPEND_ESTUDIO_THREAD SuspendThread(estudio_thread_handle)
-#define DBG_RESUME_ESTUDIO_THREAD ResumeThread (estudio_thread_handle) 
+#define DBG_RESUME_ESTUDIO_THREAD ResumeThread (estudio_thread_handle)
 #endif
 
 
@@ -416,7 +416,7 @@ rt_public void dbg_terminate_synchro () {
 	CHECK (dbg_timer != 0, "Require: timer = 0 (OFF)")
 	LOCKED_DBG_STOP_SYNCHRO;
 	/* Release dbg in case dbg is waiting and stucked */
-	LOCKED_DBG_STATE_SET_VALUE (2); 
+	LOCKED_DBG_STATE_SET_VALUE (2);
 	dbg_hWnd_for_timer = NULL;
 	DBGTRACE("[Synchro|ES] Terminate Synchro: done");
 }
@@ -518,7 +518,7 @@ rt_public void dbg_restore_cb_notification_state () {
 	 * In case of evaluation during callback notification
 	 * we need to give back the hand to the normal estudio notification
 	 * termination. This will avoid unexpected dbg_start_timer ()
-	 * 
+	 *
 	 */
 	DBGTRACE("[???] restore cb notification state");
 	REQUIRE(LOCKED_DBG_STATE_IS_EQUAL (5),"is at end of evaluation processing")
@@ -650,8 +650,8 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 	DBGTRACE_HR("[ES::Eval] Start effective evaluation: ICorDebugController->Continue(false) = ", (HRESULT)hr);
 
 	hr = dbg_icdc_continue (icdc, false);
-	if (hr < 0) { 
-		eval_callback_proceed = true; 
+	if (hr < 0) {
+		eval_callback_proceed = true;
 		LOCKED_DBG_CB_ID_SET_VALUE(old_cb_id);
 #ifdef DBG_EVALUATION_WITH_MAXIMUM_DURATION
 	} else {
@@ -686,7 +686,7 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 #endif
 			Sleep (1);
 		}
-		
+
 		/* now check if last callback is about evaluating
 		 * only now, after synchronized with debugger, otherwise we may missed one */
 		cb_id = (Callback_ids) LOCKED_DBG_CB_ID_VALUE;
@@ -718,7 +718,7 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 				DBGTRACE_HR("[ES::Eval] Callback Events Occured (non stopping since evaluation)", (HRESULT)hr);
 				break;
 		}
-		/* if eval callback occured, we must exit after this loop 
+		/* if eval callback occurred, we must exit after this loop
 		 * but we need to do this at least once */
 
 		DBGTRACE("[ES::Eval] will give hand to dbg and SUSPEND itself");
@@ -754,12 +754,12 @@ rt_public void dbg_begin_callback (Callback_ids callback_id) {
 	LOCKED_DBG_CB_ID_SET_VALUE (callback_id);
 	DBGTRACE2("[CB] ENTER CALLBACK = ", Callback_name(callback_id));
 	LOCKED_CALLBACK_START;
-	/* It is not possible to have 2 callbacks at the same time, 
+	/* It is not possible to have 2 callbacks at the same time,
 	 * since it is supposed to be in the same thread ...  */
 
 	if (LOCKED_DBG_SYNCHRO_IS_OFF) {
 		/* In this case, even if the debugging is killed, i.e: synchro is OFF,
-		 * a callback is received (most probably ExitProcess), 
+		 * a callback is received (most probably ExitProcess),
 		 * then to clean everything up, we will skip all ES specific processing
 		 * until dbg_finish_callback ... processing */
 		return; /* Exit current feature */
@@ -803,7 +803,7 @@ rt_public void dbg_begin_callback (Callback_ids callback_id) {
 				 * to refresh itself before starting debugging. */
 				Sleep (100);
 			}
-			/* Dbg wait for the Ec to call back 
+			/* Dbg wait for the Ec to call back
 			 * no sleep for a spinlock (active waiting) */
 #ifdef DBGTRACE_ENABLED
 			if (once_enter_cb == 0) {
@@ -890,17 +890,17 @@ rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 					);
 			DBGTRACE_HR("[DEBUGGER] CreateDebuggingInterfaceFromVersion CorDebugVersion_2_0 : hr = ", hr);
 		}
-	} else { 
+	} else {
 		hr = CoCreateInstance (
-					CLSID_CorDebug, 
+					CLSID_CorDebug,
 					NULL,
 					CLSCTX_INPROC_SERVER,
-					IID_ICorDebug, 
+					IID_ICorDebug,
 					(void **) icd
 				);
 		DBGTRACE_HR("[DEBUGGER] CoCreateInstance (.. CorDebug ...) : hr = ", hr);
 	}
-	
+
 	CHECKHR ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), hr, "Could not create ICorDebug");
 	return hr;
 }

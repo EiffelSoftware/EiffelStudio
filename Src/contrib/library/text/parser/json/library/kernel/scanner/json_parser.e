@@ -357,7 +357,7 @@ feature -- Commands
 		end
 
 	read_unicode: STRING
-			-- Read unicode and return value
+			-- Read Unicode and return value
 		local
 			i: INTEGER
 		do
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 		end
 
 	is_valid_unicode (a_unicode: STRING): BOOLEAN
-			-- is 'a_unicode' a valid unicode based on this regular expression
+			-- is 'a_unicode' a valid Unicode based on this regular expression
 			-- "\\u[0-9a-fA-F]{4}"
 		local
 			i: INTEGER

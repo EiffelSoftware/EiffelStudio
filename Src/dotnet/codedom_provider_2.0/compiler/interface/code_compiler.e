@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 		end
 
 	file_content (a_file_name: STRING): STRING
-			-- Content of file `a_file_name', encoding can be unicode UTF-16.
+			-- Content of file `a_file_name', encoding can be Unicode UTF-16.
 		require
 			attached_file_name: a_file_name /= Void
 		local

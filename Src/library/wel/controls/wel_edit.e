@@ -192,7 +192,7 @@ feature -- Status setting
 			-- Get the maximum length of text that the user
 			-- can enter into the edit control.
 		require
-			exisits: exists
+			exists: exists
 		do
 			Result := {WEL_API}.send_message_result_integer (item, Em_getlimittext, to_wparam (0), to_lparam (0))
 		ensure

@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			-- This is needed, as there is a Vision2 resizing bug on Windows
 			-- which stops teh scroll bar being displayed when it is first shown, as you
 			-- resize the main window smaller. Therefore,
-			-- we call show on it after the resizing has occured to combat this problem.
+			-- we call show on it after the resizing has occurred to combat this problem.
 			-- There should be no ill effects on either platform.
 		do
 			scroll_bar.show

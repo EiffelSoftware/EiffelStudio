@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 				socket.accept
 				client_socket := socket.accepted
 				if client_socket = Void then
-						-- Some error occured, perhaps because of the timeout
+						-- Some error occurred, perhaps because of the timeout
 						-- We probably should provide some diagnostics here
 					io.put_string ("accept result = Void")
 					io.put_new_line

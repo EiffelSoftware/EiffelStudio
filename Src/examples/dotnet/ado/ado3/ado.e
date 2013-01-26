@@ -75,7 +75,7 @@ feature -- Initialization
 			io.read_line
 		rescue
 				-- Rescue any exception and display corresponding error message
-			io.put_string ("%NThe following error occured: ")
+			io.put_string ("%NThe following error occurred: ")
 			io.put_string (tag_name)
 			retried := True
 			retry

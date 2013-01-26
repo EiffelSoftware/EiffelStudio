@@ -27,7 +27,7 @@ feature -- Access
 feature -- Initialization
 
 	make (a : STRING)
-			-- Create an unix socket client.
+			-- Create a Unix socket client.
 		require
 			a_valid_name: a /= Void and then not a.is_empty
 		do

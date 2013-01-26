@@ -116,7 +116,7 @@ feature {CODE_SYMBOL_VALUE} -- Query
 			-- Retrieves the ID of a code symbol value.
 			--
 			-- `a_value': The value to retrieve an ID for
-			-- `Result': An id in teh current table or Void if the value was not located.
+			-- `Result': An id in the current table or Void if the value was not located.
 		require
 			a_value_attached: a_value /= Void
 		local

@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 		-- assigned `False' at the end. When removing a selected item, Windows
 		-- automatically selects the next item. If we override
 		-- on_tvn_selchanging when `removing_item' is `True' then this stops the
-		-- selections occuring and matches GTk's behaviour.
+		-- selections occurring and matches GTk's behaviour.
 	removing_item: BOOLEAN
 
 feature {EV_ANY_I} -- WEL Implementation

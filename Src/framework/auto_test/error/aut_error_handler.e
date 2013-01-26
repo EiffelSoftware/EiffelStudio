@@ -69,7 +69,7 @@ feature -- Status report
 		end
 
 	has_error: BOOLEAN
-			-- Has an error occured?
+			-- Has an error occurred?
 
 	is_benchmarking: BOOLEAN
 			-- Should timing information be logged?
@@ -588,19 +588,19 @@ feature -- Reporting errors
 		end
 
 	report_html_generation_error
-			-- Report that an error occured while generation the html pages
+			-- Report that an error occurred while generation the html pages
 		do
 			report_error_message ("Could not generate html pages.")
 		end
 
 	report_text_generation_error
-			-- Report that an error occured while generation the text file
+			-- Report that an error occurred while generation the text file
 		do
 			report_error_message ("Could not generate text file.")
 		end
 
 	report_log_parsing_error (a_filename: STRING; a_line_number: INTEGER; a_reason: STRING)
-			-- Report that the error `a_reason' occured while parsing a interpreter log file.
+			-- Report that the error `a_reason' occurred while parsing a interpreter log file.
 		require
 			a_line_number_positive: a_line_number > 0
 			a_filename_not_void: a_filename /= Void

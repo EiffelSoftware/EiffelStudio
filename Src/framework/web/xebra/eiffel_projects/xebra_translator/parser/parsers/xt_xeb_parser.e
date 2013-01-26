@@ -255,7 +255,7 @@ feature {NONE} -- Parser Behaviors
 						if not l_tag.has_attribute (l_attribute.id) then
 							l_tag.extend_attribute (l_attribute.id, l_attribute.value)
 						else
-							Result.put_error_message ("Double attribute occurency: " + l_attribute.id +
+							Result.put_error_message ("Two occurrences of attribute: " + l_attribute.id +
 											" for tag: " + l_id)
 						end
 					elseif attached {XP_TAG_ELEMENT} l_internal_result[i] as l_subtag then
@@ -307,7 +307,7 @@ feature {NONE} -- Parser Behaviors
 										if not l_tag.has_attribute (l_attribute.id) then
 											l_tag.extend_attribute (l_attribute.id, l_attribute.value)
 										else
-											Result.put_error_message ("Double attribute occurency: " + l_attribute.id +
+											Result.put_error_message ("Two occurrences of attribute: " + l_attribute.id +
 											" for tag: " + l_namespace + ":" +l_id)
 										end
 									end

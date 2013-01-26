@@ -57,7 +57,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	feature_name: STRING
 			-- Feature name
-			-- This is the name of the feature whch occured multiple times.
+			-- This is the name of the feature whch occurred multiple times.
 
 feature -- Output
 

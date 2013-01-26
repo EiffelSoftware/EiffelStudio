@@ -169,7 +169,7 @@ feature -- Access
 						renamed_to_same_name: SEARCH_TABLE[STRING];
 						non_existent: SEARCH_TABLE[STRING]]
 			-- Error report for renaming clause. Contains all problematic cases.
-			--| Is Void if no error occured.
+			--| Is Void if no error occurred.
 
 	renamed (a_name_id: INTEGER): INTEGER
 			-- Renames `a_name_id' into it's old name or leaves it unchanged if it is not renamed.

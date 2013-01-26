@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			-- `a_message': A C compiler error message.
 			-- `a_file_name': The file associated with the error.
 			-- `a_line': Line number where the error occurred.
-			-- `a_column': Line column number where the error occured.
+			-- `a_column': Line column number where the error occurred.
 		require
 			a_message_attached: a_message /= Void
 			not_a_message_is_empty: not a_message.is_empty

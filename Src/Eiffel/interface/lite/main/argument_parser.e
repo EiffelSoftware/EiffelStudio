@@ -139,7 +139,7 @@ feature -- Status report
 
 	compile_c_code: BOOLEAN
 			-- Indiciates if compiler should trigger compiliation of the C code, after
-			-- a successful Eifel compilation
+			-- a successful Eiffel compilation
 		require
 			successful: is_successful
 		once

@@ -1,5 +1,5 @@
 note
-	description: "Constants for Eifel query language"
+	description: "Constants for Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

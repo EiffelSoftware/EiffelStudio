@@ -759,7 +759,7 @@ feature {NONE} -- Basic operation
 						else
 							l_depth := 1
 						end
-						--| FIXME: UNICODE content of the file, does not provide unicode file name
+						--| FIXME: Unicode content of the file, does not provide Unicode file name
 						--| unless it is UTF-8 encoded ...
 						a_list.extend ([l_location.as_string_32, l_depth])
 					end

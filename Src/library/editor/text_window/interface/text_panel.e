@@ -468,7 +468,7 @@ feature -- Query
 			-- Are the spaces, the tabulations and the end_of_line characters visible?			
 
 	is_unix_file: BOOLEAN
-			-- Is current file a unix file? (i.e. is "%N" line separator?)	
+			-- Is current file a Unix file? (i.e. is "%N" line separator?)	
 
 	is_in_editor_panel (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Is point at absolute coordinates (`a_screen_x', `a_screeny') in the editor?

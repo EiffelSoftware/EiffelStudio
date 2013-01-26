@@ -182,7 +182,7 @@ feature -- Status Setting
 					internal_text.append (rtf_unicode_character)
 					internal_text.append_integer (character_code.to_integer_32)
 						-- Add ANSI representation of the Unicode characters for
-						-- those who cannot read unicode characters.
+						-- those who cannot read Unicode characters.
 					internal_text.append_character ('?')
 				end
 				counter := counter + 1

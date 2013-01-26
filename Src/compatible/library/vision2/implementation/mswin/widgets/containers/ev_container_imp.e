@@ -421,7 +421,7 @@ feature {NONE} -- WEL Implementation
 					--| FIXME The way we handle toolips for lists and multi column lists
 					--| is somewhat strange. The height of the tooltip returned is too great, and
 					--| we are unable to use `tooltip_text' as we do for trees above. This code is
-					--| also non unicode compliant. Why can we not implement tooltips for these widgets
+					--| also non Unicode compliant. Why can we not implement tooltips for these widgets
 					--| as we do for tree items?
 				create lvninfotip.make_by_pointer (info.item)
 				list ?= info.window_from

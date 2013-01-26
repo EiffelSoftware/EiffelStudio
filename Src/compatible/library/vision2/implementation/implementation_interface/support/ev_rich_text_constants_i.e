@@ -283,7 +283,7 @@ feature -- Access
 		end
 
 	rtf_unicode_character: STRING_32
-			-- String denoting starting of a unicode character.
+			-- String denoting starting of a Unicode character.
 		once
 			Result := "\u"
 		ensure

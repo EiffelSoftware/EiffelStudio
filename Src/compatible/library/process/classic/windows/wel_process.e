@@ -61,7 +61,7 @@ feature -- Process operations
 			-- If `has_separate_console' is True, launch process in a separate console.
 			-- If `has_detached_console' is True, launch process without any console.
 			-- `environs' is a pointer to environment variable block.
-			-- `use_unicode' is True indicates that environment `environs' uses unicode instead of ANSI string.			
+			-- `use_unicode' is True indicates that environment `environs' uses Unicode instead of ANSI string.			
 		require
 			a_cmd_not_void: a_cmd /= Void
 			a_cmd_not_empty: not a_cmd.is_empty

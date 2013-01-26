@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Initialization
 
 	make
-			-- Create an interface objet to control the active base.
+			-- Create an interface object to control the active base.
 		do
 			implementation := handle.database.db_control
 		end

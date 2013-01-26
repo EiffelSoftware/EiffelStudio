@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Initialization
 
 	make
-			-- Create an interface objet to control the active base.
+			-- Create an interface object to control the active base.
 		require
 			database_set: is_database_set
 		do

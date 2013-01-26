@@ -68,7 +68,7 @@ feature -- Objects kept from session to session
 			objkr := objects_keeper
 			if not objkr.is_empty then
 				debug
-					print (generator + ".kept_objets : " + objkr.count.out + " items%N")
+					print (generator + ".kept_objects : " + objkr.count.out + " items%N")
 				end
 				create {ARRAYED_LIST [DBG_ADDRESS]} Result.make (objkr.count)
 				Result.compare_objects

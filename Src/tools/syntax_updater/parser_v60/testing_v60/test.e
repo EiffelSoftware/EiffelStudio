@@ -126,10 +126,10 @@ feature -- Initialization
 			-- TATA
 			default_create)
 
-			feature {ISE_RUNTIME}.generating_type (objet)
+			feature {ISE_RUNTIME}.generating_type (object)
 			feature --ttoto
-			{ISE_RUNTIME}.generating_type (objet)
-			feature{ISE_RUNTIME}.generating_type (objet)
+			{ISE_RUNTIME}.generating_type (object)
+			feature{ISE_RUNTIME}.generating_type (object)
 
 			t2 := ["hello", 10]
 			print ((equal ("hello", t2.s) and equal (10, t2.i)).out)

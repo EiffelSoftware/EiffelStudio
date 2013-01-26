@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	error: IMMUTABLE_STRING_8
-			-- The error that occured
+			-- The error that occurred
 
 feature {NONE} -- Access
 

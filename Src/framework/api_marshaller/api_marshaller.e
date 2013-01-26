@@ -41,7 +41,7 @@ feature -- Status report
 feature -- Conversion: To pointer
 
 	string_to_unicode (a_str: READABLE_STRING_GENERAL): POINTER
-			-- Marshalles a string to a Unicode string.
+			-- Marshals a string to a Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
@@ -62,7 +62,7 @@ feature -- Conversion: To pointer
 		end
 
 	string_to_ansi (a_str: READABLE_STRING_GENERAL): POINTER
-			-- Marshalles a string to an ANSI string.
+			-- Marshals a string to an ANSI string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
@@ -83,12 +83,12 @@ feature -- Conversion: To pointer
 		end
 
 	string_to_tstring (a_str: READABLE_STRING_GENERAL): POINTER
-			-- Marshalles a string to an compiler-select ANSI/Unicode string.
+			-- Marshals a string to a compiler selected ANSI/Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an compiler-select ANSI/Unicode string.
+			-- `Result': A pointer to a compiler selected ANSI/Unicode string.
 		require
 			a_str_attached: a_str /= Void
 		do
@@ -105,7 +105,7 @@ feature -- Conversion: To pointer
 feature -- Conversion: From pointer
 
 	unicode_to_string (a_ptr: POINTER): STRING_32
-			-- Marshalles a UNICODE string to an Eiffel string.
+			-- Marshals a UNICODE string to an Eiffel string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
@@ -127,7 +127,7 @@ feature -- Conversion: From pointer
 		end
 
 	ansi_to_string (a_ptr: POINTER): STRING
-			-- Marshalles a string to a Unicode string.
+			-- Marshals a string to a Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
@@ -149,12 +149,12 @@ feature -- Conversion: From pointer
 		end
 
 	tstring_to_string (a_ptr: POINTER): STRING
-			-- Marshalles a string to an compiler-select ANSI/Unicode string.
+			-- Marshals a string to a compiler selected ANSI/Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an compiler-select ANSI/Unicode string.
+			-- `Result': A pointer to a compiler selected ANSI/Unicode string.
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		do
@@ -168,12 +168,12 @@ feature -- Conversion: From pointer
 		end
 
 	tstring_to_string_32 (a_ptr: POINTER): STRING_32
-			-- Marshalles a string to an compiler-select ANSI/Unicode string.
+			-- Marshals a string to a compiler selected ANSI/Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an compiler-select ANSI/Unicode string.
+			-- `Result': A pointer to a compiler selected ANSI/Unicode string.
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		do

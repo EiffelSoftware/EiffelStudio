@@ -38,6 +38,7 @@ feature {NONE} -- Implementation
 			l_versions: PREFERENCES_VERSIONS
 		once
 			create Result.put (create {COMPILER_PREFERENCES}.make (create {PREFERENCES}.make))
+			create l_versions
 			Result.item.preferences.set_version (l_versions.version_2_0)
 		ensure
 			preferences_cell_not_void: Result /= Void

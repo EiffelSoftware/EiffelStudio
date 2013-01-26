@@ -98,7 +98,7 @@ feature -- Delayed validity checking
 				end
 			end
 		ensure
-			all_occurences_removed: not remaining_validity_checking_list.there_exists (
+			all_occurrences_removed: not remaining_validity_checking_list.there_exists (
 				agent (g_class: CLASS_C; g_item: FUTURE_CHECKING_INFO): BOOLEAN
 						-- Is this a future checking for `a_class'?
 					require

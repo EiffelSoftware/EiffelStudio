@@ -333,7 +333,7 @@ feature {NONE} -- Click ast exploration
 					end
 					current_class_as := l_eiffel_class.parsed_ast (after_save)
 					if current_class_as = Void then
-							-- If a syntax error ocurred, we retrieve the old ast.
+							-- If a syntax error occurred, we retrieve the old ast.
 						current_class_as := c.ast
 						if error_handler.has_error and then attached {SYNTAX_ERROR} error_handler.error_list.first as l_syn then
 								-- Set the new syntax error

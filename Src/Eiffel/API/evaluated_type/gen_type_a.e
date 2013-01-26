@@ -1580,7 +1580,7 @@ feature -- Primitives
 						--| `l_constraint_item' can indeed still be a formal, but now has to be resolved by using `a_type_context'
 					l_constraint_item := l_generic_parameters.item(l_formal_constraint.position)
 				elseif l_constraint_item.has_generics and then not l_constraint_item.generics.is_empty then
-						-- We substitude all occurences of formals in the constraint with the instantiation of the corresponding formal in our generic derivation.
+						-- We substitude all occurrences of formals in the constraint with the instantiation of the corresponding formal in our generic derivation.
 					l_generic_constraint ?= l_constraint_item.deep_twin
 					l_generic_constraint.substitute (l_generic_parameters)
 					l_constraint_item := l_generic_constraint

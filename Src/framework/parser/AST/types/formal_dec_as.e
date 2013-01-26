@@ -197,7 +197,7 @@ feature -- Status
 			-- Is the formal generic parameter only single constraint and this constraint has no feature renaming clause?
 			--
 			-- `a_generics' is the list of the classes generics where this formal is written in.
-			--|  `a_generics' is used to resolve formals occuring as constraints.
+			--|  `a_generics' is used to resolve formals occurring as constraints.
 			--| If this feature returns true, some optimizations become available: No check for renaming and the
 			--| feature lookup is simpler, as there is at most one constraint.
 		require

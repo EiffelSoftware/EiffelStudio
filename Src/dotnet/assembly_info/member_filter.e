@@ -90,7 +90,7 @@ feature -- Tag
 				check
 					name_attribute: a_local_part.is_equal ("name")
 				end
-					-- if we have a unicode string, convert it into a normal string
+					-- if we have a Unicode string, convert it into a normal string
 				l_uc_string ?= a_value
 				if l_uc_string /= Void then
 					l_name := l_uc_string.string

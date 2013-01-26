@@ -60,7 +60,7 @@ feature -- Access
 			n, len: INTEGER
 		once
 			n := 1024
-			-- We allocate 2 * n bytes, as `p' will hold a unicode string.
+				-- We allocate 2 * n bytes, as `p' will hold a Unicode string.
 			p := p.memory_alloc (2 * n)
 			if get_core_system_directory (p, n, $len) = 0 then
 			create path.make_empty (len + 1)

@@ -1337,7 +1337,7 @@ feature -- Status setting
 		end
 
 	safe_store_caret
-			-- Store caret position, and block caret change events from occuring.
+			-- Store caret position, and block caret change events from occurring.
 		do
 			must_restore_selection := False
 			internal_actions_blocked := True
@@ -1464,7 +1464,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 	last_known_caret_position: INTEGER
 		-- Caret position kept internally for use in `safe_restore_caret', only set when there is no selection.
-		-- Permits implementation to know the direction a selection is occuring, by comparing to the selection limits.
+		-- Permits implementation to know the direction a selection is occurring, by comparing to the selection limits.
 
 	must_fire_final_selection: BOOLEAN
 		-- Must the selection change actions be fired when there is no selection, notifying

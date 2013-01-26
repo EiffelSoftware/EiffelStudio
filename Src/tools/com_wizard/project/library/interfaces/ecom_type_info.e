@@ -202,7 +202,7 @@ feature -- Access
 		end
 
 	type_info (a_handle: NATURAL_32): ECOM_TYPE_INFO
-			-- ITypeInfo interface refernced by `a_handle'
+			-- ITypeInfo interface referenced by `a_handle'
 			-- which is returned by `ref_type_of_impl_type'
 		local
 			l_pointer: POINTER

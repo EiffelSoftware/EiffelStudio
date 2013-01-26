@@ -96,7 +96,7 @@ feature -- Access
 		end
 
 	path: STRING_32
-			-- Path of the class, relative to the group, in unix format.
+			-- Path of the class, relative to the group, in Unix format.
 		deferred
 		end
 

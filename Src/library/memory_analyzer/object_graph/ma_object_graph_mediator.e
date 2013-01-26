@@ -195,7 +195,7 @@ feature -- Command
 		end
 
 	on_select_node (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Set the refernce lines red, others black.
+			-- Set the reference lines red, others black.
 		local
 			l_node_figure: EG_FIGURE
 		do

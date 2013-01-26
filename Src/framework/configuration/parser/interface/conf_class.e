@@ -164,7 +164,7 @@ feature -- Access, in compiled only, not stored to configuration file
 		end
 
 	path: STRING_32
-			-- The path of the class, relative to the group, in unix format.
+			-- The path of the class, relative to the group, in Unix format.
 
 	overriden_by: like class_type
 			-- The class that overrides this class.

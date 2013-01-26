@@ -1424,7 +1424,7 @@ feature -- Process elements of Makefile.SH
 	process_target_prerequisites (a_dependents : STRING; initial_pos : INTEGER) is
 			-- process prerequisites (dependents) of a target:
 			--  replace macro references with their values;
-			--  for each "word", translate filespec to VMS syntax if it is a unix filespec and
+			--  for each "word", translate filespec to VMS syntax if it is a Unix filespec and
 			--    append to application dependencies
 			-- ***FIXME*** return a value, don't update application_dependencies
 		require
@@ -2329,7 +2329,7 @@ feature -- Process macro definitions
 					elseif l_word.is_equal (".") then
 						do_nothing
 					else --not l_word.is_empty and then not l_word.is_equal (".") then
-						--***FIXME*** check for VMS filespec, don't assume unix
+						--***FIXME*** check for VMS filespec, don't assume Unix
 						if not is_vms_filespec (l_word) then
 							-- ensure it looks like a path (ends in '/')
 							if l_word.item (l_word.count) /= '/' then
@@ -3230,7 +3230,7 @@ feature -- platform specific file names
 
 
 	as_vms_filespec (a_filespec : STRING) : STRING is
-			-- a new string transformed from a unix filespec to vms syntax
+			-- a new string transformed from a Unix filespec to vms syntax
 			-- enclosing quotes are removed
 			-- Rules:
 			--   a ==> a	     $(a) ==> a:        a/b ==> [.a]b	      $(a)/b ==> a:b	   a/b/c ==> [.a.b]c	
@@ -3275,7 +3275,7 @@ feature -- platform specific file names
 				-- if filespec starts with escaped $, remove the escape
 				--if l_filespec @ 1 = '$' then l_filespec.remove(1) end
 
---				-- if it has no unix filespec delimiters and doesnt begin with a symbol $(x),
+--				-- if it has no Unix filespec delimiters and doesnt begin with a symbol $(x),
 --				-- then assume it is a VMS filespec
 --				if not l_filespec.has ('/') and then l_filespec.substring_index ("$(", 1) /= 1
 --				then -- assume it is already a vms filespec

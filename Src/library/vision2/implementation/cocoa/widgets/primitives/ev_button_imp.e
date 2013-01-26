@@ -186,7 +186,7 @@ feature -- Measurement
 			-- Reset `Current' to its default minimum size.
 		do
 			-- TODO: This is not very smart at the moment!
-			-- Caluclate dynamically (this depends on the button style and the text)
+			-- Calculate dynamically (this depends on the button style and the text)
 			accommodate_text (" ")
 		end
 

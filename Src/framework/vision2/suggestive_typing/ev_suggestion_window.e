@@ -439,7 +439,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 				loop
 					l_row := grid.row (i)
 					if attached {like row_data_type} l_row.data as l_data then
-							-- Because regular expression don't support unicode,
+							-- Because regular expression don't support Unicode,
 							-- we convert the input text
 						if l_reg.is_matching (l_data.text) then
 							l_row.show

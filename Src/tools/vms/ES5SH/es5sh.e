@@ -3058,7 +3058,7 @@ feature -- platform specific file names
 
 	subdirectory_make_command (a_subdir, a_target: STRING): STRING is
 			-- command string to perform make in subdirectory of (optional) target `a_target'
-			-- eg. <tab>-@ISE_EIFEL:[studio.spec.$(ISE_PLATFORM).bin]make.vms subidr target
+			-- eg. <tab>-@ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]make.vms subidr target
 		require
 			subdirectory_exists: a_subdir /= Void
 		local

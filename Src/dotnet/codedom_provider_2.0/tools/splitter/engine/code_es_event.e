@@ -1,5 +1,5 @@
 note
-	description: "Event that occured during file splitting"
+	description: "Event that occurred during file splitting"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

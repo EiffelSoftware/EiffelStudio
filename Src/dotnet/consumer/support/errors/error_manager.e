@@ -36,7 +36,7 @@ feature -- Access
 		end
 
 	No_error: INTEGER = 0
-			-- No error occured
+			-- No error occurred
 
 feature -- Status Report
 

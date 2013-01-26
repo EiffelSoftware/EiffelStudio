@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 				if not a_info_only then
 					type_consumer.initialize
 					if not type_consumer.initialized then
-							-- An error occured during the initialization of type.
+							-- An error occurred during the initialization of type.
 							-- Notice the problem on this specific type and try the next type.
 						if type_consumer.consumed_type.dotnet_name /= Void then
 							set_error (Type_initialization_error, {STRING_32} "One of the features of " + type_consumer.consumed_type.dotnet_name +" is invalid.")

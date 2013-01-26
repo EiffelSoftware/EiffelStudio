@@ -297,7 +297,7 @@ feature{NONE} -- Actions
 			l_acc: EV_ACCELERATOR
 			l_done: BOOLEAN
 			l_keyword: STRING_32
-			l_key_str: STRING
+			l_key_str: STRING_32
 		do
 			l_component := searchable_component
 			if l_component.is_search_enabled then
@@ -332,7 +332,7 @@ feature{NONE} -- Actions
 				end
 
 				if not l_done and then (not ev_application.ctrl_pressed) and then l_component.is_direct_start_search_enabled then
-					l_key_str := a_key.out
+					l_key_str := a_key.text
 					if l_key_str.count = 1 then
 						if ev_application.shift_pressed then
 							l_key_str.to_upper

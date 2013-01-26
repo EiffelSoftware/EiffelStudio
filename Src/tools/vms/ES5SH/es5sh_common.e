@@ -79,7 +79,7 @@ feature -- Access
 	value_eiffel: STRING
 			-- value of $ISE_EIFFEL (`symbol_eiffel')
 	value_eiffel_string: STRING
-			-- symbol_eiffel + value_eiffel + value_eifel_native
+			-- symbol_eiffel + value_eiffel + value_eiffel_native
 
 	value_platform: STRING
 		-- value of $ISE_PLATFORM

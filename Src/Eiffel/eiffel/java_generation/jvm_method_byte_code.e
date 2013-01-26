@@ -1331,7 +1331,7 @@ feature {ANY} -- Arrays
 			-- read value from array (which is of kind `kind') and push
 			-- it on the stack.
 			-- the top most stack item must be the item offset
-			-- and the second top most item must be a refernce to an array
+			-- and the second top most item must be a reference to an array
 		require
 			valid_type_kind: valid_type_kind (kind)
 			stack_size: stack.count >= 2

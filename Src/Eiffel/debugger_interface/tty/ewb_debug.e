@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				create param_working_path.make_from_string (io.last_string) -- FIXME: unicode .. should we consider it as UTF-8 ?
+				create param_working_path.make_from_string (io.last_string) -- FIXME: Unicode .. should we consider it as UTF-8 ?
 			end
 		end
 

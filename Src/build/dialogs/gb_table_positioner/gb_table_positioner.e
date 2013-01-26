@@ -615,21 +615,21 @@ feature {NONE} -- Implementation
 		end
 
 	set_rows (row_value: INTEGER)
-			-- Resize table to accomodate `row_value' rows.
+			-- Resize table to accommodate `row_value' rows.
 		do
 			editor.set_rows (row_value)
 			update_editors
 		end
 
 	set_columns (column_value: INTEGER)
-			-- Resize table to accomodate `column_value' columns.
+			-- Resize table to accommodate `column_value' columns.
 		do
 			editor.set_columns (column_value)
 			update_editors
 		end
 
 	set_rows_and_draw (row_value: INTEGER)
-			-- Resize table to accomodate `row_value' rows.
+			-- Resize table to accommodate `row_value' rows.
 		do
 			editor.set_rows (row_value)
 			drawing_area.set_minimum_height (grid_size * row_value + diagram_border * 2)
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_columns_and_draw (column_value: INTEGER)
-			-- Resize table to accomodate `column_value' columns.
+			-- Resize table to accommodate `column_value' columns.
 		do
 			editor.set_columns (column_value)
 			drawing_area.set_minimum_width (grid_size * column_value +  diagram_border * 2)

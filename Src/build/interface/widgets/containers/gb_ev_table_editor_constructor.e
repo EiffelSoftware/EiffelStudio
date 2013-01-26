@@ -194,14 +194,14 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 		end
 
 	set_rows (row_value: INTEGER)
-			-- Resize table to accomodate `row_value' rows.
+			-- Resize table to accommodate `row_value' rows.
 		do
 			for_all_objects (agent {EV_TABLE}.resize (first.columns, row_value))
 			update_editors
 		end
 		
 	set_columns (column_value: INTEGER)
-			-- Resize table to accomodate `column_value' columns.
+			-- Resize table to accommodate `column_value' columns.
 		do
 			for_all_objects (agent {EV_TABLE}.resize (column_value, first.rows))
 			update_editors

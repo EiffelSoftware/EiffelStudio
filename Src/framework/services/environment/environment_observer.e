@@ -19,7 +19,7 @@ feature {ENVIRONMENT_S} -- Event handlers
 			-- Called when a value in the environment service changes.
 			--
 			-- `a_sender': The sender service of the event.
-			-- `a_name': Name of the environment variable the change occured to.
+			-- `a_name': Name of the environment variable the change occurred to.
 		require
 			is_interface_usable: (attached {USABLE_I} Current as l_usable) implies l_usable.is_interface_usable
 			a_sender_attached: a_sender /= Void

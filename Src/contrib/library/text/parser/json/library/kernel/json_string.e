@@ -89,7 +89,7 @@ feature -- Access
 							Result.append_character ('%R')
 							i := i + 2
 						when 'u' then
-							--| Leave unicode \uXXXX unescaped
+							--| Leave Unicode \uXXXX unescaped
 							Result.append_character ('\')
 							i := i + 1
 						else
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 		end
 
     escaped_json_string_32 (s: READABLE_STRING_32): STRING_8
-            -- JSON string with '"' and '\' characters and unicode escaped
+            -- JSON string with '"' and '\' characters and Unicode escaped
         require
             s_not_void: s /= Void
 		local

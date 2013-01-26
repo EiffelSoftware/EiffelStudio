@@ -146,7 +146,7 @@ feature -- Access
 feature -- Access: Error handling
 
 	last_exception: detachable SQLITE_EXCEPTION
-			-- Last occuring error, set during compilation.
+			-- Last occurring error, set during compilation.
 
 feature -- Access: Cursor
 

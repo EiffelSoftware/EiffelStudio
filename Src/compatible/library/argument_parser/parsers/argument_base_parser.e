@@ -113,7 +113,7 @@ feature {NONE} -- Access
 
 	frozen arguments: ARRAY [STRING]
 			-- The list of actual arguments, which takes into account compounded arguments when using
-			-- unix-style switches.
+			-- Unix-style switches.
 			-- Compunded switches are those single character switches, when `is_using_unix_switch_style' is True,
 			-- that are joined, such as -abcde, where a, b, c, d and e are switches.
 		local
@@ -142,7 +142,7 @@ feature {NONE} -- Access
 					l_arg := l_args[i]
 					if l_arg.count > 2 then
 						if l_prefixes.has (l_arg.item (1)) and not l_prefixes.has (l_arg.item (2)) then
-								-- This means the argument is a single prefix switched (unix style uses two (--) for full
+								-- This means the argument is a single prefix switched (Unix style uses two (--) for full
 								-- words and one (-) for shortcuts, which can be compounded.)
 							if l_use_separated_switched then
 								nb := l_arg.count
@@ -350,7 +350,7 @@ feature {NONE} -- Status report
 
 	is_using_unix_switch_style: BOOLEAN
 			-- Indicates if the Unix command switch style is being used by the application switches.
-			--| Note: Redefine to force use of unix long name switches.
+			--| Note: Redefine to force use of Unix long name switches.
 		local
 			l_switches: like switches
 			l_cursor: CURSOR

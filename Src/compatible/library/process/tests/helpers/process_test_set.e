@@ -109,7 +109,7 @@ feature {NONE} -- Query
 			-- Path to `eiffel_echo' executable
 			--
 			-- Note: by default this is $ISE_EIFFEL/studio/tools/spec/$ISE_PLATFORM/bin/eiffel_echo, if
-			--       environment variables are missing we check for a unix layout. Otherwise we assume
+			--       environment variables are missing we check for a Unix layout. Otherwise we assume
 			--       `eiffel_echo' is reachable from $PATH.
 		local
 			l_env: EXECUTION_ENVIRONMENT

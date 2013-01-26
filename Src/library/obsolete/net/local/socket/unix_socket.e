@@ -1,7 +1,7 @@
 note
 
 	description:
-		"An unix socket."
+		"A Unix socket."
 	legal: "See notice at end of class.";
 
 	status: "See notice at end of class.";

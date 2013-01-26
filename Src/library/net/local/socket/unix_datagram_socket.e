@@ -1,7 +1,7 @@
 note
 
 	description:
-		"An unix datagram socket."
+		"A Unix datagram socket."
 	legal: "See notice at end of class.";
 
 	status: "See notice at end of class.";
@@ -38,7 +38,7 @@ create
 feature -- Initialization
 
 	make
-			-- Create an unix datagram socket.
+			-- Create a Unix datagram socket.
 		do
 			c_reset_error
 			family := af_unix;
@@ -48,7 +48,7 @@ feature -- Initialization
 		end;
 
 	make_bound (a_path: STRING)
-			-- Create an unix socket bound to a local well known
+			-- Create a Unix socket bound to a local well known
 			-- address `a_path'.
 		local
 			an_address: UNIX_SOCKET_ADDRESS
@@ -58,7 +58,7 @@ feature -- Initialization
 		end;
 
 	make_targeted (a_peer_path: STRING)
-			-- Create an unix socket targeted to `a_peer_path'.
+			-- Create a Unix socket targeted to `a_peer_path'.
 		local
 			an_address: UNIX_SOCKET_ADDRESS
 		do

@@ -1,7 +1,7 @@
 note
 
 	description:
-		"A unix socket address."
+		"A Unix socket address."
 	legal: "See notice at end of class.";
 
 	status: "See notice at end of class.";
@@ -41,14 +41,14 @@ create
 feature -- Initialization
 
 	make
-			-- Create an unix socket address.
+			-- Create a Unix socket address.
 		do
 			socket_address_make;
 			set_family (af_unix)
 		end;
 
 	make_from_path (a_path: like path)
-			-- Create an unix socket address from a path.
+			-- Create a Unix socket address from a path.
 		do
 			make;
 			set_path (a_path)

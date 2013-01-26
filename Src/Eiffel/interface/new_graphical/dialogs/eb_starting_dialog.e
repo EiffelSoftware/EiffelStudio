@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 			load_available_wizards
 			fill_list_with_available_wizards
 
-				-- Add +1 to number of rows because on unix it has the side effect to show/hide
+				-- Add +1 to number of rows because on Unix it has the side effect to show/hide
 				-- the scrollbards of the grid eventhough it is not necessary.
 			wizards_list.set_minimum_height (((wizards_list.row_count + 1).min (10)) * wizards_list.row_height)
 		ensure

@@ -971,7 +971,7 @@ feature {NONE} -- Implementation
 			-- Current class text.
 
 	is_unix_file: BOOLEAN
-			-- is current file a unix file ?
+			-- is current file a Unix file ?
 			-- (i.e. is "%N" line separator ?)	
 
 	insertion_position: INTEGER

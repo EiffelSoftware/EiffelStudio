@@ -5,7 +5,7 @@ note
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
--- More_accelerators_element -> "," identfier
+-- More_accelerators_element -> "," identifier
 
 class MORE_ACCELERATORS_ELEMENT
 

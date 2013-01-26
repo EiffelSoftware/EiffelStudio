@@ -100,7 +100,7 @@ feature -- Access
 	default_key_processing_handler: detachable PREDICATE [ANY, TUPLE [EV_KEY]]
 			-- Agent used to determine whether the default key processing should occur for `Current'.
 			-- If agent returns `True' then default key processing continues as normal, False prevents
-			-- default key processing from occuring.
+			-- default key processing from occurring.
 
 feature -- Status Report
 

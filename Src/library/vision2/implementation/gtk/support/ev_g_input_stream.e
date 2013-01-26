@@ -110,7 +110,7 @@ feature {NONE} -- Externals
 			-- Closes the stream, releasing resources related to it.
 			-- a_stream :	A GInputStream.
 			-- a_cancellable :	optional GCancellable object, NULL to ignore. [allow-none]
-			-- a_error:	location to store the error occuring, or NULL to ignore
+			-- a_error:	location to store the error occurring, or NULL to ignore
 			-- Returns:	TRUE on success, FALSE (0) on failure
 		external
 			"C inline use <ev_gtk.h>"

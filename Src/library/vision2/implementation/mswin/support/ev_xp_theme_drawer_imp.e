@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 		end
 
 	unicode_string (string: READABLE_STRING_GENERAL): WEL_STRING
-			-- Convert `string' into a unicode string,
+			-- Convert `string' into a Unicode string,
 		require
 			string_not_void: string /= Void
 		do

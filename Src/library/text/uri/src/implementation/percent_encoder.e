@@ -97,8 +97,8 @@ feature {NONE} -- Implementation: character encoding
 		end
 
 	append_percent_encoded_unicode_character_code_to (a_code: NATURAL_32; a_result: STRING_GENERAL)
-			-- Append unicode character code `a_code' as UTF-8 and percent-encoded content into `a_result'
-			-- Note: it does include UTF-8 conversion of extended ASCII and unicode.
+			-- Append Unicode character code `a_code' as UTF-8 and percent-encoded content into `a_result'
+			-- Note: it does include UTF-8 conversion of extended ASCII and Unicode.
 		do
 			if a_code <= 0x7F then
 					-- 0xxxxxxx
@@ -128,7 +128,7 @@ feature -- Percent decoding
 
 	append_percent_decoded_string_to (v: READABLE_STRING_GENERAL; a_result: STRING_GENERAL)
 			-- Append to `a_result' a string equivalent to the percent-encoded string `v'
-			--| Note that is `a_result' is a STRING_8, any unicode character will be kept as UTF-8
+			--| Note that is `a_result' is a STRING_8, any Unicode character will be kept as UTF-8
 		local
 			i,n: INTEGER
 			c: NATURAL_32

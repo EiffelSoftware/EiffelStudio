@@ -750,7 +750,7 @@ feature -- External features
 feature {NONE} -- Explicit Conversion
 
 	database_format (a_str: STRING_32): STRING_8
-			-- Append an unicode code point `a_code' to an utf8 stream.
+			-- Append a Unicode code point `a_code' to an utf8 stream.
 		require
 			a_str_not_void: a_str /= Void
 		do

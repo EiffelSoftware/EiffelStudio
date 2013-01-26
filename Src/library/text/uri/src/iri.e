@@ -283,7 +283,7 @@ feature {NONE} -- Implementation: Internationalization
 
 	append_percent_encoded_string_into_internationalized_percent_encoded_string (v: READABLE_STRING_GENERAL; a_result: STRING_32)
 			-- Append to `a_result' the Internationalized URL-decoded equivalent of the given percent-encoded string `v'
-			-- It simply decode any percent-encoded unicode character and kept the rest untouched
+			-- It simply decode any percent-encoded Unicode character and kept the rest untouched
 			-- "http://example.com/summer/%C3%A9t%C3%A9" will be converted to IRI "http://example.com/summer/été"
 		local
 			i,n: INTEGER

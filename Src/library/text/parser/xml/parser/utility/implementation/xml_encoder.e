@@ -63,7 +63,7 @@ feature -- Encoder
 
 	encoded_string_32 (s: READABLE_STRING_GENERAL): STRING_32
 			-- `s' converted to escaped STRING_32 value, by escaping some character with XML entities
-			-- but keeping unicode character as they are
+			-- but keeping Unicode character as they are
 		local
 			i, n: INTEGER
 			l_code: NATURAL_32

@@ -704,7 +704,7 @@ feature -- Status report
 			-- Has effect only on Unix.
 
 	is_environment_variable_unicode: BOOLEAN
-			-- Does `environment_variable_table' use unicode?
+			-- Does `environment_variable_table' use Unicode?
 			-- Only has effect on Windows.
 		obsolete
 			"Do not use since it has no effect."

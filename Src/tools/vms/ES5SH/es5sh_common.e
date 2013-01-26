@@ -571,7 +571,7 @@ feature -- filename primitives
 
 	is_vms_filespec (filespec : STRING) : BOOLEAN is
 			-- does string look like a VMS filespec?
-			-- if it has no unix filespec delimiters and doesnt begin with a symbol $(x),
+			-- if it has no Unix filespec delimiters and doesnt begin with a symbol $(x),
 			-- then assume it is a VMS filespec
 		require
 			filespec_exists:	filespec /= Void

@@ -18,7 +18,7 @@ feature
 
 	show
 		do
-			--| no splash on unix
+			--| no splash on Unix
 		end
 
 	close

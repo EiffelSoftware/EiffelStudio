@@ -23,7 +23,7 @@ inherit
 feature -- File name operations
 
 	adapt_unix_to_windows (n: READABLE_STRING_32): STRING_32
-			-- Adapt file name `n' in unix file system to windows file system.
+			-- Adapt file name `n' in Unix file system to windows file system.
 		local
 			u: UTF_CONVERTER
 		do

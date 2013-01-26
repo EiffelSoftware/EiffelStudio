@@ -208,7 +208,7 @@ note
 		update is buffered until the system becomes idle, thereby reducing flicker.
 		However, in some situations, it is possible that the system may become idle
 		during the updates, which may lead to flicker. In situations such as these, you
-		may use `lock_update' to prevent graphical updates from occuring in the grid
+		may use `lock_update' to prevent graphical updates from occurring in the grid
 		until `unlock_update' is called. While the grid `is_locked', no graphical updates
 		of any form are performed.
 

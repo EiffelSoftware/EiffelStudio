@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	identifier: MEL_IDENTIFIER
-			-- Mel identfier return from input or work_proc 
+			-- Mel identifier return from input or work_proc 
 			-- or timer callback registration
 
 	has_widget: BOOLEAN = False;

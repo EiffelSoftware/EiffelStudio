@@ -54,7 +54,7 @@ create {STD_FILES}
 feature -- Initialization
 
 	make_open_stdin (fn: READABLE_STRING_GENERAL)
-			-- Create an unix standard input file.
+			-- Create a standard input file.
 		do
 			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_input
@@ -62,7 +62,7 @@ feature -- Initialization
 		end
 
 	make_open_stdout (fn: READABLE_STRING_GENERAL)
-			-- Create an unix standard output file.
+			-- Create a standard output file.
 		do
 			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_output
@@ -70,7 +70,7 @@ feature -- Initialization
 		end
 
 	make_open_stderr (fn: READABLE_STRING_GENERAL)
-			-- Create an unix standard error file.
+			-- Create a standard error file.
 		do
 			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_error

@@ -273,7 +273,7 @@ feature -- Status report
 		end
 
 	last_error: STRING
-			-- Text of last error occured.
+			-- Text of last error occurred.
 		local
 			a: ANY
 			success: BOOLEAN

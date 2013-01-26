@@ -187,7 +187,7 @@ feature -- Server
 --feature -- Other
 
 --	handle_errors
---			-- Handles errors that occured in the current command
+--			-- Handles errors that occurred in the current command
 --		deferred
 --		end
 note

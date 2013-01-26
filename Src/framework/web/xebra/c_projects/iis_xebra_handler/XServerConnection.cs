@@ -154,7 +154,7 @@ namespace Xebra
         /// Waits to receive a string from the server
         /// </summary>
         /// <param name="responseMessage">Used to store the received message</param>
-        /// <returns>Returns true if no error occured during receiving</returns>
+        /// <returns>Returns true if no error occurred during receiving</returns>
         public bool receiveMessage(out string responseMessage)
         {
             bool flag = false;

@@ -96,7 +96,7 @@ feature -- status report
 			--										+- callee_is (delayed_domain)			(3)
 			--
 			-- When evaluate criterion (2), we get an QL_ITEM, the delayed_domain at position (3) should be replaced by a domain represented by the
-			-- got QL_ITEM (It cannot use the delayed item got when the metric is caluclated of given input domain).
+			-- got QL_ITEM (It cannot use the delayed item got when the metric is calculated of given input domain).
 			-- That's why `should_delayed_domain_from_parent_be_used' is set to True for criterion (2).
 
 	has_metric_status_checked: BOOLEAN

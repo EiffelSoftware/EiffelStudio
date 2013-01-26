@@ -932,7 +932,7 @@ feature {NONE} -- Implementation
 				l_warnings := an_options.warnings
 				if l_warnings /= Void and then not l_warnings.is_empty then
 					create l_sorted_list.make_from_array (l_warnings.current_keys)
-					create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+					create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 					l_sorter.sort (l_sorted_list)
 					from
 						l_sorted_list.start

@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 	is_format_version_1_0: BOOLEAN
 			-- Is storage using the old format which does store the type along the name of the preferences?
 		do
-			Result := version.same_string (version_1_0)
+			Result := version = Void or else version.same_string (version_1_0)
 		end
 
 invariant

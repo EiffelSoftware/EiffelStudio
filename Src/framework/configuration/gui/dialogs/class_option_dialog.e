@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 					l_sorted_list.extend (value.key_for_iteration)
 					value.forth
 				end
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_sorted_list)
 
 				from

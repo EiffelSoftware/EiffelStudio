@@ -143,7 +143,7 @@ feature -- Access
 
 	Maximum_string_character_code: NATURAL_32 = 0x10FFFF
 			-- Maximum value for character code inside a string
-			-- According to ISO/IEC 10646, the maximum unicode point is 10FFFF.
+			-- According to ISO/IEC 10646, the maximum Unicode point is 10FFFF.
 			-- However ISO/IEC 10646 has stated that all future assignments of characters
 			-- will also take place in range 0 - 7FFFFFFF
 

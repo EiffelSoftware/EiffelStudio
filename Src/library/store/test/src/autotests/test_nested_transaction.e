@@ -90,7 +90,7 @@ feature {NONE}
 				l_book := filled_book
 				l_book.set_author ("Neal")
 				l_store.put (l_book)
-				assert ("An database error ocurred.", db_change.is_ok)
+				assert ("An database error occurred.", db_change.is_ok)
 
 					-- Transaction 2, Nested
 				l_control.begin
@@ -109,7 +109,7 @@ feature {NONE}
 				l_book := filled_book
 				l_book.set_author ("Linda")
 				l_store.put (l_book)
-				assert ("An database error ocurred.", db_change.is_ok)
+				assert ("An database error occurred.", db_change.is_ok)
 				l_control.commit
 			else
 				assert ("DB_STORE or DB_CONTROL is not ready", False)

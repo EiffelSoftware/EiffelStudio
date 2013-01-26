@@ -1171,7 +1171,7 @@ template_parameter_list
  * correctly, however. According to the manual ''...A template argument
  * that can be interpreted either as a parameter-declaration or a
  * type-argument (because its identifier is the name of an
- * already exisitng class) is taken as type-argument.''
+ * already existing class) is taken as type-argument.''
  * Therefore, any "class ID" that is seen on the input, should
  * match the first alternative here (it should be a type-argument).
  */

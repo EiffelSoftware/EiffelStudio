@@ -36,7 +36,7 @@ feature {NONE} -- initialization
 			temp_window: EV_WINDOW
 			application: detachable EV_APPLICATION
 		do
-			-- We check EV_ENVIRONMENT to see if EV_APPLICATION exisits.
+			-- We check EV_ENVIRONMENT to see if EV_APPLICATION exists.
 			-- If it does not, then we must create an instance ourselves.
 			application := (create {EV_ENVIRONMENT}).application
 			if application = Void then

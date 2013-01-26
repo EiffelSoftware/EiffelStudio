@@ -169,7 +169,7 @@ function toggleAll()
 }
 
 function synchronize(aUrl)
-//Synchronize the TOC with the 'url' displayed, if it is in the toc (take first occurence)
+//Synchronize the TOC with the 'url' displayed, if it is in the toc (take first occurrence)
 {			
 	var links = document.getElementsByTagName("a");	
 	var found;

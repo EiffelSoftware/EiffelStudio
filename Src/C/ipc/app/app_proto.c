@@ -1821,16 +1821,16 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 	EIF_TYPED_VALUE ip;
 
 	int b = exec_recording_enabled;
-	int exception_occured = 0;	/* Exception occurred ? */
+	int exception_occurred = 0;	/* Exception occurred ? */
 
 	exec_recording_enabled = 0; /* Disable execution recording status */
 
-	dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, nb_pushed, &exception_occured, &ip);
+	dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, nb_pushed, &exception_occurred, &ip);
 
 	if (ip.type == SK_VOID) {
 		app_send_typed_value (sp, NULL, DMP_VOID);
 	} else {
-		if (exception_occured == 1) {
+		if (exception_occurred == 1) {
 			app_send_typed_value (sp, &ip, DMP_EXCEPTION_ITEM);
 		} else {
 			app_send_typed_value (sp, &ip, DMP_ITEM);

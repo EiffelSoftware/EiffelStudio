@@ -230,7 +230,7 @@ rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Dbg evaluation */
 rt_shared int dbg_store_exception_trace (char* trace);
-rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occured, EIF_TYPED_VALUE *result);
+rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result);
 
 /* Feature call and/or access  */
 rt_shared void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed);
@@ -925,7 +925,7 @@ rt_private void interpret(int flag, int where)
 					/* Set exception handler address. */
 				if (setjmp(exenvo)) {
 						/* There is an exception. */
-					IC = except_part; 
+					IC = except_part;
 				}
 			}
 		}
@@ -950,7 +950,7 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * Do+Rescue clause 
+	 * Do+Rescue clause
 	 */
 	case BC_DO_RESCUE:
 #ifdef DEBUG
@@ -1605,7 +1605,7 @@ rt_private void interpret(int flag, int where)
 					break;
 				}
 			}
-			
+
 		}
 		break;
 
@@ -2064,13 +2064,13 @@ rt_private void interpret(int flag, int where)
 				RTCK;				/* Assertion success */
 			} else {
 				RTCF;				/* Assertion failure */
-			} 
+			}
 		} else {
 			if (code) {
 				RTCK0;				/* Assertion success */
 			} else {
 				RTCF0;				/* Assertion failure */
-			} 
+			}
 		}
 		break;
 
@@ -2405,7 +2405,7 @@ rt_private void interpret(int flag, int where)
 			if (nb_item.it_int32 >= 0) {
 				nb = (uint32) nb_item.it_int32;
 			} else {
-				eraise ("non_negative_argument", EN_RT_CHECK); 
+				eraise ("non_negative_argument", EN_RT_CHECK);
 			}
 
 			if (is_expanded) {
@@ -2550,11 +2550,11 @@ rt_private void interpret(int flag, int where)
 	 			/* Variables are not used in non-SCOOP context */
 #ifdef EIF_THREADS
 			EIF_TYPED_VALUE * target;
-	 		uint32 n = 
+	 		uint32 n =
 #endif
 	 			get_uint16 (&IC);    /* Number of arguments.  */
 #ifdef EIF_THREADS
-	 		EIF_BOOLEAN q = 
+	 		EIF_BOOLEAN q =
 #endif
 	 			get_bool (&IC); /* Indicator of a query. */
 
@@ -3892,7 +3892,7 @@ rt_private void interpret(int flag, int where)
 			}
 			break;
 		}
-		
+
 	/*
 	 * Allocate space to store once manifest strings.
 	 */
@@ -5474,14 +5474,14 @@ rt_private void eif_interp_bit_operations (void)
 /*
  * Function calling routines for debugger
  */
-rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occured, EIF_TYPED_VALUE *result)
+rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type or origin if the feature is precompiled (entity where feature is applied) */
 						/* Dynamic type if needed on which call is being done. Mostly used for static calls in precompiled. */
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
-						/* return the exception object if exception occurred (and set `exception_occured' to 1) */
+						/* return the exception object if exception occurred (and set `exception_occurred' to 1) */
 {
 		/* This is the debugger dispatcher for routine calls. It is called when
 		 * the user want to dynamically evaluate a feature. */
@@ -5491,15 +5491,15 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 	uint32	type = 0;			/* Dynamic type of the result */
 	EIF_TYPED_VALUE* last = NULL;
 
-	REQUIRE("exception_occured not null", exception_occured);
+	REQUIRE("exception_occurred not null", exception_occurred);
 	REQUIRE("result not null", result);
 
-	*exception_occured = 0;
+	*exception_occurred = 0;
 	debug_mode = 0; /* We don't want exceptions to be caught */
 
 	excatch(&exenv);
 	if (setjmp(exenv)) {
-		*exception_occured = 1;
+		*exception_occurred = 1;
 		result->it_ref = last_exception();
 		result->type = SK_REF;
 		if (result->it_ref != NULL) {
@@ -6096,7 +6096,7 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				int32 origin, ooffset;
 				EIF_TYPE_INDEX dftype;
 				EIF_TYPE_INDEX dtype;
-				
+
 				dtype = get_int16(&IC);
 				dftype = get_compound_id(Current, dtype);
 				stype = get_int16(&IC);			/* Get static type of caller */
@@ -6111,7 +6111,7 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				long  offset;
 				EIF_TYPE_INDEX dftype;
 				EIF_TYPE_INDEX dtype;
-				
+
 				dtype = get_int16(&IC);
 				dftype = get_compound_id(Current, dtype);
 				code = get_int16(&IC);		/* Get the static type first */
@@ -6331,7 +6331,7 @@ rt_private void put_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, 
 {
 	REQUIRE("ptr not null", ptr);
 
-	switch (rtype & SK_HEAD) 
+	switch (rtype & SK_HEAD)
 	{
 	case SK_BOOL:    *(EIF_BOOLEAN*)(curr->it_ref + offset) = ptr->it_char;   break;
 	case SK_CHAR8:   *(EIF_CHARACTER_8*)(curr->it_ref + offset) = ptr->it_char;   break;
@@ -6352,7 +6352,7 @@ rt_private void put_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, 
 		break;
 	case SK_BIT:
 	case SK_REF:
-		 *(EIF_REFERENCE*)(curr->it_ref + offset) = ptr->it_ref;    
+		 *(EIF_REFERENCE*)(curr->it_ref + offset) = ptr->it_ref;
 		 break;
 	}
 }
@@ -6361,7 +6361,7 @@ rt_private void get_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, 
 {
 	REQUIRE("ptr not null", ptr);
 
-	switch (rtype & SK_HEAD) 
+	switch (rtype & SK_HEAD)
 	{
 	case SK_BOOL:
 	case SK_CHAR8:   ptr->it_char   = *(EIF_CHARACTER_8*)(curr->it_ref + offset); break;

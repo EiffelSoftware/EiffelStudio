@@ -151,11 +151,11 @@ feature {NONE} -- Initialization
 			up_btn.disable_sensitive
 			down_btn.disable_sensitive
 
-			up_btn.set_tooltip (metric_names.f_move_row_up.as_string_32 + " (" + move_row_up_shortcut.out + ")")
-			down_btn.set_tooltip (metric_names.f_move_row_down.as_string_32 + " (" + move_row_down_shortcut.out + ")")
-			remove_criterion_btn.set_tooltip (metric_names.f_del_row.as_string_32 + " (" + del_key_shortcut.out + ")")
-			indent_and_btn.set_tooltip (metric_names.f_indent_with_and_criterion.as_string_32 + " (" + and_indent_shortcut.out + ")")
-			indent_or_btn.set_tooltip (metric_names.f_indent_with_or_criterion.as_string_32 + " (" + or_indent_shortcut.out + ")")
+			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_row_up_shortcut.text + ")")
+			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_row_down_shortcut.text + ")")
+			remove_criterion_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.text + ")")
+			indent_and_btn.set_tooltip (metric_names.f_indent_with_and_criterion + " (" + and_indent_shortcut.text + ")")
+			indent_or_btn.set_tooltip (metric_names.f_indent_with_or_criterion + " (" + or_indent_shortcut.text + ")")
 
 			criterion_lbl.set_text (metric_names.t_metric_criterion_definition)
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
@@ -457,7 +457,7 @@ invariant
 	alt_right_shortcut_attached: or_indent_shortcut /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
@@ -481,11 +481,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
         source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_BASIC_METRIC_DEFINITION_AREA

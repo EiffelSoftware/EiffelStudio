@@ -109,12 +109,12 @@ feature {NONE} -- Initialization
 			up_btn.remove_text
 			up_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_up_icon)
 			up_btn.select_actions.extend (agent on_up)
-			up_btn.set_tooltip (metric_names.f_move_row_up.as_string_32 + " (" + move_up_shortcut.out + ")")
+			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_up_shortcut.text + ")")
 
 			down_btn.remove_text
 			down_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_down_icon)
 			down_btn.select_actions.extend (agent on_down)
-			down_btn.set_tooltip (metric_names.f_move_row_down.as_string_32 + " (" + move_down_shortcut.out + ")")
+			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_down_shortcut.text + ")")
 
 			remove_metric_btn.remove_text
 			remove_metric_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
@@ -652,7 +652,7 @@ invariant
 	metric_grid_attached: metric_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -676,11 +676,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_LINEAR_METRIC_DEFINITION_AREA

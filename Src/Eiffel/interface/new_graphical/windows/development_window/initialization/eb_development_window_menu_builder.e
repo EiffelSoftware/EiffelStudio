@@ -190,7 +190,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Close
 			l_shortcut := preferences.misc_shortcut_data.close_window_shortcut
-			create l_menu_item.make_with_text (develop_window.Interface_names.m_close.as_string_32 + "%T" + l_shortcut.display_string)
+			create l_menu_item.make_with_text (develop_window.Interface_names.m_close + "%T" + l_shortcut.display_string)
 			register_action (l_menu_item.select_actions, agent develop_window.destroy)
 			develop_window.menus.file_menu.extend (l_menu_item)
 
@@ -611,7 +611,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.set_needs_editable (True)
 			l_string := develop_window.Interface_names.m_complete_word
 			l_string.append ("%T")
-			l_string.append (develop_window.preferences.editor_data.shortcuts.item ("autocomplete").display_string.as_string_32)
+			l_string.append (develop_window.preferences.editor_data.shortcuts.item ("autocomplete").display_string)
 			l_cmd.set_menu_name (l_string)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
@@ -626,7 +626,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.set_needs_editable (True)
 			l_string := develop_window.Interface_names.m_complete_class_name
 			l_string.append ("%T")
-			l_string.append (develop_window.preferences.editor_data.shortcuts.item ("class_autocomplete").display_string.as_string_32)
+			l_string.append (develop_window.preferences.editor_data.shortcuts.item ("class_autocomplete").display_string)
 			l_cmd.set_menu_name (l_string)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
@@ -1586,7 +1586,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

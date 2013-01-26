@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 	show_scroll_bar_again (a_timeout: EV_TIMEOUT)
 			-- Call show on `scroll_bar' and destroy `a_timeout'.
 			-- This is needed, as there is a Vision2 resizing bug on Windows
-			-- which stops teh scroll bar being displayed when it is first shown, as you
+			-- which stops the scroll bar being displayed when it is first shown, as you
 			-- resize the main window smaller. Therefore,
 			-- we call show on it after the resizing has occurred to combat this problem.
 			-- There should be no ill effects on either platform.

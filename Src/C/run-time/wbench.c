@@ -645,7 +645,7 @@ struct mdesc {				/* Structure used to record melted descriptor */
 
 /*
 doc:	<attribute name="mdesc_tab" return_type="struct mdesc *" export="private">
-doc:		<summary>Temporary table of melted descriptors. When byte code is read, all new descriptors are recoreded, so that they can be properly inserted during insertion pass.</summary>
+doc:		<summary>Temporary table of melted descriptors. When byte code is read, all new descriptors are recorded, so that they can be properly inserted during insertion pass.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since only done during application initialization.</synchronization>

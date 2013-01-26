@@ -13,7 +13,7 @@ VTCG, chapter 12 (Types), page 203
      the Actual_generics list of `CT':
 
         3 `T' conforms to the  type  obtained from `D'  by
-          substituting any  occurence of a formal  generic
+          substituting any occurrence of a formal  generic
           parameter  of  `C' by  the  corresponding actual
           parameter.
 

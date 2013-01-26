@@ -222,7 +222,7 @@ feature -- Mines and Field
 
 	miner_timer: MINER_TIMER
 			-- command time
-			-- objet to manage the timer...
+			-- object to manage the timer...
 
 	random:RANDOM
 			-- Initialize a randon number

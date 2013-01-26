@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 		end
 
 	convert_arrayed_list_to_group_info (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_count_clear: BOOLEAN; a_items_width: ARRAYED_LIST [INTEGER]): SD_TOOL_BAR_GROUP_INFO
-			-- Only covert first level
+			-- Only convert first level
 			-- Item is one group which has several items
 		require
 			not_void: a_list /= Void

@@ -68,7 +68,7 @@ feature -- Parsing
 
 	parse_name
 			-- Parse a name and put it in `last_token'.
-			-- `last_token' is void if a syntax error ocurred.
+			-- `last_token' is void if a syntax error occurred.
 			-- A name as the same form as an Eiffel identifier.
 		local
 			stop: BOOLEAN
@@ -106,7 +106,7 @@ feature -- Parsing
 
 	parse_colon
 			-- Parse a colon character.
-			-- `last_token' is void if a syntax error ocurred.
+			-- `last_token' is void if a syntax error occurred.
 		do
 			parse_separators;
 			if not end_of_file and then last_character = ':' then
@@ -119,7 +119,7 @@ feature -- Parsing
 
 	parse_value
 			-- Parse a resource value and put it in `last_token'.
-			-- `last_token' is void if a syntax error ocurred.
+			-- `last_token' is void if a syntax error occurred.
 			-- A value is either a word (characters with not blank)
 			-- or an Eiffel string.
 		local
@@ -158,7 +158,7 @@ feature -- Parsing
 
 	parse_string
 			-- Parse a string and put it in `last_token'.
-			-- `last_token' is void if a syntax error ocurred.
+			-- `last_token' is void if a syntax error occurred.
 		require
 			not end_of_line and then last_character = '%"'
 		local

@@ -232,7 +232,7 @@ feature -- Basic operation
 feature {NONE} -- Formatting
 
 	file_name_key (a_file_name: PATH): STRING_32
-			-- Generates a string recored key, as used by `file_records', for a given file name.
+			-- Generates a string recorded key, as used by `file_records', for a given file name.
 			--
 			-- `a_file_name': The name of the file to generate a record key for.
 			-- `Result': The generated record key.

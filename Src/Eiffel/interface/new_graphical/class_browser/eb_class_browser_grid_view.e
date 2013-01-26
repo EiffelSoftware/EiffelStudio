@@ -502,10 +502,10 @@ feature -- Access
 		end
 
 	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING]
-			-- Agent to retrieve last recored sorting order
+			-- Agent to retrieve last recorded sorting order
 
 	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
-			-- Agent to retrieve last recored sorting order
+			-- Agent to retrieve last recorded sorting order
 
 	selected_row_background_color (a_grid_row: EV_GRID_ROW): EV_COLOR
 			-- Background color for selected row `a_grid_row'

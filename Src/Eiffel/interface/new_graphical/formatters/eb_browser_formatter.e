@@ -107,7 +107,7 @@ feature -- Setting
 feature{NONE} -- Implementation
 
 	retrieve_sorting_order
-			-- Retrieve last recored sorting order.
+			-- Retrieve last recorded sorting order.
 		local
 			l_sorting_status: LINKED_LIST [TUPLE [INTEGER, INTEGER]]
 			l_orders: STRING

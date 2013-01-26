@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 			-- Widget displayed when no information can be displayed.	
 
 	retrieve_sorting_order
-			-- Retrieve last recored sorting order.
+			-- Retrieve last recorded sorting order.
 		do
 		end
 

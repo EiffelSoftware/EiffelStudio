@@ -101,6 +101,7 @@ feature {NONE} -- Implementation
 			create l_root_prop.make_with_dialog (conf_interface_names.target_root_name, l_root_dial)
 			l_root_prop.set_description (conf_interface_names.target_root_description)
 			l_root_prop.set_refresh_action (agent current_target.root)
+			l_root_prop.set_display_agent (agent {CONF_ROOT}.text)
 			l_root_prop.refresh
 			l_root_prop.change_value_actions.extend (agent current_target.set_root)
 			l_root_prop.change_value_actions.extend (agent update_inheritance_root (?, l_root_prop))

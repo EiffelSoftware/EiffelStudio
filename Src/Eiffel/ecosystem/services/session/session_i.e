@@ -222,7 +222,7 @@ feature -- Events
 	value_changed_event: EVENT_TYPE_I [TUPLE [session: SESSION_I; id: READABLE_STRING_GENERAL]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
-			-- `session': The session where the change occured.
+			-- `session': The session where the change occurred.
 			-- `id': The session data identifier index that the value changed for
 		require
 			is_interface_usable: is_interface_usable

@@ -9774,7 +9774,7 @@ feature {NONE} -- Agents
 feature {AST_FEATURE_CHECKER_GENERATOR}
 
 	break_point_slot_count: INTEGER
-			-- Counts the breakpoint slots that occured during processing the feature.
+			-- Counts the breakpoint slots that occurred during processing the feature.
 
 feature {NONE} -- Precursor handling
 

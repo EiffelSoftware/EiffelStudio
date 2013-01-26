@@ -283,7 +283,7 @@ recursively their parents until we're done
 
 Now our table has entries for all ids <= 501
 (and possibly some entries for ids > 501 if
-new generic types have occured in the process),
+new generic types have occurred in the process),
 in particular one for LIST [C] (id = 500) and
 this will in general be 0. But the question
 whether or not LIST [A] conforms to LIST [C]

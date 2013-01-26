@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -67,9 +67,9 @@ extern struct opstack op_stack;               /* Operational stack */
  * Byte-code tokens
  */
 
-#define BC_START			0					
-#define BC_PRECOND			1	
-#define BC_POSTCOND			2	
+#define BC_START			0
+#define BC_PRECOND			1
+#define BC_POSTCOND			2
 #define	BC_DEFERRED			3
 #define BC_REVERSE			4
 #define BC_CHECK			5
@@ -168,7 +168,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_BIT				97
 #define BC_ARRAY			98
 #define BC_RETRIEVE_OLD		99
-#define BC_FLOAT			100	
+#define BC_FLOAT			100
 #define BC_OLD				101
 #define BC_ADD_STRIP		102
 #define BC_END_STRIP		103
@@ -312,7 +312,7 @@ typedef struct tag_EIF_DEBUG_VALUE {
 
 extern void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volatile stop); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
-extern void call_disp(EIF_TYPE_INDEX dtype, char *object);	/* Function to call dispose routines */ 
+extern void call_disp(EIF_TYPE_INDEX dtype, char *object);	/* Function to call dispose routines */
 extern void call_copy (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call copy routines */
 extern EIF_BOOLEAN call_is_equal (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call is_equal routines */
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
@@ -324,7 +324,7 @@ extern void idump(FILE *fd, char *start);
 extern void opstack_reset(struct opstack *stk);
 
 extern void dynamic_eval(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed);	/* Dynamic evaluation of a feature */
-extern void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occured, EIF_TYPED_VALUE *result);
+extern void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result);
 
 extern EIF_TYPE_INDEX get_compound_id (EIF_REFERENCE, EIF_TYPE_INDEX);
 

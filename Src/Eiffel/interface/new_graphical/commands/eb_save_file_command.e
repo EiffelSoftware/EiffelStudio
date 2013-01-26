@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_unicode_encoding_and_save
-			-- Set the target to be unicode encoding and save.
+			-- Set the target to be Unicode encoding and save.
 		do
 			target.set_encoding (utf8)
 			target.set_bom (bom_utf8)

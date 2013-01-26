@@ -66,10 +66,6 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "eif_console.h"
 #include <winbase.h>	/* To call `ExitProcess' */
 #include <io.h>
-#include <fcntl.h>
-#ifndef _O_U16TEXT /* Not availble in VS2005 */
-#define _O_U16TEXT 0x20000
-#endif
 #endif
 
 #ifdef WORKBENCH
@@ -2523,7 +2519,6 @@ rt_private void ds_stderr (char *line)
 	/* Print the string 'line' to the standard output */
 #ifdef EIF_WINDOWS
 	RT_GET_CONTEXT
-	int mode;
 	int res;
 	DWORD dw;
 	
@@ -2549,32 +2544,23 @@ rt_private void ds_stderr (char *line)
 			/* Cannot convert to wide char, print UTF-8 directly */
 			print_err_msg(stderr, "%s", line);
 		} else {
-			/* Try to print UTF-16 directly if possible */
-			fflush(stderr); /* Must flush before _setmode */
-			mode = _setmode(_fileno(stderr), _O_U16TEXT); /* Is it thread safe between _setmode and fwprintf? */
-			if (mode != -1) {
-				fwprintf(stderr, (LPWSTR) ex_buffer_1.area);
-				fflush(stderr);
-				_setmode(_fileno(stderr), mode); /* Restore mode */
+			/* We convert our UTF-16 into the current console locale. */
+			CHECK("No truncation", ((int) ex_buffer_2.size) == ex_buffer_2.size);
+			res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, ex_buffer_2.area, (int) ex_buffer_2.size, NULL, NULL);
+			if (res == 0) {
+				dw = GetLastError();
+				if (dw == ERROR_INSUFFICIENT_BUFFER) {
+					res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, NULL, 0, NULL, NULL); /* Calculate the required buffer size */
+					ex_buffer_2.area = (char *) xrealloc(ex_buffer_2.area, res, GC_OFF);
+					ex_buffer_2.size = res;
+					res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, ex_buffer_2.area, (int) ex_buffer_2.size, NULL, NULL);
+				}
+			}
+			if (res == 0) {
+				/* Cannot convert UTF-16 to console encoding, print UTF-8 directly */
+				print_err_msg(stderr, "%s", line);
 			} else {
-				/* We cannot print UTF-16, we thus convert our UTF-16 into the current console locale. */
-				CHECK("No truncation", ((int) ex_buffer_2.size) == ex_buffer_2.size);
-				res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, ex_buffer_2.area, (int) ex_buffer_2.size, NULL, NULL);
-				if (res == 0) {
-					dw = GetLastError();
-					if (dw == ERROR_INSUFFICIENT_BUFFER) {
-						res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, NULL, 0, NULL, NULL); /* Calculate the required buffer size */
-						ex_buffer_2.area = (char *) xrealloc(ex_buffer_2.area, res, GC_OFF);
-						ex_buffer_2.size = res;
-						res = WideCharToMultiByte (cp, 0, (LPWSTR) ex_buffer_1.area, -1, ex_buffer_2.area, (int) ex_buffer_2.size, NULL, NULL);
-					}
-				}
-				if (res == 0) {
-					/* Cannot convert UTF-16 to console encoding, print UTF-8 directly */
-					print_err_msg(stderr, "%s", line);
-				} else {
-					print_err_msg(stderr, ex_buffer_2.area);
-				}
+				print_err_msg(stderr, ex_buffer_2.area);
 			}
 		}
 	}

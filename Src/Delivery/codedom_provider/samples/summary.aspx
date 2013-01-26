@@ -86,7 +86,7 @@
 				<%elseif error_message /= Void then%>
 
 					There seems to be a problem with your installation, the path to your installation could
-					not be retrieved, the following error occured: <%=error_message.to_cil%>
+					not be retrieved, the following error occurred: <%=error_message.to_cil%>
 
 				<%else%>
 

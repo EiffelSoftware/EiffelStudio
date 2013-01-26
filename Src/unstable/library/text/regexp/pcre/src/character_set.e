@@ -94,7 +94,7 @@ feature -- Element Change
 		local
 			c: INTEGER
 		do
-				-- TODO: handler unicode.
+				-- TODO: handle Unicode.
 			c := a_code \\ 256
 			set.put (True, c)
 		ensure

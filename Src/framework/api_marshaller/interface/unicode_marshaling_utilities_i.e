@@ -37,7 +37,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Query
 		end
 
 	string (a_obj: G): STRING_32
-			-- Retrieves a unicode string from a string handler object.
+			-- Retrieves a Unicode string from a string handler object.
 			--
 			-- `a_obj': A string handler object.
 			-- `Result': A string representation of the data managed by the supplied string handler.
@@ -52,7 +52,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Query
 feature {UNICODE_MARSHALING_UTILITIES} -- Status report
 
 	is_valid_string_handler (a_obj: detachable ANY): BOOLEAN
-			-- Determines if a string handler object is valid for the current unicode string marshaller.
+			-- Determines if a string handler object is valid for the current Unicode string marshaller.
 			--
 			-- `a_obj': A string handler object.
 			-- `Result': True of the string handler is valid; False otherwise.
@@ -67,7 +67,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Status report
 feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 
 	new_string_handler (a_str: READABLE_STRING_GENERAL): G
-			-- Creates a new unicode string handler from a given string.
+			-- Creates a new Unicode string handler from a given string.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--
 			-- `a_str': The string to initialize the string handler object with.
@@ -82,7 +82,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 		end
 
 	new_string_handler_from_count (a_count: NATURAL): G
-			-- Creates a new unicode string handler from a given string length.
+			-- Creates a new Unicode string handler from a given string length.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--
 			-- `a_count': The character count of the string.
@@ -95,7 +95,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 		end
 
 	new_string_handler_from_pointer (a_ptr: POINTER; a_shared: BOOLEAN): G
-			-- Creates a new unicode string handler from a given a unmanaged pointer.
+			-- Creates a new Unicode string handler from a given a unmanaged pointer.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--       Freeing is not strictly necessary for shared pointers, but it's good practice.
 			--
@@ -113,7 +113,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Factory
 		end
 
 	new_string_handler_from_pointer_and_count (a_ptr: POINTER; a_count: NATURAL; a_shared: BOOLEAN): G
-			-- Creates a new unicode string handler from a given a unmanaged pointer and string length.
+			-- Creates a new Unicode string handler from a given a unmanaged pointer and string length.
 			-- Note: Do not forget to call `free' when the object is no longer required.
 			--       Freeing is not strictly necessary for shared pointers, but it's good practice.
 			--

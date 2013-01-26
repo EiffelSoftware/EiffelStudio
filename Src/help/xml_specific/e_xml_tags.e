@@ -42,7 +42,7 @@ feature -- Miscellaneous
 		end
 
 	remove_excess_whitespace (s: STRING)
-			-- Reduces all occurences of returns, tabs and spaces with 1 space.
+			-- Reduces all occurrences of returns, tabs and spaces with 1 space.
 		do
 			s.replace_substring_all ("%N", " ")
 			s.replace_substring_all ("%T", " ")

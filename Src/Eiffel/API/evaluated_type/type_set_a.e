@@ -896,7 +896,7 @@ feature -- Access
 				loop
 					l_type_set_item := item.type
 
-						-- We have to get rid of all formals occuring somwhere (be it a generic type or a typeset)				
+						-- We have to get rid of all formals occuring somewhere (be it a generic type or a typeset)				
 						-- `has_generic' is more expensive forTYPE_SET_A
 					if l_type_set_item.is_formal then
 							l_formal_type ?= l_type_set_item
@@ -958,7 +958,7 @@ feature -- Access
 				loop
 					l_type_set_item := item.type
 
-						-- We have to get rid of all formals occuring somwhere (be it a generic type or a typeset)				
+						-- We have to get rid of all formals occuring somewhere (be it a generic type or a typeset)				
 						-- `has_generic' is more expensive for TYPE_SET_A
 					if l_type_set_item.is_formal then
 							l_formal_type ?= l_type_set_item

@@ -4824,7 +4824,7 @@ based upon the options specified.</Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>An exception has occured.  Please send the trace to neilc@eiffel.com</Text>
+<EV_TEXTABLE><Text>An exception has occurred.  Please send the trace to neilc@eiffel.com</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>

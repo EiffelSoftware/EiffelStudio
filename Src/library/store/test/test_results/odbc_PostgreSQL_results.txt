@@ -1,6 +1,6 @@
 # AutoTest results for test_store (07/23/2012 11:17)
 TEST_DATA_CORRECTNESS.test_quotes_in_string: pass
-TEST_DATA_CORRECTNESS.test_trailing_blanks: FAIL (DB Error occuredODBC ERROR: <4>, Inter code: <7>
+TEST_DATA_CORRECTNESS.test_trailing_blanks: FAIL (DB Error occurredODBC ERROR: <4>, Inter code: <7>
  Native Err#=7 , SQLSTATE=42601, Error_Info=';
 Error while executing the query'
 )
@@ -13,7 +13,7 @@ Error while executing the query'
 		Class / Object      Routine                Nature of exception           Effect
 		-------------------------------------------------------------------------------
 		ISE_EXCEPTION_MANAGER
-		                    developer_raise        DB Error occuredODBC ERROR: <4>, Inter code: <7>
+		                    developer_raise        DB Error occurredODBC ERROR: <4>, Inter code: <7>
 		 Native Err#=7 , SQLSTATE=42601, Error_Info=':
 		<00000000029591E8>                         Developer exception.          Fail
 		-------------------------------------------------------------------------------

@@ -569,55 +569,55 @@ feature {NONE} -- Option behaviour
 		require
 			a_button_not_void: a_button /= Void
 		local
-			l_prefernce: BOOLEAN_PREFERENCE
+			l_preference: BOOLEAN_PREFERENCE
 		do
 			if a_button = filter_button then
 				if filter_completion_list /= a_button.is_selected then
-					l_prefernce := preferences.editor_data.filter_completion_list_preference
-					l_prefernce.change_actions.block
-					l_prefernce.set_value (a_button.is_selected)
+					l_preference := preferences.editor_data.filter_completion_list_preference
+					l_preference.change_actions.block
+					l_preference.set_value (a_button.is_selected)
 					apply_filter_completion_list (filter_completion_list)
 				end
 			elseif a_button = show_return_type_button then
 				if show_completion_type /= a_button.is_selected then
-					l_prefernce := preferences.editor_data.show_completion_type_preference
-					l_prefernce.change_actions.block
-					l_prefernce.set_value (a_button.is_selected)
+					l_preference := preferences.editor_data.show_completion_type_preference
+					l_preference.change_actions.block
+					l_preference.set_value (a_button.is_selected)
 					apply_show_return_type (show_completion_type)
 				end
 			elseif a_button = show_signature_button then
 				if show_completion_signature /= a_button.is_selected then
-					l_prefernce := preferences.editor_data.show_completion_signature_preference
-					l_prefernce.change_actions.block
-					l_prefernce.set_value (a_button.is_selected)
+					l_preference := preferences.editor_data.show_completion_signature_preference
+					l_preference.change_actions.block
+					l_preference.set_value (a_button.is_selected)
 					apply_show_completion_signature (show_completion_signature)
 				end
 			elseif a_button = show_disambiguated_name_button then
 				if show_completion_disambiguated_name /= a_button.is_selected then
-					l_prefernce := preferences.editor_data.show_completion_disambiguated_name_preference
-					l_prefernce.change_actions.block
-					l_prefernce.set_value (a_button.is_selected)
+					l_preference := preferences.editor_data.show_completion_disambiguated_name_preference
+					l_preference.change_actions.block
+					l_preference.set_value (a_button.is_selected)
 					apply_show_completion_disambiguated_name (show_completion_disambiguated_name)
 				end
 			elseif a_button = show_obsolete_items_button then
 				if show_obsolete_items /= a_button.is_selected then
-					l_prefernce := preferences.editor_data.show_completion_obsolete_items_preference
-					l_prefernce.change_actions.block
-					l_prefernce.set_value (a_button.is_selected)
+					l_preference := preferences.editor_data.show_completion_obsolete_items_preference
+					l_preference.change_actions.block
+					l_preference.set_value (a_button.is_selected)
 					apply_show_obsolete_items (show_obsolete_items)
 				end
 			elseif a_button = show_tooltip_button then
 				if show_completion_tooltip /= a_button.is_selected then
-					l_prefernce := preferences.editor_data.show_completion_tooltip_preference
-					l_prefernce.change_actions.block
-					l_prefernce.set_value (a_button.is_selected)
+					l_preference := preferences.editor_data.show_completion_tooltip_preference
+					l_preference.change_actions.block
+					l_preference.set_value (a_button.is_selected)
 					apply_show_tooltip (show_completion_tooltip)
 				end
 			elseif a_button = remember_size_button then
 				if remember_window_size /= a_button.is_selected then
-					l_prefernce := preferences.development_window_data.remember_completion_list_size_preference
-					l_prefernce.change_actions.block
-					l_prefernce.set_value (a_button.is_selected)
+					l_preference := preferences.development_window_data.remember_completion_list_size_preference
+					l_preference.change_actions.block
+					l_preference.set_value (a_button.is_selected)
 					apply_remember_window_size (remember_window_size)
 				end
 			else
@@ -625,7 +625,7 @@ feature {NONE} -- Option behaviour
 					error: False
 				end
 			end
-			l_prefernce.change_actions.resume
+			l_preference.change_actions.resume
 		end
 
 	apply_filter_completion_list (a_b: BOOLEAN)

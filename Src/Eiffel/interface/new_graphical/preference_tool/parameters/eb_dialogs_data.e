@@ -144,7 +144,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 	confirm_delete_eis_entries: BOOLEAN
 			-- Should we display a dialog before deleting EIS entries?
 		do
-			Result := confirm_delete_eis_entries_prefernce.value
+			Result := confirm_delete_eis_entries_preference.value
 		end
 
 	acknowledge_not_loaded: BOOLEAN
@@ -301,7 +301,7 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	confirm_build_precompile_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before building a needed precompile?
 
-	confirm_delete_eis_entries_prefernce: BOOLEAN_PREFERENCE
+	confirm_delete_eis_entries_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before deleting EIS entries?
 
 	confirm_replace_all_preference: BOOLEAN_PREFERENCE
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			confirm_always_compile_before_executing_preference := l_manager.new_boolean_preference_value (l_manager, confirm_always_compile_before_executing_string, True)
 			confirm_convert_project_preference := l_manager.new_boolean_preference_value (l_manager, confirm_convert_project_string, True)
 			confirm_build_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_build_precompile_string, True)
-			confirm_delete_eis_entries_prefernce := l_manager.new_boolean_preference_value (l_manager, confirm_delete_eis_entries_string, True)
+			confirm_delete_eis_entries_preference := l_manager.new_boolean_preference_value (l_manager, confirm_delete_eis_entries_string, True)
 			confirm_remove_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_remove_metric_string, True)
 			confirm_save_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_metric_string, True)
 			acknowledge_not_loaded_preference := l_manager.new_boolean_preference_value (l_manager, acknowledge_not_loaded_string, True)
@@ -508,7 +508,7 @@ invariant
 	confirm_always_compile_before_executing_preference_not_void: confirm_always_compile_before_executing_preference /= Void
 	confirm_convert_project_preference_not_void: confirm_convert_project_preference /= Void
 	confirm_build_precompile_preference_not_void: confirm_build_precompile_preference /= Void
-	confirm_delete_eis_entries_prefernce_not_void: confirm_delete_eis_entries_prefernce /= Void
+	confirm_delete_eis_entries_preference_not_void: confirm_delete_eis_entries_preference /= Void
 	acknowledge_not_loaded_preference_not_void: acknowledge_not_loaded_preference /= Void
 	confirm_finalize_precompile_preference_not_void: confirm_finalize_precompile_preference /= Void
 	show_starting_dialog_preference_not_void: show_starting_dialog_preference /= Void

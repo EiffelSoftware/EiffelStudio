@@ -377,7 +377,7 @@ feature -- Status report
 	last_entry_8: detachable STRING_8
 			-- Raw byte sequence of the last found entry if this entry cannot be
 			-- expressed with Unicode characters. This is useful
-			-- when handeling a file that is not a valid UTF-8 sequence on Unix.
+			-- when handling a file that is not a valid UTF-8 sequence on Unix.
 		do
 			if attached directory_listing as l_listing and then search_index < l_listing.count then
 				create Result.make_from_cil (l_listing.item (search_index))

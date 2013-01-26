@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			rescued := True
-			create error_dialog.make_with_text (interface_names.m_internal_error_ocurred)
+			create error_dialog.make_with_text (interface_names.m_internal_error_occurred)
 			error_dialog.show_modal_to_window (first_window)
 			retry
 		end

@@ -82,7 +82,7 @@ feature -- Message
 	m_precompilation_done: STRING_32
 				do Result := locale.translation ("Precompilations done !") end
 
-	m_internal_error_ocurred: STRING_32
+	m_internal_error_occurred: STRING_32
 				do Result := locale.translation ("An internal error has occurred.%N%
 				%The wizard will terminate.%N") end
 

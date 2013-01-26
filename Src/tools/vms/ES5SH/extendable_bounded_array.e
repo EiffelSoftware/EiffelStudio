@@ -163,7 +163,7 @@ feature -- Access
 			-- Index of item eventually found by last call to 'has' (this is a side effect)
 
 	new_index_of (a_item: G): INTEGER is
-			-- Index of first occurence of 'a_item' in this array
+			-- Index of first occurrence of 'a_item' in this array
 		local
 			i: INTEGER
 		do

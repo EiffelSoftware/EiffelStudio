@@ -1400,7 +1400,7 @@ feature {NONE}	-- substitutions
 		end
 
 	subst_objects_redirection (line: STRING)
-			-- Replace all occurences of $objects_redirection with list of objects
+			-- Replace all occurrences of $objects_redirection with list of objects
 		local
 			l_string: STRING
 			i: INTEGER

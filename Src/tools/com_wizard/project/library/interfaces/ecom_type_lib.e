@@ -52,7 +52,7 @@ feature -- Status Report
 feature -- Access
 
 	find_name (a_name: STRING; a_count: INTEGER): ECOM_TYPE_LIB_FIND_NAME_RESULT
-			-- Finds occurences of type description `a_name' in type library.
+			-- Finds occurrences of type description `a_name' in type library.
 			-- `count' indicates number of instances to look for.
 		require
 			non_void_name: a_name /= Void

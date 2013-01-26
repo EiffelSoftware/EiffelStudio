@@ -140,7 +140,7 @@ feature {NONE} -- Access
 		end
 
 	release_suffix: STRING
-			-- Suffix containing release version which is used for unix layout
+			-- Suffix containing release version which is used for Unix layout
 		once
 			if is_unix_layout then
 				Result := "-" + {EIFFEL_CONSTANTS}.major_version.out + "." +
@@ -170,7 +170,7 @@ feature -- Status update
 			l_is_valid := True
 
 			if {PLATFORM_CONSTANTS}.is_unix then
-					-- On Unix platforms, if not ISE_EIFFEL is defined then it's probably the unix layout.
+					-- On Unix platforms, if not ISE_EIFFEL is defined then it's probably the Unix layout.
 				l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_eiffel_env)
 				is_unix_layout := (l_value = Void) or else l_value.is_empty
 			end
@@ -213,7 +213,7 @@ feature -- Status update
 				is_valid_environment := True
 
 					-- Set new ISE_EIFFEL variable. This is done to ensure that the workbench path is
-					-- set correctly, or if in unix layout that ISE_EIFFEL is set
+					-- set correctly, or if in Unix layout that ISE_EIFFEL is set
 				if not is_unix_layout then
 					set_environment (shared_path.name, {EIFFEL_CONSTANTS}.ise_eiffel_env)
 				end
@@ -307,7 +307,7 @@ feature -- Status report
 			-- Is there a valid home directory?
 
 	is_unix_layout: BOOLEAN
-			-- Is eiffelstudio installed in the unix layout?
+			-- Is eiffelstudio installed in the Unix layout?
 
 	is_user_files_supported: BOOLEAN
 			-- Determines if user files are supported on the platform.
@@ -1606,7 +1606,7 @@ feature -- Executable names
 feature {NONE} -- Configuration of layout
 
 	unix_layout_base_path: PATH
-			-- Base for the unix layout. e.g. "/usr".
+			-- Base for the Unix layout. e.g. "/usr".
 		once
 			create Result.make_from_string ("/usr")
 		ensure
@@ -1614,7 +1614,7 @@ feature {NONE} -- Configuration of layout
 		end
 
 	unix_layout_share_path: PATH
-			-- share for the unix layout. e.g. "/usr/share".
+			-- share for the Unix layout. e.g. "/usr/share".
 		once
 			Result := unix_layout_base_path.extended ("share")
 		ensure
@@ -1638,7 +1638,7 @@ feature {NONE} -- Configuration of layout
 		end
 
 	unix_layout_platform: STRING_8 = "unix";
-			-- Platform to use for the unix layout.
+			-- Platform to use for the Unix layout.
 
 feature -- Environment access
 
@@ -2001,7 +2001,7 @@ feature {NONE} -- Implementation
 		end
 
 	hidden_directory_name: STRING_32
-			-- Name of the hidden_directory where settings will be stored on unix based platforms.
+			-- Name of the hidden_directory where settings will be stored on Unix based platforms.
 		once
 			create Result.make_from_string_general (".es")
 			if is_workbench then

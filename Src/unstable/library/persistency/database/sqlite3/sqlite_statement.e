@@ -276,7 +276,7 @@ feature -- Status report
 		end
 
 	has_error: BOOLEAN
-			-- Indicates if an error occured during the last operation.
+			-- Indicates if an error occurred during the last operation.
 		do
 			Result := last_exception /= Void
 		ensure

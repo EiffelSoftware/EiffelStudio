@@ -227,7 +227,7 @@ feature -- Basic operation
 			 -- the new contents.
 			 table_object ?= new_object
 			if table_object /= Void then
-				table_object.resize_to_accomodate (an_object.children.count)
+				table_object.resize_to_accommodate (an_object.children.count)
 			end
 
 

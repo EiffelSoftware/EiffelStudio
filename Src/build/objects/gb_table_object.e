@@ -61,9 +61,9 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	resize_to_accomodate (children_count: INTEGER)
+	resize_to_accommodate (children_count: INTEGER)
 			-- Resize `display_object' and `object' of `object' to
-			-- smallest square dimensions that will accomodate `children_count'
+			-- smallest square dimensions that will accommodate `children_count'
 			-- children.
 		local
 			temp_table: EV_TABLE
@@ -79,7 +79,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			end
 			temp_table.resize (new_dimension, new_dimension)
 		ensure
-			may_accomodate_children: object.rows * object.columns >= children_count
+			may_accommodate_children: object.rows * object.columns >= children_count
 			-- and display_object.rows * display_object.columns >= children_count
 			-- Not possible to check this right now.
 		end

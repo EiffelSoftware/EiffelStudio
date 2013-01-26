@@ -33,7 +33,7 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_unicode: BOOLEAN
-			-- Indicates if the API is compiled for unicode
+			-- Indicates if the API is compiled for Unicode
 		do
 			Result := c_unicode_defined
 		end
@@ -41,12 +41,12 @@ feature -- Status report
 feature -- Conversion: To pointer
 
 	string_to_unicode (a_str: READABLE_STRING_GENERAL): POINTER
-			-- Marshalles a string to an unicode string.
+			-- Marshalles a string to a Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an unicode string.
+			-- `Result': A pointer to a Unicode string.
 		require
 			a_str_attached: a_str /= Void
 		local
@@ -83,12 +83,12 @@ feature -- Conversion: To pointer
 		end
 
 	string_to_tstring (a_str: READABLE_STRING_GENERAL): POINTER
-			-- Marshalles a string to an compiler-select ANSI/unicode string.
+			-- Marshalles a string to an compiler-select ANSI/Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an compiler-select ANSI/unicode string.
+			-- `Result': A pointer to an compiler-select ANSI/Unicode string.
 		require
 			a_str_attached: a_str /= Void
 		do
@@ -127,12 +127,12 @@ feature -- Conversion: From pointer
 		end
 
 	ansi_to_string (a_ptr: POINTER): STRING
-			-- Marshalles a string to an unicode string.
+			-- Marshalles a string to a Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an unicode string.
+			-- `Result': A pointer to a Unicode string.
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		local
@@ -149,12 +149,12 @@ feature -- Conversion: From pointer
 		end
 
 	tstring_to_string (a_ptr: POINTER): STRING
-			-- Marshalles a string to an compiler-select ANSI/unicode string.
+			-- Marshalles a string to an compiler-select ANSI/Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an compiler-select ANSI/unicode string.
+			-- `Result': A pointer to an compiler-select ANSI/Unicode string.
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		do
@@ -168,12 +168,12 @@ feature -- Conversion: From pointer
 		end
 
 	tstring_to_string_32 (a_ptr: POINTER): STRING_32
-			-- Marshalles a string to an compiler-select ANSI/unicode string.
+			-- Marshalles a string to an compiler-select ANSI/Unicode string.
 			-- Note: Please call `free' on the returned pointer once you are finished with the marhalled
 			--       reference. Failure to do so will cause a memory leak!
 			--
 			-- `a_str': The string to marshal.
-			-- `Result': A pointer to an compiler-select ANSI/unicode string.
+			-- `Result': A pointer to an compiler-select ANSI/Unicode string.
 		require
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		do
@@ -207,9 +207,9 @@ feature {NONE} -- Helpers
 feature -- Factory
 
 	new_unicode_string (a_len: NATURAL): POINTER
-			-- Creates a new unicode string.
+			-- Creates a new Unicode string.
 			--
-			-- `a_len': Length of the new unicode string to create.
+			-- `a_len': Length of the new Unicode string to create.
 			-- `Result': A pointer to the new string.
 		local
 			l_str: WEL_STRING
@@ -292,7 +292,7 @@ feature -- Basic operations
 						check l_handler_attached: l_handler /= Void end
 						l_data.remove (ia_ptr)
 						if unicode_marshaller.is_valid_string_handler (l_handler) then
-								-- The string is a unicode string so free it.
+								-- The string is a Unicode string so free it.
 							unicode_marshaller.free (l_handler)
 						else
 							check not_freed: False end

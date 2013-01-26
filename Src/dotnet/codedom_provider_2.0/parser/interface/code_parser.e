@@ -36,7 +36,7 @@ feature -- Interface
 --				initialize_referenced_assemblies
 --				create l_eiffel_parser.make
 --				
---					-- FIXME IEK We do not deal with dos files correctly yet so we convert to unix.
+--					-- FIXME IEK We do not deal with dos files correctly yet so we convert to Unix.
 --				l_code_stream := code_stream.read_to_end.replace_string_string ("%R%N", "%N")
 --				create l_class_to_parse.make_from_cil (l_code_stream)
 --				l_eiffel_parser.parse_from_string (l_class_to_parse)

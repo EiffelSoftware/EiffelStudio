@@ -398,7 +398,7 @@ feature -- Status report
 		end
 
 	has_error: BOOLEAN
-			-- Indicates if an error occured during the last operation on an open database.
+			-- Indicates if an error occurred during the last operation on an open database.
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable

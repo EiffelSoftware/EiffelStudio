@@ -13,7 +13,7 @@ create
 feature -- Initialization
 
 	make_with_buffer (a_buffer: separate BOUNDED_BUFFER [INTEGER]; a_id: INTEGER)
-			-- Initialize with identfier `a_id' to produce into `a_buffer'.
+			-- Initialize with identifier `a_id' to produce into `a_buffer'.
 		require
 			valid_id: a_id > 0
 		do

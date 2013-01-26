@@ -12,8 +12,7 @@ class
 inherit
 	HASHABLE
 		redefine
-			is_equal,
-			out
+			is_equal
 		end
 
 create
@@ -63,26 +62,27 @@ feature -- Access
 	key: EV_KEY
 			-- Key of current shortcut
 
-	out: STRING
+	text: STRING_32
 			-- String representation of key combination.
 		local
-			a_key: STRING
+			a_key: STRING_32
 		do
 			create Result.make (0)
 			if is_control_required then
-				Result.append ("Ctrl+")
+				Result.append_string_general ("Ctrl+")
 			end
 			if is_alt_required then
-				Result.append ("Alt+")
+				Result.append_string_general ("Alt+")
 			end
 			if is_shift_required then
-				Result.append ("Shift+")
+				Result.append_string_general ("Shift+")
 			end
-			a_key := key.out.twin
+			a_key := key.text
 				--| We only need to convert the key to upper case if
 				--| it is one character long such as 'a'. Other keys
 				--| do not need to be converted.
 			if a_key.count = 1 then
+				a_key := a_key.as_upper
 				a_key.to_upper
 			end
 			Result.append (a_key)

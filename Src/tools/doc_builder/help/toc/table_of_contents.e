@@ -1043,7 +1043,7 @@ feature {NONE} -- Sorting
 		end
 			
 	remove_duplicate_nodes (a_node: TABLE_OF_CONTENTS_NODE)
-			-- Remove nodes occuring with the same id
+			-- Remove nodes occurring with the same id
 		local
 			l_ids,
 			l_removable: ARRAYED_LIST [INTEGER]

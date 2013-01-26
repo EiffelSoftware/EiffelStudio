@@ -1,6 +1,6 @@
 note
 	description: "[
-		The error command response occuring if the command's parameter is of an invalid type.
+		The error command response occurring if the command's parameter is of an invalid type.
 	]"
 	legal: "See notice at end of class."
 	status: "Community Preview 1.0"

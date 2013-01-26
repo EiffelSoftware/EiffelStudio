@@ -2,7 +2,7 @@ note
 	description: "[
 		Executor capable of running parallel instances of {ETEST}.
 		
-		Note: although ETEST_EXECUTOR represents a valid {TEST_EXEUCTOR_I}, it is not directly used by
+		Note: although ETEST_EXECUTOR represents a valid {TEST_EXECUTOR_I}, it is not directly used by
 		      {ETEST} instances to by executed. Instead {TEST_EXECUTION} is used which uses `Current'
 		      through a bridge pattern, but also makes sure the project is properly compiled before
 		      starting or proceeding `Current'.

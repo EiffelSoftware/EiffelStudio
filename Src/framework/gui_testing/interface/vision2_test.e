@@ -88,7 +88,7 @@ feature -- Basic operations
 			if failed then
 				-- TODO: show error
 				if exception = developer_exception then
-					io.put_string ("a "+developer_exception_name+" exception occured")
+					io.put_string ("a "+developer_exception_name+" exception occurred")
 				else
 					-- TODO: raise again
 				end

@@ -709,7 +709,7 @@ feature -- Pick and Drop
 			-- Function used to retrieve the PND deny cursor for a particular item.
 
 	drop_action_intermediary (a_pebble: ANY)
-			-- A PND drop has occured on a grid item.
+			-- A PND drop has occurred on a grid item.
 		local
 			a_item: detachable EV_GRID_ITEM
 			l_drop_actions_internal: detachable EV_PND_ACTION_SEQUENCE

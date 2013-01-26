@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			-- Call action sequence corresponding to `condition'.
 		do
 			if condition & (G_io_err | G_io_nval | G_io_hup) /= 0 then
-					-- An error or exception has occured.
+					-- An error or exception has occurred.
 				if condition & G_io_hup /= 0 then
 					exception_actions.call (Void)
 				else

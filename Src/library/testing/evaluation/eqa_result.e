@@ -108,7 +108,7 @@ feature -- Status report
 			-- Is test response valid?
 			--
 			-- Note: the test response is valid if setup stage was not exceptional and no precondition
-			--       violation occured which was caused by a call from TEST_INTERPRETER or any (!) call
+			--       violation occurred which was caused by a call from TEST_INTERPRETER or any (!) call
 			--       from an agent.
 		do
 			Result := not test_response.is_exceptional or else not test_response.exception.is_test_invalid

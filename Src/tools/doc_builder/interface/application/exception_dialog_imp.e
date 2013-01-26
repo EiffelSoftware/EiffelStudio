@@ -76,7 +76,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_1.set_padding_width (5)
 			l_ev_horizontal_box_1.set_border_width (2)
-			l_ev_label_1.set_text ("An exception has occured.  Please send the trace to neilc@eiffel.com")
+			l_ev_label_1.set_text ("An exception has occurred.  Please send the trace to neilc@eiffel.com")
 			l_ev_label_1.align_text_left
 			l_ev_horizontal_box_2.set_padding_width (5)
 			l_ev_horizontal_box_2.set_border_width (2)

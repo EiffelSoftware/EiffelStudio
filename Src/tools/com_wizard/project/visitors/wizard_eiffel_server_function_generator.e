@@ -29,7 +29,7 @@ feature -- Basic operations
 			if a_descriptor.is_renaming_clause then
 				original_name := a_descriptor.interface_eiffel_name
 				changed_name := a_descriptor.component_eiffel_name (a_component_descriptor)
-				-- Could be identical if renaming occured for another component
+				-- Could be identical if renaming occurred for another component
 				function_renamed := not original_name.is_equal (changed_name)
 			else
 				func_desc := a_descriptor

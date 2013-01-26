@@ -51,7 +51,7 @@ feature -- Basic Operation
 				internal_execute
 			else
 				environment.set_abort (Exception_raised)
-				environment.set_error_data ("Exception " +  tag_name + " occured in task " + title)
+				environment.set_error_data ("Exception " +  tag_name + " occurred in task " + title)
 			end
 		rescue
 			l_retried := True

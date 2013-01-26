@@ -63,7 +63,7 @@ feature -- Access
 feature -- Output
 
 	to_string: STRING_32
-			-- Entry as a unicode string
+			-- Entry as a Unicode string
 		do
 			Result := Precursor
 				-- Add the msgstr

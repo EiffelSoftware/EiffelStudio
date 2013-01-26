@@ -322,7 +322,7 @@ feature -- Status report
 		end
 
 	has_unicode_character_set: BOOLEAN
-			-- Has current font the unicode character set?
+			-- Has current font the Unicode character set?
 		do
 			Result := char_set = Unicode_charset
 		end
@@ -572,7 +572,7 @@ feature -- Status setting
 		end
 
 	set_unicode_character_set
-			-- Set `char_set' to unicode.
+			-- Set `char_set' to Unicode.
 		do
 			set_char_set (Unicode_charset)
 		ensure

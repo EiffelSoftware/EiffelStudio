@@ -704,7 +704,7 @@ feature -- Status report
 			-- Has effect only on Unix.
 
 	is_environment_variable_unicode: BOOLEAN
-			-- Does `environment_variable_table' use unicode?
+			-- Does `environment_variable_table' use Unicode?
 			-- Only has effect on Windows.
 
 	is_launched_in_new_process_group: BOOLEAN

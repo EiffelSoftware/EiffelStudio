@@ -77,7 +77,7 @@ feature -- Status settings
 feature {NONE} -- External
 
 	address_size: INTEGER
-			-- Size of unix socket address
+			-- Size of Unix socket address
 		external
 			"C"
 		alias

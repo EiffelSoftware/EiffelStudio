@@ -298,7 +298,7 @@ feature {NONE} -- Helpers
 		end
 
 	ec_encoding_converter: EC_ENCODING_CONVERTER
-			-- Access to the encoding coverter for Unicode conversions.
+			-- Access to the encoding converter for Unicode conversions.
 		once
 			create Result.make
 		ensure

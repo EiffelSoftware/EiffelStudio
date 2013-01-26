@@ -2105,7 +2105,7 @@ feature {NONE} -- Pattern scanning
 	scan_escape (a_bra_count: INTEGER; a_isclass: BOOLEAN): INTEGER
 			-- This function is called when a \ has been encountered. It either returns a
 			-- positive value for a simple escape such as \n, or a negative value which
-			-- encodes one of the more complicated things such as \d. When unicode is enabled,
+			-- encodes one of the more complicated things such as \d. When Unicode is enabled,
 			-- a positive value greater than 255 may be returned. On entry, `pattern_position'
 			-- is pointing at the \. On exit, it is on the final character of the escape
 			-- sequence.

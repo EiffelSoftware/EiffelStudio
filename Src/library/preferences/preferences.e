@@ -583,7 +583,7 @@ feature {NONE} -- Implementation
 								-- Found preference
 							l_attribute := node.attribute_by_name (once "NAME")
 							if l_attribute /= Void then
-								-- TODO [2012-oct]: add unicode support for preference name
+								-- TODO [2012-oct]: add Unicode support for preference name
 								pref_name := l_attribute.value
 								if pref_name.is_valid_as_string_8 then
 

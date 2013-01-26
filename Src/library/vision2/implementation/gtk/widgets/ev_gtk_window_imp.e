@@ -365,7 +365,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 
 				l_key_string := l_app_imp.character_string_buffer
 				l_key_string.wipe_out
-					-- Propagate key event to input context, this will update the character buffer with any inputted unicode characters.
+					-- Propagate key event to input context, this will update the character buffer with any inputted Unicode characters.
 				l_key_event_handled := {GTK2}.gtk_im_context_filter_keypress (l_app_imp.default_input_context, a_key_event)
 
 				if not l_accel_called then

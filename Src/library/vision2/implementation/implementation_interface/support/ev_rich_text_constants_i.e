@@ -118,7 +118,7 @@ feature -- Access
 		-- String denoting RTF close brace.
 
 	rtf_unicode_character: STRING_32 = "\u"
-			-- String denoting starting of a unicode character.
+			-- String denoting starting of a Unicode character.
 
 	rtf_red: STRING_32 = "red"
 		-- String denoting red component of a RTF color.

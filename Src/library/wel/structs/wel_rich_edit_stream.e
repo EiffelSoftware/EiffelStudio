@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	is_unicode_data: BOOLEAN
-			-- Is current stream unicode based?
+			-- Is current stream Unicode based?
 
 	error: INTEGER
 			-- Error encountered while streaming. If there was no

@@ -215,10 +215,10 @@ feature -- Explicit Conversion
 		end
 
 	append_code_point_to_utf8 (a_code: NATURAL_32; a_string: STRING_8)
-			-- Append an unicode code point `a_code' to an utf8 stream.
+			-- Append a Unicode code point `a_code' to an utf8 stream.
 		require
 			a_string_not_void: a_string /= Void
-				-- According to ISO/IEC 10646, the maximum unicode point is 10FFFF.
+				-- According to ISO/IEC 10646, the maximum Unicode point is 10FFFF.
 			a_code_is_valid: a_code >= 0 and then a_code <= 0x10FFFF
 		do
 				if a_code <= 127 then

@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 		end
 
 	on_char (a_gtk_c_string: EV_GTK_C_STRING)
-			-- Update `character_string_buffer' unicode key string.
+			-- Update `character_string_buffer' Unicode key string.
 		do
 			character_string_buffer.wipe_out
 			character_string_buffer.append (a_gtk_c_string.string)

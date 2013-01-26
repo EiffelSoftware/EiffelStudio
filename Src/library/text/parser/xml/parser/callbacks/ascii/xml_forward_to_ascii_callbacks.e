@@ -68,10 +68,10 @@ feature {NONE} -- Conversion
 					else
 						-- FIXME: UNICODE/ASCII
 						-- Possibilities
-						-- 1) escape unicode character using entities
-						-- 2) ignore unicode character
+						-- 1) escape Unicode character using entities
+						-- 2) ignore Unicode character
 						-- 3) convert to UTF8 ...
-						-- 4) replace unicode character by %U
+						-- 4) replace Unicode character by %U
 						h := l_code.out
 						s8.grow (nb + h.count + 2)
 						s8.extend ('&')

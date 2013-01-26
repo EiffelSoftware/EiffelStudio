@@ -36,7 +36,7 @@ create -- Creation procedure
 feature -- Initialization
 
 	make
-			-- Create an interface objet to query active base.
+			-- Create an interface object to query active base.
 		local
 			l_ht: like ht
 			l_ht_order: like ht_order

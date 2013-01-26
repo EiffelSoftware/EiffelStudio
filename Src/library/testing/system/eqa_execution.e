@@ -1,6 +1,6 @@
 note
 	description: "[
-		Objets that launch an arbitrary command in a separate process and provide in- and output
+		Objects that launch an arbitrary command in a separate process and provide in- and output
 		support routines.
 	]"
 	author: ""

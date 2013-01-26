@@ -1,6 +1,6 @@
 note
 	description: "[
-		Objets that launch the system under test in a separate process and provide in- and output
+		Objects that launch the system under test in a separate process and provide in- and output
 		support routines.
 	]"
 	author: ""

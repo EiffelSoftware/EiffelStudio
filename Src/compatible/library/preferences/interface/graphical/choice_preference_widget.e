@@ -29,7 +29,7 @@ feature -- Access
 			-- Widget to change the value of this preference.
 
 	graphical_type: STRING
-			-- Graphical type identfier
+			-- Graphical type identifier
 		do
 			Result := "COMBO"
 		end

@@ -144,7 +144,7 @@ feature -- Initialization
 					--print ("debug: base_directory set to default: " + base_directory + "%N")
 				elseif base_directory = Void then
 					-- UNREACHABLE: save this code temporarily until I figure out what to do
-					print_error_message ("UNREACHABLE exeucted!%N")
+					print_error_message ("UNREACHABLE executed!%N")
 					l_val := execution_environment_.current_working_directory
 					create base_directory.make_from_string (l_val)
 					if value_platform.substring_index ("VMS", 1) > 0 and then not is_vms_filespec (base_directory) then

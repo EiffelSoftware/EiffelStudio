@@ -43,7 +43,7 @@ feature -- Access
 			-- Path where files will be generated.
 
 	unicode_data: detachable ARRAYED_LIST [UNICODE_CHARACTER_DATA] note option: stable attribute end
-			-- List collecting all the unicode characters and their properties.
+			-- List collecting all the Unicode characters and their properties.
 
 	unicode_table: detachable HASH_TABLE [UNICODE_CHARACTER_DATA, NATURAL_32] note option: stable attribute end
 			-- Same as `unicode_data' but indexed by the Unicode code.
@@ -59,7 +59,7 @@ feature -- Status Report
 feature -- Basic operations
 
 	read_unicode_data (a_file: READABLE_STRING_32)
-			-- Read the unicode data `a_file' and store it into `
+			-- Read the Unicode data `a_file' and store it into `
 		local
 			l_input: PLAIN_TEXT_FILE
 			l_list: like unicode_data
@@ -271,7 +271,7 @@ feature -- Basic operations
 					-- groups.
 				l_upper_group_code := 0
 
-					-- Iterate through the unicode data.
+					-- Iterate through the Unicode data.
 				across a_list as l_char_data loop
 						-- Only care if the Unicode character has some case transformation, but
 						-- since we optimized ASCII value, we ignore them.
@@ -361,7 +361,7 @@ feature -- Basic operations
 				i := i + 1
 					-- First compute the type for the current range. To optimize
 					-- we try to fit everything into NATURAL_8, NATURAL_16, we keep NATURAL_32
-					-- for high unicode values.
+					-- for high Unicode values.
 				if across l_range.item as l_val all l_val.item.value <= {NATURAL_8}.max_value end then
 					l_data_type := "NATURAL_8"
 				elseif across l_range.item as l_val all l_val.item.value <= {NATURAL_16}.max_value end then

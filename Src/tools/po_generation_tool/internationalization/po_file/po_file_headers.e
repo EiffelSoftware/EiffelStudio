@@ -124,7 +124,7 @@ feature -- Element change
 feature -- Output
 
 	to_string: STRING_32
-			-- Entry as a unicode string
+			-- Entry as a Unicode string
 		local
 			accumulator: STRING_32
 		do

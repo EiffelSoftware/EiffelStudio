@@ -169,7 +169,7 @@ feature -- Access
 feature	-- Output
 
 	to_string: STRING_32
-			-- Entry as a unicode string
+			-- Entry as a Unicode string
 		do
 			create Result.make_empty
  				--start with 2 lines of whitespace

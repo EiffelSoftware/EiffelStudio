@@ -226,7 +226,7 @@ feature -- Execution
 						quit := True
 					end
 				end
-					-- Note: the following is a pretty hacky heurstic to determine whether an error occurred.
+					-- Note: the following is a pretty hacky heuristic to determine whether an error occurred.
 					-- So far this is the only way to get this information from 'ec', but in the future
 					-- 'ec' will encode this information in the return value. When this is happens
 					-- the below hack can go away.

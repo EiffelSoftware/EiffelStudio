@@ -56,7 +56,7 @@ feature -- Filters
 --		end
 
 --	new_unicode_validation: XM_UNICODE_VALIDATION_FILTER
---			-- New unicode validation filter
+--			-- New Unicode validation filter
 --		do
 --			create Result.make_null
 --		ensure

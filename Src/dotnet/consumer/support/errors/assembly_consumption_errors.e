@@ -17,7 +17,7 @@ feature -- Access
 			-- Error category
 
 	Serialization_error: INTEGER = 0x04000001
-			-- Error occured during serialization
+			-- Error occurred during serialization
 
 	Assembly_not_found_error: INTEGER = 0x04000002
 			-- Assembly not found

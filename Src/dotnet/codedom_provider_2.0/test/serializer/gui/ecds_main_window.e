@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	report_success (a_file_name: STRING)
-			-- Report that serialization occured successfully.
+			-- Report that serialization occurred successfully.
 		require
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty

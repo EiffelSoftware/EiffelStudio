@@ -368,7 +368,7 @@ feature {NONE} -- Events
 				end
 			end
 		rescue
-			Event_manager.raise_event (create {TESTER_EVENT}.make ("The following exception occured:%N" + (create {EXCEPTIONS}).exception_trace, True))
+			Event_manager.raise_event (create {TESTER_EVENT}.make ("The following exception occurred:%N" + (create {EXCEPTIONS}).exception_trace, True))
 			l_retried := True
 			retry
 		end

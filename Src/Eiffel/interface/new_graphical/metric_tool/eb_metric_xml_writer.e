@@ -68,7 +68,7 @@ feature{NONE} -- Implementation
 			-- Default name space
 
 	target_element: like xml_element
-			-- Last recored element
+			-- Last recorded element
 
 	matching_strategy_name (a_strategy_id: INTEGER): STRING
 			-- Matching strategy name of strategy id `a_strategy_id'

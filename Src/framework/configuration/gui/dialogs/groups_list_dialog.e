@@ -54,7 +54,7 @@ feature -- Update
 		do
 			conf_target := a_target
 			create l_sorted_groups.make_from_array (a_target.groups.current_keys)
-			create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+			create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 			l_sorter.sort (l_sorted_groups)
 
 			new_item_name.set_strings (l_sorted_groups.to_array)

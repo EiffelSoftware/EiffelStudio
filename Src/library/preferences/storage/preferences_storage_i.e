@@ -22,6 +22,22 @@ feature {NONE} -- Initialization
 		deferred
 		ensure
 			has_location: location /= Void
+			default_version: version.same_string (default_version)
+		end
+
+	frozen make_versioned (a_version: attached like version)
+			-- Create preferences storage with `a_version' as `version'.
+			-- Location to store preferences will be generated based on name of application.
+			-- Redefine `make_empty' to change behavior.
+		require
+			a_version_not_void: a_version /= Void
+			a_version_valid: valid_version (a_version)
+		do
+			internal_version := a_version
+			make_empty
+		ensure
+			has_location: location /= Void
+			version_set: version = a_version
 		end
 
 	make_with_location (a_location: READABLE_STRING_GENERAL)
@@ -42,20 +58,34 @@ feature {NONE} -- Initialization
 	   	ensure
 	   		has_location: location /= Void
 			location_set: location = a_location
+			default_version: version.same_string (default_version)
 		end
 
-feature {PREFERENCES} -- Initialization
+	frozen make_with_location_and_version (a_location: READABLE_STRING_GENERAL; a_version: attached like version)
+			-- Create preference storage in the at location `a_location' with `a_version' as `version'.
+			-- Try to read preference at `a_location' if it exists, if not create new one.
 
-	set_version (a_version: attached like version)
-			-- Set `format_version' with `a_version'.
+			-- Preferences will be stored in `a_location' between sessions, which is the
+			-- path to either:
+			--		* the root registry key where preferences are stored,
+			--		* or the file where preferences are stored,
+			-- depending on which storage is chosen (registry or xml ... ).
+			-- Redefine `make_with_location' to change behavior.
 		require
+		    location_not_void: a_location /= Void
+		    location_not_empty: not a_location.is_empty
 			a_version_not_void: a_version /= Void
 			a_version_valid: valid_version (a_version)
 		do
-			version := a_version
-		ensure
+			internal_version := a_version
+			make_with_location (a_location)
+	   	ensure
+	   		has_location: location /= Void
+			location_set: location = a_location
 			version_set: version = a_version
 		end
+
+feature {PREFERENCES} -- Initialization
 
 	initialize_with_preferences (a_preferences: PREFERENCES)
 			-- Initialize current with `a_preferences'.
@@ -99,6 +129,18 @@ feature {PREFERENCES} -- Query
 		deferred
 		end
 
+feature -- Access
+
+	version: IMMUTABLE_STRING_32
+			-- Format version.
+		do
+			if attached internal_version as l_version then
+				Result := l_version
+			else
+				Result := default_version
+			end
+		end
+
 feature {PREFERENCES} -- Access
 
 	location: READABLE_STRING_GENERAL
@@ -110,8 +152,6 @@ feature {PREFERENCES} -- Access
 	preferences: detachable PREFERENCES
 			-- Actual preferences
 
-	version: detachable IMMUTABLE_STRING_32
-			-- Format version.
 
 feature {PREFERENCES} -- Save
 
@@ -154,6 +194,11 @@ feature {PREFERENCES} -- Save
 			argument_preference_not_void: a_preference /= Void
 		deferred
 		end
+
+feature {NONE} -- Implementation
+
+	internal_version: detachable like version
+			-- Storage for `version' if specified.
 
 invariant
 	has_location: location /= Void

@@ -36,10 +36,11 @@ feature {NONE} -- Implementation
 			-- Once cell.
 		local
 			l_versions: PREFERENCES_VERSIONS
+			l_storage: PREFERENCES_STORAGE_DEFAULT
 		once
-			create Result.put (create {COMPILER_PREFERENCES}.make (create {PREFERENCES}.make))
 			create l_versions
-			Result.item.preferences.set_version (l_versions.version_2_0)
+			create l_storage.make_versioned (l_versions.version_2_0)
+			create Result.put (create {COMPILER_PREFERENCES}.make (create {PREFERENCES}.make_with_storage (l_storage)))
 		ensure
 			preferences_cell_not_void: Result /= Void
 		end

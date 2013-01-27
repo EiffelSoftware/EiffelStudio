@@ -25,7 +25,9 @@ inherit
 
 create
 	make_empty,
-	make_with_location
+	make_versioned,
+	make_with_location,
+	make_with_location_and_version
 
 feature {NONE} -- Initialization
 

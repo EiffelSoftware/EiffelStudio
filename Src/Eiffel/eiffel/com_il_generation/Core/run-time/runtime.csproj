@@ -104,6 +104,7 @@
     <Compile Include="custom_attributes\eiffel_name_attribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="custom_attributes\eiffel_version_attribute.cs" />
     <Compile Include="custom_attributes\interface_type_attribute.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -12,5 +12,6 @@ all:: dotnet_20
 dotnet_20: $(RUNTIME_SRC) Makefile
 	csc $(CSFLAGS) -target:library -out:$(OUTPUT_NAME) -recurse:"*.cs" /keyfile:$(EIFFEL_SRC)\dotnet\helpers\isekey.snk
 
-install: all
-	gacutil $(GACFLAGS) -if EiffelSoftware.Runtime.dll
+msbuild: $(RUNTIME_SRC) Makefile
+	msbuild runtime.sln /p:TargetFrameworkVersion=v2.0;ToolsVersion=2.0
+	copy obj\Release\$(OUTPUT_NAME) $(OUTPUT_NAME)

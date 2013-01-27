@@ -5,15 +5,20 @@ GACFLAGS = -nologo
 MKDIR = -mkdir
 RMDIR = -rd /q /s
 CP = -copy
+RM = -del
 OUTPUT_NAME = EiffelSoftware.Runtime.dll
+ISE_KEY_NAME = isekey.snk
+ISE_KEY_PATH = $(EIFFEL_SRC)\dotnet\helpers\$(ISE_KEY_NAME)
 
 all:: dotnet_20
 
 dotnet_20: $(RUNTIME_SRC) Makefile
-	csc $(CSFLAGS) -target:library -out:$(OUTPUT_NAME) -recurse:"*.cs" /keyfile:$(EIFFEL_SRC)\dotnet\helpers\isekey.snk
+	csc $(CSFLAGS) -target:library -out:$(OUTPUT_NAME) -recurse:"*.cs" /keyfile:$(ISE_KEY_PATH)
 
 msbuild_20: $(RUNTIME_SRC) Makefile
-	copy $(EIFFEL_SRC)\dotnet\helpers\isekey.snk isekey.snk
+	$(CP) $(ISE_KEY_PATH) $(ISE_KEY_NAME)
 	msbuild runtime.sln /p:TargetFrameworkVersion=v2.0;ToolsVersion=2.0
-	copy obj\Release\$(OUTPUT_NAME) $(OUTPUT_NAME)
-	-del isekey.snk
+	$(CP) obj\Release\$(OUTPUT_NAME) $(OUTPUT_NAME)
+	$(RMDIR) obj
+	$(RM) runtime.sln.cache
+	$(RM)  $(ISE_KEY_NAME)

@@ -4842,7 +4842,7 @@ feature {NONE} -- Convenience
 					-- If target of call is Void, throw an exception.
 				il_generator.generate_call_on_void_target_exception
 
-					-- Else we procede normally
+					-- Else we proceed normally
 				il_generator.mark_label (l_not_void_label)
 			else
 					-- Top element is not required so we can get rid of it.

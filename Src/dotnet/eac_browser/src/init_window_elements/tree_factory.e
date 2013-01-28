@@ -755,7 +755,7 @@ feature {NONE} -- Initialization of tree elements
 			Result.set_data (full_dotnet_type_name)
 
 				-- Add action to item.
-			Result.pointer_button_press_actions.force_extend (agent edit.display_imediat_features (an_assembly, full_dotnet_type_name))
+			Result.pointer_button_press_actions.force_extend (agent edit.display_immediate_features (an_assembly, full_dotnet_type_name))
 			Result.pointer_button_press_actions.force_extend (agent edit.color_edit_type (an_assembly, full_dotnet_type_name))
 			--Result.pointer_button_press_actions.force_extend (agent display_type_information (an_assembly, full_dotnet_type_name))
 			Result.expand_actions.extend (agent edit.color_edit_type (an_assembly, full_dotnet_type_name))

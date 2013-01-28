@@ -55,7 +55,7 @@ feature -- Basic Operations
 			display (assembly_of_dotnet_type, a_full_dotnet_type_name)
 		end
 
-	print_type_imediat_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
+	print_type_immediate_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type'
 			-- Set `dotnet_type_name' with `a_full_dotnet_type_name'
 			-- Display in `output' features corresponding to `a_type_name'.

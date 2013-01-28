@@ -217,7 +217,7 @@ feature -- Tree Edit
 			tree_display.print_type (an_assembly, a_dotnet_type_name)
 		end
 
-	display_imediat_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
+	display_immediate_features (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING)
 			-- display type in a tree.
 		require
 			non_void_an_assembly: an_assembly /= Void

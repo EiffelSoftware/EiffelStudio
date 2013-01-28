@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -20,14 +20,12 @@ inherit
 	KI_TEXT_OUTPUT_FILE
 
 	KL_OUTPUT_FILE
-		redefine
-			string_name
-		end
 
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
 			name as string_name,
+			set_name as set_string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -62,13 +60,12 @@ inherit
 			append as old_append
 		export
 			{PLAIN_TEXT_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
-			{NONE} all
+			{PLAIN_TEXT_FILE} all
 		redefine
 
 
 
 
-			string_name
 		end
 
 create
@@ -77,14 +74,10 @@ create
 
 feature -- Access
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
-
 
 
 

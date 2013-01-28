@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -26,7 +26,6 @@ inherit
 
 	KL_INPUT_FILE
 		redefine
-			string_name,
 			last_character,
 			last_string
 		end
@@ -35,6 +34,7 @@ inherit
 		rename
 			make as old_make,
 			name as string_name,
+			set_name as set_string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -62,14 +62,13 @@ inherit
 			append as old_append
 		export
 			{PLAIN_TEXT_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
-			{NONE} all
+			{PLAIN_TEXT_FILE} all
 		undefine
 			file_readable
 		redefine
 
 
 
-			string_name,
 			last_character,
 			last_string
 		end
@@ -90,12 +89,12 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Input
 
-	read_line is
+	read_line
 			-- Read characters from input file until a line separator
 			-- or end of file is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
@@ -109,7 +108,7 @@ feature -- Input
 			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			is_eof := True
 			a_target := last_string
 			from until done loop
@@ -138,7 +137,7 @@ feature -- Input
 			end_of_file := is_eof
 		end
 
-	read_new_line is
+	read_new_line
 			-- Read a line separator from input file.
 			-- Make the characters making up the recognized
 			-- line separator available in `last_string',
@@ -148,7 +147,7 @@ feature -- Input
 			-- Line separators recognized by current file are:
 			-- '%N', '%R%N and '%R'.
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			read_character
 			if not end_of_file then
 				inspect last_character
@@ -174,11 +173,6 @@ feature -- Input
 		end
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
-
-
 
 
 

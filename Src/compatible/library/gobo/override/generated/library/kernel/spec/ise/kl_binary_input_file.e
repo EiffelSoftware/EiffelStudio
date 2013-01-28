@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -23,7 +23,6 @@ inherit
 
 	KL_INPUT_FILE
 		redefine
-			string_name,
 			last_character,
 			last_string
 		end
@@ -32,6 +31,7 @@ inherit
 		rename
 			make as old_make,
 			name as string_name,
+			set_name as set_string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -59,14 +59,13 @@ inherit
 			append as old_append
 		export
 			{RAW_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
-			{NONE} all
+			{RAW_FILE} all
 		undefine
 			file_readable
 		redefine
 
 
 
-			string_name,
 			last_character,
 			last_string
 		end
@@ -88,11 +87,6 @@ feature -- Access
 			-- However `last_string' is not shared between file objects.)
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
-
-
 
 
 

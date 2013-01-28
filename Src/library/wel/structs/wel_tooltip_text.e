@@ -147,7 +147,7 @@ feature -- Element change
 feature -- Status report
 
 	text_id_set: BOOLEAN
-			-- Is `text' equal to a resource string identifer?
+			-- Is `text' equal to a resource string identifier?
 		require
 			exists: exists
 		do

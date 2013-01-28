@@ -213,7 +213,7 @@ feature {MEL_OBJECT} -- Implementation
 feature {MEL_APPLICATION_CONTEXT}
 
 	last_id: MEL_IDENTIFIER;
-			-- Last identifer for input, work_proc and timer callback addition
+			-- Last identifier for input, work_proc and timer callback addition
 
 feature {NONE} -- External features passed out to C
 

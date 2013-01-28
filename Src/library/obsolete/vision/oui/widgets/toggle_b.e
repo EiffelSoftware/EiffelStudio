@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			create_ev_widget (a_name, a_parent, True)
 		ensure
 			parent_set: parent = a_parent;
-			identifer_set: identifier.is_equal (a_name);
+			identifier_set: identifier.is_equal (a_name);
 			managed: managed
 		end;
 
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			create_ev_widget (a_name, a_parent, False)
 		ensure
 			parent_set: parent = a_parent;
-			identifer_set: identifier.is_equal (a_name);
+			identifier_set: identifier.is_equal (a_name);
 			not_managed: not managed
 		end;
 

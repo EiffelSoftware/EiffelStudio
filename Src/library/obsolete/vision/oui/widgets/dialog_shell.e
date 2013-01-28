@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			set_default
 		ensure
 			parent_set: parent = a_parent;
-			identifer_set: identifier.is_equal (a_name)
+			identifier_set: identifier.is_equal (a_name)
 		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation

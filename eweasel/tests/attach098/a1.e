@@ -19,9 +19,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_self
-			-- Call Current before initializing all the attributes.
+			-- Assign Current before initializing all the attributes.
 		do
-			access_current
+			attach_current
 			default_create
 		end
 
@@ -34,9 +34,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	access_current
+	attach_current
+			-- Attach `Current' to something else.
+		local
+			x: ANY
 		do
-			Current.do_nothing -- VEVI
+			x := Current -- VEVI
 		end
 
 feature {NONE} -- Access

@@ -2706,6 +2706,7 @@ test	targeted-expanded-type			attach098 tcf fail void_safe targeted validity
 test	targeted-object-call			attach099 tcf fail void_safe targeted validity
 test	targeted-equality-operand		attach100 tcf fail void_safe targeted validity
 test	targeted-assignment-source		attach101 tcf fail void_safe targeted validity
+test	targeted-actual-argument		attach102 tcf fail void_safe targeted validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

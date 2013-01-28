@@ -19,27 +19,29 @@ feature {NONE} -- Initialization
 		end
 
 	make_self
-			-- Assign Current before initializing all the attributes.
+			-- Call Current before initializing all the attributes.
 		do
-			attach_current
 			default_create
+			access_current
 		end
 
 	make_other (t: TEST)
 			-- Pass Current before initializing all the attributes.
 		do
-			t.access (Current) -- VEVI
 			default_create
+			t.access (Current) -- VEVI
 		end
 
 feature -- Access
 
-	attach_current
-			-- Attach `Current' to something else.
+	access_current
+			-- Access `Current' without making it explicitly targeted.
 		local
 			x: ANY
 		do
 			x := Current -- VEVI
+			if Current = Void then end -- VEVI
+			if attached Current then end -- VEVI
 		end
 
 feature {NONE} -- Access

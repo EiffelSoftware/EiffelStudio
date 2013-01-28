@@ -1002,7 +1002,7 @@ feature -- Status setting
 			end
 
 			if a_item.parent = interface then
-					-- Redraw item if still existant in Current
+					-- Redraw item if still existent in Current
 				a_item.redraw
 			end
 			activate_window := Void

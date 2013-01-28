@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	id: STRING
-			-- Switch identifer
+			-- Switch identifier
 
 	lower_case_id: STRING
 			-- Lower-case version of the switch identifier
@@ -149,7 +149,7 @@ feature -- Query
 	is_valid_id (a_id: READABLE_STRING_8): BOOLEAN
 			-- Determines if switch ID is a valid identifier.
 			--
-			-- `a_id': The switch identifer to validate.
+			-- `a_id': The switch identifier to validate.
 			-- `Result': True if the switch identifier is valid; False otherwise.
 		require
 			a_id_attached: a_id /= Void

@@ -89,7 +89,7 @@ feature -- Access
 feature -- Removal
 
 	remove
-			-- Remove identifer from server.
+			-- Remove identifier from server.
 			-- (Call XtRemoveInput if input, XtRemoveTimer if timer
 			-- or XtRemoveWorkProc if work_proc).
 		require

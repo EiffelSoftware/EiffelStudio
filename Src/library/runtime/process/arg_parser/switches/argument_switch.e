@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	id: IMMUTABLE_STRING_32
-			-- Switch identifer
+			-- Switch identifier
 
 	name: IMMUTABLE_STRING_32
 			-- Priority option name
@@ -153,7 +153,7 @@ feature -- Query
 	is_valid_id (a_id: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if switch ID is a valid identifier.
 			--
-			-- `a_id': The switch identifer to validate.
+			-- `a_id': The switch identifier to validate.
 			-- `Result': True if the switch identifier is valid; False otherwise.
 		require
 			a_id_attached: a_id /= Void

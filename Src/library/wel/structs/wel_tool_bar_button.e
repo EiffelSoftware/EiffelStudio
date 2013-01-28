@@ -138,7 +138,7 @@ feature -- Access
 
 	command_id: INTEGER
 			-- Command identifier associated with the button. This
-			-- identifer is used in a Wm_command message when the
+			-- identifier is used in a Wm_command message when the
 			-- button is chosen.
 		do
 			Result := cwel_tbbutton_get_idcommand (item)

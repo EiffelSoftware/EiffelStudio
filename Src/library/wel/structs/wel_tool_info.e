@@ -115,7 +115,7 @@ feature -- Status report
 		end
 
 	text_id_set: BOOLEAN
-			-- Is `text' equal to a resource string identifer?
+			-- Is `text' equal to a resource string identifier?
 		do
 			Result := cwin_hi_word (cwel_toolinfo_get_lpsztext (item)) = 0
 		end

@@ -16,7 +16,7 @@ inherit
 feature -- Status report
 
 	is_dirty: BOOLEAN
-			-- Indicates if Current contains uncommited modifications.
+			-- Indicates if Current contains uncommitted modifications.
 		require
 			is_interface_usable: is_interface_usable
 		deferred

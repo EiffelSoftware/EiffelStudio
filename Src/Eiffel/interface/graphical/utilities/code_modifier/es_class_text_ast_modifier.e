@@ -30,7 +30,7 @@ feature -- Access
 	ast: detachable CLASS_AS
 			-- Resulting class AST node.
 			-- Note: This is the original AST node not the modified one. To access the modified one
-			--       the changes must be commited and the ast re-prepared.
+			--       the changes must be committed and the ast re-prepared.
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
@@ -41,7 +41,7 @@ feature -- Access
 	ast_match_list: detachable LEAF_AS_LIST
 			-- Resulting class AST node match list (for roundtrip)
 			-- Note: This is the original AST match list not the modified one. To access the modified one
-			--       the changes must be commited and the ast re-prepared.
+			--       the changes must be committed and the ast re-prepared.
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available

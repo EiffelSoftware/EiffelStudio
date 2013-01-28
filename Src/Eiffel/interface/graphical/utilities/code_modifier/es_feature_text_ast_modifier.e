@@ -46,7 +46,7 @@ feature -- Access
 	ast_feature: FEATURE_AS
 			-- Resulting feature AST node.
 			-- Note: This is the original AST node not the modified one. To access the modified one
-			--       the changes must be commited and the ast re-prepared.
+			--       the changes must be committed and the ast re-prepared.
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available

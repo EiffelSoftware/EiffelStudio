@@ -249,7 +249,7 @@ feature{NONE} -- Process
 					if not has_error then
 						detect_recursive (a_ratio_metric)
 
-							-- Check the existance of numerator metric.
+							-- Check the existence of numerator metric.
 						if not has_error then
 							if not metric_manager.has_metric (a_ratio_metric.numerator_metric_name) then
 								create_last_error_with_to_do (
@@ -260,7 +260,7 @@ feature{NONE} -- Process
 								l_num_metric := metric_manager.metric_with_name (a_ratio_metric.numerator_metric_name)
 							end
 						end
-							-- Check the existance of denominator metric.
+							-- Check the existence of denominator metric.
 						if not has_error then
 							if not metric_manager.has_metric (a_ratio_metric.denominator_metric_name) then
 								create_last_error_with_to_do (
@@ -801,7 +801,7 @@ feature{NONE} -- Implementation
 
 	test_metric (a_metric_name: STRING)
 			-- Test validity of metric named `a_metric_name'.
-			-- tests include existance, recursive definition.
+			-- tests include existence, recursive definition.
 			-- If `a_metric_name' represents a valid metric, make that metric in `last_tested_metric'.
 			-- If error occurs, fire that error.
 		require

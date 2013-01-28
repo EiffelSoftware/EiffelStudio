@@ -276,7 +276,7 @@ feature -- Action
 
 				-- Check if the file to parse is readable
 			if not file.is_open_read then
-					-- Need to check for existance for the quick melt operation
+					-- Need to check for existence for the quick melt operation
 					-- since it doesn't remove unused classes.
 				create vd21
 				vd21.set_cluster (cluster)

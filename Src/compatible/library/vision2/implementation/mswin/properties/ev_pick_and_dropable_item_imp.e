@@ -47,7 +47,7 @@ feature -- Access
 		end
 
 	top_level_window_imp: EV_WINDOW_IMP
-			-- Window containing `Current' in parenting heirarchy.
+			-- Window containing `Current' in parenting hierarchy.
 		local
 			pickable_parent: EV_PICK_AND_DROPABLE_IMP
 		do

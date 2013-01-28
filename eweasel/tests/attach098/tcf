@@ -1,0 +1,16 @@
+test_name 	 targeted-expanded-type
+test_description An entity of an expanded type is always targeted.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a1.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error A VEVI VEVI
+
+copy_raw	a2.e $CLUSTER a.e
+
+resume_compile
+compile_result	ok
+
+test_end

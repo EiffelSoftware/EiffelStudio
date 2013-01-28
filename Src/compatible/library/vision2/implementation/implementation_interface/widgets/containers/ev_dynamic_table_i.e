@@ -38,7 +38,7 @@ feature -- Status setting
 
 	set_row_layout (flag: BOOLEAN)
 			-- Lay the children out in rows if True,
-			-- in colum otherwise.
+			-- in column otherwise.
 		require
 		do
 			is_row_layout := flag

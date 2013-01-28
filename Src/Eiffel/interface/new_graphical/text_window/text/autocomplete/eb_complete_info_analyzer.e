@@ -1047,7 +1047,7 @@ feature {NONE} -- Implementation
 		end
 
 	static_call_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN
-			-- Is "feature" preceeding current position ?
+			-- Is "feature" preceding current position ?
 		local
 			line: EDITOR_LINE
 			token: EDITOR_TOKEN

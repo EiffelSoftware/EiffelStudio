@@ -833,7 +833,7 @@ feature {NONE} -- Implementation (`type_from')
 		end
 
 	create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN
-			-- is "create" preceeding current position ?
+			-- is "create" preceding current position ?
 		do
 			Result := locate_create_before_position (a_line, a_token) /= Void
 		end

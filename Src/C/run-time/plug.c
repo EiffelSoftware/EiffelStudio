@@ -486,7 +486,23 @@ rt_public EIF_REFERENCE makestr32_with_hash (register char *s, register size_t l
 	 * of the STRING_32 object, hence the simple de-referencing.
 	 */
 
+#if BYTEORDER == 0x1234
 	memcpy (*(EIF_REFERENCE *)string, s, len * 4); /* Every STRING_32 character has 4 bytes. */
+#else
+	{
+		int i = 0;
+		uint32 l_little, l_big;
+		for (; i < len ; i++) {
+			memcpy (&l_little, s + (i * 4), 4);
+				/* Convert our little endian to big endian. */
+			l_big = ((l_little >> 24) & 0xff) |
+				((l_little >> 8) & 0xff00) |
+			   	((l_little << 8) & 0xff0000) |
+			   	((l_little << 24) & 0xff000000);
+			memcpy ((*(EIF_REFERENCE *) string) + (i * 4), &l_big, 4);
+		}
+	}
+#endif
 	RT_GC_WEAN(string);			/* Remove protection */
 
 	return string;
@@ -530,7 +546,23 @@ rt_public EIF_REFERENCE makestr32_with_hash_as_old (register char *s, register s
 	 * of the STRING_32 object, hence the simple de-referencing.
 	 */
 
+#if BYTEORDER == 0x1234
 	memcpy (*(EIF_REFERENCE *)string, s, len * 4); /* Every STRING_32 character has 4 bytes. */
+#else
+	{
+		int i = 0;
+		uint32 l_little, l_big;
+		for (; i < len ; i++) {
+			memcpy (&l_little, s + (i * 4), 4);
+				/* Convert our little endian to big endian. */
+			l_big = ((l_little >> 24) & 0xff) |
+				((l_little >> 8) & 0xff00) |
+			   	((l_little << 8) & 0xff0000) |
+			   	((l_little << 24) & 0xff000000);
+			memcpy ((*(EIF_REFERENCE *) string) + (i * 4), &l_big, 4);
+		}
+	}
+#endif
 	RT_GC_WEAN(string);			/* Remove protection */
 
 	return string;

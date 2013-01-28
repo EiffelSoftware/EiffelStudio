@@ -22,7 +22,7 @@ inherit
 feature {NONE} -- Access
 
 	help_context_id: STRING_32
-			-- A contextual identifer to link an associated help through, when no applicable widget is
+			-- A contextual identifier to link an associated help through, when no applicable widget is
 			-- selected.
 		require
 			is_interface_usable: is_interface_usable
@@ -30,7 +30,7 @@ feature {NONE} -- Access
 		end
 
 	help_context_ids: LIST [TUPLE [widget: EV_WIDGET; id: STRING_32; section: detachable HELP_CONTEXT_SECTION_I]]
-			-- Contextual identifers to link an associated help through, binding context id's to a specific
+			-- Contextual identifiers to link an associated help through, binding context id's to a specific
 			-- widget.
 		require
 			is_interface_usable: is_interface_usable

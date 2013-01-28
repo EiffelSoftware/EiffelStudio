@@ -127,7 +127,7 @@ feature {NONE} -- Display
 			-- Associates a dialog prompt's button with an action
 			--
 			-- `a_prompt': Dialog prompt to set the button action on.
-			-- `a_button': The button identifer to associate the action with.
+			-- `a_button': The button identifier to associate the action with.
 			-- `a_action': The action to perform when the associated button is pressed.
 		require
 			a_prompt_attached: a_prompt /= Void

@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 	commit_value: INTEGER;
 			-- Threshold of successfully parsed subconstructs
-			-- above which the construct is commited
+			-- above which the construct is committed
 
 
 	expand

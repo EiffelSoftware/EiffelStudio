@@ -24,7 +24,7 @@ feature -- Access
 			-- Number of columns to be shown in grid
 
 	column_width (a_column: like column_count): INTEGER
-			-- Default width of colum with given index
+			-- Default width of column with given index
 			--
 			-- `a_column': Index of column for which default width should be returned.
 		require

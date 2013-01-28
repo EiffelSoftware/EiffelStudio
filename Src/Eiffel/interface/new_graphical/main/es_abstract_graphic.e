@@ -172,7 +172,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			target_index: INTEGER
 			l_config: PATH
 			l_project_path: detachable PATH
-			l_target: detachable STRING_8
+			l_target: detachable STRING_32
 			l_conf_constants: CONF_GUI_INTERFACE_CONSTANTS
 			first_window: EB_DEVELOPMENT_WINDOW
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 				target_index := index_of_word_option ("target")
 				if target_index /= 0 and argument_count >= target_index + 1 then
-					l_target := argument (target_index + 1).to_string_8
+					l_target := argument (target_index + 1)
 				end
 
 				check window_manager.last_created_window /= Void end

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Parsers for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Implementation
 
-	yy_build_parser_tables is
+	yy_build_parser_tables
 			-- Build parser tables.
 		do
 			yytranslate := yytranslate_template
@@ -44,12 +44,12 @@ feature {NONE} -- Implementation
 			yycheck := yycheck_template
 		end
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		do
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		do
 			yyvsp1 := -1
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			yyvsp8 := -1
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		local
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 						yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 					end
 				end
-				yyvs1.put (last_any_value, yyvsp1)
+				yyspecial_routines1.force (yyvs1, last_any_value, yyvsp1)
 			when 2 then
 				yyvsp2 := yyvsp2 + 1
 				if yyvsp2 >= yyvsc2 then
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 						yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 					end
 				end
-				yyvs2.put (last_string_value, yyvsp2)
+				yyspecial_routines2.force (yyvs2, last_string_value, yyvsp2)
 			when 3 then
 				yyvsp3 := yyvsp3 + 1
 				if yyvsp3 >= yyvsc3 then
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 						yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 					end
 				end
-				yyvs3.put (last_integer_value, yyvsp3)
+				yyspecial_routines3.force (yyvs3, last_integer_value, yyvsp3)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
@@ -197,10 +197,10 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (yyval1, yyvsp1)
+			yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		local
 			yy_type_id: INTEGER
@@ -233,9 +233,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	yy_run_geyacc
+			-- You must run geyacc to regenerate this class.
+		do
+		end
+
 feature {NONE} -- Semantic actions
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
 			yyval1: ANY
@@ -261,7 +266,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -4
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
 --|#line 58 "pr_yacc_parser.y"
@@ -290,7 +295,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
 --|#line 71 "pr_yacc_parser.y"
@@ -319,7 +324,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
 --|#line 75 "pr_yacc_parser.y"
@@ -331,7 +336,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
 --|#line 78 "pr_yacc_parser.y"
@@ -361,7 +366,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
 --|#line 82 "pr_yacc_parser.y"
@@ -374,7 +379,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 7 then
 --|#line 86 "pr_yacc_parser.y"
@@ -387,7 +392,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
 --|#line 90 "pr_yacc_parser.y"
@@ -400,7 +405,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
 --|#line 94 "pr_yacc_parser.y"
@@ -413,7 +418,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
 --|#line 98 "pr_yacc_parser.y"
@@ -426,7 +431,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
 --|#line 102 "pr_yacc_parser.y"
@@ -443,7 +448,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
 --|#line 110 "pr_yacc_parser.y"
@@ -456,7 +461,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 13 then
 --|#line 116 "pr_yacc_parser.y"
@@ -485,7 +490,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 14 then
 --|#line 120 "pr_yacc_parser.y"
@@ -500,7 +505,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp5 := yyvsp5 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 15 then
 --|#line 125 "pr_yacc_parser.y"
@@ -516,7 +521,7 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyvsp5 := yyvsp5 -1
 	yyvsp2 := yyvsp2 -2
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 16 then
 --|#line 132 "pr_yacc_parser.y"
@@ -545,7 +550,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 17 then
 --|#line 136 "pr_yacc_parser.y"
@@ -559,7 +564,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp5 := yyvsp5 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 18 then
 --|#line 142 "pr_yacc_parser.y"
@@ -589,7 +594,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 19 then
 --|#line 146 "pr_yacc_parser.y"
@@ -619,7 +624,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 20 then
 --|#line 150 "pr_yacc_parser.y"
@@ -649,7 +654,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 21 then
 --|#line 154 "pr_yacc_parser.y"
@@ -660,7 +665,7 @@ end
 yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 22 then
 --|#line 158 "pr_yacc_parser.y"
@@ -690,7 +695,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 23 then
 --|#line 162 "pr_yacc_parser.y"
@@ -720,7 +725,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 24 then
 --|#line 166 "pr_yacc_parser.y"
@@ -751,7 +756,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 25 then
 --|#line 170 "pr_yacc_parser.y"
@@ -782,7 +787,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 26 then
 --|#line 174 "pr_yacc_parser.y"
@@ -813,7 +818,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 27 then
 --|#line 178 "pr_yacc_parser.y"
@@ -844,7 +849,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 28 then
 --|#line 182 "pr_yacc_parser.y"
@@ -874,7 +879,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 29 then
 --|#line 186 "pr_yacc_parser.y"
@@ -905,7 +910,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 30 then
 --|#line 190 "pr_yacc_parser.y"
@@ -936,7 +941,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 31 then
 --|#line 194 "pr_yacc_parser.y"
@@ -967,7 +972,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 32 then
 --|#line 198 "pr_yacc_parser.y"
@@ -998,7 +1003,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 33 then
 --|#line 202 "pr_yacc_parser.y"
@@ -1029,7 +1034,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 34 then
 --|#line 206 "pr_yacc_parser.y"
@@ -1060,7 +1065,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 35 then
 --|#line 210 "pr_yacc_parser.y"
@@ -1090,7 +1095,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 36 then
 --|#line 214 "pr_yacc_parser.y"
@@ -1120,18 +1125,37 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 37 then
---|#line 220 "pr_yacc_parser.y"
+--|#line 218 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 220")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 218")
 end
 
-yyval2 := yyvs2.item (yyvsp2) 
+			yyval5 := new_anchored_type (yyvs2.item (yyvsp2 - 3), yyvs2.item (yyvsp2 - 1) + yyvs2.item (yyvsp2))
+		
 if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyssp := yyssp - 4
+	yyvsp5 := yyvsp5 + 1
+	yyvsp2 := yyvsp2 -4
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 38 then
 --|#line 222 "pr_yacc_parser.y"
@@ -1139,111 +1163,72 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 222")
 end
 
-yyval2 := yyvs2.item (yyvsp2) 
+			yyval5 := new_anchored_type (yyvs2.item (yyvsp2 - 3), yyvs2.item (yyvsp2 - 1) + yyvs2.item (yyvsp2))
+		
 if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyssp := yyssp - 4
+	yyvsp5 := yyvsp5 + 1
+	yyvsp2 := yyvsp2 -4
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 39 then
---|#line 224 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 224")
-end
-
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 40 then
 --|#line 226 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 226")
 end
 
-yyval2 := yyvs2.item (yyvsp2) 
+			yyval5 := new_qualified_anchored_type (yyvs2.item (yyvsp2 - 2), yyvs5.item (yyvsp5), yyvs2.item (yyvsp2))
+		
 if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyssp := yyssp - 6
+	yyvsp2 := yyvsp2 -3
+	yyvsp1 := yyvsp1 -2
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
-when 41 then
---|#line 228 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 228")
-end
-
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 42 then
---|#line 230 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 230")
-end
-
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 43 then
+when 40 then
 --|#line 232 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 232")
 end
 
-yyval2 := yyvs2.item (yyvsp2) 
+			yyval2 := "." + yyvs2.item (yyvsp2)
+		
 if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 44 then
---|#line 234 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 234")
-end
-
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 45 then
+when 41 then
 --|#line 236 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 236")
 end
 
-yyval2 := yyvs2.item (yyvsp2) 
+			yyval2 := yyvs2.item (yyvsp2 - 1) + "." + yyvs2.item (yyvsp2)
+		
 if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyssp := yyssp - 3
+	yyvsp2 := yyvsp2 -1
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 46 then
---|#line 238 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 238")
-end
-
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 47 then
---|#line 240 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 240")
-end
-
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 48 then
+when 42 then
 --|#line 242 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 242")
@@ -1252,9 +1237,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 49 then
+when 43 then
 --|#line 244 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 244")
@@ -1263,9 +1248,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 50 then
+when 44 then
 --|#line 246 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 246")
@@ -1274,9 +1259,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 51 then
+when 45 then
 --|#line 248 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 248")
@@ -1285,9 +1270,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 52 then
+when 46 then
 --|#line 250 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 250")
@@ -1296,9 +1281,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 53 then
+when 47 then
 --|#line 252 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 252")
@@ -1307,9 +1292,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 54 then
+when 48 then
 --|#line 254 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 254")
@@ -1318,9 +1303,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 55 then
+when 49 then
 --|#line 256 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 256")
@@ -1329,9 +1314,20 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 56 then
+when 50 then
+--|#line 258 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 258")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 51 then
 --|#line 260 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 260")
@@ -1340,9 +1336,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 57 then
+when 52 then
 --|#line 262 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 262")
@@ -1351,9 +1347,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 58 then
+when 53 then
 --|#line 264 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 264")
@@ -1362,9 +1358,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 59 then
+when 54 then
 --|#line 266 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 266")
@@ -1373,9 +1369,9 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 60 then
+when 55 then
 --|#line 268 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 268")
@@ -1384,12 +1380,146 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 61 then
+when 56 then
 --|#line 270 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 270")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 57 then
+--|#line 272 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 272")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 58 then
+--|#line 274 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 274")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 59 then
+--|#line 276 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 276")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 60 then
+--|#line 278 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 278")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 61 then
+--|#line 282 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 282")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 62 then
+--|#line 284 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 284")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 63 then
+--|#line 286 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 286")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 64 then
+--|#line 288 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 288")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 65 then
+--|#line 290 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 290")
+end
+
+yyval2 := yyvs2.item (yyvsp2 - 1) + " " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp2 := yyvsp2 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 66 then
+--|#line 292 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 292")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 67 then
+--|#line 294 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 294")
+end
+
+yyval2 := yyvs2.item (yyvsp2 - 1) + " " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp2 := yyvsp2 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 68 then
+--|#line 296 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 296")
 end
 
 yyval2 := "!" 
@@ -1413,12 +1543,24 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 62 then
---|#line 272 "pr_yacc_parser.y"
+when 69 then
+--|#line 298 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 272")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 298")
+end
+
+yyval2 := "! " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 70 then
+--|#line 300 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 300")
 end
 
 yyval2 := "?" 
@@ -1442,12 +1584,163 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 63 then
---|#line 276 "pr_yacc_parser.y"
+when 71 then
+--|#line 302 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 276")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 302")
+end
+
+yyval2 := "? " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 72 then
+--|#line 306 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 306")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 73 then
+--|#line 308 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 308")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 74 then
+--|#line 310 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 310")
+end
+
+yyval2 := yyvs2.item (yyvsp2 - 1) + " " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp2 := yyvsp2 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 75 then
+--|#line 312 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 312")
+end
+
+yyval2 := yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 76 then
+--|#line 314 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 314")
+end
+
+yyval2 := yyvs2.item (yyvsp2 - 1) + " " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp2 := yyvsp2 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 77 then
+--|#line 316 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 316")
+end
+
+yyval2 := "!" 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyvsp2 := yyvsp2 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 78 then
+--|#line 318 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 318")
+end
+
+yyval2 := "! " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 79 then
+--|#line 320 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 320")
+end
+
+yyval2 := "?" 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyvsp2 := yyvsp2 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 80 then
+--|#line 322 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 322")
+end
+
+yyval2 := "? " + yyvs2.item (yyvsp2) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
+end
+when 81 then
+--|#line 326 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 326")
 end
 
 yyval2 := Void 
@@ -1470,116 +1763,93 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 64 then
---|#line 278 "pr_yacc_parser.y"
+when 82 then
+--|#line 328 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 278")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 328")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 65 then
---|#line 282 "pr_yacc_parser.y"
+when 83 then
+--|#line 332 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 282")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 332")
 end
 
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 66 then
---|#line 284 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 284")
-end
-
-yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 67 then
---|#line 286 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 286")
-end
-
-yyval2 := "!" 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp2 := yyvsp2 + 1
-	yyvsp1 := yyvsp1 -1
-	if yyvsp2 >= yyvsc2 then
-		if yyvs2 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs2")
-			end
-			create yyspecial_routines2
-			yyvsc2 := yyInitial_yyvs_size
-			yyvs2 := yyspecial_routines2.make (yyvsc2)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs2")
-			end
-			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
-			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
-		end
-	end
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 68 then
---|#line 288 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 288")
-end
-
-yyval2 := "?" 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp2 := yyvsp2 + 1
-	yyvsp1 := yyvsp1 -1
-	if yyvsp2 >= yyvsc2 then
-		if yyvs2 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs2")
-			end
-			create yyspecial_routines2
-			yyvsc2 := yyInitial_yyvs_size
-			yyvs2 := yyspecial_routines2.make (yyvsc2)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs2")
-			end
-			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
-			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
-		end
-	end
-	yyvs2.put (yyval2, yyvsp2)
-end
-when 69 then
---|#line 292 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 292")
-end
-
-			yyval6 := yyvs6.item (yyvsp6)
+			yyval6 := yyvs6.item (yyvsp6 - 1)
 		
 if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
+	yyssp := yyssp - 5
+	yyvsp6 := yyvsp6 -2
 	yyvsp1 := yyvsp1 -2
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
-when 70 then
---|#line 298 "pr_yacc_parser.y"
+when 84 then
+--|#line 332 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 298")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 332")
+end
+
+in_generics := in_generics + 1
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp6 := yyvsp6 + 1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+end
+when 85 then
+--|#line 332 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 332")
+end
+
+in_generics := in_generics - 1 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp6 := yyvsp6 + 1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+end
+when 86 then
+--|#line 338 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 338")
 end
 
 			create yyval6.make (5)
@@ -1605,12 +1875,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
 		end
 	end
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
-when 71 then
---|#line 303 "pr_yacc_parser.y"
+when 87 then
+--|#line 343 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 303")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 343")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
@@ -1620,12 +1890,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp5 := yyvsp5 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
-when 72 then
---|#line 308 "pr_yacc_parser.y"
+when 88 then
+--|#line 348 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 308")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 348")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
@@ -1635,12 +1905,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
-when 73 then
---|#line 313 "pr_yacc_parser.y"
+when 89 then
+--|#line 353 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 313")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 353")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
@@ -1650,12 +1920,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
-when 74 then
---|#line 318 "pr_yacc_parser.y"
+when 90 then
+--|#line 358 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 318")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 358")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
@@ -1665,12 +1935,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
-when 75 then
---|#line 325 "pr_yacc_parser.y"
+when 91 then
+--|#line 365 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 325")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 365")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
@@ -1678,12 +1948,12 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-when 76 then
---|#line 331 "pr_yacc_parser.y"
+when 92 then
+--|#line 371 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 331")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 371")
 end
 
 			create yyval8.make (5)
@@ -1709,12 +1979,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
 		end
 	end
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-when 77 then
---|#line 336 "pr_yacc_parser.y"
+when 93 then
+--|#line 376 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 336")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 376")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
@@ -1724,12 +1994,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-when 78 then
---|#line 341 "pr_yacc_parser.y"
+when 94 then
+--|#line 381 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 341")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 381")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
@@ -1739,12 +2009,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-when 79 then
---|#line 346 "pr_yacc_parser.y"
+when 95 then
+--|#line 386 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 346")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 386")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
@@ -1754,12 +2024,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-when 80 then
---|#line 351 "pr_yacc_parser.y"
+when 96 then
+--|#line 391 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 351")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 391")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
@@ -1769,12 +2039,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-when 81 then
---|#line 358 "pr_yacc_parser.y"
+when 97 then
+--|#line 398 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 358")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 398")
 end
 
 			yyval7 := new_labeled_type (yyvs2.item (yyvsp2), yyvs5.item (yyvsp5))
@@ -1801,12 +2071,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
-when 82 then
---|#line 364 "pr_yacc_parser.y"
+when 98 then
+--|#line 404 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 364")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 404")
 end
 
 
@@ -1829,24 +2099,24 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 83 then
---|#line 365 "pr_yacc_parser.y"
+when 99 then
+--|#line 405 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 365")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 405")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 84 then
---|#line 366 "pr_yacc_parser.y"
+when 100 then
+--|#line 406 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 366")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 406")
 end
 
 
@@ -1854,12 +2124,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 85 then
---|#line 369 "pr_yacc_parser.y"
+when 101 then
+--|#line 409 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 369")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 409")
 end
 
 			yyval4 := new_terminal (yyvs2.item (yyvsp2), type)
@@ -1884,12 +2154,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 86 then
---|#line 373 "pr_yacc_parser.y"
+when 102 then
+--|#line 413 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 373")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 413")
 end
 
 			yyval4 := new_terminal (yyvs2.item (yyvsp2), type)
@@ -1916,12 +2186,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 87 then
---|#line 378 "pr_yacc_parser.y"
+when 103 then
+--|#line 418 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 378")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 418")
 end
 
 			yyval4 := new_terminal (yyvs2.item (yyvsp2 - 1), type)
@@ -1947,12 +2217,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 88 then
---|#line 383 "pr_yacc_parser.y"
+when 104 then
+--|#line 423 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 383")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 423")
 end
 
 			yyval4 := new_terminal (yyvs2.item (yyvsp2 - 1), type)
@@ -1980,12 +2250,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 89 then
---|#line 389 "pr_yacc_parser.y"
+when 105 then
+--|#line 429 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 389")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 429")
 end
 
 			yyval4 := new_char_terminal (yyvs2.item (yyvsp2), type)
@@ -2010,12 +2280,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 90 then
---|#line 395 "pr_yacc_parser.y"
+when 106 then
+--|#line 435 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 395")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 435")
 end
 
 
@@ -2038,24 +2308,24 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 91 then
---|#line 396 "pr_yacc_parser.y"
+when 107 then
+--|#line 436 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 396")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 436")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 92 then
---|#line 397 "pr_yacc_parser.y"
+when 108 then
+--|#line 437 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 397")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 437")
 end
 
 
@@ -2063,12 +2333,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 93 then
---|#line 400 "pr_yacc_parser.y"
+when 109 then
+--|#line 440 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 400")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 440")
 end
 
 			yyval4 := new_left_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2093,12 +2363,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 94 then
---|#line 404 "pr_yacc_parser.y"
+when 110 then
+--|#line 444 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 404")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 444")
 end
 
 			yyval4 := new_left_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2125,12 +2395,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 95 then
---|#line 409 "pr_yacc_parser.y"
+when 111 then
+--|#line 449 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 409")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 449")
 end
 
 			yyval4 := new_left_terminal (yyvs2.item (yyvsp2 - 1), precedence)
@@ -2156,12 +2426,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 96 then
---|#line 414 "pr_yacc_parser.y"
+when 112 then
+--|#line 454 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 414")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 454")
 end
 
 			yyval4 := new_left_terminal (yyvs2.item (yyvsp2 - 1), precedence)
@@ -2189,12 +2459,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 97 then
---|#line 420 "pr_yacc_parser.y"
+when 113 then
+--|#line 460 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 420")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 460")
 end
 
 			yyval4 := new_left_char_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2219,12 +2489,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 98 then
---|#line 426 "pr_yacc_parser.y"
+when 114 then
+--|#line 466 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 426")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 466")
 end
 
 
@@ -2247,24 +2517,24 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 99 then
---|#line 427 "pr_yacc_parser.y"
+when 115 then
+--|#line 467 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 427")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 467")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 100 then
---|#line 428 "pr_yacc_parser.y"
+when 116 then
+--|#line 468 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 428")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 468")
 end
 
 
@@ -2272,12 +2542,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 101 then
---|#line 431 "pr_yacc_parser.y"
+when 117 then
+--|#line 471 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 431")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 471")
 end
 
 			yyval4 := new_right_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2302,12 +2572,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 102 then
---|#line 435 "pr_yacc_parser.y"
+when 118 then
+--|#line 475 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 435")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 475")
 end
 
 			yyval4 := new_right_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2334,12 +2604,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 103 then
---|#line 440 "pr_yacc_parser.y"
+when 119 then
+--|#line 480 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 440")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 480")
 end
 
 			yyval4 := new_right_terminal (yyvs2.item (yyvsp2 - 1), precedence)
@@ -2365,12 +2635,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 104 then
---|#line 445 "pr_yacc_parser.y"
+when 120 then
+--|#line 485 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 445")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 485")
 end
 
 			yyval4 := new_right_terminal (yyvs2.item (yyvsp2 - 1), precedence)
@@ -2398,12 +2668,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 105 then
---|#line 451 "pr_yacc_parser.y"
+when 121 then
+--|#line 491 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 451")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 491")
 end
 
 			yyval4 := new_right_char_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2428,12 +2698,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 106 then
---|#line 457 "pr_yacc_parser.y"
+when 122 then
+--|#line 497 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 457")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 497")
 end
 
 
@@ -2456,24 +2726,24 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 107 then
---|#line 458 "pr_yacc_parser.y"
+when 123 then
+--|#line 498 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 458")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 498")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 108 then
---|#line 459 "pr_yacc_parser.y"
+when 124 then
+--|#line 499 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 459")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 499")
 end
 
 
@@ -2481,12 +2751,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 109 then
---|#line 462 "pr_yacc_parser.y"
+when 125 then
+--|#line 502 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 462")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 502")
 end
 
 			yyval4 := new_nonassoc_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2511,12 +2781,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 110 then
---|#line 466 "pr_yacc_parser.y"
+when 126 then
+--|#line 506 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 466")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 506")
 end
 
 			yyval4 := new_nonassoc_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2543,12 +2813,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 111 then
---|#line 471 "pr_yacc_parser.y"
+when 127 then
+--|#line 511 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 471")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 511")
 end
 
 			yyval4 := new_nonassoc_terminal (yyvs2.item (yyvsp2 - 1), precedence)
@@ -2574,12 +2844,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 112 then
---|#line 476 "pr_yacc_parser.y"
+when 128 then
+--|#line 516 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 476")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 516")
 end
 
 			yyval4 := new_nonassoc_terminal (yyvs2.item (yyvsp2 - 1), precedence)
@@ -2607,12 +2877,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 113 then
---|#line 482 "pr_yacc_parser.y"
+when 129 then
+--|#line 522 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 482")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 522")
 end
 
 			yyval4 := new_nonassoc_char_terminal (yyvs2.item (yyvsp2), precedence)
@@ -2637,12 +2907,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 114 then
---|#line 488 "pr_yacc_parser.y"
+when 130 then
+--|#line 528 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 488")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 528")
 end
 
 
@@ -2665,36 +2935,36 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 115 then
---|#line 489 "pr_yacc_parser.y"
+when 131 then
+--|#line 529 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 489")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 529")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 116 then
---|#line 490 "pr_yacc_parser.y"
+when 132 then
+--|#line 530 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 490")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 530")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 117 then
---|#line 493 "pr_yacc_parser.y"
+when 133 then
+--|#line 533 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 493")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 533")
 end
 
 			yyval1 := new_nonterminal (yyvs2.item (yyvsp2), type)
@@ -2719,12 +2989,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 118 then
---|#line 499 "pr_yacc_parser.y"
+when 134 then
+--|#line 539 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 499")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 539")
 end
 
 			report_no_rules_error
@@ -2748,35 +3018,35 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 119 then
---|#line 503 "pr_yacc_parser.y"
+when 135 then
+--|#line 543 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 503")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 543")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 120 then
---|#line 504 "pr_yacc_parser.y"
+when 136 then
+--|#line 544 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 504")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 544")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 121 then
---|#line 507 "pr_yacc_parser.y"
+when 137 then
+--|#line 547 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 507")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 547")
 end
 
 			process_rule (rule)
@@ -2786,12 +3056,12 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -3
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 122 then
---|#line 515 "pr_yacc_parser.y"
+when 138 then
+--|#line 555 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 515")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 555")
 end
 
 			if is_terminal (yyvs2.item (yyvsp2)) then
@@ -2826,12 +3096,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 123 then
---|#line 531 "pr_yacc_parser.y"
+when 139 then
+--|#line 571 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 531")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 571")
 end
 
 			rule.set_line_nb (yyvs3.item (yyvsp3))
@@ -2856,46 +3126,46 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 124 then
---|#line 537 "pr_yacc_parser.y"
+when 140 then
+--|#line 577 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 537")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 577")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 125 then
---|#line 538 "pr_yacc_parser.y"
+when 141 then
+--|#line 578 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 538")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 578")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 126 then
---|#line 541 "pr_yacc_parser.y"
+when 142 then
+--|#line 581 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 541")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 581")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 127 then
---|#line 542 "pr_yacc_parser.y"
+when 143 then
+--|#line 582 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 542")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 582")
 end
 
 			if yyvs3.item (yyvsp3) < 1 or yyvs3.item (yyvsp3) > rule.error_actions.count then
@@ -2909,12 +3179,12 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyvsp3 := yyvsp3 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 128 then
---|#line 552 "pr_yacc_parser.y"
+when 144 then
+--|#line 592 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 552")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 592")
 end
 
 
@@ -2937,12 +3207,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 129 then
---|#line 553 "pr_yacc_parser.y"
+when 145 then
+--|#line 593 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 553")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 593")
 end
 
 			put_symbol (new_symbol (yyvs2.item (yyvsp2)), rule)
@@ -2950,12 +3220,12 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 130 then
---|#line 557 "pr_yacc_parser.y"
+when 146 then
+--|#line 597 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 557")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 597")
 end
 
 			put_symbol (new_char_token (yyvs2.item (yyvsp2)), rule)
@@ -2963,12 +3233,12 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 131 then
---|#line 561 "pr_yacc_parser.y"
+when 147 then
+--|#line 601 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 561")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 601")
 end
 
 			put_symbol (new_string_token (yyvs2.item (yyvsp2)), rule)
@@ -2976,12 +3246,12 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 132 then
---|#line 565 "pr_yacc_parser.y"
+when 148 then
+--|#line 605 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 565")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 605")
 end
 
 			put_action (new_action (yyvs2.item (yyvsp2)), rule)
@@ -2989,12 +3259,12 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 133 then
---|#line 569 "pr_yacc_parser.y"
+when 149 then
+--|#line 609 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 569")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 609")
 end
 
 			if precedence_token /= Void then
@@ -3007,12 +3277,12 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 134 then
---|#line 579 "pr_yacc_parser.y"
+when 150 then
+--|#line 619 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 579")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 619")
 end
 
 			if is_terminal (yyvs2.item (yyvsp2)) then
@@ -3042,12 +3312,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 135 then
---|#line 588 "pr_yacc_parser.y"
+when 151 then
+--|#line 628 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 588")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 628")
 end
 
 			yyval4 := new_char_token (yyvs2.item (yyvsp2))
@@ -3072,12 +3342,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 136 then
---|#line 594 "pr_yacc_parser.y"
+when 152 then
+--|#line 634 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 594")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 634")
 end
 
 			process_rule (rule)
@@ -3106,12 +3376,12 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 137 then
---|#line 604 "pr_yacc_parser.y"
+when 153 then
+--|#line 644 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 604")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 644")
 end
 
 
@@ -3134,23 +3404,23 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 138 then
---|#line 605 "pr_yacc_parser.y"
+when 154 then
+--|#line 645 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 605")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 645")
 end
 
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 139 then
---|#line 606 "pr_yacc_parser.y"
+when 155 then
+--|#line 646 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 606")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 646")
 end
 
 			last_grammar.set_eiffel_code (yyvs2.item (yyvsp2))
@@ -3158,128 +3428,128 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 140 then
---|#line 612 "pr_yacc_parser.y"
+when 156 then
+--|#line 652 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 612")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 652")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 141 then
---|#line 614 "pr_yacc_parser.y"
+when 157 then
+--|#line 654 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 614")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 654")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 142 then
---|#line 616 "pr_yacc_parser.y"
+when 158 then
+--|#line 656 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 616")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 656")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 143 then
---|#line 618 "pr_yacc_parser.y"
+when 159 then
+--|#line 658 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 618")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 658")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 144 then
---|#line 620 "pr_yacc_parser.y"
+when 160 then
+--|#line 660 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 620")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 660")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 145 then
---|#line 622 "pr_yacc_parser.y"
+when 161 then
+--|#line 662 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 622")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 662")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 146 then
---|#line 624 "pr_yacc_parser.y"
+when 162 then
+--|#line 664 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 624")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 664")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 147 then
---|#line 626 "pr_yacc_parser.y"
+when 163 then
+--|#line 666 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 626")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 666")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 148 then
---|#line 628 "pr_yacc_parser.y"
+when 164 then
+--|#line 668 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 628")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 668")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 149 then
---|#line 630 "pr_yacc_parser.y"
+when 165 then
+--|#line 670 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 630")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 670")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-when 150 then
---|#line 632 "pr_yacc_parser.y"
+when 166 then
+--|#line 672 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 632")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 672")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 			else
 				debug ("GEYACC")
@@ -3291,11 +3561,11 @@ end
 			end
 		end
 
-	yy_do_error_action (yy_act: INTEGER) is
+	yy_do_error_action (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			inspect yy_act
-			when 198 then
+			when 208 then
 					-- End-of-file expected action.
 				report_eof_expected_error
 			else
@@ -3306,24 +3576,24 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: SPECIAL [INTEGER] is
+	yytranslate_template: SPECIAL [INTEGER]
 			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,   55,    2,    2,    2,    2,    2,    2,
-			   59,   60,    2,    2,   57,    2,    2,    2,    2,    2,
-			    2,    2,    2,    2,    2,    2,    2,    2,   50,   58,
-			   51,    2,   52,   56,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,   58,    2,    2,    2,    2,    2,    2,
+			   62,   63,    2,    2,   60,    2,   57,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,   50,   61,
+			   51,    2,   52,   59,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,   53,    2,   54,    2,    2,    2,    2,    2,    2,
 
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,    2,   49,    2,    2,    2,    2,    2,
+			    2,    2,    2,   55,   49,   56,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -3346,30 +3616,31 @@ feature {NONE} -- Table templates
 			   45,   46,   47,   48, yyDummy>>)
 		end
 
-	yyr1_template: SPECIAL [INTEGER] is
+	yyr1_template: SPECIAL [INTEGER]
 			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
-			    0,   78,   80,   79,   79,   83,   83,   83,   83,   83,
-			   83,   83,   83,   84,   84,   84,   86,   86,   71,   71,
-			   71,   71,   72,   72,   72,   72,   72,   72,   72,   72,
-			   72,   72,   72,   72,   72,   72,   72,   62,   62,   62,
-			   62,   62,   62,   62,   62,   62,   62,   62,   62,   62,
-			   62,   62,   62,   62,   62,   62,   63,   63,   63,   63,
-			   63,   63,   63,   65,   65,   64,   64,   64,   64,   74,
-			   73,   73,   73,   73,   73,   76,   75,   75,   75,   75,
-			   75,   77,   85,   85,   85,   67,   67,   67,   67,   67,
-			   88,   88,   88,   68,   68,   68,   68,   68,   89,   89,
+			    0,   82,   84,   83,   83,   87,   87,   87,   87,   87,
+			   87,   87,   87,   88,   88,   88,   90,   90,   75,   75,
+			   75,   75,   76,   76,   76,   76,   76,   76,   76,   76,
+			   76,   76,   76,   76,   76,   76,   76,   76,   76,   76,
+			   66,   66,   65,   65,   65,   65,   65,   65,   65,   65,
+			   65,   65,   65,   65,   65,   65,   65,   65,   65,   65,
+			   65,   67,   67,   67,   67,   67,   67,   67,   67,   67,
+			   67,   67,   68,   68,   68,   68,   68,   68,   68,   68,
+			   68,   69,   69,   78,   95,   96,   77,   77,   77,   77,
+			   77,   80,   79,   79,   79,   79,   79,   81,   89,   89,
 
-			   89,   69,   69,   69,   69,   69,   90,   90,   90,   70,
-			   70,   70,   70,   70,   87,   87,   87,   91,   81,   81,
-			   81,   92,   93,   94,   95,   95,   96,   96,   98,   98,
-			   98,   98,   98,   98,   66,   66,   97,   82,   82,   82,
-			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61, yyDummy>>)
+			   89,   71,   71,   71,   71,   71,   92,   92,   92,   72,
+			   72,   72,   72,   72,   93,   93,   93,   73,   73,   73,
+			   73,   73,   94,   94,   94,   74,   74,   74,   74,   74,
+			   91,   91,   91,   97,   85,   85,   85,   98,   99,  100,
+			  101,  101,  102,  102,  104,  104,  104,  104,  104,  104,
+			   70,   70,  103,   86,   86,   86,   64,   64,   64,   64,
+			   64,   64,   64,   64,   64,   64,   64, yyDummy>>)
 		end
 
-	yytypes1_template: SPECIAL [INTEGER] is
+	yytypes1_template: SPECIAL [INTEGER]
 			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
@@ -3382,23 +3653,24 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    5,    5,    1,    1,    2,    2,
 			    4,    1,    2,    2,    4,    1,    2,    2,    4,    5,
-			    1,    2,    1,    1,    1,    1,    6,    8,    1,    6,
+			    1,    2,    1,    1,    1,    2,    2,    2,    2,    1,
 
-			    2,    2,    2,    2,    1,    1,    2,    1,    4,    3,
-			    2,    4,    3,    2,    4,    3,    2,    1,    2,    1,
-			    2,    2,    4,    1,    3,    1,    3,    2,    2,    2,
-			    1,    2,    1,    2,    2,    2,    5,    5,    6,    8,
-			    7,    1,    2,    2,    2,    1,    6,    1,    6,    8,
+			    6,    8,    1,    6,    2,    2,    2,    2,    1,    1,
+			    2,    1,    4,    3,    2,    4,    3,    2,    4,    3,
+			    2,    1,    2,    1,    2,    2,    4,    1,    3,    1,
+			    3,    2,    2,    2,    1,    2,    1,    2,    2,    2,
+			    8,    7,    6,    1,    1,    6,    1,    6,    8,    1,
 			    2,    2,    1,    2,    2,    2,    2,    4,    3,    2,
 			    1,    1,    2,    2,    4,    1,    1,    3,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
-			    3,    6,    8,    6,    8,    5,    6,    8,    6,    2,
-			    2,    2,    8,    1,    1,    1,    1,    2,    1,    1,
+			    1,    2,    2,    2,    5,    5,    6,    1,    1,    5,
+			    1,    2,    2,    1,    2,    3,    8,    8,    5,    8,
+			    8,    1,    1,    1,    1,    6,    1,    2,    1,    1,
 
+			    6,    6,    6,    6,    1,    2,    2,    2,    1,    1,
 			    1, yyDummy>>)
 		end
 
-	yytypes2_template: SPECIAL [INTEGER] is
+	yytypes2_template: SPECIAL [INTEGER]
 			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
@@ -3408,361 +3680,363 @@ feature {NONE} -- Table templates
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    3,    3,    3,
 			    3,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1, yyDummy>>)
+			    1,    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: SPECIAL [INTEGER] is
+	yydefact_template: SPECIAL [INTEGER]
 			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
-			    2,    3,    0,    5,  118,   16,    0,    0,  106,   98,
-			   90,   13,    4,  149,  148,  147,  146,  145,  144,  143,
-			   50,   49,   48,   54,   53,   52,   51,   46,   45,   44,
-			   43,   42,   41,   40,   39,   38,   37,  150,  142,   55,
-			   47,  140,  122,  141,  137,  119,    0,   63,  114,   11,
-			   12,   10,    9,    8,   63,   82,  138,    1,  120,  123,
-			  128,   68,   67,   66,   65,   58,   57,   56,   20,   18,
-			   19,    0,   64,    0,    0,   21,    7,    0,  113,  109,
-			  107,    0,  105,  101,   99,    0,   97,   93,   91,    0,
-			    6,  139,    0,  124,  126,   63,   32,   34,   63,   27,
+			    2,    3,    0,    5,  134,   16,    0,    0,  122,  114,
+			  106,   13,    4,  165,  164,  163,  162,  161,  160,  159,
+			   55,   54,   53,   59,   58,   57,   56,   51,   50,   49,
+			   48,   47,   46,   45,   44,   43,   42,  166,  158,   60,
+			   52,  156,  138,  157,  153,  135,    0,   81,  130,   11,
+			   12,   10,    9,    8,   81,   98,  154,    1,  136,  139,
+			  144,   79,   77,   75,   73,   72,   62,   61,   20,   18,
+			   19,    0,   82,    0,    0,   21,    7,    0,  129,  125,
+			  123,    0,  121,  117,  115,    0,  113,  109,  107,    0,
+			    6,  155,    0,  140,  142,   80,   78,   76,   74,   84,
 
-			   22,   23,   28,    0,   17,    0,  117,  115,  108,  110,
-			  111,  100,  102,  103,   92,   94,   95,   14,    0,    0,
-			   89,   85,   83,  121,  136,  128,    0,  131,  130,  132,
-			    0,  129,   30,   20,   18,   19,   70,   21,    0,    0,
-			   76,   25,   20,   18,   19,   63,   26,   63,   31,   33,
-			   36,   35,  116,  112,  104,   96,    0,   84,   86,   87,
-			  125,    0,  135,  134,  133,   63,   63,   63,   63,   63,
-			   69,   75,    0,   63,   63,   63,   24,   29,   15,   88,
-			    0,   74,   80,   72,   78,   81,   73,   79,   71,    0,
-			    0,    0,   77,    0,    0,    0,    0,  127,    0,    0,
+			   32,   34,   84,   27,   22,   23,   28,    0,   17,    0,
+			  133,  131,  124,  126,  127,  116,  118,  119,  108,  110,
+			  111,   14,    0,    0,  105,  101,   99,  137,  152,  144,
+			    0,  147,  146,  148,    0,  145,   30,    0,    0,    0,
+			    0,   92,   81,   25,   84,   26,   84,   31,   33,   81,
+			   36,   35,  132,  128,  120,  112,    0,  100,  102,  103,
+			  141,    0,  151,  150,  149,    0,    0,   81,    0,   91,
+			    0,   20,   18,   19,   86,   21,   85,   24,   29,    0,
+			    0,   38,   37,   15,  104,    0,   96,   94,   97,   95,
+			   93,   81,   81,   81,   81,    0,    0,   40,    0,    0,
 
+			   90,   88,   89,   87,   83,   39,   41,  143,    0,    0,
 			    0, yyDummy>>)
 		end
 
-	yydefgoto_template: SPECIAL [INTEGER] is
+	yydefgoto_template: SPECIAL [INTEGER]
 			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
-			   42,   43,   71,   72,   73,  164,  122,   88,   84,   80,
-			  136,  137,  138,   96,  139,   97,  140,  198,    2,    1,
-			   44,   57,   12,   55,   90,   48,   76,   53,   52,   51,
-			  107,   45,   46,   60,   92,   93,  125,   94, yyDummy>>)
+			   42,   43,  181,   71,   72,   73,  164,  126,   88,   84,
+			   80,  174,  175,  176,  100,  140,  101,  141,  208,    2,
+			    1,   44,   57,   12,   55,   90,   48,   76,   53,   52,
+			   51,  142,  195,  111,   45,   46,   60,   92,   93,  129,
+			   94, yyDummy>>)
 		end
 
-	yypact_template: SPECIAL [INTEGER] is
+	yypact_template: SPECIAL [INTEGER]
 			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
-			 -32768, -32768,   58, -32768,  832,   54,  832,   56, -32768, -32768,
-			 -32768,   53, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -32768,   23, -32768,  694,   89,  694,   90, -32768, -32768,
+			 -32768,   82, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768, -32768, -32768, -32768,  634, -32768,   52,  555, -32768, -32768,
-			 -32768,  253,  214,  175,  555, -32768,   85, -32768, -32768, -32768,
-			 -32768,  995,  969,  943,  917, -32768, -32768, -32768,   44,   43,
-			 -32768,  891,   70,   49,   31, -32768,  292,  799, -32768,    0,
-			 -32768,  766, -32768,  -10, -32768,  733, -32768,  -12, -32768,  -19,
-			  136, -32768,  -44,    6,  598,  441, -32768, -32768,  403, -32768,
+			 -32768, -32768, -32768, -32768,  496, -32768,   84,  381, -32768, -32768,
+			 -32768,  260,  218,  176,  381, -32768,  116, -32768, -32768, -32768,
+			 -32768,  805,  779,  753,  727,  987, -32768, -32768,   78,   77,
+			 -32768,  961,  108,   88,   65, -32768,  302,  661, -32768,   -3,
+			 -32768,  628, -32768,   -4, -32768,  595, -32768,   -6, -32768,  -17,
+			  134, -32768,  -38,   40,  460,  935,  909,  883,  857,  422,
 
-			   27, -32768,   26,    8, -32768,  832, -32768, -32768, -32768,   60,
-			 -32768, -32768,   59, -32768, -32768,   41, -32768, -32768,  832,  700,
-			 -32768,  -16, -32768, -32768, -32768, -32768,   14, -32768, -32768, -32768,
-			  667, -32768, -32768,  -17,  -30,   19, -32768,   17,   18,   16,
-			    2, -32768,  -27,  -28,   -2,  365, -32768,  327, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768,    1, -32768,   34, -32768,
-			    6,    3, -32768, -32768, -32768,  517,  517,  555,  517,  479,
-			 -32768, -32768,  865,  479,  479,  479, -32768, -32768, -32768, -32768,
-			  -15, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  -11,
-			  -29,  -13, -32768,   24,  865,  865,  865, -32768,   38,    4,
+			 -32768, -32768,   73, -32768,   63, -32768,   57,  -10, -32768,  694,
+			 -32768, -32768, -32768,   87, -32768, -32768,   85, -32768, -32768,   83,
+			 -32768, -32768,  694,  562, -32768,   -8, -32768, -32768, -32768, -32768,
+			   38, -32768, -32768, -32768,  529, -32768, -32768,   49,  -13,   47,
+			   44,   33,  340, -32768,   43, -32768,   37, -32768, -32768,  381,
+			   24,   24, -32768, -32768, -32768, -32768,   41, -32768,   72, -32768,
+			   40,   39, -32768, -32768, -32768,  831,  831,  381,  831, -32768,
+			  831,  -11,  -35,   29, -32768,   25, -32768, -32768, -32768,   28,
+			   68,   -9,   -9, -32768, -32768,   14, -32768, -32768, -32768, -32768,
+			 -32768,  340,  340,  340,  340,   26,   24, -32768,   45,   35,
 
+			 -32768, -32768, -32768, -32768, -32768,   -9, -32768, -32768,   22,   20,
 			 -32768, yyDummy>>)
 		end
 
-	yypgoto_template: SPECIAL [INTEGER] is
+	yypgoto_template: SPECIAL [INTEGER]
 			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
-			    5,  -47, -32768, -32768, -32768, -32768,   -6,   23,   33,   32,
-			  -37,  -38,  -81,  -68, -153,    9, -32768, -32768, -32768, -32768,
+			    2,  -47, -150, -32768, -32768, -32768, -32768,   27,   67,   62,
+			   64,  -41,  -45,  -79,  -66, -149,   36, -32768, -32768, -32768,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
-			    7,   62, -32768, -32768, -32768,  -18, -32768, -32768, yyDummy>>)
+			 -32768, -32768, -32768,   30,   94, -32768, -32768, -32768,    6, -32768,
+			 -32768, yyDummy>>)
 		end
 
-	yytable_template: SPECIAL [INTEGER] is
+	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1034)
+			create an_array.make_filled (0, 0, 1026)
 			yytable_template_1 (an_array)
 			yytable_template_2 (an_array)
 			Result := yyfixed_array (an_array)
 		end
 
-	yytable_template_1 (an_array: ARRAY [INTEGER]) is
+	yytable_template_1 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #1 of template for `yytable'.
 		do
 			yyarray_subcopy (an_array, <<
-			   70,   99,  159,  118,  200,  124,  116,   70,  113,   75,
-			   74,   49,  182,  184,  123,  187,   75,   89,  110,  192,
-			  167,  167,  151,   98,  101,   98,   95,  166,  195,  174,
-			  173,  158,  146,  117,  148,  115,   95,  112,  199,  197,
-			  165,  182,  184,  187,  196,  193,  194,  109,  135,  150,
-			  180,  144,  179,  178,  126,  175,   79,   83,   87,  155,
-			  172,   11,   10,    9,    8,    7,   99,    6,    5,    4,
-			  171,    3,  170,  161,  169,   99,  168,  154,  153,  147,
-			  145,  106,   79,  104,  181,  183,   83,  186,  188,  103,
-			   87,  102,  181,  183,  186,  121,   98,   95,  144,  131,
+			   70,  182,   75,  103,  151,  122,   74,   70,   49,   75,
+			  159,  128,  120,   89,  117,  114,  186,  187,  102,  189,
+			  210,  190,  209,  127,  105,  192,   11,   10,    9,    8,
+			    7,  150,    6,    5,    4,  121,    3,  167,  145,  158,
+			  147,  119,   99,  116,  113,  149,  205,  166,  198,  191,
+			  207,  138,  139,   79,   83,   87,   40,   39,  137,  206,
+			   36,   35,   34,   33,   32,   31,   30,   29,   28,   27,
+			   26,   25,   24,   23,   22,   21,   20,  199,  110,   79,
+			  204,  180,  197,   83,  196,  194,  185,   87,  130,  193,
+			  184,  178,  125,  183,  170,  173,  135,  177,  169,  139,
 
-			  135,   91,   59,   50,   54,   47,   58,  160,  114,  108,
-			  106,  149,  152,  157,  111,    0,    0,    0,  135,  135,
-			   70,  135,  144,  156,  121,  191,  144,  144,  144,   75,
-			  185,    0,    0,    0,    0,  163,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,  191,  191,  191,
-			   41,    0,    0,  120,    0,   40,   39,   38,   37,   36,
-			   35,   34,   33,   32,   31,   30,   29,   28,   27,   26,
-			   25,   24,   23,   22,   21,   20,   19,   18,   17,   16,
-			   15,   14,   13,    0,    0,    0,    0,    0,    0,   41,
-			    0,    0,   86,  119,   40,   39,   38,   37,   36,   35,
-
-			   34,   33,   32,   31,   30,   29,   28,   27,   26,   25,
-			   24,   23,   22,   21,   20,   19,   18,   17,   16,   15,
-			   14,   13,    0,    0,    0,    0,    0,    0,   41,    0,
-			    0,   82,   85,   40,   39,   38,   37,   36,   35,   34,
+			  161,  155,   70,  154,   75,  153,  103,  168,  179,  165,
+			  146,  110,  200,  201,  202,  203,  144,  108,  139,  139,
+			   70,  139,   75,  139,  156,  125,  188,  143,  107,  106,
+			  102,   99,   91,   54,   59,  160,  163,   50,   58,  152,
+			   47,  112,  148,  115,  173,  173,  173,  173,   41,    0,
+			  157,  124,  118,   40,   39,   38,   37,   36,   35,   34,
 			   33,   32,   31,   30,   29,   28,   27,   26,   25,   24,
 			   23,   22,   21,   20,   19,   18,   17,   16,   15,   14,
-			   13,    0,    0,    0,    0,    0,    0,   41,    0,    0,
-			   78,   81,   40,   39,   38,   37,   36,   35,   34,   33,
-			   32,   31,   30,   29,   28,   27,   26,   25,   24,   23,
-			   22,   21,   20,   19,   18,   17,   16,   15,   14,   13,
+			   13,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			   41,    0,    0,   86,  123,   40,   39,   38,   37,   36,
 
+			   35,   34,   33,   32,   31,   30,   29,   28,   27,   26,
+			   25,   24,   23,   22,   21,   20,   19,   18,   17,   16,
+			   15,   14,   13,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,   41,    0,    0,   82,   85,   40,   39,   38,
+			   37,   36,   35,   34,   33,   32,   31,   30,   29,   28,
+			   27,   26,   25,   24,   23,   22,   21,   20,   19,   18,
+			   17,   16,   15,   14,   13,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,   41,    0,    0,   78,   81,   40,
+			   39,   38,   37,   36,   35,   34,   33,   32,   31,   30,
+			   29,   28,   27,   26,   25,   24,   23,   22,   21,   20,
+
+			   19,   18,   17,   16,   15,   14,   13,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,   41,    0,    0,    0,
 			   77,   40,   39,   38,   37,   36,   35,   34,   33,   32,
 			   31,   30,   29,   28,   27,   26,   25,   24,   23,   22,
 			   21,   20,   19,   18,   17,   16,   15,   14,   13,    0,
-			    0,  134,    0,    0,    0,    0,   40,   39,  133,  105,
-			   36,   35,   34,   33,   32,   31,   30,   29,   28,   27,
-			   26,   25,   24,   23,   22,   21,   20,    0,    0,   67,
-			   66,   65,   64,   63,    0,    0,    0,    0,    0,  143,
-			    0,  177,   62,   61,   40,   39,  142,    0,   36,   35,
-			   34,   33,   32,   31,   30,   29,   28,   27,   26,   25,
+			    0,    0,    0,    0,  172,    0,    0,    0,    0,   40,
+			   39,  171,  109,   36,   35,   34,   33,   32,   31,   30,
+			   29,   28,   27,   26,   25,   24,   23,   22,   21,   20,
+			    0,    0,   67,   66,   65,   64,   63,    0,    0,    0,
+			    0,    0,    0,    0,    0,   69,    0,    0,   62,   61,
 
-			   24,   23,   22,   21,   20,    0,    0,   67,   66,   65,
-			   64,   63,    0,    0,    0,    0,    0,  143,    0,  176,
-			   62,   61,   40,   39,  142,    0,   36,   35,   34,   33,
-			   32,   31,   30,   29,   28,   27,   26,   25,   24,   23,
-			   22,   21,   20,    0,    0,   67,   66,   65,   64,   63,
-			    0,    0,    0,    0,    0,  134,    0,  141,   62,   61,
-			   40,   39,  133,    0,   36,   35,   34,   33,   32,   31,
+			   40,   39,   68,    0,   36,   35,   34,   33,   32,   31,
 			   30,   29,   28,   27,   26,   25,   24,   23,   22,   21,
 			   20,    0,    0,   67,   66,   65,   64,   63,    0,    0,
-			    0,    0,    0,  143,    0,  132,   62,   61,   40,   39,
+			    0,    0,    0,    0,    0,    0,  138,    0,    0,   62,
+			   61,   40,   39,  137,    0,   36,   35,   34,   33,   32,
+			   31,   30,   29,   28,   27,   26,   25,   24,   23,   22,
+			   21,   20,    0,    0,    0,    0,    0,    0,  134,    0,
+			    0,    0,    0,    0,   41,  133,  136,  132,  131,   40,
+			   39,   38,   37,   36,   35,   34,   33,   32,   31,   30,
+			   29,   28,   27,   26,   25,   24,   23,   22,   21,   20,
 
-			  142,    0,   36,   35,   34,   33,   32,   31,   30,   29,
-			   28,   27,   26,   25,   24,   23,   22,   21,   20,    0,
-			    0,   67,   66,   65,   64,   63,    0,    0,    0,    0,
-			    0,  134,    0,    0,   62,   61,   40,   39,  133,    0,
-			   36,   35,   34,   33,   32,   31,   30,   29,   28,   27,
-			   26,   25,   24,   23,   22,   21,   20,    0,    0,   67,
-			   66,   65,   64,   63,    0,    0,    0,    0,    0,   69,
-			    0,    0,   62,   61,   40,   39,   68,    0,   36,   35,
+			   19,   18,   17,   16,   15,   14,   13,   56,    0,    0,
+			   41,    0,    0,    0,    0,   40,   39,   38,   37,   36,
+			   35,   34,   33,   32,   31,   30,   29,   28,   27,   26,
+			   25,   24,   23,   22,   21,   20,   19,   18,   17,   16,
+			   15,   14,   13,   41,    0,    0,  162,    0,   40,   39,
+			   38,   37,   36,   35,   34,   33,   32,   31,   30,   29,
+			   28,   27,   26,   25,   24,   23,   22,   21,   20,   19,
+			   18,   17,   16,   15,   14,   13,   41,    0,    0,  124,
+			    0,   40,   39,   38,   37,   36,   35,   34,   33,   32,
+			   31,   30,   29,   28,   27,   26,   25,   24,   23,   22,
+
+			   21,   20,   19,   18,   17,   16,   15,   14,   13,   41,
+			    0,    0,   86,    0,   40,   39,   38,   37,   36,   35,
 			   34,   33,   32,   31,   30,   29,   28,   27,   26,   25,
-			   24,   23,   22,   21,   20,    0,    0,   67,   66,   65,
-
-			   64,   63,    0,    0,    0,    0,  130,    0,    0,    0,
-			   62,   61,   41,  129,    0,  128,  127,   40,   39,   38,
+			   24,   23,   22,   21,   20,   19,   18,   17,   16,   15,
+			   14,   13,   41,    0,    0,   82,    0,   40,   39,   38,
 			   37,   36,   35,   34,   33,   32,   31,   30,   29,   28,
 			   27,   26,   25,   24,   23,   22,   21,   20,   19,   18,
-			   17,   16,   15,   14,   13,   56,    0,    0,   41,    0,
+			   17,   16,   15,   14,   13,   41,    0,    0,   78,    0,
+			   40,   39,   38,   37,   36,   35,   34,   33,   32,   31,
+			   30,   29,   28,   27,   26,   25,   24,   23,   22,   21,
+
+			   20,   19,   18,   17,   16,   15,   14,   13,   41,    0,
 			    0,    0,    0,   40,   39,   38,   37,   36,   35,   34,
 			   33,   32,   31,   30,   29,   28,   27,   26,   25,   24,
 			   23,   22,   21,   20,   19,   18,   17,   16,   15,   14,
-			   13,   41,    0,    0,  162,    0,   40,   39,   38,   37,
-			   36,   35,   34,   33,   32,   31,   30,   29,   28,   27,
+			   13,  -64,    0,    0,    0,    0,  -64,  -64,    0,    0,
+			  -64,  -64,  -64,  -64,  -64,  -64,  -64,  -64,  -64,  -64,
+			  -64,  -64,  -64,  -64,  -64,  -64,  -64,  -66,    0,    0,
+			    0,   98,  -66,  -66,    0,    0,  -66,  -66,  -66,  -66,
+			  -66,  -66,  -66,  -66,  -66,  -66,  -66,  -66,  -66,  -66,
+			  -66,  -66,  -66,  -68,    0,    0,    0,   97,  -68,  -68,
 
-			   26,   25,   24,   23,   22,   21,   20,   19,   18,   17,
-			   16,   15,   14,   13,   41,    0,    0,  120,    0,   40,
-			   39,   38,   37,   36,   35,   34,   33,   32,   31,   30,
-			   29,   28,   27,   26,   25,   24,   23,   22,   21,   20,
-			   19,   18,   17,   16,   15,   14,   13,   41,    0,    0,
-			   86,    0,   40,   39,   38,   37,   36,   35,   34,   33,
-			   32,   31,   30,   29,   28,   27,   26,   25,   24,   23,
-			   22,   21,   20,   19,   18,   17,   16,   15,   14,   13,
-			   41,    0,    0,   82,    0,   40,   39,   38,   37,   36,
-			   35,   34,   33,   32,   31,   30,   29,   28,   27,   26,
-
-			   25,   24,   23,   22,   21,   20,   19,   18,   17,   16,
-			   15,   14,   13,   41,    0,    0,   78,    0,   40,   39,
-			   38,   37,   36,   35,   34,   33,   32,   31,   30,   29,
-			   28,   27,   26,   25,   24,   23,   22,   21,   20,   19,
-			   18,   17,   16,   15,   14,   13,   41,    0,    0,    0,
-			    0,   40,   39,   38,   37,   36,   35,   34,   33,   32,
-			   31,   30,   29,   28,   27,   26,   25,   24,   23,   22,
-			   21,   20,   19,   18,   17,   16,   15,   14,   13,  190,
-			    0,    0,    0,    0,   40,   39,  189,    0,   36,   35,
-			   34,   33,   32,   31,   30,   29,   28,   27,   26,   25,
-
-			   24,   23,   22,   21,   20,  100,    0,    0,    0,    0,
-			   40,   39,    0,    0,   36,   35,   34,   33,   32,   31,
+			    0,    0,  -68,  -68,  -68,  -68,  -68,  -68,  -68,  -68,
+			  -68,  -68,  -68,  -68,  -68,  -68,  -68,  -68,  -68,  -70,
+			    0,    0,    0,   96,  -70,  -70,    0,    0,  -70,  -70,
+			  -70,  -70,  -70,  -70,  -70,  -70,  -70,  -70,  -70,  -70,
+			  -70,  -70,  -70,  -70,  -70,  138,    0,    0,    0,   95,
+			   40,   39,  137,    0,   36,   35,   34,   33,   32,   31,
 			   30,   29,   28,   27,   26,   25,   24,   23,   22,   21,
-			   20,  -59,    0,    0,    0,    0,  -59,  -59,    0,    0,
-			  -59,  -59,  -59,  -59,  -59,  -59,  -59,  -59,  -59,  -59,
-			  -59,  -59,  -59,  -59,  -59,  -59,  -59,  -60,    0,    0,
-			    0,    0,  -60,  -60,    0,    0,  -60,  -60,  -60,  -60,
-			  -60,  -60,  -60,  -60,  -60,  -60,  -60,  -60,  -60,  -60,
-			  -60,  -60,  -60,  -61,    0,    0,    0,    0,  -61,  -61,
-			    0,    0,  -61,  -61,  -61,  -61,  -61,  -61,  -61,  -61, yyDummy>>,
+			   20,  -65,    0,    0,    0,    0,  -65,  -65,    0,    0,
+			  -65,  -65,  -65,  -65,  -65,  -65,  -65,  -65,  -65,  -65,
+			  -65,  -65,  -65,  -65,  -65,  -65,  -65,  -67,    0,    0,
+
+			    0,    0,  -67,  -67,    0,    0,  -67,  -67,  -67,  -67,
+			  -67,  -67,  -67,  -67,  -67,  -67,  -67,  -67,  -67,  -67,
+			  -67,  -67,  -67,  -69,    0,    0,    0,    0,  -69,  -69,
+			    0,    0,  -69,  -69,  -69,  -69,  -69,  -69,  -69,  -69,
+			  -69,  -69,  -69,  -69,  -69,  -69,  -69,  -69,  -69,  -71,
+			    0,    0,    0,    0,  -71,  -71,    0,    0,  -71,  -71,
+			  -71,  -71,  -71,  -71,  -71,  -71,  -71,  -71,  -71,  -71,
+			  -71,  -71,  -71,  -71,  -71,  104,    0,    0,    0,    0,
+			   40,   39,    0,    0,   36,   35,   34,   33,   32,   31,
+			   30,   29,   28,   27,   26,   25,   24,   23,   22,   21, yyDummy>>,
 			1, 1000, 0)
 		end
 
-	yytable_template_2 (an_array: ARRAY [INTEGER]) is
+	yytable_template_2 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #2 of template for `yytable'.
 		do
 			yyarray_subcopy (an_array, <<
-			  -61,  -61,  -61,  -61,  -61,  -61,  -61,  -61,  -61,  -62,
-			    0,    0,    0,    0,  -62,  -62,    0,    0,  -62,  -62,
-			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
-			  -62,  -62,  -62,  -62,  -62, yyDummy>>,
-			1, 35, 1000)
+			   20,  -63,    0,    0,    0,    0,  -63,  -63,    0,    0,
+			  -63,  -63,  -63,  -63,  -63,  -63,  -63,  -63,  -63,  -63,
+			  -63,  -63,  -63,  -63,  -63,  -63,  -63, yyDummy>>,
+			1, 27, 1000)
 		end
 
-	yycheck_template: SPECIAL [INTEGER] is
+	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1034)
+			create an_array.make_filled (0, 0, 1026)
 			yycheck_template_1 (an_array)
 			yycheck_template_2 (an_array)
 			Result := yyfixed_array (an_array)
 		end
 
-	yycheck_template_1 (an_array: ARRAY [INTEGER]) is
+	yycheck_template_1 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #1 of template for `yycheck'.
 		do
 			yyarray_subcopy (an_array, <<
-			   47,   69,   18,   22,    0,   49,   18,   54,   18,   47,
-			   47,    6,  165,  166,   58,  168,   54,   54,   18,  172,
-			   50,   50,   14,   53,   71,   53,   53,   57,   57,   57,
-			   57,   47,  100,   52,  102,   47,   53,   47,    0,   15,
-			   57,  194,  195,  196,   57,   60,   57,   47,   95,   41,
-			   47,   98,   18,   52,   48,   57,   51,   52,   53,   18,
-			   58,    3,    4,    5,    6,    7,  134,    9,   10,   11,
-			   54,   13,   54,   59,   57,  143,   57,   18,   18,   53,
-			   53,   76,   77,   52,  165,  166,   81,  168,  169,   40,
-			   85,   21,  173,  174,  175,   90,   53,   53,  145,   94,
+			   47,  151,   47,   69,   14,   22,   47,   54,    6,   54,
+			   18,   49,   18,   54,   18,   18,  165,  166,   53,  168,
+			    0,  170,    0,   61,   71,   60,    3,    4,    5,    6,
+			    7,   41,    9,   10,   11,   52,   13,   50,  104,   47,
+			  106,   47,   53,   47,   47,   55,  196,   60,   57,   60,
+			   15,   14,   99,   51,   52,   53,   19,   20,   21,   14,
+			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
+			   33,   34,   35,   36,   37,   38,   39,   63,   76,   77,
+			   54,   57,   14,   81,   56,   60,   47,   85,   48,   60,
+			   18,   54,   90,   52,   61,  142,   94,   54,   54,  146,
 
-			  147,   16,   50,   47,   51,   51,   44,  125,   85,   77,
-			  105,  102,  105,  119,   81,   -1,   -1,   -1,  165,  166,
-			  167,  168,  169,  118,  119,  172,  173,  174,  175,  167,
-			  167,   -1,   -1,   -1,   -1,  130,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,  194,  195,  196,
-			   14,   -1,   -1,   17,   -1,   19,   20,   21,   22,   23,
-			   24,   25,   26,   27,   28,   29,   30,   31,   32,   33,
-			   34,   35,   36,   37,   38,   39,   40,   41,   42,   43,
-			   44,   45,   46,   -1,   -1,   -1,   -1,   -1,   -1,   14,
-			   -1,   -1,   17,   57,   19,   20,   21,   22,   23,   24,
-
-			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
-			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44,
-			   45,   46,   -1,   -1,   -1,   -1,   -1,   -1,   14,   -1,
-			   -1,   17,   57,   19,   20,   21,   22,   23,   24,   25,
+			   62,   18,  149,   18,  149,   18,  172,   60,  149,   60,
+			   53,  109,  191,  192,  193,  194,   53,   52,  165,  166,
+			  167,  168,  167,  170,  122,  123,  167,   54,   40,   21,
+			   53,   53,   16,   51,   50,  129,  134,   47,   44,  109,
+			   51,   77,  106,   81,  191,  192,  193,  194,   14,   -1,
+			  123,   17,   85,   19,   20,   21,   22,   23,   24,   25,
 			   26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
 			   36,   37,   38,   39,   40,   41,   42,   43,   44,   45,
-			   46,   -1,   -1,   -1,   -1,   -1,   -1,   14,   -1,   -1,
-			   17,   57,   19,   20,   21,   22,   23,   24,   25,   26,
-			   27,   28,   29,   30,   31,   32,   33,   34,   35,   36,
-			   37,   38,   39,   40,   41,   42,   43,   44,   45,   46,
+			   46,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   14,   -1,   -1,   17,   60,   19,   20,   21,   22,   23,
 
+			   24,   25,   26,   27,   28,   29,   30,   31,   32,   33,
+			   34,   35,   36,   37,   38,   39,   40,   41,   42,   43,
+			   44,   45,   46,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   14,   -1,   -1,   17,   60,   19,   20,   21,
+			   22,   23,   24,   25,   26,   27,   28,   29,   30,   31,
+			   32,   33,   34,   35,   36,   37,   38,   39,   40,   41,
+			   42,   43,   44,   45,   46,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   14,   -1,   -1,   17,   60,   19,
+			   20,   21,   22,   23,   24,   25,   26,   27,   28,   29,
+			   30,   31,   32,   33,   34,   35,   36,   37,   38,   39,
+
+			   40,   41,   42,   43,   44,   45,   46,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   14,   -1,   -1,   -1,
-			   57,   19,   20,   21,   22,   23,   24,   25,   26,   27,
+			   60,   19,   20,   21,   22,   23,   24,   25,   26,   27,
 			   28,   29,   30,   31,   32,   33,   34,   35,   36,   37,
 			   38,   39,   40,   41,   42,   43,   44,   45,   46,   -1,
-			   -1,   14,   -1,   -1,   -1,   -1,   19,   20,   21,   57,
-			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
-			   33,   34,   35,   36,   37,   38,   39,   -1,   -1,   42,
-			   43,   44,   45,   46,   -1,   -1,   -1,   -1,   -1,   14,
-			   -1,   54,   55,   56,   19,   20,   21,   -1,   23,   24,
-			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
+			   -1,   -1,   -1,   -1,   14,   -1,   -1,   -1,   -1,   19,
+			   20,   21,   60,   23,   24,   25,   26,   27,   28,   29,
+			   30,   31,   32,   33,   34,   35,   36,   37,   38,   39,
+			   -1,   -1,   42,   43,   44,   45,   46,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   14,   -1,   -1,   58,   59,
 
-			   35,   36,   37,   38,   39,   -1,   -1,   42,   43,   44,
-			   45,   46,   -1,   -1,   -1,   -1,   -1,   14,   -1,   54,
-			   55,   56,   19,   20,   21,   -1,   23,   24,   25,   26,
-			   27,   28,   29,   30,   31,   32,   33,   34,   35,   36,
-			   37,   38,   39,   -1,   -1,   42,   43,   44,   45,   46,
-			   -1,   -1,   -1,   -1,   -1,   14,   -1,   54,   55,   56,
 			   19,   20,   21,   -1,   23,   24,   25,   26,   27,   28,
 			   29,   30,   31,   32,   33,   34,   35,   36,   37,   38,
 			   39,   -1,   -1,   42,   43,   44,   45,   46,   -1,   -1,
-			   -1,   -1,   -1,   14,   -1,   54,   55,   56,   19,   20,
-
-			   21,   -1,   23,   24,   25,   26,   27,   28,   29,   30,
-			   31,   32,   33,   34,   35,   36,   37,   38,   39,   -1,
-			   -1,   42,   43,   44,   45,   46,   -1,   -1,   -1,   -1,
-			   -1,   14,   -1,   -1,   55,   56,   19,   20,   21,   -1,
-			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
-			   33,   34,   35,   36,   37,   38,   39,   -1,   -1,   42,
-			   43,   44,   45,   46,   -1,   -1,   -1,   -1,   -1,   14,
-			   -1,   -1,   55,   56,   19,   20,   21,   -1,   23,   24,
-			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
-			   35,   36,   37,   38,   39,   -1,   -1,   42,   43,   44,
-
-			   45,   46,   -1,   -1,   -1,   -1,    8,   -1,   -1,   -1,
-			   55,   56,   14,   15,   -1,   17,   18,   19,   20,   21,
-			   22,   23,   24,   25,   26,   27,   28,   29,   30,   31,
-			   32,   33,   34,   35,   36,   37,   38,   39,   40,   41,
-			   42,   43,   44,   45,   46,   11,   -1,   -1,   14,   -1,
-			   -1,   -1,   -1,   19,   20,   21,   22,   23,   24,   25,
-			   26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
-			   36,   37,   38,   39,   40,   41,   42,   43,   44,   45,
-			   46,   14,   -1,   -1,   17,   -1,   19,   20,   21,   22,
-			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
-
-			   33,   34,   35,   36,   37,   38,   39,   40,   41,   42,
-			   43,   44,   45,   46,   14,   -1,   -1,   17,   -1,   19,
+			   -1,   -1,   -1,   -1,   -1,   -1,   14,   -1,   -1,   58,
+			   59,   19,   20,   21,   -1,   23,   24,   25,   26,   27,
+			   28,   29,   30,   31,   32,   33,   34,   35,   36,   37,
+			   38,   39,   -1,   -1,   -1,   -1,   -1,   -1,    8,   -1,
+			   -1,   -1,   -1,   -1,   14,   15,   54,   17,   18,   19,
 			   20,   21,   22,   23,   24,   25,   26,   27,   28,   29,
 			   30,   31,   32,   33,   34,   35,   36,   37,   38,   39,
-			   40,   41,   42,   43,   44,   45,   46,   14,   -1,   -1,
-			   17,   -1,   19,   20,   21,   22,   23,   24,   25,   26,
-			   27,   28,   29,   30,   31,   32,   33,   34,   35,   36,
-			   37,   38,   39,   40,   41,   42,   43,   44,   45,   46,
-			   14,   -1,   -1,   17,   -1,   19,   20,   21,   22,   23,
-			   24,   25,   26,   27,   28,   29,   30,   31,   32,   33,
 
+			   40,   41,   42,   43,   44,   45,   46,   11,   -1,   -1,
+			   14,   -1,   -1,   -1,   -1,   19,   20,   21,   22,   23,
+			   24,   25,   26,   27,   28,   29,   30,   31,   32,   33,
 			   34,   35,   36,   37,   38,   39,   40,   41,   42,   43,
 			   44,   45,   46,   14,   -1,   -1,   17,   -1,   19,   20,
 			   21,   22,   23,   24,   25,   26,   27,   28,   29,   30,
 			   31,   32,   33,   34,   35,   36,   37,   38,   39,   40,
-			   41,   42,   43,   44,   45,   46,   14,   -1,   -1,   -1,
+			   41,   42,   43,   44,   45,   46,   14,   -1,   -1,   17,
 			   -1,   19,   20,   21,   22,   23,   24,   25,   26,   27,
 			   28,   29,   30,   31,   32,   33,   34,   35,   36,   37,
-			   38,   39,   40,   41,   42,   43,   44,   45,   46,   14,
-			   -1,   -1,   -1,   -1,   19,   20,   21,   -1,   23,   24,
-			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
 
-			   35,   36,   37,   38,   39,   14,   -1,   -1,   -1,   -1,
-			   19,   20,   -1,   -1,   23,   24,   25,   26,   27,   28,
+			   38,   39,   40,   41,   42,   43,   44,   45,   46,   14,
+			   -1,   -1,   17,   -1,   19,   20,   21,   22,   23,   24,
+			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
+			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44,
+			   45,   46,   14,   -1,   -1,   17,   -1,   19,   20,   21,
+			   22,   23,   24,   25,   26,   27,   28,   29,   30,   31,
+			   32,   33,   34,   35,   36,   37,   38,   39,   40,   41,
+			   42,   43,   44,   45,   46,   14,   -1,   -1,   17,   -1,
+			   19,   20,   21,   22,   23,   24,   25,   26,   27,   28,
+			   29,   30,   31,   32,   33,   34,   35,   36,   37,   38,
+
+			   39,   40,   41,   42,   43,   44,   45,   46,   14,   -1,
+			   -1,   -1,   -1,   19,   20,   21,   22,   23,   24,   25,
+			   26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
+			   36,   37,   38,   39,   40,   41,   42,   43,   44,   45,
+			   46,   14,   -1,   -1,   -1,   -1,   19,   20,   -1,   -1,
+			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
+			   33,   34,   35,   36,   37,   38,   39,   14,   -1,   -1,
+			   -1,   44,   19,   20,   -1,   -1,   23,   24,   25,   26,
+			   27,   28,   29,   30,   31,   32,   33,   34,   35,   36,
+			   37,   38,   39,   14,   -1,   -1,   -1,   44,   19,   20,
+
+			   -1,   -1,   23,   24,   25,   26,   27,   28,   29,   30,
+			   31,   32,   33,   34,   35,   36,   37,   38,   39,   14,
+			   -1,   -1,   -1,   44,   19,   20,   -1,   -1,   23,   24,
+			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
+			   35,   36,   37,   38,   39,   14,   -1,   -1,   -1,   44,
+			   19,   20,   21,   -1,   23,   24,   25,   26,   27,   28,
 			   29,   30,   31,   32,   33,   34,   35,   36,   37,   38,
 			   39,   14,   -1,   -1,   -1,   -1,   19,   20,   -1,   -1,
 			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
 			   33,   34,   35,   36,   37,   38,   39,   14,   -1,   -1,
+
 			   -1,   -1,   19,   20,   -1,   -1,   23,   24,   25,   26,
 			   27,   28,   29,   30,   31,   32,   33,   34,   35,   36,
 			   37,   38,   39,   14,   -1,   -1,   -1,   -1,   19,   20,
-			   -1,   -1,   23,   24,   25,   26,   27,   28,   29,   30, yyDummy>>,
-			1, 1000, 0)
-		end
-
-	yycheck_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yycheck'.
-		do
-			yyarray_subcopy (an_array, <<
+			   -1,   -1,   23,   24,   25,   26,   27,   28,   29,   30,
 			   31,   32,   33,   34,   35,   36,   37,   38,   39,   14,
 			   -1,   -1,   -1,   -1,   19,   20,   -1,   -1,   23,   24,
 			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
-			   35,   36,   37,   38,   39, yyDummy>>,
-			1, 35, 1000)
+			   35,   36,   37,   38,   39,   14,   -1,   -1,   -1,   -1,
+			   19,   20,   -1,   -1,   23,   24,   25,   26,   27,   28,
+			   29,   30,   31,   32,   33,   34,   35,   36,   37,   38, yyDummy>>,
+			1, 1000, 0)
+		end
+
+	yycheck_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yycheck'.
+		do
+			yyarray_subcopy (an_array, <<
+			   39,   14,   -1,   -1,   -1,   -1,   19,   20,   -1,   -1,
+			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
+			   33,   34,   35,   36,   37,   38,   39, yyDummy>>,
+			1, 27, 1000)
 		end
 
 feature {NONE} -- Semantic value stacks
@@ -3865,23 +4139,23 @@ feature {NONE} -- Semantic value stacks
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 200
+	yyFinal: INTEGER = 210
 			-- Termination state id
 
-	yyFlag: INTEGER is -32768
+	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 61
+	yyNtbase: INTEGER = 64
 			-- Number of tokens
 
-	yyLast: INTEGER is 1034
+	yyLast: INTEGER = 1026
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 303
+	yyMax_token: INTEGER = 303
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 99
+	yyNsyms: INTEGER = 105
 			-- Number of symbols
 			-- (terminal and nonterminal)
 

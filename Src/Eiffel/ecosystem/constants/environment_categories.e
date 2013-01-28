@@ -1,6 +1,6 @@
 note
 	description: "[
-		Category identifers for various parts of the EiffelStudio ecosystem.
+		Category identifiers for various parts of the EiffelStudio ecosystem.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

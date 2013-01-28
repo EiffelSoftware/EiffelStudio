@@ -47,7 +47,7 @@ feature {NONE} -- Access
 		end
 
 	template_identifier: STRING_32
-			-- Template identifer used to look up the contract code template
+			-- Template identifier used to look up the contract code template
 		deferred
 		ensure
 			result_attached: attached Result

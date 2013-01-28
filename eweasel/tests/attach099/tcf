@@ -1,0 +1,15 @@
+test_name 	 targeted-object-call
+test_description An expression which is a target of an object call is targeted.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test1.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+copy_raw	test2.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI VEVI
+
+test_end

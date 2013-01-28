@@ -8436,7 +8436,7 @@ based upon the options specified.</Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>Web Help (can generate multiple interchangable tocs)</Text>
+<EV_TEXTABLE><Text>Web Help (can generate multiple interchangeable tocs)</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>

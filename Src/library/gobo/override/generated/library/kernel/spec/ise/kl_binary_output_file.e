@@ -18,14 +18,12 @@ inherit
 	KI_BINARY_OUTPUT_FILE
 
 	KL_OUTPUT_FILE
-		redefine
-			string_name
-		end
 
 	RAW_FILE
 		rename
 			make as old_make,
 			name as string_name,
+			set_name as set_string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -66,7 +64,6 @@ inherit
 
 
 
-			string_name
 		end
 
 create
@@ -74,11 +71,6 @@ create
 	make
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
-
-
 
 
 

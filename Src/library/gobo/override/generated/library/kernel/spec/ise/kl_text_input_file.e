@@ -26,7 +26,6 @@ inherit
 
 	KL_INPUT_FILE
 		redefine
-			string_name,
 			last_character,
 			last_string
 		end
@@ -35,6 +34,7 @@ inherit
 		rename
 			make as old_make,
 			name as string_name,
+			set_name as set_string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -69,7 +69,6 @@ inherit
 
 
 
-			string_name,
 			last_character,
 			last_string
 		end
@@ -174,11 +173,6 @@ feature -- Input
 		end
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
-
-
 
 
 

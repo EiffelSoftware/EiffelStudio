@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Implementation
 
-	yy_build_parser_tables is
+	yy_build_parser_tables
 			-- Build parser tables.
 		do
 			yytranslate := yytranslate_template
@@ -43,12 +43,12 @@ feature {NONE} -- Implementation
 			yycheck := yycheck_template
 		end
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		do
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		do
 			yyvsp1 := -1
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			yyvsp4 := -1
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		local
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 						yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 					end
 				end
-				yyvs1.put (last_any_value, yyvsp1)
+				yyspecial_routines1.force (yyvs1, last_any_value, yyvsp1)
 			when 2 then
 				yyvsp2 := yyvsp2 + 1
 				if yyvsp2 >= yyvsc2 then
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 						yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 					end
 				end
-				yyvs2.put (last_et_identifier_value, yyvsp2)
+				yyspecial_routines2.force (yyvs2, last_et_identifier_value, yyvsp2)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
@@ -157,10 +157,10 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (yyval1, yyvsp1)
+			yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		local
 			yy_type_id: INTEGER
@@ -185,9 +185,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	yy_run_geyacc
+			-- You must run geyacc to regenerate this class.
+		do
+		end
+
 feature {NONE} -- Semantic actions
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
 			yyval1: ANY
@@ -208,7 +213,7 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -3
 	yyvsp2 := yyvsp2 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
 --|#line 46 "ts_config_parser.y"
@@ -236,7 +241,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
 --|#line 52 "ts_config_parser.y"
@@ -264,7 +269,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
 --|#line 53 "ts_config_parser.y"
@@ -275,7 +280,7 @@ end
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
 --|#line 54 "ts_config_parser.y"
@@ -287,7 +292,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
 --|#line 57 "ts_config_parser.y"
@@ -298,7 +303,7 @@ end
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 7 then
 --|#line 58 "ts_config_parser.y"
@@ -310,7 +315,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
 --|#line 61 "ts_config_parser.y"
@@ -327,7 +332,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
 --|#line 68 "ts_config_parser.y"
@@ -344,7 +349,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
 --|#line 75 "ts_config_parser.y"
@@ -357,7 +362,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
 --|#line 77 "ts_config_parser.y"
@@ -370,7 +375,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
 --|#line 79 "ts_config_parser.y"
@@ -383,7 +388,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 13 then
 --|#line 81 "ts_config_parser.y"
@@ -396,7 +401,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 14 then
 --|#line 85 "ts_config_parser.y"
@@ -426,7 +431,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 15 then
 --|#line 90 "ts_config_parser.y"
@@ -457,7 +462,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 16 then
 --|#line 95 "ts_config_parser.y"
@@ -469,7 +474,7 @@ yyval4 := yyvs4.item (yyvsp4)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 17 then
 --|#line 99 "ts_config_parser.y"
@@ -500,7 +505,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 18 then
 --|#line 104 "ts_config_parser.y"
@@ -512,7 +517,7 @@ yyval4 := yyvs4.item (yyvsp4); yyval4.force_last (yyvs3.item (yyvsp3))
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 19 then
 --|#line 108 "ts_config_parser.y"
@@ -542,7 +547,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 		end
 	end
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 20 then
 --|#line 112 "ts_config_parser.y"
@@ -553,7 +558,7 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 21 then
 --|#line 114 "ts_config_parser.y"
@@ -564,7 +569,7 @@ end
 yyval2 := yyvs2.item (yyvsp2) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 			else
 				debug ("GEYACC")
@@ -576,7 +581,7 @@ end
 			end
 		end
 
-	yy_do_error_action (yy_act: INTEGER) is
+	yy_do_error_action (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			inspect yy_act
@@ -591,7 +596,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: SPECIAL [INTEGER] is
+	yytranslate_template: SPECIAL [INTEGER]
 			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
@@ -627,7 +632,7 @@ feature {NONE} -- Table templates
 			   15, yyDummy>>)
 		end
 
-	yyr1_template: SPECIAL [INTEGER] is
+	yyr1_template: SPECIAL [INTEGER]
 			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
@@ -636,7 +641,7 @@ feature {NONE} -- Table templates
 			   22,   22, yyDummy>>)
 		end
 
-	yytypes1_template: SPECIAL [INTEGER] is
+	yytypes1_template: SPECIAL [INTEGER]
 			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
@@ -647,7 +652,7 @@ feature {NONE} -- Table templates
 			    1,    3,    1,    2,    1,    1,    1, yyDummy>>)
 		end
 
-	yytypes2_template: SPECIAL [INTEGER] is
+	yytypes2_template: SPECIAL [INTEGER]
 			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
@@ -655,7 +660,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    2,    2,    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: SPECIAL [INTEGER] is
+	yydefact_template: SPECIAL [INTEGER]
 			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
@@ -666,14 +671,14 @@ feature {NONE} -- Table templates
 			    8,   18,    0,   19,    0,    0,    0, yyDummy>>)
 		end
 
-	yydefgoto_template: SPECIAL [INTEGER] is
+	yydefgoto_template: SPECIAL [INTEGER]
 			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			   31,   32,   24,   33,   44,    6,   15,   13,   14, yyDummy>>)
 		end
 
-	yypact_template: SPECIAL [INTEGER] is
+	yypact_template: SPECIAL [INTEGER]
 			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
@@ -684,14 +689,14 @@ feature {NONE} -- Table templates
 			 -32768, -32768,  -10, -32768,    9,    2, -32768, yyDummy>>)
 		end
 
-	yypgoto_template: SPECIAL [INTEGER] is
+	yypgoto_template: SPECIAL [INTEGER]
 			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			    3, -32768, -32768,   -1, -32768, -32768, -32768, -32768,   23, yyDummy>>)
 		end
 
-	yytable_template: SPECIAL [INTEGER] is
+	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
@@ -702,7 +707,7 @@ feature {NONE} -- Table templates
 			    0,   43, yyDummy>>)
 		end
 
-	yycheck_template: SPECIAL [INTEGER] is
+	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
@@ -765,23 +770,23 @@ feature {NONE} -- Semantic value stacks
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 46
+	yyFinal: INTEGER = 46
 			-- Termination state id
 
-	yyFlag: INTEGER is -32768
+	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 19
+	yyNtbase: INTEGER = 19
 			-- Number of tokens
 
-	yyLast: INTEGER is 41
+	yyLast: INTEGER = 41
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 270
+	yyMax_token: INTEGER = 270
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 28
+	yyNsyms: INTEGER = 28
 			-- Number of symbols
 			-- (terminal and nonterminal)
 

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 
@@ -8,7 +8,7 @@ indexing
 	noncompliance_unicode: "UTF8 is assumed and all chars >255 are assumed to be LETTERS"
 
 	library: "Gobo Eiffel XML library"
-	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ create
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (INITIAL <= sc and sc <= dtd_ignore)
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_template
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 if yy_act <= 75 then
@@ -1982,7 +1982,7 @@ end
 end
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		do
 			terminate
@@ -1990,11 +1990,11 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER] is
+	yy_nxt_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 5207)
+			create an_array.make_filled (0, 0, 5207)
 			yy_nxt_template_1 (an_array)
 			yy_nxt_template_2 (an_array)
 			yy_nxt_template_3 (an_array)
@@ -2004,7 +2004,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_nxt_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,   38,   39,   40,   41,   39,  150,  151,  150,  150,
@@ -2119,7 +2119,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_nxt_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  119,  120,   38,  123,  124,  125,  123,  766,  112,  273,
@@ -2234,7 +2234,7 @@ feature {NONE} -- Table templates
 			1, 1000, 1000)
 		end
 
-	yy_nxt_template_3 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_3 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  438,  479,  479,  479,  616,  616,  616,  617,  617,  617,
@@ -2349,7 +2349,7 @@ feature {NONE} -- Table templates
 			1, 1000, 2000)
 		end
 
-	yy_nxt_template_4 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_4 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			   54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
@@ -2464,7 +2464,7 @@ feature {NONE} -- Table templates
 			1, 1000, 3000)
 		end
 
-	yy_nxt_template_5 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_5 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  215,  215,  215,  830,  215,  215,  215,  215,  215,  215,
@@ -2579,7 +2579,7 @@ feature {NONE} -- Table templates
 			1, 1000, 4000)
 		end
 
-	yy_nxt_template_6 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_6 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  788,  788,  788,  788,  788,  788,  788,  788,  788,  788,
@@ -2608,11 +2608,11 @@ feature {NONE} -- Table templates
 			1, 208, 5000)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER] is
+	yy_chk_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 5207)
+			create an_array.make_filled (0, 0, 5207)
 			yy_chk_template_1 (an_array)
 			yy_chk_template_2 (an_array)
 			yy_chk_template_3 (an_array)
@@ -2622,7 +2622,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_chk_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,   23,   23,   23,   23,
@@ -2737,7 +2737,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_chk_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			   16,   16,   17,   17,   17,   17,   17,  743,   17,  266,
@@ -2852,7 +2852,7 @@ feature {NONE} -- Table templates
 			1, 1000, 1000)
 		end
 
-	yy_chk_template_3 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_3 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  248,  481,  481,  481,  482,  482,  482,  483,  483,  483,
@@ -2967,7 +2967,7 @@ feature {NONE} -- Table templates
 			1, 1000, 2000)
 		end
 
-	yy_chk_template_4 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_4 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  832,  832,  832,  832,  832,  832,  832,  832,  832,  832,
@@ -3082,7 +3082,7 @@ feature {NONE} -- Table templates
 			1, 1000, 3000)
 		end
 
-	yy_chk_template_5 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_5 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  856,  856,  856,    0,  856,  856,  856,  856,  856,  856,
@@ -3197,7 +3197,7 @@ feature {NONE} -- Table templates
 			1, 1000, 4000)
 		end
 
-	yy_chk_template_6 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_6 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  881,  881,  881,  881,  881,  881,  881,  881,  881,  881,
@@ -3226,7 +3226,7 @@ feature {NONE} -- Table templates
 			1, 208, 5000)
 		end
 
-	yy_base_template: SPECIAL [INTEGER] is
+	yy_base_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,   91,  182,  273,  364,    0,  455,    0,   19,
@@ -3328,7 +3328,7 @@ feature {NONE} -- Table templates
 			 4930, 4976, 5022, 5068, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER] is
+	yy_def_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,  831,  831,  832,  832,  830,    5,  830,    7,  833,
@@ -3430,7 +3430,7 @@ feature {NONE} -- Table templates
 			  830,  830,  830,  830, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER] is
+	yy_ec_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -3463,7 +3463,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER] is
+	yy_meta_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    3,    3,    4,    5,    6,    7,    5,
@@ -3478,7 +3478,7 @@ feature {NONE} -- Table templates
 			   47,   47, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER] is
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -3577,62 +3577,62 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 5116
+	yyJam_base: INTEGER = 5116
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 830
+	yyJam_state: INTEGER = 830
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 831
+	yyTemplate_mark: INTEGER = 831
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER is 1
+	yyNull_equiv_class: INTEGER = 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN is false
+	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is false
+	yyVariable_trail_context: BOOLEAN = false
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is false
+	yyReject_or_variable_trail_context: BOOLEAN = false
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 149
+	yyNb_rules: INTEGER = 149
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 150
+	yyEnd_of_buffer: INTEGER = 150
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN is true
+	yyLine_used: BOOLEAN = true
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN is true
+	yyPosition_used: BOOLEAN = true
 			-- Is `position' used?
 
-	INITIAL: INTEGER is 0
-	comment_state: INTEGER is 1
-	processinginstruction: INTEGER is 2
-	xmldeclaration: INTEGER is 3
-	cdata: INTEGER is 4
-	tag: INTEGER is 5
-	attribute_value_single: INTEGER is 6
-	attribute_value_double: INTEGER is 7
-	entity_value_single: INTEGER is 8
-	entity_value_double: INTEGER is 9
-	doctype: INTEGER is 10
-	public_system: INTEGER is 11
-	dtd_in: INTEGER is 12
-	dtd_element: INTEGER is 13
-	dtd_attlist: INTEGER is 14
-	dtd_entity: INTEGER is 15
-	dtd_notation: INTEGER is 16
-	dtd_ignore: INTEGER is 17
+	INITIAL: INTEGER = 0
+	comment_state: INTEGER = 1
+	processinginstruction: INTEGER = 2
+	xmldeclaration: INTEGER = 3
+	cdata: INTEGER = 4
+	tag: INTEGER = 5
+	attribute_value_single: INTEGER = 6
+	attribute_value_double: INTEGER = 7
+	entity_value_single: INTEGER = 8
+	entity_value_double: INTEGER = 9
+	doctype: INTEGER = 10
+	public_system: INTEGER = 11
+	dtd_in: INTEGER = 12
+	dtd_element: INTEGER = 13
+	dtd_attlist: INTEGER = 14
+	dtd_entity: INTEGER = 15
+	dtd_notation: INTEGER = 16
+	dtd_ignore: INTEGER = 17
 			-- Start condition codes
 
 feature -- User-defined features
@@ -3641,7 +3641,7 @@ feature -- User-defined features
 
 feature -- Scanning
 
-	read_token is
+	read_token
 			-- (NOTE: THIS IS THE COPY/PASTE VERSION OF THE CODE IN
 			-- THE YY_COMPRESSED_SCANNER_SKELETON CLASS, FOR OPTIMISATION
 			-- WITH ISE EIFFEL (ALLOW INLINING NOT POSSIBLE IN
@@ -3662,6 +3662,7 @@ feature -- Scanning
 			yy_rejected_column: INTEGER
 			yy_rejected_position: INTEGER
 			yy_done: BOOLEAN
+			l_content_area: like yy_content_area
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -3709,11 +3710,12 @@ feature -- Scanning
 					-- END INLINING 'yy_at_beginning_of_line'
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
-						yy_state_stack.put (yy_current_state, 0)
+						SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, 0)
 						yy_state_count := 1
 					end
 					yy_goto := yyMatch
 				when yyMatch then
+					l_content_area := yy_content_area
 						-- Find the next match.
 					from
 						yy_done := False
@@ -3721,9 +3723,17 @@ feature -- Scanning
 						yy_done
 					loop
 						if yy_ec /= Void then
-							yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
+							if l_content_area /= Void then
+								yy_c := yy_ec.item (l_content_area.item (yy_cp).code)
+							else
+								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							end
 						else
-							yy_c := yy_content_area.item (yy_cp).code
+							if l_content_area /= Void then
+								yy_c := l_content_area.item (yy_cp).code
+							else
+								yy_c := yy_content.item (yy_cp).code
+							end
 						end
 						if
 							not yyReject_or_variable_trail_context and then
@@ -3756,7 +3766,7 @@ feature -- Scanning
 						end
 						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
-							yy_state_stack.put (yy_current_state, yy_state_count)
+							SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
 						end
 						yy_cp := yy_cp + 1

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Implementation
 
-	yy_build_parser_tables is
+	yy_build_parser_tables
 			-- Build parser tables.
 		do
 			yytranslate := yytranslate_template
@@ -52,12 +52,12 @@ feature {NONE} -- Implementation
 			yycheck := yycheck_template
 		end
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		do
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		do
 			yyvsp1 := -1
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			yyvsp3 := -1
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		local
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 						yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 					end
 				end
-				yyvs1.put (last_any_value, yyvsp1)
+				yyspecial_routines1.force (yyvs1, last_any_value, yyvsp1)
 			when 2 then
 				yyvsp2 := yyvsp2 + 1
 				if yyvsp2 >= yyvsc2 then
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 						yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 					end
 				end
-				yyvs2.put (last_string_value, yyvsp2)
+				yyspecial_routines2.force (yyvs2, last_string_value, yyvsp2)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
@@ -161,10 +161,10 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (yyval1, yyvsp1)
+			yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		local
 			yy_type_id: INTEGER
@@ -187,9 +187,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	yy_run_geyacc
+			-- You must run geyacc to regenerate this class.
+		do
+		end
+
 feature {NONE} -- Semantic actions
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
 			yyval1: ANY
@@ -205,7 +210,7 @@ end
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
 --|#line 58 "gepp_parser.y"
@@ -233,7 +238,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
 --|#line 59 "gepp_parser.y"
@@ -244,7 +249,7 @@ end
 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
 --|#line 60 "gepp_parser.y"
@@ -256,7 +261,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
 --|#line 64 "gepp_parser.y"
@@ -268,7 +273,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
 --|#line 65 "gepp_parser.y"
@@ -280,7 +285,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -4
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 7 then
 --|#line 66 "gepp_parser.y"
@@ -296,7 +301,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
 --|#line 72 "gepp_parser.y"
@@ -312,7 +317,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
 --|#line 78 "gepp_parser.y"
@@ -328,7 +333,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp2 := yyvsp2 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
 --|#line 86 "gepp_parser.y"
@@ -345,7 +350,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp3 := yyvsp3 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
 --|#line 93 "gepp_parser.y"
@@ -362,7 +367,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp3 := yyvsp3 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
 --|#line 102 "gepp_parser.y"
@@ -392,7 +397,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 		end
 	end
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 13 then
 --|#line 106 "gepp_parser.y"
@@ -405,7 +410,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 14 then
 --|#line 110 "gepp_parser.y"
@@ -419,7 +424,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 15 then
 --|#line 114 "gepp_parser.y"
@@ -433,7 +438,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 16 then
 --|#line 118 "gepp_parser.y"
@@ -446,7 +451,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 17 then
 --|#line 124 "gepp_parser.y"
@@ -462,7 +467,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 18 then
 --|#line 133 "gepp_parser.y"
@@ -479,7 +484,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 			else
 				debug ("GEYACC")
@@ -491,7 +496,7 @@ end
 			end
 		end
 
-	yy_do_error_action (yy_act: INTEGER) is
+	yy_do_error_action (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			inspect yy_act
@@ -506,7 +511,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: SPECIAL [INTEGER] is
+	yytranslate_template: SPECIAL [INTEGER]
 			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
@@ -541,7 +546,7 @@ feature {NONE} -- Table templates
 			    5,    6,    7,    8,    9,   10,   11,   12,   13,   14, yyDummy>>)
 		end
 
-	yyr1_template: SPECIAL [INTEGER] is
+	yyr1_template: SPECIAL [INTEGER]
 			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
@@ -549,7 +554,7 @@ feature {NONE} -- Table templates
 			   22,   22,   18,   18,   18,   18,   18,   23,   24, yyDummy>>)
 		end
 
-	yytypes1_template: SPECIAL [INTEGER] is
+	yytypes1_template: SPECIAL [INTEGER]
 			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
@@ -560,7 +565,7 @@ feature {NONE} -- Table templates
 			    1,    1, yyDummy>>)
 		end
 
-	yytypes2_template: SPECIAL [INTEGER] is
+	yytypes2_template: SPECIAL [INTEGER]
 			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
@@ -568,7 +573,7 @@ feature {NONE} -- Table templates
 			    1,    2,    2,    1,    1,    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: SPECIAL [INTEGER] is
+	yydefact_template: SPECIAL [INTEGER]
 			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
@@ -579,14 +584,14 @@ feature {NONE} -- Table templates
 			    0,    0, yyDummy>>)
 		end
 
-	yydefgoto_template: SPECIAL [INTEGER] is
+	yydefgoto_template: SPECIAL [INTEGER]
 			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			   15,   39,    6,    7,    8,   30,   31, yyDummy>>)
 		end
 
-	yypact_template: SPECIAL [INTEGER] is
+	yypact_template: SPECIAL [INTEGER]
 			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
@@ -597,14 +602,14 @@ feature {NONE} -- Table templates
 			    4, -32768, yyDummy>>)
 		end
 
-	yypgoto_template: SPECIAL [INTEGER] is
+	yypgoto_template: SPECIAL [INTEGER]
 			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			   -3, -32768,   -7,   -6, -32768,   12, -32768, yyDummy>>)
 		end
 
-	yytable_template: SPECIAL [INTEGER] is
+	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
@@ -616,7 +621,7 @@ feature {NONE} -- Table templates
 			   10,    9, yyDummy>>)
 		end
 
-	yycheck_template: SPECIAL [INTEGER] is
+	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
@@ -668,23 +673,23 @@ feature {NONE} -- Semantic value stacks
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 41
+	yyFinal: INTEGER = 41
 			-- Termination state id
 
-	yyFlag: INTEGER is -32768
+	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 18
+	yyNtbase: INTEGER = 18
 			-- Number of tokens
 
-	yyLast: INTEGER is 51
+	yyLast: INTEGER = 51
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 269
+	yyMax_token: INTEGER = 269
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 25
+	yyNsyms: INTEGER = 25
 			-- Number of symbols
 			-- (terminal and nonterminal)
 
@@ -694,7 +699,7 @@ feature -- User-defined features
 
 feature {NONE} -- Initialization
 
-	make (a_handler: like error_handler) is
+	make (a_handler: like error_handler)
 			-- Create a new parser.
 		require
 			a_handler_not_void: a_handler /= Void
@@ -711,7 +716,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset parser before parsing next input.
 		do
 			reset_gepp_scanner
@@ -724,7 +729,7 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse preprocessing instructions from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -737,7 +742,7 @@ feature -- Parsing
 			end
 		end
 
-	parse_string (a_string: STRING) is
+	parse_string (a_string: STRING)
 			-- Parse preprocessing instructions from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -748,7 +753,7 @@ feature -- Parsing
 
 feature -- Processing
 
-	process_include (a_filename: STRING) is
+	process_include (a_filename: STRING)
 			-- Parse include file `a_filename'.
 			-- Do not allow more than 10 nested include files.
 		require
@@ -788,7 +793,7 @@ feature -- Error handling
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Report a syntax error.
 		local
 			an_error: UT_SYNTAX_ERROR
@@ -805,7 +810,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING)
 			-- A fatal error occurred.
 			-- Print `a_message'.
 		local
@@ -817,13 +822,13 @@ feature -- Error handling
 
 feature -- Status report
 
-	ignored: BOOLEAN is
+	ignored: BOOLEAN
 			-- Is current line ignored?
 		do
 			Result := ignored_level /= 0
 		end
 
-	is_defined (a_name: STRING): BOOLEAN is
+	is_defined (a_name: STRING): BOOLEAN
 			-- Is `a_name' defined?
 		require
 			a_name_not_void: a_name/= Void
@@ -837,7 +842,7 @@ feature -- Status report
 
 feature -- Element change
 
-	define_value (a_value: STRING; a_name: STRING) is
+	define_value (a_value: STRING; a_name: STRING)
 			-- Define `a_name' with `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -848,7 +853,7 @@ feature -- Element change
 			a_name_defined: is_defined (a_name)
 		end
 
-	undefine_value (a_name: STRING) is
+	undefine_value (a_name: STRING)
 			-- Undefine `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -858,7 +863,7 @@ feature -- Element change
 			a_name_undefined: not is_defined (a_name)
 		end
 
-	set_makefile_dependencies (b: BOOLEAN) is
+	set_makefile_dependencies (b: BOOLEAN)
 			-- Set `makefile_dependencies' to `b'.
 		do
 			makefile_dependencies := b
@@ -868,7 +873,7 @@ feature -- Element change
 
 feature -- Output
 
-	echo is
+	echo
 			-- Output `text' using feature `output'.
 			-- Do not echo if option -M has been 
 			-- specified on the command-line.
@@ -897,7 +902,7 @@ feature {NONE} -- Implementation
 	line_nb_stack: DS_ARRAYED_STACK [INTEGER]
 			-- Line numbers in the corresponding input buffers in `include_stack'
 
-	Max_include_depth: INTEGER is 10
+	Max_include_depth: INTEGER = 10
 			-- Maximum number of nested include files
 
 invariant

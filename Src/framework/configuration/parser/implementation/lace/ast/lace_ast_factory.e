@@ -11,7 +11,7 @@ class LACE_AST_FACTORY
 feature -- Checking
 
 	valid_identifier (st: STRING): BOOLEAN
-			-- Is `st' a valid identifer for Lace syntax.
+			-- Is `st' a valid identifier for Lace syntax.
 		local
 			i, nb: INTEGER
 		do

@@ -39,7 +39,7 @@ feature -- Status
 
 	is_string: BOOLEAN
 			-- Is Current a representation of a manifest string and
-			-- not of an identifer.
+			-- not of an identifier.
 
 feature {LACE_AST_FACTORY, LACE_PARSER_ROUTINES} -- Access
 

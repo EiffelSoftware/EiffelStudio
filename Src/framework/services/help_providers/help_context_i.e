@@ -16,7 +16,7 @@ inherit
 feature -- Access
 
 	help_context_id: STRING_32
-			-- A contextual identifer to link an associated help through.
+			-- A contextual identifier to link an associated help through.
 		require
 			is_interface_usable: is_interface_usable
 		deferred

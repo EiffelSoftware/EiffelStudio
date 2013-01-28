@@ -67,7 +67,7 @@ feature {NONE}  -- Processing
 			l_container: like container
 		do
 			l_container := container
-			l_id := a_property.identifer
+			l_id := a_property.identifier
 			l_value := a_property.value
 			if l_value = Void then
 				create l_str_value.make_empty

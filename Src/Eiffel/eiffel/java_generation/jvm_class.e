@@ -418,7 +418,7 @@ feature {ANY} -- Composite access
 		
 	put_feature (f: JVM_FEATURE)
 			-- put feature into class.
-			-- to add a new feature to a class procede as following: 
+			-- to add a new feature to a class proceed as following: 
 			-- create the feature and setup the signature, then put it 
 			-- in via this feature
 		require

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature -- Status setting
 
    	set_default_minimum_size
-   			-- Plateform dependant initializations.
+   			-- Platform dependant initializations.
    		do
 			ev_set_minimum_width (30)
 			ev_set_minimum_height (10)

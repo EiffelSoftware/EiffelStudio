@@ -16,7 +16,7 @@ feature -- Access
 	
 	display_window: STRING = "The Display Window shows an accurate view of the window that is being%Ncreated and should be used to preview the interface.%NYou may not build directly into the Display Window."
 
-	shift_right_click_tip: STRING = "To insert an object at a particular index within a container,%Nhold the shift key while dropping on a child of the container.%NThe object will be inserted at the index preceeding the child."
+	shift_right_click_tip: STRING = "To insert an object at a particular index within a container,%Nhold the shift key while dropping on a child of the container.%NThe object will be inserted at the index preceding the child."
 	
 	color_pick_and_drop_tip: STRING = "To copy the foreground or background color of an object, %Npick the representation of the color from the%Nobject editor, and drop to the representation in another editor.%NThe transported color will be assigned to the object."
 	

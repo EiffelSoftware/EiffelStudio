@@ -75,7 +75,7 @@ feature {ANY}
 			
 	append_class_by_name (name: STRING)
 			-- appends an cpe index in the byte code pointing to a class 
-			-- named `name'. CPE Entry will be created if not yet existant.
+			-- named `name'. CPE Entry will be created if not yet existent.
 		require
 			constant_pool_not_void: constant_pool /= Void
 			constant_pool_open: constant_pool.is_open

@@ -16,18 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: like identifer; a_assigner: like assigner; a_value: like value)
+	make (a_id: like identifier; a_assigner: like assigner; a_value: like value)
 			-- Initialize section.
 		require
 			a_id_set: a_value = Void implies a_id /= Void
 			a_assigner_attached: a_assigner /= Void
 			a_value_attached: a_id = Void implies a_value /= Void
 		do
-			identifer := a_id
+			identifier := a_id
 			assigner := a_assigner
 			value := a_value
 		ensure
-			identifer_set: identifer = a_id
+			identifier_set: identifier = a_id
 			assigner_set: assigner = a_assigner
 			a_value_set: a_value = value
 		end
@@ -35,7 +35,14 @@ feature {NONE} -- Initialization
 feature -- Node Access
 
 	identifer: INI_ID_NODE
-			-- Optional identifier
+			-- Optional identifier.
+		obsolete
+			"Use `identifier' instead."
+		do
+		end
+
+	identifier: INI_ID_NODE
+			-- Optional identifier.
 
 	assigner: INI_SYMBOL_NODE
 			-- Property assigner
@@ -48,14 +55,14 @@ feature -- Access
 	span: INI_TEXT_SPAN
 			-- Span of abstract syntax node
 		local
-			l_id: like identifer
+			l_id: like identifier
 			l_value: like value
 			l_start: INI_TEXT_SPAN
 			l_end: INI_TEXT_SPAN
 		do
 			Result := internal_span
 			if Result = Void then
-				l_id := identifer
+				l_id := identifier
 				if l_id /= Void then
 					l_start := l_id.span
 				else
@@ -89,13 +96,13 @@ feature {NONE} -- Internal Implementation Cache
 			-- Note: Do not use directly!
 
 invariant
-	identifer_set: value = Void implies identifer /= Void
+	identifier_set: value = Void implies identifier /= Void
 	assigner_attached: assigner /= Void
-	value_attached: identifer = Void implies value /= Void
+	value_attached: identifier = Void implies value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -107,22 +114,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {INI_PROPERTY_NODE}

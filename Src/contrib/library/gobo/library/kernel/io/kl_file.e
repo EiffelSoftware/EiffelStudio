@@ -166,9 +166,9 @@ feature -- Status report
 								Result := True
 							else
 								a_name := string_name
-								string_name := string_other_name
+								set_string_name (string_other_name)
 								other_inode := inode
-								string_name := a_name
+								set_string_name (a_name)
 								if inode /= other_inode then
 									Result := False
 								elseif tmp_file1.count /= count then
@@ -198,13 +198,13 @@ feature -- Status report
 												tmp_file1.reset (a_name)
 											end
 											old_change_name (a_name)
-											string_name := saved_string_name
+											set_string_name (saved_string_name)
 											if not exists then
 												tmp_file1.reset (string_other_name)
 												Result := not tmp_file1.exists
-												string_name := a_name
+												set_string_name (a_name)
 												old_change_name (saved_string_name)
-												string_name := saved_string_name
+												set_string_name (saved_string_name)
 											else
 													-- We don't know.
 													-- Return True for safety reason.
@@ -219,7 +219,7 @@ feature -- Status report
 				end
 			else
 				if saved_string_name /= Void then
-					string_name := saved_string_name
+					set_string_name (saved_string_name)
 				end
 				Result := True
 			end
@@ -270,17 +270,17 @@ feature -- Basic operations
 					if exists then
 						if not same_physical_file (string_new_name) then
 							old_change_name (string_new_name)
-							string_name := saved_string_name
+							set_string_name (saved_string_name)
 							tmp_file1.reset (string_name)
 							if not tmp_file1.exists then
 								name := new_name
-								string_name := string_new_name
+								set_string_name (string_new_name)
 							end
 						end
 					end
 				end
 			elseif saved_string_name /= Void then
-				string_name := saved_string_name
+				set_string_name (saved_string_name)
 			end
 		rescue
 			if not rescued then
@@ -434,6 +434,13 @@ feature {NONE} -- Implementation
 
 	string_name: STRING
 			-- Name of file (STRING version)
+		deferred
+		end
+
+	set_string_name (a_name: READABLE_STRING_GENERAL)
+			-- Set `string_name' with `a_name'.
+		deferred
+		end
 
 	old_count: INTEGER
 			-- Size in bytes (0 if no associated physical file)

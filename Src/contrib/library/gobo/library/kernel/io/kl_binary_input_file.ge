@@ -23,7 +23,6 @@ inherit
 
 	KL_INPUT_FILE
 		redefine
-			string_name,
 			last_character,
 			last_string
 		end
@@ -32,6 +31,7 @@ inherit
 		rename
 			make as old_make,
 			name as string_name,
+			set_name as set_string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -66,7 +66,6 @@ inherit
 #ifdef GE
 			old_open_read,
 #endif
-			string_name,
 			last_character,
 			last_string
 		end
@@ -88,9 +87,6 @@ feature -- Access
 			-- However `last_string' is not shared between file objects.)
 
 feature {NONE} -- Implementation
-
-	string_name: STRING
-			-- Name of file (STRING version)
 
 #ifdef GE
 feature {RAW_FILE} -- Implementation

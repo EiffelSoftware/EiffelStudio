@@ -188,7 +188,7 @@ feature -- Generation constants
 
 	build_tag: STRING
 			-- `Result' is tag used in templates
-			-- for building of the widget heirarchy.
+			-- for building of the widget hierarchy.
 		once
 			Result := "<BUILD>"
 		end

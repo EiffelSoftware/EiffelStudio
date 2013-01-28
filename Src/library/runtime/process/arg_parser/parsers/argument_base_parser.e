@@ -312,7 +312,7 @@ feature -- Status report
 	frozen has_option (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if switch option was specified in the command-line arguments.
 			--
-			-- `a_name': The name of the switch to check existance for.
+			-- `a_name': The name of the switch to check existence for.
 			-- `Result': True if the command line specified the given switch; False otherwise.
 		require
 			a_name_attached: a_name /= Void
@@ -383,7 +383,7 @@ feature {NONE} -- Status report
 	has_switch (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a switch exists.
 			--
-			-- `a_name': The name of the switch to determine existance for.
+			-- `a_name': The name of the switch to determine existence for.
 			-- `Result': True if the switch exists; False otherwise.
 		require
 			a_name_attached: a_name /= Void

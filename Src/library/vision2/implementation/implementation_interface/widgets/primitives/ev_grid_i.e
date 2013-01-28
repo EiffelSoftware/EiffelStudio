@@ -1041,7 +1041,7 @@ feature -- Status setting
 			currently_active_item := Void
 
 			if a_item.parent = interface then
-					-- Redraw item if still existant in Current
+					-- Redraw item if still existent in Current
 				a_item.redraw
 			end
 		end

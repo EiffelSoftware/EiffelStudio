@@ -11,7 +11,7 @@ inherit
 
 feature -- Last values
 
-	last_any_value: ANY
+	last_detachable_any_value: detachable ANY
 	last_detachable_symbol_as_value: detachable SYMBOL_AS
 	last_detachable_keyword_as_value: detachable KEYWORD_AS
 	last_detachable_id_as_value: detachable ID_AS

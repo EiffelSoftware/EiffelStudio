@@ -727,10 +727,10 @@ feature {NONE} -- Implementation
 
 								-- For ribbon
 								if attached {ER_TREE_NODE_RIBBON_DATA} l_list.item.widget.i_th (1).data as l_data
-									and then attached l_data.command_name as l_identifer_name
-									and then not l_identifer_name.is_empty then
+									and then attached l_data.command_name as l_identifier_name
+									and then not l_identifier_name.is_empty then
 
-									l_last_string.replace_substring_all ("$RIBBON_NAME", l_identifer_name.as_upper)
+									l_last_string.replace_substring_all ("$RIBBON_NAME", l_identifier_name.as_upper)
 								else
 									if l_list.index = 1 then
 										l_last_string.replace_substring_all ("$RIBBON_NAME", "RIBBON")
@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 			not_void: a_last_string /= Void
 		local
 			l_application_menu_comment: STRING
-			l_first_application_menu_identifer_name: detachable STRING
+			l_first_application_menu_identifier_name: detachable STRING
 			l_tree_node: detachable EV_TREE_NODE
 		do
 			from
@@ -792,15 +792,15 @@ feature {NONE} -- Implementation
 
 			if l_tree_node /= Void then
 				l_application_menu_comment := "%N%T%T%T-- Application menu"
-				l_first_application_menu_identifer_name := first_application_menu_identifer_name
+				l_first_application_menu_identifier_name := first_application_menu_identifier_name
 				check is_application_menu: l_tree_node.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
 				if attached {ER_TREE_NODE_DATA} l_tree_node.data as l_data
-					and then attached l_data.command_name as l_identifer_name
-					and then not l_identifer_name.is_empty then
-					check l_first_application_menu_identifer_name /= void end
-					a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifer_name.as_upper + l_application_menu_comment)
+					and then attached l_data.command_name as l_identifier_name
+					and then not l_identifier_name.is_empty then
+					check l_first_application_menu_identifier_name /= void end
+					a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifier_name.as_upper + l_application_menu_comment)
 
-					a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_first_application_menu_identifer_name + ">>)")
+					a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_first_application_menu_identifier_name + ">>)")
 				else
 					if a_list_index = 1 then
 						a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: APPLICATION_MENU" + l_application_menu_comment)
@@ -819,8 +819,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	first_application_menu_identifer_name: detachable STRING
-			-- First application menu's identifer name
+	first_application_menu_identifier_name: detachable STRING
+			-- First application menu's identifier name
 		local
 			l_shared: ER_SHARED_TOOLS
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
@@ -880,12 +880,12 @@ feature {NONE} -- Implementation
 					l_comment := "%N%T%T%T-- Quick access toolbar"
 
 					if attached {ER_TREE_NODE_DATA} a_tree.item.data as l_data
-						and then attached l_data.command_name as l_identifer_name
-						and then not l_identifer_name.is_empty then
+						and then attached l_data.command_name as l_identifier_name
+						and then not l_identifier_name.is_empty then
 
-						a_last_string.replace_substring_all ("$QUICK_ACCESS_TOOLBAR_NAME", "%N%Tquick_access_toolbar: " + l_identifer_name.as_upper + l_comment)
+						a_last_string.replace_substring_all ("$QUICK_ACCESS_TOOLBAR_NAME", "%N%Tquick_access_toolbar: " + l_identifier_name.as_upper + l_comment)
 
-						a_last_string.replace_substring_all ("$QUICK_ACCESS_TOOLBAR_CREATION", "%N%T%T%Tcreate quick_access_toolbar.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifer_name + ">>)")
+						a_last_string.replace_substring_all ("$QUICK_ACCESS_TOOLBAR_CREATION", "%N%T%T%Tcreate quick_access_toolbar.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifier_name + ">>)")
 					else
 						if a_list_index = 1 then
 							a_last_string.replace_substring_all ("$QUICK_ACCESS_TOOLBAR_NAME", "%N%Tquick_access_toolbar: QUICK_ACCESS_TOOLBAR" + l_comment)
@@ -928,12 +928,12 @@ feature {NONE} -- Implementation
 					l_help_button_comment := "%N%T%T%T-- Help button"
 
 					if attached {ER_TREE_NODE_DATA} a_tree.item.data as l_data
-						and then attached l_data.command_name as l_identifer_name
-						and then not l_identifer_name.is_empty then
+						and then attached l_data.command_name as l_identifier_name
+						and then not l_identifier_name.is_empty then
 
-						a_last_string.replace_substring_all ("$HELP_BUTTON_NAME", "%N%Thelp_button: " + l_identifer_name.as_upper + l_help_button_comment)
+						a_last_string.replace_substring_all ("$HELP_BUTTON_NAME", "%N%Thelp_button: " + l_identifier_name.as_upper + l_help_button_comment)
 
-						a_last_string.replace_substring_all ("$HELP_BUTTON_CREATION", "%N%T%T%Tcreate help_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifer_name + ">>)")
+						a_last_string.replace_substring_all ("$HELP_BUTTON_CREATION", "%N%T%T%Tcreate help_button.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_identifier_name + ">>)")
 					else
 						if a_list_index = 1 then
 							a_last_string.replace_substring_all ("$HELP_BUTTON_NAME", "%N%Thelp_button: HELP_BUTTON" + l_help_button_comment)

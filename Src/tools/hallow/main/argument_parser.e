@@ -313,7 +313,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Use to force generator to respect that the content is destined for a merge module (creates shorter Ids.)", True, False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (disk_id_switch, "Use to specify the 'DiskId' to package component files into, '1' is the default.", True, False, "id", "An ID corresponding to a 'Media' ID.", False, 1, {NATURAL_8}.max_value))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_alias_switch, "Use to specify a directory alias to use when generating paths.", True, False, "alias", "A directory path alias", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_ref_switch, "Used to specify a root directory reference .", True, False, "Id", "A Directory identifer", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_ref_switch, "Used to specify a root directory reference .", True, False, "Id", "A Directory identifier", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x64_switch, "Add preprocessor to allow components to be compiled as Win64 components", True, False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_include_pattern_switch, "Regular expression to include select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_exclude_pattern_switch, "Regular expression to exclude select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))

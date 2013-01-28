@@ -6,7 +6,7 @@ note
 		`is_focus_sensitive' and `is_pointer_sensitive'. Support actions such as `execute_unfocusing_action' can be used to prevent
 		lose of focus senstivity for focus sensitive windows.
 		
-		Also supported is the notion of window-commit and window-cancel operations. A commited window is one that is committed using `hide_commit'
+		Also supported is the notion of window-commit and window-cancel operations. A committed window is one that is committed using `hide_commit'
 		or via a widget calling `hide_commit'. `is_committed_on_close' is set based on `hide_cancel' and `hide_commit'. By default pressing CTRL+ENTER
 		will perform a commit hide. Pressing ESC or hiding due to sensitivity behavior will perform a cancel hide.
 	]"

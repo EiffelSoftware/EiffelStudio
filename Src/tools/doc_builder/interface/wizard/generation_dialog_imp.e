@@ -183,7 +183,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_5.disable_item_expand (web_toc_type_box)
 			html_radio.set_text ("Microsoft HTML Help 1.x")
 			vs_radio.set_text ("Visual Studio Integrated Help (MS Help 2.0)")
-			web_radio.set_text ("Web Help (can generate multiple interchangable tocs)")
+			web_radio.set_text ("Web Help (can generate multiple interchangeable tocs)")
 			web_toc_type_box.set_padding_width (5)
 			web_toc_type_box.set_border_width (inner_border_width)
 			web_toc_type_box.disable_item_expand (tree_web_help_radio)

@@ -845,7 +845,7 @@ feature {NONE} -- Implementation constants
 			<h1>${1}.${2}</h2>
 			<p>
 				Below you will find all executed test cases. Note that AutoTest tries, for those test cases that prove the
-				existance of a bug, to add a minimized version too.
+				existence of a bug, to add a minimized version too.
 			</p>
 ]"
 

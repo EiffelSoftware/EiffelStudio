@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	contract_context: attached ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
-			-- The contract editor context used to apply an commited changes
+			-- The contract editor context used to apply an committed changes
 
 ;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

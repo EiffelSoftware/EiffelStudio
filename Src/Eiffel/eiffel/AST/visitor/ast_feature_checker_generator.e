@@ -5157,7 +5157,7 @@ feature {NONE} -- Implementation
 					end
 
 					if current_feature.written_in = context.current_class.class_id then
-						Instantiator.dispatch (local_type, context.current_class)
+						instantiator.dispatch (local_type, context.current_class)
 					end
 
 					if local_type.has_associated_class then
@@ -7278,9 +7278,9 @@ feature {NONE} -- Implementation
 								(i, iteration_cursor_type.base_class, Void).instantiated_in (iteration_cursor_type)
 						end
 						if current_feature.written_in = context.current_class.class_id then
-							Instantiator.dispatch (local_type, context.current_class)
+							instantiator.dispatch (local_type, context.current_class)
 							if iteration_cursor_type /= Void then
-								Instantiator.dispatch (iteration_cursor_type, context.current_class)
+								instantiator.dispatch (iteration_cursor_type, context.current_class)
 							end
 						end
 							-- Avoid generating new object test local record when processing loop body multiple times.
@@ -10070,7 +10070,7 @@ feature {NONE} -- Implementation: checking locals
 					if last_type /= Void then
 						from
 							if not is_inherited then
-								Instantiator.dispatch (l_solved_type, context.current_class)
+								instantiator.dispatch (l_solved_type, context.current_class)
 							end
 							l_id_list := l_as.locals.item.id_list
 							l_id_list.start

@@ -1,0 +1,16 @@
+test_name 	 targeted-actual-argument
+test_description An actual argument corresponding to a targeted formal argument is targeted.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test1.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+copy_raw	test2.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI
+
+test_end

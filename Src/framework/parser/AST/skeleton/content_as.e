@@ -32,14 +32,14 @@ feature -- Properties
 		end
 
 	is_require_else: BOOLEAN
-			-- Is the precondition block of the content preceeded by
+			-- Is the precondition block of the content preceded by
 			-- `require else' ?
 		do
 			-- Do nothing
 		end
 
 	is_ensure_then: BOOLEAN
-			-- Is the postcondition block of the content preceeded by
+			-- Is the postcondition block of the content preceded by
 			-- `ensure then' ?
 		do
 			-- Do nothing

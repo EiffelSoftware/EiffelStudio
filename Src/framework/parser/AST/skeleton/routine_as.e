@@ -197,7 +197,7 @@ feature -- Roundtrip/Token
 feature -- Properties
 
 	is_require_else: BOOLEAN
-			-- Is the precondition block of the content preceeded by
+			-- Is the precondition block of the content preceded by
 			-- `require else' ?
 			--|Note: It is valid to not include a precondition in
 			--|a redefined feature (it is equivalent to "require else False")
@@ -206,7 +206,7 @@ feature -- Properties
 		end
 
 	is_ensure_then: BOOLEAN
-			-- Is the postcondition block of the content preceeded by
+			-- Is the postcondition block of the content preceded by
 			-- `ensure then' ?
 			--|Note: It is valid to not include a postcondition in
 			--|a redefined feature (it is equivalent to "ensure then True"

@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 					n := s.item (i + 1)
 					if c /= '_' then
 						if c.is_digit and not p.is_digit and p /= '_' and not p.is_upper then
-							-- add '_' before a digit only if nor preceeded by uppercase characters
+							-- add '_' before a digit only if nor preceded by uppercase characters
 							-- UTF8Decoder = UTF8_DECODER, Border3D = BORDER_3D
 							put_us := True
 						elseif p.is_digit and not c.is_digit then

@@ -46,7 +46,7 @@ feature -- Basic operations
 feature {BARBER} -- Access
 
 	id: INTEGER
-			-- Current's unique identifer
+			-- Current's unique identifier
 
 feature {NONE} -- Implementation
 

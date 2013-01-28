@@ -81,7 +81,7 @@ feature {NONE} -- Initialize
 			replace_box.extend (replace_button)
 			replace_box.disable_item_expand (replace_button)
 
-				-- Ensures alignments of combo boxes by making sure that their preceeding
+				-- Ensures alignments of combo boxes by making sure that their preceding
 				-- labels have the same width.
 			label_search.set_minimum_width (label.width.max (label_search.minimum_width))
 			label.set_minimum_width (label_search.minimum_width)

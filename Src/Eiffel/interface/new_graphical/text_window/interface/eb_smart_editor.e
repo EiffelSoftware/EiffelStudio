@@ -1050,7 +1050,7 @@ feature {NONE} -- Autocomplete implementation
 feature {NONE} -- syntax completion
 
 	latest_typed_word_is_keyword: BOOLEAN
-			-- Is the preceeding token a keyword?
+			-- Is the preceding token a keyword?
 
 	previous_token_image: STRING_32
 			-- Image of the previous token

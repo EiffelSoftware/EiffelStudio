@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 feature {EV_MENU_ITEM_IMP} -- Implementation
 
 	top_level_window_imp: EV_WINDOW_IMP
-			-- Window containing `Current' in parenting heirarchy.
+			-- Window containing `Current' in parenting hierarchy.
 		local
 			a_menu: EV_MENU_IMP
 			a_menu_bar: EV_MENU_BAR_IMP

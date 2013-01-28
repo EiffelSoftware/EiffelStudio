@@ -610,7 +610,7 @@
 			<xs:element name="include" type="includeType" minOccurs="0"/>
 			<xs:element name="sub_script" type="xs:string" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation>Indicates text the is sub-scripted (positioned half a character below preceeding text)</xs:documentation>
+					<xs:documentation>Indicates text the is sub-scripted (positioned half a character below preceding text)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="width" type="xs:string" minOccurs="0">
@@ -775,7 +775,7 @@
 			<xs:element name="include" type="includeType" minOccurs="0"/>
 			<xs:element name="sub_script" type="xs:string" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation>Indicates text the is sub-scripted (positioned half a character below preceeding text)</xs:documentation>
+					<xs:documentation>Indicates text the is sub-scripted (positioned half a character below preceding text)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="output" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">

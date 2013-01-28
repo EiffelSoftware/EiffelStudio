@@ -37,6 +37,28 @@ feature -- Test routines
 			disconnect
 		end
 
+	test_error_recovery
+			-- Test error recovery of DATABASE_MANAGER
+		do
+			if is_odbc then
+				reset_database
+				establish_connection
+
+				if attached session_control as l_control and then not l_control.is_connected then
+					assert ("Could not connect to database", False)
+				else
+					drop_repository (error_recovery_1_table_name)
+
+					create_error_1
+
+						-- A query should not have error
+						-- Test of recovery from query error.
+					error_recovery_make_selection
+				end
+				disconnect
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	data_objects: HASH_TABLE [ANY, STRING]
@@ -148,5 +170,46 @@ feature {NONE} -- Implementation
 			l_error := db_change.error_message_32
 			assert ("Caught error message.", not l_error.ends_with ({STRING_32} "......%N"))
 		end
+
+feature {NONE} -- Implementation, Error recovery 1
+
+	create_error_1
+			-- Create error
+		local
+			l_table_name: STRING
+			l_s: STRING
+		do
+			l_table_name := error_recovery_1_table_name
+			l_s := "[
+								CREATE TABLE [dbo].[XXXXXXXX](
+									[id] [int] NOT NULL,
+									[name] [nchar](10) NULL,
+									CONSTRAINT UQ_Error_Rec_1 UNIQUE (id)
+								)
+
+						]"
+			l_s.replace_substring_all ("XXXXXXXX", l_table_name)
+
+			execute_query (l_s)
+
+			execute_query ("insert into " + l_table_name + " (id, name) values (1, 'my name')")
+				-- Insert data with the same id, which triggers an error.
+			execute_query ("insert into " + l_table_name + " (id, name) values (1, 'my name')")
+		end
+
+	error_recovery_make_selection
+			-- Select books
+		local
+			l_result: DB_TUPLE
+		do
+			assert ("No data", attached load_data_with_select (error_recovery_select_data))
+		end
+
+	error_recovery_select_data: STRING
+		do
+			Result := "select * from " + error_recovery_1_table_name
+		end
+
+	error_recovery_1_table_name: STRING = "DB_ERROR_RECOVERY_1"
 
 end

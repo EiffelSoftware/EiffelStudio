@@ -185,7 +185,7 @@ feature -- Status setting
 			create quoter.make(1)
 			create sep.make(1)
 			quoter := db_spec.identifier_quoter
-			sep := db_spec.qualifier_seperator
+			sep := db_spec.qualifier_separator
 			r_string.append ("create table ")
 			if (rep_qualifier /= Void and then rep_qualifier.count > 0) then
 				r_string.append(quoter)

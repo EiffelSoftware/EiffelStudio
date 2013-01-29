@@ -82,7 +82,7 @@ feature -- Access
 	character_format_out: STRING
 			-- Result is representation of character format attributes of `Current'.
 			-- Paragraph and formats need to be buffered independently, hence a
-			-- seperate out fetaure for each of these set of attributes.
+			-- separate out fetaure for each of these set of attributes.
 		do
 			if internal_character_format_out = Void then
 				create Result.make (30)
@@ -141,7 +141,7 @@ feature -- Access
 	paragraph_format_out: STRING
 			-- Result is representation of paragraph format attributes of `Current'.
 			-- Paragraph and formats need to be buffered independently, hence a
-			-- seperate out fetaure for each of these set of attributes.
+			-- separate out fetaure for each of these set of attributes.
 		do
 				if internal_paragraph_format_out = Void then
 					create Result.make (16)

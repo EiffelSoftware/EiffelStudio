@@ -1201,7 +1201,7 @@ feature -- Basic operations
 							end
 						end
 						-- Now draw in the background area where no items were displayed if required.
-						-- Note that we perform the vertical and horizontal drawing seperately so there may be overlap if both are
+						-- Note that we perform the vertical and horizontal drawing separately so there may be overlap if both are
 						-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
 						-- it is simply drawing a rectangle and does not flicker.
 

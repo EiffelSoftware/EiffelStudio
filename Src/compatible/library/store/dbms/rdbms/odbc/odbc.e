@@ -14,7 +14,7 @@ inherit
 		redefine
 			sensitive_mixed,
 			identifier_quoter,
-			qualifier_seperator,
+			qualifier_separator,
 			parse,
 			user_name_ok,
 			hide_qualifier,
@@ -599,10 +599,10 @@ feature -- External
 			Result.from_c (odbc_identifier_quoter)
 		end
 
-	qualifier_seperator: STRING
+	qualifier_separator: STRING
 		do
 			create Result.make (1)
-			Result.from_c (odbc_qualifier_seperator)
+			Result.from_c (odbc_qualifier_separator)
 		end
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER
@@ -855,7 +855,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_qualifier_seperator: POINTER
+	odbc_qualifier_separator: POINTER
 		external
 			"C use %"odbc.h%""
 		end

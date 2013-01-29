@@ -576,10 +576,10 @@ feature -- External features
 			Result := ""
 		end
 
-	qualifier_seperator: STRING
+	qualifier_separator: STRING
 			-- When "qualifier" and "owner" are used to identifier
-			-- a database object, they should be seperated by a string called
-			-- "qualifier seperator"
+			-- a database object, they should be separated by a string called
+			-- "qualifier separator"
 			-- Only for ODBC
 		do
 			Result := ""

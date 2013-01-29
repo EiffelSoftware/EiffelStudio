@@ -31,7 +31,7 @@ create
 feature
 
 	reference_key (table: ANY): ANY
-			-- What is the object refered by unique
+			-- What is the object referred by unique
 			-- attribute associated with `table'.
 		require
 			table_not_void: table /= Void;

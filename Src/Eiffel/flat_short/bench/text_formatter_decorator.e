@@ -679,7 +679,7 @@ feature -- Output
 
 	put_string_item (s: READABLE_STRING_GENERAL)
 			-- Append `s' as string text to `text_formatter'. Emit tabs if needed.
-			-- If `in_indexing_clause', we seperate string.
+			-- If `in_indexing_clause', we separate string.
 		require
 			s_not_void: s /= Void
 		do

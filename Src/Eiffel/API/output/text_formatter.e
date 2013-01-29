@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 			l_scanner.set_input_buffer (create {YY_BUFFER}.make (encoding_converter.utf32_to_utf8 (s.to_string_32)))
 			l_scanner.set_text_formatter (Current)
 			l_scanner.set_for_comment (for_comment)
-			l_scanner.set_seperate (seperate_comment)
+			l_scanner.set_separate (separate_comment)
 			l_scanner.set_current_class (comment_context_class)
 			l_scanner.scan
 		end
@@ -587,11 +587,11 @@ feature {NONE} -- Implementation
 	comment_scanner: COMMENT_SCANNER
 			-- Scanner for comment and manifest string
 		once
-			create Result.make_with_text_formatter (Current, seperate_comment)
+			create Result.make_with_text_formatter (Current, separate_comment)
 		end
 
-	seperate_comment: BOOLEAN
-			-- Seperate comment into words?
+	separate_comment: BOOLEAN
+			-- Separate comment into words?
 
 	reset_phrase (p: READABLE_STRING_GENERAL; for_comment: BOOLEAN)
 			-- Add comment `p' and wipe out `p'.

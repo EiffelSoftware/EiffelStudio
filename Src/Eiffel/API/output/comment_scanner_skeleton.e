@@ -26,13 +26,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text_formatter (a_text_formatter: like text_formatter; a_seperate_comment: BOOLEAN)
+	make_with_text_formatter (a_text_formatter: like text_formatter; a_separate_comment: BOOLEAN)
 			-- Initialization
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		do
 			text_formatter := a_text_formatter
-			seperate_comment := a_seperate_comment
+			separate_comment := a_separate_comment
 			create buffer_string.make (100)
 			for_comment := True
 			make
@@ -67,12 +67,12 @@ feature -- Element change
 			for_comment_set: for_comment = a_for_comment
 		end
 
-	set_seperate (a_sep: BOOLEAN)
-			-- Set `seperate_comment' with `a_sep'
+	set_separate (a_sep: BOOLEAN)
+			-- Set `separate_comment' with `a_sep'
 		do
-			seperate_comment := a_sep
+			separate_comment := a_sep
 		ensure
-			seperate_comment_set: seperate_comment = a_sep
+			separate_comment_set: separate_comment = a_sep
 		end
 
 	set_current_class (a_class: like current_class)
@@ -93,8 +93,8 @@ feature -- Access
 
 feature -- Status report
 
-	seperate_comment: BOOLEAN
-			-- Seperate into word?
+	separate_comment: BOOLEAN
+			-- Separate into word?
 
 feature -- Action
 

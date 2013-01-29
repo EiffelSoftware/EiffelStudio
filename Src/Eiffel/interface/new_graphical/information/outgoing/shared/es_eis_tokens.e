@@ -33,9 +33,9 @@ feature -- Access
 	void_string: STRING_32 = "@@@"
 			-- Used to hold the place of value of single identifier in storage table
 
-	attribute_seperator: CHARACTER_32 = ','
+	attribute_separator: CHARACTER_32 = ','
 
-	tag_seperator: CHARACTER_32 = ','
+	tag_separator: CHARACTER_32 = ','
 
 	space: CHARACTER_32 = ' '
 

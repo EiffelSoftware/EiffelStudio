@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		require
 			a_tag_string_not_void: a_tag_string /= Void
 		do
-			if attached {like parse_tags} a_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) as lt_splitted then
+			if attached {like parse_tags} a_tag_string.split ({ES_EIS_TOKENS}.tag_separator) as lt_splitted then
 				lt_splitted.do_all (
 						agent (aa_string: STRING_32)
 							do
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 		require
 			a_parameters_string_not_void: a_parameters_string /= Void
 		do
-			if attached a_parameters_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
+			if attached a_parameters_string.split ({ES_EIS_TOKENS}.attribute_separator) as lt_splitted then
 				create Result.make (1)
 				lt_splitted.do_all (
 						agent (aa_string: STRING_32; a_result: STRING_TABLE [STRING_32])

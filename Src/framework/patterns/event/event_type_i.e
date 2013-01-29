@@ -108,7 +108,7 @@ feature -- Subscription
 feature -- Basic operations
 
 	perform_suspended_action (a_action: PROCEDURE [ANY, TUPLE])
-			-- Performs a action whilst suspending subscriptions from recieve a publication
+			-- Performs a action whilst suspending subscriptions from receive a publication
 			--
 			-- `a_action': Action to call while the event is suspended.
 		require

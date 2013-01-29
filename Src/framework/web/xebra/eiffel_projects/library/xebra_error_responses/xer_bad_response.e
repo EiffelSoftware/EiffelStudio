@@ -22,7 +22,7 @@ feature -- Access
 	message: STRING
 			-- <Precursor>
 		do
-			Result := "Cannot recieve response from web application '" + arg + "'"
+			Result := "Cannot receive response from web application '" + arg + "'"
 		end
 
 note

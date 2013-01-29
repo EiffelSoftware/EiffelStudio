@@ -42,7 +42,7 @@ feature {NONE} -- Basic operation
 			l_state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_FEATURE_STATE_INFO]
 			l_local_list_state: like local_list_state
 		do
-				-- Fetch the most relivant information.
+				-- Fetch the most relevant information.
 			l_context_class := a_info.context_class
 			if attached {EDITOR_TOKEN_TEXT} a_info.current_token as l_current_token then
 				l_next := [l_current_token, a_info.current_line]

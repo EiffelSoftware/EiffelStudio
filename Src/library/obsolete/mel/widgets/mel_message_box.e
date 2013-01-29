@@ -284,7 +284,7 @@ feature -- Status report
 		end;
 
 	buttons_minimized: BOOLEAN
-			-- Keep the buttons keep their prefered size?
+			-- Keep the buttons keep their preferred size?
 		require
 			exists: not is_destroyed
 		do

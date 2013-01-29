@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 
 						-- Only register if the target and source
 						-- feature are written in the same class
-						-- and are refering to the same body
+						-- and are referring to the same body
 					if t_feat.written_in = s_feat.written_in and then
 						t_feat.body_index = s_feat.body_index
 					then

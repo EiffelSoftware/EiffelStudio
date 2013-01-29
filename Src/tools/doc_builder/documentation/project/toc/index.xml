@@ -29,7 +29,7 @@
 		<image>
 			<url>tocnodeproperties.png</url>
 		</image>
-		<paragraph>The information presented is simply the title of the topic and the file which it refers to.  By default the title is the filename minus the directory information, so a node refering to C:/my_project/my_file.xml will have the title 'my_file.xml' in the toc.  To change this title to something meaningful double-click the title and a small edit box will appear for entering a new value.  Likewise, to refer to topic to a different file double-click the 'File Url' item in the list and write in the new file in the text box.</paragraph>
+		<paragraph>The information presented is simply the title of the topic and the file which it refers to.  By default the title is the filename minus the directory information, so a node referring to C:/my_project/my_file.xml will have the title 'my_file.xml' in the toc.  To change this title to something meaningful double-click the title and a small edit box will appear for entering a new value.  Likewise, to refer to topic to a different file double-click the 'File Url' item in the list and write in the new file in the text box.</paragraph>
 		<heading>
 			<size>3</size>Sorting
 		</heading>

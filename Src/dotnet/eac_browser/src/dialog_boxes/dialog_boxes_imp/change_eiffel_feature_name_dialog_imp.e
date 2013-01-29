@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			cancel_btn.select_actions.extend (agent on_cancel_btn)
 
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent destroy)
 
 			user_initialization

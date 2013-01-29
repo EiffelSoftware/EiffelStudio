@@ -175,7 +175,7 @@ feature {NONE}-- Initialization
 			web_address_text_field.change_actions.extend (agent on_web_address_change)
 			generate_aspnet_tree_button.select_actions.extend (agent on_generate_aspnet_tree)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

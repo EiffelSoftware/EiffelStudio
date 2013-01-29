@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			edit_area_box.resize_actions.force_extend (agent on_resize_split_area)
 
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 			
 			user_initialization

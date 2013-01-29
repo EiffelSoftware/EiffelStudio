@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			selected_object := layout_item.object
 			titled_window_object ?= selected_object
 			if titled_window_object /= Void then
-					-- window objects must be handled seperately.
+					-- window objects must be handled separately.
 				create delete_window_object_command.make_with_components (titled_window_object, components)
 				delete_window_object_command.execute
 			else

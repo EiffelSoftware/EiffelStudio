@@ -121,7 +121,7 @@ feature -- Basic operation
 			component_not_void: a_component /= Void
 		do
 			components.system_status.block
-			-- We have to handle all items seperately. There may be a better
+			-- We have to handle all items separately. There may be a better
 			-- way to do this at some point.
 
 				-- Reset our previous widgets, as `component'

@@ -202,7 +202,7 @@ feature -- Access
 
 	add_menu_bar (menu_object: GB_MENU_BAR_OBJECT)
 			-- Add `menu_object' to `Current'.
-			-- We have to handle menu bars seperately from
+			-- We have to handle menu bars separately from
 			-- other objects, which may be added using `add_object'.
 			-- This is because menu bars are actually added through
 			-- `set_menu_bar', an the window can already be full, and

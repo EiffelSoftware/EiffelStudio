@@ -127,7 +127,7 @@ feature -- Basic operations
 		end
 		
 	directory_with_separator (a_directory: STRING): STRING
-			-- `Result' is directory `a_directory' with directory seperator
+			-- `Result' is directory `a_directory' with directory separator
 			-- appended if necessary.
 		require
 			a_directory_not_void: a_directory /= Void and then not a_directory.is_empty

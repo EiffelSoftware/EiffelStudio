@@ -414,7 +414,7 @@ feature {NONE} -- Implementation functions
 --			create l_popup_window
 --			l_popup_window.enable_border
 			if not is_destroyed then
---				set_width (internal_label_box.prefered_width + l_popup_window.minimum_width * 2)
+--				set_width (internal_label_box.preferred_width + l_popup_window.minimum_width * 2)
 				if not internal_scroll_area.is_vertical_scroll_bar_visible then
 					set_width (internal_tool_bar.width + 12)
 				else
@@ -604,7 +604,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

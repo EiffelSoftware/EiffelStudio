@@ -261,8 +261,8 @@ feature -- Command
 
 feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting
 
-	prefered_height: INTEGER
-			-- Prefered tool bar height
+	preferred_height: INTEGER
+			-- Preferred tool bar height
 		local
 			l_item: like item_type
 			l_items: ARRAYED_LIST [like item_type]
@@ -349,7 +349,7 @@ feature -- Query
 		do
 			if is_need_calculate_size then
 				is_need_calculate_size := False
-				l_pixmap_height := prefered_height
+				l_pixmap_height := preferred_height
 				if not items_have_texts then
 					Result := l_pixmap_height
 				else
@@ -959,7 +959,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

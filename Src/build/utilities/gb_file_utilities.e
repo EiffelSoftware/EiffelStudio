@@ -12,7 +12,7 @@ class
 	GB_FILE_UTILITIES
 
 inherit
-	operating_environment
+	OPERATING_ENVIRONMENT
 
 feature -- Basic operations
 
@@ -35,7 +35,7 @@ feature -- Basic operations
 				end
 			end
 		end
-		
+
 	move_file_between_directories (original, new: DIRECTORY; file_name: STRING)
 			-- Move file named `file_name' from `original' directory to `new_directory'.
 			-- Do nothing if `original' is equivalent to `new'.
@@ -58,7 +58,7 @@ feature -- Basic operations
 				end
 			end
 		end
-		
+
 	directory_exists (name: STRING): BOOLEAN
 			-- Does a directory named `name' exist?
 		local
@@ -67,7 +67,7 @@ feature -- Basic operations
 			create directory.make (name)
 			Result := directory.exists
 		end
-		
+
 	delete_file (directory: DIRECTORY; a_file_name: STRING)
 			-- Delete file named `a_file_name' from directory `directory'.
 		local
@@ -81,7 +81,7 @@ feature -- Basic operations
 				file.delete
 			end
 		end
-		
+
 	restore_file (directory: DIRECTORY; a_file_name, contents: STRING)
 			-- Restore plain text file file named `a_file_name' in
 			-- `directory' with contents `contents'.
@@ -103,10 +103,10 @@ feature -- Basic operations
 		require
 			directory_exists: directory.exists
 			directory_empty: directory.is_empty
-		do	
+		do
 			directory.delete
 		end
-		
+
 	create_directory (directory: DIRECTORY)
 			-- Create `directory'.
 		require
@@ -116,7 +116,7 @@ feature -- Basic operations
 		ensure
 			directory_exists: directory.exists
 		end
-		
+
 	delete_directory_and_content (directory: DIRECTORY)
 			-- Removed `directory' and all content from disk.
 		do
@@ -125,7 +125,7 @@ feature -- Basic operations
 				directory.delete
 			end
 		end
-		
+
 	directory_with_separator (a_directory: STRING): STRING
 			-- `Result' is directory `a_directory' with directory separator
 			-- appended if necessary.
@@ -139,7 +139,7 @@ feature -- Basic operations
 			end
 		ensure
 			Result_consistent: Result.count = a_directory.count or Result.count = a_directory.count + 1
-		end		
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

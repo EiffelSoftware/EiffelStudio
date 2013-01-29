@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			mi_exit.set_merge_order (110)
 
 			res := mi_file.menu_items.add (mi_add_doc)
-			res := mi_file.menu_items.add ("-")     --  Gives us a seperator
+			res := mi_file.menu_items.add ("-")     --  Gives us a separator
 			res := mi_file.menu_items.add (mi_exit)
 
 				-- Add Window Menu

@@ -429,7 +429,7 @@ feature {NONE} -- WEL Implementation
 		do
 			theme_drawer := application_imp.theme_drawer
 			if info.code = ({WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
-					-- Create the relevent WEL_TOOLTIP_TEXT.
+					-- Create the relevant WEL_TOOLTIP_TEXT.
 				create tooltip_text.make_by_nmhdr (info)
 					-- Retrieve tree view get info tip structure.
 				create tvinfotip.make_by_pointer (info.item)

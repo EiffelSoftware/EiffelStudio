@@ -26,20 +26,20 @@ create
 
 feature -- Initialization
 
-	make (a_prefered_config: detachable STRING; a_force_32bit_generation: BOOLEAN)
+	make (a_preferred_config: detachable STRING; a_force_32bit_generation: BOOLEAN)
 			-- Create and setup environment variables for currently installed
-			-- version of Visual Studio using `a_prefered_config' if present.
+			-- version of Visual Studio using `a_preferred_config' if present.
 		require
-			a_prefered_config_valid: a_prefered_config /= Void implies not a_prefered_config.is_empty
+			a_preferred_config_valid: a_preferred_config /= Void implies not a_preferred_config.is_empty
 		local
 			l_man: C_CONFIG_MANAGER
 			l_config: detachable C_CONFIG
 		do
 			create l_man.make (a_force_32bit_generation)
 			if l_man.has_applicable_config then
-				if a_prefered_config /= Void then
-						-- `a_prefered_config' is not empty per precondition
-					l_config := l_man.config_from_code (a_prefered_config, True)
+				if a_preferred_config /= Void then
+						-- `a_preferred_config' is not empty per precondition
+					l_config := l_man.config_from_code (a_preferred_config, True)
 				end
 				if l_config = Void then
 						-- Synchronize with configuration

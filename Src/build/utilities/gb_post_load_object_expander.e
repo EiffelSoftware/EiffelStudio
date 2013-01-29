@@ -24,7 +24,7 @@ feature {GB_XML_LOAD}-- Status setting
 feature {GB_XML_LOAD}-- Basic operations
 
 	expand_all_registered_objects
-			-- Expand all relevent representations of all objects in
+			-- Expand all relevant representations of all objects in
 			-- `expanded_objects', and leave `expanded_objects' empty.
 		local
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM

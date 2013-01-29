@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 
 	absolute_radio_button_selected
 			-- respond to `absolute_constant_radio_button' selection by
-			-- enabling/disabling relevent parts of interface.
+			-- enabling/disabling relevant parts of interface.
 		do
 			relative_constant_box.disable_sensitive
 			absolute_constant_box1.enable_sensitive
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 
 	relative_radio_button_selected
 			-- respond to `relative_constant_radio_button' selection by
-			-- enabling/disabling relevent parts of interface.
+			-- enabling/disabling relevant parts of interface.
 		do
 			relative_constant_box.enable_sensitive
 			absolute_constant_box1.disable_sensitive

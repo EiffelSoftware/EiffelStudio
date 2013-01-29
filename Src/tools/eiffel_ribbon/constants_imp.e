@@ -4,7 +4,7 @@ note
 			Each constant is generated into two features: both a query and a storage
 			feature. For example, for a STRING constant named `my_string', the following
 			features are generated: my_string: STRING and my_string_cell: CELL [STRING].
-			`my_string' simply returns the current item of `my_string_cell'. By seperating
+			`my_string' simply returns the current item of `my_string_cell'. By separating
 			the constant access in this way, it is possible to change the constant's value
 			by either redefining `my_string' in descendent classes or simply performing
 			my_string_cell.put ("new_string") as required.

@@ -194,11 +194,11 @@ feature {NONE} -- Basic operations
 			l_ext: STRING
 			l_cursor: DS_LINEAR_CURSOR [STRING]
 			l_pos: INTEGER
-			l_seperator: STRING
+			l_separator: STRING
 			l_count, i: INTEGER
 		do
 			create Result.make (0)
-			l_seperator := operating_environment.directory_separator.out
+			l_separator := operating_environment.directory_separator.out
 
 			l_cursor := a_directories.new_cursor
 			from l_cursor.start until l_cursor.after loop
@@ -213,7 +213,7 @@ feature {NONE} -- Basic operations
 							l_ext := l_file.substring (l_pos, l_file.count)
 							l_ext.to_lower
 							if l_ext.is_equal (once ".ecf") then
-								Result.force_last (l_dir.name + l_seperator + l_file)
+								Result.force_last (l_dir.name + l_separator + l_file)
 							end
 						end
 						i := i + 1
@@ -224,7 +224,7 @@ feature {NONE} -- Basic operations
 						l_items := l_dir.directory_names
 						l_count := l_items.count
 						from i := 1 until i > l_count loop
-							l_items.item (i).prepend (l_dir.name + l_seperator)
+							l_items.item (i).prepend (l_dir.name + l_separator)
 							i := i + 1
 						end
 						Result.append_last (scan_for_ecf_files (create {DS_ARRAYED_LIST [STRING]}.make_from_array (l_items), a_recursive))

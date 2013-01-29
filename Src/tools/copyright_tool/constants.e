@@ -29,7 +29,7 @@ feature
 		end
 
 	separator: CHARACTER
-			-- System seperator
+			-- System separator
 		once
 			Result := operating_environment.directory_separator
 		end

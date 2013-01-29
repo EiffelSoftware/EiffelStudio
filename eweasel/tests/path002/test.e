@@ -326,6 +326,10 @@ feature
 			current_path := env.current_working_path
 			create p.make_from_string ("abc.txt")
 			check_equal ("absolute", p.absolute_path.name.same_string (current_path.name + "\" + p.name))
+
+			create p.make_from_string ("C:abc.txt")
+			create current_path.make_from_string ("C:\foo\bar")
+			check_equal ("absolute_in", p.absolute_path_in (current_path).name.same_string (current_path.name + "\" + "abc.txt"))
 		end
 
 	test_canonical

@@ -231,7 +231,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 
 	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
-			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- Formatting applies to complete lines as separated by new line characters that `start_position' and
 			-- `end_position' fall on.
 		require
 			valid_positions: start_position <= end_position and start_position >= 1 and end_position <= text_length + 1
@@ -261,7 +261,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 
 	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
-			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- Formatting applies to complete lines as separated by new line characters that `start_position' and
 			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
 		require
 			applicable_attributes_not_void: applicable_attributes /= Void

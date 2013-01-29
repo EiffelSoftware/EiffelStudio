@@ -811,7 +811,7 @@ feature -- Status setting
 
 	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
-			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- Formatting applies to complete lines as separated by new line characters that `start_position' and
 			-- `end_position' fall on.
 		do
 			format_paragraph_internal (start_position, end_position, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
@@ -867,7 +867,7 @@ feature -- Status setting
 
 	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
-			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- Formatting applies to complete lines as separated by new line characters that `start_position' and
 			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
 		local
 			mask: INTEGER
@@ -1596,7 +1596,7 @@ feature {NONE} -- Implementation
 
 	format_paragraph_internal (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER)
 			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive, only
-			-- modifying attributes specified in `mask'. Formatting applies to complete lines as seperated by new line
+			-- modifying attributes specified in `mask'. Formatting applies to complete lines as separated by new line
 			-- characters that `start_position' and `end_position' fall on.
 		require
 			valid_positions: start_position <= end_position and start_position >= 1 and end_position <= text_length + 1

@@ -73,8 +73,8 @@ feature -- Access
 			Result := "Clear Except Selected"
 		end
 
-	seperator_width: INTEGER
-			-- `Result' is INTEGER constant named seperator_width.
+	separator_width: INTEGER
+			-- `Result' is INTEGER constant named separator_width.
 		once
 			Result := 10
 		end

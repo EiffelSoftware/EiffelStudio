@@ -13,7 +13,7 @@ inherit
 		redefine
 			sensitive_mixed,
 			identifier_quoter,
-			qualifier_seperator,
+			qualifier_separator,
 			parse,
 			user_name_ok,
 			hide_qualifier,
@@ -774,12 +774,12 @@ feature -- External
 			Result := l_sql_string.string
 		end
 
-	qualifier_seperator: STRING_32
+	qualifier_separator: STRING_32
 			-- Qualifier separator
 		local
 			l_sql_string: SQL_STRING
 		do
-			create l_sql_string.make_shared_from_pointer (odbc_qualifier_seperator)
+			create l_sql_string.make_shared_from_pointer (odbc_qualifier_separator)
 			Result := l_sql_string.string
 		end
 
@@ -1134,7 +1134,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_qualifier_seperator: POINTER
+	odbc_qualifier_separator: POINTER
 		external
 			"C use %"odbc.h%""
 		end

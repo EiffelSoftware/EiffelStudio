@@ -884,10 +884,10 @@ feature -- External features
 			Result := {STRING_32} ""
 		end
 
-	qualifier_seperator: STRING_32
+	qualifier_separator: STRING_32
 			-- When "qualifier" and "owner" are used to identifier
-			-- a database object, they should be seperated by a string called
-			-- "qualifier seperator"
+			-- a database object, they should be separated by a string called
+			-- "qualifier separator"
 			-- Only for ODBC
 		do
 			Result := {STRING_32} ""

@@ -57,7 +57,7 @@ feature -- Access
 			-- Second STRING represents the displayed text
 			-- e.g. "Text files (*.txt)".
 			-- Multiple filters may be grouped as one
-			-- Through seperation by a semicolon e.g.
+			-- Through separation by a semicolon e.g.
 			-- pass "*.txt;*.rtf;*.doc" as the filter.
 		require
 			not_destroyed: not is_destroyed

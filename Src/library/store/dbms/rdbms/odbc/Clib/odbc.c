@@ -63,7 +63,7 @@
 		(s)->string[0] = (SQLTCHAR)0;	\
 		(s)->char_count = 0;	\
 	}
-	
+
 /* Free string */
 #define FREE_STRING(s)	\
 	ODBC_C_FREE((s)->string);	\
@@ -74,7 +74,7 @@
 */
 typedef struct con_context_ {
 		/* ODBC connection handle, A connection consists of a driver and a data source.
-		 * A connection handle identifies each connection. The connection handle defines not only which driver to use 
+		 * A connection handle identifies each connection. The connection handle defines not only which driver to use
 		 * but which data source to use with that driver. */
 	HDBC    hdbc;
 	ODBCSQLDA *odbc_descriptor[MAX_DESCRIPTOR];
@@ -87,7 +87,7 @@ typedef struct con_context_ {
 		/* Messages: Are not exported to Eiffel due to
 		 * merge with Oracle variables when using both files.
 		 * Wrapping functions are used.*/
-	COUNTABLE_STRING error_message; 
+	COUNTABLE_STRING error_message;
 	COUNTABLE_STRING warn_message;
 	int error_number;
 	short odbc_tranNumber; /* number of transaction opened at present */
@@ -157,11 +157,11 @@ CSTXTCAT	- countable string cat
 
 #define TXTC(x)  ((SQLTCHAR) x)
 
-/* Global ODBC environment, 
+/* Global ODBC environment,
  * for the moment we only allow single environment in one process.
  * Mutex is needed later for multithreading support.
  */
-HENV    henv = NULL; 
+HENV    henv = NULL;
 short number_connection;
 
 SQLTCHAR idQuoter[DB_QUOTER_LEN];
@@ -192,7 +192,7 @@ void *c_odbc_make (int m_size)
 	{
 		/* Even though the error message is not related to current connection,
 		 * but the global environment handle.
-		 * We still store the message in it due to the way on Eiffel side of 
+		 * We still store the message in it due to the way on Eiffel side of
 		 * retrieving error message.
 		 */
 
@@ -252,7 +252,7 @@ int odbc_new_descriptor (void *con)
 		}
 
 		/* malloc area for the descriptor and then initialize it */
-		/* Initially allocate head size plus one var size. 
+		/* Initially allocate head size plus one var size.
 		* Previously we set odbc_descriptor[result] as arbitary pointer 0x1 which is not good */
 		ODBC_SAFE_ALLOC(l_con->odbc_descriptor[result], (ODBCSQLDA *) calloc(IISQDA_HEAD_SIZE + IISQDA_VAR_SIZE, 1));
 		SetVarNum(l_con->odbc_descriptor[result], 1);
@@ -353,7 +353,7 @@ int odbc_max_descriptor ()
 /* stored procedure.                                             */
 /*                                                               */
 /*****************************************************************/
-void odbc_pre_immediate(void *con, int no_desc, int argNum) 
+void odbc_pre_immediate(void *con, int no_desc, int argNum)
 {
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
@@ -477,7 +477,7 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 		{
 			l_con->flag[no_desc] = ODBC_CATALOG_TAB;
 			found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-			
+
 			l_qualifier = &l_con->odbc_qualifier;
 			l_owner = &l_con->odbc_owner;
 			if (found_byte_count)
@@ -721,7 +721,7 @@ void setup_result_space (void *con, int no_desc)
 	SQLSMALLINT tmpNullable;
 	char *dataBuf;
 	SQLHDESC hdesc = NULL;
-	
+
 	/* Save old val numbers */
 	oldVarNum = GetVarNum(dap);
 
@@ -784,7 +784,7 @@ void setup_result_space (void *con, int no_desc)
 		l_con->rc = SQLDescribeCol(l_con->hstmt[no_desc], (SQLSMALLINT) i+1, NULL, 0, &indColName, NULL, NULL, NULL, NULL);
 		/* Allocate string for column name, extra character for null character */
 		ALLOC_STRING(&((dap->sqlvar)[i].sqlname),indColName+1);
-		
+
 		/* fill in the describing information for each column, and calculate */
 		/* the total length of the data buffer                               */
 		l_con->rc = SQLDescribeCol(
@@ -1196,7 +1196,7 @@ int odbc_insensitive_lower() {
 
 int odbc_sensitive_mixed() {
 		/* Values for odbc_case should be either SQL_IC_UPPER, SQL_IC_LOWER, SQL_IC_MIXED
-		 * or SQL_IC_SENSITIVE. If it is SQL_IC_UNKNOWN(that is to say none of the above), then we consider 
+		 * or SQL_IC_SENSITIVE. If it is SQL_IC_UNKNOWN(that is to say none of the above), then we consider
 		 * it is case sensitive. */
 	return (odbc_case == SQL_IC_SENSITIVE) || (odbc_case == SQL_IC_UNKNOWN);
 }
@@ -1253,7 +1253,7 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 			l_num = (SQL_NUMERIC_STRUCT *)value;
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, SQL_DECIMAL, l_num->precision, l_num->scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 
-			/* Modify the fields in the implicit application parameter descriptor */ 
+			/* Modify the fields in the implicit application parameter descriptor */
 			/* See example in: http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q181/2/54.asp&NoWebContent=1 */
 			SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_PARAM_DESC, &hdesc, 0, NULL);
 			SQLSetDescField(hdesc, seriNumber, SQL_DESC_TYPE, (SQLPOINTER) SQL_C_NUMERIC, 0);
@@ -1388,14 +1388,14 @@ SQLTCHAR *odbc_identifier_quoter() {
 /*                                                               */
 /*                     ROUTINE  DESCRIPTION                      */
 /*                                                               */
-/* NAME: odbc_qualifier_seperator                                */
+/* NAME: odbc_qualifier_separator                                */
 /* DESCRIPTION:                                                  */
 /*   When "qualifier" and "owner" are used to identifier a       */
-/* database object, they should be seperated by a string called  */
-/* "qualifier seperator".                                        */
+/* database object, they should be separated by a string called  */
+/* "qualifier separator".                                        */
 /*                                                               */
 /*****************************************************************/
-SQLTCHAR *odbc_qualifier_seperator() {
+SQLTCHAR *odbc_qualifier_separator() {
 	return quaNameSep;
 }
 
@@ -1527,12 +1527,12 @@ void odbc_connect_by_connection_string (void *con, SQLTCHAR *a_string, int str_c
 	}
 
 	l_con->rc = SQLDriverConnect( // SQL_NULL_HDBC
-               l_con->hdbc, 
-               NULL, 
-               a_string, 
+               l_con->hdbc,
+               NULL,
+               a_string,
                (SQLSMALLINT)str_count,
                NULL,
-               0, 
+               0,
                NULL,
                SQL_DRIVER_NOPROMPT);
 	if (l_con->rc<0) {
@@ -1854,7 +1854,7 @@ int odbc_conv_type (int typeCode)
 		case SQL_WLONGVARCHAR:
 			return WSTRING_TYPE;
 		case SQL_DECIMAL:
-		case SQL_NUMERIC:	
+		case SQL_NUMERIC:
 			return DECIMAL_TYPE;
 		case SQL_FLOAT:
 		case SQL_DOUBLE:
@@ -2080,13 +2080,13 @@ double odbc_get_float_data (void *con, int no_des, int index)
 		myvalue = strhextoval(&NumStr);
 		divisor = 1;
 		if(NumStr.scale > 0){
-			for (j=0;j< NumStr.scale; j++)	
+			for (j=0;j< NumStr.scale; j++)
 				divisor = divisor * 10;
 		}
 		final_val =  myvalue /(double) divisor;
-		if(!NumStr.sign) 
+		if(!NumStr.sign)
 			sign = -1;
-		else 
+		else
 			sign  = 1;
 		final_val *= sign;
 		return final_val;
@@ -2492,7 +2492,7 @@ EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr)
 		a= current % 16; /* Obtain LSD */
 		b= current / 16; /* Obtain MSD */
 
-		value += last* a;	
+		value += last* a;
 		last = last * 16;
 		value += last* b;
 		last = last * 16;

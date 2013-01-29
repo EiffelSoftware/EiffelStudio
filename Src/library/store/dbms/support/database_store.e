@@ -93,7 +93,7 @@ feature -- Basic operations
 			create quoter.make(1)
 			create sep.make(1)
 			quoter := db_spec.identifier_quoter
-			sep := db_spec.qualifier_seperator
+			sep := db_spec.qualifier_separator
 			sql_string.wipe_out
 			sql_string.append ({STRING_32} "INSERT INTO ")
 			l_repository := repository

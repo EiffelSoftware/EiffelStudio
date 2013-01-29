@@ -82,7 +82,7 @@ feature -- Access
 	character_format_out: STRING
 			-- Result is representation of character format attributes of `Current'.
 			-- Paragraph and formats need to be buffered independently, hence a
-			-- seperate out feature for each of these set of attributes.
+			-- separate out feature for each of these set of attributes.
 		do
 			if attached internal_character_format_out as l_internal_character_format_out then
 				Result := l_internal_character_format_out
@@ -141,7 +141,7 @@ feature -- Access
 	paragraph_format_out: STRING
 			-- Result is representation of paragraph format attributes of `Current'.
 			-- Paragraph and formats need to be buffered independently, hence a
-			-- seperate out fetaure for each of these set of attributes.
+			-- separate out fetaure for each of these set of attributes.
 		do
 				if attached internal_paragraph_format_out as l_internal_paragraph_format_out then
 					Result := l_internal_paragraph_format_out

@@ -481,7 +481,7 @@ feature {NONE} -- Status report
 			create quoter.make(1)
 			create sep.make(1)
 			quoter := db_spec.identifier_quoter
-			sep := db_spec.qualifier_seperator
+			sep := db_spec.qualifier_separator
 			if (attached qualifier as l_qualifier and then l_qualifier.count > 0) then
 				Result.append(quoter)
 				Result.append(l_qualifier)

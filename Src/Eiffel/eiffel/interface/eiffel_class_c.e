@@ -710,7 +710,7 @@ feature -- Third pass: byte code production and type check
 										not feature_i.is_attribute and then
 										not feature_i.is_constant
 									then
-											-- Make it dependant on `default_rescue'
+											-- Make it dependent on `default_rescue'
 										create def_resc_depend.make (class_id, def_resc)
 										f_suppliers.extend (def_resc_depend)
 									end

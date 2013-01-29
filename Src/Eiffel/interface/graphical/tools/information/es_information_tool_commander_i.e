@@ -21,7 +21,7 @@ feature -- Basic operations
 		end
 
 	request_eis_visit
-			-- Reqest EIS background visiting to collect information into EIS storage.
+			-- Request EIS background visiting to collect information into EIS storage.
 		require
 			is_interface_usable: is_interface_usable
 		deferred

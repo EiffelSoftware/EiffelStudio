@@ -431,7 +431,7 @@ feature {NONE}-- Initialization
 			remove_button.select_actions.extend (agent on_remove_application)
 			resize_actions.extend (agent on_resize (?, ?, ?, ?))
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

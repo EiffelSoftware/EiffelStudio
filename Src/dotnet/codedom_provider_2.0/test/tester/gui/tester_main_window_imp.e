@@ -732,7 +732,7 @@ feature {NONE}-- Initialization
 			serialized_filename_text_field.change_actions.extend (agent on_serialized_filename_change)
 			parse_button.select_actions.extend (agent on_parse)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

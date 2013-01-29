@@ -169,7 +169,7 @@ feature -- Access
 			separator_index: INTEGER
 		do
 			-- The only inherent locale identifier in a .mo file is the name.
-			-- Any other way to identify it is project dependant, see FILE_MANAGER for more details
+			-- Any other way to identify it is project dependent, see FILE_MANAGER for more details
 			file_name := file.name.as_string_32
 			ending := file_name.twin
 			ending.keep_tail (3)

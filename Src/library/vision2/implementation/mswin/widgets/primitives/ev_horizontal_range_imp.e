@@ -44,7 +44,7 @@ feature -- Initialization
 feature -- Status setting
 
    	set_default_minimum_size
-   			-- Platform dependant initializations.
+   			-- Platform dependent initializations.
    		do
 			ev_set_minimum_size (10, 30, False)
  		end

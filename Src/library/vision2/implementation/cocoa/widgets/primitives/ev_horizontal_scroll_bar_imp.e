@@ -47,7 +47,7 @@ feature -- Initialization
 feature -- Minimum size
 
    	set_default_minimum_size
-   			-- Platform dependant initializations.
+   			-- Platform dependent initializations.
    		do
 			internal_set_minimum_height ({NS_SCROLLER}.scroller_width)
  		end

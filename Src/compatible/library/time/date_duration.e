@@ -117,7 +117,7 @@ feature -- Comparison
 feature -- Status report
 
 	definite: BOOLEAN
-			-- Is the duration is independant of the date
+			-- Is the duration is independent of the date
 			-- on which it applies? (use of `day' only)?
 			-- or not (use of `year', `month' and `day')?
 		do

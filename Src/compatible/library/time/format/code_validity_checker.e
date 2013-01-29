@@ -290,7 +290,7 @@ feature -- Preconditions
 		end
 
 	is_separator (s: STRING): BOOLEAN
-			-- Is the code a seperator?
+			-- Is the code a separator?
 		require
 			s_exists: s /= Void
 		do

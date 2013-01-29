@@ -297,7 +297,7 @@ feature -- Status setting
 		
 	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
-			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- Formatting applies to complete lines as separated by new line characters that `start_position' and
 			-- `end_position' fall on.
 		require
 			not_destroyed: not is_destroyed
@@ -347,7 +347,7 @@ feature -- Status setting
 		
 	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
-			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- Formatting applies to complete lines as separated by new line characters that `start_position' and
 			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
 		require
 			not_destroyed: not is_destroyed

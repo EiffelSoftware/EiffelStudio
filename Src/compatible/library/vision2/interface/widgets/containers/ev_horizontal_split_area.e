@@ -1,7 +1,7 @@
 note
 	description:
 		"[
-			Displays two widgets side by side, seperated by an adjustable divider.
+			Displays two widgets side by side, separated by an adjustable divider.
 		"]
 	apearance:
 		"[

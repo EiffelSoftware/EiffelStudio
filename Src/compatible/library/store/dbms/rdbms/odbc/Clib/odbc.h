@@ -213,7 +213,7 @@ extern void odbc_set_proc_flag(int no_desc);
 extern char *odbc_hide_qualifier(char *buf);
 extern void odbc_unhide_qualifier(char *buf);
 extern char *odbc_identifier_quoter();
-extern char *odbc_qualifier_seperator();
+extern char *odbc_qualifier_separator();
 extern void odbc_set_qualifier(char *qfy);
 extern void odbc_set_owner(char *owner);
 extern void odbc_unset_catalog_flag(int no_desc);

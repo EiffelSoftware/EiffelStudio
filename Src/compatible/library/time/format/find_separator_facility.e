@@ -1,5 +1,5 @@
 note
-	description: "Facility to find seperators in date or time strings"
+	description: "Facility to find separators in date or time strings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

@@ -38,7 +38,7 @@ feature -- Operation
 				end
 				if attached a_entry.protocol as l_protocol and then not l_protocol.is_empty then
 					if l_comma_needed then
-						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_separator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
 					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string + {ES_EIS_TOKENS}.value_assignment + l_protocol))
@@ -46,7 +46,7 @@ feature -- Operation
 				end
 				if attached a_entry.source as l_source and then not l_source.is_empty then
 					if l_comma_needed then
-						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_separator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
 					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string + {ES_EIS_TOKENS}.value_assignment + l_source))
@@ -54,7 +54,7 @@ feature -- Operation
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
 					if l_comma_needed then
-						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_separator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
 					l_output.append (quoted_string ({ES_EIS_TOKENS}.tag_string + {ES_EIS_TOKENS}.value_assignment + tags_as_code (a_entry)))
@@ -63,7 +63,7 @@ feature -- Operation
 
 				if a_entry.override then
 					if l_comma_needed then
-						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_separator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
 					l_output.append (quoted_string ({ES_EIS_TOKENS}.override_string + {ES_EIS_TOKENS}.value_assignment + {ES_EIS_TOKENS}.true_string))
@@ -72,7 +72,7 @@ feature -- Operation
 
 				if a_entry.parameters /= Void and then not a_entry.parameters.is_empty then
 					if l_comma_needed then
-						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_separator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
 					l_output.append (quoted_string (parameters_as_code (a_entry)))
@@ -160,7 +160,7 @@ feature -- Access
 					if not lt_tags.item.is_empty then
 						Result.append (lt_tags.item)
 						if not lt_tags.islast then
-							Result.append_character ({ES_EIS_TOKENS}.tag_seperator)
+							Result.append_character ({ES_EIS_TOKENS}.tag_separator)
 							Result.append_character ({ES_EIS_TOKENS}.space)
 						end
 						l_found := True
@@ -204,7 +204,7 @@ feature -- Access
 					end
 					Result.append (l_attr)
 					if i < l_count then
-						Result.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						Result.append_character ({ES_EIS_TOKENS}.attribute_separator)
 						Result.append_character ({ES_EIS_TOKENS}.space)
 					end
 					lt_parameters.forth

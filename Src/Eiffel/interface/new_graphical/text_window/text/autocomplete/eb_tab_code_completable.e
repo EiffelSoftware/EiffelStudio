@@ -270,14 +270,14 @@ feature -- Tab actions
 				go_to_start_of_line
 				l_jumped := true
 			else
-				if not between_seperator (current_token_in_line (l_line), l_line) and not seperator_following (l_line) then
+				if not between_separator (current_token_in_line (l_line), l_line) and not separator_following (l_line) then
 					l_cur_token := find_previous_start_token (l_line)
 				end
 			end
 			if l_cur_token = Void then
 				l_cur_token := current_token_in_line (l_line)
 			end
-			if l_jumped and then start_of_line (l_cur_token, l_line) and then between_seperator (l_cur_token, l_line) then
+			if l_jumped and then start_of_line (l_cur_token, l_line) and then between_separator (l_cur_token, l_line) then
 				l_stop := true
 			end
 			if not l_stop then
@@ -312,7 +312,7 @@ feature -- Tab actions
 					if l_cur_token.next /= l_line.eol_token then
 						if not l_is_start then
 							l_cur_token := l_cur_token.next
-						elseif between_seperator (l_cur_token, l_line) then
+						elseif between_separator (l_cur_token, l_line) then
 							l_cur_token := l_cur_token.next
 						end
 						l_start_token := l_cur_token
@@ -591,8 +591,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	between_seperator (a_token: EDITOR_TOKEN; a_line: like current_line) : BOOLEAN
-			-- Is cursor before `a_token' between seperators?
+	between_separator (a_token: EDITOR_TOKEN; a_line: like current_line) : BOOLEAN
+			-- Is cursor before `a_token' between separators?
 		require
 			a_token_attached: a_token /= Void
 			a_line_attached: a_line /= Void
@@ -605,8 +605,8 @@ feature {NONE} -- Implementation
 			Result := Result and (l_cur_token = Void or else token_equal (l_cur_token, "(") or token_equal (l_cur_token, ")") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";") or l_cur_token = a_line.eol_token)
 		end
 
-	seperator_following (a_line: like current_line) : BOOLEAN
-			-- Is cursor before a seperator?
+	separator_following (a_line: like current_line) : BOOLEAN
+			-- Is cursor before a separator?
 		require
 			a_line_attached: a_line /= Void
 		local

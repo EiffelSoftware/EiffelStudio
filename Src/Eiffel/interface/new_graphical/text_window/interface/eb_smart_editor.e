@@ -1613,8 +1613,8 @@ feature {NONE} -- Code completable implementation
 			l_has_right_brace_ahead,
 			l_has_right_brace_following,
 			l_has_left_brace_following,
-			l_seperator_ahead,
-			l_seperator_following: BOOLEAN
+			l_separator_ahead,
+			l_separator_following: BOOLEAN
 			l_comment_ahead: BOOLEAN
 		do
 			if has_selection implies text_displayed.selection_start.y_in_lines = text_displayed.selection_end.y_in_lines then
@@ -1646,11 +1646,11 @@ feature {NONE} -- Code completable implementation
 							l_has_right_brace_ahead := True
 						end
 						if
-							not l_seperator_ahead and then
+							not l_separator_ahead and then
 							l_current_line.item.is_text and then
 							(token_equal (l_current_line.item, ",") or else token_equal (l_current_line.item, ";"))
 						then
-							l_seperator_ahead := True
+							l_separator_ahead := True
 						end
 						l_current_line.forth
 					end
@@ -1674,15 +1674,15 @@ feature {NONE} -- Code completable implementation
 							l_has_left_brace_following := True
 						end
 						if
-							not l_seperator_following and then
+							not l_separator_following and then
 							l_current_token.is_text and then
 							(token_equal (l_current_token, ",") or else token_equal (l_current_token, ";"))
 						then
-							l_seperator_following := True
+							l_separator_following := True
 						end
 						l_current_token := l_current_token.next
 					end
-					Result := 	((l_has_left_brace_ahead or l_seperator_ahead) and then (l_has_right_brace_following or l_seperator_following))
+					Result := 	((l_has_left_brace_ahead or l_separator_ahead) and then (l_has_right_brace_following or l_separator_following))
 				end
 			end
 		end

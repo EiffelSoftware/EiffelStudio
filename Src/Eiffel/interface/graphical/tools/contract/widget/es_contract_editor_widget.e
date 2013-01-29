@@ -377,7 +377,7 @@ feature {NONE} -- Basic operations
 feature -- Modification
 
 	add_contract (a_tag: attached STRING_32; a_contract: attached STRING_32; a_source: attached ES_CONTRACT_SOURCE_I)
-			-- Adds a contract using a seperate tag name and contract.
+			-- Adds a contract using a separate tag name and contract.
 			--
 			-- `a_tag': The contract tag name.
 			-- `a_contract': The actual contract code.

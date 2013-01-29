@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			create last_line.make_empty_line
-			seperate_comment := True
+			separate_comment := True
 		end
 
 feature -- Access

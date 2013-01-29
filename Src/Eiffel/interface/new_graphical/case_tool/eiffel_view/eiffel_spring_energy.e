@@ -1,5 +1,5 @@
 note
-	description: "Objects that is an EG_SPRING_ENERGY with seperate stiffnesses for inheritance and client links"
+	description: "Objects that is an EG_SPRING_ENERGY with separate stiffnesses for inheritance and client links"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Benno Baumgartner"

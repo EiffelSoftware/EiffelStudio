@@ -47,7 +47,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
-				if seperate_comment then
+				if separate_comment then
 					set_start_condition (BREAK_TOKEN)
 				else
 					set_start_condition (NOT_BREAK_TOKEN)

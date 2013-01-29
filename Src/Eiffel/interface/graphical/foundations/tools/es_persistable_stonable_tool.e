@@ -226,7 +226,7 @@ feature -- Action handlers
 						set_stone (l_stone)
 					end
 
-						-- Register to recieve notification of changes to the session value.
+						-- Register to receive notification of changes to the session value.
 					l_session.session_connection.connect_events (Current)
 				end
 			end

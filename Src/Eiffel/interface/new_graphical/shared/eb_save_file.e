@@ -172,7 +172,7 @@ feature -- Basic operations
 						-- Notify service of file change
 					create l_notifier
 					if l_notifier.is_service_available then
-							-- Poll modifications, allowing subscribers to recieve change modifications.
+							-- Poll modifications, allowing subscribers to receive change modifications.
 						l_notifier.service.poll_modifications (create {PATH}.make_from_string (a_file_name)).do_nothing
 					end
 				end

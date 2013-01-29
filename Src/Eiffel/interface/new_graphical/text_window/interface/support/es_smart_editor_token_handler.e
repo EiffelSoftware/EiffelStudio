@@ -355,7 +355,7 @@ feature {NONE} -- Action handlers
 						l_actions.resume
 					end
 
-						-- Fake pointer press call to ensure editor recieves it
+						-- Fake pointer press call to ensure editor receives it
 					l_actions.call ([l_x, l_y, 1, .0, .0, .0, a_screen_x, a_screen_y])
 
 					if l_state /= l_actions.normal_state then

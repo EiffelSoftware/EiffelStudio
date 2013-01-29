@@ -693,7 +693,7 @@ feature {NONE} -- Formatting
 feature {NONE} -- Action handlers
 
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
-			-- Called when the dialog recieve a key event
+			-- Called when the dialog receive a key event
 			--
 			-- `a_key': The key pressed.
 			-- `a_alt': True if the ALT key was pressed; False otherwise

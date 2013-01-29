@@ -432,7 +432,7 @@ feature -- Element change
 feature {NONE} -- Element change
 
 	set_last_focused_widget (a_widget: EV_WIDGET)
-			-- Set last focused widget, used when the content recieves focus.
+			-- Set last focused widget, used when the content receives focus.
 			--
 			-- `a_widget': Last focused widget.
 		require
@@ -874,7 +874,7 @@ feature {NONE} -- Action handlers
 		end
 
 	frozen on_key_pressed (a_key: EV_KEY)
-			-- Called when the tool recieves a key press
+			-- Called when the tool receives a key press
 			--
 			-- `a_key': The key pressed.
 		local
@@ -897,7 +897,7 @@ feature {NONE} -- Action handlers
 		end
 
 	frozen on_key_released (a_key: EV_KEY)
-			-- Called when the tool recieves a key release
+			-- Called when the tool receives a key release
 			--
 			-- `a_key': The key released.
 		local
@@ -911,7 +911,7 @@ feature {NONE} -- Action handlers
 		end
 
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
-			-- Called when the tool recieve a key event
+			-- Called when the tool receive a key event
 			--
 			-- `a_key': The key pressed.
 			-- `a_alt': True if the ALT key was pressed; False otherwise

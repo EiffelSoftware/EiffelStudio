@@ -714,7 +714,7 @@ feature {NONE} -- Implementation
 				x_pos <= width and y_pos <= height
 			then
 					-- Create a WEL_TRACK_MOUSE_EVENT structure so
-					-- we will recieve the Wm_mouse_leave notification
+					-- we will receive the Wm_mouse_leave notification
 					-- message when the pointer leaves `Current'.
 				create track_mouse.make
 				track_mouse.set_hwndtrack (wel_item)
@@ -1130,7 +1130,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation, focus event
 
 	on_set_focus
-			-- Called when a `Wm_setfocus' message is recieved.
+			-- Called when a `Wm_setfocus' message is received.
 		require
 			exists: exists
 		local
@@ -1160,7 +1160,7 @@ feature {NONE} -- Implementation, focus event
 		end
 
 	on_kill_focus
-			-- Called when a `Wm_killfocus' message is recieved.
+			-- Called when a `Wm_killfocus' message is received.
 		local
 			l_top_level_window_imp: like top_level_window_imp
 		do

@@ -862,7 +862,7 @@ feature {NONE}-- Initialization
 			arrange_circle.select_actions.extend (agent arrange_circle_clicked)
 			clear_graph.select_actions.extend (agent clear_graph_clicked)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 

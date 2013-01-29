@@ -1125,7 +1125,7 @@ feature {NONE} -- Implementation
 			if l_result = Void and is_sensitive then
 					-- Otherwise iterate through children and search each but only if
 					-- we are sensitive. In the case of a non-sensitive container, no
-					-- children should recieve the tab stop.
+					-- children should receive the tab stop.
 				l_item_list := item_list
 				from
 					l_item_list.go_i_th (search_pos)

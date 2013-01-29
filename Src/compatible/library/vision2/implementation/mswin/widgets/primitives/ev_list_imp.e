@@ -375,7 +375,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 				-- we now call them after the PND has completed.
 			if not item_press_actions_called then
 
-					-- If there is an item where the button press was recieved,
+					-- If there is an item where the button press was received,
 					-- and it has not changed from the start of this procedure
 					-- then call `pointer_button_press_actions'.
 					--| Internal_propagate_pointer_press in

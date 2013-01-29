@@ -1014,11 +1014,11 @@ feature {NONE} -- WEL Implementation
 			end
 
 				-- Retrieve the current item where the button press
-				-- was recieved.
+				-- was received.
 			post_drop_mcl_row := find_item_at_position (x_pos, y_pos)
 
 			if not item_press_actions_called then
-				-- If there is an item where the button press was recieved,
+				-- If there is an item where the button press was received,
 				-- and it has not changed from the start of this procedure
 				-- then call `pointer_button_press_actions'.
 				if post_drop_mcl_row /= Void and

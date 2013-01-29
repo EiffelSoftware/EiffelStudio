@@ -971,7 +971,7 @@ feature {EV_ANY_I} -- Implementation
 										-- pick and drop target then we set the target id to that of the
 										-- item, as the items are conceptually 'above' the list and so
 										-- if a list and one of its items are pnd targets then the
-										-- item should recieve.
+										-- item should receive.
 									sensitive ?= an_item_imp.interface
 										-- If an item is not `sensitive' then it cannot be dropped on.
 									if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then
@@ -1126,7 +1126,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	window_on_wm_activate (wparam, lparam: POINTER)
-			-- `Wm_activate' message recieved form Windows by `Current'.
+			-- `Wm_activate' message received form Windows by `Current'.
 		local
 			l_is_minimized: BOOLEAN
 		do

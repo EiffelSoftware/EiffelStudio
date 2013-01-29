@@ -525,7 +525,7 @@ feature {EV_ANY_I} -- Implementation
 								-- pick and drop target then we set the target id to that of the
 								-- item, as the items are conceptually 'above' the list and so
 								-- if a list and one of its items are pnd targets then the
-								-- item should recieve.
+								-- item should receive.
 							sensitive ?= item_imp.interface
 								-- If an item is not `sensitive' then it cannot be dropped on.
 							if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then

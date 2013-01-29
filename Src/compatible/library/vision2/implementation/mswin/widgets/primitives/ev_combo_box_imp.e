@@ -565,7 +565,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 
 	on_set_focus
-			-- Called when a `Wm_setfocus' message is recieved.
+			-- Called when a `Wm_setfocus' message is received.
 		local
 			l_top_level_window: EV_WINDOW_IMP
 			l_last_focus_on_widget: EV_WIDGET_IMP
@@ -644,7 +644,7 @@ feature {NONE} -- Implementation
 			-- item event. Called on a pointer double press.
 		do
 			--| Currently not implemented. This means that any items in the
-			--| combo box will not recieve double click events.
+			--| combo box will not receive double click events.
 		end
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP

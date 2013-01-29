@@ -476,7 +476,7 @@ feature {EV_ANY_I} -- WEL Implementation
 
 			post_drop_it := find_item_at_position (x_pos, y_pos)
 
-				-- If there is an item where the button press was recieved,
+				-- If there is an item where the button press was received,
 				-- and it has not changed from the start of this procedure
 				-- then call `pointer_button_press_actions'.
 				--| Internal_propagate_pointer_press in EV_MULTI_COLUMN_LIST_IMP

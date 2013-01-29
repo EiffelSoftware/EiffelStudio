@@ -1450,7 +1450,7 @@ feature {NONE} -- Implementation
 					-- Now we must connect the close event of the window if no `close_actions' have been added by user
 					-- and we are handling a window.
 				add_event_connection ("%T-- Close the application when an interface close")
-				add_event_connection ("%T-- request is recieved on `Current'. i.e. the cross is clicked.")
+				add_event_connection ("%T-- request is received on `Current'. i.e. the cross is clicked.")
 				if info.generate_as_client then
 					add_event_connection (Client_window_string + ".close_request_actions.extend (agent " + Client_window_string + ".destroy_and_exit_if_last)")
 				else

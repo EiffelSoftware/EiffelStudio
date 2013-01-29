@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			if l_result = Void and is_sensitive then
 					-- Otherwise iterate through children and search each but only if
 					-- we are sensitive. In the case of a non-sensitive container, no
-					-- children should recieve the tab stop.
+					-- children should receive the tab stop.
 				if search_pos >= 1 and search_pos <= count then
 					if forwards then
 						if search_pos = 1 and then attached first as l_first then

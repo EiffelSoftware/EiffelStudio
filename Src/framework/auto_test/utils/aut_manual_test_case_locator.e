@@ -67,7 +67,7 @@ feature -- Settings
 --						else
 --							if a_deep then
 --								-- Keep descendants of `test_case_ancestor' which are
---								-- recursive dependants of one of the classes
+--								-- recursive dependents of one of the classes
 --								-- under test.
 --								l_providers := recursive_providers (l_class)
 --							else

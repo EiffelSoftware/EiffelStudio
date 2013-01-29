@@ -251,12 +251,12 @@ feature {EV_ANY_I} -- Wel implementation
 	set_is_theme_background_requested (a_value: BOOLEAN)
 			-- Set `is_theme_background_requested' with `a_value'.
 		do
-			is_theme_background_reqested := a_value
+			is_theme_background_requested := a_value
 		ensure
-			is_theme_background_reqested_set: is_theme_background_reqested = a_value
+			is_theme_background_requested_set: is_theme_background_requested = a_value
 		end
 
-	is_theme_background_reqested: BOOLEAN
+	is_theme_background_requested: BOOLEAN
 			-- When executing a `on_erase_background' callback are we called by the child window to draw the proper
 			-- background even if we do not usually erase the background, e.g. when drawing buttons in an EV_FRAME.?
 

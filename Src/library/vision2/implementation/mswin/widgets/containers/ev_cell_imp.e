@@ -126,7 +126,7 @@ feature {NONE} -- WEL implementation
 			-- <Precursor>
 		do
 				-- Nothing to erase if there is an item.
-			if item = Void or is_theme_background_reqested then
+			if item = Void or is_theme_background_requested then
 				clear_background (paint_dc, invalid_rect)
 			else
 					-- We let the item handle this.

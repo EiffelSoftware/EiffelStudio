@@ -298,7 +298,7 @@ feature -- Processing
 		end
 
 	process_expr_call_as (a_as: EXPR_CALL_AS)
-			-- Processes an expression call where a recieve is explicitly (' a := ...')  or
+			-- Processes an expression call where a receive is explicitly (' a := ...')  or
 			-- implicitly ('a_f (..., ...)') defined.
 			--
 			-- `a_as': Abstract syntax node to process.

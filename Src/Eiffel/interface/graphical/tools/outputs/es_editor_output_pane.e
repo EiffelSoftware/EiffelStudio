@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			a_widget.editor.editor_drawing_area.drop_actions.set_veto_pebble_function (agent (s: STONE): BOOLEAN do Result := True end)
 			auto_recycle (l_redirector)
 
-				-- Recieve notifications when a new line has been added to the output. This ensures the output
+				-- receive notifications when a new line has been added to the output. This ensures the output
 				-- is always scrolled to the end.
 			register_action (new_line_actions, agent (ia_sender: ES_NOTIFIER_FORMATTER; ia_lines: NATURAL)
 					-- Need to scroll the output

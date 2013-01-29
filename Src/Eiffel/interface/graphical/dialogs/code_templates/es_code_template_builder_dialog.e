@@ -1,6 +1,6 @@
 note
 	description: "[
-		A dialog use to recieve user inputs in order to populate a specified code template.
+		A dialog use to receive user inputs in order to populate a specified code template.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

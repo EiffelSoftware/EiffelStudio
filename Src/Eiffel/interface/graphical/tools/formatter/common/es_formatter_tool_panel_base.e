@@ -627,7 +627,7 @@ feature{NONE} -- Implementation
 		end
 
 	set_last_focused_widget (a_widget: EV_WIDGET)
-			-- Set last focused widget, used when the content recieves focus.
+			-- Set last focused widget, used when the content receives focus.
 			--
 			-- `a_widget': Last focused widget.
 		require

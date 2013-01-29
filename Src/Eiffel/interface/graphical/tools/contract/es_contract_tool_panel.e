@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 
 
 			if code_template_catalog.is_service_available then
-					-- Connect code template catalog observer, to recieve change notifications.
+					-- Connect code template catalog observer, to receive change notifications.
 				code_template_catalog.service.code_template_catalog_connection.connect_events (Current)
 
 					-- Update the menu
@@ -434,7 +434,7 @@ feature {NONE} -- Basic operations
 			-- Refreshes the editor to include new changes.
 			-- Note: This only refreshes the already set context information and will not go out to disk or the editor
 			--       to refresh the context context. For this use `update'. However be sure the editor contains loaded
-			--       text or your will recieve stale content.
+			--       text or your will receive stale content.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
@@ -988,7 +988,7 @@ feature {NONE} -- Action handlers
 						if l_modifier.is_dirty then
 							l_modifier.commit
 
-								-- Perform an update to recieve the most current information
+								-- Perform an update to receive the most current information
 							set_is_dirty (False)
 							refresh_context
 						else
@@ -1330,7 +1330,7 @@ feature {NONE} -- Action handlers
 		end
 
 	on_source_selected_in_editor (a_source: detachable ES_CONTRACT_SOURCE_I)
-			-- Called when the editor recieves a selection/deselection of a source row.
+			-- Called when the editor receives a selection/deselection of a source row.
 			--
 			-- `a_source': A source row (or a contrac line {ES_CONTRACT_LINE}) or Void to indicate a deselection.
 		do

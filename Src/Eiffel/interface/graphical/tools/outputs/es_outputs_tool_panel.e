@@ -413,7 +413,7 @@ feature {NONE} -- Basic operations
 				l_item.set_pixmap (a_editor.icon_pixmap)
 				l_item.set_data (a_editor)
 
-					-- Inject the output widget into the UI now, so it recieves updates.
+					-- Inject the output widget into the UI now, so it receives updates.
 				inject_output_widget (a_editor)
 
 					-- Set up action to ensure users are notified when a hidden output changes.

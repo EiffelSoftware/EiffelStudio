@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			l_brush: like background_brush
 			l_erased: BOOLEAN
 		do
-			if not is_theme_background_reqested and attached item_imp as l_item then
+			if not is_theme_background_requested and attached item_imp as l_item then
 					-- If `item' is within the viewport, we need to clear the border surrounding it, otherwise nothing to be done.
 				l_x_pos := l_item.x_position
 				l_y_pos := l_item.y_position

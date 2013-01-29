@@ -354,7 +354,7 @@ feature {NONE} -- WEL Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		do
-			if is_theme_background_reqested then
+			if is_theme_background_requested then
 				clear_background (paint_dc, invalid_rect)
 			else
 				disable_default_processing

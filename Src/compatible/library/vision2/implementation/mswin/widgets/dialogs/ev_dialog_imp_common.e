@@ -548,7 +548,7 @@ feature {NONE} -- Implementation
 		end
 
 	window_on_wm_activate (wparam, lparam: POINTER)
-			-- `Wm_activate' message recieved form Windows by `Current'.
+			-- `Wm_activate' message received form Windows by `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
 			if cwin_lo_word (wparam) = Wel_window_constants.Wa_inactive then

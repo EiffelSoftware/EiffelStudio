@@ -369,7 +369,7 @@ feature -- action sequences
 	--| Because this implementation uses an EV_TEXT_FIELD_IMP, we need
 	--| to associate the action sequences with those from the text field.
 	--| Before this change, none of the action_Sequences were ever called.
-	--| One downside of this is that the events will only be recieved by the
+	--| One downside of this is that the events will only be received by the
 	--| text part of the widget. No nice solution currently. Julian.	
 
 	text_change_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -632,7 +632,7 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 feature {NONE} -- Implementation
 
 	on_set_focus
-			-- Called when a `Wm_setfocus' message is recieved.
+			-- Called when a `Wm_setfocus' message is received.
 		do
 				-- No need to call precursor because calling `set_focus'
 				-- on the text will call the focus_in action sequence.

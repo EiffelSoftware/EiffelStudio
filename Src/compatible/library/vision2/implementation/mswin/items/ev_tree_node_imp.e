@@ -350,7 +350,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	--| The events are only propagated to the tree, not a tree node.
 	--| These features are required by any parent of items, however, as
 	--| in this case, the parent is an item as well, they will never
-	--| recieve any events. Cannot see an easy way to get rid of this
+	--| receive any events. Cannot see an easy way to get rid of this
 	--| dependency without complicating the inheritance structure
 	--| unecessarily for pick and drop. Julian
 
@@ -383,7 +383,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	on_parented
 			-- `Current' has just been parented.
-			-- Because this message is only recieved when a tree item becomes
+			-- Because this message is only received when a tree item becomes
 			-- the child of a tree, we need to recurse through all children of
 			-- the item and send this message.
 		local
@@ -412,7 +412,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	on_orphaned
 			-- `Current' has just been orphaned.
-			-- Because this message is only recieved when a tree item becomes
+			-- Because this message is only received when a tree item becomes
 			-- the child of a tree, we need to recurse through all children of
 			-- the item and send this message.
 		do

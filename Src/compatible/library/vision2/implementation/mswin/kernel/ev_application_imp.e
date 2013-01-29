@@ -438,7 +438,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 
 	transport_just_ended: BOOLEAN
 		-- Has a pick/drag and drop just ended and we have not
-		-- yet recieved the Wm_ncactivate message in the window
+		-- yet received the Wm_ncactivate message in the window
 		-- where the pick/drag was ended?
 		--| When we cancel a pick/drag, we must reset override_movement
 		--| ready for the next pick/drag. However, we still want to override

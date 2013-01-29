@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (interface_descriptor.c_type_name), "TRUE"))
 
-			l_string_one.append (Registry_field_seperator)
+			l_string_one.append (Registry_field_separator)
 
 			create l_string_two.make (500)
 			l_string_two.append (l_string_one)

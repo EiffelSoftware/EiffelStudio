@@ -103,7 +103,7 @@ feature -- Special simbols -- 1
 
 	C_and: STRING = "&&"
 
-	Registry_field_seperator: STRING = "\\";
+	Registry_field_separator: STRING = "\\";
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

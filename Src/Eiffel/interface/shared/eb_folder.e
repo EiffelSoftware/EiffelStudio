@@ -27,7 +27,7 @@ feature {NONE} -- Initialize
 			a_cluster_not_void: a_cluster /= Void
 			a_path_valid: a_path /= Void and then not a_path.is_empty
 		do
-			make_with_name (a_cluster, a_path, cluster.location.build_path (path, {STRING_32} "").entry.name)
+			make_with_name (a_cluster, a_path, a_cluster.location.build_path (a_path, {STRING_32} "").entry.name)
 		ensure
 			a_cluster_not_void: cluster = a_cluster
 			a_path_valid: path = a_path and then not path.is_empty

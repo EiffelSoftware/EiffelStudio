@@ -172,7 +172,7 @@ feature {NONE} -- Publication
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
-			-- `a_predicate': The predicate to use to determine if a subscriber should recieve a published event.
+			-- `a_predicate': The predicate to use to determine if a subscriber should receive a published event.
 		require
 			is_interface_usable: is_interface_usable
 			not_is_publishing: not is_publishing

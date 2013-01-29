@@ -250,7 +250,7 @@ feature {NONE} -- Query
 feature -- Actions
 
 	frozen error_reported_actions: ACTION_SEQUENCE [TUPLE [msg: READABLE_STRING_32; line: NATURAL; index: NATURAL]]
-			-- Actions used to recieve notification of an error
+			-- Actions used to receive notification of an error
 			--
 			-- 'msg': Message and cause of the error.
 			-- 'line': Offending one-based line index of the error.
@@ -268,7 +268,7 @@ feature -- Actions
 		end
 
 	frozen warning_reported_actions: ACTION_SEQUENCE [TUPLE [msg: READABLE_STRING_32; line: NATURAL; index: NATURAL]]
-			-- Actions used to recieve notification of an warning
+			-- Actions used to receive notification of an warning
 			--
 			-- 'msg': Message and cause of the warning.
 			-- 'line': Offending one-based line index of the warning.

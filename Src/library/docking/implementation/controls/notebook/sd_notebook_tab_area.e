@@ -275,7 +275,7 @@ feature -- Query
 			-- Box which contain all tabs
 
 	tab_box_predered_width: INTEGER
-			-- tool bar prefered width
+			-- tool bar preferred width
 		do
 			Result := width - internal_tool_bar.width
 			if Result < 0 then
@@ -393,7 +393,7 @@ feature {NONE}  -- Implementation functions
 			internal_tabs_not_shown.wipe_out
 			l_tabs_invisible := internal_tabs_not_shown
 			if not is_empty then
-				l_total_width := total_prefered_width
+				l_total_width := total_preferred_width
 				if l_total_width > a_width then
 					l_total_width := l_total_width + internal_tool_bar.minimum_width
 					l_tabs := all_tabs
@@ -406,7 +406,7 @@ feature {NONE}  -- Implementation functions
 						if not l_tab.is_selected then
 							if l_total_width > a_width then
 								l_tabs_invisible.extend (l_tab)
-								l_total_width := l_total_width - l_tab.prefered_size
+								l_total_width := l_total_width - l_tab.preferred_size
 							else
 								l_enough := True
 							end
@@ -451,7 +451,7 @@ feature {NONE}  -- Implementation functions
 					l_only_tab := find_only_tab_shown
 					if
 						a_width - internal_tool_bar.width >= 0
-						and a_width - internal_tool_bar.width < l_only_tab.prefered_size
+						and a_width - internal_tool_bar.width < l_only_tab.preferred_size
 					then
 						l_only_tab.set_width_not_enough_space (a_width - internal_tool_bar.width)
 					end
@@ -476,8 +476,8 @@ feature {NONE}  -- Implementation functions
 			setted: internal_tabs_not_shown.count = 0 implies not internal_tool_bar.is_displayed
 		end
 
-	total_prefered_width: INTEGER
-			-- Calculate all tabs total prefered width
+	total_preferred_width: INTEGER
+			-- Calculate all tabs total preferred width
 		local
 			l_tabs: like all_tabs
 		do
@@ -487,7 +487,7 @@ feature {NONE}  -- Implementation functions
 			until
 				l_tabs.after
 			loop
-				Result := Result + l_tabs.item.prefered_size
+				Result := Result + l_tabs.item.preferred_size
 				l_tabs.forth
 			end
 		ensure
@@ -587,7 +587,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

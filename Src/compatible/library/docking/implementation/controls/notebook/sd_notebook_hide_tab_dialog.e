@@ -401,7 +401,7 @@ feature {NONE} -- Implementation functions
 --			create l_popup_window
 --			l_popup_window.enable_border
 			if not is_destroyed then
---				set_width (internal_label_box.prefered_width + l_popup_window.minimum_width * 2)
+--				set_width (internal_label_box.preferred_width + l_popup_window.minimum_width * 2)
 				if not internal_scroll_area.is_vertical_scroll_bar_visible then
 					set_width (internal_tool_bar.width + 12)
 				else

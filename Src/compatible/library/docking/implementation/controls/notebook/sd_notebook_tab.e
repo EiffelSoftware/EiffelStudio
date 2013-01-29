@@ -160,6 +160,16 @@ feature -- Query
 			-- If draw `pixmap'?
 
 	prefered_size: INTEGER
+			-- If current is displayed, size should take
+		obsolete
+			"Use `preferred_size' instead."
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := preferred_size
+		end
+
+	preferred_size: INTEGER
 			-- If current is displayed, size should take.
 		require
 			not_destroyed: not is_destroyed

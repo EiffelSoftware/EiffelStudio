@@ -569,7 +569,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	formatted_context_for_group (a_group: CONF_GROUP; a_path: STRING)
+	formatted_context_for_group (a_group: CONF_GROUP; a_path: STRING_32)
 			-- Formatted context representing the list of classes inside `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -1165,7 +1165,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

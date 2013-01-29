@@ -164,7 +164,7 @@ feature {NONE}-- Initialization
 			focus_in_actions.extend (agent on_focus)
 			close_request_actions.extend (agent on_close)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

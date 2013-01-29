@@ -142,7 +142,7 @@ feature {NONE}-- Initialization
 			
 				--Connect events.
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

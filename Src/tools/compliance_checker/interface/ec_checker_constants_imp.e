@@ -151,7 +151,7 @@ feature -- Access
 	tooltip_help_cell: CELL [STRING_32]
 			--`Result' is once access to a cell holding vale of `tooltip_help'.
 		once
-			create Result.put ("Recieve help on using the compliance checker tool.")
+			create Result.put ("receive help on using the compliance checker tool.")
 		end
 
 	box_border_width: INTEGER

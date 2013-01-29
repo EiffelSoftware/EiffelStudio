@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			--                 string is used to restore original string object.
 			--             If type is {TUPLE} or {SPECIAL [ANY]}, attributes contains the objects element.
 			--                 In case of manifest types, these are the actual values. Otherwise
-			--                 strings refering to other objects in `context'.
+			--                 strings referring to other objects in `context'.
 			--             Otherwise attributes are pairs of the actual attribute name and the corresponding
 			--                 value. Again this can be the values for manifest type, otherwise object ids.
 			-- inv:        True if object must satisfy its invariants. False if object was part of call

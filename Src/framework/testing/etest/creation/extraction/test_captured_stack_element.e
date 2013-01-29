@@ -1,6 +1,6 @@
 note
 	description: "[
-		Objects representing a call stack element, refering to the feature called in the specific
+		Objects representing a call stack element, referring to the feature called in the specific
 		element and its attributes and objects.
 	]"
 	author: ""

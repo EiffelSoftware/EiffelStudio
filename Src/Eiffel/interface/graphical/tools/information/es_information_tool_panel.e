@@ -133,7 +133,7 @@ feature {ES_INFORMATION_TOOL_COMMANDER_I, ES_EIS_TOOL_WIDGET} -- Basic operation
 		end
 
 	request_eis_visit
-			-- Reqest EIS background visiting to collect information into EIS storage.
+			-- Request EIS background visiting to collect information into EIS storage.
 		do
 			is_visit_requested := True
 			if is_shown then

@@ -1,5 +1,5 @@
 note
-	description: "Class which encapsulates primary key information for a table recieved from ODBS SqlPrimaryKeys() function."
+	description: "Class which encapsulates primary key information for a table received from ODBS SqlPrimaryKeys() function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

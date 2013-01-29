@@ -62,7 +62,7 @@ feature {NONE}-- Initialization
 			path_combo.focus_out_actions.extend (agent on_mouse_leave)
 			path_button.select_actions.extend (agent on_browse)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

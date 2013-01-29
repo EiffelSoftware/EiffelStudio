@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 		require
 			a_grid_not_void: a_grid /= Void
 		do
-			a_grid.mouse_wheel_actions.extend (agent on_grid_mouse_wheel_recieved (a_grid, ?))
+			a_grid.mouse_wheel_actions.extend (agent on_grid_mouse_wheel_received (a_grid, ?))
 			a_grid.key_release_actions.extend (agent on_grid_key_released (a_grid, ?))
 			a_grid.key_press_actions.extend (agent on_grid_key_pressed (a_grid, ?))
 			a_grid.row_select_actions.extend (agent on_grid_row_selected)
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Agent Handlers
 
-	on_grid_mouse_wheel_recieved (a_grid: EV_GRID; a_delta: INTEGER)
+	on_grid_mouse_wheel_received (a_grid: EV_GRID; a_delta: INTEGER)
 			-- Called when user scrolls `grid_output' using the mouse wheel
 		local
 			l_move_by: INTEGER

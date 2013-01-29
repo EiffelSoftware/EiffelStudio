@@ -1,6 +1,6 @@
 note
 	description: "[
-		Used in conjunction with `EC_CHECK_WORKER' as a means to recieve notification of proffered
+		Used in conjunction with `EC_CHECK_WORKER' as a means to receive notification of proffered
 		checked entities.
 	]"
 	legal: "See notice at end of class."

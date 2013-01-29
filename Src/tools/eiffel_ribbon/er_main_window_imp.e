@@ -68,7 +68,7 @@ feature {NONE}-- Initialization
 			exit_menu.select_actions.extend (agent on_exit_selected)
 			using_application_mode.select_actions.extend (agent on_using_application_mode_selected)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent destroy_and_exit_if_last)
 
 				-- Call `user_initialization'.

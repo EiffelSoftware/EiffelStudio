@@ -143,7 +143,7 @@ feature {NONE}-- Initialization
 			open_eiffelstudio_button.select_actions.extend (agent on_open_eiffelstudio)
 			exit_button.select_actions.extend (agent on_exit)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

@@ -108,7 +108,7 @@ feature -- Basic Operations
 feature {NONE} -- Basic Operations
 		
 	pre_process_line (in: STRING; astart_pos: INTEGER)
-			-- recieves a line from the template file and returns the result
+			-- receives a line from the template file and returns the result
 		require
 			non_void_in: in /= Void
 			start_pos_greater_than_zero: astart_pos > 0

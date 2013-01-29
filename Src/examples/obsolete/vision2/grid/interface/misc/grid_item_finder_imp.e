@@ -53,7 +53,7 @@ feature {NONE}-- Initialization
 			cursor_pixmap.pointer_button_press_actions.extend (agent pointer_pressed (?, ?, ?, ?, ?, ?, ?, ?))
 			cursor_pixmap.pointer_button_release_actions.extend (agent pointer_released (?, ?, ?, ?, ?, ?, ?, ?))
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

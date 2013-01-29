@@ -295,7 +295,7 @@ feature {NONE}-- Initialization
 			modify_text_size.change_actions.extend (agent update_text_size (?))
 			close_request_actions.extend (agent close_test)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

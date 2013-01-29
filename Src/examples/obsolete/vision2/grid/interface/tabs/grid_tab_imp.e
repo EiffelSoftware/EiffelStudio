@@ -395,7 +395,7 @@ feature {NONE}-- Initialization
 			columns_drawn_above_rows_button.select_actions.extend (agent columns_drawn_above_rows_button_selected)
 			enable_pick_and_drop_button.select_actions.extend (agent enable_pick_and_drop_button_selected)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

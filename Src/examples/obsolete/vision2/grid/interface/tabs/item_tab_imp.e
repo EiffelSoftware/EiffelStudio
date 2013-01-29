@@ -389,7 +389,7 @@ feature {NONE}-- Initialization
 			apply_text_column_button.select_actions.extend (agent apply_text_column_button_selected)
 			remove_item_button.select_actions.extend (agent remove_item_button_selected)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

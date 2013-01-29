@@ -166,7 +166,7 @@ feature {NONE}-- Initialization
 			unparent_row_button.select_actions.extend (agent unparent_row_button_selected)
 			clear_row_button.select_actions.extend (agent clear_row_button_selected)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

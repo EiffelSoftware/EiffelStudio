@@ -591,7 +591,7 @@ feature -- Miscellaneous
 	Directory_string: STRING = "Directory"
 		-- XML tag used to represent a directory.
 
-	Directory_seperator: CHARACTER
+	Directory_separator: CHARACTER
 			-- Seperator used for directories on current platform.
 		once
 			Result := (create {OPERATING_ENVIRONMENT}).directory_separator

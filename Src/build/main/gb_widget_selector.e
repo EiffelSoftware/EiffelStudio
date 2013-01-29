@@ -2,7 +2,7 @@ note
 	description:
 		"[
 			Objects that allow a user to select/manipulate all the widgets in a project.
-			Each item contained will be generated as a seperate class.
+			Each item contained will be generated as a separate class.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

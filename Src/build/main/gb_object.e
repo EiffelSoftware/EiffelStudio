@@ -2069,7 +2069,7 @@ invariant
 	top_level_object_has_widget_selector_item: is_top_level_object implies (widget_selector_item /= Void)
 	instance_referers_recursively_unique: components.object_handler.objects.has (id) implies instance_referers_recursively_unique (Current, True, create {HASH_TABLE [INTEGER, INTEGER]}.make (10))
 	nested_structures_equal: ((not components.system_status.is_object_structure_changing) and (components.object_handler.deleted_objects.item (id) /= Void)) implies instance_referers_nested_strutures_match
--- Cannot check this at the moment as when the `associated_top_level_object' is set, the other link is performed seperately. Check calls of `new_top_level_representation'.
+-- Cannot check this at the moment as when the `associated_top_level_object' is set, the other link is performed separately. Check calls of `new_top_level_representation'.
 --	bi_directional_top_level_object_link: is_instance_of_top_level_object and components.object_handler.deep_object_from_id (associated_top_level_object) /= Void implies components.object_handler.deep_object_from_id (associated_top_level_object).instance_referers.has (id)
 
 -- Not True, any object within the structure may have instance referers, as properties must be updated.

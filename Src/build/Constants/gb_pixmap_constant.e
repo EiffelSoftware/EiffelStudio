@@ -140,12 +140,12 @@ feature -- Access
 					directory_constant_not_void: directory_constant /= Void
 				end
 				directory_value := directory_constant.value_as_string
-				if directory_value.item (directory_value.count).is_equal (Directory_seperator) then
+				if directory_value.item (directory_value.count).is_equal (Directory_separator) then
 						-- Strip out any ending directory separators, as some platforms may include
 						-- these.
 					directory_value := directory_value.substring (1, directory_value.count - 1)
 				end
-				Result := directory_value + Directory_seperator.out + filename
+				Result := directory_value + Directory_separator.out + filename
 			end
 		end
 
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 					directory_constant_found: directory_constant /= Void
 				end
 				directory_value := directory_constant.value
-				if directory_value.item (directory_value.count).is_equal (Directory_seperator) then
+				if directory_value.item (directory_value.count).is_equal (Directory_separator) then
 					directory_value := directory_value.substring (1, directory_value.count - 1)
 				end
 				create file_name.make_from_string (directory_value)

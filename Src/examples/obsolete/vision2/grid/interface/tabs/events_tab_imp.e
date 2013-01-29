@@ -76,7 +76,7 @@ feature {NONE}-- Initialization
 			highlight_items_on_motion.select_actions.extend (agent highlight_items_on_motion_selected)
 			show_events_in_items.select_actions.extend (agent show_events_in_items_selected)
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

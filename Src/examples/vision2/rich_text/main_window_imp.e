@@ -301,7 +301,7 @@ feature {NONE}-- Initialization
 			top_spacing.change_actions.extend (agent top_spacing_changed (?))
 			bottom_spacing.change_actions.extend (agent bottom_spacing_changed (?))
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is received on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

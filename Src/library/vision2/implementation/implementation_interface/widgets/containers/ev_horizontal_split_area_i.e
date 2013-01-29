@@ -1,6 +1,6 @@
 note
 	description:
-		"Displays two widgets side by side, seperated by an adjustable divider."
+		"Displays two widgets side by side, separated by an adjustable divider."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

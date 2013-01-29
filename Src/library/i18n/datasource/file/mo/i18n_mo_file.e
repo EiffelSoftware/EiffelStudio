@@ -111,7 +111,7 @@ feature -- Access
 			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
 			Result := l_list.i_th (1)
 				-- Extract original in case of `msgctxt' appears.
-				-- '%/4/' is the seperater used by .mo file.
+				-- '%/4/' is the separator used by .mo file.
 			Result := Result.substring ((Result.index_of ('%/4/', 1) + 1).min (Result.count) , Result.count)
 		end
 

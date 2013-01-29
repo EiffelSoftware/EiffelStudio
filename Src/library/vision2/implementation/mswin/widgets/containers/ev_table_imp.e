@@ -105,7 +105,7 @@ feature {EV_ANY_I} -- Access
 	is_homogeneous: BOOLEAN
 			-- Are all the cells equal in size ?
 			--| Gtk does not allow you to set the homogenuity of the
-			--| Columns seperately from that of the rows.
+			--| Columns separately from that of the rows.
 			--| We provide the same behaviour for this implementation.
 
 	border_width: INTEGER

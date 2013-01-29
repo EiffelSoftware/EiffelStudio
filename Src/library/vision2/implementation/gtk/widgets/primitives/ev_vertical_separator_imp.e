@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	old_make (an_interface: like interface)
-			-- Create a GTK vertical seperator in an event box.
+			-- Create a GTK vertical separator in an event box.
 		do
 			assign_interface (an_interface)
 		end

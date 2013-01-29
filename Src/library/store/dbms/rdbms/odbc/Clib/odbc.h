@@ -118,7 +118,7 @@ extern "C" {
 #define GetDbColPtr(daptr,i) ((((daptr)->sqlvar)[i]).sqldata)
 #define SetDbColPtr(daptr,i,ptr) ((((daptr)->sqlvar)[i]).sqldata = (ptr))
 
-/* 
+/*
  * String type with count
  */
 typedef struct countable_string_ {
@@ -197,7 +197,7 @@ typedef ODBCSQLDA_TYPE(sqda_, ODBCSQLDA, IISQ_MAX_COLS);
  * Specific constants for SQL Server (usually included in sqlncli.h)
  * If SQL_SS_LENGTH_UNLIMITED is not defined, then none of the others are.
  */
-#ifndef SQL_SS_LENGTH_UNLIMITED 
+#ifndef SQL_SS_LENGTH_UNLIMITED
 /* SQL_SS_LENGTH_UNLIMITED is used to describe the max length of
  * VARCHAR(max), VARBINARY(max), NVARCHAR(max), and XML columns
  */
@@ -242,7 +242,7 @@ extern void odbc_set_proc_flag(void *con, int no_desc);
 extern SQLTCHAR *odbc_hide_qualifier(SQLTCHAR *buf, int char_count);
 extern void odbc_unhide_qualifier(SQLTCHAR *buf, int char_count);
 extern SQLTCHAR *odbc_identifier_quoter();
-extern SQLTCHAR *odbc_qualifier_seperator();
+extern SQLTCHAR *odbc_qualifier_separator();
 extern void odbc_set_qualifier(void *con, SQLTCHAR *qfy, int len);
 extern void odbc_set_owner(void *con, SQLTCHAR *owner, int len);
 extern void odbc_unset_catalog_flag(void *con, int no_desc);

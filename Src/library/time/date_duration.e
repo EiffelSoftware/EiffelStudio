@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Durations of date"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -115,7 +115,7 @@ feature -- Comparison
 feature -- Status report
 
 	definite: BOOLEAN
-			-- Is the duration is independant of the date
+			-- Is the duration is independent of the date
 			-- on which it applies? (use of `day' only)?
 			-- or not (use of `year', `month' and `day')?
 		do

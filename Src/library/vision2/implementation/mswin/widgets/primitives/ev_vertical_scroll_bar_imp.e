@@ -43,7 +43,7 @@ feature -- Initialization
 feature -- Status setting
 
    	set_default_minimum_size
-   			-- Platform dependant initializations.
+   			-- Platform dependent initializations.
    		do
 			ev_set_minimum_width ((create {WEL_SYSTEM_METRICS})
 				.vertical_scroll_bar_arrow_width, False)

@@ -56,7 +56,7 @@ feature -- Basic operations
 		end
 
 	native_join (term: POINTER)
-			-- Same as `join' except that the low-level architecture-dependant
+			-- Same as `join' except that the low-level architecture-dependent
 			-- routine is used. The thread must not be created detached.
 		do
 			thread_imp.join

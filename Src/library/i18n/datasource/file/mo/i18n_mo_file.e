@@ -188,7 +188,7 @@ feature -- Access
 			l_name: READABLE_STRING_GENERAL
 		do
 				-- The only inherent locale identifier in a .mo file is the name.
-				-- Any other way to identify it is project dependant, see FILE_MANAGER for more details
+				-- Any other way to identify it is project dependent, see FILE_MANAGER for more details
 			if attached file.path.entry as l_entry and then l_entry.has_extension ("mo") then
 				l_name := l_entry.name
 				if

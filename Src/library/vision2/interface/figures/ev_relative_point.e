@@ -226,7 +226,7 @@ feature -- Element change
 			-- Set point this point is relative to.
 		require
 			new_origin_not_void: new_origin /= Void
-			no_dependance_circle: not new_origin.relative_to (Current)
+			no_dependence_circle: not new_origin.relative_to (Current)
 				and new_origin /= Current
 		local
 			l_origin: like origin
@@ -247,7 +247,7 @@ feature -- Element change
 			-- scaling factors and angle do not change.
 		require
 			new_origin_not_void: new_origin /= Void
-			no_dependance_circle: not new_origin.relative_to (Current)
+			no_dependence_circle: not new_origin.relative_to (Current)
 		do
 			x := x_abs - new_origin.x_abs
 			y := y_abs - new_origin.y_abs
@@ -575,7 +575,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 		end
 
 	notify_list: LINKED_LIST [EV_RELATIVE_POINT]
-			-- Immediate dependant points.
+			-- Immediate dependent points.
 		local
 			i: detachable EV_RELATIVE_POINT
 		do
@@ -594,7 +594,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 		end
 
 	notify_list_ids: ARRAYED_LIST [INTEGER]
-			-- Immediate dependant points and figures using weak referencing.
+			-- Immediate dependent points and figures using weak referencing.
 
 	notify_of_position_change
 			-- Set flag `position_changed' and in all referring positions.

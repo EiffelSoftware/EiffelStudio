@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Status setting
 
    	set_default_minimum_size
-   			-- Platform dependant initializations.
+   			-- Platform dependent initializations.
    		do
 			ev_set_minimum_height (
 				(create {WEL_SYSTEM_METRICS}).

@@ -130,7 +130,7 @@ feature -- Access
 	static_type_id: INTEGER
 			-- Unique static_type_id for current class type
 			--| Useful to set name of associated generated file
-			--| which has to be dynamic type (`type_id') independant.
+			--| which has to be dynamic type (`type_id') independent.
 			--| Remember that after during each finalization, dynamic types
 			--| are reprocessed.
 

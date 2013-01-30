@@ -425,11 +425,12 @@ feature -- Element change
 		end
 
 	append_raw_string_32 (s: STRING_32)
-			-- Append string `s'.
+			-- Append string `s' as a byte sequence in little endian format.
 		require
 			good_argument: s /= Void
 		local
 			i, l_count: INTEGER
+			l_code: NATURAL_32
 		do
 			from
 				l_count := s.count
@@ -437,7 +438,11 @@ feature -- Element change
 			until
 				i > l_count
 			loop
-				append_character_32 (s [i])
+				l_code := s.code (i)
+				append_natural_8 ((l_code & 0x000000FF).to_natural_8)
+				append_natural_8 ((l_code & 0x0000FF00 |>> 8).to_natural_8)
+				append_natural_8 ((l_code & 0x00FF0000 |>> 16).to_natural_8)
+				append_natural_8 ((l_code & 0xFF000000 |>> 24).to_natural_8)
 				i := i + 1
 			end
 			append ('%U')
@@ -641,7 +646,7 @@ invariant
 	integer_32_valid: integer_32_bytes = natural_32_bytes
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

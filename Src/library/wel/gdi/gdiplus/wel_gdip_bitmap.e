@@ -140,7 +140,7 @@ feature {NONE} -- Initlization
 			l_pointer: POINTER
 			l_width, l_height: INTEGER
 			l_helper: WEL_BITMAP_HELPER
-			l_data: ARRAY [CHARACTER_8]
+			l_data: MANAGED_POINTER
 		do
 			l_width := a_bitmap.width
 			l_height := a_bitmap.height
@@ -153,9 +153,9 @@ feature {NONE} -- Initlization
 
 			-- Gdi and Gdi+ have different pixel data order (`up to bottom' vs `bottom to up')
 			create l_helper
-			l_data := l_helper.bits_of_image_bottom_up (a_bitmap)
+			l_data := l_helper.bits_pointer_of_image_bottom_up (a_bitmap)
 
-			l_pointer.memory_copy (l_data.area.base_address, l_width * l_height * 4)
+			l_pointer.memory_copy (l_data.item, l_width * l_height * 4)
 			unlock_bits (l_current_data)
 		end
 
@@ -599,7 +599,7 @@ feature -- C externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -74,6 +74,23 @@ feature -- Query
 			l_info.dispose
 		end
 
+	bits_pointer_of_image_bottom_up (a_bitmap: WEL_BITMAP): MANAGED_POINTER
+			-- Data bits of `a_bitmap', vertical filp data bits.
+		require
+			not_void: a_bitmap /= Void
+			a_bitmap_exits: a_bitmap.exists
+		local
+			l_dc: WEL_MEMORY_DC
+			l_info: WEL_BITMAP_INFO
+		do
+			create l_dc.make
+			l_info := info_of_bitmap (a_bitmap)
+			l_info.header.set_height (- l_info.header.height)
+			Result := l_dc.di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			l_info.header.dispose
+			l_info.dispose
+		end
+
 	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO
 			-- Create a Result base on `a_bitmap'
 		require
@@ -133,14 +150,14 @@ feature -- Brush Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -285,39 +285,29 @@ feature -- Conversion
 			utf32_to_console_encoding_attached: Result /= Void
 		end
 
-feature -- Validate
-
 	string_32_to_stream (a_str: STRING_32): STRING
 			-- Byte stream of `a_string'.
+			-- Always generate little endian string.
 		require
 			a_str_attached: a_str /= Void
 		local
 			i: INTEGER_32
 			l_code: NATURAL_32
 			l_count: INTEGER
-			l_is_little_endian: BOOLEAN
 		do
 			l_count := a_str.count
 			if l_count > 0 then
 				create Result.make (l_count * 4)
 				from
 					i := 1
-					l_is_little_endian := is_little_endian
 				until
 					i > l_count
 				loop
 					l_code := a_str.item (i).natural_32_code
-					if l_is_little_endian then
-						Result.append_code (l_code & 0x000000FF)
-						Result.append_code (l_code & 0x0000FF00 |>> 8)
-						Result.append_code (l_code & 0x00FF0000 |>> 16)
-						Result.append_code (l_code & 0xFF000000 |>> 24)
-					else
-						Result.append_code (l_code & 0xFF000000 |>> 24)
-						Result.append_code (l_code & 0x00FF0000 |>> 16)
-						Result.append_code (l_code & 0x0000FF00 |>> 8)
-						Result.append_code (l_code & 0x000000FF)
-					end
+					Result.append_code (l_code & 0x000000FF)
+					Result.append_code (l_code & 0x0000FF00 |>> 8)
+					Result.append_code (l_code & 0x00FF0000 |>> 16)
+					Result.append_code (l_code & 0xFF000000 |>> 24)
 					i := i + 1
 				end
 			else
@@ -326,6 +316,8 @@ feature -- Validate
 		ensure
 			string_32_to_stream_attached: Result /= Void
 		end
+
+feature -- Validate
 
 	is_code_point_valid_string_8 (a_utf8_str: STRING_8): BOOLEAN
 			-- Is Unicode code point  of `a_utf_8_str' valid for STRING_8?
@@ -423,7 +415,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

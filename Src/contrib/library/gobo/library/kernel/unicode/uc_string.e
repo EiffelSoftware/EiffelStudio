@@ -60,7 +60,8 @@ inherit
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
 			set_count as old_set_count,
-			is_empty as old_is_empty
+			is_empty as old_is_empty,
+			append_substring as old_append_substring
 		export
 			{STRING}
 				share,
@@ -167,7 +168,8 @@ inherit
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
-			is_less as old_infix_less
+			is_less as old_infix_less,
+			append_substring as old_append_substring
 		export
 			{NONE} all
 		undefine

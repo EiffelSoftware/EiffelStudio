@@ -34,12 +34,14 @@ feature -- Access
 			-- Layout of eiffel.
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
-		local
-			l_result: detachable EIFFEL_ENV
 		do
-			l_result := eiffel_layout_cell.item
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			if attached eiffel_layout_cell.item as l_result then
+				Result := l_result
+			else
+					-- Per precondition
+				check False end
+				create {EC_EIFFEL_LAYOUT} Result
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end

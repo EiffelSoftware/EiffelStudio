@@ -6121,8 +6121,9 @@ feature -- Implementation
 						when {EV_KEY_CONSTANTS}.Key_tab, {EV_KEY_CONSTANTS}.Key_home, {EV_KEY_CONSTANTS}.Key_end then
 							if
 								not application_implementation.ctrl_pressed and then
-								(column_count > 1 and not is_row_selection_enabled) and then
-								is_item_tab_navigation_enabled -- Handle navigation for multi-column grid with item tab navigation.
+								(column_count >= 1 and not is_row_selection_enabled) and then
+								(column_count = 1 implies l_key_code = {EV_KEY_CONSTANTS}.Key_tab) and then -- Home / End handling for multi-column grids is handled further down.
+								is_item_tab_navigation_enabled -- Handle navigation for grid with item tab navigation.
 							then
 									-- We need to handle tab, home and end navigation correctly.
 								a_sel_item := find_next_item (l_prev_sel_item.row.index, l_prev_sel_item.column.index,
@@ -6729,7 +6730,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

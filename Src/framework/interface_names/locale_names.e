@@ -373,12 +373,10 @@ feature -- Access
 			loop
 				l_original_value := a_array_of_id.item (i)
 				l_value := l_original_value.as_lower
-				if l_locales.has_key (l_value) then
-					l_displayed_name := l_locales.found_item
-					check l_displayed_name /= Void end -- Implied from `has_key'.
-				elseif l_langs.has_key (l_value) then
-					l_displayed_name := l_langs.found_item
-					check l_displayed_name /= Void end -- Implied from `has_key'.
+				if attached l_locales.item (l_value) as l_found_item then
+					l_displayed_name := l_found_item
+				elseif attached l_langs.item (l_value) as l_found_item then
+					l_displayed_name := l_found_item
 				else
 					l_displayed_name := l_original_value.as_string_32
 				end
@@ -407,12 +405,10 @@ feature -- Access
 				a_list_of_id as c
 			loop
 				k := c.item.as_lower
-				if l_locales.has_key (k) then
-					l_displayed_name := l_locales.found_item
-					check l_displayed_name /= Void end -- Implied from `has_key'.
-				elseif l_langs.has_key (k) then
-					l_displayed_name := l_langs.found_item
-					check l_displayed_name /= Void end -- Implied from `has_key'.
+				if attached l_locales.item (k) as l_found_item then
+					l_displayed_name := l_found_item
+				elseif attached l_langs.item (k) as l_found_item then
+					l_displayed_name := l_found_item
 				else
 					l_displayed_name := c.item.as_string_32
 				end

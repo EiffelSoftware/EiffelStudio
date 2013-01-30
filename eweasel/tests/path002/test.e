@@ -13,6 +13,7 @@ feature
 			test_root
 			test_one_character_root
 			test_entry
+			test_parent
 			test_one_character_entry
 			test_extended
 			test_absolute
@@ -27,13 +28,55 @@ feature
 			counter := 0
 			create o.make_from_string ("abc")
 			p := o.twin
-			check_equal ("make_from_path", p ~ o)
-			check_equal ("make_from_path", p.name ~ o.name)
+			check_equal ("make_from_string", p.same_as (o))
+			check_equal ("make_from_string", p.name.same_string (o.name))
 
 			p := env.current_working_path.twin
-			check_equal ("make_from_path", p ~ env.current_working_path)
-			check_equal ("make_from_path", p.name ~ env.current_working_path.name)
+			check_equal ("make_from_string", p.same_as (env.current_working_path))
+			check_equal ("make_from_string", p.name.same_string (env.current_working_path.name))
 
+			create p.make_from_string ("c:\\\\foo\\\\\bar")
+			check_equal ("make_from_string", p.name.same_string_general ("c:\foo\bar"))
+
+			create p.make_from_string ("c:\\\\foo\\\\\bar\")
+			check_equal ("make_from_string", p.name.same_string_general ("c:\foo\bar"))
+
+			create p.make_from_string ("c:\\\\foo\\\\\bar\\\\")
+			check_equal ("make_from_string", p.name.same_string_general ("c:\foo\bar"))
+
+			create p.make_from_string ("\\server")
+			check_equal ("make_from_string", p.name.same_string_general ("\server"))
+
+			create p.make_from_string ("\\server\")
+			check_equal ("make_from_string", p.name.same_string_general ("\server"))
+
+			create p.make_from_string ("\\server\\\\\")
+			check_equal ("make_from_string", p.name.same_string_general ("\server"))
+
+			create p.make_from_string ("\\server\share")
+			check_equal ("make_from_string", p.name.same_string_general ("\\server\share"))
+
+			create p.make_from_string ("\\server\\\\share")
+			check_equal ("make_from_string", p.name.same_string_general ("\\server\share"))
+
+			create p.make_from_string ("\\server\share\")
+			check_equal ("make_from_string", p.name.same_string_general ("\\server\share\"))
+
+			create p.make_from_string ("\\server\\\\share\")
+			check_equal ("make_from_string", p.name.same_string_general ("\\server\share\"))
+
+			create p.make_from_string ("\\server\\\\share\\\\\")
+			check_equal ("make_from_string", p.name.same_string_general ("\\server\share\"))
+
+			create p.make_from_string ("\")
+			check_equal ("make_from_string", p.name.same_string_general ("\"))
+
+				-- Special case for UNC path.
+			create p.make_from_string ("\\")
+			check_equal ("make_from_string", p.name.same_string_general ("\"))
+
+			create p.make_from_string ("\\\\\")
+			check_equal ("make_from_string", p.name.same_string_general ("\"))
 		end
 
 	test_root
@@ -47,45 +90,45 @@ feature
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\abc")
-			check_equal ("root", p.root = Void)
-			check_equal ("root", not p.has_root)
+			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("abc\def")
 			check_equal ("root", p.root = Void)
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\abc\def")
-			check_equal ("root", p.root = Void)
-			check_equal ("root", not p.has_root)
+			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", p.has_root)
 
 				-- UNC like root
 			create p.make_from_string ("\\abc")
-			check_equal ("root", p.root = Void)
-			check_equal ("root", not p.has_root)
+			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\abc\def")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("\\abc\def"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\abc\def")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\abc\def\gdb")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("\\abc\def"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\abc\def\")))
 			check_equal ("root", p.has_root)
 
 				-- Drive letter like root
 			create p.make_from_string ("c:abc")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\abc")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:abc\def")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\abc\def")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 		end
 
@@ -100,45 +143,45 @@ feature
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\a")
-			check_equal ("root", p.root = Void)
-			check_equal ("root", not p.has_root)
+			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("a\b")
 			check_equal ("root", p.root = Void)
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\a\b")
-			check_equal ("root", p.root = Void)
-			check_equal ("root", not p.has_root)
+			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", p.has_root)
 
 				-- UNC like root
 			create p.make_from_string ("\\a")
-			check_equal ("root", p.root = Void)
-			check_equal ("root", not p.has_root)
+			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\a\b")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("\\a\b"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\a\b")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\a\b\c")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("\\a\b"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\a\b\")))
 			check_equal ("root", p.has_root)
 
 				-- Drive letter like root
 			create p.make_from_string ("c:a")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\a")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:a\b")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\a\b")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
+			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 		end
 
@@ -150,35 +193,35 @@ feature
 			counter := 0
 				-- No root.
 			create p.make_from_string ("abc")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("abc\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\abc")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\abc\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("abc\def")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("abc\def\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("\abc\def")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("\abc\def\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 				-- UNC like root
 			create p.make_from_string ("\\abc")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\\abc\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\\abc\def")
 			check_equal ("entry", p.entry = Void)
@@ -187,49 +230,49 @@ feature
 			check_equal ("entry", p.entry = Void)
 
 			create p.make_from_string ("\\abc\def\gdb")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("gdb"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("gdb")))
 
 			create p.make_from_string ("\\abc\def\gdb\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("gdb"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("gdb")))
 
 				-- Drive letter like root
 			create p.make_from_string ("c:abc")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:abc\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:\abc")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:\abc\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("abc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:abc\def")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("c:abc\def\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("c:\abc\def")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("c:\abc\def\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("def"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create s.make (2)
 			s.append_string_general ("C:\")
 			s.append_character ('%/119070/')
 			s.append_string_general ("\calc")
 			create p.make_from_string (s)
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("calc"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("calc")))
 
 			create s.make (2)
 			s.append_string_general ("C:\")
 			s.append_character ('%/119070/')
 			s.append_string_general ("\calc\calc.ecf")
 			create p.make_from_string (s)
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("calc.ecf"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("calc.ecf")))
 		end
 
 	test_one_character_entry
@@ -239,35 +282,35 @@ feature
 			counter := 0
 				-- No root.
 			create p.make_from_string ("a")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("a\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\a")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\a\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("a\b")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("a\b\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("\a\b")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("\a\b\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
 
 				-- UNC like root
 			create p.make_from_string ("\\a")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\\a\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\\a\b")
 			check_equal ("entry", p.entry = Void)
@@ -276,35 +319,121 @@ feature
 			check_equal ("entry", p.entry = Void)
 
 			create p.make_from_string ("\\a\b\c")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("c"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("c")))
 
 			create p.make_from_string ("\\a\b\c\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("c"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("c")))
 
 				-- Drive letter like root
 			create p.make_from_string ("c:a")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:a\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:\a")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:\a\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("a"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:a\b")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("c:a\b\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("c:\a\b")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("c:\a\b\")
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+		end
+
+	test_parent
+		local
+			p: PATH
+			s: STRING_32
+		do
+			counter := 0
+				-- No root.
+			create p.make_from_string ("abc")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_current))
+
+			create p.make_from_string ("abc\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_current))
+
+			create p.make_from_string ("\abc")
+			check_equal ("parent", p.root.name.same_string_general ("\"))
+			check_equal ("parent", p.parent.same_as (p.root))
+
+			create p.make_from_string ("\abc\")
+			check_equal ("parent", p.root.name.same_string_general ("\"))
+			check_equal ("parent", p.parent.same_as (p.root))
+
+			create p.make_from_string ("abc\def")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("abc")))
+
+			create p.make_from_string ("abc\def\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("abc")))
+
+			create p.make_from_string ("\abc\def")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\abc")))
+
+			create p.make_from_string ("\abc\def\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\abc")))
+
+				-- UNC like root
+			create p.make_from_string ("\\abc")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\")))
+
+			create p.make_from_string ("\\abc\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\")))
+
+			create p.make_from_string ("\\abc\def")
+			check_equal ("parent", p.parent = p)
+
+			create p.make_from_string ("\\abc\def\")
+			check_equal ("parent", p.parent = p)
+
+			create p.make_from_string ("\\abc\def\gdb")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\\abc\def\")))
+
+			create p.make_from_string ("\\abc\def\gdb\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\\abc\def\")))
+
+				-- Drive letter like root
+			create p.make_from_string ("c:abc")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:")))
+
+			create p.make_from_string ("c:abc\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:")))
+
+			create p.make_from_string ("c:\abc")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:\")))
+
+			create p.make_from_string ("c:\abc\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:\")))
+
+			create p.make_from_string ("c:abc\def")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:abc")))
+
+			create p.make_from_string ("c:abc\def\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:abc")))
+
+			create p.make_from_string ("c:\abc\def")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:\abc")))
+
+			create p.make_from_string ("c:\abc\def\")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("c:\abc")))
+
+			create s.make (2)
+			s.append_string_general ("C:\")
+			s.append_character ('%/119070/')
+			s.append_string_general ("\calc")
+			create p.make_from_string (s)
+			p := p.extended ("calc.ecf")
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string (s)))
 		end
 
 	test_extended
@@ -314,7 +443,7 @@ feature
 			counter := 0
 			create p.make_from_string ("C:")
 			p := p.extended ("abc.txt")
-			check_equal ("extended", p ~ create {PATH}.make_from_string ("C:\abc.txt"))
+			check_equal ("extended", p.same_as (create {PATH}.make_from_string ("C:\abc.txt")))
 		end
 
 	test_absolute
@@ -342,9 +471,9 @@ feature
 			s.append_character ('%/119070/')
 			s.append_string_general ("\calc\calc.ecf")
 			create p.make_from_string (s)
-			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("calc.ecf"))
+			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("calc.ecf")))
 
-			check_equal ("canonical_path", p.canonical_path ~ p)
+			check_equal ("canonical_path", p.canonical_path.same_as (p))
 		end
 
 	trailing_slashes_removed
@@ -354,7 +483,7 @@ feature
 		do
 			counter := 0
 			create p.make_from_string ("abc\")
-			check_equal ("slashes", p.name ~ {STRING_32} "abc")
+			check_equal ("slashes", p.name.same_string_general ("abc"))
 		end
 
 	env: EXECUTION_ENVIRONMENT
@@ -373,4 +502,6 @@ feature
 				io.put_new_line
 			end
 		end
+
 end
+

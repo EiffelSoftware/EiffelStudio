@@ -1,11 +1,10 @@
-note
+﻿note
 	description: "Keeper for initialized variables."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class AST_INITIALIZATION_KEEPER
+
+inherit
+	AST_NESTING_KEEPER
 
 feature -- Access
 
@@ -46,70 +45,10 @@ feature {AST_ATTRIBUTE_INITIALIZATION_TRACKER, AST_LOCAL_INITIALIZATION_TRACKER}
 			across 1 |..| count as c all is_set (c.item) end
 		end
 
-feature -- Status report: nesting
-
-	nesting_level: INTEGER
-			-- Current nesting level of a compound
-		deferred
-		end
-
-feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER} -- Modification: nesting
-
-	enter_realm
-			-- Enter a new complex instruction with inner compound parts.
-		deferred
-		ensure
-			is_nesting_level_incremented: nesting_level = old nesting_level + 1
-		end
-
-	update_realm
-			-- Update realm variable information from the current state.
-		deferred
-		ensure
-			is_nesting_level_preserved: nesting_level = old nesting_level
-		end
-
-	save_sibling
-			-- Save scope information of a sibling in a complex instrution and restart recording using the outer scope.
-			-- For example, Then_part of Elseif condition.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_preserved: nesting_level = old nesting_level
-		end
-
-	update_sibling
-			-- Update scope information of a sibling in a complex instrution and reuse it for the current scope.
-			-- For example, Loop body.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_preserved: nesting_level = old nesting_level
-		end
-
-	leave_realm
-			-- Leave a complex instruction and promote variable information to the outer compound.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_decremented: nesting_level = old nesting_level - 1
-		end
-
-	leave_optional_realm
-			-- Leave a complex instruction and discard its variable information.
-			-- For example, Debug instruction.
-		require
-			is_nested: nesting_level > 0
-		deferred
-		ensure
-			is_nesting_level_decremented: nesting_level = old nesting_level - 1
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

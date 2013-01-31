@@ -319,7 +319,11 @@ feature -- Basic operations: Degrees
 			a_path_attached: a_path /= Void
 		do
 			total_number := 1
-			put_degree (degree_message (6), 1, a_cluster.name.as_string_32 + a_path)
+			if a_path.is_empty then
+				put_degree (degree_message (6), 1, a_cluster.name)
+			else
+				put_degree (degree_message (6), 1, a_cluster.name + ":" + a_path)
+			end
 		end
 
 	put_degree_5 (a_class: CLASS_C; a_to_go: INTEGER)

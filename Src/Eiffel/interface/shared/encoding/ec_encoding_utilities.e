@@ -112,7 +112,7 @@ feature -- Conversion
 		local
 			l_str: STRING_32
 		do
-			l_str := pointer_to_wide_string (a_string.area.base_address, a_string.count)
+			l_str := string_8_to_wide_string (a_string)
 			utf16.convert_to (utf32, l_str)
 			if utf8.last_conversion_successful then
 				Result := utf8.last_converted_string.as_string_32
@@ -124,7 +124,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

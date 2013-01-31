@@ -30,31 +30,18 @@ feature {NONE} -- Implementation
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
-			new_size: INTEGER
-			l_end_pos, l_start_pos: INTEGER
-			l_result: MANAGED_POINTER
 		do
-			l_start_pos := 1
-			l_end_pos := a_string.count
-			create l_result.make ((l_end_pos + 1) * 2)
-			nb := l_end_pos - l_start_pos + 1
-
-			new_size := (nb + 1) * 2
-
-			if l_result.count < new_size  then
-				l_result.resize (new_size)
-			end
-
+			nb := a_string.count
+			create Result.make ((nb + 1) * 2)
 			from
 				i := 0
 			until
 				i = nb
 			loop
-				l_result.put_natural_16 (a_string.code (i + l_start_pos).to_natural_16, i * 2)
+				Result.put_natural_16 (a_string.code (i + 1).to_natural_16, i * 2)
 				i := i +  1
 			end
-			l_result.put_natural_16 (0, i * 2)
-			Result := l_result
+			Result.put_natural_16 (0, i * 2)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -137,17 +124,90 @@ feature {NONE} -- Implementation
 		end
 
 	string_32_to_stream (a_string: STRING_32): STRING_8
-			-- Byte stream of `a_string'.
+			-- Byte stream of `a_string' in endianness of the current platform.
+		obsolete
+			"Use `string_to_multi_byte' instead."
+		do
+			Result := string_32_to_multi_byte (a_string)
+		end
+
+	string_32_to_multi_byte (a_string: STRING_32): STRING_8
+			-- Byte stream of `a_string' in endianness of the current platform.
 		require
 			a_string_not_void: a_string /= Void
+		local
+			i: INTEGER_32
+			l_code: NATURAL_32
+			l_count: INTEGER
+			l_is_little_endian: BOOLEAN
 		do
-			Result := pointer_to_multi_byte (a_string.area.base_address, a_string.count * 4)
+			l_count := a_string.count
+			if l_count > 0 then
+				create Result.make (l_count * 4)
+				from
+					i := 1
+					l_is_little_endian := is_little_endian
+				until
+					i > l_count
+				loop
+					l_code := a_string.code (i)
+					if l_is_little_endian then
+						Result.append_code (l_code & 0x000000FF)
+						Result.append_code (l_code & 0x0000FF00 |>> 8)
+						Result.append_code (l_code & 0x00FF0000 |>> 16)
+						Result.append_code (l_code & 0xFF000000 |>> 24)
+					else
+						Result.append_code (l_code & 0xFF000000 |>> 24)
+						Result.append_code (l_code & 0x00FF0000 |>> 16)
+						Result.append_code (l_code & 0x0000FF00 |>> 8)
+						Result.append_code (l_code & 0x000000FF)
+					end
+					i := i + 1
+				end
+			else
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	string_8_to_wide_string (a_w_string: STRING_8): STRING_32
+			-- Interpret `a_w_string' as a sequence of 2-byte characters into a STRING_32
+			-- in endianness of the current platform.
+		require
+			a_w_string_not_void: a_w_string /= Void
+		local
+			i: INTEGER
+			l_size, l_count: INTEGER
+			l_is_little_endian: BOOLEAN
+			l_code: NATURAL_32
+		do
+			l_count := a_w_string.count
+			l_size := (l_count + 1) // 2
+			l_is_little_endian := is_little_endian
+			create Result.make (l_size)
+			from
+				i := 1
+			until
+				i > l_count
+			loop
+				if i + 1 <= l_count then
+					if l_is_little_endian then
+						l_code := a_w_string.code (i) | (a_w_string.code (i + 1) |<< 8)
+					else
+						l_code := (a_w_string.code (i) |<< 8) | a_w_string.code (i + 1)
+					end
+					Result.append_code (l_code)
+				end
+				i := i + 1
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	string_16_to_stream (a_string: STRING_32): STRING_8
 			-- We use `a_string' as 2 bytes encoding string, the first two bytes are not used.
+			-- in the endianness of the current platform.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -158,15 +218,16 @@ feature {NONE} -- Implementation
 			create Result.make (l_managed_pointer.count)
 			from
 				i := 0
-				l_count := l_managed_pointer.count - 1
+				l_count := l_managed_pointer.count - 2
 			until
 				i = l_count
 			loop
-				Result.put (l_managed_pointer.read_natural_8 (i).to_character_8, i + 1)
+				Result.append_character (l_managed_pointer.read_natural_8 (i).to_character_8)
 				i := i + 1
 			end
 		ensure
 			Result_not_void: Result /= Void
+			valid_count: Result.count = a_string.count * 2
 		end
 
 	string_general_to_stream (a_string: READABLE_STRING_GENERAL): STRING
@@ -177,7 +238,7 @@ feature {NONE} -- Implementation
 			if a_string.is_string_8 then
 				Result := a_string.to_string_8
 			else
-				Result := string_32_to_stream (a_string.as_string_32)
+				Result := string_32_to_multi_byte (a_string.as_string_32)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -244,7 +305,7 @@ feature {NONE} -- Endian
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

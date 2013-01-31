@@ -20,6 +20,7 @@ feature
 			test_absolute
 			test_canonical
 			test_components
+			test_extension
 			trailing_slashes_removed
 		end
 
@@ -569,7 +570,54 @@ feature
 			check_equal ("components", p.components.i_th (1).same_as (p.root))
 			check_equal ("components", p.components.i_th (1).name.same_string_general ("\\server\share\"))
 			check_equal ("components", p.components.i_th (2).name.same_string_general ("a"))
-	end
+		end
+
+	test_extension
+		local
+			p: PATH
+		do
+			create p.make_empty
+			check_equal ("extension", not p.has_extension ("some"))
+			check_equal ("extension", p.extension = Void)
+
+			create p.make_from_string (".")
+			check_equal ("extension", not p.has_extension ("some"))
+			check_equal ("extension", p.extension = Void)
+
+			create p.make_from_string ("..")
+			check_equal ("extension", not p.has_extension ("some"))
+			check_equal ("extension", p.extension = Void)
+
+			create p.make_from_string (".a")
+			check_equal ("extension", p.has_extension ("a"))
+			check_equal ("extension", not p.has_extension ("b"))
+			check_equal ("extension", attached p.extension as l_ext and then l_ext.same_string_general ("a"))
+
+			create p.make_from_string ("file.a")
+			check_equal ("extension", p.has_extension ("a"))
+			check_equal ("extension", not p.has_extension ("b"))
+			check_equal ("extension", attached p.extension as l_ext and then l_ext.same_string_general ("a"))
+
+			create p.make_from_string ("other.file.a")
+			check_equal ("extension", p.has_extension ("a"))
+			check_equal ("extension", not p.has_extension ("b"))
+			check_equal ("extension", attached p.extension as l_ext and then l_ext.same_string_general ("a"))
+
+			create p.make_from_string ("\\server\share\file.a")
+			check_equal ("extension", p.has_extension ("a"))
+			check_equal ("extension", not p.has_extension ("b"))
+			check_equal ("extension", attached p.extension as l_ext and then l_ext.same_string_general ("a"))
+
+			create p.make_from_string ("c:file.a")
+			check_equal ("extension", p.has_extension ("a"))
+			check_equal ("extension", not p.has_extension ("b"))
+			check_equal ("extension", attached p.extension as l_ext and then l_ext.same_string_general ("a"))
+
+			create p.make_from_string ("c:\file.a")
+			check_equal ("extension", p.has_extension ("a"))
+			check_equal ("extension", not p.has_extension ("b"))
+			check_equal ("extension", attached p.extension as l_ext and then l_ext.same_string_general ("a"))
+		end
 
 	trailing_slashes_removed
 			-- Verify that we always remove trailing directory separator

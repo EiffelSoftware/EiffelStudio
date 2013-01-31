@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 lace-vd16-basic
-test_description Violate validity constraint VD16 with an identifier in the Option clause in the Ace which is not the same of a class in the corresponding cluster
+test_description Violate validity constraint VD16 with an identifier in the Option clause in the Ace which is not the name of a class in the corresponding cluster
 
 if DOTNET define DOTNET_OPTION "<file_rule><exclude>ise_runtime.e</exclude></file_rule>"
 if DOTNET define EXCLUDE_SYSTEM_STRING "<exclude>system_string.e</exclude>"

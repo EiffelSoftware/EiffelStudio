@@ -23,7 +23,7 @@ feature{NONE} -- Initialization
 	make (tp: like type; tg: like target; c: like call; l_as, r_as: like lbang_symbol)
 			-- Create new CREATE_CREATION AST node.
 		require
-			type_not_void: tp /= Void
+			tg_not_void: tg /= Void
 		do
 			initialize (tp, tg, c)
 			lbang_symbol := l_as
@@ -79,7 +79,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

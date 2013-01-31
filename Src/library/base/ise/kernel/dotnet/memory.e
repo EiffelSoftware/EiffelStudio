@@ -133,6 +133,12 @@ feature -- Status report
 			create Result.make_empty (0)
 		end
 
+	objects_instance_of_type (a_type_id: INTEGER): SPECIAL [ANY]
+			-- Objects that have same dynamic type as `an_object'.
+		do
+			create Result.make_empty (0)
+		end
+
 	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER]
 			-- Retrieves all object in system as a table indexed by dynamic type
 			-- where elements are all instances of a given data type.
@@ -149,6 +155,40 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	execute_without_collection (a_action: PROCEDURE [ANY, TUPLE])
+			-- Execute `a_action' with the garbage collector disabled.
+			-- If `a_action' modifies the status of `collecting', we restore
+			-- it no matter what at the end.
+		require
+			a_action_not_void: a_action /= Void
+		local
+			l_is_collecting: like collecting
+			retried: BOOLEAN
+		do
+			if not retried then
+				l_is_collecting := collecting
+				if l_is_collecting then
+					collection_off
+					a_action.call (Void)
+					collection_on
+				else
+					a_action.call (Void)
+					collection_off
+				end
+			else
+				if l_is_collecting then
+					collection_on
+				else
+					collection_off
+				end
+			end
+		ensure
+			collection_status_preserved: collecting = old collecting
+		rescue
+			retried := True
+			retry
+		end
 
 	collection_off
 			-- Disable garbage collection.
@@ -242,12 +282,6 @@ feature -- Removal
 			-- Free `object', by-passing garbage collection.
 			-- Erratic behavior will result if the object is still
 			-- referenced.
-		do
-		end
-
-	mem_free (addr: POINTER)
-			-- Free memory of object at `addr'.
-			-- (Preferred interface is `free'.)
 		do
 		end
 

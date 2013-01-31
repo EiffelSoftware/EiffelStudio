@@ -447,8 +447,10 @@ feature -- Query
 			l_file_name := a_file_path.name
 			l_install := install_path.name
 			if l_install.count < l_file_name.count then
-				if l_file_name.substring (1, l_install.count).same_string (l_install) then
-					l_extension := l_file_name.substring (l_install.count + 1, l_file_name.count)
+				if l_file_name.substring_index (l_install, 1) = 1 and l_file_name.valid_index (l_install.count + 2) then
+						-- We do +2 to remove the directory separator from the common part
+						-- between `l_file_name' and `l_install'.
+					l_extension := l_file_name.substring (l_install.count + 2, l_file_name.count)
 					Result := user_files_path.extended (l_extension)
 					create l_actual_file.make_with_path (Result)
 					if a_must_exist and then (not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory)) then

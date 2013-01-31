@@ -556,7 +556,7 @@ feature -- Inlining
 							-- It is clear that in that case the implemented version of `f' cannot be in
 							-- `cl_type', otherwise we would go via the `then' part of the current
 							-- if then else.
-						check cl_type.class_id /= entry.class_id end
+						check different_class_id: cl_type.class_id /= entry.class_id end
 							-- Using the example above, we get `C [G]'
 						desc_cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
 						if
@@ -571,13 +571,13 @@ feature -- Inlining
 								-- implementation of `f' appears, otherwise we would go via the `then' part
 								-- of the current if then else.
 							cl_type := desc_cl_type
-							check cl_type.class_id /= f.written_in end
+							check different_class_id: cl_type.class_id /= f.written_in end
 								-- Get the CLASS_TYPE corresponding to `C [G#1]'.
 							context_class_type := cl_type.associated_class_type (context.context_cl_type)
 								-- Get the CLASS_TYPE where `g' is coming from, that is to say `B [G#1]'.
 							written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
 								-- The actual type during code generation, i.e. B [X].
-							check cl_type.base_class.simple_conform_to (f.written_class) end
+							check type_conform: cl_type.base_class.simple_conform_to (f.written_class) end
 							written_cl_type := cl_type.find_class_type (f.written_class)
 
 								-- Here we are going to do the inlining, but we are going to use written_cl_type
@@ -721,7 +721,7 @@ feature {NONE} -- Normalization of types
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

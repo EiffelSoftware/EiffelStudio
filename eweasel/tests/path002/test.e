@@ -11,6 +11,7 @@ feature
 			p := env.current_working_path
 			test_creation
 			test_root
+			test_is_simple
 			test_one_character_root
 			test_entry
 			test_parent
@@ -18,6 +19,7 @@ feature
 			test_extended
 			test_absolute
 			test_canonical
+			test_components
 			trailing_slashes_removed
 		end
 
@@ -77,6 +79,29 @@ feature
 
 			create p.make_from_string ("\\\\\")
 			check_equal ("make_from_string", p.name.same_string_general ("\"))
+		end
+
+	test_is_simple
+		local
+			p: PATH
+		do
+			create p.make_empty
+			check_equal ("is_simple", p.is_simple)
+
+			create p.make_current
+			check_equal ("is_simple", p.is_simple)
+
+			create p.make_from_string ("abc")
+			check_equal ("is_simple", p.is_simple)
+
+			create p.make_from_string ("abc\")
+			check_equal ("is_simple", p.is_simple)
+
+			create p.make_from_string ("abc\a")
+			check_equal ("is_simple", not p.is_simple)
+
+			create p.make_from_string ("\")
+			check_equal ("is_simple", not p.is_simple)
 		end
 
 	test_root
@@ -438,12 +463,37 @@ feature
 
 	test_extended
 		local
-			p: PATH
+			p, o: PATH
 		do
 			counter := 0
 			create p.make_from_string ("C:")
-			p := p.extended ("abc.txt")
-			check_equal ("extended", p.same_as (create {PATH}.make_from_string ("C:\abc.txt")))
+			create o.make_from_string ("abc.txt")
+			check_equal ("extended", p.extended (o.name).name.same_string_general ("C:abc.txt"))
+			check_equal ("extended", p.extended_path (o).name.same_string_general ("C:abc.txt"))
+
+			create p.make_from_string ("C:\")
+			check_equal ("extended", p.extended (o.name).name.same_string_general ("C:\abc.txt"))
+			check_equal ("extended", p.extended_path (o).name.same_string_general ("C:\abc.txt"))
+
+			create p.make_empty
+			check_equal ("extended", p.extended (o.name).name.same_string_general ("abc.txt"))
+			check_equal ("extended", p.extended_path (o).name.same_string_general ("abc.txt"))
+
+			create p.make_empty
+			create o.make_from_string ("\abc.txt")
+			check_equal ("extended", p.extended (o.name).name.same_string_general ("\abc.txt"))
+			check_equal ("extended", p.extended_path (o).name.same_string_general ("\abc.txt"))
+
+			create p.make_empty
+			create o.make_from_string ("abc")
+			p := p.extended ("\abc")
+			check_equal ("extended", p.extended (o.name).name.same_string_general ("\abc\abc"))
+			check_equal ("extended", p.extended_path (o).name.same_string_general ("\abc\abc"))
+
+			create p.make_empty
+			create o.make_from_string ("abc\abc\abc")
+			check_equal ("extended", p.extended (o.name).name.same_string_general ("abc\abc\abc"))
+			check_equal ("extended", p.extended_path (o).name.same_string_general ("abc\abc\abc"))
 		end
 
 	test_absolute
@@ -475,6 +525,51 @@ feature
 
 			check_equal ("canonical_path", p.canonical_path.same_as (p))
 		end
+
+	test_components
+		local
+			p: PATH
+		do
+			create p.make_empty
+			check_equal ("components", p.components.is_empty)
+
+			create p.make_from_string ("C:")
+			check_equal ("components", p.components.count = 1)
+			check_equal ("components", p.components.first.same_as (p))
+			check_equal ("components", p.components.first.name.same_string_general ("C:"))
+
+			create p.make_from_string ("C:\a\b")
+			check_equal ("components", p.components.count = 3)
+			check_equal ("components", p.components.i_th (1).same_as (p.root))
+			check_equal ("components", p.components.first.name.same_string_general ("C:\"))
+			check_equal ("components", p.components.i_th (1).name.same_string_general ("C:\"))
+			check_equal ("components", p.components.i_th (2).name.same_string_general ("a"))
+			check_equal ("components", p.components.i_th (3).name.same_string_general ("b"))
+
+			create p.make_from_string ("C:a\b")
+			check_equal ("components", p.components.count = 3)
+			check_equal ("components", p.components.i_th (1).same_as (p.root))
+			check_equal ("components", p.components.first.name.same_string_general ("C:"))
+			check_equal ("components", p.components.i_th (1).name.same_string_general ("C:"))
+			check_equal ("components", p.components.i_th (2).name.same_string_general ("a"))
+			check_equal ("components", p.components.i_th (3).name.same_string_general ("b"))
+
+			create p.make_from_string ("\\server\share")
+			check_equal ("components", p.components.count = 1)
+			check_equal ("components", p.components.i_th (1).same_as (p.root))
+			check_equal ("components", p.components.i_th (1).name.same_string_general ("\\server\share"))
+
+			create p.make_from_string ("\\server\share\")
+			check_equal ("components", p.components.count = 1)
+			check_equal ("components", p.components.i_th (1).same_as (p.root))
+			check_equal ("components", p.components.i_th (1).name.same_string_general ("\\server\share\"))
+
+			create p.make_from_string ("\\server\share\a")
+			check_equal ("components", p.components.count = 2)
+			check_equal ("components", p.components.i_th (1).same_as (p.root))
+			check_equal ("components", p.components.i_th (1).name.same_string_general ("\\server\share\"))
+			check_equal ("components", p.components.i_th (2).name.same_string_general ("a"))
+	end
 
 	trailing_slashes_removed
 			-- Verify that we always remove trailing directory separator

@@ -106,11 +106,11 @@ feature {NONE} -- Initialization
 
 	new_scope (n: like count): like scope
 		do
-			create Result.make (1, n)
+			create Result.make_filled (False, 1, n)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -409,6 +409,10 @@ feature
 			create p.make_from_string ("\abc\def\")
 			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\abc")))
 
+				-- Simple root
+			create p.make_from_string ("\")
+			check_equal ("parent", p.parent.same_as (p.root))
+
 				-- UNC like root
 			create p.make_from_string ("\\abc")
 			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\")))
@@ -417,10 +421,10 @@ feature
 			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\")))
 
 			create p.make_from_string ("\\abc\def")
-			check_equal ("parent", p.parent = p)
+			check_equal ("parent", p.parent.same_as (p))
 
 			create p.make_from_string ("\\abc\def\")
-			check_equal ("parent", p.parent = p)
+			check_equal ("parent", p.parent.same_as (p))
 
 			create p.make_from_string ("\\abc\def\gdb")
 			check_equal ("parent", p.parent.same_as (create {PATH}.make_from_string ("\\abc\def\")))
@@ -534,6 +538,10 @@ feature
 			create p.make_empty
 			check_equal ("components", p.components.is_empty)
 
+			create p.make_from_string ("\")
+			check_equal ("components", p.components.count = 1)
+			check_equal ("components", p.components.first.same_as (p))
+			
 			create p.make_from_string ("C:")
 			check_equal ("components", p.components.count = 1)
 			check_equal ("components", p.components.first.same_as (p))

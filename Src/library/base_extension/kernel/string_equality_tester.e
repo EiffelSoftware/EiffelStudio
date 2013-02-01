@@ -14,7 +14,27 @@ inherit
 			test
 		end
 
+create
+	default_create,
+	make_caseless
+
+feature {NONE} -- Initialization
+
+	make_caseless
+			-- Create string equality tester ignoring case 
+			-- when comparing keys
+		do
+			default_create
+			is_case_insensitive := True
+		end
+
 feature -- Status report
+
+	is_case_insensitive: BOOLEAN
+			-- Ignoring case when comparing keys?
+			-- (Default: False)
+
+feature -- Comparison
 
 	test (v, u: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Are `v' and `u' considered equal?
@@ -24,7 +44,11 @@ feature -- Status report
 			elseif v = Void or u = Void then
 				Result := False
 			else
-				Result := v.same_string (u)
+				if is_case_insensitive then
+					Result := v.is_case_insensitive_equal (u)
+				else
+					Result := v.same_string (u)
+				end
 			end
 		end
 

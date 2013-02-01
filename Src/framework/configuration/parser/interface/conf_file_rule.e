@@ -143,6 +143,7 @@ feature -- Basic operation
 	is_included (a_path, a_sub_path: READABLE_STRING_32): BOOLEAN
 			-- Test if the location made of `a_path/a_sub_path' is included according to the exclude/include rules.
 			-- That means it is either not excluded or it is included.
+			-- FIXME: We currently perform the match on the UTF-8 version of the string.
 		require
 			a_path_not_void: a_path /= Void
 			a_sub_path_not_void: a_sub_path /= Void
@@ -155,12 +156,12 @@ feature -- Basic operation
 			Result := True
 			l_exclude_regexp := exclude_regexp
 			if l_exclude_regexp /= Void then
-					-- FIXME: We currently perform the match on the UTF-8 version of the string.
+					-- Our regular expressions in ECFs always contain the cluster separator /
+					-- so we need to include it.
 				if a_path.is_empty then
-						-- Our regular expressions in ECFs always contain the cluster separator /
 					create l_loc.make (a_sub_path.count + 1)
 				else
-					create l_loc.make (a_path.count + a_sub_path.count + 1)
+					create l_loc.make (a_path.count + a_sub_path.count + 2)
 					l_loc.append_character ('/')
 					u.utf_32_string_into_utf_8_string_8 (a_path, l_loc)
 				end

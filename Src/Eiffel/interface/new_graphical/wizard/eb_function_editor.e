@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			Result := Precursor
 			if (once_button.is_selected or do_button.is_selected) and then type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
-				Result.append ("%T%T%Tcheck False then end end" + " --| Remove line when `Result' is initialized in body.%N")
+				Result.append ("%T%T%Tcheck False then end" + " --| Remove line when `Result' is initialized in body.%N")
 			end
 		end
 

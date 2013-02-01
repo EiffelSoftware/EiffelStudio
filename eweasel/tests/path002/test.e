@@ -116,7 +116,7 @@ feature
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\abc")
-			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("abc\def")
@@ -124,37 +124,37 @@ feature
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\abc\def")
-			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("root", p.has_root)
 
 				-- UNC like root
 			create p.make_from_string ("\\abc")
-			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\abc\def")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\abc\def")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("\\abc\def")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\abc\def\gdb")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\abc\def\")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("\\abc\def\")))
 			check_equal ("root", p.has_root)
 
 				-- Drive letter like root
 			create p.make_from_string ("c:abc")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\abc")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:abc\def")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\abc\def")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 		end
 
@@ -169,7 +169,7 @@ feature
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\a")
-			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("a\b")
@@ -177,37 +177,37 @@ feature
 			check_equal ("root", not p.has_root)
 
 			create p.make_from_string ("\a\b")
-			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("root", p.has_root)
 
 				-- UNC like root
 			create p.make_from_string ("\\a")
-			check_equal ("root", p.root.name.same_string_general ("\"))
+			check_equal ("root", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\a\b")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\a\b")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("\\a\b")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("\\a\b\c")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("\\a\b\")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("\\a\b\")))
 			check_equal ("root", p.has_root)
 
 				-- Drive letter like root
 			create p.make_from_string ("c:a")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\a")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:a\b")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:")))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\a\b")
-			check_equal ("root", p.root.same_as (create {PATH}.make_from_string ("c:\")))
+			check_equal ("root", attached p.root as l_root and then l_root.same_as (create {PATH}.make_from_string ("c:\")))
 			check_equal ("root", p.has_root)
 		end
 
@@ -219,35 +219,35 @@ feature
 			counter := 0
 				-- No root.
 			create p.make_from_string ("abc")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("abc\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\abc")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\abc\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("abc\def")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("abc\def\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("\abc\def")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("\abc\def\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 				-- UNC like root
 			create p.make_from_string ("\\abc")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\\abc\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("\\abc\def")
 			check_equal ("entry", p.entry = Void)
@@ -256,49 +256,49 @@ feature
 			check_equal ("entry", p.entry = Void)
 
 			create p.make_from_string ("\\abc\def\gdb")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("gdb")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("gdb")))
 
 			create p.make_from_string ("\\abc\def\gdb\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("gdb")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("gdb")))
 
 				-- Drive letter like root
 			create p.make_from_string ("c:abc")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:abc\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:\abc")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:\abc\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("abc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("abc")))
 
 			create p.make_from_string ("c:abc\def")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("c:abc\def\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("c:\abc\def")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create p.make_from_string ("c:\abc\def\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("def")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("def")))
 
 			create s.make (2)
 			s.append_string_general ("C:\")
 			s.append_character ('%/119070/')
 			s.append_string_general ("\calc")
 			create p.make_from_string (s)
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("calc")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("calc")))
 
 			create s.make (2)
 			s.append_string_general ("C:\")
 			s.append_character ('%/119070/')
 			s.append_string_general ("\calc\calc.ecf")
 			create p.make_from_string (s)
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("calc.ecf")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("calc.ecf")))
 		end
 
 	test_one_character_entry
@@ -308,35 +308,35 @@ feature
 			counter := 0
 				-- No root.
 			create p.make_from_string ("a")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("a\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\a")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\a\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("a\b")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("a\b\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("\a\b")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("\a\b\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 
 				-- UNC like root
 			create p.make_from_string ("\\a")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\\a\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("\\a\b")
 			check_equal ("entry", p.entry = Void)
@@ -345,35 +345,35 @@ feature
 			check_equal ("entry", p.entry = Void)
 
 			create p.make_from_string ("\\a\b\c")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("c")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("c")))
 
 			create p.make_from_string ("\\a\b\c\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("c")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("c")))
 
 				-- Drive letter like root
 			create p.make_from_string ("c:a")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:a\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:\a")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:\a\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("a")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("a")))
 
 			create p.make_from_string ("c:a\b")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("c:a\b\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("c:\a\b")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 
 			create p.make_from_string ("c:\a\b\")
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("b")))
+			check_equal ("entry", attached p.entry as l_entry and then l_entry.same_as (create {PATH}.make_from_string ("b")))
 		end
 
 	test_parent
@@ -390,11 +390,11 @@ feature
 			check_equal ("parent", p.parent.same_as (create {PATH}.make_current))
 
 			create p.make_from_string ("\abc")
-			check_equal ("parent", p.root.name.same_string_general ("\"))
+			check_equal ("parent", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("parent", p.parent.same_as (p.root))
 
 			create p.make_from_string ("\abc\")
-			check_equal ("parent", p.root.name.same_string_general ("\"))
+			check_equal ("parent", attached p.root as l_root and then l_root.name.same_string_general ("\"))
 			check_equal ("parent", p.parent.same_as (p.root))
 
 			create p.make_from_string ("abc\def")
@@ -526,7 +526,7 @@ feature
 			s.append_character ('%/119070/')
 			s.append_string_general ("\calc\calc.ecf")
 			create p.make_from_string (s)
-			check_equal ("entry", p.entry.same_as (create {PATH}.make_from_string ("calc.ecf")))
+			check_equal ("entry", (create {PATH}.make_from_string ("calc.ecf")).same_as (p.entry))
 
 			check_equal ("canonical_path", p.canonical_path.same_as (p))
 		end
@@ -541,7 +541,7 @@ feature
 			create p.make_from_string ("\")
 			check_equal ("components", p.components.count = 1)
 			check_equal ("components", p.components.first.same_as (p))
-			
+
 			create p.make_from_string ("C:")
 			check_equal ("components", p.components.count = 1)
 			check_equal ("components", p.components.first.same_as (p))

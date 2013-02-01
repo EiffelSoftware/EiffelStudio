@@ -7,12 +7,25 @@ create
 feature {NONE} -- Initialization
 
 	make
+		do
+			test_components
+			test_linux
+		end
+
+	test_components
 		local
 			p: PATH
-			d: DIRECTORY
 		do
-			p := env.current_working_path
-			create d.make_with_path (p)
+			create p.make_from_string ("/")
+			check_equal ("components", p.components.count = 1)
+			check_equal ("components", p.components.i_th (1).name.same_string_general ("/"))
+
+			create p.make_from_string ("/home/local/a")
+			check_equal ("components", p.components.count = 4)
+			check_equal ("components", p.components.i_th (1).name.same_string_general ("/"))
+			check_equal ("components", p.components.i_th (2).name.same_string_general ("home"))
+			check_equal ("components", p.components.i_th (3).name.same_string_general ("local"))
+			check_equal ("components", p.components.i_th (4).name.same_string_general ("a"))
 		end
 
 	test_linux
@@ -75,12 +88,12 @@ feature {NONE} -- Initialization
 				check_equal ("entry1", l_entry.name.same_string_general ("manus"))
 			end
 			check attached p.parent as l_parent then
-				check_equal ("parent1", l_parent.name.same_string_general ("/usr//////local////////home"))
+				check_equal ("parent1", l_parent.name.same_string_general ("/usr/local/home"))
 				check attached l_parent.entry as l_entry then
 					check_equal ("entry", l_entry.name.same_string_general ("home"))
 				end
 				check attached l_parent.parent as l_parent2 then
-					check_equal ("parent2", l_parent2.name.same_string_general ("/usr//////local"))
+					check_equal ("parent2", l_parent2.name.same_string_general ("/usr/local"))
 					check attached l_parent2.entry as l_entry then
 						check_equal ("entry", l_entry.name.same_string_general ("local"))
 					end
@@ -110,7 +123,7 @@ feature {NONE} -- Initialization
 			check_equal ("is_empty", not p.is_empty)
 			check_equal ("is_simple", p.is_simple)
 			check_equal ("entry", p.entry ~ p)
-			check_equal ("parent", p.parent = Void)
+			check_equal ("parent", p.parent.same_as (create {PATH}.make_current))
 			check_equal ("components", p.components.count = 1 and then p.components.first ~ p)
 
 			create p.make_from_string("abc/def")

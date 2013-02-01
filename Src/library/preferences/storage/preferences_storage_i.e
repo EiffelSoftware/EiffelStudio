@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 			a_version_not_void: a_version /= Void
 			a_version_valid: valid_version (a_version)
 		do
-			internal_version := a_version
 			make_empty
+			internal_version := a_version
 		ensure
 			has_location: location /= Void
 			version_set: version = a_version
@@ -77,8 +77,8 @@ feature {NONE} -- Initialization
 			a_version_not_void: a_version /= Void
 			a_version_valid: valid_version (a_version)
 		do
-			internal_version := a_version
 			make_with_location (a_location)
+			internal_version := a_version
 	   	ensure
 	   		has_location: location /= Void
 			location_set: location = a_location

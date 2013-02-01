@@ -489,6 +489,7 @@ feature -- Element change
 			l_new_class: EIFFEL_CLASS_I
 			l_clu: CLUSTER_I
 			l_fact: CONF_COMP_FACTORY
+			l_file_path: PATH
 		do
 			create l_fact
 			l_clu ?= a_cluster
@@ -499,7 +500,9 @@ feature -- Element change
 				l_clu.set_classes_by_filename (create {like {CLUSTER_I}.classes_by_filename}.make (1))
 			end
 			l_clu.classes.force (l_new_class, l_new_class.name)
-			l_clu.classes_by_filename.force (l_new_class, a_path.to_string_32 + {STRING_32} "/" + l_new_class.base_name)
+			create l_file_path.make_from_string (a_path)
+			l_file_path := l_file_path.extended (l_new_class.base_name)
+			l_clu.classes_by_filename.force (l_new_class, l_file_path)
 
 				-- update folder
 			l_folder := folder_from_cluster (a_cluster)

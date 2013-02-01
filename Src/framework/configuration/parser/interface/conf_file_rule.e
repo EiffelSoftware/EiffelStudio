@@ -140,9 +140,12 @@ feature -- Comparison
 
 feature -- Basic operation
 
-	is_included (a_location: READABLE_STRING_32): BOOLEAN
-			-- Test if `a_location' is included according to the exclude/include rules.
+	is_included (a_path, a_sub_path: READABLE_STRING_32): BOOLEAN
+			-- Test if the location made of `a_path/a_sub_path' is included according to the exclude/include rules.
 			-- That means it is either not excluded or it is included.
+		require
+			a_path_not_void: a_path /= Void
+			a_sub_path_not_void: a_sub_path /= Void
 		local
 			l_exclude_regexp: like exclude_regexp
 			l_include_regexp: like include_regexp
@@ -153,7 +156,16 @@ feature -- Basic operation
 			l_exclude_regexp := exclude_regexp
 			if l_exclude_regexp /= Void then
 					-- FIXME: We currently perform the match on the UTF-8 version of the string.
-				l_loc := u.utf_32_string_to_utf_8_string_8 (a_location)
+				if a_path.is_empty then
+						-- Our regular expressions in ECFs always contain the cluster separator /
+					create l_loc.make (a_sub_path.count + 1)
+				else
+					create l_loc.make (a_path.count + a_sub_path.count + 1)
+					l_loc.append_character ('/')
+					u.utf_32_string_into_utf_8_string_8 (a_path, l_loc)
+				end
+				l_loc.append_character ('/')
+				u.utf_32_string_into_utf_8_string_8 (a_sub_path, l_loc)
 				l_exclude_regexp.match (l_loc)
 				if l_exclude_regexp.has_matched then
 					Result := False
@@ -247,7 +259,7 @@ invariant
 	include_patterns_valid: valid_includes
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

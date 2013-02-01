@@ -275,8 +275,12 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						l_set.after
 					loop
-						l_sub_path := path + cluster_separator + l_set.item
-						if l_fr.is_included (l_sub_path) then
+						if l_fr.is_included (path, l_set.item) then
+							if not path.is_empty then
+								l_sub_path := path + cluster_separator + l_set.item
+							else
+								l_sub_path := l_set.item
+							end
 							l_subfolder := create_folder_item_with_options (data, l_sub_path)
 							l_subfolder.associate_with_window (associated_window)
 							if associated_textable /= Void then
@@ -688,7 +692,6 @@ feature {EB_CLASSES_TREE} -- Implementation
 			l_has_children: BOOLEAN
 			l_sub_dirs: ARRAYED_LIST [STRING_32]
 			l_fr: CONF_FILE_RULE
-			l_sub_path: READABLE_STRING_32
 			u: FILE_UTILITIES
 			l_sorter: QUICK_SORTER [STRING_32]
 		do
@@ -716,8 +719,7 @@ feature {EB_CLASSES_TREE} -- Implementation
 							until
 								l_sub_dirs.after or l_has_children
 							loop
-								l_sub_path := path + cluster_separator + l_sub_dirs.item
-								if l_fr.is_included (l_sub_path) then
+								if l_fr.is_included (path, l_sub_dirs.item) then
 									l_has_children := True
 								end
 								l_sub_dirs.forth

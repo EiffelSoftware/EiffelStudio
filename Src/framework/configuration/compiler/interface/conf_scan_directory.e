@@ -33,13 +33,12 @@ feature -- Processing
 			l_name: STRING_32
 			l_path: PATH
 			l_cluster_separator: READABLE_STRING_32
-			l_full_path: STRING_32
 			u: FILE_UTILITIES
+			l_full_path: STRING_32
 		do
 			l_cluster_separator := {STRING_32} "/"
 			on_process_directory (a_cluster, a_path)
 			l_path := a_cluster.location.build_path (a_path, {STRING_32} "")
-			create l_full_path.make (128)
 
 			if not attached u.file_names (l_path.name) as l_files then
 				if not a_cluster.is_test_cluster then
@@ -51,12 +50,7 @@ feature -- Processing
 					l_files as f
 				loop
 					l_name := f.item
-						-- Reuse `l_full_path' string buffer.
-					l_full_path.wipe_out
-					l_full_path.append (a_path)
-					l_full_path.append (l_cluster_separator)
-					l_full_path.append (l_name)
-					if l_name.count >= 2 and then a_file_rule.is_included (l_full_path) then
+					if l_name.count >= 2 and then a_file_rule.is_included (a_path, l_name) then
 						handle_class (l_name, a_path, a_cluster)
 					end
 				end
@@ -66,14 +60,16 @@ feature -- Processing
 					across
 						l_subdirs as d
 					loop
-							-- Reuse `l_full_path' string buffer.
-						l_full_path.wipe_out
-						l_full_path.append (a_path)
-						l_full_path.append (l_cluster_separator)
-						l_full_path.append (d.item)
-						if a_file_rule.is_included (l_full_path) then
+						if a_file_rule.is_included (a_path, d.item) then
+								-- Reuse `l_full_path' string buffer.
+							create l_full_path.make (a_path.count + d.item.count + 1)
+							if not a_path.is_empty then
+								l_full_path.append (a_path)
+								l_full_path.append (l_cluster_separator)
+							end
+							l_full_path.append (d.item)
 								-- We need a copy of the string as it is stored as a reference indirectly from this routine.
-							process_cluster_recursive (l_full_path.twin, a_cluster, a_file_rule)
+							process_cluster_recursive (l_full_path, a_cluster, a_file_rule)
 						end
 					end
 				end
@@ -91,7 +87,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -23,7 +23,7 @@ feature -- Visitor
 
 	process_directory (dn: PATH)
 			-- Iterate on directory `dn'
-			-- process files first and then directories.
+			-- process files first and then directories recursively.
 		local
 			fp, p: PATH
 			d: DIRECTORY
@@ -77,7 +77,7 @@ feature -- Status
 		require
 			a_path_is_simple: a_path.is_simple
 		do
-			Result := False
+			Result := a_path.is_current_symbol or a_path.is_parent_symbol
 		end
 
 	directory_excluded (dn: PATH): BOOLEAN
@@ -99,7 +99,7 @@ feature -- Status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

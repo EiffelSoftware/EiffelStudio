@@ -619,7 +619,7 @@ feature {NONE} -- Implementation
 	current_classes: STRING_TABLE [CONF_CLASS]
 			-- The classes of the group we are currently processing.
 
-	current_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING_32]
+	current_classes_by_filename: HASH_TABLE [CONF_CLASS, PATH]
 			-- Classes of the group we are currently processing indexed by filename.
 
 	current_cluster: CONF_CLUSTER
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 			l_name: STRING
 			l_full_file: PATH
 			l_pc: ARRAYED_LIST [READABLE_STRING_GENERAL]
-			l_file_name: STRING_32
+			l_file_path: PATH
 			l_done: BOOLEAN
 			l_suggested_filename: STRING_32
 			l_current_classes: like current_classes
@@ -666,13 +666,11 @@ feature {NONE} -- Implementation
 				old_group_classes_set: l_old_group /= Void implies l_old_group.classes_set
 			end
 			if valid_eiffel_extension (a_file) then
-				create l_file_name.make (a_path.count + 1 + a_file.count)
-				l_file_name.append_string_general (a_path)
-				l_file_name.append_character ('/')
-				l_file_name.append_string_general (a_file)
+				create l_file_path.make_from_string (a_path)
+				l_file_path := l_file_path.extended (a_file)
 					-- try to get it directly from old_group by filename
 				if
-					l_old_group /= Void and then l_old_group_classes_by_filename.has_key (l_file_name)
+					l_old_group /= Void and then l_old_group_classes_by_filename.has_key (l_file_path)
 				then
 					l_class := l_old_group_classes_by_filename.found_item
 						-- update class
@@ -691,7 +689,7 @@ feature {NONE} -- Implementation
 							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name.name, l_class.full_file_name.name, a_cluster.target.system.file_name))
 						else
 							l_current_classes.force (l_class, l_name)
-							current_classes_by_filename.force (l_class, l_file_name)
+							current_classes_by_filename.force (l_class, l_file_path)
 						end
 						l_done := True
 					elseif l_class.last_class_name /= Void then
@@ -710,7 +708,7 @@ feature {NONE} -- Implementation
 									l_class.full_file_name.name, a_cluster.target.system.file_name))
 							else
 								l_current_classes.force (l_class, l_name)
-								current_classes_by_filename.force (l_class, l_file_name)
+								current_classes_by_filename.force (l_class, l_file_path)
 							end
 						end
 						l_done := True
@@ -721,7 +719,7 @@ feature {NONE} -- Implementation
 						-- need to make sure that the class name we read from a class in an override
 						-- cluster is really the one intended. Fixes eweasel test#incr263.
 					if is_full_class_name_analysis or a_cluster.is_override then
-						l_full_file := a_cluster.location.evaluated_directory.extended (l_file_name)
+						l_full_file := a_cluster.location.evaluated_directory.extended_path (l_file_path)
 						create l_file.make_with_path (l_full_file)
 						l_file.open_read
 						if not l_file.is_open_read then
@@ -762,7 +760,7 @@ feature {NONE} -- Implementation
 											l_class.full_file_name.name, a_cluster.target.system.file_name))
 									else
 										l_current_classes.force (l_class, l_name)
-										current_classes_by_filename.force (l_class, l_file_name)
+										current_classes_by_filename.force (l_class, l_file_path)
 									end
 								end
 							end
@@ -784,7 +782,7 @@ feature {NONE} -- Implementation
 									l_class.full_file_name.name, a_cluster.target.system.file_name))
 							else
 								l_current_classes.force (l_class, l_name)
-								current_classes_by_filename.force (l_class, l_file_name)
+								current_classes_by_filename.force (l_class, l_file_path)
 							end
 						end
 					end
@@ -803,7 +801,7 @@ feature {NONE} -- Implementation
 						l_suggested_filename.append_string (a_cluster.location.evaluated_directory.name)
 						l_suggested_filename.append_string ({STRING_32} "/" + a_path + "/" + l_name.as_lower + "." + eiffel_file_extension)
 						if l_full_file = Void then
-							l_full_file := a_cluster.location.evaluated_directory.extended (l_file_name)
+							l_full_file := a_cluster.location.evaluated_directory.extended_path (l_file_path)
 						end
 						add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file.name, l_name, l_suggested_filename))
 					end
@@ -1107,7 +1105,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

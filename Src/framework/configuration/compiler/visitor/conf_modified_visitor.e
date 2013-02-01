@@ -196,13 +196,14 @@ feature {NONE} -- Implementation
 	handle_class (a_file, a_path: READABLE_STRING_32; a_cluster: CONF_CLUSTER)
 			-- Handle class in `a_file' with `a_path' in `a_cluster'
 		local
-			s32: STRING_32
+			l_path: PATH
 		do
 			if not is_force_rebuild then
 				is_force_rebuild := valid_eiffel_extension (a_file)
 				if is_force_rebuild then
-					s32 := a_path + {STRING_32} "/" + a_file
-					is_force_rebuild := not a_cluster.classes_by_filename.has (s32)
+					create l_path.make_from_string (a_path)
+					l_path := l_path.extended (a_file)
+					is_force_rebuild := not a_cluster.classes_by_filename.has (l_path)
 				end
 			end
 		end
@@ -212,7 +213,7 @@ invariant
 	process_group_observer_not_void: process_group_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

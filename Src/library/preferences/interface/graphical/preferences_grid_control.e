@@ -467,7 +467,7 @@ feature {NONE} -- Events
 			dlg.show_modal_to_window (p)
 			s := dlg.file_name
 			if s /= Void and then not s.is_empty then --| Cancelled
-				create stor.make_with_location (s)
+				create stor.make_with_location_and_version (s, preferences.version)
 				preferences.export_to_storage (stor, False)
 			end
 		end
@@ -488,7 +488,7 @@ feature {NONE} -- Events
 			dlg.show_modal_to_window (p)
 			s := dlg.file_name
 			if s /= Void then
-				create stor.make_with_location (s)
+				create stor.make_with_location_and_version (s, preferences.version)
 				preferences.import_from_storage (stor)
 				rebuild
 			end
@@ -1688,7 +1688,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

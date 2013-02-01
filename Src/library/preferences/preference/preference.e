@@ -54,7 +54,7 @@ feature -- Status setting
 				l_actions.call ([Current])
 			end
 		ensure
-			default_value_set: internal_default_value = a_value
+			default_value_set: internal_default_value.same_string_general (a_value)
 		end
 
 	set_value_from_string (a_value: READABLE_STRING_GENERAL)

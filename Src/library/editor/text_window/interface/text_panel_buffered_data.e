@@ -45,8 +45,6 @@ feature {TEXT_PANEL} -- Settings
 
 	set_fonts (a_fonts: detachable like fonts)
 			-- Set `fonts' with `a_fonts'.
-		require
-			initialized: initialized
 		local
 			l_font: EV_FONT
 			i, upper: INTEGER
@@ -57,7 +55,6 @@ feature {TEXT_PANEL} -- Settings
 			fonts := a_fonts
 			if a_fonts /= Void then
 				l_pref := editor_preferences
-				check l_pref /= Void end -- Implied by precondition
 				l_font := a_fonts.item (l_pref.editor_font_id)
 				if l_font /= Void then
 					l_width := l_font.width

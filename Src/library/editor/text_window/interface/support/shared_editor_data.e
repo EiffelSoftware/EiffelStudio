@@ -18,23 +18,19 @@ feature -- Resources
 
 	editor_preferences: EDITOR_DATA
 			-- Editor preferences
-		require
-			initialized: initialized
-		local
-			l_result : detachable EDITOR_DATA
 		do
 			if attached editor_preferences_cell.item as l_item then
-				l_result := l_item
+				Result := l_item
 			else
-				check l_result /= Void end -- Implied by precondition
+					-- No preferences set, we create default ones
+				create Result.make (create {PREFERENCES}.make)
 			end
-			Result := l_result
 		end
 
 feature -- Query
 
 	initialized: BOOLEAN
-			--
+			-- Have preferences been set and ready to be used?
 		do
 			Result := initialized_cell.item and then editor_preferences_cell.item /= Void
 		end
@@ -42,13 +38,13 @@ feature -- Query
 feature {NONE} -- Implementation		
 
 	editor_preferences_cell: CELL [detachable EDITOR_DATA]
-			--
+			-- Storage for `editor_preferences'.
 		once
 			create Result.put (Void)
 		end
 
 	initialized_cell: CELL [BOOLEAN]
-			--
+			-- Storage for `initialized'
 		once
 			create Result.put (False)
 		end

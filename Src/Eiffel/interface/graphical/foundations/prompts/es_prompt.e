@@ -410,7 +410,7 @@ feature {NONE} -- Element change
 					a_label.set_maximum_width (maximum_prompt_text_width)
 				end
 
-					-- Set actul text
+					-- Set actual text
 				a_label.set_text (format_text (a_text))
 
 				if not a_label.is_displayed then
@@ -750,7 +750,7 @@ invariant
 	not_is_size_and_position_remembered: not is_size_and_position_remembered
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

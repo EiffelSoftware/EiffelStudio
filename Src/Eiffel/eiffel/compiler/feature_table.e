@@ -24,7 +24,7 @@ inherit
 	PREFIX_INFIX_NAMES
 		export
 			{NONE} all
-			{ANY} is_mangled_alias_name
+			{ANY} is_mangled_alias_name, is_mangled_alias_name_32
 		undefine
 			is_equal, copy
 		end
@@ -397,9 +397,9 @@ feature -- Access: compatibility
 			-- Feature with given `alias_name' if any
 		require
 			alias_name_not_void: alias_name /= Void
-			is_mangled_alias_name: is_mangled_alias_name (encoding_converter.utf32_to_utf8 (alias_name))
+			is_mangled_alias_name: is_mangled_alias_name_32 (alias_name)
 		do
-			Result := item_alias_id (names_heap.id_of (encoding_converter.utf32_to_utf8 (alias_name)))
+			Result := alias_item (encoding_converter.utf32_to_utf8 (alias_name))
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access: compatibility
@@ -1655,7 +1655,7 @@ invariant
 	related_select_table: is_computed implies select_table.feature_table = Current
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

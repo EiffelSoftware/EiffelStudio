@@ -159,12 +159,14 @@ feature {NONE} -- Implementation
 			parser: XML_STOPPABLE_PARSER
 			l_file: PLAIN_TEXT_FILE
 			l_tree: XML_CALLBACKS_DOCUMENT
+			l_resolver: XML_NAMESPACE_RESOLVER
 			l_root_element: XML_ELEMENT
 			t_preference, t_name, t_value: STRING
 		do
 			create parser.make
 			create l_tree.make_null
-			parser.set_callbacks (l_tree)
+			create l_resolver.set_next (l_tree)
+			parser.set_callbacks (l_resolver)
 
 			create l_file.make_with_name (location)
 			if l_file.exists and then l_file.is_readable then

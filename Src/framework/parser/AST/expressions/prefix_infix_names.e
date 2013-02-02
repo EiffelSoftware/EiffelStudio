@@ -15,12 +15,13 @@ inherit
 
 	SHARED_ENCODING_CONVERTER
 		export
+			{INTERNAL_COMPILER_STRING_EXPORTER} encoding_converter
 			{NONE} all
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 
-	is_mangled_name (name: STRING): BOOLEAN
+	is_mangled_name (name: READABLE_STRING_8): BOOLEAN
 			-- Is `name' a mangled name that does not match an original name?
 			-- (Does it need special decoding? Cannot it be used as an identifier?)
 		require
@@ -29,7 +30,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := name.has ('"')
 		end
 
-	is_mangled_alias_name (alias_name: READABLE_STRING_GENERAL): BOOLEAN
+	is_mangled_alias_name (alias_name: READABLE_STRING_8): BOOLEAN
 			-- Does `alias_name' represent a valid mangled alias name?
 			--| I.e. either "[]", or "infix "op"", or "prefix "op"".
 		require
@@ -38,11 +39,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := not alias_name.is_empty and then
 				(syntax_checker.is_bracket_alias_name (alias_name) or
 				(alias_name.item (alias_name.count) = '"') and then
-				(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix_32 (alias_name))) or
-				(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix_32 (alias_name))))
+				(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix (alias_name))) or
+				(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix (alias_name))))
 		end
 
-	is_mangled_infix (name: READABLE_STRING_GENERAL): BOOLEAN
+	is_mangled_infix (name: READABLE_STRING_8): BOOLEAN
 			-- Does `name' represent an internal name of an infix feature, i.e. "infix "op""?
 		require
 			name_not_void: name /= Void
@@ -50,7 +51,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := name.starts_with (Infix_str)
 		end
 
-	is_mangled_prefix (name: READABLE_STRING_GENERAL): BOOLEAN
+	is_mangled_prefix (name: READABLE_STRING_8): BOOLEAN
 			-- Does `name' represent an internal name of a prefix feature, i.e. "prefix "op""?
 		require
 			name_not_void: name /= Void
@@ -58,29 +59,40 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := name.starts_with (Prefix_str)
 		end
 
+	is_mangled_alias_name_32 (alias_name: READABLE_STRING_32): BOOLEAN
+			-- Does `alias_name' represent a valid mangled alias name?
+			--| I.e. either "[]", or "infix "op"", or "prefix "op"".
+		require
+			alias_name_not_void: alias_name /= Void
+		do
+			Result := is_mangled_alias_name (encoding_converter.utf32_to_utf8 (alias_name))
+		end
+
 feature -- Basic operations
 
-	extract_symbol_from_infix_32 (op: READABLE_STRING_GENERAL): STRING_32
+	extract_symbol_from_infix_32 (op: READABLE_STRING_32): STRING_32
 			-- Get the symbol part from infix qualified operator `op'.
 		require
 			op_not_void: op /= Void
 		do
-			Result := op.substring (Infix_str.count + 1, op.count - Quote_str.count).as_string_32
+			create Result.make (op.count - infix_str.count - quote_str.count)
+			Result.append_substring (op, infix_str.count + 1, op.count - quote_str.count)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	extract_symbol_from_prefix_32 (op: READABLE_STRING_GENERAL): STRING_32
+	extract_symbol_from_prefix_32 (op: READABLE_STRING_32): STRING_32
 			-- Get the symbol part from prefix qualified operator `op'.
 		require
 			op_not_void: op /= Void
 		do
-			Result := op.substring (Prefix_str.count + 1, op.count - Quote_str.count).as_string_32
+			create Result.make (op.count - prefix_str.count - quote_str.count)
+			Result.append_substring (op, prefix_str.count + 1, op.count - quote_str.count)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	prefix_feature_name_with_symbol_32 (symbol: READABLE_STRING_GENERAL): STRING_32
+	prefix_feature_name_with_symbol_32 (symbol: READABLE_STRING_32): STRING_32
 			-- Internal name corresponding to prefix `symbol'.
 		require
 			symbol_not_void: symbol /= Void
@@ -96,7 +108,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	infix_feature_name_with_symbol_32 (symbol: READABLE_STRING_GENERAL): STRING_32
+	infix_feature_name_with_symbol_32 (symbol: READABLE_STRING_32): STRING_32
 			-- Internal name corresponding to prefix `symbol'
 		require
 			symbol_not_void: symbol /= Void
@@ -114,7 +126,7 @@ feature -- Basic operations
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 
-	prefix_feature_name_with_symbol (symbol: STRING): STRING
+	prefix_feature_name_with_symbol (symbol: READABLE_STRING_8): STRING_8
 			-- Internal name corresponding to prefix `symbol'.
 		require
 			symbol_not_void: symbol /= Void
@@ -130,7 +142,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	infix_feature_name_with_symbol (symbol: STRING): STRING
+	infix_feature_name_with_symbol (symbol: READABLE_STRING_8): STRING_8
 			-- Internal name corresponding to prefix `symbol'
 		require
 			symbol_not_void: symbol /= Void
@@ -146,27 +158,29 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	extract_symbol_from_infix (op: STRING): STRING
+	extract_symbol_from_infix (op: READABLE_STRING_8): STRING_8
 			-- Get the symbol part from infix qualified operator `op'.
 		require
 			op_not_void: op /= Void
 		do
-			Result := op.substring (Infix_str.count + 1, op.count - Quote_str.count)
+			create Result.make (op.count - infix_str.count - quote_str.count)
+			Result.append_substring (op, infix_str.count + 1, op.count - quote_str.count)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	extract_symbol_from_prefix (op: STRING): STRING
+	extract_symbol_from_prefix (op: READABLE_STRING_8): STRING_8
 			-- Get the symbol part from prefix qualified operator `op'.
 		require
 			op_not_void: op /= Void
 		do
-			Result := op.substring (Prefix_str.count + 1, op.count - Quote_str.count)
+			create Result.make (op.count - prefix_str.count - quote_str.count)
+			Result.append_substring (op, prefix_str.count + 1, op.count - quote_str.count)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	extract_alias_name (op: STRING): STRING
+	extract_alias_name (op: READABLE_STRING_8): STRING_8
 			-- Extract symbol part from alias name encoded as any of the following:
 			--   prefix "..."
 			--   infix "..."
@@ -176,7 +190,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			op_not_empty: not op.is_empty
 			is_mangled_op: is_mangled_alias_name (op)
 		local
-			c: CHARACTER
+			c: CHARACTER_8
 		do
 			c := op.item (1)
 			if c = '[' then
@@ -193,7 +207,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-	extract_alias_name_32 (op: STRING_32): STRING_32
+	extract_alias_name_32 (op: READABLE_STRING_32): STRING_32
 			-- Extract symbol part from alias name encoded as any of the following:
 			--   prefix "..."
 			--   infix "..."
@@ -201,7 +215,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 		require
 			op_not_void: op /= Void
 			op_not_empty: not op.is_empty
-			is_mangled_op: is_mangled_alias_name (op)
+			is_mangled_op: is_mangled_alias_name_32 (op)
 		local
 			c: CHARACTER_32
 		do

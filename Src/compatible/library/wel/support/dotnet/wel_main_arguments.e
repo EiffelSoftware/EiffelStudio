@@ -30,7 +30,7 @@ feature -- Access
 		once
 				-- Note: 
 			l_name := current_instance.name
-			l_pos := l_name.last_index_of ({PATH}.Directory_separator_char, l_name.count)
+			l_pos := l_name.last_index_of ({SYSTEM_PATH}.Directory_separator_char, l_name.count)
 			l_name.insert_string ("lib", l_pos + 1)
 			l_name.remove_tail (4)
 			l_name.append (".dll")

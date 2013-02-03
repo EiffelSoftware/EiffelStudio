@@ -14,6 +14,7 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 		rename
+			item as execution_environment_item,
 			put as execution_environment_put,
 			launch as execution_environment_launch,
 			sleep as execution_environment_sleep

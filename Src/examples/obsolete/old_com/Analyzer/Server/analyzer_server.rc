@@ -1,4 +1,0 @@
-#define ID_ICO_APPLICATION	1
-
-1 TYPELIB "d:\\old_com_examples\\analyzer\\server\\analyzer.tlb"
-ID_ICO_APPLICATION ICON "application.ico"

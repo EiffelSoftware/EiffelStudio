@@ -1225,7 +1225,7 @@ feature -- Element change
 			new_name_not_empty: not new_name.is_empty
 			file_exists: exists
 		local
-			l_info: FILE_INFO
+			l_info: SYSTEM_FILE_INFO
 		do
 			create l_info.make (new_name.to_cil)
 			if l_info.exists and not same_file (new_name) then
@@ -1650,7 +1650,7 @@ feature -- Convenience
 
 feature {FILE} -- Implementation
 
-	internal_file: FILE_INFO
+	internal_file: SYSTEM_FILE_INFO
 			-- File data concerning `Current'
 
 	internal_stream: detachable SYSTEM_STREAM

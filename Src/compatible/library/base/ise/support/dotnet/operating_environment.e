@@ -17,7 +17,7 @@ feature
 			-- Character used to separate subdirectories in a path name on this platform.
 			--| To build portable path names, use PATH_NAME and its descendants.
 		once
-			Result := {PATH}.directory_separator_char
+			Result := {SYSTEM_PATH}.directory_separator_char
 		end
 
 	Current_directory_name_representation: STRING = "."

@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	TEST_DATA_READER [G -> TEST_SIMPLE_CASE create make end]
 
 create
@@ -59,13 +59,13 @@ feature -- Access
 		do
 			Result := file.last_string
 		end
-		
+
 	data_values: ARRAY [STRING]
 			-- Test data values parsed out of `last_string'
-			
+
 	suite: TEST_SUITE
 			-- Generated test suite
-			
+
 feature -- Measurement
 
 	columns: INTEGER
@@ -92,7 +92,7 @@ feature -- Status report
 			-- Does `last_string' hold a valid test data record?
 		do
 			if has_last_string then
-				Result := (last_string.occurrences ('%T') = columns - 1) and 
+				Result := (last_string.occurrences ('%T') = columns - 1) and
 					(last_string.item (1) /= '%T') and
 					(last_string.item (last_string.count) /= '%T')
 			end
@@ -109,7 +109,7 @@ feature -- Status report
 		do
 			Result := data_values /= Void
 		end
-			
+
 	is_suite_generated: BOOLEAN
 			-- Has test suite been generated?
 		do
@@ -121,7 +121,7 @@ feature -- Status report
 		do
 			Result := (table.occurrences (Void) = 0)
 		end
-		
+
 	all_values_valid: BOOLEAN
 			-- Are all entries in `data_values' valid?
 		require
@@ -129,16 +129,16 @@ feature -- Status report
 		local
 			i: INTEGER
 		do
-			from 
-				i := 1 
+			from
+				i := 1
 				Result := True
-			until 
-				not Result or i > data_values.count 
+			until
+				not Result or i > data_values.count
 			loop
 				if data_values @ i /= Void then
 					Result := ((data_values @ i).occurrences ('%T') = 0) and
 						(table @ i).input_accepted (data_values @ i)
-				else 
+				else
 					Result := (table @ i).input_accepted (data_values @ i)
 				end
 				i := i + 1
@@ -160,7 +160,7 @@ feature -- Status report
 			end
 			Result := 1 <= i and i <= maxcol
 		end
-		
+
 	is_log_set: BOOLEAN
 			-- Is a log facility set up?
 		do
@@ -174,7 +174,7 @@ feature -- Status report
 		do
 			Result := (last_string.item (1) = Comment_character)
 		end
-		
+
 feature -- Status setting
 
 	set_log (l: LOG_FACILITY)
@@ -216,13 +216,13 @@ feature -- Basic operations
 			from count := 1 until end_of_file loop
 				file.read_line
 				invalid := not is_line_valid
-				if not invalid then 
-					parse_line 
+				if not invalid then
+					parse_line
 					if all_values_valid then inject_record (count) end
 				end
-				
-				if (invalid or not all_values_valid) 
-					and not last_string.is_empty 
+
+				if (invalid or not all_values_valid)
+					and not last_string.is_empty
 					and is_log_set then
 					log.put_string ("Record " + count.out + " not valid!")
 					log.put_new_line
@@ -233,14 +233,14 @@ feature -- Basic operations
 		ensure
 			suite_not_empty: is_suite_generated implies not suite.is_empty
 		end
-				 
+
 feature {NONE} -- Constants
 
 	Comment_character: CHARACTER = '#'
 			-- Character for commenting out data records
 	Void_entity: STRING = "[]"
 			-- String that is used for denoting a void string object
- 
+
 feature {NONE} -- Implementation
 
 	table: ARRAY [TEST_DATA_COLUMN]
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 
 	log: LOG_FACILITY
 			-- Log for error output
-			
+
 	parse_line
 			-- Parse data values in `last_string'
 		require
@@ -265,12 +265,12 @@ feature {NONE} -- Implementation
 		do
 			create data_values.make (1, columns)
 			s := clone (last_string)
-			if is_comment then s.tail (s.count - 1) end
+			if is_comment then s.keep_tail (s.count - 1) end
 			from i := 1 until i > columns loop
 				pos := s.index_of ('%T', 1)
 				if pos > 0 then
 					val := s.substring (1, pos - 1)
-					s.tail (s.count - pos)
+					s.keep_tail (s.count - pos)
 				else
 					val := s
 				end
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 		ensure
 			data_values_exist: data_values /= Void
 			columns_ok: data_values.count = columns
-			
+
 		end
 
 	inject_record (c: INTEGER)
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 		ensure
 			suite_exists: suite /= Void
 		end
-			
+
 invariant
 
 	table_exists: table /= Void
@@ -321,14 +321,14 @@ invariant
 	data_values_consistent: has_data_values implies data_values.count = columns
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

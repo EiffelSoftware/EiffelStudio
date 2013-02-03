@@ -42,7 +42,7 @@ feature -- Initialization
 			check l_info_attached: l_info /= Void end
 			create culture_info.make_from_name (l_info.name)
 			if attached culture_info.name as l_culture_name then
-				create l_locale_id.make_from_string (l_culture_name)
+				create l_locale_id.make_from_string (create {STRING_32}.make_from_cil (l_culture_name))
 			else
 				create l_locale_id.make ("en", "US", Void)
 			end
@@ -172,7 +172,7 @@ feature -- Informations
 						attached l_list.item (i) as l_culture and then
 						attached l_culture.name as l_culture_name
 					then
-						create l_locale_id.make_from_string (l_culture_name)
+						create l_locale_id.make_from_string (create {STRING_32}.make_from_cil (l_culture_name))
 						Result.extend (l_locale_id.twin)
 					end
 					i := i + 1
@@ -184,15 +184,15 @@ feature -- Informations
 
 	current_locale_id : I18N_LOCALE_ID
 			-- return the current locale info
-		local
-			l_culture_info: detachable CULTURE_INFO
-			l_name: detachable SYSTEM_STRING
 		do
-			l_culture_info := culture_info.current_culture
-			check l_culture_info_attached: l_culture_info /= Void end
-			l_name := l_culture_info.name
-			check l_name_attached: l_name /= Void end
-			create Result.make_from_string (l_name)
+			if
+				attached culture_info.current_culture as l_culture_info and then
+				attached l_culture_info.name as l_name
+			then
+				create Result.make_from_string (create {STRING_32}.make_from_cil (l_name))
+			else
+				create Result.make ("en", "US", Void)
+			end
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -579,7 +579,7 @@ feature -- General Information
 				attached {CULTURE_INFO}.current_culture as l_culture and then
 				attached l_culture.name as l_culture_name
 			then
-				create Result.make_from_string (l_culture_name)
+				create Result.make_from_string (create {STRING_32}.make_from_cil (l_culture_name))
 			else
 				create Result.make ("en", "US", Void)
 			end
@@ -592,7 +592,7 @@ feature -- General Information
 				attached {CULTURE_INFO}.installed_ui_culture as l_culture and then
 				attached l_culture.name as l_culture_name
 			then
-				create Result.make_from_string (l_culture_name)
+				create Result.make_from_string (create {STRING_32}.make_from_cil (l_culture_name))
 			else
 				create Result.make ("en", "US", Void)
 			end
@@ -691,7 +691,7 @@ invariant
 	culture_info_exists: culture_info /= Void
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -27,11 +27,6 @@ inherit
 			interface
 		end
 
-	EV_DIALOG_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	EV_NS_WINDOW
 
 feature {NONE} -- Implementation
@@ -49,7 +44,7 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	selected_button: detachable STRING_32
+	selected_button: detachable IMMUTABLE_STRING_32
 			-- Label of the last clicked button.
 
 feature -- Status setting
@@ -102,4 +97,14 @@ feature {EV_ANY, EV_ANY_I}
 
 	interface: detachable EV_STANDARD_DIALOG note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_STANDARD_DIALOG_IMP

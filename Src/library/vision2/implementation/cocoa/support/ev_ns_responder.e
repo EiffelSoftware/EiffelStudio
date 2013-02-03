@@ -21,7 +21,7 @@ feature -- Event handling
 		local
 			cocoa_code: NATURAL_16
 		do
-			io.put_string ("Key down: " + a_event.characters + " (" + a_event.key_code.out + ")%N")
+			io.put_string ("Key down: " + a_event.characters.as_string_32 + " (" + a_event.key_code.out + ")%N")
 			if attached key_press_actions_internal as actions then
 				if a_event.characters_ignoring_modifiers.count = 1 then
 					cocoa_code := a_event.characters_ignoring_modifiers.character_at_index (0)
@@ -44,7 +44,7 @@ feature -- Event handling
 		local
 			cocoa_code: NATURAL_16
 		do
-			io.put_string ("Key up: " + a_event.characters + " (" + a_event.key_code.out + ")%N")
+			io.put_string ("Key up: " + a_event.characters.as_string_32 + " (" + a_event.key_code.out + ")%N")
 			if attached key_release_actions_internal as actions then
 				if a_event.characters_ignoring_modifiers.count = 1 then
 					cocoa_code := a_event.characters_ignoring_modifiers.character_at_index (0)
@@ -74,4 +74,14 @@ feature {NONE} -- Actions
 		deferred
 		end
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -223,11 +223,11 @@ feature {NONE} -- Implementation
 	fill_list
 			-- Fill Left pixmaps list.
 		local
-			l_pref_hash: HASH_TABLE [EV_PIXMAP, STRING]
-			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
+			l_pref_hash: STRING_TABLE [EV_PIXMAP]
+			l_known_pref_hash: STRING_TABLE [PREFERENCE]
 			l_pref_name,
-			l_pref_parent_short_name: STRING
-			l_split_string: LIST [STRING]
+			l_pref_parent_short_name: READABLE_STRING_GENERAL
+			l_split_string: LIST [READABLE_STRING_GENERAL]
 			l_root_pixmap: EV_PIXMAP
 			l_hbox: EV_HORIZONTAL_BOX
 			l_row_index: INTEGER
@@ -277,13 +277,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_container (parent_preference: STRING)
+	fill_container (parent_preference: READABLE_STRING_GENERAL)
 			-- Show parent preferences.
 		require
 			parent_not_void: parent_preference /= Void
 		local
 			l_preference: PREFERENCE
-			l_preferences: HASH_TABLE [PREFERENCE, STRING]
+			l_preferences: STRING_TABLE [PREFERENCE]
 			l_row_index: INTEGER
 		do
 			grid.wipe_out
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 				l_preferences.after
 			loop
 				l_preference := l_preferences.item_for_iteration
-				if l_preference.name.substring (1, parent_preference.count).is_equal (parent_preference) then
+				if l_preference.name.substring (1, parent_preference.count).same_string_general (parent_preference) then
 					show_preference_in_container (l_preference, l_row_index)
 					l_row_index := l_row_index + 1
 				end
@@ -379,7 +379,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Private Attributes
 
-	selected_preference_name: detachable STRING
+	selected_preference_name: detachable READABLE_STRING_GENERAL
 			-- Selected preference
 
 	padding_width: INTEGER = 3;

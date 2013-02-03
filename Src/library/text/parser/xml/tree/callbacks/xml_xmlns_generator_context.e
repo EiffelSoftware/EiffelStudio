@@ -80,7 +80,7 @@ feature -- Status
 			a_namespace_not_void: a_namespace /= Void
 			a_namespace_not_empty: not a_namespace.is_empty
 		local
-			a_cursor: like prefixes.new_cursor
+			a_cursor: LINKED_LIST_ITERATION_CURSOR [HASH_TABLE [READABLE_STRING_32,  STRING_32]]
 			done: BOOLEAN
 			ns: STRING_32
 		do
@@ -168,7 +168,7 @@ feature -- Elements
 	on_start_element
 			-- Push context.
 		local
-			a_table: like prefixes.item
+			a_table: HASH_TABLE [READABLE_STRING_32, STRING_32]
 		do
 			create a_table.make (10)
 			a_table.compare_objects
@@ -206,7 +206,7 @@ invariant
 	default_namespaces_not_void: default_namespaces /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

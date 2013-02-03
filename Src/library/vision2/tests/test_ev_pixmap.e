@@ -61,11 +61,10 @@ feature {NONE} -- Actual Test
 	test_unicode_load_and_save
 		local
 			pixmap: EV_PIXMAP
-			l_u: FILE_UTILITIES
 			l_file: RAW_FILE
 		do
-			if l_u.file_exists (image_path) then
-				l_file := l_u.make_raw_file (image_path)
+			create l_file.make_with_name (image_path)
+			if l_file.exists then
 				l_file.delete
 			end
 
@@ -73,7 +72,7 @@ feature {NONE} -- Actual Test
 			pixmap.set_size (10, 10)
 			pixmap.save_to_named_file (create {EV_PNG_FORMAT}, image_path)
 
-			assert ("File saved.", l_u.file_exists (image_path))
+			assert ("File saved.", l_file.exists)
 
 			create pixmap
 			pixmap.set_with_named_file (image_path)
@@ -100,7 +99,7 @@ feature {NONE} -- Helpers
     image_path: STRING_32 = "测试图片.png";
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

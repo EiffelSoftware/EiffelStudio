@@ -28,9 +28,6 @@
 		<cluster name="kernel" location="..\..\..\contrib\library\gobo\library\kernel\" recursive="true">
 			<option namespace="Kernel">
 			</option>
-			<file_rule>
-				<exclude>/unicode/uc_string.e$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="lexical" location="..\..\..\contrib\library\gobo\library\lexical\" recursive="true">
 			<option namespace="Lexical">

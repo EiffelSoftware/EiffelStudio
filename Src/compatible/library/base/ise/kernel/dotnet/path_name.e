@@ -52,8 +52,8 @@ feature -- Comparison
 			l_other_full_path: detachable SYSTEM_STRING
 		do
 			--| .Net exceptions may be raised due to invalid characters or io problems.
-			l_other_full_path := {PATH}.get_full_path (other.to_cil)
-			Result := l_other_full_path /= Void and then l_other_full_path.equals ({PATH}.get_full_path (to_cil))
+			l_other_full_path := {SYSTEM_PATH}.get_full_path (other.to_cil)
+			Result := l_other_full_path /= Void and then l_other_full_path.equals ({SYSTEM_PATH}.get_full_path (to_cil))
 		end
 
 feature -- Status report
@@ -65,7 +65,7 @@ feature -- Status report
 		local
 			a_sys_str: detachable SYSTEM_STRING
 		do
-			a_sys_str := {PATH}.get_full_path (dir_name.to_cil)
+			a_sys_str := {SYSTEM_PATH}.get_full_path (dir_name.to_cil)
 			Result := a_sys_str /= Void and then not a_sys_str.equals (a_sys_str.empty)
 		end
 
@@ -76,8 +76,8 @@ feature -- Status report
 		local
 			a_sys_str: detachable SYSTEM_STRING
 		do
-			a_sys_str := {PATH}.get_full_path (vol_name.to_cil)
-			Result := a_sys_str /= Void and then a_sys_str.equals ({PATH}.get_path_root (a_sys_str))
+			a_sys_str := {SYSTEM_PATH}.get_full_path (vol_name.to_cil)
+			Result := a_sys_str /= Void and then a_sys_str.equals ({SYSTEM_PATH}.get_path_root (a_sys_str))
 		end
 
 	is_valid: BOOLEAN
@@ -112,7 +112,7 @@ feature -- Status setting
 				resize (new_size)
 			end
 			if not is_empty then
-				append_character ({PATH}.directory_separator_char)
+				append_character ({SYSTEM_PATH}.directory_separator_char)
 			end
 			append (directory_name)
 		ensure
@@ -132,7 +132,7 @@ feature -- Status setting
 				resize (new_size)
 			end
 			if not is_empty then
-				append_character ({PATH}.directory_separator_char)
+				append_character ({SYSTEM_PATH}.directory_separator_char)
 			end
 			append (directory_name)
 		ensure

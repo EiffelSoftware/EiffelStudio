@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make_temporary_name
 			-- Create a temporary filename.
 		do
-			make_from_cil ({PATH}.get_temp_file_name)
+			make_from_cil ({SYSTEM_PATH}.get_temp_file_name)
 		end
 
 feature -- Status report
@@ -55,7 +55,7 @@ feature -- Status setting
 			ch: CHARACTER
 		do
 			if not is_empty then
-				ch := {PATH}.directory_separator_char
+				ch := {SYSTEM_PATH}.directory_separator_char
 				if item (count) /= ch then
 					append_character (ch)
 				end

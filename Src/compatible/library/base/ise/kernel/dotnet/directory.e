@@ -50,7 +50,7 @@ feature -- Initialization
 		do
 			create di.make (name.to_cil)
 			create l_full_path.make_from_cil (di.full_name)
-			l_sep_index := l_full_path.last_index_of ({PATH}.directory_separator_char,
+			l_sep_index := l_full_path.last_index_of ({SYSTEM_PATH}.directory_separator_char,
 				(1).max (l_full_path.count - 1))
 			if l_sep_index = 0 then
 				di := {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
@@ -221,7 +221,7 @@ feature -- Access
 			not_new_name_void: new_name /= Void
 			file_exists: exists
 		local
-			l_info: FILE_INFO
+			l_info: SYSTEM_FILE_INFO
 		do
 			create l_info.make (new_name.to_cil)
 			if l_info.exists then

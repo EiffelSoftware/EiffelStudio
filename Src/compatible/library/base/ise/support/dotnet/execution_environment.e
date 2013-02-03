@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			l_ext, l_paths: ARRAYED_LIST [STRING]
 			l_program_name: STRING
 		do
-			if {SYSTEM_FILE}.exists (a_cmd) and then attached {PATH}.get_full_path (a_cmd) as l_path then
+			if {SYSTEM_FILE}.exists (a_cmd) and then attached {SYSTEM_PATH}.get_full_path (a_cmd) as l_path then
 				Result := l_path
 			else
 				l_ext := executable_extensions
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 						Result /= Void or l_paths.off
 					loop
 						l_program_name := l_paths.item.twin
-						l_program_name.extend ({PATH}.directory_separator_char)
+						l_program_name.extend ({SYSTEM_PATH}.directory_separator_char)
 						l_program_name.append (a_cmd + l_ext.item)
 						if {SYSTEM_FILE}.exists (l_program_name) then
 							Result := l_program_name
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			create Result.make (100)
 			if
 				attached {ASSEMBLY}.get_entry_assembly as l_assembly and then
-				attached {PATH}.get_directory_name (l_assembly.location) as l_location
+				attached {SYSTEM_PATH}.get_directory_name (l_assembly.location) as l_location
 			then
 				Result.extend (l_location)
 			end

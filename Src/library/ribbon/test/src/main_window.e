@@ -84,7 +84,7 @@ feature -- Access
 
 	ribbon: RIBBON_1
 			-- Ribbon attached to current
-	application_menu: detachable APPLICATION_MENU_1
+	application_menu: APPLICATION_MENU_1
 			-- Application menu
 end
 

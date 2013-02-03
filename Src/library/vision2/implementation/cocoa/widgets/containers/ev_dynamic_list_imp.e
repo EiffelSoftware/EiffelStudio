@@ -23,13 +23,9 @@ feature -- Access
 
 	i_th (i: INTEGER): like item
 			-- Item at `i'-th position.
-		local
-			l_item: detachable G_IMP
 		do
-			if attached ev_children then
-				l_item ?= ev_children.i_th (i)
-				check l_item /= Void end
-				Result ?= l_item.attached_interface
+			check attached ev_children.i_th (i) as l_item and then attached {like item} l_item.interface as l_result then
+				Result := l_result
 			end
 		end
 
@@ -70,7 +66,7 @@ feature {NONE} -- Implementation
 invariant
 	ev_children_not_void: is_usable implies ev_children /= Void
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

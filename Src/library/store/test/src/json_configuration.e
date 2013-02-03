@@ -163,7 +163,7 @@ feature -- Access
 		do
 			if attached json_value (data, k) as v then
 				if attached {JSON_STRING} v as j_string then
-					Result := j_string.unescaped_string
+					Result := j_string.unescaped_string_8
 				else
 					Result := v.representation
 				end
@@ -178,7 +178,7 @@ feature -- Access
 					l_map as c
 				loop
 					if attached {JSON_STRING} c.item as v then
-						Result.force (v.unescaped_string, c.key.unescaped_string)
+						Result.force (v.unescaped_string_8, c.key.unescaped_string_8)
 					end
 				end
 			end

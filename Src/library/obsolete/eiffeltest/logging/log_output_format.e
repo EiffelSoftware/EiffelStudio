@@ -12,7 +12,7 @@ deferred class LOG_OUTPUT_FORMAT inherit
 	CHECK_UTILITY
 
 	TEST_LOGGER
-	
+
 feature -- Status report
 
 	is_device_set: BOOLEAN
@@ -55,7 +55,7 @@ feature -- Output
 				pos := str.index_of ('%N', 1)
 				if pos > 0 then
 					strout := str.substring (1, pos - 1)
-					str.tail (str.count - pos)
+					str.keep_tail (str.count - pos)
 				else
 					strout := clone (str)
 					str.clear_all
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 
 	log: LOG_FACILITY
 			-- Callback reference to log facility
-			
+
 	output_device: IO_MEDIUM
 			-- Device for log output
 		do
@@ -106,16 +106,16 @@ feature {NONE} -- Implementation
 			non_empty_string: s /= Void and then not s.is_empty
 		deferred
 		end
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

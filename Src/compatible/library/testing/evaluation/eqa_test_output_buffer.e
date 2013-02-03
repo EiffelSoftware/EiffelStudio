@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			buffer_size := a_size
 			create buffer.make (buffer_size)
 			mode := write_file
-			name := "test_output_buffer"
+			set_name ("test_output_buffer")
 			create last_string.make_empty
 		end
 

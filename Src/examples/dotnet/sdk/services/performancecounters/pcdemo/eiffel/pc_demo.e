@@ -174,7 +174,7 @@ feature {NONE} -- Output
 		local
 			app_name: SYSTEM_STRING
 		do
-			app_name := {PATH}.get_file_name ({ENVIRONMENT}.get_command_line_args.item (0))
+			app_name := {SYSTEM_PATH}.get_file_name ({ENVIRONMENT}.get_command_line_args.item (0))
 
 			{SYSTEM_CONSOLE}.write_line ("Usage")
 			{SYSTEM_CONSOLE}.write_line ("-----")

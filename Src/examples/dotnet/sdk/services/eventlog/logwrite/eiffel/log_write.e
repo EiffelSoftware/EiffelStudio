@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			if not retried then
 				count := args.count - 1
 				if count /= 3 then
-					{SYSTEM_CONSOLE}.write_line ("Usage: {0} <log> <message> <source>", {PATH}.get_file_name (args[0]))
+					{SYSTEM_CONSOLE}.write_line ("Usage: {0} <log> <message> <source>", {SYSTEM_PATH}.get_file_name (args[0]))
 				else
 					log := args[1]
 					source := args[3]

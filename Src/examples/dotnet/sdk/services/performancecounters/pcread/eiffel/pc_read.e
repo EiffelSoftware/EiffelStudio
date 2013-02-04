@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		do
 			count := args.count - 1
 			if count /= 3 and count /= 2 then
-				{SYSTEM_CONSOLE}.write_line ("Usage: {0} <object> <counter> [<instance>]", {PATH}.get_file_name ({ENVIRONMENT}.get_command_line_args.item (0)))
+				{SYSTEM_CONSOLE}.write_line ("Usage: {0} <object> <counter> [<instance>]", {SYSTEM_PATH}.get_file_name ({ENVIRONMENT}.get_command_line_args.item (0)))
 			else
 				object_name := args[1]
 				counter_name := args[2]

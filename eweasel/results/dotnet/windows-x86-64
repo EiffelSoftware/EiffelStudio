@@ -313,6 +313,7 @@ Test hash-table-is-equal (table012): failed
 	Expected result:
 		Final status:  completed 
 
+Test string-table-duplicate-caseless-insertion (table013): passed
 Test recursive-delete-with-symlinks (directory001): failed
 	Description: A call to {DIRECTORY}.recursive_delete does not delete the entire directory tree if there are any symbolic links in the tree
 	Execution error in file C:\work\eweasel\eweasel\tests\directory001\tcf at line 19
@@ -477,6 +478,7 @@ Test io_exception_code (except038): failed
 	Expected result:
 		Final status:  completed 
 
+Test unicode_in_exception (except039): passed
 Test unicode_manifest_string_char_and_constants (unicode001): failed
 	Description: Test UTF-8 parser and Unicode manifest strings, characters and constants. Also test note clause, comments.
 	Execution error in file C:\work\eweasel\eweasel\tests\unicode001\tcf at line 8
@@ -531,17 +533,7 @@ Test repeated-non-conforming-inheritance-of-generic-type-from-parents (noncon012
 Test feature-inherits-export-status (noncon013): passed
 Test non-conform-once-inheritance (noncon014): passed
 Test non-conform-generic-class (noncon015): passed
-Test non-conform-arguments (noncon016): failed
-	Description: Calling a routine from a non-conforming parent crashes at run-time.
-	Execution error in file C:\work\eweasel\eweasel\tests\noncon016\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
-	Expected result:
-		Final status:  completed 
-
+Test non-conform-arguments (noncon016): passed
 Test non-conform-infinite-loop (noncon017): passed
 Test non-conform-precondition-inheritance (noncon019): passed
 Test incorrect-vrle-error (noncon020): passed
@@ -2280,17 +2272,7 @@ Test switch-parents-assertion-order (incr124): failed
 
 Test change-numeric-formal-argument (incr125): passed
 Test generic-veen-sneak (incr126): passed
-Test add-unused-formal-generic (incr127): failed
-	Description: After initial compilation, an extra unused formal generic parameter is added to a generic class and an extra actual generic parameter is added to the only generic derivation of this class.  After recompilation, system execution output should be unchanged, but execution instead terminates with a segmentation fault.  The initial compilation and recompilation can be (melt, melt) or (freeze, freeze).
-	Execution error in file C:\work\eweasel\eweasel\tests\incr127\tcf at line 23
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
+Test add-unused-formal-generic (incr127): passed
 Test make-generic-expanded-freeze (incr128): passed
 Test vtcg-in-generic-constraint (incr129): passed
 Test vtct-vtcg-die-degree-5 (incr130): passed
@@ -3468,7 +3450,7 @@ Test melted-local-referers (melt064): failed
 
 Test melted-profinfo-wrong-dir (melt065): failed
 	Description: A system whose Ace specifies `profile (yes)' is melted.  When the system is executed with the EIFGEN/W_code directory as the current directory with the MELT_PATH environment variable not set, system execution attempts to create the "profinfo" file in the wrong place (not in the EIFGEN/W_code directory).
-	Execution error in file C:\work\eweasel\eweasel\tests\melt065\tcf at line 24
+	Execution error in file C:\work\eweasel\eweasel\tests\melt065\tcf at line 27
 	Original text:    compare exec_output2 output
 	Substituted text: compare exec_output2 output
 	Reason: files being compared do not have identical contents
@@ -3570,6 +3552,13 @@ Test melted-tuple-expression-order (melt099): passed
 Test melted-creation-constrained-generic (melt100): passed
 Test melted-once-creation-of-generic (melt101): passed
 Test melted-special-creation-crash-2 (melt102): passed
+Test melted-on-character-32 (melt103): failed
+	Description: A call to `is_character_8' on a CHARACTER_32 causes incorrect melted code to be generated.
+	Execution error in file C:\work\eweasel\eweasel\tests\melt103\tcf at line 12
+	Original text:    compare exec_output_m output
+	Substituted text: compare exec_output_m output
+	Reason: files being compared do not have identical contents
+
 Test bit-arg-extend-frozen (freez001): failed
 	Description: A call to a routine whose formal argument is a BIT type with a larger number of bits than the actual argument.  The actual argument should be extended with trailing zeros
 	Execution error in file C:\work\eweasel\eweasel\tests\freez001\tcf at line 18
@@ -3981,6 +3970,7 @@ Test tight-loop-integer-constant-infinite-loop (final117): manual
 Test finalize-once-strings-in-invariant (final118): passed
 Test equation-evaluation-sequence (final119): passed
 Test comparison-involving-allocation (final120): passed
+Test bracket-wrong-dispatch (final121): passed
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -6476,6 +6466,8 @@ Test managed-pointer-invariant (lib038): failed
 		Final status:  completed 
 
 Test file-info-not-duplicated (lib039): passed
+Test utf-16-basics (utf001): passed
+Test utf-8-basics (utf002): passed
 Test tuple-manipulation (tuple001): failed
 	Description: Check validity of tuple-manipulation
 	Execution error in file C:\work\eweasel\eweasel\tests\tuple001\tcf at line 17
@@ -6562,7 +6554,7 @@ Test validity-vfav4-basic (vfav401): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Validity error code VD71
+		Validity error code VSCN
 		Final status:  paused 
 	Expected result:
 		Final status:  completed 
@@ -8611,8 +8603,8 @@ Test dotnet-static-access-on-deferred (dotnet115): failed
 
 Test missing-dotnet-type (dotnet116): passed
 
-Passed:  2163 / 2768  (78%)
-Failed:  573 / 2768  (22%)
-Manual:  26 / 2768  (1%)
-Skipped:  6 / 2768  (1%)
+Passed:  2170 / 2774  (79%)
+Failed:  572 / 2774  (21%)
+Manual:  26 / 2774  (1%)
+Skipped:  6 / 2774  (1%)
 

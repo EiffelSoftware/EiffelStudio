@@ -107,9 +107,9 @@ feature -- Access
 			-- Ribbon attached to current
 	application_menu: APPLICATION_MENU
 			-- Application menu
-	help_button: HELP_BUTTON
+	help_button: detachable HELP_BUTTON
 			-- Help button
-	quick_access_toolbar: QUICK_ACCESS_TOOLBAR
+	quick_access_toolbar: detachable QUICK_ACCESS_TOOLBAR
 			-- Quick access toolbar
 	mini_toolbar: MINI_TOOLBAR
 			-- Mini toolbar

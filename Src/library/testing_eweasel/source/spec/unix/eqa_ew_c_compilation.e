@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dir, a_save, a_freeze_cmd: STRING a_max_procs: INTEGER; a_test_set: EQA_EW_SYSTEM_TEST_SET)
+	make (a_dir: READABLE_STRING_GENERAL; a_save: STRING; a_freeze_cmd: READABLE_STRING_GENERAL; a_max_procs: INTEGER; a_test_set: EQA_EW_SYSTEM_TEST_SET)
 			-- Start a new process to do any necessary
 			-- C compilations (freezing) in directory `a_dir',
 			-- using at most `a_max_procs' simultaneous processes

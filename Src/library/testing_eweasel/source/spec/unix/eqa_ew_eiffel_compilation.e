@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Creation method
 
-	make_and_launch (a_args: LIST [STRING]; an_output_file_name: STRING; a_test_set: EQA_EW_SYSTEM_TEST_SET)
+	make_and_launch (a_args: LIST [STRING_32]; an_output_file_name: STRING; a_test_set: EQA_EW_SYSTEM_TEST_SET)
 			-- Start a new Eiffel compilation process to
 			-- run command system with arguments `a_args'.
 			-- Write all output from the new process to

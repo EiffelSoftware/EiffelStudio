@@ -47,8 +47,6 @@ feature -- Command
 
 	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Load pixel data from file `a_file_name'
-		obsolete
-			"Use `set_with_named_path' instead."
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked
@@ -77,8 +75,6 @@ feature -- Command
 
 	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save pixel data to file `a_file_name'.
-		obsolete
-			"Use `save_to_named_path' instead."
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked

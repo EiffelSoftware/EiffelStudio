@@ -3,10 +3,10 @@
 	<target name="test">
 		<root all_classes="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
-		<option is_attached_by_default="true" void_safety="all"/>
+		<option warning="false" is_attached_by_default="true" void_safety="all"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		$BAD_LIBRARY
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" use_application_options="true"/>
 	</target>
 </system>

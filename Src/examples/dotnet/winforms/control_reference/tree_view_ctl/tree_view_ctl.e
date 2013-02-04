@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			if node.parent = Void then
 				Result := node.text
 			else
-				Result := {PATH}.combine (path_from_node (node.parent), node.text)
+				Result := {SYSTEM_PATH}.combine (path_from_node (node.parent), node.text)
 			end
 		end
 

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			entry: EVENT_LOG_ENTRY
 			enum: IENUMERATOR
 		do
-			app_name := {PATH}.get_file_name (args[0])
+			app_name := {SYSTEM_PATH}.get_file_name (args[0])
 			count := args.count - 1
 			if count /= 1 and count /= 2 then
 				{SYSTEM_CONSOLE}.write_line ("Usage: {0} <log> [machine]", app_name)

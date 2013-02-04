@@ -133,12 +133,11 @@ feature -- Status setting
 			if not path.is_empty then
 				l_pos := path.last_index_of ('/', path.count)
 				if l_pos > 0 then
-					name := path.substring (l_pos+1, path.count)
+					name := path.substring (l_pos + 1, path.count)
 				else
-					create name.make_empty
+					name := path
 				end
-			end
-			if name = Void then
+			else
 				name := l_group.name
 			end
 			set_pebble (stone)
@@ -799,6 +798,7 @@ feature {NONE} -- Implementation
 			elseif data.is_cluster then
 				Result.append (data.actual_group.name)
 				if not path.is_empty then
+					Result.append_character (':')
 					Result.append_string_general (path)
 				end
 				Result.append_character ('%N')

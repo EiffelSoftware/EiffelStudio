@@ -81,8 +81,8 @@ feature -- Roundtrip/Token
 			if Result = Void or a_list = Void then
 				if not features.is_empty then
 					Result := features.last_token (a_list)
-				elseif clients /= Void then
-					Result := clients.last_token (a_list)
+				elseif attached clients as l_clients then
+					Result := l_clients.last_token (a_list)
 				else
 					Result := feature_keyword.last_token (a_list)
 				end
@@ -97,7 +97,7 @@ feature -- Roundtrip/Comments
 			a_list_not_void: a_list /= Void
 		local
 			l_end_index: INTEGER
-			l_leaf: LEAF_AS
+			l_leaf: detachable LEAF_AS
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
@@ -140,7 +140,7 @@ feature -- Comparison
 
 feature -- Access
 
-	feature_with_name (n: INTEGER): FEATURE_AS
+	feature_with_name (n: INTEGER): detachable FEATURE_AS
 			-- Feature ast with internal name `n'
 		local
 			l_area: SPECIAL [FEATURE_AS]
@@ -268,7 +268,7 @@ invariant
 	feature_location_not_void: feature_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

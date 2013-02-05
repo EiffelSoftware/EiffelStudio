@@ -74,10 +74,10 @@ feature -- Roundtrip/Token
 		do
 			if a_list /= Void and create_creation_keyword_index /= 0 then
 				Result := create_creation_keyword (a_list)
-			elseif clients /= Void then
-				Result := clients.first_token (a_list)
-			elseif feature_list /= Void then
-				Result := feature_list.first_token (a_list)
+			elseif attached clients as l_clients then
+				Result := l_clients.first_token (a_list)
+			elseif attached feature_list as l_feature_list then
+				Result := l_feature_list.first_token (a_list)
 			else
 				Result := Void
 			end
@@ -85,10 +85,10 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if feature_list /= Void then
-				Result := feature_list.last_token (a_list)
-			elseif clients /= Void then
-				Result := clients.last_token (a_list)
+			if attached feature_list as l_feature_list then
+				Result := l_feature_list.last_token (a_list)
+			elseif attached clients as l_clients then
+				Result := l_clients.last_token (a_list)
 			elseif a_list /= Void and create_creation_keyword_index /= 0 then
 				Result := create_creation_keyword (a_list)
 			else
@@ -112,18 +112,20 @@ feature -- Access
 		local
 			cur: INTEGER
 		do
-			cur := feature_list.index
+			if attached feature_list as l_feature_list then
+				cur := l_feature_list.index
 
-			from
-				feature_list.start
-			until
-				feature_list.after or else Result
-			loop
-				Result := feature_list.item <= f and feature_list.item >= f
-				feature_list.forth
+				from
+					l_feature_list.start
+				until
+					l_feature_list.after or else Result
+				loop
+					Result := l_feature_list.item <= f and l_feature_list.item >= f
+					l_feature_list.forth
+				end
+
+				l_feature_list.go_i_th (cur)
 			end
-
-			feature_list.go_i_th (cur)
 		end
 
 feature {COMPILER_EXPORTER} -- Convenience
@@ -139,7 +141,7 @@ feature {COMPILER_EXPORTER} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -92,11 +92,8 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 			-- First token in current AST nodE
-		local
-			l_list: CONSTRUCT_LIST [INTEGER]
 		do
-			l_list := id_list.id_list
-			if a_list /= Void and (l_list /= Void and then not l_list.is_empty) then
+			if a_list /= Void and (attached id_list.id_list as l_list and then not l_list.is_empty) then
 				if a_list.valid_index (l_list.first) then
 					Result := a_list.i_th (l_list.first)
 				end
@@ -144,7 +141,7 @@ invariant
 	id_list_not_void: id_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

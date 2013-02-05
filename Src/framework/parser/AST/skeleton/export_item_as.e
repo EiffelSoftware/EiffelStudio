@@ -53,13 +53,13 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 					-- Non-roundtrip mode
-				if features /= Void then
-					Result := features.last_token (a_list)
+				if attached features as l_features then
+					Result := l_features.last_token (a_list)
 				end
 			else
 					-- Roundtrip mode
-				if features /= Void then
-					Result := features.last_token (a_list)
+				if attached features as l_features then
+					Result := l_features.last_token (a_list)
 				else
 					Result := clients.last_token (a_list)
 				end
@@ -91,7 +91,7 @@ invariant
 	clients_not_void: clients /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

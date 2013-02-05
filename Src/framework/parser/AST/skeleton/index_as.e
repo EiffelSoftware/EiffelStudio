@@ -78,8 +78,8 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if tag /= Void then
-				Result := tag.first_token (a_list)
+			if attached tag as l_tag then
+				Result := l_tag.first_token (a_list)
 			else
 				Result := index_list.first_token (a_list)
 			end
@@ -107,7 +107,7 @@ feature -- Comparison
 
 feature {DOCUMENTATION_EXPORT} -- Access
 
-	content_as_string_32: STRING_32
+	content_as_string_32: detachable STRING_32
 			-- Merge content into a single string.
 		do
 			if attached content_as_string as l_str then
@@ -141,7 +141,7 @@ invariant
 	index_list_not_void: index_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

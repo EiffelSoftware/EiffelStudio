@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			group_set: group = clu
 		end
 
-	make_subfolder (clu: CONF_GROUP; a_path, a_name: READABLE_STRING_GENERAL)
+	make_subfolder (clu: CONF_GROUP; a_path: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL)
 			-- Create for a subfolder `path' of `clu'.
 		require
 			valid_cluster: clu /= Void
@@ -50,13 +50,16 @@ feature {NONE} -- Initialization
 		do
 			group := clu
 			path := a_path.as_string_32
-			if attached folder_name as l_name then
-				folder_name := l_name.as_string_32
+			if a_name /= Void then
+				folder_name := a_name.as_string_32
+			else
+				folder_name := Void
 			end
 		ensure
 			group_set: group = clu
 			path_set: path.same_string_general (a_path)
-			folder_name_set: attached folder_name as l_name implies l_name.same_string_general (a_name)
+			folder_name_unset: a_name = Void implies folder_name = Void
+			folder_name_set: a_name /= Void implies attached folder_name as l_name and then l_name.same_string_general (a_name)
 		end
 
 feature -- Access

@@ -260,7 +260,11 @@ feature -- Parsing (Unknown encoding)
 			a_class_has_text: a_class.has_text
 		do
 			filename := a_class.file_name
-			parse_from_utf8_string (a_class.text, a_class)
+			if attached a_class.text as l_class_text then
+				parse_from_utf8_string (l_class_text, a_class)
+			else
+				reset_nodes
+			end
 			detected_encoding := a_class.encoding
 			detected_bom := a_class.bom
 		end
@@ -878,7 +882,7 @@ feature {NONE} -- Actions
 			-- New CLASS AST node;
 			-- Update the clickable list.
 		local
-			ext_name: STRING_AS
+			ext_name: detachable STRING_AS
 			l_conforming_parents, l_non_conforming_parents: detachable PARENT_LIST_AS
 		do
 			if n2 /= Void then
@@ -1109,7 +1113,7 @@ invariant
 	once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

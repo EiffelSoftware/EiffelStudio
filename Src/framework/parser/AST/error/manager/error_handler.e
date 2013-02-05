@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties		
 
-	error_displayer: ERROR_DISPLAYER
+	error_displayer: detachable ERROR_DISPLAYER note option: stable attribute end
 			-- Displays warning and error messages when they occur
 
 	error_list: ARRAYED_LIST [ERROR]
@@ -237,10 +237,10 @@ feature {COMPILER_EXPORTER} -- Output
 
 	trace
 			-- Trace the output of the errors if there are any.
-		require
-			non_void_error_displayer: error_displayer /= Void
 		do
-			error_displayer.trace (Current)
+			if error_displayer /= Void then
+				error_displayer.trace (Current)
+			end
 			if has_error then
 				error_list.wipe_out
 			end
@@ -254,11 +254,11 @@ feature {COMPILER_EXPORTER} -- Output
 
 	trace_warnings
 			-- Trace the output of the warnings if there are any.
-		require
-			non_void_error_displayer: error_displayer /= Void
 		do
 			if has_warning then
-				error_displayer.trace_warnings (Current)
+				if error_displayer /= Void then
+					error_displayer.trace_warnings (Current)
+				end
 				warning_list.wipe_out
 			end
 		ensure
@@ -267,7 +267,7 @@ feature {COMPILER_EXPORTER} -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_error_displayer (ed: like error_displayer)
+	set_error_displayer (ed: attached like error_displayer)
 			-- Set `error_displayer' to `ed'.
 		require
 			non_void_ed: ed /= Void

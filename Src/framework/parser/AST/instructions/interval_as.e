@@ -76,8 +76,8 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if upper /= Void then
-				Result := upper.last_token (a_list)
+			if attached upper as l_upper then
+				Result := l_upper.last_token (a_list)
 			else
 				Result := lower.last_token (a_list)
 			end
@@ -112,7 +112,7 @@ invariant
 	lower_not_void: lower /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

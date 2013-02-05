@@ -150,7 +150,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
 
-	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [detachable STRING]
+	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [STRING]
 			-- Convert `t' an array of indexes in NAMES_HEAP into an
 			-- array of STRINGs, each string being item of Current associated
 			-- with current value in `t'.
@@ -161,13 +161,17 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
 				from
 					i := t.lower
 					nb := t.upper
-					create Result.make_filled (Void, i, nb)
+					create Result.make_filled ("", i, nb)
 				until
 					i > nb
 				loop
-					Result.put (item (t.item (i)), i)
+					if attached item (t.item (i)) as l_item then
+						Result.put (l_item, i)
+					end
 					i := i + 1
 				end
+			else
+				create Result.make_empty
 			end
 		end
 
@@ -412,7 +416,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

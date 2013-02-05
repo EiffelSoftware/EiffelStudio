@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 
 	process_variant_as (l_as: VARIANT_AS)
 		do
-			l_as.expr.process (Current)
+			safe_process (l_as.expr)
 		end
 
 	process_un_strip_as (l_as: UN_STRIP_AS)
@@ -504,8 +504,8 @@ feature {NONE} -- Implementation
 				l_as.expression.process (Current)
 				safe_process (l_as.name)
 			else
-				l_as.name.process (Current)
-				l_as.type.process (Current)
+				safe_process (l_as.name)
+				safe_process (l_as.type)
 				l_as.expression.process (Current)
 			end
 		end
@@ -941,7 +941,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

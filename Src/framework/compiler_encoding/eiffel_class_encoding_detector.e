@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 
 	found_encoding_keyword: BOOLEAN
 
-	buffer: STRING_GENERAL
+	buffer: detachable STRING_GENERAL
 
 	index: INTEGER
 

@@ -106,8 +106,8 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if compound /= Void then
-				Result := compound.last_token (a_list)
+			if attached compound as l_compound then
+				Result := l_compound.last_token (a_list)
 			elseif a_list /= Void and then_keyword_index /= 0 then
 				Result := then_keyword (a_list)
 			else
@@ -142,7 +142,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

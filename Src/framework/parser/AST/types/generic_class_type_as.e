@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Roundtrip
 
-	internal_generics: like generics
+	internal_generics: attached like generics
 			-- Internal actual generic parameters.
 
 feature -- Roundtrip/Token
@@ -114,7 +114,7 @@ invariant
 	internal_generics_not_void: internal_generics /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

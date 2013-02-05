@@ -14,7 +14,7 @@ inherit
 		export
 			{ANY} path
 		redefine
-			make
+			make, make_with_path
 		end
 
 create
@@ -33,6 +33,16 @@ feature {NONE} -- Initialization
 			create last_string.make_empty
 			name := u.utf_32_string_to_utf_8_string_8 (a_name)
 			Precursor (a_name)
+		end
+
+	make_with_path (a_path: PATH)
+			-- <Precursor>
+		local
+			u: UTF_CONVERTER
+		do
+			create last_string.make_empty
+			name := u.utf_32_string_to_utf_8_string_8 (a_path.name)
+			Precursor (a_path)
 		end
 
 note

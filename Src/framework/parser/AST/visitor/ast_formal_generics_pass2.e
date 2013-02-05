@@ -105,11 +105,31 @@ feature {NONE} -- Visitor implementation
 		local
 			l_class_name: ID_AS
 			l_formal_type, l_new_formal: detachable FORMAL_AS
-			l_generics: detachable TYPE_LIST_AS
 		do
 			check not_has_node_changed: not has_node_changed end
 			l_class_name := l_as.class_name
-			if l_as.generics = Void then
+			if attached l_as.generics as l_generics then
+					-- A formal can never be a base class of a generic class.
+					-- Something like H -> G[INTEGER] is illegal.
+					-- The error will be caught later.
+				suppliers.insert_supplier_id (l_class_name)
+				from
+					l_generics.start
+				until
+					l_generics.after
+				loop
+					l_generics.item.process (Current)
+						-- If we changed the object, we need to replace the references.
+					if has_node_changed then
+						consume_node
+						if attached last_consumed_node as l_node then
+							l_generics.replace (l_node)
+						end
+						check is_replaced: l_generics.item = last_consumed_node end
+					end
+					l_generics.forth
+				end
+			else
 					-- Check whether this class type should actually be a formal.
 					-- If so, create a new formal instance and signal that the object has changed.				
 				from
@@ -138,28 +158,6 @@ feature {NONE} -- Visitor implementation
 						-- We have not found a formal. So it is indeed a class type.
 						-- Add the class type to the suppliers!
 					suppliers.insert_supplier_id (l_class_name)
-				end
-			else
-					-- A formal can never be a base class of a generic class.
-					-- Something like H -> G[INTEGER] is illegal.
-					-- The error will be caught later.
-				suppliers.insert_supplier_id (l_class_name)
-				from
-					l_generics := l_as.generics
-					l_generics.start
-				until
-					l_generics.after
-				loop
-					l_generics.item.process (Current)
-						-- If we changed the object, we need to replace the references.
-					if has_node_changed then
-						consume_node
-						if attached last_consumed_node as l_node then
-							l_generics.replace (l_node)
-						end
-						check is_replaced: l_generics.item = last_consumed_node end
-					end
-					l_generics.forth
 				end
 			end
 		end
@@ -244,7 +242,7 @@ feature {NONE} -- Types which should not occur
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

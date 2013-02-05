@@ -42,7 +42,7 @@ feature -- Access
 						create l_result.make_from_string (path.substring (1, path.count - 4))
 						l_result.append_string_general ("-safe")
 						l_result.append_string (extension)
-						file.reset (path)
+						file.reset (l_result)
 							-- Check if the "safe" version of the file exists.
 						if not file.exists or else not file.is_readable then
 								-- Rollback to the original path.
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

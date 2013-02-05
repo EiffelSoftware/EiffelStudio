@@ -122,7 +122,7 @@ feature -- Access
 	filename: READABLE_STRING_GENERAL
 			-- Name of file being parsed
 
-	last_value: ANY
+	last_value: detachable ANY
 			-- Semantic value to be passed to the parser
 
 	last_line_pragma: detachable BREAK_AS

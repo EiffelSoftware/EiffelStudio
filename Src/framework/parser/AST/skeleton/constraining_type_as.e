@@ -37,7 +37,7 @@ feature -- Status
 			-- Does this constraining type have at least one renaming?
 			-- A rename clause which is not empty?
 		do
-			Result := renaming /= Void and then renaming.content /= Void and then not renaming.content.is_empty
+			Result := attached renaming as l_renaming and then attached l_renaming.content as l_renaming_content and then not l_renaming_content.is_empty
 		end
 
 feature -- Setters
@@ -95,8 +95,8 @@ feature -- Roundtrip
 		do
 			if a_list /= Void and end_keyword_index /= 0 then
 				Result := end_keyword (a_list)
-			elseif renaming /= Void then
-				Result := renaming.last_token (a_list)
+			elseif attached renaming as l_renaming then
+				Result := l_renaming.last_token (a_list)
 			else
 				Result := type.last_token (a_list)
 			end
@@ -123,7 +123,7 @@ invariant
 	type_not_void: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -74,8 +74,8 @@ feature -- Roundtrip/Location
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if assertions /= Void then
-					Result := assertions.first_token (a_list)
+				if attached assertions as l_assertions then
+					Result := l_assertions.first_token (a_list)
 				else
 					Result := Void
 				end
@@ -87,14 +87,14 @@ feature -- Roundtrip/Location
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if assertions /= Void then
-					Result := assertions.last_token (a_list)
+				if attached assertions as l_assertions then
+					Result := l_assertions.last_token (a_list)
 				else
 					Result := Void
 				end
 			else
-				if full_assertion_list /= Void then
-					Result := full_assertion_list.last_token (a_list)
+				if attached full_assertion_list as l_full_assertion_list then
+					Result := l_full_assertion_list.last_token (a_list)
 				elseif ensure_keyword_index /= 0 then
 					Result := ensure_keyword (a_list)
 				end
@@ -102,7 +102,7 @@ feature -- Roundtrip/Location
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

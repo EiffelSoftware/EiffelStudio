@@ -96,15 +96,15 @@ feature -- Roundtrip/Token
 		do
 			if a_list /= Void and invariant_keyword_index /= 0 then
 				Result := invariant_keyword (a_list)
-			elseif full_assertion_list /= Void then
-				Result := full_assertion_list.first_token (a_list)
+			elseif attached full_assertion_list as l_list then
+				Result := l_list.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if full_assertion_list /= Void then
-				Result := full_assertion_list.last_token (a_list)
+			if attached full_assertion_list as l_list then
+				Result := l_list.last_token (a_list)
 			elseif a_list /= Void and invariant_keyword_index /= 0 then
 				Result := invariant_keyword (a_list)
 			end
@@ -120,7 +120,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

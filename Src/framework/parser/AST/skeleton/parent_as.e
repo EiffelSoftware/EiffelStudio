@@ -69,7 +69,7 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_renaming = Void implies Result = Void) and
-						 (internal_renaming /= Void implies Result = internal_renaming.meaningful_content)
+						 (attached internal_renaming as l_renaming implies Result = l_renaming.meaningful_content)
 		end
 
 	exports: detachable EIFFEL_LIST [EXPORT_ITEM_AS]
@@ -85,8 +85,8 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_exports = Void implies Result = Void) and
-						 (internal_exports /= Void implies ((internal_exports.meaningful_content = Void implies Result = Void) and
-						 								   (internal_exports.meaningful_content /= Void implies (Result /= Void and then Result ~ internal_exports.meaningful_content)))
+						 (attached internal_exports as l_exports implies ((l_exports.meaningful_content = Void implies Result = Void) and
+						 								   (l_exports.meaningful_content /= Void implies (Result /= Void and then Result ~ l_exports.meaningful_content)))
 )		end
 
 	undefining: detachable EIFFEL_LIST [FEATURE_NAME]
@@ -102,7 +102,7 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_undefining = Void implies Result = Void) and
-						 (internal_undefining /= Void implies Result = internal_undefining.meaningful_content)
+						 (attached internal_undefining as l_undefining implies Result = l_undefining.meaningful_content)
 		end
 
 	redefining: detachable EIFFEL_LIST [FEATURE_NAME]
@@ -118,7 +118,7 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_redefining = Void implies Result = Void) and
-						 (internal_redefining /= Void implies Result = internal_redefining.meaningful_content)
+						 (attached internal_redefining as l_redefining implies Result = l_redefining.meaningful_content)
 		end
 
 	selecting: detachable EIFFEL_LIST [FEATURE_NAME]
@@ -134,7 +134,7 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_selecting = Void implies Result = Void) and
-						 (internal_selecting /= Void implies Result = internal_selecting.meaningful_content)
+						 (attached internal_selecting as l_selecting implies Result = l_selecting.meaningful_content)
 		end
 
 	end_keyword_index: INTEGER
@@ -218,12 +218,12 @@ feature -- Status report
 			-- Is this parent clause redefining or undefining
 			-- one or more features?
 		do
-			Result := undefining /= Void and then not undefining.is_empty
-				and then redefining /= Void and then not redefining.is_empty
+			Result := attached undefining as l_undefining and then not l_undefining.is_empty
+				and then attached redefining as l_redefining and then not l_redefining.is_empty
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

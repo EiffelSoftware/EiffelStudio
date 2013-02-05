@@ -50,11 +50,13 @@ feature {NONE} -- Initialization
 		do
 			group := clu
 			path := a_path.as_string_32
-			folder_name := a_name.as_string_32
+			if attached folder_name as l_name then
+				folder_name := l_name.as_string_32
+			end
 		ensure
 			group_set: group = clu
 			path_set: path.same_string_general (a_path)
-			folder_name_set: folder_name.same_string_general (a_name)
+			folder_name_set: attached folder_name as l_name implies l_name.same_string_general (a_name)
 		end
 
 feature -- Access

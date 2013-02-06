@@ -1,0 +1,11 @@
+test_name	config-library-with-uppercase
+test_description A library that is using upper case for the name of the `target' is triggering a syntax error instead of compiling.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	eweasel.ecf $CLUSTER eweasel.ecf
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

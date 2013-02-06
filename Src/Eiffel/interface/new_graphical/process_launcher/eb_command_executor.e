@@ -19,13 +19,20 @@ feature -- Command execution
 
 	invoke_finish_freezing (c_code_dir: PATH; freeze_command: STRING_32; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
 			-- Invoke the `finish_freezing' script.
+		local
+			l_launcher: EB_C_COMPILER_LAUNCHER
 		do
 			if is_gui then
-				freezing_launcher.prepare_command_line (freeze_command, Void, c_code_dir)
-				freezing_launcher.set_hidden (True)
-				freezing_launcher.launch (is_gui, False)
+				if workbench_mode then
+					l_launcher := freezing_launcher
+				else
+					l_launcher := finalizing_launcher
+				end
+				l_launcher.prepare_command_line (freeze_command, Void, c_code_dir)
+				l_launcher.set_hidden (True)
+				l_launcher.launch (is_gui, False)
 				if not asynchronous then
-					freezing_launcher.wait_for_exit
+					l_launcher.wait_for_exit
 				end
 			else
 				Precursor (c_code_dir, freeze_command, asynchronous, workbench_mode)
@@ -40,7 +47,7 @@ feature -- Command execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

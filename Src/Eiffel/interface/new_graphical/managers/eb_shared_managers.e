@@ -34,16 +34,16 @@ feature -- Status report
 			create Result.initialize
 		end
 
-	freezing_launcher: EB_FREEZING_LAUNCHER
-			-- Launcher to launch c compiler for freezing
+	freezing_launcher: EB_C_COMPILER_LAUNCHER
+			-- Launcher to launch c compiler for freezing.
 		once
-			create Result.make
+			create Result.make (False)
 		end
 
-	finalizing_launcher: EB_FINALIZING_LAUNCHER
-			-- Launcher to luanch c compiler for finalizing
+	finalizing_launcher: EB_C_COMPILER_LAUNCHER
+			-- Launcher to launch c compiler for finalizing.
 		once
-			create Result.make
+			create Result.make (True)
 		end
 
 	idle_printing_manager: EB_IDLE_PRINTING_MANAGER
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="time" uuid="78D80981-EF3C-42EC-8919-EF7D7BB61701" library_target="EWEASEL">
+	<target name="EWEASEL">
+		<root all_classes="true"/>
+	</target>
+</system>

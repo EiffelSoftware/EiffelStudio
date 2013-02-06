@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EB_C_COMPILER_LAUNCHER
 
 inherit
@@ -40,10 +40,13 @@ inherit
 			{NONE} all
 		end
 
-feature{NONE}	-- Initialization
-
+create
 	make
-			-- Set up c compiler launch parameters.
+
+feature {NONE}	-- Initialization
+
+	make (a_is_for_finalization: like is_for_finalization)
+			-- Set up c compiler launch parameters for `a_is_for_finalization' C compilation mode.
 			-- `l_storage' is storage for output and error from c compilation.
 			-- `gen_path' is directory on which c compiler will be launched.
 		do
@@ -56,10 +59,17 @@ feature{NONE}	-- Initialization
 			set_on_terminate_handler (agent on_terminate)
 			set_on_fail_launch_handler (agent on_launch_failed)
 			set_on_successful_launch_handler (agent on_launch_successed)
+			is_for_finalization := a_is_for_finalization
 		ensure
+			is_for_finalization_set: is_for_finalization = a_is_for_finalization
 			buffer_size_set: buffer_size = initial_buffer_size
 			time_interval_set: time_interval = initial_time_interval
 		end
+
+feature -- Access
+
+	is_for_finalization: BOOLEAN
+			-- Is this instance made for C compilation in finalization mode?
 
 feature {NONE} -- Access
 
@@ -98,7 +108,11 @@ feature -- Setting
 
 	set_c_compilation_type
 			-- Set c compilation type, either freezing or finalizing.
-		deferred
+		do
+			set_is_last_c_compilation_freezing (not is_for_finalization)
+		ensure then
+			compilation_type_set: is_last_c_compilation_freezing = not is_for_finalization
+			compilation_type_set: is_last_c_compilation_finalizing = is_for_finalization
 		end
 
 feature -- Path
@@ -106,7 +120,12 @@ feature -- Path
 	generation_path: PATH
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
-		deferred
+		do
+			if is_for_finalization then
+				Result := project_location.final_path
+			else
+				Result := project_location.workbench_path
+			end
 		end
 
 feature{NONE} -- Agents
@@ -236,6 +255,12 @@ feature{NONE}  -- Actions
 
 			synchronize_on_c_compilation_start
 			start_actions.call (Void)
+
+			if is_for_finalization then
+				idle_printing_manager.add_printer ({EB_IDLE_PRINTING_MANAGER}.finalizing_printer)
+			else
+				idle_printing_manager.add_printer ({EB_IDLE_PRINTING_MANAGER}.freezing_printer)
+			end
 		end
 
 	on_exit
@@ -306,29 +331,64 @@ feature{NONE}  -- Actions
 
 feature {NONE} -- Implementation
 
+	data_storage: EB_PROCESS_IO_STORAGE
+			-- <Precursor>
+		do
+			if is_for_finalization then
+				Result := finalizing_storage
+			else
+				Result := freezing_storage
+			end
+		end
+
 	c_compilation_launched_msg: STRING_32
 			-- Message to indicate c compilation launched successfully
-		deferred
+		do
+			if is_for_finalization then
+				Result := interface_names.e_finalizing_launched
+			else
+				Result := interface_names.e_freezing_launched
+			end
 		end
 
 	c_compilation_launch_failed_msg: STRING_32
 			-- Message to indicate c compilation launch failed
-		deferred
+		do
+			if is_for_finalization then
+				Result := interface_names.e_finalizing_launch_failed
+			else
+				Result := interface_names.e_freezing_launch_failed
+			end
 		end
 
 	c_compilation_succeeded_msg: STRING_32
 			-- Message to indicate c compilation exited successfully
-		deferred
+		do
+			if is_for_finalization then
+				Result := interface_names.e_finalizing_succeeded
+			else
+				Result := interface_names.e_freezing_succeeded
+			end
 		end
 
 	c_compilation_failed_msg: STRING_32
 			-- Message to indicate c compilation failed
-		deferred
+		do
+			if is_for_finalization then
+				Result := interface_names.e_finalizing_failed
+			else
+				Result := interface_names.e_freezing_failed
+			end
 		end
 
 	c_compilation_terminated_msg: STRING_32
 			-- Message to indicate c compilation has been terminated
-		deferred
+		do
+			if is_for_finalization then
+				Result := interface_names.e_finalizing_terminated
+			else
+				Result := interface_names.e_freezing_terminated
+			end
 		end
 
 	display_message_on_main_output (a_msg: STRING_32; a_suffix: BOOLEAN)
@@ -387,7 +447,7 @@ feature {NONE} -- Internationalization
 	e_could_not_launch: STRING = "Could not launch C/C++ compiler."
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

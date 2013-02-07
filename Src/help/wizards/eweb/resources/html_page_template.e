@@ -1,4 +1,4 @@
-none
+note
 	description: "Thanks form Processing"
 	author: "pascalf"
 	date: "$Date$"

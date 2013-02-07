@@ -134,7 +134,7 @@ feature -- Status report
 			context: EV_PRINT_CONTEXT
 		do
 			create context
-			if attached selected_button as l_selected_button and then not (l_selected_button ~ ev_cancel) then
+			if attached selected_button as l_selected_button and then not l_selected_button.same_string (ev_cancel) then
 				context.set_range (from_page, to_page)
 				context.set_copies (copies)
 				if all_pages_selected then
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

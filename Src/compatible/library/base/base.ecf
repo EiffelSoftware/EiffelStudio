@@ -67,6 +67,7 @@
 				<exclude>/kernel/procedure.e$</exclude>
 				<exclude>/kernel/real_32_ref.e$</exclude>
 				<exclude>/kernel/type.e$</exclude>
+				<exclude>/kernel/file_info.e$</exclude>
 				<exclude>/kernel/pointer_ref.e$</exclude>
 				<exclude>/kernel/unix_signals.e$</exclude>
 				<exclude>/kernel/exceptions.e$</exclude>

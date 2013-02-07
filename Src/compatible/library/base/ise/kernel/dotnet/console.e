@@ -56,7 +56,7 @@ feature -- Initialization
 	make_open_stdin (fn: STRING)
 			-- Create a Unix standard input file.
 		do
-			make (fn)
+			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_input
 			set_read_mode
 		end
@@ -64,7 +64,7 @@ feature -- Initialization
 	make_open_stdout (fn: STRING)
 			-- Create a Unix standard output file.
 		do
-			make (fn)
+			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_output
 			set_write_mode
 		end
@@ -72,7 +72,7 @@ feature -- Initialization
 	make_open_stderr (fn: STRING)
 			-- Create a Unix standard error file.
 		do
-			make (fn)
+			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_error
 			set_write_mode
 		end

@@ -499,13 +499,14 @@ feature {NONE} -- Implementation attribute processing
 	process_system_attributes
 			-- Process attributes of a system tag.
 		local
-			l_name,
+			l_name, l_lower_name,
 			l_uuid: like current_attributes.item
 			l_uu: UUID
 		do
 			l_name := current_attributes.item (at_name)
 			if l_name /= Void then
-				l_name := l_name.as_lower
+					-- We will use `l_lower_name' for lookup, but `l_name' for error messages.
+				l_lower_name := l_name.as_lower
 			end
 			l_uuid := current_attributes.item (at_uuid)
 
@@ -514,19 +515,18 @@ feature {NONE} -- Implementation attribute processing
 			else
 				current_library_target := Void
 			end
-			if l_name = Void then
+			if l_lower_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_system_no_name)
 			else
-				if
-					is_valid_system_name (l_name) and then
-					(l_uuid = Void or else is_valid_uuid (l_uuid))
-				then
+				if not is_valid_system_name (l_lower_name) then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_system_name (l_name))
+				elseif (l_uuid = Void or else is_valid_uuid (l_uuid)) then
 					if l_uuid /= Void then
 						create l_uu.make_from_string (l_uuid)
 					else
 						l_uu := factory.uuid_generator.generate_uuid
 					end
-					last_system := factory.new_system (l_name.as_lower, l_uu)
+					last_system := factory.new_system (l_lower_name, l_uu)
 					if attached current_attributes.item (at_readonly) as l_readonly then
 						if l_readonly.is_boolean then
 							last_system.set_readonly (l_readonly.to_boolean)
@@ -534,8 +534,6 @@ feature {NONE} -- Implementation attribute processing
 							set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
 						end
 					end
-				elseif not is_valid_system_name (l_name) then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_system_name (l_name))
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_system_invalid_uuid (l_name))
 				end
@@ -553,6 +551,7 @@ feature {NONE} -- Implementation attribute processing
 			l_lower_name: STRING_32
 		do
 			if attached current_attributes.item (at_name) as l_name then
+					-- We will use `l_lower_name' for lookup, but `l_name' for error messages.
 				l_lower_name := l_name.as_lower
 				if not is_valid_target_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_target_invalid_name (l_name))
@@ -568,7 +567,7 @@ feature {NONE} -- Implementation attribute processing
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("abstract"))
 					end
 				end
-				if current_library_target /= Void and then l_name.same_string_general (current_library_target) then
+				if current_library_target /= Void and then l_lower_name.same_string_general (current_library_target) then
 					last_system.set_library_target (current_target)
 					current_library_target := Void
 				end

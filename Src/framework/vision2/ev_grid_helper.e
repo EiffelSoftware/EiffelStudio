@@ -20,12 +20,12 @@ feature -- Properties
 
 feature -- Access
 
-	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING_GENERAL)
+	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: READABLE_STRING_GENERAL)
 			-- Set text and tooltip to `a_cell'
 		require
 			cell_not_void: a_cell /= Void
 		local
-			s: STRING_GENERAL
+			s: READABLE_STRING_GENERAL
 		do
 			s := v
 			if s = Void then
@@ -37,7 +37,7 @@ feature -- Access
 			end
 		end
 
-	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING_GENERAL)
+	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: READABLE_STRING_GENERAL)
 			-- Set tool tip to `a_cell'
 		require
 			cell_not_void: a_cell /= Void
@@ -330,8 +330,8 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -354,11 +354,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

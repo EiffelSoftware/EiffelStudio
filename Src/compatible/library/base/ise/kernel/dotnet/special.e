@@ -433,6 +433,20 @@ feature -- Duplication
 
 feature -- Resizing
 
+    keep_head (n: INTEGER)
+			-- Keep the first `n' entries.
+         require
+             non_negative_argument: n >= 0
+             less_than_count: n <= count
+         do
+             fill_with_default (n, count - 1)
+         ensure
+             count_unchanged: count = old count
+             capacity_unchanged: capacity = old capacity
+             kept: same_items (old twin, 0, 0, n)
+             not_kept: all_default (n, count - 1)
+         end
+
 	resized_area (n: INTEGER): like Current
 			-- Create a copy of Current with a count of `n'
 		require

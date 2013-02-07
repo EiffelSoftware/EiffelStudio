@@ -24,7 +24,7 @@ feature -- Initialization
 		require
 			string_exists: dn /= Void
 		do
-			name := dn
+			set_name (dn)
 			mode := Close_directory
 		end
 
@@ -228,7 +228,7 @@ feature -- Access
 				l_info.delete
 			end
 			{SYSTEM_DIRECTORY}.move (name.to_cil, new_name.to_cil)
-			name := new_name
+			set_name (new_name)
 		ensure
 			name_changed: name.is_equal (new_name)
 		end
@@ -576,6 +576,14 @@ feature {DIRECTORY} -- Implementation
 			-- Position in the list of entries
 
 feature {NONE} -- Implementation
+
+	set_name (a_name: STRING)
+			-- Set `name' with `a_name'.
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
 
 	mode: INTEGER
 			-- Status mode of the directory.

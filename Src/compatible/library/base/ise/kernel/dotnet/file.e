@@ -33,12 +33,25 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			create internal_file.make (fn.to_cil)
 			create last_string.make_empty
 			mode := Closed_file
-			name := fn
+			set_name (fn)
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
+			file_closed: is_closed
+		end
+
+	make_with_name (fn: STRING)
+			-- Create file object with `fn' as file name.
+		require
+			string_exists: fn /= Void
+			string_not_empty: not fn.is_empty
+		do
+			create last_string.make_empty
+			mode := Closed_file
+			set_name (fn)
+		ensure
+			file_named: internal_name = fn
 			file_closed: is_closed
 		end
 
@@ -49,11 +62,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 		end
@@ -66,11 +78,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_write
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_write: is_open_write
 		end
@@ -82,11 +93,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_append
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_append: is_open_append
 		end
@@ -98,11 +108,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read_write
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
@@ -116,11 +125,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			create_read_write
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
@@ -135,11 +143,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read_append
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_append: is_open_append
@@ -148,7 +155,13 @@ feature -- Initialization
 feature -- Access
 
 	name: STRING
-			-- File name
+			-- File name as a STRING_8 instance. The value might be truncated
+			-- from the original name used to create the current FILE instance.
+		do
+			create Result.make_from_cil (internal_file.name)
+		ensure then
+			name_not_empty: not Result.is_empty
+		end
 
 	item: CHARACTER
 			-- Current item
@@ -203,7 +216,7 @@ feature -- Access
 			end
 		end
 
-	file_info: UNIX_FILE_INFO
+	file_info: FILE_INFO
 			-- Collected information about the file.
 		do
 			set_buffer
@@ -272,8 +285,8 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_write_time.to_universal_time)
+			set_buffer
+			Result := buffered_file_info.date
 		end
 
 	access_date: INTEGER
@@ -281,8 +294,8 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_access_time.to_universal_time)
+			set_buffer
+			Result := buffered_file_info.access_date
 		end
 
 	retrieved: ANY
@@ -293,12 +306,9 @@ feature -- Access
 			-- if content is not a stored Eiffel structure.
 		local
 			l_formatter: BINARY_FORMATTER
-			l_result: detachable ANY
 		do
 			create l_formatter.make
-			l_result := l_formatter.deserialize (internal_stream)
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			Result := l_formatter.deserialize (internal_stream)
 		end
 
 feature -- Measurement
@@ -308,10 +318,8 @@ feature -- Measurement
 		do
 			if exists then
 				if not is_open_write then
-					internal_file.refresh
-					if not is_directory then
-						Result := internal_file.length.to_integer
-					end
+					set_buffer
+					Result := buffered_file_info.size
 				elseif attached internal_stream as l_stream then
 					Result := l_stream.length.to_integer
 				end
@@ -350,12 +358,12 @@ feature -- Status report
 			-- Does physical file exist?
 			-- (Uses effective UID.)
 		local
-			l_directory: DIRECTORY
+			l_directory: DIRECTORY_INFO
 		do
 			internal_file.refresh
 			Result := internal_file.exists
 			if not Result then -- May return `False' on directories
-				create l_directory.make (name)
+				create l_directory.make (internal_file.name)
 				Result := l_directory.exists
 			end
 		ensure then
@@ -373,39 +381,17 @@ feature -- Status report
 	is_readable: BOOLEAN
 			-- Is file readable?
 			-- (Checks permission for effective UID.)
-		local
-			perm: FILE_IO_PERMISSION
-			retried: BOOLEAN
 		do
-			if not retried then
-				internal_file.refresh
-				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read,
-					internal_file.full_name)
-				perm.demand
-			end
-			Result := not retried
-		rescue
-			retried := True
-			retry
+			set_buffer
+			Result := buffered_file_info.is_readable
 		end
 
 	is_writable: BOOLEAN
 			-- Is file writable?
 			-- (Checks write permission for effective UID.)
-		local
-			perm: FILE_IO_PERMISSION
-			retried: BOOLEAN
 		do
-			if not retried then
-				internal_file.refresh
-				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write,
-					internal_file.full_name)
-				perm.demand
-			end
-			Result := not retried
-		rescue
-			retried := True
-			retry
+			set_buffer
+			Result := buffered_file_info.is_writable
 		end
 
 	is_executable: BOOLEAN
@@ -461,9 +447,8 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.directory) =
-				{FILE_ATTRIBUTES}.directory
+			set_buffer
+			Result := buffered_file_info.is_directory
 		end
 
 	is_symlink: BOOLEAN
@@ -898,19 +883,11 @@ feature -- Status setting
 	close
 			-- Close file.
 		do
-			if attached internal_sread as l_sread then
-				l_sread.close
-			end
-			if attached internal_swrite as l_swrite then
-				l_swrite.close
-			end
 			if attached internal_stream as l_stream then
 				l_stream.close
 			end
 			mode := Closed_file
 			descriptor_available := False
-			internal_sread := Void
-			internal_swrite := Void
 			internal_end_of_file := False
 		ensure then
 			is_closed: is_closed
@@ -1071,31 +1048,31 @@ feature -- Element change
 			buf: NATIVE_ARRAY [NATURAL_8]
 			bs, rd: INTEGER
 			st, ost: like internal_stream
+			l_f: FILE
 		do
 				-- Open in append mode.
 			open_append
 				-- Open `f' in read mode.
-			f.open_read
-				-- Append contents of `f'.
+			l_f := f
+			l_f.open_read
+				-- Append contents of `l_f'.
 			bs := 10000
-			from
-				st := internal_stream
-				ost := f.internal_stream
-				check
-					ost_attached: ost /= Void
-					st_attached: st /= Void
+			st := internal_stream
+			ost := l_f.internal_stream
+			check ost /= Void and st /= Void then
+				from
+					create buf.make (bs + 1)
+					rd := ost.read (buf, 0, bs)
+				until
+					rd = 0
+				loop
+					st.write (buf, 0, rd)
+					rd := ost.read (buf, 0, bs)
 				end
-				create buf.make (bs + 1)
-				rd := ost.read (buf, 0, bs)
-			until
-				rd = 0
-			loop
-				st.write (buf, 0, rd)
-				rd := ost.read (buf, 0, bs)
 			end
 				-- Close both files.
 			close
-			f.close
+			l_f.close
 		ensure then
 			new_count: count = old count + f.count
 			files_closed: f.is_closed and is_closed
@@ -1121,26 +1098,24 @@ feature -- Element change
 		deferred
 		end
 
+
 	put_string, putstring (s: STRING)
 			-- Write `s' at current position.
 		local
 			i: INTEGER
 			l_count: INTEGER
-			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			l_count := s.count
-			if l_count /= 0 then
-				create str_area.make (l_count)
-				from
-					i := 1
-				until
-					i > l_count
-				loop
-					str_area.put (i-1, s.item (i).code.to_natural_8)
-					i := i + 1
-				end
-				if attached internal_stream as l_stream then
-					l_stream.write (str_area, 0, l_count)
+			if l_count > 0 then
+				check attached internal_stream as l_stream then
+					from
+						i := 1
+					until
+						i > l_count
+					loop
+						l_stream.write_byte (s.item (i).code.to_natural_8)
+						i := i + 1
+					end
 				end
 			end
 		end
@@ -1233,7 +1208,7 @@ feature -- Element change
 			end
 			internal_file.refresh
 			internal_file.move_to (new_name.to_cil)
-			name := new_name
+			set_name (new_name)
 		ensure
 			name_changed: name.is_equal (new_name)
 		end
@@ -1293,8 +1268,8 @@ feature -- Element change
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_write_time.to_universal_time)
+			set_buffer
+			Result := buffered_file_info.change_date
 		end
 
 	touch
@@ -1377,14 +1352,14 @@ feature -- Removal
 			if mode /= Closed_file then
 				close
 			end
-			make (fn)
+			make_with_name (fn)
 			last_integer := 0
 			last_string.wipe_out
 			last_real := 0.0
 			last_character := '%U'
 			last_double := 0.0
 		ensure
-			file_renamed: name = fn
+			file_renamed: internal_name = fn
 			file_closed: is_closed
 		end
 
@@ -1650,6 +1625,10 @@ feature -- Convenience
 
 feature {FILE} -- Implementation
 
+	internal_name: STRING
+			-- Store the name of the file as it was given to us by the user
+			-- to avoid conversion on storing as it is not necessary.
+
 	internal_file: SYSTEM_FILE_INFO
 			-- File data concerning `Current'
 
@@ -1660,6 +1639,17 @@ feature {FILE} -- Implementation
 			-- Did last call to `reader.read' reach end of file?
 
 feature {NONE} -- Implementation
+
+	set_name (a_name: STRING)
+			-- Set `name' with `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			create internal_file.make (a_name.to_cil)
+			internal_name := a_name
+		ensure
+			name_set: internal_name = a_name
+		end
 
 	create_last_string (a_min_size: INTEGER)
 			-- Create new instance of `last_string' with a least `a_min_size'
@@ -1697,12 +1687,6 @@ feature {NONE} -- Implementation
 			character_read: not end_of_file implies Result > 0
 		end
 
-	internal_sread: detachable STREAM_READER
-			-- Stream reader used to read in `Current' (if any).
-
-	internal_swrite: detachable STREAM_WRITER
-			-- Stream writer used to write in `Current' (if any).
-
 	true_string: STRING
 			-- Character string "true"
 		once
@@ -1726,7 +1710,7 @@ feature {NONE} -- Implementation
 		require
 			file_exists: exists
 		do
-			buffered_file_info.update (name)
+			buffered_file_info.fast_update (internal_name, internal_file)
 		end
 
 feature {NONE} -- Inapplicable
@@ -1748,30 +1732,17 @@ feature {NONE} -- Inapplicable
 
 	remove
 			-- Remove current item.
-		require else
-			file_prunable: file_prunable
 		do
 		end
 
 	prune (v: like item)
 			-- Remove an occurrence of `v' if any.
-		require else
-			prunable: file_prunable
 		do
 		ensure then
 			count <= old count
 		end
 
 feature {FILE} -- Implementation
-
-	dot_net_base_file_time: INTEGER_64
-			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1601:00:00:00:00
-		local
-			t: SYSTEM_DATE_TIME
-		once
-			t.make_with_year_and_month_and_day (1601 ,1 ,1 ,0 ,0 ,0 ,0)
-			Result := t.ticks
-		end
 
 	eiffel_base_file_time: INTEGER_64
 			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1970:00:00:00:00
@@ -1780,12 +1751,6 @@ feature {FILE} -- Implementation
 		once
 			t.make_with_year_and_month (1970 ,1 ,1 ,0 ,0 ,0)
 			Result := t.ticks
-		end
-
-	dot_net_time_offset: INTEGER_64
-			-- the offset in nano-seconds between 01/01/1601:00:00:00:00 and 01/01/1970:00:00:00:00
-		do
-			Result := eiffel_base_file_time - dot_net_base_file_time
 		end
 
 	dot_net_file_date_time (time: INTEGER): SYSTEM_DATE_TIME
@@ -1797,17 +1762,6 @@ feature {FILE} -- Implementation
 		do
 			t.make_from_ticks (eiffel_base_file_time + (time.to_integer_64 * 10000000))
 			Result := t
-		end
-
-	eiffel_file_date_time (dot_net_date: SYSTEM_DATE_TIME): INTEGER
-			-- convert a .NET file date time to an eiffel date
-			-- 'dot_net_date' must be the nano-seconds from 01/01/1601:00:00:00:00
-			-- (file system time) returns seconds since 01/01/1970:00:00:00:00
-		local
-			i64: INTEGER_64
-		do
-			i64 := ((dot_net_date.ticks - eiffel_base_file_time) / 10000000).floor
-			Result := i64.to_integer
 		end
 
 	mode: INTEGER
@@ -1911,8 +1865,8 @@ feature {NONE} -- Implementation
 invariant
 
 	valid_mode: Closed_file <= mode and mode <= Append_read_file
-	name_exists: name /= Void
-	name_not_empty: not name.is_empty
+	name_exists: internal_name /= Void
+	name_not_empty: not internal_name.is_empty
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

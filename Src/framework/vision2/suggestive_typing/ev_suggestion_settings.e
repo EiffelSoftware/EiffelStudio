@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			is_list_x_position_set := False
 			is_list_y_position_set := False
 			is_initial_position_at_caret := False
+			is_fit_list_window_to_content := True
 			list_width := -1
 			list_height := -1
 			is_mouse_wheel_in_full_page_mode := False
@@ -57,6 +58,7 @@ feature {NONE} -- Initialization
 			list_x_position_not_set: not is_list_x_position_set
 			list_y_position_not_set: not is_list_y_position_set
 			is_initial_position_at_caret_not_set: not is_initial_position_at_caret
+			is_horizontal_scrolling_enabled_set: is_fit_list_window_to_content
 			list_width_not_set: not is_list_width_set
 			list_height_not_set: not is_list_height_set
 			is_mouse_wheel_in_full_page_mode_not_set: not is_mouse_wheel_in_full_page_mode
@@ -231,6 +233,10 @@ feature -- Status report
 	has_arrows_key_text_navigation: BOOLEAN
 			-- When the list is shown, should the left and right arrow key move the caret
 			-- position left and right?
+
+	is_fit_list_window_to_content: BOOLEAN
+			-- Is the suggestion list resized automatically to fit the content, i.e. it will grow
+			-- or shrink depending on the items being displayed.
 
 feature -- Conversion
 
@@ -427,6 +433,14 @@ feature -- Settings
 			searched_text_agent_set: searched_text_agent = v
 		end
 
+	set_is_horizontal_scrolling_enabled (v: like is_fit_list_window_to_content)
+			-- Set `is_fit_list_window_to_content' with `v'.
+		do
+			is_fit_list_window_to_content := v
+		ensure
+			is_fit_list_window_to_content_set: is_fit_list_window_to_content = v
+		end
+
 feature -- Settings: Character handling
 
 	set_suggestion_activator_characters (a_chars: like suggestion_activator_characters)
@@ -469,7 +483,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

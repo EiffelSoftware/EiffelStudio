@@ -357,6 +357,43 @@ feature -- Command
 			end
 		end
 
+	stretched (a_width, a_height: INTEGER): EV_PIXEL_BUFFER
+			-- <Precursor>
+		local
+			l_imp: detachable EV_PIXEL_BUFFER_IMP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_dest_rect, l_src_rect: WEL_RECT
+			l_gdip_bitmap, l_imp_gdip_bitmap: like gdip_bitmap
+			l_pixmap: like pixmap
+		do
+			create Result.make_with_size (a_width, a_height)
+
+			l_imp ?= Result.implementation
+			check not_void: l_imp /= Void end
+
+			if is_gdi_plus_installed then
+				l_gdip_bitmap := gdip_bitmap
+				check l_gdip_bitmap /= Void end
+				l_imp_gdip_bitmap := l_imp.gdip_bitmap
+				check l_imp_gdip_bitmap /= Void end
+				create l_graphics.make_from_image (l_imp_gdip_bitmap)
+
+				create l_src_rect.make (0, 0, width, height)
+				create l_dest_rect.make (0, 0, a_width, a_height)
+
+				l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
+
+				l_dest_rect.dispose
+				l_src_rect.dispose
+				l_graphics.destroy_item
+			else
+				l_pixmap := pixmap
+				check l_pixmap /= Void end
+				l_pixmap.stretch (a_width, a_height)
+				create Result.make_with_pixmap (l_pixmap)
+			end
+		end
+
 	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		local
@@ -729,7 +766,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

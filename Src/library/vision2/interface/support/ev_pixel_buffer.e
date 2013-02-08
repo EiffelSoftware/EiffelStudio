@@ -108,6 +108,21 @@ feature -- Command
 			result_not_void: Result /= Void
 		end
 
+	stretched (a_width, a_height: INTEGER): EV_PIXEL_BUFFER
+			-- Stretched copy of `Current' of dimension `a_width' x `a_height'.
+		require
+			a_width_positive: a_width > 0
+			a_height_positive: a_height > 0
+			not_locked: not is_locked
+		do
+			Result := implementation.stretched (a_width, a_height)
+		ensure
+			result_not_void: Result /= Void
+			result_not_current: Result /= Current
+			result_width_set: Result.width = a_width
+			result_height_set: Result.height = a_height
+		end
+
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Return a sub pixel buffer of `Current' represented by area `a_rect'.
 		require
@@ -227,7 +242,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

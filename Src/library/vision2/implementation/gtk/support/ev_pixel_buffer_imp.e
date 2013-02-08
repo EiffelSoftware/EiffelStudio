@@ -218,6 +218,38 @@ feature -- Command
 			end
 		end
 
+	stretched (a_width, a_height: INTEGER): EV_PIXEL_BUFFER
+			-- <Precursor>
+		local
+			l_imp: detachable EV_PIXEL_BUFFER_IMP
+			l_pixbuf: POINTER
+			l_internal_pixmap: EV_PIXMAP
+			l_scale_type: INTEGER_32
+		do
+			create Result
+			l_imp ?= Result.implementation
+			check l_imp /= Void end
+			if {GTK}.gtk_maj_ver >= 2 then
+					-- The code below was taken from `{EV_PIXMAP_IMP}.stretch'.
+				if a_width <= 16 and then a_height <= 16 then
+					l_scale_type := {GTK2}.gdk_interp_nearest
+				else
+					l_scale_type := {GTK2}.gdk_interp_bilinear
+				end
+				l_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (gdk_pixbuf, a_width, a_height, l_scale_type)
+					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.				
+				l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
+				{GTK2}.object_unref (l_pixbuf)
+			else
+				if attached internal_pixmap as l_pixmap then
+						-- Duplicate internal pixmap and stretch it.
+					l_internal_pixmap := l_pixmap.twin
+					l_internal_pixmap.stretch (a_width, a_height)
+					l_imp.set_internal_pixmap (l_internal_pixmap)
+				end
+			end
+		end
+
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
@@ -225,19 +257,16 @@ feature -- Command
 			l_pixbuf: POINTER
 			l_internal_pixmap: EV_PIXMAP
 		do
+			create Result
+			l_imp ?= Result.implementation
+			check l_imp /= Void end
 			if {GTK}.gtk_maj_ver >= 2 then
-				create Result
-				l_imp ?= Result.implementation
-				check l_imp /= Void end
 				l_pixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
 				l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
 				{GTK2}.object_unref (l_pixbuf)
 			else
-				create Result
 				l_internal_pixmap := sub_pixmap (a_rect)
-				l_imp ?= Result.implementation
-				check l_imp /= Void end
 				l_imp.set_internal_pixmap (l_internal_pixmap)
 			end
 		end
@@ -522,7 +551,7 @@ feature {NONE} -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -289,6 +289,9 @@ feature {NONE} -- Positioning
 	relative_widget: detachable EV_WIDGET
 			-- The widget the popup window is shown relative to
 
+	relative_area: detachable EV_RECTANGLE
+			-- Area is shown relative to
+
 feature {NONE} -- Query
 
 	window_on_screen_position (a_widget: EV_WIDGET; a_constrain_to_widget: BOOLEAN): TUPLE [x, y: INTEGER]
@@ -320,6 +323,17 @@ feature {NONE} -- Query
 			result_attached: Result /= Void
 		end
 
+	window_on_screen_position_by_side (a_rec: EV_RECTANGLE; y_offset, secondary_y_offset: INTEGER): TUPLE [x, y: INTEGER]
+			-- Fetches the on-screen position based on the requested X and Y positions.
+			--
+			-- `a_rec': The area to be sided.
+		local
+			l_rec: EV_RECTANGLE
+		do
+			create l_rec.make (a_rec.x, a_rec.y + y_offset, a_rec.width, secondary_y_offset - y_offset)
+			Result := helpers.suggest_pop_up_location_by_rectangle_side (l_rec, popup_window.width, popup_window.height)
+		end
+
 feature -- Basic operations
 
 	show (a_x: INTEGER; a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
@@ -341,6 +355,7 @@ feature -- Basic operations
 			requested_y_position := a_y
 
 			is_committed_on_closed := False
+			is_shown_on_side := False
 
 					-- Show initially off-screen to retrieve width and height.
 			create l_screen
@@ -390,6 +405,7 @@ feature -- Basic operations
 			l_screen: EV_SCREEN
 		do
 			is_committed_on_closed := False
+			is_shown_on_side := False
 
 					-- Show initially off-screen to retrieve width and height.
 			create l_screen
@@ -408,6 +424,39 @@ feature -- Basic operations
 			on_before_show
 			popup_window.show_relative_to_window (a_window)
 		ensure
+			popup_window_is_displayed: popup_window.is_displayed
+			not_is_committed_on_closed: not is_committed_on_closed
+		end
+
+	show_on_side (a_rec: EV_RECTANGLE; y_offset, secondary_y_offset: INTEGER)
+			-- Show on side of `a_rect', with offsets
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_rec_attached: a_rec /= Void
+		local
+			l_screen: EV_SCREEN
+		do
+			on_side_y_offset := y_offset
+			on_side_secondary_y_offset := secondary_y_offset
+			relative_area := a_rec
+			is_shown_on_side := True
+			is_committed_on_closed := False
+
+			if popup_window.is_displayed then
+					-- If the window is already displayed, we simply ensure its correct position.
+				ensure_popup_window_visible_on_screen
+			else
+						-- Show initially off-screen to retrieve width and height.
+				create l_screen
+				popup_window.set_position (l_screen.width + 1, l_screen.height + 1)
+				register_kamikaze_action (show_actions, agent ensure_popup_window_visible_on_screen)
+
+				on_before_show
+				popup_window.show
+			end
+		ensure
+			relative_area_set: relative_area = a_rec
 			popup_window_is_displayed: popup_window.is_displayed
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
@@ -546,6 +595,8 @@ feature {NONE} -- Basic operation
 		do
 			if attached relative_widget as l_widget then
 				l_position := window_on_screen_position (l_widget, False)
+			elseif is_shown_on_side then
+				l_position := window_on_screen_position_by_side (relative_area, on_side_y_offset, on_side_secondary_y_offset)
 			else
 				create l_manager
 				l_window := l_manager.window_manager.last_focused_development_window
@@ -805,11 +856,21 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `popup_window'
 			-- Note: Do not use directly.
 
+	is_shown_on_side: BOOLEAN
+			-- Was shown on side of a widget?
+
+	on_side_y_offset: INTEGER
+			-- When shown on side of a widget, taking the y offset into account.
+
+	on_side_secondary_y_offset: INTEGER
+			-- When the overlapping, a secondary offset to be used.
+
+
 invariant
 	border_widget_attached: has_border implies border_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

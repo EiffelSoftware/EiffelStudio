@@ -140,6 +140,9 @@ feature -- Access
 			Result.set_text_with_tokens (l_style.text)
 		end
 
+	associated_class: CLASS_I;
+			-- Corresponding class
+
 feature -- Status report
 
 	is_obsolete: BOOLEAN
@@ -161,8 +164,8 @@ feature {NONE} -- Implementation
 			Result := just_class_name_style.twin
 		end
 
-	associated_class: CLASS_I;
-			-- Corresponding class
+invariant
+	associated_class_set: associated_class /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

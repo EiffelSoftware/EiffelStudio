@@ -1453,6 +1453,7 @@ feature -- Label texts
 	l_no_feature_bra: STRING_32 			do Result := locale.translation ("(no_feature)") end
 	l_no_class_bra: STRING_32 			do Result := locale.translation ("(no_class)") end
 	l_no_cluster_bra: STRING_32 			do Result := locale.translation ("(no_cluster)") end
+	l_no_comment: STRING_32 				do Result := locale.translation ("(No comment)") end
 	l_no_enough_info_for_feature (a_string: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_string_not_void: a_string /= Void

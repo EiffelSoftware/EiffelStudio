@@ -82,6 +82,9 @@ feature {NONE} -- Access
 	context_class: CLASS_C
 			-- Last viewed class
 
+	is_showing_comments_internal: BOOLEAN
+			-- Internal valuable for showing comments.
+
 feature -- Element change
 
 	set_context (a_class: attached like context_class; a_feature: attached like context_feature)
@@ -109,8 +112,11 @@ feature -- Status report
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := True
+			Result := is_showing_comments_internal
 		end
+
+	has_content: BOOLEAN
+			-- Was there any content generated?
 
 feature {NONE} -- Status report
 
@@ -149,6 +155,33 @@ feature -- Status setting
 			is_showing_full_contracts_set: is_showing_full_contracts = a_show
 		end
 
+	set_auto_check_visible (a_b: BOOLEAN)
+			-- Show `auto_show_check' button?
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			if attached auto_show_check as l_c then
+				if a_b then
+					l_c.widget.show
+				else
+					l_c.widget.hide
+				end
+			end
+		end
+
+	set_is_showing_comments (a_b: BOOLEAN)
+			-- Show comments?
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			is_showing_comments_internal := a_b
+			if is_shown and then has_context then
+				update_context
+			end
+		end
+
 feature {NONE} -- Basic operation
 
 	update_context
@@ -178,6 +211,8 @@ feature {NONE} -- Basic operation
 			l_grid := contract_grid
 			l_grid.lock_update
 			l_grid.clear
+
+			has_content := False
 
 			if attached context_feature as l_feature and attached context_class as l_class then
 --				contract_grid.set_row_count_to (1)
@@ -222,6 +257,7 @@ feature {NONE} -- Basic operation
 						create l_no_comment.make_from_string ("-- ")
 						l_no_comment.append_string (interface_names.h_no_comments_for_feature)
 						l_tokens.extend (create {EDITOR_TOKEN_COMMENT}.make (l_no_comment))
+						has_content := True
 					end
 					if l_tokens /= Void then
 						l_editor_item.set_text_with_tokens (l_tokens)
@@ -269,6 +305,8 @@ feature {NONE} -- Basic operation
 							-- Grid dimension adjustments
 						l_height := l_height + l_row.height
 						l_width := l_width.max (l_token_text.required_width)
+
+						has_content := True
 					end
 
 					if is_showing_full_contracts then
@@ -295,6 +333,8 @@ feature {NONE} -- Basic operation
 								-- Grid dimension adjustments
 							l_height := l_height + l_row.height
 							l_width := l_width.max (l_token_text.required_width)
+
+							has_content := True
 						end
 					end
 				end
@@ -436,8 +476,11 @@ feature {NONE} -- Internationalization
 	l_view_contracts: STRING = "View Contracts..."
 	f_edit_contracts: STRING = "Places the current feature in the contract editor for edition"
 
+invariant
+	contract_grid_set: contract_grid /= Void
+
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

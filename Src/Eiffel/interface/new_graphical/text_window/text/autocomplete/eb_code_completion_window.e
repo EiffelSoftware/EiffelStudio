@@ -34,7 +34,7 @@ inherit
 			show,
 			is_applicable_item,
 			exit,
-			build_displayed_list
+			on_scroll
 		end
 
 	EB_CONSTANTS
@@ -89,12 +89,14 @@ feature {NONE} -- Initialization
 			-- Create
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
+
 			build_option_bar
 			choice_list.enable_tree
 			choice_list.set_configurable_target_menu_mode
 			choice_list.set_configurable_target_menu_handler (agent context_menu_handler)
 			choice_list.enable_single_row_selection
 			register_action (choice_list.row_select_actions, agent on_row_selected)
+			register_action (resize_actions, agent on_window_resize)
 			set_title (Interface_names.t_Autocomplete_window)
 			setup_option_buttons
 			setup_accelerators
@@ -105,41 +107,10 @@ feature {NONE} -- Initialization
 			-- Build option bar
 		local
 			l_hbox: EV_HORIZONTAL_BOX
-			l_vbox: EV_VERTICAL_BOX
 			l_sep: EV_HORIZONTAL_SEPARATOR
 			l_label: EV_LABEL
-			l_tooltip: STRING
-			l_padding: EV_CELL
+			l_tooltip: STRING_32
 		do
-				-- Separator
-			create l_vbox
-			create l_sep
-			l_sep.set_minimum_height (2)
-			l_vbox.extend (l_sep)
-
-			create l_padding
-			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
-			l_padding.set_background_color (colors.tooltip_color)
-			l_vbox.extend (l_padding)
-			l_vbox.disable_item_expand (l_padding)
-
-				-- Tool tip
-			create comment_preview.make
-			comment_preview.align_text_left
-			comment_preview.is_text_wrapped := True
-			comment_preview.set_background_color (colors.tooltip_color)
-			l_vbox.extend (comment_preview)
-
-			create l_padding
-			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
-			l_padding.set_background_color (colors.tooltip_color)
-			l_vbox.extend (l_padding)
-			l_vbox.disable_item_expand (l_padding)
-
-			option_bar_box.extend (l_vbox)
-			option_bar_box.disable_item_expand (l_vbox)
-			comment_preview_box := l_vbox
-
 				-- Separator
 			create l_sep
 			l_sep.set_minimum_height (2)
@@ -259,7 +230,6 @@ feature {NONE} -- Initialization
 				show_tooltip_button.enable_select
 			else
 				show_tooltip_button.disable_select
-				comment_preview_box.hide
 			end
 
 				-- Callbacks
@@ -375,12 +345,6 @@ feature -- Access
 	choice_list: EB_COMPLETION_LIST_GRID
 			-- Choice list
 
-	comment_preview: EVS_LABEL
-			-- Comment preview tooltip information
-
-	comment_preview_box: EV_VERTICAL_BOX
-			-- Comment preview container box
-
 	code_completable: EB_TAB_CODE_COMPLETABLE
 			-- associated window
 
@@ -394,6 +358,9 @@ feature -- Access
 
 	option_bar: EV_TOOL_BAR
 			-- Option tool bar
+
+	tooltip_window: ES_SMART_TOOLTIP_WINDOW
+			-- Window to show extra info as tooltip
 
 feature -- Widget
 
@@ -577,6 +544,7 @@ feature {NONE} -- Option behaviour
 					l_preference.change_actions.block
 					l_preference.set_value (a_button.is_selected)
 					apply_filter_completion_list (filter_completion_list)
+					l_preference.change_actions.resume
 				end
 			elseif a_button = show_return_type_button then
 				if show_completion_type /= a_button.is_selected then
@@ -584,6 +552,7 @@ feature {NONE} -- Option behaviour
 					l_preference.change_actions.block
 					l_preference.set_value (a_button.is_selected)
 					apply_show_return_type (show_completion_type)
+					l_preference.change_actions.resume
 				end
 			elseif a_button = show_signature_button then
 				if show_completion_signature /= a_button.is_selected then
@@ -591,6 +560,7 @@ feature {NONE} -- Option behaviour
 					l_preference.change_actions.block
 					l_preference.set_value (a_button.is_selected)
 					apply_show_completion_signature (show_completion_signature)
+					l_preference.change_actions.resume
 				end
 			elseif a_button = show_disambiguated_name_button then
 				if show_completion_disambiguated_name /= a_button.is_selected then
@@ -598,6 +568,7 @@ feature {NONE} -- Option behaviour
 					l_preference.change_actions.block
 					l_preference.set_value (a_button.is_selected)
 					apply_show_completion_disambiguated_name (show_completion_disambiguated_name)
+					l_preference.change_actions.resume
 				end
 			elseif a_button = show_obsolete_items_button then
 				if show_obsolete_items /= a_button.is_selected then
@@ -605,6 +576,7 @@ feature {NONE} -- Option behaviour
 					l_preference.change_actions.block
 					l_preference.set_value (a_button.is_selected)
 					apply_show_obsolete_items (show_obsolete_items)
+					l_preference.change_actions.resume
 				end
 			elseif a_button = show_tooltip_button then
 				if show_completion_tooltip /= a_button.is_selected then
@@ -612,6 +584,7 @@ feature {NONE} -- Option behaviour
 					l_preference.change_actions.block
 					l_preference.set_value (a_button.is_selected)
 					apply_show_tooltip (show_completion_tooltip)
+					l_preference.change_actions.resume
 				end
 			elseif a_button = remember_size_button then
 				if remember_window_size /= a_button.is_selected then
@@ -619,6 +592,7 @@ feature {NONE} -- Option behaviour
 					l_preference.change_actions.block
 					l_preference.set_value (a_button.is_selected)
 					apply_remember_window_size (remember_window_size)
+					l_preference.change_actions.resume
 				end
 			else
 				check
@@ -717,18 +691,15 @@ feature {NONE} -- Option behaviour
 
 	apply_show_tooltip (a_b: BOOLEAN)
 			-- Apply showing completion tooltip.
-		local
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
 			if a_b then
-				l_rows := choice_list.selected_rows
-				if not l_rows.is_empty then
-						-- Forces the selection
-					on_row_selected (l_rows.first)
+				if attached choice_list.single_selected_row as l_row then
+					on_row_selected (l_row)
 				end
-				comment_preview_box.show
 			else
-				comment_preview_box.hide
+				if attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
+					l_w.hide
+				end
 			end
 		end
 
@@ -782,53 +753,190 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			a_row_attached: a_row /= Void
-		local
-			l_tt_text: STRING_32
 		do
-			if comment_preview.is_displayed then
-				if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
-					l_tt_text := l_completion_feature.tooltip_text
-				elseif attached {EB_CLASS_FOR_COMPLETION} a_row.data as l_completion_class then
-					l_tt_text := l_completion_class.tooltip_text
-				end
-				if l_tt_text /= Void then
-					l_tt_text.prune_all_trailing ('%N')
-					if l_tt_text.count > 150 then
-						l_tt_text.keep_head (147)
-						l_tt_text.append ("...")
+			if show_timer = Void or show_timer.is_destroyed then
+				create show_timer.make_with_interval (200)
+			else
+				show_timer.set_interval (200)
+			end
+			show_timer.actions.wipe_out
+			show_timer.actions.extend_kamikaze (
+			agent (a_r: EV_GRID_ROW)
+			do
+				if show_completion_tooltip then
+					if attached contract_widget_from_row (a_r) as l_widget then
+							-- Tooltip window
+						if tooltip_window = Void then
+							create tooltip_window.make
+						end
+						tooltip_window.set_popup_widget (l_widget)
+						if is_displayed and then show_completion_tooltip then
+							show_tooltip (a_r)
+						end
 					end
-					comment_preview.set_text (l_tt_text)
-				else
-					comment_preview.set_text ("")
 				end
+				show_timer.set_interval (0)
+			end (a_row)
+			)
+		end
 
-				if {PLATFORM}.is_windows then
-					a_row.ensure_visible
+	on_key_released (ev_key: EV_KEY)
+			-- process user input in `choice_list'.
+		do
+			if ev_key /= Void then
+				inspect
+					ev_key.code
+				when key_ctrl then
+					if temp_switching_show_disambiguated_name and then show_completion_disambiguated_name then
+						show_disambiguated_name_button.disable_select
+					end
+					temp_switching_show_disambiguated_name := False
 				else
-					ev_application.add_idle_action_kamikaze (agent
-						local
-							l_selected: ARRAYED_LIST [EV_GRID_ROW]
-						do
-								-- Ensure the row is visible on GTK platforms.
-							if is_interface_usable then
-								l_selected := choice_list.selected_rows
-								if not l_selected.is_empty then
-									l_selected.first.ensure_visible
-								end
-							end
-						end)
+					Precursor {CODE_COMPLETION_WINDOW} (ev_key)
 				end
+			end
+		end
 
+	on_window_resize
+			-- Window resized
+		do
+			if is_displayed and then attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
+				if attached choice_list.single_selected_row as l_row then
+					show_tooltip (l_row)
+				end
+			end
+		end
+
+	on_scroll (a_x, a_y: INTEGER)
+			-- Window resized
+		do
+			Precursor {CODE_COMPLETION_WINDOW}(a_x, a_y)
+			if is_displayed and then attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
+				if attached choice_list.single_selected_row as l_row then
+					show_tooltip (l_row)
+				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	build_displayed_list (name: STRING_32)
-			-- <Precursor>
+	contract_widget_from_row (a_row: EV_GRID_ROW): detachable EV_WIDGET
+			-- Contract widget from a grid row
+		local
+			l_viewer: ES_CONTRACT_VIEWER_WIDGET
+			l_c: CLASS_C
+			l_f: E_FEATURE
+			l_comment_preview: EVS_LABEL
+			l_v: EV_VERTICAL_BOX
+			l_h: EV_HORIZONTAL_BOX
+			l_tt_text: STRING_32
+			l_padding: EV_CELL
+			l_sep: EV_HORIZONTAL_SEPARATOR
+			l_widget: EV_WIDGET
 		do
-			comment_preview.set_text ("")
-			Precursor (name)
+			create l_v
+
+			create l_padding
+			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_background_color (colors.tooltip_color)
+			l_v.extend (l_padding)
+			l_v.disable_item_expand (l_padding)
+
+			create l_h
+			l_v.extend (l_h)
+			l_v.disable_item_expand (l_h)
+
+			create l_padding
+			l_padding.set_minimum_width ({ES_UI_CONSTANTS}.label_horizontal_padding)
+			l_padding.set_background_color (colors.tooltip_color)
+			l_h.extend (l_padding)
+			l_h.disable_item_expand (l_padding)
+
+			create l_comment_preview.make
+			l_h.extend (l_comment_preview)
+
+			create l_padding
+			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_background_color (colors.tooltip_color)
+			l_v.extend (l_padding)
+			l_v.disable_item_expand (l_padding)
+			l_padding.set_minimum_width (300)
+
+				-- Separator
+			create l_sep
+			l_sep.set_minimum_height (2)
+			l_v.extend (l_sep)
+			l_v.disable_item_expand (l_sep)
+
+			l_comment_preview.align_text_left
+			l_comment_preview.is_text_wrapped := True
+			l_comment_preview.set_background_color (colors.tooltip_color)
+
+			if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
+				l_tt_text := l_completion_feature.tooltip_text
+			elseif attached {EB_CLASS_FOR_COMPLETION} a_row.data as l_completion_class then
+				l_tt_text := l_completion_class.tooltip_text
+			end
+			if l_tt_text /= Void and then not l_tt_text.is_empty then
+				l_tt_text.prune_all_trailing ('%N')
+				if l_tt_text.count > 150 then
+					l_tt_text.keep_head (147)
+					l_tt_text.append ("...")
+				end
+				l_comment_preview.set_text (l_tt_text)
+				last_comment := l_tt_text
+			else
+				l_comment_preview.set_text (interface_names.l_no_comment)
+				last_comment := interface_names.l_no_comment
+			end
+			last_comment_label := l_comment_preview
+
+			if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
+				l_f := l_completion_feature.associated_feature
+				l_c := l_f.associated_class
+				if attached last_contract_widget as l_cw then
+					l_cw.recycle
+				end
+				create l_viewer.make
+				last_contract_widget := l_viewer
+				l_viewer.is_showing_full_contracts := True
+				l_viewer.set_context (l_c, l_f)
+				l_viewer.set_auto_check_visible (False)
+				l_viewer.set_is_showing_comments (False)
+				l_widget := l_viewer.widget
+				l_v.extend (l_widget)
+				color_propogator.propagate_colors (l_widget, Void, contract_background_color, Void)
+			end
+			Result := l_v
+		end
+
+	last_comment: STRING_32
+			-- Last generated comment.
+
+	last_comment_label: EVS_LABEL
+			-- Last generated label for comment.
+
+	last_contract_widget: ES_CONTRACT_VIEWER_WIDGET
+			-- Last contract widget
+
+	color_propogator: ES_COLOR_PROPAGATOR
+			-- Color propogator
+		once
+			create Result
+		end
+
+	contract_background_color: EV_COLOR
+			-- Pop up window background color, as well as the token background color
+		do
+			Result := normal_text_token.background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	normal_text_token: EDITOR_TOKEN_TEXT
+			-- Token used for getting foreground and background colors.
+		once
+			create Result.make ("")
 		end
 
 	on_char (character_string: STRING_32)
@@ -906,21 +1014,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key_released (ev_key: EV_KEY)
-			-- process user input in `choice_list'.
+	show_tooltip (a_row: EV_GRID_ROW)
+			-- Show the floating tooltip
+		require
+			a_row_set: a_row /= Void
+			tooltip_window_attached: tooltip_window /= Void
+			tooltip_window_not_recycled: not tooltip_window.is_recycled
+		local
+			l_choice_list_y_offset: INTEGER
+			l_rec: EV_RECTANGLE
 		do
-			if ev_key /= Void then
-				inspect
-					ev_key.code
-				when key_ctrl then
-					if temp_switching_show_disambiguated_name and then show_completion_disambiguated_name then
-						show_disambiguated_name_button.disable_select
-					end
-					temp_switching_show_disambiguated_name := False
-				else
-					Precursor {CODE_COMPLETION_WINDOW} (ev_key)
-				end
-			end
+			l_choice_list_y_offset := choice_list.screen_y - screen_y
+				-- Show arround the selected row.
+			create l_rec.make (screen_x, screen_y, width, height)
+			tooltip_window.show_on_side (l_rec,
+				(a_row.virtual_y_position - choice_list.virtual_y_position + l_choice_list_y_offset).max (0).min (choice_list.viewable_height),
+				(a_row.virtual_y_position + a_row.height - choice_list.virtual_y_position + l_choice_list_y_offset).max (0).min (choice_list.viewable_height))
 		end
 
 	temp_switching_show_disambiguated_name: BOOLEAN
@@ -958,6 +1067,11 @@ feature {NONE} -- Implementation
 			-- Cancel autocomplete
 		do
 			Precursor
+			if
+				attached tooltip_window as l_w and then not l_w.is_recycled
+			then
+				l_w.hide
+			end
 			if code_completable.is_focus_back_needed then
 				code_completable.post_focus_back
 			end
@@ -1059,8 +1173,13 @@ feature {NONE} -- Implementation
 	last_completed_feature_had_arguments: BOOLEAN;
 			-- Did the last inserted completed feature name contain arguments?
 
+	last_row_data: detachable ANY
+
+	show_timer: EV_TIMEOUT;
+			-- Timer to show the tooltip
+
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

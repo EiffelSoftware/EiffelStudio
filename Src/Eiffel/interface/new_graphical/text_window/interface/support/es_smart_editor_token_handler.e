@@ -133,6 +133,10 @@ feature {NONE} -- Query
 						l_feature := l_class.feature_with_name_32 (l_fstart.wide_image)
 						if attached l_feature as l_feat then
 							create l_viewer.make
+							if attached last_token_widget as l_widget then
+								l_widget.recycle
+							end
+							last_token_widget := l_viewer
 								-- Register the close action for the widget
 							l_viewer.register_action (l_viewer.edit_contract_label.select_actions, agent
 								do
@@ -148,9 +152,6 @@ feature {NONE} -- Query
 					end
 				end
 			end
-		ensure
-			result_is_destroyed: Result /= Void implies not Result.is_destroyed
-			not_result_unparented: Result /= Void implies not Result.has_parent
 		end
 
 	token_action (a_token: attached EDITOR_TOKEN; a_line: INTEGER): detachable PROCEDURE [ANY, TUPLE]
@@ -166,6 +167,9 @@ feature {NONE} -- Query
 		do
 			--| No actions here
 		end
+
+	last_token_widget: detachable ES_CONTRACT_VIEWER_WIDGET
+			-- Last token widget
 
 feature -- Basic operations
 
@@ -374,7 +378,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

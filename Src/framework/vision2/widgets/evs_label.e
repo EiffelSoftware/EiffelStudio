@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			resize_actions.extend (agent (a,b,c,d: INTEGER_32)
 				do
 					resize_actions.block
-					resize_text
+					resize_text (True)
 					resize_actions.resume
 				end)
 			maximum_height := -1
@@ -108,7 +108,7 @@ feature -- Element change
 			text_lines := l_text_lines
 			text_sizes := l_text_sizes
 			if is_displayed then
-				resize_text
+				resize_text (False)
 			end
 		ensure
 			text_set: text = a_text
@@ -119,7 +119,7 @@ feature -- Element change
 		do
 			Precursor {EV_LABEL} (a_font)
 			if is_displayed then
-				resize_text
+				resize_text (False)
 			end
 		end
 
@@ -131,7 +131,7 @@ feature -- Element change
 		do
 			maximum_width := a_width
 			if is_displayed then
-				resize_text
+				resize_text (False)
 			end
 		ensure
 			maximum_width_set: maximum_width = a_width
@@ -146,7 +146,7 @@ feature -- Element change
 		do
 			maximum_height := a_height
 			if is_displayed then
-				resize_text
+				resize_text (False)
 			end
 		ensure
 			maximum_height_set: maximum_height = a_height
@@ -177,7 +177,7 @@ feature -- Removal
 			text_lines := Void
 			text_sizes := Void
 			if is_displayed then
-				resize_text
+				resize_text (False)
 			end
 		ensure then
 			text_lines_detached: text_lines = Void
@@ -218,7 +218,7 @@ feature -- Status setting
 			l_changed := a_wrap /= is_text_wrapped
 			is_text_wrapped := a_wrap
 			if is_displayed and l_changed then
-				resize_text
+				resize_text (False)
 			end
 		ensure
 			is_text_wrapped_set: is_text_wrapped = a_wrap
@@ -235,7 +235,7 @@ feature -- Status setting
 			l_changed := a_ellipse /= is_text_ellipsed
 			is_text_ellipsed := a_ellipse
 			if is_displayed and l_changed then
-				resize_text
+				resize_text (False)
 			end
 		ensure
 			is_text_ellipsed_set: is_text_ellipsed = a_ellipse
@@ -247,7 +247,7 @@ feature -- Basic operations
 			-- Calculates the size of the label.
 			-- Note: You must call this prior to a show to get the correct size information
 		do
-			resize_text
+			resize_text (False)
 		end
 
 feature {NONE} -- Line analysis
@@ -342,7 +342,7 @@ feature {NONE} -- Line rendering
 	text_sizes: detachable LIST [ARRAY [INTEGER]]
 			-- Sizes of text fragments
 
-	resize_text
+	resize_text (a_resizing: BOOLEAN)
 			-- Sizes the text set by the user to fit on screen label dimensions specified.
 		local
 			l_text_lines: like text_lines
@@ -493,7 +493,24 @@ feature {NONE} -- Line rendering
 --					l_dummy.set_font (l_font)
 
 --					set_minimum_width (l_size.width + l_size.right + l_size.left + (l_dummy.width - l_font.string_width (l_dummy.text)))
-					set_label_text (l_text)
+
+					if a_resizing then
+							-- Cannot do `set_label_text' during resizing events.
+							-- If we do so, somehow in an EV_VERTICAL_BOX_IMP,
+							-- {EV_VERTICAL_BOX_IMP}.ev_apply_new_size might trigger
+							-- resize action twice upon inner EV_HORIZONTAL_BOX.
+							-- The first time `width' returns correct,
+							-- the second time `width' is wrong (much bigger)
+							-- The reason seems to be that {EV_HORIZONTAL_BOX_IMP}.set_children_width
+							-- is using an old value of `children_width' rather than the one
+							-- updated here in resize action. But later `litem.minimum_width' in
+							-- {EV_HORIZONTAL_BOX_IMP}.set_children_width uses the updated minimum value.
+							-- The consequence is the text wrapping is incorrectly computed
+							-- according to a wrong `width'.
+						ev_application.do_once_on_idle (agent set_label_text (l_text))
+					else
+						set_label_text (l_text)
+					end
 				end
 			end
 		end
@@ -506,8 +523,8 @@ invariant
 			attached text_lines as inv_text_lines) implies inv_text_lines.count = inv_text_sizes.count
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

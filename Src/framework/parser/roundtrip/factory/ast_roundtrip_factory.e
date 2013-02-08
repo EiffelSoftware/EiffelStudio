@@ -249,7 +249,7 @@ feature -- Leaf Nodes
 			extend_match_list_with_stub (create {KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
 		do
 			Result := Precursor (a_code, a_scn)
 				-- It is ok to create a KEYWORD_STUB_AS because it inherits from LEAF_STUB_AS and thus
@@ -294,7 +294,7 @@ feature -- Leaf Nodes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

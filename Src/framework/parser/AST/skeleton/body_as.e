@@ -117,7 +117,7 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_arguments = Void implies Result = Void) and
-						 (internal_arguments /= Void implies Result = internal_arguments.meaningful_content)
+						 (attached internal_arguments as l_args implies Result = l_args.meaningful_content)
 		end
 
 	type: detachable TYPE_AS
@@ -152,7 +152,9 @@ feature -- Roundtrip
 	index: INTEGER
 			-- <Precursor>
 		do
-			Result := content.index
+			if attached content as l_content then
+				Result := l_content.index
+			end
 		end
 
 feature -- Roundtrip/Token
@@ -229,8 +231,8 @@ feature -- Access
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Does this body has instruction `i'?
 		do
-			if content /= Void then
-				Result := content.has_instruction (i)
+			if attached content as l_content then
+				Result := l_content.has_instruction (i)
 			else
 				Result := False
 			end
@@ -240,8 +242,8 @@ feature -- Access
 			-- Index of `i' in this body.
 			-- Result is `0' not found.
 		do
-			if content /= Void then
-				Result := content.index_of_instruction (i)
+			if attached content as l_content then
+				Result := l_content.index_of_instruction (i)
 			else
 				Result := 0
 			end
@@ -252,7 +254,7 @@ feature -- empty body
 	is_empty : BOOLEAN
 				-- Is body empty?
 		do
-			Result := (content = Void) or else (content.is_empty)
+			Result := (not attached content as l_content) or else l_content.is_empty
 		end
 
 feature -- default rescue
@@ -262,8 +264,8 @@ feature -- default rescue
 		require
 			valid_feature_name_id: def_resc_name_id > 0
 		do
-			if content /= Void then
-				content.create_default_rescue (def_resc_name_id)
+			if attached content as l_content then
+				l_content.create_default_rescue (def_resc_name_id)
 			end
 		end
 
@@ -271,26 +273,26 @@ feature -- Type check, byte code and dead code removal
 
 	is_unique: BOOLEAN
 		do
-			Result := content /= Void and then content.is_unique
+			Result := attached content as l_content and then l_content.is_unique
 		end
 
 	is_built_in: BOOLEAN
 			-- Is current body a built in?
 		do
-			Result := content /= Void and then content.is_built_in
+			Result := attached content as l_content and then l_content.is_built_in
 		end
 
 	is_routine: BOOLEAN
 			-- Is current body a routine?
 		do
 				-- If not a constant then current body is a routine.
-			Result := content /= Void and then not content.is_constant
+			Result := attached content as l_content and then not l_content.is_constant
 		end
 
 	is_constant: BOOLEAN
 			-- Is current body a constant?
 		do
-			Result := content /= Void and then content.is_constant
+			Result := attached content as l_content and then l_content.is_constant
 		end
 
 feature -- New feature description
@@ -365,12 +367,8 @@ feature {BODY_AS, FEATURE_AS} -- Replication
 			content := c
 		end
 
-invariant
-	arguments_correct: (internal_arguments /= Void implies arguments = internal_arguments.meaningful_content) and
-	   				   (internal_arguments = Void implies arguments = Void)
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

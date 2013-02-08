@@ -14,25 +14,25 @@ inherit
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access		
 
-	separator: STRING
+	separator:detachable  STRING
 			-- Separator used to separate items.
 			-- Empty if no separator is needed.
 
 	has_separator: BOOLEAN
 			-- Do we deal with separators?
 		do
-			Result := separator /= Void and then not separator.is_empty
+			Result := attached separator as l_sep and then not l_sep.is_empty
 		end
 
-	leading_text: STRING
+	leading_text: detachable STRING
 			-- Leading text to be added before every prepended/appended item
 
-	trailing_text: STRING
+	trailing_text: detachable STRING
 			-- Trailing text to be added after every prepended/appended item
 
 feature -- Setting
 
-	set_separator_32 (a_separator: STRING_32)
+	set_separator_32 (a_separator: detachable STRING_32)
 			-- Set `separator' with `a_separator'.
 			-- If `a_separator' is Void or empty, separators will not be processed.
 			-- `a_separator' is in UTF-32.
@@ -43,8 +43,8 @@ feature -- Setting
 				separator := encoding_converter.utf32_to_utf8 (a_separator)
 			end
 		ensure
-			separator_set: (a_separator = Void implies separator.is_empty) and
-						   (a_separator /= Void implies separator.is_equal (encoding_converter.utf32_to_utf8 (a_separator)))
+			separator_set: (a_separator = Void implies (attached separator as l_sep and then l_sep.is_empty)) and
+						   (a_separator /= Void implies (attached separator as l_sep and then l_sep.same_string (encoding_converter.utf32_to_utf8 (a_separator))))
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
@@ -59,11 +59,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 				separator := a_separator.twin
 			end
 		ensure
-			separator_set: (a_separator = Void implies separator.is_empty) and
-						   (a_separator /= Void implies separator.is_equal (a_separator))
+			separator_set: (a_separator = Void implies (attached separator as l_sep and then l_sep.is_empty)) and
+						   (a_separator /= Void implies (attached separator as l_sep and then l_sep.same_string (a_separator)))
 		end
 
-	set_leading_text (a_text: STRING)
+	set_leading_text (a_text: detachable STRING)
 			-- Set `leading_text' with `a_text'.
 		do
 			if a_text = Void then
@@ -72,10 +72,10 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 				leading_text := a_text.twin
 			end
 		ensure
-			leading_text_set: (a_text = Void implies leading_text.is_empty) and (a_text /= Void implies leading_text.is_equal (a_text))
+			leading_text_set: (a_text = Void implies (attached leading_text as l_leading_text and then l_leading_text.is_empty)) and (a_text /= Void implies attached leading_text as l_leading_text and then l_leading_text.same_string (a_text))
 		end
 
-	set_trailing_text (a_text: STRING)
+	set_trailing_text (a_text: detachable STRING)
 			-- Set `trailing_text' with `a_text'.
 		do
 			if a_text = Void then
@@ -84,10 +84,10 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 				trailing_text := a_text.twin
 			end
 		ensure
-			trailing_text_set: (a_text = Void implies trailing_text.is_empty) and (a_text /= Void implies trailing_text.is_equal (a_text))
+			trailing_text_set: (a_text = Void implies (attached trailing_text as l_trailing_text and then l_trailing_text.is_empty)) and (a_text /= Void implies attached trailing_text as l_trailing_text and then l_trailing_text.same_string (a_text))
 		end
 
-	set_arguments (a_separator: detachable STRING; a_leading_text, a_trailing_text: STRING)
+	set_arguments (a_separator, a_leading_text, a_trailing_text: detachable STRING)
 			-- Setup arguments.
 		do
 			set_separator (a_separator)
@@ -96,7 +96,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

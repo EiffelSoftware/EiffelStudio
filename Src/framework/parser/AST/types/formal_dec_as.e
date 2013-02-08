@@ -140,7 +140,7 @@ feature -- Convenience
 
 feature -- Attributes
 
-	constraint: CONSTRAINING_TYPE_AS
+	constraint: detachable CONSTRAINING_TYPE_AS
 			-- Constraint of the formal generic
 			-- Only valid to call if there's exactly one constraint.
 		require
@@ -276,8 +276,7 @@ feature -- Status
 	has_creation_constraint: BOOLEAN
 			-- Does the construct have a creation constraint?
 		do
-			Result := creation_feature_list /= Void
-				and then not creation_feature_list.is_empty
+			Result := attached creation_feature_list as l_list and then not l_list.is_empty
 		end
 
 	has_default_create: BOOLEAN
@@ -298,17 +297,16 @@ feature -- Status
 			-- Check in `creation_feature_list' if it contains a feature with id `a_feature_name_id'.
 			--
 			-- `a_feature_name_id' is the names heap id of the feature.
-		local
-			creation_list: like creation_feature_list
 		do
-			from
-				creation_list := creation_feature_list
-				creation_list.start
-			until
-				Result or else creation_list.after
-			loop
-				Result := creation_list.item.internal_name.name_id = a_feature_name_id
-				creation_list.forth
+			if attached creation_feature_list as l_creation_list then
+				from
+					l_creation_list.start
+				until
+					Result or else l_creation_list.after
+				loop
+					Result := l_creation_list.item.internal_name.name_id = a_feature_name_id
+					l_creation_list.forth
+				end
 			end
 		end
 feature {FORMAL_DEC_AS} -- Status implementation
@@ -420,18 +418,18 @@ feature -- Output
 				Result.append (" -> ")
 
 				Result.append (constraints.dump (false))
-				if has_creation_constraint then
+				if attached creation_feature_list as l_creation_list and then not l_creation_list.is_empty then
 					from
-						creation_feature_list.start
+						l_creation_list.start
 						Result.append (" create ")
-						Result.append (creation_feature_list.item.visual_name)
-						creation_feature_list.forth
+						Result.append (l_creation_list.item.visual_name)
+						l_creation_list.forth
 					until
-						creation_feature_list.after
+						l_creation_list.after
 					loop
 						Result.append (", ")
-						Result.append (creation_feature_list.item.visual_name)
-						creation_feature_list.forth
+						Result.append (l_creation_list.item.visual_name)
+						l_creation_list.forth
 					end
 					Result.append (" end")
 				end
@@ -443,7 +441,7 @@ invariant
 	formal_not_void: formal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

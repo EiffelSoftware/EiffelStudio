@@ -208,6 +208,66 @@ feature -- Placement
 			result_attached: Result /= Void
 		end
 
+	suggest_pop_up_location_by_rectangle_side (a_rect: EV_RECTANGLE; a_width, a_height: INTEGER): TUPLE [x, y: INTEGER]
+			-- Suggests a location for a widget based on it's size
+			-- Position priority: right, left, bellow, above.
+			-- If no space arround the `a_rect', overlapping is allowed on the right bottom.
+		require
+			a_rect_attached: a_rect /= Void
+			a_width_positive: a_width > 0
+			a_height_positive: a_height > 0
+		local
+			l_top_window: like widget_top_level_window
+			l_top_area: detachable like window_working_area
+			l_new_x: INTEGER
+			l_new_y: INTEGER
+			l_screen: EV_RECTANGLE
+		do
+				-- Current monitor
+			l_screen := (create {EV_SCREEN}).monitor_area_from_position (
+				a_rect.x, a_rect.y)
+
+			if (a_rect.x + a_rect.width + a_width) > l_screen.width then
+					-- Out of space on the right, given width
+					-- Move to the left.
+				l_new_x := a_rect.x - a_width
+				if l_new_x < 0 then
+						-- Out of the screen on left side, move it back to left side and x coordinate overlap is allowed.
+					l_new_x := l_screen.width - a_width
+				end
+			else
+					-- Place on the right.
+				l_new_x := a_rect.x + a_rect.width
+			end
+
+			if l_new_x > a_rect.x - a_width and then l_new_x < a_rect.x + a_rect.width then
+					-- Overlapped x, try the space bellow and above.
+				if l_screen.height - a_rect.y - a_rect.height >= a_height then
+						-- Enough space bellow.
+					l_new_y := a_rect.y + a_rect.height
+				elseif a_rect.y >= a_height then
+						-- Enough space above
+					l_new_y := a_rect.y - a_height
+				else
+						-- Allow overlap on bottom.
+					l_new_y := l_screen.height - a_height
+				end
+			else
+					-- x is not overlapped, simply adjust y.
+				if (a_rect.y + a_height) > l_screen.height then
+						-- Out of space, given height.
+					l_new_y := l_screen.height - a_height
+				else
+						-- Align to the top line of the area.
+					l_new_y := a_rect.y
+				end
+			end
+
+			Result := [l_new_x, l_new_y]
+		ensure
+			result_attached: Result /= Void
+		end
+
 ;note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

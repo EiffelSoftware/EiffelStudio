@@ -216,6 +216,9 @@ feature -- Access
 			Result.set_text_with_tokens (l_style.text)
 		end
 
+	associated_feature: E_FEATURE
+			-- Feature associated with completion item
+
 feature -- Query
 
 	has_arguments: BOOLEAN
@@ -258,9 +261,6 @@ feature -- Setting
 		end
 
 feature {NONE} -- Implementation
-
-	associated_feature: E_FEATURE
-			-- Feature associated with completion item
 
 	feature_signature: STRING_32
 			-- The signature of `associated_feature'
@@ -308,7 +308,7 @@ invariant
 	associated_feature_not_void: associated_feature /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

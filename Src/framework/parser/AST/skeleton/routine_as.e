@@ -166,24 +166,24 @@ feature -- Roundtrip/Token
 		do
 			if a_list /= Void and obsolete_keyword_index /= 0 then
 				Result := obsolete_keyword (a_list)
-			elseif obsolete_message /= Void then
-				Result := obsolete_message.first_token (a_list)
-			elseif precondition /= Void then
-				Result := precondition.first_token (a_list)
-			elseif internal_locals /= Void then
-				Result := internal_locals.first_token (a_list)
+			elseif attached obsolete_message as l_message then
+				Result := l_message.first_token (a_list)
+			elseif attached precondition as l_prec then
+				Result := l_prec.first_token (a_list)
+			elseif attached internal_locals as l_locals then
+				Result := l_locals.first_token (a_list)
 			end
 			if Result = Void or else Result.is_null then
 				Result := routine_body.first_token (a_list)
 				if Result = Void or else Result.is_null then
-					if postcondition /= Void then
-						Result := postcondition.first_token (a_list)
+					if attached postcondition as l_post then
+						Result := l_post.first_token (a_list)
 					elseif a_list /= Void and rescue_keyword_index /= 0 then
 						Result := rescue_keyword (a_list)
-					elseif rescue_clause /= Void then
-						Result := rescue_clause.first_token (a_list)
-					elseif end_keyword /= Void then
-						Result := end_keyword.first_token (a_list)
+					elseif attached rescue_clause as l_rescue then
+						Result := l_rescue.first_token (a_list)
+					elseif attached end_keyword as l_keyword then
+						Result := l_keyword.first_token (a_list)
 					end
 				end
 			end
@@ -191,7 +191,9 @@ feature -- Roundtrip/Token
 
 	last_token (a_list:detachable  LEAF_AS_LIST): detachable LEAF_AS
 		do
-			Result := end_keyword.last_token (a_list)
+			if attached end_keyword as l_keyword then
+				Result := l_keyword.last_token (a_list)
+			end
 		end
 
 feature -- Properties
@@ -202,7 +204,7 @@ feature -- Properties
 			--|Note: It is valid to not include a precondition in
 			--|a redefined feature (it is equivalent to "require else False")
 		do
-			Result := precondition = Void or else precondition.is_else
+			Result := not attached precondition as l_prec or else l_prec.is_else
 		end
 
 	is_ensure_then: BOOLEAN
@@ -211,7 +213,7 @@ feature -- Properties
 			--|Note: It is valid to not include a postcondition in
 			--|a redefined feature (it is equivalent to "ensure then True"
 		do
-			Result := postcondition = Void or else postcondition.is_then
+			Result := not attached postcondition as l_post or else l_post.is_then
 		end
 
 	has_precondition: BOOLEAN
@@ -227,9 +229,7 @@ feature -- Properties
 	has_postcondition: BOOLEAN
 			-- Has the routine content postconditions ?
 		do
-			Result := not (	postcondition = Void
-							or else
-							postcondition.assertions = Void)
+			Result := attached postcondition as l_post and then l_post.assertions /= Void
 		end
 
 	has_false_postcondition: BOOLEAN
@@ -249,8 +249,7 @@ feature -- Properties
 	has_rescue: BOOLEAN
 			-- Has the routine a non-empty rescue clause ?
 		do
-			Result := (rescue_clause /= Void) and then
-					  not rescue_clause.is_empty
+			Result := attached rescue_clause as l_rescue and then not l_rescue.is_empty
 		end
 
 	is_attribute: BOOLEAN
@@ -389,7 +388,7 @@ invariant
 --	end_keyword_not_void: end_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

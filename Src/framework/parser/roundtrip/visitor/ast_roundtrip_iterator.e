@@ -46,8 +46,13 @@ feature -- AST process
 		require
 			is_valid: is_valid
 		do
-			start_index := match_list.item_by_start_position (a_node.complete_start_position (match_list)).index
-			end_index := match_list.item_by_end_position (a_node.complete_end_position (match_list)).index
+			if
+				attached match_list.item_by_start_position (a_node.complete_start_position (match_list)) as l_start_leaf and then
+				attached match_list.item_by_end_position (a_node.complete_end_position (match_list)) as l_end_leaf
+			then
+				start_index := l_start_leaf.index
+				end_index := l_end_leaf.index
+			end
 			last_index := start_index - 1
 			safe_process (a_node)
 			process_trailing_leaves
@@ -509,14 +514,14 @@ feature
 				check
 					consistent_separator_count: attached l_as.separator_list as l implies l.count = n or else l.count = n - 1
 				end
-				if l_as.separator_list = Void then
-					m := 0
-				else
-					m := l_as.separator_list.count
+				if attached l_as.separator_list as l_sep_list then
+					m := l_sep_list.count
 					if m >= n then
 							-- There is a leading separator, start from index 1.
 						j := 1
 					end
+				else
+					m := 0
 				end
 			until
 				i > n
@@ -1459,20 +1464,18 @@ feature{NONE} -- Implementation
 		local
 			i, l_count: INTEGER
 			l_index: INTEGER
-			l_ids: CONSTRUCT_LIST [INTEGER]
 			l_id_as: ID_AS
 			l_leaf: LEAF_AS
 		do
 			if l_as /= Void then
-				l_ids := l_as.id_list
-				if l_ids /= Void and l_ids.count > 0 then
+				if attached l_as.id_list as l_ids and then l_ids.count > 0 then
 					from
 						l_ids.start
 						i := 1
 							-- Temporary/reused objects to print identifiers.
 						create l_id_as.initialize_from_id (1)
-						if l_as.separator_list /= Void then
-							l_count := l_as.separator_list.count
+						if attached l_as.separator_list as l_sep_list then
+							l_count := l_sep_list.count
 						end
 					until
 						l_ids.after
@@ -1503,7 +1506,7 @@ feature{NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

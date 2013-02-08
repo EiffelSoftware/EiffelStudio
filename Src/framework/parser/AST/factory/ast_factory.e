@@ -134,7 +134,7 @@ feature -- Roundtrip
 
 feature -- Parser Access
 
-	parser: EIFFEL_SCANNER_SKELETON
+	parser: detachable EIFFEL_SCANNER_SKELETON
 			-- Parser used in conjonction with current factory.
 
 	set_parser (v: like parser)
@@ -320,10 +320,14 @@ feature -- Access for Errors
 		require
 			a_once_as_not_void: a_once_as /= Void
 		local
-			l_identifier: STRING
+			l_identifier: detachable STRING
 		do
-			l_identifier := a_once_as.text (match_list)
-			check l_identifier_not_void: l_identifier /= Void end
+			if attached match_list as l_match_list then
+				l_identifier := a_once_as.text (l_match_list)
+			end
+			if l_identifier = Void then
+				l_identifier := "Unknown identifier"
+			end
 			create {SYNTAX_ERROR} Result.make (a_line, a_column, a_filename, "Error VVOK1: Conflict in once's keys of routine %"" + l_identifier + "%"")
 		end
 
@@ -332,11 +336,16 @@ feature -- Access for Errors
 		require
 			a_once_as_not_void: a_once_as /= Void
 		local
-			l_identifier: STRING
+			l_identifier: detachable STRING
 		do
-			l_identifier := a_once_as.text (match_list)
-			check l_identifier_not_void: l_identifier /= Void end
-			create {SYNTAX_ERROR} Result.make (a_line, a_column, a_filename, "Error VVOK2: Unsupported once key in routine %""+ l_identifier +"%"%N(only %"PROCESS%", %"THREAD%", %"OBJECT%" are supported for now).")
+			if attached match_list as l_match_list then
+				l_identifier := a_once_as.text (l_match_list)
+			end
+			if l_identifier = Void then
+				l_identifier := "Unknown identifier"
+			end
+			create {SYNTAX_ERROR} Result.make (a_line, a_column, a_filename,
+				"Error VVOK2: Unsupported once key in routine %""+ l_identifier +"%"%N(only %"PROCESS%", %"THREAD%", %"OBJECT%" are supported for now).")
 		end
 
 

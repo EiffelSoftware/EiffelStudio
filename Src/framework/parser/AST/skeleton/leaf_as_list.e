@@ -166,7 +166,7 @@ feature -- Status update
 
 feature -- Item searching
 
-	item_by_start_position (start_pos: INTEGER): LEAF_AS
+	item_by_start_position (start_pos: INTEGER): detachable LEAF_AS
 			-- Item in `Current' whose `start_position' equals to `start_pos'
 			-- Return Void if no item in `Current' satisfies.
 		local
@@ -194,7 +194,7 @@ feature -- Item searching
 			end
 		end
 
-	item_by_end_position (end_pos: INTEGER): LEAF_AS
+	item_by_end_position (end_pos: INTEGER): detachable LEAF_AS
 			-- Item in `Current' whose `end_position' equals to `end_pos'
 			-- Return Void if no item in `Current' satisfies.
 		local
@@ -222,7 +222,7 @@ feature -- Item searching
 			end
 		end
 
-	item_by_position (a_pos: INTEGER): LEAF_AS
+	item_by_position (a_pos: INTEGER): detachable LEAF_AS
 			-- Item in `Current' between which `a_pos' is located
 			-- Return Void if no item in `Current' satisfies.
 		local
@@ -723,11 +723,15 @@ feature{NONE} -- Implementation
 
 	modifier_list: LINKED_LIST [ERT_REGION_MODIFIER]
 			-- List of modifiers
+		local
+			l_list: like internal_modifier_list
 		do
-			if internal_modifier_list = Void then
-				create internal_modifier_list.make
+			l_list := internal_modifier_list
+			if l_list = Void then
+				create l_list.make
+				internal_modifier_list := l_list
 			end
-			Result := internal_modifier_list
+			Result := l_list
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -747,33 +751,45 @@ feature{ERT_REGION_MODIFIER} -- Implementation
 
 	active_modifier_list: like modifier_list
 			-- List of active modifiers
+		local
+			l_list: like internal_active_modifier_list
 		do
-			if internal_active_modifier_list = Void then
-				create internal_active_modifier_list.make
+			l_list := internal_active_modifier_list
+			if l_list = Void then
+				create l_list.make
+				internal_active_modifier_list := l_list
 			end
-			Result := internal_active_modifier_list
+			Result := l_list
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	active_prepend_modifier_list: SORTED_TWO_WAY_LIST [ERT_PREPEND_REGION_MODIFIER]
 			-- List of active prepend modifiers
+		local
+			l_list: like internal_prepend_modifier_list
 		do
-			if internal_prepend_modifier_list = Void then
-				create internal_prepend_modifier_list.make
+			l_list := internal_prepend_modifier_list
+			if l_list = Void then
+				create l_list.make
+				internal_prepend_modifier_list := l_list
 			end
-			Result := internal_prepend_modifier_list
+			Result := l_list
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	active_append_modifier_list: SORTED_TWO_WAY_LIST [ERT_APPEND_REGION_MODIFIER]
 			-- List of active prepend modifiers
+		local
+			l_list: like internal_append_modifier_list
 		do
-			if internal_append_modifier_list = Void then
-				create internal_append_modifier_list.make
+			l_list := internal_append_modifier_list
+			if l_list = Void then
+				create l_list.make
+				internal_append_modifier_list := l_list
 			end
-			Result := internal_append_modifier_list
+			Result := l_list
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -786,7 +802,7 @@ feature{ERT_REGION_MODIFIER} -- Implementation
 		do
 			token_text_table.force (a_text, a_index)
 		ensure
-			token_text_set: token_text_table.has (a_index) and token_text_table.item (a_index).is_equal (a_text)
+			token_text_set: token_text_table.has (a_index) and then attached token_text_table.item (a_index) as l_token_text and then l_token_text.same_string (a_text)
 		end
 
 feature{NONE} -- Implementation
@@ -868,28 +884,32 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	internal_modifier_list: like modifier_list
+	internal_modifier_list: detachable like modifier_list
 			-- List of modifiers
 
-	internal_active_modifier_list: like active_modifier_list
+	internal_active_modifier_list: detachable like active_modifier_list
 			-- List of active modifiers
 
-	internal_token_text_table: like token_text_table
+	internal_token_text_table: detachable like token_text_table
 			-- Hashtable to store all tokens whose text has been changed
 
-	internal_prepend_modifier_list: like active_prepend_modifier_list
+	internal_prepend_modifier_list: detachable like active_prepend_modifier_list
 			-- List of active prepend modifiers
 
-	internal_append_modifier_list: like active_append_modifier_list
+	internal_append_modifier_list: detachable like active_append_modifier_list
 			-- List of active append modifiers
 
 	token_text_table: HASH_TABLE [STRING, INTEGER]
 			-- Hashtable to store all tokens whose text has been changed
+		local
+			l_table: like internal_token_text_table
 		do
-			if internal_token_text_table = Void then
-				create internal_token_text_table.make (100)
+			l_table := internal_token_text_table
+			if l_table = Void then
+				create l_table.make (100)
+				internal_token_text_table := l_table
 			end
-			Result := internal_token_text_table
+			Result := l_table
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -899,7 +919,7 @@ invariant
 	trunks_not_empty: not trunks.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

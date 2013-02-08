@@ -18,51 +18,59 @@ create
 
 feature -- Access
 
-	id_list: CONSTRUCT_LIST [INTEGER]
+	id_list: detachable CONSTRUCT_LIST [INTEGER]
 			-- List to store ID_AS objects in this structure.
 
-	separator_list: CONSTRUCT_LIST [INTEGER]
+	separator_list: detachable CONSTRUCT_LIST [INTEGER]
 			-- List to store terminals that appear in between every 2 items of this list
 
 	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): detachable LEAF_AS
 			-- Terminals at position `i' in `separator_list' using `a_list'.
 		require
-			valid_index: separator_list.valid_index (i)
+			valid_index: attached separator_list as l_list and then l_list.valid_index (i)
 			a_list_not_void: a_list /= Void
 		local
 			n: INTEGER
 		do
-			n := separator_list.i_th (i)
-			if a_list.valid_index (n) then
-				Result := a_list.i_th (n)
+			if attached separator_list as l_sep_list then
+				n := l_sep_list.i_th (i)
+				if a_list.valid_index (n) then
+					Result := a_list.i_th (n)
+				end
 			end
 		end
 
 	reverse_extend_separator (l_as: LEAF_AS)
 			-- Add `l_as' into `separator_list'.
+		require
+			capacity_large_enough: capacity >= 2
+		local
+			l_sep_list: like separator_list
 		do
-			if separator_list = Void then
-				if capacity >= 2 then
-					create separator_list.make_filled (capacity - 1)
-				else
-						-- One should never get here as this will yield in a call on void.
-					check one_should_never_get_here: false end
-				end
+			l_sep_list := separator_list
+			if l_sep_list = Void then
+				check enough_capacity: capacity >= 2 end
+				create l_sep_list.make_filled (capacity - 1)
+				separator_list := l_sep_list
 			end
-			separator_list.reverse_extend (l_as.index)
+			l_sep_list.reverse_extend (l_as.index)
 		end
 
 	reverse_extend_identifier (l_as: ID_AS)
 			-- Add `l_as' into `id_list'.
+		local
+			l_id_list: like id_list
 		do
-			if id_list = Void then
-				create id_list.make_filled (capacity)
+			l_id_list := id_list
+			if l_id_list = Void then
+				create l_id_list.make_filled (capacity)
+				id_list := l_id_list
 			end
-			id_list.reverse_extend (l_as.index)
+			l_id_list.reverse_extend (l_as.index)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

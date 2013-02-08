@@ -204,22 +204,22 @@ feature {NONE} -- Implementation
 			-- tag string should be in the form of "tag1, tag2, tag3"
 		require
 			a_tag_string_not_void: a_tag_string /= Void
+		local
+			l_list: LIST [STRING_32]
+			l_str: STRING_32
 		do
-			if attached {like parse_tags} a_tag_string.split ({ES_EIS_TOKENS}.tag_separator) as lt_splitted then
-				lt_splitted.do_all (
-						agent (aa_string: STRING_32)
-							do
-								check aa_string_not_void: aa_string /= Void end
-								aa_string.left_adjust
-								aa_string.right_adjust
-							end)
-				Result := lt_splitted
-					-- Empty string is not needed.
-				if Result.count = 1 and then Result.i_th (1).count = 0 then
-					Result.wipe_out
-				end
-			else
-				create Result.make (0)
+			l_list := a_tag_string.split ({ES_EIS_TOKENS}.tag_separator)
+			create Result.make (l_list.count)
+			across
+				l_list as l_c
+			loop
+				l_str := l_c.item
+				l_str.left_adjust
+				l_str.right_adjust
+				Result.extend (l_str)
+			end
+			if Result.count = 1 and then Result.i_th (1).count = 0 then
+				Result.wipe_out
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -233,37 +233,36 @@ feature {NONE} -- Implementation
 			-- Or ""parameter1=value1", parameter2=value2, "parameter3=value3""
 		require
 			a_parameters_string_not_void: a_parameters_string /= Void
+		local
+			l_list: LIST [STRING_32]
+			l_str, l_key, l_value: STRING_32
 		do
-			if attached a_parameters_string.split ({ES_EIS_TOKENS}.attribute_separator) as lt_splitted then
-				create Result.make (1)
-				lt_splitted.do_all (
-						agent (aa_string: STRING_32; a_result: STRING_TABLE [STRING_32])
-							local
-								l_key, l_value: STRING_32
-							do
-								string_general_left_adjust (aa_string)
-								string_general_right_adjust (aa_string)
-								aa_string.prune_all_leading ('"')
-								aa_string.prune_all_trailing ('"')
-								string_general_left_adjust (aa_string)
-								string_general_right_adjust (aa_string)
-								if attribute_regex_matcher.matches (encoding_converter.utf32_to_utf8 (aa_string)) then
-									if
-										attached attribute_regex_matcher.captured_substring (1) as lt_key and then
-										attached attribute_regex_matcher.captured_substring (2) as lt_value
-									then
-										l_key := encoding_converter.utf8_to_utf32 (lt_key)
-										l_value := encoding_converter.utf8_to_utf32 (lt_value)
-										l_key.left_adjust
-										l_key.right_adjust
-										l_value.left_adjust
-										l_value.right_adjust
-										a_result.force (l_value, l_key)
-									end
-								end
-							end (?, Result))
-			else
-				create Result.make (0)
+			l_list := a_parameters_string.split ({ES_EIS_TOKENS}.attribute_separator)
+			create Result.make (1)
+			across
+				l_list as l_c
+			loop
+				l_str := l_c.item
+				l_str.left_adjust
+				l_str.right_adjust
+				l_str.prune_all_leading ('"')
+				l_str.prune_all_trailing ('"')
+				l_str.left_adjust
+				l_str.right_adjust
+				if attribute_regex_matcher.matches (encoding_converter.utf32_to_utf8 (l_str)) then
+					if
+						attached attribute_regex_matcher.captured_substring (1) as lt_key and then
+						attached attribute_regex_matcher.captured_substring (2) as lt_value
+					then
+						l_key := encoding_converter.utf8_to_utf32 (lt_key)
+						l_value := encoding_converter.utf8_to_utf32 (lt_value)
+						l_key.left_adjust
+						l_key.right_adjust
+						l_value.left_adjust
+						l_value.right_adjust
+						Result.force (l_value, l_key)
+					end
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void

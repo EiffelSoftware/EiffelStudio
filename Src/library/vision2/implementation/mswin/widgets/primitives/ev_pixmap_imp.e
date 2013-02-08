@@ -1642,6 +1642,8 @@ feature {NONE} -- Implementation
 			new_bitmap.enable_reference_tracking
 			new_dc.select_bitmap (new_bitmap)
 
+			new_dc.set_stretch_blt_mode ({WEL_STRETCH_MODE_CONSTANTS}.color_on_color)
+
 				-- Stretch the content of the old bitmap into the
 				-- new one
 			new_dc.stretch_blt(
@@ -1988,7 +1990,7 @@ invariant
 			l_private_cursor.reference_tracked
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

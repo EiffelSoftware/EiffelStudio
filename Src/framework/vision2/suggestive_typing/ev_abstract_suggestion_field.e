@@ -442,7 +442,6 @@ feature {NONE} -- Key handling
 								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
 									choices.set_is_list_recomputation_required (settings.is_list_recomputed_when_typing)
 									choices.build_suggestion_list (searched_text, False)
-									choices.select_closest_match
 								end
 							end)
 						end
@@ -478,7 +477,6 @@ feature {NONE} -- Key handling
 								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
 									choices.set_is_list_recomputation_required (settings.is_list_recomputed_when_typing)
 									choices.build_suggestion_list (searched_text, False)
-									choices.select_closest_match
 								end
 							end)
 						end
@@ -554,6 +552,7 @@ feature {NONE} -- Events
 				l_choices.on_mouse_wheel (a_offset)
 			end
 		end
+
 feature {NONE} -- Implementation
 
 	reset_suggestion_timeout
@@ -603,7 +602,7 @@ feature {NONE} -- Implementation: Access
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

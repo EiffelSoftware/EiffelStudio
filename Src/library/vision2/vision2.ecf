@@ -154,7 +154,13 @@
 			</condition>
 		</library>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
+			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
+			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
+			<renaming old_name="THREAD_STATE" new_name="SYSTEM_THREAD_STATE"/>
+			<renaming old_name="TIMER" new_name="SYSTEM_TIMER"/>
+			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
+		</assembly>
 		<cluster name="contrib" location="contrib\" recursive="true">
 			<option namespace="Vision2.Contrib">
 			</option>

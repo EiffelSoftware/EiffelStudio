@@ -2592,14 +2592,14 @@ feature {NONE} -- MSIL system implementation
 			Result := Eiffel_project.initialized
 					and then Eiffel_project.system_defined
 					and then Eiffel_system.System.il_generation
-					and then equal (Eiffel_system.System.msil_generation_type, dll_type)
+					and then attached Eiffel_system.System.msil_generation_type as l_type and then l_type.same_string (dll_type)
 		end
 
-	dll_type: STRING = "dll";
+	dll_type: STRING_32 = "dll";
 			-- DLL type constant for MSIL system
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

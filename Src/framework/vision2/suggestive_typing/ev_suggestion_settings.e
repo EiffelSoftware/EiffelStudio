@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			list_x_position_not_set: not is_list_x_position_set
 			list_y_position_not_set: not is_list_y_position_set
 			is_initial_position_at_caret_not_set: not is_initial_position_at_caret
-			is_horizontal_scrolling_enabled_set: is_fit_list_window_to_content
+			is_fit_list_window_to_content_set: is_fit_list_window_to_content
 			list_width_not_set: not is_list_width_set
 			list_height_not_set: not is_list_height_set
 			is_mouse_wheel_in_full_page_mode_not_set: not is_mouse_wheel_in_full_page_mode

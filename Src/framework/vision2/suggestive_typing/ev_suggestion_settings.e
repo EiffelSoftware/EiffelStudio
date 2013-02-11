@@ -433,7 +433,7 @@ feature -- Settings
 			searched_text_agent_set: searched_text_agent = v
 		end
 
-	set_is_horizontal_scrolling_enabled (v: like is_fit_list_window_to_content)
+	set_is_fit_list_window_to_content (v: like is_fit_list_window_to_content)
 			-- Set `is_fit_list_window_to_content' with `v'.
 		do
 			is_fit_list_window_to_content := v

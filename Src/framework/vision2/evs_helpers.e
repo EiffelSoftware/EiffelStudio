@@ -217,8 +217,6 @@ feature -- Placement
 			a_width_positive: a_width > 0
 			a_height_positive: a_height > 0
 		local
-			l_top_window: like widget_top_level_window
-			l_top_area: detachable like window_working_area
 			l_new_x: INTEGER
 			l_new_y: INTEGER
 			l_screen: EV_RECTANGLE

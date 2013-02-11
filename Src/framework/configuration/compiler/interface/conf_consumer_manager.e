@@ -494,9 +494,9 @@ feature {NONE} -- retrieving information from cache
 			end
 			if Result = Void or else not Result.is_consumed then
 				if an_assembly.is_non_local_assembly then
-					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name))
+					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name, an_assembly.target.system.file_name))
 				else
-					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.location.evaluated_path.name))
+					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.location.original_path, an_assembly.target.system.file_name))
 				end
 			end
 		ensure
@@ -865,7 +865,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

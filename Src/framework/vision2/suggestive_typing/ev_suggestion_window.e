@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 
 				-- Handling of keybord/mouse events.
 			grid.pointer_double_press_actions.extend (agent mouse_selection)
+			grid.row_select_actions.extend (agent update_selection)
 
 				-- Handling of mousewheel
 			grid.mouse_wheel_actions.extend (agent on_mouse_wheel)
@@ -93,39 +94,6 @@ feature -- Access
 			"Do not use"
 		do
 			create Result.make (0)
-		end
-
-feature -- Status Setting
-
-	set_is_list_recomputation_required (v: like is_list_recomputation_required)
-			-- Set `is_list_recomputation_required' with `v'.
-		do
-			is_list_recomputation_required := v
-		ensure
-			is_list_recomputation_required_set: is_list_recomputation_required = v
-		end
-
-feature -- Update
-
-	show
-			-- Show
-		do
-				-- Initialize the current suggest list with what has been entered in `field'.
-			build_suggestion_list (field.searched_text, True)
-		end
-
-	show_content (a_is_first: BOOLEAN)
-			-- Show content for the first time if `a_is_first', otherwise update what is already shown.
-		do
-				-- Select the entry that match what has been entered in `field'.
-			select_closest_match
-			position_suggestion_choice_window (a_is_first)
-			if a_is_first then
-				resize_column_to_window_width
-				show_window
-			else
-				resize_column_to_window_width
-			end
 		end
 
 feature -- Query
@@ -181,11 +149,22 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Events handling
 			end
 		end
 
+feature {NONE} -- Event handling
+
 	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
 			-- process mouse click in the list
 		do
 			if button = 1 and not grid.selected_items.is_empty then
 				suggest_and_close
+			end
+		end
+
+	update_selection (a_row: EV_GRID_ROW)
+			-- Update selection when it changes.
+		do
+			if attached {like row_data_type} a_row.data as l_data then
+					-- Let `field' know about the selection change.
+				field.set_selected_suggestion (l_data)
 			end
 		end
 
@@ -355,12 +334,12 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
 
 feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 
-	build_suggestion_list (a_name: READABLE_STRING_GENERAL; a_is_first: BOOLEAN)
-			-- Build the list based on matches with `name'. If `a_is_first' it is
-			-- the first time that the list will be shown and a new query to the
-			-- suggestion provider is issued. If `is_list_recomputation_required'
-			-- a new query to the suggestion provider will be issued even if not
-			-- otherwise required.
+	show_suggestion_list (a_name: READABLE_STRING_GENERAL; a_is_first: BOOLEAN)
+			-- Build the list based on matches with `name' and show it on screen.
+			-- If `a_is_first' it is the first time that the list will be shown and
+			-- a new query to the- suggestion provider is issued.
+			-- If `is_list_recomputation_required' a new query to the suggestion
+			-- provider will be issued even if not otherwise required.
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -381,7 +360,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 				-- If this is the first time we are showing the list or if
 				-- settings dictate that it has to be recomputed, we get the
 				-- results from the associated suggestion provider of `field'.
-			if a_is_first or else is_list_recomputation_required then
+			if a_is_first or else settings.is_list_recomputed_when_typing then
 					-- The first time we need to show the list of suggestions
 					-- when it has fully been computed.
 				l_post_action := agent show_content (a_is_first)
@@ -404,16 +383,11 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 				show_content (a_is_first)
 			end
 
-				-- We need to unset `is_list_recomputation_required'
-			is_list_recomputation_required := False
-
 				-- Let's unlock the window to refresh its content with the newly
 				-- build content.
 			if l_is_displayed then
 				unlock_update
 			end
-		ensure
-			is_list_recomputation_required_unset: not is_list_recomputation_required
 		end
 
 	select_closest_match
@@ -450,6 +424,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 							l_row.show
 							if not l_row_selected then
 								l_row_selected := True
+								field.set_selected_suggestion (l_data)
 								grid.select_row (i)
 							end
 						else
@@ -473,23 +448,17 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 			l_rows := l_grid.selected_rows
 			if not l_rows.is_empty and then attached {like row_data_type} l_rows.first.data as l_data then
 				field.insert_suggestion (l_data)
+				field.close_actions.call ([l_data])
 			end
 			close
 		end
 
-	close
-			-- Close window without performing the suggestion.
+	cancel_and_close
+			-- Suggestion was cancelled so no suggestion is available
 		do
-			if not is_destroyed and not is_closing then
-				is_closing := True
-				if has_capture then
-					disable_capture
-				end
-				save_window_position
-				hide
-				field.terminate_suggestion
-				is_closing := False
-			end
+			field.set_selected_suggestion (Void)
+			field.close_actions.call ([Void])
+			close
 		end
 
 	save_window_position
@@ -547,7 +516,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 		end
 
 	is_list_recomputation_required: BOOLEAN
-			-- If True, next call to `build_suggestion_list' would query
+			-- If True, next call to `show_suggestion_list' would query
 			-- the associated suggestion provider to gather some new results.
 
 	row_data_type: SUGGESTION_ITEM
@@ -640,7 +609,7 @@ feature {NONE} -- Positionning
 		local
 			l_helpers: EVS_HELPERS
 			l_origin: TUPLE [x, y: INTEGER]
-			l_pos, l_current_pos: like suggestion_choice_window_coordinates
+			l_pos: like suggestion_choice_window_coordinates
 		do
 			l_pos := suggestion_choice_window_coordinates (a_is_first)
 			if attached field.parent_window as l_parent_window and then not l_parent_window.is_destroyed and then l_parent_window.is_show_requested then
@@ -874,13 +843,48 @@ feature {NONE} -- Grid helpers
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation: Access
 
 	grid: EV_GRID
 			-- Grid displaying result of search.
 
 	border_width: INTEGER = 1
 			-- Number of pixels for the border surrounding the suggestion window.
+
+feature {NONE} -- Implementation
+
+	show_content (a_is_first: BOOLEAN)
+			-- Show content for the first time if `a_is_first', otherwise update what is already shown.
+		do
+				-- Select the entry that match what has been entered in `field'.
+			select_closest_match
+			position_suggestion_choice_window (a_is_first)
+			if a_is_first then
+				resize_column_to_window_width
+				show_window
+			else
+				resize_column_to_window_width
+			end
+				-- Call field's `show_actions' if this is the first time the choice window is shown.
+			if a_is_first then
+				field.show_actions.call (Void)
+			end
+		end
+
+	close
+			-- Close window without performing the suggestion.
+		do
+			if not is_destroyed and not is_closing then
+				is_closing := True
+				if has_capture then
+					disable_capture
+				end
+				save_window_position
+				hide
+				field.terminate_suggestion
+				is_closing := False
+			end
+		end
 
 invariant
 

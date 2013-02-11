@@ -43,6 +43,8 @@ feature {NONE} -- Initialization
 			-- Creation of attached attributes of Current.
 		do
 			create suggestion_timeout.make_with_interval (0)
+			create show_actions
+			create close_actions
 
 				-- Because we are having our own handler and we still want
 				-- to let users provide their own customization, so we define
@@ -78,6 +80,15 @@ feature -- Access
 
 	last_suggestion: detachable SUGGESTION_ITEM
 			-- Last match suggestion item.
+		obsolete
+			"Use `selected_suggestion' instead."
+		do
+			Result := selected_suggestion
+		end
+
+	selected_suggestion: detachable SUGGESTION_ITEM
+			-- Currently selected suggestion if any.
+			-- If Void, no items were selected or selection was cancelled.
 
 feature {EV_SUGGESTION_WINDOW} -- Access: shared
 
@@ -124,10 +135,20 @@ feature -- Configuration
 		deferred
 		end
 
+	show_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be performed when completion list is shown.
+
+	close_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [selected_item: detachable SUGGESTION_ITEM]]
+			-- Actions to be performed when completion list is shown.
+
 feature -- Status report
 
 	is_suggesting: BOOLEAN
 			-- Is suggestion currently being processed?
+
+	is_updating_text: BOOLEAN
+			-- If true, an entry was selected in the completion list and we are updating Current with the associated
+			-- `displayed_text' of the entry.
 
 	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
@@ -263,9 +284,9 @@ feature -- Basic operation
 					-- the `choices' are hidden and user starts typing again.
 				is_suggesting := True
 					-- We are resetting the previous suggestion.
-				last_suggestion := Void
+				set_selected_suggestion (Void)
 				disable_suggestion_timeout
-				l_choices.show
+				l_choices.show_suggestion_list (searched_text, True)
 			end
 		ensure
 			is_suggesting_updated: old is_suggesting implies is_suggesting
@@ -291,16 +312,29 @@ feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 		local
 			l_text: READABLE_STRING_GENERAL
 		do
-			last_suggestion := a_selected_item
+			set_selected_suggestion (a_selected_item)
 			l_text := a_selected_item.displayed_text
 			if not l_text.is_empty and not l_text.has_code (('%R').natural_32_code)then
+					-- Before updating the text of the underlying field, we flag our editing
+					-- so that clients can control some of the change_actions and do something
+					-- different if needed
+				is_updating_text := True
 				set_displayed_text (l_text)
 				move_caret_to_end
+				is_updating_text := False
 			end
 			refresh
 		ensure
 			is_suggesting_unchanged: is_suggesting = old is_suggesting
-			last_suggestion_set: last_suggestion = a_selected_item
+			last_suggestion_set: selected_suggestion = a_selected_item
+		end
+
+	set_selected_suggestion (a_suggestion_item: like selected_suggestion)
+			-- Set `selected_suggestion' with `a_suggestion_item'.
+		do
+			selected_suggestion := a_suggestion_item
+		ensure
+			selected_suggestion_set: selected_suggestion = a_suggestion_item
 		end
 
 	is_default_key_processing_enabled (a_key: EV_KEY): BOOLEAN
@@ -399,14 +433,14 @@ feature {NONE} -- Key handling
 									-- We are at the beginning, so going to the left one more
 									-- time is a user intent to say he does not want to be
 									-- provided with a suggestion.
-								choices.close
+								choices.cancel_and_close
 							end
 						else
 							if caret_position >= displayed_text.count + 1 then
 									-- We are at the end, so going to the right one more
 									-- time is a user intent to say he does not want to
 									-- be provided with a suggestion.
-								choices.close
+								choices.cancel_and_close
 							end
 						end
 					end
@@ -425,7 +459,7 @@ feature {NONE} -- Key handling
 				when {EV_KEY_CONSTANTS}.Key_enter then
 					choices.suggest_and_close
 				when {EV_KEY_CONSTANTS}.Key_escape then
-					choices.close
+					choices.cancel_and_close
 
 				when {EV_KEY_CONSTANTS}.key_back_space, {EV_KEY_CONSTANTS}.key_delete then
 					if is_ctrl_pressed then
@@ -436,12 +470,11 @@ feature {NONE} -- Key handling
 								-- List is discarded if all the characters inserted have been
 								-- removed and that the user press one more time the backspace key
 								-- showing his intent of stopping the suggestion.
-							choices.close
+							choices.cancel_and_close
 						else
 							ev_application.do_once_on_idle (agent do
 								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-									choices.set_is_list_recomputation_required (settings.is_list_recomputed_when_typing)
-									choices.build_suggestion_list (searched_text, False)
+									choices.show_suggestion_list (searched_text, False)
 								end
 							end)
 						end
@@ -475,8 +508,7 @@ feature {NONE} -- Key handling
 						else
 							ev_application.do_once_on_idle (agent do
 								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-									choices.set_is_list_recomputation_required (settings.is_list_recomputed_when_typing)
-									choices.build_suggestion_list (searched_text, False)
+									choices.show_suggestion_list (searched_text, False)
 								end
 							end)
 						end
@@ -538,7 +570,7 @@ feature {NONE} -- Events
 				is_suggesting and then attached choices as l_choices and then
 				not l_choices.is_destroyed and then l_choices.is_displayed
 			then
-				l_choices.close
+				l_choices.cancel_and_close
 			end
 		end
 

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			create_all_actions
 
 			back_ground_color := sd_shared.default_background_color
-			
+
 			default_create
 		ensure
 			docking_manager_not_void: docking_manager /= Void
@@ -214,13 +214,13 @@ feature {NONE} -- Implementation
 	on_alt_button_selected
 			-- Called by `select_actions' of `alt_check_button'.
 		do
-			sd_shared.set_zone_navigation_accelerator_ctrl (alt_check_button.is_selected)
+			sd_shared.set_zone_navigation_accelerator_alt (alt_check_button.is_selected)
 		end
 
 	on_shift_button_selected
 			-- Called by `select_actions' of `shift_check_button'.
 		do
-			sd_shared.set_zone_navigation_accelerator_ctrl (shift_check_button.is_selected)
+			sd_shared.set_zone_navigation_accelerator_shift (shift_check_button.is_selected)
 		end
 
 	on_choose_color_button_selected

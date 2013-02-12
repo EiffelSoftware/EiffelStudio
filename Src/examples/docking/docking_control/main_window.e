@@ -191,12 +191,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	sd_shared: SD_SHARED
-			-- Docking icons, etc.
-		once
-			create Result
-		end
-
 	Window_title: STRING = "Docking Control"
 			-- Title of the window.
 

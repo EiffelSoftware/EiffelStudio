@@ -369,7 +369,7 @@ feature -- Status setting
 
 	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER
 			-- Result is greatest `required_width' of all items from
-			-- row index `start_row', `end_row'.
+			-- row index `start_row', `end_row' that are not hidden (i.e. `is_show_requested' is True).
 		require
 			parented: attached parent as l_parent
 			valid_rows: start_row >= 1 and end_row <= l_parent.row_count and start_row <= end_row
@@ -396,11 +396,13 @@ feature -- Status setting
 					-- `row_data' may not have a count less than
 					-- `column_count' if items are Void in this row.
 				if row_data /= Void and then physical_index < row_data.count then
-					grid_item_i := row_data @ (physical_index)
-					if grid_item_i /= Void then
-						Result := Result.max (grid_item_i.attached_interface.required_width + l_parent_i.item_indent (grid_item_i))
-					end
 					row := l_parent_i.row_internal (item_counter)
+					if row.is_show_requested then
+						grid_item_i := row_data @ (physical_index)
+						if grid_item_i /= Void then
+							Result := Result.max (grid_item_i.attached_interface.required_width + l_parent_i.item_indent (grid_item_i))
+						end
+					end
 					if row.subrow_count > 0 and not row.is_expanded then
 						item_counter := item_counter + row.subrow_count_recursive
 					end
@@ -799,7 +801,7 @@ invariant
 	physical_index_set: parent /= Void implies physical_index >= 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

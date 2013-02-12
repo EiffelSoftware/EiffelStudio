@@ -280,7 +280,7 @@ feature -- Status setting
 
 	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER
 			-- Result is greatest `required_width' of all items from
-			-- row index `start_row', `end_row'.
+			-- row index `start_row', `end_row' that are not hidden (i.e. `is_show_requested' is True).
 		require
 			not_destroyed: not is_destroyed
 			parented: attached parent as l_parent
@@ -519,7 +519,7 @@ invariant
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_x_position = virtual_x_position_unlocked
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

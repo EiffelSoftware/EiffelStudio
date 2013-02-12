@@ -556,6 +556,8 @@ feature -- Access
 
 	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
 			-- Horizontal scrollbar used for scrolling `Current'.
+			-- Use `is_horizontal_scroll_bar_show_requested' to find out if scrollbar will be shown if
+			-- needed (i.e. when `virtual_width' is greater than `viewable_width').
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -566,6 +568,8 @@ feature -- Access
 
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
 			-- Vertical scrollbar used for scrolling `Current'.
+			-- Use `is_vertical_scroll_bar_show_requested' to find out if scrollbar will be shown if
+			-- needed (i.e. when `virtual_height' is greater than `viewable_height').			
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -2612,7 +2616,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

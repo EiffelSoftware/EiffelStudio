@@ -69,6 +69,7 @@ typedef struct {			/* Position in program execution flow */
 	int wh_type;			/* Dynamic type of Current */
 	int wh_offset;			/* Offset within byte code (-1 if none) */
 	int wh_nested;			/* breakable nested index (-1 if none) */
+	int wh_scoop_pid;		/* Scoop processor id */
 	rt_uint_ptr wh_thread_id;	/* Thread id */
 } Where;
 

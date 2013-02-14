@@ -428,7 +428,7 @@ feature -- Access: Thread related
 
 feature -- Access: SCOOP related
 
-	all_scoop_processor_thread_ids: detachable ARRAY [like scoop_processor_id]
+	all_scoop_processor_thread_ids: detachable ARRAY [like current_thread_id]
 		do
 			if attached scoop_processor_ids as scp then
 				Result := scp.current_keys
@@ -438,7 +438,8 @@ feature -- Access: SCOOP related
 	scoop_processor_ids: HASH_TABLE [like scoop_processor_id, like current_thread_id]
 			-- SCOOP Processor id indexed by thread id
 
-	scoop_processor_id (tid: like current_thread_id): POINTER
+	scoop_processor_id (tid: like current_thread_id): NATURAL_16
+			-- Scoop processor id associated with thread id `tid'.
 		do
 			if attached scoop_processor_ids as scp then
 				Result := scp.item (tid)
@@ -521,7 +522,7 @@ feature -- Thread related change
 			refresh_threads_information
 		ensure
 			thread_unregistered: not all_thread_ids.has (tid)
-			scoop_processor_unregistered: scoop_processor_id (tid) = Default_pointer
+			scoop_processor_unregistered: scoop_processor_id (tid) = 0
 		end
 
 	refresh_threads_information
@@ -551,7 +552,7 @@ feature -- Thread related change
 			end
 			scp.force (a_scp_proc_id, tid)
 		ensure
-			scoop_processor_registered: scoop_processor_id (tid) /= Default_pointer
+			scoop_processor_registered: scoop_processor_id (tid) /= 0
 		end
 
 	unregister_scoop_thread_id (tid: like current_thread_id)
@@ -563,7 +564,7 @@ feature -- Thread related change
 				scp.remove (tid)
 			end
 		ensure
-			scoop_processor_registered: scoop_processor_id (tid) = Default_pointer
+			scoop_processor_registered: scoop_processor_id (tid) = 0
 		end
 
 feature {NONE} -- Call stack implementation
@@ -832,7 +833,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

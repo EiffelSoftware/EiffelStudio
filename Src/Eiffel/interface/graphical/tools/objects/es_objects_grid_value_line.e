@@ -35,25 +35,18 @@ feature {NONE}
 	make_with_value (dv: ABSTRACT_DEBUG_VALUE; g: like parent_grid)
 		require
 			dv /= Void
-		local
-			conv_abs_ref: ABSTRACT_REFERENCE_VALUE
-			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 		do
 			create object_spec_count_and_capacity
 			make_with_grid (g)
-			conv_abs_ref ?= dv
-			if conv_abs_ref /= Void then
+			if attached {ABSTRACT_REFERENCE_VALUE} dv as conv_abs_ref then
 				object_address := conv_abs_ref.address
+			elseif attached {ABSTRACT_SPECIAL_VALUE} dv as conv_abs_spec then
+				object_address := conv_abs_spec.address
+				object_is_special_value := True
+				object_spec_count_and_capacity.spec_count := conv_abs_spec.count
+				object_spec_count_and_capacity.spec_capacity := conv_abs_spec.capacity
 			else
-				conv_abs_spec ?= dv
-				if conv_abs_spec /= Void then
-					object_address := conv_abs_spec.address
-					object_is_special_value := True
-					object_spec_count_and_capacity.spec_count := conv_abs_spec.count
-					object_spec_count_and_capacity.spec_capacity := conv_abs_spec.capacity
-				else
-					object_address := Void -- "Unknown address"
-				end
+				object_address := Void -- "Unknown address"
 			end
 			set_object (dv)
 		end
@@ -95,11 +88,10 @@ feature {NONE} -- Object stone
 
 	get_items_stone_properties
 		local
-			cl: CLASS_C
+			cl: detachable CLASS_C
 			fst: FEATURE_STONE
 			fost: FEATURE_ON_OBJECT_STONE
-			objst: OBJECT_STONE
-			ostn: STRING
+			ostn: detachable STRING
 			feat: E_FEATURE
 			t: like internal_item_stone_data_i_th
 		do
@@ -115,8 +107,7 @@ feature {NONE} -- Object stone
 							create fost.make (related_line.object_address, feat)
 							t := internal_item_stone_data_i_th (0)
 							if t /= Void then
-								objst ?= t.pebble
-								if objst /= Void then
+								if attached {OBJECT_STONE} t.pebble as objst then
 									fost.attach_object_stone (objst)
 								end
 							end
@@ -200,10 +191,8 @@ feature -- Graphical changes
 
 	compute_grid_display
 		local
-			dv: ABSTRACT_DEBUG_VALUE
-			dmdv: DUMMY_MESSAGE_DEBUG_VALUE
-			excdv: EXCEPTION_DEBUG_VALUE
-			gi: EV_GRID_ITEM
+			dv: detachable ABSTRACT_DEBUG_VALUE
+			gi: detachable EV_GRID_ITEM
 		do
 			if row /= Void and not compute_grid_display_done then
 				compute_grid_display_done := True
@@ -214,6 +203,7 @@ feature -- Graphical changes
 					set_value (Void)
 					set_type (Void)
 					set_address (Void)
+					set_scoop_pid_value (0)
 					set_pixmap (Icons @ ({VALUE_TYPES}.Void_value))
 				else --| dv /= Void |--
 					if title /= Void then
@@ -222,27 +212,40 @@ feature -- Graphical changes
 						set_name (dv.name)
 					end
 					set_address (dv.address)
+					if attached {ABSTRACT_REFERENCE_VALUE} dv as ref_dv then
+						set_scoop_pid_value (ref_dv.scoop_processor_id)
+					elseif attached {ABSTRACT_SPECIAL_VALUE} dv as spec_dv then
+						set_scoop_pid_value (spec_dv.scoop_processor_id)
+					else
+						set_scoop_pid_value (0)
+					end
 
 					last_dump_value := Void
 					inspect
 						dv.kind
 					when {VALUE_TYPES}.Error_message_value then
-						dmdv ?= dv
-						set_value (dmdv.display_message)
-						set_type (debugger_names.l_no_information)
-						set_pixmap (Icons @ (dmdv.display_kind))
-					when {VALUE_TYPES}.Exception_message_value then
-						excdv ?= dv
-						set_value (excdv.short_description)
-						gi := value_cell
-						if gi /= Void then
-							gi.set_tooltip (Interface_names.l_exception_double_click_text)
-							gi.pointer_double_press_actions.force_extend (agent show_exception_dialog (excdv))
+						if attached  {DUMMY_MESSAGE_DEBUG_VALUE} dv as dmdv then
+							set_value (dmdv.display_message)
+							set_type (debugger_names.l_no_information)
+							set_pixmap (Icons @ (dmdv.display_kind))
+						else
+							check is_error_message_value: False end
 						end
-						set_type (debugger_names.l_exception_data)
-						set_pixmap (Icons @ (dv.kind))
-						if excdv.has_value then
-							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)
+					when {VALUE_TYPES}.Exception_message_value then
+						if attached {EXCEPTION_DEBUG_VALUE} dv as excdv then
+							set_value (excdv.short_description)
+							gi := value_cell
+							if gi /= Void then
+								gi.set_tooltip (Interface_names.l_exception_double_click_text)
+								gi.pointer_double_press_actions.force_extend (agent show_exception_dialog (excdv))
+							end
+							set_type (debugger_names.l_exception_data)
+							set_pixmap (Icons @ (dv.kind))
+							if excdv.has_value then
+								attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)
+							end
+						else
+							check is_exception_message_value: False end
 						end
 -- No need to handle this case apart
 --					when {VALUE_TYPES}.Procedure_return_message_value then
@@ -284,7 +287,7 @@ invariant
 	object_not_void: object /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

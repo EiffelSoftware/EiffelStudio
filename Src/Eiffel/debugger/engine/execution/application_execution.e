@@ -422,6 +422,19 @@ feature -- Access: Remote access to RT_
 			end
 		end
 
+	remote_rt_scoop_manager: detachable DBG_RT_SCOOP_MANAGER_PROXY
+			-- Return the remote rt_object
+		do
+			Result := internal_remote_rt_scoop_manager
+			if Result = Void and not remote_rt_scoop_manager_set then
+				if attached imp_remote_rt_scoop_manager as rto then
+					create Result.make (rto, Current)
+					internal_remote_rt_scoop_manager := Result
+				end
+				remote_rt_scoop_manager_set := True
+			end
+		end
+
 feature {NONE} -- Implementation: Remote
 
 	imp_remote_rt_object: detachable ABSTRACT_REFERENCE_VALUE
@@ -429,11 +442,21 @@ feature {NONE} -- Implementation: Remote
 		deferred
 		end
 
+	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE
+			-- Return the remote rt_scoop_manager
+		deferred
+		end
+
 	internal_remote_rt_object: like remote_rt_object
-			-- Cached value of `remote_rt_object'
+			-- Cached value of `remote_rt_object'.
 
 	internal_remote_rt_execution_recorder: like remote_rt_execution_recorder
-			-- Cached value of `remote_rt_execution_recorder'
+			-- Cached value of `remote_rt_execution_recorder'.
+
+	internal_remote_rt_scoop_manager: like remote_rt_scoop_manager
+			-- Cached value of `remote_rt_scoop_manager'.
+
+	remote_rt_scoop_manager_set: BOOLEAN
 
 feature -- Remote: execution recorder on RT_
 
@@ -1105,13 +1128,13 @@ feature -- Query
 		deferred
 		end
 
-	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE
+	dump_value_at_address (a_addr: DBG_ADDRESS): DUMP_VALUE
 		require
 			a_addr /= Void
 		deferred
 		end
 
-	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE
+	debug_value_at_address (a_addr: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE
 		require
 			a_addr /= Void
 		deferred
@@ -1371,7 +1394,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

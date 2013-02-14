@@ -825,17 +825,17 @@ feature -- Query
 			end
 		end
 
-	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): detachable DUMP_VALUE
+	dump_value_at_address (a_addr: DBG_ADDRESS): detachable DUMP_VALUE
 		local
 			l_dv: ABSTRACT_DEBUG_VALUE
 		do
-			l_dv := debug_value_at_address_with_class (a_addr, a_cl)
+			l_dv := debug_value_at_address (a_addr)
 			if l_dv /= Void then
 				Result := l_dv.dump_value
 			end
 		end
 
-	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): detachable ABSTRACT_DEBUG_VALUE
+	debug_value_at_address (a_addr: DBG_ADDRESS): detachable ABSTRACT_DEBUG_VALUE
 		do
 			if know_about_kept_object (a_addr) then
 				Result := kept_object_item (a_addr)
@@ -1709,7 +1709,7 @@ feature {NONE} -- Constants for dotnet interactions
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

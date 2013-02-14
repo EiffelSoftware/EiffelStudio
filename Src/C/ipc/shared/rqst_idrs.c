@@ -180,6 +180,7 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext)
 	result = result && idr_int(idrs, &whe->wh_type);
 	result = result && idr_int(idrs, &whe->wh_offset);
 	result = result && idr_int(idrs, &whe->wh_nested);
+	result = result && idr_int(idrs, &whe->wh_scoop_pid);
 	result = result && idr_rt_uint_ptr(idrs, &whe->wh_thread_id);
 
 	return result;

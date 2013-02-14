@@ -33,6 +33,9 @@ feature {NONE} -- parsing features
 	last_integer: INTEGER
 			-- Last parsed integer token
 
+	last_natural_16: NATURAL_16
+			-- Last parser natural_16 token
+
 --	last_integer_64: INTEGER_64
 --			-- Last parsed integer token
 
@@ -89,6 +92,13 @@ feature {NONE} -- parsing features
 			last_integer := last_string.to_integer
 		end
 
+	read_natural_16
+			-- Parse integer token.
+		do
+			read_string
+			last_natural_16 := last_string.to_natural_16
+		end
+
 --	read_integer_64 is
 --			-- Parse integer token.
 --		do
@@ -104,7 +114,7 @@ feature {NONE} -- parsing features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

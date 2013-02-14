@@ -53,13 +53,14 @@ feature {NONE} -- Initialization
 		do
 			create esgrid.make_with_name (title, "watches" + watch_id.out)
 			esgrid.enable_multiple_row_selection
-			esgrid.set_column_count_to (5)
+			esgrid.set_column_count_to (6)
 			esgrid.set_default_columns_layout (<<
-						[1, True, False, 150, interface_names.l_Expression, interface_names.to_expression],
-						[2, True, False, 150, interface_names.l_value, interface_names.to_value],
-						[3, True, False, 100, interface_names.l_type, interface_names.to_type],
-						[4, True, False, 80, interface_names.l_address, interface_names.to_address],
-						[5, True, False, 200, interface_names.l_Context, interface_names.to_context]
+						[esgrid.col_name_id, True, False, 150, interface_names.l_Expression, interface_names.to_expression],
+						[esgrid.col_value_id, True, False, 150, interface_names.l_value, interface_names.to_value],
+						[esgrid.col_type_id, True, False, 100, interface_names.l_type, interface_names.to_type],
+						[esgrid.col_address_id, True, False, 80, interface_names.l_address, interface_names.to_address],
+						[esgrid.col_scoop_pid_id, True, False,   30, interface_names.l_scoop_pid, interface_names.to_scoop_pid],
+						[esgrid.col_context_id, True, False, 200, interface_names.l_Context, interface_names.to_context]
 					>>
 				)
 			esgrid.set_columns_layout (1, esgrid.default_columns_layout)
@@ -232,12 +233,11 @@ feature -- Properties
 feature -- Closing
 
 	close
-		local
-			wt: ES_WATCH_TOOL
 		do
 			Precursor
-			wt ?= tool_descriptor
-			debugger_manager.watch_tool_list.prune_all (wt)
+			if attached {ES_WATCH_TOOL} tool_descriptor as wt then
+				debugger_manager.watch_tool_list.prune_all (wt)
+			end
 			debugger_manager.update_all_debugging_tools_menu
 		end
 
@@ -279,11 +279,11 @@ feature -- Properties setting
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
-	objects_grid_object_line (addr: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE
+	objects_grid_object_line (addr: DBG_ADDRESS): detachable ES_OBJECTS_GRID_OBJECT_LINE
 		local
 			r: INTEGER
 			lrow: EV_GRID_ROW
-			ladd: DBG_ADDRESS
+			ladd: detachable DBG_ADDRESS
 		do
 			from
 				r := 1
@@ -292,12 +292,15 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 			loop
 				lrow := watches_grid.row (r)
 				if lrow.parent_row = Void then
-					Result ?= grid_data_from_widget (lrow)
-					if Result /= Void then
-						ladd := Result.object_address
+					if attached {like objects_grid_object_line} grid_data_from_widget (lrow) as res then
+						ladd := res.object_address
 						if ladd = Void or else not ladd.is_equal (addr) then
 							Result := Void
+						else
+							Result := res
 						end
+					else
+						Result := Void
 					end
 				end
 				r := r + 1
@@ -308,21 +311,19 @@ feature {NONE} -- Stone handlers
 
 	on_stone_changed (a_old_stone: detachable like stone)
 			-- Assign `a_stone' as new stone.
-		local
-			cst: CALL_STACK_STONE
-			app_impl: APPLICATION_EXECUTION_DOTNET
 		do
 			if can_refresh then
-				cst ?= stone
-				if cst /= Void and then debugger_manager.safe_application_is_stopped then
+				if attached {CALL_STACK_STONE} stone as cst and then debugger_manager.safe_application_is_stopped then
 					debug ("refactor_fixme")
 						fixme ("Check if we should not call `update' to benefit real_update optimisation")
 					end
 					if debugger_manager.is_dotnet_project then
-						app_impl ?= debugger_manager.application
-						check app_impl /= Void end
-						if not app_impl.callback_notification_processing then
-							refresh_context_expressions
+						if attached {APPLICATION_EXECUTION_DOTNET} debugger_manager.application as app_impl then
+							if not app_impl.callback_notification_processing then
+								refresh_context_expressions
+							end
+						else
+							check is_dotnet_app: False end
 						end
 					else
 						refresh_context_expressions
@@ -521,41 +522,36 @@ feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 	on_element_drop (s: CLASSC_STONE)
 			-- Something was dropped in watch tool.
 		local
-			fst: FEATURE_STONE
-			cst: CLASSC_STONE
-			ost: OBJECT_STONE
-			fost: FEATURE_ON_OBJECT_STONE
-			dlg: EB_EXPRESSION_DEFINITION_DIALOG
+			obj_st: detachable OBJECT_STONE
+			dlg: detachable EB_EXPRESSION_DEFINITION_DIALOG
 			oname: STRING
-			cl: CLASS_C
-			add: DBG_ADDRESS
+			cl: detachable CLASS_C
+			add: detachable DBG_ADDRESS
 			ctrl_pressed: BOOLEAN
 		do
 			ctrl_pressed := ev_application.ctrl_pressed
 			show
-			fost ?= s
-			if fost /= Void then
+			if attached {FEATURE_ON_OBJECT_STONE} s as fost then
 				oname := fost.feature_name
 				add := fost.object_address
 				if ctrl_pressed then
-					ost := fost.object_stone
+					obj_st := fost.object_stone
 					cl := fost.e_class
 					if
-						ost = Void and then
+						obj_st = Void and then
 						add /= Void and then
 						cl /= Void
 					then
-						create ost.make (add, oname, cl)
+						create obj_st.make (add, oname, cl)
 					end
-					if ost /= Void then
-						on_element_drop (ost)
+					if obj_st /= Void then
+						on_element_drop (obj_st)
 					end
 				else
 					create dlg.make_with_expression_on_object (add, oname)
 				end
 			else
-				fst ?= s
-				if fst /= Void then
+				if attached {FEATURE_STONE} s as fst then
 					oname := fst.feature_name
 					cl := fst.e_class
 					if ctrl_pressed then
@@ -566,22 +562,16 @@ feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 							dlg.set_class_text (cl)
 						end
 					end
-				else
-					ost ?= s
-					if ost /= Void then
-						oname := ost.name + ": " + ost.object_address.output
-						cl := ost.dynamic_class
-						if ctrl_pressed then
-							add_object (ost, oname)
-						else
-							create dlg.make_with_named_object (ost.object_address, oname, cl)
-						end
+				elseif attached {OBJECT_STONE} s as ost then
+					oname := ost.name + ": " + ost.object_address.output
+					cl := ost.dynamic_class
+					if ctrl_pressed then
+						add_object (ost, oname)
 					else
-						cst ?= s
-						if cst /= Void then
-							create dlg.make_with_class (cst.e_class)
-						end
+						create dlg.make_with_named_object (ost.object_address, oname, cl)
 					end
+				elseif attached {CLASSC_STONE} s as cst then
+					create dlg.make_with_class (cst.e_class)
 				end
 			end
 			if dlg /= Void then
@@ -593,11 +583,8 @@ feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 	remove_expression_row (row: EV_GRID_ROW)
 		require
 			row_not_void: row /= Void
-		local
-			l_item: like watched_item_from
 		do
-			l_item ?= watched_item_from (row)
-			if l_item /= Void then
+			if attached watched_item_from (row) as l_item then
 				l_item.safe_unattach
 				watched_items.prune_all (l_item)
 			end
@@ -1033,7 +1020,6 @@ feature {NONE} -- Event handling
 		local
 			row: EV_GRID_ROW
 			rows: ARRAYED_LIST [EV_GRID_ROW]
-			empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
 		do
 			if
 				not ev_application.ctrl_pressed
@@ -1045,9 +1031,8 @@ feature {NONE} -- Event handling
 					if
 						watches_grid.col_name_index <= row.count
 					then
-						empty_expression_cell ?= row.item (watches_grid.col_name_index)
-						if empty_expression_cell /= Void then
-							if s.is_equal ("%N") then
+						if attached {ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL} row.item (watches_grid.col_name_index) as empty_expression_cell then
+							if s.same_string ("%N") then
 								empty_expression_cell.activate
 							else
 								empty_expression_cell.activate_with_string (s)
@@ -1079,7 +1064,6 @@ feature {NONE} -- Event handling
 		local
 			row: EV_GRID_ROW
 			rows: ARRAYED_LIST [EV_GRID_ROW]
-			expression_cell: ES_OBJECTS_GRID_EXPRESSION_CELL
 		do
 			if
 				not ev_application.ctrl_pressed
@@ -1092,8 +1076,7 @@ feature {NONE} -- Event handling
 					if
 						watches_grid.col_name_index <= row.count
 					then
-						expression_cell ?= row.item (watches_grid.col_name_index)
-						if expression_cell /= Void then
+						if attached {ES_OBJECTS_GRID_EXPRESSION_CELL} row.item (watches_grid.col_name_index) as expression_cell then
 							expression_cell.activate
 						end
 					end
@@ -1768,6 +1751,7 @@ feature {NONE} -- Update
 			l_item: like watched_item_from
 			witems: like watched_items
 		do
+			watches_grid.handle_project_specific_columns
 			if attached debugger_manager.application_status as l_status then
 				if
 					l_status.is_stopped and (dbg_was_stopped or l_status.break_on_assertion_violation_pending)
@@ -1843,16 +1827,6 @@ feature {NONE} -- Implementation
 			Result.set_text (s)
 		end
 
-	Cst_expression_col: INTEGER = 1
-
-	Cst_type_col: INTEGER = 2
-
-	Cst_value_col: INTEGER = 3
-
-	Cst_context_col: INTEGER = 4
-
-	Cst_nota_col: INTEGER = 5
-
 	new_watched_item_from_expression_evaluation (evl: DBG_EXPRESSION_EVALUATION; a_grid: ES_OBJECTS_GRID): like watched_item_from
 		require
 			evaluation_attached: evl /= Void
@@ -1882,14 +1856,14 @@ feature {NONE} -- Implementation
 	watched_item_from (row: EV_GRID_ROW): ES_OBJECTS_GRID_EXPRESSION_LINE
 		require
 			row_not_void: row /= Void
-		local
-			ctlr: ES_GRID_ROW_CONTROLLER
 		do
-			Result ?= row.data
-			if Result = Void then
-				ctlr ?= row.data
-				if ctlr /= Void then
-					Result ?= ctlr.data
+			if attached {ES_OBJECTS_GRID_EXPRESSION_LINE} row.data as r then
+				Result := r
+			else
+				if attached {ES_GRID_ROW_CONTROLLER} row.data as ctlr then
+					if attached {ES_OBJECTS_GRID_EXPRESSION_LINE} row.data as r then
+						Result := r
+					end
 				end
 			end
 		end

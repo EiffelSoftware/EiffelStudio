@@ -36,7 +36,7 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make_set_ref (ref: DBG_ADDRESS; id: INTEGER)
+	make_set_ref (ref: DBG_ADDRESS; id: INTEGER; scp_pid: like scoop_processor_id)
 			-- Create Current as a standalone object
 			-- i.e: not an attribute
 			-- nevertheless at this point we don't have the `capacity'
@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			set_default_name
 			is_attribute := False;
 			address := ref
+			scoop_processor_id := scp_pid
 			if ref.is_void then
 				is_null := True
 				capacity := 0
@@ -57,7 +58,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-						addr: like address; a_count: like count; a_capacity: like capacity)
+						addr: like address; a_count: like count; a_capacity: like capacity; scp_pid: like scoop_processor_id)
 		require
 			not_attr_name_void: attr_name /= Void;
 			not_addr_void: addr /= Void
@@ -69,6 +70,7 @@ feature {NONE} -- Initialization
 			end
 			address := addr
 			is_null := address = Void or else address.is_void
+			scoop_processor_id := scp_pid
 			count := a_count
 			capacity := a_capacity
 				--| No need to preallocate area, since the fill_items or similar
@@ -90,20 +92,14 @@ feature -- Access
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.
 		local
-			char_value: CHARACTER_VALUE
-			wchar_value: CHARACTER_32_VALUE
 			l_items: like children
 		do
 			l_items := children
 			if l_items.count /= 0 then
-				char_value ?= l_items.first
-				if char_value /= Void then
+				if attached {CHARACTER_VALUE} l_items.first then
 					create Result.make (l_items.count + 8)
-				else
-					wchar_value ?= l_items.first
-					if wchar_value /= Void then
-						create Result.make (l_items.count + 8)
-					end
+				elseif attached {CHARACTER_32_VALUE} l_items.first then
+					create Result.make (l_items.count + 8)
 				end
 				if Result /= Void then
 					if sp_lower > 0 then
@@ -124,74 +120,66 @@ feature -- Access
 			-- Else return Void.
 			-- Do not convert special characters to an Eiffel representation.
 		local
-			int8_value: DEBUG_BASIC_VALUE [INTEGER_8]
-			int32_value: DEBUG_BASIC_VALUE [INTEGER_32]
-			char_value: CHARACTER_VALUE
-			wchar_value: CHARACTER_32_VALUE
-			l_cursor: like children.new_cursor
 			l_items: like children
+			l_first: ABSTRACT_DEBUG_VALUE
 		do
 			l_items := children
 			if l_items.count /= 0 then
-				char_value ?= l_items.first
-				if char_value /= Void then
+				l_first := l_items.first
+				if attached {CHARACTER_VALUE} l_first then
 					create Result.make (a_size.min (l_items.count + 1))
-					from
-						l_cursor := l_items.new_cursor
-						l_cursor.start
+					across
+						l_items as l_cursor
 					until
-						l_cursor.after or Result.count = a_size
+						Result.count = a_size
 					loop
-						char_value ?= l_cursor.item
-						Result.append_code (char_value.value.natural_32_code)
-						l_cursor.forth
-					end
-				else
-					wchar_value ?= l_items.first
-					if wchar_value /= Void then
-						create Result.make (a_size.min (items.count + 1))
-						from
-							l_cursor := items.new_cursor
-							l_cursor.start
-						until
-							l_cursor.after or Result.count = a_size
-						loop
-							wchar_value ?= l_cursor.item
-							Result.append_code (wchar_value.value.natural_32_code)
-							l_cursor.forth
-						end
---| Useless:			from until l_cursor.after loop l_cursor.forth end
-					else
-						int8_value ?= l_items.first
-						if int8_value /= Void then
-							create Result.make (a_size.min (items.count + 1))
-							from
-								l_cursor := items.new_cursor
-								l_cursor.start
-							until
-								l_cursor.after or Result.count = a_size
-							loop
-								int8_value ?= l_cursor.item
-								Result.append_code (int8_value.value.as_natural_32)
-								l_cursor.forth
-							end
---| Useless:			from until l_cursor.after loop l_cursor.forth end
+						if attached {CHARACTER_VALUE} l_cursor.item as char_value then
+							Result.append_character (char_value.value)
 						else
-							int32_value ?= l_items.first
-							if int32_value /= Void then
-								create Result.make (a_size.min (items.count + 1))
-								from
-									l_cursor := items.new_cursor
-									l_cursor.start
-								until
-									l_cursor.after or Result.count = a_size
-								loop
-									int32_value ?= l_cursor.item
-									Result.append_code (int32_value.value.as_natural_32)
-									l_cursor.forth
-								end
---| Useless:					from until l_cursor.after loop l_cursor.forth end
-							end
+							check is_char_value: False end
+							Result.append_character ('?')
+						end
+					end
+				elseif attached {CHARACTER_32_VALUE} l_first then
+					create Result.make (a_size.min (items.count + 1))
+					across
+						l_items as l_cursor
+					until
+						Result.count = a_size
+					loop
+						if attached {CHARACTER_32_VALUE} l_cursor.item as wchar_value then
+							Result.append_character (wchar_value.value)
+						else
+							check is_wchar_value: False end
+							Result.append_character ('?')
+						end
+					end
+				elseif attached {DEBUG_BASIC_VALUE [INTEGER_8]} l_first then
+					create Result.make (a_size.min (items.count + 1))
+					across
+						l_items as l_cursor
+					until
+						Result.count = a_size
+					loop
+						if attached {DEBUG_BASIC_VALUE [INTEGER_8]} l_cursor.item as int8_value then
+							Result.append_code (int8_value.value.as_natural_32)
+						else
+							check is_int8_value: False end
+							Result.append_character ('?')
+						end
+					end
+				elseif attached {DEBUG_BASIC_VALUE [INTEGER_32]} l_first then
+					create Result.make (a_size.min (items.count + 1))
+					across
+						l_items as l_cursor
+					until
+						Result.count = a_size
+					loop
+						if attached {DEBUG_BASIC_VALUE [INTEGER_32]} l_cursor.item as int32_value then
+							Result.append_code (int32_value.value.as_natural_32)
+						else
+							check is_int32_value: False end
+							Result.append_character ('?')
 						end
 					end
 				end
@@ -224,7 +212,7 @@ feature -- Access
 	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
-			Result := Debugger_manager.Dump_value_factory.new_object_value (address, dynamic_class)
+			Result := Debugger_manager.Dump_value_factory.new_object_value (address, dynamic_class, scoop_processor_id)
 		end
 
 feature -- Items

@@ -87,7 +87,8 @@ feature {NONE} -- Initialization
 			col_value_index := 2
 			col_type_index := 3
 			col_address_index := 4
-			col_context_index := 5
+			col_scoop_pid_index := 5
+			col_context_index := 6
 
 			enable_tree
 			enable_row_height_fixed
@@ -131,12 +132,14 @@ feature -- Properties
 	col_type_index: INTEGER
 	col_address_index: INTEGER
 	col_context_index: INTEGER
+	Col_scoop_pid_index: INTEGER
 
 	col_name_id: INTEGER = 1
 	col_value_id: INTEGER = 2
 	col_type_id: INTEGER = 3
 	col_address_id: INTEGER = 4
 	col_context_id: INTEGER	= 5
+	Col_scoop_pid_id: INTEGER = 6
 
 	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
 
@@ -161,12 +164,22 @@ feature -- Number formatting
 		end
 
 	propagate_hexadecimal_mode (t: EV_GRID_ROW)
-		local
-			l_eb_t: ES_OBJECTS_GRID_OBJECT_LINE
 		do
-			l_eb_t ?= t.data
-			if l_eb_t /= Void then
+			if attached {ES_OBJECTS_GRID_OBJECT_LINE} t.data as l_eb_t then
 				l_eb_t.update_value
+			end
+		end
+
+feature -- Change
+
+	handle_project_specific_columns
+			-- Show or hide scoop pid column
+			-- depending if SCOOP concurrency mode is enabled or not.
+		do
+			if debugger_manager.is_scoop_concurrency_mode then
+				show_column (col_scoop_pid_index)
+			else
+				hide_column (col_scoop_pid_index)
 			end
 		end
 
@@ -309,14 +322,13 @@ feature -- Columns layout access
 			retry
 		end
 
-	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING_GENERAL; title_for_pre: STRING]
+	column_layout (c: INTEGER): TUPLE [col_index: INTEGER; is_displayed: BOOLEAN; has_auto_resizing: BOOLEAN; width: INTEGER; title: STRING_GENERAL; title_for_pre: STRING]
 		require
 			c_positive: c > 0
 			c_not_greater_than_column_count: c <= column_count
 		local
 			col: EV_GRID_COLUMN
 			cindex: INTEGER
-			l_str: STRING
 		do
 			col := column (c)
 			if c = col_name_index then
@@ -329,12 +341,16 @@ feature -- Columns layout access
 				cindex := Col_address_id
 			elseif c = col_context_index then
 				cindex := Col_context_id
+			elseif c = col_scoop_pid_id then
+				cindex := Col_scoop_pid_index
 			end
-			l_str ?= col.data
-			check
-				l_str_not_void: l_str /= Void
+			if attached {STRING} col.data as l_str then
+				Result := [cindex, col.is_show_requested, column_has_auto_resizing (c), col.width, col.title, l_str]
+			else
+				check col_data_is_string: False end
+				-- Should not occurs
+				Result := [cindex, col.is_show_requested, column_has_auto_resizing (c), col.width, col.title, cindex.out]
 			end
-			Result := [cindex, col.is_show_requested, column_has_auto_resizing (c), col.width, col.title, l_str]
 		end
 
 feature -- Change
@@ -395,6 +411,8 @@ feature -- Change
 				col_address_index := a_pos
 			when Col_context_id then
 				col_context_index := a_pos
+			when col_scoop_pid_id then
+				col_scoop_pid_index := a_pos
 			else
 			end
 			col := column (a_pos)
@@ -458,7 +476,9 @@ feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, E
 		require
 			a_row /= Void
 		do
-			Result ?= a_row.data
+			if attached {like object_line_from_row} a_row.data as res then
+				Result := res
+			end
 		end
 
 	objects_grid_item (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE
@@ -513,7 +533,7 @@ feature -- Menu
 
 feature -- Query
 
-	grid_pnd_details_from_row_and_column (a_row: EV_GRID_ROW; a_col: EV_GRID_COLUMN):
+	grid_pnd_details_from_row_and_column (a_row: EV_GRID_ROW; a_col: detachable EV_GRID_COLUMN):
 				detachable TUPLE [pebble:ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE]
 			-- Return pnd details which may be contained in `a_row' related to `a_col'.
 		do
@@ -557,12 +577,10 @@ feature -- Query
 			a_cell_not_void: a_cell /= Void
 		local
 			t: like grid_pnd_details_from_row_and_column
-			s: STONE
 		do
 			t := grid_pnd_details_from_row_and_column (a_cell.row, a_cell.column)
 			if t /= Void then
-				s ?= t.pebble
-				if s /= Void then
+				if attached {STONE} t.pebble as s then
 					Result := s.stone_cursor
 				else
 					Result := t.accept_cursor
@@ -576,12 +594,10 @@ feature -- Query
 			a_cell_not_void: a_cell /= Void
 		local
 			t: like grid_pnd_details_from_row_and_column
-			s: STONE
 		do
 			t := grid_pnd_details_from_row_and_column (a_cell.row, a_cell.column)
 			if t /= Void then
-				s ?= t.pebble
-				if s /= Void then
+				if attached {STONE} t.pebble as s then
 					Result := s.x_stone_cursor
 				else
 					Result := t.deny_cursor
@@ -593,11 +609,8 @@ feature {NONE} -- Actions implementation
 
 	on_row_expand (a_row: EV_GRID_ROW)
 			-- <Precursor>
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
 		do
-			ctler ?= a_row.data
-			if ctler /= Void then
+			if attached {ES_GRID_ROW_CONTROLLER} a_row.data as ctler then
 				ctler.call_expand_action (a_row)
 				process_columns_auto_resizing
 			end
@@ -606,11 +619,8 @@ feature {NONE} -- Actions implementation
 
 	on_row_collapse (a_row: EV_GRID_ROW)
 			-- <Precursor>
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
 		do
-			ctler ?= a_row.data
-			if ctler /= Void then
+			if attached {ES_GRID_ROW_CONTROLLER} a_row.data as ctler then
 				ctler.call_collapse_action (a_row)
 			end
 			Precursor (a_row)
@@ -699,7 +709,6 @@ feature {NONE} -- Actions implementation
 	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM
 		local
 			a_row: EV_GRID_ROW
-			obj_item: ES_OBJECTS_GRID_LINE
 		do
 			if not is_processing_remove_and_clear_all_rows then
 				if c <= column_count and r <= row_count then
@@ -707,8 +716,7 @@ feature {NONE} -- Actions implementation
 				end
 				if Result = Void then
 					a_row := row (r)
-					obj_item ?= a_row.data
-					if obj_item /= Void then
+					if attached {ES_OBJECTS_GRID_LINE} a_row.data as obj_item then
 						if not obj_item.compute_grid_display_done then
 							Result := obj_item.computed_grid_item (c)
 -- We don't return the item, since they have already been added to the grid ...
@@ -815,14 +823,11 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 
 	grid_objects_id_value_from_row (a_row: EV_GRID_ROW; is_recording_layout: BOOLEAN): ANY
 		local
-			lab: EV_GRID_LABEL_ITEM
 			s: STRING
-			line: like object_line_from_row
-			addr: DBG_ADDRESS
+			addr: detachable DBG_ADDRESS
 		do
 			if a_row.parent /= Void then
-				line ?= object_line_from_row (a_row)
-				if line /= Void then
+				if attached {like object_line_from_row} object_line_from_row (a_row) as line then
 					addr := line.object_address
 					if addr /= Void and then not addr.is_void then
 						s := addr.output
@@ -837,13 +842,11 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 				if s = Void then
 					if Col_value_index <= a_row.count then
 						s := ""
-						lab ?= a_row.item (Col_value_index)
-						if lab /= Void then
+						if attached {EV_GRID_LABEL_ITEM} a_row.item (Col_value_index) as lab then
 							s.append (lab.text)
 						end
 --						if Col_address_index <= a_row.count then
---							lab ?= a_row.item (Col_address_index)
---							if lab /= Void then
+--							if attached {EV_GRID_LABEL_ITEM} a_row.item (Col_address_index) as lab then
 --								s.append_string (lab.text)
 --							end
 --						end
@@ -889,45 +892,45 @@ feature -- Layout manager
 
 	reset_layout_recorded_values
 		do
-			if layout_manager /= Void then
-				layout_manager.reset_layout_recorded_values
+			if attached layout_manager as m then
+				m.reset_layout_recorded_values
 			end
 			clear_kept_object_references
 		end
 
 	reset_layout_manager
 		do
-			if layout_manager /= Void then
-				layout_manager.wipe_out
+			if attached layout_manager as m then
+				m.wipe_out
 			end
 			clear_kept_object_references
 		end
 
 	enable_layout_management
 		do
-			if layout_manager /= Void then
-				layout_manager.enable
+			if attached layout_manager as m then
+				m.enable
 				is_layout_managed := True
 				if
-					layout_preference /= Void
-					and then layout_preference.value /= is_layout_managed
+					attached layout_preference as p and then
+					p.value /= is_layout_managed
 				then
-					layout_preference.set_value (is_layout_managed)
+					p.set_value (is_layout_managed)
 				end
 			end
 		end
 
 	disable_layout_management
 		do
-			if layout_manager /= Void then
-				layout_manager.disable
+			if attached layout_manager as m then
+				m.disable
 			end
 			is_layout_managed := False
 			if
-				layout_preference /= Void
-				and then layout_preference.value /= is_layout_managed
+				attached layout_preference as p and then
+				p.value /= is_layout_managed
 			then
-				layout_preference.set_value (is_layout_managed)
+				p.set_value (is_layout_managed)
 			end
 		end
 
@@ -939,13 +942,13 @@ feature -- Layout manager
 		local
 			old_kept: like kept_object_references
 		do
-			if is_layout_managed and layout_manager /= Void then
+			if is_layout_managed and attached layout_manager as m then
 					--| Pre recording
 				old_kept := kept_object_references
 				create_kept_object_references
 
 					--| Recording
-				layout_manager.record
+				m.record
 
 					--| Post recording
 				Debugger_manager.release_object_references (old_kept)
@@ -956,8 +959,8 @@ feature -- Layout manager
 		local
 			retried: BOOLEAN
 		do
-			if not retried and is_layout_managed and layout_manager /= Void then
-				layout_manager.restore
+			if not retried and is_layout_managed and attached layout_manager as m then
+				m.restore
 			end
 		rescue
 			retried := True

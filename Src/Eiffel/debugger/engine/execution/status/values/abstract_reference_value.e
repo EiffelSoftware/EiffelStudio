@@ -30,6 +30,10 @@ feature -- Properties
 	is_null: BOOLEAN
 			-- Value represents Void element
 
+	scoop_processor_id: NATURAL_16
+			-- Associated SCOOP Processor ID
+			-- 0 if not relevant.
+
 feature -- Expanded status
 
 	is_expanded: BOOLEAN
@@ -87,7 +91,7 @@ invariant
 	address_void_only_for_expanded: address = Void implies is_expanded
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

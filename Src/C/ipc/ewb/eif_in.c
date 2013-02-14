@@ -180,6 +180,8 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_where.wh_nested);
 				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", stop_info.st_where.wh_scoop_pid);
+				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) stop_info.st_where.wh_thread_id);
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_why);

@@ -38,6 +38,7 @@ feature {NONE} -- Creation
 			is_erroneous := rqst.is_erroneous
 			if not is_erroneous then
 				attributes := rqst.attributes
+				scoop_processor_id := rqst.scoop_processor_id
 				is_special := rqst.is_special
 				is_tuple := rqst.is_tuple
 				capacity := rqst.capacity
@@ -141,7 +142,7 @@ feature -- Properties
 			-- Attributes of object being inspected (sorted by name)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

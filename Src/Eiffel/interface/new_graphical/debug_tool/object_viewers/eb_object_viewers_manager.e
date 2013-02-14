@@ -290,9 +290,13 @@ feature -- Change
 		require
 			has_current_object: has_object
 			application_is_executing: debugger_manager.application_is_executing
+		local
+			dv: like current_dump_value
 		do
-			if current_dump_value = Void then
-				current_dump_value := Debugger_manager.application.dump_value_at_address_with_class (current_object.object_address, current_object.dynamic_class)
+			if current_dump_value = Void and attached current_object as obj then
+				dv := Debugger_manager.application.dump_value_at_address (obj.object_address)
+				check same_class: dv /= Void implies dv.dynamic_class = obj.dynamic_class end
+				current_dump_value := dv
 			end
 		end
 
@@ -469,7 +473,7 @@ invariant
 	valid_stone: has_object implies is_stone_valid (current_object)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -125,7 +125,7 @@ feature -- Remote Invocation: Object Storage
 		do
 			dv_fact := dump_value_factory
 			create params.make (2)
-			params.extend (dv_fact.new_object_value (a_add, Void)) -- ref
+			params.extend (dv_fact.new_object_value (a_add, Void, 0)) -- ref
 			params.extend (dv_fact.new_manifest_string_32_value (fn.name, compiler_data.string_32_class_c)) -- fn
 
 			Result := query_evaluation_on ("saved_object_to", params) /= Void
@@ -142,7 +142,7 @@ feature -- Remote Invocation: Object Storage
 			if a_addr = Void then
 				params.extend (dv_fact.new_void_value (compiler_data.any_class_c))
 			else
-				params.extend (dv_fact.new_object_value (a_addr, Void))
+				params.extend (dv_fact.new_object_value (a_addr, Void, 0))
 			end
 			debug ("refactor_fixme")
 				fixme (generator + ".loaded_object: unicode, this should use new_manifest_string_32_value and STRING_32 class")
@@ -150,55 +150,6 @@ feature -- Remote Invocation: Object Storage
 			params.extend (dv_fact.new_manifest_string_32_value (fn.name, compiler_data.string_32_class_c))
 
 			Result := query_evaluation_on ("object_loaded_from", params)
-		end
-
-feature {NONE} -- Implementation: helper
-
-	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DUMP_VALUE; min,max: INTEGER; a_error_handler: detachable DBG_ERROR_HANDLER): detachable STRING
-		require
-			a_value_attached: a_value /= Void
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-		do
-			create params.make (1)
-			params.extend (a_value)
-			if
-				attached query_evaluation_on (a_featname, params) as dv and then
-				dv.has_formatted_output
-			then
-				if min >= max then
-					Result := dv.string_representation
-				else
-					Result := dv.truncated_string_representation (min, max)
-				end
-			else
-				if a_error_handler /= Void then
-					a_error_handler.notify_error_evaluation_report_to_support (Void)
-				end
-			end
-		end
-
-	two_args_resulting_boolean_evaluation (a_featname: STRING; a_value, a_other_value: DUMP_VALUE; a_error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
-		require
-			a_value_attached: a_value /= Void
-			a_other_value_attached: a_other_value /= Void
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-		do
-			create params.make (2)
-			params.extend (a_value)
-			params.extend (a_other_value)
-			if
-				attached query_evaluation_on (a_featname, params) as dv and then
-				dv.is_valid_value and then
-				dv.is_type_boolean
-			then
-				Result := dv.as_dump_value_basic.value_boolean
-			else
-				if a_error_handler /= Void then
-					a_error_handler.notify_error_evaluation_report_to_support (Void)
-				end
-			end
 		end
 
 feature {NONE} -- Implementation
@@ -221,7 +172,7 @@ invariant
 	value_attached: value /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -77,7 +77,8 @@ feature -- Access
 			s: STRING
 		do
 			if attached {OBJECT_STONE} a_stone as st then
-				dv := debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class)
+				dv := debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class, 0)
+				-- CHECKME: use 0 for scp_pid since we don't really care about the scoop pid here.
 				if dv.has_formatted_output then
 					if is_strict then
 						s := dv.formatted_truncated_string_representation (0, 10)
@@ -162,7 +163,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1069,6 +1069,7 @@ feature -- Label texts
 	l_Active_query: STRING_32			do Result := locale.translation("Active query")	end
 	l_Address_colon: STRING_32			do Result := locale.translation("Address:")	end
 	l_Address: STRING_32					do Result := locale.translation("Address")	end
+	l_scoop_pid: STRING_32				do Result := locale.translation("PID")	end
 	l_add_a_valuable: STRING_32			do Result := locale.translation("Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)")	end
 	l_add_forzen_feature_stubs: STRING_32	do Result := locale.translation("Add frozen feature stubs")	end
 	l_add_project_config_file: STRING_32	do Result := locale.translation("Add Project...")	end
@@ -2596,6 +2597,7 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_address: STRING =						"Address"
 	to_context: STRING =						"Context"
 	to_context_dot: STRING =					"Context ..."
+	to_scoop_pid: STRING =						"SCOOP PID"
 
 	to_Address_toolbar: STRING =				"Address Bar"
 	to_Standard_toolbar: STRING =				"Standard Buttons"

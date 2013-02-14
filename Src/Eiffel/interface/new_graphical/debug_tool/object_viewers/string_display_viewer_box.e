@@ -347,7 +347,8 @@ feature -- Access
 			-- Is `st' valid stone for Current?
 		do
 			Result := attached {OBJECT_STONE} a_stone as st and then
-				debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class).has_formatted_output
+				debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class, 0).has_formatted_output
+				-- CHECKME: use 0 for scp_pid since we don't really care about the scoop pid here.
 		end
 
 feature -- Change
@@ -551,7 +552,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

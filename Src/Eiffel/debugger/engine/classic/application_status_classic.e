@@ -24,7 +24,7 @@ create {APPLICATION_EXECUTION}
 
 feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
-	set (n: STRING; add: DBG_ADDRESS; ot, dt, offs, nested, reas: INTEGER)
+	set (n: STRING; add: DBG_ADDRESS; scp_pid: NATURAL_16; ot, dt, offs, nested, reas: INTEGER)
 			-- Set the various attributes identifying current
 			-- position in source code.
 		require
@@ -65,7 +65,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 				break_nested_index := nested
 
 					-- create the call stack
-				create ccs.make_empty (current_thread_id)
+				create ccs.make_empty (current_thread_id, scp_pid)
 				set_call_stack (current_thread_id, ccs)
 
 --				stack_num := Application.current_execution_stack_number
@@ -107,7 +107,7 @@ feature {NONE} -- CallStack Impl
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		do
-			create Result.make (a_stack_max_depth, a_tid)
+			create Result.make (a_stack_max_depth, a_tid, scoop_processor_id (a_tid))
 		end
 
 feature -- Query
@@ -144,7 +144,7 @@ feature -- Threads related access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

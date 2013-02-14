@@ -55,11 +55,12 @@ feature {NONE} -- Implementation
 			viewer.set_column_count_to (5)
 			viewer.set_minimum_height (100)
 			viewer.set_default_columns_layout (<<
-						[1, True, False, 150, interface_names.l_name, interface_names.to_name],
-						[2, True, False, 150, interface_names.l_value, interface_names.to_value],
-						[3, True, False, 100, interface_names.l_type, interface_names.to_type],
-						[4, True, False, 80, interface_names.l_address, interface_names.to_address],
-						[5, True, False, 200, interface_names.l_Context, interface_names.to_context]
+						[viewer.col_name_id, True, False, 150, interface_names.l_name, interface_names.to_name],
+						[viewer.col_value_id, True, False, 150, interface_names.l_value, interface_names.to_value],
+						[viewer.col_type_id, True, False, 100, interface_names.l_type, interface_names.to_type],
+						[viewer.col_address_id, True, False, 80, interface_names.l_address, interface_names.to_address],
+						[viewer.col_scoop_pid_id, True, False, 30, interface_names.l_scoop_pid, interface_names.to_scoop_pid],
+						[viewer.col_context_id, True, False, 200, interface_names.l_Context, interface_names.to_context]
 					>>
 				)
 			viewer.set_columns_layout (1, viewer.default_columns_layout)
@@ -182,6 +183,7 @@ feature -- Change
 				end
 			end
 			viewer.restore_layout
+			viewer.handle_project_specific_columns
 		end
 
 	destroy
@@ -243,7 +245,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

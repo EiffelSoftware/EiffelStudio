@@ -65,12 +65,12 @@ create {STOPPED_HDLR, APPLICATION_EXECUTION_CLASSIC, APPLICATION_STATUS_CLASSIC}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: like thread_id)
+	make (level: INTEGER; tid: like thread_id; scp_pid: like scoop_processor_id)
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				Precursor (level, tid)
+				Precursor (level, tid, scp_pid)
 
 					-- set the private to a fake value
 				private_body_index := -1
@@ -183,6 +183,8 @@ feature -- Properties
 			dobj: DEBUGGED_OBJECT
 			ct: CLASS_TYPE
 			add: DBG_ADDRESS
+			ref: REFERENCE_VALUE
+			spe: SPECIAL_VALUE
 		do
 			add := object_address
 			if add /= Void and then not add.is_void then
@@ -190,10 +192,12 @@ feature -- Properties
 				if dobj /= Void then
 					ct := dobj.class_type
 					if dobj.is_special then
-						create {SPECIAL_VALUE} Result.make_set_ref (add, ct.type_id)
+						create spe.make_set_ref (add, ct.type_id, dobj.scoop_processor_id)
+						Result := spe
 					else
 						check not_expanded: not ct.is_expanded end
-						create {REFERENCE_VALUE} Result.make (add, ct.type_id)
+						create ref.make (add, ct.type_id, dobj.scoop_processor_id)
+						Result := ref
 					end
 				end
 			end
@@ -634,7 +638,7 @@ invariant
 	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

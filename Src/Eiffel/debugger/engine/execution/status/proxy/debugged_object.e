@@ -88,6 +88,10 @@ feature -- Properties
 	object_address: DBG_ADDRESS;
 			-- Hector address of object being inspected
 
+	scoop_processor_id: NATURAL_16
+			-- SCOOP Processor id.
+			--| 0 if not relevant.
+
 	capacity: INTEGER;
 			-- Capacity of the object in case it is SPECIAL
 
@@ -148,7 +152,7 @@ invariant
 	non_void_address: attached object_address as i_add and then not i_add.is_void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

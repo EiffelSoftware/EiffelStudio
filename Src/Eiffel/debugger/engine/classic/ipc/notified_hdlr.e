@@ -74,7 +74,7 @@ feature
 					debug ("debugger_ipc")
 						print (generator + " : SCOOP Processor registered: " + event_data_tid.out + " scp_proc_id=" + event_data_scp_pid.out + "%N")
 					end
-					s.register_scoop_thread_id (event_data_tid, event_data_scp_pid)
+					s.register_scoop_thread_id (event_data_tid, event_data_scp_pid.to_integer_32.to_natural_16)
 				else
 					debug ("debugger_ipc")
 						print ("EWB notified eventType="+ event_type.out + "eventData=" + event_data_tid.out + "%N")
@@ -92,7 +92,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

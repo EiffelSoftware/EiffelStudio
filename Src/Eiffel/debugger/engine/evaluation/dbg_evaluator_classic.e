@@ -284,7 +284,7 @@ feature -- Query
 
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE
 		do
-			Result := Debugger_manager.Dump_value_factory.new_object_value (cse.object_address, cse.dynamic_class)
+			Result := Debugger_manager.Dump_value_factory.new_object_value (cse.object_address, cse.dynamic_class, cse.scoop_processor_id)
 		end
 
 	dump_value_at_address (addr: DBG_ADDRESS): detachable DUMP_VALUE
@@ -295,9 +295,11 @@ feature -- Query
 		do
 			dbg := debugger_manager
 			if dbg.object_manager.is_valid_and_known_object_address (addr) then
-				l_cl := dbg.object_manager.class_c_at_address (addr)
-				if l_cl /= Void then
-					Result := dbg.dump_value_factory.new_object_value (addr, l_cl)
+				if attached dbg.object_manager.object_at_address (addr) as obj then
+					l_cl := obj.dynamic_class
+					if l_cl /= Void then
+						Result := dbg.dump_value_factory.new_object_value (addr, l_cl, obj.scoop_processor_id)
+					end
 				end
 			end
 		end
@@ -354,7 +356,7 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

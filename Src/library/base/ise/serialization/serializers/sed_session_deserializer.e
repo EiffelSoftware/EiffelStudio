@@ -94,7 +94,7 @@ feature -- Basic operations
 
 					-- Read number of objects we are retrieving
 				l_count := deserializer.read_compressed_natural_32
-				create object_references.make_filled (Void, l_count.to_integer_32 + 1)
+				create object_references.make_empty (l_count.to_integer_32 + 1)
 
 
 					-- Read header of serialized data.
@@ -132,15 +132,8 @@ feature {NONE} -- Implementation: Access
 	internal: INTERNAL
 			-- Facilities to inspect.
 
-	object_references: SPECIAL [detachable ANY]
+	object_references: SPECIAL [ANY]
 			-- Mapping between reference ID and the associated object.
-
-	missing_references: detachable SPECIAL [detachable ARRAYED_LIST [like new_tuple]]
-			-- When decoding an object some of its references might not be decoded yet, so
-			-- we store the object index, the field position in this object and the reference id.
-
-	is_for_fast_retrieval: BOOLEAN
-			-- Was current data stored for fast retrieval?
 
 	is_transient_retrieval_required: BOOLEAN
 			-- Do we need to retrieve transient attribute with their default value?
@@ -221,24 +214,12 @@ feature {NONE} -- Cleaning
 
 	clear_internal_data
 			-- Clear all allocated data
-		local
-			l: like list_stack
-			t: like tuple_stack
 		do
-			missing_references := Void
 			create object_references.make_empty (0)
-			t := tuple_stack
-			if t /= Void then
-				t.wipe_out
-				tuple_stack := Void
-			end
-			l := list_stack
-			if l /= Void then
-				l.wipe_out
-				list_stack := Void
-			end
 				-- Consume any remaining bytes if any
-			deserializer.cleanup
+			if deserializer.is_ready_for_reading then
+				deserializer.cleanup
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -269,13 +250,17 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_obj: ANY
 		do
+				-- Reading the `is_for_fast_retrieval' flag which is now obsolete and not referenced
+				-- anymore in the code. We could skip it but it would prevent storable made with this
+				-- setting to be retrieved due to a format mismatch.
 			if deserializer.read_boolean then
-				is_for_fast_retrieval := True
 				l_mem := memory
 				l_is_collecting := l_mem.collecting
 				l_deser := deserializer
 				l_int := internal
 				l_objs := object_references
+					-- Create a fake entry for item at index `0' in SPECIAL since our indexing starts at 1.
+				l_objs.extend (l_int)
 				from
 					i := 0
 					nb := a_count.to_integer_32
@@ -295,6 +280,7 @@ feature {NONE} -- Implementation
 							l_nat32_valid: l_nat32 > 0 and l_nat32 < {INTEGER}.max_value.as_natural_32
 						end
 						l_ref_id := l_nat32.to_integer_32
+						check valid_id: l_ref_id = i + 1 end
 
 							-- Read object flags
 						inspect
@@ -311,7 +297,7 @@ feature {NONE} -- Implementation
 							l_obj := l_int.new_instance_of (l_dtype)
 						end
 
-						l_objs.put (l_obj, l_ref_id)
+						l_objs.extend (l_obj)
 					else
 							-- Data is visibly corrupted, stop here.
 						raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
@@ -322,7 +308,8 @@ feature {NONE} -- Implementation
 					l_mem.collection_on
 				end
 			else
-				is_for_fast_retrieval := False
+					-- Data is not using `is_for_fast_retrieval', we cannot continue.
+				raise_fatal_error (error_factory.new_format_mismatch_66)
 			end
 		end
 
@@ -413,73 +400,27 @@ feature {NONE} -- Implementation
 			l_obj: detachable ANY
 			l_nat32: NATURAL_32
 			l_index: INTEGER
-			l_flags: NATURAL_8
-			l_spec_type, l_spec_count: INTEGER
 		do
 			l_deser := deserializer
 			l_int := internal
 
-			if is_for_fast_retrieval then
-					-- Read reference ID.
-				l_nat32 := l_deser.read_compressed_natural_32
-				check
-					l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
-				end
-				l_index := l_nat32.to_integer_32
+				-- Read reference ID.
+			l_nat32 := l_deser.read_compressed_natural_32
+			check
+				l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
+			end
+			l_index := l_nat32.to_integer_32
 
-				l_obj := object_references.item (l_index)
-				check attached l_obj then
-					l_dtype := l_int.dynamic_type (l_obj)
+			l_obj := object_references.item (l_index)
+			l_dtype := l_int.dynamic_type (l_obj)
 
-					if l_int.is_special (l_obj) then
-							-- Get the abstract element type of the SPECIAL.
-						decode_special (l_obj, l_index, abstract_type (l_int.generic_dynamic_type_of_type (l_dtype, 1)))
-					elseif l_int.is_tuple (l_obj) then
-						decode_tuple (l_obj, l_dtype, l_index)
-					else
-						decode_normal_object (l_obj, l_dtype, l_index)
-					end
-				end
+			if l_int.is_special (l_obj) then
+					-- Get the abstract element type of the SPECIAL.
+				decode_special (l_obj, l_index, abstract_type (l_int.generic_dynamic_type_of_type (l_dtype, 1)))
+			elseif l_int.is_tuple (l_obj) then
+				decode_tuple (l_obj, l_dtype, l_index)
 			else
-					-- Read object dynamic type
-				l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
-				if l_dtype >= 0 then
-						-- Read reference ID.
-					l_nat32 := l_deser.read_compressed_natural_32
-					check
-						l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
-					end
-					l_index := l_nat32.to_integer_32
-
-						-- Read object flags.
-					l_flags := l_deser.read_natural_8
-
-					inspect l_flags
-					when is_special_flag then
-						l_spec_type := l_deser.read_compressed_integer_32
-						l_spec_count := l_deser.read_compressed_integer_32
-						l_obj := new_special_instance (l_dtype, l_spec_type, l_spec_count)
-						object_references.put (l_obj, l_index)
-							-- Reconnect un-connected object to `l_obj' we found so far.
-						reconnect_object (l_index)
-						decode_special (l_obj, l_index, l_spec_type)
-					when is_tuple_flag then
-						l_obj := l_int.new_instance_of (l_dtype)
-						object_references.put (l_obj, l_index)
-							-- Reconnect un-connected object to `l_obj' we found so far.
-						reconnect_object (l_index)
-						decode_tuple (l_obj, l_dtype, l_index)
-					else
-						l_obj := l_int.new_instance_of (l_dtype)
-						object_references.put (l_obj, l_index)
-							-- Reconnect un-connected object to `l_obj' we found so far.
-						reconnect_object (l_index)
-						decode_normal_object (l_obj, l_dtype, l_index)
-					end
-				else
-						-- Data is visibly corrupted, stop here.
-					raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
-				end
+				decode_normal_object (l_obj, l_dtype, l_index)
 			end
 			if is_root then
 				last_decoded_object := l_obj
@@ -547,6 +488,7 @@ feature {NONE} -- Implementation
 
 					when {INTERNAL}.reference_type then
 						decode_reference (an_obj, an_index, l_new_offset)
+
 					else
 						check
 							False
@@ -1043,13 +985,6 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := a_spec.capacity
-
-				-- If we are in fast retrieval mode, nothing to be done
-				-- we are guaranteed to find all the elements of the SPECIAL.
-			if not is_for_fast_retrieval and not is_void_safe then
-				a_spec.fill_with (Void, 0, nb - 1)
-			end
-
 			from
 			until
 				i = nb
@@ -1071,9 +1006,6 @@ feature {NONE} -- Implementation
 			l_nat32: NATURAL_32
 			l_index: INTEGER
 			l_sub_obj: detachable ANY
-			l_list: detachable ARRAYED_LIST [like new_tuple]
-			l_tuple: like new_tuple
-			l_missing: like missing_references
 		do
 			l_nat32 := deserializer.read_compressed_natural_32
 			if l_nat32 /= 0 then
@@ -1082,24 +1014,7 @@ feature {NONE} -- Implementation
 				end
 				l_index := l_nat32.to_integer_32
 				l_sub_obj := object_references.item (l_index)
-				if l_sub_obj /= Void then
-					update_reference (an_obj, l_sub_obj, an_index)
-				else
-					l_missing := missing_references
-					if l_missing = Void then
-						create l_missing.make_filled (Void, object_references.count)
-						missing_references := l_missing
-					end
-							l_list := l_missing.item (l_index)
-					if l_list = Void then
-						l_list := new_list
-								l_missing.put (l_list, l_index)
-					end
-					l_tuple := new_tuple
-							l_tuple.object_index := an_obj_index
-							l_tuple.field_position := an_index
-					l_list.extend (l_tuple)
-				end
+				update_reference (an_obj, l_sub_obj, an_index)
 			elseif attached {SPECIAL [detachable ANY]} an_obj as l_spec then
 				l_spec.force (Void, an_index)
 			end
@@ -1131,93 +1046,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reconnect_object (an_index: INTEGER)
-			-- Reconnect missing references to `an_index'.
-		local
-			l_missing_references: like missing_references
-			l_object_references: like object_references
-			l_tuple: like new_tuple
-			l_list: detachable ARRAYED_LIST [like new_tuple]
-			l_tuple_stack: like tuple_stack
-			l_list_stack: like list_stack
-		do
-			l_missing_references := missing_references
-			if l_missing_references /= Void then
-				l_list := l_missing_references.item (an_index)
-				if l_list /= Void and then not l_list.is_empty then
-					from
-						l_object_references := object_references
-						l_tuple_stack := tuple_stack
-						if l_tuple_stack = Void then
-							create l_tuple_stack.make (l_list.count)
-							tuple_stack := l_tuple_stack
-						end
-						l_list.finish
-					until
-						l_list.off
-					loop
-						l_tuple := l_list.item
-						check attached l_object_references.item (l_tuple.object_index) as o then
-							update_reference (
-								o,
-								l_object_references.item (an_index),
-								l_tuple.field_position)
-						end
-						l_tuple_stack.extend (l_tuple)
-						l_list.remove
-						l_list.finish
-					end
-				end
-				if l_list /= Void then
-					l_list_stack := list_stack
-					if l_list_stack = Void then
-						create l_list_stack.make (1)
-						list_stack := l_list_stack
-					end
-					l_list_stack.extend (l_list)
-				end
-				l_missing_references.put (Void, an_index)
-			end
-		end
-
-	new_tuple: TUPLE [object_index: INTEGER; field_position: INTEGER]
-			-- Factory of TUPLE.
-		local
-			l_tuple_stack: like tuple_stack
-		do
-			l_tuple_stack := tuple_stack
-			if l_tuple_stack /= Void and then not l_tuple_stack.is_empty then
-				Result := l_tuple_stack.item
-				l_tuple_stack.remove
-			else
-				create Result
-			end
-		ensure
-			new_tuple_not_void: Result /= Void
-		end
-
-	new_list: ARRAYED_LIST [like new_tuple]
-			-- Factory of TUPLE.
-		local
-			l_list_stack: like list_stack
-		do
-			l_list_stack := list_stack
-			if l_list_stack /= Void and then not l_list_stack.is_empty then
-				Result := l_list_stack.item
-				l_list_stack.remove
-			else
-				create Result.make (5)
-			end
-		ensure
-			new_list_not_void: Result /= Void
-		end
-
-	tuple_stack: detachable ARRAYED_STACK [like new_tuple]
-			-- Storage for `new_tuple'.
-
-	list_stack: detachable ARRAYED_STACK [like new_list]
-			-- Storage for `new_list'.
-
 	memory: MEMORY
 			-- Access to MEMORY features without having to create a new instance each time.
 		once
@@ -1233,7 +1061,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

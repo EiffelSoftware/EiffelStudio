@@ -53,15 +53,6 @@ feature -- Status report
 	is_root_object_set: BOOLEAN
 			-- Is root object of object graph set?
 
-	is_for_fast_retrieval: BOOLEAN
-			-- Is data stored for fast retrieval?
-			-- It is always True by default.
-		obsolete
-			"Option is always enabled."
-		do
-			Result := True
-		end
-
 feature {NONE} -- Status report
 
 	is_transient_storage_required: BOOLEAN
@@ -103,13 +94,6 @@ feature -- Element change
 		ensure
 			root_object_set: root_object = an_object and is_root_object_set
 			root_object_identity: root_object = traversable.root_object
-		end
-
-	set_is_for_fast_retrieval (v: like is_for_fast_retrieval)
-			-- Set `is_for_fast_retrieval' with `v'.
-		obsolete
-			"Option `is_for_fast_retrieval' is always enabled now."
-		do
 		end
 
 	set_serializer (a_serializer: like serializer)
@@ -236,7 +220,8 @@ feature {NONE} -- Implementation
 			l_area: SPECIAL [ANY]
 		do
 			l_ser := serializer
-				-- Mark data with information that shows we have a mapping
+				-- To preserve backward compatibility of storable using the `is_for_fast_retrieval' setting
+				-- we always write `True' to mark data with information that shows we have a mapping
 				-- between reference IDs and objects.
 			l_ser.write_boolean (True)
 			l_int := internal
@@ -327,6 +312,7 @@ feature {NONE} -- Implementation
 			l_obj: ANY
 			i, nb: INTEGER
 			l_area: SPECIAL [ANY]
+			l_obj_index: NATURAL_32
 		do
 			l_int := internal
 			l_ser := serializer
@@ -345,7 +331,10 @@ feature {NONE} -- Implementation
 				l_dtype := l_int.dynamic_type (l_obj)
 
 					-- Write object reference ID.
-				l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
+				l_obj_index := l_object_indexes.index (l_obj)
+				l_ser.write_compressed_natural_32 (l_obj_index)
+					-- Index should be incremented by one and follow the order in the object list.
+				check l_obj_index = i.as_natural_32 end
 
 					-- Write object flags if in slow retrieval mode, then data.
 				if l_int.is_special (l_obj) then
@@ -431,6 +420,7 @@ feature {NONE} -- Implementation
 
 					when {INTERNAL}.reference_type then
 						encode_reference (l_int.field (i, an_object))
+
 					else
 						check
 							False
@@ -903,14 +893,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SED_SESSION_SERIALIZER

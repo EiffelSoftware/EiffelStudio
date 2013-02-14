@@ -27,6 +27,8 @@ inherit
 
 create
 	make,
+	make_for_reading,
+	make_for_writing,
 	make_with_buffer
 
 feature {NONE} -- Initialization
@@ -42,6 +44,31 @@ feature {NONE} -- Initialization
 			buffer_size_set: buffer_size = default_buffer_size
 		end
 
+	make_for_reading (a_medium: IO_MEDIUM)
+			-- Initialize current to read from `a_medium'.
+		require
+			a_medium_not_void: a_medium /= Void
+			a_medium_open_for_reading: a_medium.is_open_read
+		do
+			make (a_medium)
+			set_for_reading
+		ensure
+			medium_set: medium = a_medium
+			buffer_size_set: buffer_size = default_buffer_size
+		end
+
+	make_for_writing (a_medium: IO_MEDIUM)
+			-- Initialize current to write to `a_medium'.
+		require
+			a_medium_not_void: a_medium /= Void
+			a_medium_open_for_writing: a_medium.is_open_write
+		do
+			make (a_medium)
+			set_for_writing
+		ensure
+			medium_set: medium = a_medium
+			buffer_size_set: buffer_size = default_buffer_size
+		end
 	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER)
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
 			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used
@@ -307,14 +334,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

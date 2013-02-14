@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="base_testing" uuid="49BA0C0D-FFCF-454d-8C51-575233A6C047" library_target="base_testing">
+	<description>Eiffel Base Testing support classes</description>
+	<target name="base_testing">
+		<root all_classes="true"/>
+		<option warning="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="test" location="." recursive="true"/>
+	</target>
+</system>

@@ -119,12 +119,14 @@ feature	{} -- Initialization of the C/Eiffel interface
 			create {DEBUG_BASIC_VALUE [DOUBLE]} item.make (sk_real64, v)
 		end
 
-	set_ref (ref: POINTER; type: INTEGER)
+	set_ref (ref: POINTER; type: INTEGER; scp_pid: NATURAL_16)
 			-- Receive a reference value.
 		local
 			cl: CLASS_C
 			add: attached DBG_ADDRESS
 			l_type_id: INTEGER
+			spe: SPECIAL_VALUE
+			ref_value: REFERENCE_VALUE
 		do
 			debug ("refactor_fixme")
 				fixme ("[
@@ -138,9 +140,11 @@ feature	{} -- Initialization of the C/Eiffel interface
 			if Eiffel_system.valid_dynamic_id (l_type_id) then
 				cl := Eiffel_system.class_of_dynamic_id (l_type_id, False)
 				if cl /= Void and then cl.is_special then
-					create {SPECIAL_VALUE} item.make_set_ref (add, l_type_id)
+					create spe.make_set_ref (add, l_type_id, scp_pid)
+					item := spe
 				else
-					create {REFERENCE_VALUE} item.make (add, l_type_id)
+					create ref_value.make (add, l_type_id, scp_pid)
+					item := ref_value
 				end
 			else
 					--| The runtime is sending the debugger a wrong id ...
@@ -149,7 +153,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 			end
 		end
 
-	set_exception_ref (ref: POINTER; type: INTEGER)
+	set_exception_ref (ref: POINTER; type: INTEGER; scp_pid: NATURAL_16)
 			-- Receive a exception reference value.
 		local
 			rf: REFERENCE_VALUE
@@ -159,7 +163,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 
 			check Eiffel_system.valid_dynamic_id (type + 1) end
 			create add.make_from_pointer (ref)
-			create {REFERENCE_VALUE} rf.make (add, type + 1)
+			create rf.make (add, type + 1, scp_pid)
 			create {EXCEPTION_DEBUG_VALUE} item.make_with_value (rf)
 		end
 
@@ -240,7 +244,7 @@ feature {NONE} -- External routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

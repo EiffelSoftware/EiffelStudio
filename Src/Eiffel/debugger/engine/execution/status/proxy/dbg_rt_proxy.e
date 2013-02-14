@@ -42,6 +42,76 @@ feature {NONE} -- Implementation: Evaluation
 		deferred
 		end
 
+feature {NONE} -- Implementation: helper
+
+	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DUMP_VALUE; min,max: INTEGER; a_error_handler: detachable DBG_ERROR_HANDLER): detachable STRING
+		require
+			a_value_attached: a_value /= Void
+		local
+			params: ARRAYED_LIST [DUMP_VALUE]
+		do
+			create params.make (1)
+			params.extend (a_value)
+			if
+				attached query_evaluation_on (a_featname, params) as dv and then
+				dv.has_formatted_output
+			then
+				if min >= max then
+					Result := dv.string_representation
+				else
+					Result := dv.truncated_string_representation (min, max)
+				end
+			else
+				if a_error_handler /= Void then
+					a_error_handler.notify_error_evaluation_report_to_support (Void)
+				end
+			end
+		end
+
+	one_arg_resulting_integer_32_evaluation (a_featname: STRING; a_value: DUMP_VALUE; a_error_handler: detachable DBG_ERROR_HANDLER): INTEGER_32
+		require
+			a_value_attached: a_value /= Void
+		local
+			params: ARRAYED_LIST [DUMP_VALUE]
+		do
+			create params.make (1)
+			params.extend (a_value)
+			if
+				attached query_evaluation_on (a_featname, params) as dv and then
+				dv.is_valid_value and then
+				dv.is_type_integer_32
+			then
+				Result := dv.as_dump_value_basic.value_integer_32
+			else
+				if a_error_handler /= Void then
+					a_error_handler.notify_error_evaluation_report_to_support (Void)
+				end
+			end
+		end
+
+	two_args_resulting_boolean_evaluation (a_featname: STRING; a_value, a_other_value: DUMP_VALUE; a_error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
+		require
+			a_value_attached: a_value /= Void
+			a_other_value_attached: a_other_value /= Void
+		local
+			params: ARRAYED_LIST [DUMP_VALUE]
+		do
+			create params.make (2)
+			params.extend (a_value)
+			params.extend (a_other_value)
+			if
+				attached query_evaluation_on (a_featname, params) as dv and then
+				dv.is_valid_value and then
+				dv.is_type_boolean
+			then
+				Result := dv.as_dump_value_basic.value_boolean
+			else
+				if a_error_handler /= Void then
+					a_error_handler.notify_error_evaluation_report_to_support (Void)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	debugger_manager: DEBUGGER_MANAGER

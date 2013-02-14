@@ -90,7 +90,7 @@ rt_private void string_inspect(EIF_OBJECT object);		/* String object inspection 
 rt_private void load_bc(int slots, int amount);		/* Load byte code information */
 rt_private void app_send_integer (EIF_PSTREAM sp, int val);
 rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int dump_type);
-rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type);
+rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type, int a_dmp_info);
 rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref);
 rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, int a_index);
 
@@ -228,12 +228,12 @@ static int curr_modify = NO_CURRMODIF;
 		dthread_restore();
 		break;
 	case DUMP_THREADS:
-		CHECK("DUMP_THREADS: not yet implemented", 0);
 			/*
 			 * This is not yet implemented,
 			 * and probably will be removed
 			 * if we don't find a portable way to get thread OS id, name, and priority
 			 */
+		CHECK("DUMP_THREADS: not yet implemented", NULL);
 		break;
 	case DUMP_STACK:						/* General stack dump request */
 		dthread_prepare();
@@ -260,8 +260,10 @@ static int curr_modify = NO_CURRMODIF;
 			excpt.type = SK_REF;
 			if (excpt.it_ref != NULL) {
 				excpt.type = excpt.type | Dtype(excpt.it_ref);
+				app_send_typed_value (sp, &excpt, DMP_EXCEPTION_ITEM, RTS_PID(excpt.it_ref));
+			} else {
+				app_send_typed_value (sp, &excpt, DMP_EXCEPTION_ITEM, 0);
 			}
-			app_send_typed_value (sp, &excpt, DMP_EXCEPTION_ITEM);
 		}
 		break;
 	case LAST_RTCC_INFO:
@@ -534,18 +536,21 @@ rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int a_dmp
 	 */
 
 	EIF_TYPED_VALUE ip;
+	int scp_pid = 0;
+
 	memset (&ip, 0, sizeof(EIF_TYPED_VALUE));
 	if (ref != NULL) {
 		ip.it_ref = (EIF_REFERENCE) ref;
 		ip.type = SK_REF | Dtype(ip.it_ref);
+		scp_pid = (int) RTS_PID(ref);
 	} else {
 		ip.it_ref = (EIF_REFERENCE) 0;
 		ip.type = SK_VOID;
 	}
-	app_send_typed_value (sp, &ip, a_dmp_type);
+	app_send_typed_value (sp, &ip, a_dmp_type, scp_pid);
 }
 
-rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type)
+rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type, int a_dmp_info)
 {
 	/*
 	 * Send EIF_TYPED_VALUE `ip' using dmp_type `a_dmp_type'
@@ -557,6 +562,7 @@ rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a
 
 	dumped.dmp_type = a_dmp_type;	/* We are dumping a `a_dmp_type' */
 	dumped.dmp_item = ip;
+	dumped.dmp_info = a_dmp_info;	/* mainly used to send SCP PID of references */
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
@@ -607,7 +613,8 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_type = 0;					/* Dynamic type */
 		rqst.st_wh.wh_offset = 0;				/* Offset in byte code */
 		rqst.st_wh.wh_nested = 0;				/* breakable nested index */
-		rqst.st_wh.wh_thread_id = (rt_int_ptr) 0;			/* Thread id -> rt_int_ptr for XDR */
+		rqst.st_wh.wh_scoop_pid = 0;			/* Scoop pid -> int for XDR */
+		rqst.st_wh.wh_thread_id = (rt_int_ptr) 0;	/* Thread id -> rt_int_ptr for XDR */
 	}
 	else {
 		rqst.st_wh.wh_name = wh.wh_name;			/* Feature name */
@@ -616,6 +623,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_type = wh.wh_type;			/* Dynamic type */
 		rqst.st_wh.wh_offset = wh.wh_offset;		/* Offset in byte code for melted feature, line number for frozen one */
 		rqst.st_wh.wh_nested = wh.wh_nested;		/* breakable nested index */
+		rqst.st_wh.wh_scoop_pid = (int) wh.wh_scoop_pid; 	/* scoop processor id  -> int for XDR */
 
 #ifdef EIF_THREADS
 		dthread_id = eif_thr_context->thread_id;
@@ -1029,8 +1037,12 @@ rt_private void obj_inspect(EIF_OBJECT object)
 	uint32 flags;		/* Object lags */
 	EIF_BOOLEAN is_special, is_tuple;
 	int32 dtype;
+	int32 scp_pid=0;
 	EIF_REFERENCE ref = eif_access(object);
 	if (ref == NULL) {
+		/* Send SCOOP pid */
+		app_twrite (&scp_pid, sizeof(int32));
+
 		is_special = EIF_FALSE;
 		is_tuple = EIF_FALSE;
 		app_twrite (&is_special, sizeof(EIF_BOOLEAN));
@@ -1040,6 +1052,11 @@ rt_private void obj_inspect(EIF_OBJECT object)
 		app_twrite (&dtype, sizeof(int32));
 		return;
 	}
+
+		/* Send SCOOP pid */
+	scp_pid = (int32) RTS_PID(ref);
+	app_twrite (&scp_pid, sizeof(int32));
+
 	flags = HEADER(ref)->ov_flags;
 	is_special = EIF_TEST(flags & EO_SPEC);
 	is_tuple = EIF_TEST(flags & EO_TUPLE);
@@ -1101,8 +1118,9 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		CAttrOffs(offset,cn_attr[i],dtype);
 		o_ref = object + offset;
 		sk_type = type & SK_HEAD;
-		if (sk_type != SK_REF)
+		if (sk_type != SK_REF) {
 			app_twrite (&sk_type, sizeof(uint32));
+		}
 
 		switch(sk_type) {
 		case SK_POINTER: app_twrite (o_ref, sizeof(EIF_POINTER)); break;
@@ -1125,7 +1143,13 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		case SK_EXP:
 			{
 				int32 dtype = Dtype(o_ref);
+				int32 scp_pid=0;
+				if (o_ref) {
+					scp_pid = (int32) RTS_PID(reference);
+				}
+					
 				app_twrite (&dtype, sizeof(int32));
+				app_twrite (&scp_pid, sizeof(int32)); /* Send SCOOP pid */
 				app_twrite (&o_ref, sizeof(EIF_POINTER));
 			}
 			break;
@@ -1133,12 +1157,17 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 			{
 					/* Object reference */
 			  	EIF_BOOLEAN is_special = EIF_FALSE, is_void = FALSE;
+				int32 scp_pid=0;
 
 				reference = *(EIF_REFERENCE *)o_ref;
 				if (reference) {
 					int32 dtype = Dtype(reference);
 					ref_flags = HEADER(reference)->ov_flags;
 					app_twrite (&sk_type, sizeof(uint32));
+						/* Send SCOOP pid */
+					scp_pid = (int32) RTS_PID(reference);
+					app_twrite (&scp_pid, sizeof(int32));
+
 					if (ref_flags & EO_SPEC) {
 						EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
 						is_special = EIF_TRUE;
@@ -1159,6 +1188,10 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 				} else {
 					is_void = EIF_TRUE;
 					app_twrite (&sk_type, sizeof(uint32));
+						/* Send SCOOP pid */
+					scp_pid = (int32) 0;
+					app_twrite (&scp_pid, sizeof(int32));
+
 					app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 					app_twrite (&is_void, sizeof(EIF_BOOLEAN));
 				}
@@ -1313,6 +1346,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 				EIF_BOOLEAN is_special = EIF_FALSE;
 				EIF_BOOLEAN is_tuple = EIF_FALSE;
 				uint32 sk_type = SK_REF;
+				int32 scp_pid = 0;
 				for (o_ref = (char *) ((char **)object + sp_start),
 							sp_index = sp_start; sp_index <= sp_end;
 							sp_index++, o_ref = (char *) ((char **)o_ref + 1)) {
@@ -1322,12 +1356,22 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 					if (!reference) {
 						is_void = EIF_TRUE;
 						app_twrite (&sk_type, sizeof(uint32));
+
+							/* Send SCOOP pid */
+						scp_pid = 0;
+						app_twrite (&scp_pid, sizeof(int32));
+
 						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
 						is_void = EIF_FALSE;
 					} else {
 						dtype = Dtype(reference);
 						app_twrite (&sk_type, sizeof(uint32));
+
+							/* Send SCOOP pid */
+						scp_pid = (int32) RTS_PID(reference);
+						app_twrite (&scp_pid, sizeof(int32));
+						
 						if (HEADER(reference)->ov_flags & EO_SPEC) {
 							is_special = EIF_TRUE;
 							is_tuple = EIF_TEST(HEADER(reference)->ov_flags & EO_TUPLE);
@@ -1445,11 +1489,16 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 					{
 						EIF_BOOLEAN is_special = EIF_FALSE, is_void = FALSE;
 						EIF_REFERENCE reference = eif_reference_tuple_item(l_item);
+						int32 scp_pid=0;
 						app_twrite (&sk_type, sizeof(uint32));
 
 						if (reference) {
 							uint32 ref_flags = HEADER(reference)->ov_flags;
 							int32 dtype = Dtype(reference);
+								/* Send SCOOP pid */
+							scp_pid = (int32) RTS_PID(reference);
+							app_twrite (&scp_pid, sizeof(int32));
+							
 							if (ref_flags & EO_SPEC) {
 								EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
 								is_special = EIF_TRUE;
@@ -1468,6 +1517,10 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 								app_twrite (&reference, sizeof(EIF_POINTER));
 							}
 						} else {
+								/* Send SCOOP pid */
+							scp_pid = (int32) 0;
+							app_twrite (&scp_pid, sizeof(int32));
+
 							is_void = EIF_TRUE;
 							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 							app_twrite (&is_void, sizeof(EIF_BOOLEAN));
@@ -1819,7 +1872,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
 {
 	EIF_TYPED_VALUE ip;
-
+	int scp_pid = 0; /* SCOOP PID */
 	int b = exec_recording_enabled;
 	int exception_occurred = 0;	/* Exception occurred ? */
 
@@ -1827,13 +1880,27 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 
 	dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, nb_pushed, &exception_occurred, &ip);
 
-	if (ip.type == SK_VOID) {
-		app_send_typed_value (sp, NULL, DMP_VOID);
+	if ((ip.type & SK_HEAD) == SK_VOID) {
+		app_send_typed_value (sp, NULL, DMP_VOID, 0);
 	} else {
 		if (exception_occurred == 1) {
-			app_send_typed_value (sp, &ip, DMP_EXCEPTION_ITEM);
+			if (ip.it_ref) {
+				scp_pid = RTS_PID(ip.it_ref);
+			}
+			app_send_typed_value (sp, &ip, DMP_EXCEPTION_ITEM, scp_pid);
 		} else {
-			app_send_typed_value (sp, &ip, DMP_ITEM);
+			switch (ip.type & SK_HEAD) {
+				case SK_EXP:
+				case SK_REF: // What about SK_STRING and SK_STRING32
+
+					if (ip.it_ref) {
+						scp_pid = RTS_PID(ip.it_ref);
+					}
+					break;
+				default:
+					break;
+			}
+			app_send_typed_value (sp, &ip, DMP_ITEM, scp_pid);
 		}
 	}
 

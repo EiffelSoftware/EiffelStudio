@@ -215,11 +215,15 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_object_value (addr: DBG_ADDRESS; a_dtype: CLASS_C): DUMP_VALUE
+	new_object_value (addr: DBG_ADDRESS; a_dtype: CLASS_C; a_scp_pid: NATURAL_16): DUMP_VALUE
 			-- make a object item initialized to `value'
+		require
+			(addr /= Void and then not addr.is_void) implies a_dtype /= Void
 		local
 			dvnet: DUMP_VALUE_DOTNET
 			dtype: CLASS_C
+			dobj: detachable DEBUGGED_OBJECT
+			scp_pid: NATURAL_16
 		do
 			if debugger_manager.is_dotnet_project then
 				create dvnet.make_empty (debugger_manager)
@@ -228,22 +232,36 @@ feature -- Access
 				create Result.make_empty (debugger_manager)
 			end
 			dtype := a_dtype
-			if dtype = Void and then addr /= Void and then not addr.is_void then
-				dtype := debugger_manager.object_manager.class_c_at_address (addr)
-			end
-			Result.set_object_value (addr, dtype)
+			scp_pid := a_scp_pid
+			Result.set_object_value (addr, dtype, scp_pid)
 			init_value (Result)
 		ensure
 			Result_attached: Result /= Void
 		end
 
-	new_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C): DUMP_VALUE
+	new_incomplete_object_value (addr: DBG_ADDRESS): DUMP_VALUE
+		local
+			dobj: detachable DEBUGGED_OBJECT
+			dtype: CLASS_C
+			scp_pid: NATURAL_16
+		do
+			if addr /= Void and then not addr.is_void then
+				dobj := debugger_manager.object_manager.object_at_address (addr)
+				dtype := dobj.dynamic_class
+				scp_pid := dobj.scoop_processor_id
+			end
+			Result := new_object_value (addr, dtype, scp_pid)
+		end
+
+	new_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C; a_scp_pid: NATURAL_16): DUMP_VALUE
 			-- Make an expanded object item of type `dtype'.
 		require
 			dtype_not_void: dtype /= Void
+		local
+			dobj: detachable DEBUGGED_OBJECT
 		do
 			create Result.make_empty (debugger_manager)
-			Result.set_expanded_object_value (addr, dtype)
+			Result.set_expanded_object_value (addr, dtype, a_scp_pid)
 			init_value (Result)
 		ensure
 			Result_attached: Result /= Void
@@ -273,7 +291,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_exception_value  (value: EXCEPTION_DEBUG_VALUE): DUMP_VALUE
+	new_exception_value (value: EXCEPTION_DEBUG_VALUE): DUMP_VALUE
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_exception_value (value)
@@ -334,7 +352,7 @@ invariant
 	debugger_manager_not_void: debugger_manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

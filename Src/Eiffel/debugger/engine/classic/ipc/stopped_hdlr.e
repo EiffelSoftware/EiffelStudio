@@ -60,10 +60,10 @@ feature -- Execution
 			address: DBG_ADDRESS
 			stopping_reason: INTEGER
 			exception_occurred: BOOLEAN
+			scp_pid: NATURAL_16
 			thr_id: POINTER
 
 			l_app: APPLICATION_EXECUTION
-			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
 		do
 			check
@@ -124,6 +124,10 @@ feature -- Execution
 				read_integer
 				nested := last_integer
 
+					--| Read SCOOP Processor id
+				read_natural_16
+				scp_pid := last_natural_16
+
 					--| Read thread id
 				read_pointer
 				thr_id := last_pointer
@@ -148,33 +152,35 @@ feature -- Execution
 					io.error.put_new_line
 				end
 
-				l_status ?= l_app.status;
-				check
-					application_launched: l_status /= Void
-				end
-				if thr_id = Default_pointer then
-						--| Since our version of HASH_TABLE does not allow to have default value as key
-						--| and thr_id may be zero only in non MT system
-						--| thus we can hack this with '1' as thread id.
-					thr_id := thr_id + 1
-				end
-				l_status.set_is_stopped (True)
-				if not l_status.has_thread_id (thr_id) then
-					l_status.add_thread_id (thr_id)
-				end
-				l_status.set_active_thread_id (thr_id)
-				l_status.set_current_thread_id (thr_id)
+				if attached {APPLICATION_STATUS_CLASSIC} l_app.status as l_status then
+					if thr_id = Default_pointer then
+							--| Since our version of HASH_TABLE does not allow to have default value as key
+							--| and thr_id may be zero only in non MT system
+							--| thus we can hack this with '1' as thread id.
+						thr_id := thr_id + 1
+					end
+					l_status.set_is_stopped (True)
+					if not l_status.has_thread_id (thr_id) then
+						l_status.add_thread_id (thr_id)
+					end
+					l_status.set_active_thread_id (thr_id)
+					l_status.set_current_thread_id (thr_id)
 
-				l_status.set (feature_name, address, origine_type_id, dynamic_type_id, offset, nested, stopping_reason)
-				l_status.set_exception_occurred (exception_occurred)
-				if exception_occurred then
-					if attached l_app.remote_current_exception_value as e then
-						e.update_data
-						l_status.set_exception (e)
-					else
-						check should_not_occur: False end
-						l_status.set_exception (create {EXCEPTION_DEBUG_VALUE}.make_without_any_value)
-						l_status.exception.set_user_meaning ("Exception occurred (no data available!)")
+					l_status.set (feature_name, address, scp_pid, origine_type_id, dynamic_type_id, offset, nested, stopping_reason)
+					l_status.set_exception_occurred (exception_occurred)
+					if exception_occurred then
+						if attached l_app.remote_current_exception_value as e then
+							e.update_data
+							l_status.set_exception (e)
+						else
+							check should_not_occur: False end
+							l_status.set_exception (create {EXCEPTION_DEBUG_VALUE}.make_without_any_value)
+							l_status.exception.set_user_meaning ("Exception occurred (no data available!)")
+						end
+					end
+				else
+					check
+						application_launched: False
 					end
 				end
 
@@ -430,7 +436,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

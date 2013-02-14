@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 		local
 			g: like grid
 			l_tid: POINTER
-			l_scp: POINTER
+			l_scp: NATURAL_16
 			j,sr: INTEGER
 			l_lab: EV_GRID_LABEL_ITEM
 			l_row: EV_GRID_ROW
@@ -575,10 +575,16 @@ feature {NONE} -- Implementation
 				l_scp := a_appstatus.scoop_processor_id (l_tid)
 				sr := sr + 1
 				l_row := g.row (sr)
-				l_row.set_data ([l_tid, l_scp])
+				set_row_data (l_row, l_tid, l_scp)
 
 				j := j + 1
 			end
+		end
+
+	set_row_data (r: EV_GRID_ROW; tid: POINTER; scp: NATURAL_16)
+		do
+			r.set_data ([tid, scp])
+
 		end
 
 feature {NONE} -- Implementation note
@@ -601,11 +607,11 @@ feature {NONE} -- Implementation note
 
 feature {NONE} -- Implementation, cosmetic
 
-	thread_id_and_scoop_processor_id_from_row (r: EV_GRID_ROW): detachable TUPLE [tid: POINTER; scp: POINTER]
+	thread_id_and_scoop_processor_id_from_row (r: EV_GRID_ROW): detachable TUPLE [tid: POINTER; scp: NATURAL_16]
 			-- Thread id and SCOOP Processor id related to `r'
 		do
 			if has_scoop_processor and then r.parent /= Void and then r /= Void then
-				if attached {TUPLE [tid: POINTER; scp: POINTER]} r.data as tu then
+				if attached {like thread_id_and_scoop_processor_id_from_row} r.data as tu then
 					Result := tu
 				end
 			end
@@ -656,7 +662,7 @@ feature {NONE} -- Constants
 	col_note_index: 	INTEGER = 4
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

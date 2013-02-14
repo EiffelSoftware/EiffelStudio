@@ -413,14 +413,11 @@ feature -- Graphical computation
 			-- `title' value overwrite name's value.
 
 	set_title (v: STRING_GENERAL)
-		local
-			li: EV_GRID_LABEL_ITEM
 		do
 			title := v
 			if row /= Void then
 				set_name (title)
-				li ?= row.item (Col_name_index)
-				if li /= Void then
+				if attached {EV_GRID_LABEL_ITEM} row.item (Col_name_index) as li then
 					apply_cell_title_properties_on (li)
 				end
 			end
@@ -447,8 +444,9 @@ feature -- Graphical computation
 				title := v
 			end
 
-			glab ?= cell (Col_name_index)
-			if glab = Void then
+			if attached {EV_GRID_LABEL_ITEM} cell (Col_name_index) as i then
+				glab := i
+			else
 				glab := new_cell_name
 				set_cell (Col_name_index, glab)
 			end
@@ -461,22 +459,24 @@ feature -- Graphical computation
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab ?= cell (Col_type_index)
-			if glab = Void then
+			if attached {EV_GRID_LABEL_ITEM} cell (Col_type_index) as i then
+				glab := i
+			else
 				glab := new_cell_type
 				set_cell (Col_type_index, glab)
 			end
 			grid_cell_set_text (glab, v)
 		end
 
-	set_address (v: DBG_ADDRESS)
+	set_address (v: detachable DBG_ADDRESS)
 		require
 			is_attached_to_row: is_attached_to_row
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab ?= cell (Col_address_index)
-			if glab = Void then
+			if attached {EV_GRID_LABEL_ITEM} cell (Col_address_index) as i then
+				glab := i
+			else
 				glab := new_cell_address
 				set_cell (Col_address_index, glab)
 			end
@@ -493,8 +493,9 @@ feature -- Graphical computation
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab ?= cell (Col_value_index)
-			if glab = Void then
+			if attached {EV_GRID_LABEL_ITEM} cell (Col_value_index) as i then
+				glab := i
+			else
 				glab := new_cell_value
 				set_cell (Col_value_index, glab)
 			end
@@ -505,12 +506,40 @@ feature -- Graphical computation
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab ?= cell (Col_context_index)
-			if glab = Void then
+			if attached {EV_GRID_LABEL_ITEM} cell (Col_context_index) as i then
+				glab := i
+			else
 				glab := new_cell_context
 				set_cell (Col_context_index, glab)
 			end
 			grid_cell_set_text (glab, v)
+		end
+
+	set_scoop_pid_value (a_scp_pid: NATURAL_16)
+		local
+			glab: detachable EV_GRID_LABEL_ITEM
+			v: like scoop_pid_to_text
+		do
+			v := scoop_pid_to_text (a_scp_pid)
+			if attached {EV_GRID_LABEL_ITEM} cell (Col_scoop_pid_index) as i then
+				glab := i
+			else
+				if v /= Void then
+					glab := new_cell_context
+					set_cell (Col_scoop_pid_index, glab)
+				end
+			end
+			if glab /= Void then
+				grid_cell_set_text (glab, v)
+			end
+		end
+
+	scoop_pid_to_text (a_scp_pid: NATURAL_16): detachable STRING
+			-- String representation for `a_scp_pid'.
+		do
+			if a_scp_pid > 0 then
+				Result := a_scp_pid.out
+			end
 		end
 
 	value_cell: EV_GRID_ITEM
@@ -590,6 +619,11 @@ feature -- Column index
 	Col_context_index: INTEGER
 		do
 			Result := parent_grid.Col_context_index
+		end
+
+	Col_scoop_pid_index: INTEGER
+		do
+			Result := parent_grid.Col_scoop_pid_index
 		end
 
 feature -- Updating
@@ -1234,7 +1268,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

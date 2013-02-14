@@ -25,7 +25,7 @@ create {DEBUG_VALUE_EXPORTER}
 feature {DEBUG_VALUE_EXPORTER}
 
 	make_attribute_of_special (attr_name: like name; a_class: like e_class;
-			type: like dynamic_type_id; a_add: like address)
+			type: like dynamic_type_id; a_add: like address; scp_pid: like scoop_processor_id)
 		require
 			not_attr_name_void: attr_name /= Void
 		do
@@ -38,6 +38,7 @@ feature {DEBUG_VALUE_EXPORTER}
 			dynamic_type_id := type
 			address := a_add
 			is_null := False
+			scoop_processor_id := scp_pid
 			create attributes.make (10)
 		end
 
@@ -53,7 +54,7 @@ feature -- Access
 	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
-			Result := Debugger_manager.Dump_value_factory.new_expanded_object_value (address, dynamic_class)
+			Result := Debugger_manager.Dump_value_factory.new_expanded_object_value (address, dynamic_class, scoop_processor_id)
 		end
 
 feature {NONE} -- Output
@@ -144,7 +145,7 @@ invariant
 	attributes_exists: attributes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

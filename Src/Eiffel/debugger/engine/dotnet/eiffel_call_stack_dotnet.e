@@ -228,7 +228,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 															l_class_type := l_stack_adv.dynamic_class.types.first
 														end
 
-														create eiffel_cse.make (level, tid)
+														create eiffel_cse.make (level, tid, 0) -- 0: no SCOOP for dotnet
 														eiffel_cse.set_private_current_object (l_stack_adv)
 														eiffel_cse.set_routine (
 															l_chain,
@@ -256,7 +256,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 											end
 											if call = Void then
 													-- Here we have an External CallStack
-												create external_cse.make (level, tid)
+												create external_cse.make (level, tid, 0)  -- 0: no SCOOP for dotnet
 												if l_stack_object /= Void then
 													create addr.make_from_natural_64 (l_stack_object.get_address)
 												else
@@ -325,7 +325,7 @@ feature -- cleaning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

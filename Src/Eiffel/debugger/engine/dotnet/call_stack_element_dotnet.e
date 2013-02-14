@@ -68,9 +68,9 @@ create {EIFFEL_CALL_STACK}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: like thread_id)
+	make (level: INTEGER; tid: like thread_id; scp_pid: like scoop_processor_id)
 		do
-			Precursor (level, tid)
+			Precursor (level, tid, scp_pid)
 			private_body_index := -1
 		end
 
@@ -827,7 +827,7 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

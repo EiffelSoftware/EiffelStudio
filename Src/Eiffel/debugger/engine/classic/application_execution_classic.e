@@ -313,6 +313,23 @@ feature -- Remote access to RT_
 			reset_recv_value
 		end
 
+feature -- Remote access to SCOOP MANAGER
+
+	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE
+			-- Return the remote scp_mnger
+		do
+			ewb_request.send_rqst_1 (rqst_rt_operation, Rtop_dump_scoop_manager)
+			ewb_request.reset_recv_value
+			ewb_request.recv_value (ewb_request)
+			if attached {like imp_remote_rt_scoop_manager} ewb_request.item as ref then
+				Result := ref
+				Result.set_hector_addr
+			else
+				check ewb_request.item = Void end
+			end
+			ewb_request.reset_recv_value
+		end
+
 feature {NONE} -- Breakpoints implementation
 
 	send_execution_information (a_execution_mode: INTEGER; ign_bp: BOOLEAN)
@@ -522,15 +539,13 @@ feature -- Query
 			Result := [l_called, l_exc, l_res]
 		end
 
-	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE
+	dump_value_at_address (a_addr: DBG_ADDRESS): DUMP_VALUE
 		do
-			Result := Debugger_manager.Dump_value_factory.new_object_value (a_addr, a_cl)
+			Result := Debugger_manager.Dump_value_factory.new_incomplete_object_value (a_addr)
 		end
 
-	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE
+	debug_value_at_address (a_addr: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE
 		do
---			debugged_object_manager.classic_debugged_object_with_class (a_addr, a_cl)
---			Result := dump_value_at_address_with_class (a_addr, a_cl).
 			to_implement ("Need to be implemented, but for now this is not used.")
 			check False end
 		end
@@ -712,7 +727,7 @@ invariant
 	ipc_engine_not_void: ipc_engine /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

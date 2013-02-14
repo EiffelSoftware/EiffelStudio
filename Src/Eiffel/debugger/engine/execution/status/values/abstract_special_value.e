@@ -71,6 +71,10 @@ feature -- Properties
 	sp_lower, sp_upper: INTEGER
 			-- Bounds for special object inspection
 
+	scoop_processor_id: NATURAL_16
+			-- Associated SCOOP Processor ID
+			-- 0 if not relevant.
+
 feature -- Output
 
 	sorted_children: DEBUG_VALUE_LIST
@@ -159,7 +163,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

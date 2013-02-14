@@ -329,6 +329,9 @@ feature -- Value Access
 			end
 		end
 
+	scoop_processor_id: NATURAL_16
+			-- Associated SCOOP processor id if relevant.
+
 feature {NONE} -- Output
 
 	output_value: STRING_32
@@ -471,7 +474,7 @@ feature {APPLICATION_EXECUTION} -- Implementation Change
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

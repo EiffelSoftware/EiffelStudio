@@ -88,17 +88,18 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			dynamic_class := dtype
 		end
 
-	set_object_value  (value: DBG_ADDRESS; dtype: CLASS_C)
+	set_object_value  (value: DBG_ADDRESS; dtype: CLASS_C; scp_pid: like scoop_processor_id)
 			-- make a object item initialized to `value'
 		do
 			value_address := value
 			type := Type_object
 			dynamic_class := dtype
+			scoop_processor_id := scp_pid
 		ensure
 			type /= Type_unknown
 		end
 
-	set_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C)
+	set_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C; scp_pid: like scoop_processor_id)
 			-- Make an expanded object item of type `dtype'.
 		require
 			dtype_not_void: dtype /= Void
@@ -106,6 +107,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			value_address := addr
 			type := Type_expanded_object
 			dynamic_class := dtype
+			scoop_processor_id := scp_pid
 		ensure
 			value_address_set: value_address = addr
 			type_set: type = type_expanded_object
@@ -143,6 +145,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			value_exception := value
 			type := Type_exception
 			dynamic_class := value_exception.dynamic_class
+			scoop_processor_id := value.scoop_processor_id
 		end
 
 	set_procedure_return_value  (value: PROCEDURE_RETURN_DEBUG_VALUE)
@@ -1059,6 +1062,9 @@ feature -- Access
 	dynamic_class_type: CLASS_TYPE
 			-- Dynamic Class Type of `Current'. Void if `is_void'.
 			-- Used only in Reference dotnet context (for now)
+
+	scoop_processor_id: NATURAL_16
+			-- Associated SCOOP pid if relevant.
 
 	is_void: BOOLEAN
 			-- Is `Current' a Void reference?

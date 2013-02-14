@@ -103,7 +103,6 @@ feature {NONE} -- Initialization
 				--| objects grid layout
 			initialize_objects_grid_layout (preferences.debug_tool_data.is_stack_grid_layout_managed_preference, stack_objects_grid)
 			initialize_objects_grid_layout (preferences.debug_tool_data.is_debugged_grid_layout_managed_preference, debugged_objects_grid)
-
 		end
 
 	on_after_initialized
@@ -365,6 +364,7 @@ feature {NONE} -- Interface
 							[g.col_value_id, 	True,  False, 150, interface_names.l_value, interface_names.to_value],
 							[g.col_type_id, 	True,  False, 200, interface_names.l_type, interface_names.to_type],
 							[g.col_address_id, 	True,  False,  80, interface_names.l_address, interface_names.to_address],
+							[g.col_scoop_pid_id, True, False,   30, interface_names.l_scoop_pid, interface_names.to_scoop_pid],
 							[g.col_context_id, 	False, False,   0, interface_names.l_context_dot, interface_names.to_context_dot]
 						>>
 					)
@@ -631,7 +631,6 @@ feature {NONE} -- Notebook item's behavior
 			header_box /= Void
 		local
 			app: APPLICATION_EXECUTION
-			ecse: EIFFEL_CALL_STACK_ELEMENT
 			l_fstone: FEATURE_STONE
 			l_cstone: CLASSC_STONE
 			hbox: like header_box
@@ -673,8 +672,7 @@ feature {NONE} -- Notebook item's behavior
 					app := debugger_manager.application
 					if app.is_stopped and then dbg_stopped then
 						if not app.current_call_stack_is_empty then
-							ecse ?= current_stack_element
-							if ecse /= Void then
+							if attached {EIFFEL_CALL_STACK_ELEMENT} current_stack_element as ecse then
 								header_class_label.set_text ("{" + ecse.dynamic_class.name_in_upper.twin + "}")
 								create l_cstone.make (ecse.dynamic_class)
 								header_class_label.set_pebble (l_cstone)
@@ -871,6 +869,7 @@ feature {NONE} -- Update
 			until
 				l_grids.after
 			loop
+				l_grids.item_for_iteration.grid.handle_project_specific_columns
 				l_grids.item_for_iteration.grid.request_delayed_clean
 				l_grids.forth
 			end
@@ -1393,8 +1392,6 @@ feature {NONE} -- Impl : Stack objects grid
 	debug_value_key_action (grid: ES_OBJECTS_GRID; k: EV_KEY)
 			-- Actions performed when a key is pressed on a debug_value.
 			-- Handle `Ctrl+C'.
-		local
-			ost: OBJECT_STONE
 		do
 			inspect
 				k.code
@@ -1413,8 +1410,9 @@ feature {NONE} -- Impl : Stack objects grid
 					and then not ev_application.shift_pressed
 				then
 					if grid.selected_rows.count > 0 then
-						ost ?= grid.grid_pebble_from_row_and_column (grid.selected_rows.first, Void)
-						object_viewer_cmd.set_stone (ost)
+						if attached {OBJECT_STONE} grid.grid_pebble_from_row_and_column (grid.selected_rows.first, Void) as ost then
+							object_viewer_cmd.set_stone (ost)
+						end
 					end
 				end
 			when {EV_KEY_CONSTANTS}.key_enter then

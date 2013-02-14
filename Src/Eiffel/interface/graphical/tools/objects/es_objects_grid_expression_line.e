@@ -334,7 +334,8 @@ feature -- Query
 		do
 			Result := internal_associated_dump_value
 			if Result = Void and then object_address /= Void then
-				Result := debugger_manager.application.dump_value_at_address_with_class (object_address, object_dynamic_class)
+				Result := debugger_manager.application.dump_value_at_address (object_address)
+				check same_class: Result /= Void implies Result.dynamic_class = object_dynamic_class end
 				internal_associated_dump_value := Result
 			end
 		end
@@ -534,6 +535,7 @@ feature -- Graphical changes
 			add: DBG_ADDRESS
 			typ: STRING
 			res: STRING_32
+			scp_pid: NATURAL_16
 			l_title: STRING_32
 			exp: like expression
 			evl: like expression_evaluation
@@ -633,14 +635,17 @@ feature -- Graphical changes
 									set_expand_action (agent on_row_expand)
 									set_collapse_action (agent on_row_collapse)
 								end
+								scp_pid := last_dump_value.scoop_processor_id
 							else
 								res := ""
 								typ := ""
+								scp_pid := 0
 							end
 							set_expression_info (typ)
 							set_expression_result_address (add)
 							set_expression_result (res)
 							set_expression_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_icon)
+							set_scoop_pid_value (scp_pid)
 						end
 					end
 					if is_auto_expression then
@@ -662,7 +667,7 @@ feature -- Graphical changes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

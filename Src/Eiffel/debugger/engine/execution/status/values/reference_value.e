@@ -21,14 +21,14 @@ inherit
 		undefine
 			is_equal
 		end
-		
+
 create {DEBUG_VALUE_EXPORTER}
 
 	make, make_attribute
 
 feature {NONE} -- Initialization
 
-	make (ref: attached like address; id: like dynamic_type_id)
+	make (ref: attached like address; id: like dynamic_type_id; scp_pid: like scoop_processor_id)
 			-- Set `address' to (attached)  `ref' address
 			-- and `dynamic_type_id' to `id'.
 		do
@@ -38,11 +38,12 @@ feature {NONE} -- Initialization
 			if not is_null then
 				dynamic_type_id := id
 			end
+			scoop_processor_id := scp_pid
 			get_is_expanded
 		end
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-						type: like dynamic_type_id; addr: attached like address)
+						type: like dynamic_type_id; addr: attached like address; scp_pid: like scoop_processor_id)
 		require
 			not_attr_name_void: attr_name /= Void
 		do
@@ -54,6 +55,7 @@ feature {NONE} -- Initialization
 			dynamic_type_id := type
 			address := addr
 			is_null := addr.is_void
+			scoop_processor_id := scp_pid
 			get_is_expanded
 		end
 
@@ -92,7 +94,7 @@ feature -- Access
 			if l_cl = Void then
 				l_cl := static_class
 			end
-			Result := Debugger_manager.Dump_value_factory.new_object_value (address, l_cl)
+			Result := Debugger_manager.Dump_value_factory.new_object_value (address, l_cl, scoop_processor_id)
 		end
 
 feature -- Expanded status

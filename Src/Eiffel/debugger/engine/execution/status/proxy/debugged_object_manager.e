@@ -64,6 +64,14 @@ feature -- Query
 			Result := dobj.dynamic_class
 		end
 
+	object_at_address (addr: DBG_ADDRESS): DEBUGGED_OBJECT
+			-- CLASS_C for remote object at address `addr'
+		require
+			address_not_void: addr /= Void and then not addr.is_void
+		do
+			Result := debugged_object (addr, 0, 0)
+		end
+
 	attributes_at_address (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DEBUG_VALUE_LIST
 			-- Attributes for remote object at address `addr'
 		require
@@ -209,7 +217,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

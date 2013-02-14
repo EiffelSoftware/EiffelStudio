@@ -697,6 +697,14 @@ feature -- Status
 			Result := Eiffel_project.workbench.system.il_generation
 		end
 
+	is_scoop_concurrency_mode: BOOLEAN
+			-- Is this project using SCOOP concurrency mode ?
+		require
+			system_defined: Eiffel_project.system_defined
+		do
+			Result := Eiffel_project.workbench.system.is_scoop
+		end
+
 	rt_extension_available: BOOLEAN
 			-- is RT_EXTENSION available ?
 			-- Value valid only during the debugging session.

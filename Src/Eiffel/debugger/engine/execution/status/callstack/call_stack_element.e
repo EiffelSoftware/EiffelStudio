@@ -9,12 +9,13 @@ deferred class CALL_STACK_ELEMENT
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: like thread_id)
+	make (level: INTEGER; tid: like thread_id; scp_pid: like scoop_processor_id)
 		require
 			valid_level: level >= 1
 		do
 			level_in_stack := level
 			thread_id := tid
+			scoop_processor_id := scp_pid
 		end
 
 feature -- Properties
@@ -34,6 +35,9 @@ feature -- Properties
 
 	thread_id: POINTER
 			-- Thread id related to Current
+
+	scoop_processor_id: NATURAL_16
+			-- Associated scoop processor id if relevant.
 
 	break_index: INTEGER
 			-- the "Line number" where application is stopped within current feature
@@ -96,7 +100,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

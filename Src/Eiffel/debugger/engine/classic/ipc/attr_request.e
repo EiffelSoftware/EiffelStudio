@@ -77,6 +77,10 @@ feature -- Properites
 			-- Type ID of the inspected object.
 			-- 0 if the object is special.
 
+	scoop_processor_id: NATURAL_16
+			-- SCOOP Processor id of the inspected object
+			-- 0 is not relevant.
+
 feature -- Update
 
 	send
@@ -90,6 +94,8 @@ feature -- Update
 			object_type_id := 0
 			send_rqst_3_integer (Rqst_sp_lower, 0, sp_lower, sp_upper)
 			send_rqst_3 (request_code, In_h_addr, object_address.offset, object_address.as_pointer)
+
+			scoop_processor_id := to_integer_32 (c_tread).to_natural_16
 			is_special := to_boolean (c_tread)
 			is_tuple := to_boolean (c_tread)
 			object_type_id := to_integer_32 (c_tread) + 1
@@ -182,15 +188,19 @@ feature {NONE} -- Implementation
 			sk_type: NATURAL_32
 			i, attr_nb: INTEGER
 			attr: ABSTRACT_DEBUG_VALUE
+			ref_attr: REFERENCE_VALUE
 			exp_attr: EXPANDED_VALUE
 			spec_attr: SPECIAL_VALUE
 			type_id: INTEGER
+			scoop_id: NATURAL_16
 			p: POINTER
 			i1,i2: INTEGER
 			l_attr_address: like object_address
 		do
+			-- Get attributes count							
 			s := c_tread
 			if is_valid_integer_32_string (s) then
+
 				attr_nb := to_integer_32 (s)
 				if attr_list.capacity <= attr_nb then
 					attr_list.resize (attr_nb)
@@ -209,7 +219,10 @@ feature {NONE} -- Implementation
 				until
 					i > attr_nb
 				loop
+					-- Get attribute name
 					attr_name := c_tread
+
+					-- Get type
 					s := c_tread
 					if is_valid_integer_32_string (s) then
 						sk_type := to_natural_32 (s)
@@ -257,14 +270,18 @@ feature {NONE} -- Implementation
 					when Sk_bit then
 						create {BITS_VALUE} attr.make_attribute (attr_name, e_class, c_tread)
 					when Sk_exp then
+						-- Get type id
 						type_id := to_integer_32 (c_tread) + 1;
+
+						-- Get Scoop id
+						scoop_id := to_integer_32 (c_tread).to_natural_16
 						if container_is_special then
 							--| If expanded contained in SPECIAL, it doesn't have a specific (hector) address
 							--| and is only addressed via the SPECIAL object and the index
 							--| Then in this case we receive its attributes right away
 							create l_attr_address.make_from_pointer (object_address.as_pointer)
 							l_attr_address.set_offset (i)
-							create exp_attr.make_attribute_of_special (attr_name, e_class, type_id, l_attr_address)
+							create exp_attr.make_attribute_of_special (attr_name, e_class, type_id, l_attr_address, scoop_id)
 							attr := exp_attr
 							if Eiffel_system.valid_dynamic_id (type_id) then
 								recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id, False), False)
@@ -275,16 +292,20 @@ feature {NONE} -- Implementation
 							sort_debug_values (exp_attr.attributes)
 						else
 							p := to_pointer (c_tread)
-							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, type_id, create {DBG_ADDRESS}.make_from_pointer (p));
+							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, type_id, create {DBG_ADDRESS}.make_from_pointer (p), scoop_id)
 						end
 					when Sk_ref then
-							-- Is this a special object?
+						-- Get Scoop id
+						scoop_id := to_integer_32 (c_tread).to_natural_16
+
+						-- Is this a special object?						
 						if to_boolean (c_tread) then
 								-- Is this a tuple object?
 							if to_boolean (c_tread) then
 								type_id := to_integer_32 (c_tread) + 1
-								create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
-									type_id, create {DBG_ADDRESS}.make_from_pointer (to_pointer (c_tread)))
+								create ref_attr.make_attribute (attr_name, e_class,
+									type_id, create {DBG_ADDRESS}.make_from_pointer (to_pointer (c_tread)), scoop_id)
+								attr := ref_attr
 							else
 								debug("DEBUG_RECV")
 									io.error.put_string ("Creating SPECIAL object.%N")
@@ -292,7 +313,7 @@ feature {NONE} -- Implementation
 								p := to_pointer (c_tread)
 								i1 := to_integer_32 (c_tread)
 								i2 := to_integer_32 (c_tread)
-								create spec_attr.make_attribute (attr_name, e_class, create {DBG_ADDRESS}.make_from_pointer (p), i1, i2)
+								create spec_attr.make_attribute (attr_name, e_class, create {DBG_ADDRESS}.make_from_pointer (p), i1, i2, scoop_id)
 								debug("DEBUG_RECV")
 									io.error.put_string ("Attribute name: ");
 									io.error.put_string (attr_name);
@@ -316,12 +337,11 @@ feature {NONE} -- Implementation
 								-- Is this a void object?
 							if not to_boolean (c_tread) then
 								type_id := to_integer_32 (c_tread) + 1
-								create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
-															type_id, create {DBG_ADDRESS}.make_from_pointer (to_pointer (c_tread)))
+								create ref_attr.make_attribute (attr_name, e_class, type_id, create {DBG_ADDRESS}.make_from_pointer (to_pointer (c_tread)), scoop_id)
 							else
-								create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
-															0, create {DBG_ADDRESS}.make_void)
+								create ref_attr.make_attribute (attr_name, e_class, 0, create {DBG_ADDRESS}.make_void, scoop_id)
 							end
+							attr := ref_attr
 						end
 					else
 							-- We should never go through this path.
@@ -381,7 +401,7 @@ invariant
 	object_address_attached: object_address /= Void and then not object_address.is_void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

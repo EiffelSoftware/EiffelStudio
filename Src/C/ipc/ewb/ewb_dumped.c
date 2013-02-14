@@ -67,11 +67,11 @@ rt_private void (* set_char) (EIF_REFERENCE, EIF_CHARACTER_8);
 rt_private void (* set_wchar) (EIF_REFERENCE, EIF_CHARACTER_32);
 rt_private void (* set_real) (EIF_REFERENCE, EIF_REAL_32);
 rt_private void (* set_double) (EIF_REFERENCE, EIF_REAL_64);
-rt_private void (* set_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+rt_private void (* set_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16);
 rt_private void (* set_pointer) (EIF_REFERENCE, EIF_POINTER);
 rt_private void (* set_bits) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
 rt_private void (* set_error) (EIF_REFERENCE);
-rt_private void (* set_exception_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+rt_private void (* set_exception_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16);
 rt_private void (* set_void) (EIF_REFERENCE);
 
 
@@ -183,7 +183,7 @@ rt_public void c_recv_value (EIF_OBJ target)
 			switch (pack.rq_dump.dmp_type) {
 				case DMP_EXCEPTION_ITEM:
 					item = *pack.rq_dump.dmp_item;
-					set_exception_ref (eif_access (target), item.it_ref, item.type & SK_DTYPE);
+					set_exception_ref (eif_access (target), item.it_ref, item.type & SK_DTYPE, (EIF_NATURAL_16) pack.rq_dump.dmp_info);
 					return;
 				case DMP_ITEM:
 					item = *pack.rq_dump.dmp_item;
@@ -206,7 +206,7 @@ rt_public void c_recv_value (EIF_OBJ target)
 						case SK_REF:
 						case SK_EXP:
 								/* reference and dynamic type */
-							set_ref (eif_access (target), item.it_ref, type_flag & SK_DTYPE);
+							set_ref (eif_access (target), item.it_ref, type_flag & SK_DTYPE, (EIF_NATURAL_16) pack.rq_dump.dmp_info);
 							return;
 						case SK_BIT:
 								/* reference and number of bits */
@@ -270,11 +270,11 @@ rt_public void c_pass_recv_routines (
 	set_wchar = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER_32)) d_wchar;
 	set_real = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) d_real;
 	set_double = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) d_double;
-	set_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_ref;
+	set_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16)) d_ref;
 	set_pointer = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) d_point;
 	set_bits = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_bits;
 	set_error = FUNCTION_CAST(void, (EIF_REFERENCE)) d_error;
-	set_exception_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_exception_ref;
+	set_exception_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16)) d_exception_ref;
 	set_void = FUNCTION_CAST(void, (EIF_REFERENCE)) d_void;
 }
 

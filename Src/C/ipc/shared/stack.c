@@ -150,8 +150,9 @@ rt_public void send_stack_variables(EIF_PSTREAM s, int where)
 	if (start != EIF_NO_ITEM) {
 		dp = get_next_variable (start);
 		while (dp) {	/* While still some data to send */
-			if (dp != (struct dump *) EIF_IGNORE)
+			if (dp != (struct dump *) EIF_IGNORE) {
 				send_dump(s, dp);
+			}
 			dp = get_next_variable (start);
 		}
 	}
@@ -171,8 +172,28 @@ rt_private void send_dump(EIF_PSTREAM s, struct dump *dp)
 	Request rqst;					/* What we send back */
 
 	Request_Clean (rqst);
+	
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 	memcpy (&rqst.rq_dump, dp, sizeof(struct dump));
+
+	if (rqst.rq_dump.dmp_info == 0) {
+		if ( (rqst.rq_dump.dmp_type == DMP_ITEM) || (rqst.rq_dump.dmp_type == DMP_EXCEPTION_ITEM) )  {
+			EIF_TYPED_VALUE *ip = NULL;
+			ip = rqst.rq_dump.dmp_item;
+			switch (ip->type & SK_HEAD) {
+				case SK_EXP:
+				case SK_REF:
+					if (ip->it_ref) {
+						rqst.rq_dump.dmp_info = RTS_PID(ip->it_ref);
+					}
+					break;
+				default:
+					break;
+			}
+		} else if ((rqst.rq_dump.dmp_type == DMP_VECT) || (rqst.rq_dump.dmp_type == DMP_VECT) ) {
+			//FIXMEref = rqst.rq_dump.dmp_vect.ex_id;
+		}
+	}
 	send_packet(s, &rqst);			/* Send to network */
 }
 
@@ -524,6 +545,9 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	type = ip.type & SK_HEAD;
 	if ((type == SK_EXP || type == SK_REF) && (ip.it_ref != NULL)) {
 		ip.type = type | Dtype(ip.it_ref);
+		dumped.dmp_info = RTS_PID(ip.it_ref);
+	} else {
+		dumped.dmp_info = 0;
 	}
 
 	send_dump(s, &dumped);

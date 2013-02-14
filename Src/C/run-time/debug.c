@@ -1132,6 +1132,11 @@ rt_shared void ewhere(struct where *where)
 	where->wh_name = ex->ex_rout;	/* Feature name */
 	where->wh_obj = ex->ex_id;		/* Current value of Current */
 	where->wh_origin = ex->ex_orig;	/* Where feature was written */
+	if (ex->ex_id) {
+		where->wh_scoop_pid = RTS_PID(ex->ex_id);
+	} else {
+		where->wh_scoop_pid = (EIF_SCP_PID) 0;
+	}
 
 	/* Now compute things the remote process will like to know. First, the
 	 * dynamic type of the current object...

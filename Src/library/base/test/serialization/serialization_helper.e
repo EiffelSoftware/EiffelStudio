@@ -71,7 +71,7 @@ feature -- Operations
 			l_file.close
 		end
 
-	retrieve_object (a_file_name: STRING): HASH_TABLE [detachable ANY, STRING]
+	retrieved_objects (a_file_name: STRING): HASH_TABLE [detachable ANY, STRING]
 			-- Using `a_file_name' tries all the possible serialization mechanisms
 			-- and associate the retrieved object with the type of serialization.
 		local
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 		local
 			l_serializer: SED_INDEPENDENT_SERIALIZER
 		do
-			l_serializer := independent_serializer (a_writer)
+			create l_serializer.make (a_writer)
 			a_writer.write_header
 			a_writer.write_natural_32 (eiffel_independent_store)
 			l_serializer.set_root_object (an_object)

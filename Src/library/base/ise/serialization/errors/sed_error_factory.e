@@ -67,6 +67,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	new_format_mismatch_66: SED_ERROR
+			-- Return an error when the format is not using `is_for_fast_retrieval' setting.
+		do
+			create Result.make_with_string ("Storable created with 6.6 or earlier not using `is_for_fast_retrieval' cannot be retrieved anymore. Contact EiffelSoftware if you need this functionality.")
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	new_missing_type_error (a_stored_type, a_adapted_type: STRING): SED_ERROR
 			-- Return a error representing a missing type `a_stored_type' possibly adapted to `a_adapted_type'.
 		require
@@ -182,7 +190,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

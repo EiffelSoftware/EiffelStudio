@@ -5,6 +5,7 @@
 --| Public License version 2.
 
 class TEST
+
 inherit
 	SERIALIZATION_HELPER
 

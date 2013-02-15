@@ -48,7 +48,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	start_evaluator (a_argument: STRING_8)
+	start_evaluator (a_argument: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			test_suite.project_helper.run (Void, a_argument, Void)
@@ -64,7 +64,7 @@ feature {NONE} -- Status setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

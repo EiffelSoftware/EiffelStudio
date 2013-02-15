@@ -9,11 +9,11 @@ create
 	default_create
 
 feature
-	make is
+	make
    		do
    		end
 
-	to_reference: A is
+	to_reference: A
 		do
 			create Result
 		end

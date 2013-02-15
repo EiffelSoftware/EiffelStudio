@@ -5,21 +5,28 @@
 --| Public License version 2.
 
 class TEST
+inherit
+	SERIALIZATION_HELPER
 
 create
 	make
 	
 feature
 
-	make is
+	make
 		local
-			l_file: RAW_FILE
+			l_objects: like retrieved_objects
 		do
 			tuple_int := [32]
-			create l_file.make_with_name ("test.store")
-			l_file.open_write
-			l_file.independent_store (Current)
-			l_file.close
+			store_object (tuple_int, "stored")
+			l_objects := retrieved_objects ("stored")
+			if l_objects.count /= storable_types.count then
+				across l_objects as l_item loop
+					io.put_string ("Retrieved " + l_item.key + "%N")
+				end
+			elseif not across l_objects as l_item all deep_equal (l_item.item, tuple_int) end then
+				io.put_string ("Some objects are not equal!%N")
+			end
 		end
 
 	tuple_int: TUPLE [INTEGER]

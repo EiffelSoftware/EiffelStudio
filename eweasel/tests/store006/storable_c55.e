@@ -8,7 +8,7 @@ feature -- Access
 
 	attr: G
 
-	to_reference: STORABLE_C55 [G] is
+	to_reference: STORABLE_C55 [G]
 		do
 			create Result
 		end

@@ -6,26 +6,31 @@
 
 class TEST
 
+inherit
+	SERIALIZATION_HELPER
+
 create
 	make
 
 feature -- Initialization
 
-	make is
+	make
 		local
-			file : RAW_FILE
 			manu: MANU [STRING]
 			$LOCAL
+			i: INTEGER
 		do
 			create manu.make ("Fdsfds", 123)
-			create file.make_open_write ("stored")
-			file.independent_store (manu)
-			file.close
-			
-			create file.make_open_read ("stored")
-			manu := Void
-			manu ?= file.retrieved
-			file.close
+			store_object (manu, "stored")
+			across retrieved_objects ("stored") as l_object loop
+				if not attached l_object.item then
+					io.put_string ("No object was retrieved!!%N")
+				end
+				i := i + 1
+			end
+			if i /= storable_types.count then
+				io.put_string ("Cannot retrieve all storables%N")
+			end
 		end 
 		
 end

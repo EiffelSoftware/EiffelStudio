@@ -16,18 +16,15 @@ feature -- Initialization
 	make
 		local
 			manu: MANU [STRING]
-			i: INTEGER
+			l_objects: like retrieved_objects
 		do
 			create manu.make ("Fdsfds", 123, 1)
 			store_object (manu, "stored")
-			across retrieved_objects ("stored") as l_object loop
-				if not attached l_object.item then
-					io.put_string ("No object was retrieved!!%N")
+			l_objects := retrieved_objects ("stored")
+			if l_objects.count /= storable_types.count then
+				across l_objects as l_item loop
+					io.put_string ("Retrieved " + l_item.key + "%N")
 				end
-				i := i + 1
-			end
-			if i /= storable_types.count then
-				io.put_string ("Cannot retrieve all storables%N")
 			end
 		end 
 		

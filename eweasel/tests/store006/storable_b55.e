@@ -9,7 +9,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 		do
 			int := 123
 		end
@@ -18,7 +18,7 @@ feature -- Access
 
 	int: INTEGER
 
-	to_reference: STORABLE_B55 is
+	to_reference: STORABLE_B55
 		do
 			create Result
 		end

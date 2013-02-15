@@ -9,7 +9,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 		local
 			l_gen_s: expanded STORABLE_C55 [STRING]
 			l_gen_gen_s: expanded STORABLE_C55 [expanded STORABLE_C55 [STRING]]

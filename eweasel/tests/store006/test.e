@@ -1,26 +1,27 @@
 class TEST
+inherit
+	SERIALIZATION_HELPER
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
+			l_objects: like retrieved_objects
 			sa: STORABLE_A55
-			a: ANY
-			l_file: RAW_FILE
 		do
 			create sa
-			create l_file.make_with_name ("toto")
-			l_file.open_write
-			l_file.independent_store (sa)
-			l_file.close
-
-			create l_file.make_with_name ("toto")
-			l_file.open_read
-			a := l_file.retrieved
-			l_file.close
+			store_object (sa, "stored")
+			l_objects := retrieved_objects ("stored")
+			if l_objects.count /= storable_types.count then
+				across l_objects as l_item loop
+					io.put_string ("Retrieved " + l_item.key + "%N")
+				end
+			elseif not across l_objects as l_item all deep_equal (l_item.item, sa) end then
+				io.put_string ("Some objects are not equal!%N")
+			end
 		end
 
 end

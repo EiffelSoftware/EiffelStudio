@@ -71,13 +71,14 @@ feature -- Operations
 			l_file.close
 		end
 
-	retrieved_objects (a_file_name: STRING): HASH_TABLE [detachable ANY, STRING]
+	retrieved_objects (a_file_name: STRING): HASH_TABLE [ANY, STRING]
 			-- Using `a_file_name' tries all the possible serialization mechanisms
 			-- and associate the retrieved object with the type of serialization.
 		local
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_file: RAW_FILE
 			l_path: PATH
+			l_obj: detachable ANY
 		do
 			create Result.make (7)
 			create l_path.make_from_string (a_file_name)
@@ -86,7 +87,10 @@ feature -- Operations
 				create l_file.make_with_path (l_path.appended_with_extension (l_type.item))
 				if l_file.exists then
 					l_file.open_read
-					Result.put (l_file.retrieved, l_type.item)
+					l_obj := l_file.retrieved
+					if l_obj /= Void then
+						Result.put (l_obj, l_type.item)
+					end
 					l_file.close
 				end
 			end
@@ -96,7 +100,11 @@ feature -- Operations
 				if l_file.exists then
 					l_file.open_read
 					create l_reader.make_for_reading (l_file)
-					Result.put (retrieved (l_reader, True), l_type.item)
+					retrieved_errors := Void
+					l_obj := retrieved (l_reader, True)
+					if l_obj /= Void then
+						Result.put (l_obj, l_type.item)
+					end
 					l_file.close
 				end
 			end

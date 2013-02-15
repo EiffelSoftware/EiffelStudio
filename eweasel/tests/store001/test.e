@@ -27,6 +27,8 @@ feature -- Initialization
 				across l_objects as l_item loop
 					io.put_string ("Retrieved " + l_item.key + "%N")
 				end
+			elseif not across l_objects as l_item all deep_equal (l_item.item, manu) end then
+				io.put_string ("Some objects are not equal!%N")
 			end
 		end 
 		

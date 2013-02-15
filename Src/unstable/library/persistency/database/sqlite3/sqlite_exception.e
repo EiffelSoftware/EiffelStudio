@@ -17,7 +17,7 @@ class
 inherit
 	DEVELOPER_EXCEPTION
 		redefine
-			internal_meaning
+			tag
 		end
 
 create
@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODE}.ok
 		do
 			internal_code := a_code
-			create internal_meaning.make_from_string (a_message)
+			create tag.make_from_string (a_message)
 		ensure
 			internal_code_set: internal_code = a_code
-			internal_meaning_set: internal_meaning.same_string (a_message)
+			tag_set: tag.same_string (a_message)
 		end
 
 feature -- Access
@@ -148,14 +148,14 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
-	internal_meaning: STRING
+	tag: IMMUTABLE_STRING_32
 			-- <Precursor>
 
 	internal_code: INTEGER
 			-- Actual reported code.
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

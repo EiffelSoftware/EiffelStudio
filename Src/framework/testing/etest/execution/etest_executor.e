@@ -450,9 +450,9 @@ feature {NONE} -- Factory
 			-- Create new controller
 		do
 			if test_execution.is_debugging then
-				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (etest_suite, testing_directory)
+				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (etest_suite)
 			else
-				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (etest_suite, testing_directory)
+				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (etest_suite)
 			end
 		end
 
@@ -526,7 +526,7 @@ invariant
 	empty_tasks_empty: empty_tasks.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

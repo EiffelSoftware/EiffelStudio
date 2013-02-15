@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite; a_testing_directory: like testing_directory)
+	make (a_test_suite: like test_suite)
 			-- Initialize `Current'.
 			--
 			-- `a_test_suite': Test suite containing tests.
@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			a_test_suite_attached: a_test_suite /= Void
 		do
 			test_suite := a_test_suite
-			testing_directory := a_testing_directory
 		ensure
 			test_suite_set: test_suite = a_test_suite
 		end
@@ -85,9 +84,6 @@ feature {NONE} -- Access
 
 	internal_connection: detachable like connection
 			-- Connection to evaluator
-
-	testing_directory: PATH
-			-- Directory in which tests should be executed
 
 feature -- Status report
 

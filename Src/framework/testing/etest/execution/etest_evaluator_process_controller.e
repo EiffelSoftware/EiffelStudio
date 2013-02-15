@@ -20,10 +20,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite; a_testing_directory: like testing_directory)
+	make (a_test_suite: like test_suite)
 			-- <Precursor>
 		do
-			Precursor (a_test_suite, a_testing_directory)
+			Precursor (a_test_suite)
 			create mutex.make
 			create output.make (1000)
 		end

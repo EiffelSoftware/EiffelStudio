@@ -83,7 +83,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	start_evaluator (a_argument: STRING)
+	start_evaluator (a_argument: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_project: E_PROJECT
@@ -98,7 +98,7 @@ feature {NONE} -- Status setting
 			l_cmd.append_string_general (l_project.system.application_name (True).name)
 			l_cmd.append_character ('"')
 			l_cmd.append_character (' ')
-			l_cmd.append_string (a_argument)
+			l_cmd.append_string_general (a_argument)
 			l_process := l_factory.process_launcher_with_command_line (l_cmd, l_project.lace.directory_name)
 
 			l_process.enable_launch_in_new_process_group
@@ -150,7 +150,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

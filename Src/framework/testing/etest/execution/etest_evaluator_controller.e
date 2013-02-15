@@ -148,8 +148,7 @@ feature -- Status setting
 			not_has_next_step: not has_next_step
 		local
 			l_connection: like connection
-			l_args: STRING
-			u: UTF_CONVERTER
+			l_args: STRING_32
 		do
 			if is_running and has_died then
 				reset
@@ -159,9 +158,6 @@ feature -- Status setting
 				internal_connection := l_connection
 				create l_args.make (100)
 				l_args.append_integer (l_connection.current_port)
-				l_args.append (" %"")
-				l_args.append_string (u.string_32_to_utf_8_string_8 (testing_directory.name))
-				l_args.append_character ('"')
 				l_args.append (" -eif_root ")
 				l_args.append ({TEST_SYSTEM_I}.eqa_evaluator_name)
 				l_args.append_character ('.')
@@ -218,7 +214,7 @@ feature -- Status setting
 
 feature {NONE} -- Status setting
 
-	start_evaluator (a_argument: STRING)
+	start_evaluator (a_argument: READABLE_STRING_GENERAL)
 			-- Launch evaluator process.
 			--
 			-- `a_argument': Arguments with which evaluator should be launched.
@@ -261,7 +257,7 @@ invariant
 	has_next_step_implies_running: has_next_step implies (is_running and then is_evaluator_launched)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

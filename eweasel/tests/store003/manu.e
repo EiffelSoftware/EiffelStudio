@@ -11,7 +11,7 @@ create
 	
 feature
 	
-	make (a_s: STRING a_i: INTEGER n: INTEGER) is
+	make (a_s: STRING a_i: INTEGER n: INTEGER)
 		do
 			s := a_s
 			create s.make (n)

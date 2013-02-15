@@ -49,8 +49,12 @@ feature {NONE} -- Initialization
 				port := l_args.argument (1).to_integer
 				create execution_directory.make_from_string (l_args.argument (2))
 			else
-					-- See value in {ETEST_EVALUATOR_CONNECTION} from EiffelStudio's code.
-				port := 49200
+				if l_args.argument_count = 1 then
+					port := l_args.argument (1).to_integer
+				else
+						-- See value in {ETEST_EVALUATOR_CONNECTION} from EiffelStudio's code.
+					port := 49200
+				end
 				execution_directory := current_working_path
 			end
 		ensure
@@ -140,7 +144,7 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

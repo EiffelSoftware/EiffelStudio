@@ -119,9 +119,9 @@ feature {NONE} -- Basic operation
 							localint := rate + rest (total_rest)
 							total_rest := (total_rest - 1).max (0)
 							if l_agents /= Void then
-								l_agents.extend (agent set_item_size (litem, bwidth, mark, cwidth, localint, originator))
+								l_agents.extend (agent set_item_size (litem, bwidth, mark, litem.width.max (cwidth), localint, originator))
 							else
-								set_item_size (litem, bwidth, mark, cwidth, localint, originator)
+								set_item_size (litem, bwidth, mark, litem.width.max (cwidth), localint, originator)
 							end
 							mark := mark + space + localint
 						end
@@ -182,9 +182,9 @@ feature {NONE} -- Basic operation
 								end
 							end
 							if l_agents /= Void then
-								l_agents.extend (agent set_item_size (litem, bwidth, mark, cwidth, localint, originator))
+								l_agents.extend (agent set_item_size (litem, bwidth, mark, litem.width.max (cwidth), localint, originator))
 							else
-								set_item_size (litem, bwidth, mark, cwidth, localint, originator)
+								set_item_size (litem, bwidth, mark, litem.width.max (cwidth), localint, originator)
 							end
 							mark := mark + space + localint
 						elseif lchild.index = next_non_expandable then
@@ -375,14 +375,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VERTICAL_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

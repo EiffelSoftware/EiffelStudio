@@ -40,8 +40,13 @@ feature {NONE} -- Access
 		do
 			if first_recorded_exception = Void then
 				first_recorded_exception := a_exception
-				if attached application as l_app then
-					l_app.add_idle_action_kamikaze (agent l_app.destroy)
+				if attached application as l_appl then
+					l_appl.destroy
+				end
+				if attached a_exception.description as l_desc then
+					assert ("Exception occurred: (" + a_exception.tag + ") " + l_desc, False)
+				else
+					assert ("Exception occurred: (" + a_exception.tag + ")", False)
 				end
 			end
 		end

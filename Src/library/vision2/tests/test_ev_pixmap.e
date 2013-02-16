@@ -63,10 +63,17 @@ feature -- Test routines
 			testing: "execution/isolated"
 		local
 			pixmap: EV_PIXMAP
+			l_path: PATH
+			l_file: RAW_FILE
 		do
 			create pixmap
 			pixmap.set_with_named_file (lenna)
-			pixmap.save_to_named_file (create {EV_BMP_FORMAT}, create {FILE_NAME}.make_from_string("graphics/img.png"))
+			create l_path.make_from_string ("graphics/img.png")
+			pixmap.save_to_named_path (create {EV_BMP_FORMAT}, l_path)
+			pixmap.save_to_named_path (create {EV_PNG_FORMAT}, l_path)
+			create l_file.make_with_path (l_path)
+			assert ({STRING_32} "Pixmap missing in " + l_path.canonical_path.name + ".", l_file.exists)
+			l_file.delete
 		end
 
 	draw_segment
@@ -292,6 +299,8 @@ feature {NONE} -- Actual Test
 			pixmap.set_with_named_file (image_path)
 
 			assert ("File loaded.", pixmap.width = 10 and then pixmap.height = 10)
+
+			l_file.delete
 		end
 
 feature {NONE} -- Helpers
@@ -306,7 +315,7 @@ feature {NONE} -- Helpers
     		Result := "graphics/Lenna.png"
     	end
 
-    image_path: STRING_32 = "测试图片.png";
+    image_path: STRING_32 = "graphics/测试图片.png";
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

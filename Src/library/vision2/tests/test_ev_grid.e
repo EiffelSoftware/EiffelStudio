@@ -41,7 +41,7 @@ feature {NONE} -- Actual Test
 				window.extend (l_grid)
 				window.show
 
-				application.process_events
+				process_events
 			else
 				create l_except
 				first_recorded_exception := l_except
@@ -52,7 +52,7 @@ feature {NONE} -- Actual Test
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

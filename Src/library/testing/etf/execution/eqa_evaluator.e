@@ -47,11 +47,11 @@ feature {NONE} -- Initialization
 			l_args := arguments
 			if l_args.argument_count >= 2 then
 				port := l_args.argument (1).to_integer
- 				create execution_directory.make_from_string (l_args.argument (2))
+ 				create testing_directory.make_from_string (l_args.argument (2))
 			else
 					-- See value in {ETEST_EVALUATOR_CONNECTION} from EiffelStudio's code.
 				port := 49200
-				execution_directory := current_working_path
+				testing_directory := current_working_path
 			end
 		ensure
 			port_initialized: port > 0
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 				then
 						-- TODO: initialize working directory and environment variables for system level testing
 					l_environment.put (l_test_name, {EQA_TEST_SET}.test_name_key)
-					l_environment.put (execution_directory.name, {EQA_TEST_SET}.execution_directory_key)
+					l_environment.put (testing_directory.name, {EQA_TEST_SET}.testing_directory_key)
 
 					l_result := execute_test (l_class_name, l_retrieved.body_id)
 					socket.put_boolean (True)
@@ -115,7 +115,7 @@ feature {NONE} -- Access: Connection
 
 feature {NONE} -- Access: Test execution
 
-	execution_directory: PATH
+	testing_directory: PATH
 			-- Test execution directory
 			--
 			-- Note: command line arg #2

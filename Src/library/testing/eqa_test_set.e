@@ -33,16 +33,14 @@ feature {NONE} -- Initialization
 			if attached environment.item ({EQA_TEST_SET}.target_path_key) as l_target then
 				create l_target_path.make_from_string (l_target)
 			else
-				if attached environment.item ({EQA_TEST_SET}.execution_directory_key) as l_exec then
+				if attached environment.item ({EQA_TEST_SET}.testing_directory_key) as l_exec then
 					create l_exec_dir.make_from_string (l_exec)
 				else
 					l_exec_dir := l_exec_env.current_working_path
 				end
-
 				l_target_path := l_exec_dir.extended (environment.item_attached ({EQA_TEST_SET}.test_name_key, asserter))
 				environment.put (l_target_path.name, {EQA_TEST_SET}.target_path_key)
 			end
-
 			create l_directory.make_with_path (l_target_path)
 				-- We cannot assume that the directory does not already exist which sometimes
 				-- happen since EiffelStudio let users keep their testing directory via a preference.
@@ -55,8 +53,6 @@ feature {NONE} -- Initialization
 				l_directory.delete_content
 			end
 			assert_32 ({STRING_32} "testing_directory_exists " + l_target_path.name, l_directory.exists)
-			l_exec_env.change_working_path (l_target_path)
-
 			on_prepare
 		ensure then
 			prepared: is_prepared
@@ -208,10 +204,10 @@ feature -- Constants
 			--
 			-- The test name is a string unique to each test wich can be used a file/directory name.
 
-	execution_directory_key: STRING = "EXECUTION_DIRECTORY"
-			-- Key for execution directory setting in {EQA_ENVIRONMENT}
+	testing_directory_key: STRING = "TESTING_DIRECTORY"
+			-- Key for testing directory setting in {EQA_ENVIRONMENT}
 			--
-			-- The execution directory is where the test specific working directories are created.
+			-- The testing directory is where the test specific working directories are created.
 
 	target_path_key: STRING = "TARGET_PATH"
 			-- Key for path in which test of `Current' is executed
@@ -220,7 +216,7 @@ invariant
 	internal_file_system_valid: file_system.asserter = asserter
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

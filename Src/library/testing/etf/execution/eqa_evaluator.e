@@ -47,14 +47,10 @@ feature {NONE} -- Initialization
 			l_args := arguments
 			if l_args.argument_count >= 2 then
 				port := l_args.argument (1).to_integer
-				create execution_directory.make_from_string (l_args.argument (2))
+ 				create execution_directory.make_from_string (l_args.argument (2))
 			else
-				if l_args.argument_count = 1 then
-					port := l_args.argument (1).to_integer
-				else
-						-- See value in {ETEST_EVALUATOR_CONNECTION} from EiffelStudio's code.
-					port := 49200
-				end
+					-- See value in {ETEST_EVALUATOR_CONNECTION} from EiffelStudio's code.
+				port := 49200
 				execution_directory := current_working_path
 			end
 		ensure

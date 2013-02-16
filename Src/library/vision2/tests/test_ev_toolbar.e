@@ -1,40 +1,40 @@
 note
-	description: "Tests for EV_APPLICATION"
+	description: "Tests for EV_TOOLBAR"
 	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 	testing: "type/manual"
 
 class
-	TEST_EV_APPLICATION
+	TEST_EV_TOOLBAR
 
 inherit
 	VISION2_TEST_SET
 
 feature -- Test routines
 
-	test_idle_action_called
-			-- Checks if idle actions are called correctly
+	toolbar_with_button_icons
 		note
 			testing: "execution/isolated"
-		do
-			run_test (agent idle_action_called)
-		end
-
-feature {NONE} -- Actual Test
-
-	idle_action_called
 		local
-			flag: CELL [BOOLEAN]
+			toolbar: EV_TOOL_BAR
+			tool_bar_button: EV_TOOL_BAR_BUTTON
+			window: EV_TITLED_WINDOW
+			stock_pixmaps: EV_STOCK_PIXMAPS
 		do
-			if attached application as l_appl then
-				create flag.put (False)
-				l_appl.add_idle_action_kamikaze (agent flag.put (True))
-				l_appl.process_events
-				assert ("Idle actions called", flag.item)
-			else
-				assert ("Application not initialized.", False)
-			end
+			create stock_pixmaps
+			create toolbar
+
+			create tool_bar_button.make_with_text ("Button 1")
+			tool_bar_button.set_pixmap (stock_pixmaps.default_window_icon)
+			toolbar.extend (tool_bar_button)
+
+			create tool_bar_button.make_with_text ("Button 2")
+			toolbar.extend (tool_bar_button)
+
+			create window
+			window.extend (toolbar)
+			window.show
 		end
 
 note

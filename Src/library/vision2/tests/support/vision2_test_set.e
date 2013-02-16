@@ -30,9 +30,9 @@ feature -- Action
 
 feature {NONE} -- Access
 
-	application: EV_APPLICATION
+	application: detachable EV_APPLICATION
 
-	first_recorded_exception: EXCEPTION;
+	first_recorded_exception: detachable EXCEPTION;
 			-- First caught exception
 
 	record_exception (a_exception: EXCEPTION)
@@ -40,7 +40,9 @@ feature {NONE} -- Access
 		do
 			if first_recorded_exception = Void then
 				first_recorded_exception := a_exception
-				application.add_idle_action_kamikaze (agent application.destroy)
+				if attached application as l_app then
+					l_app.add_idle_action_kamikaze (agent l_app.destroy)
+				end
 			end
 		end
 
@@ -52,8 +54,123 @@ feature {NONE} -- Access
 			end
 		end
 
+feature {NONE} -- Event handling
+
+	process_events
+			-- Process application events
+		do
+			if attached application as l_appl then
+				l_appl.process_events
+			end
+		end
+
+	click_on_button (a_identifer_name: STRING)
+			-- Click on a button `a_identifier_name'.
+		require
+			a_name_not_void: a_identifer_name /= Void
+		local
+			l_screen: EV_SCREEN
+		do
+			if attached {EV_BUTTON} find_widget_with_name (a_identifer_name) as l_button then
+				create l_screen
+				l_screen.set_pointer_position (l_button.screen_x + l_button.width // 2, l_button.screen_y + l_button.height // 2)
+				assert ("Widget under pointer match", l_screen.widget_at_mouse_pointer = l_button)
+				l_screen.fake_pointer_button_click ({EV_POINTER_CONSTANTS}.left)
+			else
+				assert ("Can't find button with name: " + a_identifer_name, False)
+			end
+		end
+
+	click_on_window_cloase_button (a_window_identifier: STRING)
+			-- Click on the close button of a window `a_window_identifier'.
+		require
+			not_void: a_window_identifier /= Void
+		local
+			l_screen: EV_SCREEN
+		do
+			if attached {EV_WINDOW} find_widget_with_name (a_window_identifier) as l_window then
+				create l_screen
+				l_screen.set_pointer_position (l_window.screen_x + l_window.width - 5, l_window.screen_y + 5)
+				l_screen.fake_pointer_button_click ({EV_POINTER_CONSTANTS}.left)
+			else
+				assert ("Can't find window with name: " + a_window_identifier, False)
+			end
+		end
+
+	check_button_text (a_identifier_name: STRING; a_correct_text: STRING)
+			-- Check button's text
+		require
+			a_name_not_void: a_identifier_name /= Void
+			a_correct_text_not_void: a_correct_text /= Void
+		do
+			if attached {EV_BUTTON} find_widget_with_name (a_identifier_name) as l_button then
+				if not l_button.text.same_string (a_correct_text) then
+					assert ("Button's text not correct. " + a_identifier_name + " " + a_correct_text + " " + l_button.text, False)
+				end
+			else
+				assert ("Can't find button with name: " + a_identifier_name, False)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	find_widget_with_name (a_identifier_name: STRING): detachable EV_WIDGET
+			-- Find button with identifier name which is `a_name'
+		require
+			not_void: a_identifier_name /= Void
+		local
+			l_env: EV_ENVIRONMENT
+			l_windows: LINEAR [EV_WINDOW]
+		do
+			if attached application as l_appl then
+				from
+					create l_env
+					l_windows := l_appl.windows
+					l_windows.start
+				until
+					l_windows.after or Result /= Void
+				loop
+					Result := find_widget_recursive (l_windows.item, a_identifier_name)
+
+					l_windows.forth
+				end
+			end
+		end
+
+	find_widget_recursive (a_top_level_widget: EV_WIDGET; a_identifier_name: STRING): detachable EV_WIDGET
+			-- Find widget which identifier name is `a_identifier_name' recursivly in `a_top_level_widget'
+		require
+			a_widget_not_void: a_top_level_widget /= Void
+			a_widget_name_not_void: a_identifier_name /= Void
+		local
+			l_items: LINEAR [EV_WIDGET]
+		do
+			if a_top_level_widget.identifier_name.is_equal (a_identifier_name) then
+				Result := a_top_level_widget
+			else
+				if attached {EV_CONTAINER} a_top_level_widget as lt_container then
+					from
+						l_items := lt_container.linear_representation
+						l_items.start
+					until
+						l_items.after or Result /= Void
+					loop
+						Result := find_widget_recursive (l_items.item, a_identifier_name)
+						l_items.forth
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Conveniences
+
+	colors: EV_STOCK_COLORS
+		once
+			create Result
+		end
+
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -37,22 +37,26 @@ feature {NONE} -- Actual Test
 			flag: BOOLEAN_REF
 			ms_passed: INTEGER
 		do
-			create timeout.make_with_interval (1000)
-			from
-				create flag
-				timeout.actions.extend (agent (a_flag: BOOLEAN_REF)
-					do
-						a_flag.set_item (True)
-					end (flag))
-				ms_passed := 0
-			until
-				flag.item or ms_passed > 1000
-			loop
-				application.sleep (100)
-				application.process_events
-				ms_passed := ms_passed + 100
+			if attached application as l_appl then
+				create timeout.make_with_interval (1000)
+				from
+					create flag
+					timeout.actions.extend (agent (a_flag: BOOLEAN_REF)
+						do
+							a_flag.set_item (True)
+						end (flag))
+					ms_passed := 0
+				until
+					flag.item or ms_passed > 1000
+				loop
+					l_appl.sleep (100)
+					l_appl.process_events
+					ms_passed := ms_passed + 100
+				end
+				assert ("Timeout actions not called!", flag.item)
+			else
+				assert ("Application not initialized", False)
 			end
-			assert ("Timeout actions not called!", flag.item)
 		end
 
 	repeated_timer
@@ -62,25 +66,29 @@ feature {NONE} -- Actual Test
 			counter: INTEGER_REF
 			ms_passed: INTEGER
 		do
-			create timeout.make_with_interval (200)
-			from
-				create counter
-				timeout.actions.extend (agent (a_counter: INTEGER_REF)
-					do
-						a_counter.set_item (a_counter.item + 1)
-					end (counter))
-			until
-				counter.item = 5 or ms_passed > 1000
-			loop
-				application.sleep (20)
-				application.process_events
-				ms_passed := ms_passed + 20
+			if attached application as l_appl then
+				create timeout.make_with_interval (200)
+				from
+					create counter
+					timeout.actions.extend (agent (a_counter: INTEGER_REF)
+						do
+							a_counter.set_item (a_counter.item + 1)
+						end (counter))
+				until
+					counter.item = 5 or ms_passed > 1000
+				loop
+					l_appl.sleep (20)
+					l_appl.process_events
+					ms_passed := ms_passed + 20
+				end
+				assert ("Timeout actions called " + counter.item.out + " instead of 5 times!", counter.item = 5)
+			else
+				assert ("Application not initialized", False)
 			end
-			assert ("Timeout actions called " + counter.item.out + " instead of 5 times!", counter.item = 5)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

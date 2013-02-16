@@ -55,13 +55,12 @@ feature {NONE} -- Actual Test
 			end (flag, ?, ?, ?, ?))
 
 			window.set_size (100, 100)
-			application.process_events
-
+			process_events
 			assert ("Resize action called", flag.item)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

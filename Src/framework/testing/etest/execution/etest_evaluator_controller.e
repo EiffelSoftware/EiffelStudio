@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite)
+	make (a_test_suite: like test_suite; a_testing_directory: like testing_directory)
 			-- Initialize `Current'.
 			--
 			-- `a_test_suite': Test suite containing tests.
@@ -84,6 +84,9 @@ feature {NONE} -- Access
 
 	internal_connection: detachable like connection
 			-- Connection to evaluator
+
+	testing_directory: PATH
+			-- Directory in which tests will have some associated files stored during execution.
 
 feature -- Status report
 
@@ -154,6 +157,9 @@ feature -- Status setting
 				internal_connection := l_connection
 				create l_args.make (100)
 				l_args.append_integer (l_connection.current_port)
+				l_args.append (" %"")
+				l_args.append_string_general (testing_directory.name)
+				l_args.append_character ('"')
 				l_args.append (" -eif_root ")
 				l_args.append ({TEST_SYSTEM_I}.eqa_evaluator_name)
 				l_args.append_character ('.')

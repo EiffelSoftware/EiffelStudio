@@ -450,9 +450,9 @@ feature {NONE} -- Factory
 			-- Create new controller
 		do
 			if test_execution.is_debugging then
-				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (etest_suite)
+				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (etest_suite, testing_directory)
 			else
-				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (etest_suite)
+				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (etest_suite, testing_directory)
 			end
 		end
 

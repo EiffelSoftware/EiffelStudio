@@ -1,0 +1,255 @@
+# AutoTest results for vision2-tests (02/16/2013 00:02)
+TEST_EV_APPLICATION.test_idle_action_called: pass
+TEST_EV_BUTTON.button_set_text: pass
+TEST_EV_COLOR.test_set_rgb_with_24_bit: pass
+TEST_EV_CONTAINER.test_horizontal_box_resizing: pass
+TEST_EV_CONTAINER.test_vertical_box_resizing: pass
+TEST_EV_DRAWING_AREA.drawing_area_draw_pixmap: pass
+TEST_EV_DRAWING_AREA.drawing_area_draw_sub_pixmap: pass
+TEST_EV_DRAWING_AREA.drawing_area_draw_text: pass
+TEST_EV_FONT.font_metrics: pass
+TEST_EV_GRID.test_hide_row: FAIL
+	on_prepare: ok
+	test routine: exceptional (Routine failure in VISION2_TEST_SET.run_test)
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Exception occurred: (Class invariant violated.) tree_disabled_implies_visible_rows_equal_hidden_rows:
+		<0000000002380468>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<0000000002380468>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<0000000002380468>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<0000000002380D48>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @7                                           
+		<00000000023233D8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_GRID        assert @2                                           
+		<0000000002323358>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_GRID        record_exception @6                                 
+		<0000000002323358>  (From VISION2_TEST_SET)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		PROCEDURE           fast_call                                           
+		<0000000002327938>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		PROCEDURE           call @5                                             
+		<0000000002327938>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_LITE_ACTION_SEQUENCE
+		                    call @22               
+		<0000000002327708>  (From ACTION_SEQUENCE) Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_LITE_ACTION_SEQUENCE
+		                    call @3                
+		<0000000002327708>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_IMP  on_exception_action @8                              
+		<0000000002325688>  (From EV_APPLICATION_I)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_IMP  process_event_queue @64
+		<0000000002325688>  (From EV_APPLICATION_I)
+		                                           Resumption attempt failed.    Rescue
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_HANDLER
+		                    process_application_event_queue @1
+		<0000000002327A28>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_HANDLER
+		                    launch @5              
+		<0000000002327A28>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION      internal_launch_application @3
+		<00000000023255F8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION      launch @4                                           
+		<00000000023255F8>                         Routine failure.              Rescue
+		-------------------------------------------------------------------------------
+		TEST_EV_GRID        run_test @6                                         
+		<0000000002323358>  (From VISION2_TEST_SET)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_GRID        test_hide_row @1                                    
+		<0000000002323358>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_EV_PIXMAP.clear: pass
+TEST_EV_PIXMAP.create_with_size: pass
+TEST_EV_PIXMAP.draw_pixmap: pass
+TEST_EV_PIXMAP.draw_segment: pass
+TEST_EV_PIXMAP.draw_sub_pixmap: pass
+TEST_EV_PIXMAP.draw_sub_pixmap2: pass
+TEST_EV_PIXMAP.draw_text: pass
+TEST_EV_PIXMAP.draw_text_draw_text_top_left: pass
+TEST_EV_PIXMAP.load_save: pass
+TEST_EV_PIXMAP.save_to_named_file: pass
+TEST_EV_PIXMAP.set_font_draw_text: pass
+TEST_EV_PIXMAP.set_with_named_file: pass
+TEST_EV_SCREEN.test_creation: pass
+TEST_EV_SCREEN.test_pixel_color_relative_to: pass
+TEST_EV_TIMEOUT.test_basic_timer: unresolved (Internal Failure)
+	The executor for a test of type ETEST failed to report a test result for test TEST_EV_TIMEOUT.test_basic_timer
+TEST_EV_TIMEOUT.test_repeated_timer: pass
+TEST_EV_TOOLBAR.toolbar_with_button_icons: pass
+TEST_EV_VIEWPORT.test_viewport_item_size: FAIL
+	on_prepare: ok
+	test routine: exceptional (Routine failure in VISION2_TEST_SET.run_test)
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Exception occurred: (Developer exception.) width_correct: 52 instead of 0:
+		<00000000022A5558>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000022A5558>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000022A5558>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<00000000022A6098>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @7                                           
+		<0000000002293448>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_VIEWPORT    assert @2                                           
+		<00000000022933C8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_VIEWPORT    record_exception @6                                 
+		<00000000022933C8>  (From VISION2_TEST_SET)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		PROCEDURE           fast_call                                           
+		<0000000002297928>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		PROCEDURE           call @5                                             
+		<0000000002297928>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_LITE_ACTION_SEQUENCE
+		                    call @22               
+		<00000000022976F8>  (From ACTION_SEQUENCE) Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_LITE_ACTION_SEQUENCE
+		                    call @3                
+		<00000000022976F8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_IMP  on_exception_action @8                              
+		<0000000002295678>  (From EV_APPLICATION_I)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_IMP  process_event_queue @64
+		<0000000002295678>  (From EV_APPLICATION_I)
+		                                           Resumption attempt failed.    Rescue
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_HANDLER
+		                    process_application_event_queue @1
+		<0000000002297A18>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_HANDLER
+		                    launch @5              
+		<0000000002297A18>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION      internal_launch_application @3
+		<00000000022955E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION      launch @4                                           
+		<00000000022955E8>                         Routine failure.              Rescue
+		-------------------------------------------------------------------------------
+		TEST_EV_VIEWPORT    run_test @6                                         
+		<00000000022933C8>  (From VISION2_TEST_SET)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_VIEWPORT    test_viewport_item_size @1
+		<00000000022933C8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_EV_WINDOW.test_resize_action_called: FAIL
+	on_prepare: ok
+	test routine: exceptional (Routine failure in VISION2_TEST_SET.run_test)
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Exception occurred: (Developer exception.) Resize action called:
+		<000000000240FBB8>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<000000000240FBB8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<000000000240FBB8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<00000000024106E8>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @7                                           
+		<0000000002403438>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_WINDOW      assert @2                                           
+		<00000000024033B8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_WINDOW      record_exception @6                                 
+		<00000000024033B8>  (From VISION2_TEST_SET)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		PROCEDURE           fast_call                                           
+		<0000000002407918>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		PROCEDURE           call @5                                             
+		<0000000002407918>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_LITE_ACTION_SEQUENCE
+		                    call @22               
+		<00000000024076E8>  (From ACTION_SEQUENCE) Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_LITE_ACTION_SEQUENCE
+		                    call @3                
+		<00000000024076E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_IMP  on_exception_action @8                              
+		<0000000002405668>  (From EV_APPLICATION_I)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_IMP  process_event_queue @64
+		<0000000002405668>  (From EV_APPLICATION_I)
+		                                           Resumption attempt failed.    Rescue
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_HANDLER
+		                    process_application_event_queue @1
+		<0000000002407A08>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION_HANDLER
+		                    launch @5              
+		<0000000002407A08>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION      internal_launch_application @3
+		<00000000024055D8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EV_APPLICATION      launch @4                                           
+		<00000000024055D8>                         Routine failure.              Rescue
+		-------------------------------------------------------------------------------
+		TEST_EV_WINDOW      run_test @6                                         
+		<00000000024033B8>  (From VISION2_TEST_SET)
+		                                           Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EV_WINDOW      test_resize_action_called @1
+		<00000000024033B8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_EV_WINDOW.test_show: pass
+TEST_UNICODE.button_set_surrogate_text: pass

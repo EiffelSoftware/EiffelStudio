@@ -124,9 +124,9 @@ feature {NONE} -- Basic operation
 							localint := rate + rest (total_rest)
 							total_rest := (total_rest - 1).max (0)
 							if l_agents /= Void then
-								l_agents.extend (agent set_item_size (litem, mark, bwidth, localint, litem.height.max (cheight), originator))
+								l_agents.extend (agent set_item_size (litem, mark, bwidth, localint, litem.minimum_height.max (cheight), originator))
 							else
-								set_item_size (litem, mark, bwidth, localint, litem.height.max (cheight), originator)
+								set_item_size (litem, mark, bwidth, localint, litem.minimum_height.max (cheight), originator)
 							end
 							mark := mark + space + localint
 						end
@@ -187,9 +187,9 @@ feature {NONE} -- Basic operation
 								end
 							end
 							if l_agents /= Void then
-								l_agents.extend (agent set_item_size (litem, mark, bwidth, localint, litem.height.max (cheight), originator))
+								l_agents.extend (agent set_item_size (litem, mark, bwidth, localint, litem.minimum_height.max (cheight), originator))
 							else
-								set_item_size (litem, mark, bwidth, localint, litem.height.max (cheight), originator)
+								set_item_size (litem, mark, bwidth, localint, litem.minimum_height.max (cheight), originator)
 							end
 							mark := mark + space + localint
 						elseif lchild.index = next_non_expandable then

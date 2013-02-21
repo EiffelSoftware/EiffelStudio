@@ -222,7 +222,6 @@ feature -- Access
 		local
 			dvnet: DUMP_VALUE_DOTNET
 			dtype: CLASS_C
-			dobj: detachable DEBUGGED_OBJECT
 			scp_pid: NATURAL_16
 		do
 			if debugger_manager.is_dotnet_project then
@@ -257,8 +256,6 @@ feature -- Access
 			-- Make an expanded object item of type `dtype'.
 		require
 			dtype_not_void: dtype /= Void
-		local
-			dobj: detachable DEBUGGED_OBJECT
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_expanded_object_value (addr, dtype, a_scp_pid)

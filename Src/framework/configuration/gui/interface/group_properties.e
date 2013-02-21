@@ -191,6 +191,7 @@ feature {NONE} -- Implementation
 				-- condition
 			create l_dial.make_with_dialog (conf_interface_names.group_condition_name, create {CONDITION_DIALOG})
 			l_dial.set_description (conf_interface_names.group_condition_description)
+			l_dial.set_display_agent (agent {CONF_CONDITION_LIST}.text)
 			l_dial.set_value (a_group.internal_conditions)
 			l_dial.disable_text_editing
 			l_dial.change_value_actions.extend (agent a_group.set_conditions)

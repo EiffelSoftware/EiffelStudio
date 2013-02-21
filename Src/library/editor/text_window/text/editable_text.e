@@ -2143,7 +2143,6 @@ feature {NONE} -- Implementation
 			a_tab_symbol_not_empty: not a_tab_symbol.is_empty
 		local
 			l_text_count, l_tab_symbol_count: INTEGER
-			l_first_line: STRING_32
 			l_stop: BOOLEAN
 			i: INTEGER
 		do
@@ -2191,7 +2190,7 @@ invariant
 	tabulation_symbol_valid: tabulation_symbol.count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

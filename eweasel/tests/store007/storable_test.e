@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test object for storable"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create_basic_types
 			create_tuples
@@ -41,7 +41,7 @@ feature -- Basic types
 	c: CHARACTER
 	s: STRING
 
-	create_basic_types is
+	create_basic_types
 		do
 			i8 := -9
 			i16 := -1245
@@ -71,7 +71,7 @@ feature -- Tuples
 	t5: TUPLE [STRING, NATURAL_8, NATURAL_16]
 	t6: TUPLE [INTEGER_8, INTEGER_16, INTEGER, INTEGER_64, NATURAL_8, NATURAL_16, NATURAL_32, NATURAL_64]
 
-	create_tuples is
+	create_tuples
 		do
 			t1 := []
 			t2 := [5]
@@ -102,7 +102,7 @@ feature -- Specials
 	spec_s: SPECIAL [STRING]
 	spec_t: SPECIAL [TUPLE]
 
-	create_specials is
+	create_specials
 		do
 			create spec_i8.make_filled (0, 100)
 			create spec_i16.make_filled (0, 100)
@@ -147,7 +147,7 @@ feature -- Lists
 
 	lists: ARRAYED_LIST [like list_cell]
 
-	create_lists is
+	create_lists
 		local
 			i: INTEGER
 		do
@@ -180,7 +180,7 @@ feature -- Lists
 			end
 		end
 
-	list: LINKED_LIST [CELL [INTEGER]] is
+	list: LINKED_LIST [CELL [INTEGER]]
 			-- New big list of data
 		local
 			i: INTEGER

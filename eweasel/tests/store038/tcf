@@ -1,0 +1,25 @@
+test_name 	storable-performance-testing
+test_description Based of store007, it is simply used to test on a regular basis performance of the various storable mechanisms we currently support.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	storable_test.e $CLUSTER storable_test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output2
+execute_result 	ok
+
+test_end

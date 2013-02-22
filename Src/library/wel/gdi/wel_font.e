@@ -235,6 +235,7 @@ feature -- Access
 			screen_dc_pointer: POINTER
 			abc_struct: WEL_ABC_STRUCT
 			abc_struct_size: INTEGER
+			l_wel_rect: like wel_rect
 			managed_pointer: MANAGED_POINTER
 			char_pointer: POINTER
 			character_code: NATURAL_32
@@ -245,7 +246,6 @@ feature -- Access
 			metric_height: INTEGER
 			last_newline_index: INTEGER
 			optimize_for_short_strings: BOOLEAN
-			standard_result: like string_size
 		do
 			if a_string.count = 0 then
 				cur_width := 0
@@ -336,11 +336,13 @@ feature -- Access
 					greatest_c := cur_width - greatest_c
 				else
 						-- We are not dealing with a true type font, so
-						-- use `string_size' to return the best approximation.
+						-- use the same implementation as `string_size' to return the best approximation.
 						-- The third and fourth values of the result will be 0.
-					standard_result := string_size (a_string)
-					cur_width := standard_result.width
-					cur_height := standard_result.height
+					l_wel_rect := wel_rect
+					l_wel_rect.set_rect (0, 0, 32767, 32767)
+					screen_dc.draw_text (a_string, l_wel_rect, dt_calcrect | dt_expandtabs | dt_noprefix)
+					cur_width := l_wel_rect.width
+					cur_height := l_wel_rect.height
 				end
 				screen_dc.unselect_font
 				screen_dc.quick_release
@@ -461,7 +463,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

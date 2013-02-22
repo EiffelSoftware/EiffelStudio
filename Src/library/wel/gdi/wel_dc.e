@@ -1554,11 +1554,15 @@ feature -- Basic operations
 	alpha_blend (a_x_dest, a_y_dest, a_width, a_height: INTEGER;
 			dc_source: WEL_DC; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER
 			a_blend_function: WEL_BLEND_FUNCTION): BOOLEAN
-				-- Per pixel alpha blend.
+				-- Per pixel alpha blend of bitmap of `dc_source' onto current.
+				-- The source rectangle should be within the bounds of the bitmap associated with `dc_source'.
 		require
 			exists: exists
 			dc_source_not_void: dc_source /= Void
 			dc_source_exists: dc_source.exists
+			dc_source_bitmap_selected: dc_source.bitmap_selected
+			valid_src_top_left_coordinate: a_x_src >= 0 and a_y_src >= 0
+			src_rect_in_source_dc: attached dc_source.bitmap as l_bitmap and then (l_bitmap.width >= (a_x_src + a_width_src) and l_bitmap.height >= (a_y_src + a_height_src))
 			blend_function_not_void: a_blend_function /= Void
 			blend_function_exists: a_blend_function.exists
 		local
@@ -2619,7 +2623,7 @@ invariant
 	valid_background_mode: exists implies is_opaque /= is_transparent
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -2111,9 +2111,9 @@ test	finalize-expanded-generic-c-error	ccomp087 tcf fail c_compilation
 test	freeze-retrieval-mismatch	store001 tcf pass storable
 test	retrieve-corrupted-file		store002 tcf pass storable
 test	melt-retrieval-mismatch		store003 tcf pass storable
-test	melted-retrieve-list-expanded	store004 tcf pass storable
+test	melted-retrieve-list-expanded	store004 tcf pass storable expanded
 test	store-tuple-integer		store005 tcf pass storable tuple
-test	store-generic-reference-class-used-as-expanded	store006 tcf pass storable
+test	store-generic-reference-class-used-as-expanded	store006 tcf pass storable expanded
 test	various-storable-format-testing	store007 tcf pass storable
 test	missing-type-retrieval		store008 tcf pass storable
 test	store-expanded-as-reference	store009 tcf pass storable expanded
@@ -2145,6 +2145,7 @@ test	old-hashtable-retrieval		store034 tcf pass storable table
 test	store-retrieve-bogus-version-mismatch	store035 tcf pass storable
 test	correct-mismatch-memory-corruption store036 tcf pass storable
 test	store-retrieve-non-void-safe	store037 tcf pass storable attached_types
+test	storable-performance-testing	store038 tcf pass storable performance
 
 -- Flat, short, flatshort tests
 

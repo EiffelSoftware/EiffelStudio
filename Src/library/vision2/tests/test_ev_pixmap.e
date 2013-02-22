@@ -123,47 +123,83 @@ feature -- Test routines
 			-- Draws using draw_sub_pixmap and draw_pixmap (sub_pixmap), which should produce the same result
 		note
 			testing: "execution/isolated"
-		local
-			pixmap1, pixmap2: EV_PIXMAP
-			window: EV_TITLED_WINDOW
 		do
-			create pixmap2
-			pixmap2.set_with_named_file (lenna)
+			run_test (agent
+				local
+					pixmap1, pixmap2: EV_PIXMAP
+					window: EV_TITLED_WINDOW
+				do
+					create pixmap2
+					pixmap2.set_with_named_file (lenna)
 
-			create pixmap1.make_with_size (215, 110)
-			pixmap1.set_background_color (colors.green)
-			pixmap1.clear
+					create pixmap1.make_with_size (1024, 230)
+					pixmap1.set_background_color (colors.green)
+					pixmap1.clear
 
-			pixmap1.draw_sub_pixmap (5, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 100, 100))
+					pixmap1.draw_sub_pixmap (5, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 100, 100))
+					pixmap1.draw_sub_pixmap (110, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 1024, 100))
+					pixmap1.draw_rectangle (530, 5, 110, 110)
+					pixmap1.draw_sub_pixmap (530, 5, pixmap2, create {EV_RECTANGLE}.make (-10, -10, 100, 100))
 
-			pixmap1.draw_pixmap (110, 5, pixmap2.sub_pixmap (create {EV_RECTANGLE}.make (100, 100, 100, 100)))
+					pixmap1.draw_rectangle (530, 115, 110, 110)
+					pixmap1.draw_pixmap (5, 115, pixmap2.sub_pixmap (create {EV_RECTANGLE}.make (100, 100, 100, 100)))
+					pixmap1.draw_pixmap (110, 115, pixmap2.sub_pixmap (create {EV_RECTANGLE}.make (100, 100, 1024, 100)))
+					pixmap1.draw_pixmap (530, 115, pixmap2.sub_pixmap (create {EV_RECTANGLE}.make (-10, -10, 100, 100)))
 
-			create window
-			window.extend (pixmap1)
-			window.show
+					create window
+					window.extend (pixmap1)
+					window.set_size (1050, 300)
+					window.show
+					process_events
+				end
+			)
 		end
 
 	draw_sub_pixmap2
+			-- In this test
 		note
 			testing: "execution/isolated"
-		local
-			pixmap1, pixmap2: EV_PIXMAP
-			window: EV_TITLED_WINDOW
 		do
-			create pixmap2
-			pixmap2.set_with_named_file (lenna)
+			run_test (agent
+				local
+					pixmap1, pixmap2: EV_PIXMAP
+					window: EV_TITLED_WINDOW
+					l_app: EV_APPLICATION
+				do
+						-- It is very important to use `default_create' here, as otherwise
+						-- it creates on Windows the drawable, not the widget version.
+					create pixmap2
+					pixmap2.set_with_named_file (lenna)
 
-			create pixmap1.make_with_size (215, 110)
-			pixmap1.set_background_color (colors.green)
-			pixmap1.clear
+					assert_32 ("Proper width", pixmap2.width = 512)
+					assert_32 ("Proper height", pixmap2.height = 512)
 
-			pixmap1.draw_sub_pixmap (5, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 100, 100))
+					create pixmap1.make_with_size (1024, 230)
+					pixmap1.set_background_color (colors.green)
+					pixmap1.clear
 
-			pixmap1.draw_sub_pixmap (110, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 412, 100))
+					pixmap1.draw_sub_pixmap (5, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 100, 100))
+					pixmap1.draw_sub_pixmap (110, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 1024, 100))
+					pixmap1.draw_rectangle (530, 5, 110, 110)
+					pixmap1.draw_sub_pixmap (530, 5, pixmap2, create {EV_RECTANGLE}.make (-10, -10, 100, 100))
 
-			create window
-			window.extend (pixmap1)
-			window.show
+						-- Draw rectangle before chaning mode.
+					pixmap1.draw_rectangle (530, 115, 110, 110)
+						-- Now we draw the exact same image as above using `xor' not for using `xor' but to exercise
+						-- the default drawing method on Windows which will use `BitBlt' instead of `AlphaBlend' and
+						-- we make sure that visually it looks the same apart from the color.
+					pixmap1.set_drawing_mode ({EV_DRAWABLE_CONSTANTS}.drawing_mode_xor)
+					pixmap1.draw_sub_pixmap (5, 115, pixmap2, create {EV_RECTANGLE}.make (100, 100, 100, 100))
+					pixmap1.draw_sub_pixmap (110, 115, pixmap2, create {EV_RECTANGLE}.make (100, 100, 1024, 100))
+					pixmap1.draw_sub_pixmap (530, 115, pixmap2, create {EV_RECTANGLE}.make (-10, -10, 100, 100))
+
+					create window
+					window.extend (pixmap1)
+					window.set_minimum_size (1050, 300)
+					window.show
+					process_events
+				end
+			)
 		end
 
 	draw_text

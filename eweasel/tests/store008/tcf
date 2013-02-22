@@ -20,7 +20,7 @@ copy_sub 	test.e $CLUSTER test.e
 compile_melted
 compile_result 	ok
 
-execute_work 	NONE exec_output1
+execute_work 	NONE exec_output2
 execute_result 	ok
 
 

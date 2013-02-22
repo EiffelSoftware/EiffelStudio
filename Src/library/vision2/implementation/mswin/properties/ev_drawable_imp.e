@@ -611,6 +611,7 @@ feature -- Drawing operations
 			l_result			: BOOLEAN
 			l_is_src_bitmap_32bits : BOOLEAN
 			l_mask_dc: detachable WEL_MEMORY_DC
+			l_x, l_y: INTEGER
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= Void end
@@ -691,11 +692,31 @@ feature -- Drawing operations
 								source_bitmap_dc, source_x, source_y, l_src_drawing_mode
 							)
 						else
-							-- Alpha blend function works same as bit blt function, but it care about alpha channel if possible.
+								-- Alpha blend function works same as bit blt function, but it care about alpha channel if possible.
 							create l_blend_function.make
-							l_result := dest_dc.alpha_blend (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, source_width, source_height, l_blend_function)
-							check successed: l_result = True end
-							check not_shared: not l_blend_function.shared end
+								-- If `source_x' and `source_y' are negative `alpha_blend' won't work, but luckily
+								-- it is as if we were drawing the subpixmap at an offset position from `x', `y'.
+								-- and we shrink the requested source width and height accordingly.
+							if source_x < 0 then
+								l_x := x - source_x
+								source_width := source_width + source_x
+								source_x := 0
+							else
+								l_x := x
+							end
+							if  source_y < 0 then
+								l_y := y - source_y
+								source_height := source_height + source_y
+								source_y := 0
+							else
+								l_y := y
+							end
+							l_result := dest_dc.alpha_blend (l_x, l_y, source_width.min (pixmap_width - source_x), source_height.min (pixmap_height - source_y), source_bitmap_dc,
+								source_x, source_y, source_width.min (pixmap_width - source_x), source_height.min (pixmap_height - source_y), l_blend_function)
+							check
+								succeeded: l_result
+								not_shared: not l_blend_function.shared
+							end
 							l_blend_function.dispose
 						end
 							-- Free GDI Objects
@@ -1354,14 +1375,14 @@ invariant
 		attached internal_pen as l_pen implies l_pen.reference_tracked
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

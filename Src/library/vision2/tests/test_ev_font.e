@@ -48,10 +48,25 @@ feature -- Test routines
 					pixmap.draw_text_top_left (10, 10, "the quick brown fox jumps over the lazy dog")
 
 					create window
+					window.set_size (1000, 200)
 					window.extend (pixmap)
 					window.show
+					process_events
 				end
 			)
+		end
+
+	non_truetype_font_size
+		local
+			l_font: EV_FONT
+			l_tuple: TUPLE [width: INTEGER_32; height: INTEGER_32; left_offset: INTEGER_32; right_offset: INTEGER_32]
+		do
+			create l_font
+				-- If `vt100' is not available, replace it with a non-TrueType font.
+			l_font.preferred_families.extend ("vt100")
+			l_font.set_height (10)
+				-- The test here checks there is no contract violation during the evaluation of `string_size'.
+			l_tuple := l_font.string_size ("mmmm")
 		end
 
 note

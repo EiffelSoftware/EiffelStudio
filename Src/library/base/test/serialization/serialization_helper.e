@@ -9,6 +9,14 @@ class
 inherit
 	SED_STORABLE_FACILITIES
 
+	STORABLE
+		rename
+			basic_store as c_basic_store,
+			general_store as c_general_store,
+			independent_store as c_independent_store,
+			retrieved as c_retrieved
+		end
+
 feature -- Operations
 
 	store_object (a_obj: ANY; a_file_name: STRING)
@@ -23,6 +31,9 @@ feature -- Operations
 			l_path: PATH
 		do
 			create l_path.make_from_string (a_file_name)
+
+				-- Discard pointers or not for the C mechanism.
+			set_discard_pointers (not is_pointer_value_stored)
 
 				-- 1- C Basic store
 			create l_file.make_with_path (l_path.appended_with_extension (c_basic_extension))
@@ -39,13 +50,14 @@ feature -- Operations
 				-- 3- C Independent store
 			create l_file.make_with_path (l_path.appended_with_extension (c_independent_extension))
 			l_file.open_write
-			l_file.general_store (a_obj)
+			l_file.independent_store (a_obj)
 			l_file.close
 
 				-- 4- SED Session store
 			create l_file.make_with_path (l_path.appended_with_extension (sed_session_extension))
 			l_file.open_write
 			create l_writer.make_for_writing (l_file)
+			l_writer.set_is_pointer_value_stored (is_pointer_value_stored)
 			session_store (a_obj, l_writer, True)
 			l_file.close
 
@@ -53,6 +65,7 @@ feature -- Operations
 			create l_file.make_with_path (l_path.appended_with_extension (sed_basic_extension))
 			l_file.open_write
 			create l_writer.make_for_writing (l_file)
+			l_writer.set_is_pointer_value_stored (is_pointer_value_stored)
 			basic_store (a_obj, l_writer, True)
 			l_file.close
 
@@ -60,6 +73,7 @@ feature -- Operations
 			create l_file.make_with_path (l_path.appended_with_extension (sed_independent_extension))
 			l_file.open_write
 			create l_writer.make_for_writing (l_file)
+			l_writer.set_is_pointer_value_stored (is_pointer_value_stored)
 			sed_independent_store (a_obj, l_writer)
 			l_file.close
 
@@ -67,6 +81,7 @@ feature -- Operations
 			create l_file.make_with_path (l_path.appended_with_extension (sed_recoverable_extension))
 			l_file.open_write
 			create l_writer.make_for_writing (l_file)
+			l_writer.set_is_pointer_value_stored (is_pointer_value_stored)
 			store (a_obj, l_writer)
 			l_file.close
 		end
@@ -110,6 +125,42 @@ feature -- Operations
 			end
 		end
 
+	retrieved_recoverable_objects (a_file_name: STRING): HASH_TABLE [ANY, STRING]
+			-- Using `a_file_name' tries all the possible serialization mechanisms
+			-- that supports recovarability features and associate the retrieved
+			-- object with the type of serialization.
+		local
+			l_reader: SED_MEDIUM_READER_WRITER
+			l_file: RAW_FILE
+			l_path: PATH
+			l_obj: detachable ANY
+		do
+			create Result.make (2)
+			create l_path.make_from_string (a_file_name)
+
+			create l_file.make_with_path (l_path.appended_with_extension (c_independent_extension))
+			if l_file.exists then
+				l_file.open_read
+				l_obj := l_file.retrieved
+				if l_obj /= Void then
+					Result.put (l_obj, c_independent_extension)
+				end
+				l_file.close
+			end
+
+			create l_file.make_with_path (l_path.appended_with_extension (sed_recoverable_extension))
+			if l_file.exists then
+				l_file.open_read
+				create l_reader.make_for_reading (l_file)
+				retrieved_errors := Void
+				l_obj := retrieved (l_reader, True)
+				if l_obj /= Void then
+					Result.put (l_obj, sed_recoverable_extension)
+				end
+				l_file.close
+			end
+		end
+
 feature -- Access
 
 	storable_types: ARRAYED_LIST [STRING]
@@ -118,6 +169,27 @@ feature -- Access
 			create Result.make (10)
 			Result.append (c_storable_types)
 			Result.append (sed_storable_types)
+		end
+
+	recoverable_types: ARRAYED_LIST [STRING]
+			-- List of all possible serializations
+		once
+			create Result.make (10)
+			Result.extend (c_independent_extension)
+			Result.extend (sed_recoverable_extension)
+		end
+
+	is_pointer_value_stored: BOOLEAN
+			-- Is value of a POINTER stored?
+
+feature -- Settings
+
+	set_is_pointer_value_stored (v: like is_pointer_value_stored)
+			-- Set `is_pointer_value_stored' with `v'.
+		do
+			is_pointer_value_stored := v
+		ensure
+			is_pointer_value_stored_set: is_pointer_value_stored = v
 		end
 
 feature -- C serializations
@@ -169,5 +241,7 @@ feature {NONE} -- Implementation
 			l_serializer.encode
 			a_writer.write_footer
 		end
+
+
 
 end

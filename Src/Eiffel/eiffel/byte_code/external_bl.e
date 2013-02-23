@@ -453,6 +453,7 @@ feature
 		local
 			expr_b: PARAMETER_B;
 			l_encapsulated: BOOLEAN
+			l_is_built_in: BOOLEAN
 		do
 			multi_constraint_static := e.multi_constraint_static
 			is_static_call := e.is_static_call
@@ -463,6 +464,7 @@ feature
 			set_parameters (e.parameters)
 			l_encapsulated := e.encapsulated
 			extension := e.extension;
+			l_is_built_in := extension.is_built_in
 			feature_id := e.feature_id;
 			feature_name_id := e.feature_name_id;
 			routine_id := e.routine_id
@@ -475,7 +477,7 @@ feature
 					expr_b ?= parameters.item
 					parameters.replace (expr_b.enlarged);
 					if
-						not l_encapsulated and then
+						(not l_is_built_in and not l_encapsulated) and then
 						(not expr_b.is_hector and real_type (expr_b.type).c_type.is_reference)
 					then
 							-- We are handling an external whose parameter's type is not an
@@ -524,7 +526,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -8,7 +8,7 @@ expanded class TEST2
 feature
 	d: DOUBLE
 
-	to_reference: ANY is
+	to_reference: ANY
 		do
 		end
 end

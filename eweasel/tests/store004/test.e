@@ -8,7 +8,7 @@ class TEST
 creation
 	make
 feature
-	make is
+	make
 		local
 			list: TWO_WAY_LIST [TEST2];
 			k: INTEGER;

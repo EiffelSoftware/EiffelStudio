@@ -2710,6 +2710,7 @@ test	targeted-object-call			attach099 tcf fail void_safe targeted validity
 test	targeted-equality-operand		attach100 tcf fail void_safe targeted validity
 test	targeted-assignment-source		attach101 tcf fail void_safe targeted validity
 test	targeted-actual-argument		attach102 tcf fail void_safe targeted validity
+test	vevi-not-detected				attach103 tcf fail void_safe validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

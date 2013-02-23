@@ -1,0 +1,10 @@
+test_name 	 vevi-not-detected
+test_description An attached attribute with a postcondition but without a body and that is not created in the creation procedure should raise a VEVI error but does not.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error	TEST VEVI
+
+test_end

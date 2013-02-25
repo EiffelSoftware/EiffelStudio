@@ -766,9 +766,6 @@ feature {NONE} -- Action handlers
 			-- `a_widget': The widget the move was performed on.
 			-- `a_screen_x': Position of mouse cusor on the x-axis.
 			-- `a_screen_y': Position of mouse cusor on the y-axis.
-		require
-			a_screen_x_non_negative: a_screen_x >= 0
-			a_screen_y_non_negative: a_screen_y >= 0
 		local
 			l_window: like popup_window
 			l_sx, l_sy: INTEGER

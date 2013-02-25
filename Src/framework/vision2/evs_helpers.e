@@ -225,13 +225,13 @@ feature -- Placement
 			l_screen := (create {EV_SCREEN}).monitor_area_from_position (
 				a_rect.x, a_rect.y)
 
-			if (a_rect.x + a_rect.width + a_width) > l_screen.width then
+			if (a_rect.x + a_rect.width + a_width) > l_screen.width + l_screen.x then
 					-- Out of space on the right, given width
 					-- Move to the left.
 				l_new_x := a_rect.x - a_width
-				if l_new_x < 0 then
-						-- Out of the screen on left side, move it back to left side and x coordinate overlap is allowed.
-					l_new_x := l_screen.width - a_width
+				if l_new_x < l_screen.x then
+						-- Out of the screen on left side, move it back to right side and x coordinate overlap is allowed.
+					l_new_x := l_screen.x + l_screen.width - a_width
 				end
 			else
 					-- Place on the right.
@@ -240,21 +240,21 @@ feature -- Placement
 
 			if l_new_x > a_rect.x - a_width and then l_new_x < a_rect.x + a_rect.width then
 					-- Overlapped x, try the space bellow and above.
-				if l_screen.height - a_rect.y - a_rect.height >= a_height then
+				if l_screen.y + l_screen.height - a_rect.y - a_rect.height >= a_height then
 						-- Enough space bellow.
 					l_new_y := a_rect.y + a_rect.height
-				elseif a_rect.y >= a_height then
+				elseif a_rect.y - l_screen.y >= a_height then
 						-- Enough space above
 					l_new_y := a_rect.y - a_height
 				else
 						-- Allow overlap on bottom.
-					l_new_y := l_screen.height - a_height
+					l_new_y := l_screen.y + l_screen.height - a_height
 				end
 			else
 					-- x is not overlapped, simply adjust y.
-				if (a_rect.y + a_height) > l_screen.height then
+				if a_rect.y + a_height > l_screen.y + l_screen.height then
 						-- Out of space, given height.
-					l_new_y := l_screen.height - a_height
+					l_new_y := l_screen.y + l_screen.height - a_height
 				else
 						-- Align to the top line of the area.
 					l_new_y := a_rect.y
@@ -267,7 +267,7 @@ feature -- Placement
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

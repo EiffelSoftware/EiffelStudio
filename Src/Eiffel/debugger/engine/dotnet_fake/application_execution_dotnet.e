@@ -37,6 +37,9 @@ feature {NONE} -- Ancestor facade
 	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) do end
 	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) do end
 
+	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE do end
+	dump_value_at_address (a_addr: DBG_ADDRESS): DUMP_VALUE do end
+	debug_value_at_address (a_addr: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE do end
 
 feature -- Client facade
 
@@ -47,7 +50,7 @@ feature -- Client facade
 	callback_notification_processing: BOOLEAN do end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

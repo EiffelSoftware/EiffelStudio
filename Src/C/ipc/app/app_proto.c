@@ -1090,7 +1090,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 	long offset;
 	EIF_TYPE_INDEX dtype;				/* Object dynamic type */
 	EIF_REFERENCE o_ref;
-	EIF_REFERENCE reference;				/* Reference attribute */
+	EIF_REFERENCE reference;		/* Reference attribute */
 	char **names;					/* Attribute names */
 	char *name;
 	long i;
@@ -1145,7 +1145,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 				int32 dtype = Dtype(o_ref);
 				int32 scp_pid=0;
 				if (o_ref) {
-					scp_pid = (int32) RTS_PID(reference);
+					scp_pid = (int32) RTS_PID(o_ref);
 				}
 					
 				app_twrite (&dtype, sizeof(int32));

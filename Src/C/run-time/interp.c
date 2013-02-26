@@ -247,8 +247,6 @@ rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX 
 /* Calling protocol */
 rt_private void put_once_result (EIF_TYPED_VALUE * ptr, uint32 rtype, MTOT OResult); /* Save local result to permanent once storage */
 rt_private void get_once_result (MTOT OResult, uint32 rtype, EIF_TYPED_VALUE *ptr);   /* Retrieve local result from permanent once storage */
-rt_private void put_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, uint32 rtype, EIF_TYPED_VALUE *ptr); /* put local result for once per object storage */
-rt_private void get_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, uint32 rtype, EIF_TYPED_VALUE *ptr); /* retrieve local result from once per object storage */
 
 rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE current_ref); /* Initialize to 0 a variable entity */
 rt_private void init_registers(void);			/* Intialize registers in callee */
@@ -6318,71 +6316,6 @@ rt_private void get_once_result (MTOT OResult, uint32 rtype, EIF_TYPED_VALUE *pt
 	case SK_EXP:
 	case SK_REF:
 		ptr->it_ref = *MTOR(EIF_REFERENCE, OResult);
-		break;
-	case SK_VOID:
-		break;
-	default:
-		eif_panic(MTC "invalid result type");
-	}
-}
-
-
-rt_private void put_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, uint32 rtype, EIF_TYPED_VALUE *ptr)
-{
-	REQUIRE("ptr not null", ptr);
-
-	switch (rtype & SK_HEAD)
-	{
-	case SK_BOOL:    *(EIF_BOOLEAN*)(curr->it_ref + offset) = ptr->it_char;   break;
-	case SK_CHAR8:   *(EIF_CHARACTER_8*)(curr->it_ref + offset) = ptr->it_char;   break;
-	case SK_CHAR32:  *(EIF_CHARACTER_32*)(curr->it_ref + offset) = ptr->it_wchar;  break;
-	case SK_UINT8:   *(EIF_NATURAL_8*)(curr->it_ref + offset) = ptr->it_uint8;  break;
-	case SK_UINT16:  *(EIF_NATURAL_16*)(curr->it_ref + offset) = ptr->it_uint16; break;
-	case SK_UINT32:  *(EIF_NATURAL_32*)(curr->it_ref + offset) = ptr->it_uint32; break;
-	case SK_UINT64:  *(EIF_NATURAL_64*)(curr->it_ref + offset) = ptr->it_uint64; break;
-	case SK_INT8:    *(EIF_INTEGER_8*)(curr->it_ref + offset) = ptr->it_int8;   break;
-	case SK_INT16:   *(EIF_INTEGER_16*)(curr->it_ref + offset) = ptr->it_int16;  break;
-	case SK_INT32:   *(EIF_INTEGER_32*)(curr->it_ref + offset) = ptr->it_int32;  break;
-	case SK_INT64:   *(EIF_INTEGER_64*)(curr->it_ref + offset) = ptr->it_int64;  break;
-	case SK_REAL32:  *(EIF_REAL_32*)(curr->it_ref + offset) = ptr->it_real32; break;
-	case SK_REAL64:  *(EIF_REAL_64*)(curr->it_ref + offset) = ptr->it_real64; break;
-	case SK_POINTER: *(EIF_POINTER*)(curr->it_ref + offset) = ptr->it_ptr;    break;
-	case SK_EXP:
-		eif_std_ref_copy(ptr->it_ref, curr->it_ref + offset);
-		break;
-	case SK_BIT:
-	case SK_REF:
-		 *(EIF_REFERENCE*)(curr->it_ref + offset) = ptr->it_ref;
-		 break;
-	}
-}
-
-rt_private void get_once_per_object_result (EIF_TYPED_VALUE *curr, long offset, uint32 rtype, EIF_TYPED_VALUE *ptr)
-{
-	REQUIRE("ptr not null", ptr);
-
-	switch (rtype & SK_HEAD)
-	{
-	case SK_BOOL:
-	case SK_CHAR8:   ptr->it_char   = *(EIF_CHARACTER_8*)(curr->it_ref + offset); break;
-	case SK_CHAR32:  ptr->it_wchar  = *(EIF_CHARACTER_32*)(curr->it_ref + offset); break;
-	case SK_UINT8:   ptr->it_uint8  = *(EIF_NATURAL_8*)(curr->it_ref + offset); break;
-	case SK_UINT16:  ptr->it_uint16 = *(EIF_NATURAL_16*)(curr->it_ref + offset); break;
-	case SK_UINT32:  ptr->it_uint32 = *(EIF_NATURAL_32*)(curr->it_ref + offset); break;
-	case SK_UINT64:  ptr->it_uint64 = *(EIF_NATURAL_64*)(curr->it_ref + offset); break;
-	case SK_INT8:    ptr->it_int8   = *(EIF_INTEGER_8*)(curr->it_ref + offset); break;
-	case SK_INT16:   ptr->it_int16  = *(EIF_INTEGER_16*)(curr->it_ref + offset); break;
-	case SK_INT32:   ptr->it_int32  = *(EIF_INTEGER_32*)(curr->it_ref + offset); break;
-	case SK_INT64:   ptr->it_int64  = *(EIF_INTEGER_64*)(curr->it_ref + offset); break;
-	case SK_REAL32:  ptr->it_real32 = *(EIF_REAL_32*)(curr->it_ref + offset); ; break;
-	case SK_REAL64:  ptr->it_real64 = *(EIF_REAL_64*)(curr->it_ref + offset); ; break;
-	case SK_POINTER: ptr->it_ptr    = *(EIF_POINTER*)(curr->it_ref + offset); ; break;
-	case SK_EXP:
-		ptr->it_ref = curr->it_ref + offset;
-		break;
-	case SK_BIT:
-	case SK_REF:
-		ptr->it_ref = *(EIF_REFERENCE*)(curr->it_ref + offset);
 		break;
 	case SK_VOID:
 		break;

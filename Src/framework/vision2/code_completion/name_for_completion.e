@@ -14,7 +14,7 @@ inherit
 		rename
 			make as make_string
 		redefine
-			is_equal, is_less
+			is_equal, is_less, new_string
 		end
 
 create
@@ -282,6 +282,13 @@ feature {CODE_COMPLETION_WINDOW} -- Children
 			-- Children index
 
 feature {NONE} -- Implementation
+
+	new_string (n: INTEGER): like Current
+			-- New instance of current with space for at least `n' characters.
+		do
+			create Result.make ({STRING_32} "")
+			Result.resize (n)
+		end
 
 	icon_internal: detachable EV_PIXMAP
 			-- Storage for `icon'.

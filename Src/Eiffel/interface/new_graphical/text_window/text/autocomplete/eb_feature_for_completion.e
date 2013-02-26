@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 		local
 			l_s: STRING_32
 			l_name: STRING_32
+			l_type: like completion_type
 		do
 			if a_feature.is_infix then
 				l_s := a_feature.infix_symbol_32
@@ -74,7 +75,12 @@ feature {NONE} -- Initialization
 				append (feature_signature)
 			end
 			if show_type then
-				append (completion_type)
+				l_type := completion_type
+				if not l_type.is_empty then
+					append (ti_colon)
+					append (ti_space)
+					append (l_type)
+				end
 			end
 
 			create insert_name_internal.make (name.count + feature_signature.count)

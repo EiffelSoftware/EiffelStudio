@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 			store_object (sa, "stored")
 			l_objects := retrieved_objects ("stored")
 			if l_objects.count /= storable_types.count then
+				io.put_string ("Error occurred. List of successful retrieval:%N")
 				across l_objects as l_item loop
 					io.put_string ("Retrieved " + l_item.key + "%N")
 				end

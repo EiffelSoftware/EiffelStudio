@@ -14,8 +14,7 @@ inherit
 		rename
 			make as make_string
 		redefine
-			is_equal, is_less,
-			new_string
+			is_equal, is_less
 		end
 
 create
@@ -284,12 +283,6 @@ feature {CODE_COMPLETION_WINDOW} -- Children
 
 feature {NONE} -- Implementation
 
-	new_string (n: INTEGER): like Current
-			-- New instance of current with space for at least `n' characters.
-		do
-			create Result.make (name)
-		end
-
 	icon_internal: detachable EV_PIXMAP
 			-- Storage for `icon'.
 
@@ -328,7 +321,7 @@ feature {NONE} -- Implementation
 	name_matcher_internal: detachable like name_matcher;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

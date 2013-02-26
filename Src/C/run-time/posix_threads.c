@@ -59,7 +59,7 @@ doc:<file name="eif_posix_threads.c" header="eif_posix_threads.h" version="$Id$"
 
 #ifdef EIF_THREADS
 
-rt_private int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE * sem, rt_uint_ptr timeout);
+rt_private rt_inline int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE * sem, rt_uint_ptr timeout);
 
 /* Posix drafts compatibility */
 #ifdef POSIX_10034A
@@ -1063,7 +1063,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE *sem, rt_uint_ptr timeout)
+rt_private inline int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE *sem, rt_uint_ptr timeout)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS

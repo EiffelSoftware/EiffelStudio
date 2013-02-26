@@ -86,7 +86,7 @@ rt_private int randomizer (int i) {
 	return i % 100;
 }
 
-rt_private inline void double_alignment_speed_test (void) {
+rt_private rt_inline void double_alignment_speed_test (void) {
 	double *pd = (double *) malloc (sizeof(double) * 10005);
 	double d;
 	int i, j;

@@ -1063,7 +1063,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private inline int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE *sem, rt_uint_ptr timeout)
+rt_private rt_inline int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE *sem, rt_uint_ptr timeout)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS

@@ -210,6 +210,13 @@ typedef uintptr_t	rt_uint_ptr;
 
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
+/* Compiler specific implementation for inlining routines. */
+#if defined(_MSC_VER)
+/* Microsoft does not define `inline' for C, just for C++, __inline is available for both. */
+#define rt_inline __inline
+#else
+#define rt_inline inline
+#endif
 #define rt_shared				/* data shared between modules, but not public */
 
 /* Maps an Eiffel type on a C type */

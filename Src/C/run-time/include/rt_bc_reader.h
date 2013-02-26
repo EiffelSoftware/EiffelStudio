@@ -70,7 +70,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_CHARACTER_8 get_char8 (unsigned char **bc)
+rt_private rt_inline EIF_CHARACTER_8 get_char8 (unsigned char **bc)
 {
 		/* Get EIF_CHARACTER_8 stored at *bc in byte code array.  */
 	EIF_CHARACTER_8 result;
@@ -93,7 +93,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_CHARACTER_32 get_char32 (unsigned char **bc)
+rt_private rt_inline EIF_CHARACTER_32 get_char32 (unsigned char **bc)
 {
 		/* Get EIF_CHARACTER_32 stored at *bc in byte code array.  */
 	EIF_CHARACTER_32 result;
@@ -116,7 +116,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_BOOLEAN get_bool (unsigned char **bc)
+rt_private rt_inline EIF_BOOLEAN get_bool (unsigned char **bc)
 {
 		/* Get EIF_BOOLEAN stored at *bc in byte code array.  */
 	EIF_BOOLEAN result;
@@ -139,7 +139,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_INTEGER_8 get_int8 (unsigned char **bc)
+rt_private rt_inline EIF_INTEGER_8 get_int8 (unsigned char **bc)
 {
 		/* Get EIF_INTEGER_8 stored at *bc in byte code array.  */
 	EIF_INTEGER_8 result;
@@ -162,7 +162,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_INTEGER_16 get_int16 (unsigned char **bc)
+rt_private rt_inline EIF_INTEGER_16 get_int16 (unsigned char **bc)
 {
 		/* Get EIF_INTEGER_16 stored at *bc in byte code array.  */
 	EIF_INTEGER_16 result;
@@ -185,7 +185,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_INTEGER_32 get_int32(unsigned char **bc)
+rt_private rt_inline EIF_INTEGER_32 get_int32(unsigned char **bc)
 {
 		/* Get EIF_INTEGER_32 stored at *bc in byte code array.  */
 	EIF_INTEGER_32 result;
@@ -208,7 +208,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_INTEGER_64 get_int64(unsigned char **bc)
+rt_private rt_inline EIF_INTEGER_64 get_int64(unsigned char **bc)
 {
 		/* Get EIF_INTEGER_64 stored at *bc in byte code array.  */
 	EIF_INTEGER_64 result;
@@ -231,7 +231,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_NATURAL_8 get_uint8 (unsigned char **bc)
+rt_private rt_inline EIF_NATURAL_8 get_uint8 (unsigned char **bc)
 {
 		/* Get EIF_NATURAL_8 stored at *bc in byte code array.  */
 	EIF_NATURAL_8 result;
@@ -254,7 +254,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_NATURAL_16 get_uint16 (unsigned char **bc)
+rt_private rt_inline EIF_NATURAL_16 get_uint16 (unsigned char **bc)
 {
 		/* Get EIF_NATURAL_16 stored at *bc in byte code array.  */
 	EIF_NATURAL_16 result;
@@ -277,7 +277,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_NATURAL_32 get_uint32(unsigned char **bc)
+rt_private rt_inline EIF_NATURAL_32 get_uint32(unsigned char **bc)
 {
 		/* Get EIF_NATURAL_32 stored at *bc in byte code array.  */
 	EIF_NATURAL_32 result;
@@ -300,7 +300,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_NATURAL_64 get_uint64(unsigned char **bc)
+rt_private rt_inline EIF_NATURAL_64 get_uint64(unsigned char **bc)
 {
 		/* Get EIF_NATURAL_64 stored at *bc in byte code array.  */
 	EIF_NATURAL_64 result;
@@ -323,7 +323,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REAL_32 get_real32(unsigned char **bc)
+rt_private rt_inline EIF_REAL_32 get_real32(unsigned char **bc)
 {
 		/* Get EIF_REAL_32 stored at *bc in byte code array.  */
 	EIF_REAL_32 result;
@@ -346,7 +346,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REAL_64 get_real64(unsigned char **bc)
+rt_private rt_inline EIF_REAL_64 get_real64(unsigned char **bc)
 {
 		/* Get EIF_REAL_64 stored at *bc in byte code array.  */
 	EIF_REAL_64 result;
@@ -370,7 +370,7 @@ doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_CHARACTER_8 * get_string8(unsigned char **bc, EIF_INTEGER_32 requested_length)
+rt_private rt_inline EIF_CHARACTER_8 * get_string8(unsigned char **bc, EIF_INTEGER_32 requested_length)
 {
 		/* Get EIF_CHARACTER_8 * stored at *bc in byte code array.  */
 	EIF_CHARACTER_8 * result;

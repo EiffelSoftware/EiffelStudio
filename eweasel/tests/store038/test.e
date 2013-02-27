@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System's root class"
 --	assembly_metadata: create {DEBUGGABLE_ATTRIBUTE}.make (True, True) end
 
@@ -10,7 +10,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			l_obj: ANY
@@ -49,15 +49,15 @@ feature -- Initialization
 
 feature -- Access
 
-	is_gc_enabled: BOOLEAN is False
+	is_gc_enabled: BOOLEAN = False
 		-- Is GC enabled for retrieving?
 
-	is_for_fast_retrieval: BOOLEAN is True
+	is_for_fast_retrieval: BOOLEAN = True
 		-- Is data stored in an optimized way for retrieval?
 
 feature {NONE} -- Implementation
 
-	store_new_session (an_object: ANY) is
+	store_new_session (an_object: ANY)
 			-- Store using new storable mechanism.
 		local
 			l_serializer: SED_STORABLE_FACILITIES
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	store_new_basic (an_object: ANY) is
+	store_new_basic (an_object: ANY)
 			-- Store using new storable mechanism.
 		local
 			l_serializer: SED_STORABLE_FACILITIES
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	store_new_independent (an_object: ANY) is
+	store_new_independent (an_object: ANY)
 			-- Store using new storable mechanism.
 		local
 			l_serializer: SED_STORABLE_FACILITIES
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	store_old_basic (an_object: ANY) is
+	store_old_basic (an_object: ANY)
 			-- Store using old storable mechanism.
 		local
 			l_file: RAW_FILE
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	store_old_independent (an_object: ANY) is
+	store_old_independent (an_object: ANY)
 			-- Store using old storable mechanism.
 		local
 			l_file: RAW_FILE

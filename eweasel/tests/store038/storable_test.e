@@ -13,6 +13,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
+			a := ""
 			create_basic_types
 			create_tuples
 			create_specials
@@ -99,8 +100,8 @@ feature -- Specials
 	spec_r64: SPECIAL [DOUBLE]
 
 	spec_c: SPECIAL [CHARACTER]
-	spec_s: SPECIAL [STRING]
-	spec_t: SPECIAL [TUPLE]
+	spec_s: SPECIAL [detachable STRING]
+	spec_t: SPECIAL [detachable TUPLE]
 
 	create_specials
 		do

@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			l_serializer: SED_STORABLE_FACILITIES
 			l_med: SED_MEDIUM_READER_WRITER
 			l_file: RAW_FILE
-			l_obj: ANY
+			l_obj: detachable ANY
 			date1, date2: DATE_TIME
 		do
 			create l_serializer
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			l_serializer: SED_STORABLE_FACILITIES
 			l_med: SED_MEDIUM_READER_WRITER
 			l_file: RAW_FILE
-			l_obj: ANY
+			l_obj: detachable ANY
 			date1, date2: DATE_TIME
 		do
 			create l_serializer
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			l_serializer: SED_STORABLE_FACILITIES
 			l_med: SED_MEDIUM_READER_WRITER
 			l_file: RAW_FILE
-			l_obj: ANY
+			l_obj: detachable ANY
 			date1, date2: DATE_TIME
 		do
 			create l_serializer
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			-- Store using old storable mechanism.
 		local
 			l_file: RAW_FILE
-			l_obj: ANY
+			l_obj: detachable ANY
 			date1, date2: DATE_TIME
 		do
 			if {PLATFORM}.is_dotnet then
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			-- Store using old storable mechanism.
 		local
 			l_file: RAW_FILE
-			l_obj: ANY
+			l_obj: detachable ANY
 			date1, date2: DATE_TIME
 			l_storable: STORABLE
 		do

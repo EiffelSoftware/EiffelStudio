@@ -63,7 +63,7 @@ feature -- Debug Operation
 			l_app_string: like safe_path
 			is_dotnet_system: BOOLEAN
 			prefstr: STRING
-			dotnet_debugger: STRING
+			dotnet_debugger: READABLE_STRING_32
 		do
 			launch_program := False
 			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
@@ -72,7 +72,7 @@ feature -- Debug Operation
 				Eiffel_project.initialized and then
 				Eiffel_project.system_defined and then
 				Eiffel_system.system.il_generation and then
-				Eiffel_system.system.msil_generation_type.same_string ("dll")
+				Eiffel_system.system.msil_generation_type.same_string_general ("dll")
 			then
 				warning (debugger_names.m_no_debugging_for_dll_system)
 			elseif (not manager.application_is_executing) then
@@ -98,8 +98,8 @@ feature -- Debug Operation
 							dotnet_debugger := manager.dotnet_debugger
 
 							create l_il_env.make (Eiffel_system.System.clr_runtime_version)
-							if dotnet_debugger /= Void then
-								l_app_string := safe_path (l_il_env.Dotnet_debugger_path (dotnet_debugger).name)
+							if dotnet_debugger /= Void and then attached l_il_env.dotnet_debugger_path (dotnet_debugger) as l_app_path then
+								l_app_string := safe_path (l_app_path.name)
 							end
 							if l_app_string /= Void then
 									--| This means we are using either dbgclr or cordbg

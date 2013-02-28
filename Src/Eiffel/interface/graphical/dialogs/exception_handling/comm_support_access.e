@@ -147,6 +147,7 @@ feature -- HTML query
 			a_source_attached: a_source /= Void
 		do
 			Result := find_expression ("<a\shref=%"(.*?)%">here", a_source).as_string_8
+			Result := decoded_url (Result)
 		end
 
 	find_event_validation (a_source: STRING_GENERAL): STRING_GENERAL
@@ -200,7 +201,7 @@ feature {NONE} -- Basic operations
 
 	encoding_url (a_url: READABLE_STRING_GENERAL): STRING_32
 			-- Simple URL encoding.
-			-- Only replace / and + for the moment.
+			-- Only replace /, + and & for the moment.
 		require
 			a_url_attached: a_url /= Void
 		do
@@ -208,6 +209,31 @@ feature {NONE} -- Basic operations
 			Result.replace_substring_all ("/", "%%2F")
 			Result.replace_substring_all ("+", "%%2B")
 			Result.replace_substring_all ("&", "%%26")
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not a_url.is_empty implies not Result.is_empty
+			forward_slash_replaced: not Result.has_substring ("/")
+			plus_replaced: not Result.has_substring ("+")
+			ampersand_replaced: not Result.has_substring ("&")
+		end
+
+	decoded_url (a_url: READABLE_STRING_GENERAL): STRING_32
+			-- Simple URL decoding.
+		require
+			a_url_attached: a_url /= Void
+		do
+			create Result.make_from_string_general (a_url)
+			Result.replace_substring_all ("%%2F", "/")
+			Result.replace_substring_all ("%%2B", "+")
+			Result.replace_substring_all ("%%26", "&")
+			Result.replace_substring_all ("%%3F", "?")
+			Result.replace_substring_all ("%%3D", "=")
+
+			Result.replace_substring_all ("%%2f", "/")
+			Result.replace_substring_all ("%%2b", "+")
+			Result.replace_substring_all ("%%26", "&")
+			Result.replace_substring_all ("%%3f", "?")
+			Result.replace_substring_all ("%%3d", "=")
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not a_url.is_empty implies not Result.is_empty
@@ -225,7 +251,7 @@ feature {NONE} -- Constants
 			-- Support site unsecure base URL
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

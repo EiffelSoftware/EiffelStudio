@@ -356,7 +356,6 @@ feature -- Activation
 			end
 			from
 				l_sub.start
-				l_sub.forth
 			until
 				l_sub.after or a_folder = Void
 			loop

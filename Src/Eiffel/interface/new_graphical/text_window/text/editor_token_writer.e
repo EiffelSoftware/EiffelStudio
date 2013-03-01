@@ -35,8 +35,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count : INTEGER
-
 	last_line: EIFFEL_EDITOR_LINE
 
 feature -- New line
@@ -68,7 +66,7 @@ feature -- Token operator
 			until
 				a_tokens.after
 			loop
-				last_line.append_token (a_tokens.item_for_iteration)
+				append_token (a_tokens.item_for_iteration)
 				a_tokens.forth
 			end
 		end
@@ -100,7 +98,7 @@ feature -- Text processing
 				end
 			else
 				create tok.make (l_str.as_string_32)
-				last_line.append_token (tok)
+				append_token (tok)
 			end
 		end
 
@@ -134,7 +132,7 @@ feature -- Text processing
 					create stone.make (url.as_string_32)
 					tok.set_pebble (stone)
 				end
-				last_line.append_token (tok)
+				append_token (tok)
 			end
 		end
 
@@ -149,7 +147,7 @@ feature -- Text processing
 				create stone.make (url.as_string_32)
 				tok.set_pebble (stone)
 			end
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_quoted_text (t: READABLE_STRING_GENERAL)
@@ -158,7 +156,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_COMMENT
 		do
 			create tok.make (text_quoted (t).as_string_32)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_new_line
@@ -174,7 +172,7 @@ feature -- Text processing
 		do
 			if a_indent_depth > 0 then
 				create tok.make (a_indent_depth)
-				last_line.append_token (tok)
+				append_token (tok)
 			end
 		end
 
@@ -184,7 +182,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_OPERATOR
 		do
 			create tok.make (t.as_string_32)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_keyword_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
@@ -198,7 +196,7 @@ feature -- Text processing
 				create stone.make (a_feature)
 				tok.set_pebble (stone)
 			end
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
@@ -216,7 +214,7 @@ feature -- Text processing
 			create tok.make (l_text)
 			create stone.make (a_cluster)
 			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			append_token (tok)
 		end;
 
 	process_class_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
@@ -244,7 +242,7 @@ feature -- Text processing
 				end
 				tok.set_pebble (stone)
 			end
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_target_name_text (text: READABLE_STRING_GENERAL; a_target: CONF_TARGET)
@@ -256,7 +254,7 @@ feature -- Text processing
 			create tok.make (text.as_string_32)
 			create l_stone.make (a_target)
 			tok.set_pebble (l_stone)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_feature_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
@@ -272,7 +270,7 @@ feature -- Text processing
 			create tok.make (a_index.out)
 			create stone.make (a_feature, a_index)
 			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_feature_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_C)
@@ -285,7 +283,7 @@ feature -- Text processing
 				create stone.make (text.as_string_32, a_class)
 				tok.set_pebble (stone)
 			end
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
@@ -328,7 +326,7 @@ feature -- Text processing
 			create addr.make_from_string (a_address.as_string_32)
 			create stone.make (addr, a_name.as_string_32, a_class)
 			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_error_text (t: READABLE_STRING_GENERAL; a_error: ERROR)
@@ -340,7 +338,7 @@ feature -- Text processing
 			create tok.make (t.as_string_32)
 			create stone.make (a_error)
 			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_feature_error (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
@@ -352,7 +350,7 @@ feature -- Text processing
 			create tok.make (text.as_string_32)
 			create stone.make (a_feature, a_line)
 			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_cl_syntax (text: READABLE_STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
@@ -364,7 +362,7 @@ feature -- Text processing
 			create tok.make (text.as_string_32)
 			create stone.make (a_syntax_message, a_class)
 			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_assertion_tag_text (t: READABLE_STRING_GENERAL)
@@ -374,7 +372,7 @@ feature -- Text processing
 		do
 			create tok.make (t.as_string_32)
 			tok.set_indexing (False)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_indexing_tag_text (t: READABLE_STRING_GENERAL)
@@ -384,7 +382,7 @@ feature -- Text processing
 		do
 			create tok.make (t.as_string_32)
 			tok.set_indexing (True)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_generic_text (t: READABLE_STRING_GENERAL)
@@ -393,7 +391,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_GENERIC
 		do
 			create tok.make (t.as_string_32)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_character_text (t: READABLE_STRING_GENERAL)
@@ -402,7 +400,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_CHARACTER
 		do
 			create tok.make (t.as_string_32)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_local_text (t: READABLE_STRING_GENERAL)
@@ -411,7 +409,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_LOCAL
 		do
 			create tok.make (t.as_string_32)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_number_text (t: READABLE_STRING_GENERAL)
@@ -420,7 +418,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_NUMBER
 		do
 			create tok.make (t.as_string_32)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_reserved_word_text (t: READABLE_STRING_GENERAL)
@@ -429,7 +427,7 @@ feature -- Text processing
 			tok: EDITOR_TOKEN_RESERVED
 		do
 			create tok.make (t.as_string_32)
-			last_line.append_token (tok)
+			append_token (tok)
 		end
 
 	process_filter_item (text: READABLE_STRING_GENERAL; a_before: BOOLEAN)
@@ -445,7 +443,7 @@ feature -- Text processing
 			if is_before then
 				create tok.make (text.as_string_32)
 				tok.set_text_color_feature
-				last_line.append_token (tok)
+				append_token (tok)
 			end
 		end
 
@@ -483,7 +481,7 @@ feature -- Text processing
 				end
 				l_ast_token.set_pebble (l_stone)
 			end
-			last_line.append_token (l_ast_token)
+			append_token (l_ast_token)
 		end
 
 	process_warning (a_warning_message: READABLE_STRING_GENERAL; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER])
@@ -505,7 +503,7 @@ feature -- Text processing
 		do
 			create l_token.make_with_appearance (a_name.to_string_32, [editor_font_id, line_number_text_color_id, string_background_color_id])
 			l_token.set_pebble (create {COMPILED_LINE_STONE}.make_with_line (a_class_c, a_line_number, a_selected))
-			last_line.append_token (l_token)
+			append_token (l_token)
 		end
 
 	process_uncompiled_line (a_name: READABLE_STRING_GENERAL; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN)
@@ -519,7 +517,7 @@ feature -- Text processing
 		do
 			create l_token.make_with_appearance (a_name.to_string_32, [editor_font_id, line_number_text_color_id, string_background_color_id])
 			l_token.set_pebble (create {UNCOMPILED_LINE_STONE}.make_with_line (a_class_i, a_line_number, a_selected))
-			last_line.append_token (l_token)
+			append_token (l_token)
 		end
 
 	add_new_line
@@ -565,7 +563,7 @@ feature -- Text processing
 			create l_token.make_with_appearance (a_folder_name.to_string_32, [editor_font_id, folder_text_color_id, folder_background_color_id])
 				-- Use `as_string_8' until we finish adapting {CLUSTER_STONE}.
 			l_token.set_pebble (create {CLUSTER_STONE}.make_subfolder (a_group, a_path, a_folder_name))
-			last_line.append_token (l_token)
+			append_token (l_token)
 		end
 
 feature {NONE} -- Initialisations and File status
@@ -611,11 +609,11 @@ feature {NONE} -- Initialisations and File status
 				create feature_start.make (l_text)
 				feature_start.set_pebble (stone)
 				feature_start.set_text_color_feature
-				last_line.append_token (feature_start)
+				append_token (feature_start)
 			else
 				create tok.make (l_text)
 				tok.set_pebble (stone)
-				last_line.append_token (tok)
+				append_token (tok)
 			end
 		end
 
@@ -657,7 +655,7 @@ feature {NONE} -- Initialisations and File status
 				else
 					feature_start.set_text_color_operator
 				end
-				last_line.append_token (feature_start)
+				append_token (feature_start)
 			else
 				if is_keyword (t) then
 					create {EDITOR_TOKEN_KEYWORD} tok.make (t.as_string_32)
@@ -665,7 +663,7 @@ feature {NONE} -- Initialisations and File status
 					create {EDITOR_TOKEN_OPERATOR} tok.make (t.as_string_32)
 				end
 				tok.set_pebble (stone)
-				last_line.append_token (tok)
+				append_token (tok)
 			end
 		end
 

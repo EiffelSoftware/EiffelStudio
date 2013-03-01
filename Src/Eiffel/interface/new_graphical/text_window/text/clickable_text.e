@@ -23,7 +23,8 @@ inherit
 			last_processed_line,
 			process_new_line,
 			start_processing,
-			end_processing
+			end_processing,
+			append_token
 		end
 
 	EDITABLE_TEXT
@@ -372,6 +373,16 @@ feature {NONE} -- Implementation
 	finish_reading_text_agent: PROCEDURE [like Current, TUPLE]
 			-- Agent for function `finish_reading_text'
 
+feature -- Debugger tooltip
+
+	append_token (a_token: EDITOR_TOKEN)
+			-- <Precursor>
+		do
+			Precursor (a_token)
+				-- Add mapping between token and expression meta
+			a_token.set_data (meta_data)
+		end
+
 feature {EB_EDITOR} -- Multi editor support
 
 	set_lexer (a_lexer: like lexer)
@@ -416,7 +427,7 @@ feature {NONE} -- Private Constants
 	from_text: INTEGER = 2;
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

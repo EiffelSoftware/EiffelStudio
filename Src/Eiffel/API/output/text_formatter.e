@@ -28,6 +28,9 @@ feature -- Access
 			Result := internal_context_group
 		end
 
+	meta_data: detachable ANY
+			-- Meta data
+
 feature -- Element change
 
 	set_context_group (a_group: like context_group)
@@ -36,6 +39,14 @@ feature -- Element change
 			internal_context_group := a_group
 		ensure
 			context_group_set: internal_context_group = a_group
+		end
+
+	set_meta_data (a_data: detachable ANY)
+			-- Set `meta_data' with `a_data'.
+		do
+			meta_data := a_data
+		ensure
+			meta_data_set: meta_data = a_data
 		end
 
 feature -- Operation

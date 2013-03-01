@@ -139,6 +139,11 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := always_show_callstack_tool_when_stopping_preference.value
 		end
 
+	show_debug_tooltip: BOOLEAN
+		do
+			Result := show_debug_tooltip_preference.value
+		end
+
 feature -- Preference
 
 	edit_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
@@ -172,6 +177,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	watch_tools_layout_preference: ARRAY_PREFERENCE
 	move_up_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
 	move_down_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
+	show_debug_tooltip_preference: BOOLEAN_PREFERENCE
 
 	objects_tool_layout_preference: ARRAY_PREFERENCE
 
@@ -252,6 +258,7 @@ feature -- Preference Strings
 	show_text_in_project_toolbar_string: STRING = "debugger.show_text_in_project_toolbar"
 	show_all_text_in_project_toolbar_string: STRING = "debugger.show_all_text_in_project_toolbar"
 	always_show_callstack_tool_when_stopping_string: STRING = "debugger.always_show_callstack_tool_when_stopping"
+	show_debug_tooltip_string: STRING = "debugger.show_debug_tooltip"
 	default_expanded_view_size_string: STRING = "debugger.default_expanded_view_size"
 	move_up_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_up_watch_expression"
 	move_down_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_down_watch_expression"
@@ -294,6 +301,7 @@ feature {NONE} -- Implementation
 			objects_tool_layout_preference := l_manager.new_array_preference_value (l_manager, objects_tool_layout_string, <<>>)
 			watch_tools_layout_preference := l_manager.new_array_preference_value (l_manager, watch_tools_layout_string, <<>>)
 			always_show_callstack_tool_when_stopping_preference := l_manager.new_boolean_preference_value (l_manager, always_show_callstack_tool_when_stopping_string, True)
+			show_debug_tooltip_preference := l_manager.new_boolean_preference_value (l_manager, show_debug_tooltip_string, True)
 
 			move_up_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_up_watch_expression_shortcut_string, [True, False, True, "up"])
 			move_down_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_down_watch_expression_shortcut_string,  [True, False, True, "down"])
@@ -336,7 +344,7 @@ invariant
 	always_show_callstack_tool_when_stopping_preference_not_void: always_show_callstack_tool_when_stopping_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

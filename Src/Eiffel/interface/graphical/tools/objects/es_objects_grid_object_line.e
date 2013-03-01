@@ -94,7 +94,7 @@ feature -- Recycling
 			item_stone_properties_not_computed : not items_stone_properties_computed
 		end
 
-feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
+feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_MANAGER, ES_DEBUGER_TOOLTIP_HANDLER} -- Grid and row attachement
 
 	attach_to_row (a_row: EV_GRID_ROW)
 		do

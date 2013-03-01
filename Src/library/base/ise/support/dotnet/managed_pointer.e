@@ -662,7 +662,7 @@ feature -- Access: Little-endian format
 			check
 				correct_size: real_32_bytes = natural_32_bytes
 			end
-			Result := read_natural_32_le (pos)
+			l_nat32 := read_natural_32_le (pos)
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
@@ -677,7 +677,7 @@ feature -- Access: Little-endian format
 			check
 				correct_size: real_64_bytes = natural_64_bytes
 			end
-			Result := read_natural_64_le (pos)
+			l_nat64 := read_natural_64_le (pos)
 			($Result).memory_copy ($l_nat64, natural_64_bytes)
 		end
 
@@ -788,7 +788,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_64_le (pos)
 		end
 
-	put_real_32_le (v: REAL; pos: INTEGER)
+	put_real_32_le (v: REAL; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -805,7 +805,7 @@ feature -- Element change: Little-endian format
 			inserted: v = read_real_32_le (pos)
 		end
 
-	put_real_64_le (v: DOUBLE; pos: INTEGER)
+	put_real_64_le (v: DOUBLE; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -931,7 +931,7 @@ feature -- Access: Big-endian format
 			check
 				correct_size: real_32_bytes = natural_32_bytes
 			end
-			Result := read_natural_32_be (pos)
+			l_nat32 := read_natural_32_be (pos)
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
@@ -946,7 +946,7 @@ feature -- Access: Big-endian format
 			check
 				correct_size: real_64_bytes = natural_64_bytes
 			end
-			Result := read_natural_64_be (pos)
+			l_nat64 := read_natural_64_be (pos)
 			($Result).memory_copy ($l_nat64, natural_64_bytes)
 		end
 
@@ -1057,7 +1057,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_64_be (pos)
 		end
 
-	put_real_32_be (v: REAL; pos: INTEGER)
+	put_real_32_be (v: REAL; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1074,7 +1074,7 @@ feature -- Element change: Big-endian format
 			inserted: v = read_real_32_be (pos)
 		end
 
-	put_real_64_be (v: DOUBLE; pos: INTEGER)
+	put_real_64_be (v: DOUBLE; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1155,14 +1155,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

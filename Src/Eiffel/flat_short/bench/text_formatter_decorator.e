@@ -47,7 +47,8 @@ inherit
 			process_menu_text,
 			process_class_menu_text,
 			set_context_group,
-			context_group
+			context_group,
+			set_meta_data
 		end
 
 create
@@ -401,6 +402,13 @@ feature -- Setting
 			setup_output_strategy
 		end
 
+	set_for_expression_meta
+			-- Set for expression meta.
+		do
+			create {AST_EXPRESSION_META_OUTPUT_STRATEGY}ast_output_strategy.make (Current)
+			setup_output_strategy
+		end
+
 	set_context_group (a_group: like context_group)
 			-- Set `context_group' with `a_group'.
 		do
@@ -419,6 +427,14 @@ feature -- Setting
 			ast_output_strategy := a_ast_output_strategy
 			breakpoint_index := a_breakpoint_index
 			e_feature := a_e_feature
+		end
+
+	set_meta_data (a_data: detachable ANY)
+			-- Set `meta_data' with `a_data'.
+		do
+			Precursor (a_data)
+				-- Propagate into the decorated formatter.
+			text_formatter.set_meta_data (a_data)
 		end
 
 feature -- Setting local format details

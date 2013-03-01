@@ -66,6 +66,11 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		export
+			{NONE} all
+		end
+
 create
 	make, make_for_inline_agent
 
@@ -375,7 +380,11 @@ feature {NONE} -- Implementation
 
 	process_id_as (l_as: ID_AS)
 		do
-			text_formatter_decorator.process_basic_text (l_as.name_32)
+			if is_local_id then
+				text_formatter_decorator.process_local_text (l_as.name_32)
+			else
+				text_formatter_decorator.process_basic_text (l_as.name_32)
+			end
 		end
 
 	process_integer_as (l_as: INTEGER_CONSTANT)
@@ -872,18 +881,19 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator := text_formatter_decorator
 			if l_as.is_argument then
 				if not expr_type_visiting then
-					l_text_formatter_decorator.process_local_text (current_feature.arguments.item_name (l_as.argument_position))
+					format_local_with_name (current_feature.arguments.item_name (l_as.argument_position))
 				end
 			elseif l_as.is_local then
 				if not expr_type_visiting then
-					l_text_formatter_decorator.process_local_text (l_as.access_name_32)
+					format_local_with_name (l_as.access_name_8)
 				end
 			elseif l_as.is_object_test_local then
 				if not expr_type_visiting then
-					l_text_formatter_decorator.process_local_text (l_as.access_name_32)
+					format_local_with_name (l_as.access_name_8)
 				end
 			elseif l_as.is_tuple_access then
 				if not expr_type_visiting then
+						-- Named tuple is neither a local nor an argument, we simply use local style.
 					l_text_formatter_decorator.process_symbol_text (ti_dot)
 					l_text_formatter_decorator.process_local_text (l_as.access_name_32)
 				end
@@ -1741,7 +1751,7 @@ feature {NONE} -- Implementation
 					if l_feat /= Void then
 						l_text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name.name_32, l_feat, False)
 					else
-						l_text_formatter_decorator.process_local_text (l_as.feature_name.internal_name.name_32)
+						format_local_with_name (l_as.feature_name.internal_name.name_8)
 					end
 					l_text_formatter_decorator.commit
 				end
@@ -3245,7 +3255,7 @@ feature {NONE} -- Implementation
 			until
 				l_as.id_list.after
 			loop
-				l_text_formatter_decorator.process_local_text (l_names_heap.item_32 (l_as.id_list.item))
+				format_local_with_id (l_as.id_list.item)
 				l_as.id_list.forth
 				if not l_as.id_list.after then
 					l_text_formatter_decorator.put_separator
@@ -3473,7 +3483,7 @@ feature {NONE} -- Implementation
 					end
 					l_text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					l_text_formatter_decorator.add_space
-					l_text_formatter_decorator.process_local_text (l_as.anchor.name_32)
+					format_local_with_id (l_as.anchor.name_id)
 				end
 			end
 		end
@@ -5022,6 +5032,32 @@ feature {NONE} -- Implementation: helpers
 				object_test_locals_for_current_feature.force (t.as_attached_in (current_class), l_as.identifier.name_32)
 			end
 		end
+
+	format_local_with_id (a_id: INTEGER)
+			-- Format local with id `a_id'.
+		local
+			l_id: ID_AS
+		do
+			is_local_id := True
+			create l_id.initialize_from_id (a_id)
+			l_id.process (Current)
+			is_local_id := False
+		end
+
+	format_local_with_name (a_name: STRING_8)
+			-- Format local with name `a_name'.
+			-- `a_name' is in UTF-8.
+		local
+			l_id: ID_AS
+		do
+			is_local_id := True
+			create l_id.initialize (a_name)
+			l_id.process (Current)
+			is_local_id := False
+		end
+
+	is_local_id: BOOLEAN
+			-- Is formatting local ids?
 
 invariant
 	text_formatter_not_void: text_formatter_decorator /= Void

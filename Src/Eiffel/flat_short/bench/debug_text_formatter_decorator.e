@@ -12,7 +12,8 @@ inherit
 		redefine
 			put_breakable,
 			emit_tabs,
-			execute
+			execute,
+			initialize
 		end
 
 	TTY_CONSTANTS
@@ -22,6 +23,15 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	initialize (a_formatter: TEXT_FORMATTER)
+			-- Initialize Current for bench.
+		do
+			Precursor (a_formatter)
+			set_for_expression_meta
+		end
 
 feature -- Execution
 
@@ -64,17 +74,27 @@ feature {NONE}
 
 	emit_tabs
 			-- Add the good number of tabulations to the text.
+		local
+			l_meta: like meta_data
 		do
+				-- Remove meta (expression) temparorily,
+				-- As we do not need it for indentations.
+			l_meta := text_formatter.meta_data
+			set_meta_data (Void)
+
 			if added_breakpoint then
 				added_breakpoint := False
 			else
 				text_formatter.process_padded
 			end
 			Precursor {FEAT_TEXT_FORMATTER_DECORATOR}
+
+				-- Restore meta (expression).
+			set_meta_data (l_meta)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

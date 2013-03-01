@@ -74,6 +74,7 @@ feature {NONE}-- Initialization
 			editor_drawing_area.drop_actions.set_veto_pebble_function (agent (a: ANY): BOOLEAN do Result := False end)
 			editor_drawing_area.pick_actions.force_extend (agent suspend_cursor_blinking)
 			editor_drawing_area.pick_ended_actions.force_extend (agent resume_cursor_blinking)
+			editor_drawing_area.pointer_motion_actions.extend (agent on_pointer_move)
 
 				-- Not necessarily use `a_dev_window' to get context menu.
 				-- `a_dev_window' could be void for some uses.
@@ -85,7 +86,6 @@ feature {NONE}-- Initialization
 				editor_drawing_area.set_configurable_target_menu_mode
 				editor_drawing_area.set_configurable_target_menu_handler (agent (l_dev_win.menus.context_menu_factory).editor_menu (?, ?, ?, ?, Current))
 			end
-
 		end
 
 feature -- Access
@@ -216,7 +216,7 @@ feature -- Possibly delayed operations
 	highlight_when_ready (a, b: INTEGER)
 			-- same as select_lines but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and
-			-- does not need the text to be fully loaded	
+			-- does not need the text to be fully loaded
 		local
 			fld: INTEGER
 			max_line: INTEGER
@@ -459,6 +459,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 					refresh_now
 				end
 			end
+			debug_tooltip_handler.hide_tooltip
 		end
 
 	handle_extended_key (ev_key: EV_KEY)
@@ -499,6 +500,47 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (ev_key)
 			end
 		end
+
+	on_pointer_move (x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
+			-- On pointer move.
+		do
+			debug_tooltip_handler.propagate_pointer_move (x, y, x_tilt, y_tilt, pressure, screen_x, screen_y)
+		end
+
+feature {NONE} -- Debug tooktip
+
+	expression_at (a_x, a_y: INTEGER): detachable READABLE_STRING_GENERAL
+			-- Expression at position
+		do
+			if attached token_at (a_x - editor_drawing_area.screen_x, a_y - editor_drawing_area.screen_y - (first_line_displayed - 1) * line_height) as l_token then
+				if attached {READABLE_STRING_GENERAL} l_token.data as l_e and then not l_e.is_empty then
+					Result := l_e
+				end
+			end
+		ensure
+			Result_not_empty: attached Result as l_res implies not l_res.is_empty
+		end
+
+	debug_tooltip_handler: ES_DEBUGER_TOOLTIP_HANDLER
+			-- Debug tooltip handler
+		do
+			if attached debug_tooltip_handler_internal as l_h then
+				Result := l_h
+			else
+				create Result
+				Result.set_expression_callback (agent expression_at)
+				if attached dev_window as l_window then
+					register_action (horizontal_scrollbar.change_actions,
+						agent (a_v: INTEGER; a_h: like debug_tooltip_handler) do a_h.hide_tooltip end (?, Result))
+					register_action (vertical_scrollbar.change_actions,
+						agent (a_v: INTEGER; a_h: like debug_tooltip_handler) do a_h.hide_tooltip end (?, Result))
+				end
+				debug_tooltip_handler_internal := Result
+			end
+		end
+
+	debug_tooltip_handler_internal: detachable ES_DEBUGER_TOOLTIP_HANDLER
+			-- Debug tooltip handler
 
 feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
@@ -816,7 +858,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

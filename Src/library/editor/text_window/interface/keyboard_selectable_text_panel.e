@@ -124,6 +124,24 @@ feature -- Query
 	auto_scroll: BOOLEAN assign set_auto_scroll
 			-- Auto scroll when selecting texts with mouse?
 
+	token_at (x, y: INTEGER): detachable EDITOR_TOKEN
+			-- Token at position (x, y)
+		local
+			l_number		: INTEGER
+			pointed_line	: detachable like line_type
+		do
+			if x > 0 and then y > 0 then
+					-- Compute the line number pointed by the mouse cursor
+					-- and adjust it if its over the number of lines in the text.
+				l_number := line_at_position (x, y)
+				pointed_line := text_displayed.line (l_number)
+
+				if pointed_line /= Void then
+					Result := token_in_line (x, pointed_line).token
+				end
+			end
+		end
+
 feature -- Cursor Management
 
 	check_cursor_position
@@ -137,50 +155,21 @@ feature -- Cursor Management
 	position_cursor (a_cursor: like cursor_type; x_pos, y_pos: INTEGER)
 			-- Position `a_cursor' as close as possible from coordinates (x_pos, y_pos).
 		local
-			l_number		: INTEGER
 			current_width	: INTEGER
-			nol				: INTEGER
 			pointed_line	: detachable like line_type
 			pointed_token	: detachable EDITOR_TOKEN
-			tw				: INTEGER
-			l_x_pos			: INTEGER
+			l_token_in_line : like token_in_line
 		do
-			l_x_pos := x_pos
-			if l_x_pos < 0 then
-				l_x_pos := 0
-			end
-
 			if y_pos >= 0 then
-					-- Compute the line number pointed by the mouse cursor
-					-- and adjust it if its over the number of lines in the text.
-				l_number := (y_pos + (first_line_displayed * line_height)) // line_height
-				nol := text_displayed.number_of_lines
-
-				if l_number > nol then
-					l_number := nol
-				end
-				current_width := l_x_pos
-				pointed_line := text_displayed.line (l_number)
+				pointed_line := text_displayed.line (line_at_position (x_pos, y_pos))
 				if pointed_line /= Void then
-					pointed_token := pointed_line.first_token
-					check pointed_token /= Void end -- First token is not void, otherwise a bug.
-					from
-						tw := pointed_token.width
-					until
-						pointed_token = Void or else tw > current_width
-					loop
-						current_width := current_width - tw
-						pointed_token := pointed_token.next
-						if pointed_token /= Void then
-							tw := pointed_token.width
-						end
-					end
-					check pointed_line.is_valid end
+					l_token_in_line := token_in_line (x_pos, pointed_line)
+					pointed_token := l_token_in_line.token
 					if pointed_token /= Void then
 						debug ("editor")
 							print (pointed_token.out + "%N")
 						end
-						a_cursor.set_from_relative_pos (pointed_line, pointed_token, pointed_token.retrieve_position_by_width (current_width), text_displayed)
+						a_cursor.set_from_relative_pos (pointed_line, pointed_token, pointed_token.retrieve_position_by_width (l_token_in_line.distance), text_displayed)
 					else
 						debug
 							print ("pointed token is VOID!%N")
@@ -1289,6 +1278,45 @@ feature {NONE} -- Implementation
 	 		end
 		end
 
+	line_at_position (x, y: INTEGER): INTEGER
+			-- The line number of at (x, y) position.
+		local
+			nol: INTEGER
+		do
+			Result := (y + (first_line_displayed * line_height)) // line_height
+			nol := text_displayed.number_of_lines
+
+			if Result > nol then
+				Result := nol
+			end
+		end
+
+	token_in_line (x: INTEGER; a_line: like line_type): TUPLE [token: detachable EDITOR_TOKEN; distance: INTEGER]
+			-- Token in `a_line' at `x' position, and distance from the beginning of the token to `x'.
+		require
+			x_not_negative: x >= 0
+			a_line_attached: a_line /= Void
+		local
+			pointed_token: detachable EDITOR_TOKEN
+			tw, current_width: INTEGER
+		do
+			pointed_token := a_line.first_token
+			current_width := x
+			check pointed_token /= Void end -- First token is not void, otherwise a bug.
+			from
+				tw := pointed_token.width
+			until
+				pointed_token = Void or else tw > current_width
+			loop
+				current_width := current_width - tw
+				pointed_token := pointed_token.next
+				if pointed_token /= Void then
+					tw := pointed_token.width
+				end
+			end
+			Result := [pointed_token, current_width]
+		end
+
 feature -- Clipboard
 
 	clipboard: EV_CLIPBOARD
@@ -1356,14 +1384,14 @@ invariant
 	stored_first_line_not_negative: stored_first_line >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

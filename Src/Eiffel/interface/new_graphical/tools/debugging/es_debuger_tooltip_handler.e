@@ -133,12 +133,9 @@ feature {NONE} -- Implementation
 
 					l_object_grid := object_grid
 					if l_object_grid = Void then
-						create l_object_grid.make_with_name ("", "")
-						object_grid := l_object_grid
-						l_object_grid.row_expand_actions.extend (agent on_grid_size_changed)
-						l_object_grid.row_collapse_actions.extend (agent on_grid_size_changed)
-						l_object_grid.disable_vertical_overscroll
+						l_object_grid := create_object_grid
 						l_tooltip_window.set_popup_widget (l_object_grid)
+						object_grid := l_object_grid
 					end
 					l_object_grid.wipe_out
 					l_object_grid.set_default_columns_layout (<<
@@ -172,6 +169,48 @@ feature {NONE} -- Implementation
 					last_expression := a_expr
 				end
 			end
+		end
+
+	create_object_grid: ES_OBJECTS_GRID
+			-- Create object grid
+		do
+			create Result.make_with_name ("", "")
+			Result.row_expand_actions.extend (agent on_grid_size_changed)
+			Result.row_collapse_actions.extend (agent on_grid_size_changed)
+			Result.disable_vertical_overscroll
+
+			open_viewer_shortcut 		:= preferences.debug_tool_data.new_open_viewer_shortcut
+			goto_home_shortcut 			:= preferences.debug_tool_data.new_goto_home_shortcut
+			goto_end_shortcut 			:= preferences.debug_tool_data.new_goto_end_shortcut
+
+			Result.register_shortcut (open_viewer_shortcut, agent
+				do
+					if
+						attached {EB_DEBUGGER_MANAGER} debugger_manager as l_manager and then attached l_manager.object_viewer_cmd as l_cmd and then
+						attached object_grid as g and then g.selected_rows.count > 0
+					then
+						if attached {OBJECT_STONE} g.grid_pebble_from_row_and_column (g.selected_rows.first, Void) as ost then
+							l_cmd.set_stone (ost)
+							hide_tooltip
+						end
+					end
+				end)
+			Result.register_shortcut (goto_home_shortcut, agent
+				local
+					g: like object_grid
+				do
+					g := object_grid
+					g.set_virtual_position (g.virtual_x_position, 0)
+				end)
+			Result.register_shortcut (goto_end_shortcut,  agent
+				local
+					g: like object_grid
+				do
+					g := object_grid
+					g.set_virtual_position (g.virtual_x_position, g.maximum_virtual_y_position)
+				end)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	stop_debug_tooltip_timer
@@ -261,6 +300,12 @@ feature {NONE} -- Implementation
 
 	last_expression: detachable READABLE_STRING_GENERAL;
 			-- Last expression analyzed for the debugger
+
+feature {NONE} -- Shortcuts
+
+	open_viewer_shortcut,
+	goto_home_shortcut,
+	goto_end_shortcut: ES_KEY_SHORTCUT;
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

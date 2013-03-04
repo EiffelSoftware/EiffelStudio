@@ -428,7 +428,7 @@ feature -- Access
 	force_debug_mode_cmd: EB_FORCE_EXECUTION_MODE_CMD
 			-- Force debug mode command.
 
-feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
+feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY, ES_DEBUGER_TOOLTIP_HANDLER} -- Command
 
 	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
 			-- Command controlling the object viewer tools

@@ -64,27 +64,18 @@ feature -- Setting
 			-- If `v' it will discard POINTER values and replace them by
 			-- the `default_pointer' pointer. Otherwise it keeps the original value.
 		do
-			check
-				not_supported: False
-			end
 		end
 
 	set_new_independent_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.0 storable format for
 			-- storing.
 		do
-			check
-				not_supported: False
-			end
 		end
 
 	set_new_recoverable_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.3 storable format for
 			-- storing with ability to recover when there is a type mismatch.
 		do
-			check
-				not_supported: False
-			end
 		end
 
 feature -- Element change
@@ -160,7 +151,7 @@ feature -- Element change
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

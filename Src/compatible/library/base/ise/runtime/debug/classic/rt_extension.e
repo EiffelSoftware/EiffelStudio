@@ -103,38 +103,33 @@ feature -- Notification
 			retry
 		end
 
-	cached_arguments: ARRAY [TUPLE]
+	cached_arguments: ARRAY [detachable TUPLE]
 			-- Cached argument to use less temporary objects
-		once
+		once ("THREAD")
 				--| Make sure, the id are contigus, and in this range !
-			create Result.make (Op_enter_feature, Op_rt_assign_local)
+			create Result.make_filled (Void, Op_enter_feature, Op_rt_assign_local)
 		ensure
 			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Execution replay
 
-	events_feature_argument (t: TUPLE): TUPLE [ref: detachable ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
+	events_feature_argument: TUPLE [ref: detachable ANY; cid: INTEGER; fid: INTEGER; a_dep: INTEGER]
 			-- Argument for `process_*_feature'.
 			-- used only as anchor for type declaration
-		local
-			a: detachable like events_feature_argument
 		do
-			a ?= t
-			check a /= Void end
-			Result := a
+			check False then end
+		ensure
+			False
 		end
 
-	events_assign_argument (t: TUPLE): TUPLE [ref: detachable ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
-
+	events_assign_argument: TUPLE [ref: detachable ANY; a_dep: INTEGER; a_pos: INTEGER; a_type: INTEGER; a_xpm_info: INTEGER]
 			-- Argument for `process_*_assign'.
 			-- used only as anchor for type declaration
-		local
-			a: detachable like events_assign_argument
 		do
-			a ?= t
-			check a /= Void end
-			Result := a
+			check False then end
+		ensure
+			False
 		end
 
 	reset_events_feature_argument (t: TUPLE)
@@ -267,11 +262,9 @@ feature {NONE} -- Execution replay
 			Result := execution_recorder_cell.item
 		end
 
-	execution_recorder_parameters: RT_DBG_EXECUTION_PARAMETERS
-			-- Once per thread record parameters.
-		note
-			once_status: global
-		once
+	execution_recorder_parameters: separate RT_DBG_EXECUTION_PARAMETERS
+			-- Once per process record parameters.
+		once ("PROCESS")
 			create Result.make
 		ensure
 			result_attached: Result /= Void
@@ -285,20 +278,31 @@ feature {NONE} -- Execution replay
 			p: like execution_recorder_parameters
 		do
 			p := execution_recorder_parameters
-			p.set_maximum_record_count (a_maximum_record_count)
-			p.set_flatten_when_closing (a_flatten_when_closing)
-			p.set_keep_calls_records (a_keep_calls_record)
-			p.set_recording_values (a_recording_values)
+			set_execution_recorder_parameters_to (
+				a_maximum_record_count,
+				a_flatten_when_closing,
+				a_keep_calls_record,
+				a_recording_values,
+				p
+			)
 			if attached execution_recorder as r then
 				r.update_parameters (p)
 			end
 		end
 
+	set_execution_recorder_parameters_to (a_maximum_record_count: INTEGER; a_flatten_when_closing: BOOLEAN;
+				a_keep_calls_record: BOOLEAN; a_recording_values: BOOLEAN; p: like execution_recorder_parameters)
+			-- Set execution recorder parameters to `p'.
+		do
+			p.set_maximum_record_count (a_maximum_record_count)
+			p.set_flatten_when_closing (a_flatten_when_closing)
+			p.set_keep_calls_records (a_keep_calls_record)
+			p.set_recording_values (a_recording_values)
+		end
+
 	execution_recorder_cell: CELL [detachable RT_DBG_EXECUTION_RECORDER]
 			-- Cell containing the once per thread recorder, if activated.
-		note
-			description: "Once per thread"
-		once
+		once ("THREAD")
 			create Result.put (Void)
 		ensure
 			result_attached: Result /= Void
@@ -369,17 +373,17 @@ feature -- debug purpose: to remove
 		end
 
 invariant
-	no_attribute: (create {INTERNAL}).field_count (Current) = 0
+	no_attribute: (create {INTERNAL}).field_count_of_type (1) = 0
 			-- Since this object is shared among threads,
 			-- it is better to avoid any attribute conflict
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

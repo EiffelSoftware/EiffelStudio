@@ -6,15 +6,13 @@ note
 	revision: "$Revision$"
 
 class
-	RT_DBG_FIELD_RECORD [G]
+	RT_DBG_FIELD_RECORD [G -> detachable ANY]
 
 inherit
 	RT_DBG_VALUE_RECORD
 		rename
 			position as index
 		end
-
-	INTERNAL
 
 create
 	make
@@ -87,7 +85,7 @@ feature -- Access
 				end
 			else
 				if v /= Void then
-					Result := v.out
+					Result := out_value (v)
 				else
 					check False end
 					create Result.make_empty
@@ -223,6 +221,18 @@ feature {NONE} -- Internal Implementation
 			end
 		end
 
+feature {NONE} -- Output
+
+	out_value (v: attached G): STRING
+			-- Printable representation of `v'.
+		require
+			v_attached: attached v
+		do
+			Result := v.out
+		ensure
+			result_attached: attached Result
+		end
+
 feature {NONE} -- Implementation
 
 	default_value: detachable G
@@ -235,11 +245,11 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

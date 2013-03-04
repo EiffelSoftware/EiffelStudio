@@ -24,7 +24,11 @@ feature {NONE} -- Initialization
 			a_deserializer_not_void: a_deserializer /= Void
 			a_deserializer_ready: a_deserializer.is_ready_for_reading
 		do
-			create internal
+			create reflector
+				-- Create an empty instance of `reflected_object' using `reflector' to satisfy
+				-- the creation procedure. We will use `set_object' to update with the appropriate
+				-- object.
+			create reflected_object.make (reflector)
 			create object_references.make_empty (0)
 			deserializer := a_deserializer
 		ensure
@@ -129,8 +133,11 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation: Access
 
-	internal: INTERNAL
+	reflector: REFLECTOR
 			-- Facilities to inspect.
+
+	reflected_object: REFLECTED_OBJECT
+			-- Facilities to inspect objects.
 
 	object_references: SPECIAL [ANY]
 			-- Mapping between reference ID and the associated object.
@@ -241,7 +248,7 @@ feature {NONE} -- Implementation
 		local
 			l_objs: like object_references
 			l_deser: like deserializer
-			l_int: like internal
+			l_reflector: like reflector
 			l_mem: like memory
 			l_is_collecting: BOOLEAN
 			l_nat32: NATURAL_32
@@ -257,10 +264,10 @@ feature {NONE} -- Implementation
 				l_mem := memory
 				l_is_collecting := l_mem.collecting
 				l_deser := deserializer
-				l_int := internal
+				l_reflector := reflector
 				l_objs := object_references
 					-- Create a fake entry for item at index `0' in SPECIAL since our indexing starts at 1.
-				l_objs.extend (l_int)
+				l_objs.extend (Current)
 				from
 					i := 0
 					nb := a_count.to_integer_32
@@ -283,18 +290,14 @@ feature {NONE} -- Implementation
 						check valid_id: l_ref_id = i + 1 end
 
 							-- Read object flags
-						inspect
-							l_deser.read_natural_8
-						when is_special_flag then
+						if l_deser.read_natural_8 = is_special_flag then
 								-- We need to first read the `item_type' of the SPECIAL,
 								-- and then its count.
 							l_obj := new_special_instance (l_dtype,
 								l_deser.read_compressed_integer_32,
 								l_deser.read_compressed_integer_32)
-						when is_tuple_flag then
-							l_obj := l_int.new_instance_of (l_dtype)
 						else
-							l_obj := l_int.new_instance_of (l_dtype)
+							l_obj := l_reflector.new_instance_of (l_dtype)
 						end
 
 						l_objs.extend (l_obj)
@@ -320,31 +323,47 @@ feature {NONE} -- Implementation
 		do
 			l_deser := deserializer
 			inspect a_abstract_type
-			when {INTERNAL}.boolean_type then l_deser.read_boolean.do_nothing
-			when {INTERNAL}.character_8_type then l_deser.read_character_8.do_nothing
-			when {INTERNAL}.character_32_type then l_deser.read_character_32.do_nothing
-			when {INTERNAL}.natural_8_type then l_deser.read_natural_8.do_nothing
-			when {INTERNAL}.natural_16_type then l_deser.read_natural_16.do_nothing
-			when {INTERNAL}.natural_32_type then l_deser.read_natural_32.do_nothing
-			when {INTERNAL}.natural_64_type then l_deser.read_natural_64.do_nothing
-			when {INTERNAL}.integer_8_type then l_deser.read_integer_8.do_nothing
-			when {INTERNAL}.integer_16_type then l_deser.read_integer_16.do_nothing
-			when {INTERNAL}.integer_32_type then l_deser.read_integer_32.do_nothing
-			when {INTERNAL}.integer_64_type then l_deser.read_integer_64.do_nothing
-			when {INTERNAL}.real_32_type then l_deser.read_real_32.do_nothing
-			when {INTERNAL}.real_64_type then l_deser.read_real_64.do_nothing
-			when {INTERNAL}.pointer_type then l_deser.read_pointer.do_nothing
-			when {INTERNAL}.reference_type then l_deser.read_compressed_natural_32.do_nothing
+			when {REFLECTOR_CONSTANTS}.boolean_type then l_deser.read_boolean.do_nothing
+			when {REFLECTOR_CONSTANTS}.character_8_type then l_deser.read_character_8.do_nothing
+			when {REFLECTOR_CONSTANTS}.character_32_type then l_deser.read_character_32.do_nothing
+			when {REFLECTOR_CONSTANTS}.natural_8_type then l_deser.read_natural_8.do_nothing
+			when {REFLECTOR_CONSTANTS}.natural_16_type then l_deser.read_natural_16.do_nothing
+			when {REFLECTOR_CONSTANTS}.natural_32_type then l_deser.read_natural_32.do_nothing
+			when {REFLECTOR_CONSTANTS}.natural_64_type then l_deser.read_natural_64.do_nothing
+			when {REFLECTOR_CONSTANTS}.integer_8_type then l_deser.read_integer_8.do_nothing
+			when {REFLECTOR_CONSTANTS}.integer_16_type then l_deser.read_integer_16.do_nothing
+			when {REFLECTOR_CONSTANTS}.integer_32_type then l_deser.read_integer_32.do_nothing
+			when {REFLECTOR_CONSTANTS}.integer_64_type then l_deser.read_integer_64.do_nothing
+			when {REFLECTOR_CONSTANTS}.real_32_type then l_deser.read_real_32.do_nothing
+			when {REFLECTOR_CONSTANTS}.real_64_type then l_deser.read_real_64.do_nothing
+			when {REFLECTOR_CONSTANTS}.pointer_type then l_deser.read_pointer.do_nothing
+			when {REFLECTOR_CONSTANTS}.reference_type then l_deser.read_compressed_natural_32.do_nothing
+			when {REFLECTOR_CONSTANTS}.expanded_type then l_deser.read_natural_8.do_nothing
+
 			else
 				check False end
 			end
 		end
 
-	read_persistent_field_count (a_dtype: INTEGER): INTEGER
-			-- Number of fields we are going to read from the retrieved system.
+	read_reference: detachable ANY
+			-- Read reference from the stream.
+		local
+			l_nat32: NATURAL_32
+		do
+			l_nat32 := deserializer.read_compressed_natural_32
+			if l_nat32 /= 0 then
+				check
+					l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
+				end
+				Result := object_references.item (l_nat32.to_integer_32)
+			end
+		end
+
+	read_persistent_field_count (a_reflected_object: REFLECTED_OBJECT): INTEGER
+			-- Number of fields we are going to read from `a_reflected_object' in the the retrieved system.
 		do
 				-- We read the same number of fields because the transient fields are serialized.
-			Result := internal.field_count_of_type (a_dtype)
+			Result := a_reflected_object.field_count
 		end
 
 	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER
@@ -394,15 +413,14 @@ feature {NONE} -- Implementation
 	decode_object (is_root: BOOLEAN)
 			-- Decode one object and store it in `last_decoded_object' if `is_root'.
 		local
-			l_dtype: INTEGER
 			l_deser: like deserializer
-			l_int: like internal
+			l_reflected_object: like reflected_object
 			l_obj: detachable ANY
 			l_nat32: NATURAL_32
 			l_index: INTEGER
 		do
 			l_deser := deserializer
-			l_int := internal
+			l_reflected_object := reflected_object
 
 				-- Read reference ID.
 			l_nat32 := l_deser.read_compressed_natural_32
@@ -412,82 +430,81 @@ feature {NONE} -- Implementation
 			l_index := l_nat32.to_integer_32
 
 			l_obj := object_references.item (l_index)
-			l_dtype := l_int.dynamic_type (l_obj)
+			l_reflected_object.set_object (l_obj)
 
-			if l_int.is_special (l_obj) then
+			if l_reflected_object.is_special then
 					-- Get the abstract element type of the SPECIAL.
-				decode_special (l_obj, l_index, abstract_type (l_int.generic_dynamic_type_of_type (l_dtype, 1)))
-			elseif l_int.is_tuple (l_obj) then
-				decode_tuple (l_obj, l_dtype, l_index)
+				decode_special (l_obj, abstract_type (l_reflected_object.generic_dynamic_type (1)))
+			elseif l_reflected_object.is_tuple then
+				decode_tuple (l_obj)
 			else
-				decode_normal_object (l_obj, l_dtype, l_index)
+				decode_normal_object (l_reflected_object)
 			end
 			if is_root then
 				last_decoded_object := l_obj
 			end
 		end
 
-	decode_normal_object (an_obj: ANY; a_dtype, an_index: INTEGER)
-			-- Decode an object of type `a_dtype' and index `an_index' in `an_obj'.
+	decode_normal_object (a_reflected_object: REFLECTED_OBJECT)
+			-- Decode an object represented by `a_reflected_object'.
 		require
-			an_obj_not_void: an_obj /= Void
-			an_obj_valid: internal.dynamic_type (an_obj) = a_dtype
-			a_dtype_non_negative: a_dtype >= 0
-			an_index_non_negative: an_index >= 0
+			an_obj_not_void: a_reflected_object /= Void
 		local
-			l_int: like internal
 			l_deser: like deserializer
 			i, nb: INTEGER
-			l_new_offset: INTEGER
+			l_dtype, l_new_offset: INTEGER
 		do
-			l_int := internal
 			l_deser := deserializer
 			from
 				i := 1
-				nb := read_persistent_field_count (a_dtype) + 1
+				l_dtype := a_reflected_object.dynamic_type
+				nb := read_persistent_field_count (a_reflected_object) + 1
 			until
 				i = nb
 			loop
-				l_new_offset := new_attribute_offset (a_dtype, i)
+				l_new_offset := new_attribute_offset (l_dtype, i)
 				check l_new_offset_positive: l_new_offset > 0 end
-				if not l_int.is_field_transient_of_type (l_new_offset, a_dtype) then
-					inspect l_int.field_type_of_type (l_new_offset, a_dtype)
-					when {INTERNAL}.boolean_type then
-						l_int.set_boolean_field (l_new_offset, an_obj, l_deser.read_boolean)
+				if not a_reflected_object.is_field_transient (l_new_offset) then
+					inspect a_reflected_object.field_type (l_new_offset)
+					when {REFLECTOR_CONSTANTS}.boolean_type then
+						a_reflected_object.set_boolean_field (l_new_offset, l_deser.read_boolean)
 
-					when {INTERNAL}.character_8_type then
-						l_int.set_character_8_field (l_new_offset, an_obj, l_deser.read_character_8)
-					when {INTERNAL}.character_32_type then
-						l_int.set_character_32_field (l_new_offset, an_obj, l_deser.read_character_32)
+					when {REFLECTOR_CONSTANTS}.character_8_type then
+						a_reflected_object.set_character_8_field (l_new_offset, l_deser.read_character_8)
+					when {REFLECTOR_CONSTANTS}.character_32_type then
+						a_reflected_object.set_character_32_field (l_new_offset, l_deser.read_character_32)
 
-					when {INTERNAL}.natural_8_type then
-						l_int.set_natural_8_field (l_new_offset, an_obj, l_deser.read_natural_8)
-					when {INTERNAL}.natural_16_type then
-						l_int.set_natural_16_field (l_new_offset, an_obj, l_deser.read_natural_16)
-					when {INTERNAL}.natural_32_type then
-						l_int.set_natural_32_field (l_new_offset, an_obj, l_deser.read_natural_32)
-					when {INTERNAL}.natural_64_type then
-						l_int.set_natural_64_field (l_new_offset, an_obj, l_deser.read_natural_64)
+					when {REFLECTOR_CONSTANTS}.natural_8_type then
+						a_reflected_object.set_natural_8_field (l_new_offset, l_deser.read_natural_8)
+					when {REFLECTOR_CONSTANTS}.natural_16_type then
+						a_reflected_object.set_natural_16_field (l_new_offset, l_deser.read_natural_16)
+					when {REFLECTOR_CONSTANTS}.natural_32_type then
+						a_reflected_object.set_natural_32_field (l_new_offset, l_deser.read_natural_32)
+					when {REFLECTOR_CONSTANTS}.natural_64_type then
+						a_reflected_object.set_natural_64_field (l_new_offset, l_deser.read_natural_64)
 
-					when {INTERNAL}.integer_8_type then
-						l_int.set_integer_8_field (l_new_offset, an_obj, l_deser.read_integer_8)
-					when {INTERNAL}.integer_16_type then
-						l_int.set_integer_16_field (l_new_offset, an_obj, l_deser.read_integer_16)
-					when {INTERNAL}.integer_32_type then
-						l_int.set_integer_32_field (l_new_offset, an_obj, l_deser.read_integer_32)
-					when {INTERNAL}.integer_64_type then
-						l_int.set_integer_64_field (l_new_offset, an_obj, l_deser.read_integer_64)
+					when {REFLECTOR_CONSTANTS}.integer_8_type then
+						a_reflected_object.set_integer_8_field (l_new_offset, l_deser.read_integer_8)
+					when {REFLECTOR_CONSTANTS}.integer_16_type then
+						a_reflected_object.set_integer_16_field (l_new_offset, l_deser.read_integer_16)
+					when {REFLECTOR_CONSTANTS}.integer_32_type then
+						a_reflected_object.set_integer_32_field (l_new_offset, l_deser.read_integer_32)
+					when {REFLECTOR_CONSTANTS}.integer_64_type then
+						a_reflected_object.set_integer_64_field (l_new_offset, l_deser.read_integer_64)
 
-					when {INTERNAL}.real_32_type then
-						l_int.set_real_32_field (l_new_offset, an_obj, l_deser.read_real_32)
-					when {INTERNAL}.real_64_type then
-						l_int.set_real_64_field (l_new_offset, an_obj, l_deser.read_real_64)
+					when {REFLECTOR_CONSTANTS}.real_32_type then
+						a_reflected_object.set_real_32_field (l_new_offset, l_deser.read_real_32)
+					when {REFLECTOR_CONSTANTS}.real_64_type then
+						a_reflected_object.set_real_64_field (l_new_offset, l_deser.read_real_64)
 
-					when {INTERNAL}.pointer_type then
-						l_int.set_pointer_field (l_new_offset, an_obj, l_deser.read_pointer)
+					when {REFLECTOR_CONSTANTS}.pointer_type then
+						a_reflected_object.set_pointer_field (l_new_offset, l_deser.read_pointer)
 
-					when {INTERNAL}.reference_type then
-						decode_reference (an_obj, an_index, l_new_offset)
+					when {REFLECTOR_CONSTANTS}.reference_type then
+						a_reflected_object.set_reference_field (l_new_offset, read_reference)
+
+					when {REFLECTOR_CONSTANTS}.expanded_type then
+						decode_expanded_object (a_reflected_object.meta_field (l_new_offset))
 
 					else
 						check
@@ -500,20 +517,99 @@ feature {NONE} -- Implementation
 							-- was already detected.
 						session_basic_only: is_transient_retrieval_required
 					end
-					read_default_value (l_int.field_type_of_type (l_new_offset, a_dtype))
+					read_default_value (a_reflected_object.field_type (l_new_offset))
 				end
 				i := i + 1
 			end
 		end
 
-	decode_tuple (an_obj: ANY; a_dtype, an_index: INTEGER)
-			-- Decode TUPLE object of type `a_dtype' and index `an_index' in `an_obj'.
+	decode_expanded_object (a_reflected_object: REFLECTED_OBJECT)
+			-- Decode an object `a_reflected_object'.
+		require
+			an_obj_not_void: a_reflected_object /= Void
+		local
+			l_deser: like deserializer
+			i, nb: INTEGER
+			l_new_offset: INTEGER
+			l_dtype: INTEGER
+		do
+			l_deser := deserializer
+			if l_deser.read_natural_8 /= 0 then
+					-- Something was stored, we can go ahead
+				from
+					i := 1
+					l_dtype := a_reflected_object.dynamic_type
+					nb := read_persistent_field_count (a_reflected_object) + 1
+				until
+					i = nb
+				loop
+					l_new_offset := new_attribute_offset (l_dtype, i)
+					check l_new_offset_positive: l_new_offset > 0 end
+					if not a_reflected_object.is_field_transient (l_new_offset) then
+						inspect a_reflected_object.field_type (l_new_offset)
+						when {REFLECTOR_CONSTANTS}.boolean_type then
+							a_reflected_object.set_boolean_field (l_new_offset, l_deser.read_boolean)
+
+						when {REFLECTOR_CONSTANTS}.character_8_type then
+							a_reflected_object.set_character_8_field (l_new_offset, l_deser.read_character_8)
+						when {REFLECTOR_CONSTANTS}.character_32_type then
+							a_reflected_object.set_character_32_field (l_new_offset, l_deser.read_character_32)
+
+						when {REFLECTOR_CONSTANTS}.natural_8_type then
+							a_reflected_object.set_natural_8_field (l_new_offset, l_deser.read_natural_8)
+						when {REFLECTOR_CONSTANTS}.natural_16_type then
+							a_reflected_object.set_natural_16_field (l_new_offset, l_deser.read_natural_16)
+						when {REFLECTOR_CONSTANTS}.natural_32_type then
+							a_reflected_object.set_natural_32_field (l_new_offset, l_deser.read_natural_32)
+						when {REFLECTOR_CONSTANTS}.natural_64_type then
+							a_reflected_object.set_natural_64_field (l_new_offset, l_deser.read_natural_64)
+
+						when {REFLECTOR_CONSTANTS}.integer_8_type then
+							a_reflected_object.set_integer_8_field (l_new_offset, l_deser.read_integer_8)
+						when {REFLECTOR_CONSTANTS}.integer_16_type then
+							a_reflected_object.set_integer_16_field (l_new_offset, l_deser.read_integer_16)
+						when {REFLECTOR_CONSTANTS}.integer_32_type then
+							a_reflected_object.set_integer_32_field (l_new_offset, l_deser.read_integer_32)
+						when {REFLECTOR_CONSTANTS}.integer_64_type then
+							a_reflected_object.set_integer_64_field (l_new_offset, l_deser.read_integer_64)
+
+						when {REFLECTOR_CONSTANTS}.real_32_type then
+							a_reflected_object.set_real_32_field (l_new_offset, l_deser.read_real_32)
+						when {REFLECTOR_CONSTANTS}.real_64_type then
+							a_reflected_object.set_real_64_field (l_new_offset, l_deser.read_real_64)
+
+						when {REFLECTOR_CONSTANTS}.pointer_type then
+							a_reflected_object.set_pointer_field (l_new_offset, l_deser.read_pointer)
+
+						when {REFLECTOR_CONSTANTS}.reference_type then
+							a_reflected_object.set_reference_field (l_new_offset, read_reference)
+
+						when {REFLECTOR_CONSTANTS}.expanded_type then
+							decode_expanded_object (a_reflected_object.meta_field (l_new_offset))
+
+						else
+							check
+								False
+							end
+						end
+					else
+						check
+								-- In independent store we should not come here since any mismatch if detected
+								-- was already detected.
+							session_basic_only: is_transient_retrieval_required
+						end
+						read_default_value (a_reflected_object.field_type (l_new_offset))
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	decode_tuple (an_obj: ANY)
+			-- Decode TUPLE object.
 		require
 			an_obj_not_void: an_obj /= Void
-			an_obj_valid: internal.dynamic_type (an_obj) = a_dtype
-			an_obj_is_tuple: internal.is_tuple (an_obj)
-			a_dtype_non_negative: a_dtype >= 0
-			an_index_non_negative: an_index >= 0
+			an_obj_is_tuple: attached {TUPLE} an_obj
 		local
 			l_deser: like deserializer
 			i, nb: INTEGER
@@ -547,7 +643,7 @@ feature {NONE} -- Implementation
 
 					when {TUPLE}.pointer_code then l_tuple.put_pointer (l_deser.read_pointer, i)
 
-					when {TUPLE}.reference_code then decode_reference (l_tuple, an_index, i)
+					when {TUPLE}.reference_code then l_tuple.put_reference (read_reference, i)
 					else
 						check
 							False
@@ -558,7 +654,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_special_instance (a_dtype, a_item_type, a_count: INTEGER): ANY
+	new_special_instance (a_dtype, a_item_type, a_count: INTEGER): SPECIAL [detachable ANY]
 			-- Create new special instance of a special object whose dynamic
 			-- type is `a_dtype', whose element abstract type is `a_item_type'
 			-- and of count `a_count'.
@@ -568,481 +664,414 @@ feature {NONE} -- Implementation
 			a_count_non_negative: a_count >= 0
 		do
 			inspect a_item_type
-			when {INTERNAL}.boolean_type then create {SPECIAL [BOOLEAN]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.boolean_type then create {SPECIAL [BOOLEAN]} Result.make_empty (a_count)
 
-			when {INTERNAL}.character_8_type then create {SPECIAL [CHARACTER_8]} Result.make_empty (a_count)
-			when {INTERNAL}.character_32_type then create {SPECIAL [CHARACTER_32]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.character_8_type then create {SPECIAL [CHARACTER_8]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.character_32_type then create {SPECIAL [CHARACTER_32]} Result.make_empty (a_count)
 
-			when {INTERNAL}.natural_8_type then create {SPECIAL [NATURAL_8]} Result.make_empty (a_count)
-			when {INTERNAL}.natural_16_type then create {SPECIAL [NATURAL_16]} Result.make_empty (a_count)
-			when {INTERNAL}.natural_32_type then create {SPECIAL [NATURAL_32]} Result.make_empty (a_count)
-			when {INTERNAL}.natural_64_type then create {SPECIAL [NATURAL_64]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.natural_8_type then create {SPECIAL [NATURAL_8]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.natural_16_type then create {SPECIAL [NATURAL_16]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.natural_32_type then create {SPECIAL [NATURAL_32]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.natural_64_type then create {SPECIAL [NATURAL_64]} Result.make_empty (a_count)
 
-			when {INTERNAL}.integer_8_type then create {SPECIAL [INTEGER_8]} Result.make_empty (a_count)
-			when {INTERNAL}.integer_16_type then create {SPECIAL [INTEGER_16]} Result.make_empty (a_count)
-			when {INTERNAL}.integer_32_type then create {SPECIAL [INTEGER]} Result.make_empty (a_count)
-			when {INTERNAL}.integer_64_type then create {SPECIAL [INTEGER_64]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.integer_8_type then create {SPECIAL [INTEGER_8]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.integer_16_type then create {SPECIAL [INTEGER_16]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.integer_32_type then create {SPECIAL [INTEGER]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.integer_64_type then create {SPECIAL [INTEGER_64]} Result.make_empty (a_count)
 
-			when {INTERNAL}.real_32_type then create {SPECIAL [REAL]} Result.make_empty (a_count)
-			when {INTERNAL}.real_64_type then create {SPECIAL [DOUBLE]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.real_32_type then create {SPECIAL [REAL]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.real_64_type then create {SPECIAL [DOUBLE]} Result.make_empty (a_count)
 
-			when {INTERNAL}.pointer_type then create {SPECIAL [POINTER]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.pointer_type then create {SPECIAL [POINTER]} Result.make_empty (a_count)
 			else
-				Result := internal.new_special_any_instance (a_dtype, a_count)
+				Result := reflector.new_special_any_instance (a_dtype, a_count)
 			end
 		ensure
 			new_special_instance_not_void: Result /= Void
-			new_special_instance_is_special: internal.is_special (Result)
 		end
 
-	decode_special (an_obj: ANY; an_index, an_item_type: INTEGER)
-			-- Decode SPECIAL object of index `an_index' and element type `an_item_type' in `an_obj'.
+	decode_special (an_obj: ANY; an_item_type: INTEGER)
+			-- Decode SPECIAL object of element type `an_item_type' in `an_obj'.
 		require
 			an_obj_not_void: an_obj /= Void
-			an_obj_is_special: internal.is_special (an_obj)
-			an_index_non_negative: an_index >= 0
+			an_obj_is_special: attached {SPECIAL [detachable ANY]} an_obj
+		local
+			nb: INTEGER
 		do
+				-- Read number of elements in SPECIAL.
+			nb := deserializer.read_compressed_integer_32
 			inspect an_item_type
-			when {INTERNAL}.boolean_type then
+			when {REFLECTOR_CONSTANTS}.boolean_type then
 				if attached {SPECIAL [BOOLEAN]} an_obj as l_spec_boolean then
-					decode_special_boolean (l_spec_boolean)
+					decode_special_boolean (l_spec_boolean, nb)
 				else
 					check l_spec_boolean_not_void: False end
 				end
 
-			when {INTERNAL}.character_8_type then
+			when {REFLECTOR_CONSTANTS}.character_8_type then
 				if attached {SPECIAL [CHARACTER_8]} an_obj as l_spec_character_8 then
-					decode_special_character_8 (l_spec_character_8)
+					decode_special_character_8 (l_spec_character_8, nb)
 				else
 					check l_spec_character_8_not_void: False end
 				end
 
-			when {INTERNAL}.character_32_type then
+			when {REFLECTOR_CONSTANTS}.character_32_type then
 				if attached {SPECIAL [CHARACTER_32]} an_obj as l_spec_character_32 then
-					decode_special_character_32 (l_spec_character_32)
+					decode_special_character_32 (l_spec_character_32, nb)
 				else
 					check l_spec_character_32_not_void: False end
 				end
 
-			when {INTERNAL}.natural_8_type then
+			when {REFLECTOR_CONSTANTS}.natural_8_type then
 				if attached {SPECIAL [NATURAL_8]} an_obj as l_spec_natural_8 then
-					decode_special_natural_8 (l_spec_natural_8)
+					decode_special_natural_8 (l_spec_natural_8, nb)
 				else
 					check l_spec_natural_8_not_void: False end
 				end
 
-			when {INTERNAL}.natural_16_type then
+			when {REFLECTOR_CONSTANTS}.natural_16_type then
 				if attached {SPECIAL [NATURAL_16]} an_obj as l_spec_natural_16 then
-					decode_special_natural_16 (l_spec_natural_16)
+					decode_special_natural_16 (l_spec_natural_16, nb)
 				else
 					check l_spec_natural_16_not_void: False end
 				end
 
-			when {INTERNAL}.natural_32_type then
+			when {REFLECTOR_CONSTANTS}.natural_32_type then
 				if attached {SPECIAL [NATURAL_32]} an_obj as l_spec_natural_32 then
-					decode_special_natural_32 (l_spec_natural_32)
+					decode_special_natural_32 (l_spec_natural_32, nb)
 				else
 					check l_spec_natural_32_not_void: False end
 				end
 
-			when {INTERNAL}.natural_64_type then
+			when {REFLECTOR_CONSTANTS}.natural_64_type then
 				if attached {SPECIAL [NATURAL_64]} an_obj as l_spec_natural_64 then
-					decode_special_natural_64 (l_spec_natural_64)
+					decode_special_natural_64 (l_spec_natural_64, nb)
 				else
 					check l_spec_natural_64_not_void: False end
 				end
 
-			when {INTERNAL}.integer_8_type then
+			when {REFLECTOR_CONSTANTS}.integer_8_type then
 				if attached {SPECIAL [INTEGER_8]} an_obj as l_spec_integer_8 then
-					decode_special_integer_8 (l_spec_integer_8)
+					decode_special_integer_8 (l_spec_integer_8, nb)
 				else
 					check l_spec_integer_8_not_void: False end
 				end
 
-			when {INTERNAL}.integer_16_type then
+			when {REFLECTOR_CONSTANTS}.integer_16_type then
 				if attached {SPECIAL [INTEGER_16]} an_obj as l_spec_integer_16 then
-					decode_special_integer_16 (l_spec_integer_16)
+					decode_special_integer_16 (l_spec_integer_16, nb)
 				else
 					check l_spec_integer_16_not_void: False end
 				end
 
-			when {INTERNAL}.integer_32_type then
+			when {REFLECTOR_CONSTANTS}.integer_32_type then
 				if attached {SPECIAL [INTEGER]} an_obj as l_spec_integer_32 then
-					decode_special_integer_32 (l_spec_integer_32)
+					decode_special_integer_32 (l_spec_integer_32, nb)
 				else
 					check l_spec_integer_32_not_void: False end
 				end
 
-			when {INTERNAL}.integer_64_type then
+			when {REFLECTOR_CONSTANTS}.integer_64_type then
 				if attached {SPECIAL [INTEGER_64]} an_obj as l_spec_integer_64 then
-					decode_special_integer_64 (l_spec_integer_64)
+					decode_special_integer_64 (l_spec_integer_64, nb)
 				else
 					check l_spec_integer_64_not_void: False end
 				end
 
-			when {INTERNAL}.real_32_type then
+			when {REFLECTOR_CONSTANTS}.real_32_type then
 				if attached {SPECIAL [REAL]} an_obj as l_spec_real_32 then
-					decode_special_real_32 (l_spec_real_32)
+					decode_special_real_32 (l_spec_real_32, nb)
 				else
 					check l_spec_real_32_not_void: False end
 				end
 
-			when {INTERNAL}.real_64_type then
+			when {REFLECTOR_CONSTANTS}.real_64_type then
 				if attached {SPECIAL [DOUBLE]} an_obj as l_spec_real_64 then
-					decode_special_real_64 (l_spec_real_64)
+					decode_special_real_64 (l_spec_real_64, nb)
 				else
 					check l_spec_real_64_not_void: False end
 				end
 
-			when {INTERNAL}.pointer_type then
+			when {REFLECTOR_CONSTANTS}.pointer_type then
 				if attached {SPECIAL [POINTER]} an_obj as l_spec_pointer then
-					decode_special_pointer (l_spec_pointer)
+					decode_special_pointer (l_spec_pointer, nb)
 				else
 					check l_spec_pointer_not_void: False end
 				end
 
 			else
-				check an_item_type_valid: an_item_type = {INTERNAL}.reference_type end
+				check an_item_type_valid: an_item_type = {REFLECTOR_CONSTANTS}.reference_type end
 				if attached {SPECIAL [detachable ANY]} an_obj as l_spec_any then
-					decode_special_reference (l_spec_any, an_index)
+					decode_special_reference (l_spec_any, nb)
 				else
 					check l_spec_any_not_void: False end
 				end
 			end
 		end
 
-	decode_special_boolean (a_spec: SPECIAL [BOOLEAN])
+	decode_special_boolean (a_spec: SPECIAL [BOOLEAN]; a_count: INTEGER)
 			-- Decode SPECIAL [BOOLEAN].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_boolean)
 				i := i + 1
 			end
 		end
 
-	decode_special_character_8 (a_spec: SPECIAL [CHARACTER_8])
+	decode_special_character_8 (a_spec: SPECIAL [CHARACTER_8]; a_count: INTEGER)
 			-- Decode SPECIAL [CHARACTER_8].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_character_8)
 				i := i + 1
 			end
 		end
 
-	decode_special_character_32 (a_spec: SPECIAL [CHARACTER_32])
+	decode_special_character_32 (a_spec: SPECIAL [CHARACTER_32]; a_count: INTEGER)
 			-- Decode SPECIAL [CHARACTER_32].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_character_32)
 				i := i + 1
 			end
 		end
 
-	decode_special_natural_8 (a_spec: SPECIAL [NATURAL_8])
+	decode_special_natural_8 (a_spec: SPECIAL [NATURAL_8]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_8].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_natural_8)
 				i := i + 1
 			end
 		end
 
-	decode_special_natural_16 (a_spec: SPECIAL [NATURAL_16])
+	decode_special_natural_16 (a_spec: SPECIAL [NATURAL_16]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_16].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_natural_16)
 				i := i + 1
 			end
 		end
 
-	decode_special_natural_32 (a_spec: SPECIAL [NATURAL_32])
+	decode_special_natural_32 (a_spec: SPECIAL [NATURAL_32]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_32].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_natural_32)
 				i := i + 1
 			end
 		end
 
-	decode_special_natural_64 (a_spec: SPECIAL [NATURAL_64])
+	decode_special_natural_64 (a_spec: SPECIAL [NATURAL_64]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_64].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_natural_64)
 				i := i + 1
 			end
 		end
 
-	decode_special_integer_8 (a_spec: SPECIAL [INTEGER_8])
+	decode_special_integer_8 (a_spec: SPECIAL [INTEGER_8]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER_8].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_integer_8)
 				i := i + 1
 			end
 		end
 
-	decode_special_integer_16 (a_spec: SPECIAL [INTEGER_16])
+	decode_special_integer_16 (a_spec: SPECIAL [INTEGER_16]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER_16].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_integer_16)
 				i := i + 1
 			end
 		end
 
-	decode_special_integer_32 (a_spec: SPECIAL [INTEGER])
+	decode_special_integer_32 (a_spec: SPECIAL [INTEGER]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_integer_32)
 				i := i + 1
 			end
 		end
 
-	decode_special_integer_64 (a_spec: SPECIAL [INTEGER_64])
+	decode_special_integer_64 (a_spec: SPECIAL [INTEGER_64]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER_64].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_integer_64)
 				i := i + 1
 			end
 		end
 
-	decode_special_real_32 (a_spec: SPECIAL [REAL])
+	decode_special_real_32 (a_spec: SPECIAL [REAL]; a_count: INTEGER)
 			-- Decode SPECIAL [REAL].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_real_32)
 				i := i + 1
 			end
 		end
 
-	decode_special_real_64 (a_spec: SPECIAL [DOUBLE])
+	decode_special_real_64 (a_spec: SPECIAL [DOUBLE]; a_count: INTEGER)
 			-- Decode SPECIAL [DOUBLE].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_real_64)
 				i := i + 1
 			end
 		end
 
-	decode_special_pointer (a_spec: SPECIAL [POINTER])
+	decode_special_pointer (a_spec: SPECIAL [POINTER]; a_count: INTEGER)
 			-- Decode SPECIAL [POINTER].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_deser: like deserializer
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.capacity
 			until
-				i = nb
+				i = a_count
 			loop
 				a_spec.extend (l_deser.read_pointer)
 				i := i + 1
 			end
 		end
 
-	decode_special_reference (a_spec: SPECIAL [detachable ANY]; an_index: INTEGER)
-			-- Decode SPECIAL of reference whose index is `an_index'.
-		require
-			an_index_non_negative: an_index >= 0
+	decode_special_reference (a_spec: SPECIAL [detachable ANY]; a_count: INTEGER)
+			-- Decode SPECIAL of reference.
 		local
-			i, nb: INTEGER
+			i: INTEGER
 		do
-			nb := a_spec.capacity
 			from
 			until
-				i = nb
+				i = a_count
 			loop
-				decode_reference (a_spec, an_index, i)
+				a_spec.force (read_reference, i)
 				i := i + 1
-			end
-		end
-
-	decode_reference (an_obj: ANY; an_obj_index, an_index: INTEGER)
-			-- Read reference and if found update `an_obj'
-			-- with found reference at `an_index' in `an_obj'.
-			-- If `an_obj' is a SPECIAL, then `an_index' is actually a SPECIAL index.
-		require
-			an_obj_not_void: an_obj /= Void
-			an_index_non_negative: an_index >= 0
-			an_index_positive_for_normal_object: not internal.is_special (an_obj) implies an_index > 0
-		local
-			l_nat32: NATURAL_32
-			l_index: INTEGER
-			l_sub_obj: detachable ANY
-		do
-			l_nat32 := deserializer.read_compressed_natural_32
-			if l_nat32 /= 0 then
-				check
-					l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
-				end
-				l_index := l_nat32.to_integer_32
-				l_sub_obj := object_references.item (l_index)
-				update_reference (an_obj, l_sub_obj, an_index)
-			elseif attached {SPECIAL [detachable ANY]} an_obj as l_spec then
-				l_spec.force (Void, an_index)
-			end
-		end
-
-	update_reference (an_obj: ANY; a_sub_obj: detachable ANY; an_index: INTEGER)
-			-- Connect `a_sub_obj' to `an_obj' at `an_index' position
-			-- which can be a field, special or tuple position depending
-			-- on type of `an_obj'.
-		require
-			an_obj_not_void: an_obj /= Void
-			an_index_non_negative: an_index >= 0
-			an_index_positive_for_normal_object: not internal.is_special (an_obj) implies an_index > 0
-		local
-			l_int: like internal
-		do
-			l_int := internal
-
-			if l_int.is_special (an_obj) then
-				if attached {SPECIAL [detachable ANY]} an_obj as l_spec then
-					l_spec.force (a_sub_obj, an_index)
-				end
-			elseif l_int.is_tuple (an_obj) then
-				if attached {TUPLE} an_obj as l_tuple then
-					l_tuple.put_reference (a_sub_obj, an_index)
-				end
-			else
-				l_int.set_reference_field (an_index, an_obj, a_sub_obj)
 			end
 		end
 
@@ -1055,7 +1084,8 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	internal_not_void: internal /= Void
+	reflector_not_void: reflector /= Void
+	reflected_object_not_void: reflected_object /= Void
 	deserializer_not_void: deserializer /= Void
 	object_references_not_void: object_references /= Void
 

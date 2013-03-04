@@ -119,8 +119,8 @@ feature -- Measure
 	same_object_type (ref: detachable ANY): BOOLEAN
 			-- Is `ref' representing the same value as `object' ?
 		do
-			if attached {ANY} ref as r then
-				Result := attached object as o and then dynamic_type (o) = dynamic_type (r)
+			if attached ref as r then
+				Result := attached object as o and then o.same_type (r)
 			else
 				Result := object = Void
 			end
@@ -1162,7 +1162,7 @@ feature -- debug
 		local
 			tn: STRING
 		do
-			tn := type_name_of_type (class_type_id)
+			tn := reflector.type_name_of_type (class_type_id)
 			if attached object as o and then attached {STRING} o.generating_type as otn then
 				if tn = Void or else otn /~ tn then
 					if tn /= Void then
@@ -1205,11 +1205,11 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

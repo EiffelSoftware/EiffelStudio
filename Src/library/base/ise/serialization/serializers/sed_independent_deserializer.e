@@ -67,12 +67,12 @@ feature {NONE} -- Implementation
 		local
 			i, j, nb: INTEGER
 			l_deser: like deserializer
-			l_int: like internal
+			l_reflector: like reflector
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
 			l_type_str: STRING
 		do
-			l_int := internal
+			l_reflector := reflector
 			l_deser := deserializer
 
 			version := 0
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 						-- Read type string associated to `l_old_dtype' and find dynamic type
 						-- in current system.
 					l_type_str := l_deser.read_string_8
-					l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
+					l_new_dtype := l_reflector.dynamic_type_from_string (l_type_str)
 					if l_new_dtype >= 0 then
 						if not l_table.valid_index (l_old_dtype) then
 							l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
@@ -146,12 +146,15 @@ feature {NONE} -- Implementation
 			read_object_table (a_count)
 		end
 
-	read_persistent_field_count (a_dtype: INTEGER): INTEGER
-			-- Number of fields we are going to read from the retrieved system.
+	read_persistent_field_count (a_reflected_object: REFLECTED_OBJECT): INTEGER
+			-- <Precursor>
+		local
+			l_dtype: INTEGER
 		do
+			l_dtype := a_reflected_object.dynamic_type
 			if
-				attached attributes_mapping as l_map and then l_map.valid_index (a_dtype) and then
-				attached l_map.item (a_dtype) as l_entry
+				attached attributes_mapping as l_map and then l_map.valid_index (l_dtype) and then
+				attached l_map.item (l_dtype) as l_entry
 			then
 					-- We substract -1 because the SPECIAL have a dummy entry at position 0 since
 					-- positions in INTERNAL always start at one.
@@ -181,7 +184,7 @@ feature {NONE} -- Implementation
 
 				-- Compare count of attributes
 			nb := l_deser.read_compressed_natural_32.to_integer_32
-			if nb /= internal.persistent_field_count_of_type (a_dtype) then
+			if nb /= reflector.persistent_field_count_of_type (a_dtype) then
 					-- Stored type has a different number of attributes than the type
 					-- from the retrieving system.
 				add_error (error_factory.new_attribute_count_mismatch (a_dtype, nb))
@@ -235,22 +238,22 @@ feature {NONE} -- Implementation
 		require
 			a_dtype_non_negative: a_dtype >= 0
 		local
-			l_int: like internal
+			l_reflector: like reflector
 			i, nb: INTEGER
 		do
-			l_int := internal
+			l_reflector := reflector
 
 			from
 				i := 1
-				nb := l_int.field_count_of_type (a_dtype)
+				nb := l_reflector.field_count_of_type (a_dtype)
 				create Result.make (nb)
 				nb := nb + 1
 			until
 				i = nb
 			loop
 				Result.put (
-					[i, l_int.field_static_type_of_type (i, a_dtype)],
-					l_int.field_name_of_type (i, a_dtype))
+					[i, l_reflector.field_static_type_of_type (i, a_dtype)],
+					l_reflector.field_name_of_type (i, a_dtype))
 				i := i + 1
 			end
 		ensure
@@ -268,14 +271,14 @@ feature {NONE} -- Cleaning
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

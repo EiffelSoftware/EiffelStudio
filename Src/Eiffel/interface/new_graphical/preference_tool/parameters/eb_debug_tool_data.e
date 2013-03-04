@@ -150,6 +150,26 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := show_debug_tooltip_delay_preference.value
 		end
 
+	new_edit_selected_shortcut: ES_KEY_SHORTCUT
+		do
+			Result := new_shortcut ({EV_KEY_CONSTANTS}.key_f2, False, False, False)
+		end
+
+	new_open_viewer_shortcut: ES_KEY_SHORTCUT
+		do
+			Result := new_shortcut ({EV_KEY_CONSTANTS}.key_e, True, False, False)
+		end
+
+	new_goto_home_shortcut: ES_KEY_SHORTCUT
+		do
+			Result := new_shortcut ({EV_KEY_CONSTANTS}.key_home, True, False, True)
+		end
+
+	new_goto_end_shortcut: ES_KEY_SHORTCUT
+		do
+			Result := new_shortcut ({EV_KEY_CONSTANTS}.key_end, True, False, False)
+		end
+
 feature -- Preference
 
 	edit_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
@@ -327,6 +347,12 @@ feature {NONE} -- Implementation
 			enable_remove_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_remove_here_shortcut_string,  [False, False, False, "F9"])
 			enable_disable_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_disable_bp_here_shortcut_string,  [False, False, True, "F9"])
 			run_to_this_point_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, run_to_this_point_shortcut_string,  [False, True, False, "F10"])
+		end
+
+	new_shortcut (a_key: INTEGER; a_ctrl, a_alt, a_shift: BOOLEAN): ES_KEY_SHORTCUT
+			-- Create new shortcut from arguments
+		do
+			create Result.make_with_key_combination (create {EV_KEY}.make_with_code (a_key), a_ctrl, a_alt, a_shift)
 		end
 
 	preferences: PREFERENCES

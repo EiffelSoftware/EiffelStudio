@@ -1629,10 +1629,10 @@ feature {NONE} -- Shortcuts
 			g.register_shortcut (move_row_down_shortcut, agent move_selected (+1))
 
 				--| Other shortcuts (non pref)
-			edit_selected_shortcut 		:= new_shortcut ({EV_KEY_CONSTANTS}.key_f2, False, False, False)
-			open_viewer_shortcut 		:= new_shortcut ({EV_KEY_CONSTANTS}.key_e, True, False, False)
-			goto_home_shortcut 			:= new_shortcut ({EV_KEY_CONSTANTS}.key_home, True, False, True)
-			goto_end_shortcut 			:= new_shortcut ({EV_KEY_CONSTANTS}.key_end, True, False, False)
+			edit_selected_shortcut 		:= preferences.debug_tool_data.new_edit_selected_shortcut
+			open_viewer_shortcut 		:= preferences.debug_tool_data.new_open_viewer_shortcut
+			goto_home_shortcut 			:= preferences.debug_tool_data.new_goto_home_shortcut
+			goto_end_shortcut 			:= preferences.debug_tool_data.new_goto_end_shortcut
 
 			g.register_shortcut (edit_selected_shortcut, agent edit_expression)
 			g.register_shortcut (open_viewer_shortcut, agent open_viewer_on_expression)
@@ -1955,7 +1955,7 @@ invariant
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -77,6 +77,18 @@ public class EIFFEL_EVENT_ARGS : EventArgs
 [Serializable]
 public sealed class ISE_RUNTIME
 {
+
+/*
+feature {NONE} -- Initialization
+*/
+
+	static ISE_RUNTIME()
+		// Type initializer
+	{
+		marked_objects = new Hashtable (500, new RT_REFERENCE_COMPARER());
+		marking_mutex = new System.Threading.Mutex();
+	}
+
 /*
 feature -- Assertions
 */
@@ -1155,6 +1167,88 @@ feature -- Duplication
 		return GENERIC_CONFORMANCE.create_like_object ((EIFFEL_TYPE_INFO) obj);
 	}
 
+/*
+feature -- Marking
+*/
+
+	public static bool is_object_marked (object obj)
+			// Is `obj' marked?
+			// Note that `marking_mutex' should be owned to safely call this routine.
+	{
+		return marked_objects.Contains(obj);
+	}
+
+	public static void mark_object (object obj)
+		// Mark object `obj'.
+		// Note that `marking_mutex' should be owned to safely call this routine.
+	{
+		marked_objects.Add(obj, obj);
+	}
+
+	public static void unmark_object(object obj)
+		// Mark object `obj'.
+		// Note that `marking_mutex' should be owned to safely call this routine.
+	{
+		marked_objects.Remove(obj);
+	}
+
+	public static void lock_marking ()
+		// Get a lock for `mark_object', `unmark_object' and `is_object_marked' so that they can
+		// be safely executed.
+	{
+		marking_mutex.WaitOne();
+	}
+
+	public static void unlock_marking ()
+		// Release a lock for `mark_object', `unmark_object' and `is_object_marked' so that marking
+		// routines can be executed from another thread.
+	{
+		marking_mutex.ReleaseMutex();
+	}
+
+	private static Hashtable marked_objects;
+			// Store all marked objects.
+
+	private static System.Threading.Mutex marking_mutex;
+			// Mutex used to mark objects in `marked_objects'.
+
+/*
+feature -- Introspection
+*/
+
+	public static int field_bit_size (int i, object obj)
+		// BIT size of the `i'-th field of `obj' assuming it is a BIT instance.
+	{
+			// BIT types are not implemented on .NET
+		return 0;
+	}
+	
+	[CLSCompliant(false)]
+	public static ulong object_size (object obj)
+		// Physical size of an object.
+	{
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE("obj not void", obj != null);
+		#endif
+
+		return (ulong) System.Runtime.InteropServices.Marshal.SizeOf(obj.GetType());
+	}
+
+	public static void set_field_of_expanded (object root_object, FieldInfo [] a_fields, FieldInfo a_field, object val)
+		// Set `a_field' with `val', an attribute reachable from `root_object' using `a_fields' as a path to
+		// reach it.
+	{
+		TypedReference t = TypedReference.MakeTypedReference(root_object, a_fields);
+		a_field.SetValueDirect(t, val);
+	}
+
+	public static object field_of_expanded (object root_object, FieldInfo [] a_fields, FieldInfo a_field)
+		// Get value of `a_field', an attribute reachable from `root_object' using `a_fields' as a path to
+		// reach it.
+	{
+		TypedReference t = TypedReference.MakeTypedReference(root_object, a_fields);
+		return a_field.GetValueDirect(t);
+	}
 }
 }
 

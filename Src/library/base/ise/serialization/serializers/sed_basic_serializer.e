@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 		local
 			l_dtype_table: like type_table
 			l_ser: like serializer
-			l_int: like internal
+			l_reflector: like reflector
 			l_dtype: INTEGER
 		do
 			l_ser := serializer
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 				-- quickly detect incompatibilities.
 			l_ser.write_compressed_natural_32 (version)
 			from
-				l_int := internal
+				l_reflector := reflector
 				l_dtype_table := type_table (a_list)
 				l_ser.write_compressed_natural_32 (l_dtype_table.count.to_natural_32)
 				l_dtype_table.start
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 				l_dtype := l_dtype_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write type name
-				l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
+				l_ser.write_string_8 (l_reflector.type_name_of_type (l_dtype))
 				l_dtype_table.forth
 			end
 
@@ -65,11 +65,11 @@ feature {NONE} -- Implementation
 			a_list_not_empty: not a_list.is_empty
 		local
 			l_dtype: INTEGER
-			l_int: like internal
+			l_reflector_object: like reflected_object
 			l_area: SPECIAL [ANY]
 			i, nb: INTEGER
 		do
-			l_int := internal
+			l_reflector_object := reflected_object
 			from
 					-- There is no good way to estimate how many different types
 					-- there will be in the system, we guessed that 500 should give
@@ -81,7 +81,8 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				l_dtype := l_int.dynamic_type (l_area.item (i))
+				l_reflector_object.set_object (l_area.item (i))
+				l_dtype := l_reflector_object.dynamic_type
 				Result.put (l_dtype, l_dtype)
 				i := i + 1
 			end
@@ -91,14 +92,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

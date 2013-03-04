@@ -44,12 +44,12 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			l_deser: like deserializer
-			l_int: like internal
+			l_reflector: like reflector
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
 			l_type_str: STRING
 		do
-			l_int := internal
+			l_reflector := reflector
 			l_deser := deserializer
 
 			check has_version: has_version end
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 				loop
 					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
 					l_type_str := l_deser.read_string_8
-					l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
+					l_new_dtype := l_reflector.dynamic_type_from_string (l_type_str)
 					if l_new_dtype >= 0 then
 						if not l_table.valid_index (l_old_dtype) then
 							l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))

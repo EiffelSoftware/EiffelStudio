@@ -158,13 +158,13 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			l_deser: like deserializer
-			l_int: like internal
+			l_reflector: like reflector
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
 			l_old_type_str, l_new_type_str: STRING
 			l_old_version, l_new_version: detachable IMMUTABLE_STRING_8
 		do
-			l_int := internal
+			l_reflector := reflector
 			l_deser := deserializer
 
 			if has_version then
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 				else
 					l_new_type_str := l_old_type_str
 				end
-				l_new_dtype := l_int.dynamic_type_from_string (l_new_type_str)
+				l_new_dtype := l_reflector.dynamic_type_from_string (l_new_type_str)
 				if l_new_dtype >= 0 then
 					if not l_table.valid_index (l_old_dtype) then
 						l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 					l_old_version := Void
 				end
 				if l_new_dtype /= -1 then
-					l_new_version := l_int.storable_version_of_type (l_new_dtype)
+					l_new_version := l_reflector.storable_version_of_type (l_new_dtype)
 					if l_old_version /~ l_new_version then
 							-- We record the mismatch for later when retrieving instances of `l_new_dtype'.
 						associated_mismatch (l_new_dtype).add_version_mismatch (l_old_version, l_new_version)
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 				else
 					l_new_type_str := l_old_type_str
 				end
-				l_new_dtype := l_int.dynamic_type_from_string (l_new_type_str)
+				l_new_dtype := l_reflector.dynamic_type_from_string (l_new_type_str)
 				if l_new_dtype >= 0 then
 					if not l_table.valid_index (l_old_dtype) then
 						l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			-- from the current system.
 		local
 			l_deser: like deserializer
-			l_int: like internal
+			l_reflector: like reflector
 			l_map: like attributes_map
 			l_mapping: SPECIAL [INTEGER]
 			l_old_name, l_new_name: STRING
@@ -307,11 +307,11 @@ feature {NONE} -- Implementation
 			l_attribute_type: INTEGER
 		do
 			l_deser := deserializer
-			l_int := internal
+			l_reflector := reflector
 
 				-- Compare count of attributes
 			l_old_count := l_deser.read_compressed_natural_32.to_integer_32
-			l_new_count := l_int.persistent_field_count_of_type (a_dtype)
+			l_new_count := l_reflector.persistent_field_count_of_type (a_dtype)
 			if l_old_count /= l_new_count then
 					-- Stored type has a different number of attributes than the type
 					-- from the retrieving system.
@@ -347,11 +347,11 @@ feature {NONE} -- Implementation
 								-- Case #1: types are different but we allow retrieval if the old type conforms
 								-- to the new one and taking into account attachment marks.
 							if is_conforming_mismatch_allowed then
-								if not l_int.type_conforms_to (l_dtype, l_attribute_type) then
+								if not l_reflector.type_conforms_to (l_dtype, l_attribute_type) then
 										-- No conformance, let's check if it conforms to the detachable type to
 										-- have an autofix mismatch. In either case the `l_mismatch' instance
 										-- has to be created
-									if l_int.is_attached_type (l_attribute_type) and then l_int.type_conforms_to (l_dtype, l_int.detachable_type (l_attribute_type)) then
+									if l_reflector.is_attached_type (l_attribute_type) and then l_reflector.type_conforms_to (l_dtype, l_reflector.detachable_type (l_attribute_type)) then
 											-- We do, we do not trigger a mismatch but we let the system know
 											-- that upon retrieval if the retrieved attribute is Void, we will
 											-- trigger a correct mismatch.
@@ -363,8 +363,8 @@ feature {NONE} -- Implementation
 							else
 									-- Case #2: types are different but we only accept it if they only differ
 									-- by their attachment mark.
-								if l_int.is_attached_type (l_attribute_type) then
-									if l_int.detachable_type (l_attribute_type) = l_dtype then
+								if l_reflector.is_attached_type (l_attribute_type) then
+									if l_reflector.detachable_type (l_attribute_type) = l_dtype then
 											-- We do, we do not trigger a mismatch but we let the system know
 											-- that upon retrieval if the retrieved attribute is Void, we will
 											-- trigger a correct mismatch.
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 										associated_mismatch (a_dtype).add_attribute_mismatch (l_dtype, l_attribute_type, l_old_name, l_new_name, i, l_item.position)
 									end
 								else
-									if l_int.is_attached_type (l_dtype) and then l_int.detachable_type (l_dtype) = l_attribute_type then
+									if l_reflector.is_attached_type (l_dtype) and then l_reflector.detachable_type (l_dtype) = l_attribute_type then
 											-- Nothing to do, old attribute type was attached while the
 											-- new one is not.
 									else
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 				if attached {MISMATCH_CORRECTOR} an_obj as l_corrector then
 					l_mismatch_called := True
 					l_check := {ISE_RUNTIME}.check_assert (False)
-					a_mismatch_information.put (internal.type_name (an_obj), {MISMATCH_INFORMATION}.type_name_key)
+					a_mismatch_information.put (an_obj.generating_type.name, {MISMATCH_INFORMATION}.type_name_key)
 					mismatch_information.copy (a_mismatch_information)
 					l_corrector.correct_mismatch
 					l_check := {ISE_RUNTIME}.check_assert (l_check)
@@ -507,22 +507,27 @@ feature {NONE} -- Implementation
 	is_object_valid (an_obj: ANY; a_verify_invariant: BOOLEAN): BOOLEAN
 			-- Is object content valid, i.e. are all attached attributes really attached?
 		local
-			l_int: INTERNAL
+			l_reflected_object: like reflected_object
+			l_reflector: like reflector
 			l_dtype, i, nb: INTEGER
 			retried: BOOLEAN
 		do
 			if not retried then
 					-- Let's verify attachment status of our objects
 				from
-					l_int := internal
-					l_dtype := l_int.dynamic_type (an_obj)
+					l_reflected_object := reflected_object
+					l_reflector := reflector
+					l_reflected_object.set_object (an_obj)
+					l_dtype := l_reflected_object.dynamic_type
 					i := 1
-					nb := l_int.field_count_of_type (l_dtype)
+					nb := l_reflected_object.field_count
 					Result := True
 				until
 					i > nb or not Result
 				loop
-					Result := not l_int.is_attached_type (l_int.field_static_type_of_type (i, l_dtype)) or else l_int.field (i, an_obj) /= Void
+					if l_reflected_object.field_type (i) = {REFLECTOR_CONSTANTS}.reference_type then
+						Result := not l_reflector.is_attached_type (l_reflected_object.field_static_type (i)) or else l_reflected_object.reference_field (i) /= Void
+					end
 					i := i + 1
 				end
 				if a_verify_invariant then
@@ -537,33 +542,32 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	decode_normal_object (an_obj: ANY; a_dtype, an_index: INTEGER)
+	decode_normal_object (a_reflected_object: REFLECTED_OBJECT)
 			-- <Precursor>
 		local
-			l_int: like internal
 			l_deser: like deserializer
 			i, nb: INTEGER
-			l_new_offset: INTEGER
+			l_dtype, l_new_offset: INTEGER
 			l_mismatch_info: SED_TYPE_MISMATCH
 			l_info: detachable MISMATCH_INFORMATION
 			l_check_for_non_void: BOOLEAN
 			l_has_mismatch: BOOLEAN
 			l_field_info: detachable TUPLE [old_name, new_name: STRING; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
 		do
-			if not has_mismatch (a_dtype) then
-				Precursor (an_obj, a_dtype, an_index)
+			l_dtype := a_reflected_object.dynamic_type
+			if not has_mismatch (l_dtype) then
+				Precursor (a_reflected_object)
 			else
-				l_mismatch_info := associated_mismatch (a_dtype)
+				l_mismatch_info := associated_mismatch (l_dtype)
 				if l_mismatch_info.has_version_mismatch then
 					create l_info.make (l_mismatch_info.old_count)
 					l_info.set_versions (l_mismatch_info.old_version, l_mismatch_info.new_version)
 				end
-				l_int := internal
 				l_deser := deserializer
 				from
 					i := 1
 						-- We read only as many attributes as stored.
-					nb := read_persistent_field_count (a_dtype) + 1
+					nb := read_persistent_field_count (a_reflected_object) + 1
 				until
 					i = nb
 				loop
@@ -581,52 +585,57 @@ feature {NONE} -- Implementation
 						l_has_mismatch := False
 					end
 					if l_field_info = Void then
-						l_new_offset := new_attribute_offset (a_dtype, i)
-						inspect l_int.field_type_of_type (l_new_offset, a_dtype)
-						when {INTERNAL}.boolean_type then
-							l_int.set_boolean_field (l_new_offset, an_obj, l_deser.read_boolean)
+						l_new_offset := new_attribute_offset (l_dtype, i)
+						inspect a_reflected_object.field_type (l_new_offset)
+						when {REFLECTOR_CONSTANTS}.boolean_type then
+							a_reflected_object.set_boolean_field (l_new_offset, l_deser.read_boolean)
 
-						when {INTERNAL}.character_8_type then
-							l_int.set_character_8_field (l_new_offset, an_obj, l_deser.read_character_8)
-						when {INTERNAL}.character_32_type then
-							l_int.set_character_32_field (l_new_offset, an_obj, l_deser.read_character_32)
+						when {REFLECTOR_CONSTANTS}.character_8_type then
+							a_reflected_object.set_character_8_field (l_new_offset, l_deser.read_character_8)
+						when {REFLECTOR_CONSTANTS}.character_32_type then
+							a_reflected_object.set_character_32_field (l_new_offset, l_deser.read_character_32)
 
-						when {INTERNAL}.natural_8_type then
-							l_int.set_natural_8_field (l_new_offset, an_obj, l_deser.read_natural_8)
-						when {INTERNAL}.natural_16_type then
-							l_int.set_natural_16_field (l_new_offset, an_obj, l_deser.read_natural_16)
-						when {INTERNAL}.natural_32_type then
-							l_int.set_natural_32_field (l_new_offset, an_obj, l_deser.read_natural_32)
-						when {INTERNAL}.natural_64_type then
-							l_int.set_natural_64_field (l_new_offset, an_obj, l_deser.read_natural_64)
+						when {REFLECTOR_CONSTANTS}.natural_8_type then
+							a_reflected_object.set_natural_8_field (l_new_offset, l_deser.read_natural_8)
+						when {REFLECTOR_CONSTANTS}.natural_16_type then
+							a_reflected_object.set_natural_16_field (l_new_offset, l_deser.read_natural_16)
+						when {REFLECTOR_CONSTANTS}.natural_32_type then
+							a_reflected_object.set_natural_32_field (l_new_offset, l_deser.read_natural_32)
+						when {REFLECTOR_CONSTANTS}.natural_64_type then
+							a_reflected_object.set_natural_64_field (l_new_offset, l_deser.read_natural_64)
 
-						when {INTERNAL}.integer_8_type then
-							l_int.set_integer_8_field (l_new_offset, an_obj, l_deser.read_integer_8)
-						when {INTERNAL}.integer_16_type then
-							l_int.set_integer_16_field (l_new_offset, an_obj, l_deser.read_integer_16)
-						when {INTERNAL}.integer_32_type then
-							l_int.set_integer_32_field (l_new_offset, an_obj, l_deser.read_integer_32)
-						when {INTERNAL}.integer_64_type then
-							l_int.set_integer_64_field (l_new_offset, an_obj, l_deser.read_integer_64)
+						when {REFLECTOR_CONSTANTS}.integer_8_type then
+							a_reflected_object.set_integer_8_field (l_new_offset, l_deser.read_integer_8)
+						when {REFLECTOR_CONSTANTS}.integer_16_type then
+							a_reflected_object.set_integer_16_field (l_new_offset, l_deser.read_integer_16)
+						when {REFLECTOR_CONSTANTS}.integer_32_type then
+							a_reflected_object.set_integer_32_field (l_new_offset, l_deser.read_integer_32)
+						when {REFLECTOR_CONSTANTS}.integer_64_type then
+							a_reflected_object.set_integer_64_field (l_new_offset, l_deser.read_integer_64)
 
-						when {INTERNAL}.real_32_type then
-							l_int.set_real_32_field (l_new_offset, an_obj, l_deser.read_real_32)
-						when {INTERNAL}.real_64_type then
-							l_int.set_real_64_field (l_new_offset, an_obj, l_deser.read_real_64)
+						when {REFLECTOR_CONSTANTS}.real_32_type then
+							a_reflected_object.set_real_32_field (l_new_offset, l_deser.read_real_32)
+						when {REFLECTOR_CONSTANTS}.real_64_type then
+							a_reflected_object.set_real_64_field (l_new_offset, l_deser.read_real_64)
 
-						when {INTERNAL}.pointer_type then
-							l_int.set_pointer_field (l_new_offset, an_obj, l_deser.read_pointer)
+						when {REFLECTOR_CONSTANTS}.pointer_type then
+							a_reflected_object.set_pointer_field (l_new_offset, l_deser.read_pointer)
 
-						when {INTERNAL}.reference_type then
-							decode_reference (an_obj, an_index, l_new_offset)
+						when {REFLECTOR_CONSTANTS}.reference_type then
+							a_reflected_object.set_reference_field (l_new_offset, read_reference)
+
 								-- We check now that for an attached attribute, we have indeed retrieved a non-void
 								-- attribute, otherwise we will generate a mismatch.
-							if l_check_for_non_void and then l_int.field (l_new_offset, an_obj) = Void then
+							if l_check_for_non_void and then a_reflected_object.reference_field (l_new_offset) = Void then
 								if l_info = Void then
 									create l_info.make (l_mismatch_info.old_count)
 								end
-								l_info.put (Void, l_int.field_name_of_type (l_new_offset, a_dtype))
+								l_info.put (Void, a_reflected_object.field_name (l_new_offset))
 							end
+
+						when {REFLECTOR_CONSTANTS}.expanded_type then
+							decode_expanded_object (a_reflected_object.meta_field (l_new_offset))
+
 						else
 							check
 								False
@@ -638,26 +647,31 @@ feature {NONE} -- Implementation
 							create l_info.make (l_mismatch_info.old_count)
 						end
 						inspect abstract_type (l_field_info.old_attribute_type)
-						when {INTERNAL}.boolean_type then l_info.put (l_deser.read_boolean, l_field_info.new_name)
-						when {INTERNAL}.character_8_type then l_info.put (l_deser.read_character_8, l_field_info.new_name)
-						when {INTERNAL}.character_32_type then l_info.put (l_deser.read_character_32, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.boolean_type then l_info.put (l_deser.read_boolean, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.character_8_type then l_info.put (l_deser.read_character_8, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.character_32_type then l_info.put (l_deser.read_character_32, l_field_info.new_name)
 
-						when {INTERNAL}.natural_8_type then l_info.put (l_deser.read_natural_8, l_field_info.new_name)
-						when {INTERNAL}.natural_16_type then l_info.put (l_deser.read_natural_16, l_field_info.new_name)
-						when {INTERNAL}.natural_32_type then l_info.put (l_deser.read_natural_32, l_field_info.new_name)
-						when {INTERNAL}.natural_64_type then l_info.put (l_deser.read_natural_64, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.natural_8_type then l_info.put (l_deser.read_natural_8, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.natural_16_type then l_info.put (l_deser.read_natural_16, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.natural_32_type then l_info.put (l_deser.read_natural_32, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.natural_64_type then l_info.put (l_deser.read_natural_64, l_field_info.new_name)
 
-						when {INTERNAL}.integer_8_type then l_info.put (l_deser.read_integer_8, l_field_info.new_name)
-						when {INTERNAL}.integer_16_type then l_info.put (l_deser.read_integer_16, l_field_info.new_name)
-						when {INTERNAL}.integer_32_type then l_info.put (l_deser.read_integer_32, l_field_info.new_name)
-						when {INTERNAL}.integer_64_type then l_info.put (l_deser.read_integer_64, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.integer_8_type then l_info.put (l_deser.read_integer_8, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.integer_16_type then l_info.put (l_deser.read_integer_16, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.integer_32_type then l_info.put (l_deser.read_integer_32, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.integer_64_type then l_info.put (l_deser.read_integer_64, l_field_info.new_name)
 
-						when {INTERNAL}.real_32_type then l_info.put (l_deser.read_real_32, l_field_info.new_name)
-						when {INTERNAL}.real_64_type then l_info.put (l_deser.read_real_64, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.real_32_type then l_info.put (l_deser.read_real_32, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.real_64_type then l_info.put (l_deser.read_real_64, l_field_info.new_name)
 
-						when {INTERNAL}.pointer_type then l_info.put (l_deser.read_pointer, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.pointer_type then l_info.put (l_deser.read_pointer, l_field_info.new_name)
 
-						when {INTERNAL}.reference_type then l_info.put (read_reference, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.reference_type then l_info.put (read_reference, l_field_info.new_name)
+
+						when {REFLECTOR_CONSTANTS}.expanded_type then
+								-- Trigger an exception for the time being
+							check False then end
+
 						else
 							check
 								False
@@ -670,22 +684,9 @@ feature {NONE} -- Implementation
 			if l_info /= Void then
 					-- There was a mismatch, we store it for later when trying
 					-- to correct mismatches.
-				mismatched_object.extend ([an_obj, l_info])
+				mismatched_object.extend ([a_reflected_object.object, l_info])
 			end
 		end
-
-	read_reference: detachable ANY
-			-- Read reference.
-		local
-			l_nat32: NATURAL_32
-		do
-			l_nat32 := deserializer.read_compressed_natural_32
-			check
-				l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
-			end
-			Result := object_references.item (l_nat32.to_integer_32)
-		end
-
 
 feature {NONE} -- Cleaning
 
@@ -699,7 +700,7 @@ feature {NONE} -- Cleaning
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

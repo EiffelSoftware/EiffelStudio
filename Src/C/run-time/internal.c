@@ -202,16 +202,25 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 	return ei_field_at (offset, field_type, object);
 }
 
-rt_public long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
+#ifdef WORKBENCH
+rt_public void * ei_oref(long i, EIF_REFERENCE object)
+	/* Returns the memory address of the i-th field of `object'. */
 {
-	/* Returns dynamic type of i-th logical field of `type_id' as
-	 * declared in associated class of `type_id'. */
-
-	EIF_TYPE_INDEX *typearr = System(To_dtype(type_id)).cn_gtypes[i];
-
-	REQUIRE("valid type_id", rt_valid_type_index(type_id));
-	return eif_compound_id ((EIF_TYPE_INDEX) type_id, typearr [1], typearr);
+	EIF_TYPE_INDEX dtype = Dtype(object);
+	long offset;
+	CAttrOffs(offset,System(dtype).cn_attr[i],dtype);
+	return object + offset;
 }
+
+rt_public long ei_offset_of_type(long i, EIF_TYPE_INDEX type_id)
+	/* Returns the memory address of the i-th field of objects of type `type_id'. */
+{
+	EIF_TYPE_INDEX dtype = To_dtype(type_id);
+	long offset;
+	CAttrOffs(offset,System(dtype).cn_attr[i - 1],dtype);
+	return offset;
+}
+#endif
 
 rt_public long ei_eif_type(uint32 field_type)
 {
@@ -237,98 +246,6 @@ rt_public long ei_eif_type(uint32 field_type)
 	case SK_BIT:	return EIF_BIT_TYPE;
 	default:		return EIF_POINTER_TYPE;
 	}
-}
-
-rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
-{
-	/* Returns type of i-th logical field of `object'. */
-	/* Look at `eif_cecil.h' for constants definitions */
-
-	uint32 field_type = System(To_dtype(type_id)).cn_types[i];
-	return ei_eif_type (field_type);
-}
-
-rt_public char *ei_exp_type(long i, EIF_REFERENCE object)
-{
-	/* Returns the class name of the i-th expanded field of `object'. */
-	char *s;
-
-	s = System(HEADER(ei_oref(i,object))->ov_dtype).cn_generator;
-	return makestr(s,strlen(s));
-}
-
-rt_public rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object)
-{
-	/* Returns the size (in bit) of the i-the bit field of `object'. */
-
-	return (long) (System(Dtype(object)).cn_types[i] - SK_BIT);
-}
-
-rt_public rt_uint_ptr ei_size(EIF_REFERENCE object)
-{
-	REQUIRE ("not expanded", (HEADER(object)->ov_flags & EO_EXP) == 0);
-		/* Returns physical size occupied by `object' including its header. */
-	return (OVERHEAD + (HEADER(object)->ov_size & B_SIZE));
-}
-
-rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
-	/* Does `dtype' represent a SPECIAL [XX] where XX can be a basic type
-	 * or a reference type? */
-{
-	EIF_TYPE_INDEX dtype = To_dtype(dftype);
-	return EIF_TEST(
-		(dtype == egc_sp_bool) ||
-		(dtype == egc_sp_char) ||
-		(dtype == egc_sp_wchar) ||
-		(dtype == egc_sp_uint8) ||
-		(dtype == egc_sp_uint16) ||
-		(dtype == egc_sp_uint32) ||
-		(dtype == egc_sp_uint64) ||
-		(dtype == egc_sp_int8) ||
-		(dtype == egc_sp_int16) ||
-		(dtype == egc_sp_int32) ||
-		(dtype == egc_sp_int64) ||
-		(dtype == egc_sp_real32) ||
-		(dtype == egc_sp_real64) ||
-		(dtype == egc_sp_pointer) ||
-		(dtype == egc_sp_ref)
-		);
-}
-
-rt_public void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dftype)
-	/* Set object type to be `dftype'. To be used very carefully as one might
-	 * mess up object structure.
-	 */
-{
-	REQUIRE ("object not null", object);
-	REQUIRE ("dftype valid", dftype > 0);
-	REQUIRE ("dftype not too big", rt_valid_type_index(dftype));
-
-	Dftype(object)=(EIF_TYPE_INDEX) dftype;
-	Dtype(object)=To_dtype(dftype);
-
-	ENSURE ("dftype set", (EIF_INTEGER) Dftype(object) == dftype);
-}
-
-rt_public void * ei_oref(long i, EIF_REFERENCE object)
-{
-	/* Returns character value of i-th value */
-
-	struct cnode *obj_desc;
-	EIF_TYPE_INDEX dtype = Dtype(object);
-	void * o_ref;
-#ifdef WORKBENCH
-	long offset;
-#endif
-
-	obj_desc = &System(dtype);
-#ifndef WORKBENCH
-	o_ref = object + obj_desc->cn_offsets[i];
-#else
-	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
-	o_ref = object + offset;
-#endif
-	return o_ref;
 }
 
 /*

@@ -46,7 +46,7 @@ feature -- Access
 	new_invalid_object_error (a_obj: ANY): SED_ERROR
 			-- Object `a_obj' was retrieved but is not valid.
 		do
-			create Result.make_with_string ("Invalid retrieved object of type " + internal.type_name (a_obj))
+			create Result.make_with_string ("Invalid retrieved object of type " + a_obj.generating_type.name)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -54,7 +54,7 @@ feature -- Access
 	new_object_mismatch_error (a_obj: ANY): SED_ERROR
 			-- Object `a_obj' was retrieved but its content is still mismatched.
 		do
-			create Result.make_with_string ("Unfixable object of type " + internal.type_name (a_obj))
+			create Result.make_with_string ("Unfixable object of type " + a_obj.generating_type.name)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -180,7 +180,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal: INTERNAL
+	internal: REFLECTOR
 			-- Once access to internal.
 		once
 			create Result

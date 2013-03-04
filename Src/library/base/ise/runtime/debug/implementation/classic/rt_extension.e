@@ -340,7 +340,7 @@ feature -- debug purpose: to remove
 		require
 			ref_attached: ref /= Void
 		do
-			activate_execution_replay_recording (True, ref, (create {INTERNAL}).dynamic_type (ref), fid, dep, bpline)
+			activate_execution_replay_recording (True, ref, ref.generating_type.type_id, fid, dep, bpline)
 			c_activate_recording
 		end
 
@@ -373,17 +373,17 @@ feature -- debug purpose: to remove
 		end
 
 invariant
-	no_attribute: (create {INTERNAL}).field_count (Current) = 0
+	no_attribute: (create {REFLECTED_OBJECT}.make (Current)).field_count = 0
 			-- Since this object is shared among threads,
 			-- it is better to avoid any attribute conflict
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

@@ -52,17 +52,87 @@ extern "C" {
 /* Returns name of the i_th logical field of `object'. */
 #define ei_field_name_of_type(i,type_id)	(System(To_dtype(type_id)).cn_names[i])
 
-RT_LNK char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE object);
 RT_LNK char *ei_field (long i, EIF_REFERENCE object);
 RT_LNK long ei_eif_type(uint32 field_type);
-RT_LNK long ei_field_type_of_type(long i, EIF_INTEGER type_id);
-RT_LNK long ei_field_static_type_of_type(long i, EIF_INTEGER type_id);
-RT_LNK char *ei_exp_type(long i, EIF_REFERENCE object);
-RT_LNK rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object);
-RT_LNK rt_uint_ptr ei_size(EIF_REFERENCE object);
+rt_private rt_inline long ei_field_type_of_type(long i, EIF_INTEGER type_id)
+	/* Returns type of i-th logical field of `object'. */
+	/* Look at `eif_cecil.h' for constants definitions */
+{
+	uint32 field_type = System(To_dtype(type_id)).cn_types[i];
+	return ei_eif_type (field_type);
+}
+
+rt_private rt_inline long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
+	/* Returns dynamic type of i-th logical field of `type_id' as
+	 * declared in associated class of `type_id'. */
+{
+	EIF_TYPE_INDEX *typearr;
+	typearr = System(To_dtype(type_id)).cn_gtypes[i];
+	return eif_compound_id ((EIF_TYPE_INDEX) type_id, typearr [1], typearr);
+}
+
+#ifdef WORKBENCH
 RT_LNK void *ei_oref(long, EIF_REFERENCE);
-RT_LNK void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dtype);
-RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
+#else
+rt_private rt_inline void * ei_oref(long i, EIF_REFERENCE object)
+	/* Returns the memory address of the i-th field of `object'. */
+{
+	return object + System(Dtype(object)).cn_offsets[i]; 
+}
+#endif
+
+rt_private rt_inline char *ei_exp_type(long i, EIF_REFERENCE object)
+	/* Returns the class name of the i-th expanded field of `object'. */
+{
+	char *s;
+	s = System(HEADER(ei_oref(i,object))->ov_dtype).cn_generator;
+	return makestr(s,strlen(s));
+}
+
+rt_private rt_inline rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object)
+	/* Returns the size (in bit) of the i-the bit field of `object'. */
+{
+	return (long) (System(Dtype(object)).cn_types[i] - SK_BIT);
+}
+
+rt_private rt_inline rt_uint_ptr ei_size(EIF_REFERENCE object)
+{
+		/* Returns physical size occupied by `object' including its header. */
+	return (OVERHEAD + (HEADER(object)->ov_size & B_SIZE));
+}
+
+rt_private rt_inline void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dftype)
+	/* Set object type to be `dftype'. To be used very carefully as one might
+	 * mess up object structure.
+	 */
+{
+	Dftype(object)=(EIF_TYPE_INDEX) dftype;
+	Dtype(object)=To_dtype(dftype);
+}
+
+rt_private rt_inline EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
+	/* Does `dtype' represent a SPECIAL [XX] where XX can be a basic type
+	 * or a reference type? */
+{
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
+	return EIF_TEST(
+		(dtype == egc_sp_bool) ||
+		(dtype == egc_sp_char) ||
+		(dtype == egc_sp_wchar) ||
+		(dtype == egc_sp_uint8) ||
+		(dtype == egc_sp_uint16) ||
+		(dtype == egc_sp_uint32) ||
+		(dtype == egc_sp_uint64) ||
+		(dtype == egc_sp_int8) ||
+		(dtype == egc_sp_int16) ||
+		(dtype == egc_sp_int32) ||
+		(dtype == egc_sp_int64) ||
+		(dtype == egc_sp_real32) ||
+		(dtype == egc_sp_real64) ||
+		(dtype == egc_sp_pointer) ||
+		(dtype == egc_sp_ref)
+		);
+}
 
 #define ei_special(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC))
 #define ei_tuple(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == (EO_SPEC | EO_TUPLE)))
@@ -70,7 +140,18 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 
 #define eif_special_any_type(dftype) (EIF_TEST((uint32) To_dtype(dftype) == (uint32) egc_sp_ref))
 
-#define	ei_offset(i,object)			(EIF_INTEGER) ((EIF_REFERENCE) ei_oref(i, (EIF_REFERENCE) (object)) - (EIF_REFERENCE) (object))
+#ifdef WORKBENCH
+#define	ei_offset(i,object)		(EIF_INTEGER) ((EIF_REFERENCE) ei_oref(i, (EIF_REFERENCE) (object)) - (EIF_REFERENCE) (object))
+#else
+#define	ei_offset(i,object)		(EIF_INTEGER) (System(Dtype(object)).cn_offsets[i])
+#endif
+
+#ifdef WORKBENCH
+RT_LNK long ei_offset_of_type(long i, EIF_TYPE_INDEX type_id);
+#else
+	/* Returns the memory address of the i-th field of objects of type `type_id'. */
+#define ei_offset_of_type(i,type_id)	(EIF_INTEGER) (System(To_dtype(type_id)).cn_offsets[i - 1])
+#endif
 
 /* Attribute access */
 #define ei_char_field(i,object)		*(EIF_CHARACTER_8 *) ei_oref(i,(EIF_REFERENCE) (object))
@@ -87,6 +168,7 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 #define ei_float_field(i,object)	*(EIF_REAL *) ei_oref(i,(EIF_REFERENCE) (object))
 #define ei_double_field(i,object)	*(EIF_DOUBLE *) ei_oref(i,(EIF_REFERENCE) (object))
 #define ei_ptr_field(i,object)		*(EIF_POINTER *) ei_oref(i,(EIF_REFERENCE) (object))
+#define ei_reference_field(i,object)	*(EIF_REFERENCE *) ei_oref(i,(EIF_REFERENCE) (object))
 
 /* Attribute setting */
 #define ei_set_reference_field(i,object,value)	RTAR(object,value); *(EIF_REFERENCE *) ei_oref(i,object) = (EIF_REFERENCE) (value)

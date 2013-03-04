@@ -119,8 +119,8 @@ feature -- Measure
 	same_object_type (ref: detachable ANY): BOOLEAN
 			-- Is `ref' representing the same value as `object' ?
 		do
-			if attached {ANY} ref as r then
-				Result := attached object as o and then dynamic_type (o) = dynamic_type (r)
+			if attached ref as r then
+				Result := attached object as o and then o.same_type (r)
 			else
 				Result := object = Void
 			end
@@ -435,7 +435,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			no_records: not recorder.keep_calls_records implies call_records = Void
 		end
 
-	get_value_records_flattened_into (vals: like value_records)
+	get_value_records_flattened_into (vals: attached like value_records)
 			-- Flatten record `rec'
 			--| Note: all value records and object will be removed from sub call records.
 		require
@@ -449,11 +449,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 		do
 			vrecs := value_records
 			if is_flat then
-				check value_records_not_void_if_flat: vrecs /= Void end
-				c := vrecs.cursor
-				vals.append (vrecs)
-				vrecs.go_to (c)
-				n := vrecs.count
+				check value_records_not_void_if_flat: vrecs /= Void then
+					c := vrecs.cursor
+					vals.append (vrecs)
+					vrecs.go_to (c)
+					n := vrecs.count
+				end
 			else
 				if vrecs /= Void then
 					if vrecs = vals then --| i.e: rec = flattening call record
@@ -530,8 +531,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			is_flat: is_flat
 		local
 			ot: ARRAYED_LIST [ANY] -- indexed by `oi'
-			ort: ARRAY [LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
-			orcds: detachable LIST [RT_DBG_VALUE_RECORD]
+			ort: ARRAY [detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
+			orcds: detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			rec: RT_DBG_VALUE_RECORD
 			o: detachable ANY
 			oi: INTEGER
@@ -544,14 +545,14 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 				if vals.count > 1 then
 					from
 						create ot.make (10)
-						create ort.make (1, ot.capacity - 1)
+						create ort.make_filled (Void, 1, ot.capacity - 1)
 						vals.start
 					until
 						vals.after
 					loop
 						rec := vals.item_for_iteration
 						check is_not_local_record: not rec.is_local_record end
-						if attached {ANY} rec.associated_object as rec_obj then
+						if attached rec.associated_object as rec_obj then
 							if o /= rec_obj then
 								o := rec_obj
 								ot.search (o)
@@ -562,10 +563,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 									ot.force (o)
 									ot.finish
 									oi := ot.index
-									create {ARRAYED_LIST [RT_DBG_VALUE_RECORD]} orcds.make (10)
-									if not ort.valid_index (oi) then
-										ort.grow (oi + ort.count // 2)
-									end
+									create orcds.make (10)
 									ort.force (orcds, oi)
 								end
 							--else-- use previous values (ie: index)
@@ -574,6 +572,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 								oi_positive: oi > 0
 								o_attached: o /= Void
 								orcds_attached: orcds /= Void
+							then
 							end
 							if orcds.is_empty then
 								orcds.force (rec)
@@ -613,13 +612,15 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 						oi := ot.index
 						o := ot.item_for_iteration
 						orcds := ort.item (oi)
-						from
-							orcds.start
-						until
-							orcds.after
-						loop
-							vals.force (orcds.item_for_iteration)
-							orcds.forth
+						if orcds /= Void then
+							from
+								orcds.start
+							until
+								orcds.after
+							loop
+								vals.force (orcds.item_for_iteration)
+								orcds.forth
+							end
 						end
 						ot.forth
 					end
@@ -1204,11 +1205,11 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

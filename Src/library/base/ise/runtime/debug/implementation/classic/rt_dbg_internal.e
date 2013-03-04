@@ -11,10 +11,7 @@ deferred class
 inherit
 	ANY
 
-	INTERNAL
-		export
-			{NONE} all
-		end
+	REFLECTOR_CONSTANTS
 
 feature -- Object access
 
@@ -23,7 +20,8 @@ feature -- Object access
 		require
 			obj_attached: obj /= Void
 		do
-			Result := field_count (obj)
+			reflected_object.set_object (obj)
+			Result := reflected_object.field_count
 		end
 
 	frozen object_records (obj: ANY): detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
@@ -66,13 +64,16 @@ feature -- Object access
 			obj /= Void
 		local
 			n: INTEGER
+			l_reflected_object: like reflected_object
 		do
 			from
-				n := field_count (obj)
+				l_reflected_object := reflected_object
+				l_reflected_object.set_object (obj)
+				n := l_reflected_object.field_count
 			until
 				n = 0 or Result > 0
 			loop
-				if off = field_offset (n, obj) then
+				if off = l_reflected_object.field_offset (n) then
 					Result := n
 				end
 				n := n - 1
@@ -89,7 +90,8 @@ feature -- Object access
 		do
 			i := field_index_at (off, obj)
 			if i > 0 then
-				Result := field_name (i, obj)
+				reflected_object.set_object (obj)
+				Result := reflected_object.field_name (i)
 			end
 		end
 
@@ -105,35 +107,35 @@ feature -- Object access
 			t := eif_type (a_field_type)
 			inspect t
 			when boolean_type then
-				Result := c_boolean_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.boolean_field_at (off, object, 0)
 			when character_8_type then
-				Result := c_character_8_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.character_8_field_at (off, object, 0)
 			when character_32_type then
-				Result := c_character_32_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.character_32_field_at (off, object, 0)
 			when natural_8_type then
-				Result := c_natural_8_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.natural_8_field_at (off, object, 0)
 			when natural_16_type then
-				Result := c_natural_16_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.natural_16_field_at (off, object, 0)
 			when natural_32_type then
-				Result := c_natural_32_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.natural_32_field_at (off, object, 0)
 			when natural_64_type then
-				Result := c_natural_64_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.natural_64_field_at (off, object, 0)
 			when integer_8_type then
-				Result := c_integer_8_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.integer_8_field_at (off, object, 0)
 			when integer_16_type then
-				Result := c_integer_16_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.integer_16_field_at (off, object, 0)
 			when integer_32_type then
-				Result := c_integer_32_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.integer_32_field_at (off, object, 0)
 			when integer_64_type then
-				Result := c_integer_64_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.integer_64_field_at (off, object, 0)
 			when real_32_type then
-				Result := c_real_32_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.real_32_field_at (off, object, 0)
 			when real_64_type then
-				Result := c_real_64_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.real_64_field_at (off, object, 0)
 			when pointer_type then
-				Result := c_pointer_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.pointer_field_at (off, object, 0)
 			when reference_type then
-				Result := c_field_at (off, a_field_type, $object)
+				Result := {ISE_RUNTIME}.reference_field_at (off, object, 0)
 			else
 			end
 		end
@@ -182,42 +184,45 @@ feature {NONE} -- Factory
 			obj_attached: obj /= Void
 		local
 			ft: INTEGER
+			l_reflected_object: like reflected_object
 		do
-			Result := object_attribute_record (field_offset (i, obj), c_rt_field_type (i, field_type (i, obj)), obj)
-			ft := field_type (i, obj)
+			l_reflected_object := reflected_object
+			l_reflected_object.set_object (obj)
+			ft := l_reflected_object.field_type (i)
+			Result := object_attribute_record (l_reflected_object.field_offset (i), c_rt_field_type (i, ft), obj)
 			inspect ft
 			when Integer_8_type then
-				create {RT_DBG_FIELD_RECORD [INTEGER_8]} Result.make (obj, i, ft, integer_8_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [INTEGER_8]} Result.make (obj, i, ft, l_reflected_object.integer_8_field (i))
 			when Integer_16_type then
-				create {RT_DBG_FIELD_RECORD [INTEGER_16]} Result.make (obj, i, ft, integer_16_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [INTEGER_16]} Result.make (obj, i, ft, l_reflected_object.integer_16_field (i))
 			when integer_32_type then
-				create {RT_DBG_FIELD_RECORD [INTEGER_32]} Result.make (obj, i, ft, integer_32_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [INTEGER_32]} Result.make (obj, i, ft, l_reflected_object.integer_32_field (i))
 			when Integer_64_type then
-				create {RT_DBG_FIELD_RECORD [INTEGER_64]} Result.make (obj, i, ft, integer_64_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [INTEGER_64]} Result.make (obj, i, ft, l_reflected_object.integer_64_field (i))
 			when natural_8_type then
-				create {RT_DBG_FIELD_RECORD [NATURAL_8]} Result.make (obj, i, ft, natural_8_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [NATURAL_8]} Result.make (obj, i, ft, l_reflected_object.natural_8_field (i))
 			when natural_16_type then
-				create {RT_DBG_FIELD_RECORD [NATURAL_16]} Result.make (obj, i, ft, natural_16_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [NATURAL_16]} Result.make (obj, i, ft, l_reflected_object.natural_16_field (i))
 			when natural_32_type then
-				create {RT_DBG_FIELD_RECORD [NATURAL_32]} Result.make (obj, i, ft, natural_32_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [NATURAL_32]} Result.make (obj, i, ft, l_reflected_object.natural_32_field (i))
 			when natural_64_type then
-				create {RT_DBG_FIELD_RECORD [NATURAL_64]} Result.make (obj, i, ft, natural_64_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [NATURAL_64]} Result.make (obj, i, ft, l_reflected_object.natural_64_field (i))
 			when Pointer_type then
-				create {RT_DBG_FIELD_RECORD [POINTER]} Result.make (obj, i, ft, pointer_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [POINTER]} Result.make (obj, i, ft, l_reflected_object.pointer_field (i))
 			when Reference_type then
-				create {RT_DBG_FIELD_RECORD [detachable ANY]} Result.make (obj, i, ft, field (i, obj))
+				create {RT_DBG_FIELD_RECORD [detachable ANY]} Result.make (obj, i, ft, l_reflected_object.reference_field (i))
 			when Expanded_type then
-				create {RT_DBG_FIELD_RECORD [detachable ANY]} Result.make (obj, i, ft, field (i, obj))
+				create {RT_DBG_FIELD_RECORD [detachable ANY]} Result.make (obj, i, ft, l_reflected_object.field (i))
 			when Boolean_type then
-				create {RT_DBG_FIELD_RECORD [BOOLEAN]} Result.make (obj, i, ft, boolean_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [BOOLEAN]} Result.make (obj, i, ft, l_reflected_object.boolean_field (i))
 			when real_32_type then
-				create {RT_DBG_FIELD_RECORD [REAL_32]} Result.make (obj, i, ft, real_32_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [REAL_32]} Result.make (obj, i, ft, l_reflected_object.real_32_field (i))
 			when real_64_type then
-				create {RT_DBG_FIELD_RECORD [REAL_64]} Result.make (obj, i, ft, real_64_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [REAL_64]} Result.make (obj, i, ft, l_reflected_object.real_64_field (i))
 			when character_8_type then
-				create {RT_DBG_FIELD_RECORD [CHARACTER_8]} Result.make (obj, i, ft, character_8_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [CHARACTER_8]} Result.make (obj, i, ft, l_reflected_object.character_8_field (i))
 			when character_32_type then
-				create {RT_DBG_FIELD_RECORD [CHARACTER_32]} Result.make (obj, i, ft, character_32_field (i, obj))
+				create {RT_DBG_FIELD_RECORD [CHARACTER_32]} Result.make (obj, i, ft, l_reflected_object.character_32_field (i))
 --			when Bit_type then
 --			when none_type then
 			else
@@ -230,41 +235,43 @@ feature {NONE} -- Factory
 			obj_attached: obj /= Void
 		local
 			ft: INTEGER
+			l_reflected_object: REFLECTED_OBJECT
 		do
 			ft := eif_type (t)
 			inspect ft
 			when boolean_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [BOOLEAN]} Result.make (obj, off, ft, t, c_boolean_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [BOOLEAN]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.boolean_field_at (off, obj, 0))
 			when character_8_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_8]} Result.make (obj, off, ft, t, c_character_8_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.character_8_field_at (off, obj, 0))
 			when character_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_32]} Result.make (obj, off, ft, t, c_character_32_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.character_32_field_at (off, obj, 0))
 			when Integer_8_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_8]} Result.make (obj, off, ft, t, c_integer_8_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_8_field_at (off, obj, 0))
 			when Integer_16_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_16]} Result.make (obj, off, ft, t, c_integer_16_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_16]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_16_field_at (off, obj, 0))
 			when integer_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_32]} Result.make (obj, off, ft, t, c_integer_32_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_32_field_at (off, obj, 0))
 			when Integer_64_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_64]} Result.make (obj, off, ft, t, c_integer_64_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_64_field_at (off, obj, 0))
 			when natural_8_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_8]} Result.make (obj, off, ft, t, c_natural_8_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, obj, 0))
 			when natural_16_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_16]} Result.make (obj, off, ft, t, c_natural_16_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_16]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_16_field_at (off, obj, 0))
 			when natural_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_32]} Result.make (obj, off, ft, t, c_natural_8_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, obj, 0))
 			when natural_64_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_64]} Result.make (obj, off, ft, t, c_natural_8_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, obj, 0))
 			when real_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [REAL_32]} Result.make (obj, off, ft, t, c_real_32_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [REAL_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.real_32_field_at (off, obj, 0))
 			when real_64_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [REAL_64]} Result.make (obj, off, ft, t, c_real_64_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [REAL_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.real_64_field_at (off, obj, 0))
 			when Pointer_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [POINTER]} Result.make (obj, off, ft, t, c_pointer_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [POINTER]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.pointer_field_at (off, obj, 0))
 			when Reference_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, c_field_at (off, t, $obj))
+				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.reference_field_at (off, obj, 0))
 			when Expanded_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, c_field_at (off, t, $obj))
+				create l_reflected_object.make_for_expanded_field_at (obj, off)
+				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, l_reflected_object.object)
 --			when Bit_type then
 --			when none_type then
 			else
@@ -352,131 +359,9 @@ feature {NONE} -- External implementation
 			"Dtype"
 		end
 
-feature -- Get
-
-	frozen c_boolean_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): BOOLEAN
-			-- BOOLEAN value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_BOOLEAN *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_character_8_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): CHARACTER_8
-			-- CHARACTER_8 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_CHARACTER *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_character_32_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): CHARACTER_32
-			-- CHARACTER_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_WIDE_CHAR *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_natural_8_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): NATURAL_8
-			-- NATURAL_8 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_NATURAL_8 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_natural_16_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): NATURAL_16
-			-- NATURAL_16 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_NATURAL_16 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_natural_32_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): NATURAL_32
-			-- NATURAL_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_NATURAL_32 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_natural_64_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): NATURAL_64
-			-- NATURAL_64 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_NATURAL_64 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_integer_8_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): INTEGER_8
-			-- INTEGER_8 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_INTEGER_8 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_integer_16_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): INTEGER_16
-			-- INTEGER_16 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_INTEGER_16 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_integer_32_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): INTEGER_32
-			-- INTEGER_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_INTEGER_32 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_integer_64_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): INTEGER_64
-			-- INTEGER_64 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_INTEGER_64 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_real_32_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): REAL_32
-			-- REAL_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_REAL_32 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_real_64_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): REAL_64
-			-- REAL_64 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_REAL_64 *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_pointer_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): POINTER
-			-- POINTER value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return *(EIF_POINTER *) ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
-	frozen c_field_at (off: INTEGER; a_type: NATURAL_32; object: POINTER): detachable ANY
-			-- Object value referenced at `off' offset of `object'
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"return ei_field_at((long) $off, (uint32) $a_type, (EIF_REFERENCE) $object)"
-		end
-
 feature -- Change field
 
-	set_field_at (off: INTEGER; a_type: NATURAL_32; value: detachable separate ANY; object: ANY)
+	set_field_at (off: INTEGER; a_type: NATURAL_32; value: detachable ANY; object: ANY)
 		require
 			object_attached: object /= Void
 		local
@@ -489,169 +374,64 @@ end
 			inspect a_eif_type
 			when boolean_type then
 				if attached {BOOLEAN} value as bool then
-					c_set_boolean_field_at (off, bool, $object)
+					{ISE_RUNTIME}.set_boolean_field_at (off, object, 0, bool)
 				end
 			when character_8_type then
 				if attached {CHARACTER_8} value as c8 then
-					c_set_character_8_field_at (off, c8, $object)
+					{ISE_RUNTIME}.set_character_8_field_at (off, object, 0, c8)
 				end
 			when character_32_type then
 				if attached {CHARACTER_32} value as c32 then
-					c_set_character_32_field_at (off, c32, $object)
+					{ISE_RUNTIME}.set_character_32_field_at (off, object, 0, c32)
 				end
 			when natural_8_type then
 				if attached {NATURAL_8} value as n8 then
-					c_set_natural_8_field_at (off, n8, $object)
+					{ISE_RUNTIME}.set_natural_8_field_at (off, object, 0, n8)
 				end
 			when natural_16_type then
 				if attached {NATURAL_16} value as n16 then
-					c_set_natural_16_field_at (off, n16, $object)
+					{ISE_RUNTIME}.set_natural_16_field_at (off, object, 0, n16)
 				end
 			when natural_32_type then
 				if attached {NATURAL_32} value as n32 then
-					c_set_natural_32_field_at (off, n32, $object)
+					{ISE_RUNTIME}.set_natural_32_field_at (off, object, 0, n32)
 				end
 			when natural_64_type then
 				if attached {NATURAL_64} value as n64 then
-					c_set_natural_64_field_at (off, n64, $object)
+					{ISE_RUNTIME}.set_natural_64_field_at (off, object, 0, n64)
 				end
 			when integer_8_type then
 				if attached {INTEGER_8} value as i8 then
-					c_set_integer_8_field_at (off, i8, $object)
+					{ISE_RUNTIME}.set_integer_8_field_at (off, object, 0, i8)
 				end
 			when integer_16_type then
 				if attached {INTEGER_16} value as i16 then
-					c_set_integer_16_field_at (off, i16, $object)
+					{ISE_RUNTIME}.set_integer_16_field_at (off, object, 0, i16)
 				end
 			when integer_32_type then
 				if attached {INTEGER_32} value as i32 then
-					c_set_integer_32_field_at (off, i32, $object)
+					{ISE_RUNTIME}.set_integer_32_field_at (off, object, 0, i32)
 				end
 			when integer_64_type then
 				if attached {INTEGER_64} value as i64 then
-					c_set_integer_64_field_at (off, i64, $object)
+					{ISE_RUNTIME}.set_integer_64_field_at (off, object, 0, i64)
 				end
 			when real_32_type then
 				if attached {REAL_32} value as r32 then
-					c_set_real_32_field_at (off, r32, $object)
+					{ISE_RUNTIME}.set_real_32_field_at (off, object, 0, r32)
 				end
 			when real_64_type then
 				if attached {REAL_64} value as r64 then
-					c_set_real_64_field_at (off, r64, $object)
+					{ISE_RUNTIME}.set_real_64_field_at (off, object, 0, r64)
 				end
 			when pointer_type then
 				if attached {POINTER} value as ptr then
-					c_set_pointer_field_at (off, ptr, $object)
+					{ISE_RUNTIME}.set_pointer_field_at (off, object, 0, ptr)
 				end
 			when reference_type then
-				c_set_reference_field_at (off, $value, $object)
+				{ISE_RUNTIME}.set_reference_field_at (off, object, 0, value)
 			else
 			end
-		end
-
-	frozen c_set_boolean_field_at (off: INTEGER; value: BOOLEAN; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_BOOLEAN *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_BOOLEAN)($value)"
-		end
-
-	frozen c_set_character_8_field_at (off: INTEGER; value: CHARACTER_8; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_CHARACTER *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_CHARACTER)($value)"
-		end
-
-	frozen c_set_character_32_field_at (off: INTEGER; value: CHARACTER_32; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_WIDE_CHAR *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_WIDE_CHAR)($value)"
-		end
-
-	frozen c_set_natural_8_field_at (off: INTEGER; value: NATURAL_8; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_NATURAL_8 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_NATURAL_8)($value)"
-		end
-
-	frozen c_set_natural_16_field_at (off: INTEGER; value: NATURAL_16; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_NATURAL_16 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_NATURAL_16)($value)"
-		end
-
-	frozen c_set_natural_32_field_at (off: INTEGER; value: NATURAL_32; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_NATURAL_32 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_NATURAL_32)($value)"
-		end
-
-	frozen c_set_natural_64_field_at (off: INTEGER; value: NATURAL_64; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_NATURAL_64 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_NATURAL_64)($value)"
-		end
-
-	frozen c_set_integer_8_field_at (off: INTEGER; value: INTEGER_8; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_INTEGER_8 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_INTEGER_8)($value)"
-		end
-
-	frozen c_set_integer_16_field_at (off: INTEGER; value: INTEGER_16; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_INTEGER_16 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_INTEGER_16)($value)"
-		end
-
-	frozen c_set_integer_32_field_at (off: INTEGER; value: INTEGER_32; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_INTEGER_32 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_INTEGER_32)($value)"
-		end
-
-	frozen c_set_integer_64_field_at (off: INTEGER; value: INTEGER_64; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_INTEGER_64 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_INTEGER_64)($value)"
-		end
-
-	frozen c_set_real_32_field_at (off: INTEGER; value: REAL_32; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_REAL_32 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_REAL_32)($value)"
-		end
-
-	frozen c_set_real_64_field_at (off: INTEGER; value: REAL_64; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_REAL_64 *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_REAL_64)($value)"
-		end
-
-	frozen c_set_pointer_field_at (off: INTEGER; value: POINTER; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"*(EIF_POINTER *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_POINTER)($value)"
-		end
-
-	frozen c_set_reference_field_at (off: INTEGER; value: POINTER; object: POINTER)
-		external
-			"C inline use %"eif_internal.h%""
-		alias
-			"{ RTAR($object,$value); *(EIF_REFERENCE *) ((EIF_REFERENCE)$object + (long)$off) = (EIF_REFERENCE)($value); }"
 		end
 
 feature -- Access local
@@ -1073,13 +853,27 @@ feature -- Testing
 			retry
 		end
 
+feature {NONE} -- Implementation
+
+	reflected_object: REFLECTED_OBJECT
+			-- To enable object introspection.
+		once
+			create Result.make (Current)
+		end
+
+	reflector: REFLECTOR
+			-- To enable type discovery
+		once
+			create Result
+		end
+
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

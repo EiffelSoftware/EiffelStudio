@@ -30,6 +30,7 @@ feature -- Events
 			-- Propagte pointer move event.
 		local
 			l_timer: like show_tooltip_timer
+			l_delay: like show_tooltip_interval
 		do
 			if
 				preferences.debug_tool_data.show_debug_tooltip and then
@@ -37,17 +38,22 @@ feature -- Events
 				l_debug_manager.safe_application_is_stopped
 			then
 				if attached expression_at (screen_x, screen_y) as l_e then
-					l_timer := show_tooltip_timer
-					if l_timer = Void then
-						create l_timer
+					l_delay := show_tooltip_interval
+					if l_delay > 0 then
+						l_timer := show_tooltip_timer
+						if l_timer = Void then
+							create l_timer
+						end
+							-- The pointer context might have been changed.
+							-- Reschedule displaying tooltip when the tooltip has not been shown
+							-- in previous scheduler.
+						l_timer.set_interval (0)
+						l_timer.actions.wipe_out
+						l_timer.actions.extend_kamikaze (agent show_debug_tooltip (l_e))
+						l_timer.set_interval (l_delay)
+					else
+						show_debug_tooltip (l_e)
 					end
-						-- The pointer context might have been changed.
-						-- Reschedule displaying tooltip when the tooltip has not been shown
-						-- in previous scheduler.
-					l_timer.set_interval (0)
-					l_timer.actions.wipe_out
-					l_timer.actions.extend_kamikaze (agent show_debug_tooltip (l_e))
-					l_timer.set_interval (show_tooltip_interval)
 				else
 					stop_debug_tooltip_timer
 					if attached debug_tooltip as l_tooltip and then l_tooltip.is_shown then
@@ -244,8 +250,11 @@ feature {NONE} -- Implementation
 	show_tooltip_timer: detachable EV_TIMEOUT
 			-- Timer to show debug tooltip
 
-	show_tooltip_interval: INTEGER = 500
+	show_tooltip_interval: INTEGER
 			-- Wait a bit to show the tooltip
+		do
+			Result := preferences.debug_tool_data.show_debug_tooltip_delay
+		end
 
 	max_column_width: INTEGER = 200
 			-- Max width of a column in the debugger tooltip grid.

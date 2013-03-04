@@ -144,6 +144,12 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := show_debug_tooltip_preference.value
 		end
 
+	show_debug_tooltip_delay: INTEGER
+			-- Show debug tooltip delay in milliseconds
+		do
+			Result := show_debug_tooltip_delay_preference.value
+		end
+
 feature -- Preference
 
 	edit_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
@@ -178,6 +184,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	move_up_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
 	move_down_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
 	show_debug_tooltip_preference: BOOLEAN_PREFERENCE
+	show_debug_tooltip_delay_preference: INTEGER_PREFERENCE
 
 	objects_tool_layout_preference: ARRAY_PREFERENCE
 
@@ -259,6 +266,7 @@ feature -- Preference Strings
 	show_all_text_in_project_toolbar_string: STRING = "debugger.show_all_text_in_project_toolbar"
 	always_show_callstack_tool_when_stopping_string: STRING = "debugger.always_show_callstack_tool_when_stopping"
 	show_debug_tooltip_string: STRING = "debugger.show_debug_tooltip"
+	show_debug_tooltip_delay_string: STRING = "debugger.show_debug_tooltip_delay"
 	default_expanded_view_size_string: STRING = "debugger.default_expanded_view_size"
 	move_up_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_up_watch_expression"
 	move_down_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_down_watch_expression"
@@ -302,6 +310,15 @@ feature {NONE} -- Implementation
 			watch_tools_layout_preference := l_manager.new_array_preference_value (l_manager, watch_tools_layout_string, <<>>)
 			always_show_callstack_tool_when_stopping_preference := l_manager.new_boolean_preference_value (l_manager, always_show_callstack_tool_when_stopping_string, True)
 			show_debug_tooltip_preference := l_manager.new_boolean_preference_value (l_manager, show_debug_tooltip_string, True)
+			show_debug_tooltip_delay_preference := l_manager.new_integer_preference_value (l_manager, show_debug_tooltip_delay_string, 500)
+			show_debug_tooltip_delay_preference.set_validation_agent (
+					agent (a_str: READABLE_STRING_GENERAL): BOOLEAN
+						do
+							if a_str /= Void then
+								Result := a_str.is_integer and then a_str.to_integer >= 0
+							end
+						end
+				)
 
 			move_up_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_up_watch_expression_shortcut_string, [True, False, True, "up"])
 			move_down_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_down_watch_expression_shortcut_string,  [True, False, True, "down"])

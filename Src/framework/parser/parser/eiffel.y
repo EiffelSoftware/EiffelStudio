@@ -83,7 +83,7 @@ create
 %token <detachable KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
 %token <detachable KEYWORD_AS> TE_XOR
 -- Special type for keywords that are either keyword or identifier
-%token <detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL] as keyword_id> TE_ACROSS TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE TE_INDEXING TE_IS TE_NOTE TE_SOME
+%token <detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL] as keyword_id> TE_ACROSS TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE TE_INDEXING TE_IS TE_NOTE TE_SOME
 
 %token <detachable STRING_AS> TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
 %token <detachable STRING_AS> TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS

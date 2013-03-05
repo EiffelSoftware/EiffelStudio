@@ -23,7 +23,7 @@ feature -- Last values
 	last_detachable_current_as_value: detachable CURRENT_AS
 	last_detachable_deferred_as_value: detachable DEFERRED_AS
 	last_detachable_void_as_value: detachable VOID_AS
-	last_keyword_id_value: detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL]
+	last_keyword_id_value: detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]
 	last_detachable_string_as_value: detachable STRING_AS
 
 feature -- Access

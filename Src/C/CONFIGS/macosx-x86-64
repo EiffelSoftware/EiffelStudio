@@ -161,18 +161,18 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='gcc'
+	cc='cc'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-arch x86_64 -pipe -no-cpp-precomp -fno-common -fPIC'
+	ccflags='-pipe -fno-common -fPIC'
 fi
-ccldflags='-arch x86_64'
+ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='g++'
+	cpp='c++'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
@@ -211,7 +211,7 @@ if [ -n "$LD" ]; then
 else
 	ld='ld'
 fi
-ldflags='-arch x86_64'
+ldflags=''
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"
 libs='-lm'
 ln='/bin/ln'
@@ -235,7 +235,7 @@ shared_rt_suffix='.dylib'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
 sharedlibversion='.7.1'
-sharedlink='gcc'
+sharedlink=$cc
 suffix='.a'
 wkeiflib='wkbench'
 

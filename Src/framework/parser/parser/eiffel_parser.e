@@ -25399,8 +25399,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines13: detachable KL_SPECIAL_ROUTINES [INTEGER] note option: stable attribute end
 			-- Routines that ought to be in SPECIAL [INTEGER]
 
-	yyvs14: SPECIAL [detachable READABLE_STRING_GENERAL]
-			-- Stack for semantic values of type detachable READABLE_STRING_GENERAL
+	yyvs14: SPECIAL [READABLE_STRING_GENERAL]
+			-- Stack for semantic values of type READABLE_STRING_GENERAL
 
 	yyvsc14: INTEGER
 			-- Capacity of semantic value stack `yyvs14'
@@ -25408,11 +25408,11 @@ feature {NONE} -- Semantic value stacks
 	yyvsp14: INTEGER
 			-- Top of semantic value stack `yyvs14'
 
-	yyspecial_routines14: detachable KL_SPECIAL_ROUTINES [detachable READABLE_STRING_GENERAL] note option: stable attribute end
-			-- Routines that ought to be in SPECIAL [detachable READABLE_STRING_GENERAL]
+	yyspecial_routines14: detachable KL_SPECIAL_ROUTINES [READABLE_STRING_GENERAL] note option: stable attribute end
+			-- Routines that ought to be in SPECIAL [READABLE_STRING_GENERAL]
 
-	yyvs15: SPECIAL [detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL]]
-			-- Stack for semantic values of type detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL]
+	yyvs15: SPECIAL [detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]]
+			-- Stack for semantic values of type detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]
 
 	yyvsc15: INTEGER
 			-- Capacity of semantic value stack `yyvs15'
@@ -25420,8 +25420,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp15: INTEGER
 			-- Top of semantic value stack `yyvs15'
 
-	yyspecial_routines15: detachable KL_SPECIAL_ROUTINES [detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL]] note option: stable attribute end
-			-- Routines that ought to be in SPECIAL [detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL]]
+	yyspecial_routines15: detachable KL_SPECIAL_ROUTINES [detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]] note option: stable attribute end
+			-- Routines that ought to be in SPECIAL [detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]]
 
 	yyvs16: SPECIAL [detachable STRING_AS]
 			-- Stack for semantic values of type detachable STRING_AS

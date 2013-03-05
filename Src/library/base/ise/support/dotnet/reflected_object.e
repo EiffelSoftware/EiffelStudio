@@ -19,8 +19,8 @@ inherit
 create
 	make
 
-create {REFLECTED_OBJECT, RT_DBG_INTERNAL}
-	make_for_expanded_field, make_for_expanded_field_at
+create {REFLECTED_OBJECT}
+	make_for_expanded_field
 
 feature {NONE} -- Initialization
 
@@ -49,19 +49,6 @@ feature {NONE} -- Initialization
 			field_info := helper.get_members (a_enclosing_object.dynamic_type).i_th (i)
 		ensure
 			enclosing_object_set: enclosing_object = a_enclosing_object.enclosing_object
-		end
-
-	make_for_expanded_field_at (a_enclosing_object: ANY; a_physical_offset: INTEGER)
-			-- Setup a proxy to expanded field located at the `a_physical_offset' of `a_enclosing_object'.
-		require
-			not_reflected_object: not attached {REFLECTED_OBJECT} a_enclosing_object
-		do
-			enclosing_object := a_enclosing_object
-			physical_offset := a_physical_offset
-			check False then end
---			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (a_enclosing_object, a_physical_offset)
-		ensure
-			enclosing_object_set: enclosing_object = a_enclosing_object
 		end
 
 feature -- Access

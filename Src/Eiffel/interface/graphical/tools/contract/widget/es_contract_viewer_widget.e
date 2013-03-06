@@ -182,6 +182,18 @@ feature -- Status setting
 			end
 		end
 
+	set_is_showing_edit_contract_button (a_b: BOOLEAN)
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			if a_b then
+				edit_contract_label.show
+			else
+				edit_contract_label.hide
+			end
+		end
+
 feature {NONE} -- Basic operation
 
 	update_context
@@ -410,9 +422,6 @@ feature -- User interface elements
 	contract_grid: attached ES_GRID
 			-- The grid used to show the contracts
 
-	edit_contracts_button: attached EV_BUTTON
-			-- Button used to edit the contracts
-
 	edit_contract_label: attached EVS_LINK_LABEL
 			-- Label used to edit contracts
 
@@ -478,6 +487,7 @@ feature {NONE} -- Internationalization
 
 invariant
 	contract_grid_set: contract_grid /= Void
+	edit_contract_label_set: edit_contract_label /= Void
 
 ;note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

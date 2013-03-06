@@ -5,34 +5,38 @@
 --| Public License version 2.
 
 class TEST
+inherit
+	SERIALIZATION_HELPER
+
 creation
 	make
 feature
 	make
 		local
 			list: TWO_WAY_LIST [TEST2];
-			k: INTEGER;
-			f: RAW_FILE
+			i: INTEGER;
 			x: TEST2
+			l_objects: like retrieved_objects
 		do
 			from
 				!!list.make;
-				k := 1
+				i := 1
 			until
-				k > 1000
+				i > 1000
 			loop
 				list.put_front (x);
-				k := k + 1;
+				i := i + 1;
 			end;
-			create f.make_open_write ("object")
-			f.independent_store (list)
-			f.close
-			list := Void
-			io.putstring ("Starting retrieve%N");
-			create f.make_open_read ("object")
-			list ?= f.retrieved
-			f.close
-			print (f /= Void); io.new_line
+			store_object (list, "stored")
+			l_objects := retrieved_objects ("stored")
+			if l_objects.count /= storable_types.count then
+				io.put_string ("Error occurred. List of successful retrieval:%N")
+				across l_objects as l_item loop
+					io.put_string ("Retrieved " + l_item.key + "%N")
+				end
+			elseif not across l_objects as l_item all deep_equal (l_item.item, list) end then
+				io.put_string ("Some objects are not equal!%N")
+			end
 		end
 
 end

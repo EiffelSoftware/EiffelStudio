@@ -1,5 +1,5 @@
 test_name 	 equality-operator-semantics
-test_description Equality test should be performedd correctly.
+test_description Equality test should be performed correctly.
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 a.e  $CLUSTER a.e

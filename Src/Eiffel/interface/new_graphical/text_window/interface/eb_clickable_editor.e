@@ -511,8 +511,9 @@ feature {NONE} -- Debug tooktip
 
 	expression_at (a_x, a_y: INTEGER): detachable READABLE_STRING_GENERAL
 			-- Expression at position
+			-- `a_x' and `a_y' are screen positions
 		do
-			if attached token_at (a_x - editor_drawing_area.screen_x, a_y - editor_drawing_area.screen_y - (first_line_displayed - 1) * line_height) as l_token then
+			if attached token_at (a_x - editor_drawing_area.screen_x - left_margin_width, a_y - editor_drawing_area.screen_y - editor_viewport.y_offset) as l_token then
 				if attached {READABLE_STRING_GENERAL} l_token.data as l_e and then not l_e.is_empty then
 					Result := l_e
 				end

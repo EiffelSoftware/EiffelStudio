@@ -50,6 +50,9 @@ copy_raw	mismatch_corrector.e $CLUSTER mismatch_corrector.e
 copy_raw	primes.e $CLUSTER primes.e 
 copy_raw	process.e $CLUSTER process.e 
 copy_raw	readable_indexable.e $CLUSTER readable_indexable.e 
+copy_raw	reflector.e $CLUSTER reflector.e 
+copy_raw	reflector_helper.e $CLUSTER reflector_helper.e 
+copy_raw	reflector_constants.e $CLUSTER reflector_constants.e 
 copy_raw	resizable.e $CLUSTER resizable.e 
 copy_raw	set.e $CLUSTER set.e 
 copy_raw	sequence.e $CLUSTER sequence.e 

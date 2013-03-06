@@ -11,11 +11,14 @@ feature -- Initialization
 			g (Current, 5.0, f)
 			g (Void, 5.0, f)
 			g (object, real, f)
+
+			g2 ("s", real, f)
 		end
 
 	formal: G
 	real: REAL_64
 	object: detachable ANY
+	obj2: detachable ANY
 
 	g (arg_any: detachable ANY; arg_real: REAL_64; arg_formal: G)
 		local
@@ -76,17 +79,66 @@ feature -- Initialization
 				external_routine ($l_object)
 			end
 
-			print ($arg_formal)
-			print ($arg_real)
-			print ($arg_any)
-			print ($formal)
-			print ($real)
-			print ($object)
-			print ($a)
-			print ($r)
-			print ($l_g)
+			my_print ($arg_formal)
+			my_print ($arg_real)
+			my_print ($arg_any)
+			my_print ($formal)
+			my_print ($real)
+			my_print ($object)
+			my_print ($a)
+			my_print ($r)
+			my_print ($l_g)
 			if attached object as l_object then
-				print ($l_object)
+				my_print ($l_object)
+			end
+
+			my_inlined_print ($arg_formal)
+			my_inlined_print ($arg_real)
+			my_inlined_print ($arg_any)
+			my_inlined_print ($formal)
+			my_inlined_print ($real)
+			my_inlined_print ($object)
+			my_inlined_print ($a)
+			my_inlined_print ($r)
+			my_inlined_print ($l_g)
+			if attached object as l_object then
+				my_inlined_print ($l_object)
+			end
+		end
+
+	g2 (arg_any: detachable ANY; arg_real: REAL_64; arg_formal: G)
+		local
+			a: detachable ANY
+			r: REAL_64
+			l_g: G
+		do
+			obj2 := "s"
+			a := "s"
+			if object = obj2 then
+				io.put_string ("object = obj2!!!%N")
+			end
+			if arg_any = object then
+				io.put_string ("arg_any = object!!!%N")
+			end
+			if a = object then
+				io.put_string ("a = object!!!%N")
+			end
+
+
+			if is_same_object ($object, $obj2) then
+				io.put_string ("Not OK%N")
+			end
+			if is_same_object ($arg_any, $object) then
+				io.put_string ("Not OK%N")
+			end
+			if is_same_object ($object, $arg_any) then
+				io.put_string ("Not OK%N")
+			end
+			if is_same_object ($a, $object) then
+				io.put_string ("Not OK%N")
+			end
+			if is_same_object ($object, $a) then
+				io.put_string ("Not OK%N")
 			end
 		end
 
@@ -131,6 +183,26 @@ feature -- Initialization
 			"C inline"
 		alias
 			"return;"
+		end
+
+	is_same_object (a_obj, a_obj2: POINTER): BOOLEAN
+		external
+			"C inline"
+		alias
+			"return $a_obj == $a_obj2;"
+		end
+
+	my_print (a: detachable ANY)
+		local
+			s: STRING_32
+		do
+			if a /= Void then
+				create s.make (512)
+			end
+		end
+
+	my_inlined_print (a: detachable ANY)
+		do
 		end
 
 end

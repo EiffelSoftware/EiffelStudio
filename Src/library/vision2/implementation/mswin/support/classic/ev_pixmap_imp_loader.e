@@ -91,7 +91,7 @@ feature {NONE} -- Externals
 		update_fields_routine: POINTER
 		)
 		external
-			"C signature (void *, char *, void *) use %"load_pixmap.h%""
+			"C signature (void *, EIF_FILENAME, void *) use %"load_pixmap.h%""
 		end
 
 note

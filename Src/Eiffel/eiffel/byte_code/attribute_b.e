@@ -119,7 +119,7 @@ feature
 			if context.workbench_mode and then context_type.is_separate then
 					-- Wrap a separate call in workbench mode.
 				is_initialization_required := True
-			elseif not is_attachment and then not type.is_basic then
+			elseif not is_attachment and then not real_type (type).is_basic then
 					-- No need to wrap a target of an attachment as well as
 					-- access to an attribute of a basic type that is always initialized.
 				if context.workbench_mode then
@@ -242,7 +242,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

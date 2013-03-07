@@ -102,15 +102,6 @@ extern "C" {
 
 #define cwel_menu_item_not_found 0xFFFFFFFF
 
-
-#ifndef BIF_EDITBOX
-#define BIF_EDITBOX				0x0010
-#endif
-
-#ifndef BIF_VALIDATE
-#define BIF_VALIDATE			0x0020
-#endif
-
 #ifdef __cplusplus
 }
 #endif

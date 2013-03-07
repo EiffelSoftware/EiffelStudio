@@ -232,7 +232,7 @@ feature {NONE} -- Implementaiton
 			-- Get expression meta from AST
 		do
 			if attached source_class as l_class then
-				if attached Match_list_server.item (l_class.class_id) as l_list then
+				if attached Match_list_server.item (l_class.class_id) as l_list and then a_as.is_text_available (l_list) then
 					Result := a_as.text_32 (l_list)
 				end
 			end

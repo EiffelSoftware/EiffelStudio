@@ -797,7 +797,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_window_resize
+	on_window_resize (a_x, a_y, a_width, a_height: INTEGER)
 			-- Window resized
 		do
 			if is_displayed and then attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then

@@ -31,7 +31,7 @@ inherit
 			{NONE} byte_real_type, byte_generate, byte_size
 		redefine
 			print_register,
-			is_simple_expr, is_predefined,
+			is_simple_expr,
 			is_fast_as_local, is_constant_expression,
 			evaluate
 		end
@@ -107,9 +107,6 @@ feature -- Properties
 
 	is_simple_expr: BOOLEAN = True
 			-- A constant is a simple expression
-
-	is_predefined: BOOLEAN = True
-			-- A constant is a predefined structure.
 
 	is_constant_expression: BOOLEAN = True
 			-- A constant is a constant.
@@ -519,7 +516,7 @@ invariant
 		(constant_actual_type.is_integer or constant_actual_type.is_natural)
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -159,7 +159,7 @@ feature -- Events: Connection point
 		local
 			l_result: like internal_file_notifier_connection
 		do
-			l_result := file_notifier_connection
+			l_result := internal_file_notifier_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]} Result.make (
 					agent (ia_observer: FILE_NOTIFIER_EVENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

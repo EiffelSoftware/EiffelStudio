@@ -14,7 +14,7 @@ inherit
 			calls_special_features, is_unsafe, optimized_byte_node,
 			pre_inlined_code, inlined_byte_code,
 			analyze, print_register,
-			generate, size
+			generate
 		end
 
 	SHARED_TYPES
@@ -23,21 +23,11 @@ inherit
 		end
 
 create
-	make, make_with_type
+	make_with_type
 
 feature {NONE} -- Initialization
 
-	make (a: like expr)
-			-- Initialization
-		require
-			a_not_void: a /= Void
-		do
-			expr := a
-		ensure
-			expr_set: expr = a
-		end
-
-	make_with_type (a: like expr; t: like type)
+	make_with_type (a: like expr; t: TYPED_POINTER_A)
 			-- Initialization
 		require
 			a_not_void: a /= Void
@@ -60,29 +50,15 @@ feature -- Visitor
 
 feature -- Access
 
-	is_pointer: BOOLEAN = True
-			-- Does Current represent a dollar expression of type POINTER?
-			-- Always True in 5.4. In 5.5 it will be only True for converted
-			-- expression $x to POINTER. If of type TYPED_POINTER, then it
-			-- will be False.
-
 	expr: ACCESS_B
 			-- Access on which we do `$'.
 
 	type: TYPE_A
 			-- Expression's type
 		do
-			if is_pointer then
-				Result := Pointer_type
-			else
-				Result := internal_type
-				if Result = Void then
-					create {TYPED_POINTER_A} Result.make_typed (expr.type)
-					internal_type := Result
-				end
-			end
+			Result := Pointer_type
 		ensure then
-			type_not_void: type /= Void
+			type_not_void: Result /= Void
 		end
 
 	enlarged: like Current
@@ -95,18 +71,6 @@ feature -- Access
 	is_hector: BOOLEAN = True
 			-- The expression is an hector one.
 
-feature -- Settings
-
-	set_is_pointer
-			-- Set `is_pointer' to True.
-		do
-			 -- FIXME: Manu 09/20/2003: To remove when `is_pointer' is made
-			 -- an attribute again. See comment on `is_pointer' for rational.
---			is_pointer := True
-		ensure
-			is_pointer_set: is_pointer
-		end
-
 feature -- Code generation
 
 	analyze
@@ -115,7 +79,7 @@ feature -- Code generation
 			context.init_propagation
 			expr.propagate (No_register)
 			expr.analyze
-			if expr.is_result and then (not is_pointer or else real_type (expr.type).is_basic) then
+			if expr.is_result and then real_type (expr.type).is_basic then
 				context.mark_result_used
 			end
 		end
@@ -129,16 +93,20 @@ feature -- C code generation
 			l_type: TYPE_A
 		do
 			l_type := real_type (expr.type)
-			if not is_pointer or else (l_type.is_basic and not l_type.is_bit) then
+			if l_type.is_basic and not l_type.is_bit then
 				buf := buffer
-				l_type.c_type.generate_access_cast (buf)
-				buf.put_three_character (' ', '&', '(')
-				if expr.is_attribute then
-					expr.generate_access
+				if expr.is_predefined or expr.is_attribute then
+					l_type.c_type.generate_access_cast (buf)
+					buf.put_three_character (' ', '&', '(')
+					if expr.is_attribute then
+						expr.generate_access
+					else
+						expr.print_register
+					end
+					buf.put_character (')')
 				else
 					expr.print_register
 				end
-				buf.put_character (')')
 			else
 				expr.print_register
 			end
@@ -146,11 +114,11 @@ feature -- C code generation
 
 	generate
 			-- Generate expression
+		local
+			l_type: TYPE_A
 		do
-			if
-				expr.is_attribute and then
-				(not is_pointer or else (expr.type.is_basic and not expr.type.is_bit))
-			then
+			l_type := real_type (expr.type)
+			if (l_type.is_basic and not l_type.is_bit) and (expr.is_predefined or expr.is_attribute) then
 					-- We don't need to do anything now,
 					-- `generate_parameters_list' from EXTERNAL_B(L/W)
 					-- will generate the access on the attribute
@@ -183,6 +151,9 @@ feature -- Inlining
 				-- inlining of `element_address' and `base_address' of SPECIAL
 				-- possible.
 			Result := Current
+			if attached {like expr} expr.pre_inlined_code as l_expr then
+				expr := l_expr
+			end
 		end
 
 	inlined_byte_code: like Current
@@ -191,23 +162,19 @@ feature -- Inlining
 			expr := expr.inlined_byte_code
 		end
 
-	size: INTEGER
-		do
-				-- We cannot inline a feature that contains an address
-				-- computation.
-			Result := 101
-		end
-
 feature {NONE} -- Implementation
 
-	internal_type: TYPE_A
+	internal_type: TYPED_POINTER_A
 			-- Type associated to Current.
+			-- Currently type is not used but it might be in the future when we actually properly
+			-- handle TYPED_POINTER [EXP_CLASS] at runtime (see eweasel test#melt078 for example).
 
 invariant
 	expr_not_void: expr /= Void
+	internal_type_not_void: internal_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -490,7 +490,7 @@ feature {NONE} -- External
 			a_scale_height,
 			a_colormode: INTEGER)
 		external
-			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
+			"C signature (char *, EIF_FILENAME, int, int, int, int, int) use %"load_pixmap.h%""
 		end
 
 feature {

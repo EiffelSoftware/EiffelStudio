@@ -1093,14 +1093,17 @@ feature {NONE} -- Visitors
 
 	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
+		local
+			l_type: TYPE_A
 		do
-			if not a_node.is_pointer or else a_node.expr.type.is_basic then
+			l_type := context.real_type (a_node.expr.type)
+			if l_type.is_basic then
 					-- Getting the address of a basic type can be done
 					-- only once all the expressions have been evaluated
 				ba.append (Bc_reserve)
 			else
 				a_node.expr.process (Current)
-				if a_node.expr.type.is_reference then
+				if l_type.is_reference then
 					ba.append (Bc_ref_to_ptr)
 				end
 			end
@@ -2284,8 +2287,11 @@ feature {NONE} -- Implementation
 			-- Generate byte code for an unprotected external call argument
 		require
 			a_node_not_void: a_node /= Void
+		local
+			l_type: TYPE_A
 		do
-			if not a_node.is_pointer or else a_node.expr.type.is_basic then
+			l_type := context.real_type (a_node.expr.type)
+			if l_type.is_basic then
 				ba.append (Bc_object_addr)
 				ba.append_uint32_integer (a_pos)
 				a_node.expr.process (Current)
@@ -2618,7 +2624,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

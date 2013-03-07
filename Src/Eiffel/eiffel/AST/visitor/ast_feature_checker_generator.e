@@ -3680,6 +3680,7 @@ feature {NONE} -- Implementation
 			l_vrle3: VRLE3
 			l_veen2a: VEEN2A
 			l_type: TYPE_A
+			l_typed_pointer: TYPED_POINTER_A
 		do
 			reset_byte_node
 			if is_checking_invariant or else not current_feature.has_return_value then
@@ -3697,20 +3698,23 @@ feature {NONE} -- Implementation
 				error_handler.insert_error (l_veen2a)
 			end
 			l_type := current_feature.type
-			create {TYPED_POINTER_A} last_type.make_typed (l_type)
+			create l_typed_pointer.make_typed (l_type)
+			last_type := l_typed_pointer
+			instantiator.dispatch (last_type, context.current_class)
 			if is_byte_node_enabled then
-				create {HECTOR_B} last_byte_node.make (create {RESULT_B})
+				create {HECTOR_B} last_byte_node.make_with_type (create {RESULT_B}, l_typed_pointer)
 			end
 		end
 
 	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
 		local
-			l_like_current: LIKE_CURRENT
+			l_typed_pointer: TYPED_POINTER_A
 		do
-			l_like_current := context.current_class_type
-			create {TYPED_POINTER_A} last_type.make_typed (l_like_current)
+			create l_typed_pointer.make_typed (context.current_class_type)
+			last_type := l_typed_pointer
+			instantiator.dispatch (last_type, context.current_class)
 			if is_byte_node_enabled then
-				create {HECTOR_B} last_byte_node.make (create {CURRENT_B})
+				create {HECTOR_B} last_byte_node.make_with_type (create {CURRENT_B}, l_typed_pointer)
 			end
 		end
 
@@ -3728,6 +3732,7 @@ feature {NONE} -- Implementation
 			l_arg_pos: INTEGER
 			l_last_id: INTEGER
 			l_type: TYPE_A
+			l_typed_pointer: TYPED_POINTER_A
 			l_depend_unit: DEPEND_UNIT
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
@@ -3759,11 +3764,12 @@ feature {NONE} -- Implementation
 					-- Found argument
 				l_type := l_feature.arguments.i_th (l_arg_pos)
 				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
-				create {TYPED_POINTER_A} last_type.make_typed (l_type)
+				create l_typed_pointer.make_typed (l_type)
+				last_type := l_typed_pointer
 				if l_needs_byte_node then
 					create l_argument
 					l_argument.set_position (l_arg_pos)
-					create {HECTOR_B} last_byte_node.make_with_type (l_argument, last_type)
+					create {HECTOR_B} last_byte_node.make_with_type (l_argument, l_typed_pointer)
 				end
 				if not is_inherited then
 					l_as.enable_argument
@@ -3779,11 +3785,12 @@ feature {NONE} -- Implementation
 					l_local_info.set_is_used (True)
 					l_type := l_local_info.type
 					l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
-					create {TYPED_POINTER_A} last_type.make_typed (l_type)
+					create l_typed_pointer.make_typed (l_type)
+					last_type := l_typed_pointer
 					if l_needs_byte_node then
 						create l_local
 						l_local.set_position (l_local_info.position)
-						create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type)
+						create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
 					end
 
 					if is_checking_postcondition or else is_checking_precondition then
@@ -3809,10 +3816,11 @@ feature {NONE} -- Implementation
 						last_access_writable := False
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
-						create {TYPED_POINTER_A} last_type.make_typed (l_type)
+						create l_typed_pointer.make_typed (l_type)
+						last_type := l_typed_pointer
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
-							create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type)
+							create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
 						end
 						if not is_inherited then
 							l_as.enable_object_test_local
@@ -3843,7 +3851,8 @@ feature {NONE} -- Implementation
 								error_handler.insert_error (l_unsupported)
 							elseif l_feature.is_attribute then
 								l_type := l_feature.type.actual_type
-								create {TYPED_POINTER_A} last_type.make_typed (l_type)
+								create l_typed_pointer.make_typed (l_type)
+								last_type := l_typed_pointer
 							else
 								set_type (Pointer_type, l_as)
 							end
@@ -3856,9 +3865,10 @@ feature {NONE} -- Implementation
 								end
 
 								if l_needs_byte_node then
-									if l_feature.is_attribute then
+									if l_typed_pointer /= Void then
+										check is_attribte: l_feature.is_attribute end
 										l_access := l_feature.access (l_type, False)
-										create {HECTOR_B} last_byte_node.make_with_type (l_access, last_type)
+										create {HECTOR_B} last_byte_node.make_with_type (l_access, l_typed_pointer)
 									else
 										create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
 									end
@@ -10647,7 +10657,7 @@ feature {NONE} -- Type recording
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

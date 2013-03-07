@@ -11,7 +11,7 @@ inherit
 	EXPR_B
 		redefine
 			print_register, evaluate,
-			is_simple_expr, is_predefined,
+			is_simple_expr,
 			is_fast_as_local, is_constant_expression
 		end
 
@@ -68,9 +68,6 @@ feature -- Status report
 	is_simple_expr: BOOLEAN = True
 			-- A constant is a simple expression
 
-	is_predefined: BOOLEAN = True
-			-- A constant is a predefined structure.
-
 	is_constant_expression: BOOLEAN = True
 			-- A character constant is constant.
 
@@ -113,7 +110,7 @@ feature -- IL code generation
 			-- Is expression calculation as fast as loading a local?
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

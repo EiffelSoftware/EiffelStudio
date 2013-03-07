@@ -1990,7 +1990,8 @@ feature -- Cleaning
 feature {NONE} -- Convenience
 
 	skeleton_flags: NATURAL_16
-			-- Corresponding flags to insert in skeleton structure
+			-- Corresponding flags to insert in skeleton structure.
+			--| See runtime definition of flags in `rt_struct.h'.
 		local
 			l_class: like associated_class
 		do
@@ -2089,7 +2090,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

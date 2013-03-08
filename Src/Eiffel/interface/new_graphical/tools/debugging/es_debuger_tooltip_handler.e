@@ -138,16 +138,6 @@ feature {NONE} -- Implementation
 						object_grid := l_object_grid
 					end
 					l_object_grid.wipe_out
-					l_object_grid.set_default_columns_layout (<<
-								[l_object_grid.col_name_id, True, False, 150, interface_names.l_Expression, interface_names.to_expression],
-								[l_object_grid.col_value_id, True, False, 150, interface_names.l_value, interface_names.to_value],
-								[l_object_grid.col_type_id, True, False, 100, interface_names.l_type, interface_names.to_type],
-								[l_object_grid.col_address_id, True, False, 80, interface_names.l_address, interface_names.to_address],
-								[l_object_grid.col_scoop_pid_id, True, False,   30, interface_names.l_scoop_pid, interface_names.to_scoop_pid],
-								[l_object_grid.col_context_id, True, False, 200, interface_names.l_Context, interface_names.to_context]
-							>>
-						)
-					l_object_grid.set_columns_layout (1, l_object_grid.default_columns_layout)
 
 					create l_e.make_from_string_general (a_expr)
 					l_e.replace_substring_all ("%N", " ")
@@ -178,6 +168,7 @@ feature {NONE} -- Implementation
 			Result.row_expand_actions.extend (agent on_grid_size_changed)
 			Result.row_collapse_actions.extend (agent on_grid_size_changed)
 			Result.disable_vertical_overscroll
+			Result.hide_header
 
 			open_viewer_shortcut 		:= preferences.debug_tool_data.new_open_viewer_shortcut
 			goto_home_shortcut 			:= preferences.debug_tool_data.new_goto_home_shortcut

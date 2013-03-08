@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	make_for_expanded_field (a_enclosing_object: REFLECTED_OBJECT; i: INTEGER)
 			-- Setup a proxy to expanded field located at the `i'-th field of `a_enclosing_object'.
 		require
-			i_th_field_is_expanded: a_enclosing_object.is_field_expanded (i)
+			i_th_field_is_expanded: a_enclosing_object.is_field_statically_expanded (i)
 		do
 			enclosing_object := a_enclosing_object.enclosing_object
 			dynamic_type := a_enclosing_object.field_static_type (i)
@@ -124,7 +124,7 @@ feature -- Status report
 			Result := helper.is_field_transient_of_type (i, dynamic_type)
 		end
 
-	is_field_expanded (i: INTEGER): BOOLEAN
+	is_field_statically_expanded (i: INTEGER): BOOLEAN
 			-- Is `i'-th field of `object' a user-defined expanded attribute?
 		require
 			index_large_enough: i >= 1
@@ -248,6 +248,7 @@ feature -- Access
 		require
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count
+			expanded_field: field_type (i) = expanded_type
 			not_special: not is_special
 		do
 			create Result.make_for_expanded_field (Current, i)

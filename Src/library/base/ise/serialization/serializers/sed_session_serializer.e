@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 						l_ser.write_pointer (an_object.pointer_field (i))
 
 					when {REFLECTOR_CONSTANTS}.reference_type then
-						encode_reference (an_object.field (i))
+						encode_reference (an_object.reference_field (i))
 
 					when {REFLECTOR_CONSTANTS}.expanded_type then
 						encode_expanded (an_object.meta_field (i))

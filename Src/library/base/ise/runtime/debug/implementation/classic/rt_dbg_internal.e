@@ -107,35 +107,35 @@ feature -- Object access
 			t := eif_type (a_field_type)
 			inspect t
 			when boolean_type then
-				Result := {ISE_RUNTIME}.boolean_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.boolean_field_at (off, $object, 0)
 			when character_8_type then
-				Result := {ISE_RUNTIME}.character_8_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.character_8_field_at (off, $object, 0)
 			when character_32_type then
-				Result := {ISE_RUNTIME}.character_32_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.character_32_field_at (off, $object, 0)
 			when natural_8_type then
-				Result := {ISE_RUNTIME}.natural_8_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.natural_8_field_at (off, $object, 0)
 			when natural_16_type then
-				Result := {ISE_RUNTIME}.natural_16_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.natural_16_field_at (off, $object, 0)
 			when natural_32_type then
-				Result := {ISE_RUNTIME}.natural_32_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.natural_32_field_at (off, $object, 0)
 			when natural_64_type then
-				Result := {ISE_RUNTIME}.natural_64_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.natural_64_field_at (off, $object, 0)
 			when integer_8_type then
-				Result := {ISE_RUNTIME}.integer_8_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.integer_8_field_at (off, $object, 0)
 			when integer_16_type then
-				Result := {ISE_RUNTIME}.integer_16_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.integer_16_field_at (off, $object, 0)
 			when integer_32_type then
-				Result := {ISE_RUNTIME}.integer_32_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.integer_32_field_at (off, $object, 0)
 			when integer_64_type then
-				Result := {ISE_RUNTIME}.integer_64_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.integer_64_field_at (off, $object, 0)
 			when real_32_type then
-				Result := {ISE_RUNTIME}.real_32_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.real_32_field_at (off, $object, 0)
 			when real_64_type then
-				Result := {ISE_RUNTIME}.real_64_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.real_64_field_at (off, $object, 0)
 			when pointer_type then
-				Result := {ISE_RUNTIME}.pointer_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.pointer_field_at (off, $object, 0)
 			when reference_type then
-				Result := {ISE_RUNTIME}.reference_field_at (off, object, 0)
+				Result := {ISE_RUNTIME}.reference_field_at (off, $object, 0)
 			else
 			end
 		end
@@ -240,35 +240,35 @@ feature {NONE} -- Factory
 			ft := eif_type (t)
 			inspect ft
 			when boolean_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [BOOLEAN]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.boolean_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [BOOLEAN]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.boolean_field_at (off, $obj, 0))
 			when character_8_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.character_8_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.character_8_field_at (off, $obj, 0))
 			when character_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.character_32_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [CHARACTER_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.character_32_field_at (off, $obj, 0))
 			when Integer_8_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_8_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_8_field_at (off, $obj, 0))
 			when Integer_16_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_16]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_16_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_16]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_16_field_at (off, $obj, 0))
 			when integer_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_32_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_32_field_at (off, $obj, 0))
 			when Integer_64_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_64_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [INTEGER_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.integer_64_field_at (off, $obj, 0))
 			when natural_8_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_8]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, $obj, 0))
 			when natural_16_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_16]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_16_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_16]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_16_field_at (off, $obj, 0))
 			when natural_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, $obj, 0))
 			when natural_64_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [NATURAL_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.natural_8_field_at (off, $obj, 0))
 			when real_32_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [REAL_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.real_32_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [REAL_32]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.real_32_field_at (off, $obj, 0))
 			when real_64_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [REAL_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.real_64_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [REAL_64]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.real_64_field_at (off, $obj, 0))
 			when Pointer_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [POINTER]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.pointer_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [POINTER]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.pointer_field_at (off, $obj, 0))
 			when Reference_type then
-				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.reference_field_at (off, obj, 0))
+				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, {ISE_RUNTIME}.reference_field_at (off, $obj, 0))
 			when Expanded_type then
 				create l_reflected_object.make_for_expanded_field_at (obj, off)
 				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, l_reflected_object.object)

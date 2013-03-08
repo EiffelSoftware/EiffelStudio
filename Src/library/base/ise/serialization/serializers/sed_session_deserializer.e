@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 						a_reflected_object.set_reference_field (l_new_offset, read_reference)
 
 					when {REFLECTOR_CONSTANTS}.expanded_type then
-						decode_expanded_object (a_reflected_object.meta_field (l_new_offset))
+						decode_expanded_object (a_reflected_object.expanded_field (l_new_offset))
 
 					else
 						check
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 							a_reflected_object.set_reference_field (l_new_offset, read_reference)
 
 						when {REFLECTOR_CONSTANTS}.expanded_type then
-							decode_expanded_object (a_reflected_object.meta_field (l_new_offset))
+							decode_expanded_object (a_reflected_object.expanded_field (l_new_offset))
 
 						else
 							check

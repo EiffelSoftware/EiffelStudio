@@ -248,6 +248,7 @@ feature {NONE} -- Implementation
 				l_button.select_actions.extend (agent button_clicked (l_button))
 				setup_sensitivity (l_button)
 				l_content.items.extend (l_button)
+				l_content.refresh
 			end
 		end
 
@@ -268,6 +269,7 @@ feature {NONE} -- Implementation
 				l_button.select_actions.extend (agent button_clicked (l_button))
 				setup_sensitivity (l_button)
 				l_content.items.extend (l_button)
+				l_content.refresh
 			end
 		end
 
@@ -307,6 +309,7 @@ feature {NONE} -- Implementation
 				l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Menu Item"))
 				l_button.set_menu (l_menu)
 				l_content.items.extend (l_button)
+				l_content.refresh
 			end
 		end
 
@@ -354,6 +357,7 @@ feature {NONE} -- Implementation
 					setup_sensitivity (l_w_button)
 					l_content.items.extend (l_w_button)
 				end
+				l_content.refresh
 			end
 		end
 
@@ -369,6 +373,7 @@ feature {NONE} -- Implementation
 				create l_widget.make
 				create l_widget_item.make (l_widget)
 				l_content.items.extend (l_widget_item)
+				l_content.refresh
 			end
 		end
 
@@ -384,6 +389,7 @@ feature {NONE} -- Implementation
 				create l_widget.make
 				create l_widget_item.make (l_widget)
 				l_content.items.extend (l_widget_item)
+				l_content.refresh
 			end
 		end
 
@@ -397,6 +403,7 @@ feature {NONE} -- Implementation
 			if l_content /= Void then
 				create l_sep.make
 				l_content.items.extend (l_sep)
+				l_content.refresh
 			end
 		end
 

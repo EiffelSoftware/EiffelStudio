@@ -211,9 +211,10 @@ feature {NONE} -- Handle mouse clicks
 			end
 
 			if not editor_drawing_area.has_capture then
-				if not editor_drawing_area.has_focus then
-					editor_drawing_area.set_focus
+				if not editor_drawing_area.is_sensitive then
+					editor_drawing_area.enable_sensitive
 				end
+				editor_drawing_area.set_focus
 				editor_drawing_area.enable_capture
 			end
 			position_cursor (l_cursor, x_pos + font.width // 3, y_pos)
@@ -700,14 +701,14 @@ feature {NONE} -- Memory Management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

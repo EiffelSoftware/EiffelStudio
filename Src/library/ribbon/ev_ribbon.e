@@ -519,17 +519,15 @@ feature {EV_RIBBON_DISPACHER} -- Externals callbacks
 			"C++ inline use %"eiffel_ribbon.h%""
 		alias
 			"{
-				HRESULT hr = S_OK;
+				HRESULT hr = S_FALSE;
 
 				IUIRibbon* pRibbon = NULL;
 				IStream* l_stream = (IStream *)$a_i_stream;					
 				if (SUCCEEDED(((IUIFramework *) $a_framework)->GetView(0, IID_IUIRIBBON, (void **) &pRibbon))) {
 					hr = pRibbon->LoadSettingsFromStream(l_stream);
-		
 					pRibbon->Release();
-					return hr;
 				}
-
+				return hr;
 			}"
 		end
 
@@ -542,16 +540,15 @@ feature {EV_RIBBON_DISPACHER} -- Externals callbacks
 			"C++ inline use %"eiffel_ribbon.h%""
 		alias
 			"{
-				HRESULT hr = S_OK;
+				HRESULT hr = S_FALSE;
 
 				IUIRibbon* pRibbon = NULL;
 				IStream* l_stream = (IStream *)$a_i_stream;
 				if (SUCCEEDED(((IUIFramework *) $a_framework)->GetView(0, IID_IUIRIBBON, (void **) &pRibbon))) {
 					hr = pRibbon->SaveSettingsToStream(l_stream);			
 					pRibbon->Release();
-					return hr;
 				}
-
+				return hr;
 			}"
 		end
 note

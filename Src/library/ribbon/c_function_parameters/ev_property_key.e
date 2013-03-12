@@ -816,11 +816,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_GlobalBackgroundColor;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_GlobalBackgroundColor;"
 		end
 
 	c_ui_pkey_globaltextcolor: POINTER
@@ -829,11 +825,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_GlobalTextColor;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_GlobalTextColor;"
 		end
 
 	c_ui_pkey_globalhighlightcolor: POINTER
@@ -842,11 +834,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_GlobalHighlightColor;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_GlobalHighlightColor;"
 		end
 
 	c_ui_pkey_item_image: POINTER
@@ -856,11 +844,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_ItemImage;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_ItemImage;"
 		end
 
 	c_ui_pkey_representative_string: POINTER
@@ -870,11 +854,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_RepresentativeString;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_RepresentativeString;"
 		end
 
 	c_ui_pkey_tooltip_title: POINTER
@@ -884,11 +864,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_TooltipTitle;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_TooltipTitle;"
 		end
 
 	c_ui_pkey_tooltip_description: POINTER
@@ -898,11 +874,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_TooltipDescription;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_TooltipDescription;"
 		end
 
 	c_ui_pkey_recent_items: POINTER
@@ -911,11 +883,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_RecentItems;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_RecentItems;"
 		end
 
 	c_ui_pkey_color: POINTER
@@ -926,11 +894,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_Color;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_Color;"
 		end
 
 feature {NONE} -- Font control properties
@@ -941,11 +905,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties;"
 		end
 
 	c_ui_pkey_font_properties_backgroundcolor: POINTER
@@ -956,11 +916,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_BackgroundColor;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_BackgroundColor;"
 		end
 
 	c_ui_pkey_font_properties_backgroundcolor_type: POINTER
@@ -971,11 +927,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_BackgroundColorType;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_BackgroundColorType;"
 		end
 
 	c_ui_pkey_font_properties_bold: POINTER
@@ -986,11 +938,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_Bold;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_Bold;"
 		end
 
 	c_ui_pkey_font_properties_changed_properties: POINTER
@@ -1002,11 +950,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_ChangedProperties;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_ChangedProperties;"
 		end
 
 	c_ui_pkey_font_properties_delta_size: POINTER
@@ -1018,11 +962,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_DeltaSize;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_DeltaSize;"
 		end
 
 	c_ui_pkey_font_properties_family: POINTER
@@ -1035,11 +975,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_Family;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_Family;"
 		end
 
 	c_ui_pkey_font_properties_foregroundcolor: POINTER
@@ -1050,11 +986,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_ForegroundColor;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_ForegroundColor;"
 		end
 
 	c_ui_pkey_font_properties_foregroundcolor_type: POINTER
@@ -1066,11 +998,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_ForegroundColorType;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_ForegroundColorType;"
 		end
 
 	c_ui_pkey_font_properties_italic: POINTER
@@ -1081,11 +1009,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_Italic;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_Italic;"
 		end
 
 	c_ui_pkey_font_properties_size: POINTER
@@ -1105,11 +1029,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_Size;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_Size;"
 		end
 
 	c_ui_pkey_font_properties_strikethrough: POINTER
@@ -1120,11 +1040,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_Strikethrough;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_Strikethrough;"
 		end
 
 	c_ui_pkey_font_properties_underline: POINTER
@@ -1135,11 +1051,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_Underline;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_Underline;"
 		end
 
 	c_ui_pkey_font_properties_vertical_positioning: POINTER
@@ -1151,11 +1063,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_FontProperties_VerticalPositioning;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_FontProperties_VerticalPositioning;"
 		end
 
 	c_ui_pkey_command_id: POINTER
@@ -1165,11 +1073,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use  %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_CommandId;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_CommandId;"
 		end
 
 	c_ui_pkey_quick_access_toolbar_dock: POINTER
@@ -1179,11 +1083,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_QuickAccessToolbarDock;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_QuickAccessToolbarDock;"
 		end
 
 	c_ui_pkey_enabled: POINTER
@@ -1193,11 +1093,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_Enabled;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_Enabled;"
 		end
 
 	c_ui_pkey_context_available: POINTER
@@ -1206,11 +1102,7 @@ feature {NONE} -- Font control properties
 		external
 			"C inline use %"UIRibbon.h%""
 		alias
-			"[
-			{
-				return &UI_PKEY_ContextAvailable;
-			}
-			]"
+			"return (EIF_POINTER) &UI_PKEY_ContextAvailable;"
 		end
 
 note

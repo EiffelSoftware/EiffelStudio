@@ -25,8 +25,10 @@ feature {NONE} -- Initialization
 			a_test_suite_attached: a_test_suite /= Void
 		do
 			test_suite := a_test_suite
+			testing_directory := a_testing_directory
 		ensure
 			test_suite_set: test_suite = a_test_suite
+			testing_directory_set: testing_directory = a_testing_directory
 		end
 
 feature -- Access

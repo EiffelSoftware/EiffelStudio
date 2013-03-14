@@ -39,7 +39,6 @@
 				<exclude>/support/mismatch_information.e$</exclude>
 				<exclude>/support/operating_environment.e$</exclude>
 				<exclude>/support/single_math.e$</exclude>
-				<exclude>/kernel/bit_ref.e$</exclude>
 				<exclude>/kernel/console.e$</exclude>
 				<exclude>/kernel/directory.e$</exclude>
 				<exclude>/kernel/directory_name.e$</exclude>

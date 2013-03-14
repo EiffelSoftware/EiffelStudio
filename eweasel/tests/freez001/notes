@@ -1,5 +1,0 @@
-In a call to a routine whose formal argument is a BIT type with a
-larger number of bits than the actual argument, the actual argument is
-not extended with trailing zeros but only when the code is frozen.
-
-Discovered in Release 3.2.

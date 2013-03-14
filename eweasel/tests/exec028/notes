@@ -1,6 +1,0 @@
-A system with an attribute whose type is a BIT type with a large
-number of bits (2 million) compiles fine, but dies with a run-time
-panic when executed.
-
-Discovered in Prerelease 93.07.15.
-

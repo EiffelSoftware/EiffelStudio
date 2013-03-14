@@ -1,6 +1,0 @@
-A generic derivation of a generic class with a constraint which is a
-BIT type with (what looks like) a constant attribute expressing the
-number of bits in the BIT type causes a compiler exception trace.
-
-Discovered in Prerelease 93.05.17.
-

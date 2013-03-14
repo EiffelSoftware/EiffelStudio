@@ -1,7 +1,0 @@
-A class has a call to a function which takes an argument of type BIT N
-and just returns its argument.  The system compiles fine, but when
-executed it dies with the exception "object allocation: No more
-memory" if it was melted and if N >= 32768 (2 ^ 15).  Frozen code
-works fine for BIT sizes up to at least 1_000_000.
-
-Discovered in Release 3.3 beta.

@@ -1,7 +1,0 @@
-A class has an attribute of type `BIT Weasel_bits', where
-`Weasel_bits' is a very large constant integer.  After initial
-compilation where the system is melted, the integer value is changed
-to a very small number.  But system execution still ends with an
-"unknown attribute type" panic.
-
-Discovered in Release 3.2.4.

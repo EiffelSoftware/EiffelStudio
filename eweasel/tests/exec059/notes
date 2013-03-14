@@ -1,7 +1,0 @@
-A function which returns a BIT type includes an explicit creation
-instruction `!!Result'.  The class compiles fine, but when the BIT
-type is printed it is wrong.  Removing the explicit creation
-instruction causes system execution to produce correct output.
-
-Discovered in Release 3.2.3b.
-

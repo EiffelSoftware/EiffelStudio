@@ -1,5 +1,0 @@
-A bit constant which is 117 bits or longer causes an exception trace in
-the compiler during pass 1.
-
-Discovered in Prerelease 93.05.17.
-

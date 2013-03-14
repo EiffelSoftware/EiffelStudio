@@ -1,6 +1,0 @@
-After initial compilation, the value of a constant integer attribute
-is changed, thereby introducing a VTBT violation.  When the system is
-recompiled, the compiler does not detect the VTBT violation.
-
-Discovered in Prerelease 93.07.15.
-

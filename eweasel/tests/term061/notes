@@ -1,5 +1,0 @@
-A class has a routine with 2000 copies of an instruction that prints a
-BIT constant which is 370 bits long.  When the class is compiled, the
-compiler dies with a run-time panic during degree 2.
-
-Discovered in Release 3.2.4.

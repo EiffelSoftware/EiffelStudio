@@ -1,0 +1,42 @@
+test_name copy-semantics-reflection	
+test_description Verify that we are able to inspect a set of objects using expanded or copy/semantics without causing any duplication. In addition of traversing, we also update the object content and verify that it has been properly updated.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+copy_raw	test5.e $CLUSTER test5.e
+copy_raw	test6.e $CLUSTER test6.e
+copy_raw	test7.e $CLUSTER test7.e
+copy_raw	expanded_counter.e $CLUSTER expanded_counter.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_f
+execute_result 	ok
+compare		exec_output_f output
+
+test_end

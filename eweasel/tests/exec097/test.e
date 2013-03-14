@@ -23,7 +23,6 @@ feature
 			!!x8.make;
 			!!x9.make;
 			!!x10.make;
-			!!x11.make;
 		end
 	
 	k, m: INTEGER;
@@ -38,5 +37,4 @@ feature
 	x8: TEST1 [TEST];
 	x9: TEST1 [TEST1 [DOUBLE]];
 	x10: TEST1 [TEST2];
-	x11: TEST1 [BIT 100];
 end

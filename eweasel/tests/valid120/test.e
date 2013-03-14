@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2013 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -17,7 +16,7 @@ feature
 	x2: ARGUMENTS_32
 	x3: ARRAY [DOUBLE]
 	x4: BASIC_ROUTINES
-	x5: BIT_REF
+
 	x6: BOOLEAN
 	x7: BOOLEAN_REF
 	x8: CHARACTER

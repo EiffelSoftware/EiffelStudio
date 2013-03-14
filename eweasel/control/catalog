@@ -234,7 +234,6 @@ test	creation-client-no-feats	syntax008 tcf pass syntax
 test	empty-strip-expression		syntax009 tcf pass syntax
 test	empty-manifest-array		syntax010 tcf pass syntax
 test	valid-anchored-decl		syntax011 tcf fail syntax
-test	bit-type-with-plus		syntax012 tcf pass syntax
 test	empty-index-list		syntax013 tcf pass syntax
 test	free-operator-reject		syntax014 tcf fail syntax
 test	long-string-constant		syntax015 tcf pass syntax
@@ -304,7 +303,6 @@ test	local-same-as-formal		valid005 tcf pass validity
 test	invalid-precondition		valid006 tcf pass validity
 test	invalid-use-of-old		valid007 tcf pass validity
 test	invalid-entity-assertion-tag	valid008 tcf pass validity
-test	invalid-bit-type		valid009 tcf pass validity
 test	rename-infix-to-prefix		valid010 tcf pass validity
 test	anchored-type-violation		valid011 tcf pass validity
 test	invalid-creation-instruction	valid012 tcf pass validity
@@ -340,7 +338,6 @@ test	valid-once-undefine		valid040 tcf pass validity
 test	result-in-none-func		valid041 tcf pass validity
 test	repeat-inher-vmrc-violation	valid042 tcf pass validity
 test	manifest-array-conform		valid043 tcf pass validity
-test	bit-constant-diff-length	valid044 tcf pass validity
 test	vtct-on-generic-5		valid045 tcf pass validity
 test	actual-generic-anchor-feat	valid046 tcf pass validity
 test	valid-actual-generic		valid047 tcf pass validity
@@ -348,9 +345,7 @@ test	valid-actual-generic		valid047 tcf pass validity
 test	redecl-violation		valid048 tcf pass validity
 test	local-entity-wrong-error	valid049 tcf pass validity
 test	vuar-called-vuex		valid050 tcf pass validity
-test	veen-called-other-viol		valid051 tcf pass validity
 test	generic-constrained-by-generic	valid052 tcf pass validity
-test	spurious-vtat-on-bit		valid053 tcf pass validity
 test	vuar-called-vuar2		valid054 tcf pass validity
 test	vtug-called-vtug3		valid055 tcf pass validity
 test	pointer-ref-conformance		valid056 tcf pass validity conformance
@@ -430,8 +425,6 @@ test	anchored-argument-bogus-vdjr	valid131 tcf fail validity
 test	vdrd3-ensure-then		valid132 tcf pass validity
 test	indirect-vlec			valid133 tcf fail validity
 test	generic-create-deferred		valid134 tcf fail validity
-test	bit-identifier-in-generic	valid135 tcf fail validity
-test	bad-bit-identifier-in-static	valid136 tcf pass validity
 test	assign-minimum-integer-vjar	valid137 tcf pass validity
 test	anchored-bogus-vsrp2		valid138 tcf pass validity
 test	default-create-vtcg		valid139 tcf pass validity
@@ -549,7 +542,6 @@ test	assigner-wrong-vbac					valid250 tcf pass validity
 test	bogus-veen-on-object-test-local		valid251 tcf pass validity
 test	undetected-vuot-error			valid252 tcf pass validity
 test	equality-of-conforming-classes		valid253 tcf pass validity equality conformance attached_types
-test	bogus-bit-vdrd				valid254 tcf pass validity
 test	missing-vhpr-with-different-generic-derivation	valid255 tcf pass validity
 test	wrong-vdpr-errors			valid256 tcf pass validity
 test	wrong-manifest-array-attached-type	valid257 tcf pass validity
@@ -645,7 +637,6 @@ test	vjrv-sneak			incr008  tcf pass incrementality
 test	vuar-sneak			incr009  tcf pass incrementality
 test	vtat-sneak			incr010  tcf pass incrementality
 test	veen-sneak			incr011  tcf pass incrementality
-test	vtbt-sneak			incr012  tcf pass incrementality
 test	vd29-sneak			incr014  tcf pass incrementality
 
 test	vtec-compiler-wrong		incr015  tcf pass incrementality
@@ -680,7 +671,6 @@ test	delete-add-invariant		incr042  tcf pass incrementality
 
 test	unique-not-unique		incr043  tcf pass incrementality
 test	unique-not-consecutive		incr044  tcf pass incrementality
-test	chg-integer-const-value		incr045  tcf pass incrementality
 test	expanded-class-bad-behavior	incr046  tcf pass incrementality
 test	expanded-generic-exec-panic	incr047  tcf pass incrementality
 test	call-proc-print-attr		incr048  tcf pass incrementality
@@ -710,21 +700,15 @@ test	delete-finite-add-back		incr071  tcf pass incrementality
 test	expand-generic-no-creation-call	incr072  tcf pass incrementality
 test	change-attr-expanded-type	incr073  tcf pass incrementality
 test	bogus-vlec			incr074  tcf pass incrementality
-test	vtbt-weasel			incr075  tcf pass incrementality
 test	vwst-sneak			incr076  tcf pass incrementality
-test	string-to-bit1			incr077  tcf pass incrementality
-test	string-to-bit-refreeze		incr078  tcf pass incrementality
-test	vuar-weasel			incr079  tcf pass incrementality
 test	vjaw-delete-creation-clause	incr080  tcf pass incrementality
 test	name-exists-invariant		incr082  tcf pass incrementality
 test	exclude-any-add-back		incr083  tcf pass incrementality
-test	chg-bit-length-refreeze		incr084  tcf pass incrementality
 test	create-chg-to-nonexpanded	incr085  tcf pass incrementality
 test	frozen-feat-bogus-vd27		incr086  tcf pass incrementality
 test	vomb-sneak			incr087  tcf pass incrementality
 test	new-ace-root-still-vscn		incr088  tcf fail incrementality
 test	delete-generic-class-header	incr089  tcf pass incrementality
-test	vtbt-granddad-weasel		incr090  tcf pass incrementality
 test	intro-vtat-attr-to-proc		incr091  tcf pass incrementality
 test	vomb2-called-vomb5		incr092  tcf pass incrementality
 test	vcfg1-called-vffd7		incr093  tcf fail incrementality
@@ -735,25 +719,19 @@ test	anchored-constraint-touch-file	incr097  tcf pass incrementality
 test	redef-external-chg-to-effect	incr098  tcf pass incrementality
 test	vjaw-sneak			incr099  tcf pass incrementality
 test	external-with-alias-new-root	incr100  tcf pass incrementality
-test	vncb-sneak			incr101  tcf pass incrementality
-test	bigger-bit-func-wrong-value	incr102  tcf fail incrementality
 test	vdrd-weasel			incr103  tcf pass incrementality
 test	ext-with-alias-new-cluster	incr104  tcf pass incrementality
 test	veen-cant-find-feature		incr105  tcf pass incrementality
 test	no-precomp-chg-class-name	incr106  tcf pass incrementality
 test	root-none-remove-cluster	incr107  tcf pass incrementality
 test	veen2-called-veen22		incr108  tcf pass incrementality
-test	bool-string-to-bit-ref		incr109  tcf pass incrementality ec_precondition
 test	chg-expanded-source-freeze	incr110  tcf pass incrementality
 test	melt-chg-attr-type-freeze	incr111  tcf pass incrementality
-test	actual-generic-vtbt-sneak	incr112  tcf pass incrementality
 test	vtcg-sneak			incr113  tcf pass incrementality
 test	vtat1-called-vtcg		incr114  tcf pass incrementality
 test	new-root-cluster-bogus-vscn	incr115  tcf fail incrementality
 test	delete-ace-resume-compile	incr116  tcf pass incrementality
 test	new-precomp-cluster-bogus-vd41	incr117  tcf pass incrementality
-test	short-manifest-bit-array-arg	incr118  tcf pass incrementality
-test	reduce-bit-attribute-size	incr119  tcf pass incrementality
 test	vuar1-called-veen		incr120  tcf pass incrementality
 test	none-then-string-generic	incr121  tcf pass incrementality
 test	switch-expanded-attributes	incr122  tcf pass incrementality
@@ -777,7 +755,6 @@ test	rename-get-new-precursor	incr139  tcf pass incrementality
 test	add-remove-root-generic		incr140  tcf pass incrementality
 test	none-then-tuple-generic		incr141  tcf pass incrementality tuple
 test	make-root-expanded-freeze	incr142  tcf pass incrementality
-test	change-expanded-tuple-bit	incr143  tcf pass incrementality tuple
 test	vtcg-remove-creation-feat	incr144  tcf fail incrementality
 test	add-remove-vsrt			incr145  tcf pass incrementality
 test	add-remove-constraint-vtcg	incr146  tcf pass incrementality
@@ -841,7 +818,6 @@ test	bogus-vtec			incr204  tcf pass incrementality
 test	vgcc-remove-generic-creator	incr205  tcf fail incrementality
 test	expand-generic-remove-creation	incr206  tcf pass incrementality
 test	chg-indexing-tag-to-attribute	incr207  tcf fail incrementality
-test	bit-n-illegal-opcode		incr208  tcf pass incrementality
 test	external-make-precondition-true	incr209  tcf pass incrementality
 test	unexpand-class-no-conformance	incr210  tcf fail incrementality conformance
 test	uninherit-any-vdpr2-sneak	incr211  tcf fail incrementality
@@ -1066,7 +1042,6 @@ test	ececil-undefined-symbol-4	incr429	tcf fail incrementality
 -- Melting
 
 test	divide-melt-panic		melt001  tcf pass melting
-test	bit-melt-metamorphose		melt002  tcf pass melting
 test	manifest-array-with-old		melt003  tcf pass melting
 test	ref-actual-expanded-formal	melt004  tcf pass melting
 test	real-const-arith-to-double	melt005  tcf pass melting
@@ -1078,7 +1053,6 @@ test	invariant-melt-panic		melt009  tcf pass melting
 test	weird-sprintf-melt-panic	melt010  tcf pass melting manual
 test	manifest-array-int-double	melt011  tcf pass melting
 test	raise-exception-call-self	melt012  tcf fail melting
-test	invalid-assertion-level		melt013  tcf pass melting assertion
 test	creation-proc-modify-target	melt014  tcf pass melting
 test	nested-expanded-creation	melt015  tcf pass melting
 test	chg-external-to-internal	melt016  tcf pass melting
@@ -1090,12 +1064,9 @@ test	chg-argless-func-to-constant	melt021  tcf pass melting
 test	ensure-extend-linked-list	melt022  tcf pass melting
 test	old-expanded-melted-creations	melt023  tcf fail melting
 test	manifest-array-expanded-generic	melt024  tcf pass melting
-test	bit-two-to-the-twenty-four	melt025  tcf pass melting
 test	manifest-array-of-expanded	melt026  tcf pass melting
 test	expanded-clone-of-clone		melt027  tcf pass melting
-test	named-bit-constant-argument	melt028  tcf pass melting
 test	named-constant-call-out		melt029  tcf pass melting
-test	cloned-bit-actual-argument	melt030  tcf fail melting
 test	evaluate-old-when-retry		melt031  tcf fail melting
 test	eval-precondition-when-retry	melt032  tcf pass melting
 test	melted-two-level-rescue		melt033  tcf pass melting
@@ -1106,7 +1077,6 @@ test	old-expression-eval-order	melt037  tcf fail melting
 test	pass-expanded-like-current	melt038  tcf pass melting
 test	generic-local-expanded-actual	melt039  tcf pass melting
 test	infix-integer-real-double	melt040  tcf pass melting
-test	bit-two-to-the-fifteen		melt041  tcf pass melting
 test	put-double-five-over-two	melt042  tcf pass melting
 test	expanded-creation-alloc-memory	melt043  tcf pass melting
 test	melted-creation-pass-target	melt044  tcf pass melting
@@ -1131,7 +1101,6 @@ test	melted-invariant-invalid-object	melt062  tcf fail melting
 test	melted-void-expanded-arg	melt063  tcf pass melting
 test	melted-local-referers		melt064  tcf fail melting
 test	melted-profinfo-wrong-dir	melt065  tcf fail melting
-test	bit-n-out-of-memory		melt066  tcf pass melting
 test	expanded-generic-anchored-local	melt067  tcf fail melting
 test	melted-old-expanded-result	melt068  tcf pass melting
 test	expanded-list-like-current	melt069  tcf fail melting
@@ -1172,16 +1141,13 @@ test	melted-on-character-32	melt103  tcf pass melting execution
 
 -- Freezing
 
-test	bit-arg-extend-frozen		freez001  tcf fail freezing
 test	frozen-xor-precedence-error	freez002  tcf pass freezing
-test	extend-short-bit-constant	freez003  tcf pass freezing
 test	frozen-high-bit-characters	freez004  tcf pass freezing
 test	who-gets-old-exception		freez005  tcf pass freezing
 test	expanded-local-no-creation	freez006  tcf pass freezing
 if not DOTNET test	init-expanded-local-when-retry	freez007  tcf fail freezing
 test	redefine-expanded-to-attribute	freez008  tcf fail freezing
 test	assign-attempt-exp-to-ref	freez009  tcf pass freezing
-test	deep-clone-frozen-not-equal	freez010  tcf pass freezing
 test	compare-frozen-high-bit-chars	freez011  tcf pass freezing
 test	compare-frozen-real-arg		freez012  tcf pass freezing
 test	frozen-retried-precondition	freez013  tcf pass freezing
@@ -1212,7 +1178,6 @@ test	finalize-debug-inst-not-kept	final002  tcf pass finalizing
 test	finalize-manifest-array-call	final003  tcf pass finalizing
 test	finalize-ensure-keep-dead	final004  tcf pass finalizing
 test	finalize-pass-wrong-argument	final005  tcf pass finalizing
-test	finalize-expanded-generic-bit	final006  tcf pass finalizing
 test	finalize-expand-creation-order	final007  tcf pass finalizing
 test	finalize-expanded-arg-result	final008  tcf pass finalizing
 test	finalize-array-optimization	final009  tcf pass finalizing
@@ -1229,7 +1194,6 @@ test	inline-generic-assign-attempt	final019  tcf pass finalizing inlining
 test	finalize-or-else-true		final020  tcf pass finalizing execution
 test	finalize-mult-double-constant	final021  tcf pass finalizing execution
 test	expanded-generic-return-type	final022  tcf pass finalizing execution
-test	bigger-array-of-bit		final023  tcf pass finalizing execution
 test	finalize-skip-invariant		final024  tcf fail finalizing
 test	inline-pass-expanded		final025  tcf pass finalizing inlining
 test	c-inline-function-ten-args	final026  tcf pass finalizing inlining
@@ -1377,7 +1341,6 @@ test	multiple-thread-gc-crash		thread024	tcf pass multithreaded
 -- Execution
 
 test	print-double			exec001  tcf pass execution
-test	bit-out-wrong			exec002  tcf pass execution
 test	real-conform-double		exec003  tcf pass execution
 test	power-operator			exec004  tcf pass execution
 test	once-routine-precond-fail	exec005  tcf pass execution
@@ -1388,7 +1351,6 @@ test	free-binary-wrong-precedence	exec009  tcf pass execution
 test	divide-by-real-zero		exec010  tcf fail execution
 test	expanded-creation-order		exec011  tcf pass execution
 test	redecl-implicit-precond		exec012  tcf pass execution
-test	bit-equal-wrong			exec013  tcf pass execution
 test	variable-attr-wrong-address	exec014  tcf pass execution manual
 test	readline-long-line-wrong	exec015  tcf pass execution
 
@@ -1396,14 +1358,12 @@ test	rescue-floating-exception	exec016  tcf pass execution
 test	strip-wont-c-compile		exec017  tcf pass execution
 test	strip-with-void			exec018  tcf pass execution
 test	manifest-array-concat		exec019  tcf pass execution
-test	manifest-array-of-bits		exec020  tcf pass execution
 test	very-deep-clone			exec021  tcf pass execution
 test	out-of-locals			exec022  tcf pass execution
 test	prefix-oper-attribute		exec023  tcf pass execution
 test	long-linked-list-fails		exec024  tcf pass execution
 test	malloc-free-collect-coalesce	exec026  tcf pass execution
 test	memory-leak			exec027  tcf fail execution skip
-test	big-bit-attribute		exec028  tcf pass execution
 test	external-feature-address	exec029  tcf pass execution
 test	null-char-in-string		exec030  tcf pass execution
 test	uninit-root-class-arg		exec031  tcf pass execution
@@ -1418,7 +1378,6 @@ test	create-zero-len-bool-string	exec039  tcf pass execution
 test	merge-sort-panic		exec040  tcf pass execution
 test	random-memory-alloc-panic	exec041  tcf pass execution
 test	cecil-panic			exec042  tcf pass execution manual
-test	deep-clone-not-deep-equal	exec043  tcf pass execution
 test	auto-resize-exp-arrayed-list	exec044  tcf pass execution
 test	reference-to-sub-object		exec045  tcf pass execution
 if not DOTNET test	class-invariant-fail-panic	exec046  tcf pass execution
@@ -1433,10 +1392,7 @@ test	integer-ref-gt-integer		exec054  tcf pass execution
 test	expanded-generic-like-current	exec055  tcf pass execution
 test	skip-deferred-feat-assertions	exec056  tcf fail execution assertion
 test	array-of-expanded-insert-fails	exec057  tcf pass execution
-test	once-bit-type-result		exec058  tcf fail execution
-test	bit-function-explicit-creation	exec059  tcf pass execution
 test	inherit-array-of-expanded	exec060  tcf pass execution
-test	bit-copy-panic-void-source	exec061  tcf pass execution
 test	conforms-to-with-generics	exec062  tcf pass execution
 test	deep-clone-panic		exec063  tcf pass execution
 test	random-string-blank-panic	exec064  tcf pass execution
@@ -1448,23 +1404,16 @@ test	keep-on-stripping		exec069  tcf pass execution
 test	deep-exception-in-rescue	exec070  tcf pass execution skip
 test	few-locals-deep-recursion	exec071  tcf pass execution
 test	expanded-create-big-string	exec072  tcf pass execution
-test	negate-big-bit-local		exec073  tcf pass execution
-test	big-array-of-bit		exec074  tcf pass execution
 test	negative-eiffel-memory-used	exec075  tcf pass execution
-test	repeated-manifest-bit-array	exec076  tcf pass execution
 test	strip-with-expanded-attr	exec077  tcf pass execution
 test	manifest-array-of-strip		exec078  tcf pass execution
 test	rescue-recurse-many-retries	exec079  tcf pass execution
-test	diff-bit-constants-deep-equal	exec080  tcf fail execution
 test	print-null-get-nothing		exec081  tcf pass execution
 test	cloned-int-passed-to-double	exec082  tcf pass execution
-test	deep-clone-bit			exec083  tcf fail execution
 test	retry-forget-in-assertion	exec084  tcf pass execution assertion
 test	rescue-show-exception-meaning	exec085  tcf pass execution
-test	long-short-bits-not-equal	exec086  tcf pass execution
 test	clone-integer-boolean-character	exec087  tcf pass execution
 if not DOTNET test	expanded-local-void-in-rescue	exec088  tcf pass execution
-test	generic-formal-bit-actual-arg	exec089  tcf pass execution
 test	print-char-dot-is-digit		exec090  tcf pass execution
 test	expanded-skip-class-invariant	exec091  tcf fail execution
 test	parent-invariants-reverse-order	exec092  tcf pass execution
@@ -1473,7 +1422,6 @@ test	many-big-expanded-locals	exec094  tcf pass execution
 test	internal-exception-memory-leak	exec095  tcf fail execution
 test	expanded-local-raise-exception	exec096  tcf pass execution
 test	generic-attributes-not-equal	exec097  tcf pass execution
-test	out-of-memory-on-out		exec098  tcf pass execution
 test	inherit-generic-wrong-call	exec099  tcf fail execution
 test	generic-constrained-by-double	exec100  tcf pass execution
 test	strip-bad-linked-list		exec101  tcf pass execution
@@ -1532,7 +1480,6 @@ test	nested-manifest-array-gen-type	exec153  tcf pass execution
 test	explicit-expanded-creation	exec154  tcf pass execution
 test	expanded-add-default-create	exec155  tcf fail execution
 test	inherit-create-like-current	exec156  tcf pass execution
-test	array-bit-two-to-sixteen	exec157  tcf pass execution
 test	inspect-big-integer-64		exec158  tcf pass execution
 test	long-name-exception-trace	exec159  tcf pass execution
 test	bigger-generation-object-limit	exec160  tcf pass execution
@@ -1769,17 +1716,12 @@ test	void-as-variant			term008  tcf pass termination
 test	none-as-actual-generic		term009  tcf pass termination
 test	invalid-generic-constraint	term010  tcf pass termination
 test	manifest-array-call-target	term011  tcf pass termination
-test	long-bit-constant		term012  tcf pass termination
-test	bit-constraint-with-attr	term013  tcf pass termination
 test	deeply-nested-when		term014  tcf pass termination
 test	manifest-array-call-target2	term015  tcf pass termination
 test	empty-external-feat-alias	term016  tcf pass termination
-test	array-of-big-bit		term017  tcf pass termination
 test	none-as-actual-generic2		term018  tcf pass termination
 test	expanded-client-cycle		term020  tcf pass termination
-test	valid-weasel-bits		term022  tcf pass termination
 test	function-returning-none		term023  tcf pass termination
-test	bit-creation-type		term024  tcf pass termination
 test	expanded-local-panic		term025  tcf pass termination
 test	bad-generic-deriv-creation-type2 term026 tcf pass termination
 test	many-same-generics		term027  tcf pass termination
@@ -1799,7 +1741,6 @@ test	redef-anchored-to-self-version	term042  tcf pass termination
 test	generic-constraint-cycle	term043  tcf pass termination
 test	explicit-create-def-gen-parent  term044  tcf pass termination
 test	strip-attribute-of-type-none	term045  tcf pass termination
-test	generic-constraint-bit-type	term046  tcf pass termination
 test	two-creation-clauses-one-empty	term047  tcf pass termination
 test	long-anchored-decl-chain	term048  tcf pass termination
 test	anchored-generic-multi-dot-call	term049  tcf pass termination
@@ -1813,7 +1754,6 @@ test	long-white-space		term056  tcf pass termination
 test	no-precomp-big-manifest-array	term057  tcf pass termination
 test	heavy-anded-bool-panic		term058  tcf pass termination
 test	feature-address-in-invariant	term060  tcf pass termination
-test	many-long-bit-constants		term061  tcf pass termination
 test	manifest-array-at-sign		term062  tcf pass termination
 test	non-windows-dll-external	term063  tcf pass termination
 test	external-omit-signature-args	term064  tcf pass termination
@@ -1826,7 +1766,6 @@ test	finalize-deferred-feature-call	term072  tcf pass termination
 test	finalize-array-opt-remove-dead	term073  tcf pass termination
 test	finalize-inline-strip-expr	term074  tcf pass termination inlining
 test	assign-creation-expression	term075  tcf pass termination
-test	explicit-bit-creation		term076  tcf pass termination
 test	finalize-inline-array-expanded	term077  tcf pass termination inlining
 test	finalize-inline-small-classes	term078  tcf pass termination inlining
 test	simple-explicit-generic-create	term079  tcf pass termination
@@ -2027,7 +1966,6 @@ test	visible-finalize-wont-link	ccomp006 tcf pass c_compilation
 test	finalize-assertion-all		ccomp007 tcf pass c_compilation
 test	finalize-void-parse-error	ccomp008 tcf pass c_compilation
 test	invariant-zero-equals-zero	ccomp009 tcf pass c_compilation
-test	frozen-bit-operations		ccomp010 tcf pass c_compilation
 test	finalize-inh-root-creation-proc	ccomp011 tcf pass c_compilation
 test	finalize-ext-root-creation-proc	ccomp012 tcf pass c_compilation
 test	strip-empty-list-freeze-cc	ccomp013 tcf pass c_compilation
@@ -2042,13 +1980,11 @@ test	inherit-integer-call-remainder	ccomp021 tcf pass c_compilation
 test	expanded-generic-dead-code	ccomp022 tcf pass c_compilation
 test	external-func-with-signature	ccomp023 tcf pass c_compilation
 test	external-tab-between-includes	ccomp024 tcf pass c_compilation
-test	finalize-bit-return-type	ccomp025 tcf pass c_compilation
 test	finalize-call-undef-external	ccomp026 tcf pass c_compilation
 test	expanded-arg-with-cast		ccomp027 tcf pass c_compilation
 test	finalize-array-opt-pointers	ccomp028 tcf pass c_compilation
 test	finalize-wont-trace-visible	ccomp029 tcf pass c_compilation
 test	finalize-create-deferred-type	ccomp030 tcf pass c_compilation
-test	finalize-bit-attribute		ccomp031 tcf pass c_compilation
 test	freeze-generic-creation-expr	ccomp032 tcf pass c_compilation
 test	finalize-precomp-assertion-all	ccomp033 tcf pass c_compilation
 test	finalize-deferred-delayed-call	ccomp034 tcf pass c_compilation
@@ -2372,7 +2308,6 @@ test	lace-vd27-basic			vd27001	 tcf pass validity vd27
 -- Regression tests of bugs which have been fixed
 
 test	no-leading-white-space		fixed001 tcf pass fixed
-test	no-upper-bit-constants		fixed002 tcf pass fixed
 test	empty-creation-list		fixed003 tcf pass fixed
 test	bad-feature-decl		fixed004 tcf pass fixed
 test	syntax-wrong-positions		fixed005 tcf pass fixed
@@ -2408,7 +2343,6 @@ test	repeated-rescue-panic		fixed036 tcf pass fixed
 test	creation-once-routine		fixed037 tcf pass fixed
 test	cluster-modified-viol		fixed038 tcf pass fixed
 test	chg-class-to-nonexistent	fixed039 tcf pass fixed
-test	bit-any-no-conform		fixed040 tcf pass fixed
 test	nonexistent-root-class		fixed041 tcf pass fixed
 test	missing-class-header		fixed042 tcf pass fixed
 test	lace-syntax-error-retry		fixed043 tcf pass fixed
@@ -2450,7 +2384,7 @@ test	invalid-redefine-subclause	fixed083 tcf pass fixed
 test	old-name-inherit-clauses	fixed084 tcf pass fixed
 test	general-conformance		fixed085 tcf pass fixed conformance
 test	old-in-precondition		fixed086 tcf pass fixed
-test	none-conform-bit-expanded	fixed087 tcf pass fixed
+test	none-conform-expanded		fixed087 tcf pass fixed
 test	delete-inheritance		fixed088 tcf pass fixed
 test	melt-inherit-bug		fixed089 tcf pass fixed
 test	change-generic-parm-count	fixed090 tcf pass fixed
@@ -2481,7 +2415,6 @@ test	lace-opt-cluster-mark		fixed114 tcf pass fixed
 test	lace-assertion-option		fixed118 tcf pass fixed
 test	lace-remove-cluster2		fixed119 tcf pass fixed
 test	whip-that-ace			fixed120 tcf pass fixed
-test	concat-manifest-bit-array	fixed123 tcf pass fixed
 test	creation-generic-types-in-onces	fixed124 tcf pass fixed
 test	reference-assign-tuple-fail-gc	fixed125 tcf pass fixed tuple
 test	infix-inherited-assertions	fixed126 tcf pass fixed

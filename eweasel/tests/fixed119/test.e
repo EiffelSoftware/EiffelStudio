@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2013 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,26 +11,17 @@
 
 class 
 	TEST
-inherit
-	ARGUMENTS
-creation
+
+create
 	make
+
 feature
 	
 	make is
 		local
-			b: BIT $BIT_LENGTH ;
-			k: INTEGER;
+			i: $TYPE
 		do
-			b := 1B;
-			from
-				k := 1;
-			until
-				k > b.count
-			loop
-				b.put (true, k);
-				k := k + 1;
-			end
-		end;
-	
+			i := 256
+		end
+
 end

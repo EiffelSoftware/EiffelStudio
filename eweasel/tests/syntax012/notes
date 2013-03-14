@@ -1,6 +1,0 @@
-A declaration introducing an attribute whose type is a Bit_type
-appears to be valid, since the Constant is of type INTEGER and has a
-positive value (VTBT on page 210).  But the compiler reports a syntax
-error.
-
-Discovered in prerelease 93.02.17.

@@ -8,7 +8,7 @@ class TEST
 inherit
 	TEST1
 		redefine
-			weasel, wimp
+			weasel
 		end
 creation
 	make
@@ -19,7 +19,5 @@ feature
 		end
 
 	weasel: TEST2;
-	
-	wimp: BIT 32;
 	
 end

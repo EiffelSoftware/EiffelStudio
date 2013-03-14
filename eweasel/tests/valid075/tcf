@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2013 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,7 +6,7 @@
 -- This is a test control file
 
 test_name 	 vqmc-extra-bogus-vffd7
-test_description A constant attribute which has declared type of `like Current' causes the compiler to report a bogus VFFD(7) error when the constant used in the declaration is a string or a bit type
+test_description A constant attribute which has declared type of `like Current' causes the compiler to report a bogus VFFD(7) error when the constant used in the declaration is a string or a bit type.
 
 copy_sub 	 Ace $TEST Ace
 define		 CONSTANT ""abc""
@@ -15,7 +14,7 @@ copy_sub 	 test.e $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VQMC
 
-define		 CONSTANT "0001B"
+define		 CONSTANT "0001"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VQMC

@@ -6,7 +6,6 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
-		<variable name="USE_BIT" value="true"/>
 		<setting name="console_application" value="True"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING

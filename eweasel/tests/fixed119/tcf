@@ -10,10 +10,10 @@ test_name 	 lace-remove-cluster2
 test_description After initial compilation, remove a particular cluster from the Ace and then add it back in
 
 copy_sub 	 Ace $TEST Ace
-define		 BIT_LENGTH 100_000_000
+define		 TYPE INTEGER_8
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VTBT
+compile_result 	 validity_error TEST VJAR
 
 copy_sub 	 Ace_rev1 $TEST Ace
 resume_compile
@@ -21,11 +21,11 @@ compile_result 	 validity_error ARRAY VTCT ; BOX VTCT ; CHAIN VTCT ; CHAIN VTCT 
 
 copy_sub 	 Ace $TEST Ace
 resume_compile
-compile_result 	 validity_error TEST VTBT
+compile_result 	 validity_error TEST VJAR
 
-define		 BIT_LENGTH 1
+define		 TYPE INTEGER_16
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Obsolete
+compile_result 	 ok
 
 test_end

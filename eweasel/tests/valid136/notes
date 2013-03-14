@@ -1,7 +1,0 @@
-A class has a call to a static feature `feature {FOO [BIT
-weasel]}.value' where FOO is an unconstrained generic class, but
-`weasel' is an unknown identifier.  The compiler accepts the class but
-should not.  Executing melting system prints "Error: could not read
-Eiffel update file".
-
-Discovered in release 5.4.0403.

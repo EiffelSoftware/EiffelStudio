@@ -1,12 +1,11 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2013 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 	-- To reproduce error:
 	-- Compile class as is.  Compiler accepts it, even though NONE
-	--	does not conform to `expanded STRING' or `BIT 5'.
+	--	does not conform to `expanded TEST1'.
 
 class TEST
 creation
@@ -15,11 +14,10 @@ feature
 
 	make is
 		local
-			x: expanded TEST1;
-			y: BIT 5;
+			x: expanded TEST1
 		do
-			$INSTRUCTION
-		end;
+			x := Void
+		end
 			
 end
 

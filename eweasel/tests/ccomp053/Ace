@@ -7,7 +7,6 @@
 			<warning name="classname_filename_mismatch" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
-		<variable name="USE_BIT" value="true"/>
 		<setting name="console_application" value="True"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING

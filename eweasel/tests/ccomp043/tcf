@@ -18,7 +18,6 @@ copy_raw	a3.e $CLUSTER a3.e
 copy_raw	any.e $CLUSTER any.e
 if DOTNET copy_raw	arguments.e $CLUSTER arguments.e
 copy_raw	array.e $CLUSTER array.e
-copy_raw	bit_ref.e $CLUSTER bit_ref.e
 copy_raw	boolean.e $CLUSTER boolean.e
 copy_raw	boolean_ref.e $CLUSTER boolean_ref.e
 copy_raw	character_32.e $CLUSTER character_32.e

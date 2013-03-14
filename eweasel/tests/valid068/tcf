@@ -20,7 +20,6 @@ copy_raw	arrayed_list_cursor.e $CLUSTER arrayed_list_cursor.e
 copy_raw	bag.e $CLUSTER bag.e 
 copy_raw	basic_routines.e $CLUSTER basic_routines.e 
 copy_raw	bilinear.e $CLUSTER bilinear.e 
-copy_raw	bit_ref.e $CLUSTER bit_ref.e 
 copy_raw	boolean.e $CLUSTER boolean.e 
 copy_raw	boolean_ref.e $CLUSTER boolean_ref.e 
 copy_raw	bounded.e $CLUSTER bounded.e 

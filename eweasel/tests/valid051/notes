@@ -1,7 +1,0 @@
-In some cases, a validity violation involving a construct enclosing an
-Entity rule violation (validity constraint VEEN) is reported, instead
-of the Entity rule violation, which is the true cause of the problem.
-This is confusing.
-
-Discovered in Prerelease 93.05.17.
-

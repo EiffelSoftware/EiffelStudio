@@ -10,14 +10,9 @@ feature
 	try is
 		do
 			io.putint (weasel.a); io.new_line;
-			io.putint (wimp.count); io.new_line;
 		end
 	
 	weasel: TEST2 is
-		do
-		end
-
-	wimp: BIT 32 is
 		do
 		end
 

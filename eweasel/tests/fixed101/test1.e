@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2013 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -8,7 +7,8 @@ class TEST1 [G -> $CONSTRAINT]
 
 feature
 
-	the_bits: BIT 5 is
+	value: BOOLEAN
 		do
-		end;
+		end
+
 end

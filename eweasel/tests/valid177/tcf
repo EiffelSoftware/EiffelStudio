@@ -8,9 +8,4 @@ copy_sub	test.e	$CLUSTER test.e
 compile_melted
 compile_result	validity_error	TEST VJAR
 
-define	VALUE	"0B"
-copy_sub	test.e	$CLUSTER test.e
-resume_compile
-compile_result	validity_error	TEST VNCB
-
 test_end

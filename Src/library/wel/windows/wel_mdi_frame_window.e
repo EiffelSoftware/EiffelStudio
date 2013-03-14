@@ -69,7 +69,7 @@ feature -- Status report
 		do
 			Result := client_window.has_active_window
 		ensure
-			active_window_attached: client_window.active_window /= Void
+			active_window_attached: Result implies client_window.active_window /= Void
 		end
 
 	active_window: detachable WEL_MDI_CHILD_WINDOW
@@ -77,7 +77,6 @@ feature -- Status report
 		require
 			exists: exists
 			client_window_exists: client_window.exists
-			has_active_window: has_active_window
 		do
 			Result := client_window.active_window
 		end

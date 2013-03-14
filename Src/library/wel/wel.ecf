@@ -52,13 +52,15 @@
 			</option>
 			<file_rule>
 				<exclude>/\.svn$</exclude>
+				<exclude>^/tests$</exclude>
+			</file_rule>
+			<file_rule>
 				<exclude>/dotnet$</exclude>
 				<condition>
 					<dotnet value="false"/>
 				</condition>
 			</file_rule>
 			<file_rule>
-				<exclude>/\.svn$</exclude>
 				<exclude>/classic$</exclude>
 				<condition>
 					<dotnet value="true"/>

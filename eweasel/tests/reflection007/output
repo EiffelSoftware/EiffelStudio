@@ -1,0 +1,45 @@
+Printing object:
+ attr = {TEST2} {
+   str3 = TEST3
+   int3 = 3
+   exp3 = {TEST4} {
+     str4 = TEST4
+     int4 = 4
+     exp4 = {TEST5} {
+       str5 = TEST5
+       int5 = 5
+       attr5 = {TEST6} {
+         str6 = TEST6
+         int6 = 6
+         attr6 = {TEST7} {
+           str7 = TEST7
+           int7 = 7
+           attr7 = Void
+         }
+       }
+     }
+   }
+ }
+Printing object:
+ attr = {TEST2} {
+   str3 = TEST3_modified
+   int3 = 10003
+   exp3 = {TEST4} {
+     str4 = TEST4_modified
+     int4 = 10004
+     exp4 = {TEST5} {
+       str5 = TEST5_modified
+       int5 = 10005
+       attr5 = {TEST6} {
+         str6 = TEST6_modified
+         int6 = 10006
+         attr6 = {TEST7} {
+           str7 = TEST7_modified
+           int7 = 10007
+           attr7 = Void
+         }
+       }
+     }
+   }
+ }
+Execution completed

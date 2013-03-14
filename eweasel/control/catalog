@@ -2665,6 +2665,7 @@ test	type-of-internal				reflection003 tcf pass reflection
 test	field-basic-type-inconsistency	reflection004 tcf pass reflection
 test	field-type-inconsistency		reflection005 tcf pass reflection 
 test	storable-version-data			reflection006 tcf pass reflection storable
+test	copy-semantics-reflection		reflection007 tcf pass reflection
 
 -- Tests for anchored types
 test	qat-evaluation-order			anchor001 tcf pass anchored_type

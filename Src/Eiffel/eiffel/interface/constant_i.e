@@ -434,18 +434,13 @@ feature -- Byte code generation
 
 	is_once: BOOLEAN
 			-- is the constant (implemented like) a once function ?
-		local
-			l_val: STRING_VALUE_I
 		do
-			Result := value.is_string
-			if Result then
-				l_val ?= value
+			if value.is_string then
 				check
-					l_val_not_void: l_val /= Void
+					attached {STRING_VALUE_I} value as l_val
+				then
+					Result := not l_val.is_dotnet_string
 				end
-				Result := not l_val.is_dotnet_string
-			else
-				Result := value.is_bit
 			end
 		end
 
@@ -509,7 +504,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

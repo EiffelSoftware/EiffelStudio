@@ -282,11 +282,6 @@ feature -- Roundtrip: process leaf
 
 feature
 
-	process_bit_const_as (l_as: BIT_CONST_AS)
-		do
-			safe_process (l_as.value)
-		end
-
 	process_none_id_as (l_as: NONE_ID_AS)
 			-- Process `l_as'.
 		do
@@ -1146,22 +1141,6 @@ feature
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
 			safe_process (l_as.class_name_literal)
-			safe_process (l_as.rcurly_symbol (match_list))
-		end
-
-	process_bits_as (l_as: BITS_AS)
-		do
-			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process (l_as.bit_keyword (match_list))
-			safe_process (l_as.bits_value)
-			safe_process (l_as.rcurly_symbol (match_list))
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
-		do
-			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process (l_as.bit_keyword (match_list))
-			safe_process (l_as.bits_symbol)
 			safe_process (l_as.rcurly_symbol (match_list))
 		end
 

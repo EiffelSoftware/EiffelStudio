@@ -310,9 +310,7 @@ feature {NONE} -- Visitors
 			end
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).
-			if l_target_type.is_bit then
-				ba.append (l_target_node.bit_assign_code)
-			elseif l_target_type.is_true_expanded then
+			if l_target_type.is_true_expanded then
 					-- Target is expanded: copy with possible exception
 				ba.append (l_target_node.expanded_assign_code)
 			else
@@ -346,7 +344,7 @@ feature {NONE} -- Visitors
 			else
 				l_type := context.real_type (a_node.type)
 				l_cl_type ?= a_node.context_type
-				if l_cl_type.is_basic and not l_cl_type.is_bit then
+				if l_cl_type.is_basic then
 						-- Access to `item' from basic types.
 						-- Nothing to be done since the right value is already on the stack.
 				else
@@ -579,14 +577,6 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_xor)
-		end
-
-	process_bit_const_b (a_node: BIT_CONST_B)
-			-- Process `a_node'.
-		do
-			ba.append (bc_bit)
-			ba.append_integer (a_node.value.count)
-			ba.append_bit (a_node.value)
 		end
 
 	process_bool_const_b (a_node: BOOL_CONST_B)
@@ -1681,9 +1671,7 @@ feature {NONE} -- Visitors
 					l_target_class_type.class_id = l_source_class_type.class_id
 				then
 						-- Do normal assignment.
-					if l_target_type.is_bit then
-						ba.append (a_node.target.bit_assign_code)
-					elseif l_target_type.is_basic then
+					if l_target_type.is_basic then
 						ba.append (a_node.target.assign_code)
 					else
 						ba.append (a_node.target.expanded_assign_code)
@@ -1832,9 +1820,7 @@ feature {NONE} -- Visitors
 					l_target_class_type.class_id = l_source_class_type.class_id
 				then
 						-- Do normal assignment.
-					if l_target_type.is_bit then
-						ba.append (a_node.target.bit_assign_code)
-					elseif l_target_type.is_basic then
+					if l_target_type.is_basic then
 						ba.append (a_node.target.assign_code)
 					else
 						ba.append (a_node.target.expanded_assign_code)
@@ -2345,12 +2331,6 @@ feature {NONE} -- Implementation
 				if a_node_opcode = bc_ne then
 					ba.append (bc_not)
 				end
-			elseif l_lt.is_bit and then l_rt.is_bit then
-					-- Bit equality
-				ba.append (bc_bit_standard_equal)
-				if a_node_opcode = bc_ne then
-					ba.append (bc_not)
-				end
 			elseif (l_lt.is_basic and then l_rt.is_none) or else (l_lt.is_none and then l_rt.is_basic) then
 					-- A basic type is neither Void
 				ba.append (a_node_obvious_opcode)
@@ -2442,7 +2422,7 @@ feature {NONE} -- Implementation
 					-- True is used for a query, False - for a procedure.
 				ba.append_boolean (not a_node.type.is_void)
 			end
-			l_metamorphosed := l_inst_cont_type.is_basic and then not l_inst_cont_type.is_bit
+			l_metamorphosed := l_inst_cont_type.is_basic
 				-- Note: Manu 08/08/2002: if `a_node.precursor_type' is not Void, it can only means
 				-- that we are currently performing a static access call on a feature
 				-- from a basic class. Assuming otherwise is not correct as you
@@ -2609,7 +2589,7 @@ feature -- Type information
 		do
 			r := context.real_type (t)
 			b.append_natural_32 (r.sk_value (context.context_class_type.type))
-			if r.is_true_expanded and then not r.is_bit then
+			if r.is_true_expanded then
 					-- Generate full type info.
 				t.make_full_type_byte_code (b, context.context_class_type.type)
 			end

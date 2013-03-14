@@ -127,7 +127,7 @@ io.error.put_string (feature_name)
 io.error.put_new_line
 end
 			basic_i ?= context_type
-			if basic_i /= Void and (not is_feature_special (True, basic_i) or else basic_i.is_bit) then
+			if basic_i /= Void and not is_feature_special (True, basic_i) then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

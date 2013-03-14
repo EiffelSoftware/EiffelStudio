@@ -2034,14 +2034,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS)
-		do
-			create {BITS_A} last_type.make (l_as.size)
-			if is_byte_node_enabled then
-				create {BIT_CONST_B} last_byte_node.make (l_as.value.name)
-			end
-		end
-
 	process_array_as (l_as: COMPILER_ARRAY_AS)
 		local
 			i, nb: INTEGER
@@ -4246,35 +4238,30 @@ feature {NONE} -- Implementation
 								-- Update the type stack; instantiate the result of the
 								-- refixed feature
 							l_prefix_feature_type := l_prefix_feature.type
-							if l_last_constrained.is_bit and then l_prefix_feature_type.is_like_current then
-									-- For feature prefix "not" of symbolic class BIT_REF.
-								l_prefix_feature_type := l_last_constrained
-							else
-								if l_as.is_minus then
-										-- Let's say if it is a special case the negation of a positive
-										-- value in which case we maintain the type of the expression.
-										-- E.g. -127 is of type INTEGER_8, not of type INTEGER
-										--      -128 is of type INTEGER_16, since 128 is an INTEGER_16
-										--      -511 is of type INTEGER_16, not of type INTEGER
-										--
-										-- FIXME: Manu 02/06/2004: we do not attempt here to ensure
-										-- that `-128' is of type INTEGER_8. We will have to wait for ETL3
-										-- to tell us what we need to do. The current behavior preserve
-										-- compatibility with older version of Eiffel (5.4 and earlier).
-									l_manifest ?= l_last_constrained
-									l_value ?= l_as.expr
-									if l_value /= Void and l_manifest /= Void then
-										l_prefix_feature_type := l_last_constrained
-									else
-											-- Usual case
-										l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
-														(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
-									end
+							if l_as.is_minus then
+									-- Let's say if it is a special case the negation of a positive
+									-- value in which case we maintain the type of the expression.
+									-- E.g. -127 is of type INTEGER_8, not of type INTEGER
+									--      -128 is of type INTEGER_16, since 128 is an INTEGER_16
+									--      -511 is of type INTEGER_16, not of type INTEGER
+									--
+									-- FIXME: Manu 02/06/2004: we do not attempt here to ensure
+									-- that `-128' is of type INTEGER_8. We will have to wait for ETL3
+									-- to tell us what we need to do. The current behavior preserve
+									-- compatibility with older version of Eiffel (5.4 and earlier).
+								l_manifest ?= l_last_constrained
+								l_value ?= l_as.expr
+								if l_value /= Void and l_manifest /= Void then
+									l_prefix_feature_type := l_last_constrained
 								else
 										-- Usual case
 									l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
 													(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
 								end
+							else
+									-- Usual case
+								l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
+												(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
 							end
 							if l_is_assigner_call then
 								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
@@ -4652,22 +4639,11 @@ feature {NONE} -- Implementation
 
 								-- Update the type stack: instantiate result type of the
 								-- infixed feature
-							l_infix_type := last_alias_feature.type
-							if
-								l_target_type.is_bit and then l_right_constrained.is_bit and then
-								l_infix_type.is_like_current
-							then
-									-- For non-balanced features of symbolic class BIT_REF
-									-- like infix "^" or infix "#"
-								l_infix_type := l_target_type
-							else
-									-- Usual case
-								l_infix_type := l_infix_type.formal_instantiation_in (l_target_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_left_id)
-								if l_infix_type.has_like_argument then
-									l_infix_type := l_infix_type.actual_argument_type (<<l_right_type>>)
-								end
-								l_infix_type := l_infix_type.actual_type
+							l_infix_type := last_alias_feature.type.formal_instantiation_in (l_target_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_left_id)
+							if l_infix_type.has_like_argument then
+								l_infix_type := l_infix_type.actual_argument_type (<<l_right_type>>)
 							end
+							l_infix_type := l_infix_type.actual_type
 
 							if l_is_assigner_call then
 								process_assigner_command (l_target_type, l_left_constrained, last_alias_feature)
@@ -5338,7 +5314,6 @@ feature {NONE} -- Implementation
 			l_source_type, l_target_type: TYPE_A
 			target_attribute: FEATURE_I
 			l_vjar: VJAR
-			l_vncb: VNCB
 			l_warning_count: INTEGER
 			l_reinitialized_variable: like last_reinitialized_variable
 			l_error_level: NATURAL_32
@@ -5397,23 +5372,13 @@ feature {NONE} -- Implementation
 					system.conformance_checks.nb := system.conformance_checks.nb + 1
 				end
 				if not is_type_compatible.is_compatible then
-					if l_source_type.is_bit then
-						create l_vncb
-						context.init_error (l_vncb)
-						l_vncb.set_target_name (l_as.target.access_name)
-						l_vncb.set_source_type (l_source_type)
-						l_vncb.set_target_type (l_target_type)
-						l_vncb.set_location (l_as.start_location)
-						error_handler.insert_error (l_vncb)
-					else
-						create l_vjar
-						context.init_error (l_vjar)
-						l_vjar.set_source_type (l_source_type)
-						l_vjar.set_target_type (l_target_type)
-						l_vjar.set_target_name (l_as.target.access_name)
-						l_vjar.set_location (l_as.start_location)
-						error_handler.insert_error (l_vjar)
-					end
+					create l_vjar
+					context.init_error (l_vjar)
+					l_vjar.set_source_type (l_source_type)
+					l_vjar.set_target_type (l_target_type)
+					l_vjar.set_target_name (l_as.target.access_name)
+					l_vjar.set_location (l_as.start_location)
+					error_handler.insert_error (l_vjar)
 				elseif
 					attached target_attribute and then
 					target_attribute.is_stable and then
@@ -7534,16 +7499,6 @@ feature {NONE} -- Implementation
 		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS)
-		do
-			check_type (l_as)
-		end
-
-	process_bits_as (l_as: BITS_AS)
-		do
-			check_type (l_as)
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 			check_type (l_as)
 		end

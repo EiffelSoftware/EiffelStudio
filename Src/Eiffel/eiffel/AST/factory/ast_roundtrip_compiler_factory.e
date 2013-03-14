@@ -21,7 +21,6 @@ inherit
 			new_integer_octal_as,
 			new_integer_binary_as,
 			new_feature_as,
-			new_bits_as,
 			new_class_as,
 			new_class_type_as,
 			set_expanded_class_type,
@@ -66,7 +65,6 @@ inherit
 			new_integer_octal_as,
 			new_integer_binary_as,
 			new_real_as,
-			new_filled_bit_id_as,
 			new_string_as,
 			new_verbatim_string_as,
 			append_character_to_buffer,
@@ -136,7 +134,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

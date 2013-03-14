@@ -618,7 +618,6 @@ feature -- Byte code generation
 			i, nb: INTEGER
 			l_type, l_adapted_type: TYPE_A;
 			local_list: ARRAYED_LIST [TYPE_A]
-			bit_i: BITS_A
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 			r_id: INTEGER
@@ -800,11 +799,7 @@ feature -- Byte code generation
 				loop
 					l_type := arguments.item (i)
 					l_adapted_type := context.real_type (l_type)
-					if l_adapted_type.is_bit then
-						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.bit_tuple_code_extension)
-						bit_i ?= l_adapted_type
-						Temp_byte_code_array.append_natural_32 (bit_i.bit_count)
-					elseif l_adapted_type.is_true_expanded then
+					if l_adapted_type.is_true_expanded then
 						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.expanded_tuple_code_extension)
 						l_type.make_full_type_byte_code (Temp_byte_code_array, context.context_class_type.type)
 					else
@@ -815,7 +810,7 @@ feature -- Byte code generation
 			end
 
 			l_adapted_type := context.real_type(result_type)
-			if l_adapted_type.is_true_expanded and then not l_adapted_type.is_bit then
+			if l_adapted_type.is_true_expanded then
 					-- Generate full type info.
 				result_type.make_full_type_byte_code (Temp_byte_code_array, context.context_class_type.type)
 			end
@@ -1062,7 +1057,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

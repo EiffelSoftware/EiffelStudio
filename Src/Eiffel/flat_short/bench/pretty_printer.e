@@ -136,8 +136,6 @@ inherit
 			process_create_creation_expr_as,
 
 			-- Types
-			process_bits_as,
-			process_bits_symbol_as,
 			process_class_type_as,
 			process_generic_class_type_as,
 			process_formal_as,
@@ -1618,24 +1616,6 @@ feature {CLASS_AS} -- Calls
 		end
 
 feature {CLASS_AS} -- Types
-
-	process_bits_as (l_as: BITS_AS)
-			-- Process BIT type `l_as'.
-		do
-			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process (l_as.bit_keyword (match_list))
-			safe_process_and_print (l_as.bits_value, " ", "")
-			safe_process (l_as.rcurly_symbol (match_list))
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
-			-- Process bit symbol `l_as'.
-		do
-			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process (l_as.bit_keyword (match_list))
-			safe_process_and_print (l_as.bits_symbol, " ", "")
-			safe_process (l_as.rcurly_symbol (match_list))
-		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 			-- Process class type `l_as'.

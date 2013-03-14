@@ -287,7 +287,7 @@ feature {NONE} -- C code generation
 					item_print_register (expr, target_type)
 						-- Generation of the RTAR protection
 						-- if the array contains references
-					if target_type.is_reference or target_type.is_bit then
+					if target_type.is_reference then
 						buf.put_character (';');
 						buf.put_new_line
 						buf.put_string ("RTAR(");
@@ -429,7 +429,7 @@ feature {NONE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -47,19 +47,6 @@ feature {NONE} -- Implementation
 
 feature {TYPE_A} -- Visitors
 
-	process_bits_a (a_type: BITS_A)
-			-- Process `a_type'.
-		do
-			ctxt.process_string_text ("BIT ", Void)
-			ctxt.process_string_text (a_type.bit_count.out, Void)
-		end
-
-	process_bits_symbol_a (a_type: BITS_SYMBOL_A)
-			-- Process `a_type'.
-		do
-			process_bits_a (a_type)
-		end
-
 	process_boolean_a (a_type: BOOLEAN_A)
 			-- Process `a_type'.
 		do
@@ -206,12 +193,6 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
-		end
-
-	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A)
-			-- Process `a_type'.
-		do
-			ctxt.process_string_text (a_type.dump, Void)
 		end
 
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)

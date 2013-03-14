@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 			real_32_class_c := class_c_from_class_i (sys.real_32_class)
 			real_64_class_c := class_c_from_class_i (sys.real_64_class)
 			pointer_class_c := class_c_from_class_i (sys.Pointer_class)
-			bit_class_c := class_c_from_class_i (sys.Bit_class)
 			system_object_class_c := class_c_from_class_i (sys.system_object_class)
 			system_string_class_c := class_c_from_class_i (sys.system_string_class)
 			native_array_class_c := class_c_from_class_i (sys.native_array_class)
@@ -92,7 +91,6 @@ feature -- Access
 	real_32_class_c,
 	real_64_class_c,
 	pointer_class_c,
-	bit_class_c,
 	exception_class_c,
 	assertion_violation_class_c,
 	exception_manager_class_c: detachable CLASS_C
@@ -167,7 +165,7 @@ feature {NONE} -- Once per object
 	opo_ise_runtime_class_c: like ise_runtime_class_c
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

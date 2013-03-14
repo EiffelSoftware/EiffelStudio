@@ -66,7 +66,7 @@ feature -- Processing
 
 				-- We do not record various type declaration of BIT x
 				-- as we only need the one from BIT_REF.
-			if type_i /= Void and then not type_i.is_bit then
+			if type_i /= Void then
 					-- Check if it is a data or a filter
 				if type_i.is_loose then
 						-- It is a filter: the insertion list is the filter
@@ -366,7 +366,7 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

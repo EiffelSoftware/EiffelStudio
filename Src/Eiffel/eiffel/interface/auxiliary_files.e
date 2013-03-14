@@ -958,13 +958,6 @@ feature -- Plug and Makefile file
 			end
 			buffer.put_string (";%N")
 
-				-- Dynamic type of class BIT_REF
-			if attached system.bit_class as c and then c.is_compiled then
-				buffer.put_string ("%Tegc_bit_dtype = ")
-				buffer.put_type_id (c.compiled_class.types.first.type_id)
-				buffer.put_string (";%N")
-			end
-
 			special_cl ?= System.special_class.compiled_class
 			special_cl.generate_dynamic_types (buffer)
 			generate_dynamic_ref_type (buffer)

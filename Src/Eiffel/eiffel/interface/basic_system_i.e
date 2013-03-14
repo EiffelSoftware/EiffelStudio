@@ -60,9 +60,6 @@ feature -- Access
 	special_class, native_array_class: CLASS_I
 			-- Class SPECIAL and NATIVE_ARRAY
 
-	bit_class: detachable CLASS_I
-			-- Class BIT_REF
-
 	disposable_class: CLASS_I
 			-- Class DISPOSABLE
 
@@ -724,17 +721,6 @@ feature -- Settings
 			typed_pointer_class_set: typed_pointer_class = c
 		end
 
-	set_bit_class (c: CLASS_I)
-			-- Assign `c' to `bit_class'.
-		require
-			c_not_void: c /= Void
-		do
-			c.set_as_basic_class
-			bit_class := c
-		ensure
-			bit_class_set: bit_class = c
-		end
-
 	set_disposable_class (c: CLASS_I)
 			-- Assign `c' to `disposable_class'.
 		require
@@ -978,7 +964,7 @@ feature -- Settings: Exception
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

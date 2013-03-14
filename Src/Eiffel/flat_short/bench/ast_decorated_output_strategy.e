@@ -617,18 +617,6 @@ feature {NONE} -- Implementation
 			last_type := Boolean_type
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS)
-		local
-			l_text_formatter_decorator: like text_formatter_decorator
-		do
-			if not expr_type_visiting then
-				l_text_formatter_decorator := text_formatter_decorator
-				l_text_formatter_decorator.process_string_text (l_as.value.name_32, Void)
-				l_text_formatter_decorator.process_string_text ("B", Void)
-			end
-			create {BITS_A} last_type.make (l_as.size)
-		end
-
 	process_array_as (l_as: COMPILER_ARRAY_AS)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
@@ -3689,16 +3677,6 @@ feature {NONE} -- Implementation
 			process_type_as (l_as)
 		end
 
-	process_bits_as (l_as: BITS_AS)
-		do
-			process_type_as (l_as)
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
-		do
-			process_type_as (l_as)
-		end
-
 	process_rename_as (l_as: RENAME_AS)
 		local
 			l_last_parent: like last_parent
@@ -4805,7 +4783,7 @@ feature {NONE} -- Implementation: helpers
 			if not has_error_internal then
 				-- If `source_feature' is Void, it means that we are outside of
 				-- a feature, and therefore `l_type' must be valid because it should
-				-- not have any anchors or bit symbols in `a_type'.
+				-- not have any anchors in `a_type'.
 				if source_feature /= Void then
 						-- Perform simple update of TYPE_A in context of `source_class'.
 					type_a_checker.init_with_feature_table (source_feature, source_class.feature_table, Void)

@@ -68,7 +68,6 @@ feature -- Byte code generation
 			ba_not_void: ba /= Void
 		local
 			gen_param: TYPE_A
-			l_bit: BITS_A
 			l_param_is_expanded: BOOLEAN
 			final_mode: BOOLEAN
 		do
@@ -78,17 +77,12 @@ feature -- Byte code generation
 
 			ba.append_boolean (not gen_param.is_expanded)
 			ba.append_boolean (gen_param.is_basic)
-			ba.append_boolean (gen_param.is_bit)
+			ba.append_boolean (False)
 			ba.append_boolean (l_param_is_expanded)
 			if l_param_is_expanded then
 				ba.append_short_integer (gen_param.static_type_id (Void) - 1)
 			else
 				ba.append_natural_32 (gen_param.sk_value (Void))
-			end
-			if gen_param.is_bit then
-					-- Initialize array of bits with default values
-				l_bit ?= gen_param
-				ba.append_natural_32 (l_bit.bit_count)
 			end
 		end
 
@@ -106,7 +100,6 @@ feature -- C code generation
 			gen_param: TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			l_exp_has_references: BOOLEAN
-			l_bit: BITS_A
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			final_mode: BOOLEAN
@@ -143,7 +136,7 @@ feature -- C code generation
 			buffer.put_string (" = RTLNSP2(eif_non_attached_type(")
 			info.generate_type_id (buffer, final_mode, 0)
 			buffer.put_two_character (')', ',')
-			if not gen_param.is_expanded or else l_exp_has_references or else gen_param.is_bit then
+			if not gen_param.is_expanded or else l_exp_has_references then
 				buffer.put_string ("EO_REF")
 				if l_param_is_expanded then
 					buffer.put_string (" | EO_COMP")
@@ -189,40 +182,6 @@ feature -- C code generation
 				target_register.print_register
 				buffer.put_three_character (')', ' ', '=')
 				buffer.put_three_character (' ', '0', ';')
-			end
-
-			if gen_param.is_bit and not a_make_filled then
-					-- Initialize array of bits with default values
-				shared_include_queue_put (Names_heap.eif_plug_header_name_id)
-				l_bit ?= gen_param
-				buffer.put_new_line
-				buffer.put_character ('{')
-				buffer.indent
-				buffer.put_new_line
-				buffer.put_string ("EIF_INTEGER_32 i;")
-				buffer.put_new_line
-				buffer.put_string ("for (i = 0; i < ")
-				nb_register.print_immediate_register
-				buffer.put_string ("; i++) {")
-				buffer.put_new_line
-				buffer.indent
-				buffer.put_string ("*((EIF_REFERENCE *) ")
-				target_register.print_register
-				buffer.put_string (" + i) = RTLB(")
-				buffer.put_natural_32 (l_bit.bit_count)
-				buffer.put_string (");")
-				buffer.put_new_line
-				buffer.put_string ("RTAR(")
-				target_register.print_register
-				buffer.put_string (", *((EIF_REFERENCE *) ")
-				target_register.print_register
-				buffer.put_string (" + i));")
-				buffer.put_new_line
-				buffer.exdent
-				buffer.put_character ('}')
-				buffer.put_new_line
-				buffer.exdent
-				buffer.put_character ('}')
 			end
 		end
 
@@ -1754,7 +1713,7 @@ feature -- IL code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -193,10 +193,6 @@ feature -- Access
 							check realis_64: l_real.is_real_64 end
 						end
 					end
-				elseif a_value_i.is_bit then
---					if {l_bit: BIT_VALUE_I} a_value_i then
---						create {DEBUG_BASIC_VALUE[BITS]} Result.make ({SK_CONST}.sk_bits, l_bit.bit_value)
---					end
 				end
 			end
 		end
@@ -739,7 +735,7 @@ invariant
 	dbg_handler_attached: dbg_error_handler /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

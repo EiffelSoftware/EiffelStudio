@@ -79,7 +79,7 @@ feature
 		do
 			if context_type.is_basic and then
 				attached {BASIC_A} context_type as basic_i and then
-				(not is_feature_special (True, basic_i) or else basic_i.is_bit)
+				not is_feature_special (True, basic_i)
 			then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of

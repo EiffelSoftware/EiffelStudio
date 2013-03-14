@@ -93,7 +93,7 @@ feature -- C code generation
 			l_type: TYPE_A
 		do
 			l_type := real_type (expr.type)
-			if l_type.is_basic and not l_type.is_bit then
+			if l_type.is_basic then
 				buf := buffer
 				if expr.is_predefined or expr.is_attribute then
 					l_type.c_type.generate_access_cast (buf)
@@ -118,7 +118,7 @@ feature -- C code generation
 			l_type: TYPE_A
 		do
 			l_type := real_type (expr.type)
-			if (l_type.is_basic and not l_type.is_bit) and (expr.is_predefined or expr.is_attribute) then
+			if l_type.is_basic and (expr.is_predefined or expr.is_attribute) then
 					-- We don't need to do anything now,
 					-- `generate_parameters_list' from EXTERNAL_B(L/W)
 					-- will generate the access on the attribute

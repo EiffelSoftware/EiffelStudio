@@ -69,13 +69,9 @@ feature {COMPILER_EXPORTER} -- Setting
 		require
 			a_const_not_void: a_const /= Void
 		local
-			bit_value: BIT_VALUE_I
 			l_int: INTEGER_CONSTANT
 		do
-			if a_const.is_bit then
-				bit_value ?= a_const
-				create {BITS_A} constant_type.make (bit_value.bit_count)
-			elseif a_const.is_boolean then
+			if a_const.is_boolean then
 				constant_type := Boolean_type
 			elseif a_const.is_character then
 				constant_type := Character_type
@@ -109,7 +105,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

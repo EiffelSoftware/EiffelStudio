@@ -443,7 +443,7 @@ feature -- Element Change
 		do
 			result_type := type.adapted_in (class_type)
 
-			if not result_type.is_true_expanded and then not result_type.is_bit then
+			if not result_type.is_true_expanded then
 				buffer.put_character ('*')
 				result_type.c_type.generate_access_cast (buffer)
 			else
@@ -610,7 +610,7 @@ feature -- Element Change
 					-- Local count
 				ba.append_short_integer (0)
 					-- Precise result type (if required)
-				if result_type.is_true_expanded and then not result_type.is_bit then
+				if result_type.is_true_expanded then
 						-- Generate full type info.
 					type.make_full_type_byte_code (ba, l_byte_context.context_class_type.type)
 				end
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -51,7 +51,7 @@ feature -- Access
 			valid_feature_name_id: feature_name_id > 0
 			target_type_not_void: target_type /= Void
 		do
-			Result := (target_type.is_basic and not target_type.is_bit) or else target_type.is_enum
+			Result := target_type.is_basic or else target_type.is_enum
 
 			if Result then
 				inspect
@@ -858,7 +858,6 @@ feature {NONE} -- Type information
 			-- Returns corresponding type constants to `t'.
 		require
 			t_not_void: t /= Void
-			t_not_bit: not t.is_bit
 		local
 			l_typed_pointer: TYPED_POINTER_A
 		do
@@ -905,7 +904,7 @@ invariant
 	il_generation: System.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -50,7 +50,6 @@ feature -- Status report
 			if
 				not t.is_like_argument and then
 				not t.is_void and then
-				not attached {UNEVALUATED_BITS_SYMBOL_A} t and then
 				not attached {UNEVALUATED_LIKE_TYPE} t and then
 				not attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} t
 			then
@@ -198,18 +197,6 @@ feature -- Search
 		end
 
 feature {TYPE_A} -- Visitor
-
-	process_bits_a (t: BITS_A)
-			-- <Precursor>
-		do
-			process_cl_type_a (t)
-		end
-
-	process_bits_symbol_a (t: BITS_SYMBOL_A)
-			-- <Precursor>
-		do
-			process_cl_type_a (t)
-		end
 
 	process_boolean_a (t: BOOLEAN_A)
 			-- <Precursor>
@@ -381,12 +368,6 @@ feature {TYPE_A} -- Visitor
 			process_cl_type_a (t)
 		end
 
-	process_unevaluated_bits_symbol_a (t: UNEVALUATED_BITS_SYMBOL_A)
-			-- <Precursor>
-		do
-			check valid_t: False end
-		end
-
 	process_unevaluated_like_type (t: UNEVALUATED_LIKE_TYPE)
 			-- <Precursor>
 		do
@@ -406,7 +387,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

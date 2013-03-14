@@ -83,7 +83,7 @@ feature -- C code generation
 			is_nested := not is_first;
 			type_i := real_type (type);
 			type_c := type_i.c_type;
-			if not type_i.is_true_expanded and then not type_c.is_bit then
+			if not type_i.is_true_expanded then
 					-- For dereferencing, we need a star...
 				buf.put_character ('*');
 					-- ...followed by the appropriate access cast
@@ -169,7 +169,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

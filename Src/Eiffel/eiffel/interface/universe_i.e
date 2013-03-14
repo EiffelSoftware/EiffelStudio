@@ -692,9 +692,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_exceptions.put ("RT_EXTENSION")
 			l_actions.put (agent l_system.set_rt_extension_class, "RT_EXTENSION")
 
-				-- BIT class
-			l_exceptions.put ("BIT_REF")
-			l_actions.put (agent l_system.set_bit_class, "BIT_REF")
 				-- XX_REF classes
 			l_actions.put (agent l_system.set_boolean_ref_class, "BOOLEAN_REF")
 			l_actions.put (agent l_system.set_character_ref_class (?, 8), "CHARACTER_8_REF")

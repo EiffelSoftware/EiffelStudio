@@ -131,12 +131,6 @@ feature -- Access
 			Result := System.special_class
 		end;
 
-	Bit_class: detachable CLASS_I
-			-- Class BIT_REF
-		do
-			Result := System.bit_class
-		end
-
 	number_of_classes: INTEGER
 			-- Number of compiled classes in the system
 		do
@@ -243,7 +237,7 @@ invariant
 	sub_clusters_exists: sub_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

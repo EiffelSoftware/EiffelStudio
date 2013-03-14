@@ -4362,7 +4362,7 @@ feature -- Object creation
 					create_generic_object (a_type.implementation_id (current_class_type.type))
 				end
 			end
-			if a_type.is_expanded and not a_type.is_bit then
+			if a_type.is_expanded then
 					-- Box expanded object.
 				generate_metamorphose (a_type)
 			end
@@ -4729,7 +4729,7 @@ feature -- Variables access
 				-- through the `set_item' routine.
 
 			l_cl_type ?= a_type
-			l_is_basic := l_cl_type.is_basic and not l_cl_type.is_bit
+			l_is_basic := l_cl_type.is_basic
 
 			if l_is_basic then
 					-- Assign value to a temporary local variable.

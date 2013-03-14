@@ -235,7 +235,7 @@ feature -- Analyzis
 				-- If result is expanded or a bit, we need to create it anyway
 			if not result_type.is_void then
 				type_i := l_context.real_type (result_type)
-				if type_i.is_true_expanded or else type_i.is_bit then
+				if type_i.is_true_expanded then
 					l_context.mark_result_used
 				else
 					l_context.analyze_external_result
@@ -955,12 +955,6 @@ end
 							l_class_type := type_i.associated_class_type (context.context_cl_type)
 							l_name := local_var.register_name
 							l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
-						elseif type_i.is_bit then
-							local_var.set_position (i)
-							l_buffer.put_string (local_var.register_name)
-							l_buffer.put_three_character (' ', '=', ' ')
-							type_i.c_type.generate_default_value (l_buffer)
-							l_buffer.put_two_character (';', '%N')
 						end
 					end
 					i := i + 1
@@ -978,11 +972,6 @@ end
 						l_class_type.generate_expanded_creation (l_buffer, l_name, result_type, context.context_class_type)
 						l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
 					end
-				elseif type_i.is_bit then
-					l_buffer.put_string (context.result_register.register_name)
-					l_buffer.put_three_character (' ', '=', ' ')
-					type_i.c_type.generate_default_value (l_buffer)
-					l_buffer.put_two_character (';', '%N')
 				end
 			end
 		end
@@ -2127,7 +2116,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

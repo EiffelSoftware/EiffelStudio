@@ -1,7 +1,0 @@
-A class creates an ARRAY [BIT 32] and fills it with elements of type
-BIT 32.  Executing the system results in a run-time panic if the size
-of the array is big enough (approximately 4500), but only if garbage
-collection is on.  If garbage collection is off, a 500_000 element
-array works fine.
-
-Discovered in Release 3.2.4.

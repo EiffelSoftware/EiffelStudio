@@ -1,6 +1,0 @@
-Finalizing a particular system with a couple of levels of expanded
-types which are generic and using `BIT 8' as actual generic at the top
-level generates C code which produces the wrong output.  If the system
-is instead melted or frozen, system execution works as expected.
-
-Discovered in Release 3.2.4.

@@ -1,6 +1,0 @@
-After initial compilation, the value of a constant integer attribute
-is changed and the system is recompiled.  System execution should
-print a longer bit string, but it does not.
-
-Discovered in Prerelease 93.07.15.
-

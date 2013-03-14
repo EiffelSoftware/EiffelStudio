@@ -1,8 +1,0 @@
-A class calls a function which takes an argument of type `ARRAY [BIT
-500]', passing as actual argument a manifest array of bit constants
-which are each only 1 bit long.  After initial compilation where the
-system is frozen, the return type of the function is changed from `BIT
-2000' to `BIT 2100' and changes are melted.  System execution then
-ends with a "bit copy panic (void source)" run-time panic.
-
-Discovered in Release 3.2.4.

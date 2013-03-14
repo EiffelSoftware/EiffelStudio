@@ -1,6 +1,0 @@
-When an inherited constant integer attribute used as the number of
-bits in a BIT type is changed to a function with no arguments, the
-compiler does not detect the newly introduced VTBT error if the
-modified class is not an immediate ancestor.
-
-Discovered in Release 3.2.1.

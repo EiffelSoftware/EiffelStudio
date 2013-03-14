@@ -1,8 +1,0 @@
-A system which seems to be correct concatenates and prints the BIT
-constants of a manifest array many times, but eventually dies with a
-run-time panic.  Also, the values printed are incorrect (all zeroes).
-Modifying the concatenation routine (causing melting) and re-executing
-the system yields correct output, but the panic still occurs.
-
-Discovered in Prerelease 93.05.17.
-

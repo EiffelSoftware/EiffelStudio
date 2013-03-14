@@ -1,8 +1,0 @@
-After initial compilation, a constant integer attribute referenced in
-a BIT type which is the return type of a function is given a different
-(larger) value.  After recompilation, the function should return a
-larger BIT type during system execution but it does not.  The initial
-compilation and recompilation can each be either a melt or a freeze -
-the problem occurs regardless.
-
-Discovered in Release 3.2.2.

@@ -1,9 +1,0 @@
-A class has pattern of creation of small STRINGs guided by a random
-number generator.  It also has an attribute which is a BIT_REF and it
-calls deep_clone on the current object after each STRING creation.
-The system compiles fine with `assertion (all)', but violates
-postcondition `deep_equal' of routine `deep_clone' when it is
-executed.
-
-Discovered in Release 3.2.2.
-

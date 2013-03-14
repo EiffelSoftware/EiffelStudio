@@ -64,8 +64,6 @@ feature -- Generic
 				character_value_append_type_and_value (character_value (v), st)
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.character_32_value_id then
 				character_32_value_append_type_and_value (character_32_value (v), st)
-			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.bits_value_id then
-				bits_value_append_type_and_value (bits_value (v), st)
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.dummy_message_debug_value_id then
 				dummy_message_debug_value_append_type_and_value (dummy_message_debug_value (v), st)
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.debug_basic_value_id then
@@ -720,18 +718,6 @@ feature {NONE} -- append_type_and_value implementation
 			st.add_char ('%'')
 		end
 
-	bits_value_append_type_and_value (v: BITS_VALUE; st: TEXT_FORMATTER)
-		local
-			val: STRING
-		do
-			st.add_classi (v.dynamic_class.lace_class, "BIT");
-			st.add (Space_str);
-			val := v.value
-			st.add_int (val.count - 1);
-			st.add (Equal_sign_str);
-			st.add (val)
-		end
-
 	dummy_message_debug_value_append_type_and_value (v: DUMMY_MESSAGE_DEBUG_VALUE; st: TEXT_FORMATTER)
 		local
 			s: STRING_GENERAL
@@ -785,10 +771,6 @@ feature {NONE} -- Conversion
 			Result ?= v
 		end
 	character_32_value (v: ABSTRACT_DEBUG_VALUE): CHARACTER_32_VALUE
-		do
-			Result ?= v
-		end
-	bits_value (v: ABSTRACT_DEBUG_VALUE): BITS_VALUE
 		do
 			Result ?= v
 		end

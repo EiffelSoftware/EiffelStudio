@@ -67,10 +67,6 @@ feature -- Access
 	sk_int64_string: STRING = "SK_INT64"
 			-- Defined in eif_struct.h as SK_INT64
 
-	sk_bit: NATURAL_32 = 0x28000000
-	sk_bit_string: STRING = "SK_BIT"
-			-- Defined in eif_struct.h as SK_BIT
-
 	sk_pointer: NATURAL_32 = 0x40000000
 	sk_pointer_string: STRING = "SK_POINTER"
 			-- Defined in eif_struct.h as SK_POINTER
@@ -97,7 +93,7 @@ feature -- Access
 	--| -----------------------------
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

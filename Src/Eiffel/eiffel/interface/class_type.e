@@ -1100,7 +1100,7 @@ feature -- Generation
 			-- Does the class type need an initialization routine ?
 			--| i.e has the skeleton a bit or an expanded attribute at least ?
 		do
-			skeleton.go_bits
+			skeleton.go_expanded
 			Result := not skeleton.after
 		end
 
@@ -1115,13 +1115,12 @@ feature -- Generation
 			i, nb_ref, position: INTEGER
 			exp_desc: EXPANDED_DESC
 			c_name: STRING
-			bits_desc: BITS_DESC
 			value: INTEGER
 			l_create_info: CREATE_INFO
 		do
 			c_name := Encoder.feature_name (type_id, Initialization_body_index)
 			nb_ref := skeleton.nb_reference
-			skeleton.go_bits
+			skeleton.go_expanded
 				-- There are some expandeds here...
 				-- Generate a procedure which will be in charge of all the
 				-- initialisation bulk.
@@ -1141,31 +1140,6 @@ feature -- Generation
 			buffer.put_local_registration (1, "parent")
 				-- Separation for formatting
 			buffer.put_new_line
-			from
-			until
-				skeleton.after or else not skeleton.item.is_bits
-			loop
-					--| In this instruction and in the followings, we put `False' as second
-					--| arguments. This means we won't generate anything if there is nothing
-					--| to generate. Remember that `True' is used in the generation of attributes
-					--| table in Final mode.
-				buffer.put_new_line
-				buffer.put_string ("offset_position = ");
-				skeleton.generate (buffer, False, True)
-				buffer.put_character (';')
-					-- Initialize dynamic type of the bit attribute
-				buffer.put_new_line
-				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
-				buffer.put_new_line
-				buffer.put_string ("RT_DFS(HEADER(Current + offset_position), egc_bit_dtype);")
-				buffer.put_new_line
-				bits_desc ?= skeleton.item; 	-- Cannot fail
-				buffer.put_string ("*(uint32 *) (Current + offset_position")
-				buffer.put_string(") = ")
-				buffer.put_natural_32 (bits_desc.size)
-				buffer.put_character (';')
-				skeleton.forth
-			end
 				-- Current class type is composite
 			buffer.put_new_line
 			buffer.put_string ("HEADER(Current)->ov_flags |= EO_COMP;")

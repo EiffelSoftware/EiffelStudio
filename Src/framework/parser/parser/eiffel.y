@@ -38,7 +38,7 @@ create
 %left		TE_DOT
 %right		TE_LPARAN
 
-%token <detachable ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
+%token <detachable ID_AS> TE_FREE TE_ID TE_TUPLE
 %token TE_INTEGER
 %token TE_REAL
 %token <detachable CHAR_AS>		TE_CHAR
@@ -72,7 +72,7 @@ create
 %token <detachable KEYWORD_AS> TE_PREFIX
 
 %token <detachable KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
-%token <detachable KEYWORD_AS> TE_BIT TE_CHECK TE_CLASS TE_CONVERT
+%token <detachable KEYWORD_AS> TE_CHECK TE_CLASS TE_CONVERT
 %token <detachable KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
 %token <detachable KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
 %token <detachable KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INHERIT
@@ -112,7 +112,6 @@ create
 %type <detachable ASSIGNER_CALL_AS>	Assigner_call
 %type <detachable ATOMIC_AS>			Index_value Manifest_constant Expression_constant Manifest_value
 %type <detachable BINARY_AS>			Qualified_binary_expression
-%type <detachable BIT_CONST_AS>		Bit_constant
 %type <detachable BODY_AS>				Declaration_body
 %type <detachable BOOL_AS>				Boolean_constant
 %type <detachable CALL_AS>				Call Remote_call Qualified_call
@@ -212,7 +211,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 349
+%expect 345
 
 %%
 
@@ -1752,10 +1751,6 @@ Obsolete_type: TE_EXPANDED Unmarked_class_type
 						once "Make an expanded version of the base class associated with this type."))
 				end
 			}
-	|	TE_BIT Integer_constant
-			{ $$ := new_bits ($2, $1) }
-	|	TE_BIT Identifier_as_lower
-			{ $$ := new_bits_symbol ($2, $1) }
 	|	TE_BANG Unmarked_unqualified_anchored_type
 			{
 				$$ := $2
@@ -3169,8 +3164,6 @@ Manifest_value: Boolean_constant
 			{ $$ := $1 }
 	|	Nosigned_real
 			{ $$ := $1 }
-	|	Bit_constant
-			{ $$ := $1 }
 	|	Default_manifest_string
 			{ $$ := $1 }
 	;
@@ -3183,8 +3176,6 @@ Manifest_constant: Boolean_constant
 	|	Integer_constant
 			{ $$ := $1 }
 	|	Real_constant
-			{ $$ := $1 }
-	|	Bit_constant
 			{ $$ := $1 }
 	|	Manifest_string
 			{ $$ := $1 }
@@ -3203,8 +3194,6 @@ Expression_constant:
 	|	Typed_signed_real
 			{ $$ := $1 }
 	|	Character_constant
-			{ $$ := $1 }
-	|	Bit_constant
 			{ $$ := $1 }
 	|	Manifest_string
 			{ $$ := $1 }
@@ -3328,13 +3317,6 @@ Typed_signed_real: Typed TE_PLUS TE_REAL
 			{
 				$$ := ast_factory.new_real_value (Current, True, '-', $1, token_buffer, $2)
 			}
-	;
-
---###################################################################
---# Bit constants
---###################################################################
-Bit_constant: TE_A_BIT
-			{ $$ := new_bit_const ($1) }
 	;
 
 --###################################################################

@@ -67,28 +67,6 @@ feature -- Access
 
 feature {TYPE_A} -- Visitors
 
-	process_bits_a (a_type: BITS_A)
-			-- Process `a_type'.
-		do
-			text_formatter.process_keyword_text (ti_bit_class, Void)
-			text_formatter.add_space
-			text_formatter.add_natural_32 (a_type.bit_count)
-		end
-
-	process_bits_symbol_a (a_type: BITS_SYMBOL_A)
-			-- Process `a_type'.
-		local
-			l_feat : E_FEATURE
-		do
-			text_formatter.process_keyword_text (ti_bit_class, Void)
-			text_formatter.add_space
-			l_feat := current_class.feature_with_rout_id (a_type.rout_id)
-			check
-				l_feat_not_void: l_feat /= Void
-			end
-			text_formatter.process_feature_text (l_feat.name_32, l_feat, False)
-		end
-
 	process_boolean_a (a_type: BOOLEAN_A)
 			-- Process `a_type'.
 		do
@@ -333,14 +311,6 @@ feature {TYPE_A} -- Visitors
 			process_gen_type_a (a_type)
 		end
 
-	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A)
-			-- Process `a_type'.
-		do
-			text_formatter.process_keyword_text (ti_bit_class, Void)
-			text_formatter.add_space
-			text_formatter.add (a_type.symbol)
-		end
-
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
@@ -404,7 +374,7 @@ feature {NONE} -- Generic visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

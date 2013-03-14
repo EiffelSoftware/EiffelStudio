@@ -19,7 +19,6 @@ inherit
 			process_tuple_as,
 			process_real_as,
 			process_bool_as,
-			process_bit_const_as,
 			process_array_as,
 			process_char_as,
 			process_string_as,
@@ -112,8 +111,6 @@ inherit
 			process_generic_class_type_as,
 			process_named_tuple_type_as,
 			process_none_type_as,
-			process_bits_as,
-			process_bits_symbol_as,
 			process_rename_as,
 			process_invariant_as,
 			process_interval_as,
@@ -487,11 +484,6 @@ feature {NONE} -- Implementation
 	process_bool_as (l_as: BOOL_AS)
 		do
 			last_type := Boolean_type
-		end
-
-	process_bit_const_as (l_as: BIT_CONST_AS)
-		do
-			create {BITS_A} last_type.make (l_as.size)
 		end
 
 	process_array_as (l_as: COMPILER_ARRAY_AS)
@@ -1858,16 +1850,6 @@ feature {NONE} -- Implementation
 		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS)
-		do
-			process_type_as (l_as)
-		end
-
-	process_bits_as (l_as: BITS_AS)
-		do
-			process_type_as (l_as)
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 			process_type_as (l_as)
 		end

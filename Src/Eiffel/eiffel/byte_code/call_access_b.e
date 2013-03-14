@@ -108,7 +108,7 @@ feature -- Byte code generation
 			gen: GEN_TYPE_A
 		do
 			if precursor_type = Void then
-				if a_context_type.is_basic and then not a_context_type.is_bit then
+				if a_context_type.is_basic then
 						-- We perform a non-optimized call on a basic type.
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
@@ -176,7 +176,7 @@ feature -- Byte code generation
 				-- cannot seriously inherit from a basic class.
 			if type_i.is_basic and then precursor_type = Void then
 				basic_type ?= type_i
-				if basic_type.is_bit or else not is_feature_special (True, basic_type) then
+				if not is_feature_special (True, basic_type) then
 					buf := buffer
 					class_type := basic_type.reference_type
 						-- If an invariant is to be checked however, the
@@ -287,7 +287,7 @@ feature -- Byte code generation
 				-- cannot seriously inherit from a basic class.
 			if type_i.is_basic and then precursor_type = Void then
 				basic_type ?= type_i
-				if not basic_type.is_bit and then is_feature_special (True, basic_type) then
+				if is_feature_special (True, basic_type) then
 					generate_special_feature (reg, basic_type)
 				else
 					buf := buffer
@@ -358,7 +358,6 @@ feature -- Byte code generation
 			l_return_type := class_type.base_class.feature_of_rout_id (routine_id).type
 			if
 				not l_target_type.is_void and then l_target_type.is_expanded and then
-				not l_target_type.is_bit and then
 				(l_return_type.is_reference or l_return_type.is_like_current)
 			then
 					-- Result of a basic type is expected.
@@ -675,7 +674,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

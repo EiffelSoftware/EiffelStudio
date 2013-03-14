@@ -45,7 +45,6 @@ inherit
 			new_integer_octal_as,
 			new_integer_binary_as,
 			new_real_as,
-			new_filled_bit_id_as,
 			new_string_as,
 			new_verbatim_string_as,
 			new_bin_and_then_as,
@@ -242,16 +241,6 @@ feature -- Leaf nodes
 			create Result.initialize (l_str)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 			Result.set_index (a_index)
-		end
-
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
-			-- New empty ID AST node.
-		do
-			Result := Precursor (a_scn)
-			increase_match_list_count
-			if Result /= Void then
-				Result.set_index (match_list_count)
-			end
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS

@@ -267,8 +267,6 @@ feature {NONE} -- Implementation
 						create {DEBUG_BASIC_VALUE [DOUBLE]} attr.make_attribute (sk_type, attr_name, e_class, to_real_64 (c_tread))
 					when Sk_pointer then
 						create {DEBUG_BASIC_VALUE [POINTER]} attr.make_attribute (sk_type, attr_name, e_class, to_pointer (c_tread))
-					when Sk_bit then
-						create {BITS_VALUE} attr.make_attribute (attr_name, e_class, c_tread)
 					when Sk_exp then
 						-- Get type id
 						type_id := to_integer_32 (c_tread) + 1;

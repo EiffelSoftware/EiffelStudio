@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 					-- have to do a special check, and since the information is in BYTE_CODE
 					-- we can do it easily in order to avoid the inlining.
 				result_type := byte_code.result_type
-				Result := (not a_return_type.is_bit and then not result_type.has_like)
+				Result := not result_type.has_like
 
 				if Result then
 					types := byte_code.locals
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.has_like)
+							Result := not (type_i.is_true_expanded or else type_i.has_like)
 							i := i - 1
 						end
 					end
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.has_like)
+							Result := not (type_i.is_true_expanded or else type_i.has_like)
 							i := i - 1
 						end
 					end
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

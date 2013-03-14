@@ -216,14 +216,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_array_as (l_as: ARRAY_AS)
 			-- Process `l_as'.
 		require
@@ -513,22 +505,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_bits_as (l_as: BITS_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 			-- Process `l_as'.
 		require
 			is_valid_visitor: is_valid

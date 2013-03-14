@@ -349,15 +349,6 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
-	process_bit_const_b (a_node: BIT_CONST_B)
-			-- Process `a_node'.
-		require
-			is_valid: is_valid
-			a_node_not_void: a_node /= Void
-			a_node_valid: is_node_valid (a_node)
-		deferred
-		end
-
 	process_bool_const_b (a_node: BOOL_CONST_B)
 			-- Process `a_node'.
 		require
@@ -889,7 +880,7 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

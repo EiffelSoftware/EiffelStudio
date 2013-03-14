@@ -43,9 +43,6 @@ feature
 	expand_return: BOOLEAN
 			-- Do we have to expand the assignment in Result ?
 
-	is_bit_assignment: BOOLEAN
-			-- Do we have an assignment to a bit?
-
 	register: REGISTRABLE
 			-- Where result is stored, for case where an entity is
 			-- assigned to a manifest string. Usually those are expanded
@@ -211,8 +208,6 @@ feature
 						source.propagate (No_register)
 						register := target
 						register_for_metamorphosis := True
-					elseif target_type.is_bit and then source_type.is_bit then
-						is_bit_assignment := True
 					else
 							-- Do not propagate something expanded as the
 							-- routines in NESTED_BL and friends won't know
@@ -243,8 +238,6 @@ feature
 						source.propagate (No_register)
 						get_register
 						register_for_metamorphosis := True
-					elseif target_type.is_bit then
-						is_bit_assignment := True
 					else
 							-- Nothing to be done because:
 							-- 1 - For reference target, we need an aging test which is a macro
@@ -550,40 +543,26 @@ feature
 				end
 			else
 				if how = Simple_assignment or need_aging_tests then
-					if is_bit_assignment then
-						-- Otherwize, copy bit since I know that
-						-- bits have a default value.
-						buf.put_new_line
-						buf.put_string ("RTXB(")
-						source_print_register
-					else
-						buf.put_new_line
-						target.print_register
-						buf.put_string (" = ")
-							-- Always ensure that we perform a cast to type of target.
-							-- Cast in case of basic type will never loose information
-							-- as it has been validated by the Eiffel compiler.
-						target_c_type.generate_cast (buf)
-					end
+					buf.put_new_line
+					target.print_register
+					buf.put_string (" = ")
+						-- Always ensure that we perform a cast to type of target.
+						-- Cast in case of basic type will never loose information
+						-- as it has been validated by the Eiffel compiler.
+					target_c_type.generate_cast (buf)
 					if need_aging_tests and then register /= Void and not register_for_metamorphosis then
 						print_register
 					else
-						if is_bit_assignment then
-							buf.put_string ({C_CONST}.comma_space)
-							target.print_register
-							buf.put_character (')')
-						else
-							source_type := context.real_type (source.type)
-							if how = Simple_assignment and then source_type.is_reference then
-									-- Support boxed expanded types.
-								if register_for_metamorphosis then
-									source.generate_dynamic_clone (Current, source_type)
-								else
-									source.generate_dynamic_clone (source, source_type)
-								end
+						source_type := context.real_type (source.type)
+						if how = Simple_assignment and then source_type.is_reference then
+								-- Support boxed expanded types.
+							if register_for_metamorphosis then
+								source.generate_dynamic_clone (Current, source_type)
 							else
-								source_print_register
+								source.generate_dynamic_clone (source, source_type)
 							end
+						else
+							source_print_register
 						end
 					end
 					buf.put_character (';')
@@ -746,7 +725,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

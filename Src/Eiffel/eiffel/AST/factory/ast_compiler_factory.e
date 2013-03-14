@@ -12,7 +12,6 @@ inherit
 	AST_FACTORY
 		redefine
 			new_array_as,
-			new_bits_as,
 			set_expanded_class_type,
 			new_debug_as,
 			new_expr_address_as,
@@ -69,27 +68,6 @@ feature -- Access
 		do
 			if exp /= Void then
 				create Result.initialize (exp, l_as, r_as)
-			end
-		end
-
-	new_bits_as (v: detachable INTEGER_AS; b_as: detachable KEYWORD_AS): detachable BITS_AS
-			-- New BITS AST node
-		local
-			l_vtbt: VTBT_SIMPLE
-		do
-			if v /= Void then
-				create Result.initialize (v, b_as)
-				if (v.integer_32_value <= 0) then
-					if attached {CLASS_C} parser.current_class as l_class_c then
-						create l_vtbt
-						l_vtbt.set_class (l_class_c)
-						l_vtbt.set_value (v.integer_32_value)
-						l_vtbt.set_location (v.start_location)
-						Error_handler.insert_error (l_vtbt)
-					else
-						error_handler.insert_error (create {SYNTAX_ERROR}.init (eiffel_parser))
-					end
-				end
 			end
 		end
 
@@ -384,7 +362,7 @@ feature {NONE} -- Validation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

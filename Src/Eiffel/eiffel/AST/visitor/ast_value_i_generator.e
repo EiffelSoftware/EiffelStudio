@@ -11,7 +11,6 @@ class
 inherit
 	AST_NULL_VISITOR
 		redefine
-			process_bit_const_as,
 			process_bool_as,
 			process_char_as,
 			process_real_as,
@@ -49,11 +48,6 @@ feature {NONE} -- Implementation
 
 	current_class: CLASS_C
 			-- Class in which current AST node appears.
-
-	process_bit_const_as (l_as: BIT_CONST_AS)
-		do
-			create {BIT_VALUE_I} last_value.make (l_as.value.name)
-		end
 
 	process_bool_as (a_bool: BOOL_AS)
 		do
@@ -104,7 +98,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

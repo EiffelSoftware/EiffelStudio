@@ -381,12 +381,6 @@ feature -- Status
 			Result := nb_attributes.item (real_64_level)
 		end;
 
-	nb_bits: INTEGER
-			-- Number of bits attribute
-		do
-			Result := nb_attributes.item (bits_level)
-		end;
-
 	nb_expanded: INTEGER
 			-- Number of expanded attributes
 		do
@@ -397,12 +391,6 @@ feature -- Status
 			-- Go to the expanded
 		do
 			goto (Expanded_level);
-		end;
-
-	go_bits
-			-- Go to the bits attribute
-		do
-			goto (Bits_level);
 		end;
 
 	goto (level: INTEGER)
@@ -431,10 +419,9 @@ feature -- Status
 			good_argument: buffer /= Void;
 		local
 			expanded_desc: EXPANDED_DESC
-			bit_desc: BITS_DESC
 			expanded_skeleton: SKELETON
 			nb_ref, nb_char, nb_int16, nb_int32, nb_int64: INTEGER
-			nb_r32, nb_ptr, nb_r64, nb_bit, nb_exp: INTEGER
+			nb_r32, nb_ptr, nb_r64, nb_exp: INTEGER
 			i, nb: INTEGER
 			current_area: SPECIAL [ATTR_DESC]
 			l_def_buffer: like buffer
@@ -447,7 +434,6 @@ feature -- Status
 			nb_ptr := nb_pointer
 			nb_int64 := nb_integer_64
 			nb_r64 := nb_real_64
-			nb_bit := nb_bits
 			nb_exp := nb_expanded
 
 			l_def_buffer := definition_buffer
@@ -471,26 +457,6 @@ feature -- Status
 			l_def_buffer.put_integer (nb_r64)
 			l_def_buffer.put_character (')')
 			insert_in_buffer (buffer, l_def_buffer, as_macro)
-
-			if nb_bit > 0 then
-				from
-						-- Go at the bits level
-					current_area := area
-					go_bits
-					i := position
-					nb := count - 1
-				until
-					i > nb or else current_area.item (i).level /= Bits_level
-				loop
-					bit_desc ?= current_area.item (i)
-					buffer.put_string (" + OVERHEAD + ")
-					l_def_buffer.put_string ("@BITOFF(")
-					l_def_buffer.put_natural_32 (bit_desc.size)
-					l_def_buffer.put_character (')')
-					insert_in_buffer (buffer, l_def_buffer, as_macro)
-					i := i + 1
-				end
-			end
 
 			if nb_exp > 0 then
 				from
@@ -521,10 +487,9 @@ feature -- Status
 			-- Size of the current skeleton in workbench mode
 		local
 			expanded_desc: EXPANDED_DESC;
-			bit_desc: BITS_DESC;
 			expanded_skeleton: SKELETON;
 			nb_ref, nb_char, nb_int16, nb_int32, nb_int64: INTEGER
-			nb_r32, nb_ptr, nb_r64, nb_bit, nb_exp: INTEGER
+			nb_r32, nb_ptr, nb_r64, nb_exp: INTEGER
 			i, nb: INTEGER
 			current_area: SPECIAL [ATTR_DESC]
 		do
@@ -536,27 +501,10 @@ feature -- Status
 			nb_ptr := nb_pointer
 			nb_int64 := nb_integer_64
 			nb_r64 := nb_real_64
-			nb_bit := nb_bits
 			nb_exp := nb_expanded
 
 			Result := eif_objsiz(nb_ref + nb_exp, nb_char, nb_int16, nb_int32,
 								nb_r32, nb_ptr, nb_int64, nb_r64);
-
-			if nb_bit > 0 then
-				from
-						-- Go at the bits level
-					current_area := area
-					go_bits
-					i := position
-					nb := count - 1
-				until
-					i > nb or else current_area.item (i).level /= Bits_level
-				loop
-					bit_desc ?= current_area.item (i)
-					Result := Result + ovhsiz + bitoff(bit_desc.size)
-					i := i + 1
-				end
-			end
 
 			if nb_exp > 0 then
 				from
@@ -627,7 +575,6 @@ feature -- Status
 			current_area: SPECIAL [ATTR_DESC]
 			index, level, i: INTEGER
 			expanded_desc: EXPANDED_DESC
-			bit_desc: BITS_DESC
 			value: INTEGER
 			l_def_buffer: like buffer
 		do
@@ -805,59 +752,22 @@ feature -- Status
 				l_def_buffer.put_integer (nb_r64);
 				l_def_buffer.put_character (')');
 				insert_in_buffer (buffer, l_def_buffer, as_macro)
-				if level = Bits_level then
+				if nb_expanded > 0 then
 					from
 						current_area := area
-						go_bits
+						go_expanded
 						i := position
 					until
 						i >= index
 					loop
 						buffer.put_string (" + OVERHEAD + ")
-						l_def_buffer.put_string ("@BITOFF(");
-						bit_desc ?= current_area.item (i);
-						l_def_buffer.put_natural_32 (bit_desc.size);
-						l_def_buffer.put_character (')');
-						insert_in_buffer (buffer, l_def_buffer, as_macro)
-						i := i + 1;
-					end;
-					buffer.put_string (" + OVERHEAD");
-				else
-					if nb_bits > 0 then
-						from
-							current_area := area
-							go_bits
-							i := position
-						until
-							current_area.item(i).level > Bits_level
-						loop
-							buffer.put_string (" + OVERHEAD + ")
-							l_def_buffer.put_string ("@BITOFF(")
-							bit_desc ?= current_area.item (i)
-							l_def_buffer.put_natural_32 (bit_desc.size)
-							l_def_buffer.put_character (')')
-							insert_in_buffer (buffer, l_def_buffer, as_macro)
-							i := i + 1
-						end
+						expanded_desc ?= current_area.item (i)
+						expanded_desc.class_type.skeleton.generate_size (buffer, as_macro)
+						i := i + 1
 					end
-
-					if nb_expanded > 0 then
-						from
-							current_area := area
-							go_expanded
-							i := position
-						until
-							i >= index
-						loop
-							buffer.put_string (" + OVERHEAD + ")
-							expanded_desc ?= current_area.item (i)
-							expanded_desc.class_type.skeleton.generate_size (buffer, as_macro)
-							i := i + 1
-						end
-						buffer.put_string (" + OVERHEAD")
-					end
-				end;
-			end;
+					buffer.put_string (" + OVERHEAD")
+				end
+			end
 
 				-- Restore previous position
 			position := index
@@ -874,7 +784,6 @@ feature -- Status
 			index, level: INTEGER
 			i: INTEGER
 			expanded_desc: EXPANDED_DESC
-			bit_desc: BITS_DESC
 			exp_skel: SKELETON
 			current_area: SPECIAL [ATTR_DESC]
 		do
@@ -943,55 +852,25 @@ feature -- Status
 				nb_int64 := nb_integer_64;
 				nb_r64 := nb_real_64;
 				Result := eif_objsiz (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_r32,nb_ptr,nb_int64,nb_r64);
-				if level = Bits_level then
+				if nb_expanded > 0 then
 					from
 						current_area := area
-						go_bits
+						go_expanded
 						i := position
 					until
 						i >= index
 					loop
-						bit_desc ?= current_area.item (i)
-						Result := Result + ovhsiz + bitoff(bit_desc.size);
+						expanded_desc ?= current_area.item (i)
+						exp_skel := expanded_desc.class_type.skeleton
+						Result := Result + ovhsiz + exp_skel.workbench_size
 						i := i + 1
-					end;
-					Result := Result + ovhsiz;
-				else
-					if nb_bits > 0 then
-						from
-							current_area := area
-							go_bits
-							i := position
-						until
-							current_area.item (i).level > Bits_level
-						loop
-							bit_desc ?= current_area.item (i)
-							Result := Result + ovhsiz + bitoff(bit_desc.size)
-							i := i + 1
-						end
 					end
-
-					if nb_expanded > 0 then
-						from
-							current_area := area
-							go_expanded
-							i := position
-						until
-							i >= index
-						loop
-							expanded_desc ?= current_area.item (i)
-							exp_skel := expanded_desc.class_type.skeleton
-							Result := Result + ovhsiz + exp_skel.workbench_size
-							i := i + 1
-						end
-						Result := Result + ovhsiz
-					end
+					Result := Result + ovhsiz
 				end
-			end;
-
+			end
 				-- Restore previous position
 			position := index
-		end;
+		end
 
 feature -- Skeleton byte code
 
@@ -1566,7 +1445,7 @@ invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -176,7 +176,8 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_bits (ref: POINTER; size: INTEGER)
 			-- Receive a bit value.
 		do
-			create {BITS_VALUE} item.make (ref, size)
+		ensure
+			is_callable: False
 		end
 
 	set_void

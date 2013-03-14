@@ -143,11 +143,6 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS)
-		do
-				-- Nothing to be done
-		end
-
 	process_array_as (l_as: ARRAY_AS)
 		do
 			l_as.expressions.process (Current)
@@ -743,16 +738,6 @@ feature {NONE} -- Implementation
 		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS)
-		do
-				-- Nothing to be done
-		end
-
-	process_bits_as (l_as: BITS_AS)
-		do
-				-- Nothing to be done
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 				-- Nothing to be done
 		end

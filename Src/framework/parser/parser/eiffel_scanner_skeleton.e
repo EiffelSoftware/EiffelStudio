@@ -147,9 +147,6 @@ feature -- Access
 			-- However ISO/IEC 10646 has stated that all future assignments of characters
 			-- will also take place in range 0 - 7FFFFFFF
 
-	Maximum_bit_constant: NATURAL_32 = 0x7FFF
-			-- Maximum value of Constant in Bit_type declaration
-
 	Maximum_string_length: INTEGER = 0x7FFF
 			-- Maximum length of tokens that require a string representation
 			-- (such as Identifier, Manifest_string, Free_operator)

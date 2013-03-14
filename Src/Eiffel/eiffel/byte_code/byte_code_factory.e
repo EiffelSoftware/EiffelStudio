@@ -82,9 +82,9 @@ feature {NONE} -- Implementation: status report
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := True
 			elseif is_from_conversion then
-				Result := not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bit
+				Result := not a_source_type.is_expanded and a_target_type.is_basic
 			elseif not is_from_conversion then
-				Result := a_source_type.is_basic and not a_source_type.is_bit and not a_target_type.is_expanded
+				Result := a_source_type.is_basic and not a_target_type.is_expanded
 			end
 		end
 
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation: Byte node
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := a_expr
 			elseif is_from_conversion then
-				if not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bit then
+				if not a_source_type.is_expanded and a_target_type.is_basic then
 						-- Simply call `item' from the reference type instead of
 						-- trying to create an instance of the basic type and then
 						-- calling its creation procedure.
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation: Byte node
 					Result := to_type_byte_code (l_feat, a_target_type, a_expr)
 				end
 			elseif not is_from_conversion then
-				if a_source_type.is_basic and not a_source_type.is_bit and not a_target_type.is_expanded then
+				if a_source_type.is_basic and not a_target_type.is_expanded then
 						-- Create a new instance of the associated reference of `a_source_type'
 						-- and then assign new value. We use a hack here to call `set_item' as
 						-- creation procedure to avoid having to generate two calls: one

@@ -452,9 +452,6 @@ feature -- Properties
 			local_workbench.change_class (pointer_class)
 			local_workbench.change_class (array_class)
 			local_workbench.change_class (tuple_class)
-			if attached bit_class as c then
-				local_workbench.change_class (c)
-			end
 			local_workbench.change_class (routine_class)
 			local_workbench.change_class (procedure_class)
 			local_workbench.change_class (function_class)
@@ -542,9 +539,6 @@ feature -- Properties
 			pointer_class.compiled_class.record_precompiled_class_in_system
 			array_class.compiled_class.record_precompiled_class_in_system
 			tuple_class.compiled_class.record_precompiled_class_in_system
-			if attached bit_class as c and then attached c.compiled_class as cc and then cc.is_precompiled then
-				cc.record_precompiled_class_in_system
-			end
 			routine_class.compiled_class.record_precompiled_class_in_system
 			procedure_class.compiled_class.record_precompiled_class_in_system
 			function_class.compiled_class.record_precompiled_class_in_system
@@ -2295,9 +2289,6 @@ end
 			pointer_class.compiled_class.mark_class (marked_classes)
 			array_class.compiled_class.mark_class (marked_classes)
 			tuple_class.compiled_class.mark_class (marked_classes)
-			if attached bit_class as c and then c.is_compiled then
-				c.compiled_class.mark_class (marked_classes)
-			end
 			routine_class.compiled_class.mark_class (marked_classes)
 			procedure_class.compiled_class.mark_class (marked_classes)
 			function_class.compiled_class.mark_class (marked_classes)

@@ -1285,7 +1285,6 @@ feature {NONE} -- Type information
 			-- Returns corresponding type constants to `b'.
 		require
 			b_not_void: b /= Void
-			b_not_bit: not b.is_bit
 		local
 			l_int: INTEGER_A
 			l_nat: NATURAL_A
@@ -1336,7 +1335,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

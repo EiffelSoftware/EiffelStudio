@@ -134,7 +134,7 @@ feature -- IL code generation
 			-- Generate IL code for a hardcoded creation type.
 		do
 			il_generator.generate_creation (type)
-			if type.is_expanded and not type.is_bit then
+			if type.is_expanded then
 					-- Load value of a boxed value type object.
 				il_generator.generate_unmetamorphose (type)
 			end
@@ -182,7 +182,7 @@ invariant
 	type_not_void: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

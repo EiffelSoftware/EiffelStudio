@@ -249,7 +249,7 @@ feature -- Comparison
 
 	allocates_memory: BOOLEAN
 		do
-			Result := value.is_string or else value.is_bit
+			Result := value.is_string
 		end
 
 feature {NONE} -- Separate call
@@ -283,7 +283,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

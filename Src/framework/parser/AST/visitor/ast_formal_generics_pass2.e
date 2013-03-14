@@ -18,7 +18,6 @@ inherit
 			process_qualified_anchored_type_as,
 			process_formal_as, process_class_type_as,
 			process_generic_class_type_as, process_none_type_as,
-			process_bits_as, process_bits_symbol_as,
 			process_named_tuple_type_as, process_type_dec_as
 		end
 
@@ -224,18 +223,6 @@ feature {NONE} -- Types which should not occur
 		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS)
-		do
-			-- This type is not a formal and has no generics.
-			-- Do nothing.
-		end
-
-	process_bits_as (l_as: BITS_AS)
-		do
-			-- This type is not a formal and has no generics.
-			-- Do nothing.
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 			-- This type is not a formal and has no generics.
 			-- Do nothing.

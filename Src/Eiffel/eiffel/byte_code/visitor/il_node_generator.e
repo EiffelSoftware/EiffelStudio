@@ -1363,53 +1363,6 @@ feature {NONE} -- Visitors
 			generate_converted_binary_b (a_node, il_xor)
 		end
 
-	process_bit_const_b (a_node: BIT_CONST_B)
-			-- Process `a_node'.
-		local
-			l_bit_type: BITS_A
-			l_bit_class: CLASS_C
-			l_make_feat, l_put_feat: FEATURE_I
-			l_decl_type: CL_TYPE_A
-			l_values: STRING
-			i, nb: INTEGER
-		do
-			l_bit_type ?= context.real_type (a_node.type)
-			l_bit_class := l_bit_type.base_class
-			l_make_feat := l_bit_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
-			l_decl_type := l_bit_type.implemented_type (l_make_feat.origin_class_id)
-
-				-- Creation of BIT object
-			l_bit_type.create_info.generate_il
-
- 				-- Call creation procedure of BIT_REF
-			il_generator.duplicate_top
-			il_generator.put_integer_32_constant (l_bit_type.bit_count.to_integer_32)
- 			il_generator.generate_feature_access (l_decl_type, l_make_feat.origin_feature_id,
-				l_make_feat.argument_count, l_make_feat.has_return_value, True)
-
-				-- Find `put' and call `put' for the sequence.
-			l_put_feat := l_bit_class.feature_table.item_id ({PREDEFINED_NAMES}.put_name_id)
-			l_decl_type := l_bit_type.implemented_type (l_put_feat.origin_class_id)
-
-			from
-				l_values := a_node.value
- 				i := 1
- 				nb := l_values.count
- 			until
- 				i = nb
- 			loop
- 					-- Duplicate top
-				il_generator.duplicate_top
-
- 					-- Generate expression
- 				il_generator.put_boolean_constant (l_values.item (i) /= '0')
- 				il_generator.put_integer_32_constant (i)
- 				il_generator.generate_feature_access (l_decl_type, l_put_feat.origin_feature_id,
-					l_put_feat.argument_count, l_put_feat.has_return_value, True)
- 				i := i + 1
- 			end
-		end
-
 	process_bool_const_b (a_node: BOOL_CONST_B)
 			-- Process `a_node'.
 		do

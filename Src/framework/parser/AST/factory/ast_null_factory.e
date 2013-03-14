@@ -17,7 +17,7 @@ inherit
 			new_bin_le_as, new_bin_lt_as, new_bin_minus_as, new_bin_mod_as, new_bin_ne_as,
 			new_bin_not_tilde_as, new_bin_or_as, new_bin_or_else_as, new_bin_plus_as,
 			new_bin_power_as, new_bin_slash_as, new_bin_star_as, new_bin_tilde_as,
-			new_bin_xor_as, new_bit_const_as, new_bits_as, new_bits_symbol_as, new_built_in_as,
+			new_bin_xor_as, new_built_in_as,
 			new_body_as, new_boolean_as, new_case_as, new_character_as, new_check_as, new_class_as,
 			new_class_type_as, new_client_as, new_constant_as, new_constraining_type, new_convert_feat_as, new_create_as,
 			new_current_as, new_custom_attribute_as,
@@ -32,7 +32,7 @@ inherit
 			new_eiffel_list_type_dec_as, new_elseif_as, new_ensure_as, new_ensure_then_as,
 			new_exit_condition_pair, new_export_item_as, new_expr_address_as, new_expr_call_as, new_external_as,
 			new_external_lang_as, new_feature_as, new_feature_clause_as, new_feature_list_as,
-			new_feature_name_alias_as, new_feature_name_id_as, new_filled_bit_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
+			new_feature_name_alias_as, new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
 			new_guard_as, new_identifier_list, new_if_as, new_index_as, new_infix_as,
 			new_inline_agent_creation_as, new_inspect_as,
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_integer_octal_as,
@@ -488,22 +488,6 @@ feature -- Access
 		do
 		end
 
-	new_bit_const_as (b: detachable ID_AS): detachable BIT_CONST_AS
-			-- New BIT_CONSTANT AST node with
-			-- with bit sequence contained in `b'
-		do
-		end
-
-	new_bits_as (v: detachable INTEGER_AS; b_as: detachable KEYWORD_AS): detachable BITS_AS
-			-- New BITS AST node
-		do
-		end
-
-	new_bits_symbol_as (s: detachable ID_AS; b_as: detachable KEYWORD_AS): detachable BITS_SYMBOL_AS
-			-- New BITS_SYMBOL AST node
-		do
-		end
-
 	new_bracket_as (t: detachable EXPR_AS; o: detachable EIFFEL_LIST [EXPR_AS]; l_as, r_as: detachable SYMBOL_AS): detachable BRACKET_AS
 			-- New BRACKET AST node
 		do
@@ -808,10 +792,6 @@ feature -- Access
 
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): detachable ID_AS
 			-- New empty ID AST node.
-		do
-		end
-
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
 		do
 		end
 

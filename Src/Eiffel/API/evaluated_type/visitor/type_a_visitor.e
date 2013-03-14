@@ -39,24 +39,6 @@ feature {TYPE_A} -- Helpers
 
 feature {TYPE_A} -- Visitor
 
-	process_bits_a (a_type: BITS_A)
-			-- Process `a_type'.
-		require
-			is_valid: is_valid
-			a_type_not_void: a_type /= Void
-			a_type_valid: is_type_valid (a_type)
-		deferred
-		end
-
-	process_bits_symbol_a (a_type: BITS_SYMBOL_A)
-			-- Process `a_type'.
-		require
-			is_valid: is_valid
-			a_type_not_void: a_type /= Void
-			a_type_valid: is_type_valid (a_type)
-		deferred
-		end
-
 	process_boolean_a (a_type: BOOLEAN_A)
 			-- Process `a_type'.
 		require
@@ -256,15 +238,6 @@ feature {TYPE_A} -- Visitor
 		deferred
 		end
 
-	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A)
-			-- Process `a_type'.
-		require
-			is_valid: is_valid
-			a_type_not_void: a_type /= Void
-			a_type_valid: is_type_valid (a_type)
-		deferred
-		end
-
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
 			-- Process `a_type'.
 		require
@@ -293,7 +266,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

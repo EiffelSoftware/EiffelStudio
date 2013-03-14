@@ -30,7 +30,6 @@ inherit
 			new_integer_binary_as,
 			new_real_as,
 			new_filled_id_as,
-			new_filled_bit_id_as,
 			new_void_as,
 			new_unique_as,
 			new_retry_as,
@@ -177,12 +176,6 @@ feature -- Access
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
 		do
 			extend_match_list_with_stub (create {LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
-		end
-
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
-			-- New empty ID AST node.
-		do
-			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS

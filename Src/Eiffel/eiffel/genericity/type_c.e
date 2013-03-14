@@ -81,11 +81,6 @@ feature -- Status Report
 		do
 		end
 
-	is_bit: BOOLEAN
-			-- Is C type a a bit type (Conveniencee)
-		do
-		end
-
 	is_void: BOOLEAN
 			-- Is C type a void type
 		do
@@ -244,7 +239,7 @@ feature -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

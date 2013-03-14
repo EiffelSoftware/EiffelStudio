@@ -637,12 +637,6 @@ feature {BYTE_NODE} -- Visitor
 			process_binary_b (a_node)
 		end
 
-	process_bit_const_b (a_node: BIT_CONST_B)
-			-- Process `a_node'.
-		do
-			dbg_error_handler.notify_error_not_supported (a_node)
-		end
-
 	process_bool_const_b (a_node: BOOL_CONST_B)
 			-- Process `a_node'.
 		do
@@ -1699,7 +1693,6 @@ feature {NONE} -- Visitor: implementation
 			a_value_i_not_void: a_value_i /= Void
 		local
 			l_integer: INTEGER_CONSTANT
-			l_bit: BIT_VALUE_I
 			l_char: CHAR_VALUE_I
 			l_real: REAL_VALUE_I
 			l_string: STRING_VALUE_I
@@ -1760,12 +1753,6 @@ feature {NONE} -- Visitor: implementation
 						end
 						dv := d_fact.new_real_64_value (l_real.real_64_value, l_cl)
 					end
-				elseif a_value_i.is_bit then
-					l_bit ?= a_value_i
-					if l_cl = Void then
-						l_cl := comp_data.bit_class_c
-					end
-					dv := d_fact.new_bits_value (l_bit.bit_value, l_cl.class_signature, l_cl);
 				else
 					dbg_error_handler.notify_error_not_supported (a_value_i)
 				end

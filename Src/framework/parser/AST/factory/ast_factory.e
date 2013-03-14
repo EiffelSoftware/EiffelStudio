@@ -875,31 +875,6 @@ feature -- Access
 			end
 		end
 
-	new_bit_const_as (b: detachable ID_AS): detachable BIT_CONST_AS
-			-- New BIT_CONSTANT AST node with
-			-- with bit sequence contained in `b'
-		do
-			if b /= Void then
-				create Result.initialize (b)
-			end
-		end
-
-	new_bits_as (v: detachable INTEGER_AS; b_as: detachable KEYWORD_AS): detachable BITS_AS
-			-- New BITS AST node
-		do
-			if v /= Void then
-				create Result.initialize (v, b_as)
-			end
-		end
-
-	new_bits_symbol_as (s: detachable ID_AS; b_as: detachable KEYWORD_AS): detachable BITS_SYMBOL_AS
-			-- New BITS_SYMBOL AST node
-		do
-			if s /= Void then
-				create Result.initialize (s, b_as)
-			end
-		end
-
 	new_bracket_as (t: detachable EXPR_AS; o: detachable EIFFEL_LIST [EXPR_AS]; l_as, r_as: detachable SYMBOL_AS): detachable BRACKET_AS
 			-- New BRACKET AST node
 		do
@@ -1442,21 +1417,6 @@ feature -- Access
 			a_scn_not_void: a_scn /= Void
 		do
 			Result := new_filled_id_as (a_scn)
-		end
-
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
-			-- New empty ID AST node.
-		require
-			a_scn_not_void: a_scn /= Void
-		local
-			l_cnt: INTEGER
-			l_str: STRING
-		do
-			l_cnt := a_scn.text_count - 1
-			create l_str.make (l_cnt)
-			a_scn.append_text_substring_to_string (1, l_cnt, l_str)
-			create Result.initialize (l_str)
-			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 		end
 
 	new_guard_as (c: detachable KEYWORD_AS; a: detachable EIFFEL_LIST [TAGGED_AS]; t: detachable KEYWORD_AS;

@@ -80,13 +80,6 @@ feature -- Status report
 			Result := (code = {EIFFEL_TOKENS}.te_assign)
 		end
 
-	is_bit_keyword: BOOLEAN
-			--
-			-- Is current keyword 'bit'?
-		do
-			Result := (code = {EIFFEL_TOKENS}.te_bit)
-		end
-
 	is_check_keyword: BOOLEAN
 			-- Is current keyword 'check'?
 		do

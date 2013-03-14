@@ -145,11 +145,6 @@ feature -- Status report
 		deferred
 		end
 
-	is_bits: BOOLEAN
-			-- Is the attribute a BIT one ?
-		do
-		end
-
 	is_expanded: BOOLEAN
 			-- Is the attribute an expanded one ?
 		do
@@ -222,7 +217,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

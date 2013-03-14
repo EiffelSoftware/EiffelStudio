@@ -15,7 +15,6 @@ inherit
 			process_qualified_anchored_type_as,
 			process_formal_as, process_class_type_as,
 			process_generic_class_type_as, process_none_type_as,
-			process_bits_as, process_bits_symbol_as,
 			process_named_tuple_type_as, process_type_dec_as
 		end
 
@@ -392,16 +391,6 @@ feature {NONE} -- Visitor implementation
 			last_type := set_class_type_marks (l_as, none_type)
 		end
 
-	process_bits_as (l_as: BITS_AS)
-		do
-			create {BITS_A} last_type.make (l_as.size)
-		end
-
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
-		do
-			create {UNEVALUATED_BITS_SYMBOL_A} last_type.make (l_as.bits_symbol.name)
-		end
-
 feature {NONE} -- Type marks
 
 	set_class_type_marks (a: TYPE_AS; t: ANNOTATED_TYPE_A): ANNOTATED_TYPE_A
@@ -448,7 +437,7 @@ feature {NONE} -- Type marks
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

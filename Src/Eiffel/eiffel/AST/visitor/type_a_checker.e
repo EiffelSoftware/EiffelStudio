@@ -412,82 +412,6 @@ feature -- Special checking
 
 feature {TYPE_A} -- Visitors
 
-	process_bits_a (a_type: BITS_A)
-			-- Process `a_type'.
-		local
-			l_vtbt: VTBT
-		do
-			if a_type.bit_count <= 0 or else a_type.bit_count > {EIFFEL_SCANNER_SKELETON}.maximum_bit_constant then
-				last_type := Void
-				if has_error_reporting then
-					create l_vtbt
-					l_vtbt.set_class (current_class)
-					l_vtbt.set_feature (current_feature)
-					l_vtbt.set_value (a_type.bit_count)
-					if associated_type_ast /= Void then
-						l_vtbt.set_location (associated_type_ast.start_location)
-					end
-					error_handler.insert_error (l_vtbt)
-				end
-			else
-				last_type := a_type
-			end
-		end
-
-	process_bits_symbol_a (a_type: BITS_SYMBOL_A)
-			-- Process `a_type'.
-		local
-			l_anchor_feature: FEATURE_I
-			vtbt: VTBT
-			l_veen: VEEN
-			constant: CONSTANT_I
-			l_value: NATURAL_32
-			error: BOOLEAN
-			int_value: INTEGER_CONSTANT
-		do
-			if current_class.class_id /= a_type.current_class_id then
-				l_anchor_feature := system.class_of_id (a_type.current_class_id).feature_table.
-					item_id (a_type.feature_name_id)
-			else
-				l_anchor_feature := current_feature_table.item_id (a_type.feature_name_id)
-			end
-			if l_anchor_feature = Void then
-				last_type := Void
-				if has_error_reporting then
-					create l_veen
-					l_veen.set_class (System.current_class)
-					l_veen.set_feature (current_feature)
-					l_veen.set_identifier (a_type.feature_name)
-					error_handler.insert_error (l_veen)
-				end
-			else
-				constant ?= l_anchor_feature
-				error := constant = Void
-				if not error then
-					int_value ?= constant.value
-					error := int_value = Void or else not int_value.has_natural (32)
-					if not error then
-						l_value := int_value.natural_32_value
-						error := l_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
-					end
-				end
-				if error then
-					last_type := Void
-					if has_error_reporting then
-						create vtbt
-						vtbt.set_class (current_feature_table.associated_class)
-						vtbt.set_feature (current_feature)
-						vtbt.set_value (l_value)
-						error_handler.insert_error (vtbt)
-					end
-				else
-					a_type.set_rout_id (l_anchor_feature.rout_id_set.first)
-					a_type.set_bit_count (l_value)
-					last_type := a_type
-				end
-			end
-		end
-
 	process_boolean_a (a_type: BOOLEAN_A)
 			-- Process `a_type'.
 		do
@@ -700,62 +624,6 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
-		end
-
-	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A)
-			-- Process `a_type'.
-		local
-			l_vtbt: VTBT
-			l_veen: VEEN
-			l_constant: CONSTANT_I
-			l_value: NATURAL_32
-			l_has_error: BOOLEAN
-			l_int_value: INTEGER_CONSTANT
-			l_depend_unit: DEPEND_UNIT
-		do
-			if not current_feature_table.has_id (a_type.symbol_name_id) then
-				last_type := Void
-				if has_error_reporting then
-					create l_veen
-					l_veen.set_class (current_class)
-					l_veen.set_feature (current_feature)
-					l_veen.set_identifier (a_type.symbol)
-					if associated_type_ast /= Void then
-						l_veen.set_location (associated_type_ast.start_location)
-					end
-					error_handler.insert_error (l_veen)
-				end
-			else
-				l_constant ?= current_feature_table.item_id (a_type.symbol_name_id)
-				l_has_error := l_constant = Void
-				if not l_has_error then
-					l_int_value ?= l_constant.value
-					l_has_error := l_int_value = Void or else not l_int_value.has_natural (32)
-					if not l_has_error then
-						l_value := l_int_value.natural_32_value
-						l_has_error := l_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
-					end
-				end
-				if l_has_error then
-					last_type := Void
-					if has_error_reporting then
-						create l_vtbt
-						l_vtbt.set_class (current_class)
-						l_vtbt.set_feature (current_feature)
-						l_vtbt.set_value (l_value)
-						if associated_type_ast /= Void then
-							l_vtbt.set_location (associated_type_ast.start_location)
-						end
-						error_handler.insert_error (l_vtbt)
-					end
-				else
-					create {BITS_SYMBOL_A} last_type.make (l_constant, l_value)
-					if suppliers /= Void then
-						create l_depend_unit.make (current_class.class_id, l_constant)
-						suppliers.extend (l_depend_unit)
-					end
-				end
-			end
 		end
 
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
@@ -1176,7 +1044,7 @@ invariant
 	is_current_actual_type_correct: attached current_class as c implies attached current_actual_type as t and then t.same_as (current_class.actual_type)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

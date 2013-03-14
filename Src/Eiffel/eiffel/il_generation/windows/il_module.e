@@ -848,7 +848,7 @@ feature {NONE} -- Implementations: signatures
 			end
 				-- Simply take `actual_type' to resolve directly anchors if any.
 			l_type := a_type.actual_type
-			if (l_type.is_basic and not l_type.is_bit) or l_type.is_none then
+			if l_type.is_basic or l_type.is_none then
 				a_sig.set_type (l_type.element_type, 0)
 			elseif l_type.is_formal then
 				l_formal ?= l_type
@@ -872,7 +872,7 @@ feature {NONE} -- Implementations: signatures
 				then
 					l_exp_type := il_code_generator.external_class_mapping.item (l_exp_type.base_class.external_class_name)
 				end
-				if l_exp_type /= Void and then (l_exp_type.is_basic and not l_exp_type.is_bit) then
+				if l_exp_type /= Void and then l_exp_type.is_basic then
 					a_sig.set_type (l_exp_type.element_type, 0)
 				else
 					a_sig.set_type (l_type.element_type,

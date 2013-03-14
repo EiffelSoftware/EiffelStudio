@@ -1004,30 +1004,6 @@ feature {NONE} -- Type factory
 			end
 		end
 
-feature {NONE} -- BIT factory
-
-	new_bit_const (b: detachable ID_AS): detachable BIT_CONST_AS
-			-- New BIT_CONSTANT AST node with
-			-- with bit sequence contained in `b'.
-		do
-			Result := ast_factory.new_bit_const_as (b)
-			insert_supplier ("BIT_REF", b)
-		end
-
-	new_bits (v: detachable INTEGER_AS; b_as: detachable KEYWORD_AS): detachable BITS_AS
-			-- New BITS AST node
-		do
-			Result := ast_factory.new_bits_as (v, b_as)
-			insert_supplier ("BIT_REF", b_as)
-		end
-
-	new_bits_symbol (s: detachable ID_AS; b_as: detachable KEYWORD_AS): detachable BITS_SYMBOL_AS
-			-- New BITS_SYMBOL AST node
-		do
-			Result := ast_factory.new_bits_symbol_as (s, b_as)
-			insert_supplier ("BIT_REF", b_as)
-		end
-
 feature {NONE} -- Instruction factory
 
 	new_call_instruction_from_expression (e: detachable EXPR_AS): detachable INSTR_CALL_AS

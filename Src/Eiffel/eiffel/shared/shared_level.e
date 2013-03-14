@@ -1,6 +1,6 @@
 note
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Values for grouping attributes in object layout of generated code."
+
 class SHARED_LEVEL
 
 feature {NONE}
@@ -35,13 +35,15 @@ feature {NONE}
 
 	Real_64_level: INTEGER = 15
 
-	Expanded_level: INTEGER = 17
+	Expanded_level: INTEGER = 16
 
-	Formal_level: INTEGER = 18
+	Formal_level: INTEGER = 17
 
-	Level_count: INTEGER = 18;
+	Level_count: INTEGER = 17;
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

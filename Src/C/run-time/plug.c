@@ -2,7 +2,7 @@
 	description: "A set of routines to plug the run-time in the generated C code."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -53,7 +53,6 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #if !defined CUSTOM || defined NEED_HASHIN_H
 #include "rt_hashin.h"
 #endif
-#include "rt_bits.h"
 #include "rt_struct.h"
 #include "rt_native_string.h"
 #include "rt_assert.h"		/* For assertions checkings. */
@@ -347,9 +346,6 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 			case SK_POINTER:
 				new_obj = RTLN(egc_point_ref_dtype);
 				*(fnptr *) new_obj = *(fnptr *) o_ref;
-				break;
-			case SK_BIT:
-				new_obj = b_clone(o_ref);
 				break;
 			default:
 				eif_panic(MTC "unknown attribute type");
@@ -868,27 +864,6 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				if (origin)					/* Call creation routine */
 					wpexp(origin, offset, orig_exp_dtype, obj + exp_offset);
 			}
-			}
-			break;
-		case SK_BIT:
-			{
-			uint32 offset;					/* Attribute offset */
-
-				/* Current has some expanded objects, we need to make `obj' composite. */
-			has_expanded = 1;
-
-			/* Set dynamic type for bit expanded object */
-			CAttrOffs(offset,cn_attr[i],dtype);
-			zone = HEADER(obj + offset);
-			zone->ov_dftype = egc_bit_dtype;
-			zone->ov_dtype = egc_bit_dtype;
-			zone->ov_flags |= EO_EXP;
-			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
-			zone->ov_size = offset + (uint32) (obj - parent);
-
-			CHECK("valid bit_size", (uint32) (type & SK_BMASK) <= 0x0000FFFF);
-			LENGTH(obj + offset) = (uint16) (type & SK_BMASK); /* Write bit size */
-
 			}
 			break;
 		default:

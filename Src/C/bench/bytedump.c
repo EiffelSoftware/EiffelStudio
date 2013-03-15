@@ -2,7 +2,7 @@
 	description: "Byte code reader."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -141,16 +141,16 @@ static  char    *names [] = {
 "BC_FALSE_COMPAR" ,
 "BC_TRUE_COMPAR" ,
 "BC_STANDARD_EQUAL" ,
-"BC_BIT_STD_EQUAL" ,
+"BC_NOTUSED_95" ,
 "BC_HOOK" ,
-"BC_BIT" ,
+"BC_NOTUSED_97" ,
 "BC_ARRAY" ,
 "BC_RETRIEVE_OLD" ,
 "BC_FLOAT" ,
 "BC_OLD" ,
 "BC_ADD_STRIP" ,
 "BC_END_STRIP" ,
-"BC_LBIT_ASSIGN" ,
+"BC_NOTUSED_104" ,
 "BC_RAISE_PREC" ,
 "BC_GOTO_BODY" ,
 "BC_NOT_REC" ,
@@ -510,9 +510,6 @@ static  void    print_byte_code (void)
 		case EIF_EXPANDED_CODE_EXTENSION:
 			print_dtype (1, SK_EXP | get_int16(&ip));
 			break;
-		case EIF_BIT_CODE_EXTENSION:
-			fprintf (ofp,"BIT %d", (int) get_int32(&ip));
-			break;
 		case EIF_REFERENCE_CODE:
 			fprintf (ofp,"REFERENCE");
 			break;
@@ -843,13 +840,10 @@ static  void    print_instructions (void)
 				{
 					int is_type_creation = (code == BC_CREATE_TYPE);
 
-						/* Do we need to duplicate top object or is it a BIT type creation? */
+						/* Do we need to duplicate top object? */
 					cval = get_char8(&ip);
 
-					if (cval == BC_BIT) {
-						fprintf (ofp, " (BC_BIT %d)", get_int32(&ip));
-						break;
-					} else if (cval == (char) 1) {
+					if (cval == (char) 1) {
 						fprintf (ofp," dup_top_object ");
 					}
 
@@ -878,7 +872,7 @@ static  void    print_instructions (void)
 				if (get_char8(&ip)) { fprintf (ofp, "is_reference "); }
 				if (get_char8(&ip)) { fprintf (ofp, "is_basic "); }
 				cval = get_char8(&ip);
-				if (cval) { fprintf (ofp, "is_bit "); }
+				if (cval) { /* unused */ }
 				if (get_char8(&ip)) {
 					fprintf (ofp, "is_expanded of type %d", get_int16(&ip));
 				} else {
@@ -1271,25 +1265,8 @@ static  void    print_instructions (void)
 			case  BC_STRING32 :
 				fprintf (ofp,"\"%s\"", get_string8(&ip, get_int32(&ip)));
 				break;
-			case  BC_BIT :
-				/* True number of bits */
-				fprintf (ofp, "%d ", get_uint32(&ip));
-				/* Bit count */
-				lval = get_uint32(&ip);
-				fprintf (ofp, "%d", lval);
-
-				i = (int) BIT_NBPACK(lval);
-
-				/* Bit sequence packed */
-
-				while (i--)
-					(void) get_uint32(&ip);
-
-				break;
 			case  BC_VOID :
 				break;
-
-
 			case  BC_RETRY :
 				/* Retry offset */
 				fprintf (ofp,"offset %d", get_int32(&ip));
@@ -1336,8 +1313,6 @@ static  void    print_instructions (void)
 				/* Rotate stack */
 				/* Amount */
 				fprintf (ofp,"%d", (int) get_int16(&ip));
-				break;
-			case  BC_BIT_STD_EQUAL  :
 				break;
 			case  BC_STANDARD_EQUAL :
 				break;
@@ -1462,7 +1437,6 @@ static  void    print_dtype (int cid, uint32 type)
 			case SK_REAL32:  fprintf (ofp," [REAL_32]"); break;
 			case SK_REAL64: fprintf (ofp," [REAL_64]"); break;
 			case SK_POINTER:fprintf (ofp," [POINTER]"); break;
-			case SK_BIT:    fprintf (ofp," [BIT]"); break;
 			case SK_EXP:    fprintf (ofp,"ET %u", type & SK_DTYPE);
 
 							if (dtype <= dtype_max)

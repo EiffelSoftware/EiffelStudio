@@ -2,7 +2,7 @@
 	description: "Internal data representation."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -84,8 +84,6 @@ extern void ridr_multi_float (EIF_REAL_32 *obj, size_t num);
 extern void widr_multi_float (EIF_REAL_32 *obj, size_t num);
 extern void ridr_multi_double (EIF_REAL_64 *obj, size_t num);
 extern void widr_multi_double (EIF_REAL_64 *obj, size_t num);
-extern void ridr_multi_bit (struct bit *obj, size_t num, size_t elm_siz);
-extern void widr_multi_bit (struct bit *obj, size_t num, uint32 len, size_t elm_siz);
 extern int idr_read_line(char *bu, size_t max_size);
 
 #ifdef __cplusplus

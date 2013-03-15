@@ -135,8 +135,6 @@ run-time/gen_conf.c
 run-time/eif_gen_conf.h
 run-time/argv.c
 run-time/eif_argv.h
-run-time/bits.c
-run-time/eif_bits.h
 run-time/boolstr.c
 run-time/cecil.c
 run-time/eif_cecil.h

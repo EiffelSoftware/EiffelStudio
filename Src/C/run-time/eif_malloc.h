@@ -2,7 +2,7 @@
 	description: "Declarations for malloc routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,7 +95,6 @@ extern "C" {
 RT_LNK EIF_REFERENCE emalloc(EIF_TYPE_INDEX type);				/* Allocate an Eiffel object */
 RT_LNK EIF_REFERENCE emalloc_as_old(EIF_TYPE_INDEX type);			/* Allocate an Eiffel object as an old object */
 RT_LNK EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX dtype, uint32 size);	/* Allocate an Eiffel object */
-RT_LNK EIF_REFERENCE bmalloc(uint16 size);			/* Bit object creation */
 RT_LNK EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic);
 RT_LNK EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype);
 RT_LNK EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype);	/* Allocated tuple object */

@@ -5,7 +5,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -123,7 +123,6 @@ extern "C" {
 	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 
 	RT_LNK int32 egc_copy_rout_id;			/* Copy routine id */ 
 	RT_LNK int32 egc_is_equal_rout_id;		/* is_equal routine id */ 
-	RT_LNK EIF_TYPE_INDEX egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
 	RT_LNK EIF_TYPE_INDEX egc_any_dtype;			/* Dynamic type of ANY */
 
 	RT_LNK EIF_TYPE_INDEX egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */

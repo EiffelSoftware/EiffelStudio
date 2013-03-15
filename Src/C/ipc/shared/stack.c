@@ -9,7 +9,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -531,7 +531,6 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 		case SK_REAL64: ip.it_real64 = (EIF_REAL_64) OResult->result.EIF_REAL_64_result; break;
 		case SK_POINTER: ip.it_ptr = (EIF_POINTER) OResult->result.EIF_POINTER_result; break;
 		case SK_REF: ip.it_ref = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
-		case SK_BIT: ip.it_bit = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
 	}
 
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
@@ -693,9 +692,6 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 
 				*(EIF_REFERENCE *)(ip.address) = new_object;
 				break;
-			case SK_BIT:
-				error_code = 1; /* not yet implemented */
-				goto lblError;
 			case SK_EXP:
 				error_code = 2; /* modifying  an expanded reference is not allowed */
 				goto lblError;

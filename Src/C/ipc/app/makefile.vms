@@ -275,7 +275,6 @@ app_proto.obj : ../../run-time/eif_hector.h
 app_proto.obj : ../../run-time/eif_cecil.h
 app_proto.obj : ../../run-time/eif_plug.h
 app_proto.obj : ../../run-time/eif_garcol.h
-app_proto.obj : ../../run-time/eif_bits.h
 app_proto.obj : ../../eif_portable.h
 app_proto.obj : ../../run-time/eif_plug.h
 app_proto.obj : ../../run-time/eif_eiffel.h

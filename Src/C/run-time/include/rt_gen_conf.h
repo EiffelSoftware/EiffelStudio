@@ -2,7 +2,7 @@
 	description: "Private externals for generic conformance."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -55,9 +55,6 @@ extern void eif_gen_conf_cleanup (void);
 
 /* Is current tuple made of basic types? */
 extern int eif_tuple_is_atomic (EIF_REFERENCE tuple);
-
-/* Register a bit type of size `size' */
-extern EIF_TYPE_INDEX eif_register_bit_type (uint16 size);
 
 /* Type of ARRAY [type] */
 extern EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX type);

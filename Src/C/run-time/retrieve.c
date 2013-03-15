@@ -2,7 +2,7 @@
 	description: "Eiffel retrieve mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -40,7 +40,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 
 #include "eif_portable.h"
 #include "rt_lmalloc.h"
-#include "eif_project.h" /* for egc_ce_type, egc_bit_dtype */
+#include "eif_project.h" /* for egc_ce_type */
 #include "rt_macros.h"
 #include "rt_malloc.h"
 #include "rt_garcol.h"
@@ -51,7 +51,6 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_cecil.h"
 #include "rt_retrieve.h"
 #include "rt_store.h"
-#include "rt_bits.h"
 #include "rt_run_idr.h"
 #include "rt_error.h"
 #include "rt_traverse.h"
@@ -99,7 +98,6 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #define OLD_INTEGER_32_TYPE		-4
 #define OLD_REAL_32_TYPE		-5
 #define OLD_REAL_64_TYPE		-6
-#define OLD_BIT_TYPE			-7
 #define OLD_POINTER_TYPE		-8
 #define OLD_TUPLE_TYPE			-15
 #define OLD_INTEGER_8_TYPE		-16
@@ -1498,12 +1496,8 @@ rt_private uint32 rt_special_element_size(int is_tuple, EIF_TYPE_INDEX dtype) {
 				case SK_DTYPE:
 				case SK_REF: elm_size = sizeof (EIF_REFERENCE); break;
 				default:
-					if (dgen & SK_BIT) {
-						elm_size = BITOFF(dgen & SK_DTYPE);
-					} else {
-						elm_size = 0; /* To avoid C compiler warning. */
-						eise_io("Independent retrieve: not an Eiffel object.");
-					}
+					elm_size = 0; /* To avoid C compiler warning. */
+					eise_io("Independent retrieve: not an Eiffel object.");
 			}
 		} else {
 #ifdef WORKBENCH
@@ -1672,7 +1666,6 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 								case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
 								case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 								case SK_REF:
-								case SK_BIT:
 								case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
 								case SK_EXP:
 										elem_size = HEADER(newadd + attrib_offset)->ov_size & B_SIZE;
@@ -2649,7 +2642,6 @@ static char *type2name (long type)
 		case SK_REAL32:  name = "REAL_32";        break;
 		case SK_CHAR32:   name = "CHARACTER_32"; break;
 		case SK_REAL64:  name = "REAL_64";        break;
-		case SK_BIT:     name = "BIT";            break;
 		case SK_POINTER: name = "POINTER";        break;
 		case SK_REF:     name = "REFERENCE";      break;
 		default: name = "***UNDEFINED***";        break;
@@ -2905,15 +2897,6 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 				(*gtype)++;
 				dftype = **gtype;
 				result = ((OLD_FORMAL_TYPE - aftype ) == dftype);
-			} else {
-				result = 0;
-			}
-		} else if (aftype == OLD_BIT_TYPE) {
-			if (dftype == egc_bit_dtype) {
-				(*atype)++;
-				(*gtype)++;
-					/* Compare size of BIT. */
-				result = ((uint16) **gtype == (uint16) **atype);
 			} else {
 				result = 0;
 			}
@@ -3416,8 +3399,6 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 					eif_rt_xfree ((char *) attributes);
 					eise_io ("Independent retrieve: unable to read attribute description.");
 				}
-				if (att_type == SK_BIT)
-					eraise ("BIT type unsupported", EN_RETR);
 				attributes[j].name = (char *) eif_rt_xmalloc (strlen (vis_name) +1, C_T, GC_OFF);
 				if (attributes[j].name == NULL)
 					xraise (EN_MEM);
@@ -3697,8 +3678,6 @@ rt_private void rread_attribute (attribute_detail *a)
 	/* Reader attribute basic type */
 	ridr_multi_char ((EIF_CHARACTER_8 *) &basic_type, 1);
 	a->basic_type = ((uint32) basic_type << 24);
-	if (a->basic_type == SK_BIT)
-		eraise ("BIT type unsupported", EN_RETR);
 
 	/* Reader attribute type array */
 	ridr_multi_int16 (&num_atypes, 1);
@@ -4054,24 +4033,6 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 					case SK_CHAR8:
 						buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER_8));
 						break;
-					case SK_BIT:
-							{
-								uint16 hflags;
-								EIF_TYPE_INDEX hdtype, hdftype;
-								struct bit *bptr = (struct bit *)(object + attrib_offset);
-								buffer_read((char *)&store_flags, sizeof(uint32));
-								Split_flags_dtype(hflags,hdtype,store_flags);
-								hdftype = rt_read_cid(hdtype);
-								HEADER(bptr)->ov_dftype = hdftype;
-								HEADER(bptr)->ov_dtype = To_dtype(hdftype);
-								HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
-
-								buffer_read((char *) bptr, bptr->b_length);
-								if ((types_cn & SK_DTYPE) != LENGTH(bptr))
-									eise_io("General retrieve: mismatch size for BIT object.");
-							}
-
-						break;
 					case SK_EXP: {
 						uint16 hflags;
 						EIF_TYPE_INDEX hdtype, hdftype;
@@ -4154,13 +4115,6 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 #endif
 							gen_object_read (ref, parent, hflags, hdtype);
 						}
-						}
-						break;
-					case SK_BIT: {
-						/* uint32 l;*/ /* %%ss removed */
-
-						elem_size = RT_SPECIAL_ELEM_SIZE(object);
-						buffer_read(object, (rt_uint_ptr) count*elem_size); /* %%ss cast was struct bit* */
 						}
 						break;
 					case SK_POINTER:
@@ -5016,13 +4970,6 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 						case OLD_REAL_64_TYPE: ip[l_real_count] = egc_real64_dtype; l_real_count++; break;
 						case OLD_POINTER_TYPE: ip[l_real_count] = egc_point_dtype; l_real_count++; break;
 						case OLD_CHARACTER_32_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
-						case OLD_BIT_TYPE:
-							ip[l_real_count] = egc_bit_dtype;
-							l_real_count++;
-							ridr_norm_int (&val);	/* Number of bits. */
-							ip[l_real_count] = (EIF_TYPE_INDEX) val;
-							i--;
-							break;
 						default:
 							ip[l_real_count] = (EIF_TYPE_INDEX) old_dftype;
 							l_real_count++;

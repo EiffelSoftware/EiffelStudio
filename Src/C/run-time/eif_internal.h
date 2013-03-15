@@ -2,7 +2,7 @@
 	description: "Routines to implement class INTERNAL."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -87,12 +87,6 @@ rt_private rt_inline char *ei_exp_type(long i, EIF_REFERENCE object)
 	char *s;
 	s = System(HEADER(ei_oref(i,object))->ov_dtype).cn_generator;
 	return makestr(s,strlen(s));
-}
-
-rt_private rt_inline rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object)
-	/* Returns the size (in bit) of the i-the bit field of `object'. */
-{
-	return (long) (System(Dtype(object)).cn_types[i] - SK_BIT);
 }
 
 rt_private rt_inline rt_uint_ptr ei_size(EIF_REFERENCE object)

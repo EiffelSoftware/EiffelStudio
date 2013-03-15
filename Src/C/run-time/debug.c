@@ -2,7 +2,7 @@
 	description: "Routine to control the debugging behavior."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -2505,9 +2505,6 @@ rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint3
 			new_object = (EIF_REFERENCE) (new_value->it_ref);
 #endif
 			*(EIF_REFERENCE *)(ip.address) = new_object;
-			break;
-		case SK_BIT:
-			error_code = 1; /* not yet implemented */
 			break;
 		case SK_EXP:
 			error_code = 2; /* modifying  an expanded reference is not allowed */

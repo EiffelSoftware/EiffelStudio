@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -56,7 +56,6 @@
 #include "eif_gen_conf.h"
 #include "eif_rout_obj.h"
 #include "eif_option.h"
-#include "eif_bits.h"
 #include "eif_scoop.h"
 
 #ifdef WORKBENCH
@@ -175,12 +174,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTLNSP(t,n,e,b) allocates a new special array
  *  initializes it with the routine pointer 'y', the true routine pointer 'z',
  *  argument tuple 'a', open map 'o' and closed map 'c'
- *  RTLB(x) allocated a new bit object of size 'x'
  *  RTLX(x) allocates an expanded object (with possible in invocation
  *		of the creation routine) of type `x'
- *  RTXB(x,y) copies bit `x' to `y'
- *  RTMB(x,y) creates bit of length y bits from string value x
- *  RTEB(x,y) are bits `x' and `y' equal?
  *  RTBU(x) box a basic value stored in EIF_TYPED_VALUE and return EIF_REFERENCE
  */
 #define RTLN(x)				emalloc(x)
@@ -194,10 +189,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNC(x)			eclone(x)
 #define RTLNSP2(t,f,n,e,b)	special_malloc(f,t,n,e,b)
 #define RTLNSP(t,f,n,e,b)	special_malloc(t | f,n,e,b)
-#define RTLB(x)				bmalloc(x)
-#define RTMB(x,y)			makebit(x,y)
-#define RTXB(x,y)			b_copy(x,y)
-#define RTEB(x,y)			b_equal(x,y)
 #define RTLX(x)				cr_exp(x)
 #define RTBU(x)				eif_box(x)
 #ifdef WORKBENCH
@@ -217,7 +208,6 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTCCL(c) same as RTRCL, but first checks if `x' is expanded
  */
 #define RTCL(x)		rtclone(x)
-#define RTCB(x)		b_clone(x)
 #define RTCCL(x)	((x && eif_is_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
 #ifdef WORKBENCH
 #	define RTRCL(x)	((egc_twin(x)).it_r)
@@ -1115,22 +1105,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 					exvect_o->ex_jbuf = &exenv_o
 #define RTE_OP \
 					expop(&eif_stack)
-
-/* Accessing of bits in a bit field is done via macros.
- * Bits are stored from left to right. If the size of an int is I (in bits),
- * then bit "n" is in the n/I th int at the position n%I.
- *  RTBI(b,n) accesses bit 'n' in the bit field 'b'
- *  RTBS(b,n) sets bit 'n' to 1 in the bit field 'b'
- *  RTBR(b,n) resets bit 'n' to 0 in the bit field 'b'
- */
-#define RTBI(b,n) \
-	(((struct bit *) (b))->b_value[(n)/BITLONG] & (1<<((n)%BITLONG)))
-#define RTBS(b,n) \
-	(((struct bit *) (b))->b_value[(n)/BITLONG] |= (1<<((n)%BITLONG)))
-#define RTBR(b,n) \
-	(((struct bit *) (b))->b_value[(n)/BITLONG] &= ~(1<<((n)%BITLONG)))
-
-
 
 /* Hector protection for external calls:
  *  RTHP(x) protects 'x' returns Hector indirection pointer

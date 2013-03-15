@@ -2,7 +2,7 @@
 	description: "size.vms: Platform specific sizes of basic elements (VMS version)."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -67,7 +67,6 @@ CONFIGURATION ERROR EIF_VMS NOT DEFINED
 #define CHRSIZ		1		/* Size of char */
 #define PTRSIZ		EIF_VMS_PTRSIZ	/* Size of a function pointer */
 #define BYTSIZ		8		/* Size of a byte, in bits */
-#define BITLONG (BYTSIZ * LNGSIZ) /* Number of bits in a long */
 #define LNGPAD_2	8 	/* Computed version of LNGPAD (2) on VMS/Alpha (s.b. 1 on VMS/VAX) */
 
 #else	/* other (VAX? IA64?): hardware dependent values */
@@ -76,17 +75,6 @@ CONFIGURATION ERROR SIZE.VMS VAX HARDWARE DEPENDENT SIZES NOT DEFINED
 #define LNGPAD_2	1		/* Computed version of LNGPAD (2) on VMS/VAX) */
 #endif	/* __alpha */
 
-
-/* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
- * This means some garbage bits may be found at the end of the bit field.
- * BIT_NBPACK computes the number of 'uint32' fields (bit units) needed to
- * store a given amount of bits.
- */
-#define BIT_PACKSIZE    sizeof(uint32)	/* Size of a bit unit in bytes */
-#define BIT_UNIT	(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
-#define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
-#define BITACS(n)	((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
-#define BITOFF(n)	(((BITACS(n)/EIF_ALIGN)+((BITACS(n)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 
 #define REFPAD(n) (((((n)*REFSIZ)/EIF_ALIGN)+((((n)*REFSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 #define CHRPAD(n) (((((n)*CHRSIZ)/EIF_ALIGN)+((((n)*CHRSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)

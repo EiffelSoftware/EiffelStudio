@@ -2,7 +2,7 @@
 	description: "Eiffel based C storing mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -49,7 +49,6 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 #include "eif_cecil.h"
 #include <stdio.h>
 #include "rt_struct.h"
-#include "rt_bits.h"
 #include "rt_run_idr.h"
 #include "rt_error.h"
 #include "eif_main.h"
@@ -998,7 +997,6 @@ rt_public void st_write(EIF_REFERENCE object, int has_transient_attributes)
 							case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
 							case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 							case SK_REF:
-							case SK_BIT:
 							case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
 							case SK_EXP:
 									elem_size = HEADER(object + attrib_offset)->ov_size & B_SIZE;
@@ -1214,7 +1212,6 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 					case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 					case SK_REF:
 					case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
-					case SK_BIT:
 					case SK_EXP:
 								/* We don't actually need the size because per the validity rules they cannot be volatile. */
 							elem_size = 0; break;
@@ -1222,14 +1219,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 						elem_size = 0;
 						eise_io("General store: not an Eiffel object.");
 				}
-				if (sk_type == SK_BIT) {
-					struct bit *bptr = (struct bit *)(object + attrib_offset);
-					store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
-					buffer_write((char *)(&store_flags), sizeof(uint32));
-					st_write_cid (HEADER(bptr)->ov_dftype);
-					buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));
-					buffer_write((char *) (bptr->b_value), bptr->b_length);
-				} else if (sk_type == SK_EXP) {
+				if (sk_type == SK_EXP) {
 						/* General store does not need a value for the second argument since
 						 * we do a field by field store. */
 					gst_write (object + attrib_offset, 0);
@@ -1288,12 +1278,6 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 						case SK_REAL32: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REAL_32)); break;
 						case SK_REAL64: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REAL_64)); break;
 						case SK_POINTER: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_POINTER)); break;
-						case SK_BIT:
-							elem_size = RT_SPECIAL_ELEM_SIZE(object);
-
-	/*FIXME: header for each object ????*/
-							buffer_write(object, (rt_uint_ptr) count*elem_size); /* %%ss arg1 was cast (struct bit *) */
-							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE(object);
 							exp_dftype = eif_gen_param_id(dftype, 1);
@@ -1439,26 +1423,6 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						break;
 					case SK_REF: widr_multi_any (object + attrib_offset, 1); break;
 					case SK_POINTER: widr_multi_ptr (object + attrib_offset, 1); break;
-					case SK_BIT:
-						{
-							struct bit *bptr = (struct bit *)(object + attrib_offset);
-#if DEBUG &1
-							int q;
-							printf (" %x", bptr->b_length);
-							printf (" %x", HEADER(bptr)->ov_flags);
-							for (q = 0; q < BIT_NBPACK(LENGTH(bptr)) ; q++) {
-								printf (" %lx", *((uint32 *)(bptr->b_value + q)));
-								if (!(q % 40))
-									printf ("\n");
-							}
-#endif
-							store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
-							widr_norm_int(&store_flags);
-							ist_write_cid (HEADER(bptr)->ov_dftype);
-							widr_multi_bit (bptr, 1, bptr->b_length, 0);
-						}
-
-						break;
 					default:
 						eise_io("Independent store: not an Eiffel object.");
 				}
@@ -1517,11 +1481,6 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)object, count); break;
 						case SK_BOOL: widr_multi_char ((EIF_BOOLEAN *) object, count); break;
 						case SK_CHAR8: widr_multi_char ((EIF_CHARACTER_8 *) object, count); break;
-						case SK_BIT:
-							dgen_typ = dgen & SK_DTYPE;
-							elem_size = RT_SPECIAL_ELEM_SIZE(object);
-							widr_multi_bit ((struct bit *)object, count, dgen_typ, elem_size);
-							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE(object);
 							exp_dftype = eif_gen_param_id(dftype, 1);

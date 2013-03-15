@@ -2,7 +2,7 @@
 	description: "Definitions and macros for the C-Eiffel Call-In Library."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -64,7 +64,6 @@ typedef EIF_REFERENCE*	EIF_OBJECT;			/* Eiffel object: safe indirection to an Ei
 #else
 typedef EIF_REFERENCE	EIF_OBJECT;			/* Eiffel object: safe indirection to an Eiffel reference */
 #endif
-typedef struct bit *	EIF_BIT;			/* Structure used for bits */
 typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 
 /* Types defined for easier reference when dealing with function pointers.
@@ -86,7 +85,6 @@ typedef EIF_REAL_32	(*EIF_REAL_32_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an E
 typedef EIF_REAL_64	(*EIF_REAL_64_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Double */
 typedef EIF_REFERENCE (*EIF_REFERENCE_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Reference */
 typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Pointer */
-typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bits */
 
 
 #define eif_create			eifcreate		/* Object creation */
@@ -110,7 +108,6 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define eif_real_64_function(rout,cid)		(EIF_REAL_64_FUNCTION) eifref(rout,cid)
 #define eif_reference_function(rout,cid)	(EIF_REFERENCE_FUNCTION) eifref(rout,cid)
 #define eif_boolean_function(rout,cid)		(EIF_BOOLEAN_FUNCTION) eifref(rout,cid)
-#define eif_bit_function(rout,cid)			(EIF_BIT_FUNCTION) eifref(rout,cid)
 #define eif_pointer_function(rout,cid)		(EIF_POINTER_FUNCTION) eifref(rout,cid)
 
 /*
@@ -119,7 +116,6 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 
 #define eif_type			eiftype			/* Dynamic type ID */
 #define eif_name			eifname			/* Reverts class ID to name */
-#define eif_bit_clone		eifbcln			/* Clones a bit structure */
 #define eif_attribute_type    eifattrtype           /* Get the type of an attribute, returns EIF_NO_TYPE if fails */
 #define eif_locate  eiflocate   /* Return index of a given attribute in a given object */
 
@@ -138,31 +134,32 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define eif_disable_visible_exception eifuvisex /* Disable the visible exception */
 
 /* 
- * Convention for attribute types
+ * Convention for attribute types.
+ * The values are in sync with REFLECTOR_CONSTANTS.
  */
 
-#define EIF_POINTER_TYPE	0
-#define EIF_REFERENCE_TYPE	1
-#define EIF_CHARACTER_8_TYPE	2
-#define EIF_BOOLEAN_TYPE	3
-#define EIF_INTEGER_TYPE	4
-#define EIF_INTEGER_32_TYPE	4
-#define EIF_REAL_32_TYPE		5
-#define EIF_REAL_64_TYPE		6
-#define EIF_EXPANDED_TYPE	7
-#define EIF_BIT_TYPE		8
-#define EIF_INTEGER_8_TYPE	9
-#define EIF_INTEGER_16_TYPE	10
-#define EIF_INTEGER_64_TYPE 11
-#define EIF_CHARACTER_32_TYPE	12
-#define EIF_NATURAL_8_TYPE	13
-#define EIF_NATURAL_16_TYPE	14
-#define EIF_NATURAL_32_TYPE 15
-#define EIF_NATURAL_64_TYPE 16
+#define EIF_POINTER_TYPE       0
+#define EIF_REFERENCE_TYPE     1
+#define EIF_EXPANDED_TYPE      2
+#define EIF_BOOLEAN_TYPE       3
+#define EIF_CHARACTER_8_TYPE   4
+#define EIF_CHARACTER_32_TYPE  5
+#define EIF_REAL_32_TYPE       6
+#define EIF_REAL_64_TYPE       7
+#define EIF_INTEGER_8_TYPE     8
+#define EIF_INTEGER_16_TYPE    9
+#define EIF_INTEGER_32_TYPE   10
+#define EIF_INTEGER_64_TYPE   11
+#define EIF_NATURAL_8_TYPE    12
+#define EIF_NATURAL_16_TYPE   13
+#define EIF_NATURAL_32_TYPE   14
+#define EIF_NATURAL_64_TYPE   15
+
+#define EIF_INTEGER_TYPE      EIF_INTEGER_32_TYPE
 
 /* Obsolete code. */
-#define EIF_CHARACTER_TYPE	2
-#define EIF_WIDE_CHAR_TYPE	12
+#define EIF_CHARACTER_TYPE    EIF_CHARACTER_8_TYPE
+#define EIF_WIDE_CHAR_TYPE    EIF_CHARACTER_32_TYPE
 
 
 /* Accessing an attribute in read/write mode (this is both an lvalue and
@@ -197,17 +194,6 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 		memcpy ((type *) area, c_array, nelts * sizeof (type));\
 	}
 
-/* Accessing bits is done via special macros, because they have no counterpart
- * in C. We provide macros for reading and writing bit fields in an Eiffel
- * object, as well as macros to handle the EIF_BIT type.
- */
-#define eif_bit_attribute		eifgbit			/* Return EIF_BIT attribute */
-#define eif_bit_set_attribute	eifsbit			/* Copy supplied bit into another */
-#define eif_bit_length(x)	(x)->b_length	/* Length of EIF_BIT item */
-#define eif_bit_ith			eifibit			/* Value of the ith bit */
-#define eif_bit_set			eifsibit		/* Set ith bit to 1 */
-#define eif_bit_clear		eifribit		/* Reset ith bit to 0 */
-
 /*
  * Creation an Eiffel string.
  */
@@ -220,8 +206,6 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
  */
 
 #define EIF_NO_TYPE			(-1)			/* No type associated to a name */
-#define EIF_NO_BIT_FIELD		((EIF_BIT) 0)	/* No bit field associated */
-#define EIF_NO_BIT			2				/* Indexing a bit out of range */
 #define EIF_NO_ATTRIBUTE	(-1)			/* No attribute found */
 #define EIF_WRONG_TYPE	(-2)			/* Wrong type */
 #define EIF_CECIL_OK	(0)			/* Function returned successfully. */
@@ -270,7 +254,6 @@ struct cecil_info {
 #define eif_fn_double	eif_double_function	/* Use `eif_double_function' instead */
 #define eif_fn_ref		eif_reference_function	/* Use `eif_reference_function' instead */
 #define eif_fn_bool		eif_boolean_function	/* Use `eif_boolean_function' instead */
-#define eif_fn_bit		eif_bit_function	/* Use `eif_bit_function' instead */
 #define eif_fn_pointer	eif_pointer_function	/* Use `eif_pointer_function' instead */
 
 
@@ -282,14 +265,9 @@ struct cecil_info {
 #define EIF_FN_REAL_64 EIF_REAL_64_FUNCTION	/* Use EIF_REAL_64_FUNCTION instead */
 #define EIF_FN_REF EIF_REFERENCE_FUNCTION /* use EIF_REFERENCE_FUNCTION instead */
 #define EIF_FN_POINTER EIF_POINTER_FUNCTION	/* Use EIF_POINTER_FUNCTION instead */
-#define EIF_FN_BIT EIF_BIT_FUNCTION	/*  Use EIF_BIT_FUNCTION instead */
 
 
 #define	EIF_OBJ	EIF_OBJECT						/* Use EIF_OBJECT instead */
-#define eif_bit_attr		eifgbit			/* Return EIF_BIT attribute */
-#define eif_bit_set_attr	eifsbit			/* Copy supplied bit into another */
-
-#define EIF_NO_BFIELD		((EIF_BIT) 0)	/* No bit field associated */
 
 /*
  * Functions and variables declarations.
@@ -319,12 +297,6 @@ RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
 RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by *(EIF_TYPE*). */
 RT_LNK void *old_eifaddr(EIF_REFERENCE object, char *name);					/* Compute address of attribute. Old version. */
 RT_LNK EIF_INTEGER eifaddr_offset(EIF_REFERENCE, char *name, int * const ret);	/* Compute offset to `object' of attribute `name' */
-RT_LNK EIF_BIT eifgbit(EIF_REFERENCE object, char *name);				/* Get a bit field structure */
-RT_LNK void eifsbit(EIF_REFERENCE object, char *name, EIF_BIT bit);					/* Set a bit field structure */
-RT_LNK char eifibit(EIF_BIT bit, int i);					/* Access ith bit in bit field */
-RT_LNK int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
-RT_LNK int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */
-RT_LNK EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
 
 /* Dynamic Type id of an object of type `type_string' */
 RT_LNK EIF_TYPE_ID eif_type_id (char *type_string);

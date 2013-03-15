@@ -2,7 +2,7 @@
 	description: "Declarations for plugging routines and structures."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -56,19 +56,6 @@ RT_LNK EIF_TYPED_VALUE eif_optimized_return_value;		/* Location where optimized 
 
 RT_LNK EIF_TYPED_VALUE eif_do_nothing_value;	/* To store values of computation of `x.do_something'. */
 
-/* Structure used to represent bits in the object. The first long integer
- * is the length of the bit field. It is then followed by enough long integers
- * to store the value of the bits.
- * The declaration of the structure is tricky: the value field is declared as
- * a pointer on an array of one time, but as C does no range checking, this
- * perfectly suits our needs--RAM.
- */
-
-struct bit {
-	uint16 b_length;				/* Length of the bit field */
-	uint32 b_value[1];				/* Array long integers holding value */
-};
-
 #define	eif_make_string	makestr	/* Returns an Eiffel string */
 
 /*
@@ -80,7 +67,6 @@ RT_LNK EIF_REFERENCE makestr_with_hash_as_old(register char *s, register size_t 
 RT_LNK EIF_REFERENCE makestr(register char *s, register size_t len);
 RT_LNK EIF_REFERENCE makestr32_with_hash(register char *s, register size_t len, register int a_hash);
 RT_LNK EIF_REFERENCE makestr32_with_hash_as_old(register char *s, register size_t len, register int a_hash);
-RT_LNK EIF_REFERENCE makebit(char *bit, uint16 bit_count);		/* Build an Eiffel bit object */
 extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
 RT_LNK EIF_REFERENCE eif_arg_array(void);		/* ARRAY[STRING] creation from command line arguments */

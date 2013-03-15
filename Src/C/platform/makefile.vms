@@ -239,6 +239,5 @@ commands.obj :	      [-.run-time]eif_copy.h
 commands.obj :	      [-.run-time]eif_hector.h
 commands.obj :	      [-.run-time]eif_size.h
 commands.obj :	      [-.run-time]eif_option.h
-commands.obj :	      [-.run-time]eif_bits.h
 commands.obj :	   [-.run-time]eif_vmsdirent.h
 commands.obj :	[-.run-time]eif_file.h

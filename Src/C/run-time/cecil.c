@@ -2,7 +2,7 @@
 	description: "C-Eiffel Call-In Library."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -184,7 +184,6 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 				case SK_REAL32: l_result = EIF_REAL_32_TYPE;
 				case SK_REAL64: l_result = EIF_REAL_64_TYPE;
 				case SK_EXP: l_result = EIF_EXPANDED_TYPE;
-				case SK_BIT: l_result = EIF_BIT_TYPE;
 				case SK_POINTER: l_result = EIF_POINTER_TYPE;
 			}
 		}
@@ -503,157 +502,6 @@ rt_public void *old_eifaddr(EIF_REFERENCE object, char *name)
 	int ret;
 	return eifaddr (object, name, &ret);
 }	/* old_eifaddr */
-
-/*
- * Bit field handling
- */
-
-rt_public EIF_BIT eifgbit(EIF_REFERENCE object, char *name)
-{
-	/* Return a pointer the bit field 'name' in the object, or an error if
-	 * no such bit field is found.
-	 */
-
-	int i;							/* Index in skeleton structure */
-#ifdef WORKBENCH
-	int32 rout_id;					/* Bit attribute routine id */
-	EIF_TYPE_INDEX dtype;			/* Object dynamic type */
-	long offset;					/* Bit attribute offset */
-#else
-	struct cnode *sk;				/* Skeleton entry in system */
-#endif
-
-	i = locate(object, name);		/* Locate attribute by name */
-	if (i == EIF_NO_ATTRIBUTE)					/* Attribute not found */
-		return EIF_NO_BIT_FIELD;		/* No bit field */
-
-#ifndef WORKBENCH
-	sk = &System(Dtype(object));	/* Fetch skeleton entry */
-
-	if (!(sk->cn_types[i] & SK_BIT))
-		return EIF_NO_BIT_FIELD;		/* Wrong type (not a bit field) */
-
-	return (EIF_BIT) (object + (sk->cn_offsets[i]));
-#else
-	dtype = Dtype(object);
-	rout_id = System(dtype).cn_attr[i];
-	CAttrOffs(offset,rout_id,dtype);
-
-	return (EIF_BIT) (object + offset);
-#endif
-}
-
-rt_public void eifsbit(EIF_REFERENCE object, char *name, EIF_BIT bit)
-{
-	/* Sets the bit field 'name' of 'object' to bit. Do nothing if the fields
-	 * is not a bit one or if 'bit' is a void pointer.
-	 */
-
-	EIF_BIT obj_field;				/* Address of the bit field in object */
-	int size;						/* Size of the whole bit field (in bytes) */
-
-	if (bit == (EIF_BIT) 0)			/* Abort on void reference */
-		return;
-
-	obj_field = eifgbit(object, name);	/* Get address of bit field */
-	if (obj_field == EIF_NO_BIT_FIELD)		/* Eh! This is not a bit field! */
-		return;							/* Do nothing */
-
-	/* The size of the whole bit field is the size of the long which holds the
-	 * length of the bit field (in bits) plus the size of the field itself.
-	 */
-
-	size = LNGSIZ + (obj_field->b_length / BITLONG +
-		(obj_field->b_length % BITLONG) ? 0 : 1) * LNGSIZ;
-
-	/* Copy the bit field 'bit' into obj_field. No check is made to ensure the
-	 * field is big enough (that would cost one more look-up in the skeleton).
-	 */
-
-	memcpy (obj_field, bit, size);
-}
-
-rt_public char eifibit(EIF_BIT bit, int i)
-{
-	/* Return the value of the ith bit in 'bit', starting numbering at 1.
-	 * If 'i' is not in the range, return EIF_NO_BIT.
-	 */
-
-	if (bit == (EIF_BIT) 0)			/* Null pointer */
-		return EIF_NO_BIT;			/* No bit then! */
-
-	if (i < 1 || (uint32) i > bit->b_length)
-		return EIF_NO_BIT;			/* Index out of range */
-
-	i--;			/* Run-time macros work with index starting at 0 */
-
-	return (char) RTBI(bit, i);			/* Access to bit i */
-}
-
-rt_public int eifsibit(EIF_BIT bit, int i)
-{
-	/* Set the bit 'i' to 1 in the bit field 'bit'. If out of range or a null
-	 * bit field is provided, do nothing and return -1.
-	 */
-
-	if (bit == (EIF_BIT) 0)			/* Null pointer */
-		return -1;					/* No action */
-
-	if (i < 1 || (uint32) i > bit->b_length)
-		return -1;					/* Index out of range */
-
-	i--;			/* Run-time macros work with index starting at 0 */
-	RTBS(bit, i);	/* Set bit i to 1 */
-
-	return 0;		/* Ok */
-}
-
-rt_public int eifribit(EIF_BIT bit, int i)
-{
-	/* Reset the bit 'i' to 0 in the bit field 'bit'. If out of range or a null
-	 * bit field is provided, do nothing and return -1.
-	 */
-
-	if (bit == (EIF_BIT) 0)			/* Null pointer */
-		return -1;					/* No action */
-
-	if (i < 1 || (uint32) i > bit->b_length)
-		return -1;					/* Index out of range */
-
-	i--;			/* Run-time macros work with index starting at 0 */
-	RTBR(bit, i);	/* Reset bit i to 0 */
-
-	return 0;		/* Ok */
-}
-
-rt_public EIF_BIT eifbcln(EIF_BIT bit)
-{
-	/* Clones the bit field structure given as argument */
-
-	EIF_BIT new_bit;				/* The fresh new copy of the bit field */
-	int size;						/* Size of the bit field container */
-
-	if (bit == (EIF_BIT) 0)
-		return (EIF_BIT) 0;
-
-	/* The size of the whole bit field is the size of the long which holds the
-	 * length of the bit field (in bits) plus the size of the field itself.
-	 */
-
-	size = LNGSIZ + (bit->b_length / BITLONG +
-		(bit->b_length % BITLONG) ? 0 : 1) * LNGSIZ;
-
-	new_bit = (EIF_BIT) eif_rt_xmalloc(size, C_T, GC_OFF);
-	if (new_bit == (EIF_BIT) 0)
-		return (EIF_BIT) 0;			/* Could not allocate memory */
-
-	/* Copy the bit field 'bit' into obj_field. No check is made to ensure the
-	 * field is big enough (that would cost one more look-up in the skeleton).
-	 */
-
-	memcpy (new_bit, bit, size);
-	return (new_bit);
-}
 
 /*
  * Hash table handling

@@ -2,7 +2,7 @@
 	description: "Pre-computes offsets in generated C code to avoid cpp indigestion."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -60,7 +60,6 @@ rt_private size_t ptroff(void);
 rt_private size_t r64off(void);
 rt_private size_t objsiz(void);
 rt_private size_t i64off(void);
-rt_private size_t bitoff(void);
 
 rt_private size_t refacs (void);
 rt_private size_t chracs (void);
@@ -110,7 +109,6 @@ rt_private struct parse parser[] = {
 	{ "I64OFF", 7, i64off },
 	{ "R64OFF", 8, r64off },
 	{ "OBJSIZ", 8, objsiz },
-	{ "BITOFF", 1, bitoff },
 /* Fixme: to remove when bootstrap done */
 	{ "DBLOFF", 8, r64off },
 	{ "DBLACS", 1, r64acs },
@@ -383,7 +381,6 @@ rt_private size_t i64off(void) { return eif_i64off(nb_ref, nb_char, nb_i16, nb_i
 rt_private size_t r64off(void) { return eif_r64off(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64) + R64ACS(nb_r64); }
 rt_private size_t objsiz(void) { return eif_objsiz(nb_ref, nb_char, nb_i16, nb_i32, nb_r32, nb_ptr, nb_i64, nb_r64); }
 
-rt_private size_t bitoff (void) { return BITOFF(a[0]); }
 rt_private size_t refacs (void) { return REFACS(a[0]); } 
 rt_private size_t chracs (void) { return CHRACS(a[0]); }
 rt_private size_t i16acs (void) { return I16ACS(a[0]); }

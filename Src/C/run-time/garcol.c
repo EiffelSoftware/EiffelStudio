@@ -2,7 +2,7 @@
 	description: "Garbage collection routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -2101,7 +2101,6 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				case SK_INT64: printf("\t%d: int64 %ld\n", i, lst->it_int64); break;
 				case SK_REAL32: printf("\t%d: real32 %f\n", i, lst->it_real32); break;
 				case SK_REAL64: printf("\t%d: real64 %f\n", i, lst->it_real64); break;
-				case SK_BIT: printf("\t%d: BITS\n", i); break;
 				case SK_POINTER: printf("\t%d: pointer 0x%lx\n", i, lst->it_ref); break;
 				case SK_VOID: printf("\t%d: void\n", i); break;
 				default:
@@ -2117,7 +2116,6 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				switch (last->type & SK_HEAD) {		/* Type in stack */
 				case SK_REF:						/* Reference */
 				case SK_EXP:
-				case SK_BIT:
 					last->it_ref = mark_expanded(last->it_ref, marker);
 					break;
 				}
@@ -2126,7 +2124,6 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				switch (last->type & SK_HEAD) {		/* Type in stack */
 				case SK_REF:						/* Reference */
 				case SK_EXP:
-				case SK_BIT:
 					(void) mark_expanded(last->it_ref, marker);
 					break;
 				}
@@ -2155,7 +2152,6 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				case SK_INT64: printf("\t%d: int %ld\n", i, lst->it_int64); break;
 				case SK_REAL32: printf("\t%d: real32 %f\n", i, lst->it_real32); break;
 				case SK_REAL64: printf("\t%d: real64 %f\n", i, lst->it_real64); break;
-				case SK_BIT: printf("\t%d: BITS\n", i); break;
 				case SK_POINTER: printf("\t%d: pointer 0x%lx\n", i, lst->it_ref); break;
 				case SK_VOID: printf("\t%d: void\n", i); break;
 				default:

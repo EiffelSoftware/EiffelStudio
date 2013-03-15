@@ -2,7 +2,7 @@
 	description: "Routines for manipulating directories."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -228,7 +228,7 @@ rt_public EIF_POINTER eif_dir_next(EIF_POINTER d)
 doc:	<routine name="eif_dir_current" return_type="EIF_INTEGER" export="public">
 doc:		<summary>Store a EIF_FILENAME pointer corresponding to the current working directory if it can be computed in `a_buffer'.</summary>
 doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'. If there is an error, we return -1.</return>
-doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengþh of buffer is required.</param>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengï¿½h of buffer is required.</param>
 doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
@@ -536,7 +536,7 @@ doc:	</routine>
 rt_public EIF_BOOLEAN eif_dir_is_deletable(EIF_FILENAME name)
 {
 #ifdef EIF_VMS
-	return (EIF_BOOLEAN) TRUE;  /* ***VMS FIXME:*** */
+	return EIF_TRUE;  /* ***VMS FIXME:*** */
 #else
     return eif_dir_is_writable (name);
 #endif

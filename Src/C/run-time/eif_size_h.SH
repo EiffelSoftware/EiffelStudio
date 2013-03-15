@@ -72,23 +72,11 @@ $spitshell >eif_size.h <<!GROK!THIS!
 #define CHRSIZ	$charsize		/* Size of char */
 #define PTRSIZ	$ptrsize		/* Size of a function pointer: FIXME */
 #define BYTSIZ	$bitpbyte		/* Size of a byte, in bits */
-#define BITLONG (BYTSIZ * LNGSIZ) /* Number of bits in a long */
 #define LNGPAD_2 $lngpad_2	/* equivalent to LNGPAD(2) */
 !GROK!THIS!
 
 : In the following dollars and backticks do not need the extra backslash.
 $spitshell >>eif_size.h <<'!NO!SUBS!'
-
-/* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
- * This means some garbage bits may be found at the end of the bit field.
- * BIT_NBPACK computes the number of 'uint32' fields (bit units) needed to
- * store a given amount of bits.
- */
-#define BIT_PACKSIZE    sizeof(uint32)	/* Size of a bit unit in bytes */
-#define BIT_UNIT		(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
-#define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
-#define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
-#define BITOFF(n)		(((BITACS(n)/EIF_ALIGN)+((BITACS(n)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 
 #define REFPAD(n) (((((n)*REFSIZ)/EIF_ALIGN)+((((n)*REFSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 #define CHRPAD(n) (((((n)*CHRSIZ)/EIF_ALIGN)+((((n)*CHRSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)

@@ -100,7 +100,6 @@ feature {NONE} -- Implementation: Byte node
 		local
 			l_string_b: STRING_B
 			l_type_expr_b: TYPE_EXPR_B
-			l_hector_b: HECTOR_B
 			l_feat: FEATURE_I
 			l_basic_i: BASIC_A
 			l_ref: CL_TYPE_A

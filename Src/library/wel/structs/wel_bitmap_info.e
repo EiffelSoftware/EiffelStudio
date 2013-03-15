@@ -62,6 +62,15 @@ feature {NONE} -- Initialization
 			create bih.make
 			set_bitmap_info_header (bih)
 			cwin_get_di_bits (dc.item, bitmap.item, 0, 0, default_pointer, item, usage)
+
+			rgb_quad_count := header.color_count
+			if rgb_quad_count > 0 then
+					-- If we use the color table, we need to reallocate it.
+				item := item.memory_realloc (structure_size)
+				if item = default_pointer then
+					(create {EXCEPTIONS}).raise ("No more memory")
+				end
+			end
 		end
 
 feature -- Access
@@ -90,6 +99,16 @@ feature -- Access
 			create Result.make_by_pointer (cwel_bitmap_info_get_rgb_quad (item, index))
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	rgb_quad_natural (index: INTEGER): NATURAL_32
+			-- Bitmap color at zero-based `index'
+		require
+			exists: exists
+			index_small_enough: index < rgb_quad_count
+			index_large_enough: index >= 0
+		do
+			Result := cwel_bitmap_info_get_rgb_quad_natural (item, index)
 		end
 
 feature -- Element change
@@ -193,6 +212,20 @@ feature {NONE} -- Externals
 			"C [macro <bmpinfo.h>]"
 		end
 
+	cwel_bitmap_info_get_rgb_quad_natural (ptr: POINTER; i: INTEGER): NATURAL_32
+		external
+			"C inline use <bmpinfo.h>"
+		alias
+			"{
+				union {
+					RGBQUAD rgb;
+					EIF_NATURAL_32 n32;
+				} xconvert;
+				xconvert.rgb = ((BITMAPINFO*) $ptr)->bmiColors[$i];
+				return xconvert.n32;
+			}"
+		end
+
 	cwin_get_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
 			bits, bi: POINTER; usage: INTEGER)
 			-- SDK GetDIBits
@@ -204,14 +237,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

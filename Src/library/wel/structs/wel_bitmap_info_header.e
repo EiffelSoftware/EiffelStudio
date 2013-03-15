@@ -100,6 +100,31 @@ feature -- Access
 			Result := cwel_bitmapinfoheader_get_clrimportant (item)
 		end
 
+	color_count: INTEGER
+			-- Number of colors expected in WEL_BITMAP_INFO to properly represent Current.
+			-- See Microsoft documentation on BITMAPINFOHEADER and the `biBitCount' description.
+		do
+			inspect bit_count
+			when 0 then
+			when 1 then
+				Result := 2
+			when 4 then
+				Result := 16
+			when 8 then
+				Result := 256
+			when 16, 32 then
+				if compression = {WEL_BI_COMPRESSION_CONSTANTS}.bi_rgb then
+					Result := clr_used
+				elseif compression = {WEL_BI_COMPRESSION_CONSTANTS}.bi_bitfields then
+					Result := 3
+				end
+			when 24 then
+				Result := clr_used
+			else
+				check False end
+			end
+		end
+
 feature -- Element change
 
 	set_width (a_width: INTEGER)
@@ -303,14 +328,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

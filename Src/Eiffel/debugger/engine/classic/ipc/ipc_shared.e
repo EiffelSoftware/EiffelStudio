@@ -5,7 +5,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class IPC_SHARED
 
@@ -75,7 +75,6 @@ feature {NONE} -- Inspection constants
 
 	In_address: INTEGER					= 0 -- Inspect Object at given physical addr
 	In_h_addr: INTEGER					= 5 -- Inspect Object at given hector addr
-	In_bit_addr: INTEGER				= 6 -- Inspect Bit object at given addr
 	In_string_addr: INTEGER				= 7 -- Inspect String object at given addr
 
 	Out_called: INTEGER					= 0 -- Check whether once routine has been called
@@ -138,7 +137,7 @@ feature {NONE} -- For workbench responses.
 	Rep_notified: INTEGER				= 7
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -223,7 +223,6 @@ feature {NONE} -- Factory
 				create {RT_DBG_FIELD_RECORD [CHARACTER_8]} Result.make (obj, i, ft, l_reflected_object.character_8_field (i))
 			when character_32_type then
 				create {RT_DBG_FIELD_RECORD [CHARACTER_32]} Result.make (obj, i, ft, l_reflected_object.character_32_field (i))
---			when Bit_type then
 --			when none_type then
 			else
 			end
@@ -272,7 +271,6 @@ feature {NONE} -- Factory
 			when Expanded_type then
 				create l_reflected_object.make_for_expanded_field_at (obj, off)
 				create {RT_DBG_ATTRIBUTE_RECORD [ANY]} Result.make (obj, off, ft, t, l_reflected_object.object)
---			when Bit_type then
 --			when none_type then
 			else
 			end
@@ -317,7 +315,6 @@ feature {NONE} -- Factory
 				create {RT_DBG_LOCAL_RECORD [ANY]} Result.make (dep, pos, ft, t)
 			when Expanded_type then
 				create {RT_DBG_LOCAL_RECORD [ANY]} Result.make (dep, pos, ft, t)
-			when Bit_type then
 			when none_type then
 			else
 			end

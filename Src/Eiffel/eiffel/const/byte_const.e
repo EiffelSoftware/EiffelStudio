@@ -108,16 +108,16 @@ feature -- Access
 	Bc_false_compar:	CHARACTER = '%/092/';
 	Bc_true_compar:		CHARACTER = '%/093/';
 	Bc_standard_equal:	CHARACTER = '%/094/';
-	Bc_bit_standard_equal:	CHARACTER = '%/095/';
+	Bc_not_used_95:	CHARACTER = '%/095/';
 	Bc_hook:			CHARACTER = '%/096/';
-	Bc_bit:				CHARACTER = '%/097/';
+	Bc_not_used_97:	CHARACTER = '%/097/';
 	Bc_array:			CHARACTER = '%/098/';
 	Bc_retrieve_old:	CHARACTER = '%/099/';
 	Bc_real32:			CHARACTER = '%/100/';
 	Bc_old:				CHARACTER = '%/101/';
 	Bc_add_strip:		CHARACTER = '%/102/';
 	Bc_end_strip:		CHARACTER = '%/103/';
-	Bc_lbit_assign:		CHARACTER = '%/104/';
+	Bc_not_used_104:	CHARACTER = '%/104/';
 	Bc_raise_prec:		CHARACTER = '%/105/';
 	Bc_goto_body:		CHARACTER = '%/106/';
 	Bc_not_rec:			CHARACTER = '%/107/';
@@ -268,7 +268,7 @@ feature -- Access
 	Bc_postfail: CHARACTER = '%/177/';
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -381,30 +381,6 @@ feature -- Element change
 			end
 		end
 
-	append_bit (s: STRING)
-			-- Append bit which string value is `s'.
-		local
-			nb_uint32, new_position, bcount: INTEGER
-			ptr: ANY
-		do
-				-- Append number of uint32 integers needed
-				-- for representing the bit value `s'
-			bcount := s.count
-			append_uint32_integer (bcount)
-
-				-- Resize if necessary
-			nb_uint32 := ca_bsize(bcount)
-			new_position := position + nb_uint32 * natural_32_bytes
-			if new_position >= count then
-				resize ((new_position \\ Chunk + 1) * Chunk)
-			end
-
-				-- Write bit representation in `area'
-			ptr := s.to_c
-			ca_wbit ($area, $ptr, position, s.count)
-			position := new_position
-		end
-
 	append_raw_string (s: STRING)
 			-- Append string `s'.
 		require
@@ -623,22 +599,6 @@ feature {BYTE_ARRAY} -- Access
 
 	position: INTEGER
 			-- Position of the cursor in the array
-
-feature {NONE} -- Externals
-
-	ca_bsize (bit_count: INTEGER): INTEGER
-			-- Number of uint32 fields for encoding a bit of length `bit_count'
-		external
-			"C [macro %"eif_eiffel.h%"] (long int): EIF_INTEGER"
-		alias
-			"BIT_NBPACK"
-		end
-
-	ca_wbit(ptr: POINTER; val: POINTER; pos: INTEGER; bit_count: INTEGER)
-			-- Write in `ptr' at position `pos' a bit value `val'
-		external
-			"C"
-		end
 
 invariant
 	position_greater_than_zero: position >= 0

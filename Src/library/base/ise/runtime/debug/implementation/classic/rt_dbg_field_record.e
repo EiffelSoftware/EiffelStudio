@@ -223,7 +223,6 @@ feature {NONE} -- Internal Implementation
 				if attached {RT_DBG_FIELD_RECORD [CHARACTER_32]} r as l_fr_character_32 then
 					l_reflected_object.set_character_32_field (i, (l_fr_character_32).value)
 				end
---			when Bit_type then
 --			when none_type then
 			else
 			end

@@ -66,7 +66,7 @@ feature {NONE} -- Constants
 			Result.extend (image_04bpp)
 			Result.extend (image_08bpp)
 			Result.extend (image_16bpp)
-		Result.extend (image_24bpp)
+			Result.extend (image_24bpp)
 			Result.extend (image_32bpp)
 		end
 

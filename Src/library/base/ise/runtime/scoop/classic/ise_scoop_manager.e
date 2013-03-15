@@ -62,6 +62,8 @@ feature {NONE} -- C callback function
 				free_processor_id (client_processor_id)
 			when enumerate_live_processors_task_id then
 				enumerate_live_processors
+			when update_statistics_task_id then
+				update_statistics
 			else
 				check invalid_task: False end
 			end
@@ -173,6 +175,7 @@ feature {NONE} -- C callback function
 	frozen add_synchronous_call_task_id: NATURAL_8 = 9
 	frozen wait_for_processor_redundancy_task_id: NATURAL_8 = 10
 	frozen check_uncontrolled_call_task_id: NATURAL_8 = 11
+	frozen update_statistics_task_id: NATURAL_8 = 12
 		-- SCOOP Task Constants, similies of those defined in <eif_macros.h>
 		--| FIXME: Use external macros when valid in an inspect statement.
 
@@ -315,6 +318,7 @@ feature -- Request Chain Handling
 				--| FIXME: Replace when check False then is optimized in the compiler.
 				check l_previous_chain_meta_data_entry_attached: False end
 				create l_request_chain_meta_data.make_empty (0)
+				migrate_to_root (l_request_chain_meta_data)
 			end
 
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed;
@@ -325,6 +329,7 @@ feature -- Request Chain Handling
 					--| FIXME: Replace when check False then is optimized in the compiler.
 					check l_request_chain_meta_data_attached: False end
 					create l_request_chain_meta_data.make_empty (0)
+					migrate_to_root (l_request_chain_meta_data)
 				end
 				request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data
 			else
@@ -655,6 +660,7 @@ feature -- Request Chain Handling
 					--| FIXME: Replace when check False then is optimized in the compiler.
 					check l_request_chain_node_meta_data_queue_attached: False end
 					create l_request_chain_node_meta_data_queue.make_empty (0)
+					migrate_to_root (l_request_chain_node_meta_data_queue)
 				end
 
 				l_request_chain_node_meta_data_queue [l_request_chain_node_id] := l_request_chain_meta_data
@@ -665,6 +671,7 @@ feature -- Request Chain Handling
 					--| FIXME: Replace when check False then is optimized in the compiler.
 					check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
 					create l_request_chain_node_queue.make_empty (0)
+					migrate_to_root (l_request_chain_node_queue)
 				end
 
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
@@ -760,6 +767,7 @@ feature -- Command/Query Handling
 					--| FIXME Replace when check False then end code generation for attachment is more efficient.
 				check l_request_chain_node_queue_attached: False end
 				create l_request_chain_node_queue.make_empty (0)
+				migrate_to_root (l_request_chain_node_queue)
 			end
 
 			l_is_synchronous := call_data_sync_pid (a_call_data) /= null_processor_id
@@ -884,6 +892,7 @@ feature -- Command/Query Handling
 				l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
 				if l_request_chain_node_queue = Void then
 					create l_request_chain_node_queue.make_empty (0)
+					migrate_to_root (l_request_chain_node_queue)
 					check l_request_chain_node_queue_attached: False end
 				end
 
@@ -892,6 +901,7 @@ feature -- Command/Query Handling
 					if l_client_request_chain_node_queue_entry = Void then
 						--| FIXME: Replace when check False then is optimized in the compiler.
 						create l_client_request_chain_node_queue_entry.make_empty (0)
+						migrate_to_root (l_client_request_chain_node_queue_entry)
 						check l_client_request_chain_node_queue_entry_attached: False end
 					end
 					l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
@@ -939,6 +949,7 @@ feature -- Command/Query Handling
 					if l_client_request_chain_node_queue_entry = Void then
 						--| FIXME: Replace when check False then is optimized in the compiler.
 						create l_client_request_chain_node_queue_entry.make_empty (0)
+						migrate_to_root (l_client_request_chain_node_queue_entry)
 						check l_client_request_chain_node_queue_entry_attached: False end
 					end
 
@@ -1170,6 +1181,9 @@ feature {NONE} -- Resource Initialization
 				-- Build a list of free processors.
 			create_free_processor_list
 
+				-- Initialize data for resource management.
+			initialize_resource_management
+
 				-- Create request chain node meta data queue pigeon hole for each potential processor.
 			create request_chain_node_meta_data_queue_list.make_filled (Void, max_scoop_processors_instantiable)
 
@@ -1201,6 +1215,7 @@ feature {NONE} -- Resource Initialization
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_mutex, l_condition_variable: POINTER
+			t: like processor_synchronization_list.item
 		do
 				-- Initialize request chain node meta data queue
 			l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [a_processor_id]
@@ -1223,7 +1238,9 @@ feature {NONE} -- Resource Initialization
 				-- Initialize processor synchronization primitives
 			l_mutex := new_mutex
 			l_condition_variable := new_condition_variable
-			processor_synchronization_list [a_processor_id] := [l_mutex, l_condition_variable]
+			t := [l_mutex, l_condition_variable]
+			migrate_to_root (t)
+			processor_synchronization_list [a_processor_id] := t
 
 				-- Make sure that the processor primitives are correctly accessible.
 			check mutex_set: processor_synchronization_list [a_processor_id].mutex = l_mutex end
@@ -1266,6 +1283,7 @@ feature {NONE} -- Resource Initialization
 						--| FIXME Replace when check False then end code generation for attachment is more efficient.
 					check l_request_chain_node_queue_attached: False end
 					create l_request_chain_node_queue.make_empty (0)
+					migrate_to_root (l_request_chain_node_queue)
 				end
 
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [a_logical_processor_id]
@@ -1273,6 +1291,7 @@ feature {NONE} -- Resource Initialization
 						--| FIXME Replace when check False then end code generation for attachment is more efficient.
 					check l_request_chain_node_meta_data_queue_attached: False end
 					create l_request_chain_node_meta_data_queue.make_empty (0)
+					migrate_to_root (l_request_chain_node_meta_data_queue)
 				end
 			until
 				l_processor_meta_data [processor_status_index] = processor_status_redundant
@@ -1398,6 +1417,7 @@ feature {NONE} -- Resource Initialization
 									--| FIXME Replace when check False then end code generation for attachment is more efficient.
 								check l_executing_request_chain_node_attached: False end
 								create l_executing_request_chain_node.make_empty (0)
+								migrate_to_root (l_executing_request_chain_node)
 							end
 							l_executing_node_id_cursor := l_executing_request_chain_node.count
 						until
@@ -1492,6 +1512,7 @@ feature {NONE} -- Resource Initialization
 						--| FIXME Replace when check False then end code generation for attachment is more efficient.
 					check l_executing_request_chain_node_attached: False end
 					create l_executing_request_chain_node.make_empty (0)
+					migrate_to_root (l_executing_request_chain_node)
 				end
 				l_temp_count := l_executing_request_chain_node.count
 				if l_executing_node_id_cursor < l_temp_count then
@@ -2214,6 +2235,19 @@ feature {NONE} -- List of free processors
 	free_processor_index: INTEGER
 			-- Index of the first element in a list of free processors.
 
+feature {NONE} -- Resource management
+
+	initialize_resource_management
+			-- Initialize data for resource management.
+		do
+		end
+
+	update_statistics
+			-- Update statistics used to trigger GC cycle.
+			-- This is usually called at the end of full GC.
+		do
+		end
+
 feature {NONE} -- List of free processors: mutex
 
 	processor_id_mutex: POINTER
@@ -2370,7 +2404,7 @@ feature {NONE} -- Disposal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

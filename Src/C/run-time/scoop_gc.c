@@ -266,6 +266,8 @@ rt_shared void report_live_index (void)
 				/* Notify SCOOP manager that the processor is not used anymore. */
 			RTS_TCB(scoop_task_free_processor, c -> logical_id, 0, 0);
 		}
+			/* Notify SCOOP manager that the GC cycle is over. */
+		RTS_TCB(scoop_task_update_statistics, 0, 0, 0);
 	}
 }
 

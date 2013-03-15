@@ -9,6 +9,8 @@ class
 inherit
 	VISION2_TEST_SET
 
+	TEST_CONSTANTS
+
 feature -- Testing
 
 	draw_sub_pixel_buffer
@@ -58,7 +60,6 @@ feature -- Testing
 					pixmap1: EV_PIXMAP
 					pixmap2: EV_PIXEL_BUFFER
 					window: EV_TITLED_WINDOW
-					l_app: EV_APPLICATION
 				do
 						-- It is very important to use `default_create' here, as otherwise
 						-- it creates on Windows the drawable, not the widget version.
@@ -95,20 +96,6 @@ feature -- Testing
 				end
 			)
 		end
-
-feature {NONE} -- Helpers
-
-    red: EV_COLOR
-    	once
-    		create Result.make_with_rgb ({REAL_32}1.0, {REAL_32}0.0, {REAL_32}0.0)
-    	end
-
-    lenna: STRING
-    	once
-    		Result := "graphics/Lenna.png"
-    	end
-
-    image_path: STRING_32 = "graphics/测试图片.png";
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

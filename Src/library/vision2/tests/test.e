@@ -6,6 +6,15 @@ note
 class
 	TEST
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+		end
+
 feature {NONE} -- Convenience
 
 	tests: detachable TUPLE [
@@ -25,7 +34,7 @@ feature {NONE} -- Convenience
 		TEST_UNICODE]
 
 invariant
-	
+
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

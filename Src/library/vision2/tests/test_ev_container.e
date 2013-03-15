@@ -12,7 +12,56 @@ class
 inherit
 	VISION2_TEST_SET
 
+	TEST_CONSTANTS
+
 feature -- Test routines
+
+	test_container_background_pixmap
+		note
+			testing: "execution/isolated"
+		local
+			s: STRING
+		do
+			create s.make (10)
+			run_test_with_delay (2000, agent (a_string: STRING)
+				local
+					l_window: EV_WINDOW
+					l_hbox: EV_HORIZONTAL_BOX
+					l_vbox: EV_VERTICAL_BOX
+					l_pixel_buffer: EV_PIXEL_BUFFER
+					i: INTEGER
+				do
+					create l_window
+					create l_vbox
+					l_vbox.set_minimum_size (1000, 500)
+					l_vbox.set_border_width (50)
+					l_vbox.set_padding (30)
+					create l_pixel_buffer
+					l_pixel_buffer.set_with_named_file (image_32bpp)
+					l_vbox.set_background_pixmap (l_pixel_buffer.to_pixmap)
+					l_window.extend (l_vbox)
+
+					create l_hbox
+					from
+						i := 1
+					until
+						i > 3
+					loop
+						create l_hbox
+						l_hbox.set_minimum_size (100, 100)
+						create l_pixel_buffer
+						l_pixel_buffer.set_with_named_file (lenna)
+						l_hbox.set_background_pixmap (l_pixel_buffer.to_pixmap)
+						l_vbox.extend (l_hbox)
+						i := i + 1
+					end
+					l_window.show
+					process_events
+					a_string.append ("Success")
+				end (s)
+			)
+			assert ("Completed", s.same_string ("Success"))
+		end
 
 	test_vertical_box_resizing
 		note

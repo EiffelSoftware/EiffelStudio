@@ -2,7 +2,7 @@
 	description: "Externals for dealing with sent (outgoing) requests."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -392,14 +392,6 @@ rt_public void send_string_32_value(char* string, int a_size)
 /* send a bit value to the application */
 rt_public void send_bit_value(char *value)
 {
-	EIF_TYPED_VALUE item;
-
-	/* fill in the item to send */
-	item.type = SK_BIT;
-	item.it_bit = value;
-
-	/* send the request */
-	send_dmpitem_request(&item, 0);
 }
 
 rt_public void ewb_send_ack_ok(void)

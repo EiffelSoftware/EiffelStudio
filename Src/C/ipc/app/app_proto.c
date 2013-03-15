@@ -2,7 +2,7 @@
 	description: "Protocol handling. Send requests and wait for answers."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -54,7 +54,6 @@
 #include "rt_malloc.h"
 #include "select.h"
 #include "eif_hector.h"
-#include "eif_bits.h"
 #include "eif_eiffel.h"
 #include "rt_interp.h"
 #include "eif_memory.h"
@@ -85,7 +84,6 @@ rt_private void ipc_access(EIF_PSTREAM s, Opaque *what);		/* Access object throu
 rt_private void wean(EIF_PSTREAM s, Opaque *what);			/* Wean adopted object */
 rt_private void once_inspect(EIF_PSTREAM s, Opaque *what);	/* Once routines inspection */
 rt_private void obj_inspect(EIF_OBJECT object);
-rt_private void bit_inspect(EIF_REFERENCE object);
 rt_private void string_inspect(EIF_OBJECT object);		/* String object inspection */
 rt_private void load_bc(int slots, int amount);		/* Load byte code information */
 rt_private void app_send_integer (EIF_PSTREAM sp, int val);
@@ -746,10 +744,6 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		}
 		obj_inspect(obj);
 		return;
-	case IN_BIT_ADDR:				/* Bit address inspection */
-		addr = (char *) what->op_3;		/* long -> (char *) */
-		bit_inspect(addr);
-		return;
 	case IN_STRING_ADDR:		/* String object inspection (hector addr) */
 		addr = (char *) what->op_3;		/* long -> (char *) */
 #ifdef ISE_GC
@@ -1137,9 +1131,6 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		case SK_INT64: app_twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
 		case SK_REAL32: app_twrite (o_ref, sizeof(EIF_REAL_32)); break;
 		case SK_REAL64: app_twrite (o_ref, sizeof (EIF_REAL_64)); break;
-		case SK_BIT:
-			bit_inspect(o_ref);
-			break;
 		case SK_EXP:
 			{
 				int32 dtype = Dtype(o_ref);
@@ -1308,8 +1299,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 				else if (dtype == egc_sp_pointer)
 					sk_type = SK_POINTER;
 				else {
-					CHECK("Must be a bit", dtype == egc_bit_dtype);
-					sk_type = SK_BIT;
+					CHECK("Known type", 0);
 				}
 
 				for (o_ref = object + ((rt_uint_ptr) sp_start * elem_size),
@@ -1335,9 +1325,6 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 					case SK_INT64: app_twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
 					case SK_REAL32: app_twrite (o_ref, sizeof(EIF_REAL_32)); break;
 					case SK_REAL64: app_twrite (o_ref, sizeof (EIF_REAL_64)); break;
-					case SK_BIT:
-						bit_inspect (eif_access(o_ref));
-						break;
 					}
 				}
 			} else {
@@ -1532,14 +1519,6 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 	}
 }
 
-rt_private void bit_inspect(EIF_REFERENCE object)
-               		/* Reference to a bit object (= BIT_REF) */
-{
-	char *buf = b_out(object);
-	app_twrite (buf, strlen(buf));
-	eif_rt_xfree(buf);
-}
-
 rt_private void string_inspect(EIF_OBJECT object)
                		/* Reference to a string object */
 {
@@ -1616,9 +1595,6 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 				case SK_INT64: *(EIF_INTEGER_64 *)o_ref = new_value->it_int64; break;
 				case SK_REAL32: *(EIF_REAL_32 *)o_ref = new_value->it_real32; break;
 				case SK_REAL64: *(EIF_REAL_64 *)o_ref = new_value->it_real64; break;
-				case SK_BIT:
-					/* FIXME ARNAUD: To do... */
-					return 1; /* not yet implemented */
 				default:
 					return 1; /* unexpected value */
 			}
@@ -1722,9 +1698,6 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 			case SK_STRING:
 				*(char **)o_ref = RTMS(new_value->it_ref);
 				break;
-			case SK_BIT: /* Bit attribute */
-				/* FIXME ARNAUD: To do... */
-				return 1; /* error: not yet implemented */
 			case SK_EXP: /* Expanded attribute - unauthorized action */
 				return 2;
 			default: /* Object reference */

@@ -112,7 +112,7 @@ MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	hector.c cecil.c bits.c file.c dir.c misc.c \
+	hector.c cecil.c file.c dir.c misc.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
 	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
@@ -150,7 +150,6 @@ WOBJ = \
 	wsig.o \
 	whector.o \
 	wcecil.o \
-	wbits.o \
 	wfile.o \
 	wdir.o \
 	wmisc.o \
@@ -199,7 +198,6 @@ LOBJ = \
 	sig.o \
 	hector.o \
 	cecil.o \
-	bits.o \
 	file.o \
 	dir.o \
 	misc.o \
@@ -256,7 +254,6 @@ MT_WOBJ = \
 	MTwsig.o \
 	MTwhector.o \
 	MTwcecil.o \
-	MTwbits.o \
 	MTwfile.o \
 	MTwdir.o \
 	MTwmisc.o \
@@ -307,7 +304,6 @@ MT_LOBJ = \
 	MTsig.o \
 	MThector.o \
 	MTcecil.o \
-	MTbits.o \
 	MTfile.o \
 	MTdir.o \
 	MTmisc.o \
@@ -392,9 +388,6 @@ whector.o: hector.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wcecil.o: cecil.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
-
-wbits.o: bits.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wfile.o: file.c
@@ -533,9 +526,6 @@ MThector.o: hector.c
 MTcecil.o: cecil.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTbits.o: bits.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
 MTfile.o: file.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
@@ -670,9 +660,6 @@ MTwhector.o: hector.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwcecil.o: cecil.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
-MTwbits.o: bits.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwfile.o: file.c

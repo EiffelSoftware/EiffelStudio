@@ -2,7 +2,7 @@
 	description: "Equality C externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -148,9 +148,6 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 					/* Second condition: block equality */
 				return EIF_TEST(!memcmp (source, target, RT_SPECIAL_VISIBLE_SIZE(source)));
 			}
-		} else if (Dftype(source) == egc_bit_dtype) {
-				/* Eiffel standard equality on BIT objects */
-			return b_equal (source, target);
 		} else {
 			if (!(HEADER(source)->ov_flags & EO_COMP))	/* Perform a block comparison */
 				return EIF_TEST(!memcmp (source, target, EIF_Size(Dtype(source))));
@@ -611,14 +608,6 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 			if (*(fnptr *) t_ref != *(fnptr *) s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_BIT:
-				/* BITS attribute */
-				/* All we have to do here is call the routine for bit comparison
-				 * as we have the references for the source and the target
-				 * -- Fabrice */
-			if (!b_equal(s_ref, t_ref))
-				return EIF_FALSE;
-			break;
 		case SK_EXP:
 				/* Source and target attribute are expanded of the same type.
 				 * Block comparison if the attribute type is not composite
@@ -750,9 +739,7 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 				return EIF_FALSE;
 			break;
 		default:
-			if ((attribute_type & SK_HEAD) == SK_BIT) {
-		/* BITS attribute */
-			} else if ((attribute_type & SK_HEAD) == SK_EXP) {
+			if ((attribute_type & SK_HEAD) == SK_EXP) {
 				/* Source and target attribute are expanded of the same type.
 				 * Block comparison if the attribute type is not composite
 				 * itself else field-by-field comparison.

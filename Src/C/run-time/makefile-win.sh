@@ -45,7 +45,6 @@ FINAL_OBJECTS = \
 	$(INDIR)sig.$obj \
 	$(INDIR)hector.$obj \
 	$(INDIR)cecil.$obj \
-	$(INDIR)bits.$obj \
 	$(INDIR)file.$obj \
 	$(INDIR)dir.$obj \
 	$(INDIR)misc.$obj \
@@ -98,7 +97,6 @@ WORKBENCH_OBJECTS = \
 	$(INDIR)wsig.$obj \
 	$(INDIR)whector.$obj \
 	$(INDIR)wcecil.$obj \
-	$(INDIR)wbits.$obj \
 	$(INDIR)wfile.$obj \
 	$(INDIR)wdir.$obj \
 	$(INDIR)wmisc.$obj \
@@ -155,7 +153,6 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTsig.$obj \
 	$(INDIR)MThector.$obj \
 	$(INDIR)MTcecil.$obj \
-	$(INDIR)MTbits.$obj \
 	$(INDIR)MTfile.$obj \
 	$(INDIR)MTdir.$obj \
 	$(INDIR)MTmisc.$obj \
@@ -210,7 +207,6 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwsig.$obj \
 	$(INDIR)MTwhector.$obj \
 	$(INDIR)MTwcecil.$obj \
-	$(INDIR)MTwbits.$obj \
 	$(INDIR)MTwfile.$obj \
 	$(INDIR)MTwdir.$obj \
 	$(INDIR)MTwmisc.$obj \
@@ -337,9 +333,6 @@ $all_dependency
 
 $(INDIR)argv.$obj: $(RTSRC)argv.c
 	$(CC) $(JCFLAGS) $(RTSRC)argv.c
-
-$(INDIR)bits.$obj: $(RTSRC)bits.c
-	$(CC) $(JCFLAGS) $(RTSRC)bits.c
 
 $(INDIR)boolstr.$obj: $(RTSRC)boolstr.c
 	$(CC) $(JCFLAGS) $(RTSRC)boolstr.c
@@ -488,9 +481,6 @@ $(INDIR)wargv.$obj: $(RTSRC)argv.c
 $(INDIR)wbench.$obj: $(RTSRC)wbench.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)wbench.c
 
-$(INDIR)wbits.$obj: $(RTSRC)bits.c
-	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)bits.c
-
 $(INDIR)wboolstr.$obj: $(RTSRC)boolstr.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)boolstr.c
 
@@ -626,9 +616,6 @@ $(INDIR)MTmain.$obj: $(RTSRC)main.c
 
 $(INDIR)MTargv.$obj: $(RTSRC)argv.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)argv.c
-
-$(INDIR)MTbits.$obj: $(RTSRC)bits.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)bits.c
 
 $(INDIR)MTboolstr.$obj: $(RTSRC)boolstr.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)boolstr.c
@@ -776,9 +763,6 @@ $(INDIR)MTwargv.$obj: $(RTSRC)argv.c
 
 $(INDIR)MTwbench.$obj: $(RTSRC)wbench.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)wbench.c
-
-$(INDIR)MTwbits.$obj: $(RTSRC)bits.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)bits.c
 
 $(INDIR)MTwboolstr.$obj: $(RTSRC)boolstr.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)boolstr.c
@@ -967,7 +951,7 @@ $(INDIR)internal.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_size.h \
 			eif_struct.h
 
-$(INDIR)plug.$obj : eif_bits.h eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
+$(INDIR)plug.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
 			include$(DIR)rt_hashin.h eif_hector.h eif_interp.h eif_local.h eif_malloc.h eif_option.h \
 			eif_out.h eif_plug.h eif_size.h eif_struct.h
 
@@ -981,7 +965,7 @@ $(INDIR)equal.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_equal.h eif_except.h e
 
 $(INDIR)lmalloc.$obj : eif_garcol.h eif_malloc.h eif_plug.h eif_struct.h
 
-$(INDIR)out.$obj : eif_bits.h eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
+$(INDIR)out.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
 			include$(DIR)rt_hashin.h eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h \
 			eif_sig.h eif_size.h eif_struct.h
 
@@ -997,9 +981,6 @@ $(INDIR)hector.$obj : eif_cecil.h eif_except.h eif_garcol.h eif_hector.h eif_mal
 $(INDIR)cecil.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_size.h eif_struct.h \
 			include/rt_tools.h
-
-$(INDIR)bits.$obj : eif_bits.h eif_cecil.h eif_except.h eif_garcol.h eif_local.h eif_malloc.h \
-			eif_plug.h eif_struct.h
 
 $(INDIR)file.$obj : eif_cecil.h eif_copy.h eif_except.h eif_file.h eif_garcol.h eif_hector.h \
 			eif_local.h eif_malloc.h eif_plug.h eif_size.h eif_struct.h
@@ -1023,7 +1004,7 @@ $(INDIR)debug.$obj : eif_cecil.h eif_copy.h eif_debug.h eif_except.h eif_garcol.
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_sig.h \
 			eif_size.h eif_struct.h
 
-$(INDIR)interp.$obj : eif_bits.h eif_cecil.h eif_copy.h eif_debug.h eif_dir.h eif_except.h eif_file.h \
+$(INDIR)interp.$obj : eif_cecil.h eif_copy.h eif_debug.h eif_dir.h eif_except.h eif_file.h \
 			eif_garcol.h include$(DIR)rt_hashin.h eif_hector.h eif_interp.h eif_local.h eif_malloc.h \
 			eif_out.h eif_plug.h eif_sig.h eif_size.h eif_struct.h
 

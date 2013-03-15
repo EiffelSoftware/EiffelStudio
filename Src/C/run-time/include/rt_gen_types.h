@@ -2,7 +2,7 @@
 	description: "Constants used for generic conformance."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -119,7 +119,6 @@ extern "C" {
 #define EIF_CHARACTER_32_CODE	0x0E
 
 #define EIF_EXPANDED_CODE_EXTENSION 0x10
-#define EIF_BIT_CODE_EXTENSION 0x20
 
 /*------------------------------------------------------------------*/
 

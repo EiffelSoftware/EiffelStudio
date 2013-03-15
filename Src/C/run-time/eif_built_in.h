@@ -2,7 +2,7 @@
 	description: "Declarations for `built_in' externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -109,7 +109,6 @@ extern "C" {
 #define eif_builtin_INTERNAL_c_is_special(obj)				ei_special(obj)
 #define eif_builtin_INTERNAL_c_is_tuple(obj)				ei_tuple(obj)
 #define eif_builtin_INTERNAL_c_field_offset(i,obj)			ei_offset(i,obj)
-#define eif_builtin_INTERNAL_c_bit_size(i,obj)				ei_bit_size(i,obj)
 #define eif_builtin_INTERNAL_c_size(obj)					ei_size(obj)
 #define eif_builtin_INTERNAL_c_set_reference_field(i,obj,val)		ei_set_reference_field(i,obj,val)
 #define eif_builtin_INTERNAL_c_set_character_8_field(i,obj,val)		ei_set_char_field(i,obj,val)
@@ -140,7 +139,6 @@ rt_private rt_inline EIF_REFERENCE eif_obj_at (EIF_REFERENCE obj, EIF_INTEGER_32
 }
 #define eif_builtin_ISE_RUNTIME_dynamic_type(obj)					Dftype(obj)
 #define eif_builtin_ISE_RUNTIME_dynamic_type_at_offset(obj,offs)	Dftype(eif_obj_at(obj,offs))
-#define eif_builtin_ISE_RUNTIME_field_bit_size(i,obj)				ei_bit_size(i,obj)
 #define eif_builtin_ISE_RUNTIME_field_name_of_type(i,dftype)		(System(To_dtype(dftype)).cn_names[i - 1])
 #define eif_builtin_ISE_RUNTIME_field_static_type_of_type(i,dftype)	ei_field_static_type_of_type(i - 1, dftype)
 #define eif_builtin_ISE_RUNTIME_field_type_of_type(i,dftype)		ei_field_type_of_type(i - 1, dftype)

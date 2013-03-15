@@ -2,7 +2,7 @@
 	description: "Routines for printing an Eiffel object."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -49,7 +49,6 @@ doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for p
 #include "eif_except.h"		/* For `eraise' */
 #include "eif_sig.h"
 #include "eif_hector.h"
-#include "rt_bits.h"
 #include "eif_globals.h"
 #include "rt_malloc.h"
 #include "rt_wbench.h"
@@ -323,18 +322,6 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			write_string(buffero);
 			write_string("\n");
 			break;
-		case SK_BIT:
-			{
-				char *str = b_out(o_ref);
-
-				sprintf(buffero, "BIT %u = ", LENGTH(o_ref));
-				write_string(buffero);
-				write_string(str);
-				sprintf(buffero, "\n");
-				write_string(buffero);
-				eif_rt_xfree(str);	/* Allocated by `b_out' */
-			}
-			break;
 		case SK_EXP:
 			/* Expanded attribute */
 			write_string("expanded ");
@@ -487,15 +474,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 						(rt_uint_ptr) (*(fnptr *)o_ref));
 					write_string(buffero);
 				} else {
-					/* Must be bit */
-					char *str = b_out(o_ref);
-
-					sprintf(buffero, "BIT %u = ", LENGTH(o_ref));
-					write_string(buffero);
-					write_string(str);
-					sprintf(buffero, "\n");
-					write_string(buffero);
-					eif_rt_xfree(str);	/* Allocated by `b_out' */
+					write_string("UNKNOWN\n");
 				}
 			}
 	else

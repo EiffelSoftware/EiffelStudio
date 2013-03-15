@@ -2,7 +2,7 @@
 	description: "Exception handling routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -56,7 +56,6 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "rt_error.h"
 #include "rt_lmalloc.h"		/* for eif_free, eif_realloc */
 #include "rt_malloc.h"
-#include "rt_bits.h"
 #include "rt_assert.h"
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
@@ -1084,24 +1083,21 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 			dftype = Dftype(arg);
 			expected_dftype = eif_non_attached_type(expected_dftype);
 			if (!RTRC(expected_dftype, dftype)) {
-					/* Type do not conform. Let's check the particular case of BIT XX types for which
-					 * we do not actually record the full type information. */
-				if (!((dftype == egc_bit_dtype) && (eif_register_bit_type(LENGTH(arg)) == expected_dftype))) {
+					/* Types do not conform. */
 #ifdef WORKBENCH
-					if (catcall_detection_console_enabled) {
-						print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
-							System(dtype).cn_generator,
-							a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
-					}
-					if (catcall_detection_debugger_enabled) {
-						dcatcall(a_pos, expected_dftype, dftype);
-					}
-#else
+				if (catcall_detection_console_enabled) {
 					print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
 						System(dtype).cn_generator,
 						a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
-#endif
 				}
+				if (catcall_detection_debugger_enabled) {
+					dcatcall(a_pos, expected_dftype, dftype);
+				}
+#else
+				print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
+					System(dtype).cn_generator,
+					a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
+#endif
 			}
 		} else if (eif_is_attached_type(expected_dftype)) {
 				/* Case of where we get a Void object where a non-Void object was expected. */

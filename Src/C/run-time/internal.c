@@ -2,7 +2,7 @@
 	description: "Routines to implement class INTERNAL."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -243,8 +243,7 @@ rt_public long ei_eif_type(uint32 field_type)
 	case SK_REAL32:	return EIF_REAL_32_TYPE;
 	case SK_REAL64:	return EIF_REAL_64_TYPE;
 	case SK_EXP:	return EIF_EXPANDED_TYPE;
-	case SK_BIT:	return EIF_BIT_TYPE;
-	default:		return EIF_POINTER_TYPE;
+	default:	return EIF_POINTER_TYPE;
 	}
 }
 

@@ -2,7 +2,7 @@
 	description: "Memory allocation management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -62,7 +62,6 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "eif_local.h"			/* For epop() */
 #include "rt_sig.h"
 #include "rt_err_msg.h"
-#include "rt_bits.h"
 #include "rt_globals.h"
 #include "rt_struct.h"
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
@@ -1524,64 +1523,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 #endif
 
 	return object;
-}
-
-/*
-doc:	<routine name="bmalloc" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Allocate a new object of type BIT `size'.</summary>
-doc:		<param name="size" type="long int">Required size of bit type to allocated.</param>
-doc:		<return>A newly allocated BIT object if successful, otherwise throw an exception.</return>
-doc:		<exception>"No more memory" when it fails</exception>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None required</synchronization>
-doc:	</routine>
-*/
-
-rt_public EIF_REFERENCE bmalloc(uint16 size)
-{
-	EIF_REFERENCE object;			/* Pointer to the freshly created bit object */
-	unsigned int nbytes;			/* Object's size */
-#ifdef ISE_GC
-	uint32 mod;
-#endif
-
-	(void) eif_register_bit_type (size);
-#ifdef DEBUG
-	dprintf(1) ("bmalloc: %d bits requested.\n", size);
-#endif
-
-	/* A BIT object has a length field (the number of bits in the object), and
-	 * an arena where the bits are stored, from left to right, as an array of
-	 * booleans (i.e. the first bit is the rightmost one, as opposed to the
-	 * usual conventions).
-	 */
-	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
-#ifdef ISE_GC
-	mod = nbytes % ALIGNMAX;
-	if (mod != 0)
-		nbytes += ALIGNMAX - mod;
-
-	object = malloc_from_eiffel_list (nbytes);		/* Allocate Eiffel object */
-#endif
-#if defined(BOEHM_GC) || defined(NO_GC)
-	object = external_allocation (1, 0, nbytes);
-#endif
-
-		/* As in the memory allocation routines located in eif_malloc.c, a new
-		 * BIT object has to be marked after being allocated in the eif_free
-		 * list. Otherwise the GC will be lost.
-		 * Fixes negate-big-bit-local.
-		 * -- Fabrice
-		 */
-	if (object) {
-		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-		object = eif_set(object, EO_NEW, egc_bit_dtype, egc_bit_dtype);
-		LENGTH(object) = size;				/* Record size */
-		return object;
-	}
-
-	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
-	return NULL; /* NOTREACHED */
 }
 
 /*

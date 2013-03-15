@@ -9,7 +9,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -69,7 +69,6 @@ rt_private void (* set_real) (EIF_REFERENCE, EIF_REAL_32);
 rt_private void (* set_double) (EIF_REFERENCE, EIF_REAL_64);
 rt_private void (* set_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16);
 rt_private void (* set_pointer) (EIF_REFERENCE, EIF_POINTER);
-rt_private void (* set_bits) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
 rt_private void (* set_error) (EIF_REFERENCE);
 rt_private void (* set_exception_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16);
 rt_private void (* set_void) (EIF_REFERENCE);
@@ -208,10 +207,6 @@ rt_public void c_recv_value (EIF_OBJ target)
 								/* reference and dynamic type */
 							set_ref (eif_access (target), item.it_ref, type_flag & SK_DTYPE, (EIF_NATURAL_16) pack.rq_dump.dmp_info);
 							return;
-						case SK_BIT:
-								/* reference and number of bits */
-							set_bits (eif_access (target), item.it_ref, type_flag & SK_BMASK);
-							return;
 						default:
 							break;
 					}
@@ -272,7 +267,6 @@ rt_public void c_pass_recv_routines (
 	set_double = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) d_double;
 	set_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16)) d_ref;
 	set_pointer = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) d_point;
-	set_bits = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_bits;
 	set_error = FUNCTION_CAST(void, (EIF_REFERENCE)) d_error;
 	set_exception_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_NATURAL_16)) d_exception_ref;
 	set_void = FUNCTION_CAST(void, (EIF_REFERENCE)) d_void;

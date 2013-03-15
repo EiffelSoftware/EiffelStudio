@@ -7,7 +7,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -744,7 +744,7 @@ static const char* locale_category_name (int category) ;
 char_ptr32 eifrt_vms_setlocale (int category, const char* locale)
 {
     char_ptr32 res, res1;
-    static uint once = FALSE;
+    static uint once = EIF_FALSE;
     static const_char_ptr32 default_locale = NULL;
     char_ptr32 DECC$SETLOCALE (int category, const char* locale);
     char_ptr32 __XSETLOCALE (int category, const char* locale);
@@ -753,7 +753,7 @@ char_ptr32 eifrt_vms_setlocale (int category, const char* locale)
     printf ("eifrtvms: setlocale(%d (%s), \"%s\") called:\n", category, locale_category_name (category), safe_string(locale));
 #endif
     if (!once) {
-	once = TRUE;
+	once = EIF_TRUE;
 	res = DECC$SETLOCALE (LC_ALL, NULL);
 	default_locale = _strdup32 (res);
 #ifdef VMS_TRACE_SETLOCALE
@@ -800,10 +800,10 @@ static const char* locale_category_name (int category)
 {
     locale_category_map_item_t *itemp;
     const char* res = NULL;
-    static int once = FALSE;
+    static int once = EIF_FALSE;
 
     if (!once) {
-	once = TRUE;
+	once = EIF_TRUE;
 	qsort (locale_category_map, CARDINALITY(locale_category_map), sizeof(locale_category_map[0]), 
 		(int (*)(const void*, const void*))locale_category_item_compare);
     }

@@ -2,7 +2,7 @@
 	description: "Internal data representation."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -55,7 +55,6 @@ doc:<file name="run_idr.c" header="rt_run_idr.h" version="$Id$" summary="IDR = I
 #include "eif_globals.h"
 #include "eif_store.h"	/* For rt_kind_version */
 #include "eif_eiffel.h"
-#include "rt_bits.h"
 #include "rt_err_msg.h"
 #if !defined(CUSTOM) || defined(NEED_RETRIEVE_H)
 #include "rt_retrieve.h"
@@ -971,83 +970,6 @@ rt_public void widr_multi_double (EIF_REAL_64 *obj, size_t num)
 			memcpy  (idrf.i_encode.i_ptr, obj++, R64SIZ);
 #endif
 			idrf.i_encode.i_ptr += R64SIZ;
-		}
-	}
-}
-
-
-rt_public void ridr_multi_bit (struct bit *obj, size_t num, size_t elm_siz)
-{
-	RT_GET_CONTEXT
-	size_t i = 0;
-	int siz, number_of_bits;
-	size_t cap;
-	uint32 *iptr = ARENA (obj);
-
-		/* we have at least 1 bit in the BIT object. */
-	number_of_bits = 1;
-	run_int (&idrf.i_decode, IDR_DECODE, (uint32 *) (&number_of_bits), 1);
-	CHECK("valid number of bits", number_of_bits <= 0x000FFFF);
-	siz = BIT_NBPACK (number_of_bits);
-	cap = idrf_buffer_size / (siz * sizeof (uint32));
-
-
-	if (cap != 0) {
-		while (num > i) {
-			LENGTH ((((char *)obj) + (elm_siz * i++))) = (uint16) number_of_bits;
-			run_int (&idrf.i_decode, IDR_DECODE, iptr, siz);
-			iptr = ARENA ((((char *)obj) + (elm_siz * i)));
-		}
-	} else {
-		size_t loop_c, count = (siz * sizeof (uint32)) / idrf_buffer_size;
-		size_t left_over = (siz * sizeof (uint32))% idrf_buffer_size;
-		size_t write_size = idrf_buffer_size / sizeof (uint32);
-
-		while (num > i++) {
-			loop_c = count;
-			while (loop_c) {
-
-				run_int (&idrf.i_decode, IDR_DECODE, iptr, write_size);
-				iptr += write_size;
-				loop_c--;
-			} 
-			run_int (&idrf.i_decode, IDR_DECODE, iptr, left_over);
-			iptr = ARENA ((((char *)obj) + (elm_siz * i)));
-		}
-	}
-}
-
-rt_public void widr_multi_bit (struct bit *obj, size_t num, uint32 len, size_t elm_siz)
-{
-	RT_GET_CONTEXT
-	size_t i = 0;
-	int siz = BIT_NBPACK (len);
-	size_t cap;
-	uint32 *iptr = ARENA (obj);
-
-	cap = idrf_buffer_size / (siz * sizeof (uint32));
-
-	run_int (&idrf.i_encode, IDR_ENCODE, &len, 1);
-	if (cap != 0) {
-		while (num > i++) {
-			run_int (&idrf.i_encode, IDR_ENCODE, iptr, siz);
-			iptr = ARENA ((((char *)obj) + (elm_siz * i)));
-		}
-	} else {
-		size_t loop_c, count = (siz * sizeof (uint32)) / idrf_buffer_size;
-		size_t left_over = (siz * sizeof (uint32)) % idrf_buffer_size;
-		size_t write_size = idrf_buffer_size / sizeof (uint32);
-
-		while (num > i++) {
-			loop_c = count;
-			while (loop_c) {
-
-				run_int (&idrf.i_encode, IDR_ENCODE, iptr, write_size);
-				iptr += write_size;
-				loop_c--;
-			} 
-			run_int (&idrf.i_encode, IDR_ENCODE, iptr, left_over);
-			iptr = ARENA ((((char *)obj) + (elm_siz * i)));
 		}
 	}
 }

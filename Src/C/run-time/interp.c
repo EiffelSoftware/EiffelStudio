@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2011, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -56,7 +56,6 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_copy.h"
 #include "rt_debug.h"
 #include "rt_sig.h"
-#include "rt_bits.h"
 #include <math.h>
 #include "eif_main.h"
 #include "rt_gen_conf.h"
@@ -344,38 +343,30 @@ rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volati
 	last = opop();
 	stagval = tagval;
 	head_type = last->type & SK_HEAD;
-	if (head_type != SK_BIT) {
-		switch (head_type) {
-		case SK_BOOL: new_obj = RTLN(egc_bool_dtype); *new_obj = last->it_char; break;
-		case SK_CHAR8:	new_obj = RTLN(egc_char_dtype); *new_obj = last->it_char; break;
-		case SK_CHAR32:	new_obj = RTLN(egc_wchar_dtype); *(EIF_CHARACTER_32 *) new_obj = last->it_wchar; break;
-		case SK_UINT8: new_obj = RTLN(egc_uint8_dtype); *(EIF_NATURAL_8 *) new_obj = last->it_uint8; break;
-		case SK_UINT16: new_obj = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) new_obj = last->it_uint16; break;
-		case SK_UINT32: new_obj = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) new_obj = last->it_uint32; break;
-		case SK_UINT64: new_obj = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *) new_obj = last->it_uint64; break;
-		case SK_INT8: new_obj = RTLN(egc_int8_dtype); *(EIF_INTEGER_8 *) new_obj = last->it_int8; break;
-		case SK_INT16: new_obj = RTLN(egc_int16_dtype); *(EIF_INTEGER_16 *) new_obj = last->it_int16; break;
-		case SK_INT32: new_obj = RTLN(egc_int32_dtype); *(EIF_INTEGER_32 *) new_obj = last->it_int32; break;
-		case SK_INT64: new_obj = RTLN(egc_int64_dtype); *(EIF_INTEGER_64 *) new_obj = last->it_int64; break;
-		case SK_REAL32: new_obj = RTLN(egc_real32_dtype); *(EIF_REAL_32 *) new_obj = last->it_real32; break;
-		case SK_REAL64: new_obj = RTLN(egc_real64_dtype); *(EIF_REAL_64 *) new_obj = last->it_real64; break;
-		case SK_POINTER: new_obj = RTLN(egc_point_dtype); *(EIF_REFERENCE *) new_obj = last->it_ptr; break;
-		case SK_REF:			/* Had to do this for bit operations */
-			new_obj = last->it_ref;
-			break;
-		default:
-			eif_panic("illegal metamorphose type");
-		}
-		last = iget();
-		last->type = SK_REF;
-		last->it_ref = new_obj;
-	} else {
-		/* Bit metamorphose is a clone */
-		new_obj = b_clone(last->it_bit);
-		last = iget();
-		last->type = SK_REF;
-		last->it_ref = new_obj;
+	switch (head_type) {
+	case SK_BOOL: new_obj = RTLN(egc_bool_dtype); *new_obj = last->it_char; break;
+	case SK_CHAR8:	new_obj = RTLN(egc_char_dtype); *new_obj = last->it_char; break;
+	case SK_CHAR32:	new_obj = RTLN(egc_wchar_dtype); *(EIF_CHARACTER_32 *) new_obj = last->it_wchar; break;
+	case SK_UINT8: new_obj = RTLN(egc_uint8_dtype); *(EIF_NATURAL_8 *) new_obj = last->it_uint8; break;
+	case SK_UINT16: new_obj = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) new_obj = last->it_uint16; break;
+	case SK_UINT32: new_obj = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) new_obj = last->it_uint32; break;
+	case SK_UINT64: new_obj = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *) new_obj = last->it_uint64; break;
+	case SK_INT8: new_obj = RTLN(egc_int8_dtype); *(EIF_INTEGER_8 *) new_obj = last->it_int8; break;
+	case SK_INT16: new_obj = RTLN(egc_int16_dtype); *(EIF_INTEGER_16 *) new_obj = last->it_int16; break;
+	case SK_INT32: new_obj = RTLN(egc_int32_dtype); *(EIF_INTEGER_32 *) new_obj = last->it_int32; break;
+	case SK_INT64: new_obj = RTLN(egc_int64_dtype); *(EIF_INTEGER_64 *) new_obj = last->it_int64; break;
+	case SK_REAL32: new_obj = RTLN(egc_real32_dtype); *(EIF_REAL_32 *) new_obj = last->it_real32; break;
+	case SK_REAL64: new_obj = RTLN(egc_real64_dtype); *(EIF_REAL_64 *) new_obj = last->it_real64; break;
+	case SK_POINTER: new_obj = RTLN(egc_point_dtype); *(EIF_REFERENCE *) new_obj = last->it_ptr; break;
+	case SK_REF:			/* Had to do this for bit operations */
+		new_obj = last->it_ref;
+		break;
+	default:
+		eif_panic("illegal metamorphose type");
 	}
+	last = iget();
+	last->type = SK_REF;
+	last->it_ref = new_obj;
 	if (tagval != stagval)				/* If G.C calls melted dispose */
 		sync_registers(scur, stop);
 }
@@ -691,14 +682,6 @@ rt_private void interpret(int flag, int where)
 					RT_GC_WEAN(ref);
 					last->type = SK_EXP;
 					eif_std_ref_copy(ref, last->it_ref);
-					break;
-				case EIF_BIT_CODE_EXTENSION:
-					if (ref == NULL)
-						xraise(EN_VEXP);	/* Void assigned to expanded */
-					RT_GC_PROTECT(ref);
-					last->it_bit = RTLB((uint16)get_uint32(&IC));
-					RT_GC_WEAN(ref);
-					b_copy(ref, last->it_bit);
 					break;
 				case EIF_REFERENCE_CODE:
 #ifdef EIF_THREADS
@@ -1595,7 +1578,6 @@ rt_private void interpret(int flag, int where)
 			if (is_process_or_thread_relative_once) {
 				last = iresult;
 				switch (rtype & SK_HEAD) {	/* Result type held in rtype */
-				case SK_BIT:
 				case SK_EXP:
 				case SK_REF:	/* See below */
 					CHECK("OResult not null", OResult);
@@ -1617,24 +1599,6 @@ rt_private void interpret(int flag, int where)
 		code = get_int16(&IC);		/* Get the local number (from 1 to locnum) */
 		RTDBGA_LOCAL(icurrent->it_ref,code,loc (code)->type,0,1);
 		memcpy (loc (code) , opop(), ITEM_SZ);
-		break;
-
-	/*
-	 * Assignment to a bit local variable.
-	 */
-	case BC_LBIT_ASSIGN:
-#ifdef DEBUG
-		dprintf(2)("BC_LBIT_ASSIGN\n");
-#endif
-		code = get_int16(&IC);		/* Get the local number (from 1 to locnum) */
-		last = opop();
-		if ((last->type & SK_HEAD) != SK_BIT)
-			/*
-			 * This was necessary because the resulting type of operations
-			 * on bits was SK_REF.
-			 */
-			last->type = SK_BIT;
-		b_copy(last->it_bit, loc(code)->it_bit);
 		break;
 
 	/*
@@ -2280,25 +2244,9 @@ rt_private void interpret(int flag, int where)
 	case BC_CREATE:
 	case BC_CREATE_TYPE:
 		{
-			char need_push = (char) 0;
 			int is_type_creation = (code == BC_CREATE_TYPE);
-		/* Special treatment of BIT types */
-
-		if (*IC == BC_BIT)
-		{
-			EIF_REFERENCE new_obj;		/* New bit object created */
-			uint32 realcount;	/* Real bit count */
-
-			++IC;
-			last = iget();
-			realcount = get_uint32(&IC);
-			new_obj = RTLB((uint16)realcount);			/* Creation */
-			last->type = SK_BIT + realcount;
-			last->it_bit = new_obj;
-			break;
-		}
-		need_push = *IC++;		/* If there is a creation routine to call
-								   we need to push twice the created object */
+			char need_push = *IC++;		/* If there is a creation routine to call
+							   we need to push twice the created object */
 
 		type = get_creation_type (1);
 
@@ -2349,8 +2297,8 @@ rt_private void interpret(int flag, int where)
 	case BC_SPCREATE:
 		{
 			EIF_REFERENCE new_obj;						/* New object */
-			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit, is_make_filled, is_make_empty;
-			uint32 elem_size = 0, bit_size = 0, i = 0, spec_type;
+			EIF_BOOLEAN is_ref, is_basic, is_expanded, unused, is_make_filled, is_make_empty;
+			uint32 elem_size = 0, spec_type;
 			uint16 flags = 0;
 			EIF_TYPED_VALUE nb_item, default_item;
 			uint32 nb = 0;
@@ -2363,7 +2311,7 @@ rt_private void interpret(int flag, int where)
 
 			is_ref = EIF_TEST(*IC++);
 			is_basic = EIF_TEST(*IC++);
-			is_bit = EIF_TEST(*IC++);
+			unused = EIF_TEST(*IC++);
 			is_expanded = EIF_TEST(*IC++);
 
 			if (is_expanded) {
@@ -2386,7 +2334,6 @@ rt_private void interpret(int flag, int where)
 					case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 					case SK_POINTER: elem_size = sizeof(EIF_POINTER); break;
 					case SK_REF:
-					case SK_BIT:
 						elem_size = sizeof(EIF_REFERENCE); break;
 					default:
 						eif_panic ("Illegal type");
@@ -2408,7 +2355,7 @@ rt_private void interpret(int flag, int where)
 
 			if (is_expanded) {
 				flags = EO_COMP;
-			} else if (is_ref || is_bit) {
+			} else if (is_ref) {
 				flags = EO_REF;
 			}
 				/* The allocation of the SPECIAL may callback some melted code when creating
@@ -2440,14 +2387,6 @@ rt_private void interpret(int flag, int where)
 				opush(&nb_item);
 			} else if (is_make_empty) {
 				RT_SPECIAL_COUNT(new_obj) = 0;
-			}
-
-			if (is_bit) {
-				bit_size = get_uint32(&IC);
-				for (i = 0; i < nb; i++) {
-					*((EIF_REFERENCE *) new_obj + i) = RTLB((uint16)bit_size);
-					RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
-				}
 			}
 		}
 		break;
@@ -3234,25 +3173,6 @@ rt_private void interpret(int flag, int where)
 		}
 		break;
 
-
-	/*
-	 * Bit comparison
- 	 */
-
-	case BC_BIT_STD_EQUAL:
-#ifdef DEBUG
-	dprintf(2)("BC_STD_EQUAL\n");
-#endif
-		{	EIF_REFERENCE bit;
-
-			bit = opop()->it_bit;
-			last = otop();
-			CHECK("last not null", last);
-			last->it_char = (char) RTEB(bit, last->it_bit);
-			last->type = SK_BOOL;
-		}
-		break;
-
 	/*
 	 * Obvious true comparisons
 	 */
@@ -3375,7 +3295,6 @@ rt_private void interpret(int flag, int where)
 					case SK_INT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int64)); break;
 					case SK_REAL32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real32)); break;
 					case SK_REAL64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real64)); break;
-					case SK_BIT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_bit)); break;
 					case SK_POINTER: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_ptr)); break;
 					default:
 						eif_panic(MTC "illegal type for address access");
@@ -3418,7 +3337,6 @@ rt_private void interpret(int flag, int where)
 			case SK_INT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int64)); break;
 			case SK_REAL32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real32)); break;
 			case SK_REAL64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real64)); break;
-			case SK_BIT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_bit)); break;
 			case SK_POINTER: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_ptr)); break;
 			default:
 				eif_panic(MTC "illegal type for address access");
@@ -3509,7 +3427,6 @@ rt_private void interpret(int flag, int where)
 				case SK_BOOL:
 				case SK_CHAR8: *((EIF_CHARACTER_8 *) sp_area + l_index) = it->it_char; break;
 				case SK_CHAR32: *((EIF_CHARACTER_32 *) sp_area + l_index) = it->it_wchar; break;
-				case SK_BIT: *((EIF_REFERENCE *) sp_area + l_index) = it->it_bit; break;
 				case SK_UINT8: *((EIF_NATURAL_8 *) sp_area + l_index) = it->it_uint8; break;
 				case SK_UINT16: *((EIF_NATURAL_16 *) sp_area + l_index) = it->it_uint16; break;
 				case SK_UINT32: *((EIF_NATURAL_32 *) sp_area + l_index) = it->it_uint32; break;
@@ -3645,7 +3562,6 @@ rt_private void interpret(int flag, int where)
 					case SK_BOOL: eif_put_boolean_item(new_obj, curr_pos, it->it_char); break;
 					case SK_CHAR8: eif_put_character_item(new_obj, curr_pos, it->it_char); break;
 					case SK_CHAR32: eif_put_wide_character_item(new_obj, curr_pos, it->it_wchar); break;
-					case SK_BIT: eif_put_reference_item(new_obj, curr_pos, it->it_bit); break;
 					case SK_UINT8: eif_put_natural_8_item(new_obj, curr_pos, it->it_uint8); break;
 					case SK_UINT16: eif_put_natural_16_item(new_obj, curr_pos, it->it_uint16); break;
 					case SK_UINT32: eif_put_natural_32_item(new_obj, curr_pos, it->it_uint32); break;
@@ -3986,34 +3902,6 @@ rt_private void interpret(int flag, int where)
 			break;
 		}
 
-
-	/*
-	 * Manifest bit
-	 */
-	case BC_BIT:
-#ifdef DEBUG
-		dprintf(2)("BC_BIT\n");
-#endif
-		{
-			EIF_REFERENCE new_obj;		/* New bit object created */
-			uint32 bcount;		/* Bit count */
-			uint32 realcount;	/* Real bit count */
-			int nb_uint32;
-			uint32 *addr;
-
-			last = iget();
-			realcount = get_uint32(&IC);
-			bcount = get_uint32(&IC);			/* Read bit count */
-			new_obj = RTLB((uint16)realcount);			/* Creation */
-			addr = ARENA(new_obj);
-			nb_uint32 = BIT_NBPACK(bcount);
-			while (nb_uint32--)	/* Write bit count and value in `new_obj' */
-				*addr++ = get_uint32(&IC);
-			last->type = SK_BIT + bcount; /* bcount or realcount ??*/
-			last->it_bit = new_obj;
-		}
-		break;
-
 	/*
 	 * Jump if top of stack is false (value is poped).
 	 */
@@ -4281,7 +4169,6 @@ enter_body:
 				if (is_process_or_thread_relative_once) {
 					switch (rtype & SK_HEAD)
 					{
-					case SK_BIT:
 					case SK_EXP:
 					case SK_REF:
 							/* Register once result for GC. */
@@ -4912,7 +4799,6 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 			}
 			break;
 		case SK_POINTER: f->it_char = EIF_TEST(f->it_ptr == s->it_ptr); break;
-		case SK_BIT:
 		case SK_EXP:
 		case SK_REF: f->it_char = EIF_TEST(f->it_ref == s->it_ref); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
@@ -5773,7 +5659,6 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	case SK_INT64: last->it_int64 = *(EIF_INTEGER_64 *) (current + offset); break;
 	case SK_REAL32: last->it_real32 = *(EIF_REAL_32 *) (current + offset); break;
 	case SK_REAL64: last->it_real64 = *(EIF_REAL_64 *) (current + offset); break;
-	case SK_BIT: last->it_bit = (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(EIF_POINTER *) (current + offset); break;
 	case SK_REF: last->it_ref = *(EIF_REFERENCE *) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
@@ -5818,7 +5703,6 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	case SK_INT64: last->it_int64 = *(EIF_INTEGER_64 *) (current + offset); break;
 	case SK_REAL32: last->it_real32 = *(EIF_REAL_32 *) (current + offset); break;
 	case SK_REAL64: last->it_real64 = *(EIF_REAL_64 *) (current + offset); break;
-	case SK_BIT: last->it_bit = (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(EIF_POINTER *) (current + offset); break;
 	case SK_REF: last->it_ref = *(EIF_REFERENCE *) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
@@ -5842,14 +5726,8 @@ rt_private void assign(long offset, uint32 type)
 
 	last = opop();					/* Value to be assigned */
 
-		/* FIXME: Manu 02/17/2004: For Bit types, the generated code is incorrect
-		 * because we can assign BIT type into BIT_REF therefore there is a mismatch
-		 * in the type, one is a reference, the other is a BIT, thus the extra 2 lines
-		 * in the check. */
 	CHECK("Target same type as source",
-			((last->type & SK_HEAD) == (type & SK_HEAD)) ||
-			(((last->type & SK_HEAD) == SK_BIT) && ((type & SK_HEAD) == SK_REF)) ||
-			(((last->type & SK_HEAD) == SK_REF) && ((type & SK_HEAD) == SK_BIT)));
+			((last->type & SK_HEAD) == (type & SK_HEAD)));
 
 #define l last
 #define i icurrent
@@ -5869,7 +5747,6 @@ rt_private void assign(long offset, uint32 type)
 	case SK_REAL32: *(EIF_REAL_32 *) (i->it_ref + offset) = l->it_real32; break;
 	case SK_REAL64: *(EIF_REAL_64 *) (i->it_ref + offset) = l->it_real64; break;
 	case SK_POINTER: *(EIF_POINTER *) (i->it_ref + offset) = l->it_ptr; break;
-	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); break;
 	case SK_REF:
 		/* Perform aging tests: if the reference is new and is assigned to an
 		 * old object which is not yet remembered, then we need to put it in
@@ -5929,7 +5806,6 @@ rt_private void reverse_attribute(long offset, uint32 type)
 		case SK_REAL32:  *(EIF_REAL_32    *) (i->it_ref + offset) = * (EIF_REAL_32    *) last->it_ref; break;
 		case SK_REAL64:  *(EIF_REAL_64    *) (i->it_ref + offset) = * (EIF_REAL_64    *) last->it_ref; break;
 		case SK_POINTER: *(EIF_POINTER    *) (i->it_ref + offset) = * (EIF_POINTER    *) last->it_ref; break;
-		case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); break;
 		case SK_EXP:
 			eif_std_ref_copy (last->it_ref, icurrent->it_ref + offset);
 			break;
@@ -6250,7 +6126,6 @@ rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE curren
 	case SK_INT64:		ptr->it_int64 = (EIF_INTEGER_64) 0; break;
 	case SK_REAL32:		ptr->it_real32 = (EIF_REAL_32) 0; break;
 	case SK_REAL64:		ptr->it_real64 = (EIF_REAL_64) 0; break;
-	case SK_BIT:		ptr->it_ref = (EIF_REFERENCE)0; break;
 	case SK_EXP:		dtype = get_int16(&IC);
 						dtype = get_compound_id(MTC current_ref, (short) dtype);
 						ptr->type = (type & SK_HEAD) | ((uint32) dtype);
@@ -6284,7 +6159,6 @@ rt_private void put_once_result (EIF_TYPED_VALUE *ptr, uint32 rtype, MTOT OResul
 	case SK_REAL32:  MTOP(EIF_REAL_32,      OResult, ptr->it_real32); break;
 	case SK_REAL64:  MTOP(EIF_REAL_64,      OResult, ptr->it_real64); break;
 	case SK_POINTER: MTOP(EIF_POINTER,      OResult, ptr->it_ptr);    break;
-	case SK_BIT:
 	case SK_EXP:
 	case SK_REF:
 		*(OResult->result.EIF_REFERENCE_result) = ptr->it_ref; break;
@@ -6312,7 +6186,6 @@ rt_private void get_once_result (MTOT OResult, uint32 rtype, EIF_TYPED_VALUE *pt
 	case SK_REAL32:  ptr->it_real32 = MTOR(EIF_REAL_32,      OResult); break;
 	case SK_REAL64:  ptr->it_real64 = MTOR(EIF_REAL_64,      OResult); break;
 	case SK_POINTER: ptr->it_ptr    = MTOR(EIF_POINTER,      OResult); break;
-	case SK_BIT:
 	case SK_EXP:
 	case SK_REF:
 		ptr->it_ref = *MTOR(EIF_REFERENCE, OResult);
@@ -6558,14 +6431,6 @@ rt_private void create_expanded_locals (
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop);
 			break;
-		case SK_BIT:
-			stagval = tagval;
-			last->type = SK_POINTER;	/* GC: wait for malloc */
-			last->it_bit = RTLB((EIF_TYPE_INDEX) (type & SK_BMASK));
-			last->type = SK_BIT;
-			if (tagval != stagval)
-				sync_registers(MTC scur, stop);
-			break;
 		}
 	}
 	if (create_result) {
@@ -6577,14 +6442,6 @@ rt_private void create_expanded_locals (
 			last->type = SK_POINTER;		/* For GC */
 			last->it_ref = RTLX((EIF_TYPE_INDEX) (type & SK_DTYPE));
 			last->type = SK_EXP;
-			if (tagval != stagval)
-				sync_registers(MTC scur, stop);
-			break;
-		case SK_BIT:
-			stagval = tagval;
-			last->type = SK_POINTER;    /* GC: wait for malloc */
-			last->it_bit = RTLB((EIF_TYPE_INDEX) (type & SK_BMASK));
-			last->type = SK_BIT;
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop);
 			break;
@@ -7086,7 +6943,6 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 			case SK_REAL32: value->value.it_real32 = *((EIF_REAL_32 *)(value -> address)); break;
 			case SK_REAL64: value->value.it_real64 = *((EIF_REAL_64 *)(value -> address)); break;
 			case SK_POINTER: value->value.it_ptr = *((EIF_POINTER *)(value -> address)); break;
-			case SK_BIT: value->value.it_bit = *((EIF_REFERENCE *)(value -> address)); break;
 			case SK_EXP:
 			case SK_REF:
 				value->value.it_ref = *((EIF_REFERENCE *)(value -> address)); break;

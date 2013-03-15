@@ -2,7 +2,7 @@
 	description: "Interpreter declarations and definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -72,7 +72,6 @@ RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 #define	it_uint64	item.n8
 #define it_ref		item.r
 #define it_ptr		item.p
-#define it_bit		item.r
 
 /* Interpreter interface to outside world */
 RT_LNK void xinitint(void);										/* Initialize the interpreter */

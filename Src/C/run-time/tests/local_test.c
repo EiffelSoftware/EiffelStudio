@@ -2,7 +2,7 @@
 	description: "Testing of `local.c'."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -252,7 +252,7 @@ rt_public void eif_panic(char *s)
 	exit(1);
 }
 
-rt_public void eraise(int val, char *tag)		/* %%zs incoherent with other definitions (see bits.c:964, except.c:132, garcol.c:3901, eif_malloc.c:3495 */
+rt_public void eraise(int val, char *tag)		/* %%zs incoherent with other definitions (see except.c:132, garcol.c:3901, eif_malloc.c:3495 */
 {
 	xraise(val);
 }

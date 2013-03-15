@@ -2,7 +2,7 @@
 	description: "Interpreter declarations and definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -163,16 +163,16 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_FALSE_COMPAR		92
 #define BC_TRUE_COMPAR		93
 #define BC_STANDARD_EQUAL	94
-#define BC_BIT_STD_EQUAL	95
+#define BC_NOTUSED_95		95
 #define BC_HOOK				96
-#define BC_BIT				97
+#define BC_NOTUSED_97			97
 #define BC_ARRAY			98
 #define BC_RETRIEVE_OLD		99
 #define BC_FLOAT			100
 #define BC_OLD				101
 #define BC_ADD_STRIP		102
 #define BC_END_STRIP		103
-#define BC_LBIT_ASSIGN		104
+#define BC_NOTUSED_104		104
 #define BC_RAISE_PREC		105
 #define BC_GOTO_BODY		106
 #define BC_NOT_REC			107

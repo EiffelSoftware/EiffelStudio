@@ -2,7 +2,7 @@
 	description: "Constants shared with class REQUEST_CONST on the Eiffel side."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -75,7 +75,7 @@
 #define METAMORPHOSE		34		/* Convert the top-level item in the operational stack from a basic type to a reference */
 #define APP_INTERRUPT_FLAG	35		/* Application sends the address of its interruption flag to daemon */
 #define EWB_UPDBREAKPOINTS	36		/* Application sends the address of its interruption flag to daemon */
-#define MODIFY_LOCAL		37		/* `ec' asks the æpplication to change the value of a local variable */
+#define MODIFY_LOCAL		37		/* `ec' asks the application to change the value of a local variable */
 #define MODIFY_ATTR			38		/* `ec' asks the application to change the value of an object attribute */
 #define DYNAMIC_EVAL		39		/* `ec' asks the application to execute a given feature on a given object */
 #define APPLICATION_CWD		40		/* Send current directory to launch application */
@@ -111,7 +111,6 @@
 #define IN_CURRENT		3		/* Current */
 #define IN_RESULT		4		/* Result */
 #define IN_H_ADDR		5		/* Object at given hector address */
-#define IN_BIT_ADDR		6		/* Bit object at given address */
 #define IN_STRING_ADDR	7		/* String object at given address */
 
 /* Once inspection types */

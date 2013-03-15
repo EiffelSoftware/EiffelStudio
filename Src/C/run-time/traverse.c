@@ -2,7 +2,7 @@
 	description: "Traversal of objects. Useful for storing objects and/or recursively coying them."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -947,7 +947,6 @@ rt_private void match_op_stack(struct opstack *stk, void (*action_fnptr) (EIF_RE
 			switch (last->type & SK_HEAD) {		/* Type in stack */
 			case SK_REF:						/* Reference */
 			case SK_EXP:
-			case SK_BIT:
 				if (last->it_ref) {
 					match_object (last->it_ref, action_fnptr);
 				}

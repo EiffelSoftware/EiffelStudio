@@ -2,7 +2,7 @@
 	description: "Generic conformance routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -140,7 +140,6 @@ typedef struct eif_gen_der {
 	EIF_TYPE_INDEX		annotation;	/* Annotation flag for that type. */
 	char                *name;      /* Full type name */
 	char                is_expanded;/* Is it an expanded type? */
-	char                is_bit;     /* Is it a BIT type? */
 	char                is_tuple;   /* Is it a TUPLE type? */
 	struct eif_gen_der  *next;      /* Next derivation */
 } EIF_GEN_DER;
@@ -250,7 +249,6 @@ rt_shared uint32 eifthd_gen_count_with_dftype (EIF_TYPE_INDEX );
 rt_shared char eifthd_gen_typecode_with_dftype (EIF_TYPE_INDEX , uint32);
 rt_public EIF_TYPE_INDEX eifthd_gen_param_id (EIF_TYPE_INDEX , uint32);
 rt_public EIF_REFERENCE eifthd_gen_create (EIF_REFERENCE , uint32);
-rt_shared EIF_TYPE_INDEX eifthd_register_bit_type (uint16);
 rt_shared EIF_TYPE_INDEX eifthd_typeof_array_of (EIF_TYPE_INDEX);
 rt_shared EIF_TYPE_INDEX eifthd_typeof_type_of (EIF_TYPE_INDEX);
 rt_public char *eifthd_gen_typename (EIF_REFERENCE );
@@ -355,18 +353,6 @@ rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 }
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_register_bit_type (uint16 size)
-{
-	EIF_TYPE_INDEX   result;
-
-	EIFMTX_LOCK;
-	result = eifthd_register_bit_type (size);
-	EIFMTX_UNLOCK;
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
 rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
 {
 	EIF_TYPE_INDEX   result;
@@ -434,7 +420,6 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX source_type, EIF_TYPE_INDEX target_ty
 #define eif_gen_count_with_dftype eifthd_gen_count_with_dftype
 #define eif_gen_typecode_with_dftype  eifthd_gen_typecode_with_dftype
 #define eif_gen_param_id          eifthd_gen_param_id
-#define eif_register_bit_type     eifthd_register_bit_type
 #define eif_typeof_array_of       eifthd_typeof_array_of
 #define eif_typeof_type_of        eifthd_typeof_type_of
 #define eif_gen_cid               eifthd_gen_cid
@@ -800,7 +785,6 @@ rt_shared char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos)
 	gdp = eif_derivations [dftype];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
-	CHECK ("Not a bit type", !gdp->is_bit);
 
 	CHECK ("Valid generic position min", pos > 0);
 	CHECK ("Valid generic position max", pos <= gdp->size);
@@ -839,7 +823,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	gdp = eif_derivations [dftype];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
-	CHECK ("Not a bit type", !gdp->is_bit);
 	CHECK ("Not a routine object", gdp->size > 1);
 
 		/* Type of call target */
@@ -854,7 +837,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	gdp = eif_derivations [dftype];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
-	CHECK ("Not a bit type", !gdp->is_bit);
 
 		/* Create a string for gdp->size + 1 characters */
 	len = gdp->size + 1;
@@ -904,47 +886,10 @@ rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 
 	gdp = eif_derivations [dftype];
 
-	CHECK("A generic type", gdp && (!gdp->is_bit));
+	CHECK("A generic type", gdp);
 	CHECK("Valid generic parameter position", (pos <= gdp->size));
 
 	return gdp->typearr [pos-1];
-}
-/*------------------------------------------------------------------*/
-/* Register a bit type. Return its type id.                         */
-/*------------------------------------------------------------------*/
-
-rt_shared EIF_TYPE_INDEX eif_register_bit_type (uint16 size)
-{
-	EIF_TYPE_INDEX dftype;
-	EIF_GEN_DER *gdp, *prev;
-
-	/* Search for BIT type of size *intab */
-
-	dftype = egc_bit_dtype;
-	gdp    = eif_derivations [dftype];
-	prev   = NULL;
-
-	while (gdp != NULL) {
-		if (size == gdp->size) {
-			break; /* Found */
-		}
-		prev = gdp;
-		gdp  = gdp->next;
-	}
-
-	if (!gdp) {
-			/* Not found: we need a new id */
-		gdp = eif_new_gen_der(size, NULL, dftype, '1', (char) 0, 0, 0);
-
-		if (prev == (EIF_GEN_DER *)0) {
-			eif_derivations [dftype] = gdp;
-		} else {
-			prev->next = gdp;
-		}
-		eif_derivations[gdp->id] = gdp; /* Self-reference */
-	}
-
-	return gdp->id;
 }
 /*------------------------------------------------------------------*/
 /* Type id for ARRAY [something], where 'something' is a reference  */
@@ -993,12 +938,7 @@ rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
 		sk_type = SK_REF;
 	} else {
 		l_type = To_dtype(dftype);
-		if (l_type == egc_bit_dtype) {
-			EIF_GEN_DER *der = eif_derivations[dftype];
-			sk_type = SK_BIT | der->size;
-		} else {
-			sk_type = eif_dtype_to_sk_type (l_type);
-		}
+		sk_type = eif_dtype_to_sk_type (l_type);
 	}
 
 		/* Now try to find the proper TYPE generic derivation. */
@@ -1243,15 +1183,6 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 			if (sgdp->first_id == tgdp->first_id) {
 				/* Both have the same base class */
 
-				/* Check BIT types. BIT n conforms to BIT m
-				   iff n <= m. 
-				*/
-
-				if (sgdp->is_bit) {
-					result = ((sgdp->size <= tgdp->size) ? 1 : 0);
-					goto done;
-				}
-
 				/* Same base class. If nr. of generics
 				   differs, both are TUPLEs.
 				*/
@@ -1414,15 +1345,6 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 		return dftype;
 	}
 
-	if (dftype == egc_bit_dtype) {
-		(*intab)++;
-		dftype = eif_register_bit_type ((uint16) (**intab));
-		**outtab = dftype;
-		(*intab)++;
-		(*outtab)++;
-		return dftype;
-	}
-
 	if (dftype >= eif_first_gen_id) {
 		/* It's an already created gen. type */
 		(*intab)++;
@@ -1559,7 +1481,6 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 		result->first_id    = INVALID_DTYPE;
 		result->annotation  = annotation;
 		result->is_expanded = is_exp;
-		result->is_bit      = ((size > 0) ? '1' : (char) 0);
 		result->is_tuple    = is_tuple;
 		result->name        = NULL;       /* Generated on request only */
 				/* `name' must be allocated dynamically. */
@@ -1594,7 +1515,6 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 	result->first_id    = INVALID_DTYPE;
 	result->annotation  = annotation;
 	result->is_expanded = is_exp;
-	result->is_bit      = (char) 0;
 	result->is_tuple    = is_tuple;
 	result->name        = NULL;       /* Generated on request only */
 				/* `name' must be allocated dynamically. */
@@ -1982,46 +1902,29 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
 				if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
 					strcat (result, "!");
 				}
-				if (gdp->is_bit) {
-					size = gdp->size;
-					strcat (result, "BIT ");
-					n = strlen(result);
-					while (size) {
-						size /= 10;
-						++n;
-					}
+					/* Generic case */
+				i = (EIF_TYPE_INDEX) gdp->size;
 
-					size = gdp->size;
-					result [n] = '\0';
-					for (--n; size; --n) {
-						result [n] = (char) (size % 10) + '0';
-						size /= 10;
-					}
-				} else {
-						/* Generic case */
-					i = (EIF_TYPE_INDEX) gdp->size;
+				if (needs_expanded) {
+					strcat (result, "expanded ");
+				} else if (needs_reference) {
+					strcat (result, "reference ");
+				}
 
-					if (needs_expanded) {
-						strcat (result, "expanded ");
-					} else if (needs_reference) {
-						strcat (result, "reference ");
-					}
+				strcat (result, System(par_info(gdp->base_id)->dtype).cn_generator);
 
-					strcat (result, System(par_info(gdp->base_id)->dtype).cn_generator);
-
-					if (i > 0) {
-						strcat (result, " [");
-						gp = gdp->typearr;
-						while (i--) {
-							dtype = *gp;
-							eif_create_typename (dtype, result);
-							++gp;
-							if (i) {
-								strcat (result, ", ");
-							}
+				if (i > 0) {
+					strcat (result, " [");
+					gp = gdp->typearr;
+					while (i--) {
+						dtype = *gp;
+						eif_create_typename (dtype, result);
+						++gp;
+						if (i) {
+							strcat (result, ", ");
 						}
-						strcat(result, "]");
 					}
+					strcat(result, "]");
 				}
 			}
 		}
@@ -2073,33 +1976,24 @@ rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype)
 				if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
 					len += 1;	/* for ! */
 				}
-				if (gdp->is_bit) {
-					size = gdp->size;
-					len += 4; /* for BIT followed by a space */
-					while (size) {
-						size /= 10;
-						len++;
-					}
-				} else {
-						/* Generic case */
-					i = gdp->size;
-					len += strlen (System(par_info(gdp->base_id)->dtype).cn_generator);
+					/* Generic case */
+				i = gdp->size;
+				len += strlen (System(par_info(gdp->base_id)->dtype).cn_generator);
 
-					if (needs_expanded) {
-						len += 9; /* for expanded followed by space */
-					} else if (needs_reference) {
-						len += 10; /* for reference followed by space */
-					}
+				if (needs_expanded) {
+					len += 9; /* for expanded followed by space */
+				} else if (needs_reference) {
+					len += 10; /* for reference followed by space */
+				}
 
-					if (i > 0) {
-							/* Numbers of `[', `]' and `, ' needed in the type specification. */
-						len += 3 + (i-1)*2;
-						gp = gdp->typearr;
-						while (i--) {
-							l_dftype = *gp;
-							len += eif_typename_len (l_dftype);
-							++gp;
-						}
+				if (i > 0) {
+						/* Numbers of `[', `]' and `, ' needed in the type specification. */
+					len += 3 + (i-1)*2;
+					gp = gdp->typearr;
+					while (i--) {
+						l_dftype = *gp;
+						len += eif_typename_len (l_dftype);
+						++gp;
 					}
 				}
 			}
@@ -2139,25 +2033,20 @@ rt_private uint16 eif_gen_seq_len (EIF_TYPE_INDEX dftype)
 			len = 0;
 		}
 
-			/* Is it a BIT type? */
-		if (gdp->is_bit) {
-			len += 2;
-		} else {
-				/* Is it a TUPLE? */
-			if (gdp->is_tuple) {
-					/* Size is TUPLE_OFFSET because we need to take into account
-					 * TUPLE_TYPE constant, number of generic parameters
-					 * in seqence for tuple type */
-				len += TUPLE_OFFSET;
-			}
+			/* Is it a TUPLE? */
+		if (gdp->is_tuple) {
+				/* Size is TUPLE_OFFSET because we need to take into account
+				 * TUPLE_TYPE constant, number of generic parameters
+				 * in seqence for tuple type */
+			len += TUPLE_OFFSET;
+		}
 
-			i = gdp->size;
-				/* Add 1 for the base ID. */
-			len = len + 1; 
-			while (i) {
-				i--;
-				len = len + eif_gen_seq_len (gdp->typearr [i]);
-			}
+		i = gdp->size;
+			/* Add 1 for the base ID. */
+		len = len + 1; 
+		while (i) {
+			i--;
+			len = len + eif_gen_seq_len (gdp->typearr [i]);
 		}
 	}
 
@@ -2196,31 +2085,22 @@ rt_private void eif_put_gen_seq (EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX *typearr,
 			(*idx)++;
 		}
 
-			/* Is it a BIT type? */
-		if (gdp->is_bit) {
-			typearr [*idx] = egc_bit_dtype;    /* Bit type */
+			/* Is it a TUPLE type? */
+		if (gdp->is_tuple) {
+			typearr [*idx] = TUPLE_TYPE;                   /* TUPLE type */
 			(*idx)++;
-			CHECK("Valid number of bits", rt_valid_type_index(gdp->size));
-			typearr [*idx] = (EIF_TYPE_INDEX) (gdp->size); /* Nr of bits */
+			CHECK("Valid number of generics", rt_valid_type_index(gdp->size));
+			typearr [*idx] = (EIF_TYPE_INDEX) (gdp->size);   /* Nr of generics */
 			(*idx)++;
-		} else {
-				/* Is it a TUPLE type? */
-			if (gdp->is_tuple) {
-				typearr [*idx] = TUPLE_TYPE;                   /* TUPLE type */
-				(*idx)++;
-				CHECK("Valid number of generics", rt_valid_type_index(gdp->size));
-				typearr [*idx] = (EIF_TYPE_INDEX) (gdp->size);   /* Nr of generics */
-				(*idx)++;
-			}
+		}
 
-			typearr [*idx] = gdp->base_id;
-			(*idx)++;
+		typearr [*idx] = gdp->base_id;
+		(*idx)++;
 
-			len = gdp->size;
+		len = gdp->size;
 
-			for (i = 0; i < len; ++i) {
-				eif_put_gen_seq (gdp->typearr [i], typearr, idx);
-			}
+		for (i = 0; i < len; ++i) {
+			eif_put_gen_seq (gdp->typearr [i], typearr, idx);
 		}
 	}
 }
@@ -2360,15 +2240,11 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 		if (!gdp || (!RT_IS_ATTACHED_TYPE(gdp->annotation))) {
 			tuple_added_size = 0;
 			if (gdp) {
-				if (gdp->is_bit) {
-					nb = 1;
-				} else {
-					nb = gdp->size;
-					if (gdp->is_tuple) {
-							/* + 2 because we need to store TUPLE_TYPE followed by
-							* the actual generic parameter count. */
-						tuple_added_size = 2;
-					}
+				nb = gdp->size;
+				if (gdp->is_tuple) {
+						/* + 2 because we need to store TUPLE_TYPE followed by
+						* the actual generic parameter count. */
+					tuple_added_size = 2;
 				}
 			} else {
 				nb = 0;
@@ -2389,17 +2265,12 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 			intable[0] = ATTACHED_TYPE;
 			intable[tuple_added_size + 1] = To_dtype(dftype);
 			if (gdp) {
-				if (gdp->is_bit) {
-					CHECK("not tuple", tuple_added_size == 0);
-					intable [2] = (EIF_TYPE_INDEX) gdp->size;
-				} else {
-					if (tuple_added_size) {
-						intable[1] = TUPLE_TYPE;
-						CHECK("valid cound", nb < 0xFFFF);
-						intable[2] = (EIF_TYPE_INDEX) nb;
-					}
-					memcpy (intable + (tuple_added_size + 2), gdp->typearr, sizeof(EIF_TYPE_INDEX) * nb);
+				if (tuple_added_size) {
+					intable[1] = TUPLE_TYPE;
+					CHECK("valid cound", nb < 0xFFFF);
+					intable[2] = (EIF_TYPE_INDEX) nb;
 				}
+				memcpy (intable + (tuple_added_size + 2), gdp->typearr, sizeof(EIF_TYPE_INDEX) * nb);
 			}
 			intable[nb + tuple_added_size + 2] = TERMINATOR;
 			l_result = eif_id_of (&intable, &outtable, dftype);

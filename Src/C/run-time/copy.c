@@ -2,7 +2,7 @@
 	description: "Implementation of copying/cloning routines of ANY."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -104,8 +104,6 @@ rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 		} else {
 			return spclone (source);
 		}
-	} else if (dftype == egc_bit_dtype) {
-		return b_clone(source);
 	} else {
 		return emalloc(dftype);
 	}
@@ -194,8 +192,6 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	flags = HEADER(source)->ov_flags;
 	if (flags & EO_SPEC) {
 		spcopy(source, target);
-	} else if (Dftype(source) == egc_bit_dtype) {
-		b_copy(source, target);
 	} else {
 		eif_std_ref_copy(source, target);
 	}

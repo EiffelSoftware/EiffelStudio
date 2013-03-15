@@ -2,7 +2,7 @@
 	description: "Basic structure definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -124,7 +124,6 @@ struct cnode {
 #define SK_CHAR32	0x1c000000			/* Simple unicode character type */
 #define SK_REAL64	0x20000000			/* Simple double type */
 #define SK_INT64	0x24000000			/* Simple integer 64 types */
-#define SK_BIT		0x28000000			/* Signals bits type */
 #define SK_STRING	0x2c000000			/* String type / Use for debugging only */
 #define SK_UINT8	0x30000000			/* Simple unsigned integer 8 type */
 #define SK_UINT16	0x34000000			/* Simple unsigned integer 16 type */
@@ -132,7 +131,6 @@ struct cnode {
 #define SK_UINT64	0x3c000000			/* Simple unsigned integer 64 type */
 #define SK_POINTER	0x40000000			/* Simple pointer type */
 #define SK_STRING32 0x44000000		/* STRING_32 type / Use for debugging only */
-#define SK_BMASK	0x00007fff			/* Bits number (coded on 15 bits) */
 #define SK_SIMPLE	0x7c000000			/* Mask to test for simple type */
 #define SK_REF		0xf8000000			/* Mask to test for reference type */
 #define SK_VOID		0x00000000			/* Mask for void type */

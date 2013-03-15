@@ -5,7 +5,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1106,7 +1106,6 @@ static  void    print_dtype (uint32 type)
 			case SK_REAL32:  fprintf (mfp," [REAL_32]"); break;
 			case SK_REAL64: fprintf (mfp," [REAL_64]"); break;
 			case SK_POINTER:fprintf (mfp," [POINTER]"); break;
-			case SK_BIT:    fprintf (mfp," [BIT]"); break;
 			case SK_EXP:    fprintf (mfp,"ET %u", type & SK_DTYPE);
 
 							if ((dtype <= dtype_max) && (dtype_names [dtype] != NULL))

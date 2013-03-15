@@ -2,7 +2,7 @@
 	description: "Routines for Request Internal Data Representation."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -342,8 +342,6 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum)
 			memcpy (idrs->i_ptr, &ext->it_ptr, sizeof(EIF_POINTER));
 			idrs->i_ptr += sizeof(EIF_POINTER);
 			return TRUE;
-		case SK_BIT:
-			return idr_eif_reference (idrs, (&ext->it_bit));
 		case SK_STRING:
 			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
 		case SK_STRING32:
@@ -412,8 +410,6 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum)
 			memcpy (&ext->it_ptr, idrs->i_ptr, sizeof(EIF_POINTER));
 			idrs->i_ptr += sizeof(EIF_POINTER);
 			return TRUE;
-		case SK_BIT:
-			return idr_eif_reference (idrs, &ext->it_bit);
 		case SK_STRING:
 			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
 		case SK_STRING32:

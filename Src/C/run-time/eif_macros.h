@@ -1336,6 +1336,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_add_synchronous_call 9
 #define scoop_task_wait_for_processor_redundancy 10
 #define scoop_task_check_uncontrolled 11
+#define scoop_task_update_statistics 12
 
 #ifdef WORKBENCH
 #define RTS_TCB(t,c,s,a) \

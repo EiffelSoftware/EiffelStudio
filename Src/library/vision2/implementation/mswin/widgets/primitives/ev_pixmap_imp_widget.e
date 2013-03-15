@@ -493,7 +493,6 @@ feature {NONE} -- Implementation
 			l_blend_function: WEL_BLEND_FUNCTION
 			l_result: BOOLEAN
 			l_background_region, l_image_region, l_combined_region: WEL_REGION
-			l_helper: WEL_BITMAP_HELPER
 			l_bitmap_info: WEL_BITMAP_INFO
 		do
 			if parent /= Void then
@@ -531,8 +530,7 @@ feature {NONE} -- Implementation
 
 				if internal_mask_bitmap = Void then
 					check l_bitmap /= Void end
-					create l_helper
-					l_bitmap_info := l_helper.info_of_bitmap (l_bitmap)
+					create l_bitmap_info.make_by_dc (l_bitmap_dc, l_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 					if l_bitmap_info /= Void and then l_bitmap_info.header.bit_count = 32 and then
 						(l_bitmap.ppv_bits /= default_pointer or l_bitmap.is_made_by_dib) then
 						-- Only 32bits DIB bitmap use alpha blend function instead of bit_blt
@@ -685,7 +683,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for the bridge pattern.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

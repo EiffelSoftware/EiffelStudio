@@ -1706,37 +1706,19 @@ feature -- Basic operations
 			a_bitmap_exists: a_bitmap.exists
 			file_not_void: file /= Void
 		local
-			bmi, bmi2: WEL_BITMAP_INFO
+			bmi: WEL_BITMAP_INFO
 			bfh: WEL_BITMAP_FILE_HEADER
 			bits: MANAGED_POINTER
-			size: INTEGER
 			rgb_quad: WEL_RGB_QUAD
 			rf: RAW_FILE
 			l_ptr: MANAGED_POINTER
 		do
 			create rgb_quad.make
 			create bmi.make_by_dc (Current, a_bitmap, Dib_rgb_colors)
-			inspect
-				bmi.header.bit_count
-			when 24 then
-				size := bmi.header.structure_size
-				create bmi2.make (bmi.header, 0)
-			when 16, 32 then
-				size := bmi.header.structure_size +
-					rgb_quad.structure_size * 3
-				create bmi2.make (bmi.header, 3)
-			else
-				size := (bmi.header.structure_size.to_double +
-					rgb_quad.structure_size *
-					(2 ^ bmi.header.bit_count)).truncated_to_integer
-				create bmi2.make (bmi.header, (2 ^ bmi.header.bit_count).truncated_to_integer)
-			end
 			create bfh.make
 			bfh.set_type (19778) -- 'BM'
-			bfh.set_size (bfh.structure_size +
-				bmi2.header.structure_size + size +
-				bmi2.header.size_image)
-			bfh.set_off_bits (bfh.structure_size + size)
+			bfh.set_size (bfh.structure_size + bmi.structure_size + bmi.header.size_image)
+			bfh.set_off_bits (bfh.structure_size + bmi.structure_size)
 
 			-- Create the file
 			create rf.make_with_path (file)
@@ -1746,15 +1728,15 @@ feature -- Basic operations
 			create l_ptr.share_from_pointer (bfh.item, bfh.structure_size)
 			rf.put_managed_pointer (l_ptr, 0, bfh.structure_size)
 
-			bits := di_bits_pointer (a_bitmap, 0, bmi2.header.height, bmi2, Dib_rgb_colors)
+			bits := di_bits_pointer (a_bitmap, 0, bmi.header.height, bmi, Dib_rgb_colors)
 
 			-- Write the bitmap info header
-			l_ptr.set_from_pointer (bmi2.item, size)
-			rf.put_managed_pointer (l_ptr, 0, size)
+			l_ptr.set_from_pointer (bmi.item, bmi.structure_size)
+			rf.put_managed_pointer (l_ptr, 0, bmi.structure_size)
 
 			-- Write the DIB and close the file
-			l_ptr.set_from_pointer (bits.item, bmi2.header.size_image)
-			rf.put_managed_pointer (l_ptr, 0, bmi2.header.size_image)
+			l_ptr.set_from_pointer (bits.item, bmi.header.size_image)
+			rf.put_managed_pointer (l_ptr, 0, bmi.header.size_image)
 			rf.close
 		end
 
@@ -1776,11 +1758,11 @@ feature -- Basic operations
 			valid_usage: valid_dib_colors_constant (usage)
 		local
 			a: WEL_CHARACTER_ARRAY
+			l_code: INTEGER
 		do
 			create Result.make_filled ('%U', 1, bitmap_info.header.size_image)
 			create a.make (Result)
-			cwin_get_di_bits (item, a_bitmap.item, start_scan,
-				scan_lines, a.item, bitmap_info.item, usage)
+			l_code := cwin_get_di_bits (item, a_bitmap.item, start_scan, scan_lines, a.item, bitmap_info.item, usage)
 			Result := a.to_array (1)
 		ensure
 			result_not_void: Result /= Void
@@ -1803,10 +1785,11 @@ feature -- Basic operations
 			positive_scan_lines: scan_lines >= 0
 			bitmap_info_not_void: bitmap_info /= Void
 			valid_usage: valid_dib_colors_constant (usage)
+		local
+			l_code: INTEGER
 		do
 			create Result.make (bitmap_info.header.size_image)
-			cwin_get_di_bits (item, a_bitmap.item, start_scan,
-				scan_lines, Result.item, bitmap_info.item, usage)
+			l_code := cwin_get_di_bits (item, a_bitmap.item, start_scan, scan_lines, Result.item, bitmap_info.item, usage)
 		ensure
 			result_not_void: Result /= Void
 			consistent_count: Result.count = bitmap_info.header.size_image
@@ -2546,12 +2529,10 @@ feature {NONE} -- Externals
 			"GetTextFace"
 		end
 
-	cwin_get_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
-			bits, bi: POINTER; usage: INTEGER)
+	cwin_get_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER; bits, bi: POINTER; usage: INTEGER): INTEGER
 			-- SDK GetDIBits
 		external
-			"C [macro <windows.h>] (HDC, HBITMAP, UINT, UINT, %
-				%VOID *, BITMAPINFO *, UINT)"
+			"C macro signature (HDC, HBITMAP, UINT, UINT, VOID *, BITMAPINFO *, UINT): int use <windows.h>"
 		alias
 			"GetDIBits"
 		end

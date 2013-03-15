@@ -60,15 +60,12 @@ feature {NONE} -- Initialization
 		do
 			create bitmap_file_header.make
 			create info_header.make
-			create a_buf_1.make (bitmap_file_header.structure_size)
+			create a_buf_1.share_from_pointer (bitmap_file_header.item, bitmap_file_header.structure_size)
 			a_stream.read_to_managed_pointer (a_buf_1, 0, bitmap_file_header.structure_size)
-			bitmap_file_header.memory_copy (a_buf_1.item,
-				bitmap_file_header.structure_size)
 			structure_size := bitmap_file_header.size - bitmap_file_header.structure_size
 			structure_make
-			create a_buf_2.make (structure_size)
+			create a_buf_2.share_from_pointer (item, structure_size)
 			a_stream.read_to_managed_pointer (a_buf_2, 0, structure_size)
-			memory_copy (a_buf_2.item, a_buf_2.count)
 			info_header.memory_copy (item, info_header.structure_size)
 			palette := new_palette
 		end
@@ -114,12 +111,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			if info_header.structure_size >= 36 then
-				Result := info_header.clr_used
-			end
-			if Result = 0 and then (info_header.bit_count /= 24 and info_header.bit_count /= 32) then
-				Result := (2 ^ info_header.bit_count).truncated_to_integer
-			end
+			Result := info_header.color_count
 		ensure
 			positive_result: Result >= 0
 		end
@@ -143,7 +135,6 @@ feature -- Access
 		ensure
 			positive_result: Result >= 0
 		end
-
 
 	item_bits: POINTER
 		require
@@ -349,14 +340,14 @@ feature {WEL_BITMAP}
 	info_header: WEL_BITMAP_INFO_HEADER;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

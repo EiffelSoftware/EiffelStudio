@@ -133,30 +133,65 @@ feature {NONE} -- Initlization
 			-- `a_bitmap' must have alpha channel and bits order is argb.
 		require
 			exists: a_bitmap /= Void and then a_bitmap.exists
-			is_32bits: a_bitmap.log_bitmap.bits_pixel = 32
 		local
 			l_current_data: WEL_GDIP_BITMAP_DATA
 			l_rect: WEL_GDIP_RECT
 			l_pointer: POINTER
 			l_width, l_height: INTEGER
-			l_helper: WEL_BITMAP_HELPER
 			l_data: MANAGED_POINTER
+			l_dc: WEL_MEMORY_DC
+			l_info: WEL_BITMAP_INFO
+			l_header: WEL_BITMAP_INFO_HEADER
+			l_format: INTEGER
 		do
 			l_width := a_bitmap.width
 			l_height := a_bitmap.height
-			make_with_size (l_width, l_height)
 
+			create l_dc.make
+			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			l_header := l_info.header
+
+				-- Gdi and Gdi+ have different pixel data order (`up to bottom' vs `bottom to up')
+				-- Let's revert the data
+			l_header.set_height (- l_height)
+			l_data := l_dc.di_bits_pointer (a_bitmap, 0, l_height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+
+			inspect l_header.bit_count
+			when 1 then l_format := {WEL_GDIP_PIXEL_FORMAT}.format1bppindexed
+			when 4 then l_format := {WEL_GDIP_PIXEL_FORMAT}.format4bppindexed
+			when 8 then l_format := {WEL_GDIP_PIXEL_FORMAT}.format8bppindexed
+			when 16 then
+				if l_header.compression = {WEL_BI_COMPRESSION_CONSTANTS}.bi_bitfields then
+					if
+						l_info.rgb_quad_natural (0) = 0xF800 and l_info.rgb_quad_natural (1) = 0x07E0 and
+						l_info.rgb_quad_natural (2) = 0x001F
+					then
+						l_format := {WEL_GDIP_PIXEL_FORMAT}.format16bpprgb565
+					else
+						check
+							expected_555_format: l_info.rgb_quad_natural (0) = 0x7C00 and l_info.rgb_quad_natural (1) = 0x03E0 and
+							l_info.rgb_quad_natural (2) = 0x001F
+						end
+						l_format := {WEL_GDIP_PIXEL_FORMAT}.format16bpprgb555
+					end
+				else
+					l_format := {WEL_GDIP_PIXEL_FORMAT}.format16bpprgb555
+				end
+			when 24 then l_format := {WEL_GDIP_PIXEL_FORMAT}.format24bpprgb
+			when 32 then l_format := {WEL_GDIP_PIXEL_FORMAT}.format32bppargb
+			else
+				check False end
+			end
+
+			make_formatted (l_width, l_height, l_format)
 			create l_rect.make_with_size (0, 0, l_width, l_height)
-			l_current_data := lock_bits (l_rect, {WEL_GDIP_IMAGE_LOCK_MODE}.write_only, {WEL_GDIP_PIXEL_FORMAT}.format32bppargb)
-
+			l_current_data := lock_bits (l_rect, {WEL_GDIP_IMAGE_LOCK_MODE}.write_only, l_format)
 			l_pointer := l_current_data.scan_0
 
-			-- Gdi and Gdi+ have different pixel data order (`up to bottom' vs `bottom to up')
-			create l_helper
-			l_data := l_helper.bits_pointer_of_image_bottom_up (a_bitmap)
+			l_pointer.memory_copy (l_data.item, l_data.count)
 
-			l_pointer.memory_copy (l_data.item, l_width * l_height * 4)
 			unlock_bits (l_current_data)
+			l_info.dispose
 		end
 
 feature -- Command

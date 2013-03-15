@@ -23,7 +23,7 @@ feature -- Command
 			l_result: INTEGER
 		do
 			create l_orignal_dc.make
-			l_info := info_of_bitmap (a_bitmap)
+			create l_info.make_by_dc (l_orignal_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 
 				-- When use SetDiBits/GetDiBits Api, windows require bitmap is not selected by any dc.
 			l_bits := l_orignal_dc.di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
@@ -31,8 +31,6 @@ feature -- Command
 				-- Following line is KEY to mirror bitmap
 			l_info.header.set_height (- l_info.header.height)
 			l_result := l_orignal_dc.set_di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_bits, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-
-			l_info.header.dispose
 			l_info.dispose
 			l_orignal_dc.delete
 		end
@@ -49,9 +47,8 @@ feature -- Query
 			l_info: WEL_BITMAP_INFO
 		do
 			create l_dc.make
-			l_info := info_of_bitmap (a_bitmap)
+			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-			l_info.header.dispose
 			l_info.dispose
 		ensure
 			not_void: Result /= Void
@@ -67,10 +64,9 @@ feature -- Query
 			l_info: WEL_BITMAP_INFO
 		do
 			create l_dc.make
-			l_info := info_of_bitmap (a_bitmap)
+			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			l_info.header.set_height (- l_info.header.height)
 			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-			l_info.header.dispose
 			l_info.dispose
 		end
 
@@ -82,33 +78,28 @@ feature -- Query
 		local
 			l_dc: WEL_MEMORY_DC
 			l_info: WEL_BITMAP_INFO
+			l_header: WEL_BITMAP_INFO_HEADER
 		do
 			create l_dc.make
-			l_info := info_of_bitmap (a_bitmap)
-			l_info.header.set_height (- l_info.header.height)
+			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			l_header := l_info.header
+			l_header.set_height (- l_header.height)
 			Result := l_dc.di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-			l_info.header.dispose
 			l_info.dispose
 		end
 
 	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO
 			-- Create a Result base on `a_bitmap'
+		obsolete
+			"Use `create {WEL_BITMAP_INFO}.make_by_dc instead (a_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)'."
 		require
 			a_bitmap_not_void: a_bitmap /= Void
 			a_bitmap_exits: a_bitmap.exists
 		local
 			l_dc: WEL_MEMORY_DC
-			l_info: WEL_BITMAP_INFO
 		do
 			create l_dc.make
-			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-			-- We must make another header info, otherwise memory will crash when call GetDIBits.
-			-- For 32bits, it's 3
-			-- See WEL_DC save_bitmap
-			create Result.make (l_info.header, 3)
-
-			l_info.header.dispose
-			l_info.dispose
+			create Result.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 		end
 
 feature -- Brush Query

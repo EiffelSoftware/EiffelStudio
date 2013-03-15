@@ -15,13 +15,20 @@ feature -- Action
 	run_test (a_agent: PROCEDURE [ANY, TUPLE])
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
+		do
+			run_test_with_delay (0, a_agent)
+		end
+
+	run_test_with_delay (a_delay_in_ms: INTEGER; a_agent: PROCEDURE [ANY, TUPLE])
+			-- Create `Current', build and display `main_window',
+			-- then launch the application.
 		local
 			l_app: EV_APPLICATION
 		do
 			create l_app
 			application := l_app
 			l_app.add_idle_action_kamikaze (a_agent)
-			l_app.add_idle_action_kamikaze (agent l_app.destroy)
+			l_app.add_idle_action_kamikaze (agent destroy (l_app, a_delay_in_ms))
 			l_app.uncaught_exception_actions.extend (agent record_exception)
 			l_app.launch
 
@@ -56,6 +63,20 @@ feature {NONE} -- Access
 		do
 			if attached first_recorded_exception as l_exception then
 				l_exception.raise
+			end
+		end
+
+	destroy (a_app: EV_APPLICATION; a_delay_in_ms: INTEGER)
+			-- Destroy `a_app' after `a_delay_in_ms' millisecond.
+		local
+			l_timer: EV_TIMEOUT
+		do
+			if a_delay_in_ms > 0 then
+				create l_timer
+				l_timer.actions.extend (agent a_app.destroy)
+				l_timer.set_interval (a_delay_in_ms)
+			else
+				a_app.destroy
 			end
 		end
 

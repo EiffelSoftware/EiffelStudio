@@ -10,6 +10,8 @@ class
 inherit
 	VISION2_TEST_SET
 
+	TEST_CONSTANTS
+
 feature -- Test routines
 
 	drawing_area_draw_pixmap
@@ -88,13 +90,6 @@ feature -- Test routines
 			window.show
 			window.set_size (100, 100)
 		end
-
-feature {NONE} -- Helpers
-
-    lenna: STRING
-    	once
-    		Result := "graphics/Lenna.png"
-    	end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

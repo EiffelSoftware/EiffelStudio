@@ -62,42 +62,42 @@ feature {NONE} -- Constants
 	bitmaps: ARRAYED_LIST [STRING]
 		once
 			create Result.make (10)
-			Result.extend (lenna_01bpp)
-			Result.extend (lenna_04bpp)
-			Result.extend (lenna_08bpp)
-			Result.extend (lenna_16bpp)
-			Result.extend (lenna_24bpp)
-			Result.extend (lenna_32bpp)
+			Result.extend (image_01bpp)
+			Result.extend (image_04bpp)
+			Result.extend (image_08bpp)
+			Result.extend (image_16bpp)
+		Result.extend (image_24bpp)
+			Result.extend (image_32bpp)
 		end
 
-	lenna_32bpp: STRING
+	image_32bpp: STRING
 		once
-			Result := "graphics/Lenna_32bpp.bmp"
+			Result := "graphics/32bpp.bmp"
 		end
 
-	lenna_24bpp: STRING
+	image_24bpp: STRING
 		once
-			Result := "graphics/Lenna_24bpp.bmp"
+			Result := "graphics/24bpp.bmp"
 		end
 
-	lenna_16bpp: STRING
+	image_16bpp: STRING
 		once
-			Result := "graphics/Lenna_16bpp.bmp"
+			Result := "graphics/16bpp.bmp"
 		end
 
-	lenna_08bpp: STRING
+	image_08bpp: STRING
 		once
-			Result := "graphics/Lenna_08bpp.bmp"
+			Result := "graphics/08bpp.bmp"
 		end
 
-	lenna_04bpp: STRING
+	image_04bpp: STRING
 		once
-			Result := "graphics/Lenna_04bpp.bmp"
+			Result := "graphics/04bpp.bmp"
 		end
 
-	lenna_01bpp: STRING
+	image_01bpp: STRING
 		once
-			Result := "graphics/Lenna_01bpp.bmp"
+			Result := "graphics/01bpp.bmp"
 		end
 
 	output_path: PATH

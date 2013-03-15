@@ -1361,14 +1361,6 @@ feature {NONE} -- Externals
 			"C use %"eif_offset.h%""
 		end;
 
-	bitoff (bit_val: NATURAL_32): INTEGER
-			-- Size of a bit object of size `bit_val'
-		external
-			"C macro use %"eif_eiffel.h%""
-		alias
-			"BITOFF"
-		end;
-
 	chracs (n: INTEGER): INTEGER
 			-- Size of `n' characters
 		external

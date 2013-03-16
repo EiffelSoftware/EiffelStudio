@@ -2,7 +2,7 @@
 	description: "Declarations."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -57,7 +57,6 @@ extern void c_pass_recv_routines (
 	EIF_PROC d_double,
 	EIF_PROC d_ref,
 	EIF_PROC d_point,
-	EIF_PROC d_bits,
 	EIF_PROC d_error,
 	EIF_PROC d_exception_ref,
 	EIF_PROC d_void);

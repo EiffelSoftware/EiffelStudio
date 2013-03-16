@@ -2,7 +2,7 @@
 	description: "Declarations."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -62,7 +62,6 @@ extern void send_ref_value(EIF_REFERENCE value);
 extern void send_ptr_value(EIF_POINTER value);
 extern void send_string_value(char* string, int a_size);
 extern void send_string_32_value(char* string, int a_size);
-extern void send_bit_value(char *value);
 
 extern void ewb_send_ack_ok(void);
 extern EIF_BOOLEAN recv_ack (void);

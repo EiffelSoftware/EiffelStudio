@@ -389,11 +389,6 @@ rt_public void send_string_32_value(char* string, int a_size)
 	send_dmpitem_request(&item, a_size);
 }
 
-/* send a bit value to the application */
-rt_public void send_bit_value(char *value)
-{
-}
-
 rt_public void ewb_send_ack_ok(void)
       		/* The socket descriptor */
          	/* The acknowledgment code */

@@ -869,18 +869,10 @@ static  void    print_instructions (void)
 				get_creation_type ();
 				fprintf (ofp, " ");
 					/* Read various flags about special we want to create. */
-				if (get_char8(&ip)) { fprintf (ofp, "is_reference "); }
-				if (get_char8(&ip)) { fprintf (ofp, "is_basic "); }
-				cval = get_char8(&ip);
-				if (cval) { /* unused */ }
 				if (get_char8(&ip)) {
 					fprintf (ofp, "is_expanded of type %d", get_int16(&ip));
 				} else {
 						/* Read SK_XX type */
-					get_uint32(&ip);
-				}
-				if (cval) {
-						/* Get size of bits. */
 					get_uint32(&ip);
 				}
 				break;

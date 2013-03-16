@@ -74,10 +74,6 @@ feature -- Byte code generation
 			gen_param := first_generic
 			l_param_is_expanded := gen_param.is_true_expanded
 			final_mode := byte_context.final_mode
-
-			ba.append_boolean (not gen_param.is_expanded)
-			ba.append_boolean (gen_param.is_basic)
-			ba.append_boolean (False)
 			ba.append_boolean (l_param_is_expanded)
 			if l_param_is_expanded then
 				ba.append_short_integer (gen_param.static_type_id (Void) - 1)

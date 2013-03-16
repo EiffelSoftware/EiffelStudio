@@ -2297,7 +2297,8 @@ rt_private void interpret(int flag, int where)
 	case BC_SPCREATE:
 		{
 			EIF_REFERENCE new_obj;						/* New object */
-			EIF_BOOLEAN is_ref, is_basic, is_expanded, unused, is_make_filled, is_make_empty;
+			EIF_BOOLEAN is_expanded, is_make_filled, is_make_empty;
+			EIF_BOOLEAN is_basic = EIF_FALSE;
 			uint32 elem_size = 0, spec_type;
 			uint16 flags = 0;
 			EIF_TYPED_VALUE nb_item, default_item;
@@ -2309,32 +2310,29 @@ rt_private void interpret(int flag, int where)
 			is_make_empty = EIF_TEST(*IC++);
 			type = get_creation_type (1);
 
-			is_ref = EIF_TEST(*IC++);
-			is_basic = EIF_TEST(*IC++);
-			unused = EIF_TEST(*IC++);
 			is_expanded = EIF_TEST(*IC++);
 
 			if (is_expanded) {
 				elem_size = OVERHEAD + EIF_Size(get_int16(&IC));
+				flags = EO_COMP;
 			} else {
 				spec_type = get_uint32(&IC);
 				switch (spec_type & SK_HEAD) {
-					case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
-					case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
-					case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
-					case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
-					case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
-					case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
-					case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
-					case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
-					case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
-					case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
-					case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
-					case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
-					case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
-					case SK_POINTER: elem_size = sizeof(EIF_POINTER); break;
-					case SK_REF:
-						elem_size = sizeof(EIF_REFERENCE); break;
+					case SK_CHAR8:   elem_size = sizeof(EIF_CHARACTER_8);  is_basic = EIF_TRUE; break;
+					case SK_CHAR32:  elem_size = sizeof(EIF_CHARACTER_32); is_basic = EIF_TRUE; break;
+					case SK_BOOL:    elem_size = sizeof(EIF_BOOLEAN);      is_basic = EIF_TRUE; break;
+					case SK_UINT8:   elem_size = sizeof(EIF_NATURAL_8);    is_basic = EIF_TRUE; break;
+					case SK_UINT16:  elem_size = sizeof(EIF_NATURAL_16);   is_basic = EIF_TRUE; break;
+					case SK_UINT32:  elem_size = sizeof(EIF_NATURAL_32);   is_basic = EIF_TRUE; break;
+					case SK_UINT64:  elem_size = sizeof(EIF_NATURAL_64);   is_basic = EIF_TRUE; break;
+					case SK_INT8:    elem_size = sizeof(EIF_INTEGER_8);    is_basic = EIF_TRUE; break;
+					case SK_INT16:   elem_size = sizeof(EIF_INTEGER_16);   is_basic = EIF_TRUE; break;
+					case SK_INT32:   elem_size = sizeof(EIF_INTEGER_32);   is_basic = EIF_TRUE; break;
+					case SK_INT64:   elem_size = sizeof(EIF_INTEGER_64);   is_basic = EIF_TRUE; break;
+					case SK_REAL32:  elem_size = sizeof(EIF_REAL_32);      is_basic = EIF_TRUE; break;
+					case SK_REAL64:  elem_size = sizeof(EIF_REAL_64);      is_basic = EIF_TRUE; break;
+					case SK_POINTER: elem_size = sizeof(EIF_POINTER);      is_basic = EIF_TRUE; break;
+					case SK_REF:     elem_size = sizeof(EIF_REFERENCE);    flags = EO_REF;      break;
 					default:
 						eif_panic ("Illegal type");
 				}
@@ -2353,11 +2351,6 @@ rt_private void interpret(int flag, int where)
 				eraise ("non_negative_argument", EN_RT_CHECK);
 			}
 
-			if (is_expanded) {
-				flags = EO_COMP;
-			} else if (is_ref) {
-				flags = EO_REF;
-			}
 				/* The allocation of the SPECIAL may callback some melted code when creating
 				 * special of expanded where the call to the creation procedure goes back to
 				 * the interpreter. */

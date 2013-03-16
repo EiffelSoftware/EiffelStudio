@@ -32,7 +32,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 				$set_int8, $set_int16, $set_int32, $set_int64, $set_bool,
 				$set_char, $set_wchar, $set_real,
 				$set_double, $set_ref, $set_point,
-				$set_bits, $set_error, $set_exception_ref, $set_void)
+				$set_error, $set_exception_ref, $set_void)
 		end
 
 	set_error
@@ -171,13 +171,6 @@ feature	{} -- Initialization of the C/Eiffel interface
 			-- Receive a pointer value.
 		do
 			create {DEBUG_BASIC_VALUE [POINTER]} item.make (sk_pointer ,v)
-		end
-
-	set_bits (ref: POINTER; size: INTEGER)
-			-- Receive a bit value.
-		do
-		ensure
-			is_callable: False
 		end
 
 	set_void

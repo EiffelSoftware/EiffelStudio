@@ -244,7 +244,6 @@ rt_public void c_pass_recv_routines (
 	EIF_PROC d_double,
 	EIF_PROC d_ref,
 	EIF_PROC d_point,
-	EIF_PROC d_bits,
 	EIF_PROC d_error,
 	EIF_PROC d_exception_ref,
 	EIF_PROC d_void)

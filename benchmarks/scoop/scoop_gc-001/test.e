@@ -23,6 +23,7 @@ feature {NONE} -- Creation
 			s: DATE_TIME
 			t: separate TEST
 		do
+			fill (data)
 			create a
 			if a.argument_count /= 1 or else not a.argument (1).is_natural_64 then
 				io.error.put_string ("Usage: test number_of_iterations")
@@ -38,6 +39,29 @@ feature {NONE} -- Creation
 				create t
 			end
 			io.put_integer_64 ((create {DATE_TIME}.make_now_utc).relative_duration (s).seconds_count)
+		end
+
+feature {NONE} -- GC data
+
+	data: separate LINKED_LIST [detachable ANY]
+			-- Data to make sure GC cycle takes some time.
+		once ("PROCESS")
+			create Result.make
+		end
+
+	fill (d: like data)
+			-- Fill `d' with values.
+		local
+			i: like data.count
+		do
+			from
+				i := 100_000
+			until
+				i <= 0
+			loop
+				d.extend (Void)
+				i := i - 1
+			end
 		end
 
 end

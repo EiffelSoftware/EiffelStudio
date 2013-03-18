@@ -2739,9 +2739,9 @@ test 	qat-with-secret-features	anchor068 tcf fail anchored_type
 test 	qat-instantiated-in-crash-4 	anchor069 tcf fail finalizing formal generic anchored_type
 
 -- SCOOP
-test	scoop-access-smoke					scoop001 tcf pass scoop execution
+test	scoop-access-smoke				scoop001 tcf pass scoop execution
 test	scoop-argument-validity				scoop002 tcf pass scoop validity expanded
-test	scoop-hanging-1						scoop003 tcf pass scoop execution
+test	scoop-hanging-1					scoop003 tcf pass scoop execution
 test	scoop-basic-argument-formal-nested	scoop004 tcf pass scoop execution
 test	scoop-separate-like-current			scoop005 tcf pass scoop execution
 test	scoop-result-validity				scoop006 tcf pass scoop validity expanded
@@ -2767,6 +2767,7 @@ test	scoop-unnested-logging				scoop026 tcf pass scoop execution
 test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop execution
 test	scoop-sequential-processor-creation		scoop028 tcf pass scoop execution
 test	scoop-recursive-processor-creation		scoop029 tcf pass scoop execution
+test	scoop-agent-validity				scoop030 tcf pass scoop validity expanded agents conformance
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

@@ -3151,6 +3151,9 @@ feature -- Properties
 		do
 		end
 
+	is_hidden_in_debugger_call_stack: BOOLEAN
+			-- Is class's features hidden in debugger call stack tool?
+
 	obsolete_message_32: STRING_32
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
@@ -4033,6 +4036,14 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Set `bom' with `a_bom'
 		do
 			lace_class.set_encoding_and_bom (a_encoding, a_bom)
+		end
+
+	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
+			-- Set `is_hidden_in_debugger_call_stack' with `v'
+		do
+			is_hidden_in_debugger_call_stack := v
+		ensure
+			is_hidden_in_debugger_call_stack_set: is_hidden_in_debugger_call_stack = v
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting

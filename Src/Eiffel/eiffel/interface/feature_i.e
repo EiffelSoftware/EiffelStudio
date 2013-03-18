@@ -986,6 +986,14 @@ feature -- Setting
 			is_stable_set: is_stable = v
 		end
 
+	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
+			-- Set `is_hidden_in_debugger_call_stack' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, is_hidden_in_debugger_call_stack_mask)
+		ensure
+			is_hidden_in_debugger_call_stack_set: is_hidden_in_debugger_call_stack = v
+		end
+
 	set_rout_id_set (an_id_set: like rout_id_set)
 			-- Assign `an_id_set' to `rout_id_set'.
 		require
@@ -1418,6 +1426,16 @@ feature -- Conveniences
 			-- (Usually applies to queries.)
 		do
 			Result := feature_flags & is_stable_mask = is_stable_mask
+		end
+
+	is_hidden_in_debugger_call_stack: BOOLEAN
+			-- Is feature hidden in debugger call stack tool?
+		do
+			if attached written_class as cl and then cl.is_hidden_in_debugger_call_stack then
+				Result := True
+			else
+				Result := feature_flags & is_hidden_in_debugger_call_stack_mask = is_hidden_in_debugger_call_stack_mask
+			end
 		end
 
 	is_transient: BOOLEAN
@@ -3065,6 +3083,7 @@ feature -- Replication
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_is_stable (is_stable)
+			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
 		end
@@ -3476,7 +3495,8 @@ feature {FEATURE_I} -- Implementation
 	is_transient_mask: NATURAL_32 = 				0x0400_0000 -- Used in ATTRIBUTE_I
 	is_hidden_mask: NATURAL_32 = 					0x0800_0000 -- Used in ATTRIBUTE_I
 	is_type_evaluation_delayed_mask: NATURAL_32 =	0x1000_0000
-	has_false_postcondition_mask: NATURAL_32 =                   0x2000_0000
+	has_false_postcondition_mask: NATURAL_32 =      0x2000_0000
+	is_hidden_in_debugger_call_stack_mask: NATURAL_32 = 0x4000_0000
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status
@@ -3530,7 +3550,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

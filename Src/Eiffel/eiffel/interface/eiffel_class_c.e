@@ -1485,6 +1485,11 @@ feature {NONE} -- Class initialization
 				remove_parent_relations
 			end
 
+				-- Indexing note
+			if attached ast_b.top_indexes as l_top_notes then
+				set_is_hidden_in_debugger_call_stack (l_top_notes.is_hidden_in_debugger_call_stack)
+			end
+
 				-- Deferred mark
 			old_is_deferred := is_deferred
 			set_is_deferred (ast_b.is_deferred)

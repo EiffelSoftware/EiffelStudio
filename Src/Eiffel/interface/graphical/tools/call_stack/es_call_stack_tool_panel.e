@@ -60,15 +60,18 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			create has_internal_callstack_hidden_notification
+		end
+
 	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- Build all the tool's widgets.
 		local
-			development_window: EB_DEVELOPMENT_WINDOW
 			box2: EV_VERTICAL_BOX
 			t_label: EV_LABEL
 			g: like stack_grid
 		do
-
 				--| UI look
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
 			set_row_highlight_bg_color_agent := agent (v: COLOR_PREFERENCE)
@@ -94,6 +97,13 @@ feature {NONE} -- Initialization
 							end
 						end
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.extend (set_row_replayable_bg_color_agent)
+
+			internal_bg_color := Preferences.debug_tool_data.internal_background_color
+			set_row_internal_bg_color_agent := agent (v: COLOR_PREFERENCE)
+						do
+							internal_bg_color := v.value
+						end
+			Preferences.debug_tool_data.internal_background_color_preference.change_actions.extend (set_row_internal_bg_color_agent)
 
 
 				--| UI structure			
@@ -183,9 +193,12 @@ feature {NONE} -- Initialization
 			g.row_deselect_actions.extend (agent on_row_deselected)
 
 				--| Context menu handler
-			development_window ?= develop_window
 			g.set_configurable_target_menu_mode
-			g.set_configurable_target_menu_handler (agent (development_window.menus.context_menu_factory).call_stack_menu)
+			if attached develop_window as l_development_window then
+				g.set_configurable_target_menu_handler (agent (l_development_window.menus.context_menu_factory).call_stack_menu)
+			else
+				check is_development_window: False end
+			end
 
 				--| Call stack level selection mode
 			update_call_stack_level_selection_mode (preferences.debug_tool_data.select_call_stack_level_on_double_click_preference)
@@ -207,6 +220,9 @@ feature {NONE} -- Initialization
 
 				--| Attach to Current dialog
 			a_widget.extend (g)
+
+				--| Show/hide internal stack
+			initialize_box_internal_callstack_control (a_widget)
 
 			load_preferences
 		end
@@ -230,8 +246,61 @@ feature {NONE} -- Initialization
             -- Retrieves a list of tool bar items to display on the window title
 		local
 			cmd: EB_STANDARD_CMD
+			togg: SD_TOOL_BAR_TOGGLE_BUTTON
+			p: BOOLEAN_PREFERENCE
         do
+        	create_interface_objects
+
 			create Result.make (5)
+
+			create togg.make
+			Result.extend (togg)
+			p := preferences.debugger_data.debugger_hidden_enabled_preference
+			togg.set_tooltip (interface_names.tt_hide_internal_call_stack_elements)
+			if p.value then
+				togg.set_pixel_buffer (pixmaps.mini_pixmaps.hidden_hide_in_callstack_icon_buffer)
+				togg.enable_select
+			else
+				togg.set_pixel_buffer (pixmaps.mini_pixmaps.hidden_show_in_callstack_icon_buffer)
+				togg.disable_select
+			end
+			p.change_actions.extend (agent (i_p: BOOLEAN_PREFERENCE; i_togg: SD_TOOL_BAR_TOGGLE_BUTTON)
+					do
+						if i_p.value then
+							if not i_togg.is_selected then
+								i_togg.enable_select
+							end
+						else
+							if i_togg.is_selected then
+								i_togg.disable_select
+							end
+						end
+					end(?, togg)
+				)
+			togg.select_actions.extend (agent (i_p: BOOLEAN_PREFERENCE; i_togg: SD_TOOL_BAR_TOGGLE_BUTTON)
+					do
+						if i_togg.is_selected then
+							if not i_p.value then
+								i_togg.set_pixel_buffer (pixmaps.mini_pixmaps.hidden_hide_in_callstack_icon_buffer)
+								i_p.set_value (True)
+							end
+						else
+							if i_p.value then
+								i_togg.set_pixel_buffer (pixmaps.mini_pixmaps.hidden_show_in_callstack_icon_buffer)
+								i_p.set_value (False)
+							end
+						end
+					end(p, togg)
+				)
+			togg.select_actions.extend (agent filter_internal_callstack_elements)
+			has_internal_callstack_hidden_notification.extend (agent (b: BOOLEAN; ia_togg: SD_TOOL_BAR_TOGGLE_BUTTON)
+					do
+						if b then
+							ia_togg.enable_sensitive
+						else
+							ia_togg.disable_sensitive
+						end
+					end (?, togg))
 
 			create save_call_stack_cmd.make
 			save_call_stack_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_save_icon)
@@ -315,6 +384,58 @@ feature {NONE} -- Factory
 	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
+		end
+
+	initialize_box_internal_callstack_control (a_widget: EV_VERTICAL_BOX)
+		local
+			hb: EV_HORIZONTAL_BOX
+			cb: EV_CHECK_BUTTON	-- Checkbox controlling to display or not the internal callstack element.
+			p: BOOLEAN_PREFERENCE
+		do
+			create hb
+			hb.set_border_width (3)
+			create cb.make_with_text (interface_names.t_hide_internal_call_stack_elements)
+			if preferences.debugger_data.debugger_hidden_enabled then
+				cb.enable_select
+			else
+				cb.disable_select
+			end
+			p := preferences.debugger_data.debugger_hidden_enabled_preference
+			p.change_actions.extend (agent (ia_p: BOOLEAN_PREFERENCE; ia_cb: EV_CHECK_BUTTON)
+					do
+						if ia_p.value then
+							if not ia_cb.is_selected then
+								ia_cb.enable_select
+							end
+						else
+							if ia_cb.is_selected then
+								ia_cb.disable_select
+							end
+						end
+					end(?, cb)
+				)
+
+			hb.extend (cb)
+			cb.select_actions.extend (agent (i_p: BOOLEAN_PREFERENCE; i_cb: EV_CHECK_BUTTON)
+					do
+						i_p.set_value (i_cb.is_selected)
+					end(p, cb)
+				)
+			cb.select_actions.extend (agent filter_internal_callstack_elements)
+
+			a_widget.extend (hb)
+			a_widget.disable_item_expand (hb)
+			hb.hide
+
+			has_internal_callstack_hidden_notification.extend (agent (b: BOOLEAN; ia_b: EV_BOX)
+				do
+					if b then
+						ia_b.show
+					else
+						ia_b.hide
+					end
+				end(?, hb)
+			)
 		end
 
 	create_box_exception
@@ -470,6 +591,46 @@ feature {NONE} -- Commands
 			-- Command that alters the displayed depth of the call stack.
 
 feature {ES_CALL_STACK_TOOL} -- UI access
+
+	has_internal_callstack_hidden_notification: ACTION_SEQUENCE [TUPLE [BOOLEAN]]
+
+	set_has_internal_callstack_hidden (b: BOOLEAN)
+		do
+			has_internal_callstack_hidden_notification.call ([b])
+		end
+
+	filter_internal_callstack_elements
+		local
+			l_hide: BOOLEAN
+			r, n: INTEGER
+		do
+			l_hide := preferences.debugger_data.debugger_hidden_enabled
+			if attached stack_grid as g then
+				from
+					r := 1
+					n := g.row_count
+				until
+					r > n
+				loop
+					if
+						attached g.row (r) as l_row and then
+						attached stack_from_row (l_row) as elt and then
+						is_internal_call_stack_element (elt)
+					then
+						if l_row.is_show_requested then
+							if l_hide then
+								l_row.hide
+							end
+						else
+							if not l_hide then
+								l_row.show
+							end
+						end
+					end
+					r := r + 1
+				end
+			end
+		end
 
 	activate_execution_replay_mode (b: BOOLEAN; levlim: INTEGER)
 			-- Enable or disable execution replay
@@ -695,6 +856,8 @@ feature {NONE} -- Internal memory management
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.prune_all (set_row_replayable_bg_color_agent)
 			Preferences.debug_tool_data.unsensitive_foreground_color_preference.change_actions.prune_all (set_unsensitive_fg_color_agent)
+			Preferences.debug_tool_data.internal_background_color_preference.change_actions.prune_all (set_row_internal_bg_color_agent)
+			has_internal_callstack_hidden_notification.wipe_out
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
@@ -1302,6 +1465,24 @@ feature {NONE} -- Export call stack
 			retry
 		end
 
+feature {NONE} -- Disabled stack element
+
+	is_internal_call_stack_element (e: CALL_STACK_ELEMENT): BOOLEAN
+			-- Call stack element `e' should be hidden ?
+		do
+			if e.is_hidden then
+				Result := True
+			elseif e.is_eiffel_call_stack_element then
+				if attached e.class_name as cl then
+					Result := cl.same_string ("ISE_SCOOP_MANAGER") or else cl.same_string ("ISE_EXCEPTION_MANAGER")
+				end
+			else
+				-- Do not show pure dotnet calls.
+				Result := True
+			end
+		end
+
+
 feature {NONE} -- Stack grid implementation
 
 	clean_stack_grid
@@ -1331,10 +1512,14 @@ feature {NONE} -- Stack grid implementation
 			l_tooltipable_grid_row: EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
 			i: INTEGER
+			l_has_hidden: BOOLEAN
+			l_hide_internal: BOOLEAN
 		do
+			set_has_internal_callstack_hidden (False)
 			clean_stack_grid
 			g := stack_grid
 			if stack /= Void and then not stack.is_empty then
+				l_hide_internal := preferences.debugger_data.debugger_hidden_enabled
 				save_call_stack_cmd.enable_sensitive
 				copy_call_stack_cmd.enable_sensitive
 				from
@@ -1348,12 +1533,18 @@ feature {NONE} -- Stack grid implementation
 					row := stack_grid.row (i)
 					stack_data[i] := stack.item
 					row.set_data (i)
-					if not stack.item.is_eiffel_call_stack_element then
-						row.disable_select
+					if is_internal_call_stack_element (stack.item) then
+						mark_row_as_internal (row)
+						l_has_hidden := True
+						if l_hide_internal then
+							row.disable_select
+							row.hide
+						end
 					end
 					i := i + 1
 					stack.forth
 				end
+				set_has_internal_callstack_hidden (l_has_hidden)
 			else
 				save_call_stack_cmd.disable_sensitive
 				copy_call_stack_cmd.disable_sensitive
@@ -1573,7 +1764,7 @@ feature {NONE} -- Stack grid implementation
 		require
 			a_row /= Void
 		local
-			glab: EV_GRID_LABEL_ITEM
+			l_grid_label: detachable EV_GRID_LABEL_ITEM
 			level: INTEGER
 			ep: EV_PIXMAP
 		do
@@ -1581,10 +1772,8 @@ feature {NONE} -- Stack grid implementation
 			a_row.set_foreground_color (Void)
 			a_row.set_background_color (Void)
 
-			glab ?= a_row.item (Feature_column_index)
-			if glab = Void then
-				a_row.clear
-			else
+			if attached {EV_GRID_LABEL_ITEM} a_row.item (Feature_column_index) as glab then
+				l_grid_label := glab
 				if level = current_level then
 					glab.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
 					a_row.set_background_color (row_highlight_bg_color)
@@ -1598,6 +1787,11 @@ feature {NONE} -- Stack grid implementation
 						a_row.set_foreground_color (unsensitive_fg_color)
 					end
 				end
+			else
+				a_row.clear
+			end
+			if attached stack_data_at (level) as cse and then is_internal_call_stack_element (cse) then
+				mark_row_as_internal (a_row)
 			end
 			if execution_replay_activated then
 				if level - 1 <= execution_replay_level_limit then
@@ -1605,8 +1799,8 @@ feature {NONE} -- Stack grid implementation
 					a_row.set_background_color (row_replayable_bg_color)
 				end
 				if level = marked_level then
-					if glab /= Void then
-						glab.set_pixmap (pixmaps.icon_pixmaps.callstack_marked_arrow_icon)
+					if l_grid_label /= Void then
+						l_grid_label.set_pixmap (pixmaps.icon_pixmaps.callstack_marked_arrow_icon)
 					end
 				end
 			end
@@ -1798,6 +1992,26 @@ feature {NONE} -- Stack grid implementation
 			end
 		end
 
+	mark_row_as_internal (a_row: EV_GRID_ROW)
+		local
+			i,n: INTEGER
+		do
+			if attached internal_bg_color as bgcol then
+				a_row.set_background_color (bgcol)
+				from
+					i := 1
+					n := a_row.count
+				until
+					i > n
+				loop
+					if attached a_row.item (i) as gi then
+						gi.set_background_color (bgcol)
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Stone handlers
 
 	on_stone_changed (a_old_stone: detachable like stone)
@@ -1817,15 +2031,17 @@ feature {NONE} -- Stone handlers
 
 feature {NONE} -- Grid Implementation
 
-	replayed_call_stack_element_from_row (a_row: EV_GRID_ROW): REPLAYED_CALL_STACK_ELEMENT
+	replayed_call_stack_element_from_row (a_row: EV_GRID_ROW): detachable REPLAYED_CALL_STACK_ELEMENT
 			-- Call stack level related to `a_row'.
 		require
 			a_row /= Void
 		do
-			Result ?= a_row.data
+			if attached {REPLAYED_CALL_STACK_ELEMENT} a_row.data as res then
+				Result := res
+			end
 		end
 
-	replayed_call_stack_element_from_row_with_rt_info (a_row: EV_GRID_ROW): REPLAYED_CALL_STACK_ELEMENT
+	replayed_call_stack_element_from_row_with_rt_info (a_row: EV_GRID_ROW): detachable REPLAYED_CALL_STACK_ELEMENT
 			-- Call stack level related to `a_row'.
 		require
 			a_row /= Void
@@ -1840,18 +2056,18 @@ feature {NONE} -- Grid Implementation
 			Result_with_rt_info: Result /= Void implies Result.rt_information_available
 		end
 
-	stack_data_at (lev: INTEGER): CALL_STACK_ELEMENT
+	stack_data_at (lev: INTEGER): detachable CALL_STACK_ELEMENT
 			-- Stack data for level `lev'
 		do
-			if stack_data /= Void and then stack_data.valid_index (lev) then
-				Result := stack_data[lev]
+			if attached stack_data as l_data and then l_data.valid_index (lev) then
+				Result := l_data [lev]
 			end
 		end
 
 	is_eiffel_callstack_at (lev: INTEGER): BOOLEAN
 			-- Is stack data related to `lev' an Eiffel call stack ?
 		do
-			Result := (attached stack_data_at (lev) as s) and then s.is_eiffel_call_stack_element
+			Result := attached stack_data_at (lev) as s and then s.is_eiffel_call_stack_element
 		end
 
 	level_associated_with (rep: REPLAYED_CALL_STACK_ELEMENT): INTEGER
@@ -2204,9 +2420,10 @@ feature {NONE} -- Implementation, cosmetic
 			lab.refresh_now
 		end
 
-	set_unsensitive_fg_color_agent,
 	set_row_highlight_bg_color_agent,
-	set_row_replayable_bg_color_agent: PROCEDURE [ANY, TUPLE [COLOR_PREFERENCE]]
+	set_row_replayable_bg_color_agent,
+	set_row_internal_bg_color_agent,
+	set_unsensitive_fg_color_agent: PROCEDURE [ANY, TUPLE [COLOR_PREFERENCE]]
 			-- agents associated with color assignment from preferences
 			-- get properly removed when recycling.
 
@@ -2218,7 +2435,10 @@ feature {NONE} -- Implementation, cosmetic
 
 	unsensitive_fg_color: EV_COLOR
 			-- Foreground color for unsensitive row
-			-- (i.e: row related to non Eiffel call stack element)
+
+	internal_bg_color: detachable EV_COLOR
+			-- Background color for internal call stack element row
+			-- (i.e: row related to non Eiffel call stack element or hidden)	
 
 	special_label_color: EV_COLOR
 			-- label foreground color for special labels
@@ -2226,7 +2446,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

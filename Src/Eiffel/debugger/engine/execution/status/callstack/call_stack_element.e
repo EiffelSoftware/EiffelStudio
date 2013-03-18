@@ -67,6 +67,11 @@ feature -- Status
 		deferred
 		end
 
+	is_hidden: BOOLEAN
+			-- Is hidden from debugger callstack?
+		deferred
+		end
+
 feature -- Output
 
 	to_string: STRING

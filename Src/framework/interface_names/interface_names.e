@@ -2551,6 +2551,11 @@ feature -- Title part
 	t_contract_no_postcondtions: STRING_32 			do Result := locale.translation ("No postconditions added yet") end
 	t_contract_no_invariants: STRING_32 			do Result := locale.translation ("No invariants added yet") end
 
+feature -- Debugger/callstack
+
+	t_hide_internal_call_stack_elements: STRING_32 	do Result := locale.translation ("Hide internal callstack elements?") end
+	tt_hide_internal_call_stack_elements: STRING_32 do Result := locale.translation ("Hide rows related to internal or hidden callstack elements?") end
+
 feature -- Sub titles
 
 		-- Debugger

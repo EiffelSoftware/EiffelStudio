@@ -78,6 +78,9 @@ feature -- Factory
 				if i.is_stable then
 					Result.set_is_stable (True)
 				end
+				if i.is_hidden_in_debugger_call_stack then
+					Result.set_is_hidden_in_debugger_call_stack (True)
+				end
 				if attached {ATTRIBUTE_I} Result as a and then i.is_transient then
 					a.set_is_transient (True)
 				end

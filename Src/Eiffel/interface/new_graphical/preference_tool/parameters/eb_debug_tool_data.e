@@ -104,6 +104,11 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := unsensitive_foreground_color_preference.value
 		end
 
+	internal_background_color: EV_COLOR
+		do
+			Result := internal_background_color_preference.value
+		end
+
 	row_replayable_background_color: EV_COLOR
 		do
 			Result := row_replayable_background_color_preference.value
@@ -191,6 +196,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	delay_before_cleaning_objects_grid_preference: INTEGER_PREFERENCE
 	row_highlight_background_color_preference: COLOR_PREFERENCE
 	unsensitive_foreground_color_preference: COLOR_PREFERENCE
+	internal_background_color_preference: COLOR_PREFERENCE
 	row_replayable_background_color_preference: COLOR_PREFERENCE
 	select_call_stack_level_on_double_click_preference: BOOLEAN_PREFERENCE
 	is_stack_grid_layout_managed_preference: BOOLEAN_PREFERENCE
@@ -271,6 +277,7 @@ feature -- Preference Strings
 	grid_foreground_color_string: STRING = "debugger.colors.grid_foreground_color"
 	row_highlight_background_color_string: STRING = "debugger.colors.row_highlight_background_color"
 	unsensitive_foreground_color_string: STRING = "debugger.colors.unsensitive_foreground_color"
+	internal_background_color_string: STRING = "debugger.colors.internal_background_color"
 	row_replayable_background_color_string: STRING = "debugger.colors.row_replayable_background_color"
 	number_of_watch_tools_string: STRING = "debugger.number_of_watch_tools"
 	delay_before_cleaning_objects_string: STRING = "debugger.delay_before_cleaning_objects_grid"
@@ -320,6 +327,7 @@ feature {NONE} -- Implementation
 			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_preference_value (l_manager, delay_before_cleaning_objects_string, 500)
 			row_highlight_background_color_preference := l_manager.new_color_preference_value (l_manager, row_highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
 			unsensitive_foreground_color_preference := l_manager.new_color_preference_value (l_manager, unsensitive_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (150, 150, 150))
+			internal_background_color_preference := l_manager.new_color_preference_value (l_manager, internal_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (180, 150, 150))
 			row_replayable_background_color_preference := l_manager.new_color_preference_value (l_manager, row_replayable_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (205, 230, 255))
 			select_call_stack_level_on_double_click_preference := l_manager.new_boolean_preference_value (l_manager, select_call_stack_level_on_double_click_string, False)
 			is_stack_grid_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_stack_grid_layout_managed_string, True)
@@ -372,6 +380,7 @@ invariant
 	delay_before_cleaning_objects_grid_preference_not_void: delay_before_cleaning_objects_grid_preference /= Void
 	row_highlight_background_color_preference_not_void: row_highlight_background_color_preference /= Void
 	unsensitive_foreground_color_preference_not_void: unsensitive_foreground_color_preference /= Void
+	internal_background_color_preference_not_void: internal_background_color_preference /= Void
 	row_replayable_background_color_preference_not_void: row_replayable_background_color_preference /= Void
 	select_call_stack_level_on_double_click_preference_not_void: select_call_stack_level_on_double_click_preference /= Void
 	is_stack_grid_layout_managed_preference_not_void: is_stack_grid_layout_managed_preference /= Void

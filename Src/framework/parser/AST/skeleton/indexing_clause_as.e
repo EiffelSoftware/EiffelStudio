@@ -148,6 +148,12 @@ feature -- Access
 			Result := has_tag_value (option_header, transient_option_value)
 		end
 
+	is_hidden_in_debugger_call_stack: BOOLEAN
+			-- Is feature marked as hidden from debugger?
+		do
+			Result := has_tag_value (debugger_header, is_hidden_in_debugger_call_stack_value)
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	description: detachable STRING
@@ -367,6 +373,9 @@ feature {NONE} -- Constants
 	storable_version_header: STRING = "storable_version"
 			-- Index name under which we will store the version of a class.
 
+	Debugger_header: STRING = "debugger"
+			-- Note name under which the attribute may be marked as hidden from debugger.
+
 	global_value: STRING = "global"
 			-- Value name of `Once_status_header'.
 
@@ -375,6 +384,9 @@ feature {NONE} -- Constants
 
 	transient_option_value: STRING = "transient"
 			-- Predefined value of `option_header'.
+
+	is_hidden_in_debugger_call_stack_value: STRING = "is_hidden_in_call_stack"
+			-- Predefined value of `Debugger_header'.			
 
 	obsolete_tags: HASH_TABLE [STRING, STRING]
 			-- Table indexed by obsoleted indexing tag, where key is new indexing tag that

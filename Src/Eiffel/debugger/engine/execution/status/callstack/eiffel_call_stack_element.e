@@ -26,6 +26,14 @@ feature -- Properties
 	is_eiffel_call_stack_element: BOOLEAN = True
 			-- Is Current an Eiffel Call Stack Element ?
 
+	is_hidden: BOOLEAN
+			-- Is hidden for debugger?
+		do
+			if attached routine_i as f then
+				Result := f.is_hidden_in_debugger_call_stack
+			end
+		end
+
 	is_invariant_call_stack_element: BOOLEAN
 		do
 			Result := attached routine_name as n and then not n.is_empty and then
@@ -330,7 +338,7 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

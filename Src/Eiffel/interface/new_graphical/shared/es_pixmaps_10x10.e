@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen toolbar_close_icon: EV_PIXMAP
 			-- Access to 'close' pixmap.
 		require
@@ -862,6 +862,46 @@ feature -- Icons
 			execution_object_storage_icon_buffer_attached: Result /= Void
 		end
 
+	frozen hidden_show_in_callstack_icon: EV_PIXMAP
+			-- Access to 'show in callstack' pixmap.
+		require
+			has_named_icon: has_named_icon (hidden_show_in_callstack_name)
+		once
+			Result := named_icon (hidden_show_in_callstack_name)
+		ensure
+			hidden_show_in_callstack_icon: Result /= Void
+		end
+
+	frozen hidden_show_in_callstack_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'show in callstack' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (hidden_show_in_callstack_name)
+		once
+			Result := named_icon_buffer (hidden_show_in_callstack_name)
+		ensure
+			hidden_show_in_callstack_icon_buffer_attached: Result /= Void
+		end
+
+	frozen hidden_hide_in_callstack_icon: EV_PIXMAP
+			-- Access to 'hide in callstack' pixmap.
+		require
+			has_named_icon: has_named_icon (hidden_hide_in_callstack_name)
+		once
+			Result := named_icon (hidden_hide_in_callstack_name)
+		ensure
+			hidden_hide_in_callstack_icon: Result /= Void
+		end
+
+	frozen hidden_hide_in_callstack_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'hide in callstack' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (hidden_hide_in_callstack_name)
+		once
+			Result := named_icon_buffer (hidden_hide_in_callstack_name)
+		ensure
+			hidden_hide_in_callstack_icon_buffer_attached: Result /= Void
+		end
+
 	frozen new_feature_icon: EV_PIXMAP
 			-- Access to 'feature' pixmap.
 		require
@@ -1283,7 +1323,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-	
+
 	-- No animation frames detected.
 
 feature -- Constants: Icon names
@@ -1329,6 +1369,8 @@ feature -- Constants: Icon names
 	execution_record_name: STRING = "execution record"
 	execution_replay_name: STRING = "execution replay"
 	execution_object_storage_name: STRING = "execution object storage"
+	hidden_show_in_callstack_name: STRING = "show in callstack"
+	hidden_hide_in_callstack_name: STRING = "hide in callstack"
 	new_feature_name: STRING = "new feature"
 	new_class_name: STRING = "new class"
 	new_cluster_name: STRING = "new cluster"
@@ -1397,6 +1439,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 4], execution_record_name)
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 4], execution_replay_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 4], execution_object_storage_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 4], hidden_show_in_callstack_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 4], hidden_hide_in_callstack_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 5], new_feature_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 5], new_class_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 5], new_cluster_name)
@@ -1421,7 +1465,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

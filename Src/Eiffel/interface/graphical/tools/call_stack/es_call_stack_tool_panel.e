@@ -1472,16 +1472,11 @@ feature {NONE} -- Disabled stack element
 		do
 			if e.is_hidden then
 				Result := True
-			elseif e.is_eiffel_call_stack_element then
-				if attached e.class_name as cl then
-					Result := cl.same_string ("ISE_SCOOP_MANAGER") or else cl.same_string ("ISE_EXCEPTION_MANAGER")
-				end
 			else
 				-- Do not show pure dotnet calls.
 				Result := True
 			end
 		end
-
 
 feature {NONE} -- Stack grid implementation
 

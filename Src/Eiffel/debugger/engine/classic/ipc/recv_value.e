@@ -230,7 +230,7 @@ feature {NONE} -- External routines
 	c_pass_recv_routines (
 			d_nat8, d_nat16, d_nat32, d_nat64,
 			d_int8, d_int16, d_int32, d_int64, d_bool, d_char, d_wchar, d_real, d_double,
-			d_ref, d_point, d_bits, d_error, d_exception_ref, d_void: POINTER)
+			d_ref, d_point, d_error, d_exception_ref, d_void: POINTER)
 
 				-- Check: C/ipc/ewb/ewb_dumped.c
 		external

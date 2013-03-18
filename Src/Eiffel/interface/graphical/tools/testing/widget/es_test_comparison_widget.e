@@ -797,13 +797,13 @@ feature {NONE} -- Internationalization
 	e_file_not_valid: STRING = "$1%Nis not a valid test result file"
 
 invariant
-	category_statistics_valid: category_statistics.count = statistic_count
+	category_statistics_valid: category_statistics.count = category_count
 	statistic_labels_valid: statistic_labels.count = statistic_count
 	previous_bars_valid: previous_bars.count = statistic_count
 	current_bars_valid: current_bars.count = statistic_count
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

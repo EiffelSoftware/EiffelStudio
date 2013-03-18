@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			a_context_menu_factory_not_void: a_context_menu_factory /= Void
 			a_widget_not_void: a_widget /= Void
 		do
+			eis_tool_widget := a_widget
 			create managed_tags.make
 			managed_tags.compare_objects
 
@@ -62,7 +63,6 @@ feature {NONE} -- Initialization
 			add_single_click_action_to_classes (agent on_button_press_action)
 			add_single_click_action_to_cluster (agent on_button_press_action)
 			key_release_actions.extend (agent on_key_released)
-			eis_tool_widget := a_widget
 
 				-- Register to EIS observer management.
 			storage.add_observer (Current)
@@ -475,7 +475,7 @@ invariant
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

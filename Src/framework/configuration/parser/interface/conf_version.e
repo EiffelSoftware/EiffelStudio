@@ -230,7 +230,7 @@ feature -- Comparison
 
 feature -- Output
 
-	name: STRING_32
+	text: STRING_32
 			-- New string with printable representation.
 		local
 			l_ext: STRING_32
@@ -257,7 +257,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
+	is_hidden: BOOLEAN = True
+
 	is_eiffel_call_stack_element: BOOLEAN = False
 
 	current_object: ABSTRACT_DEBUG_VALUE

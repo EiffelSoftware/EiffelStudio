@@ -116,6 +116,7 @@ feature {NONE} -- Implementation
 			create l_version_prop.make_with_dialog (conf_interface_names.target_version_name, create {VERSION_DIALOG})
 			l_version_prop.set_description (conf_interface_names.target_version_description)
 			l_version_prop.set_refresh_action (agent current_target.version)
+			l_version_prop.set_display_agent (agent {CONF_VERSION}.text)
 			l_version_prop.refresh
 			l_version_prop.change_value_actions.extend (agent current_target.set_version)
 			l_version_prop.change_value_actions.extend (agent update_inheritance_version (?, l_version_prop))
@@ -631,7 +632,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

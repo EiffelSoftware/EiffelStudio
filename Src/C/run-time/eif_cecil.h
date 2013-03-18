@@ -138,28 +138,28 @@ typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an E
  * The values are in sync with REFLECTOR_CONSTANTS.
  */
 
-#define EIF_POINTER_TYPE       0
-#define EIF_REFERENCE_TYPE     1
-#define EIF_EXPANDED_TYPE      2
-#define EIF_BOOLEAN_TYPE       3
-#define EIF_CHARACTER_8_TYPE   4
-#define EIF_CHARACTER_32_TYPE  5
-#define EIF_REAL_32_TYPE       6
-#define EIF_REAL_64_TYPE       7
-#define EIF_INTEGER_8_TYPE     8
-#define EIF_INTEGER_16_TYPE    9
-#define EIF_INTEGER_32_TYPE   10
-#define EIF_INTEGER_64_TYPE   11
-#define EIF_NATURAL_8_TYPE    12
-#define EIF_NATURAL_16_TYPE   13
-#define EIF_NATURAL_32_TYPE   14
-#define EIF_NATURAL_64_TYPE   15
-
-#define EIF_INTEGER_TYPE      EIF_INTEGER_32_TYPE
+#define EIF_POINTER_TYPE		0
+#define EIF_REFERENCE_TYPE		1
+#define EIF_CHARACTER_8_TYPE	2
+#define EIF_BOOLEAN_TYPE		3
+#define EIF_INTEGER_32_TYPE		4
+#define EIF_REAL_32_TYPE		5
+#define EIF_REAL_64_TYPE		6
+#define EIF_EXPANDED_TYPE		7
+#define EIF_INTEGER_8_TYPE		9
+#define EIF_INTEGER_16_TYPE		10
+#define EIF_INTEGER_64_TYPE 	11
+#define EIF_CHARACTER_32_TYPE	12
+#define EIF_NATURAL_8_TYPE		13
+#define EIF_NATURAL_16_TYPE		14
+#define EIF_NATURAL_32_TYPE 	15
+#define EIF_NATURAL_64_TYPE 	16
 
 /* Obsolete code. */
 #define EIF_CHARACTER_TYPE    EIF_CHARACTER_8_TYPE
 #define EIF_WIDE_CHAR_TYPE    EIF_CHARACTER_32_TYPE
+#define EIF_INTEGER_TYPE      EIF_INTEGER_32_TYPE
+#define EIF_BIT_TYPE			8
 
 
 /* Accessing an attribute in read/write mode (this is both an lvalue and

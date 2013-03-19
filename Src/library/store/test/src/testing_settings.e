@@ -31,9 +31,9 @@ feature {NONE} -- Imp
 			-- Json configuration
 		once
 			if {PLATFORM}.is_windows then
-				create Result.make ("..\..\..\..\..\test.config")
+				create Result.make ("test.config")
 			else
-				create Result.make ("../../../../../test.config")
+				create Result.make ("test.config")
 			end
 			Result.load
 		end

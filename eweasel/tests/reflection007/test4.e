@@ -20,7 +20,7 @@ feature
 
 feature
 
-	str4: detachable STRING
+	str4: STRING
 	int4: INTEGER
 	exp4: TEST5
 

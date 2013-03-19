@@ -10,7 +10,7 @@ feature -- Status report: nesting
 		deferred
 		end
 
-feature {AST_COLLECTION_KEEPER, AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER} -- Modification: nesting
+feature {AST_COLLECTION_KEEPER, AST_CONTEXT, AST_VISITOR} -- Modification: nesting
 
 	enter_realm
 			-- Enter a new complex instruction with inner compound parts.

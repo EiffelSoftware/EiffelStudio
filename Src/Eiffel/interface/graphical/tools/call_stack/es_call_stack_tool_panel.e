@@ -1472,6 +1472,8 @@ feature {NONE} -- Disabled stack element
 		do
 			if e.is_hidden then
 				Result := True
+			elseif e.is_eiffel_call_stack_element then
+				Result := False
 			else
 				-- Do not show pure dotnet calls.
 				Result := True

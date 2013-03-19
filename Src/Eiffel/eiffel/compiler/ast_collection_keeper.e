@@ -29,7 +29,7 @@ feature -- Status report: nesting
 			Result := collection [0].nesting_level
 		end
 
-feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER} -- Modification: nesting
+feature {AST_CONTEXT, AST_VISITOR} -- Modification: nesting
 
 	enter_realm
 			-- <Precursor>

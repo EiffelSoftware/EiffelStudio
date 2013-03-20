@@ -371,62 +371,62 @@ end
 			inspect a_eif_type
 			when boolean_type then
 				if attached {BOOLEAN} value as bool then
-					{ISE_RUNTIME}.set_boolean_field_at (off, object, 0, bool)
+					{ISE_RUNTIME}.set_boolean_field_at (off, $object, 0, bool)
 				end
 			when character_8_type then
 				if attached {CHARACTER_8} value as c8 then
-					{ISE_RUNTIME}.set_character_8_field_at (off, object, 0, c8)
+					{ISE_RUNTIME}.set_character_8_field_at (off, $object, 0, c8)
 				end
 			when character_32_type then
 				if attached {CHARACTER_32} value as c32 then
-					{ISE_RUNTIME}.set_character_32_field_at (off, object, 0, c32)
+					{ISE_RUNTIME}.set_character_32_field_at (off, $object, 0, c32)
 				end
 			when natural_8_type then
 				if attached {NATURAL_8} value as n8 then
-					{ISE_RUNTIME}.set_natural_8_field_at (off, object, 0, n8)
+					{ISE_RUNTIME}.set_natural_8_field_at (off, $object, 0, n8)
 				end
 			when natural_16_type then
 				if attached {NATURAL_16} value as n16 then
-					{ISE_RUNTIME}.set_natural_16_field_at (off, object, 0, n16)
+					{ISE_RUNTIME}.set_natural_16_field_at (off, $object, 0, n16)
 				end
 			when natural_32_type then
 				if attached {NATURAL_32} value as n32 then
-					{ISE_RUNTIME}.set_natural_32_field_at (off, object, 0, n32)
+					{ISE_RUNTIME}.set_natural_32_field_at (off, $object, 0, n32)
 				end
 			when natural_64_type then
 				if attached {NATURAL_64} value as n64 then
-					{ISE_RUNTIME}.set_natural_64_field_at (off, object, 0, n64)
+					{ISE_RUNTIME}.set_natural_64_field_at (off, $object, 0, n64)
 				end
 			when integer_8_type then
 				if attached {INTEGER_8} value as i8 then
-					{ISE_RUNTIME}.set_integer_8_field_at (off, object, 0, i8)
+					{ISE_RUNTIME}.set_integer_8_field_at (off, $object, 0, i8)
 				end
 			when integer_16_type then
 				if attached {INTEGER_16} value as i16 then
-					{ISE_RUNTIME}.set_integer_16_field_at (off, object, 0, i16)
+					{ISE_RUNTIME}.set_integer_16_field_at (off, $object, 0, i16)
 				end
 			when integer_32_type then
 				if attached {INTEGER_32} value as i32 then
-					{ISE_RUNTIME}.set_integer_32_field_at (off, object, 0, i32)
+					{ISE_RUNTIME}.set_integer_32_field_at (off, $object, 0, i32)
 				end
 			when integer_64_type then
 				if attached {INTEGER_64} value as i64 then
-					{ISE_RUNTIME}.set_integer_64_field_at (off, object, 0, i64)
+					{ISE_RUNTIME}.set_integer_64_field_at (off, $object, 0, i64)
 				end
 			when real_32_type then
 				if attached {REAL_32} value as r32 then
-					{ISE_RUNTIME}.set_real_32_field_at (off, object, 0, r32)
+					{ISE_RUNTIME}.set_real_32_field_at (off, $object, 0, r32)
 				end
 			when real_64_type then
 				if attached {REAL_64} value as r64 then
-					{ISE_RUNTIME}.set_real_64_field_at (off, object, 0, r64)
+					{ISE_RUNTIME}.set_real_64_field_at (off, $object, 0, r64)
 				end
 			when pointer_type then
 				if attached {POINTER} value as ptr then
-					{ISE_RUNTIME}.set_pointer_field_at (off, object, 0, ptr)
+					{ISE_RUNTIME}.set_pointer_field_at (off, $object, 0, ptr)
 				end
 			when reference_type then
-				{ISE_RUNTIME}.set_reference_field_at (off, object, 0, value)
+				{ISE_RUNTIME}.set_reference_field_at (off, $object, 0, value)
 			else
 			end
 		end

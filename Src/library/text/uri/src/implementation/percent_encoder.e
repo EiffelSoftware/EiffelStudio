@@ -23,7 +23,7 @@ feature -- Percent encoding
 			until
 				i > n
 			loop
-				c := s[i].natural_32_code
+				c := s.code (i)
 				if
 						--| unreserved ALPHA / DIGIT
 					   (48 <= c and c <= 57)  -- DIGIT: 0 .. 9
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation: decoding
 			-- note: it also updates `a_position.item' to indicate the new index position.
 		require
 			valid_start: a_position.item <= v.count
-			is_percent_char: v [a_position.item] = '%%'
+			is_percent_char: v.code (a_position.item) = 37 -- 37 '%%'
 		local
 			c: NATURAL_32
 			i, n: INTEGER
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation: decoding
 			-- note: it also updates `a_position' to indicate the new index position.
 		require
 			valid_start: a_position.item <= v.count
-			is_percent_char: v [a_position.item] = '%%'
+			is_percent_char: v.code (a_position.item) = 37 -- 37 '%%'
 		local
 			n, j: INTEGER
 			c: NATURAL_32
@@ -367,6 +367,13 @@ feature {NONE} -- Implementation: decoding
 		end
 
 feature -- RFC and characters
+
+	is_hexa_decimal_character (c: CHARACTER_32): BOOLEAN
+			-- Is hexadecimal character ?
+		do
+			Result :=  ('a' <= c and c <= 'f') or ('A' <= c and c <= 'F')	-- HEXA
+					or ('0' <= c and c <= '9') 								-- DIGIT
+		end
 
 	is_alpha_or_digit_character (c: CHARACTER_32): BOOLEAN
 			-- Is ALPHA or DIGIT character ?
@@ -488,4 +495,14 @@ feature {NONE} -- Implementation
 			ctoi_convertor_not_void: Result /= Void
 		end
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

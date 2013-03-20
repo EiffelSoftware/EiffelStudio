@@ -184,7 +184,8 @@ feature -- Query
 					s.append_character ('@')
 					s.append_string_general (h)
 				else
-					create s.make_from_string_general (h)
+					create s.make (h.count)
+					s.append_string_general (h)
 				end
 				if port /= 0 then
 					s.append_character (':')
@@ -205,7 +206,8 @@ feature -- Conversion
 			s: STRING_32
 		do
 			if attached scheme as l_scheme and then not l_scheme.is_empty then
-				create s.make_from_string_general (l_scheme)
+				create s.make (l_scheme.count)
+				s.append_string_general (l_scheme)
 				s.append_character (':')
 			else
 				create s.make_empty
@@ -338,7 +340,7 @@ feature {NONE} -- Implementation: Internationalization
 
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

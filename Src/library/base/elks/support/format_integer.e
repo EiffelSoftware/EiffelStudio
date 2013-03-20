@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 				Result.precede (s.item (count))
 				count := count - 1
 			end
-		end -- split
+		end
 
 	process_sign (s: STRING; sn: INTEGER): STRING
 			-- Process sign related values.

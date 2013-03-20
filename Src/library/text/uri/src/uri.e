@@ -665,13 +665,13 @@ feature -- Status report
 				from
 					i := 1
 					n := s.count
-					Result := s.item (i).is_alpha
+					Result := is_alpha_character (string_item (s, i))
 					i := 2
 				until
 					not Result or i > n
 				loop
-					c := s.item (i)
-					Result := c.is_alpha or c.is_digit or c = '+' or c = '-' or c = '.'
+					c := string_item (s, i)
+					Result := is_alpha_or_digit_character (c) or c = '+' or c = '-' or c = '.'
 					i := i + 1
 				end
 			end
@@ -691,7 +691,7 @@ feature -- Status report
 				until
 					not Result or i > n
 				loop
-					c := s.item (i)
+					c := string_item (s, i)
 						-- unreserved
 					if is_unreserved_character (c)
 						or is_sub_delims_character (c)
@@ -701,7 +701,7 @@ feature -- Status report
 					elseif c = '%%' then
 						if
 							i + 2 <= n and then
-							s.item (i + 1).is_hexa_digit and s.item (i + 2).is_hexa_digit
+							is_hexa_decimal_character (string_item (s, i+ 1)) and is_hexa_decimal_character (string_item (s, i + 2))
 						then
 								-- True
 							i := i + 2
@@ -748,10 +748,10 @@ feature -- Status report
 		do
 			Result := True
 			if s /= Void and then not s.is_empty then
-				if s.item (1) = '[' and s.item (s.count) = ']' then
+				if string_item (s, 1) = '[' and string_item (s, s.count) = ']' then
 					Result := True  -- IPV6 : to complete
 				else
-					Result := s.item (1).is_alpha_numeric -- IPV4 or reg-name : to complete
+					Result := is_hexa_decimal_character (string_item (s, 1)) -- IPV4 or reg-name : to complete
 				end
 			end
 		end
@@ -775,10 +775,10 @@ feature -- Status report
 			--
 			--      pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"			
 		do
-			if s.is_empty or s.item (1) = '/' then
+			if s.is_empty or string_item (s, 1) = '/' then
 				Result := is_valid_in_uri_string (s)
 			elseif has_authority then
-				if s.item (1) = '/' and (s.count > 1 implies s.item (2) /= '/') then
+				if string_item (s, 1) = '/' and (s.count > 1 implies string_item (s, 2) /= '/') then
 					Result := is_valid_in_uri_string (s)
 				end
 			elseif s.is_empty then
@@ -803,7 +803,7 @@ feature -- Status report
 				until
 					not Result or i > n
 				loop
-					c := s.item (i)
+					c := string_item (s, i)
 						-- pchar = unreserved / pct-encoded / sub-delims / ":" / "@"	
 					if -- pchar
 						is_unreserved_character (c)
@@ -816,7 +816,7 @@ feature -- Status report
 					elseif c = '%%' then
 						if
 							i + 2 <= n and then
-							s.item (i + 1).is_hexa_digit and s.item (i + 2).is_hexa_digit
+							is_hexa_decimal_character (string_item (s, i + 1)) and is_hexa_decimal_character (string_item (s, i + 2))
 						then
 							-- True
 							i := i + 2
@@ -845,7 +845,7 @@ feature -- Status report
 				until
 					not Result or i > n
 				loop
-					c := s.item (i)
+					c := string_item (s, i)
 						-- pchar = unreserved / pct-encoded / sub-delims / ":" / "@"	
 					if -- pchar
 						is_unreserved_character (c)
@@ -858,7 +858,7 @@ feature -- Status report
 					elseif c = '%%' then
 						if
 							i + 2 <= n and then
-							s.item (i + 1).is_hexa_digit and s.item (i + 2).is_hexa_digit
+							is_alpha_or_digit_character (string_item (s, i + 1)) and is_alpha_or_digit_character (string_item (s, i + 2))
 						then
 							i := i + 2
 						else
@@ -873,6 +873,11 @@ feature -- Status report
 		end
 
 feature -- Helper
+
+	string_item (s: READABLE_STRING_GENERAL; i: INTEGER): CHARACTER_32
+		do
+			Result := s.code (i).to_character_32
+		end
 
 	append_www_form_urlencoded_string_to (a_string: READABLE_STRING_GENERAL; a_target: STRING_GENERAL)
 			-- The application/x-www-form-urlencoded encoded string for `a_string'.
@@ -922,7 +927,7 @@ feature -- Assertion helper
 			until
 				not Result or i > n
 			loop
-				if s[i].natural_32_code > 0x7F then
+				if s.code (i) > 0x7F then
 					Result := False
 				end
 				i := i + 1
@@ -943,7 +948,7 @@ feature -- Assertion helper
 
 feature -- Status report
 
-	debug_output: READABLE_STRING_GENERAL
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		local
 			s: STRING
@@ -954,7 +959,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

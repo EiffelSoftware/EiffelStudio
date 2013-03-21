@@ -28,9 +28,9 @@ feature -- Access
 			r: ROUTINE [separate ANY, TUPLE]
 		do
 			a := x
-			r := agent x.f (5)
-			r := agent x.g (Current)
-			r := agent x.g (a)
+			r := agent x.f (5)       -- VJAR
+			r := agent x.g (Current) -- VJAR
+			r := agent x.g (a)       -- VJAR
 			r := agent x.g (e)       -- VUAR(2)         VUAR(4)
 			r := agent x.h (Current) --         VUAR(3)
 			r := agent x.h (a)       -- VUAR(2) VUAR(3)

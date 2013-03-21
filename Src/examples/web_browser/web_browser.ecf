@@ -8,23 +8,6 @@
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
 		<setting name="multithreaded" value="true"/>
-		<external_include location="/usr/include/webkit-1.0">
-			<condition>
-				<platform value="unix"/>
-			</condition>
-			<condition>
-			</condition>
-		</external_include>
-		<external_include location="/usr/include/libsoup-2.4">
-			<condition>
-				<platform value="unix"/>
-			</condition>
-		</external_include>
-		<external_object location="/usr/local/lib/libsoup-2.4.a">
-			<condition>
-				<platform value="unix"/>
-			</condition>
-		</external_object>
 		<precompile name="vision2-pre" location="$ISE_PRECOMP\vision2-mt-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>

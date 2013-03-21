@@ -6,8 +6,14 @@ create
 feature {NONE} -- Creation
 
         make
+        	local
+        		x: separate TEST
+			r: ROUTINE [separate ANY, TUPLE]
 		do
-			g (create {separate TEST})
+			create x
+			r := agent x.f (5)               -- VUTA(3)
+			r := agent {separate TEST}.f (5) -- VUTA(3)
+			g (x)
 		end
 
 feature -- Access

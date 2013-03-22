@@ -67,7 +67,7 @@ extern "C" {
 #define DB_TOO_MANY_COL                 	5
 
 /* the following are lengthes of some data types in EiffelStore on ODBC */
-#define DB_MAX_NAME_LEN                 	40
+#define DB_MAX_NAME_LEN                 	80
 #define DB_MAX_COLS                             300
 // Added by David
 //#define DB_MAX_STRING_LEN			254

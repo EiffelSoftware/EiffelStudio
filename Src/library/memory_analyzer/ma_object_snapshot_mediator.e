@@ -43,6 +43,10 @@ feature -- Initlization
 			object_grid.set_pick_and_drop_mode
 			object_grid.set_item_pebble_function (agent pick_item)
 
+			object_grid.column (1).set_width (500)
+			object_grid.column (2).set_width (100)
+			object_grid.column (3).set_width (100)
+
 --			object_grid.set_item_pebble_function (agent pick_item_for_filter)
 			show_memory_map
 		ensure
@@ -577,7 +581,8 @@ feature -- Status report
 				Result := a_str.is_equal (once "MA_GRID_LABEL_ITEM") or else
 						a_str.is_equal (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY, EV_GRID_ROW]") or else
 						--a_str.is_equal (once "MA_OBJECT_SNAPSHOT_MEDIATOR") or else
-						a_str.is_equal (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY]")
+						a_str.is_equal (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY]") or else
+						a_str.has_substring ("MA_OBJECT_SNAPSHOT")
 			end
 		end
 

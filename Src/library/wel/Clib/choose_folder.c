@@ -23,8 +23,9 @@ indexing
 int CALLBACK cwel_browse_callback_proc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 {
 		/* Select the initial folder upon initialization (lpData contains the initial folder) */
-	if (uMsg == BFFM_INITIALIZED)
+	if ((uMsg == BFFM_INITIALIZED) && (lpData)) {
 		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
+	}
 
 	return 0;
 }

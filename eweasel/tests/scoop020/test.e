@@ -7,12 +7,12 @@ feature {NONE} -- Creation
 
         make
 		do
-			test (Current, Current, create {A [TEST]}, create {A [separate TEST]})
+			test (Current, Current, create {A [TEST, TEST]}.make (Current, Current), create {A [separate TEST, TEST]}.make (Current, Current))
 		end
 
 feature {NONE} -- Test
 
-	test (x: TEST; y: separate TEST; xx: A [TEST]; yy: A [separate TEST])
+	test (x: TEST; y: separate TEST; xx: A [TEST, TEST]; yy: A [separate TEST, TEST])
 		do
 			xx.f (x, x)
 			xx.f (x, y)

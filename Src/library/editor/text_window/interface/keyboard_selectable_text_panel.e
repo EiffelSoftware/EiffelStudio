@@ -155,7 +155,6 @@ feature -- Cursor Management
 	position_cursor (a_cursor: like cursor_type; x_pos, y_pos: INTEGER)
 			-- Position `a_cursor' as close as possible from coordinates (x_pos, y_pos).
 		local
-			current_width	: INTEGER
 			pointed_line	: detachable like line_type
 			pointed_token	: detachable EDITOR_TOKEN
 			l_token_in_line : like token_in_line

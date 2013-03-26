@@ -44,10 +44,8 @@ feature -- Initialization
 			standard_make
 			create str_folder_name.make_empty (max_path)
 			create str_title.make_empty (max_title_length)
-			create str_starting_folder.make_empty (max_path)
 			cwel_browse_info_set_pszdisplayname (item, str_folder_name.item)
 			cwel_browse_info_set_lpsztitle (item, str_title.item)
-			cwel_browse_info_set_lparam (item, str_starting_folder.item)
 			cwel_browse_info_set_lpfn (item, cwel_browse_callback_proc)
 			set_default_title
 		end
@@ -94,13 +92,17 @@ feature -- Access
 		obsolete
 			"Use `starting_path' instead."
 		do
-			Result := str_starting_folder.string
+			Result := starting_path.name
 		end
 
 	starting_path: PATH
 			-- Initial folder name
 		do
-			create Result.make_from_pointer (str_starting_folder.item)
+			if attached str_starting_folder as l_folder then
+				create Result.make_from_pointer (l_folder.item)
+			else
+				create Result.make_empty
+			end
 		end
 
 	flags: INTEGER
@@ -143,7 +145,8 @@ feature -- Element Change
 		require
 			valid_folder_name: a_folder_name /= Void and then not a_folder_name.is_empty
 		do
-			str_starting_folder.set_string (a_folder_name)
+			create str_starting_folder.make (a_folder_name)
+			cwel_browse_info_set_lparam (item, str_starting_folder.item)
 		ensure
 			starting_folder_set: starting_folder.same_string_general (a_folder_name)
 		end
@@ -154,6 +157,7 @@ feature -- Element Change
 			valid_folder_name: a_path /= Void and then not a_path.is_empty
 		do
 			create str_starting_folder.make_from_path (a_path)
+			cwel_browse_info_set_lparam (item, str_starting_folder.item)
 		ensure
 			starting_path_set: starting_path ~ a_path
 		end
@@ -217,7 +221,7 @@ feature {NONE} -- Implementation
 	str_folder_name: WEL_STRING
 			-- Chosen folder name
 
-	str_starting_folder: WEL_STRING
+	str_starting_folder: detachable WEL_STRING note option: stable attribute end
 			-- Starting folder name
 
 	str_title: WEL_STRING
@@ -300,7 +304,7 @@ feature {NONE} -- External
 			end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

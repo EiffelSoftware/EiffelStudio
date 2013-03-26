@@ -291,7 +291,9 @@ feature -- C code generation
 						if not l_target_solved_type.is_separate and then source_type.is_separate then
 								-- Check if expression object belongs to the current processor.
 							buf.put_new_line
-							buf.put_string ("if (RTS_OS (Current, ")
+							buf.put_string ("if ((")
+							target.print_register
+							buf.put_string (") && RTS_OS (Current, ")
 							target.print_register
 							buf.put_three_character (')', ')', ' ')
 							target.print_register

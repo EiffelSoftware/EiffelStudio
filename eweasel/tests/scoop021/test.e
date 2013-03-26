@@ -57,6 +57,11 @@ feature {NONE} -- Creation
 			create st.make (s, False, 41)
 			create ss.make (Current, True, 49)
 			create ss.make (s, True, 57)
+				-- Separate source type, non-conforming object.
+			assert (not attached {A [TEST, TEST]} s, 65)
+			assert (not attached {separate A [TEST, TEST]} s, 66)
+			assert (not attached {A [TEST, TEST]} s as x, 67)
+			assert (not attached {separate A [TEST, TEST]} s as x, 68)
 		end
 
 feature {NONE} -- Output

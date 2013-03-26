@@ -10,4 +10,4 @@ if "%~1" == "" (
 
 if not exist %EWEASEL_OUTPUT%\nul mkdir %EWEASEL_OUTPUT%
 
-%EWEASEL_COMMAND% -keep all -filter "kw %1" -catalog %EWEASEL%\control\catalog
+%EWEASEL_COMMAND% -order -keep all -filter "kw %1" -catalog %EWEASEL%\control\catalog

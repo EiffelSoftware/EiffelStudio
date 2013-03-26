@@ -11,5 +11,5 @@ if "%~1" == "" (
 	echo 	%~nx0 catalog-name
 	exit 1
 ) else (
-	%EWEASEL_COMMAND% -keep failed -catalog %1
+	%EWEASEL_COMMAND% -order -keep failed -catalog %1
 )

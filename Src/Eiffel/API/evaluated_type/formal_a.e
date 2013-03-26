@@ -512,7 +512,11 @@ feature {FORMAL_A} -- Conformance
 			a_context_class_attached: attached a_context_class
 			other_attached: attached other
 		do
-			if is_equivalent_excluding_status (other) then
+			if
+				position = other.position and then
+				is_reference = other.is_reference and then
+				is_expanded = other.is_expanded
+			then
 					-- Test attachment status.
 					-- The rules are as follows, but we need to take care about implicit attachment status:
     				-- 1. !G conforms to G, ?G and !G.
@@ -536,6 +540,8 @@ feature {FORMAL_A} -- Conformance
 				end
 				if Result then
 						-- Test separateness status.
+						-- 1. "separate G" conforms to "separate G".
+						-- 2. "G" conforms to "G" and "separate G".
 					Result := has_separate_mark implies other.has_separate_mark
 				end
 			end
@@ -603,7 +609,7 @@ feature -- Access
 						-- Take only class types into account since there is no other way
 						-- this formal can conform to other and leaving formal generics in
 						-- the type set can lead to infinite recursion for no need.
-					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).conform_to_type (a_context_class, other.to_type_set)
+					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).to_other_separateness (Current).conform_to_type (a_context_class, other.to_type_set)
 				end
 			end
 		end
@@ -735,7 +741,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Action sequence for PND drop events."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create {EV_PND_ACTION_SEQUENCE}
 
 feature -- Basic operations
 
-	call (a_pebble_tuple: detachable TUPLE [ANY])
+	call (a_pebble_tuple: detachable TUPLE [pebble: ANY])
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -44,7 +44,7 @@ feature -- Basic operations
 				then
 					from
 						is_aborted_stack.extend (False)
-						l_is_accepting := veto_pebble_function_result (a_pebble_tuple.item (1))
+						l_is_accepting := veto_pebble_function_result (a_pebble_tuple.pebble)
 						snapshot.start
 					until
 						snapshot.index > snapshot.count
@@ -141,30 +141,14 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-
-
-
-
-
-
-
-
-
-
-
-
-

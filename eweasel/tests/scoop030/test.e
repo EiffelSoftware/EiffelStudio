@@ -8,7 +8,7 @@ feature {NONE} -- Creation
         make
         	local
         		x: separate TEST
-			r: ROUTINE [separate ANY, TUPLE]
+			r: ROUTINE [ANY, TUPLE]
 		do
 			create x
 			r := agent x.f (5)               -- VUTA(3)
@@ -25,7 +25,7 @@ feature -- Access
 	g (x: separate TEST)
 		local
 			a: separate TEST
-			r: ROUTINE [separate ANY, TUPLE]
+			r: ROUTINE [ANY, TUPLE]
 		do
 			a := x
 			r := agent x.f (5)       -- VJAR

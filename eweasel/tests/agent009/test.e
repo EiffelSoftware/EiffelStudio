@@ -6,7 +6,7 @@ feature {NONE}
 
 	make
 		local
-			a: PROCEDURE [detachable ANY, detachable TUPLE [attached STRING]]
+			a: PROCEDURE [attached ANY, detachable TUPLE [attached STRING]]
 		do
 			a := agent f
 			if not a.valid_operands (["STRING"]) then

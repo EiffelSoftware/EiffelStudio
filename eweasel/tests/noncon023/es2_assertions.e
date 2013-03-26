@@ -102,7 +102,6 @@ feature {NONE} -- Implementation
 				when {INTERNAL}.natural_64_type then
 				when {INTERNAL}.real_32_type then
 				when {INTERNAL}.real_64_type then
-				when {INTERNAL}.bit_type then
 				when {INTERNAL}.expanded_type then
 				when {INTERNAL}.reference_type then
 					assert_objects_equal (l_path,

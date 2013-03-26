@@ -994,7 +994,7 @@ feature -- Access
 			not_has_formal: not Result.has_formal
 		end
 
-feature -- Attachment properties
+feature -- Attachment and separateness properties
 
 	to_other_attachment (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
@@ -1013,6 +1013,37 @@ feature -- Attachment properties
 				r := types.i_th (i)
 				t := r.type
 				a := t.to_other_attachment (other)
+				if a /= t then
+						-- The type is different from what we have in the current one.
+					r := r.twin
+					r.set_type (a)
+					if Result = Current then
+							-- Avoid changing current type descriptor.
+						Result := twin
+					end
+					Result.types.put_i_th (r, i)
+				end
+				i := i - 1
+			end
+		end
+
+	to_other_separateness (other: ANNOTATED_TYPE_A): like Current
+			-- Current type to which separateness status of `other' is applied.
+		local
+			i: INTEGER
+			r: RENAMED_TYPE_A
+			t: TYPE_A
+			a: TYPE_A
+		do
+			Result := Current
+			from
+				i := count
+			until
+				i <= 0
+			loop
+				r := types.i_th (i)
+				t := r.type
+				a := t.to_other_separateness (other)
 				if a /= t then
 						-- The type is different from what we have in the current one.
 					r := r.twin
@@ -1106,7 +1137,7 @@ feature -- Convenience to be removed later
 			types.remove
 		end
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

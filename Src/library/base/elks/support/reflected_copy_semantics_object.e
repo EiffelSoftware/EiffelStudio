@@ -638,15 +638,13 @@ feature -- Measurement
 			-- Space occupied by `object' and its children in bytes
 		local
 			l_traverse: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
-			l_objects: detachable ARRAYED_LIST [ANY]
-			l_obj: ANY
+			l_obj: like {OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE}.visited_objects.item
 		do
 			create l_traverse
 			l_traverse.set_root_object (object)
 			l_traverse.set_is_skip_transient (False)
 			l_traverse.traverse
-			l_objects := l_traverse.visited_objects
-			if l_objects /= Void then
+			if attached l_traverse.visited_objects as l_objects then
 				from
 					l_objects.start
 				until

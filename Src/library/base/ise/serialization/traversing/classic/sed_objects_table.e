@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	index (an_obj: ANY): NATURAL_32
+	index (an_obj: separate ANY): NATURAL_32
 			-- Index of `an_obj' in Current
 		local
 			hash_value, increment, l_pos, l_new_pos, l_item_pos, l_capacity: INTEGER

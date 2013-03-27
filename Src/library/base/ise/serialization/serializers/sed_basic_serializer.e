@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 			version := {SED_VERSIONS}.basic_version_6_6
 		end
 
-	write_header (a_list: ARRAYED_LIST [ANY])
+	write_header (a_list: ARRAYED_LIST [separate ANY])
 			-- Write header of storable.
 		local
 			l_dtype_table: like type_table
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			write_object_table (a_list)
 		end
 
-	type_table (a_list: ARRAYED_LIST [ANY]): HASH_TABLE [INTEGER, INTEGER]
+	type_table (a_list: ARRAYED_LIST [separate ANY]): HASH_TABLE [INTEGER, INTEGER]
 			-- Given a list of objects `a_list', builds a compact table of the
 			-- dynamic type IDs present in `a_list'.
 		require
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 		local
 			l_dtype: INTEGER
 			l_reflector_object: like reflected_object
-			l_area: SPECIAL [ANY]
+			l_area: SPECIAL [separate ANY]
 			i, nb: INTEGER
 		do
 			l_reflector_object := reflected_object

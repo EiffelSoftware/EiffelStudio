@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	index (an_obj: ANY): NATURAL_32
+	index (an_obj: separate ANY): NATURAL_32
 			-- Index of `an_obj' in Current
 		require
 			an_obj_not_void: an_obj /= Void

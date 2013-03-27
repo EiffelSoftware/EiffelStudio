@@ -15,14 +15,14 @@ inherit
 
 feature {NONE} -- Implementation
 
-	new_dispenser: ARRAYED_STACK [ANY]
+	new_dispenser: ARRAYED_STACK [separate ANY]
 			-- Create the dispenser to use for storing visited objects.
 		do
 			create Result.make (default_size)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

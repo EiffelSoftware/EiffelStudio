@@ -9,7 +9,7 @@ class
 
 feature {OBJECT_GRAPH_TRAVERSABLE} -- Status report
 
-	is_marked (obj: ANY): BOOLEAN
+	is_marked (obj: separate ANY): BOOLEAN
 			-- Is `obj' marked?
 		require
 			object_exists: obj /= Void
@@ -19,7 +19,7 @@ feature {OBJECT_GRAPH_TRAVERSABLE} -- Status report
 
 feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 
-	mark (obj: ANY)
+	mark (obj: separate ANY)
 			-- Mark object `obj'.
 			-- To be thread safe, make sure to call this feature when you
 			-- have the marking lock that you acquire using `lock_marking'.
@@ -32,7 +32,7 @@ feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 			is_marked: is_marked (obj)
 		end
 
-	unmark (obj: ANY)
+	unmark (obj: separate ANY)
 			-- Unmark object `obj'.
 			-- To be thread safe, make sure to call this feature when you
 			-- have the marking lock that you acquire using `lock_marking'.

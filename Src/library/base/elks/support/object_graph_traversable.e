@@ -15,10 +15,10 @@ feature -- Access
 	root_object: detachable ANY
 			-- Starting point of graph traversing
 
-	object_action: detachable PROCEDURE [ANY, TUPLE [ANY]]
+	object_action: detachable PROCEDURE [ANY, TUPLE [separate ANY]]
 			-- Action called on every object in object graph
 
-	visited_objects: detachable ARRAYED_LIST [ANY]
+	visited_objects: detachable ARRAYED_LIST [separate ANY]
 			-- List referencing objects of object graph that have been visited in `traverse'.
 
 feature -- Status report
@@ -111,7 +111,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	new_dispenser: DISPENSER [ANY]
+	new_dispenser: DISPENSER [separate ANY]
 			-- New dispenser to use for storing visited objects.
 		deferred
 		ensure
@@ -126,13 +126,13 @@ feature {NONE} -- Implementation
 			-- on every object in the graph.
 		local
 			i, nb: INTEGER
-			l_object: ANY
-			l_field: detachable ANY
+			l_object: separate ANY
+			l_field: like {TUPLE}.reference_item
 			l_marker: OBJECT_GRAPH_MARKER
 			l_objects_to_visit: like new_dispenser
 			l_visited: like visited_objects
 			l_action: like object_action
-			l_spec: SPECIAL [ANY]
+			l_spec: like visited_objects.area
 			l_reflected_object: REFLECTED_OBJECT
 		do
 			from

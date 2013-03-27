@@ -57,7 +57,7 @@ feature -- Comparison
 			l_count := item.count
 			Result := l_count = other.item.count
 			if Result then
-				from i := 1 until i > l_count loop
+				from i := 1 until not Result or else i > l_count loop
 					l_item := item.item (i)
 					l_other := other.item [i]
 					Result := equal (l_item, l_other)
@@ -67,7 +67,7 @@ feature -- Comparison
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

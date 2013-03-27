@@ -2214,6 +2214,13 @@ rt_private void interpret(int flag, int where)
 			if (has_closed) {
 				aclosed_operands = opop();
 				closed_operands = (EIF_REFERENCE) (aclosed_operands->it_ref);
+#ifdef EIF_THREADS
+		 		if (is_target_closed) {
+		 				/* Migrate a tuple that holds closed arguments to a target processor. */
+		 				/* Target is the first item of this tuple ("closed_operands"). */
+					RTS_PID (closed_operands) = RTS_PID (((EIF_TYPED_VALUE *) closed_operands + 1)->it_r);
+	 			}
+#endif
 			}
 			stagval = tagval;
 			OLD_IC = IC;
@@ -2225,6 +2232,13 @@ rt_private void interpret(int flag, int where)
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+#ifdef EIF_THREADS
+	 		if (is_target_closed) {
+	 				/* Migrate a routine object to a target processor. */
+	 				/* Target is the first item of the tuple "closed_operands". */
+				RTS_PID (new_obj) = RTS_PID (((EIF_TYPED_VALUE *) closed_operands + 1)->it_r);
+	 		}
+#endif
 			if (tagval != stagval) {		/* If type is expanded we may
 										 * need to sync the registers if it
 										 * called the interpreter for the

@@ -219,7 +219,14 @@ feature {NONE} -- Large string select
 			l_table_name: STRING
 		do
 			drop_repository (large_string_select_table_name)
-			execute_query ("CREATE TABLE `db_basic_select` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+
+			if is_odbc then
+				execute_query ("CREATE TABLE db_basic_select (title text, author varchar(80), [year] datetime, quantity int ,[price] float, double_value float)")
+			end
+
+			if is_mysql then
+				execute_query ("CREATE TABLE `db_basic_select` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+			end
 
 				-- Put more data using direct SQL
 			if is_mysql then

@@ -14,7 +14,7 @@ note
 	revision: "$Revision$"
 
 class
-	FUNCTION [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
+	FUNCTION [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]
@@ -30,7 +30,7 @@ feature -- Access
 	last_result: detachable RESULT_TYPE
 			-- Result of last call, if any
 
-	call (args: detachable OPEN_ARGS)
+	call (args: detachable separate OPEN_ARGS)
 		local
 			l_closed_count: INTEGER
 			c: like closed_operands
@@ -43,7 +43,7 @@ feature -- Access
 				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
-	item (args: detachable OPEN_ARGS): RESULT_TYPE
+	item (args: detachable separate OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

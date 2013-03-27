@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end]
+	ROUTINE [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
 	HASHABLE
@@ -50,18 +50,16 @@ feature -- Access
 			-- Target of call
 		local
 			c: like closed_operands
-			o: detachable OPEN_ARGS
 		do
+				-- Because a target object is never separate relative to the routine object,
+				-- the first argument is checked against {ANY} rather than {separate ANY}.
 			if is_target_closed then
 				c := closed_operands
-				if c /= Void and then c.count > 0 then
-					Result := c.item (1)
+				if c /= Void and then c.count > 0 and then attached {ANY} c.item (1) as r then
+					Result := r
 				end
-			else
-				o := operands
-				if o /= Void and then o.count > 0 then
-					Result := o.item (1)
-				end
+			elseif attached {TUPLE} operands as o and then o.count > 0 and then attached {ANY} o.item (1) as r then
+				Result := r
 			end
 		end
 
@@ -117,11 +115,11 @@ feature -- Status report
 				and then (calc_rout_addr = other.calc_rout_addr)
 		end
 
-	valid_operands (args: detachable TUPLE): BOOLEAN
+	valid_operands (args: detachable separate TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
 			i, arg_type_code: INTEGER
-			arg: detachable ANY
+			arg: like {TUPLE}.item
 			int: REFLECTOR
 			open_type_codes: STRING
 			l_type: INTEGER
@@ -148,10 +146,10 @@ feature -- Status report
 							-- is indeed attached.
 						if int.is_attached_type (l_type) then
 							Result := arg /= Void and then
-								int.field_conforms_to (arg.generating_type.type_id, l_type)
+								int.field_conforms_to (type_id_of (arg), l_type)
 						else
 							Result := arg = Void or else
-								int.field_conforms_to (arg.generating_type.type_id, l_type)
+								int.field_conforms_to (type_id_of (arg), l_type)
 						end
 					end
 					i := i + 1
@@ -230,7 +228,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	call (args: detachable OPEN_ARGS)
+	call (args: detachable separate OPEN_ARGS)
 			-- Call routine with `args'.
 		require
 			valid_operands: valid_operands (args)
@@ -379,6 +377,12 @@ feature {NONE} -- Implementation
 				Result := ({OPEN_ARGS}).generic_parameter_type (i).type_id
 				o.put (Result, i)
 			end
+		end
+
+	type_id_of (a: separate ANY): INTEGER
+			-- Type ID of an object `a'.
+		do
+			Result := a.generating_type.type_id
 		end
 
 feature {NONE} -- Externals

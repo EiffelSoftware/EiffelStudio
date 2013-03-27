@@ -121,7 +121,6 @@ feature -- Basic operations
 		local
 			l_mem: detachable MEMORY
 			l_is_collecting: BOOLEAN
-			l_list: detachable ARRAYED_LIST [ANY]
 			l_list_count: NATURAL_32
 		do
 			if not {PLATFORM}.is_dotnet then
@@ -133,8 +132,7 @@ feature -- Basic operations
 				-- We ignore transient attributes for storing.
 			traversable.set_is_skip_transient (True)
 			traversable.traverse
-			l_list := traversable.visited_objects
-			if l_list /= Void then
+			if attached traversable.visited_objects as l_list then
 				l_list_count := l_list.count.to_natural_32
 
 				if l_list.count > object_indexes.capacity then
@@ -197,7 +195,7 @@ feature {NONE} -- Implementation
 			version := {SED_VERSIONS}.session_version_6_6
 		end
 
-	write_header (a_list: ARRAYED_LIST [ANY])
+	write_header (a_list: ARRAYED_LIST [separate ANY])
 			-- Operation performed before `encoding_objects'.
 		require
 			a_list_not_void: a_list /= Void
@@ -210,7 +208,7 @@ feature {NONE} -- Implementation
 			write_object_table (a_list)
 		end
 
-	write_object_table (a_list: ARRAYED_LIST [ANY])
+	write_object_table (a_list: ARRAYED_LIST [separate ANY])
 			-- Write mapping between object's reference ID in `a_list' with
 			-- all the necessary information necessary to recreate it at a
 			-- later time.
@@ -223,8 +221,8 @@ feature {NONE} -- Implementation
 			l_object_indexes: like object_indexes
 			i, nb: INTEGER
 			l_dtype: INTEGER
-			l_obj: ANY
-			l_area: SPECIAL [ANY]
+			l_obj: separate ANY
+			l_area: SPECIAL [separate ANY]
 		do
 			l_ser := serializer
 				-- To preserve backward compatibility of storable using the `is_for_fast_retrieval' setting
@@ -309,7 +307,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_objects (a_list: ARRAYED_LIST [ANY])
+	encode_objects (a_list: ARRAYED_LIST [separate ANY])
 			-- Encode all objects referenced in `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -318,9 +316,9 @@ feature {NONE} -- Implementation
 			l_reflected_object: like reflected_object
 			l_ser: like serializer
 			l_object_indexes: like object_indexes
-			l_obj: ANY
+			l_obj: separate ANY
 			i, nb: INTEGER
-			l_area: SPECIAL [ANY]
+			l_area: SPECIAL [separate ANY]
 			l_obj_index: NATURAL_32
 		do
 			l_reflected_object := reflected_object
@@ -334,7 +332,7 @@ feature {NONE} -- Implementation
 				i = nb
 			loop
 				l_obj := l_area.item (i)
-				l_reflected_object.set_object (l_area.item (i))
+				l_reflected_object.set_object (l_obj)
 				i := i + 1
 
 					-- Write object reference ID.
@@ -361,7 +359,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_reference (an_object: detachable ANY)
+	encode_reference (an_object: detachable separate ANY)
 			-- Encode reference to `an_object'.
 		do
 			if an_object /= Void then
@@ -371,7 +369,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_normal_object (an_object: ANY)
+	encode_normal_object (an_object: separate ANY)
 			-- Encode normal object.
 		require
 			an_object_not_void: an_object /= Void
@@ -566,11 +564,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special (an_object: ANY; a_item_type: INTEGER)
+	encode_special (an_object: separate ANY; a_item_type: INTEGER)
 			-- Encode an object which is a special object.
 		require
 			an_object_not_void: an_object /= Void
-			an_object_is_special: attached {SPECIAL [detachable ANY]} an_object
+			an_object_is_special: attached {separate SPECIAL [detachable ANY]} an_object
 			a_item_type_non_negative: a_item_type >= 0
 		do
 			inspect a_item_type

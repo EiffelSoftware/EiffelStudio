@@ -599,7 +599,7 @@ feature -- Measurement
 			Result := l_size.min ({INTEGER_32}.max_value.as_natural_64).as_integer_32
 		end
 
-	physical_size_64 (object: ANY): NATURAL_64
+	physical_size_64 (object: separate ANY): NATURAL_64
 			-- Space occupied by `object' in bytes
 		require
 			object_not_void: object /= Void
@@ -613,14 +613,12 @@ feature -- Measurement
 			object_not_void: object /= Void
 		local
 			l_traverse: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
-			l_objects: detachable ARRAYED_LIST [ANY]
 		do
 			create l_traverse
 			l_traverse.set_root_object (object)
 			l_traverse.set_is_skip_transient (False)
 			l_traverse.traverse
-			l_objects := l_traverse.visited_objects
-			if l_objects /= Void then
+			if attached l_traverse.visited_objects as l_objects then
 				from
 					l_objects.start
 				until

@@ -80,7 +80,7 @@ feature -- Access
 			Result := {ISE_RUNTIME}.raw_reference_field_at_offset ($enclosing_object, physical_offset)
 		end
 
-	enclosing_object: ANY
+	enclosing_object: separate ANY
 			-- Enclosing object containing `object' or a reference to `object.
 
 	physical_offset: INTEGER
@@ -170,7 +170,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_object (a_obj: ANY)
+	set_object (a_obj: separate ANY)
 			-- Update Current to represent a new reflected object.
 		require
 			physical_offset_not_set: physical_offset = 0
@@ -657,15 +657,13 @@ feature -- Measurement
 			-- Space occupied by `object' and its children in bytes
 		local
 			l_traverse: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
-			l_objects: detachable ARRAYED_LIST [ANY]
-			l_obj: ANY
+			l_obj: like {OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE}.visited_objects.item
 		do
 			create l_traverse
 			l_traverse.set_root_object (object)
 			l_traverse.set_is_skip_transient (False)
 			l_traverse.traverse
-			l_objects := l_traverse.visited_objects
-			if l_objects /= Void then
+			if attached l_traverse.visited_objects as l_objects then
 				from
 					l_objects.start
 				until

@@ -33,7 +33,7 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", at alias "@" (index: INTEGER): detachable ANY assign put
+	item alias "[]", at alias "@" (index: INTEGER): detachable separate ANY assign put
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end
 
-	reference_item (index: INTEGER): detachable ANY
+	reference_item (index: INTEGER): detachable separate ANY
 			-- Reference item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -297,7 +297,7 @@ feature -- Status report
 			Result := k >= 1 and then k <= count
 		end
 
-	valid_type_for_index (v: detachable ANY; index: INTEGER): BOOLEAN
+	valid_type_for_index (v: detachable separate ANY; index: INTEGER): BOOLEAN
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
@@ -358,7 +358,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: detachable ANY; index: INTEGER)
+	put (v: detachable separate ANY; index: INTEGER)
 			-- Insert `v' at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -383,7 +383,7 @@ feature -- Element change
 			end
 		end
 
-	put_reference (v: detachable ANY; index: INTEGER)
+	put_reference (v: detachable separate ANY; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -856,7 +856,7 @@ feature -- Type conversion queries
 
 feature -- Conversion
 
-	arrayed: ARRAY [detachable ANY]
+	arrayed: ARRAY [detachable separate ANY]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"

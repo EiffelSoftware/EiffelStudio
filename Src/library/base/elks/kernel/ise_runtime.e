@@ -73,7 +73,7 @@ feature -- Internal C routines
 			"eif_type_id"
 		end
 
-	frozen dynamic_type (object: ANY): INTEGER
+	frozen dynamic_type (object: separate ANY): INTEGER
 			-- Dynamic type of `object'.
 		external
 			"built_in static"
@@ -606,17 +606,17 @@ feature -- Object marking
 			"eif_unlock_marking"
 		end
 
-	frozen is_object_marked (obj: ANY): BOOLEAN
+	frozen is_object_marked (obj: separate ANY): BOOLEAN
 		external
 			"built_in static"
 		end
 
-	frozen unmark_object (obj: ANY)
+	frozen unmark_object (obj: separate ANY)
 		external
 			"built_in static"
 		end
 
-	frozen mark_object (obj: ANY)
+	frozen mark_object (obj: separate ANY)
 		external
 			"built_in static"
 		end

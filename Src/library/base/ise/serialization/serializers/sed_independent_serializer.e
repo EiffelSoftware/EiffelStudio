@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 			version := 0
 		end
 
-	write_header (a_list: ARRAYED_LIST [ANY])
+	write_header (a_list: ARRAYED_LIST [separate ANY])
 			-- Write header of storable.
 		local
 			l_dtype_table, l_attr_dtype_table: like type_table

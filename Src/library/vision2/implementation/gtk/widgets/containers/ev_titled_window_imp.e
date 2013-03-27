@@ -26,7 +26,8 @@ inherit
 			old_make,
 			default_wm_decorations,
 			is_displayed,
-			call_window_state_event
+			call_window_state_event,
+			on_size_allocate
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -44,6 +45,21 @@ feature {NONE} -- Initialization
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
+			-- <Precursor>
+		do
+			Precursor {EV_WINDOW_IMP} (a_x, a_x, a_width, a_height)
+			if is_maximized_pending then
+					-- Call pending maximize actions.
+					-- This is done here as currently the window is maximized before a resize
+					-- and the behavior on Windows is to resize first.
+				is_maximized_pending := False
+				if maximize_actions_internal /= Void then
+					maximize_actions_internal.call (Void)
+				end
+			end
+		end
+
 	call_window_state_event (a_changed_mask, a_new_state: INTEGER)
 			-- Handle either minimize, maximize or restore event for `Current'.
 		local
@@ -51,26 +67,38 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 		do
 			if a_changed_mask & {GTK2}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
 				if a_new_state & {GTK2}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
+						-- Window has been minimized
 					is_minimized := True
 					is_maximized := False
 					if minimize_actions_internal /= Void then
 						minimize_actions_internal.call (Void)
 					end
-				else
-					l_call_restore := True
-				end
-			elseif a_changed_mask & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
-				if a_new_state & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+				elseif a_new_state & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+						-- Window has been restored to a maximized state from a previous minimized state
+						-- We need to call maximize actions to match Windows behavior instead of calling restore.
 					is_maximized := True
 					is_minimized := False
 					if maximize_actions_internal /= Void then
 						maximize_actions_internal.call (Void)
 					end
 				else
+						-- We must be restoring from a minimized to a non maximized state.
+					l_call_restore := True
+				end
+			elseif a_changed_mask & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+				if a_new_state & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+						-- The window has been maximized
+					is_maximized := True
+					is_minimized := False
+						-- We defer the calling of maximize actions to `on_size_allocate' so that the dimensions are precalculated.
+					is_maximized_pending := True
+				else
+						-- We must be restoring from a maximized state to a normal window state.
 					l_call_restore := True
 				end
 			end
 			if l_call_restore then
+					-- Call restore actions after setting
 				is_minimized := False
 				is_maximized := False
 				if restore_actions_internal /= Void then
@@ -79,6 +107,9 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 			end
 			Precursor {EV_WINDOW_IMP} (a_changed_mask, a_new_state)
 		end
+
+	is_maximized_pending: BOOLEAN
+		-- Is there currently a maximized event pending?
 
 feature -- Access
 
@@ -214,14 +245,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TITLED_WINDOW_IMP

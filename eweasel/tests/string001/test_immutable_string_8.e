@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 			test_prunable
 			test_resizable
 			test_same_string
+			test_same_characters
+			test_same_caseless_characters
 			test_same_type
 			test_split
 			test_starts_with
@@ -943,6 +945,43 @@ feature {NONE} -- Implementation
 			s := "abcdef"
 			check_boolean ("same_string", not s.same_string ("ABCDEF"))
 		end
+
+	test_same_characters is
+		local
+			s: IMMUTABLE_STRING_8
+			o: IMMUTABLE_STRING_8
+		do
+			s := "12345"
+			o := "234"
+			check_boolean ("same_characters", s.same_characters (o, 1, 3, 2))
+			check_boolean ("same_characters", o.same_characters (s, 2, 4, 1))
+			o := "432"
+			check_boolean ("same_characters", not s.same_characters (o, 1, 3, 2))
+			check_boolean ("same_characters", not o.same_characters (s, 2, 4, 1))
+
+			s := "abcdef"
+			o := "BCD"
+			check_boolean ("same_characters", not s.same_characters (o, 1, 2, 2))
+		end
+
+	test_same_caseless_characters is
+		local
+			s: IMMUTABLE_STRING_8
+			o: IMMUTABLE_STRING_8
+		do
+			s := "12345"
+			o := "234"
+			check_boolean ("same_caseless_characters", s.same_caseless_characters (o, 1, 3, 2))
+			check_boolean ("same_caseless_characters", o.same_caseless_characters (s, 2, 4, 1))
+			o := "432"
+			check_boolean ("same_caseless_characters", not s.same_caseless_characters (o, 1, 3, 2))
+			check_boolean ("same_caseless_characters", not o.same_caseless_characters (s, 2, 4, 1))
+
+			s := "abcdef"
+			o := "BCD"
+			check_boolean ("same_caseless_characters", s.same_caseless_characters (o, 1, 2, 2))
+			check_boolean ("same_caseless_characters", not s.same_caseless_characters (o, 1, 2, 3))
+		end		
 
 	test_same_type is
 		do

@@ -456,20 +456,20 @@ feature -- Initialization/Checking
 			a_target_type_not_void: a_target_type /= Void
 		local
 			l_convert_ok, l_success: BOOLEAN
-			l_other: FORMAL_A
 			l_constraint: TYPE_A
 			l_constraints: TYPE_SET_A
 			l_cl_type: CL_TYPE_A
 		do
-			l_other ?= a_target_type
-			if l_other = Void then
+			if not attached {FORMAL_A} a_target_type then
 				if not a_formal.is_single_constraint_without_renaming (a_context_class) then
 						-- Multi constraint case, use TYPE_SET_A.
-					l_constraints := a_context_class.constraints (a_formal.position)
+						-- (See test#scoop020 for cases when attachment and separateness statuses have to be taken into account.)
+					l_constraints := a_context_class.constraints (a_formal.position).to_other_attachment (a_formal).to_other_separateness (a_formal)
 					l_convert_ok := l_constraints.conform_to_type (a_context_class, a_target_type.to_type_set)
 				else
 						-- Single constraint, common case.
-					l_constraint := a_context_class.constraint (a_formal.position)
+						-- (See test#scoop020 for cases when attachment and separateness statuses have to be taken into account.)
+					l_constraint := a_context_class.constraint (a_formal.position).to_other_attachment (a_formal).to_other_separateness (a_formal)
 					l_convert_ok := l_constraint.conform_to (a_context_class, a_target_type)
 				end
 
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation: access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

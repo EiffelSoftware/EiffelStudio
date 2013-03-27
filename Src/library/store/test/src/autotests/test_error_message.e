@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 				-- Put more data using direct SQL
 			if is_mysql then
-				execute_query ("insert into DB_BASIC_SELECT_ERROR_TEST (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, str_to_date('1973', '%%Y'), 3.5)")
+				execute_query ("insert into DB_BASIC_SELECT_ERROR_TEST (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, str_to_date('1973', '%%Y'), 23.767)")
 			end
 
 			if is_odbc then
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			end
 
 			if is_oracle then
-				execute_query ("insert into DB_BASIC_SELECT_ERROR_TEST (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, to_date('1973', 'YYYY'), 3.5)")
+				execute_query ("insert into DB_BASIC_SELECT_ERROR_TEST (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, to_date('1973', 'YYYY'), 23.767)")
 			end
 
 			if is_sybase then

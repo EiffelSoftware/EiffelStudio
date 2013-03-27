@@ -26,7 +26,7 @@ feature -- Visitor
 feature  -- Initialization
 
 	init (cl_type: like class_type; cl_id: INTEGER; f: FEATURE_I;
-		  r_type : GEN_TYPE_A; args : TUPLE_CONST_B;
+		  r_type : like type; args : TUPLE_CONST_B;
 		  omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
 		  a_is_inline_agent, a_is_target_closed, a_is_precompiled, a_is_basic: BOOLEAN)
 			-- Initialization
@@ -69,7 +69,7 @@ feature  -- Initialization
 		end
 
 	set_ids (cl_type : like class_type; cl_id, o_cl_id, r_id, f_id, r_origin, r_offset: INTEGER;
-			 r_type : GEN_TYPE_A; args : TUPLE_CONST_B;
+			 r_type : like type; args : TUPLE_CONST_B;
 			 omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
 			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN)
 			-- Set ids and type
@@ -119,7 +119,7 @@ feature -- Attributes
 	rout_id: INTEGER
 			-- Routine id of the feature
 
-	type: GEN_TYPE_A
+	type: TYPE_A
 			-- Type of routine object
 
 	arguments: TUPLE_CONST_B
@@ -210,7 +210,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

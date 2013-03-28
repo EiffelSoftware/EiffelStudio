@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			tester: AUT_FEATURE_OF_TYPE_EQUALITY_TESTER
 		do
 			system := a_system
-			create feature_list_table.make_map_default
+			create feature_list_table.make (10)
 			create tester.make
 			create priority_table.make_with_key_tester (10, tester)
 		ensure
@@ -239,7 +239,7 @@ feature -- Basic routines
 
 feature {NONE} -- Implementation
 
-	feature_list_table: DS_HASH_TABLE [DS_LINKED_LIST [AUT_FEATURE_OF_TYPE], INTEGER]
+	feature_list_table: HASH_TABLE [DS_LINKED_LIST [AUT_FEATURE_OF_TYPE], INTEGER]
 			-- Table that maps dynamic priorities to lists of features
 
 	priority_table: HASH_TABLE_EX [PAIR [INTEGER, INTEGER], AUT_FEATURE_OF_TYPE]
@@ -284,20 +284,12 @@ feature {NONE} -- Implementation
 	set_highest_priority
 			-- Set `highest_dynamic_priority' to the highest priority value
 			-- found in `feature_list_table'.
-		local
-			cs: DS_HASH_TABLE_CURSOR [DS_LINKED_LIST [AUT_FEATURE_OF_TYPE], INTEGER]
 		do
-			from
-				highest_dynamic_priority := 0
-				cs := feature_list_table.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			highest_dynamic_priority := 0
+			across feature_list_table as cs loop
 				if cs.key > highest_dynamic_priority then
 					highest_dynamic_priority := cs.key
 				end
-				cs.forth
 			end
 		end
 
@@ -365,38 +357,23 @@ feature {NONE} -- Assertion helpers
 	is_highest_priority_valid: BOOLEAN
 			-- Is `highest_dynamic_priority' set to the highest priority found
 			-- in `feature_list_table'.
-		local
-			cs: DS_HASH_TABLE_CURSOR [DS_LINKED_LIST [AUT_FEATURE_OF_TYPE], INTEGER]
 		do
-			from
-				Result := True
-				cs := feature_list_table.new_cursor
-				cs.start
-			until
-				cs.off or not Result
-			loop
+			Result := True
+			across feature_list_table as cs until not Result loop
 				if cs.key > highest_dynamic_priority then
 					Result := False
 				end
-				cs.forth
 			end
-			cs.go_after
 		end
 
 	are_tables_valid: BOOLEAN
 			-- Are the tables `feature_list_table' and `priority_table'
 			-- synchronized?
 		local
-			table_cs: DS_HASH_TABLE_CURSOR [DS_LINKED_LIST [AUT_FEATURE_OF_TYPE], INTEGER]
 			list_cs: DS_LINKED_LIST_CURSOR [AUT_FEATURE_OF_TYPE]
 		do
-			from
-				Result := True
-				table_cs := feature_list_table.new_cursor
-				table_cs.start
-			until
-				table_cs.off or not Result
-			loop
+			Result := True
+			across feature_list_table as table_cs until not Result loop
 				from
 					list_cs := table_cs.item.new_cursor
 					list_cs.start
@@ -417,9 +394,7 @@ feature {NONE} -- Assertion helpers
 					list_cs.forth
 				end
 				list_cs.go_after
-				table_cs.forth
 			end
-			table_cs.go_after
 		end
 
 invariant

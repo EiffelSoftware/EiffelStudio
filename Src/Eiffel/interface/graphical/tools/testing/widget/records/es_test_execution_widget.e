@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				l_grid.remove_row (l_subrow.row.index)
-				l_subrows.remove_found_item
+				l_subrows.remove (a_test_name)
 			end
 		ensure
 			removed: not subrows.has (a_test_name)

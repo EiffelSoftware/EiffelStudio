@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 				-- Create action lists
 			create show_actions
 			create hide_actions
-			create button_actions.make_default
+			create button_actions.make (10)
 
 			is_modal := True
 			is_confirmation_key_active := True
@@ -355,7 +355,7 @@ feature {NONE} -- Access
 			result_consistent: Result = dialog_window_buttons
 		end
 
-	frozen button_actions: DS_HASH_TABLE [TUPLE [action: like button_action; before_close: BOOLEAN], INTEGER]
+	frozen button_actions: HASH_TABLE [TUPLE [action: like button_action; before_close: BOOLEAN], INTEGER]
 			-- Dialog button actions
 
 	dialog_session_id: attached STRING_8

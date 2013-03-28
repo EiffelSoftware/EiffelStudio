@@ -334,7 +334,7 @@ feature -- Extension
 			end
 
 				-- Extends the folder catalog
-			cataloged_folder_files.put (l_files, a_folder)
+			cataloged_folder_files.force (l_files, a_folder)
 
 			if l_changed and then (attached internal_catalog_changed_event as l_events) then
 				l_events.publish (Void)
@@ -506,7 +506,7 @@ invariant
 	cataloged_template_definitions_attached: attached cataloged_template_definitions
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -69,7 +69,7 @@ feature -- Access
 
 			if Result = Void then
 					-- It's possible that an invalid context was specified.
-				create {DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]}Result.make (0)
+				create {DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]} Result.make (0)
 			end
 		end
 
@@ -93,7 +93,7 @@ feature -- Extension
 				end
 				if l_event_items = Void then
 					create l_event_items.make (1)
-					internal_event_items_index.force_last (l_event_items, a_context_cookie)
+					internal_event_items_index.force (l_event_items, a_context_cookie)
 				end
 				l_event_items.force_last (a_event_item)
 			end
@@ -108,7 +108,6 @@ feature -- Removal
 			-- <Precursor>
 		local
 			l_event_items_cursor: DS_ARRAYED_LIST_CURSOR [EVENT_LIST_ITEM_I]
-			l_index_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
 			l_index_events_cursor: DS_ARRAYED_LIST_CURSOR [EVENT_LIST_ITEM_I]
 			l_event_item: EVENT_LIST_ITEM_I
 			l_remove: BOOLEAN
@@ -121,8 +120,7 @@ feature -- Removal
 					-- Remove from list
 				l_event_items_cursor.remove
 
-				l_index_cursor := internal_event_items_index.new_cursor
-				from l_index_cursor.start until l_index_cursor.after or l_remove loop
+				across internal_event_items_index as l_index_cursor until l_remove loop
 					l_index_events_cursor := l_index_cursor.item.new_cursor
 					l_index_events_cursor.start
 					l_index_events_cursor.search_forth (a_event_item)
@@ -135,13 +133,9 @@ feature -- Removal
 
 							-- Fire events
 						on_item_removed (l_event_item)
-						l_index_cursor.go_after
-					else
-						l_index_cursor.forth
 					end
 				end
 			end
-			check gobo_cursor_cleanup: l_index_cursor.after end
 		end
 
 	prune_event_items (a_context_cookie: UUID)
@@ -196,13 +190,11 @@ feature -- Basic operations
 	adopt_event_item (a_new_cookie: UUID; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
 			l_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 			l_old_cookie: UUID
 			l_stop: BOOLEAN
 		do
-			l_cursor := internal_event_items_index.new_cursor
-			from l_cursor.start until l_cursor.after or l_stop loop
+			across internal_event_items_index as l_cursor until l_stop loop
 				l_items := l_cursor.item
 				l_stop := l_items.has (a_event_item)
 				if l_stop then
@@ -216,12 +208,8 @@ feature -- Basic operations
 						l_items.search_forth (a_event_item)
 						l_items.remove_at
 					end
-					l_cursor.go_after
-				else
-					l_cursor.forth
 				end
 			end
-			check gobo_cursor_cleanup: l_cursor.after end
 
 			check
 				item_found: l_stop
@@ -231,7 +219,7 @@ feature -- Basic operations
 				l_items := internal_event_items_index.item (a_new_cookie)
 			else
 				create l_items.make (1)
-				internal_event_items_index.force_last (l_items, a_new_cookie)
+				internal_event_items_index.force (l_items, a_new_cookie)
 			end
 			l_items.force_last (a_event_item)
 
@@ -241,21 +229,21 @@ feature -- Basic operations
 
 feature -- Events
 
-	item_added_event: attached EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- <Precursor>
 
-	item_removed_event: attached EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_removed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- <Precursor>
 
-	item_changed_event: attached EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- <Precursor>
 
-	item_adopted_event: attached EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
+	item_adopted_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
 			-- <Precursor>
 
 feature -- Events: Connection point
 
-	event_list_connection: attached EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
+	event_list_connection: EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
 			-- <Precursor>
 		local
 			l_result: like internal_event_list_connection
@@ -350,7 +338,7 @@ feature {NONE} -- Implementation: Internal cache
 	internal_event_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 			-- Mutable events, ordered by addition for the purpose of correct indexing
 
-	internal_event_items_index: DS_HASH_TABLE [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
+	internal_event_items_index: HASH_TABLE [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
 			-- Mutable event index for fast and context-based access
 
 	internal_event_list_connection: detachable like event_list_connection

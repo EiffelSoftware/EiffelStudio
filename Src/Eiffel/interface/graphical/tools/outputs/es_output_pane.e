@@ -178,7 +178,7 @@ feature {NONE} -- Access: User interface
 			not_result_is_empty: not Result.is_empty
 		end
 
-	widget_table: detachable DS_HASH_TABLE [G, NATURAL]
+	widget_table: detachable HASH_TABLE [G, NATURAL]
 			-- Table of requested widgets, indexed by a window ID.
 			--
 			-- Key: Window ID
@@ -226,10 +226,10 @@ feature -- Query: User interface
 				Result := new_widget (a_window)
 				build_interface (Result)
 				if l_table = Void then
-					create l_table.make_default
+					create l_table.make (10)
 					widget_table := l_table
 				end
-				l_table.put_last (Result, l_id)
+				l_table.force (Result, l_id)
 
 					-- The widget has been requested so we can made the output window
 					-- available for use but adding it to the `output_window' object.
@@ -413,7 +413,7 @@ invariant
 	notifier_formatter_attached: notifier_formatter /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

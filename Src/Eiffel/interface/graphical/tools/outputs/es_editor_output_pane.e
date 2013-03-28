@@ -77,17 +77,13 @@ feature {NONE} -- Initialization
 				-- is always scrolled to the end.
 			register_action (new_line_actions, agent (ia_sender: ES_NOTIFIER_FORMATTER; ia_lines: NATURAL)
 					-- Need to scroll the output
-				local
-					l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
 				do
 					if is_auto_scrolled then
 						if attached widget_table as l_table then
-							l_cursor := l_table.new_cursor
-							from l_cursor.start until l_cursor.after loop
+							across l_table as l_cursor loop
 								if attached l_cursor.item as l_widget then
 									l_widget.scroll_editor_to_end (True)
 								end
-								l_cursor.forth
 							end
 						end
 					end
@@ -173,17 +169,13 @@ feature -- Basic operations
 
 	clear
 			-- <Precursor>
-		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
 		do
 			Precursor
 			if attached widget_table as l_table then
-				l_cursor := l_table.new_cursor
-				from l_cursor.start until l_cursor.after loop
+				across l_table as l_cursor loop
 					if attached l_cursor.item as l_widget then
 						l_widget.clear
 					end
-					l_cursor.forth
 				end
 			end
 		end
@@ -218,34 +210,26 @@ feature {NONE} -- Event handlers
 
 	on_locked
 			-- <Precursor>
-		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
 		do
 			Precursor
 			if attached widget_table as l_table then
-				l_cursor := l_table.new_cursor
-				from l_cursor.start until l_cursor.after loop
+				across l_table as l_cursor loop
 					if attached l_cursor.item as l_widget then
 						l_widget.editor.handle_before_processing (True)
 					end
-					l_cursor.forth
 				end
 			end
 		end
 
 	on_unlocked
 			-- <Precursor>
-		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
 		do
 			Precursor
 			if attached widget_table as l_table then
-				l_cursor := l_table.new_cursor
-				from l_cursor.start until l_cursor.after loop
+				across l_table as l_cursor loop
 					if attached l_cursor.item as l_widget then
 						l_widget.editor.handle_after_processing
 					end
-					l_cursor.forth
 				end
 			end
 		end
@@ -268,7 +252,7 @@ invariant
 	not_name_is_empty: not name.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

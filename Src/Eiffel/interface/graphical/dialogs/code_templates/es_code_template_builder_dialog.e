@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_template: attached like code_template)
+	make (a_template: like code_template)
 			-- Initialize dialog using a specific development window
 		require
 			a_template_is_interface_usable: a_template.is_interface_usable
@@ -41,16 +41,16 @@ feature {NONE} -- Initialization
 	build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
-			l_template: attached like code_template
-			l_definition: attached CODE_TEMPLATE_DEFINITION
-			l_declarations: attached DS_BILINEAR [CODE_DECLARATION]
+			l_template: like code_template
+			l_definition: CODE_TEMPLATE_DEFINITION
+			l_declarations: DS_BILINEAR [CODE_DECLARATION]
 			l_cursor: DS_BILINEAR_CURSOR [CODE_DECLARATION]
-			l_padding: attached EV_CELL
-			l_description: attached EVS_LABEL
-			l_template_description: attached STRING_32
-			l_code_result_label: attached EV_LABEL
-			l_code_result_view: attached like code_result_view
-			l_declaration_fields: attached like declaration_text_fields
+			l_padding: EV_CELL
+			l_description: EVS_LABEL
+			l_template_description: STRING_32
+			l_code_result_label: EV_LABEL
+			l_code_result_view: like code_result_view
+			l_declaration_fields: like declaration_text_fields
 		do
 			a_container.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 			code_result_view := l_code_result_view
 		end
 
-	build_declaration_line_interface (a_declaration: attached CODE_LITERAL_DECLARATION; a_container: EV_VERTICAL_BOX)
+	build_declaration_line_interface (a_declaration: CODE_LITERAL_DECLARATION; a_container: EV_VERTICAL_BOX)
 			-- TODO
 		require
 			not_a_declaration_is_built_in: not a_declaration.is_built_in
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			not_declaration_text_fields_has_id: not declaration_text_fields.has (a_declaration.id)
 		local
 			l_label: EV_LABEL
-			l_edit: attached EV_TEXT_FIELD
+			l_edit: EV_TEXT_FIELD
 			l_text: STRING_32
 			l_vbox: EV_VERTICAL_BOX
 		do
@@ -205,10 +205,10 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	code_result: attached STRING_32
+	code_result: STRING_32
 			-- Current result of user input
 
-	frozen code_symbol_table: attached CODE_SYMBOL_TABLE
+	frozen code_symbol_table: CODE_SYMBOL_TABLE
 			-- Symbol table used to evaluate the code template.
 		do
 			if attached {like code_symbol_table} internal_code_symbol_table as l_table then
@@ -223,7 +223,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	code_template: attached CODE_TEMPLATE
+	code_template: CODE_TEMPLATE
 			-- The code template used to build the UI.
 
 feature -- Dialog access
@@ -234,10 +234,10 @@ feature -- Dialog access
 			Result := stock_pixmaps.general_document_icon_buffer
 		end
 
-	title: attached STRING_32
+	title: STRING_32
 			-- <Precursor>
 		local
-			l_title: attached STRING_32
+			l_title: STRING_32
 			l_title_extension: STRING_32
 		do
 			l_title_extension := interface_names.t_code_template_evaluator.as_string_32
@@ -286,7 +286,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	frozen template_renderer: attached CODE_TEMPLATE_STRING_RENDERER
+	frozen template_renderer: CODE_TEMPLATE_STRING_RENDERER
 			-- Renderer used for evaluating the code template.
 		require
 			is_interface_usable: is_interface_usable
@@ -310,7 +310,7 @@ feature {NONE} -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
-			l_renderer: attached like template_renderer
+			l_renderer: like template_renderer
 		do
 			l_renderer := template_renderer
 			l_renderer.render_template (code_template, code_symbol_table)
@@ -331,7 +331,7 @@ feature {NONE} -- User interface elements
 	edited_declaration_text_fields: DS_HASH_SET [READABLE_STRING_32]
 			-- The set of user edited declaration fields
 
-	code_result_view: attached EB_SMART_EDITOR
+	code_result_view: EB_SMART_EDITOR
 			-- Widget containing the result of the evaluated code template
 
 feature -- Events handlers
@@ -368,7 +368,7 @@ feature {NONE} -- Action handlers
 			-- <Precursor>
 		local
 			l_declarations: DS_BILINEAR_CURSOR [CODE_DECLARATION]
-			l_declaration_fields: attached like declaration_text_fields
+			l_declaration_fields: like declaration_text_fields
 			l_focus_set: BOOLEAN
 		do
 			Precursor
@@ -394,14 +394,14 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_text_changed (a_sender: attached EV_TEXT_FIELD; a_id: attached STRING)
+	on_text_changed (a_sender: EV_TEXT_FIELD; a_id: STRING)
 			-- Called when the user changes the text variables
 		require
 			not_a_sender_is_destroyed: not a_sender.is_destroyed
 			not_a_id_is_empty: not a_id.is_empty
 		local
-			l_table: attached like code_symbol_table
-			l_code_value: attached CODE_SYMBOL_VALUE
+			l_table: like code_symbol_table
+			l_code_value: CODE_SYMBOL_VALUE
 		do
 				-- Update the symbol table
 			l_table := code_symbol_table
@@ -423,7 +423,7 @@ feature {NONE} -- Action handlers
 			update_code_result
 		end
 
-	on_text_focused (a_sender: attached EV_TEXT_FIELD; a_id: attached STRING)
+	on_text_focused (a_sender: EV_TEXT_FIELD; a_id: STRING)
 			-- Called when the user focuses to a text field
 		require
 			not_a_sender_is_destroyed: not a_sender.is_destroyed
@@ -440,7 +440,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_code_symbol_table (a_template: attached CODE_TEMPLATE_DEFINITION): attached CODE_SYMBOL_TABLE
+	create_code_symbol_table (a_template: CODE_TEMPLATE_DEFINITION): CODE_SYMBOL_TABLE
 			-- Creates a symbol table for a given template.
 		require
 			is_interface_usable: is_interface_usable
@@ -452,7 +452,7 @@ feature {NONE} -- Factory
 			Result := l_builder.symbol_table
 		end
 
-	create_template_renderer: attached CODE_TEMPLATE_STRING_RENDERER
+	create_template_renderer: CODE_TEMPLATE_STRING_RENDERER
 			-- Creates a new template renderer for code template evaluation
 		require
 			is_interface_usable: is_interface_usable
@@ -460,7 +460,7 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	create_declaration_text_widget (a_declaration: attached CODE_DECLARATION): attached EV_TEXT_FIELD
+	create_declaration_text_widget (a_declaration: CODE_DECLARATION): EV_TEXT_FIELD
 			-- Create a new text widget for a given code declaration
 		require
 			is_interface_usable: is_interface_usable

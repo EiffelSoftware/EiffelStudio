@@ -109,7 +109,7 @@ feature -- Access
 			used_vars_set: used_vars = a_used_vars
 		end
 
-	used_vars: DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN; use_void: BOOLEAN], ITP_VARIABLE]
+	used_vars: HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN; use_void: BOOLEAN], ITP_VARIABLE]
 			-- Set of used variables: keys are variables, items are tuples of static type of variable
 			-- and a boolean flag showing if the static type should be checked against dynamic type
 			-- (is only the case for variables returned as results of function calls and those whose type
@@ -232,7 +232,7 @@ invariant
 	at_most_one_classification: classifications.count <= 1
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

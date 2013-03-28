@@ -19,17 +19,14 @@ feature -- Query
 		require
 			not_a_protocol_is_empty: not a_protocol.is_empty
 		local
-			l_providers: DS_LINEAR_CURSOR [CONCEALER_I [HELP_PROVIDER_I]]
 			l_provider: HELP_PROVIDER_I
 		do
 			if help_providers.is_service_available then
-				l_providers := help_providers.service.providers.new_cursor
-				from l_providers.start until l_providers.after or Result /= Void loop
+				across help_providers.service.providers as l_providers until Result /= Void loop
 					l_provider := l_providers.item.object
-					if l_provider.document_protocol.as_string_8.is_case_insensitive_equal (a_protocol.as_string_8) then
+					if l_provider.document_protocol.is_case_insensitive_equal_general (a_protocol) then
 						Result := l_provider.kind
 					end
-					l_providers.forth
 				end
 			end
 		end
@@ -111,7 +108,7 @@ feature {NONE} -- Regular expressions
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

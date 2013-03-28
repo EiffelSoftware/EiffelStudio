@@ -37,9 +37,8 @@ feature {NONE} -- Initialization
 		do
 			system := a_system
 			create feature_list_table.make_map_default
-			create priority_table.make_default
 			create tester.make
-			priority_table.set_key_equality_tester (tester)
+			create priority_table.make_with_key_tester (10, tester)
 		ensure
 			system_set: system = a_system
 		end
@@ -90,12 +89,12 @@ feature -- Changing Priority
 			a_feature_is_not_infix_or_prefix: not a_feature.feature_.is_prefix and not a_feature.feature_.is_infix
 			a_priority_valid: a_priority >= 0
 		local
-			pair: DS_PAIR [INTEGER, INTEGER]
+			pair: PAIR [INTEGER, INTEGER]
 			list: DS_LINKED_LIST [AUT_FEATURE_OF_TYPE]
 		do
 			priority_table.search (a_feature)
 			if priority_table.found then
-				priority_table.found_item.put_first (a_priority)
+				priority_table.found_item.set_first (a_priority)
 			else
 				create pair.make (a_priority, a_priority)
 				if highest_dynamic_priority < a_priority then
@@ -210,7 +209,7 @@ feature -- Basic routines
 				if new_priority < 0 then
 					new_priority := 0
 				end
-				priority_table.found_item.put_second (new_priority)
+				priority_table.found_item.set_second (new_priority)
 				feature_list_table.search (old_priority)
 				check
 					found: feature_list_table.found
@@ -243,29 +242,23 @@ feature {NONE} -- Implementation
 	feature_list_table: DS_HASH_TABLE [DS_LINKED_LIST [AUT_FEATURE_OF_TYPE], INTEGER]
 			-- Table that maps dynamic priorities to lists of features
 
-	priority_table: DS_HASH_TABLE [DS_PAIR [INTEGER, INTEGER], AUT_FEATURE_OF_TYPE]
+	priority_table: HASH_TABLE_EX [PAIR [INTEGER, INTEGER], AUT_FEATURE_OF_TYPE]
 			-- Table that maps features to their priorities (static, dynamic)
 
 	reset_dynamic_priorities
 			-- Reset the dynamic priorities of all
 			-- features to their static value.
 		local
-			cs: DS_HASH_TABLE_CURSOR [DS_PAIR [INTEGER, INTEGER], AUT_FEATURE_OF_TYPE]
 			old_priority: INTEGER
 			new_priority: INTEGER
 			feature_: AUT_FEATURE_OF_TYPE
 			list: DS_LINKED_LIST [AUT_FEATURE_OF_TYPE]
 		do
-			from
-				cs := priority_table.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			across priority_table as cs loop
 				new_priority := cs.item.first
 				old_priority := cs.item.second
 				feature_ := cs.key
-				cs.item.put_second (new_priority)
+				cs.item.set_second (new_priority)
 				feature_list_table.search (old_priority)
 				check
 					found: feature_list_table.found
@@ -284,7 +277,6 @@ feature {NONE} -- Implementation
 					list.force_last (feature_)
 					feature_list_table.force (list, new_priority)
 				end
-				cs.forth
 			end
 			set_highest_priority
 		end
@@ -439,7 +431,7 @@ invariant
 	tables_valid: are_tables_valid
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

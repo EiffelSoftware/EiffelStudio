@@ -68,7 +68,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	used_vars: detachable DS_HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN; use_void: BOOLEAN], ITP_VARIABLE]
+	used_vars: detachable HASH_TABLE [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN; use_void: BOOLEAN], ITP_VARIABLE]
 			-- Set of used variables: keys are variables, items are tuples of static type of variable
 			-- and a boolean flag showing if the static type should be checked against dynamic type
 			-- (is only the case for variables returned as results of function calls and those whose type
@@ -201,7 +201,6 @@ feature -- Basic operations
 			no_request_void: not a_request_list.has (Void)
 		local
 			cs: DS_BILINEAR_CURSOR [AUT_REQUEST]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [type: detachable TYPE_A; name: detachable STRING; check_dyn_type: BOOLEAN], ITP_VARIABLE]
 			l_type: detachable TYPE_A
 			l_root: SYSTEM_ROOT
 		do
@@ -222,12 +221,7 @@ feature -- Basic operations
 			output_stream.put_line ("local")
 			indent
 			if used_vars /= Void then
-				l_cursor := used_vars.new_cursor
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
+				across used_vars as l_cursor loop
 					l_type := variable_type (l_cursor.key)
 					print_indentation
 					output_stream.put_string (variable_name (l_cursor.key))
@@ -236,7 +230,6 @@ feature -- Basic operations
 						l_type := any_type
 					end
 					output_stream.put_line (effective_type_name (l_type))
-					l_cursor.forth
 				end
 			else
 				print_indentation
@@ -621,7 +614,7 @@ invariant
 	valid_expression_printer_output_stream: expression_printer.output_stream = output_stream
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

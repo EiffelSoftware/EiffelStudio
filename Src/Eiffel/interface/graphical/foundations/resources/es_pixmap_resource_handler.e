@@ -26,12 +26,12 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes the resource handler.
 		do
-			create matrices.make_default
+			create matrices.make (10)
 		end
 
 feature {NONE} -- Access
 
-	matrices: DS_HASH_TABLE [EV_PIXEL_BUFFER, STRING_32]
+	matrices: STRING_TABLE [EV_PIXEL_BUFFER]
 			-- Table of loaded matrices.
 			--
 			-- Key: Matrix file name, sans extension.
@@ -57,7 +57,7 @@ feature -- Query
 			not_a_name_is_empty: a_name /= Void and then not a_name.is_empty
 		do
 			Result := eiffel_layout.bitmaps_path.extended (pixmap_file_extension)
-			Result := Result.extended (a_name.as_string_32 + "." + pixmap_file_extension)
+			Result := Result.extended (a_name + "." + pixmap_file_extension)
 		ensure
 			not_result_is_empty: Result /= Void and then not Result.is_empty
 		end
@@ -70,21 +70,19 @@ feature -- Query
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			n: STRING_32
 			l_matrices: like matrices
 			l_file_name: like matrix_file_name
 			l_buffer: EV_PIXEL_BUFFER
 			u: FILE_UTILITIES
 		do
-			n := a_name.as_string_32
 			l_matrices := matrices
-			if l_matrices.has (n) then
-				Result := l_matrices.item (n)
+			if l_matrices.has (a_name) then
+				Result := l_matrices.item (a_name)
 			end
 
 			if Result = Void then
 					-- Load the pixmap file from disk, if it exists
-				l_file_name := matrix_file_name (n)
+				l_file_name := matrix_file_name (a_name)
 				if attached eiffel_layout.user_priority_file_name (l_file_name, True) as l_user_file_name then
 						-- The user has replaced the pixmaps.
 					l_file_name := l_user_file_name
@@ -94,13 +92,13 @@ feature -- Query
 					l_buffer.set_with_named_path (l_file_name)
 
 						-- Ensure only successful loads are cached!
-					l_matrices.force_last (l_buffer, n)
+					l_matrices.force (l_buffer, a_name)
 					Result := l_buffer
 				end
 			end
 		ensure
 			not_result_is_destroyed: attached Result implies not Result.is_destroyed
-			matrices_has_a_name: attached Result implies matrices.has (a_name.as_string_32)
+			matrices_has_a_name: attached Result implies matrices.has (a_name)
 		end
 
 invariant

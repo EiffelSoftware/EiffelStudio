@@ -108,10 +108,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	sticky_paths: DS_HASH_TABLE [PATH, STRING]
+	sticky_paths: HASH_TABLE [PATH, STRING]
 			-- Table of sticky path names.
 		once
-			create Result.make_default
+			create Result.make (10)
 		end
 
 	sticky_path_id: detachable STRING
@@ -190,7 +190,7 @@ feature {NONE} -- Action handlers
 					-- The dialog was confirmed, set a stick folder
 				l_id := sticky_path_id
 				check l_id_attached: l_id /= Void end
-				sticky_paths.force_last (path, l_id)
+				sticky_paths.force (path, l_id)
 			end
 		end
 
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

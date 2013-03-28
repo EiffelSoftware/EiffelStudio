@@ -35,14 +35,13 @@ feature -- Status report
 			is_initialized: is_initialized
 		do
 			completion_provider := a_provider
-			declaration_text_fields.do_all (agent (ia_item: attached EV_TEXT_FIELD; ia_provider: attached like completion_provider)
-				do
-					if attached {CODE_COMPLETABLE} ia_item as l_completable then
-							-- Set completion provider on a code completable text field
-						l_completable.set_completion_possibilities_provider (ia_provider)
-						register_action (ia_item.focus_in_actions, agent ia_provider.set_code_completable (l_completable))
-					end
-				end (?, a_provider))
+			across declaration_text_fields as l_text_field loop
+				if attached {CODE_COMPLETABLE} l_text_field.item as l_completable then
+						-- Set completion provider on a code completable text field
+					l_completable.set_completion_possibilities_provider (a_provider)
+					register_action (l_text_field.item.focus_in_actions, agent a_provider.set_code_completable (l_completable))
+				end
+			end
 		ensure
 			completion_provider_set: completion_provider = a_provider
 		end
@@ -56,7 +55,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -69,22 +68,22 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

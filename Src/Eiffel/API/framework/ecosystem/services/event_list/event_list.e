@@ -231,7 +231,7 @@ feature -- Basic operations
 				l_items := internal_event_items_index.item (a_new_cookie)
 			else
 				create l_items.make (1)
-				internal_event_items_index.put_last (l_items, a_new_cookie)
+				internal_event_items_index.force_last (l_items, a_new_cookie)
 			end
 			l_items.force_last (a_event_item)
 
@@ -364,7 +364,7 @@ invariant
 	internal_event_items_index_contains_attached_items: not internal_event_items_index.has_item (Void)
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -100,7 +100,7 @@ feature -- Basic operation
 			if not l_records.has (l_key) then
 					-- Create a new record and add it to the record table
 				create l_record.make (a_file_name)
-				l_records.put (l_record, l_key)
+				l_records.force (l_record, l_key)
 			else
 				l_record := l_records.item (l_key)
 			end
@@ -303,7 +303,7 @@ invariant
 		end)
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 			Precursor {EG_GRAPH}
 			create class_name_to_node_lookup.make (50)
 			create l_comparer.make (agent link_comparer)
-			create inheritance_links_lookup.make_with_equality_testers (50, Void, l_comparer)
-			create client_supplier_links_lookup.make_with_equality_testers (100, Void, l_comparer)
+			create inheritance_links_lookup.make_with_key_tester (50, l_comparer)
+			create client_supplier_links_lookup.make_with_key_tester (100, l_comparer)
 			feature_name_number := 0
 		end
 
@@ -928,10 +928,10 @@ feature {NONE} -- Implementation
 	class_name_to_node_lookup: HASH_TABLE [ES_CLASS, STRING]
 			-- Lookup tables to speed up `class_from_interface'.
 
-	inheritance_links_lookup: DS_HASH_TABLE [ES_INHERITANCE_LINK, like link_type]
+	inheritance_links_lookup: HASH_TABLE_EX [ES_INHERITANCE_LINK, like link_type]
 			-- Lookup tables to speed up `inheritance_link_connecting'.
 
-	client_supplier_links_lookup: DS_HASH_TABLE [ES_CLIENT_SUPPLIER_LINK, like link_type]
+	client_supplier_links_lookup: HASH_TABLE_EX [ES_CLIENT_SUPPLIER_LINK, like link_type]
 			-- Lookup tables to speed up `client_supplier_link_connecting'.
 
 	link_comparer (u, v: like link_type): BOOLEAN

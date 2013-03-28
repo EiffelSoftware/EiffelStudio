@@ -269,7 +269,7 @@ feature -- Basic operations
 					i := l_keys.lower
 					nb := l_keys.upper
 				until
-					i = nb
+					i > nb
 				loop
 						-- Extend catalogs
 					l_key := l_keys.item (i)

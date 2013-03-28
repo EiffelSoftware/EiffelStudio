@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 		require
 			not_is_initialized: not is_initialized
 		do
-			create button_actions.make_default
+			create button_actions.make (10)
         end
 
     on_after_initialized
@@ -219,7 +219,7 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	frozen button_actions: attached DS_HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
+	frozen button_actions: attached HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
 			-- Dialog button actions.
 
 feature -- Element change
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

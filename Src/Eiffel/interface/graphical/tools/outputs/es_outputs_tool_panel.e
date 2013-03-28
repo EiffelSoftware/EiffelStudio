@@ -73,7 +73,7 @@ feature {NONE} -- User interface initialization
 			-- <Precursor>
 		do
 			Precursor
-			create modified_outputs.make_default
+			create modified_outputs.make (10)
 		end
 
 	on_after_initialized
@@ -147,7 +147,7 @@ feature {NONE} -- Access
 	last_output: detachable ES_OUTPUT_PANE_I
 			-- The previously active output
 
-	modified_outputs: attached DS_HASH_TABLE [TUPLE [output: attached ES_OUTPUT_PANE_I; button: attached SD_TOOL_BAR_BUTTON], IMMUTABLE_STRING_32]
+	modified_outputs: HASH_TABLE [TUPLE [output: attached ES_OUTPUT_PANE_I; button: attached SD_TOOL_BAR_BUTTON], IMMUTABLE_STRING_32]
 			-- Modified output panes, used to manage the show modified outputs buttons
 
 feature -- Access: Help
@@ -828,7 +828,7 @@ feature {NONE} -- Events handlers
 					if l_outputs.is_empty then
 						l_tool_bar.show
 					end
-					l_outputs.force_last ([a_output, l_button], l_name)
+					l_outputs.force ([a_output, l_button], l_name)
 				end
 			end
 		ensure
@@ -996,7 +996,7 @@ feature {NONE} -- Internationalization
 	tt_show_modified_output_1: STRING = "Show the modified $1 output"
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

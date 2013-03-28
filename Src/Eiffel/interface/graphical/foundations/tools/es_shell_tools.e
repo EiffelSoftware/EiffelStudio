@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_window_attached: a_window /= Void
 			not_a_window_is_recycled: not a_window.is_recycled
 		do
-			create internal_requested_tools.make_default
+			create internal_requested_tools.make (10)
 			window := a_window
 		ensure
 			window_set: window = a_window
@@ -41,22 +41,20 @@ feature {NONE} -- Clean up
 			-- Called to clean up resources of Current.
 		local
 			l_win: like window
+			l_count, i: INTEGER
 		do
 			l_win := window
 			if l_win /= Void and then l_win.docking_manager /= Void then
 				l_win.docking_manager.close_all
 			end
 				-- Recycle all activated tools.
-			internal_requested_tools.do_all (agent (a_items: ARRAY [ES_TOOL [EB_TOOL]])
-				local
-					l_count, i: INTEGER
-				do
-					l_count := a_items.count
-					from i := 1 until i > l_count loop
-						(a_items [i]).recycle
-						i := i + 1
-					end
-				end)
+			across internal_requested_tools as l_tool loop
+				l_count := l_tool.item.count
+				from i := 1 until i > l_count loop
+					(l_tool.item [i]).recycle
+					i := i + 1
+				end
+			end
 		end
 
 	internal_detach_entities
@@ -79,7 +77,6 @@ feature {NONE} -- Clean up
 			is_interface_usable: is_interface_usable
 		local
 			l_requested_tools: like internal_requested_tools
-			l_cursor: DS_HASH_TABLE_CURSOR [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
 			l_tools: ARRAY [ES_TOOL [EB_TOOL]]
 			l_tool: ES_TOOL [EB_TOOL]
 			l_count, i: INTEGER
@@ -94,10 +91,8 @@ feature {NONE} -- Clean up
 				-- This way any request for a tool will always return an activated tool because
 				-- the tool function will not find an activated and recycled tool, and therefore
 				-- will create a new tool instance.
-			l_cursor := l_requested_tools.new_cursor
-			from l_cursor.start until l_cursor.after loop
+			across l_requested_tools as l_cursor loop
 					-- Iterate through the tool types to examine the array of activated tools.
-
 				l_remove_indexes := Void
 				l_tools := l_cursor.item
 				from i := 1; l_count := l_tools.count until i > l_count loop
@@ -146,7 +141,6 @@ feature {NONE} -- Clean up
 						l_requested_tools.replace (l_new_tools, l_cursor.key)
 					end
 				end
-				l_cursor.forth
 			end
 
 			if l_remove_keys /= Void then
@@ -195,15 +189,11 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
-			l_tools: like requested_tools
 			l_editions: ARRAY [ES_TOOL [EB_TOOL]]
 			l_count, i: INTEGER
 		do
-			l_tools := requested_tools
-			l_cursor := l_tools.new_cursor
-			create Result.make (l_tools.count)
-			from l_cursor.start until l_cursor.after loop
+			create Result.make (requested_tools.count)
+			across requested_tools as l_cursor loop
 				l_editions := l_cursor.item
 				from
 					i := 1
@@ -212,7 +202,6 @@ feature -- Access
 					Result.force_last (l_editions [i])
 					i := i + 1
 				end
-				l_cursor.forth
 			end
 		ensure
 			result_attached: Result /= Void
@@ -271,7 +260,7 @@ feature {NONE} -- Access
 			result_contains_attached_items: not Result.has (Void)
 		end
 
-	requested_tools: DS_HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
+	requested_tools: HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
 			-- Table of requested, and therefore created, tools.
 		do
 			if not is_recycled then
@@ -699,7 +688,7 @@ invariant
 	internal_requested_tools_contains_attached_items: not is_recycled implies not internal_requested_tools.has_item (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

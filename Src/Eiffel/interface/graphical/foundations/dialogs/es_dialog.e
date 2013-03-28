@@ -337,7 +337,7 @@ feature {NONE} -- Access
 			result_non_negative: Result >= 0
 		end
 
-	frozen dialog_window_buttons: DS_HASH_TABLE [EV_BUTTON, INTEGER]
+	frozen dialog_window_buttons: HASH_TABLE [EV_BUTTON, INTEGER]
 			-- Dialog window buttons indexed by a button id.
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
@@ -752,7 +752,6 @@ feature {NONE} -- Basic operation
 			not_dialog_window_buttons_is_empty: not dialog_window_buttons.is_empty
 		local
 			l_padding_button: EV_BUTTON
-			l_buttons: DS_HASH_TABLE_CURSOR [EV_BUTTON, INTEGER]
 			l_button: EV_BUTTON
 			l_min_width: INTEGER
 			l_padding: INTEGER
@@ -773,8 +772,7 @@ feature {NONE} -- Basic operation
 			l_padding := l_padding_button.minimum_width - l_padding_button.font.string_width ("dummy")
 
 				-- Determine minimum width
-			l_buttons := dialog_window_buttons.new_cursor
-			from l_buttons.start until l_buttons.after loop
+			across dialog_window_buttons as l_buttons loop
 				l_button := l_buttons.item
 				check l_button_attached: l_button /= Void end
 				if l_button.pixmap = Void then
@@ -783,18 +781,15 @@ feature {NONE} -- Basic operation
 						-- Account for icon width, plus extra for style
 					l_min_width := l_min_width.max (l_button.font.string_width (l_button.text) + l_padding + l_button.pixmap.width + 10)
 				end
-
-				l_buttons.forth
 			end
 
 				-- Set min width
-			from l_buttons.start until l_buttons.after loop
+			across dialog_window_buttons as l_buttons loop
 				l_button := l_buttons.item
 				check l_button_attached: l_button /= Void end
 				if l_min_width > l_button.minimum_width then
 					l_button.set_minimum_width (l_min_width)
 				end
-				l_buttons.forth
 			end
 
 			if not l_allow_resize then
@@ -1010,7 +1005,7 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-	frozen create_dialog_window_buttons: DS_HASH_TABLE [EV_BUTTON, INTEGER]
+	frozen create_dialog_window_buttons: HASH_TABLE [EV_BUTTON, INTEGER]
 			-- Creates the table of dialog buttons indexed by their id.
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
@@ -1116,7 +1111,7 @@ invariant
 	button_actions_attached: button_actions /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

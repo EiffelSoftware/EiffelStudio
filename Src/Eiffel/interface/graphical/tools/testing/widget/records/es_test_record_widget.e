@@ -65,7 +65,7 @@ feature {NONE} -- Access
 	grid: ES_TESTING_TOOL_GRID
 			-- Grid in which record details are displayed
 
-	subrows: DS_HASH_TABLE [ES_TEST_GRID_ROW, READABLE_STRING_32]
+	subrows: HASH_TABLE [ES_TEST_GRID_ROW, READABLE_STRING_32]
 			-- Table containing test names and the corresponding grid row
 
 	session: G
@@ -159,7 +159,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

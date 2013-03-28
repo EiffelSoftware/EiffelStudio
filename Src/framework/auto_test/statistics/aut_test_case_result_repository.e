@@ -20,8 +20,7 @@ feature {NONE} -- Initialization
 			-- Create new repository.
 		do
 			create class_equality_tester.make
-			create result_table.make_default
-			result_table.set_key_equality_tester (class_equality_tester)
+			create result_table.make_with_key_tester (10, class_equality_tester)
 			create witnesses.make_default
 		end
 
@@ -31,19 +30,12 @@ feature -- Access
 			-- List of classes for which there are test results
 		local
 			list: DS_ARRAYED_LIST [CLASS_C]
-			cs: DS_HASH_TABLE_CURSOR [DS_LIST [AUT_TEST_CASE_RESULT], CLASS_C]
 		do
-			from
-				create list.make (result_table.count)
-				list.set_equality_tester (class_equality_tester)
-				Result := list
-				cs := result_table.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			create list.make (result_table.count)
+			list.set_equality_tester (class_equality_tester)
+			Result := list
+			across result_table as cs loop
 				list.force_last (cs.key)
-				cs.forth
 			end
 		ensure
 			classes_not_void: Result /= Void
@@ -99,18 +91,11 @@ feature -- Access
 	results: AUT_TEST_CASE_RESULT_SET
 			-- All results
 		local
-			cs: DS_HASH_TABLE_CURSOR [DS_LIST [AUT_TEST_CASE_RESULT], CLASS_C]
 			list: DS_ARRAYED_LIST [AUT_TEST_CASE_RESULT]
 		do
-			from
-				create list.make (result_table.count * 1000)
-				cs := result_table.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			create list.make (result_table.count * 1000)
+			across result_table as cs loop
 				list.append_last (cs.item)
-				cs.forth
 			end
 			create Result.make (list)
 		ensure
@@ -165,7 +150,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	result_table: DS_HASH_TABLE [DS_LIST [AUT_TEST_CASE_RESULT], CLASS_C]
+	result_table: HASH_TABLE_EX [DS_LIST [AUT_TEST_CASE_RESULT], CLASS_C]
 			-- Table storing all results grouped by class
 
 	class_equality_tester: AUT_CLASS_EQUALITY_TESTER
@@ -180,7 +165,7 @@ invariant
 	no_witness_void: not witnesses.has (Void)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

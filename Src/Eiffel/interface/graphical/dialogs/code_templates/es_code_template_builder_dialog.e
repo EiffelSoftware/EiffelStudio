@@ -167,7 +167,7 @@ feature {NONE} -- Initialization
 			a_container.extend (l_vbox)
 			a_container.disable_item_expand (l_vbox)
 
-			declaration_text_fields.force_last (l_edit, a_declaration.id)
+			declaration_text_fields.force (l_edit, a_declaration.id)
 		ensure
 			declaration_text_fields_has_a_declaration: declaration_text_fields.has (a_declaration.id)
 		end
@@ -175,7 +175,7 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- <Precursor>
 		do
-			create declaration_text_fields.make_default
+			create declaration_text_fields.make (10)
 			create edited_declaration_text_fields.make_default
 			create code_result.make_empty
 			Precursor
@@ -322,7 +322,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- User interface elements
 
-	declaration_text_fields: DS_HASH_TABLE [EV_TEXT_FIELD, READABLE_STRING_32]
+	declaration_text_fields: HASH_TABLE [EV_TEXT_FIELD, READABLE_STRING_32]
 			-- A table of text fields for a code template's declarations indexed by a declaration id.
 			--
 			-- Key: Declaration ID.
@@ -479,7 +479,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -30,7 +30,6 @@ feature -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
---			result_contains_attached_items: (attached {DS_LINEAR [detachable G]} as l_result) and then not l_result.has (Void)
 			result_contains_usable_items: Result.for_all (agent (ia_item: G): BOOLEAN
 				do
 					Result := attached {USABLE_I} ia_item as l_usable implies l_usable.is_interface_usable
@@ -38,18 +37,16 @@ feature -- Access
 			result_consistent: Result = active_registrations
 		end
 
-	registrations: DS_LINEAR [CONCEALER_I [G]]
+	registrations: HASH_TABLE [CONCEALER_I [G], K]
 			-- Current registrations.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_attached: Result /= Void
---			result_contains_attached_items: (attached {DS_LINEAR [detachable G]} as l_result) and then not l_result.has (Void)
-			result_contains_usable_items: Result.for_all (agent (ia_item: CONCEALER_I [G]): BOOLEAN
-				do
-					Result := attached {USABLE_I} ia_item as l_usable implies l_usable.is_interface_usable
-				end)
+			result_contains_usable_items: across Result as l_registration all
+					attached {USABLE_I} l_registration.item as l_usable implies l_usable.is_interface_usable
+				end
 			result_consistent: Result = registrations
 		end
 
@@ -228,7 +225,7 @@ feature -- Events
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

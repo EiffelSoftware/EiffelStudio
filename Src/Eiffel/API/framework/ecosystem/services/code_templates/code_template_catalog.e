@@ -23,13 +23,11 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes the code template catalog.
 		local
-			l_tester: KL_EQUALITY_TESTER [PATH]
+			l_tester: EQUALITY_TESTER [PATH]
 		do
-			create cataloged_folder_files.make_default
-			create cataloged_template_definitions.make_default
 			create l_tester
-			cataloged_folder_files.set_key_equality_tester (l_tester)
-			cataloged_template_definitions.set_key_equality_tester (l_tester)
+			create cataloged_folder_files.make_with_key_tester (10, l_tester)
+			create cataloged_template_definitions.make_with_key_tester (10, l_tester)
 		end
 
 feature {NONE} -- Clean up
@@ -53,18 +51,15 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_templates: DS_ARRAYED_LIST [CODE_TEMPLATE_DEFINITION]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], PATH]
 		do
 			if attached internal_code_templates as l_results then
 				Result := l_results
 			else
 				create l_templates.make_default
-				l_cursor := cataloged_template_definitions.new_cursor
-				from l_cursor.start until l_cursor.after loop
+				across cataloged_template_definitions as l_cursor loop
 					if attached l_cursor.item as l_item and then attached l_item.definition as l_definition then
 						l_templates.force_last (l_definition)
 					end
-					l_cursor.forth
 				end
 				Result := l_templates
 				internal_code_templates := l_templates
@@ -73,12 +68,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: DS_HASH_TABLE [ARRAYED_LIST [PATH], PATH]
+	cataloged_folder_files: HASH_TABLE_EX [ARRAYED_LIST [PATH], PATH]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
 
-	cataloged_template_definitions: DS_HASH_TABLE [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], PATH]
+	cataloged_template_definitions: HASH_TABLE_EX [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], PATH]
 			-- Cataloged code template definitions, with reference count.
 			-- Key: Code template definition file name
 			-- Value: A code template definition with a cataloged reference count.
@@ -145,15 +140,12 @@ feature -- Query
 		local
 			l_categories: CODE_CATEGORY_COLLECTION
 			l_cat_cursor: DS_BILINEAR_CURSOR [READABLE_STRING_GENERAL]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], PATH]
 			l_continue: BOOLEAN
 		do
 			create Result.make_default
 			l_cat_cursor := a_categories.new_cursor
-			l_cursor := cataloged_template_definitions.new_cursor
-
 				-- Iterate code template definitions for matching categories
-			from l_cursor.start until l_cursor.after loop
+			across cataloged_template_definitions as l_cursor loop
 				if (attached l_cursor.item as l_item) and then (attached l_item.definition as l_definition) then
 						-- Iterate supplied applicable categories for a matching code template definition category.
 					l_categories := l_definition.metadata.categories
@@ -176,12 +168,7 @@ feature -- Query
 						end
 					end
 				end
-				l_cursor.forth
 			end
-
-				-- Prevent Gobo memory leak
-			l_cat_cursor.go_after
-			check l_cursor_is_off: l_cursor.off end
 
 			sort_templates_by_title (Result)
 		end
@@ -260,9 +247,10 @@ feature -- Basic operations
 	rescan_catalog
 			-- <Precursor>
 		local
-			l_keys: DS_BILINEAR [PATH]
+			l_keys: ARRAY [PATH]
 			l_key: PATH
 			l_empty: BOOLEAN
+			i, nb: INTEGER
 		do
 			if attached internal_catalog_changed_event as l_events and then not l_events.is_suspended then
 				l_empty := cataloged_folder_files.is_empty
@@ -272,18 +260,22 @@ feature -- Basic operations
 				end
 			else
 					-- Remove cataloged data.
+				l_keys := cataloged_folder_files.current_keys
+
 				cataloged_folder_files.wipe_out
 				cataloged_template_definitions.wipe_out
 
-				l_keys := cataloged_folder_files.keys
-				if not l_keys.is_empty then
+				from
+					i := l_keys.lower
+					nb := l_keys.upper
+				until
+					i = nb
+				loop
 						-- Extend catalogs
-					from l_keys.start until l_keys.after loop
-						l_key := l_keys.item_for_iteration
-						check l_key_attached: l_key /= Void end
-						extend_catalog (l_key)
-						l_keys.forth
-					end
+					l_key := l_keys.item (i)
+					check l_key_attached: l_key /= Void end
+					extend_catalog (l_key)
+					i := i + 1
 				end
 			end
 --		ensure then
@@ -320,7 +312,7 @@ feature -- Extension
 							create l_definition
 							l_definition.definition := build_template (l_file)
 							l_definition.ref_count := 1
-							l_definitions.force_last (l_definition, l_file)
+							l_definitions.force (l_definition, l_file)
 							l_changed := True
 
 							if l_definition.definition /= Void then

@@ -32,10 +32,10 @@ feature -- Basic operations
 			l_cont: BOOLEAN
 			l_escape: BOOLEAN
 			l_match_para: BOOLEAN
-			l_id_table: DS_HASH_TABLE [CODE_TOKEN_ID, STRING_32]
+			l_id_table: HASH_TABLE [CODE_TOKEN_ID, STRING_32]
 		do
 			create Result.make_default
-			create l_id_table.make_default
+			create l_id_table.make (10)
 
 			create l_buffer.make (128)
 			from

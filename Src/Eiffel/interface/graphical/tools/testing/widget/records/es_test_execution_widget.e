@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			else
 				create l_row.make (a_test, a_result, a_row)
 			end
-			subrows.force_last (l_row, a_test)
+			subrows.force (l_row, a_test)
 		end
 
 feature {NONE} -- Implementation
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			else
 				create l_subrow.make (l_name, a_result, l_grid.row (l_pos))
 			end
-			subrows.force_last (l_subrow, l_name)
+			subrows.force (l_subrow, l_name)
 		end
 
 	add_running_test (a_test: TEST_I)
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			end
 			l_grid.insert_new_row (l_pos)
 			create l_subrow.make_attached (a_test, l_grid.row (l_pos))
-			subrows.force_last (l_subrow, a_test.name)
+			subrows.force (l_subrow, a_test.name)
 		end
 
 	add_queued_test (a_test: TEST_I)
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			end
 			l_grid.insert_new_row (l_pos)
 			create l_subrow.make_attached (a_test, l_grid.row (l_pos))
-			subrows.force_last (l_subrow, a_test.name)
+			subrows.force (l_subrow, a_test.name)
 		end
 
 	remove_subrow (a_test_name: READABLE_STRING_32)
@@ -283,7 +283,7 @@ invariant
 	indices_valid: (running_index > 0 and queued_index > 0) implies running_index < queued_index
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

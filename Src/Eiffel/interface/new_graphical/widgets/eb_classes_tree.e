@@ -350,20 +350,24 @@ feature -- Activation
 				end
 				path.forth
 			end
-			l_sub := a_path.split ('/')
-			check
-				not_empty: not l_sub.is_empty
-			end
-			from
-				l_sub.start
-			until
-				l_sub.after or a_folder = Void
-			loop
-				a_folder := find_subfolder_in (l_sub.item, a_folder)
-				if a_folder /= Void and then a_folder.is_expandable and not a_folder.is_expanded then
-					a_folder.expand
+				-- Do nothing if there is no sub folder in the group.
+				-- Make sure `a_folder' is selected later.
+			if not a_path.is_empty then
+				l_sub := a_path.split ('/')
+				check
+					not_empty: not l_sub.is_empty
 				end
-				l_sub.forth
+				from
+					l_sub.start
+				until
+					l_sub.after or a_folder = Void
+				loop
+					a_folder := find_subfolder_in (l_sub.item, a_folder)
+					if a_folder /= Void and then a_folder.is_expandable and not a_folder.is_expanded then
+						a_folder.expand
+					end
+					l_sub.forth
+				end
 			end
 			if a_folder /= Void then
 				a_folder.enable_select

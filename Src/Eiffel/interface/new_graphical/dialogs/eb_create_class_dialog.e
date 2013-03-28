@@ -347,7 +347,7 @@ feature {NONE} -- Basic operations
 			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
 			l_source_file: PATH
 			l_user_file: detachable PATH
-			l_params: attached DS_HASH_TABLE [ANY, STRING_32]
+			l_params: HASH_TABLE [ANY, STRING_32]
 			l_buffer: attached STRING_32
 			l_parents: EV_LIST
 			l_creation_routine: detachable STRING_32
@@ -372,24 +372,24 @@ feature {NONE} -- Basic operations
 						l_source_file := l_user_file
 					end
 
-					create l_params.make_default
+					create l_params.make (10)
 						-- Class name
 					l_class_name := class_name.as_string_32
 					if l_class_name /= Void then
-						l_params.put_last (l_class_name, class_name_symbol)
+						l_params.force (l_class_name, class_name_symbol)
 					end
 
 						-- Note keyword
 					if cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
 							-- Use old syntax
-						l_params.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+						l_params.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
 					else
 							-- Use new syntax
-						l_params.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+						l_params.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
 					end
 
 						-- Year
-					l_params.put_last ((create {DATE}.make_now).year, year_symbol)
+					l_params.force ((create {DATE}.make_now).year, year_symbol)
 
 					if (create {RAW_FILE}.make_with_path (l_source_file)).exists then
 							-- Only render if the file exists.
@@ -403,7 +403,7 @@ feature {NONE} -- Basic operations
 							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.expanded_keyword)
 							l_buffer.append_character (' ')
 						end
-						l_params.put_last (l_buffer.twin, class_modifiers_symbol)
+						l_params.force (l_buffer.twin, class_modifiers_symbol)
 
 							-- Inheritance
 						l_buffer.wipe_out
@@ -443,7 +443,7 @@ feature {NONE} -- Basic operations
 								end
 							end
 						end
-						l_params.put_last (l_buffer.twin, inherit_clause_symbol)
+						l_params.force (l_buffer.twin, inherit_clause_symbol)
 
 							-- Create
 						l_buffer.wipe_out
@@ -458,7 +458,7 @@ feature {NONE} -- Basic operations
 							l_buffer.append (l_creation_routine)
 							l_buffer.append ("%N%N")
 						end
-						l_params.put_last (l_buffer.twin, create_clause_symbol)
+						l_params.force (l_buffer.twin, create_clause_symbol)
 
 							-- Initialization
 						l_buffer.wipe_out
@@ -476,7 +476,7 @@ feature {NONE} -- Basic operations
 									%%T%Tdo%N%T%T%T%N%
 									%%T%Tend%N%N")
 						end
-						l_params.put_last (l_buffer.twin, init_clause_symbol)
+						l_params.force (l_buffer.twin, init_clause_symbol)
 
 							-- Render the template using the defined parameters
 						l_wizard.service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name)

@@ -37,7 +37,7 @@ feature {NONE} -- Clean up
 
 feature -- Basic operations
 
-	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]): STRING_32
+	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): STRING_32
 			-- <Precursor>
 		local
 			l_templates: like build_code_template
@@ -63,7 +63,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file (a_file_name: PATH; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]): detachable STRING_32
+	render_template_from_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): detachable STRING_32
 			-- <Precursor>
 		local
 			l_file: RAW_FILE
@@ -91,7 +91,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
 			-- <Precursor>
 		local
 			l_file: RAW_FILE
@@ -112,7 +112,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
+	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
 			-- <Precursor>
 		local
 			l_file: RAW_FILE
@@ -134,7 +134,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	build_code_template (a_template: STRING_32; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
+	build_code_template (a_template: STRING_32; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
 			-- Builds a code template definition file from a template text.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -145,7 +145,6 @@ feature {NONE} -- Basic operations
 			not_a_template_is_empty: not a_template.is_empty
 			a_parameters_attached: a_parameters /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ANY, STRING_32]
 			l_key: STRING_32
 			l_factory: CODE_FACTORY
 			l_definition: CODE_TEMPLATE_DEFINITION
@@ -161,8 +160,7 @@ feature {NONE} -- Basic operations
 
 				-- Create template declarations
 			l_declarations := l_definition.declarations
-			l_cursor := a_parameters.new_cursor
-			from l_cursor.start until l_cursor.after loop
+			across a_parameters as l_cursor loop
 				l_key := l_cursor.key
 				check l_key_attached: l_key /= Void end
 				l_literal_declaration := l_factory.new_code_literal_declaration (l_key, l_declarations)
@@ -170,7 +168,6 @@ feature {NONE} -- Basic operations
 					l_literal_declaration.default_value := l_item.out.as_string_32
 				end
 				l_declarations.extend (l_literal_declaration)
-				l_cursor.forth
 			end
 
 				-- Create template
@@ -194,7 +191,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

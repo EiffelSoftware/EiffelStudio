@@ -80,7 +80,7 @@ feature -- Basic operatons
 			l_libraries: LIST [CONF_LIBRARY]
 			l_library: CONF_LIBRARY
 			l_uuid: UUID
-			l_parameters: DS_HASH_TABLE [ANY, STRING_32]
+			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_use_old_syntax: BOOLEAN
 			l_load_default: BOOLEAN
 			retried: BOOLEAN
@@ -179,11 +179,11 @@ feature -- Basic operatons
 									-- Render the invalid license template.
 								l_license := locale_formatter.translation (invalid_license_license)
 								if wizard_enginer.is_service_available then
-									create l_parameters.make_default
+									create l_parameters.make (1)
 									if l_use_old_syntax then
-										l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+										l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
 									else
-										l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+										l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
 									end
 									l_license := wizard_enginer.service.render_template (l_license, l_parameters)
 								else
@@ -240,7 +240,7 @@ feature {NONE} -- Basic operation
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
 			l_name: detachable STRING_32
-			l_parameters: DS_HASH_TABLE [ANY, STRING_32]
+			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -249,11 +249,11 @@ feature {NONE} -- Basic operation
 					if wizard_enginer.is_service_available then
 							-- Set up wizard parameters
 						create l_parameters.make (2)
-						l_parameters.put_last ((create {DATE}.make_now).year, year_symbol)
+						l_parameters.force ((create {DATE}.make_now).year, year_symbol)
 						if a_use_old_syntax then
-							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+							l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
 						else
-							l_parameters.put_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+							l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
 						end
 
 							-- Render template

@@ -180,14 +180,14 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	template_parameters (a_class_name: STRING): DS_HASH_TABLE [STRING, STRING_32]
+	template_parameters (a_class_name: STRING): HASH_TABLE [STRING, STRING_32]
 			-- Template parameters for creating actual class text from template file.
 		local
 			l_redefine, l_body, l_indexing: STRING
 			l_count: INTEGER
 			l_tags: like tags
 		do
-			create Result.make_default
+			create Result.make (10)
 			if attached cluster as l_cluster and then l_cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
 					-- Use old syntax
 				Result.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
@@ -301,7 +301,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

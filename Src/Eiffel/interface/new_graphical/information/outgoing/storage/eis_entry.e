@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags a_id: like id; a_parameters: like parameters)
+	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags a_id: like target_id; a_parameters: like parameters)
 			-- Initialization
 		require
 			a_id_not_void: a_id /= Void
@@ -33,14 +33,14 @@ feature {NONE} -- Initialization
 			protocol := a_protocol
 			source := a_source
 			tags := a_tags
-			id := a_id
+			target_id := a_id
 			parameters := a_parameters
 		ensure
 			name_set: name = a_name
 			protocol_set: protocol = a_protocol
 			source_set: source = a_source
 			tags_set: tags = a_tags
-			id_set: id = a_id
+			id_set: target_id = a_id
 			parameters_set: parameters = a_parameters
 		end
 
@@ -51,8 +51,14 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `name' with `a_name'
 		require
 			name_valid: attached a_name as l_n implies valid_attribute (l_n)
+		local
+			l_name: like name
 		do
+			l_name := name
 			name := a_name
+			if not same_string_attribute (l_name, a_name) then
+				update_fingerprint
+			end
 		ensure
 			name_set: name = a_name
 		end
@@ -61,8 +67,14 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `protocol' with `a_protocol'
 		require
 			protocol_valid: attached a_protocol as l_p implies valid_attribute (l_p)
+		local
+			l_protocol: like protocol
 		do
+			l_protocol := protocol
 			protocol := a_protocol
+			if not same_string_attribute (l_protocol, a_protocol) then
+				update_fingerprint
+			end
 		ensure
 			protocol_set: protocol = a_protocol
 		end
@@ -71,8 +83,14 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `source' with `a_source'
 		require
 			source_valid: attached a_source as l_s implies valid_attribute (l_s)
+		local
+			l_source: like source
 		do
+			l_source := source
 			source := a_source
+			if not same_string_attribute (l_source, a_source) then
+				update_fingerprint
+			end
 		ensure
 			source_set: source = a_source
 		end
@@ -81,29 +99,41 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `tags' with `a_tags'
 		require
 			tags_valid: attached a_tags as l_t implies valid_tags (l_t)
+		local
+			l_tags: like tags
 		do
+			l_tags := tags
 			tags := a_tags
+			if l_tags /= a_tags then
+				update_fingerprint
+			end
 		ensure
 			tags_set: tags = a_tags
 		end
 
-	set_id (a_id: like id)
+	set_id (a_id: like target_id)
 			-- Set `id' with `a_id'
 		require
 			a_id_not_void: a_id /= Void
 			id_valid: valid_attribute (a_id)
 		do
-			id := a_id
+			target_id := a_id
 		ensure
-			id_set: id = a_id
+			id_set: target_id = a_id
 		end
 
 	set_parameters (a_parameters: like parameters)
 			-- Set `parameters' with `a_parameters'
 		require
 			parameters_valid: attached a_parameters as l_p implies valid_parameters (l_p)
+		local
+			l_parameters: like parameters
 		do
+			l_parameters := parameters
 			parameters := a_parameters
+			if l_parameters /= a_parameters then
+				update_fingerprint
+			end
 		ensure
 			parameters_set: parameters = a_parameters
 		end
@@ -152,14 +182,21 @@ feature -- Access
 	tags: detachable ARRAYED_LIST [STRING_32]
 			-- Tags of the entry
 
-	id: STRING
+	target_id: STRING
 			-- Id of the entry (from EB_SHARED_ID_SOLUTION)
+			--
 
 	parameters: detachable STRING_TABLE [STRING_32]
 			-- Parameters of the entry
 
 	override: BOOLEAN
 			-- Overriding entry over auto entry?
+
+	entry_id: STRING
+			-- Identifier of the entry
+		do
+			Result := fingerprint.md5
+		end
 
 	is_auto: BOOLEAN
 			-- Is current an auto entry? (No actual written notes)
@@ -208,46 +245,37 @@ feature -- Access
 					parameters /= Void implies Result /= Void
 		end
 
+	fingerprint: EIS_MD5_FINGERPRINT
+			-- Finger print of the entry itself
+		do
+			if attached internal_fingerprint as l_f then
+				Result := l_f
+			else
+				update_fingerprint
+				Result := internal_fingerprint
+			end
+		ensure
+			fingerprint_set: Result /= Void
+		end
+
 feature -- Comparison
 
 	same_entry (other: like Current): BOOLEAN
 			-- <precursor>
 			-- Do not compare ids.
 		do
-			Result :=
-				same_string_attribute (name, other.name) and then
-				same_string_attribute (source, other.source) and then
-				same_string_attribute (protocol, other.protocol) and then
-				same_string_attribute (tags_as_string, other.tags_as_string) and then
-				same_string_attribute (parameters_as_string, other.parameters_as_string)
+			Result := fingerprint.same_fingerprint (other.fingerprint)
 		end
 
 feature -- Hashable
 
 	hash_code: INTEGER
 			-- <precursor>
-		local
-			l_string: STRING_32
 		do
 			Result := internal_hash_code
 			if Result = 0 then
-				create l_string.make (20)
-				if attached name as lt_name then
-					l_string.append (lt_name)
-				end
-				if attached protocol as lt_protocol then
-					l_string.append (lt_protocol)
-				end
-				if attached source as lt_source then
-					l_string.append (lt_source)
-				end
-				if attached tags_as_string as lt_tags then
-					l_string.append (lt_tags)
-				end
-				if attached parameters_as_string as lt_parameters then
-					l_string.append (lt_parameters)
-				end
-				Result := l_string.hash_code
+				Result := fingerprint.md5.hash_code
+				internal_hash_code := Result
 			end
 		end
 
@@ -265,16 +293,54 @@ feature {NONE} -- Implementation
 				(attached a_str as l_str and then attached a_other as l_other and then l_str.is_case_insensitive_equal (l_other))
 		end
 
+	updated_fingerprint: like fingerprint
+			-- Updated fingerprint according to current entry
+		local
+			l_string: STRING_32
+		do
+			create l_string.make (100)
+			l_string.append (target_id)
+			if attached name as lt_name then
+				l_string.append (lt_name)
+			end
+			if attached protocol as lt_protocol then
+				l_string.append (lt_protocol)
+			end
+			if attached source as lt_source then
+				l_string.append (lt_source)
+			end
+			if attached tags_as_string as lt_tags then
+				l_string.append (lt_tags)
+			end
+			if attached parameters_as_string as lt_parameters then
+				l_string.append (lt_parameters)
+			end
+			l_string.append (override.out)
+			create Result.make_with_content (l_string)
+		end
+
+	update_fingerprint
+			-- Update fingerprint
+		do
+			internal_fingerprint := updated_fingerprint
+		ensure
+			fingerprint_set: internal_fingerprint /= Void
+		end
+
+	internal_fingerprint: EIS_MD5_FINGERPRINT
+			-- Cache for md5
+
 feature {NONE} -- Hash code
 
 	internal_hash_code: like hash_code;
 			-- Catched hash code
 
 invariant
-	a_id_not_void: id /= Void
+	id_not_void: target_id /= Void
+	fingerprint_not_void: fingerprint /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

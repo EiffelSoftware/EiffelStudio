@@ -71,7 +71,7 @@ feature -- Access
 			l_feature: E_FEATURE
 		do
 			create Result.make (10)
-			if attached a_entry.id as l_id then
+			if attached a_entry.target_id as l_id then
 				l_target := id_solution.target_of_id (l_id)
 				l_type := id_solution.most_possible_type_of_id (l_id)
 				if l_type = id_solution.feature_type then

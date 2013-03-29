@@ -253,6 +253,7 @@ feature {NONE} -- Initialization
 
 				-- Tool bar
 			create l_toolbar.make
+			toolbar := l_toolbar
 
 				-- Add button
 			create l_button.make
@@ -281,6 +282,15 @@ feature {NONE} -- Initialization
 			l_button.set_tooltip (interface_names.t_go_to_info)
 			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_information_icon_buffer)
 			l_button.select_actions.extend (agent on_go_to_button_pressed)
+			l_toolbar.extend (l_button)
+
+				-- Acknowledge button
+			create l_button.make
+			acknowledge_button := l_button
+			l_button.set_text (interface_names.b_acknowledge)
+			l_button.set_tooltip (interface_names.t_acknowledge_change)
+			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_tick_icon_buffer)
+			l_button.select_actions.extend (agent on_acknowledge_button_selected)
 			l_toolbar.extend (l_button)
 
 			list_area_widget.extend (l_toolbar)
@@ -351,6 +361,12 @@ feature -- Access
 
 	delete_button: detachable SD_TOOL_BAR_BUTTON
 			-- Delete button
+
+	acknowledge_button: detachable SD_TOOL_BAR_BUTTON
+			-- Acknowledge button
+
+	toolbar: SD_TOOL_BAR
+			-- The toolbar
 
 feature -- Callbacks
 
@@ -463,6 +479,14 @@ feature -- Callbacks
 			end
 		end
 
+	on_acknowledge_button_selected
+			-- On acknowledge button selected
+		do
+			if attached {ES_EIS_AFFECTED_VIEW} tree.current_view as l_view then
+				l_view.acknowledge_selected_items
+			end
+		end
+
 feature -- Progress notification
 
 	on_progress_start
@@ -551,12 +575,14 @@ feature -- Element Change
 			end
 		end
 
-	inform_editable (a_editable: BOOLEAN)
+	refresh_buttons (a_view: ES_EIS_COMPONENT_VIEW [ANY])
 			-- Inform the widget GUI current view displayed is editable or not.
 			-- Change the sensitivity of buttons accordingly.
+		require
+			a_view_not_void: a_view /= Void
 		do
 			if attached add_button as l_ab and then attached delete_button as l_db then
-				if a_editable then
+				if a_view.component_editable then
 					l_ab.enable_sensitive
 					l_db.enable_sensitive
 				else
@@ -564,6 +590,14 @@ feature -- Element Change
 					l_db.disable_sensitive
 				end
 			end
+			if attached acknowledge_button as l_b then
+				if attached {ES_EIS_AFFECTED_VIEW} a_view then
+					toolbar.extend (l_b)
+				else
+					toolbar.prune (l_b)
+				end
+			end
+			toolbar.refresh_now
 		end
 
 feature -- Query
@@ -623,7 +657,7 @@ invariant
 	tree_not_void: tree /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

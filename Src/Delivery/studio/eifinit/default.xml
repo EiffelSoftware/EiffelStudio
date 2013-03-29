@@ -160,6 +160,7 @@
 	<PREF NAME="tools.testing_tool.autotest.use_ddmin" DESCRIPTION="Should ddmin algorithm be used for minimizing found failures?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.autotest.use_slicing" DESCRIPTION="Should slicing be used for minimizing found failures?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.autotest.html_statistics" DESCRIPTION="Should AutoTest generate HTML statistics?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_acknowledge_eis_affected_items" DESCRIPTION="Display confirmation dialog for acknowledging affected items in Info tool."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_always_apply_debugger_profiles_before_closing" DESCRIPTION="Display confirmation dialog to apply profile when closing execution parameters dialog."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_apply_debugger_profiles" DESCRIPTION="Display confirmation dialog when applying debugger profiles."><BOOLEAN>True</BOOLEAN></PREF>

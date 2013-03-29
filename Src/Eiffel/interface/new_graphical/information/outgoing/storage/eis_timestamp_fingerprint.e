@@ -1,46 +1,51 @@
 note
-	description: "View for a given tag"
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
+	description: "Summary description for {EIS_TIMESTAMP_FINGERPRINT}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_EIS_TAG_VIEW
+	EIS_TIMESTAMP_FINGERPRINT
 
 inherit
-	ES_EIS_COMPONENT_VIEW [STRING_32]
-		rename
-			component as tag
-		end
+	EIS_FINGERPRINT
 
 create
-	make
+	make_with_timestamp
 
-feature {NONE} -- Initialization
+feature {NONE} -- Init
 
-	make (a_tag: STRING_32; a_eis_grid: ES_EIS_ENTRY_GRID)
-			-- Initialized with `a_conf_notable' and `a_eis_grid'.
-		require
-			a_tag_not_void: a_tag /= Void
-			a_eis_grid_not_void: a_eis_grid /= Void
-			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
+	make_with_timestamp (a_timestamp: like timestamp)
+			-- Make with time stamp
 		do
-			tag := a_tag
-			eis_grid := a_eis_grid
+			timestamp := a_timestamp
+		ensure
+			timestamp_set: timestamp = a_timestamp
 		end
 
-feature {NONE} -- Implementation
+feature -- Query
 
-	new_extractor: ES_EIS_EXTRACTOR
-			-- Create extractor
+	same_fingerprint (a_fingerprint: EIS_FINGERPRINT): BOOLEAN
+			-- Same fingerprint?
 		do
-			create {ES_EIS_TAG_EXTRACTOR}Result.make (tag)
+			if a_fingerprint = Current then
+				Result := True
+			else
+				if attached {EIS_TIMESTAMP_FINGERPRINT} a_fingerprint as l_f then
+					Result := timestamp = l_f.timestamp
+				end
+			end
 		end
+
+feature -- Access
+
+	timestamp: INTEGER;
+			-- Time stamp
+
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -69,8 +74,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
 end

@@ -191,8 +191,8 @@ feature {NONE} -- Sorting
 		do
 			inspect cached_column
 			when column_target then
-				if attached u.id as lt_id_u then
-					if attached v.id as lt_id_v then
+				if attached u.target_id as lt_id_u then
+					if attached v.target_id as lt_id_v then
 						type_u := id_solution.most_possible_type_of_id (lt_id_u)
 						type_v := id_solution.most_possible_type_of_id (lt_id_v)
 						if type_u = type_v then
@@ -974,7 +974,7 @@ feature {NONE} -- Grid items
 			l_feature: E_FEATURE
 			l_editor_token_item: ES_GRID_LIST_ITEM
 		do
-			if attached a_entry.id as lt_id then
+			if attached a_entry.target_id as lt_id then
 				token_writer.new_line
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.target_type then

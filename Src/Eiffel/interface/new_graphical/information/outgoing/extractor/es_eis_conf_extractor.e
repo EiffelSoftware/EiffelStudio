@@ -102,6 +102,7 @@ feature {NONE} -- Implementation
 				else
 					if attached {like eis_entries} l_entries.found_item as lt_entries then
 						eis_entries := lt_entries
+						storage.update_fingerprint_for_entries (lt_entries)
 					else
 						check
 							type_conformace: False
@@ -120,7 +121,7 @@ feature {NONE} -- Access
 			-- Cached full entries
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

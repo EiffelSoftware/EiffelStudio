@@ -97,8 +97,8 @@ feature {NONE} -- Initialization
 				-- Store expanded state of `Current'
 			store_expanded_state
 
+			wipe_out
 			if eiffel_project.initialized and then universe.target /= Void then
-				wipe_out
 				l_sys := universe.target.system
 				l_target_order := l_sys.target_order
 				l_target_order.do_if (
@@ -112,12 +112,10 @@ feature {NONE} -- Initialization
 			create tag_header.make (interface_names.l_all_tags, pixmaps.icon_pixmaps.information_tags_icon)
 			tag_header.pointer_button_press_actions.extend (agent on_button_press_action)
 			extend (tag_header)
-			--create affected_header.make (interface_names.l_affected_items, pixmaps.icon_pixmaps.information_affected_items_icon)
-			--extend (affected_header)
+
+			build_affected_items
 
 			build_tags
-
-			-- build_affected_items
 
 				-- Restore original expanded state, stored during last call to
 				-- `store_expanded_state'
@@ -197,12 +195,14 @@ feature {NONE} -- Initialization
 
 	build_affected_items
 			-- Build affected items
-		local
-			l_item: ES_EIS_TREE_TAG_ITEM
 		do
-			create l_item.make ("ANY")
-			l_item.set_pixmap (pixmaps.icon_pixmaps.class_normal_icon)
-			affected_header.extend (l_item)
+			create affected_target_header.make (interface_names.l_affected_target, pixmaps.icon_pixmaps.information_affected_target_icon)
+			affected_target_header.pointer_button_press_actions.extend (agent on_button_press_action)
+			extend (affected_target_header)
+
+			create affected_resource_header.make (interface_names.l_affected_source, pixmaps.icon_pixmaps.information_affected_resource_icon)
+			affected_resource_header.pointer_button_press_actions.extend (agent on_button_press_action)
+			extend (affected_resource_header)
 		end
 
 feature -- Operation
@@ -210,10 +210,10 @@ feature -- Operation
 	rebuild_list_if_possible
 			-- Synchronize
 		do
+			render_information_signs
 			if old_view /= Void then
 				old_view.rebuild_and_refresh_grid
 			end
-			render_information_signs
 		end
 
 	item_selected
@@ -278,7 +278,7 @@ feature {NONE} -- Actions
 					-- If old view is void
 				if old_view = Void or else not l_view.same_view (old_view) then
 					l_view.display
-					eis_tool_widget.inform_editable (l_view.component_editable)
+					eis_tool_widget.refresh_buttons (l_view)
 					if old_view /= Void then
 							-- Call destroy to recycle callbacks from the EIS grid.
 						old_view.destroy
@@ -315,6 +315,10 @@ feature {NONE} -- Component view factory
 						else
 							create {ES_EIS_TAG_VIEW}Result.make (lt_string, lt_grid)
 						end
+					elseif l_item = affected_target_header then
+						create {ES_EIS_AFFECTED_VIEW} Result.make (True, lt_grid)
+					elseif l_item = affected_resource_header then
+						create {ES_EIS_AFFECTED_VIEW} Result.make (False, lt_grid)
 					elseif attached {CLASS_I} l_item.data as lt_class then
 						create {ES_EIS_CLASS_VIEW}Result.make (lt_class, lt_grid)
 					elseif attached {CONF_TARGET} l_item.data as lt_target then
@@ -458,10 +462,16 @@ feature {NONE} -- Implemenation
 feature {NONE} -- Access
 
 	old_view: detachable ES_EIS_COMPONENT_VIEW [ANY]
+			-- Old view
 
 	tag_header: EB_CLASSES_TREE_HEADER_ITEM
+			-- Tag header
 
-	affected_header: EB_CLASSES_TREE_HEADER_ITEM;
+	affected_target_header: EB_CLASSES_TREE_HEADER_ITEM;
+			-- Affected target header
+
+	affected_resource_header: EB_CLASSES_TREE_HEADER_ITEM
+			-- Affected resource header
 
 	eis_tool_widget: ES_EIS_TOOL_WIDGET;
 			-- The tool widget

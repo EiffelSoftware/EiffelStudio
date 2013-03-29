@@ -214,6 +214,8 @@ feature {NONE} -- Access: test creation
 			l_item: EV_MENU_ITEM
 			l_launch_wizard: BOOLEAN
 			l_suffix: STRING_32
+			l_system_available: BOOLEAN
+			l_system_valid: BOOLEAN
 		do
 			create Result
 
@@ -229,19 +231,34 @@ feature {NONE} -- Access: test creation
 				l_suffix := ""
 			end
 
+			l_system_available := workbench.is_in_stable_state and then not workbench.is_compiling
+			l_system_valid := l_system_available and then workbench.system.successful
+
 			create l_item.make_with_text_and_action (locale.translation (create_manual_text) + l_suffix,
 				agent on_create_manual_test (l_launch_wizard))
 			Result.extend (l_item)
+			if not l_system_available then
+					-- Manual tests can only be launched if there is a system available and the compiler is not already compiling.
+				l_item.disable_sensitive
+			end
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 
 			create l_item.make_with_text_and_action (locale.translation (generate_all_text) + l_suffix,
 				agent on_generate_test (l_launch_wizard))
 			Result.extend (l_item)
+			if not l_system_valid then
+					-- Can only be used if we have a valid system.
+				l_item.disable_sensitive
+			end
 
 			create l_item.make_with_text_and_action (locale.translation (generate_custom_text) + l_suffix,
 				agent on_generate_custom_test (l_launch_wizard))
 			Result.extend (l_item)
+			if not l_system_valid then
+					-- Can only be used if we have a valid system.
+				l_item.disable_sensitive
+			end
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 
@@ -751,7 +768,7 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

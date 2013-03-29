@@ -50,6 +50,23 @@ feature -- Basic operation
 			end
 		end
 
+feature -- Query
+
+	expanded_uri_from_entry (a_entry: EIS_ENTRY): STRING_32
+			-- Expanded URI from `a_entry'
+		require
+			a_entry_not_void: a_entry /= Void
+		do
+			if attached a_entry.source as l_source then
+				Result := l_source.twin
+				format_uris (Result)
+			else
+				create Result.make_empty
+			end
+		ensure
+			Result_set: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	context_variables: STRING_TABLE [READABLE_STRING_32]

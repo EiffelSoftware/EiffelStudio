@@ -127,7 +127,7 @@ feature -- Modification: Feature
 			last_entry_removed := False
 			last_removed_position := 0
 			l_feature_id := id_solution.id_of_feature (context_feature)
-			if l_feature_id.is_equal (a_entry.id) then
+			if l_feature_id.is_equal (a_entry.target_id) then
 				l_ast := ast_feature
 				l_indexes := l_ast.indexes
 				from

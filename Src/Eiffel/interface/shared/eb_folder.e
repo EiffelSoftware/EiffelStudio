@@ -95,7 +95,8 @@ feature -- Element change
 		end
 
 invariant
-	invariant_clause: True -- Your invariant here
+	a_cluster_not_void: cluster /= Void
+	a_path_valid: path /= Void and then not path.is_empty
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

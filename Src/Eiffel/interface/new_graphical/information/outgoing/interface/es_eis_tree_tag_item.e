@@ -10,6 +10,9 @@ class
 
 inherit
 	EB_CLASSES_TREE_ITEM
+		redefine
+			set_pixmap
+		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		export
@@ -37,6 +40,15 @@ feature {NONE} -- Initialization
 			pointer_button_press_actions.extend (agent register_pressed_item)
 		end
 
+feature -- Status change
+
+	set_pixmap (a_pixmap: EV_PIXMAP)
+			-- <Precursor>
+		do
+			associated_pixmap := a_pixmap
+			Precursor (a_pixmap)
+		end
+
 feature -- Access
 
 	stone: STONE
@@ -45,7 +57,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

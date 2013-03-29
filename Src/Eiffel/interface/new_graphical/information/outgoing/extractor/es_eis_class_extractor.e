@@ -103,6 +103,7 @@ feature {NONE} -- Implementation
 							l_search_entries := l_entries.found_item
 							check l_search_entries /= Void end -- Implied from `found'.
 							eis_entries := l_search_entries
+							storage.update_fingerprint_for_entries (l_search_entries)
 						end
 					end
 				else
@@ -300,7 +301,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

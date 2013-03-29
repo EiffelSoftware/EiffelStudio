@@ -119,7 +119,7 @@ feature -- Modification
 			last_entry_removed := False
 			last_removed_position := 0
 			l_class_id := id_solution.id_of_class (context_class.config_class)
-			if l_class_id.is_equal (a_entry.id) then
+			if l_class_id.is_equal (a_entry.target_id) then
 				l_ast := ast
 					-- We check entry in top and bottom note clause.
 				create l_list.make (2)

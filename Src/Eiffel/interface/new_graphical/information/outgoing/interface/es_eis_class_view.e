@@ -196,7 +196,7 @@ feature {NONE} -- Access
 			l_editable_cache: like editable_cache
 			l_class_i: like class_i
 		do
-			if not a_entry.is_auto and then attached a_entry.id as lt_id then
+			if not a_entry.is_auto and then attached a_entry.target_id as lt_id then
 				l_class_i := class_i
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.class_type then
@@ -283,10 +283,10 @@ feature {NONE} -- Class modification
 			a_entry_not_void: a_entry /= Void
 			a_entry_editable: entry_editable (a_entry, False)
 		do
-			if attached {E_FEATURE} id_solution.feature_of_id (a_entry.id) as lt_feature then
+			if attached {E_FEATURE} id_solution.feature_of_id (a_entry.target_id) as lt_feature then
 				remove_entry_in_feature (a_entry, lt_feature)
 				storage.deregister_entry (a_entry, component_id)
-			elseif attached {CLASS_I} id_solution.class_of_id (a_entry.id) as lt_class then
+			elseif attached {CLASS_I} id_solution.class_of_id (a_entry.target_id) as lt_class then
 				remove_entry_in_class (a_entry, lt_class)
 				storage.deregister_entry (a_entry, component_id)
 			end
@@ -472,7 +472,7 @@ feature {NONE} -- Target token
 			l_item: ES_EIS_GRID_CHECKABLE_LABEL_ITEM
 			l_pixmap_item: EV_GRID_LABEL_ITEM
 		do
-			l_type := id_solution.most_possible_type_of_id (a_entry.id)
+			l_type := id_solution.most_possible_type_of_id (a_entry.target_id)
 
 			if l_type /= id_solution.class_type then
 				create {EV_GRID_LABEL_ITEM}Result.make_with_text ("-")
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation
 			-- Background color of `a_entry'
 		do
 			if
-				attached a_entry.id as lt_id and then
+				attached a_entry.target_id as lt_id and then
 				(lt_id.is_equal (component_id) or id_solution.most_possible_type_of_id (lt_id) = id_solution.feature_type)
 			then
 					-- Default background color without change
@@ -551,14 +551,14 @@ feature {NONE} -- Implementation
 			l_new_entry: EIS_ENTRY
 		do
 			if a_entry.override /= a_enable then
-				if attached {E_FEATURE} id_solution.feature_of_id (a_entry.id) as lt_feature then
+				if attached {E_FEATURE} id_solution.feature_of_id (a_entry.target_id) as lt_feature then
 					if attached a_entry.twin as lt_new_entry then
 						l_new_entry := lt_new_entry
 					end
 					l_new_entry.set_override (a_enable)
 					modify_entry_in_feature (a_entry, l_new_entry, lt_feature)
 					l_done := True
-				elseif attached {CLASS_I} id_solution.class_of_id (a_entry.id) as lt_class then
+				elseif attached {CLASS_I} id_solution.class_of_id (a_entry.target_id) as lt_class then
 					if attached a_entry.twin as lt_new_entry1 then
 						l_new_entry := lt_new_entry1
 					end
@@ -631,14 +631,14 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the name is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
+						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_name (lt_name)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
-						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
+						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.target_id) as lt_class then
 							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
@@ -673,14 +673,14 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the protocol is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
+						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_protocol (l_protocol)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
-						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
+						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.target_id) as lt_class then
 							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
@@ -716,14 +716,14 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the source is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
+						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_source (l_source)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
-						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
+						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.target_id) as lt_class then
 							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
@@ -759,14 +759,14 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the tags is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
+						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_tags (l_tags)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
-						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
+						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.target_id) as lt_class then
 							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
@@ -825,14 +825,14 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the parameters is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
+						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_parameters (l_parameters)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
-						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
+						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.target_id) as lt_class then
 							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end

@@ -8302,24 +8302,24 @@ feature -- Icons
 			information_no_tag_icon_buffer_attached: Result /= Void
 		end
 
-	frozen information_affected_items_icon: EV_PIXMAP
-			-- Access to 'affected items' pixmap.
+	frozen information_affected_target_icon: EV_PIXMAP
+			-- Access to 'affected target' pixmap.
 		require
-			has_named_icon: has_named_icon (information_affected_items_name)
+			has_named_icon: has_named_icon (information_affected_target_name)
 		once
-			Result := named_icon (information_affected_items_name)
+			Result := named_icon (information_affected_target_name)
 		ensure
-			information_affected_items_icon_attached: Result /= Void
+			information_affected_target_icon_attached: Result /= Void
 		end
 
-	frozen information_affected_items_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'affected items' pixmap pixel buffer.
+	frozen information_affected_target_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'affected target' pixmap pixel buffer.
 		require
-			has_named_icon: has_named_icon (information_affected_items_name)
+			has_named_icon: has_named_icon (information_affected_target_name)
 		once
-			Result := named_icon_buffer (information_affected_items_name)
+			Result := named_icon_buffer (information_affected_target_name)
 		ensure
-			information_affected_items_icon_buffer_attached: Result /= Void
+			information_affected_target_icon_buffer_attached: Result /= Void
 		end
 
 	frozen information_auto_sweeping_icon: EV_PIXMAP
@@ -8400,6 +8400,26 @@ feature -- Icons
 			Result := named_icon_buffer (information_with_info_sign_name)
 		ensure
 			information_with_info_sign_icon_buffer_attached: Result /= Void
+		end
+
+	frozen information_affected_resource_icon: EV_PIXMAP
+			-- Access to 'affected resource' pixmap.
+		require
+			has_named_icon: has_named_icon (information_affected_resource_name)
+		once
+			Result := named_icon (information_affected_resource_name)
+		ensure
+			information_affected_resource_icon_attached: Result /= Void
+		end
+
+	frozen information_affected_resource_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'affected resource' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (information_affected_resource_name)
+		once
+			Result := named_icon_buffer (information_affected_resource_name)
+		ensure
+			information_affected_resource_icon_buffer_attached: Result /= Void
 		end
 
 	frozen testing_new_unit_test_icon: EV_PIXMAP
@@ -9057,11 +9077,12 @@ feature -- Constants: Icon names
 	information_tag_name: STRING = "information tag"
 	information_tags_name: STRING = "information tags"
 	information_no_tag_name: STRING = "information no tag"
-	information_affected_items_name: STRING = "information affected items"
+	information_affected_target_name: STRING = "information affected target"
 	information_auto_sweeping_name: STRING = "information auto sweeping"
 	information_sweep_now_name: STRING = "information sweep now"
 	information_edit_auto_node_name: STRING = "information edit auto node"
 	information_with_info_sign_name: STRING = "information with info sign"
+	information_affected_resource_name: STRING = "information affected resource"
 	testing_new_unit_test_name: STRING = "testing new_unit_test"
 	testing_failure_name: STRING = "testing failure"
 	testing_run_last_tests_name: STRING = "testing run_last_tests"
@@ -9490,11 +9511,12 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 24], information_tag_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 24], information_tags_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 24], information_no_tag_name)
-			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 24], information_affected_items_name)
+			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 24], information_affected_target_name)
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 24], information_auto_sweeping_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 24], information_sweep_now_name)
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 24], information_edit_auto_node_name)
 			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 24], information_with_info_sign_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 24], information_affected_resource_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 25], testing_new_unit_test_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 25], testing_failure_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 25], testing_run_last_tests_name)

@@ -265,7 +265,7 @@ feature {NONE} -- Conf modification
 			l_type: NATURAL
 			l_target: CONF_TARGET
 		do
-			if attached a_entry.id as lt_id then
+			if attached a_entry.target_id as lt_id then
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.target_type and then lt_id.is_equal (component_id) then
 					l_target := id_solution.target_of_id (lt_id)
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 			-- Background color of `a_entry'
 		do
 			if
-				attached a_entry.id as lt_id and then
+				attached a_entry.target_id as lt_id and then
 				(lt_id.is_equal (component_id) or id_solution.most_possible_type_of_id (lt_id) = id_solution.feature_type)
 			then
 					-- Default background color without change

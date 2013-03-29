@@ -199,9 +199,6 @@ feature -- Status report
 	is_constraint_renaming: BOOLEAN
 			-- Is the parser parsing a constraint renaming?
 
-	is_parsing_class_head: BOOLEAN
-			-- Is the parser parsing a class hed?
-
 	il_parser: BOOLEAN
 			-- Is current Eiffel parser an IL Eiffel parser?
 
@@ -598,14 +595,6 @@ feature -- Modification
 		end
 
 feature {NONE} -- Implementation
-
-	set_is_parsing_class_head (a_flag_value: BOOLEAN)
-			-- Set is_parsing_class_head to `a_flag_value'.
-		do
-			is_parsing_class_head := a_flag_value
-		ensure
-			is_parsing_class_head_is_set: is_parsing_class_head = a_flag_value
-		end
 
 	id_level: INTEGER
 			-- Boolean for controlling the semantic

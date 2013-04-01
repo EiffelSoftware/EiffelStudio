@@ -75,6 +75,7 @@ rt_private void print_info(void) {
 	struct align_test2 t2;
 	struct eif_ex_type t3;
 
+	printf ("Size of pointer %ld\n", sizeof(rt_int_ptr));
 	printf ("Size of overhead %ld\n", OVERHEAD);
 	printf ("Expected alignment %d\n", MEM_ALIGNBYTES);
 	printf ("Computed alignment EIF_REAL_64 %ld\n", (char *) &t.d - (char *) &t);

@@ -23,6 +23,8 @@ inherit
 	IMMUTABLE_STRING_GENERAL
 		rename
 			same_string as same_string_general,
+			same_characters as same_characters_general,
+			same_caseless_characters as same_caseless_characters_general,			
 			starts_with as starts_with_general,
 			ends_with as ends_with_general,
 			is_case_insensitive_equal as is_case_insensitive_equal_general,
@@ -269,7 +271,7 @@ feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
 			-- Index where current string starts in `area'
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

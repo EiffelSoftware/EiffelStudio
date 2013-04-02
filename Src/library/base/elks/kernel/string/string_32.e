@@ -27,6 +27,8 @@ inherit
 			prepend as prepend_string_general,
 			prepend_substring as prepend_substring_general,
 			same_string as same_string_general,
+			same_characters as same_characters_general,
+			same_caseless_characters as same_caseless_characters_general,			
 			starts_with as starts_with_general,
 			ends_with as ends_with_general,
 			is_case_insensitive_equal as is_case_insensitive_equal_general

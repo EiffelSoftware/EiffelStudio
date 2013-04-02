@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
 		end
 
-	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
+	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING_32; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
 			-- Remove ancestor with `a_name' and hide `a_link' if succesfull.
 		do
 			a_ctm.remove_ancestor (a_name, is_non_conforming)
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
+	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING_32; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
 			--Add ancestor with `a_name' and show `a_link' if succesfull.
 		do
 			a_ctm.add_ancestor (a_name, is_non_conforming)
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			a_link_not_void: a_link /= Void
 		local
 			ctm: CLASS_TEXT_MODIFIER
-			undo_list: LIST [TUPLE [STRING, INTEGER]]
+			undo_list: LIST [TUPLE [STRING_8, INTEGER]]
 			l_model: ES_CLIENT_SUPPLIER_LINK
 			l_client: ES_CLASS
 			fne: FEATURE_NAME_EXTRACTOR
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reinclude_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS)
+	reinclude_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; code: LIST [TUPLE [STRING_8, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS)
 			-- Reinclude `code' to `a_ctm' and add `a_features' to `a_link'.
 		do
 			a_ctm.undelete_code (code)
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reinclude_code_and_link (a_ctm: CLASS_TEXT_MODIFIER; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK)
+	reinclude_code_and_link (a_ctm: CLASS_TEXT_MODIFIER; code: LIST [TUPLE [STRING_8, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK)
 			-- Reinclude `code' to `a_ctm' and enable `a_link' on diagram.
 		do
 			a_ctm.undelete_code (code)
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

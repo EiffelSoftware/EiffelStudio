@@ -97,12 +97,12 @@ feature -- Access
 	detachable_check_box: EV_CHECK_BUTTON
 			-- Check box for determining if types should be detachable.
 
-	code: STRING
+	code: STRING_32
 			-- Type currently selected by user.
 			-- Including generics.
 		local
 			gts: like generic_type_selectors
-			generic_type_name: STRING
+			generic_type_name: STRING_32
 		do
 			Result := selector.text
 			if Result.is_empty or Result.index_of (' ', 1) > 0 then
@@ -111,11 +111,11 @@ feature -- Access
 			else
 				Result.to_upper
 				if detachable_check_box.is_selected and then detachable_check_box.is_sensitive then
-					Result.prepend ("detachable ")
+					Result.prepend ({STRING_32} "detachable ")
 				end
 				gts := generic_type_selectors
 				if not gts.is_empty then
-					Result.append (" [")
+					Result.append ({STRING_32} " [")
 					from
 						gts.start
 					until
@@ -125,10 +125,10 @@ feature -- Access
 						Result.append (generic_type_name)
 						gts.forth
 						if not gts.after then
-							Result.append (", ")
+							Result.append ({STRING_32} ", ")
 						end
 					end
-					Result.append ("]")
+					Result.append ({STRING_32} "]")
 				end
 			end
 		end
@@ -138,7 +138,7 @@ feature -- Status report
 	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
 		local
-			t: STRING
+			t: STRING_32
 		do
 			t := selector.text
 			Result := t /= Void and then not t.is_empty
@@ -150,7 +150,7 @@ feature -- Element change
 			-- Set with same type as `other'.
 		local
 			gts: LINKED_LIST [EB_TYPE_SELECTOR]
-			tmpstr: STRING
+			tmpstr: STRING_32
 		do
 			tmpstr := other.selector.text
 			if not tmpstr.is_empty then
@@ -170,7 +170,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	constraint: STRING
+	constraint: STRING_32
 			-- To be implemented. (Not of type STRING anyway)
 			-- Generic constraint type.
 
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			-- User selected something in `selector'.
 		local
 			gen_count: INTEGER
-			s: STRING
+			s: STRING_32
 			l_was_tuple: BOOLEAN
 		do
 				-- Special treatment here because when we enter `tuple' in lower case,
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_detachable_status (a_class_name: STRING)
+	update_detachable_status (a_class_name: STRING_32)
 			-- Update detachable status for `a_class_name'.
 		local
 			l_class_i: CLASS_I
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generics_count (a_class_name: STRING): INTEGER
+	generics_count (a_class_name: STRING_32): INTEGER
 			-- Number of generics for `a_class_name'.
 		require
 			a_class_name_valid: a_class_name /= Void
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 		local
 			class_i: CLASS_I
 			class_c: CLASS_C
-			l_class_text: STRING
+			l_class_text: STRING_32
 		do
 			l_class_text := a_class_name.substring (a_class_name.index_of (' ', 1) + 1, a_class_name.count)
 			if not l_class_text.is_empty then
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initial_strings: ARRAY [STRING]
+	initial_strings: ARRAY [STRING_32]
 			-- Initial list items.
 			--| FIXME Get favorites, previously entered names, etc.
 		do
@@ -420,7 +420,7 @@ feature {EB_FEATURE_EDITOR, EB_CREATE_CLASS_DIALOG, EB_TYPE_SELECTOR, EB_INHERIT
 	update_list_strings (a_initial_list: BOOLEAN)
 			-- Update types listed in selector.
 		local
-			l_list: ARRAY [STRING_8]
+			l_list: ARRAY [STRING_32]
 			i: INTEGER
 		do
 			l_list := strings_from_type (client_type, supplier_type)
@@ -446,11 +446,11 @@ feature {EB_FEATURE_EDITOR, EB_CREATE_CLASS_DIALOG, EB_TYPE_SELECTOR, EB_INHERIT
 			end
 		end
 
-	strings_from_type (a_client_type, a_supplier_type: ES_CLASS): ARRAY [STRING]
+	strings_from_type (a_client_type, a_supplier_type: ES_CLASS): ARRAY [STRING_32]
 			-- Return default type selector strings for `a_client_type' and `a_supplier_type'.
 		local
-			l_list: ARRAYED_LIST [STRING]
-			l_str: STRING
+			l_list: ARRAYED_LIST [STRING_32]
+			l_str: STRING_32
 		do
 			create l_list.make (2 + initial_strings.count)
 
@@ -486,7 +486,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

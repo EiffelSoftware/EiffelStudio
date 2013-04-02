@@ -109,13 +109,13 @@ feature -- Access
 	cancel_button: EV_BUTTON
 			-- Button labeled "Cancel".
 
-	code: STRING
+	code: STRING_32
 			-- Current text of the feature in the wizard.
 		do
 			Result := feature_editor.code
 		end
 
-	clause_export: STRING
+	clause_export: STRING_32
 			-- User selected export clause.
 		do
 			Result := feature_editor.feature_clause_selector.export_field.text
@@ -125,19 +125,19 @@ feature -- Access
 			end
 		end
 
-	clause_comment: STRING
+	clause_comment: STRING_32
 			-- User selected feature clause.
 		do
 			Result := feature_editor.feature_clause_selector.comment_field.text
 		end
 
-	feature_name: STRING
+	feature_name: STRING_32
 			-- User selected name for feature.
 		do
 			Result := feature_editor.feature_name_field.text
 		end
 
-	feature_type: STRING
+	feature_type: STRING_32
 			-- Return type if attribute or function.
 		local
 			qe: EB_QUERY_EDITOR
@@ -148,7 +148,7 @@ feature -- Access
 			end
 		end
 
-	feature_arguments: STRING
+	feature_arguments: STRING_32
 			-- Arguments of current feature if any.
 		local
 			qe: EB_QUERY_EDITOR
@@ -170,7 +170,7 @@ feature -- Access
 			end
 		end
 
-	setter_name: STRING
+	setter_name: STRING_32
 			-- Name of set-procedure if any.
 		local
 			e: EB_QUERY_EDITOR
@@ -181,7 +181,7 @@ feature -- Access
 			end
 		end
 
-	precondition: STRING
+	precondition: STRING_32
 			-- Precondition selected for set-procedure.
 			-- Void if none.
 		local
@@ -193,7 +193,7 @@ feature -- Access
 			end
 		end
 
-	invariant_part: STRING
+	invariant_part: STRING_32
 			-- Invariant for feature. Void if none.
 		local
 			e: EB_ATTRIBUTE_EDITOR
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			-- Container of `feature_editor'.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

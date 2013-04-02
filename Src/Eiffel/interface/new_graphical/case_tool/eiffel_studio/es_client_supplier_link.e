@@ -86,10 +86,9 @@ feature -- Element change
 			if client.is_queries_changed then
 				features := client.suppliers_with_class (supplier)
 				if features.is_empty then
-					check
-						features_is_not_empty_at_creation: graph /= Void
+					if graph /= Void then
+						graph.remove_link (Current)
 					end
-					graph.remove_link (Current)
 				else
 					set_name_from_feature_as_list (features)
 				end
@@ -139,7 +138,7 @@ invariant
 	features_not_void: features /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

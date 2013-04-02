@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 
 	on_text_change
 		local
-			t: STRING
+			t: STRING_32
 		do
 			t := text
 			if not t.is_empty then
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_defined (a_string: STRING): BOOLEAN
+	is_defined (a_string: STRING_32): BOOLEAN
 			-- Is `a_string' already defined in current class?
 		require
 			a_string_not_void: a_string /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,18 +1,11 @@
-# AutoTest results for test_store (07/23/2012 10:59)
+# AutoTest results for test_store (04/02/2013 11:01)
 TEST_DATA_CORRECTNESS.test_quotes_in_string: pass
 TEST_DATA_CORRECTNESS.test_trailing_blanks: pass
-TEST_ERROR_MESSAGE.test_error_message: unresolved (Evaluator Died)
-	The evaluator process which was executing test TEST_ERROR_MESSAGE.test_error_message terminated unexpectedly with exit code -1073741819. Any output from the
-	evaluator is printed below.
-	
-	No Output Available
+TEST_ERROR_MESSAGE.test_error_message: pass
+TEST_ERROR_MESSAGE.test_error_recovery: pass
 TEST_EXTENDED_SELECT.test_extended_select: pass
 TEST_GUID_TYPE.test_uuid_type: pass
-TEST_LENGTH_OF_COLUMN_NAME.test: unresolved (Evaluator Died)
-	The evaluator process which was executing test TEST_LENGTH_OF_COLUMN_NAME.test terminated unexpectedly with exit code -1073740940. Any output from the
-	evaluator is printed below.
-	
-	No Output Available
+TEST_LENGTH_OF_COLUMN_NAME.test: pass
 TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
 	The evaluator process which was executing test TEST_MULTIPLE_THREAD.test_multiple_thread terminated unexpectedly with exit code 1. Any output from the
 	evaluator is printed below.
@@ -27,7 +20,7 @@ TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
 
 	******************************** Thread exception *****************************
 
-	In thread           Child thread           0x350 (thread id)
+	In thread           Child thread           0x2E8 (thread id)
 
 	*******************************************************************************
 
@@ -41,7 +34,7 @@ TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
 
 	                    execute_action @5      result_expected:
 
-	<00000000026DE378>                         Assertion violated.           Fail
+	<0000000002921D48>                         Assertion violated.           Fail
 
 	-------------------------------------------------------------------------------
 
@@ -49,13 +42,13 @@ TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
 
 	                    execute_action @5      
 
-	<00000000026DE378>                         Routine failure.              Fail
+	<0000000002921D48>                         Routine failure.              Fail
 
 	-------------------------------------------------------------------------------
 
 	DB_SELECTION        load_result @27                                     
 
-	<0000000002780978>                         Routine failure.              Fail
+	<00000000029BB998>                         Routine failure.              Fail
 
 	-------------------------------------------------------------------------------
 
@@ -63,7 +56,7 @@ TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
 
 	                    make_selection @3      
 
-	<00000000026DE378>                         Routine failure.              Fail
+	<0000000002921D48>                         Routine failure.              Fail
 
 	-------------------------------------------------------------------------------
 
@@ -71,7 +64,7 @@ TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
 
 	                    execute @16            
 
-	<00000000026DE378>                         Routine failure.              Fail
+	<0000000002921D48>                         Routine failure.              Fail
 
 	-------------------------------------------------------------------------------
 
@@ -79,20 +72,20 @@ TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
 
 	                    thr_main @3            
 
-	<00000000026DE378>  (From THREAD)          Routine failure.              Rescue
+	<0000000002921D48>  (From THREAD)          Routine failure.              Rescue
 
 	-------------------------------------------------------------------------------
 
 	EQA_EVALUATOR       root's creation                                     
 
-	<00000000026C05E8>                         Routine failure.              Exit
+	<00000000028F05E8>                         Routine failure.              Exit
 
 	-------------------------------------------------------------------------------
 
 TEST_NESTED_TRANSACTION.test: pass
 TEST_NUMERIC_TYPES.test_numeric_types: FAIL (Result is not expected)
 	on_prepare: ok
-	test routine: exceptional (Developer exception in EXCEPTIONS.raise)
+	test routine: exceptional (Developer exception in EQA_ASSERTIONS.assert)
 		******************************** Thread exception *****************************
 		In thread           Root thread            0x0 (thread id)
 		*******************************************************************************
@@ -101,36 +94,34 @@ TEST_NUMERIC_TYPES.test_numeric_types: FAIL (Result is not expected)
 		-------------------------------------------------------------------------------
 		ISE_EXCEPTION_MANAGER
 		                    developer_raise        Result is not expected:
-		<0000000002B02168>                         Developer exception.          Fail
+		<0000000002B22CB8>                         Developer exception.          Fail
 		-------------------------------------------------------------------------------
 		ISE_EXCEPTION_MANAGER
 		                    developer_raise        
-		<0000000002B02168>                         Routine failure.              Fail
+		<0000000002B22CB8>                         Routine failure.              Fail
 		-------------------------------------------------------------------------------
 		ISE_EXCEPTION_MANAGER
 		                    raise @11              
-		<0000000002B02168>                         Routine failure.              Fail
+		<0000000002B22CB8>                         Routine failure.              Fail
 		-------------------------------------------------------------------------------
 		DEVELOPER_EXCEPTION raise @2                                            
-		<0000000002B020E8>  (From EXCEPTION)       Routine failure.              Fail
+		<0000000002B22C08>  (From EXCEPTION)       Routine failure.              Fail
 		-------------------------------------------------------------------------------
-		EQA_ASSERTIONS      raise @3                                            
-		<0000000002AE2888>  (From EXCEPTIONS)      Routine failure.              Fail
-		-------------------------------------------------------------------------------
-		EQA_ASSERTIONS      assert @5                                           
-		<0000000002AE2888>                         Routine failure.              Fail
+		EQA_ASSERTIONS      assert @7                                           
+		<0000000002B03468>                         Routine failure.              Fail
 		-------------------------------------------------------------------------------
 		TEST_NUMERIC_TYPES  assert @2                                           
-		<0000000002AE27E8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		<0000000002B033C8>  (From EQA_TEST_SET)    Routine failure.              Fail
 		-------------------------------------------------------------------------------
 		TEST_NUMERIC_TYPES  numeric_types_make_selection @16
-		<0000000002AE27E8>                         Routine failure.              Fail
+		<0000000002B033C8>                         Routine failure.              Fail
 		-------------------------------------------------------------------------------
 		TEST_NUMERIC_TYPES  test_numeric_types @6                               
-		<0000000002AE27E8>                         Routine failure.              Fail
+		<0000000002B033C8>                         Routine failure.              Fail
 		-------------------------------------------------------------------------------
 	on_clean: ok
 TEST_NUMERIC_TYPES.test_numeric_types_use_decimal_mode: pass
 TEST_PROCEDURE.test_procedure: pass
 TEST_SELECT.test_basic_select: pass
+TEST_SELECT.test_large_string_select: pass
 TEST_TRANSACTION.test: pass

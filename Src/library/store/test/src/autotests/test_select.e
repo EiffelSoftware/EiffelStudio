@@ -83,7 +83,7 @@ feature {NONE} -- Basic select
 				-- Put more data using direct SQL
 			if is_mysql then
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, str_to_date('1973', '%%Y'), 3.5)")
-				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries', 'Bertrand Meyer', 11, 20, str_to_date('1994', '%%Y'), 435.6)")
+				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries ', 'Bertrand Meyer', 11, 20, str_to_date('1994', '%%Y'), 435.6)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Language', 'Bertrand Meyer', 9, 51, str_to_date('1992', '%%Y'), 3254.6767)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('ObjectOriented Development', 'Grady Booch', 5, 40.50, str_to_date('1986', '%%Y'), 456)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('ObjectOriented Programming', 'Brad J. Cox', 2, 38.25, str_to_date('1984', '%%Y'), 45.675)")
@@ -99,7 +99,7 @@ feature {NONE} -- Basic select
 			if is_odbc then
 				l_table_name := sql_table_name (basic_select_table_name)
 				execute_query ("insert into " + l_table_name + " (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, " + sql_from_datetime (create {DATE_TIME}.make (1973, 1, 1, 0, 0, 0)) + ", 23.767)")
-				execute_query ("insert into " + l_table_name + " (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries', 'Bertrand Meyer', 11, 20, " + sql_from_datetime (create {DATE_TIME}.make (1994, 1, 2, 0, 0, 0)) + ", 435.6)")
+				execute_query ("insert into " + l_table_name + " (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries ', 'Bertrand Meyer', 11, 20, " + sql_from_datetime (create {DATE_TIME}.make (1994, 1, 2, 0, 0, 0)) + ", 435.6)")
 				execute_query ("insert into " + l_table_name + " (title, author, quantity, price, year, double_value) values ('Eiffel The Language', 'Bertrand Meyer', 9, 51, " + sql_from_datetime (create {DATE_TIME}.make (1992, 2, 3, 0, 0, 0)) + ", 3254.6767)")
 				execute_query ("insert into " + l_table_name + " (title, author, quantity, price, year, double_value) values ('ObjectOriented Development', 'Grady Booch', 5, 40.50, " + sql_from_datetime (create {DATE_TIME}.make (1986, 8, 9, 0, 0, 0)) + ", 345.665)")
 				execute_query ("insert into " + l_table_name + " (title, author, quantity, price, year, double_value) values ('ObjectOriented Programming', 'Brad J. Cox', 2, 38.25, " + sql_from_datetime (create {DATE_TIME}.make (1984, 4, 5, 0, 0, 0)) + ", 3443.65)")
@@ -114,7 +114,7 @@ feature {NONE} -- Basic select
 
 			if is_oracle then
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, to_date('1973', 'YYYY'), 3.5)")
-				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries', 'Bertrand Meyer', 11, 20, to_date('1994', 'YYYY'), 435.6)")
+				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries ', 'Bertrand Meyer', 11, 20, to_date('1994', 'YYYY'), 435.6)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Language', 'Bertrand Meyer', 9, 51, to_date('1992', 'YYYY'), 3254.6767)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('ObjectOriented Development', 'Grady Booch', 5, 40.50, to_date('1986', 'YYYY'), 456)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('ObjectOriented Programming', 'Brad J. Cox', 2, 38.25, to_date('1984', 'YYYY'), 45.675)")
@@ -129,7 +129,7 @@ feature {NONE} -- Basic select
 
 			if is_sybase then
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Simula Begin', 'Birtwistle et al.', 12, 4, '01/01/1973', 23.767)")
-				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries', 'Bertrand Meyer', 11, 20, '01/01/1994', 435.6)")
+				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Libraries ', 'Bertrand Meyer', 11, 20, '01/01/1994', 435.6)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('Eiffel The Language', 'Bertrand Meyer', 9, 51, '01/01/1992', 3254.6767)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('ObjectOriented Development', 'Grady Booch', 5, 40.50, '01/01/1986', 345.665)")
 				execute_query ("insert into DB_BASIC_SELECT (title, author, quantity, price, year, double_value) values ('ObjectOriented Programming', 'Brad J. Cox', 2, 38.25, '01/01/1984', 3443.65)")
@@ -166,7 +166,7 @@ feature {NONE} -- Basic select
 													l_list.i_th (1).double_value = 3254.6767
 													)
 
-				assert ("Result is not expected", l_list.i_th (2).title ~ "Eiffel The Libraries" and then
+				assert ("Result is not expected", l_list.i_th (2).title ~ "Eiffel The Libraries " and then
 													l_list.i_th (2).author ~ "Bertrand Meyer" and then
 													l_list.i_th (2).quantity = 11 and then
 													l_list.i_th (2).price = 20 and then

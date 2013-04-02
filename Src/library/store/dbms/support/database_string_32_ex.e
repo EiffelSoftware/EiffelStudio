@@ -31,43 +31,15 @@ feature -- Status setting
 			capacity_unchanged: capacity >= old capacity
 		end
 
-feature -- Element Change
-
-	force_right_adjust
-			-- Remove all trailing whitespace.
-		local
-			i, nb: INTEGER
-			nb_space: INTEGER
-			l_area: like area
-		do
-				-- Compute number of spaces at the right of current string.
-			from
-				nb := count - 1
-				i := nb
-				l_area := area
-			until
-				i < 0 or else not l_area.item (i).is_character_8 or else not l_area.item (i).is_space
-			loop
-				nb_space := nb_space + 1
-				i := i - 1
-			end
-
-			if nb_space > 0 then
-					-- Set new count.
-				count := nb + 1 - nb_space
-				internal_hash_code := 0
-			end
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

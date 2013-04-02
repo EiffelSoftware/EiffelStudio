@@ -28,12 +28,12 @@ inherit
 
 feature -- Access
 
-	code: STRING
+	code: STRING_32
 			-- Current text of the feature in the wizard.
 		deferred
 		end
 
-	arguments_code: STRING
+	arguments_code: STRING_32
 			-- Arguments needed for feature if any.
 		deferred
 		end
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Access
 
-	type: STRING
+	type: STRING_32
 			-- Full type as string.
 		deferred
 		end
@@ -74,7 +74,7 @@ feature -- Element change
 			end
 		end
 
-	set_type (a_type: STRING)
+	set_type (a_type: STRING_32)
 			-- Set content of `type_field' to `a_type'.
 		deferred
 		end
@@ -134,10 +134,10 @@ feature -- Error
 
 feature {NONE} -- Implementation
 
-	comments_code: STRING
+	comments_code: STRING_32
 			-- Formatted Eiffel comments.
 		local
-			l_text: STRING
+			l_text: STRING_32
 		do
 			l_text := comment_field.text
 			create Result.make (7 + l_text.count)
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			Result.append_character ('%N')
 		end
 
-	add_label (a_text: STRING; ind: INTEGER)
+	add_label (a_text: STRING_32; ind: INTEGER)
 			-- Create new label with `a_text'.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -229,7 +229,7 @@ feature -- Adaptation
 	adapt (other: EB_FEATURE_EDITOR)
 			-- Set with `other'.
 		local
-			tmpstr: STRING
+			tmpstr: STRING_32
 		do
 			set_client_type (other.client_type)
 			set_supplier_type (other.supplier_type)
@@ -275,7 +275,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

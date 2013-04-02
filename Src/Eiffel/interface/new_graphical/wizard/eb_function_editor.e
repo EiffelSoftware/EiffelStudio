@@ -72,36 +72,36 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING
+	code: STRING_32
 			-- Current text of the feature in the wizard.
 		local
-			l_arguments_code: STRING
+			l_arguments_code: STRING_32
 		do
 			create Result.make (100)
-			Result.append ("%T" + feature_name_field.text)
+			Result.append ({STRING_32} "%T" + feature_name_field.text)
 			l_arguments_code := arguments_code
 			if
 				l_arguments_code /= Void and then not l_arguments_code.is_empty
 			then
-				Result.append (" (" + l_arguments_code + ")")
+				Result.append ({STRING_32} " (" + l_arguments_code + ")")
 			end
-			 Result.append (": " + type_selector.code)
+			 Result.append ({STRING_32} ": " + type_selector.code)
 			if assigner_check_box.is_selected then
-				Result.append (" assign " + setter_text.text)
+				Result.append ({STRING_32} " assign " + setter_text.text)
 			end
-			Result.append ("%N")
+			Result.append_string_general ("%N")
 			Result.append (comments_code)
 			Result.append (routine_code)
 		end
 
 feature {NONE} -- Implementation
 
-	body_code: STRING
+	body_code: STRING_32
 			-- Code for routine body.
 		do
 			Result := Precursor
 			if (once_button.is_selected or do_button.is_selected) and then type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
-				Result.append ("%T%T%Tcheck False then end" + " --| Remove line when `Result' is initialized in body.%N")
+				Result.append_string_general ("%T%T%Tcheck False then end" + " --| Remove line when `Result' is initialized in body.%N")
 			end
 		end
 

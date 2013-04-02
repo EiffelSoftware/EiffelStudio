@@ -200,7 +200,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	arguments_code: STRING
+	arguments_code: STRING_32
 			-- Arguments as text. Empty if no arguments.
 		local
 			asc: EB_ARGUMENT_SELECTOR
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	routine_code: STRING
+	routine_code: STRING_32
 			-- Code of routine without signature.
 		do
 			Result := require_code
@@ -238,13 +238,13 @@ feature {NONE} -- Implementation
 			Result.append ("%T%Tend%N%N")
 		end
 
-	require_code: STRING
+	require_code: STRING_32
 			-- Code for precondition.
 		do
 			Result := code_for_contract_list (require_list, "require")
 		end
 
-	body_code: STRING
+	body_code: STRING_32
 			-- Code for routine body.
 		do
 			create Result.make (8)
@@ -260,10 +260,10 @@ feature {NONE} -- Implementation
 			Result := code_for_contract_list (ensure_list, "ensure")
 		end
 
-	code_for_field (f: EV_TEXT_FIELD; kw: STRING): STRING
+	code_for_field (f: EV_TEXT_FIELD; kw: STRING_32): STRING_32
 			-- Code for routine part `f' with keyword `kw'.
 		local
-			l_text: STRING
+			l_text: STRING_32
 		do
 			l_text := f.text
 			if not l_text.is_empty then
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	code_for_contract_list (a_list: EV_BOX; a_keyword: STRING): STRING
+	code_for_contract_list (a_list: EV_BOX; a_keyword: STRING_32): STRING_32
 			-- Code for contract list `a_list' for keyword `a_keyword'.
 		local
 			cs: detachable EB_CONTRACT_SELECTOR
@@ -407,7 +407,7 @@ feature {EB_FEATURE_EDITOR} -- Access
 	ensure_field: EV_TEXT_FIELD;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

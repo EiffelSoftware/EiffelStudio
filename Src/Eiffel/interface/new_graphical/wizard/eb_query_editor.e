@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	type: STRING
+	type: STRING_32
 			-- Full type as string.
 		do
 			Result := type_selector.code
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_type (a_type: STRING)
+	set_type (a_type: STRING_32)
 			-- Set content of `type_field' to `a_type'.
 		do
 			if a_type.is_empty then
@@ -116,9 +116,9 @@ feature {EB_FEATURE_EDITOR} -- Implementation
 	feature_name_change
 			-- Feature name has changed
 		local
-			l_feat_name: STRING
+			l_feat_name: STRING_32
 		do
-			l_feat_name := "set_" + feature_name_field.text
+			l_feat_name := {STRING_32} "set_" + feature_name_field.text
 			if syntax_checker.is_valid_feature_name_32 (l_feat_name) then
 				setter_text.i_th (2).set_text (l_feat_name)
 			end
@@ -146,7 +146,7 @@ feature {EB_FEATURE_EDITOR} -- Implementation
 	type_selector: EB_TYPE_SELECTOR;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

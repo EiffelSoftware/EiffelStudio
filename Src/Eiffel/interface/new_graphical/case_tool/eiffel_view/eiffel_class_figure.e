@@ -387,7 +387,7 @@ feature {NONE} -- Implementation (adding relations)
 			screen: EV_SCREEN
 			x_pos, y_pos, screen_w, screen_h: INTEGER
 			cg: CLASS_TEXT_MODIFIER
-			added_code: LIST [TUPLE [STRING, INTEGER]]
+			added_code: LIST [TUPLE [STRING_8, INTEGER]]
 			l_is_non_conforming: BOOLEAN
 		do
 			if world.model.has_node (other.model) then
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation (adding relations)
 			screen: EV_SCREEN
 			x_pos, y_pos, screen_w, screen_h: INTEGER
 			cg: CLASS_TEXT_MODIFIER
-			added_code: LIST [TUPLE [STRING, INTEGER]]
+			added_code: LIST [TUPLE [STRING_8, INTEGER]]
 			es_link: ES_CLIENT_SUPPLIER_LINK
 			last_query: FEATURE_AS
 			client_model: ES_CLASS
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	reinclude_removed_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
+	reinclude_removed_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING_8, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
 			-- Reinclude code in `a_client' with associating `a_link'.
 		do
 			reinclude_added_code (a_client, added_code)
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	remove_added_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
+	remove_added_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING_8, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
 			-- Remove code from `a_client' represented by `a_link'.
 		do
 			a_client.code_generator.delete_code (added_code)
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	remove_added_feature (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
+	remove_added_feature (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING_8, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
 			-- Remove added code from `a_client'
 		do
 			remove_added_code (a_client, added_code)
@@ -533,13 +533,13 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	remove_added_code (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]])
+	remove_added_code (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING_8, INTEGER]])
 			-- Remove code represented by `added_code' from `a_client'
 		do
 			a_client.code_generator.delete_code (added_code)
 		end
 
-	reinclude_added_code (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]])
+	reinclude_added_code (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING_8, INTEGER]])
 			-- Readd the code represented by `added_code' to `a_client'.
 		do
 			a_client.code_generator.undelete_code (added_code)
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation (move)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

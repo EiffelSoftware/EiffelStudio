@@ -75,10 +75,10 @@ feature -- Access
 			-- Button to remove `Current' from its container.
 			-- Does nothing until `set_remove_procedure' gets called.
 
-	code: STRING
+	code: STRING_32
 			-- Generated code.
 		local
-			t: STRING
+			t: STRING_32
 		do
 			t := tag_field.text
 			create Result.make (10)
@@ -96,7 +96,7 @@ feature -- Status report
 	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
 		local
-			t: STRING
+			t: STRING_32
 		do
 			t := tag_field.text
 			Result := t /= Void and then not t.is_empty
@@ -104,7 +104,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_tag (a_tag: STRING)
+	set_tag (a_tag: STRING_32)
 			-- Put `a_tag' in `tag_field'.
 		do
 			if a_tag.is_empty then
@@ -152,7 +152,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

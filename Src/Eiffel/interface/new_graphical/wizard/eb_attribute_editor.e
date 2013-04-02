@@ -89,34 +89,34 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING
+	code: STRING_32
 			-- Current text of the feature in the wizard.
 		do
 			create Result.make (100)
-			Result.append ("%T" + feature_name_field.text + ": " + type_selector.code)
+			Result.append ({STRING_32} "%T" + feature_name_field.text + ": " + type_selector.code)
 			if assigner_check_box.is_selected then
-				Result.append (" assign " + setter_text.text)
+				Result.append ({STRING_32} " assign " + setter_text.text)
 			end
 			Result.append ("%N")
 			Result.append (comments_code)
 
 			if type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
-				Result.append ("%T%Tattribute check False then end end" + " --| Remove line when `" + feature_name_field.text + "' is initialized in creation procedure.%N")
+				Result.append ({STRING_32} "%T%Tattribute check False then end end" + " --| Remove line when `" + feature_name_field.text + "' is initialized in creation procedure.%N")
 			end
 			Result.append ("%N")
 		end
 
 
-	arguments_code: STRING
+	arguments_code: STRING_32
 			-- <Precursor>
 		do
 			-- No arguments needed for attribute so return Void
 		end
 
-	precondition: STRING
+	precondition: STRING_32
 			-- Selected precondition for set-procedure.
 		local
-			f_name: STRING
+			f_name: STRING_32
 		do
 			Result := invariant_part
 			if Result /= Void then
@@ -125,7 +125,7 @@ feature -- Access
 			end
 		end
 
-	invariant_part: STRING
+	invariant_part: STRING_32
 			-- Invariant for feature. Void if none.
 		do
 			Result := invariant_field.text

@@ -30,6 +30,13 @@ inherit
 			default_create
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 	EB_CLASS_TEXT_MANAGER
 		export
 			{NONE} all
@@ -112,8 +119,8 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an CLASS_TEXT_MODIFIER.
 		do
-			create {ARRAYED_LIST [TUPLE [STRING, INTEGER]]} last_added_code.make (10)
-			create {ARRAYED_LIST [TUPLE [STRING, INTEGER]]} last_removed_code.make (10)
+			create {ARRAYED_LIST [TUPLE [STRING_8, INTEGER]]} last_added_code.make (10)
+			create {ARRAYED_LIST [TUPLE [STRING_8, INTEGER]]} last_removed_code.make (10)
 		end
 
 	make (a_class: CLASS_I)
@@ -148,10 +155,10 @@ feature -- Access
 	last_feature_as: FEATURE_AS
 			-- AST of last added feature.
 
-	last_removed_code: ARRAYED_LIST [TUPLE [str: STRING; pos: INTEGER]]
+	last_removed_code: ARRAYED_LIST [TUPLE [str: STRING_8; pos: INTEGER]]
 			-- List of code and positions that has been removed.
 
-	last_added_code: ARRAYED_LIST [TUPLE [str: STRING; pos: INTEGER]]
+	last_added_code: ARRAYED_LIST [TUPLE [str: STRING_8; pos: INTEGER]]
 			-- List of added code and position.
 
 	class_as: CLASS_AS
@@ -188,10 +195,14 @@ feature -- Status setting
 			-- Retrieve `class_text' from file or from an editor if
 			-- the class is open.
 			-- Callers should check `valid_syntax' afterwards to see if
-			-- modification of the class is legal.
+		local
+			l_text_32: STRING_32
 		do
 			if text = Void then
-				text := class_text (class_i)
+				l_text_32 := class_text (class_i)
+
+				text := ec_encoding_converter.utf32_to_utf8 (l_text_32)
+
 					-- Ensured that there is some text in the class we are loading
 					-- so that we can properly find out if we are using a Unix text
 					-- file format.
@@ -221,7 +232,8 @@ feature -- Status setting
 		require
 			text_managed: text_managed
 		do
-			set_class_text (class_i, text)
+				-- Set UTF8 Text back to UTF32 and set back in the editor.
+			set_class_text (class_i, ec_encoding_converter.utf8_to_utf32 (text))
 			reset_date
 			text := Void
 			class_as := Void
@@ -249,14 +261,17 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_code (a_text: STRING)
+	insert_code (a_text: STRING_32)
 			-- Insert in `class_text' on `insertion_position', `a_text'.
 		require
 			text_managed: text_managed
+		local
+			l_utf8_text: STRING_8
 		do
-			last_added_code.extend ([a_text, insertion_position])
-			text.insert_string (a_text, insertion_position)
-			insertion_position := insertion_position + a_text.count
+			l_utf8_text := ec_encoding_converter.utf32_to_utf8 (a_text)
+			last_added_code.extend ([l_utf8_text, insertion_position])
+			text.insert_string (l_utf8_text, insertion_position)
+			insertion_position := insertion_position + l_utf8_text.count
 			is_modified := True
 		ensure
 			is_modified: is_modified
@@ -275,20 +290,7 @@ feature -- Element change
 			is_modified: is_modified
 		end
 
-	replace_code (new_code: STRING; start_pos, end_pos: INTEGER)
-			-- Replace code between `start_pos' and `end_pos' with `new_code'.
-		require
-			start_pos_smaller_than_end_pos: start_pos <= end_pos
-			text_managed: text_managed
-			new_code_not_void: new_code /= Void
-		do
-			text.replace_substring (new_code, start_pos, end_pos)
-			is_modified := True
-		ensure
-			is_modified: is_modified
-		end
-
-	code (start_pos, end_pos: INTEGER): STRING
+	code (start_pos, end_pos: INTEGER): STRING_8
 			-- Code between `start_pos' and `end_pos'.
 		require
 			start_pos_smaller_than_end_pos: start_pos <= end_pos
@@ -297,7 +299,7 @@ feature -- Element change
 			Result := text.substring (start_pos, end_pos)
 		end
 
-	index_of (c: CHARACTER; start: INTEGER): INTEGER
+	index_of (c: CHARACTER_8; start: INTEGER): INTEGER
 			-- Position of first occurrence of `c' at or after `start';
 			-- 0 if none.
 		require
@@ -330,7 +332,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	remove_ancestor (a_name: STRING; is_non_conforming: BOOLEAN)
+	remove_ancestor (a_name: STRING_8; is_non_conforming: BOOLEAN)
 			-- Remove `a_name' from the parent list of `class_as'.
 		require
 			a_name_not_void: a_name /= Void
@@ -380,7 +382,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	add_ancestor (a_name: STRING; is_non_conforming: BOOLEAN)
+	add_ancestor (a_name: STRING_8; is_non_conforming: BOOLEAN)
 			-- Reinclude `code' to inheritance clause.
 		require
 			a_name /= Void
@@ -396,7 +398,6 @@ feature -- Modification (Add/Remove feature)
 			end
 			prepare_for_modification
 			if valid_syntax then
-
 				if not is_non_conforming then
 						-- Conforming inheritance
 					if class_as.conforming_parents = Void then
@@ -406,7 +407,7 @@ feature -- Modification (Add/Remove feature)
 						else
 							insertion_position := class_as.conforming_inherit_clause_insert_position
 						end
-						insert_code ("inherit%N")
+						insert_code ({STRING_32} "inherit%N")
 					else
 						insertion_position := class_as.conforming_inherit_clause_insert_position
 					end
@@ -414,10 +415,10 @@ feature -- Modification (Add/Remove feature)
 						-- Non conforming inheritance
 					insertion_position := class_as.non_conforming_inherit_clause_insert_position
 					if class_as.non_conforming_parents = Void then
-						insert_code ("inherit {NONE}%N")
+						insert_code ({STRING_32} "inherit {NONE}%N")
 					end
 				end
-				insert_code ("%T" + a_name + "%N%N")
+				insert_code ({STRING_32} "%T" + a_name + "%N%N")
 				commit_modification
 			end
 		end
@@ -430,7 +431,7 @@ feature -- Modification (Add/Remove feature)
 			class_file: PLAIN_TEXT_FILE
 			actual_feature_as: FEATURE_AS
 			l_item: FEATURE_AS
-			feat_code: STRING
+			feat_code: STRING_8
 			f_name: FEATURE_NAME
 			names: EIFFEL_LIST [FEATURE_NAME]
 			name_index, name_start_position, name_end_position, tmp: INTEGER
@@ -505,14 +506,14 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	undelete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]])
+	undelete_code (data: LIST [TUPLE [str: STRING_8; pos: INTEGER]])
 			-- Reinclude code in `data'.
 		require
 			data_not_void: data /= Void
 		local
 			class_file: PLAIN_TEXT_FILE
-			l_item: TUPLE [str: STRING; pos: INTEGER]
-			str: STRING
+			l_item: TUPLE [str: STRING_8; pos: INTEGER]
+			str: STRING_8
 		do
 			create class_file.make_with_path (class_i.file_name)
 			check class_file.exists end
@@ -541,12 +542,12 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	delete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]])
+	delete_code (data: LIST [TUPLE [str: STRING_8; pos: INTEGER]])
 			--
 		local
 			class_file: PLAIN_TEXT_FILE
-			l_item: TUPLE [str: STRING; pos: INTEGER]
-			str: STRING
+			l_item: TUPLE [str: STRING_8; pos: INTEGER]
+			str: STRING_8
 			pos: INTEGER
 		do
 			create class_file.make_with_path (class_i.file_name)
@@ -568,9 +569,6 @@ feature -- Modification (Add/Remove feature)
 					pos := l_item.pos
 					check
 						text.has_substring (str)
-					end
-					check
-						text.substring_index (str, 1) = pos
 					end
 					check
 						text.substring (pos, pos + str.count - 1).is_equal (str)
@@ -678,7 +676,7 @@ feature -- Modification (Add/Remove feature)
 			wizard_not_void: fcw /= Void
 		local
 			l_error: ES_ERROR_PROMPT
-			inv: STRING
+			inv: STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -723,196 +721,9 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
---	extend_ancestor (a_name: STRING; ihf: BON_INHERITANCE_FIGURE) is
---			-- Add `a_name' to parent list of the class
---			-- with respect to `ihf' if is is not Void.
---		require
---			a_name_not_void: a_name /= Void
---			text_managed: text_managed
---			valid_syntax: valid_syntax
---			not_modified: not is_modified
---		do
-----			insertion_position := class_as.inherit_clause_insert_position + 1
-----			if class_as.parents = Void then
-----				insert_code ("inherit%N")
-----			end
-----			if ihf /= Void and then ihf.code /= Void then
-----				insert_code (ihf.code)
-----			else
-----				insert_code ("%T" + a_name + "%N%N")
-----			end
-----			reparse
---		end
---
-
---	remove_feature_from_diagram_with_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD; supplier_data: CASE_SUPPLIER) is
---			-- Remove feature described in `fcw' from the class.
---		require
---			wizard_not_void: fcw /= Void
---		local
---			class_file: PLAIN_TEXT_FILE
---			editor: EB_SMART_EDITOR
---		do
-----			editor := diagram.context_editor.development_window.editor_tool.text_area
-----			if not editor.is_empty then
-----					-- Wait for the editor to read class text.
-----				from
-----					process_events_and_idle
-----				until
-----					editor.text_is_fully_loaded
-----				loop
-----				end
-----			end
-----
-----			create class_file.make (class_i.file_name)
-----			check class_file.exists end
-----			if date = class_file.date then
-----				prepare_for_modification
-----				if valid_syntax then
-----					if fcw.invariant_part /= Void then
-----						remove_code (
-----							supplier_data.invariant_insertion_position,
-----							class_as.invariant_insertion_position - 1)
-----						reparse
-----					end
-----					if fcw.generate_setter_procedure then
-----						remove_feature ("set_" + fcw.feature_name)
-----					end
-----					remove_feature (fcw.feature_name)
-----					commit_modification
-----					supplier_data.remove
-----				end
-----			else
-----				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
-----				warning_dialog.show_modal_to_window (diagram.context_editor.development_window.window)
-----				warning_dialog := Void
-----				diagram.context_editor.reset_history
-----				date := class_file.date
-----			end
---		end
---
---	extend_features_with_data (data: LINKED_LIST [CASE_SUPPLIER]) is
---			-- Extend features associated to `data' items.
---		require
---			data_not_void: data /= Void
---		local
---			class_file: PLAIN_TEXT_FILE
---			cs: CASE_SUPPLIER
---			saved_code: STRING
---		do
-----			create class_file.make (class_i.file_name)
-----			check class_file.exists end
-----			if date = class_file.date then
-----				prepare_for_modification
-----				if valid_syntax then
-----					from
-----						data.start
-----					until
-----						data.after
-----					loop
-----						cs := data.item
-----						if cs.feature_code /= Void then
-----							insertion_position := cs.insertion_position
-----							saved_code := cs.feature_code
-----							insert_code (saved_code)
-----							cs.restore
-----						end
-----						data.forth
-----					end
-----					commit_modification
-----				end
-----			else
-----				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
-----				warning_dialog.show_modal_to_window (diagram.context_editor.development_window.window)
-----				warning_dialog := Void
-----				diagram.context_editor.reset_history
-----				date := class_file.date
-----			end
---		end
---
---	remove_feature (a_name: STRING) is
---			-- Remove `a_name' from the class.
---		require
---			a_name_not_void: a_name /= Void
---			text_managed: text_managed
---			valid_syntax: valid_syntax
---			not_modified: not is_modified
---		local
---			old_comment: STRING
---			f: FEATURE_AS
---			clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
---			old_f_clause, f_clause: FEATURE_CLAUSE_AS
---		do
---			f := class_as.feature_with_name (a_name.as_lower)
---			clauses := class_as.features
---			from
---				clauses.start
---			until
---				old_f_clause /= Void or else clauses.after
---			loop
---				if clauses.item.has_feature (f) then	
---					old_f_clause := clauses.item
---				end
---				clauses.forth
---			end
---			old_comment := old_f_clause.comment (text)
---			
---				--| FIXME: Why is `clients' set to Void when feature clause is empty?
---			old_f_clause.set_clients (Void)
---				
---			remove_feature_with_ast (f)
---			clauses := class_as.features
---			from
---				clauses.start
---			until
---				f_clause /= Void or else clauses.after
---			loop
---				if clauses.item.has_same_clients (old_f_clause) and
---					clauses.item.comment (text).is_equal (old_comment) then	
---						f_clause := clauses.item
---				end
---				clauses.forth
---			end
---			
---				--| The following check should not be needed (see previous FIXME).
---			if f_clause /= Void then
---				if f_clause.features.is_empty then
---					remove_code (
---						f_clause.end_position - 7,
---						text.substring_index ("%N", f_clause.end_position) + 1)
---					reparse
---				end
---			end
---		end
---
---	set_formal_generics (a_formal_list: STRING) is
---			-- Set formal generics of class to `a_formal_list'.
---		require
---			a_formal_list_not_void: a_formal_list /= Void
---			text_managed: text_managed
---			valid_syntax: valid_syntax
---			not_modified: not is_modified
---		do
---			remove_formal_generics
---			insertion_position := class_as.generics_start_position
---			insert_code (a_formal_list)
---		end
---
---	remove_formal_generics is
---			-- Remove all formal generics for this class.
---		require
---			text_managed: text_managed
---			valid_syntax: valid_syntax
---			not_modified: not is_modified
---		do
---			if class_as.generics_end_position > 0 then
---				remove_code (class_as.generics_start_position + 1, class_as.generics_end_position + 1)
---			end
---		end
-
 feature -- Modification (Change class name)
 
-	set_class_name_declaration (a_name, a_generics: STRING)
+	set_class_name_declaration (a_name, a_generics: STRING_32)
 			-- Set `a_name' `a_generics' as new class header.
 		require
 			a_name_not_void: a_name /= Void
@@ -936,39 +747,14 @@ feature -- Modification (Change class name)
 			insertion_position := sp
 			insert_code (a_name)
 			if not a_generics.is_empty then
-				insert_code (" " + a_generics)
-			end
-		end
-
-	set_end_mark (a_name: STRING)
-			-- Set `a_name' as X in "end -- class X".
-		require
-			a_name_not_void: a_name /= Void
-			text_managed: text_managed
-		local
-			i, j: INTEGER
-			end_mark: STRING
-		do
-			end_mark := "end -- class "
-			i := text.substring_index (end_mark, 1)
-			if i > 0 then
-				j := text.index_of ('%N', i)
-				if j = 0 then
-					j := text.count
-				else
-					j := j - 1
-				end
-				remove_code (i, j)
-				insertion_position := i
-				insert_code (end_mark + a_name)
-				is_modified := True
+				insert_code ({STRING_32} " " + a_generics)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	text: STRING
-			-- Current class text.
+	text: STRING_8
+			-- Current class text in UTF8 Format.
 
 	is_unix_file: BOOLEAN
 			-- is current file a Unix file ?
@@ -1001,7 +787,8 @@ feature {NONE} -- Implementation
 				end
 				inst_context.set_group (class_i.group)
 				create l_wrapper
-				l_wrapper.parse_with_option_32 (parser, text, class_i.options, True, l_class_c)
+					-- Text is in UTF8 so we parse as such to get the correct utf8 positions to match up with the AST.
+				l_wrapper.parse_with_option (parser, text, class_i.options, True, l_class_c)
 				if attached {CLASS_AS} l_wrapper.ast_node as l_class_as and then attached l_wrapper.ast_match_list then
 					class_as := l_class_as
 					match_list := l_wrapper.ast_match_list
@@ -1014,6 +801,14 @@ feature {NONE} -- Implementation
 			retried := True
 			Error_handler.error_list.wipe_out
 			retry
+		end
+
+	ec_encoding_converter: EC_ENCODING_CONVERTER
+			-- Access to the encoding coverter for unicode conversions.
+		once
+			create Result.make
+		ensure
+			result_attached: attached Result
 		end
 
 	remove_feature_with_ast (f: FEATURE_AS)
@@ -1051,16 +846,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setter_procedure (a_name, a_setter_name, a_arguments, a_type, a_pc: STRING): STRING
+	setter_procedure (a_name, a_setter_name, a_arguments, a_type, a_pc: STRING_32): STRING_32
 			-- Add in "Element change" for `a_name'.
 			-- If `a_pc' not Void, add as precondition.
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 		local
-			s: STRING
-			first_character: CHARACTER
-			preposition: STRING
+			s: STRING_32
+			first_character: CHARACTER_32
+			preposition: STRING_32
 		do
 			create s.make (60)
 			first_character := a_name.item (1)
@@ -1070,29 +865,29 @@ feature {NONE} -- Implementation
 			else
 				preposition := "a_"
 			end
-			s.append ("%T" + a_setter_name + " (" + preposition + a_name + ": like " + a_name)
+			s.append ({STRING_32} "%T" + a_setter_name + " (" + preposition + a_name + ": like " + a_name)
 			if a_arguments /= Void then
-				s.append ("; " + a_arguments)
+				s.append ({STRING_32} "; " + a_arguments)
 			end
-			s.append (")%N")
-			s.append ("%T%T%T-- Assign `" + a_name + "' with `" + preposition + a_name + "'.%N")
+			s.append_string_general (")%N")
+			s.append ({STRING_32} "%T%T%T-- Assign `" + a_name + "' with `" + preposition + a_name + "'.%N")
 			if a_pc /= Void and then a_arguments = Void then
-				s.append ("%T%Trequire%N")
-				s.append ("%T%T%T" + a_pc + "%N")
+				s.append_string_general ("%T%Trequire%N")
+				s.append ({STRING_32} "%T%T%T" + a_pc + "%N")
 			end
-			s.append ("%T%Tdo%N")
+			s.append_string_general ("%T%Tdo%N")
 			if a_arguments = Void then
-				s.append ("%T%T%T" + a_name + " := " + preposition + a_name + "%N")
+				s.append ({STRING_32} "%T%T%T" + a_name + " := " + preposition + a_name + "%N")
 			else
-				s.append ("%T%T%T--| Assigner code%N")
+				s.append ({STRING_32} "%T%T%T--| Assigner code%N")
 			end
 
 			if a_arguments = Void then
-				s.append ("%T%Tensure%N")
-				s.append ("%T%T%T" + a_name + "_assigned: " + a_name + " = " + preposition + a_name + "%N")
+				s.append_string_general ("%T%Tensure%N")
+				s.append ({STRING_32} "%T%T%T" + a_name + "_assigned: " + a_name + " = " + preposition + a_name + "%N")
 			end
-			s.append ("%T%Tend%N")
-			s.append ("%N")
+			s.append_string_general ("%T%Tend%N")
+			s.append_string_general ("%N")
 			Result := s
 		end
 
@@ -1189,7 +984,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_feature_clause (a_export, a_comment: STRING)
+	insert_feature_clause (a_export, a_comment: STRING_32)
 			-- Insert in `insertion_position' a new empty feature clause with
 			-- `a_export' and `a_comment'.
 		require
@@ -1197,52 +992,23 @@ feature {NONE} -- Implementation
 			a_comment_not_void: a_comment /= Void
 			text_managed: text_managed
 		local
-			s, up: STRING
+			s, up: STRING_32
 		do
 			create s.make (20)
-			s.append ("feature")
+			s.append_string_general ("feature")
 			if not a_export.is_empty then
-				s.append (" {")
+				s.append_string_general (" {")
 				up := a_export.as_upper
 				s.append (up)
 				s.extend ('}')
 			end
 			if not a_comment.is_empty then
-				s.append (" -- ")
+				s.append_string_general (" -- ")
 				s.append (a_comment)
 			end
-			s.append ("%N%N")
+			s.append_string_general ("%N%N")
 			insert_code (s)
 		end
-
---	trailing_clauses (a_clause: STRING): ARRAYED_LIST [STRING] is
---			-- Subset of `feature_clause_order' that should appear after `c' in the class text.
---		require
---			a_clause_not_void: a_clause /= Void
---		do
---			create Result.make (20)
---			Result.fill (feature_clause_order)
---			Result.compare_objects
---			if not Result.is_empty then
---				Result.start
---				Result.search (a_clause)
---				if Result.exhausted then
---					Result.start
---					Result.search (fc_Other)
---					if Result.exhausted then
---						Result.wipe_out
---					end
---				end
---				from
---				until
---					Result.off
---				loop
---					Result.remove
---					Result.back
---				end
---				Result.prune_all (fc_Other)
---			end
---		end
 
 	leading_clauses (a_clause: STRING_32): ARRAYED_LIST [STRING_32]
 			-- Subset of `feature_clause_order' that should appear before `c' in the class text.
@@ -1334,9 +1100,9 @@ feature {NONE} -- Implementation
 		local
 			l_error: ES_ERROR_PROMPT
 			class_file: PLAIN_TEXT_FILE
-			inv: STRING
+			inv: STRING_32
 			editor: EB_SMART_EDITOR
-			new_code: STRING
+			new_code: STRING_32
 		do
 			editor := context_editor.develop_window.editors_manager.current_editor
 			if editor /= Void and then not editor.is_empty then
@@ -1410,7 +1176,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extend_invariant (a_inv: STRING)
+	extend_invariant (a_inv: STRING_32)
 			-- Add `a_inv' to end of invariant.
 		require
 			a_inv_not_void: a_inv /= Void
@@ -1440,7 +1206,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

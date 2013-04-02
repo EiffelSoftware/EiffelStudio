@@ -53,25 +53,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING
+	code: STRING_32
 			-- Current text of the feature in the wizard.
 		local
-			l_arguments_code: STRING
+			l_arguments_code: STRING_32
 		do
 			create Result.make (100)
-			Result.append ("%T" + feature_name_field.text)
+			Result.append ({STRING_32} "%T" + feature_name_field.text)
 			l_arguments_code := arguments_code
 			if
 				l_arguments_code /= Void and then not l_arguments_code.is_empty
 			then
-				Result.append (" (" + l_arguments_code + ")")
+				Result.append ({STRING_32} " (" + l_arguments_code + ")")
 			end
 			Result.append ("%N")
 			Result.append (comments_code)
 			Result.append (routine_code)
 		end
 
-	type: STRING
+	type: STRING_32
 			-- Full type as string.
 
 feature -- Status report
@@ -81,14 +81,14 @@ feature -- Status report
 
 feature -- Element change
 
-	set_type (a_type: STRING)
+	set_type (a_type: STRING_32)
 			-- Set content of `type_field' to `a_type'.
 		do
 			type := a_type.string
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

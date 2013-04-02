@@ -82,13 +82,15 @@ feature {NONE} -- Basic select
 			l_list: ARRAYED_LIST [like uuid_data]
 			l_data: like uuid_data
 		do
-			l_data := uuid_data
-			l_data.set_uuid_t ("6F9619FF-8B86-D011-B42D-00C04FC964FF")
-			l_list := load_list_with_select (uuid_type_select_data, uuid_data)
-			if l_list.count = 1 then
-				assert ("Result is not expected", l_list.i_th (1) ~ l_data)
-			else
-				assert ("Number of results is not expected", False)
+			if is_odbc then
+				l_data := uuid_data
+				l_data.set_uuid_t ("6F9619FF-8B86-D011-B42D-00C04FC964FF")
+				l_list := load_list_with_select (uuid_type_select_data, uuid_data)
+				if l_list.count = 1 then
+					assert ("Result is not expected", l_list.i_th (1) ~ l_data)
+				else
+					assert ("Number of results is not expected", False)
+				end
 			end
 		end
 

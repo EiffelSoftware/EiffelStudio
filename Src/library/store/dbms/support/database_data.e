@@ -256,9 +256,6 @@ feature -- Element change
 					-- STRING TYPE
 					if l_value_type.item (ind) = String_type_database then
 						l_database_string.get_value (no_descriptor, ind)
-						if l_value_size.item (ind) = l_value_max_size.item (ind) then
-							l_database_string.right_adjust
-						end
 						if attached {like f_string} f_any as l_string_2 then
 							l_string_2.wipe_out
 							f_string := l_string_2
@@ -273,9 +270,6 @@ feature -- Element change
 					-- STRING_32 TYPE
 					elseif l_value_type.item (ind) = Wide_string_type_database then
 						l_database_string_32.get_value (no_descriptor, ind)
-						if l_value_size.item (ind) = l_value_max_size.item (ind) then
-							l_database_string_32.force_right_adjust
-						end
 						if attached {like f_string_32} f_any as l_string_3 then
 							l_string_3.wipe_out
 							f_string_32 := l_string_3
@@ -496,7 +490,7 @@ feature {NONE} -- Status report
 		-- Array of selected column names listed in select clause
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

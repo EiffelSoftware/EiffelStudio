@@ -553,20 +553,20 @@ feature -- For DATABASE_PROC
 
 feature -- For DATABASE_REPOSITORY
 
-	sql_string: STRING = "char ("
+	sql_string: STRING = "varchar ("
 
 	sql_string2 (int: INTEGER): STRING
 		do
-			Result := "char ("
+			Result := "varchar ("
 			Result.append (int.out)
 			Result.append (")")
 		end
 
-	sql_wstring: STRING = "nchar ("
+	sql_wstring: STRING = "nvarchar ("
 
 	sql_wstring2 (int: INTEGER): STRING
 		do
-			Result := "nchar ("
+			Result := "nvarchar ("
 			Result.append (int.out)
 			Result.append (")")
 		end
@@ -1803,7 +1803,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

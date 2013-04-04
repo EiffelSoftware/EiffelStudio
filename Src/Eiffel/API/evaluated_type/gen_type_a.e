@@ -649,7 +649,7 @@ feature {TYPE_A} -- Helpers
 			parameter: TYPE_A
 			other_parameter: TYPE_A
 			cl_type: CL_TYPE_A
-			types: TYPE_LIST
+			l_types: TYPE_LIST
 			cursor: ARRAYED_LIST_CURSOR
 			i: INTEGER
 		do
@@ -658,13 +658,13 @@ feature {TYPE_A} -- Helpers
 			if n > 4  then
 					-- It's faster to scan registered class types rather than to generate conforming ones.
 				from
-					types := base_class.types
-					cursor := types.cursor
-					types.start
+					l_types := base_class.types
+					cursor := l_types.cursor
+					l_types.start
 				until
-					types.after
+					l_types.after
 				loop
-					cl_type := types.item.type
+					cl_type := l_types.item.type
 						-- Check only types that differ from current one.
 					if cl_type /= Current then
 						gen_type ?= cl_type
@@ -692,13 +692,13 @@ feature {TYPE_A} -- Helpers
 								i := i - 1
 							end
 							if i = 0 then
-								processor.call ([types.item])
+								processor.call ([l_types.item])
 							end
 						end
 					end
-					types.forth
+					l_types.forth
 				end
-				types.go_to (cursor)
+				l_types.go_to (cursor)
 			else
 				from
 					i := n
@@ -1938,7 +1938,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

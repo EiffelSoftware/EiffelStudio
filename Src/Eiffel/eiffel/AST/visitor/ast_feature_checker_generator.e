@@ -8021,9 +8021,13 @@ feature {NONE} -- Implementation
 			l_old_written_class: CLASS_C
 			l_written_class: CLASS_C
 			t: TYPE_A
+			old_locals: like empty_locals
 		do
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
+					-- Save locals to make them usable after type checking completes.
+				old_locals := context.locals
+				context.set_locals (empty_locals)
 				context.clear_local_context
 				set_is_inherited (True)
 				if context.local_scope = Void then
@@ -8086,6 +8090,8 @@ feature {NONE} -- Implementation
 					context.remove_result_scope
 				end
 				set_is_inherited (False)
+					-- Restore previously computed locals in case they are used by later analysis.
+				context.set_locals (old_locals)
 			end
 		end
 
@@ -10143,6 +10149,12 @@ feature {NONE} -- Implementation: checking locals
 			if l_warning /= Void then
 				error_handler.insert_warning (l_warning)
 			end
+		end
+
+	empty_locals: like {AST_CONTEXT}.locals
+			-- Empty locals that are used when processing inherited assertions.
+		once
+			create Result.make (10)
 		end
 
 feature {NONE} -- Variable initialization

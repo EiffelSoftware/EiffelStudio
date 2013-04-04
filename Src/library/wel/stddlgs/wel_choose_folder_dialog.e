@@ -103,6 +103,8 @@ feature -- Access
 			else
 				create Result.make_empty
 			end
+		ensure
+			consistent: attached str_starting_folder as l_folder implies Result.name.same_string (l_folder.string)
 		end
 
 	flags: INTEGER

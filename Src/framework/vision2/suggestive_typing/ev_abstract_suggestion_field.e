@@ -162,6 +162,13 @@ feature -- Status report
 		deferred
 		end
 
+	is_editable: BOOLEAN
+			-- Is `Current' editable?
+		require
+			not_destroyed: not is_destroyed
+		deferred
+		end
+
 feature -- Element change
 
 	set_settings (a_settings: like settings)
@@ -277,7 +284,7 @@ feature -- Basic operation
 			-- Prepare suggestion list and show suggestion window directly.
 		do
 			if
-				not is_suggesting and then
+				is_editable and then not is_suggesting and then
 				suggestion_provider.is_available and then attached choices as l_choices
 			then
 					-- We are done processing the keys for the time being until
@@ -405,83 +412,85 @@ feature {NONE} -- Key handling
 			-- that `a_key' is a shortcut for triggering the suggestion. If not specified
 			-- we use `is_shortcut_for_suggestion' instead.
 		do
-			if not is_suggesting then
-				if attached settings.override_shortcut_trigger as l_agent then
-					if l_agent.item ([a_key, is_ctrl_pressed, is_alt_pressed, is_shift_pressed]) then
-						provide_suggestion
-					end
-				else
-					if is_shortcut_for_suggestion (a_key, is_ctrl_pressed, is_alt_pressed, is_shift_pressed) then
-						provide_suggestion
-					end
-				end
-				if a_key.is_printable then
-					reset_suggestion_timeout
-				elseif is_ctrl_pressed then
-						-- If Backspace or Delete is pressed we perform
-						-- whatever the implementation decided. By default it is to
-						-- remove the word before or after `caret_position'.
-					handle_deletion_keys (a_key)
-				end
-			elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-				inspect
-					a_key.code
-				when {EV_KEY_CONSTANTS}.key_left, {EV_KEY_CONSTANTS}.key_right then
-					if settings.has_arrows_key_text_navigation and not choices.is_navigable then
-						if a_key.code = {EV_KEY_CONSTANTS}.key_left then
-							if caret_position = 1 then
-									-- We are at the beginning, so going to the left one more
-									-- time is a user intent to say he does not want to be
-									-- provided with a suggestion.
-								choices.cancel_and_close
-							end
-						else
-							if caret_position >= displayed_text.count + 1 then
-									-- We are at the end, so going to the right one more
-									-- time is a user intent to say he does not want to
-									-- be provided with a suggestion.
-								choices.cancel_and_close
-							end
+			if is_editable then
+				if not is_suggesting then
+					if attached settings.override_shortcut_trigger as l_agent then
+						if l_agent.item ([a_key, is_ctrl_pressed, is_alt_pressed, is_shift_pressed]) then
+							provide_suggestion
 						end
-					end
-				when {EV_KEY_CONSTANTS}.Key_up then
-					choices.go_to_next_item (False)
-				when {EV_KEY_CONSTANTS}.Key_down then
-					choices.go_to_next_item (True)
-				when {EV_KEY_CONSTANTS}.Key_page_up then
-					choices.go_to_next_page (False)
-				when {EV_KEY_CONSTANTS}.Key_page_down then
-					choices.go_to_next_page (True)
-				when {EV_KEY_CONSTANTS}.key_home then
-					choices.go_first
-				when {EV_KEY_CONSTANTS}.key_end then
-					choices.go_last
-				when {EV_KEY_CONSTANTS}.Key_enter then
-					choices.suggest_and_close
-				when {EV_KEY_CONSTANTS}.Key_escape then
-					choices.cancel_and_close
-
-				when {EV_KEY_CONSTANTS}.key_back_space, {EV_KEY_CONSTANTS}.key_delete then
-					if is_ctrl_pressed then
-						handle_deletion_keys (a_key)
 					else
-							-- Note that `displayed_text' is the text representation before handling `a_key'.
-						if displayed_text.is_empty then
-								-- List is discarded if all the characters inserted have been
-								-- removed and that the user press one more time the backspace key
-								-- showing his intent of stopping the suggestion.
-							choices.cancel_and_close
-						else
-							ev_application.do_once_on_idle (agent do
-								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-									choices.show_suggestion_list (searched_text, False)
-								end
-							end)
+						if is_shortcut_for_suggestion (a_key, is_ctrl_pressed, is_alt_pressed, is_shift_pressed) then
+							provide_suggestion
 						end
 					end
+					if a_key.is_printable then
+						reset_suggestion_timeout
+					elseif is_ctrl_pressed then
+							-- If Backspace or Delete is pressed we perform
+							-- whatever the implementation decided. By default it is to
+							-- remove the word before or after `caret_position'.
+						handle_deletion_keys (a_key)
+					end
+				elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+					inspect
+						a_key.code
+					when {EV_KEY_CONSTANTS}.key_left, {EV_KEY_CONSTANTS}.key_right then
+						if settings.has_arrows_key_text_navigation and not choices.is_navigable then
+							if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+								if caret_position = 1 then
+										-- We are at the beginning, so going to the left one more
+										-- time is a user intent to say he does not want to be
+										-- provided with a suggestion.
+									choices.cancel_and_close
+								end
+							else
+								if caret_position >= displayed_text.count + 1 then
+										-- We are at the end, so going to the right one more
+										-- time is a user intent to say he does not want to
+										-- be provided with a suggestion.
+									choices.cancel_and_close
+								end
+							end
+						end
+					when {EV_KEY_CONSTANTS}.Key_up then
+						choices.go_to_next_item (False)
+					when {EV_KEY_CONSTANTS}.Key_down then
+						choices.go_to_next_item (True)
+					when {EV_KEY_CONSTANTS}.Key_page_up then
+						choices.go_to_next_page (False)
+					when {EV_KEY_CONSTANTS}.Key_page_down then
+						choices.go_to_next_page (True)
+					when {EV_KEY_CONSTANTS}.key_home then
+						choices.go_first
+					when {EV_KEY_CONSTANTS}.key_end then
+						choices.go_last
+					when {EV_KEY_CONSTANTS}.Key_enter then
+						choices.suggest_and_close
+					when {EV_KEY_CONSTANTS}.Key_escape then
+						choices.cancel_and_close
 
-				else
-					-- Do nothing
+					when {EV_KEY_CONSTANTS}.key_back_space, {EV_KEY_CONSTANTS}.key_delete then
+						if is_ctrl_pressed then
+							handle_deletion_keys (a_key)
+						else
+								-- Note that `displayed_text' is the text representation before handling `a_key'.
+							if displayed_text.is_empty then
+									-- List is discarded if all the characters inserted have been
+									-- removed and that the user press one more time the backspace key
+									-- showing his intent of stopping the suggestion.
+								choices.cancel_and_close
+							else
+								ev_application.do_once_on_idle (agent do
+									if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+										choices.show_suggestion_list (searched_text, False)
+									end
+								end)
+							end
+						end
+
+					else
+						-- Do nothing
+					end
 				end
 			end
 		end
@@ -492,25 +501,27 @@ feature {NONE} -- Key handling
 		local
 			c: CHARACTER_32
 		do
-			if character_string.count = 1 then
-				if not is_suggesting then
-					if attached settings.suggestion_activator_characters as l_chars and then l_chars.has (character_string.item (1)) then
-						provide_suggestion
-					end
-				elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-					c := character_string.item (1)
-					if attached settings.character_translator as l_translator then
-						c := l_translator.item ([c])
-					end
-					if c /= '%U' then
-						if attached settings.suggestion_deactivator_characters as l_table and then l_table.has (c) then
-							choices.suggest_and_close
-						else
-							ev_application.do_once_on_idle (agent do
-								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-									choices.show_suggestion_list (searched_text, False)
-								end
-							end)
+			if is_editable then
+				if character_string.count = 1 then
+					if not is_suggesting then
+						if attached settings.suggestion_activator_characters as l_chars and then l_chars.has (character_string.item (1)) then
+							provide_suggestion
+						end
+					elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+						c := character_string.item (1)
+						if attached settings.character_translator as l_translator then
+							c := l_translator.item ([c])
+						end
+						if c /= '%U' then
+							if attached settings.suggestion_deactivator_characters as l_table and then l_table.has (c) then
+								choices.suggest_and_close
+							else
+								ev_application.do_once_on_idle (agent do
+									if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+										choices.show_suggestion_list (searched_text, False)
+									end
+								end)
+							end
 						end
 					end
 				end

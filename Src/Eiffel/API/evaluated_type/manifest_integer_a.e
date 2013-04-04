@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 			consistent_integer_64: n = 64 implies (possible_types & integer_64_mask) /= 0
 		do
 			make (n)
-			types := possible_types
+			integer_types := possible_types
 		ensure
 			size_set: size = n
-			types_set: types = possible_types
+			types_set: integer_types = possible_types
 		end
 
 feature -- Visitor
@@ -75,7 +75,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		do
 			if a_target_type.is_integer then
 				l_int ?= a_target_type
-				if (types & integer_mask (l_int.size)) /= 0 then
+				if (integer_types & integer_mask (l_int.size)) /= 0 then
 					l_feat := base_class.feature_table.
 						item ("to_integer_" + l_int.size.out)
 						-- We protect ourself in case the `to_integer_xx' routines
@@ -88,7 +88,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				context.set_last_conversion_info (l_info)
 			elseif a_target_type.is_natural then
 				l_nat ?= a_target_type
-				if (types & natural_mask (l_nat.size)) /= 0 then
+				if (integer_types & natural_mask (l_nat.size)) /= 0 then
 					l_feat := base_class.feature_table.
 						item ("to_natural_" + l_nat.size.out)
 						-- We protect ourself in case the `to_natural_xx' routines
@@ -106,14 +106,14 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	types: INTEGER
+	integer_types: INTEGER
 			-- Possible types of integer constant
 			-- (Combination of bit masks `integer_..._mask' and `natural_..._mask')
 
 invariant
 	correct_size: size = 32 or size = 64
 	valid_types:
-		types & (
+		integer_types & (
 			integer_8_mask | integer_16_mask | integer_32_mask | integer_64_mask |
 			natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
 		).bit_not = 0

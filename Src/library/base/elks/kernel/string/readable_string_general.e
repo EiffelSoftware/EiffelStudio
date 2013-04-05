@@ -535,7 +535,7 @@ feature -- Comparison
 			else
 				nb := count
 				if nb = other.count then
-					Result := same_caseless_characters (other, 1, nb, 1)
+					Result := nb = 0 or else same_caseless_characters (other, 1, nb, 1)
 				end
 			end
 		ensure
@@ -582,7 +582,7 @@ feature -- Comparison
 				end
 			end
 		ensure
-			same_characters: Result = substring (index_pos, end_pos - start_pos + 2).is_case_insensitive_equal (other.substring (start_pos, end_pos))
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).is_case_insensitive_equal (other.substring (start_pos, end_pos))
 		end
 
 	has_substring (other: READABLE_STRING_GENERAL): BOOLEAN
@@ -616,7 +616,7 @@ feature -- Comparison
 			else
 				nb := count
 				if nb = other.count then
-					Result := same_characters (other, 1, nb, 1)
+					Result := nb = 0 or else same_characters (other, 1, nb, 1)
 				end
 			end
 		end
@@ -654,7 +654,7 @@ feature -- Comparison
 				end
 			end
 		ensure
-			same_characters: Result = substring (index_pos, end_pos - start_pos + 2).same_string (other.substring (start_pos, end_pos))
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).same_string (other.substring (start_pos, end_pos))
 		end
 
 	starts_with (s: READABLE_STRING_GENERAL): BOOLEAN

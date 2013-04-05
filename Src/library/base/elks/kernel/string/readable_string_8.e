@@ -356,7 +356,7 @@ feature -- Comparison
 			else
 				nb := count
 				if nb = other.count then
-					Result := same_caseless_characters (other, 1, nb, 1)
+					Result := nb = 0 or else same_caseless_characters (other, 1, nb, 1)
 				end
 			end
 		ensure
@@ -385,8 +385,8 @@ feature -- Comparison
 					l_area := area
 					l_other_area := other.area
 					Result := True
-					i := l_area.lower + index_pos - 1
-					j := l_other_area.lower + start_pos - 1
+					i := area_lower + index_pos - 1
+					j := other.area_lower + start_pos - 1
 					nb := nb + i
 				until
 					i = nb
@@ -404,7 +404,7 @@ feature -- Comparison
 				end
 			end
 		ensure
-			same_characters: Result = substring (index_pos, end_pos - start_pos + 2).is_case_insensitive_equal (other.substring (start_pos, end_pos))
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).is_case_insensitive_equal (other.substring (start_pos, end_pos))
 		end
 
 	same_string (other: READABLE_STRING_8): BOOLEAN
@@ -419,7 +419,7 @@ feature -- Comparison
 			else
 				nb := count
 				if nb = other.count then
-					Result := same_characters (other, 1, nb, 1)
+					Result := nb = 0 or else same_characters (other, 1, nb, 1)
 				end
 			end
 		ensure
@@ -443,7 +443,7 @@ feature -- Comparison
 				Result := area.same_items (other.area, other.area_lower + start_pos - 1, area_lower + index_pos - 1, nb)
 			end
 		ensure
-			same_characters: Result = substring (index_pos, end_pos - start_pos + 2).same_string (other.substring (start_pos, end_pos))
+			same_characters: Result = substring (index_pos, index_pos + end_pos - start_pos).same_string (other.substring (start_pos, end_pos))
 		end
 
 	is_less alias "<" (other: like Current): BOOLEAN

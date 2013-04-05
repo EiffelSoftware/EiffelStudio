@@ -1386,6 +1386,20 @@ end;
 								-- This should not happen, but if it does.
 							is_the_same := False
 						else
+							if not tmp_ast_server.has (a_class.class_id) then
+									-- We could get an old body from the previous compilation, but `a_class'
+									-- was added back to degree 4 even though it was not re-parsed. This happens
+									-- whenever there is a call to `{CLASS_I}.set_changed' and that the class
+									-- is added back to degree 4.
+									-- For example, when signature of a routine changes and that routine is
+									-- used as part of a qualified anchored type (See eweasel test#incr353
+									-- to reproduce the scenario).
+									-- Or when a class has some replicated features.
+
+									-- We force a load of the AST into the `Tmp_ast_server'
+								Tmp_ast_server.load (a_class)
+							end
+
 							old_tmp_description := Tmp_ast_server.body_item (a_class.class_id, body_index)
 
 								-- Incrementality of the workbench is here: we
@@ -2006,7 +2020,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

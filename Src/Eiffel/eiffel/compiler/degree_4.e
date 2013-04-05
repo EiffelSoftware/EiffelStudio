@@ -264,6 +264,14 @@ feature -- Processing
 							-- Mark class for processing.
 						d.set_changed2 (True)
 						insert_new_class (d)
+							-- See eweasel test#incr353, we need to ensure that code generation is properly done
+							-- on the client class as well. This is a workaround, because ideally, when
+							-- we do a degree 4 pass on `d' we should detect that the signature has changed.
+						if not d.lace_class.changed then
+							d.lace_class.set_changed (True)
+						end
+						degree_3.insert_new_class (d)
+						degree_2.insert_new_class (d)
 							-- Actions should not be applied to the classes that are descendants of the affected ones.
 							-- These descendants will be processed again after processing their ancestors.
 						remove_descendant_classes_from_processing (d)
@@ -1018,7 +1026,7 @@ invariant
 	delayed_classes_attached: attached delayed_classes
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

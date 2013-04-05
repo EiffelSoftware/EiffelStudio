@@ -672,12 +672,9 @@ feature -- Comparison
 			--| `deep_equal' cannot be used as for STRINGS, the area
 			--| can have a different size but the STRING is still
 			--| the same (problem detected for LIKE_FEATURE). Xavier
-		require
-			is_valid: is_valid
 		do
 			if other /= Void and then other.same_type (Current) then
-				Result := attached {like Current} other as l_other and then
-					l_other.is_valid and then is_equivalent (l_other)
+				Result := attached {like Current} other as l_other and then is_equivalent (l_other)
 			end
 		end;
 
@@ -687,7 +684,7 @@ feature -- Comparison
 			-- but ARRAYs and STRINGs are processed correctly
 			-- (`deep_equal' will compare the size of the `area')
 		require
-			o1_is_valid: o1 /= Void implies o1.is_valid
+			o1_is_valid: o1 /= Void
 		do
 			if o1 = Void then
 				Result := o2 = Void
@@ -699,10 +696,8 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		require
-			is_valid: is_valid
 			arg_non_void: other /= Void
 			same_type: same_type (other)
-			other_is_valid: other.is_valid
 		deferred
 		end
 

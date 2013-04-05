@@ -607,11 +607,7 @@ feature -- Comparison
 						check
 							f1.feature_name_id = f2.feature_name_id
 						end
-						if
-							not f1.is_type_evaluation_delayed and then
-							not f2.is_type_evaluation_delayed and then
-							f1.equiv (f2)
-						then
+						if f1.equiv (f2) then
 							f1.set_code_id (f2.code_id)
 						else
 	debug ("ACTIVITY")

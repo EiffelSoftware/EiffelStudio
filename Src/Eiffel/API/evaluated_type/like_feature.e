@@ -109,7 +109,6 @@ feature -- Access
 			if
 				attached {LIKE_FEATURE} other as o and then
 				o.routine_id = routine_id and then
-				o.feature_id = feature_id and then
 				has_same_marks (o)
 			then
 					-- Compare computed actual types as otherwise they may be left
@@ -229,10 +228,7 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := routine_id = other.routine_id and then
-				class_id = other.class_id and then
-				feature_id = other.feature_id and then
 				equivalent (actual_type, other.actual_type) and then
-				feature_name_id = other.feature_name_id and then
 				has_same_marks (other)
 		end
 

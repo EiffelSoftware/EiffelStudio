@@ -34,13 +34,17 @@ feature {NONE} -- Initialization
 		do
 			standard_dialog_make
 			cwel_open_file_name_set_lstructsize (item, structure_size)
+
 			create str_file_name.make_empty (Max_file_name_length)
-			create str_file_title.make_empty (Max_file_title_length)
-			create str_title.make_empty (Max_title_length)
 			cwel_open_file_name_set_lpstrfile (item, str_file_name.item)
-			cwel_open_file_name_set_nmaxfile (item, Max_file_name_length - 10)
+			cwel_open_file_name_set_nmaxfile (item, str_file_name.character_capacity)
+
+			create str_file_title.make_empty (Max_file_title_length)
 			cwel_open_file_name_set_lpstrfiletitle (item, str_file_title.item)
-			cwel_open_file_name_set_nmaxfiletitle (item, Max_file_title_length - 10)
+
+			create str_title.make_empty (Max_title_length)
+			cwel_open_file_name_set_nmaxfiletitle (item, str_title.character_capacity)
+
 			set_default_title
 			add_flag ({WEL_OFN_CONSTANTS}.Ofn_hidereadonly)
 		end
@@ -268,8 +272,13 @@ feature -- Element change
 		require
 			a_file_path_not_void: a_file_path /= Void
 		do
-			create str_file_name.make_from_path (a_file_path)
+				-- We do not recreated `str_file_name' as we want to preserve
+				-- the original minimal size of `Max_file_name_length'. However,
+				-- if `a_file_path' is greater, we need to updated the underlying
+				-- structure with the new reallocated pointer and its new size.
+			str_file_name.set_string (a_file_path.name)
 			cwel_open_file_name_set_lpstrfile (item, str_file_name.item)
+			cwel_open_file_name_set_nmaxfile (item, str_file_name.character_capacity)
 		ensure
 			file_name_set: file_path ~ a_file_path
 		end
@@ -605,7 +614,7 @@ invariant
 	str_title_exists: str_title.exists
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

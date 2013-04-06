@@ -58,7 +58,6 @@ extern "C" {
  */
 struct chunk {
 	int32 ck_type;			/* Chunk's type */
-	uint32	ck_age;			/* Age of chunk. */
 	struct chunk *ck_next;	/* Next chunk in list */
 	struct chunk *ck_prev;	/* Previous chunk in list */
 	struct chunk *ck_lnext;	/* Next chunk of same type */

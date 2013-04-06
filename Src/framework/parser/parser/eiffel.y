@@ -164,7 +164,7 @@ create
 %type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <detachable TAGGED_AS>			Assertion_clause
 %type <detachable TUPLE_AS>			Manifest_tuple
-%type <detachable TYPE_AS>				Type Anchored_type Typed Class_or_tuple_type Unmarked_class_type Unmarked_tuple_type Unmarked_anchored_type Unmarked_class_or_tuple_type Unmarked_unqualified_anchored_type Constraint_type
+%type <detachable TYPE_AS>				Type Type_interval Inheritance_type Anchored_type Typed Class_or_tuple_type Unmarked_class_type Unmarked_tuple_type Unmarked_anchored_type Unmarked_class_or_tuple_type Unmarked_unqualified_anchored_type Constraint_type
 %type <detachable TYPE_AS>				Obsolete_creation_type Obsolete_type Obsolete_class_or_tuple_type
 %type <detachable QUALIFIED_ANCHORED_TYPE_AS>	Unmarked_qualified_anchored_type
 %type <detachable CLASS_TYPE_AS>		Parent_class_type
@@ -1561,7 +1561,13 @@ Assertion_clause: Expression ASemi
 -- Note that only `Type' should be used in other constructs. If something else is used, please make
 -- sure to put a note (e.g. 'Class_or_tuple_type' being used in 'Constraint_type'.
 
-Type: Class_or_tuple_type
+Type: Type_interval
+			{ $$ := $1 }
+	|	Inheritance_type
+			{ $$ := $1 }
+	;
+
+Inheritance_type: Class_or_tuple_type
 			{ $$ := $1 }
 	|	Anchored_type
 			{ $$ := $1 }
@@ -1701,6 +1707,16 @@ Unmarked_qualified_anchored_type:
 					q.extend ($2, l_id)
 				end
 			}
+	;
+
+Type_interval: Inheritance_type TE_DOTDOT Inheritance_type
+			 {
+				if is_type_interval_supported then
+			 		$$ := ast_factory.new_type_interval_as ($1, $3);
+				else
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($2), token_column ($2), filename, "Unexpected .. after type declaration"))
+				end
+			 }
 	;
 
 -- This is also used in the obsolete syntax for 'Creation' and 'Creation_expression'.
@@ -2641,7 +2657,7 @@ Delayed_actual: TE_QUESTION
 -- Manu: 01/19/2005: Due to syntax ambiguity we cannot have 'Typed' only
 -- as there will be no way to distinguish it from a Manifest type expression.
 -- To preserve this feature in case it is needed by some of our customers
--- we have invented the new syntax ? Typed.
+-- we have invented the new syntax Typed ?.
 	|	Typed TE_QUESTION
 			{ $$ := ast_factory.new_operand_as ($1, Void, Void)
 				if attached $$ as l_actual then
@@ -2891,8 +2907,7 @@ Qualified_factor:
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
 	;
 
-Typed_expression:	Typed
-			
+Typed_expression:	Typed			
 			{ $$ := ast_factory.new_type_expr_as ($1) }
 	|	Typed_nosigned_integer
 			{ $$ := $1 }
@@ -3217,7 +3232,10 @@ Boolean_constant: TE_FALSE
 Character_constant: TE_CHAR
 			{ $$ := $1 }
 	|	Typed TE_CHAR
-			{ $$ := ast_factory.new_typed_char_as ($1, $2) }
+			{
+				check_single_type ($1)
+				$$ := ast_factory.new_typed_char_as ($1, $2)
+			}
 	;
 
 --###################################################################
@@ -3256,16 +3274,19 @@ Typed_integer: Typed_nosigned_integer
 
 Typed_nosigned_integer: Typed TE_INTEGER
 			{
+				check_single_type ($1)
 				$$ := ast_factory.new_integer_value (Current, '%U', $1, token_buffer, Void)
 			}
 	;
 
 Typed_signed_integer:	Typed TE_PLUS TE_INTEGER
 			{
+				check_single_type ($1)
 				$$ := ast_factory.new_integer_value (Current, '+', $1, token_buffer, $2)
 			}
 	|	Typed TE_MINUS TE_INTEGER
 			{
+				check_single_type ($1)
 				$$ := ast_factory.new_integer_value (Current, '-', $1, token_buffer, $2)
 			}
 	;
@@ -3305,16 +3326,19 @@ Typed_real: Typed_nosigned_real
 
 Typed_nosigned_real: Typed TE_REAL
 			{
+				check_single_type ($1)
 				$$ := ast_factory.new_real_value (Current, False, '%U', $1, token_buffer, Void)
 			}
 	;
 
 Typed_signed_real: Typed TE_PLUS TE_REAL
 			{
+				check_single_type ($1)
 				$$ := ast_factory.new_real_value (Current, True, '+', $1, token_buffer, $2)
 			}
 	|	Typed TE_MINUS TE_REAL
 			{
+				check_single_type ($1)
 				$$ := ast_factory.new_real_value (Current, True, '-', $1, token_buffer, $2)
 			}
 	;
@@ -3338,6 +3362,7 @@ Default_manifest_string: Non_empty_string
 
 Typed_manifest_string: Typed Default_manifest_string
 			{
+				check_single_type ($1)
 				$$ := $2
 				if attached $$ as l_string then
 					l_string.set_type ($1)

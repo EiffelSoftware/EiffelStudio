@@ -61,17 +61,8 @@ feature -- Generic conformance
 
 	annotation_flags: NATURAL_16
 			-- Flags for annotations of Current.
-			-- Currently only `!' and `frozen' are supported
-		do
- 				-- Only if a type is not expanded do we need to generate the
-				-- attached annotation since by default expanded implies attached.
-			if is_attached and not is_expanded then
-				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
-			end
--- To uncomment when variant/frozen proposal for generics is supported.
---			if is_frozen then
---				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
---			end
+			-- Currently only attachment marks are supported.
+		deferred
 		end
 
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
@@ -313,6 +304,11 @@ feature -- IL code generation
 		end
 
 feature -- Properties
+
+	types: ARRAYED_LIST [ABSTRACT_TYPE_INTERVAL_A]
+			-- List of intervals making up Current.
+		deferred
+		end
 
 	has_associated_class: BOOLEAN
 			-- Does Current have an associated class?

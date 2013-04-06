@@ -122,8 +122,8 @@ feature -- Status report
 	is_experimental_mode: BOOLEAN
 			-- Is the compiler being run in experimental mode?
 		do
-				-- In the 6.6. release, it has no effect.
---			Result := flags.item & experimental_mode_flag = experimental_mode_flag
+				-- Starting in the 7.3 release, experimental support type interval.
+			Result := flags.item & experimental_mode_flag = experimental_mode_flag
 		end
 
 	is_full_class_checking_mode: BOOLEAN
@@ -196,7 +196,7 @@ feature {NONE}
 			-- Various flags.
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

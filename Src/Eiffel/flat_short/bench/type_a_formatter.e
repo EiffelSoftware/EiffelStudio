@@ -59,6 +59,16 @@ feature {TYPE_A} -- Visitors
 			process_cl_type_a (a_type)
 		end
 
+	process_type_interval_a (a_type: TYPE_INTERVAL_A)
+			-- Process `a_type'
+		do
+			a_type.lower.process (Current)
+			ctxt.add_space
+			ctxt.process_keyword_text (ti_dotdot, Void)
+			ctxt.add_space
+			a_type.upper.process (Current)
+		end
+
 	process_cl_type_a (a_type: CL_TYPE_A)
 			-- Process `a_type'.
 		do
@@ -214,7 +224,7 @@ feature {TYPE_A} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

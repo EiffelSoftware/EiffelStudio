@@ -18,7 +18,8 @@ inherit
 			process_qualified_anchored_type_as,
 			process_formal_as, process_class_type_as,
 			process_generic_class_type_as, process_none_type_as,
-			process_named_tuple_type_as, process_type_dec_as
+			process_named_tuple_type_as, process_type_dec_as,
+			process_type_interval_as
 		end
 
 	COMPILER_EXPORTER
@@ -98,6 +99,12 @@ feature {NONE} -- Visitor implementation
 		do
 			check not_has_node_changed: not has_node_changed end
 			-- Do nothing.
+		end
+
+	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
+		do
+			l_as.lower.process (Current)
+			l_as.upper.process (Current)
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)

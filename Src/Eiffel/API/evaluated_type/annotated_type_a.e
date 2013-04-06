@@ -8,7 +8,7 @@ note
 deferred class ANNOTATED_TYPE_A
 
 inherit
-	TYPE_A
+	INHERITANCE_TYPE_A
 		redefine
 			as_attached_type,
 			as_attachment_mark_free,
@@ -399,7 +399,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

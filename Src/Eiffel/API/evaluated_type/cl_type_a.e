@@ -654,7 +654,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 			end
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		local
 			other_class_type: CL_TYPE_A
@@ -720,7 +720,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 						l_other_class_type.set_reference_mark
 					end
 
-					Result := conform_to (a_context_class, other)
+					Result := general_conform_to (a_context_class, other)
 
 					if l_is_exp then
 						set_mark (current_mark)
@@ -1026,7 +1026,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

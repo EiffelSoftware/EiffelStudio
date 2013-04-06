@@ -226,6 +226,15 @@ feature -- Status report
 	is_ignoring_separate_mark: BOOLEAN
 			-- Are separate marks ignored?
 
+	is_type_interval_supported: BOOLEAN
+			-- Are type interval supported?
+		do
+-- Code commented for the time being while waiting for full implementation of type intervals.
+--				-- For the time being we accept type intervals only if `provisional syntax'
+--				-- has been selected.
+--			Result := syntax_version = provisional_syntax
+		end
+
 feature -- Parsing (Unknown encoding)
 
 	parse (a_file: KL_BINARY_INPUT_FILE)
@@ -917,6 +926,15 @@ feature {NONE} -- Actions
 					report_one_warning (create {SYNTAX_WARNING}.make (a_keyword_id.line, a_keyword_id.column, a_keyword_id.filename,
 						"Using keyword as identifier."))
 				end
+			end
+		end
+
+	check_single_type (a_type: detachable TYPE_AS)
+			-- Check if `a_type' is a valid type for an object test.
+		do
+			if a_type /= Void and then attached {TYPE_INTERVAL_AS} a_type then
+				report_one_error (create {SYNTAX_ERROR}.make (token_line (a_type), token_column (a_type), filename,
+					"Type used in object test should be a `Single_type'."))
 			end
 		end
 

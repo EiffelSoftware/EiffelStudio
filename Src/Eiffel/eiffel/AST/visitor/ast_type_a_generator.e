@@ -15,7 +15,8 @@ inherit
 			process_qualified_anchored_type_as,
 			process_formal_as, process_class_type_as,
 			process_generic_class_type_as, process_none_type_as,
-			process_named_tuple_type_as, process_type_dec_as
+			process_named_tuple_type_as, process_type_dec_as,
+			process_type_interval_as
 		end
 
 	COMPILER_EXPORTER
@@ -279,6 +280,35 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
+	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
+		local
+			l_lower, l_upper: INHERITANCE_TYPE_A
+		do
+			l_as.lower.process (Current)
+			if attached {INHERITANCE_TYPE_A} last_type as l_type then
+				l_lower := l_type
+			end
+			l_as.upper.process (Current)
+			if attached {INHERITANCE_TYPE_A} last_type as l_type then
+				l_upper := l_type
+			end
+
+			if l_lower /= Void and l_upper /= Void then
+				if l_upper.conform_to (current_class, l_lower) then
+					create {TYPE_INTERVAL_A} last_type.make (l_lower, l_upper)
+				else
+					check False then
+						-- Generate a new error here when interval is not valid.
+					end
+					last_type := Void
+				end
+			else
+					-- On of the bound of the interval was invalid, the error has already
+					-- been generated when checking the bounds.
+				last_type := Void
+			end
+		end
+
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		local
 			l_class_i: CLASS_I
@@ -306,6 +336,11 @@ feature {NONE} -- Visitor implementation
 					loop
 						l_generics.i_th (i).process (Current)
 						l_has_error := last_type = Void
+						if attached {INHERITANCE_TYPE_A} last_type as l_gen_type then
+								-- `last_type' is used as actual generic paramter, so
+								-- we need to mark it.
+							l_gen_type.set_is_actual_generic_parameter (True)
+						end
 						l_actual_generic.put (last_type, i)
 						i := i + 1
 					end
@@ -357,6 +392,11 @@ feature {NONE} -- Visitor implementation
 				loop
 					l_generics.i_th (g).process (Current)
 					l_has_error := last_type = Void
+					if attached {INHERITANCE_TYPE_A} last_type as l_gen_type then
+							-- `last_type' is used as actual generic paramter, so
+							-- we need to mark it.
+						l_gen_type.set_is_actual_generic_parameter (True)
+					end
 					l_id_list := l_generics.i_th (g).id_list
 					from
 						l_id_list.start

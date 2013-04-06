@@ -424,6 +424,36 @@ feature {TYPE_A} -- Visitors
 			last_type := a_type
 		end
 
+	process_type_interval_a (a_type: TYPE_INTERVAL_A)
+			-- Process `a_type'
+		local
+			l_lower, l_upper: detachable INHERITANCE_TYPE_A
+		do
+			a_type.lower.process (Current)
+			if attached {INHERITANCE_TYPE_A} last_type as l_type then
+				l_lower := l_type
+			end
+			a_type.upper.process (Current)
+			if attached {INHERITANCE_TYPE_A} last_type as l_type then
+				l_upper := l_type
+			end
+			if l_lower /= Void and l_upper /= Void then
+				if l_upper.conform_to (current_class, l_lower) then
+					a_type.make (l_lower, l_upper)
+					last_type := a_type
+				else
+					check False then
+						-- Generate a new error here when interval is not valid.
+					end
+					last_type := Void
+				end
+			else
+					-- There is an error, it was already added when checking `lower'
+					-- or `upper' from `a_type'.
+				last_type := Void
+			end
+		end
+
 	process_cl_type_a (a_type: CL_TYPE_A)
 			-- Process `a_type'.
 		do

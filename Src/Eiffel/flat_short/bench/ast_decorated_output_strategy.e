@@ -3656,6 +3656,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
+		do
+			process_type_as (l_as)
+		end
+
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			process_type_as (l_as)

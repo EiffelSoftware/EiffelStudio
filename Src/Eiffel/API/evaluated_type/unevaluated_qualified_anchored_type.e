@@ -65,6 +65,7 @@ feature -- Access
 	chain: SPECIAL [INTEGER]
 			-- Second part of the type:
 			-- ["b", "c"] for "like {A}.b.c", "like a.b.c", "like Current.b.c"
+			-- IDs are from NAMES_HEAP.
 
 feature -- Status report
 
@@ -169,7 +170,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
 			-- Does Current conform to `other' in `a_context_class'?
 		do
 		end
@@ -196,7 +197,7 @@ invariant
 	chain_attached: chain /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

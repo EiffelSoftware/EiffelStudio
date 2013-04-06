@@ -602,7 +602,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			create Result
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
 			-- Does `Current' conform to `other'?
 		do
 			Result :=
@@ -631,7 +631,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

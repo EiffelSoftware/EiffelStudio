@@ -8,9 +8,10 @@ note
 class VOID_A
 
 inherit
-	TYPE_A
+	INHERITANCE_TYPE_A
 		redefine
-			is_reference, is_void, same_as, c_type
+			is_reference, is_void, same_as, c_type,
+			types, general_conform_to, upper
 		end
 
 feature -- Visitor
@@ -19,6 +20,19 @@ feature -- Visitor
 			-- Process current element.
 		do
 			v.process_void_a (Current)
+		end
+
+feature -- Access
+
+	types: ARRAYED_LIST [ABSTRACT_TYPE_INTERVAL_A]
+			-- There is no Void type, it is just a place holder, so there is no type.
+		once
+			create Result.make (0)
+		end
+
+	upper: VOID_A
+		do
+			Result := Current
 		end
 
 feature -- Property
@@ -67,7 +81,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+	general_conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+			-- Does Current conform to `other'?
+		do
+			Result := other.conformance_type.is_void
+		end
+
+	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		do
 			Result := other.conformance_type.is_void
@@ -87,7 +107,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -100,22 +120,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class VOID_A

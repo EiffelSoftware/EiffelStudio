@@ -518,6 +518,10 @@ feature -- Implementation
 		do
 		end
 
+	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
+		do
+		end
+
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 		end
@@ -687,7 +691,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -555,7 +555,7 @@ feature -- Access
 	is_loose: BOOLEAN = True
 			-- Does type depend on formal generic parameters and/or anchors?
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		local
 			l_constraints: TYPE_SET_A

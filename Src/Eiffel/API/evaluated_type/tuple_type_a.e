@@ -163,7 +163,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		local
 			tuple_type: TUPLE_TYPE_A
@@ -258,7 +258,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

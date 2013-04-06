@@ -7493,6 +7493,11 @@ feature {NONE} -- Implementation
 			-- Nothing to be done
 		end
 
+	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
+		do
+			check_type (l_as)
+		end
+
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			check_type (l_as)

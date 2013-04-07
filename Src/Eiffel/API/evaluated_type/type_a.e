@@ -670,7 +670,8 @@ feature -- Comparison
 			--| the same (problem detected for LIKE_FEATURE). Xavier
 		do
 			if other /= Void and then other.same_type (Current) then
-				Result := attached {like Current} other as l_other and then is_equivalent (l_other)
+				Result := is_valid and then attached {like Current} other as l_other and then
+					l_other.is_valid and then is_equivalent (l_other)
 			end
 		end;
 
@@ -692,8 +693,10 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		require
+			is_valid: is_valid
 			arg_non_void: other /= Void
 			same_type: same_type (other)
+			other_is_valid: other.is_valid
 		deferred
 		end
 

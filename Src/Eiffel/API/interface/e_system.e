@@ -44,7 +44,7 @@ feature -- Access
 			Result := System.name
 		end;
 
-	document_path: like {SYSTEM_I}.document_path
+	document_path: PATH
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation
 		do

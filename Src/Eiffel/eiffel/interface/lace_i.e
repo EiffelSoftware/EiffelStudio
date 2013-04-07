@@ -374,7 +374,7 @@ feature -- Status setting
 	check_shared_library_definition_stamp
 			-- Check if a shared library definition file has changed and request to freeze if required.
 		local
-			s: like {SYSTEM_I}.dynamic_def_file
+			s: PATH
 		do
 			s := system.dynamic_def_file
 			if s = Void then

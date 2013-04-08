@@ -763,14 +763,15 @@ feature {NONE} -- Action handlers
 			show_timer.actions.extend_kamikaze (
 			agent (a_r: EV_GRID_ROW)
 			do
-				if show_completion_tooltip then
+				if show_completion_tooltip and then a_r.parent /= Void then
+						-- We check for row parent incase it has been subsequently removed from grid.
 					if attached contract_widget_from_row (a_r) as l_widget then
 							-- Tooltip window
 						if tooltip_window = Void then
 							create tooltip_window.make
 						end
 						tooltip_window.set_popup_widget (l_widget)
-						if is_displayed and then show_completion_tooltip then
+						if is_displayed then
 							show_tooltip (a_r)
 						end
 					end

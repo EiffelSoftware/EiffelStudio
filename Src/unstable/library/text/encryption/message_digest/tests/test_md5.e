@@ -13,7 +13,7 @@ feature -- Test routines
 
 	test_md5
 			-- Test md5
-			-- Test suite from standard specification: 
+			-- Test suite from standard specification:
 			-- http://tools.ietf.org/html/rfc1321
 		do
 			assert ("", md5_string ("").is_case_insensitive_equal ("d41d8cd98f00b204e9800998ecf8427e"))
@@ -25,11 +25,33 @@ feature -- Test routines
 			assert ("", md5_string ("12345678901234567890123456789012345678901234567890123456789012345678901234567890").is_case_insensitive_equal ("57edf4a22be3c955ac49da2e2107b67a"))
 		end
 
+	test_file
+			-- Test computaton from file
+		local
+			l_file: RAW_FILE
+			l_s: STRING
+		do
+			create l_file.make_create_read_write ("md5_test.tmp")
+			l_file.put_string ("12345678901234567890123456789012345678901234567890123456789012345678901234567890")
+			l_file.close
+
+			create l_file.make_open_read ("md5_test.tmp")
+			l_s := md5_from_file (l_file)
+			l_file.close
+			assert ("md5 from file", l_s.is_case_insensitive_equal ("57edf4a22be3c955ac49da2e2107b67a"))
+		end
+
 feature {NONE} -- Implementation
 
 	md5_string (a_str: STRING): STRING
 		do
 			md5.update_from_string (a_str)
+			Result := md5.digest_as_string
+		end
+
+	md5_from_file (a_file: FILE): STRING
+		do
+			md5.update_from_io_medium (a_file)
 			Result := md5.digest_as_string
 		end
 

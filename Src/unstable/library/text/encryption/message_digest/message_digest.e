@@ -85,6 +85,32 @@ feature -- Element Change
 			end
 		end
 
+	update_from_iterator (a_it: ITERATION_CURSOR [NATURAL_8])
+			-- Append bytes from iteration cursor.
+		do
+			from
+			until
+				a_it.after
+			loop
+				update_from_byte (a_it.item)
+				a_it.forth
+			end
+		end
+
+	update_from_io_medium (a_io_medium: IO_MEDIUM)
+			-- Append bytes from io medium
+		do
+			from
+			until
+				not a_io_medium.readable
+			loop
+				a_io_medium.read_natural_8
+				if a_io_medium.bytes_read > 0 then
+					update_from_byte (a_io_medium.last_natural_8)
+				end
+			end
+		end
+
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

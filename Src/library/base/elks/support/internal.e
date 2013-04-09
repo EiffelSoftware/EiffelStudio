@@ -632,7 +632,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	reflected_object: REFLECTED_OBJECT
+	reflected_object: REFLECTED_REFERENCE_OBJECT
 			-- Abstraction to reflect on objects.
 		once
 			create Result.make (Current)

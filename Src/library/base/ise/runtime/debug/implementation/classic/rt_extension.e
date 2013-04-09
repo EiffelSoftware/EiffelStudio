@@ -373,7 +373,7 @@ feature -- debug purpose: to remove
 		end
 
 invariant
-	no_attribute: (create {REFLECTED_OBJECT}.make (Current)).field_count = 0
+	no_attribute: (create {REFLECTED_REFERENCE_OBJECT}.make (Current)).field_count = 0
 			-- Since this object is shared among threads,
 			-- it is better to avoid any attribute conflict
 

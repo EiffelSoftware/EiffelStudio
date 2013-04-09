@@ -133,11 +133,13 @@ feature {NONE} -- Implementation
 			l_visited: like visited_objects
 			l_action: like object_action
 			l_spec: like visited_objects.area
+			l_reflected_reference_object: REFLECTED_REFERENCE_OBJECT
 			l_reflected_object: REFLECTED_OBJECT
 		do
 			from
 				create l_marker
-				create l_reflected_object.make (a_root_object)
+				create l_reflected_reference_object.make (a_root_object)
+				l_reflected_object := l_reflected_reference_object
 				l_marker.mark (a_root_object)
 				create l_visited.make (default_size)
 				l_objects_to_visit := new_dispenser
@@ -159,10 +161,17 @@ feature {NONE} -- Implementation
 
 					-- Iterate through fields of `l_object'.
 					-- There are three major types of object:
-					-- 1 - SPECIAL [ANY]
-					-- 2 - TUPLE containing references
-					-- 3 - Normal objects
-				l_reflected_object.set_object (l_object)
+					-- 1 - Objects representing
+					-- 2 - SPECIAL [ANY]
+					-- 3 - TUPLE containing references
+					-- 4 - Normal objects
+				if attached {REFLECTED_COPY_SEMANTICS_OBJECT} l_object as l_exp_as_ref then
+					l_reflected_object := l_exp_as_ref
+				else
+					l_reflected_reference_object.set_object (l_object)
+					l_reflected_object := l_reflected_reference_object
+				end
+
 				if l_reflected_object.is_special then
 					if
 						l_reflected_object.is_special_of_reference and then
@@ -209,10 +218,17 @@ feature {NONE} -- Implementation
 					loop
 						if l_reflected_object.field_type (i) = {REFLECTOR_CONSTANTS}.reference_type then
 							if not is_skip_transient or else not l_reflected_object.is_field_transient (i) then
-								l_field := l_reflected_object.reference_field (i)
-								if l_field /= Void and then not l_marker.is_marked (l_field) then
-									l_marker.mark (l_field)
+								if l_reflected_object.is_copy_semantics_field (i) then
+									l_field := l_reflected_object.copy_semantics_field (i)
 									l_objects_to_visit.put (l_field)
+										-- There is no need for marking since, no one can have a reference
+										-- to that object, so we are sure to never hit it again.
+								else
+									l_field := l_reflected_object.reference_field (i)
+									if l_field /= Void and then not l_marker.is_marked (l_field) then
+										l_marker.mark (l_field)
+										l_objects_to_visit.put (l_field)
+									end
 								end
 							end
 						end
@@ -231,7 +247,11 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				l_marker.unmark (l_spec.item (i))
+				if l_marker.is_marked (l_spec.item (i)) then
+					l_marker.unmark (l_spec.item (i))
+				else
+					check attached {REFLECTED_COPY_SEMANTICS_OBJECT} l_spec.item (i) end
+				end
 				i := i + 1
 			end
 

@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			read_object_table (a_count)
 		end
 
-	read_persistent_field_count (a_reflected_object: REFLECTED_OBJECT): INTEGER
+	read_persistent_field_count (a_reflected_object: REFLECTED_REFERENCE_OBJECT): INTEGER
 			-- <Precursor>
 		local
 			l_dtype: INTEGER

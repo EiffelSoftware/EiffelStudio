@@ -34,13 +34,10 @@ feature {NONE} -- Init
 		require
 			a_content_set: a_content /= Void
 		local
-			l_md5: MD5
 			u: UTF_CONVERTER
 		do
-			create l_md5.make
-			l_md5.sink_string (u.utf_32_string_to_utf_8_string_8 (a_content))
-			l_md5.do_final (md5_output, 0)
-			Result := special_to_string (md5_output)
+			md5_computer.update_from_string (u.utf_32_string_to_utf_8_string_8 (a_content))
+			Result := md5_computer.digest_as_string
 		ensure
 			Result_set: Result /= Void
 		end
@@ -66,24 +63,10 @@ feature -- Access
 
 feature {NONE} -- Implemetation
 
-	md5_output: SPECIAL [NATURAL_8]
-			-- Output buffer for MD5
+	md5_computer: MD5
+			-- MD5 computer
 		once
-			create Result.make_filled (0, 16)
-		end
-
-	special_to_string (a_special: SPECIAL [NATURAL_8]): STRING_8
-			-- Create string instance from special
-		do
-			create Result.make (a_special.count * 2)
-			a_special.do_all_in_bounds (
-					agent (a_n: NATURAL_8; a_string: STRING_8)
-						do
-							a_string.append_string (a_n.to_hex_string)
-						end (?, Result),
-					a_special.lower, a_special.upper)
-		ensure
-			correct_result_length: a_special.count * 2 = Result.count
+			create Result.make
 		end
 
 note

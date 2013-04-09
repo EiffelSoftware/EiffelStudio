@@ -234,7 +234,7 @@ feature {NONE} -- Factory
 			obj_attached: obj /= Void
 		local
 			ft: INTEGER
-			l_reflected_object: REFLECTED_OBJECT
+			l_reflected_object: REFLECTED_REFERENCE_OBJECT
 		do
 			ft := eif_type (t)
 			inspect ft
@@ -852,7 +852,7 @@ feature -- Testing
 
 feature {NONE} -- Implementation
 
-	reflected_object: REFLECTED_OBJECT
+	reflected_object: REFLECTED_REFERENCE_OBJECT
 			-- To enable object introspection.
 		once
 			create Result.make (Current)

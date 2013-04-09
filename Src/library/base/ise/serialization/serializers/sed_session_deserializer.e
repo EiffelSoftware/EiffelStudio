@@ -136,7 +136,7 @@ feature {NONE} -- Implementation: Access
 	reflector: REFLECTOR
 			-- Facilities to inspect.
 
-	reflected_object: REFLECTED_OBJECT
+	reflected_object: REFLECTED_REFERENCE_OBJECT
 			-- Facilities to inspect objects.
 
 	object_references: SPECIAL [ANY]
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_persistent_field_count (a_reflected_object: REFLECTED_OBJECT): INTEGER
+	read_persistent_field_count (a_reflected_object: REFLECTED_REFERENCE_OBJECT): INTEGER
 			-- Number of fields we are going to read from `a_reflected_object' in the the retrieved system.
 		do
 				-- We read the same number of fields because the transient fields are serialized.
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_normal_object (a_reflected_object: REFLECTED_OBJECT)
+	decode_normal_object (a_reflected_object: REFLECTED_REFERENCE_OBJECT)
 			-- Decode an object represented by `a_reflected_object'.
 		require
 			an_obj_not_void: a_reflected_object /= Void
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_expanded_object (a_reflected_object: REFLECTED_OBJECT)
+	decode_expanded_object (a_reflected_object: REFLECTED_REFERENCE_OBJECT)
 			-- Decode an object `a_reflected_object'.
 		require
 			an_obj_not_void: a_reflected_object /= Void

@@ -162,7 +162,7 @@ feature {NONE} -- Implementation: Access
 	reflector: REFLECTOR
 			-- Facilities to inspect.
 
-	reflected_object: REFLECTED_OBJECT
+	reflected_object: REFLECTED_REFERENCE_OBJECT
 			-- Facility to inspect object.
 
 	traversable: OBJECT_GRAPH_TRAVERSABLE
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_expanded (an_object: REFLECTED_OBJECT)
+	encode_expanded (an_object: REFLECTED_REFERENCE_OBJECT)
 			-- Encode expanded `an_object'.
 		require
 			an_object_not_void: an_object /= Void

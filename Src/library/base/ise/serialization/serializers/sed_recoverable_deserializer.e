@@ -542,7 +542,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	decode_normal_object (a_reflected_object: REFLECTED_OBJECT)
+	decode_normal_object (a_reflected_object: REFLECTED_REFERENCE_OBJECT)
 			-- <Precursor>
 		local
 			l_deser: like deserializer

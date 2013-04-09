@@ -1,5 +1,13 @@
 note
-	description: "MD5 encryption"
+	description: "[
+					MD5 encryption
+					
+					Usage: 
+						1. Call one or more update* to input source to encode.
+						2. Call *digest* to get the computed result.
+					To start a new computation without calls to *digest*,
+					`reset' must be called.
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

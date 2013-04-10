@@ -92,12 +92,14 @@ feature -- Action
 
 feature -- Status Change
 
-	set_expression_callback (a_c: like expression_callback)
+	set_expression_callback (a_c: like expression_callback; a_pos_c: like show_position_callback)
 			-- Set `expression_callback' with `a_c'.
 		do
 			expression_callback := a_c
+			show_position_callback := a_pos_c
 		ensure
 			expression_callback_set: expression_callback = a_c
+			show_position_callback_set: show_position_callback = a_pos_c
 		end
 
 feature {NONE} -- Implementation
@@ -154,7 +156,12 @@ feature {NONE} -- Implementation
 					l_line.request_refresh
 					on_grid_size_changed (Void)
 
-					create l_rec.make (l_pointer.x, l_pointer.y, 0, 0)
+					if attached show_position_callback as l_c and then attached l_c.item ([l_pointer.x, l_pointer.y]) as l_p then
+						create l_rec.make (l_p.x, l_p.y, 0, 0)
+					else
+						create l_rec.make (l_pointer.x, l_pointer.y, 0, 0)
+					end
+
 					l_tooltip_window.show_on_side (l_rec, 0, 0)
 					last_expression := a_expr
 				end
@@ -270,6 +277,10 @@ feature {NONE} -- Implementation
 	expression_callback: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable READABLE_STRING_GENERAL]
 			-- Callback to query expression
 			-- Arguments are screen positions
+
+	show_position_callback: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable TUPLE [x, y: INTEGER]]
+			-- Call back to query a preferred show position
+			-- Arguments and return values are screen positions
 
 	debug_tooltip: detachable ES_SMART_TOOLTIP_WINDOW
 			-- Debug tooktip

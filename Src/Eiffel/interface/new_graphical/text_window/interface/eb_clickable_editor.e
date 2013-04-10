@@ -522,6 +522,18 @@ feature {NONE} -- Debug tooktip
 			Result_not_empty: attached Result as l_res implies not l_res.is_empty
 		end
 
+	preferred_tooltip_show_position (a_x, a_y: INTEGER): TUPLE [INTEGER, INTEGER]
+			-- Preferred tooltip show position
+			-- `a_x' and `a_y' are mouse pointer screen positions
+			-- Result values are screen positions.
+		local
+			l_y, l_height: INTEGER
+		do
+			l_height := line_height
+			l_y := a_y - (a_y - editor_drawing_area.screen_y - editor_viewport.y_offset) \\ l_height + l_height
+			Result := [a_x, l_y]
+		end
+
 	debug_tooltip_handler: ES_DEBUGER_TOOLTIP_HANDLER
 			-- Debug tooltip handler
 		do
@@ -529,7 +541,7 @@ feature {NONE} -- Debug tooktip
 				Result := l_h
 			else
 				create Result
-				Result.set_expression_callback (agent expression_at)
+				Result.set_expression_callback (agent expression_at, agent preferred_tooltip_show_position)
 				if attached dev_window as l_window then
 					register_action (horizontal_scrollbar.change_actions,
 						agent (a_v: INTEGER; a_h: like debug_tooltip_handler) do a_h.hide_tooltip end (?, Result))

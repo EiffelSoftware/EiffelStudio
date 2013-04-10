@@ -751,7 +751,7 @@ feature -- Status report
 				if string_item (s, 1) = '[' and string_item (s, s.count) = ']' then
 					Result := True  -- IPV6 : to complete
 				else
-					Result := is_hexa_decimal_character (string_item (s, 1)) -- IPV4 or reg-name : to complete
+					Result := True -- IPV4 or reg-name : to complete
 				end
 			end
 		end

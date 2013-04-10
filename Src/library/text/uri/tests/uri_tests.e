@@ -64,6 +64,16 @@ feature -- Tests
 		local
 			uri: URI
 		do
+			create uri.make_from_string ("http://example.com/")
+			assert ("is_valid", uri.is_valid)
+
+			create uri.make_from_string ("http://abc.def.com/")
+			assert ("is_valid", uri.is_valid)
+
+			create uri.make_from_string ("http://zyx.def.com/")
+			assert ("is_valid", uri.is_valid)
+
+
 			create uri.make_from_string ("http://user:pass@foo.com:8888/path%%20to%%20foo")
 			assert ("is_valid", uri.is_valid)
 			assert ("path", uri.path.same_string ("/path%%20to%%20foo"))

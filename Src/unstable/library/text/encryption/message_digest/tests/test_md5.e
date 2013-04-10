@@ -38,6 +38,7 @@ feature -- Test routines
 			create l_file.make_open_read ("md5_test.tmp")
 			l_s := md5_from_file (l_file)
 			l_file.close
+			l_file.delete
 			assert ("md5 from file", l_s.is_case_insensitive_equal ("57edf4a22be3c955ac49da2e2107b67a"))
 		end
 

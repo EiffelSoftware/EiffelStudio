@@ -277,7 +277,7 @@ feature -- Basic Operations
 				l_done := False
 				l_history := attached_history
 			until
-				l_done
+				ln = Void or else ln.index > end_line
 			loop
 				from
 					ln.start
@@ -321,8 +321,6 @@ feature -- Basic Operations
 					ln.forth
 				end
 				ln := ln.next
-				check ln /= Void end -- Not possible, otherwise a bug.
-				l_done := ln.index > end_line
 			end
 			if cursor_start then
 				create cursor.make_from_character_pos (start_pos, start_line, Current)

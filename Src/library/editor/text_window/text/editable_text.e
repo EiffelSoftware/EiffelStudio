@@ -251,7 +251,7 @@ feature -- Basic Operations
 			not_empty: not is_empty
 		local
 			ln: like first_line
-			l_done, end_loop, cursor_start: BOOLEAN
+			end_loop, cursor_start: BOOLEAN
 			start_pos, end_pos, start_line, end_line: INTEGER
 			start_selection, end_selection: like attached_cursor
 			l_offset: INTEGER
@@ -274,7 +274,6 @@ feature -- Basic Operations
 
 			from
 				ln := start_selection.line
-				l_done := False
 				l_history := attached_history
 			until
 				ln = Void or else ln.index > end_line

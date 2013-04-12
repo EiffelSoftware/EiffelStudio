@@ -6,14 +6,14 @@ create
 
 feature {NONE} -- Creation
 
-	make_reference is
+	make_reference
 		do
 			create b1
 			create b2
 			create r
 		end
 
-	make_expanded is
+	make_expanded
 		do
 			create {expanded B} b1
 			create {expanded B} b2

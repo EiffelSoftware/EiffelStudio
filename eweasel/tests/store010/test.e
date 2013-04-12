@@ -1,49 +1,74 @@
 class
 	TEST
 
+inherit
+	SERIALIZATION_HELPER
+
 create
 	make
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
 			a: A
+			b: B
+			l_objects: like retrieved_objects
+			l_counter: INTEGER
 		do
+			create b
 			create a.make_reference
-			a ?= store_retrieve_independent (a)
-			io.put_boolean (a.b1 = a.b2)
-			io.put_new_line
+
+			set_is_pointer_value_stored (True)
+			store_object (a, "stored_reference")
+			l_objects := retrieved_objects ("stored_reference")
+			if l_objects.count /= storable_types.count then
+				io.put_string ("Error occurred. List of successful retrieval:%N")
+				across l_objects as l_item loop
+					io.put_string ("Retrieved " + l_item.key + "%N")
+				end
+			else
+				across l_objects as l_item loop
+					if attached {A} l_item.item as l_a then
+						if l_a.b1 = l_a.b2 then
+							io.put_string ("In " + l_item.key + " retrieval: %N")
+							io.put_string ("b1 and b2 should not be equal%N")
+						end
+					else
+						io.put_string ("In " + l_item.key + " retrieval:%N")
+						io.put_string ("Unable to retrieve the items%N")
+					end
+				end
+			end
+
 			create a.make_expanded
-			a ?= store_retrieve_independent (a)
-			io.put_boolean (a.b1 = a.b2)
-			io.put_new_line
-		end
 
-feature {NONE} -- Implementation
-
-	store_retrieve_independent (an_object: ANY): ANY is
-			-- Store and retrieve `an_object'.
-		local
-			l_serializer: SED_STORABLE_FACILITIES
-			l_med: SED_MEDIUM_READER_WRITER
-			l_file: RAW_FILE
-		do
-			create l_serializer
-
-			create l_file.make ("output.data")
-			create l_med.make (l_file)
-
-			l_file.open_write
-			l_med.set_for_writing
-			l_serializer.independent_store (an_object, l_med, False)
-			l_file.close
-
-			l_file.open_read
-			l_med.set_for_reading
-			Result := l_serializer.retrieved (l_med, True)
-			l_file.close
+			set_is_pointer_value_stored (True)
+			store_object (a, "stored_expanded")
+			l_objects := retrieved_objects ("stored_expanded")
+			if l_objects.count /= storable_types.count then
+				io.put_string ("Error occurred. List of successful retrieval:%N")
+				across l_objects as l_item loop
+					io.put_string ("Retrieved " + l_item.key + "%N")
+				end
+			else
+				across l_objects as l_item loop
+					if attached {A} l_item.item as l_a then
+						l_counter := b.counter.item
+						if l_a.b1 /= l_a.b2 then
+							io.put_string ("In " + l_item.key + " retrieval: %N")
+							io.put_string ("b1 and b2 should be equal%N")
+						elseif b.counter.item = l_counter then
+							io.put_string ("In " + l_item.key + " retrieval: %N")
+							io.put_string ("{B}.is_equal was not called%N")
+						end
+					else
+						io.put_string ("In " + l_item.key + " retrieval: %N")
+						io.put_string ("Unable to retrieve the items%N")
+					end
+				end
+			end
 		end
 
 end

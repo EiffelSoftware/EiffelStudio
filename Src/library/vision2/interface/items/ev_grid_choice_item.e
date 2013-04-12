@@ -83,6 +83,32 @@ feature -- Access
 			end
 		end
 
+feature -- Actions
+
+	deactivate
+			-- Cleanup from previous call to activate.
+		local
+			l_item: detachable EV_GRID_LABEL_ITEM
+		do
+			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
+				l_choice_list.focus_out_actions.wipe_out
+
+				l_choice_list.key_press_actions.wipe_out
+				l_choice_list.pointer_button_press_item_actions.wipe_out
+				l_choice_list.pointer_button_release_item_actions.wipe_out
+				l_choice_list.pointer_motion_actions.wipe_out
+
+				if has_user_selected_item and then not l_choice_list.selected_rows.is_empty then
+					l_item ?= l_choice_list.selected_rows.first.item (1)
+					if l_item /= Void then
+						set_text (l_item.text)
+					end
+				end
+				choice_list := Void
+			end
+			Precursor {EV_GRID_LABEL_ITEM}
+		end
+
 feature {NONE} -- Implementation
 
 	choice_list: detachable EV_GRID
@@ -483,30 +509,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	deactivate
-			-- Cleanup from previous call to activate.
-		local
-			l_item: detachable EV_GRID_LABEL_ITEM
-		do
-			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
-				l_choice_list.focus_out_actions.wipe_out
-
-				l_choice_list.key_press_actions.wipe_out
-				l_choice_list.pointer_button_press_item_actions.wipe_out
-				l_choice_list.pointer_button_release_item_actions.wipe_out
-				l_choice_list.pointer_motion_actions.wipe_out
-
-				if has_user_selected_item and then not l_choice_list.selected_rows.is_empty then
-					l_item ?= l_choice_list.selected_rows.first.item (1)
-					if l_item /= Void then
-						set_text (l_item.text)
-					end
-				end
-				choice_list := Void
-			end
-			Precursor {EV_GRID_LABEL_ITEM}
-		end
-
 	drop_down_pixmap: EV_PIXMAP
 			-- Drop drawn pixmap
 		local
@@ -553,7 +555,7 @@ invariant
 	choice_list_parented_during_activation: attached choice_list as l_choice_list implies l_choice_list.parent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

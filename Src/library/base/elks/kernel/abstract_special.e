@@ -28,6 +28,13 @@ feature -- Measurement
 			count_non_negative: Result >= 0
 		end
 
+feature -- Status report
+
+	valid_index (i: INTEGER): BOOLEAN
+			-- Is `i' within the bounds of Current?
+		deferred
+		end
+
 feature -- Output
 
 	debug_output: STRING

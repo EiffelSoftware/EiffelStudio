@@ -2,7 +2,7 @@ expanded class X
 
 feature -- Modification
 
-	set is
+	set
 		do
 			i := 5
 		end

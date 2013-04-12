@@ -70,6 +70,21 @@ feature -- Access
 	item_strings: detachable INDEXABLE [READABLE_STRING_GENERAL, INTEGER]
 		-- Item strings used to make up combo box list.
 
+feature -- Actions
+
+	deactivate
+			-- Cleanup from previous call to activate.
+		do
+			if attached combo_box as l_combo_box then
+				l_combo_box.focus_out_actions.wipe_out
+				if not user_cancelled_activation then
+					set_text (l_combo_box.text)
+				end
+				combo_box := Void
+				Precursor {EV_GRID_LABEL_ITEM}
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	update_popup_dimensions (a_popup: EV_POPUP_WINDOW)
@@ -204,24 +219,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	deactivate
-			-- Cleanup from previous call to activate.
-		do
-			if attached combo_box as l_combo_box then
-				l_combo_box.focus_out_actions.wipe_out
-				if not user_cancelled_activation then
-					set_text (l_combo_box.text)
-				end
-				combo_box := Void
-				Precursor {EV_GRID_LABEL_ITEM}
-			end
-		end
-
 invariant
 	combo_box_parented_during_activation: attached combo_box as l_combo_box implies l_combo_box.parent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -145,6 +145,14 @@ rt_private rt_inline EIF_BOOLEAN rt_is_copy_semantics_field (EIF_INTEGER_32 i, E
 		return EIF_FALSE;
 	}
 }
+rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_32 i, EIF_REFERENCE a_spec) {
+	EIF_REFERENCE obj = *((EIF_REFERENCE *) a_spec + i);
+	if (obj) {
+		return eif_is_expanded(HEADER(obj)->ov_flags);
+	} else {
+		return EIF_FALSE;
+	}
+}
 #define eif_builtin_ISE_RUNTIME_dynamic_type(obj)					Dftype(obj)
 #define eif_builtin_ISE_RUNTIME_dynamic_type_at_offset(obj,offs)	Dftype(eif_obj_at(obj,offs))
 #define eif_builtin_ISE_RUNTIME_field_name_of_type(i,dftype)		(System(To_dtype(dftype)).cn_names[i - 1])
@@ -152,6 +160,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_copy_semantics_field (EIF_INTEGER_32 i, E
 #define eif_builtin_ISE_RUNTIME_field_type_of_type(i,dftype)		ei_field_type_of_type(i - 1, dftype)
 #define eif_builtin_ISE_RUNTIME_generating_type_of_type(dftype)		eif_gen_typename_of_type((EIF_TYPE_INDEX) (dftype))
 #define eif_builtin_ISE_RUNTIME_is_copy_semantics_field(i,obj,offs)	rt_is_copy_semantics_field(i,obj,offs)
+#define eif_builtin_ISE_RUNTIME_is_special_copy_semantics_item(i,obj)	rt_is_special_copy_semantics_item(i,obj)
 #define eif_builtin_ISE_RUNTIME_is_special(obj)						ei_special(obj)
 #define eif_builtin_ISE_RUNTIME_is_special_of_reference(obj)		EIF_TEST(Dtype(obj) == egc_sp_ref)
 #define eif_builtin_ISE_RUNTIME_is_tuple(obj)						ei_tuple(obj)

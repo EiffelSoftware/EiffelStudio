@@ -14,10 +14,10 @@ feature {NONE} -- Initialization
 		do
 			create sa
 				-- Uncomment the paragraph below when creating a new storable file
-			create l_file.make (argument (1))
-			l_file.open_write
-			l_file.independent_store (sa)
-			l_file.close
+--			create l_file.make (argument (1))
+--			l_file.open_write
+--			l_file.independent_store (sa)
+--			l_file.close
 
 			test (sa, argument (1))
 		end

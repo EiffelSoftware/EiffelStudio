@@ -1,38 +1,28 @@
 class
 	TEST
 
+inherit
+	SERIALIZATION_HELPER
+
 create
 	make
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		local
+			l_objects: HASH_TABLE [ANY, STRING]
 			worker_thread: WORKER_THREAD
 		do
-			retrieve
+			set_is_safe_retrieval (True)
+			l_objects := retrieved_objects_ex ("$CORRUPTED_FILE", False)
+			if l_objects.count /= 0 then
+				io.put_string ("Something very wrong here%N")
+			end
 			create worker_thread.make (agent do_nothing)
 			worker_thread.launch
 			worker_thread.join
-		end
-
-feature {NONE} -- Implementation
-
-	retrieve is
-		local
-			a: like Current
-			l_file: RAW_FILE
-			retried: BOOLEAN
-		do
-			if not retried then
-				create l_file.make_open_read ("$CORRUPTED_FILE")
-				a ?= l_file.retrieved
-				l_file.close
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 end

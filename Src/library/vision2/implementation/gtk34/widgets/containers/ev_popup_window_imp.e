@@ -141,6 +141,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 	show
 			-- Map the Window to the screen.
 		do
+			{GTK}.gtk_window_set_accept_focus (c_object, not is_disconnected_from_window_manager)
 			Precursor
 			if override_redirect then
 				if not has_focus then

@@ -346,7 +346,7 @@ feature
 		alias
 			"GTK_WIDGET_NO_WINDOW"
 		end
-		
+
 	frozen gtk_widget_get_snapshot (a_widget: POINTER; a_rect: POINTER): POINTER
 		external
 			"C signature (GtkWidget*, GdkRectangle*): GdkPixmap* use <ev_gtk.h>"
@@ -2439,6 +2439,11 @@ feature
 			"C (GtkWindow*, GtkWindow*) | <ev_gtk.h>"
 		end
 
+	frozen gtk_window_set_accept_focus (a_window: POINTER; a_accept: BOOLEAN)
+		external
+			"C (GtkWindow*, gboolean) | <ev_gtk.h>"
+		end
+
 	frozen gdk_color_struct_blue (a_c_struct: POINTER): INTEGER_32
 		external
 			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
@@ -3402,7 +3407,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

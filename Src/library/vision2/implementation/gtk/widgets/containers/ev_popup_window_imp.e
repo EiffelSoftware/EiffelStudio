@@ -141,6 +141,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 	show
 			-- Map the Window to the screen.
 		do
+			{GTK}.gtk_window_set_accept_focus (c_object, not is_disconnected_from_window_manager)
 			Precursor
 			if override_redirect then
 				if not has_focus then
@@ -205,14 +206,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_POPUP_WINDOW_IMP

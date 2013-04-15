@@ -1326,6 +1326,11 @@ feature
 			"C (GdkWindow*, GdkWindow*) | <ev_gtk.h>"
 		end
 
+	frozen gtk_window_set_accept_focus (a_window: POINTER; a_accept: BOOLEAN)
+		external
+			"C (GtkWindow*, gboolean) | <ev_gtk.h>"
+		end
+
 	frozen gtk_adjustment_changed (a_adjustment: POINTER)
 		external
 			"C (GtkAdjustment*) | <ev_gtk.h>"

@@ -695,16 +695,29 @@ feature -- Update
 
 	update_eis_system
 			-- Update EIS storage and the tool if needed.
+		local
+			l_agent: like update_eis_system_agent
 		do
-			if
-				attached {ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander and then
-				l_info_tool_commander.is_interface_usable
-			then
-					-- Update Information tool.
-				l_info_tool_commander.refresh_list
-				l_info_tool_commander.request_eis_visit
+			l_agent := update_eis_system_agent
+			if l_agent = Void then
+				l_agent := agent
+					do
+						if
+							attached {ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander and then
+							l_info_tool_commander.is_interface_usable
+						then
+								-- Update Information tool.
+							l_info_tool_commander.refresh_list
+							l_info_tool_commander.request_eis_visit
+						end
+					end
+				update_eis_system_agent := l_agent
 			end
+			ev_application.do_once_on_idle (l_agent)
 		end
+
+	update_eis_system_agent: detachable PROCEDURE [ANY, TUPLE]
+			-- Agent to update EIS system
 
 feature -- Stone process
 
@@ -2605,7 +2618,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

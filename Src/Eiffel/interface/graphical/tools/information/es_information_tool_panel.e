@@ -121,6 +121,9 @@ feature {NONE} -- Status report
 	is_visit_requested: BOOLEAN
 			-- Is backgroud visiting requested?
 
+	refresh_list_requested: BOOLEAN
+			-- Refresh list requested?
+
 feature {ES_INFORMATION_TOOL_COMMANDER_I, ES_EIS_TOOL_WIDGET} -- Basic operations
 
 	refresh_list
@@ -129,7 +132,12 @@ feature {ES_INFORMATION_TOOL_COMMANDER_I, ES_EIS_TOOL_WIDGET} -- Basic operation
 			if not is_initialized then
 				initialize
 			end
-			user_widget.refresh_list
+			if is_shown then
+				user_widget.refresh_list
+				refresh_list_requested := False
+			else
+				refresh_list_requested := True
+			end
 		end
 
 	request_eis_visit
@@ -218,6 +226,9 @@ feature {NONE} -- Action handlers
 			if is_visit_requested then
 				perform_auto_background_visiting
 			end
+			if refresh_list_requested then
+				user_widget.refresh_list
+			end
 		end
 
 	on_focus_in
@@ -303,7 +314,7 @@ feature {NONE} -- Constants
 			-- Session IDs
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -228,6 +228,7 @@ feature {NONE} -- Action handlers
 			end
 			if refresh_list_requested then
 				user_widget.refresh_list
+				refresh_list_requested := False
 			end
 		end
 

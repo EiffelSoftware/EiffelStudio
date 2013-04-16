@@ -347,11 +347,6 @@ feature
 			"GTK_WIDGET_NO_WINDOW"
 		end
 
-	frozen gtk_widget_get_snapshot (a_widget: POINTER; a_rect: POINTER): POINTER
-		external
-			"C signature (GtkWidget*, GdkRectangle*): GdkPixmap* use <ev_gtk.h>"
-		end
-
 	frozen c_gdk_color_struct_size: INTEGER_32
 		external
 			"C [macro <ev_gtk.h>]"

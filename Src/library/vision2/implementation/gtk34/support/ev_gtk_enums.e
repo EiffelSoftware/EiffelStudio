@@ -8,20 +8,6 @@ class
 
 feature -- C enums
 
-	frozen Gdk_window_type_hint_popup_menu_enum: INTEGER
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_WINDOW_TYPE_HINT_POPUP_MENU"
-		end
-
-	frozen Gdk_window_type_hint_dropdown_menu_enum: INTEGER
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU"
-		end
-
 	frozen Gdk_window_type_hint_toolbar_enum: INTEGER
 		external
 			"C macro use <ev_gtk.h>"

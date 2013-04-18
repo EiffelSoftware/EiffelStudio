@@ -126,7 +126,7 @@ features				|*
 keyword					|*
 	-- Processed when a keyword is encountered but it is not explicitly specified.
 
-keyword_feature			|*
+keyword_features		|*
 	-- Operator keyword or "Precursor"
 	-- If not specified, "keyword" is processed.
 	-- $file$ and $feature$ are defined, like for "features".
@@ -134,7 +134,7 @@ keyword_feature			|*
 symbol					|*
 	-- Processed when a symbol is encountered but it is not explicitly specified.
 
-symbol_feature			|*
+symbol_features			|*
 	-- Operator symbol. If not specified, "symbol" is processed.
 	-- $file$ and $feature$ are defined, like for "features".
 

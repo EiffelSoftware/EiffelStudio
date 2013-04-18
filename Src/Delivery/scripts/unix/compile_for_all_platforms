@@ -33,6 +33,9 @@
 #Let's compile for Linux 64 bits in background
 (sh ./make_for_platform tokyo.ise manus linux-x86-64 22) &
 
+#Let's compile for MacOS X 64 bits in background
+(sh ./make_for_platform macmini.ise manus macosx-x86-64 22) &
+
 #Let's compile for OpenBSD in background
 #(sh ./make_for_platform sushi.inf.ethz.ch manus openbsd-x86 22) &
 

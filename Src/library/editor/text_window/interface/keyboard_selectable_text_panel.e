@@ -127,17 +127,16 @@ feature -- Query
 	token_at (x, y: INTEGER): detachable EDITOR_TOKEN
 			-- Token at position (x, y)
 		local
-			l_number		: INTEGER
-			pointed_line	: detachable like line_type
+			l_number: INTEGER
 		do
 			if x > 0 and then y > 0 then
 					-- Compute the line number pointed by the mouse cursor
 					-- and adjust it if its over the number of lines in the text.
 				l_number := line_at_position (x, y)
-				pointed_line := text_displayed.line (l_number)
-
-				if pointed_line /= Void then
-					Result := token_in_line (x, pointed_line).token
+				if l_number >= 1 and then l_number <= text_displayed.number_of_lines then
+					if attached text_displayed.line (l_number) as l_pointed_line then
+						Result := token_in_line (x, l_pointed_line).token
+					end
 				end
 			end
 		end

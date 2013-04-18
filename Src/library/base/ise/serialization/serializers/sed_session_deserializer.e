@@ -78,7 +78,7 @@ feature -- Settings
 
 feature -- Basic operations
 
-	decode (a_is_gc_enabled: BOOLEAN)
+	frozen decode (a_is_gc_enabled: BOOLEAN)
 			-- Decode object graph stored in `deserializer'.
 		local
 			l_count: NATURAL_32
@@ -150,6 +150,16 @@ feature {NONE} -- Implementation: Access
 			Result := True
 		end
 
+	is_store_settings_enabled: BOOLEAN
+			-- Are settings stored?
+			-- By default not for SED_INDEPENDENT_DESERIALIZER.
+		do
+			Result := True
+		end
+
+	has_reference_with_copy_semantics: BOOLEAN
+			-- Does retrieved data contain references with copy semantics?
+
 	error_factory: SED_ERROR_FACTORY
 			-- Once access to the error factory.
 		once
@@ -158,14 +168,33 @@ feature {NONE} -- Implementation: Access
 			result_not_void: Result /= Void
 		end
 
-	has_version: BOOLEAN
-			-- Does format support reading of a version number?
-		do
-			Result := True
-		end
-
 	version: NATURAL_32
 			-- Internal version of the storable being retrieved (See SED_VERSIONS for possible values).
+
+	dynamic_type_table: detachable SPECIAL [INTEGER]
+			-- Mapping between old dynamic types and new ones.
+
+	frozen new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER
+			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
+			-- type id in current system. Return -1 if not found.
+		require
+			a_old_type_id_non_negative: a_old_type_id >= 0
+		do
+				-- If `dynamic_type_table' was provided, use it.
+			if attached dynamic_type_table as t then
+				if a_old_type_id < t.count then
+					Result := t.item (a_old_type_id)
+				else
+						-- Mapping was not found, most likely what we are retrieving has been corrupted
+						-- since serialization ensures that this could not happen.
+					Result := -1
+				end
+			else
+				Result := a_old_type_id
+			end
+		ensure
+			minus_one_of_non_negative: Result >= -1
+		end
 
 feature {NONE} -- Implementation: Settings
 
@@ -227,6 +256,7 @@ feature {NONE} -- Cleaning
 			if deserializer.is_ready_for_reading then
 				deserializer.cleanup
 			end
+			dynamic_type_table := Void
 		end
 
 feature {NONE} -- Implementation
@@ -234,16 +264,29 @@ feature {NONE} -- Implementation
 	read_header (a_count: NATURAL_32)
 			-- Read header of serialized data which has `a_count' objects.
 		do
-			check has_version: has_version end
-			version := deserializer.read_compressed_natural_32
-			if version /= {SED_VERSIONS}.session_version then
-				raise_fatal_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.session_version))
+			read_settings
+			read_object_table (a_count)
+		end
+
+	frozen read_settings
+			-- Read various settings of serialized data.
+		do
+			if is_store_settings_enabled then
+				version := deserializer.read_compressed_natural_32
+				if version >= {SED_VERSIONS}.version_7_3 then
+					has_reference_with_copy_semantics := deserializer.read_boolean
+				else
+						-- Old versions did not support reference with copy semantics.
+					has_reference_with_copy_semantics := False
+				end
 			else
-				read_object_table (a_count)
+				version := {SED_VERSIONS}.version_5_6
+					-- By default we assume there will be no references with copy semantics.				
+				has_reference_with_copy_semantics := False
 			end
 		end
 
-	read_object_table (a_count: NATURAL_32)
+	frozen read_object_table (a_count: NATURAL_32)
 			-- Read object table if any, which has `a_count' objects.
 		local
 			l_objs: like object_references
@@ -316,7 +359,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_default_value (a_abstract_type: INTEGER)
+	frozen read_default_value (a_abstract_type: INTEGER)
 			-- Read from the stream the default value that corresponds to `a_abstract_type'.
 		local
 			l_deser: like deserializer
@@ -345,7 +388,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_reference: detachable ANY
+	frozen read_reference: detachable ANY
 			-- Read reference from the stream.
 		local
 			l_nat32: NATURAL_32
@@ -359,22 +402,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_persistent_field_count (a_reflected_object: REFLECTED_REFERENCE_OBJECT): INTEGER
+	read_persistent_field_count (a_reflected_object: REFLECTED_OBJECT): INTEGER
 			-- Number of fields we are going to read from `a_reflected_object' in the the retrieved system.
 		do
 				-- We read the same number of fields because the transient fields are serialized.
 			Result := a_reflected_object.field_count
-		end
-
-	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER
-			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
-			-- type id in current system. Return -1 if not found.
-		require
-			a_old_type_id_non_negative: a_old_type_id >= 0
-		do
-			Result := a_old_type_id
-		ensure
-			minus_one_of_non_negative: Result >= -1
 		end
 
 	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER
@@ -410,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_object (is_root: BOOLEAN)
+	frozen decode_object (is_root: BOOLEAN)
 			-- Decode one object and store it in `last_decoded_object' if `is_root'.
 		local
 			l_deser: like deserializer
@@ -445,14 +477,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_normal_object (a_reflected_object: REFLECTED_REFERENCE_OBJECT)
+	decode_normal_object (a_reflected_object: REFLECTED_OBJECT)
 			-- Decode an object represented by `a_reflected_object'.
 		require
 			an_obj_not_void: a_reflected_object /= Void
 		local
 			l_deser: like deserializer
 			i, nb: INTEGER
-			l_dtype, l_new_offset: INTEGER
+			l_dtype, l_exp_dtype, l_new_offset: INTEGER
+			l_exp: REFLECTED_REFERENCE_OBJECT
 		do
 			l_deser := deserializer
 			from
@@ -501,111 +534,40 @@ feature {NONE} -- Implementation
 						a_reflected_object.set_pointer_field (l_new_offset, l_deser.read_pointer)
 
 					when {REFLECTOR_CONSTANTS}.reference_type then
-						a_reflected_object.set_reference_field (l_new_offset, read_reference)
+						if has_reference_with_copy_semantics then
+							if l_deser.read_boolean then
+									-- Reading a reference to an object with copy semantics. First
+									-- get its dynamic type to create it.
+								l_exp_dtype := l_deser.read_compressed_integer_32
+								create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+								decode_normal_object (l_exp)
+									-- Ideally we want to directly set the reference with copy semantics
+									-- without triggering a copy.
+--								{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+								a_reflected_object.set_reference_field (l_new_offset, l_exp.object)
+							else
+								a_reflected_object.set_reference_field (l_new_offset, read_reference)
+							end
+						else
+							a_reflected_object.set_reference_field (l_new_offset, read_reference)
+						end
 
 					when {REFLECTOR_CONSTANTS}.expanded_type then
-						decode_expanded_object (a_reflected_object.expanded_field (l_new_offset))
+							-- No need for the dynamic type by default, so we skip it.
+						l_deser.read_compressed_integer_32.do_nothing
+						decode_normal_object (a_reflected_object.expanded_field (l_new_offset))
 
 					else
 						check
 							False
 						end
 					end
-				else
-					check
-							-- In independent store we should not come here since any mismatch if detected
-							-- was already detected.
-						session_basic_only: is_transient_retrieval_required
-					end
-					read_default_value (a_reflected_object.field_type (l_new_offset))
 				end
 				i := i + 1
 			end
 		end
 
-	decode_expanded_object (a_reflected_object: REFLECTED_REFERENCE_OBJECT)
-			-- Decode an object `a_reflected_object'.
-		require
-			an_obj_not_void: a_reflected_object /= Void
-		local
-			l_deser: like deserializer
-			i, nb: INTEGER
-			l_new_offset: INTEGER
-			l_dtype: INTEGER
-		do
-			l_deser := deserializer
-			if l_deser.read_natural_8 /= 0 then
-					-- Something was stored, we can go ahead
-				from
-					i := 1
-					l_dtype := a_reflected_object.dynamic_type
-					nb := read_persistent_field_count (a_reflected_object) + 1
-				until
-					i = nb
-				loop
-					l_new_offset := new_attribute_offset (l_dtype, i)
-					check l_new_offset_positive: l_new_offset > 0 end
-					if not a_reflected_object.is_field_transient (l_new_offset) then
-						inspect a_reflected_object.field_type (l_new_offset)
-						when {REFLECTOR_CONSTANTS}.boolean_type then
-							a_reflected_object.set_boolean_field (l_new_offset, l_deser.read_boolean)
-
-						when {REFLECTOR_CONSTANTS}.character_8_type then
-							a_reflected_object.set_character_8_field (l_new_offset, l_deser.read_character_8)
-						when {REFLECTOR_CONSTANTS}.character_32_type then
-							a_reflected_object.set_character_32_field (l_new_offset, l_deser.read_character_32)
-
-						when {REFLECTOR_CONSTANTS}.natural_8_type then
-							a_reflected_object.set_natural_8_field (l_new_offset, l_deser.read_natural_8)
-						when {REFLECTOR_CONSTANTS}.natural_16_type then
-							a_reflected_object.set_natural_16_field (l_new_offset, l_deser.read_natural_16)
-						when {REFLECTOR_CONSTANTS}.natural_32_type then
-							a_reflected_object.set_natural_32_field (l_new_offset, l_deser.read_natural_32)
-						when {REFLECTOR_CONSTANTS}.natural_64_type then
-							a_reflected_object.set_natural_64_field (l_new_offset, l_deser.read_natural_64)
-
-						when {REFLECTOR_CONSTANTS}.integer_8_type then
-							a_reflected_object.set_integer_8_field (l_new_offset, l_deser.read_integer_8)
-						when {REFLECTOR_CONSTANTS}.integer_16_type then
-							a_reflected_object.set_integer_16_field (l_new_offset, l_deser.read_integer_16)
-						when {REFLECTOR_CONSTANTS}.integer_32_type then
-							a_reflected_object.set_integer_32_field (l_new_offset, l_deser.read_integer_32)
-						when {REFLECTOR_CONSTANTS}.integer_64_type then
-							a_reflected_object.set_integer_64_field (l_new_offset, l_deser.read_integer_64)
-
-						when {REFLECTOR_CONSTANTS}.real_32_type then
-							a_reflected_object.set_real_32_field (l_new_offset, l_deser.read_real_32)
-						when {REFLECTOR_CONSTANTS}.real_64_type then
-							a_reflected_object.set_real_64_field (l_new_offset, l_deser.read_real_64)
-
-						when {REFLECTOR_CONSTANTS}.pointer_type then
-							a_reflected_object.set_pointer_field (l_new_offset, l_deser.read_pointer)
-
-						when {REFLECTOR_CONSTANTS}.reference_type then
-							a_reflected_object.set_reference_field (l_new_offset, read_reference)
-
-						when {REFLECTOR_CONSTANTS}.expanded_type then
-							decode_expanded_object (a_reflected_object.expanded_field (l_new_offset))
-
-						else
-							check
-								False
-							end
-						end
-					else
-						check
-								-- In independent store we should not come here since any mismatch if detected
-								-- was already detected.
-							session_basic_only: is_transient_retrieval_required
-						end
-						read_default_value (a_reflected_object.field_type (l_new_offset))
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	decode_tuple (an_obj: ANY)
+	frozen decode_tuple (an_obj: ANY)
 			-- Decode TUPLE object.
 		require
 			an_obj_not_void: an_obj /= Void
@@ -654,7 +616,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_special_instance (a_dtype, a_item_type, a_count: INTEGER): SPECIAL [detachable ANY]
+	frozen new_special_instance (a_dtype, a_item_type, a_count: INTEGER): SPECIAL [detachable ANY]
 			-- Create new special instance of a special object whose dynamic
 			-- type is `a_dtype', whose element abstract type is `a_item_type'
 			-- and of count `a_count'.
@@ -690,7 +652,7 @@ feature {NONE} -- Implementation
 			new_special_instance_not_void: Result /= Void
 		end
 
-	decode_special (an_obj: ANY; an_item_type: INTEGER)
+	frozen decode_special (an_obj: ANY; an_item_type: INTEGER)
 			-- Decode SPECIAL object of element type `an_item_type' in `an_obj'.
 		require
 			an_obj_not_void: an_obj /= Void
@@ -809,7 +771,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_boolean (a_spec: SPECIAL [BOOLEAN]; a_count: INTEGER)
+	frozen decode_special_boolean (a_spec: SPECIAL [BOOLEAN]; a_count: INTEGER)
 			-- Decode SPECIAL [BOOLEAN].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -827,7 +789,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_character_8 (a_spec: SPECIAL [CHARACTER_8]; a_count: INTEGER)
+	frozen decode_special_character_8 (a_spec: SPECIAL [CHARACTER_8]; a_count: INTEGER)
 			-- Decode SPECIAL [CHARACTER_8].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -845,7 +807,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_character_32 (a_spec: SPECIAL [CHARACTER_32]; a_count: INTEGER)
+	frozen decode_special_character_32 (a_spec: SPECIAL [CHARACTER_32]; a_count: INTEGER)
 			-- Decode SPECIAL [CHARACTER_32].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -863,7 +825,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_natural_8 (a_spec: SPECIAL [NATURAL_8]; a_count: INTEGER)
+	frozen decode_special_natural_8 (a_spec: SPECIAL [NATURAL_8]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_8].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -881,7 +843,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_natural_16 (a_spec: SPECIAL [NATURAL_16]; a_count: INTEGER)
+	frozen decode_special_natural_16 (a_spec: SPECIAL [NATURAL_16]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_16].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -899,7 +861,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_natural_32 (a_spec: SPECIAL [NATURAL_32]; a_count: INTEGER)
+	frozen decode_special_natural_32 (a_spec: SPECIAL [NATURAL_32]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_32].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -917,7 +879,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_natural_64 (a_spec: SPECIAL [NATURAL_64]; a_count: INTEGER)
+	frozen decode_special_natural_64 (a_spec: SPECIAL [NATURAL_64]; a_count: INTEGER)
 			-- Decode SPECIAL [NATURAL_64].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -935,7 +897,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_integer_8 (a_spec: SPECIAL [INTEGER_8]; a_count: INTEGER)
+	frozen decode_special_integer_8 (a_spec: SPECIAL [INTEGER_8]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER_8].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -953,7 +915,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_integer_16 (a_spec: SPECIAL [INTEGER_16]; a_count: INTEGER)
+	frozen decode_special_integer_16 (a_spec: SPECIAL [INTEGER_16]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER_16].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -971,7 +933,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_integer_32 (a_spec: SPECIAL [INTEGER]; a_count: INTEGER)
+	frozen decode_special_integer_32 (a_spec: SPECIAL [INTEGER]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -989,7 +951,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_integer_64 (a_spec: SPECIAL [INTEGER_64]; a_count: INTEGER)
+	frozen decode_special_integer_64 (a_spec: SPECIAL [INTEGER_64]; a_count: INTEGER)
 			-- Decode SPECIAL [INTEGER_64].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -1007,7 +969,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_real_32 (a_spec: SPECIAL [REAL]; a_count: INTEGER)
+	frozen decode_special_real_32 (a_spec: SPECIAL [REAL]; a_count: INTEGER)
 			-- Decode SPECIAL [REAL].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -1025,7 +987,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_real_64 (a_spec: SPECIAL [DOUBLE]; a_count: INTEGER)
+	frozen decode_special_real_64 (a_spec: SPECIAL [DOUBLE]; a_count: INTEGER)
 			-- Decode SPECIAL [DOUBLE].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -1043,7 +1005,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_pointer (a_spec: SPECIAL [POINTER]; a_count: INTEGER)
+	frozen decode_special_pointer (a_spec: SPECIAL [POINTER]; a_count: INTEGER)
 			-- Decode SPECIAL [POINTER].
 		require
 			a_spec_not_void: a_spec /= Void
@@ -1061,17 +1023,50 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_reference (a_spec: SPECIAL [detachable ANY]; a_count: INTEGER)
+	frozen decode_special_reference (a_spec: SPECIAL [detachable ANY]; a_count: INTEGER)
 			-- Decode SPECIAL of reference.
 		local
 			i: INTEGER
+			l_has_copy_semantics_item: BOOLEAN
+			l_deser: like deserializer
+			l_exp_dtype: INTEGER
+			l_exp: REFLECTED_REFERENCE_OBJECT
 		do
-			from
-			until
-				i = a_count
-			loop
-				a_spec.force (read_reference, i)
-				i := i + 1
+			l_deser := deserializer
+			if version >= {SED_VERSIONS}.version_7_3 then
+				l_has_copy_semantics_item := l_deser.read_boolean
+			end
+
+			if not l_has_copy_semantics_item then
+					-- Efficient retrieval of a special with normal references
+				from
+				until
+					i = a_count
+				loop
+					a_spec.force (read_reference, i)
+					i := i + 1
+				end
+			else
+					-- Retrieval of a special containing some references with copy semantics.
+				from
+				until
+					i = a_count
+				loop
+					if l_deser.read_boolean then
+							-- Reading a reference to an object with copy semantics. First
+							-- get its dynamic type to create it.
+						l_exp_dtype := l_deser.read_compressed_integer_32
+						create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+						decode_normal_object (l_exp)
+							-- Ideally we want to directly set the reference with copy semantics
+							-- without triggering a copy.
+--						{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+						a_spec.force (l_exp.object, i)
+					else
+						a_spec.force (read_reference, i)
+					end
+					i := i + 1
+				end
 			end
 		end
 

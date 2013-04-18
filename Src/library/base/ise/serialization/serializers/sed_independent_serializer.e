@@ -12,7 +12,7 @@ class
 inherit
 	SED_BASIC_SERIALIZER
 		redefine
-			write_header, is_transient_storage_required, setup_version
+			write_header, is_store_settings_enabled
 		end
 
 create
@@ -20,68 +20,54 @@ create
 
 feature {NONE} -- Status Report
 
-	is_transient_storage_required: BOOLEAN
+	is_store_settings_enabled: BOOLEAN
 			-- <Precursor>
 		do
-				-- We do not need transient attribute to be stored, only persistent one.
 			Result := False
 		end
 
 feature {NONE} -- Implementation
 
-	setup_version
-			-- Set `version' with the appropriate version number.
-			--| By default it is 0 for SED_INDEPENDENT_SERIALIZER and different of 0 for descendants.
-			--| See SED_VERSIONS for a complete list of version numbers
-		do
-			version := 0
-		end
-
-	write_header (a_list: ARRAYED_LIST [separate ANY])
+	write_header (a_list: ARRAYED_LIST [separate ANY]; a_type_table: HASH_TABLE [INTEGER, INTEGER])
 			-- Write header of storable.
 		local
-			l_dtype_table, l_attr_dtype_table: like type_table
+			l_attr_dtype_table: like attributes_dynamic_types
 			l_dtype: INTEGER
 			l_ser: like serializer
 			l_reflector: like reflector
+			l_is_independent_serializer: BOOLEAN
 		do
 			l_ser := serializer
 			l_reflector := reflector
 
-				-- Write the version of storable used to create it.
-				-- This is useful for versioning of formats upon retrieval to
-				-- quickly detect incompatibilities.
-				-- However to not break old SED_INDEPENDENT_SERIALIZER instances,
-				-- we do not store it, it will be stored if we have a non-zero
-				-- version which is the case for the descendants of this class.
-			if version > 0 then
-				l_ser.write_compressed_natural_32 (version)
-			end
+				-- Store settings
+			write_settings
+
+			l_is_independent_serializer := not is_store_settings_enabled
 
 				-- Record all types that are alive
-			l_dtype_table := type_table (a_list)
 				-- Keep track of other type of attributes for alive object
-				-- (note that attributes that are expanded are added back to `l_dtype_table'
+				-- (note that attributes that are expanded are added back to `a_type_table'
 				-- as they are alive but not directly reachable).
-			l_attr_dtype_table := attributes_dynamic_types (l_dtype_table)
+			l_attr_dtype_table := attributes_dynamic_types (a_type_table)
 
 				-- Write mapping dynamic type and their string representation for alive objects.
 			from
 					-- Write number of types being written
-				l_ser.write_compressed_natural_32 (l_dtype_table.count.to_natural_32)
-				l_dtype_table.start
+				l_ser.write_compressed_natural_32 (a_type_table.count.to_natural_32)
+				a_type_table.start
 			until
-				l_dtype_table.after
+				a_type_table.after
 			loop
 					-- Write dynamic type
-				l_dtype := l_dtype_table.item_for_iteration
+				l_dtype := a_type_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write type name
 				l_ser.write_string_8 (l_reflector.type_name_of_type (l_dtype))
-				l_dtype_table.forth
+				a_type_table.forth
 					-- Write the storable version number for that type, but only
 					-- if the format supports it.
-				if version >= {SED_VERSIONS}.recoverable_version_6_6 then
+				if not l_is_independent_serializer and then version >= {SED_VERSIONS}.version_6_6 then
 					if attached l_reflector.storable_version_of_type (l_dtype) as l_version and then not l_version.is_empty then
 						l_ser.write_boolean (True)
 						l_ser.write_string_8 (l_version)
@@ -111,24 +97,24 @@ feature {NONE} -- Implementation
 
 				-- Write attribute description mapping
 			from
-				l_ser.write_compressed_natural_32 (l_dtype_table.count.to_natural_32)
-				l_dtype_table.start
+				l_ser.write_compressed_natural_32 (a_type_table.count.to_natural_32)
+				a_type_table.start
 			until
-				l_dtype_table.after
+				a_type_table.after
 			loop
 					-- Write dynamic type
-				l_dtype := l_dtype_table.item_for_iteration
+				l_dtype := a_type_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write attributes description
 				write_attributes (l_dtype)
-				l_dtype_table.forth
+				a_type_table.forth
 			end
 
 				-- Write object table if necessary.
 			write_object_table (a_list)
 		end
 
-	attributes_dynamic_types (a_type_table: like type_table): like type_table
+	attributes_dynamic_types (a_type_table: HASH_TABLE [INTEGER, INTEGER]): HASH_TABLE [INTEGER, INTEGER]
 			-- Table of dynamic types of attributes appearing in `a_type_table'.
 			-- If encountering an expanded type inside one of the type of `a_type_table',
 			-- we add it to `a_type_table'.

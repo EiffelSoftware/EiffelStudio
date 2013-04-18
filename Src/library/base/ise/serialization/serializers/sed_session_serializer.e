@@ -1,5 +1,11 @@
 note
-	description: "Encoding of arbitrary objects graphs within a session of a same program."
+	description: "[
+		Encoding of arbitrary objects graphs within a session of a same program.
+		
+		Some routines are explicitely frozen, not because we do not want them to be redefined
+		but if they are frozen, it saves us having to look at all possible descendants whenever
+		we do a change.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -30,7 +36,7 @@ feature {NONE} -- Initialization
 			create object_indexes.make (1)
 			traversable := breadth_first_traversable
 			serializer := a_serializer
-			setup_version
+			version := {SED_VERSIONS}.version_7_3
 		ensure
 			serializer_set: serializer = a_serializer
 		end
@@ -56,16 +62,6 @@ feature -- Status report
 
 	is_root_object_set: BOOLEAN
 			-- Is root object of object graph set?
-
-feature {NONE} -- Status report
-
-	is_transient_storage_required: BOOLEAN
-			-- Do we need to store transient attribute with their default value?
-			-- This is necessary for Session/Basic storing where we expect the same
-			-- object layout.
-		do
-			Result := True
-		end
 
 feature -- Element change
 
@@ -113,7 +109,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	encode
+	frozen encode
 			-- Encode object graph starting with the root object.
 		require
 			traversing_mode_set: is_traversing_mode_set
@@ -131,8 +127,12 @@ feature -- Basic operations
 
 				-- We ignore transient attributes for storing.
 			traversable.set_is_skip_transient (True)
+			traversable.set_is_skip_copy_semantics_reference (True)
 			traversable.traverse
-			if attached traversable.visited_objects as l_list then
+			if attached traversable.visited_objects as l_list and then attached traversable.visited_types as l_type_table then
+					-- Get some results of the traversal
+				has_reference_with_copy_semantics := traversable.has_reference_with_copy_semantics
+
 				l_list_count := l_list.count.to_natural_32
 
 				if l_list.count > object_indexes.capacity then
@@ -143,7 +143,7 @@ feature -- Basic operations
 				serializer.write_compressed_natural_32 (l_list_count)
 
 					-- Write header of encoding
-				write_header (l_list)
+				write_header (l_list, l_type_table)
 
 					-- Write objects
 				encode_objects (l_list)
@@ -186,29 +186,49 @@ feature {NONE} -- Implementation: Access
 	version: NATURAL_32
 			-- Internal version of the format (See SED_VERSIONS for possible values).
 
-feature {NONE} -- Implementation
+feature {NONE} -- Status report
 
-	setup_version
-			-- Set `version' with the appropriate version number.
-			--| See SED_VERSIONS for a complete list of version numbers
+	is_store_settings_enabled: BOOLEAN
+			-- Are settings stored?
+			-- By default not for SED_INDEPENDENT_SERIALIZER.
 		do
-			version := {SED_VERSIONS}.session_version_6_6
+			Result := True
 		end
 
-	write_header (a_list: ARRAYED_LIST [separate ANY])
+	has_reference_with_copy_semantics: BOOLEAN
+			-- Does serialized data have some reference with copy semantics?
+			-- If none, we optimize the serialization of references by not emitting
+			-- a boolean switch each time we refer to an object.
+
+feature {NONE} -- Implementation
+
+	write_header (a_list: ARRAYED_LIST [separate ANY]; a_type_table: HASH_TABLE [INTEGER, INTEGER])
 			-- Operation performed before `encoding_objects'.
 		require
 			a_list_not_void: a_list /= Void
 			a_list_not_empty: not a_list.is_empty
 		do
-				-- Write the version of storable used to create it.
-				-- This is useful for versioning of formats upon retrieval to
-				-- quickly detect incompatibilities.
-			serializer.write_compressed_natural_32 (version)
+			write_settings
 			write_object_table (a_list)
 		end
 
-	write_object_table (a_list: ARRAYED_LIST [separate ANY])
+	frozen write_settings
+		do
+				-- Write the version of storable used to create it.
+				-- This is useful for versioning of formats upon retrieval to
+				-- quickly detect incompatibilities.	
+				--| Note:
+				--| Because versioning was added after the initial release of SED, in order
+				--| to not break existing storables, SED_INDEPENDENT_DESERIALIZER does not support
+				--| the reading of a version by redefining `is_version_stored' accordingly.
+			if is_store_settings_enabled then
+				serializer.write_compressed_natural_32 (version)
+					-- Store whether or not we have some reference with copy semantics.
+				serializer.write_boolean (has_reference_with_copy_semantics)
+			end
+		end
+
+	frozen write_object_table (a_list: ARRAYED_LIST [separate ANY])
 			-- Write mapping between object's reference ID in `a_list' with
 			-- all the necessary information necessary to recreate it at a
 			-- later time.
@@ -278,36 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	write_default_value (a_abstract_type: INTEGER)
-			-- Write to the stream the default value that corresponds to `a_abstract_type'.
-		local
-			l_ser: like serializer
-		do
-			l_ser := serializer
-			inspect a_abstract_type
-			when {REFLECTOR_CONSTANTS}.boolean_type then l_ser.write_boolean (False)
-			when {REFLECTOR_CONSTANTS}.character_8_type then l_ser.write_character_8 ('%/000/')
-			when {REFLECTOR_CONSTANTS}.character_32_type then l_ser.write_character_32 ('%/000/')
-			when {REFLECTOR_CONSTANTS}.natural_8_type then l_ser.write_natural_8 (0)
-			when {REFLECTOR_CONSTANTS}.natural_16_type then l_ser.write_natural_16 (0)
-			when {REFLECTOR_CONSTANTS}.natural_32_type then l_ser.write_natural_32 (0)
-			when {REFLECTOR_CONSTANTS}.natural_64_type then l_ser.write_natural_64 (0)
-			when {REFLECTOR_CONSTANTS}.integer_8_type then l_ser.write_integer_8 (0)
-			when {REFLECTOR_CONSTANTS}.integer_16_type then l_ser.write_integer_16 (0)
-			when {REFLECTOR_CONSTANTS}.integer_32_type then l_ser.write_integer_32 (0)
-			when {REFLECTOR_CONSTANTS}.integer_64_type then l_ser.write_integer_64 (0)
-			when {REFLECTOR_CONSTANTS}.real_32_type then l_ser.write_real_32 (0)
-			when {REFLECTOR_CONSTANTS}.real_64_type then l_ser.write_real_64 (0)
-			when {REFLECTOR_CONSTANTS}.pointer_type then l_ser.write_pointer (default_pointer)
-			when {REFLECTOR_CONSTANTS}.reference_type then encode_reference (Void)
-			when {REFLECTOR_CONSTANTS}.expanded_type then l_ser.write_natural_8 (0)
-
-			else
-				check False end
-			end
-		end
-
-	encode_objects (a_list: ARRAYED_LIST [separate ANY])
+	frozen encode_objects (a_list: ARRAYED_LIST [separate ANY])
 			-- Encode all objects referenced in `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -354,12 +345,12 @@ feature {NONE} -- Implementation
 						end
 					end
 				else
-					encode_normal_object (l_obj)
+					encode_normal_object (l_reflected_object)
 				end
 			end
 		end
 
-	encode_reference (an_object: detachable separate ANY)
+	frozen encode_reference (an_object: detachable separate ANY)
 			-- Encode reference to `an_object'.
 		do
 			if an_object /= Void then
@@ -369,152 +360,91 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_normal_object (an_object: separate ANY)
-			-- Encode normal object.
-		require
-			an_object_not_void: an_object /= Void
+	frozen encode_normal_object (a_reflected_object: REFLECTED_OBJECT)
+			-- Encode normal object `a_reflected_object'.
 		local
 			i, nb: INTEGER
-			l_reflected_object: like reflected_object
 			l_ser: like serializer
+			l_exp: REFLECTED_COPY_SEMANTICS_OBJECT
 		do
 			from
-				l_reflected_object := reflected_object
-				l_reflected_object.set_object (an_object)
 				l_ser := serializer
 				i := 1
-				nb := l_reflected_object.field_count + 1
+				nb := a_reflected_object.field_count + 1
 			until
 				i = nb
 			loop
-				if not l_reflected_object.is_field_transient (i) then
-					inspect l_reflected_object.field_type (i)
+				if not a_reflected_object.is_field_transient (i) then
+					inspect a_reflected_object.field_type (i)
 					when {REFLECTOR_CONSTANTS}.boolean_type then
-						l_ser.write_boolean (l_reflected_object.boolean_field (i))
+						l_ser.write_boolean (a_reflected_object.boolean_field (i))
 
 					when {REFLECTOR_CONSTANTS}.character_8_type then
-						l_ser.write_character_8 (l_reflected_object.character_8_field (i))
+						l_ser.write_character_8 (a_reflected_object.character_8_field (i))
 					when {REFLECTOR_CONSTANTS}.character_32_type then
-						l_ser.write_character_32 (l_reflected_object.character_32_field (i))
+						l_ser.write_character_32 (a_reflected_object.character_32_field (i))
 
 					when {REFLECTOR_CONSTANTS}.natural_8_type then
-						l_ser.write_natural_8 (l_reflected_object.natural_8_field (i))
+						l_ser.write_natural_8 (a_reflected_object.natural_8_field (i))
 					when {REFLECTOR_CONSTANTS}.natural_16_type then
-						l_ser.write_natural_16 (l_reflected_object.natural_16_field (i))
+						l_ser.write_natural_16 (a_reflected_object.natural_16_field (i))
 					when {REFLECTOR_CONSTANTS}.natural_32_type then
-						l_ser.write_natural_32 (l_reflected_object.natural_32_field (i))
+						l_ser.write_natural_32 (a_reflected_object.natural_32_field (i))
 					when {REFLECTOR_CONSTANTS}.natural_64_type then
-						l_ser.write_natural_64 (l_reflected_object.natural_64_field (i))
+						l_ser.write_natural_64 (a_reflected_object.natural_64_field (i))
 
 					when {REFLECTOR_CONSTANTS}.integer_8_type then
-						l_ser.write_integer_8 (l_reflected_object.integer_8_field (i))
+						l_ser.write_integer_8 (a_reflected_object.integer_8_field (i))
 					when {REFLECTOR_CONSTANTS}.integer_16_type then
-						l_ser.write_integer_16 (l_reflected_object.integer_16_field (i))
+						l_ser.write_integer_16 (a_reflected_object.integer_16_field (i))
 					when {REFLECTOR_CONSTANTS}.integer_32_type then
-						l_ser.write_integer_32 (l_reflected_object.integer_32_field (i))
+						l_ser.write_integer_32 (a_reflected_object.integer_32_field (i))
 					when {REFLECTOR_CONSTANTS}.integer_64_type then
-						l_ser.write_integer_64 (l_reflected_object.integer_64_field (i))
+						l_ser.write_integer_64 (a_reflected_object.integer_64_field (i))
 
 					when {REFLECTOR_CONSTANTS}.real_32_type then
-						l_ser.write_real_32 (l_reflected_object.real_32_field (i))
+						l_ser.write_real_32 (a_reflected_object.real_32_field (i))
 					when {REFLECTOR_CONSTANTS}.real_64_type then
-						l_ser.write_real_64 (l_reflected_object.real_64_field (i))
+						l_ser.write_real_64 (a_reflected_object.real_64_field (i))
 
 					when {REFLECTOR_CONSTANTS}.pointer_type then
-						l_ser.write_pointer (l_reflected_object.pointer_field (i))
+						l_ser.write_pointer (a_reflected_object.pointer_field (i))
 
 					when {REFLECTOR_CONSTANTS}.reference_type then
-						encode_reference (l_reflected_object.reference_field (i))
+						if has_reference_with_copy_semantics then
+							if a_reflected_object.is_copy_semantics_field (i) then
+									-- Mark that it is a reference with copy semantics.
+								l_ser.write_boolean (True)
+									-- Provide the dynamic type for that reference.
+								l_exp := a_reflected_object.copy_semantics_field (i)
+									-- We encode the object as if it was an expanded one.
+									-- To ensure retrieval in case of a mismatch, we store the dynamic type too.
+								l_ser.write_compressed_integer_32 (l_exp.dynamic_type)
+								encode_normal_object (l_exp)
+							else
+								l_ser.write_boolean (False)
+								encode_reference (a_reflected_object.reference_field (i))
+							end
+						else
+							encode_reference (a_reflected_object.reference_field (i))
+						end
 
 					when {REFLECTOR_CONSTANTS}.expanded_type then
-						encode_expanded (l_reflected_object.expanded_field (i))
+							-- To ensure retrieval in case of a mismatch, we store the dynamic type too.
+						l_ser.write_compressed_integer_32 (a_reflected_object.dynamic_type)
+						encode_normal_object (a_reflected_object.expanded_field (i))
 
 					else
 						check
 							False
 						end
 					end
-				elseif is_transient_storage_required then
-					write_default_value (l_reflected_object.field_type (i))
 				end
 				i := i + 1
 			end
 		end
 
-	encode_expanded (an_object: REFLECTED_REFERENCE_OBJECT)
-			-- Encode expanded `an_object'.
-		require
-			an_object_not_void: an_object /= Void
-		local
-			i, nb: INTEGER
-			l_ser: like serializer
-		do
-			from
-				l_ser := serializer
-				i := 1
-				nb := an_object.field_count + 1
-					-- Marker to tell that we are an expanded that is not transient.
-					-- Useful for retrieval where a transiant expanded field would
-					-- have a value of 0 there.
-				l_ser.write_natural_8 (1)
-			until
-				i = nb
-			loop
-				if not an_object.is_field_transient (i) then
-					inspect an_object.field_type (i)
-					when {REFLECTOR_CONSTANTS}.boolean_type then
-						l_ser.write_boolean (an_object.boolean_field (i))
-
-					when {REFLECTOR_CONSTANTS}.character_8_type then
-						l_ser.write_character_8 (an_object.character_8_field (i))
-					when {REFLECTOR_CONSTANTS}.character_32_type then
-						l_ser.write_character_32 (an_object.character_32_field (i))
-
-					when {REFLECTOR_CONSTANTS}.natural_8_type then
-						l_ser.write_natural_8 (an_object.natural_8_field (i))
-					when {REFLECTOR_CONSTANTS}.natural_16_type then
-						l_ser.write_natural_16 (an_object.natural_16_field (i))
-					when {REFLECTOR_CONSTANTS}.natural_32_type then
-						l_ser.write_natural_32 (an_object.natural_32_field (i))
-					when {REFLECTOR_CONSTANTS}.natural_64_type then
-						l_ser.write_natural_64 (an_object.natural_64_field (i))
-
-					when {REFLECTOR_CONSTANTS}.integer_8_type then
-						l_ser.write_integer_8 (an_object.integer_8_field (i))
-					when {REFLECTOR_CONSTANTS}.integer_16_type then
-						l_ser.write_integer_16 (an_object.integer_16_field (i))
-					when {REFLECTOR_CONSTANTS}.integer_32_type then
-						l_ser.write_integer_32 (an_object.integer_32_field (i))
-					when {REFLECTOR_CONSTANTS}.integer_64_type then
-						l_ser.write_integer_64 (an_object.integer_64_field (i))
-
-					when {REFLECTOR_CONSTANTS}.real_32_type then
-						l_ser.write_real_32 (an_object.real_32_field (i))
-					when {REFLECTOR_CONSTANTS}.real_64_type then
-						l_ser.write_real_64 (an_object.real_64_field (i))
-
-					when {REFLECTOR_CONSTANTS}.pointer_type then
-						l_ser.write_pointer (an_object.pointer_field (i))
-
-					when {REFLECTOR_CONSTANTS}.reference_type then
-						encode_reference (an_object.reference_field (i))
-
-					when {REFLECTOR_CONSTANTS}.expanded_type then
-						encode_expanded (an_object.expanded_field (i))
-
-					else
-						check
-							False
-						end
-					end
-				elseif is_transient_storage_required then
-					write_default_value (an_object.field_type (i))
-				end
-				i := i + 1
-			end
-		end
-
-	encode_tuple_object (a_tuple: TUPLE)
+	frozen encode_tuple_object (a_tuple: TUPLE)
 			-- Encode a TUPLE object.
 		require
 			a_tuple_not_void: a_tuple /= Void
@@ -564,7 +494,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special (an_object: separate ANY; a_item_type: INTEGER)
+	frozen encode_special (an_object: separate ANY; a_item_type: INTEGER)
 			-- Encode an object which is a special object.
 		require
 			an_object_not_void: an_object /= Void
@@ -608,13 +538,6 @@ feature {NONE} -- Implementation
 				else
 					check l_spec_natural_16_not_void: False end
 				end
-
---			when {REFLECTOR_CONSTANTS}.natural_32_type then
---				if attached {SPECIAL [NATURAL_32]} an_object as l_spec_natural_32 then
---					encode_special_natural_32 (l_spec_natural_32)
---				else
---					check l_spec_natural_32_not_void: False end
---				end
 
 			when {REFLECTOR_CONSTANTS}.natural_64_type then
 				if attached {SPECIAL [NATURAL_64]} an_object as l_spec_natural_64 then
@@ -684,7 +607,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_boolean (a_spec: SPECIAL [BOOLEAN])
+	frozen encode_special_boolean (a_spec: SPECIAL [BOOLEAN])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -704,7 +627,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_character_8 (a_spec: SPECIAL [CHARACTER_8])
+	frozen encode_special_character_8 (a_spec: SPECIAL [CHARACTER_8])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -724,7 +647,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_character_32 (a_spec: SPECIAL [CHARACTER_32])
+	frozen encode_special_character_32 (a_spec: SPECIAL [CHARACTER_32])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -744,7 +667,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_8 (a_spec: SPECIAL [NATURAL_8])
+	frozen encode_special_natural_8 (a_spec: SPECIAL [NATURAL_8])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -764,7 +687,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_16 (a_spec: SPECIAL [NATURAL_16])
+	frozen encode_special_natural_16 (a_spec: SPECIAL [NATURAL_16])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -784,7 +707,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_32 (a_spec: SPECIAL [NATURAL_32])
+	frozen encode_special_natural_32 (a_spec: SPECIAL [NATURAL_32])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -804,7 +727,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_64 (a_spec: SPECIAL [NATURAL_64])
+	frozen encode_special_natural_64 (a_spec: SPECIAL [NATURAL_64])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -824,7 +747,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_8 (a_spec: SPECIAL [INTEGER_8])
+	frozen encode_special_integer_8 (a_spec: SPECIAL [INTEGER_8])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -844,7 +767,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_16 (a_spec: SPECIAL [INTEGER_16])
+	frozen encode_special_integer_16 (a_spec: SPECIAL [INTEGER_16])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -864,7 +787,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_32 (a_spec: SPECIAL [INTEGER])
+	frozen encode_special_integer_32 (a_spec: SPECIAL [INTEGER])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -884,7 +807,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_64 (a_spec: SPECIAL [INTEGER_64])
+	frozen encode_special_integer_64 (a_spec: SPECIAL [INTEGER_64])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -904,7 +827,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_real_32 (a_spec: SPECIAL [REAL])
+	frozen encode_special_real_32 (a_spec: SPECIAL [REAL])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -924,7 +847,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_real_64 (a_spec: SPECIAL [DOUBLE])
+	frozen encode_special_real_64 (a_spec: SPECIAL [DOUBLE])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -944,7 +867,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_pointer (a_spec: SPECIAL [POINTER])
+	frozen encode_special_pointer (a_spec: SPECIAL [POINTER])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -964,21 +887,67 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_reference (a_spec: SPECIAL [detachable ANY])
+	frozen encode_special_reference (a_spec: SPECIAL [detachable ANY])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
 		local
 			i, nb: INTEGER
+			l_reflected_object: like reflected_object
+			l_exp: REFLECTED_COPY_SEMANTICS_OBJECT
+			l_ser: like serializer
+			l_has_copy_semantics: BOOLEAN
 		do
+				-- Check if there are any references with copy semantics
 			from
 				nb := a_spec.count
-				serializer.write_compressed_integer_32 (nb)
+				l_reflected_object := reflected_object
+				l_reflected_object.set_object (a_spec)
 			until
 				i = nb
 			loop
-				encode_reference (a_spec.item (i))
+				if l_reflected_object.is_special_copy_semantics_item (i) then
+					i := nb - 1
+					l_has_copy_semantics := True
+				end
 				i := i + 1
+			end
+
+			l_ser := serializer
+			l_ser.write_compressed_integer_32 (nb)
+			l_ser.write_boolean (l_has_copy_semantics)
+			if l_has_copy_semantics then
+				from
+					i := 0
+				until
+					i = nb
+				loop
+					if l_reflected_object.is_special_copy_semantics_item (i) then
+							-- Mark that it is a reference with copy semantics.
+						l_ser.write_boolean (True)
+							-- Provide the dynamic type for that reference.
+						l_exp := l_reflected_object.special_copy_semantics_item (i)
+							-- We encode the object as if it was an expanded one.
+							-- To ensure retrieval in case of a mismatch, we store the dynamic type too.
+						l_ser.write_compressed_integer_32 (l_exp.dynamic_type)
+						encode_normal_object (l_exp)
+					else
+						l_ser.write_boolean (False)
+						encode_reference (a_spec.item (i))
+					end
+					i := i + 1
+				end
+			else
+					-- More compact way to write a special of reference
+					-- that contains no references with copy semantics.
+				from
+					i := 0
+				until
+					i = nb
+				loop
+					encode_reference (a_spec.item (i))
+					i := i + 1
+				end
 			end
 		end
 

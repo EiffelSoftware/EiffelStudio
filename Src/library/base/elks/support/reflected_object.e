@@ -149,6 +149,15 @@ feature -- Status report
 			Result := {ISE_RUNTIME}.is_copy_semantics_field (i, object_address, 0)
 		end
 
+	is_special_copy_semantics_item (i: INTEGER): BOOLEAN
+			-- Is `i'-th field of `object' a reference with copy-semantics properties?
+		require
+			is_special_of_reference: is_special_of_reference
+			valid_index: attached {ABSTRACT_SPECIAL} object as l_spec and then l_spec.valid_index (i)
+		do
+			Result := {ISE_RUNTIME}.is_special_copy_semantics_item (i, object_address)
+		end
+
 	is_field_statically_attached (i: INTEGER): BOOLEAN
 			-- Is `i'-th field of `object' defined as attached?
 		require
@@ -222,6 +231,15 @@ feature -- Status report
 			not_special: not is_special
 			reference_field: field_type (i) = reference_type and is_copy_semantics_field (i)
 		deferred
+		end
+
+	special_copy_semantics_item (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
+			-- Object attached to the `i'th item of special.
+		require
+			is_special_reference: is_special_of_reference
+			valid_index: attached {ABSTRACT_SPECIAL} object as l_spec and then l_spec.valid_index (i)
+		do
+			create Result.make_special (Current, i)
 		end
 
 	expanded_field (i: INTEGER): REFLECTED_OBJECT

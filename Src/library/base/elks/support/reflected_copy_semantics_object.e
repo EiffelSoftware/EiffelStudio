@@ -17,21 +17,36 @@ inherit
 
 	REFLECTOR_CONSTANTS
 
-create {REFLECTED_REFERENCE_OBJECT}
-	make
+create {REFLECTED_OBJECT}
+	make, make_special
 
 create {REFLECTED_COPY_SEMANTICS_OBJECT}
 	make_recursive
 
 feature {NONE} -- Initialization
 
-	make (a_enclosing_object: REFLECTED_REFERENCE_OBJECT; i: INTEGER)
+	make (a_enclosing_object: REFLECTED_OBJECT; i: INTEGER)
 			-- Setup a proxy to copy semantics field located at the `i'-th field of `a_enclosing_object'.
 		require
 			i_th_field_is_expanded: a_enclosing_object.is_copy_semantics_field (i)
 		do
 			referring_object := a_enclosing_object
 			referring_physical_offset := a_enclosing_object.field_offset (i)
+			physical_offset := 0
+			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
+		ensure
+			enclosing_object_set: referring_object = a_enclosing_object
+		end
+
+	make_special (a_enclosing_object: REFLECTED_OBJECT; i: INTEGER)
+			-- Setup a proxy to copy semantics item located at the `i'-th position of special represented by `a_enclosing_object'.
+		require
+			a_enclosing_object_is_special_reference: a_enclosing_object.is_special_of_reference
+			valid_index: attached {ABSTRACT_SPECIAL} a_enclosing_object.object as l_spec and then l_spec.valid_index (i)
+			i_th_field_is_expanded: a_enclosing_object.is_special_copy_semantics_item (i)
+		do
+			referring_object := a_enclosing_object
+			referring_physical_offset := i * {PLATFORM}.pointer_bytes
 			physical_offset := 0
 			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
 		ensure
@@ -67,8 +82,6 @@ feature -- Access
 
 	physical_offset: INTEGER
 			-- Actual offset of `object' in `referring_object + referring_physical_offset'.
-
-feature -- Access
 
 	copy_semantics_field (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
 			-- <Precursor>

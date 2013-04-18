@@ -166,6 +166,27 @@ feature -- Status setting
 			refresh_margin
 		end
 
+	enable_debug_tooltip
+			-- Enable debug tooltip if possible
+		do
+			debug_tooltip_enabled := True
+		ensure
+			debug_tooltip_enabled: debug_tooltip_enabled
+		end
+
+	disable_debug_tooltip
+			-- Disable debug tooltip
+		do
+			debug_tooltip_enabled := False
+		ensure
+			debug_tooltip_disabled: not debug_tooltip_enabled
+		end
+
+feature -- Query
+
+	debug_tooltip_enabled: BOOLEAN
+			-- Debug tooltip enabled?
+
 feature -- Possibly delayed operations
 
 	display_line_when_ready (l_num: INTEGER; a_col: INTEGER; highlight: BOOLEAN)
@@ -459,7 +480,9 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 					refresh_now
 				end
 			end
-			debug_tooltip_handler.hide_tooltip
+			if debug_tooltip_enabled then
+				debug_tooltip_handler.hide_tooltip
+			end
 		end
 
 	handle_extended_key (ev_key: EV_KEY)
@@ -504,7 +527,9 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 	on_pointer_move (x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
 			-- On pointer move.
 		do
-			debug_tooltip_handler.propagate_pointer_move (x, y, x_tilt, y_tilt, pressure, screen_x, screen_y)
+			if debug_tooltip_enabled then
+				debug_tooltip_handler.propagate_pointer_move (x, y, x_tilt, y_tilt, pressure, screen_x, screen_y)
+			end
 		end
 
 feature {NONE} -- Debug tooktip

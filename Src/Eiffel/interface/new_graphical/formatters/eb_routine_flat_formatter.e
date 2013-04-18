@@ -44,6 +44,7 @@ feature -- Status setting
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (a_displayer)
 			if displayer /= Void then
 				displayer.editor.enable_has_breakable_slots
+				displayer.editor.enable_debug_tooltip
 				displayer.editor.drop_actions.extend (agent on_breakable_drop)
 			end
 		end
@@ -176,7 +177,7 @@ feature {NONE} -- Implementation
 			-- Should breakpoints be shown in Current?
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

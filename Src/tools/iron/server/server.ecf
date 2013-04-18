@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="server" uuid="18703970-6222-4F1A-8A63-4E72E05E8A6B" library_target="server">
+	<target name="server">
+		<description>IRON_CONTROLLER</description>
+		<root class="IRON_REPO_CONTROLLER" feature="make"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+			<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
+		</option>
+		<setting name="executable_name" value="ironctl"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="cgi" location="..\lib\EWF\library\server\wsf\connector\cgi-safe.ecf"/>
+		<library name="default_nino" location="..\lib\EWF\library\server\wsf\default\nino-safe.ecf"/>
+		<library name="encoder" location="..\lib\EWF\library\text\encoder\encoder-safe.ecf" readonly="false"/>
+		<library name="http" location="..\lib\EWF\library\network\protocol\http\http-safe.ecf" readonly="false"/>
+		<library name="http_authorization" location="..\lib\EWF\library\server\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
+		<library name="libfcgi" location="..\lib\EWF\library\server\wsf\connector\libfcgi-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf">
+			<option>
+				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="nino" location="..\lib\EWF\library\server\wsf\connector\nino-safe.ecf" readonly="false"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
+		<library name="wgi_nino" location="..\lib\EWF\library\server\ewsgi\connectors\nino\nino-safe.ecf"/>
+		<library name="wsf" location="..\lib\EWF\library\server\wsf\wsf-safe.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="wsf_html" location="..\lib\EWF\library\server\wsf_html\wsf_html-safe.ecf" readonly="false"/>
+		<cluster name="controller" location=".\controller\" recursive="true"/>
+		<cluster name="kernel" location=".\kernel\" recursive="true"/>
+		<cluster name="service" location=".\service\" recursive="true"/>
+		<cluster name="storage" location=".\storage\" recursive="true"/>
+		<cluster name="support" location="..\support\" recursive="true"/>
+	</target>
+</system>

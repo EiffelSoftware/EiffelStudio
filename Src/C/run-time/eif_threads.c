@@ -1272,11 +1272,24 @@ rt_public void eif_enter_eiffel_code(void)
 	/* Synchronize current thread as we enter some Eiffel code */
 {
 	RT_GET_CONTEXT
-		/* Do not change current thread status if we are currently running a
-		 * GC cycle, the status will be reset in `eif_unsynchronize_gc'. */
-	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
-			/* Check if GC requested a synchronization before resetting our status. */
-		gc_thread_status = EIF_THREAD_RUNNING;
+	if (rt_globals) {
+			/* Do not change current thread status if we are currently running a
+			 * GC cycle, the status will be reset in `eif_unsynchronize_gc'. */
+		if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
+				/* Check if GC requested a synchronization before resetting our status. */
+			gc_thread_status = EIF_THREAD_RUNNING;
+		}
+	} else {
+			/* We are reentering Eiffel code but we have no more context, it means that the
+			 * `rt_global_key' was destroyed in a call to `reclaim'. In other words, we are
+			 * in the process of stopping the program. We cannot therefore continue safely.
+			 * We will lock ourself on the `eif_gc_mutex' which should be locked already
+			 * by `reclaim'.
+			 * See eweasel test#scoop029 to reproduce the problem. */
+		CHECK("is collecting", eif_is_gc_collecting);
+			/* We cannot use EIF_GC_MUTEX_LOCK because the it blocks signals and at
+			 * this point the per thread data for signals is gone since `rt_globals' is NULL. */
+		RT_TRACE(eif_pthread_cs_lock(eif_gc_mutex));
 	}
 }
 

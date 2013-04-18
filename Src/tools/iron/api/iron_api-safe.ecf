@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="iron_api" uuid="812E6D32-0DF0-40A4-B19D-0E7404A2DE90" library_target="iron_api">
+	<target name="iron_api">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		</option>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
+
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf" readonly="false"/>
+		<cluster name="src" location="kernel" recursive="true"/>
+	</target>
+</system>

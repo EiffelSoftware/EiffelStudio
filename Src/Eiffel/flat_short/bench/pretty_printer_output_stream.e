@@ -26,7 +26,12 @@ feature {NONE} -- Creation
 					if attached c then
 							-- Write in a given encoding.
 						utf32.convert_to (c, s)
-						o.put_string (utf32.last_converted_string_8)
+						if utf32.last_conversion_successful then
+							o.put_string (utf32.last_converted_string_8)
+						else
+								-- Write in UTF-8 by default.
+							o.put_string (u.utf_32_string_to_utf_8_string_8 (s))
+						end
 					else
 							-- Write in UTF-8 by default.
 						o.put_string (u.utf_32_string_to_utf_8_string_8 (s))

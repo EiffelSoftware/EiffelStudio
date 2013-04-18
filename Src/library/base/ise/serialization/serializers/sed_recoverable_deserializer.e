@@ -23,7 +23,7 @@ inherit
 			clear_internal_data,
 			decode_normal_object,
 			decode_objects,
-			has_version
+			is_store_settings_enabled
 		end
 
 	MISMATCH_CORRECTOR
@@ -61,6 +61,12 @@ feature {NONE} -- Implementation: access
 
 	is_checking_data_consistency: BOOLEAN
 			-- After retrieving objects, should we check that all objects are consistent?
+
+	is_store_settings_enabled: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
+		end
 
 feature -- Settings
 
@@ -138,12 +144,6 @@ feature -- Settings
 
 feature {NONE} -- Status report
 
-	has_version: BOOLEAN
-			-- Recoverable format needs to read the version from the storable.
-		do
-			Result := True
-		end
-
 	mismatches: HASH_TABLE [SED_TYPE_MISMATCH, INTEGER]
 			-- Set of mismatches recorded during retrieval indexed by dynamic types.
 
@@ -167,17 +167,13 @@ feature {NONE} -- Implementation
 			l_reflector := reflector
 			l_deser := deserializer
 
-			if has_version then
-				version := l_deser.read_compressed_natural_32
-				inspect version
-				when {SED_VERSIONS}.recoverable_version_6_6 then
+				-- Read various settings.
+			read_settings
 
-				else
-						-- Unknown version read or not a independent/recoverable format.
-					raise_fatal_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.session_version))
-				end
-			else
-				version := 0
+				-- Check proper version
+			if version < {SED_VERSIONS}.version_6_6 then
+					-- Unknown version read or not a independent/recoverable format.
+				raise_fatal_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.version_6_6))
 			end
 
 				-- Number of dynamic types in storable
@@ -542,17 +538,18 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	decode_normal_object (a_reflected_object: REFLECTED_REFERENCE_OBJECT)
+	decode_normal_object (a_reflected_object: REFLECTED_OBJECT)
 			-- <Precursor>
 		local
 			l_deser: like deserializer
 			i, nb: INTEGER
-			l_dtype, l_new_offset: INTEGER
+			l_dtype, l_exp_dtype, l_new_offset: INTEGER
 			l_mismatch_info: SED_TYPE_MISMATCH
 			l_info: detachable MISMATCH_INFORMATION
 			l_check_for_non_void: BOOLEAN
 			l_has_mismatch: BOOLEAN
 			l_field_info: detachable TUPLE [old_name, new_name: STRING; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
+			l_exp: REFLECTED_REFERENCE_OBJECT
 		do
 			l_dtype := a_reflected_object.dynamic_type
 			if not has_mismatch (l_dtype) then
@@ -622,7 +619,28 @@ feature {NONE} -- Implementation
 							a_reflected_object.set_pointer_field (l_new_offset, l_deser.read_pointer)
 
 						when {REFLECTOR_CONSTANTS}.reference_type then
-							a_reflected_object.set_reference_field (l_new_offset, read_reference)
+							if has_reference_with_copy_semantics then
+								if l_deser.read_boolean then
+										-- Reading a reference to an object with copy semantics. First
+										-- get its dynamic type to create it.
+									l_exp_dtype := l_deser.read_compressed_integer_32
+									create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+									decode_normal_object (l_exp)
+										-- Ideally we want to directly set the reference with copy semantics
+										-- without triggering a copy.
+--									{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+									a_reflected_object.set_reference_field (l_new_offset, l_exp.object)
+									if l_check_for_non_void then
+											-- No need to search for non-Void field since we just
+											-- created an object.
+										l_check_for_non_void := False
+									end
+								else
+									a_reflected_object.set_reference_field (l_new_offset, read_reference)
+								end
+							else
+								a_reflected_object.set_reference_field (l_new_offset, read_reference)
+							end
 
 								-- We check now that for an attached attribute, we have indeed retrieved a non-void
 								-- attribute, otherwise we will generate a mismatch.
@@ -634,7 +652,9 @@ feature {NONE} -- Implementation
 							end
 
 						when {REFLECTOR_CONSTANTS}.expanded_type then
-							decode_expanded_object (a_reflected_object.expanded_field (l_new_offset))
+								-- No mismatch, so we can ignore the dynamic type that was stored
+							l_deser.read_compressed_integer_32.do_nothing
+							decode_normal_object (a_reflected_object.expanded_field (l_new_offset))
 
 						else
 							check
@@ -666,11 +686,31 @@ feature {NONE} -- Implementation
 
 						when {REFLECTOR_CONSTANTS}.pointer_type then l_info.put (l_deser.read_pointer, l_field_info.new_name)
 
-						when {REFLECTOR_CONSTANTS}.reference_type then l_info.put (read_reference, l_field_info.new_name)
+						when {REFLECTOR_CONSTANTS}.reference_type then
+							if has_reference_with_copy_semantics then
+								if l_deser.read_boolean then
+										-- Reading a reference to an object with copy semantics. First
+										-- get its dynamic type to create it.
+									l_exp_dtype := l_deser.read_compressed_integer_32
+									create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+									decode_normal_object (l_exp)
+										-- Ideally we want to directly set the reference with copy semantics
+										-- without triggering a copy.
+--									{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+									l_info.put (l_exp.object, l_field_info.new_name)
+								else
+									l_info.put (read_reference, l_field_info.new_name)
+								end
+							else
+								l_info.put (read_reference, l_field_info.new_name)
+							end
 
 						when {REFLECTOR_CONSTANTS}.expanded_type then
-								-- Trigger an exception for the time being
-							check False then end
+								-- Get its dynamic type to create it since there was a mismatch.
+							l_exp_dtype := l_deser.read_compressed_integer_32
+							create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+							decode_normal_object (l_exp)
+							l_info.put (l_exp.object, l_field_info.new_name)
 
 						else
 							check

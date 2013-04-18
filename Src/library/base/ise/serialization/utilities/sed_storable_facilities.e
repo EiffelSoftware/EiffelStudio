@@ -58,7 +58,7 @@ feature -- Serialization routines
 		local
 			l_serializer: SED_RECOVERABLE_SERIALIZER
 		do
-			l_serializer := independent_serializer (a_writer)
+			l_serializer := recoverable_serializer (a_writer)
 			a_writer.write_header
 			a_writer.write_natural_32 (eiffel_recoverable_store)
 			l_serializer.set_root_object (an_object)
@@ -76,7 +76,7 @@ feature -- Serialization routines
 		local
 			l_serializer: SED_RECOVERABLE_SERIALIZER
 		do
-			l_serializer := independent_serializer (a_writer)
+			l_serializer := recoverable_serializer (a_writer)
 			a_writer.write_header
 			a_writer.write_natural_32 (eiffel_recoverable_store)
 			l_serializer.set_root_object (an_object)
@@ -161,18 +161,6 @@ feature {NONE} -- Access
 			basic_deserializer_not_void: Result /= Void
 		end
 
-	independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
-			-- New instance of `session' based on `a_reader'.
-		require
-			a_reader_not_void: a_reader /= Void
-			a_reader_ready: a_reader.is_ready_for_reading
-		do
-			Result := internal_independent_deserializer (a_reader)
-			Result.set_deserializer (a_reader)
-		ensure
-			independent_deserializer_not_void: Result /= Void
-		end
-
 	recoverable_deserializer (a_reader: SED_READER_WRITER): SED_RECOVERABLE_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
@@ -209,13 +197,13 @@ feature {NONE} -- Access
 			basic_serializer_not_void: Result /= Void
 		end
 
-	independent_serializer (a_writer: SED_READER_WRITER): SED_RECOVERABLE_SERIALIZER
+	recoverable_serializer (a_writer: SED_READER_WRITER): SED_RECOVERABLE_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
 			a_writer_ready: a_writer.is_ready_for_writing
 		do
-			Result := internal_independent_serializer (a_writer)
+			Result := internal_recoverable_serializer (a_writer)
 			Result.set_serializer (a_writer)
 		ensure
 			independent_serializer_not_void: Result /= Void
@@ -243,6 +231,18 @@ feature {NONE} -- Data
 			create Result.make (a_reader)
 		ensure
 			basic_deserializer_not_void: Result /= Void
+		end
+
+	independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
+			-- New instance of `session' based on `a_reader'.
+		require
+			a_reader_not_void: a_reader /= Void
+			a_reader_ready: a_reader.is_ready_for_reading
+		do
+			Result := internal_independent_deserializer (a_reader)
+			Result.set_deserializer (a_reader)
+		ensure
+			independent_deserializer_not_void: Result /= Void
 		end
 
 	internal_independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
@@ -289,7 +289,7 @@ feature {NONE} -- Data
 			basic_serializer_not_void: Result /= Void
 		end
 
-	internal_independent_serializer (a_writer: SED_READER_WRITER): SED_RECOVERABLE_SERIALIZER
+	internal_recoverable_serializer (a_writer: SED_READER_WRITER): SED_RECOVERABLE_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -297,19 +297,19 @@ feature {NONE} -- Data
 		once
 			create Result.make (a_writer)
 		ensure
-			independent_serializer_not_void: Result /= Void
+			internal_recoverable_serializer_not_void: Result /= Void
 		end
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

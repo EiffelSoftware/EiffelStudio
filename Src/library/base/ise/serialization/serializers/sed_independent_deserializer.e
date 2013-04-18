@@ -18,7 +18,7 @@ inherit
 			read_persistent_field_count,
 			clear_internal_data,
 			is_transient_retrieval_required,
-			has_version
+			is_store_settings_enabled
 		end
 
 create
@@ -51,12 +51,10 @@ feature {NONE} -- Status report
 			Result := False
 		end
 
-	has_version: BOOLEAN
-			-- Does format support reading of a version number?
+	is_store_settings_enabled: BOOLEAN
+			-- <Precursor>
 		do
-				-- Because versioning was added after the initial release of SED, in order
-				-- to not break existing storables, SED_INDEPENDENT_DESERIALIZER does not support
-				-- the reading of a version.
+			Result := False
 		end
 
 feature {NONE} -- Implementation
@@ -75,7 +73,9 @@ feature {NONE} -- Implementation
 			l_reflector := reflector
 			l_deser := deserializer
 
-			version := 0
+				-- Read various settings.
+			read_settings
+
 				-- Number of dynamic types in storable
 			nb := l_deser.read_compressed_natural_32.to_integer_32
 			create l_table.make_filled (0, nb)
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			read_object_table (a_count)
 		end
 
-	read_persistent_field_count (a_reflected_object: REFLECTED_REFERENCE_OBJECT): INTEGER
+	read_persistent_field_count (a_reflected_object: REFLECTED_OBJECT): INTEGER
 			-- <Precursor>
 		local
 			l_dtype: INTEGER

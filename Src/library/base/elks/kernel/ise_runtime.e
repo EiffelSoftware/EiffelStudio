@@ -183,6 +183,12 @@ feature -- Internal support
 			"built_in static"
 		end
 
+	frozen is_special_copy_semantics_item (i: INTEGER; a_object: POINTER): BOOLEAN
+			-- Does `i'-th item of specia `a_object' denote a reference with copy semantics?
+		external
+			"built_in static"
+		end
+
 	frozen field_count_of_type (a_type_id: INTEGER): INTEGER
 			-- Number of logical fields in dynamic type `a_type_id'.
 		external

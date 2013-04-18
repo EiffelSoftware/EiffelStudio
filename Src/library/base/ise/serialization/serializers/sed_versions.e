@@ -9,36 +9,28 @@ class
 
 feature -- Access
 
-	session_version_6_6: NATURAL_32 = 1
-			-- Version for SED_SESSION_SERIALIZER.
+	version_5_6: NATURAL_32 = 0
+			-- Original introducting of Eiffel serialization.
 
-	basic_version_6_6: NATURAL_32 = 2
-			-- Version for SED_BASIC_SERIALIZER.
+	version_6_6: NATURAL_32 = 3
+			-- Added support for recoverable serialization (aka correct mismatch)
+			--| It starts at 3 because in version 7.2, values one and two were
+			--| used to version session/basic serialization but really there was no
+			--| need to version them since it can only work inside the same application.
 
-	recoverable_version_6_6: NATURAL_32 = 3
-			-- 6.6 version for SED_RECOVERABLE_SERIALIZER.
-
-feature -- Last revisions
-
-	session_version: NATURAL_32 = 1
-			-- Very latest version of session storable
-
-	basic_version: NATURAL_32 = 2
-			-- Very latest version of basic storable
-
-	recoverable_version: NATURAL_32 = 3
-			-- Very latest version of recoverable storable
+	version_7_3: NATURAL_32 = 4
+			-- Added support for expanded and reference with copy semantics.
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

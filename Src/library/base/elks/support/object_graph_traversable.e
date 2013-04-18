@@ -21,6 +21,9 @@ feature -- Access
 	visited_objects: detachable ARRAYED_LIST [separate ANY]
 			-- List referencing objects of object graph that have been visited in `traverse'.
 
+	visited_types: detachable HASH_TABLE [INTEGER, INTEGER]
+			-- List of all types encountered during traversal
+
 feature -- Status report
 
 	is_root_object_set: BOOLEAN
@@ -35,9 +38,16 @@ feature -- Status report
 			Result := object_action /= Void
 		end
 
+	has_reference_with_copy_semantics: BOOLEAN
+			-- Does the traversed graph of objects contain reference with copy semantics?
+
 	is_skip_transient: BOOLEAN
 			-- Do we skip transient attribute during traversal?
 			--| Default: False, i.e. transient attributes will be processed.
+
+	is_skip_copy_semantics_reference: BOOLEAN
+			-- Do we skip copy semantics reference from `visited_objects' during traversal?
+			-- Default: False, i.e. copy semantics reference will be traversed and kept in `visited_objects'.
 
 feature -- Element change
 
@@ -67,6 +77,14 @@ feature -- Element change
 			is_skip_transient := v
 		ensure
 			is_skip_transient_set: is_skip_transient = v
+		end
+
+	set_is_skip_copy_semantics_reference (v: like is_skip_copy_semantics_reference)
+			-- Set `is_skip_copy_semantics_reference' with `v'.
+		do
+			is_skip_copy_semantics_reference := v
+		ensure
+			is_skip_copy_semantics_reference_set: is_skip_copy_semantics_reference = v
 		end
 
 feature -- Basic operations
@@ -101,6 +119,7 @@ feature -- Basic operations
 			-- Clear current to default values
 		do
 			visited_objects := Void
+			visited_types := Void
 			object_action := Void
 			root_object := Void
 		ensure
@@ -131,10 +150,12 @@ feature {NONE} -- Implementation
 			l_marker: OBJECT_GRAPH_MARKER
 			l_objects_to_visit: like new_dispenser
 			l_visited: like visited_objects
+			l_visited_types: like visited_types
 			l_action: like object_action
 			l_spec: like visited_objects.area
 			l_reflected_reference_object: REFLECTED_REFERENCE_OBJECT
 			l_reflected_object: REFLECTED_OBJECT
+			l_has_reference_with_copy_semantics: BOOLEAN
 		do
 			from
 				create l_marker
@@ -142,6 +163,7 @@ feature {NONE} -- Implementation
 				l_reflected_object := l_reflected_reference_object
 				l_marker.mark (a_root_object)
 				create l_visited.make (default_size)
+				create l_visited_types.make (default_size)
 				l_objects_to_visit := new_dispenser
 				l_objects_to_visit.put (a_root_object)
 				l_action := object_action
@@ -150,9 +172,6 @@ feature {NONE} -- Implementation
 			loop
 				l_object := l_objects_to_visit.item
 				l_objects_to_visit.remove
-
-					-- Add `l_object' to processed objects.
-				l_visited.extend (l_object)
 
 					-- Call action.
 				if l_action /= Void then
@@ -166,11 +185,22 @@ feature {NONE} -- Implementation
 					-- 3 - TUPLE containing references
 					-- 4 - Normal objects
 				if attached {REFLECTED_COPY_SEMANTICS_OBJECT} l_object as l_exp_as_ref then
+					l_has_reference_with_copy_semantics := True
 					l_reflected_object := l_exp_as_ref
+						-- We usually add `l_object' (i.e. a reference with copy semantic)
+						-- to processed object. However if `is_skip_copy_semantics_reference' is set,
+						-- we won't add them to the list; it must mean that caller will traverse
+						-- them later by going directly to the enclosing object that reference them
+					if not is_skip_copy_semantics_reference then
+						l_visited.extend (l_exp_as_ref.object)
+					end
 				else
 					l_reflected_reference_object.set_object (l_object)
 					l_reflected_object := l_reflected_reference_object
+						-- Add `l_object' to processed objects.
+					l_visited.extend (l_object)
 				end
+				l_visited_types.put (l_reflected_object.dynamic_type, l_reflected_object.dynamic_type)
 
 				if l_reflected_object.is_special then
 					if
@@ -183,10 +213,17 @@ feature {NONE} -- Implementation
 						until
 							i = nb
 						loop
-							l_field := l_sp.item (i)
-							if l_field /= Void and then not l_marker.is_marked (l_field) then
-								l_marker.mark (l_field)
+							if l_reflected_object.is_special_copy_semantics_item (i) then
+								l_field := l_reflected_object.special_copy_semantics_item (i)
 								l_objects_to_visit.put (l_field)
+									-- There is no need for marking since, no one can have a reference
+									-- to that object, so we are sure to never hit it again.
+							else
+								l_field := l_sp.item (i)
+								if l_field /= Void and then not l_marker.is_marked (l_field) then
+									l_marker.mark (l_field)
+									l_objects_to_visit.put (l_field)
+								end
 							end
 							i := i + 1
 						end
@@ -247,16 +284,14 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				if l_marker.is_marked (l_spec.item (i)) then
-					l_marker.unmark (l_spec.item (i))
-				else
-					check attached {REFLECTED_COPY_SEMANTICS_OBJECT} l_spec.item (i) end
-				end
+				l_marker.unmark (l_spec.item (i))
 				i := i + 1
 			end
 
-				-- Set `visited_objects'.
+				-- Update queries of Current with last traversal.
 			visited_objects := l_visited
+			visited_types := l_visited_types
+			has_reference_with_copy_semantics := l_has_reference_with_copy_semantics
 		end
 
 note

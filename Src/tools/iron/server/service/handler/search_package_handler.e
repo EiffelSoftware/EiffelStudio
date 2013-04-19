@@ -40,9 +40,9 @@ feature -- Execution
 			h: WSF_HEADER
 			s: detachable STRING
 			lst: detachable ITERABLE [IRON_REPO_PACKAGE]
-			html_vis: IRON_REPO_HTML_ITERATOR
+			html_vis: HTML_IRON_REPO_ITERATOR
 			html: IRON_REPO_HTML_RESPONSE
-			json_vis: IRON_REPO_JSON_ITERATOR
+			json_vis: JSON_V1_IRON_REPO_ITERATOR
 		do
 			lst := iron.database.packages (iron_version (req), 1, 0)
 			if req.is_content_type_accepted ("text/html") then
@@ -58,17 +58,8 @@ feature -- Execution
 				html.set_body (s)
 				res.send (html)
 			else
-				if lst /= Void then
-					create json_vis.make (req, iron, iron_version (req))
-					json_vis.visit_package_iterable (lst)
-					if attached json_vis.last_json_value as jv then
-						s := jv.representation
-					end
-				end
-				if s = Void then
-					s := "[]"
-				end
-				s := "{ %"packages%": " + s + "}"
+				create json_vis.make (req, iron, iron_version (req))
+				s := json_vis.packages_to_json (lst)
 
 				create h.make
 				h.put_content_type_application_json

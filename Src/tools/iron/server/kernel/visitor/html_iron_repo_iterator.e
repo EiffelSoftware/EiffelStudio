@@ -5,7 +5,7 @@ note
 	revision    : "$Revision$"
 
 class
-	IRON_REPO_HTML_ITERATOR
+	HTML_IRON_REPO_ITERATOR
 
 inherit
 	IRON_REPO_ITERATOR

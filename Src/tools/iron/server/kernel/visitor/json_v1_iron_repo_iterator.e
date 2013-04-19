@@ -5,7 +5,7 @@ note
 	revision    : "$Revision$"
 
 class
-	IRON_REPO_JSON_ITERATOR
+	JSON_V1_IRON_REPO_ITERATOR
 
 inherit
 	IRON_REPO_ITERATOR
@@ -33,9 +33,67 @@ feature {NONE} -- Initialization
 
 	version: IRON_REPO_VERSION
 
+	content_type_version: IMMUTABLE_STRING_8
+		do
+			create Result.make_from_string ("1.0")
+		end
+
+	content_type: IMMUTABLE_STRING_8
+		local
+			s: STRING
+		do
+			s := "application/json+iron-v"
+			s.append (content_type_version)
+			create Result.make_from_string (s)
+		end
+
 feature -- Access	
 
 	last_json_value: detachable JSON_VALUE
+
+	package_to_json (p: detachable IRON_REPO_PACKAGE): STRING_8
+		local
+			j: like last_json_value
+			jo: JSON_OBJECT
+			js: JSON_STRING
+		do
+			last_json_value := Void
+			if p /= Void then
+				visit_package (p)
+				j := last_json_value
+			else
+				create {JSON_NULL} j
+			end
+			create jo.make
+			js := content_type_version
+			jo.put (js, "_version")
+			if j /= Void then
+				jo.put (j, "package")
+			end
+			Result := jo.representation
+		end
+
+	packages_to_json (it: detachable ITERABLE [IRON_REPO_PACKAGE]): STRING
+		local
+			j: like last_json_value
+			jo: JSON_OBJECT
+			js: JSON_STRING
+		do
+			last_json_value := Void
+			if it /= Void then
+				visit_package_iterable (it)
+				j := last_json_value
+			else
+				create {JSON_ARRAY} j.make_array
+			end
+			create jo.make
+			js := content_type_version
+			jo.put (js, "_version")
+			if j /= Void then
+				jo.put (j, "packages")
+			end
+			Result := jo.representation
+		end
 
 feature -- Visit
 

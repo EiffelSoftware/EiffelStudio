@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			iri: IRI
 		do
 			create iri.make_from_uri (u)
-			l_path := iri.path
+			l_path := iri.decoded_path
 			if {PLATFORM}.is_windows then
 				if l_path.starts_with ("/") then
 					l_path := l_path.substring (2, l_path.count)

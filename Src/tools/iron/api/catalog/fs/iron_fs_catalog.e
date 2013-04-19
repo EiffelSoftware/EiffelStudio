@@ -75,10 +75,12 @@ feature -- Access: repository
 			create repo_conf.make (layout.repositories_configuration_file)
 			repo_conf.add_repository (a_name, a_repo)
 			repo_conf.save
+			load_repositories
 		end
 
 	unregister_repository (a_name_or_uri: READABLE_STRING_GENERAL)
 		local
+			repo: detachable IRON_REPOSITORY
 			repo_conf: IRON_REPOSITORY_CONFIGURATION_FILE
 			repo_name: detachable READABLE_STRING_GENERAL
 		do
@@ -91,6 +93,7 @@ feature -- Access: repository
 				loop
 					if a_name_or_uri.same_string (c.item.uri.string) then
 						repo_name := c.key
+						repo := c.item
 					end
 				end
 			else
@@ -100,6 +103,7 @@ feature -- Access: repository
 				repo_conf.remove_repository (repo_name)
 				repo_conf.save
 			end
+			load_repositories
 		end
 
 feature -- Acces: package
@@ -385,79 +389,20 @@ feature -- Restricted
 
 	import_packages_from_json (a_json_string: READABLE_STRING_8; repo: IRON_REPOSITORY)
 		local
-			j: JSON_PARSER
+			f: JSON_TO_IRON_FACTORY
 		do
-			create j.make_parser (a_json_string)
-			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
-				if attached {JSON_ARRAY} jo.item ("packages") as j_packages then
-					across
-						j_packages.array_representation as c
-					loop
-						if attached {JSON_OBJECT} c.item as j_package then
-							if attached package_from_json (j_package, repo) as p then
-								repo.put_package (p)
-								print ("- ")
-								print (p.human_identifier)
-								print ("%N")
-							end
-						end
-					end
+			create f
+			if attached f.json_to_packages (a_json_string, repo) as lst then
+				across
+					lst as p
+				loop
+					repo.put_package (p.item)
+					print ("- ")
+					print (p.item.human_identifier)
+					print ("%N")
 				end
 			end
 		end
-
-	package_from_json (j_package: JSON_OBJECT; repo: IRON_REPOSITORY): detachable IRON_PACKAGE
-		do
-			if
-				attached {JSON_STRING} j_package.item ("id") as j_id and
-				attached {JSON_STRING} j_package.item ("name") as j_name
-			then
-				create Result.make (j_id.item, repo)
-				Result.put_json_item (j_package.representation)
-				Result.set_name (j_name.item)
-				if attached {JSON_STRING} j_package.item ("description") as j_description then
-					Result.set_description (j_description.item)
-				end
-				if attached {JSON_STRING} j_package.item ("archive") as j_archive then
-					Result.set_archive_uri (j_archive.item)
-				end
-				if attached {JSON_ARRAY} j_package.item ("paths") as j_paths then
-					across
-						j_paths.array_representation as c
-					loop
-						if attached {JSON_STRING} c.item as js then
-							Result.associated_paths.force (js.item)
-						end
-					end
-				end
-			end
-		end
-
---	repo_package_from_json_string (s: READABLE_STRING_8): detachable IRON_PACKAGE
---		local
---			j: JSON_PARSER
---			repo: IRON_REPOSITORY
---			u: URI
---		do
---			create j.make_parser (s)
---			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
---				if attached {JSON_OBJECT} jo.item ("repository") as j_repo then
---					if
---						attached {JSON_STRING} j_repo.item ("uri") as j_uri and
---						attached {JSON_STRING} j_repo.item ("version") as j_version and
---						attached {JSON_OBJECT} jo.item ("package") as j_package
---					then
---						create u.make_from_string (j_uri.item)
---						create repo.make (u, j_version.item)
---						if attached package_from_json (j_package, repo) as p then
---							p.put (j_package.representation, "json")
---							Result := p
---						end
---					end
---				end
---			end
---		end
-
 
 feature {NONE} -- Helper
 

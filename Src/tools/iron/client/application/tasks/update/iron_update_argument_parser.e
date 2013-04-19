@@ -51,7 +51,7 @@ feature {NONE} -- Switches
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
-			create Result.make (1)
+			create Result.make (3)
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)

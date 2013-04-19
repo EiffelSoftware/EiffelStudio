@@ -7,7 +7,6 @@ note
 class
 	IRON_NAMES
 
-
 feature -- List task
 
 	m_warning_no_repository: STRING_32

@@ -34,7 +34,7 @@ feature -- Execution
 	handle_view_package (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: IRON_REPO_HTML_RESPONSE
-			it: IRON_REPO_HTML_ITERATOR
+			it: HTML_IRON_REPO_ITERATOR
 			s: STRING_8
 			v: READABLE_STRING_8
 		do

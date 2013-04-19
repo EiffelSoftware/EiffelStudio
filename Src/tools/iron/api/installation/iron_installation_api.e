@@ -181,55 +181,10 @@ feature {NONE} -- Implementation
 
 	repo_package_from_json_string (s: READABLE_STRING_8): detachable IRON_PACKAGE
 		local
-			j: JSON_PARSER
-			repo: IRON_REPOSITORY
-			u: URI
+			f: JSON_TO_IRON_FACTORY
 		do
-			create j.make_parser (s)
-			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
-				if attached {JSON_OBJECT} jo.item ("repository") as j_repo then
-					if
-						attached {JSON_STRING} j_repo.item ("uri") as j_uri and
-						attached {JSON_STRING} j_repo.item ("version") as j_version and
-						attached {JSON_OBJECT} jo.item ("package") as j_package
-					then
-						create u.make_from_string (j_uri.item)
-						create repo.make (u, j_version.item)
-						if attached package_from_json (j_package, repo) as p then
-							p.put_json_item (j_package.representation)
-							Result := p
-						end
-					end
-				end
-			end
-		end
-
-	package_from_json (j_package: JSON_OBJECT; repo: IRON_REPOSITORY): detachable IRON_PACKAGE
-			-- FIXME: duplication with IRON_FS_CATALOG.package_from_json
-		do
-			if
-				attached {JSON_STRING} j_package.item ("id") as j_id and
-				attached {JSON_STRING} j_package.item ("name") as j_name
-			then
-				create Result.make (j_id.item, repo)
-				Result.put_json_item (j_package.representation)
-				Result.set_name (j_name.item)
-				if attached {JSON_STRING} j_package.item ("description") as j_description then
-					Result.set_description (j_description.item)
-				end
-				if attached {JSON_STRING} j_package.item ("archive") as j_archive then
-					Result.set_archive_uri (j_archive.item)
-				end
-				if attached {JSON_ARRAY} j_package.item ("paths") as j_paths then
-					across
-						j_paths.array_representation as c
-					loop
-						if attached {JSON_STRING} c.item as js then
-							Result.associated_paths.force (js.item)
-						end
-					end
-				end
-			end
+			create f
+			Result := f.json_to_package (s)
 		end
 
 invariant

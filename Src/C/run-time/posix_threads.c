@@ -877,15 +877,33 @@ rt_public int eif_pthread_sem_create (EIF_SEM_TYPE **sem, int shared, unsigned i
 	int Result;
 #ifdef EIF_POSIX_THREADS
 	*sem = (EIF_SEM_TYPE *) eif_malloc (sizeof(EIF_SEM_TYPE));
-	if (*sem) {
+	if (*sem == NULL) {
+		Result = T_CANNOT_CREATE_SEMAPHORE;
+	} else {
+#if EIF_OS == EIF_OS_DARWIN
+		if (shared) {
+				/* We do not support shared mutexes on Mac OS X. */
+			Result = T_UNSUPPORTED;
+		} else if (eif_pthread_mutex_create (&((*sem)->mutex)) == T_OK) {
+			if (eif_pthread_cond_create (&((*sem)->cond)) == T_OK) {
+				(*sem)->val = count;
+				Result = T_OK;
+			} else {
+				/* Free mutex. */
+				RT_TRACE(eif_pthread_mutex_destroy((*sem)->mutex));
+				Result = T_CANNOT_CREATE_SEMAPHORE;
+			}
+		} else {
+			Result = T_CANNOT_CREATE_SEMAPHORE;
+		}
+#else
 		Result = sem_init(*sem, shared, count);
 		if (Result) {
 			Result = mapped_errno(errno);
 			eif_free(*sem);
 			*sem = NULL;
 		}
-	} else {
-		Result = T_CANNOT_CREATE_SEMAPHORE;
+#endif
 	}
 #elif defined(SOLARIS_THREADS)
 	*sem = (EIF_SEM_TYPE *) eif_malloc (sizeof(EIF_SEM_TYPE));
@@ -944,11 +962,23 @@ rt_public int eif_pthread_sem_destroy (EIF_SEM_TYPE *sem)
 	int Result;
 	if (sem) {
 #ifdef EIF_POSIX_THREADS
+#if EIF_OS == EIF_OS_DARWIN
+		if (eif_pthread_mutex_destroy(sem->mutex) == T_OK) {
+			if (eif_pthread_cond_destroy(sem->cond) == T_OK) {
+				Result = T_OK;
+			} else {
+				Result = T_CANNOT_DESTROY_SEMAPHORE;
+			}
+		} else {
+			Result = T_CANNOT_DESTROY_SEMAPHORE;
+		}
+#else
 		if (sem_destroy (sem)) {
 			Result = mapped_errno(errno);
 		} else {
 			Result = T_OK;
 		}
+#endif
 		eif_free (sem);
 #elif defined(SOLARIS_THREADS)
 		Result = mapped_errno(sema_destroy(sem));
@@ -986,11 +1016,29 @@ rt_public int eif_pthread_sem_post (EIF_SEM_TYPE *sem)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
+#if EIF_OS == EIF_OS_DARWIN
+	Result = eif_pthread_mutex_lock(sem->mutex);
+	if (Result == T_OK) {
+		sem->val += 1;
+		if (sem->val == 1) {
+				/* Let's awake somebody. */
+			Result = eif_pthread_cond_broadcast(sem->cond);
+		}
+		if (Result == T_OK) {
+			Result = eif_pthread_mutex_unlock(sem->mutex);
+		} else {
+				/* Call to broadcast failed, we want to return this error while
+				 * still unlocking the mutex. */
+			RT_TRACE(eif_pthread_mutex_unlock(sem->mutex));
+		}
+	}
+#else
 	if (sem_post(sem)) {
 		Result = mapped_errno(errno);
 	} else {
 		Result = T_OK;
 	}
+#endif
 #elif defined(SOLARIS_THREADS)
 	Result = mapped_errno(sema_post(sem));
 #elif defined(EIF_WINDOWS)
@@ -1024,11 +1072,28 @@ rt_public int eif_pthread_sem_wait (EIF_SEM_TYPE *sem)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
+#if EIF_OS == EIF_OS_DARWIN
+	Result = eif_pthread_mutex_lock(sem->mutex);
+	if (Result == T_OK) {
+		while ((sem->val == 0) && (Result == T_OK)) {
+			Result = eif_pthread_cond_wait(sem->cond, sem->mutex);	
+		}
+		if (Result == T_OK) {
+			sem->val -= 1;
+			Result = eif_pthread_mutex_unlock(sem->mutex);
+		} else {
+				/* Call to wait failed, we want to return this error while
+				 * still unlocking the mutex. */
+			RT_TRACE(eif_pthread_mutex_unlock(sem->mutex));
+		}
+	}
+#else
 	if (sem_wait(sem)) {
 		Result = mapped_errno(errno);
 	} else {
 		Result = T_OK;
 	}
+#endif
 #elif defined(SOLARIS_THREADS)
 	Result = mapped_errno(sema_wait(sem));
 #elif defined(EIF_WINDOWS)
@@ -1070,12 +1135,29 @@ rt_private rt_inline int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE *sem, r
 #if defined(__SunOS_5_8) || defined (__SunOS_5_9) || (EIF_OS == EIF_OS_OPENBSD)
 	Result = T_NOT_IMPLEMENTED;
 #else
+#if EIF_OS == EIF_OS_DARWIN
+	int other_result;
+	Result = eif_pthread_mutex_lock(sem->mutex);
+	if (Result == T_OK) {
+		while ((sem->val == 0) && (Result == T_OK)) {
+			Result = eif_pthread_cond_wait_with_timeout(sem->cond, sem->mutex, timeout);	
+		}
+		if (Result == T_OK) {
+			sem->val -= 1;
+		}
+		other_result = eif_pthread_mutex_unlock(sem->mutex);
+		if (other_result != T_OK) {
+			Result = other_result;
+		}
+	}
+#else
 	struct timespec tspec = rt_timeout_to_timespec(timeout);
 	if (sem_timedwait(sem, &tspec)) {
 		Result = mapped_errno(errno);
 	} else {
 		 Result = T_OK;
 	}
+#endif
 #endif
 #elif defined(SOLARIS_THREADS)
 #if defined(__SunOS_5_8) || defined (__SunOS_5_9)
@@ -1126,6 +1208,12 @@ rt_public int eif_pthread_sem_trywait (EIF_SEM_TYPE *sem)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
+#if EIF_OS == EIF_OS_DARWIN
+	Result = eif_pthread_sem_wait_with_timeout(sem, 0);
+	if (Result == T_TIMEDOUT) {
+		Result = T_BUSY;
+	}
+#else
 	if (sem_trywait(sem)) {
 		Result = mapped_errno(errno);
 		if (Result == T_TRY_AGAIN) {
@@ -1134,6 +1222,7 @@ rt_public int eif_pthread_sem_trywait (EIF_SEM_TYPE *sem)
 	} else {
 		Result = T_OK;
 	}
+#endif
 #elif defined(SOLARIS_THREADS)
 	Result = mapped_errno(sema_trywait(sem));
 #elif defined(EIF_WINDOWS)

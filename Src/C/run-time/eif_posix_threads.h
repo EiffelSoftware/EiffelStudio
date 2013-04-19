@@ -157,8 +157,16 @@ rt_public typedef struct {
 #define EIF_THR_TYPE            pthread_t
 #define EIF_CS_TYPE				pthread_mutex_t
 #define EIF_MUTEX_TYPE          pthread_mutex_t
-#define EIF_SEM_TYPE			sem_t
 #define EIF_COND_TYPE			pthread_cond_t
+#if EIF_OS == EIF_OS_DARWIN
+rt_public typedef struct {
+	EIF_MUTEX_TYPE	*mutex;
+	EIF_COND_TYPE	*cond;
+	unsigned int val;
+} EIF_SEM_TYPE;
+#else
+#define EIF_SEM_TYPE			sem_t
+#endif
 #define EIF_RWL_TYPE			pthread_rwlock_t
 
 #elif defined SOLARIS_THREADS

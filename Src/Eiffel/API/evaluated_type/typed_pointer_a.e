@@ -51,8 +51,8 @@ feature {NONE} -- Initialization
 		require
 			a_type_not_void: a_type /= Void
 		do
-			create generics.make (1, 1)
-			generics.put (a_type, 1)
+			create generics.make (1)
+			generics.extend (a_type)
 			cl_make (base_class.class_id)
 		ensure
 			pointed_type_set: pointed_type = a_type
@@ -80,7 +80,7 @@ feature -- Property
 	pointed_type: TYPE_A
 			-- Type pointed by current if any.
 		do
-			Result := generics.item (1)
+			Result := generics.first
 		end
 
 feature -- IL code generation
@@ -90,7 +90,7 @@ feature -- IL code generation
 		local
 			t: TYPE_A
 		do
-			t := generics.item (1)
+			t := generics.first
 			Result := t.il_type_name (a_prefix, a_context_type).twin
 			Result.append ("&")
 			if a_prefix /= Void and then t.is_external then
@@ -102,7 +102,7 @@ feature -- IL code generation
 	generic_il_type_name (a_context_type: TYPE_A): STRING
 			-- Name of current class
 		do
-			Result := generics.item (1).generic_il_type_name (a_context_type).twin
+			Result := generics.first.generic_il_type_name (a_context_type).twin
 			Result.append ("&")
 		end
 
@@ -125,7 +125,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -565,7 +565,7 @@ feature {NONE} -- Implementation: State
 				{DEPEND_UNIT}.is_in_assignment_flag
 		end
 
-	last_expressions_type: ARRAY [TYPE_A]
+	last_expressions_type: ARRAYED_LIST [TYPE_A]
 			-- Last computed types of a list of expressions
 
 	last_tuple_type: TUPLE_TYPE_A
@@ -1465,7 +1465,7 @@ feature {NONE} -- Implementation
 						if l_named_tuple /= Void then
 							l_label_pos := l_named_tuple.label_position_by_id (l_feature_name.name_id)
 							if l_label_pos > 0 then
-								set_type (l_named_tuple.generics.item (l_label_pos), a_name)
+								set_type (l_named_tuple.generics.i_th (l_label_pos), a_name)
 								l_is_last_access_tuple_access := True
 								last_feature_name_id := l_feature_name.name_id
 									-- No renaming possible (from RENAMED_TYPE_A), they are the same
@@ -1528,7 +1528,7 @@ feature {NONE} -- Implementation
 										-- Parameters haven't yet evaluated
 									from
 										i := 1
-										create l_arg_types.make (1, l_actual_count)
+										create l_arg_types.make (l_actual_count)
 										if l_needs_byte_node then
 											create l_arg_nodes.make (l_actual_count)
 										end
@@ -1544,7 +1544,7 @@ feature {NONE} -- Implementation
 											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 										l_parameters.i_th (i).process (Current)
 										if last_type /= Void and l_arg_types /= Void then
-											l_arg_types.put (last_type, i)
+											l_arg_types.extend (last_type)
 											if l_needs_byte_node then
 												l_expr ?= last_byte_node
 												l_arg_nodes.extend (l_expr)
@@ -1567,7 +1567,7 @@ feature {NONE} -- Implementation
 										i = l_actual_count
 									loop
 											-- Get actual argument type.
-										l_arg_type := l_arg_types.item (i)
+										l_arg_type := l_arg_types.i_th (i)
 
 											-- Get formal argument type.
 										l_formal_arg_type := l_feature.arguments.i_th (i)
@@ -2038,7 +2038,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			l_array_type: GEN_TYPE_A
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			l_type_a, l_element_type: TYPE_A
 			l_list: BYTE_LIST [EXPR_B]
 			l_gen_type: GEN_TYPE_A
@@ -2065,7 +2065,7 @@ feature {NONE} -- Implementation
 				then
 					l_has_array_target := True
 						-- Check that expressions' type matches element's type of `l_gen_type' array.
-					l_element_type := l_gen_type.generics.item (1).actual_type
+					l_element_type := l_gen_type.generics.first.actual_type
 				end
 			end
 
@@ -2092,7 +2092,7 @@ feature {NONE} -- Implementation
 						until
 							i > nb
 						loop
-							l_element_type := l_last_types.item (i)
+							l_element_type := l_last_types.i_th (i)
 							if not l_element_type.conform_to (l_current_class, l_type_a) then
 								if not is_inherited and then l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
 									if l_context.last_conversion_info.has_depend_unit then
@@ -2116,8 +2116,8 @@ feature {NONE} -- Implementation
 						if is_checking_cas then
 								-- Create a .NET array
 							check l_gen_type.class_id = system.native_array_id end
-							create l_generics.make (1, 1)
-							l_generics.put (l_type_a, 1)
+							create l_generics.make (1)
+							l_generics.extend (l_type_a)
 							create {NATIVE_ARRAY_TYPE_A} l_array_type.make (system.native_array_id, l_generics)
 						else
 								-- We can reuse the target type for the ARRAY type.
@@ -2143,7 +2143,7 @@ feature {NONE} -- Implementation
 							-- common type.
 							-- Take first element in manifest array and let's suppose
 							-- it is the lowest type.
-						l_type_a := l_last_types.item (1)
+						l_type_a := l_last_types.i_th (1)
 						l_is_attached := l_type_a.is_attached
 						i := 2
 						if is_checking_cas then
@@ -2151,7 +2151,7 @@ feature {NONE} -- Implementation
 							until
 								i > nb
 							loop
-								l_element_type := l_last_types.item (i)
+								l_element_type := l_last_types.i_th (i)
 								if l_is_attached and then not l_element_type.is_attached then
 									l_is_attached := False
 								end
@@ -2182,7 +2182,7 @@ feature {NONE} -- Implementation
 							until
 								i > nb
 							loop
-								l_element_type := l_last_types.item (i)
+								l_element_type := l_last_types.i_th (i)
 								if l_is_attached and then not l_element_type.is_attached then
 									l_is_attached := False
 								end
@@ -2218,8 +2218,8 @@ feature {NONE} -- Implementation
 								-- Respect attachment status of the elements.
 							l_type_a := l_type_a.as_attached_in (l_current_class)
 						end
-						create l_generics.make (1, 1)
-						l_generics.put (l_type_a, 1)
+						create l_generics.make (1)
+						l_generics.extend (l_type_a)
 						create l_array_type.make (system.array_id, l_generics)
 							-- Type of a manifest array is always attached.
 						l_array_type := l_array_type.as_attached_in (l_current_class)
@@ -2477,7 +2477,7 @@ feature {NONE} -- Implementation
 								l_is_not_call := True
 								is_last_access_tuple_access := True
 								is_assigner_call := False
-								set_type (l_tuple_type.generics.item (l_as.label_position), l_as)
+								set_type (l_tuple_type.generics.i_th (l_as.label_position), l_as)
 							else
 								check
 									False
@@ -3884,11 +3884,14 @@ feature {NONE} -- Implementation
  		local
 			l_type: TYPE_A
 			l_type_type: GEN_TYPE_A
+			l_generics: ARRAYED_LIST [TYPE_A]
 		do
 			l_as.type.process (Current)
 			l_type := last_type
 			if l_type /= Void then
-				create l_type_type.make (system.type_class.compiled_class.class_id, << l_type >>)
+				create l_generics.make (1)
+				l_generics.extend (l_type)
+				create l_type_type.make (system.type_class.compiled_class.class_id, l_generics)
 					-- The type is always attached.
 				l_type_type := l_type_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_type_type, context.current_class)
@@ -4423,7 +4426,7 @@ feature {NONE} -- Implementation
 			l_context_current_class: CLASS_C
 			s: INTEGER
 			l_error_level: NATURAL_32
-			l_arg_types: ARRAY [TYPE_A]
+			l_arg_types: ARRAYED_LIST [TYPE_A]
 			l_parameters: EIFFEL_LIST [EXPR_AS]
 			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
 			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
@@ -4530,7 +4533,9 @@ feature {NONE} -- Implementation
 										l_feature_type := last_alias_feature.type
 										l_feature_type := l_feature_type.formal_instantiation_in (l_left_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_class.class_id)
 										if l_feature_type.has_like_argument then
-											l_feature_type := l_feature_type.actual_argument_type (<<l_right_type>>)
+											create l_arg_types.make (1)
+											l_arg_types.extend (l_right_type)
+											l_feature_type := l_feature_type.actual_argument_type (l_arg_types)
 										end
 										l_feature_type := l_feature_type.actual_type
 										if 	l_last_feature_type = Void then
@@ -4621,8 +4626,8 @@ feature {NONE} -- Implementation
 								set_routine_ids (last_alias_feature.rout_id_set, l_as)
 								l_as.set_class_id (l_left_id)
 								if context.current_class.is_cat_call_detection then
-									create l_arg_types.make (1, 1)
-									l_arg_types.put (l_right_type, 1)
+									create l_arg_types.make (1)
+									l_arg_types.extend (l_right_type)
 									create l_parameters.make (1)
 									l_parameters.extend (l_as.right)
 									check_cat_call (l_target_type, last_alias_feature, l_arg_types, l_as.left.start_location, l_parameters)
@@ -4651,7 +4656,9 @@ feature {NONE} -- Implementation
 								-- infixed feature
 							l_infix_type := last_alias_feature.type.formal_instantiation_in (l_target_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_left_id)
 							if l_infix_type.has_like_argument then
-								l_infix_type := l_infix_type.actual_argument_type (<<l_right_type>>)
+								create l_arg_types.make (1)
+								l_arg_types.extend (l_right_type)
+								l_infix_type := l_infix_type.actual_argument_type (l_arg_types)
 							end
 							l_infix_type := l_infix_type.actual_type
 
@@ -8000,12 +8007,12 @@ feature {NONE} -- Predefined types
 			any_compiled: system.any_class.is_compiled
 			array_compiled: system.array_class.is_compiled
 		local
-			generics: ARRAY [TYPE_A]
+			generics: ARRAYED_LIST [TYPE_A]
 			any_type: CL_TYPE_A
 		once
-			create generics.make (1,1)
+			create generics.make (1)
 			create any_type.make (system.any_id)
-			generics.put (any_type, 1)
+			generics.extend (any_type)
 
 			create Result.make (system.array_id, generics)
 		end
@@ -8119,7 +8126,7 @@ feature {NONE} -- Implementation
 			l_as.start
 			i := 1
 			nb := l_as.count
-			create l_type_list.make (1, nb)
+			create l_type_list.make (nb)
 			l_cur_type := current_target_type
 			if is_byte_node_enabled then
 				from
@@ -8133,7 +8140,7 @@ feature {NONE} -- Implementation
 					l_as.item.process (Current)
 					l_expr ?= last_byte_node
 					l_list.extend (l_expr)
-					l_type_list.put (last_type, i)
+					l_type_list.extend (last_type)
 					i := i + 1
 					l_as.forth
 				end
@@ -8147,7 +8154,7 @@ feature {NONE} -- Implementation
 					reset_for_unqualified_call_checking
 					current_target_type := l_cur_type
 					l_as.item.process (Current)
-					l_type_list.put (last_type, i)
+					l_type_list.extend (last_type)
 					i := i + 1
 					l_as.forth
 				end
@@ -8179,7 +8186,7 @@ feature {NONE} -- Implementation
 			l_type_list: like last_expressions_type
 			i, nb: INTEGER
 			l_tuple_type: TUPLE_TYPE_A
-			l_types: ARRAY [TYPE_A]
+			l_types: ARRAYED_LIST [TYPE_A]
 			l_error_level: NATURAL_32
 		do
 			l_error_level := error_level
@@ -8187,7 +8194,7 @@ feature {NONE} -- Implementation
 			l_as.start
 			i := 1
 			nb := l_as.count
-			create l_type_list.make (1, nb)
+			create l_type_list.make (nb)
 			l_tuple_type ?= current_target_type
 			if l_tuple_type /= Void then
 				l_types := l_tuple_type.generics
@@ -8201,14 +8208,14 @@ feature {NONE} -- Implementation
 				loop
 					reset_for_unqualified_call_checking
 					if l_types /= Void and then l_types.valid_index (i) then
-						current_target_type := l_types.item (i)
+						current_target_type := l_types.i_th (i)
 					else
 						current_target_type := Void
 					end
 					l_as.item.process (Current)
 					l_expr ?= last_byte_node
 					l_list.extend (l_expr)
-					l_type_list.put (last_type, i)
+					l_type_list.extend (last_type)
 					i := i + 1
 					l_as.forth
 				end
@@ -8221,12 +8228,12 @@ feature {NONE} -- Implementation
 				loop
 					reset_for_unqualified_call_checking
 					if l_types /= Void and then l_types.valid_index (i) then
-						current_target_type := l_types.item (i)
+						current_target_type := l_types.i_th (i)
 					else
 						current_target_type := Void
 					end
 					l_as.item.process (Current)
-					l_type_list.put (last_type, i)
+					l_type_list.extend (last_type)
 					i := i + 1
 					l_as.forth
 				end
@@ -8738,7 +8745,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation: overloading
 
 	overloaded_feature (
-			a_type: TYPE_A; a_last_class: CLASS_C; a_arg_types: ARRAY [TYPE_A];
+			a_type: TYPE_A; a_last_class: CLASS_C; a_arg_types: ARRAYED_LIST [TYPE_A];
 			a_feature_name: ID_AS; is_static_access: BOOLEAN): FEATURE_I
 
 			-- Find overloaded feature that could match Current. The rules are taken from
@@ -8787,7 +8794,7 @@ feature {NONE} -- Implementation: overloading
 						until
 							i > nb
 						loop
-							l_list.extend (a_arg_types.item (i))
+							l_list.extend (a_arg_types.i_th (i))
 							i := i + 1
 						end
 					end
@@ -8800,7 +8807,7 @@ feature {NONE} -- Implementation: overloading
 		end
 
 	applicable_overloaded_features
-			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A]; last_id: INTEGER;
+			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAYED_LIST [TYPE_A]; last_id: INTEGER;
 			is_static_access: BOOLEAN): LIST [FEATURE_I]
 
 			-- Use C# ECMA specification 14.4.2.1 to find list of matching features in
@@ -8865,7 +8872,7 @@ feature {NONE} -- Implementation: overloading
 						i = count or l_done
 					loop
 						l_formal_arg_type := feature_arg_type (l_feature, i, a_type, a_arg_types, last_id)
-						l_arg_type := a_arg_types.item (i)
+						l_arg_type := a_arg_types.i_th (i)
 						if
 							not (l_arg_type.conform_to (context.current_class, l_formal_arg_type) or
 							l_arg_type.convert_to (context.current_class, l_formal_arg_type.deep_actual_type))
@@ -8887,7 +8894,7 @@ feature {NONE} -- Implementation: overloading
 		end
 
 	best_overloaded_features
-			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A];
+			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAYED_LIST [TYPE_A];
 			last_id: INTEGER): LIST [FEATURE_I]
 
 			-- Use C# ECMA specification 14.4.2.2 and 14.4.2.3 to find list of best matching
@@ -8967,7 +8974,7 @@ feature {NONE} -- Implementation: overloading
 		end
 
 	better_feature (
-			a_feat1, a_feat2: FEATURE_I; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A];
+			a_feat1, a_feat2: FEATURE_I; a_type: TYPE_A; a_arg_types: ARRAYED_LIST [TYPE_A];
 			last_id: INTEGER): FEATURE_I
 
 			-- If `a_feat1' is better for overloading that `a_feat2', returns `a_feat1',
@@ -9003,7 +9010,7 @@ feature {NONE} -- Implementation: overloading
 				l_target2 := feature_arg_type (a_feat2, i, a_type, a_arg_types, last_id)
 
 					-- Extract passed argument info.
-				l_current_item := a_arg_types.item (i)
+				l_current_item := a_arg_types.i_th (i)
 
 				if not l_target1.same_as (l_target2) then
 					l_better := better_conversion (l_current_item, l_target1, l_target2)
@@ -9091,7 +9098,7 @@ feature {NONE} -- Implementation: overloading
 		end
 
 	feature_arg_type
-			(a_feature: FEATURE_I; a_pos: INTEGER; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A]; last_id: INTEGER): TYPE_A
+			(a_feature: FEATURE_I; a_pos: INTEGER; a_type: TYPE_A; a_arg_types: ARRAYED_LIST [TYPE_A]; last_id: INTEGER): TYPE_A
 
 			-- Find type of argument at position `a_pos' of feature `a_feature' in context
 			-- of `a_type', `last_id'.
@@ -9134,12 +9141,12 @@ feature {NONE} -- Agents
 			valid_feature: is_byte_node_enabled or a_has_args implies a_feature /= Void;
 			no_byte_code_for_attribute: is_byte_node_enabled implies not a_feature.is_attribute
 		local
-			l_type: TYPE_A
-			l_generics: ARRAY [TYPE_A]
+			l_type, l_query_type: TYPE_A
+			l_generics: ARRAYED_LIST [TYPE_A]
 			l_feat_args: FEAT_ARG
-			l_oargtypes, l_cargtypes: ARRAY [TYPE_A]
+			l_oargtypes, l_cargtypes: ARRAYED_LIST [TYPE_A]
 			l_tuple_type: TUPLE_TYPE_A
-			l_arg_count, l_open_count, l_closed_count, l_idx, l_cidx, l_oidx: INTEGER
+			l_arg_count, l_open_count, l_closed_count, l_idx, l_oidx: INTEGER
 			l_operand: OPERAND_AS
 			l_is_open, l_target_closed: BOOLEAN
 			l_result_type: TYPE_A
@@ -9168,17 +9175,17 @@ feature {NONE} -- Agents
 				end
 				if l_type.actual_type.is_boolean then
 						-- generics are: base_type, open_types
-					create l_generics.make (1, 2)
+					create l_generics.make (2)
 					create {GEN_TYPE_A} l_result_type.make (System.predicate_class_id, l_generics)
 				else
 						-- generics are: base_type, open_types, result_type
-					create l_generics.make (1, 3)
-					l_generics.put (l_type, 3)
+					create l_generics.make (3)
+					l_query_type := l_type
 					create {GEN_TYPE_A} l_result_type.make (System.function_class_id, l_generics)
 				end
 			else
 					-- generics are: base_type, open_types
-				create l_generics.make (1, 2)
+				create l_generics.make (2)
 				create {GEN_TYPE_A} l_result_type.make (System.procedure_class_id, l_generics)
 			end
 
@@ -9203,7 +9210,6 @@ feature {NONE} -- Agents
 			else
 					-- Target was specified
 				l_open_count := 0
-				l_oidx  := 1
 				l_target_closed := True
 			end
 
@@ -9227,28 +9233,25 @@ feature {NONE} -- Agents
 
 				-- Create `oargytpes' with `l_count' parameters. This array
 				-- is used to create current ROUTINE type.
-			create l_oargtypes.make (1, l_open_count)
+			create l_oargtypes.make (l_open_count)
 
 			if l_open_count > 0 then
 				create l_last_open_positions.make (l_open_count)
 				if l_oidx > 1 then
 						-- Target is open, so insert it.
 					l_last_open_positions.extend (1)
-					l_oargtypes.put (a_target_type, 1)
+					l_oargtypes.extend (a_target_type)
 				end
 			end
 
 				-- Create `l_cargtypes', array used to initialize type of `operands_tuple'.
 				-- This array can hold the types for all closed arguments
 			l_closed_count := l_arg_count - l_open_count
-			create l_cargtypes.make (1, l_closed_count)
+			create l_cargtypes.make (l_closed_count)
 
 				-- Always insert target's type in `l_cargtypes' as first argument.
 			if l_target_closed then
-				l_cargtypes.put (a_target_type, 1)
-				l_cidx := 2
-			else
-				l_cidx := 1
+				l_cargtypes.extend (a_target_type)
 			end
 
 				-- Create argument types
@@ -9302,13 +9305,11 @@ feature {NONE} -- Agents
 						-- If it is open insert it in `l_oargtypes' and insert
 						-- position in `l_last_open_positions'.
 					if l_is_open then
-						l_oargtypes.put (l_type, l_oidx)
+						l_oargtypes.extend (l_type)
 						l_last_open_positions.extend (l_idx)
-						l_oidx := l_oidx + 1
 					else
 						-- Add type to `l_argtypes'.
-						l_cargtypes.put (l_type, l_cidx)
-						l_cidx := l_cidx + 1
+						l_cargtypes.extend (l_type)
 					end
 
 					l_idx := l_idx + 1
@@ -9324,15 +9325,18 @@ feature {NONE} -- Agents
 			create l_tuple_type.make (System.tuple_id, l_oargtypes)
 				-- Type of an argument tuple is always attached.
 			l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
-				-- Insert it as second generic parameter of ROUTINE.
-			l_generics.put (l_tuple_type, 2)
 
 				-- Type of the first actual generic parameter of the routine type
 				-- should always be attached.
 			l_type := a_target_type.as_attached_in (context.current_class)
 				-- The target type is not separate, because an agent object is created on a target processor.
 			l_type := l_type.to_other_separateness (l_tuple_type)
-			l_generics.put (l_type, 1)
+			l_generics.extend (l_type)
+				-- Insert it as second generic parameter of ROUTINE.
+			l_generics.extend (l_tuple_type)
+			if l_query_type /= Void then
+				l_generics.extend (l_query_type)
+			end
 
 
 				-- Type of an agent is always attached.
@@ -9429,10 +9433,10 @@ feature {NONE} -- Agents
 	integer_array_type : GEN_TYPE_A
 			-- Representation of an array of INTEGER
 		local
-			generics : ARRAY [TYPE_A]
+			generics : ARRAYED_LIST [TYPE_A]
 		once
-			create generics.make (1,1)
-			generics.put (integer_type, 1)
+			create generics.make (1)
+			generics.extend (integer_type)
 			create Result.make (System.array_id, generics)
 		end
 
@@ -9493,6 +9497,7 @@ feature {NONE} -- Agents
 			l_target_closed: BOOLEAN
 			l_rout_creation: ROUTINE_CREATION_B
 			l_depend_unit: DEPEND_UNIT
+			l_generics: ARRAYED_LIST [TYPE_A]
 		do
 			l_target_closed := not (a_rc.target /= Void and then a_rc.target.is_open)
 			l_cur_class := context.current_class.eiffel_class_c
@@ -9552,12 +9557,17 @@ feature {NONE} -- Agents
 				l_closed_args.extend (create {CURRENT_B})
 				l_closed_args.extend (l_target)
 
-				create l_tuple_type.make (system.tuple_id, <<context.current_class_type, a_target_type>>)
+				create l_generics.make (2)
+				l_generics.extend (context.current_class_type)
+				l_generics.extend (a_target_type)
+				create l_tuple_type.make (system.tuple_id, l_generics)
 
 			else
 				create l_closed_args.make (1)
 				l_closed_args.extend (create {CURRENT_B})
-				create l_tuple_type.make (system.tuple_id, <<context.current_class_type>> )
+				create l_generics.make (1)
+				l_generics.extend (context.current_class_type)
+				create l_tuple_type.make (system.tuple_id, l_generics)
 			end
 
 				-- We need to instantiate the closed TUPLE type of the agent otherwise it
@@ -9996,7 +10006,7 @@ feature {NONE} -- Implementation: type validation
 					l_formal_type ?= Result.actual_type
 				end
 				if l_formal_type /= Void then
-					Result := a_last_constrained.generics.item (l_formal_type.position)
+					Result := a_last_constrained.generics.i_th (l_formal_type.position)
 				end
 			elseif a_last_type.is_like then
 				if Result.is_formal then
@@ -10005,7 +10015,7 @@ feature {NONE} -- Implementation: type validation
 					l_formal_type ?= Result.actual_type
 				end
 				if l_formal_type /= Void then
-					Result := a_last_type.actual_type.generics.item (l_formal_type.position)
+					Result := a_last_type.actual_type.generics.i_th (l_formal_type.position)
 				end
 			end
 			if l_formal_type /= Void and then attached {ANNOTATED_TYPE_A} a_type as l_attachable_type then
@@ -10219,7 +10229,7 @@ feature {NONE} -- Implementation: Error handling
 
 feature {NONE} -- Implementation: catcall check
 
-	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_params: ARRAY [TYPE_A]; a_location: LOCATION_AS; a_parameters: EIFFEL_LIST [EXPR_AS])
+	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_params: ARRAYED_LIST [TYPE_A]; a_location: LOCATION_AS; a_parameters: EIFFEL_LIST [EXPR_AS])
 			-- Check if a call can potentially be a cat call.
 			--
 			-- `a_callee_type': Type on which the call happens
@@ -10270,7 +10280,7 @@ feature {NONE} -- Implementation: catcall check
 					until
 						i > a_feature.argument_count
 					loop
-						l_arg_type := a_params.item (i)
+						l_arg_type := a_params.i_th (i)
 						l_formal_arg_type := l_descendant_feature.arguments.i_th (i)
 							-- Take care of anchoring to argument
 						if l_formal_arg_type.is_like_argument then
@@ -10325,7 +10335,7 @@ feature {NONE} -- Implementation: catcall check
 									l_tcat.set_called_feature (a_feature)
 									error_handler.insert_warning (l_tcat)
 								end
-								l_tcat.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.item (i), i)
+								l_tcat.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.i_th (i), i)
 							end
 						end
 						i := i + 1
@@ -10367,7 +10377,7 @@ feature {NONE} -- Implementation: catcall check
 			l_formal: FORMAL_A
 			l_parent_class: CLASS_C
 			l_descendant_class: CLASS_C
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			l_target_types: ARRAYED_LIST [TYPE_A]
 			i, nb: INTEGER
 			l_rout_id_set: ROUT_ID_SET
@@ -10442,11 +10452,11 @@ feature {NONE} -- Implementation: catcall check
 										l_rout_id_set := l_descendant_class.formal_rout_id_set_at_position (i)
 										l_type_feat ?= l_parent_class.feature_of_rout_id_set (l_rout_id_set)
 										if l_type_feat /= Void then
-											l_constraint_type := l_parent_type.generics.item (l_type_feat.position)
+											l_constraint_type := l_parent_type.generics.i_th (l_type_feat.position)
 											if l_constraint_type.has_variant_mark then
 												l_fail_if_constraint_not_met := True
 											end
-											l_generics.put (l_constraint_type, i)
+											l_generics.put_i_th (l_constraint_type, i)
 										else
 												-- We cannot find a definition for the new formal, we simply use its
 												-- constraint, at least if it is not a multiconstraint.
@@ -10460,7 +10470,7 @@ feature {NONE} -- Implementation: catcall check
 												else
 													l_needs_formal_check := True
 												end
-												l_generics.put (l_constraint_type, i)
+												l_generics.put_i_th (l_constraint_type, i)
 											else
 												l_compiler_limitation := True
 											end
@@ -10493,8 +10503,8 @@ feature {NONE} -- Implementation: catcall check
 												until
 													i > nb
 												loop
-													if l_descendant_type.generics.item (i).is_formal then
-														l_descendant_type.generics.put (create {CL_TYPE_A}.make (system.any_id), i)
+													if l_descendant_type.generics.i_th (i).is_formal then
+														l_descendant_type.generics.put_i_th (create {CL_TYPE_A}.make (system.any_id), i)
 													end
 													i := i + 1
 												end

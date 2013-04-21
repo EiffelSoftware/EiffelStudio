@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			if generics /= Void then
 				Precursor
 			else
-				create {TUPLE_TYPE_A} actual_type.make (class_id, <<>>)
+				create {TUPLE_TYPE_A} actual_type.make (class_id, create {ARRAYED_LIST [TYPE_A]}.make (0))
 				if lace_class.is_attached_by_default then
 					actual_type.set_is_attached
 				else
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	create_generic_type (g: ARRAY [TYPE_A]): GEN_TYPE_A
+	create_generic_type (g: ARRAYED_LIST [TYPE_A]): GEN_TYPE_A
 			-- <Precursor>
 		do
 			create {TUPLE_TYPE_A} Result.make (class_id, g)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A
+	partial_actual_type (gen: ARRAYED_LIST [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
@@ -59,7 +59,7 @@ feature {CLASS_TYPE_AS} -- Actual class type
 			if gen /= Void then
 				create {TUPLE_TYPE_A} Result.make (class_id, gen)
 			else
-				create {TUPLE_TYPE_A} Result.make (class_id, create {ARRAY [TYPE_A]}.make (1, 0))
+				create {TUPLE_TYPE_A} Result.make (class_id, create {ARRAYED_LIST [TYPE_A]}.make (0))
 			end
 				-- Note that TUPLE is not expanded by default.
 			if is_exp then
@@ -76,7 +76,7 @@ invariant
 	types_has_only_one_element: types /= Void implies types.count <= 1
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

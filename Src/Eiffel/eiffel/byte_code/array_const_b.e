@@ -31,10 +31,14 @@ feature {NONE} -- Initialize
 		require
 			e_not_void: e /= Void
 			t_not_void: t /= Void
+		local
+			l_generics: ARRAYED_LIST [TYPE_A]
 		do
 			expressions := e
 			type := t
-			create special_info.make (create {GEN_TYPE_A}.make (system.special_id, << t.generics.item (1) >>))
+			create l_generics.make (1)
+			l_generics.extend (t.generics.first)
+			create special_info.make (create {GEN_TYPE_A}.make (system.special_id, l_generics))
 		ensure
 			expressions_set: expressions = e
 			type_set: type = t
@@ -186,7 +190,7 @@ invariant
 	special_info_not_void: special_info /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

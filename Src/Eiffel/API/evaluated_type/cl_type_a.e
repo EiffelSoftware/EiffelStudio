@@ -876,7 +876,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 										l_result_generics := Result.generics
 									end
 									l_pos := l_formal.position
-									l_result_generics.put (l_parent_generics.item (l_parent_formal.position), l_pos)
+									l_result_generics.put_i_th (l_parent_generics.i_th (l_parent_formal.position), l_pos)
 										-- Mark that we have done `l_pos'.
 									if nb < 64 then
 										l_quick_positions := l_quick_positions | ({NATURAL_64} 1 |<< l_pos)

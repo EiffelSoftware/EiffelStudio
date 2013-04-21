@@ -375,8 +375,7 @@ feature -- Contexts
 
 			if type_a.is_formal then
 				formal_a ?= type_a
-				Result := Context.class_type.type.generics.item
-						(formal_a.position).c_type
+				Result := Context.class_type.type.generics.i_th (formal_a.position).c_type
 			else
 				Result := type_a.c_type
 			end
@@ -507,7 +506,7 @@ feature {NONE} -- Detection of safe/unsafe features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 					end
 					l_pos := l_named_tuple_type.label_position (l_as.access_name)
 					if l_pos > 0 then
-						last_type := l_named_tuple_type.generics.item (l_pos)
+						last_type := l_named_tuple_type.generics.i_th (l_pos)
 					else
 						last_type := Void
 					end
@@ -830,13 +830,16 @@ feature {NONE} -- Implementation
 		end
 
 	process_type_expr_as (l_as: TYPE_EXPR_AS)
+		local
+			l_generics: ARRAYED_LIST [TYPE_A]
 		do
 			if not expr_type_visiting then
 				l_as.type.process (Current)
 			else
 				l_as.type.process (Current)
-				create {GEN_TYPE_A} last_type.make (
-					system.type_class.compiled_class.class_id, << last_type >>)
+				create l_generics.make (1)
+				l_generics.extend (last_type)
+				create {GEN_TYPE_A} last_type.make (system.type_class.compiled_class.class_id, l_generics)
 			end
 		end
 
@@ -2137,7 +2140,7 @@ feature -- Expression visitor
 			no_error_implies_result_is_not_void: not has_error_internal implies Result /= Void
 		end
 
-	expr_types (a_exprs: EIFFEL_LIST [EXPR_AS]): ARRAY [TYPE_A]
+	expr_types (a_exprs: EIFFEL_LIST [EXPR_AS]): ARRAYED_LIST [TYPE_A]
 			-- Types of `expr_types'
 			-- `last_type' is not modified.
 		local
@@ -2151,7 +2154,7 @@ feature -- Expression visitor
 			l_last_type := last_type
 			l_last_class := last_class
 			last_type := Void
-			create Result.make (1, a_exprs.count)
+			create Result.make ( a_exprs.count)
 			from
 				i := 1
 				l_count := a_exprs.count
@@ -2159,7 +2162,7 @@ feature -- Expression visitor
 				i > l_count
 			loop
 				a_exprs.i_th (i).process (Current)
-				Result.put (last_type, i)
+				Result.extend (last_type)
 				i := i + 1
 			end
 			last_type := l_last_type
@@ -2495,12 +2498,12 @@ feature {NONE} -- Implementation: helpers
 			any_compiled: system.any_class.is_compiled
 			array_compiled: system.array_class.is_compiled
 		local
-			generics: ARRAY [TYPE_A]
+			generics: ARRAYED_LIST [TYPE_A]
 			any_type: CL_TYPE_A
 		once
-			create generics.make (1, 1)
+			create generics.make (1)
 			create any_type.make (system.any_id)
-			generics.put (any_type, 1)
+			generics.extend (any_type)
 			create Result.make (system.array_id, generics)
 		end
 
@@ -2557,9 +2560,9 @@ feature {NONE} -- Implementation: helpers
 		local
 			l_target_type: TYPE_A;
 			l_arg_type:TYPE_A
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			l_feat_args: E_FEATURE_ARGUMENTS
-			l_oargtypes, l_argtypes: ARRAY [TYPE_A]
+			l_oargtypes, l_argtypes: ARRAYED_LIST [TYPE_A]
 			l_tuple: TUPLE_TYPE_A
 			l_count, l_idx, l_oidx: INTEGER
 			l_operand: OPERAND_AS
@@ -2572,12 +2575,11 @@ feature {NONE} -- Implementation: helpers
 			if not has_error_internal then
 				if l_feat.has_return_value then
 						-- generics are: base_type, open_types, result_type
-					create l_generics.make (1, 3)
-					l_generics.put (l_feat.type.actual_type, 3)
+					create l_generics.make (3)
 					create l_result_type.make (System.function_class_id, l_generics)
 				else
 						-- generics are: base_type, open_types
-					create l_generics.make (1, 2)
+					create l_generics.make (2)
 					create l_result_type.make (System.procedure_class_id, l_generics)
 				end
 
@@ -2590,7 +2592,7 @@ feature {NONE} -- Implementation: helpers
 				end
 
 				l_actual_target_type := l_target_type.actual_type
-				l_generics.put (l_target_type, 1)
+				l_generics.extend (l_target_type)
 
 				l_feat_args := l_feat.arguments
 
@@ -2604,7 +2606,7 @@ feature {NONE} -- Implementation: helpers
 				else
 					l_count := 1
 				end
-				create l_argtypes.make (1, l_count)
+				create l_argtypes.make (l_count)
 
 					-- Create `l_oargtypes'. But first we need to find the `l_count', number
 					-- of open operands.
@@ -2639,17 +2641,17 @@ feature {NONE} -- Implementation: helpers
 
 					-- Create `oargytpes' with `l_count' parameters. This array
 					-- is used to create current ROUTINE type.
-				create l_oargtypes.make (1, l_count)
+				create l_oargtypes.make (l_count)
 
 				if l_count > 0 then
 					if l_oidx > 1 then
 							-- Target is open, so insert it.
-						l_oargtypes.put (l_target_type, 1)
+						l_oargtypes.extend (l_target_type)
 					end
 				end
 
 					-- Always insert target's type in `l_argtypes' as first argument.
-				l_argtypes.put (l_target_type, 1)
+				l_argtypes.extend (l_target_type)
 
 					-- Create argument types
 				if l_feat_args /= Void then
@@ -2695,12 +2697,12 @@ feature {NONE} -- Implementation: helpers
 
 							-- If it is open insert it in `l_oargtypes'
 						if l_is_open then
-							l_oargtypes.put (l_arg_type, l_oidx)
+							l_oargtypes.extend (l_arg_type)
 							l_oidx := l_oidx + 1
 						end
 
 							-- Add type to `l_argtypes'.
-						l_argtypes.put (l_arg_type, l_idx)
+						l_argtypes.extend (l_arg_type)
 
 						l_idx := l_idx + 1
 						l_feat_args.forth
@@ -2714,8 +2716,12 @@ feature {NONE} -- Implementation: helpers
 					-- Create open argument type tuple
 				create l_tuple.make (System.tuple_id, l_oargtypes)
 					-- Insert it as second generic parameter of ROUTINE.
-				l_generics.put (l_tuple, 2)
+				l_generics.extend (l_tuple)
 
+					-- Insert it as third generic parameter of FUNCTION if it is a function
+				if l_feat.has_return_value then
+					l_generics.put (l_feat.type.actual_type)
+				end
 				Result := l_result_type
 			end
 		ensure
@@ -2736,7 +2742,7 @@ invariant
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

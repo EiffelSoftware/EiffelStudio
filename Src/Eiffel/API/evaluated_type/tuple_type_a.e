@@ -45,7 +45,7 @@ feature -- Properties
 			until
 				i > nb
 			loop
-				if not l_generics.item (i).is_basic then
+				if not l_generics.i_th (i).is_basic then
 					Result := False
 					i := nb + 1
 				else
@@ -60,7 +60,7 @@ feature -- Access
 		do
 				-- Since the generic derivation for a TUPLE does not has actual generic parameter
 				-- we simply create a copy of current without actuals.
-			create Result.make (class_id, create {ARRAY [TYPE_A]}.make (1, 0))
+			create Result.make (class_id, create {ARRAYED_LIST [TYPE_A]}.make (0))
 			Result.set_mark (declaration_mark)
 		end
 
@@ -155,7 +155,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				until
 					i > nb or else not Result
 				loop
-					Result := l_tuple_generics.item (i).conform_to (a_context_class, generics.item (i))
+					Result := l_tuple_generics.i_th (i).conform_to (a_context_class, generics.i_th (i))
 					i := i + 1
 				end
 			else
@@ -168,7 +168,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		local
 			tuple_type: TUPLE_TYPE_A
 			i, count, other_count: INTEGER
-			other_generics: ARRAY [TYPE_A]
+			other_generics: like generics
 		do
 			tuple_type ?= other
 
@@ -185,8 +185,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 				until
 					(i > other_count) or else (not Result)
 				loop
-					Result := generics.item (i).conform_to (a_context_class,
-						other_generics.item (i))
+					Result := generics.i_th (i).conform_to (a_context_class,
+						other_generics.i_th (i))
 					i := i + 1
 				end
 			else
@@ -209,7 +209,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			until
 				i > count or else not Result
 			loop
-				Result := generics.item (i).good_generics
+				Result := generics.i_th (i).good_generics
 				i := i + 1
 			end
 		end
@@ -227,8 +227,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 			until
 				i > count or else (Result /= Void)
 			loop
-				if not generics.item (i).good_generics then
-					Result := generics.item (i).error_generics
+				if not generics.i_th (i).good_generics then
+					Result := generics.i_th (i).error_generics
 				end
 				i := i + 1
 			end
@@ -248,7 +248,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			until
 				i > count
 			loop
-				gen_param := generics.item (i)
+				gen_param := generics.i_th (i)
 					-- Creation readiness check is set to false because:
 					--  * one cannot inherit from TUPLE
 					--  * there is no expanded entity

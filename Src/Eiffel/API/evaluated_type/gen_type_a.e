@@ -73,7 +73,7 @@ feature -- Properties
 			until
 				i > nb
 			loop
-				l_cl_type ?= l_generics.item (i)
+				l_cl_type ?= l_generics.i_th (i)
 				if l_cl_type /= Void and then (l_cl_type.same_as (type) or else l_cl_type.has_actual (type)) then
 					Result := True
 					i := nb + 1
@@ -101,8 +101,8 @@ feature -- Comparison
 				until
 					i > nb or else not Result
 				loop
-					Result := equivalent (generics.item (i),
-							other_generics.item (i))
+					Result := equivalent (generics.i_th (i),
+							other_generics.i_th (i))
 					i := i + 1
 				end
 			end
@@ -130,7 +130,7 @@ feature -- Comparison
 				until
 					i > nb or else not Result
 				loop
-					Result := generics.item (i).same_as (other_generics.item (i))
+					Result := generics.i_th (i).same_as (other_generics.i_th (i))
 					i := i + 1
 				end
 			end
@@ -138,7 +138,7 @@ feature -- Comparison
 
 feature -- Access
 
-	generics: ARRAY [TYPE_A]
+	generics: ARRAYED_LIST [TYPE_A]
 			-- Actual generical parameter
 
 	hash_code: INTEGER
@@ -154,10 +154,10 @@ feature -- Access
 				until
 					i = 0
 				loop
-					l_rotate := l_generics.item (i).hash_code
+					l_rotate := l_generics.i_th (i).hash_code
 					l_bytes := 4 * (1 + i \\ 8)
 					l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
-					Result := Result.bit_xor (l_generics.item (i).hash_code)
+					Result := Result.bit_xor (l_generics.i_th (i).hash_code)
 					i := i - 1
 				end
 					-- To prevent negative values.
@@ -224,7 +224,7 @@ feature -- Status Report
 			until
 				i > nb
 			loop
-				if not l_generics.item (i).is_explicit then
+				if not l_generics.i_th (i).is_explicit then
 					Result := False
 					i := nb + 1
 				else
@@ -247,7 +247,7 @@ feature -- Status Report
 				until
 					i > nb
 				loop
-					if not l_generics.item (i).is_class_valid then
+					if not l_generics.i_th (i).is_class_valid then
 						Result := False
 						i := nb + 1
 					else
@@ -275,7 +275,7 @@ feature -- Status Report
 			until
 				i > nb
 			loop
-				l_type ?= l_generics.item (i)
+				l_type ?= l_generics.i_th (i)
 					-- If type is still expanded, we do the recursion in case it has a generic parameter which is
 					-- itself generic and needs to be checked as well.
 				if l_type /= Void and then (not l_type.is_expanded or else not l_type.has_associated_class_type (Void)) then
@@ -308,7 +308,7 @@ feature -- Output
 				until
 					i > count
 				loop
-					Result.append (generics.item (i).dump)
+					Result.append (generics.i_th (i).dump)
 					if i /= count then
 						Result.append_character (',')
 						Result.append_character (' ')
@@ -336,7 +336,7 @@ feature -- Output
 				until
 					i > count
 				loop
-					generics.item (i).ext_append_to (st, c)
+					generics.i_th (i).ext_append_to (st, c)
 					if i /= count then
 						st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_Comma)
 						st.add_space
@@ -362,7 +362,7 @@ feature -- Generic conformance
 			until
 				i > nb
 			loop
-				l_generics.item (i).generate_cid (buffer, final_mode, use_info, a_context_type)
+				l_generics.i_th (i).generate_cid (buffer, final_mode, use_info, a_context_type)
 				i := i + 1
 			end
 		end
@@ -381,7 +381,7 @@ feature -- Generic conformance
 			until
 				i > nb
 			loop
-				l_generics.item (i).generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
+				l_generics.i_th (i).generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
 				i := i + 1
 			end
 		end
@@ -400,7 +400,7 @@ feature -- Generic conformance
 			until
 				i > nb
 			loop
-				l_generics.item (i).generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_context_type, a_level)
+				l_generics.i_th (i).generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_context_type, a_level)
 				i := i + 1
 			end
 		end
@@ -422,7 +422,7 @@ feature -- Generic conformance
 			until
 				i > nb
 			loop
-				l_generics.item (i).make_type_byte_code (ba, use_info, a_context_type)
+				l_generics.i_th (i).make_type_byte_code (ba, use_info, a_context_type)
 				i := i + 1
 			end
 		end
@@ -449,7 +449,7 @@ feature -- Generic conformance
 			loop
 				il_generator.duplicate_top
 				il_generator.put_integer_32_constant (i - 1)
-				l_generics.item (i).generate_gen_type_il (il_generator, use_info)
+				l_generics.i_th (i).generate_gen_type_il (il_generator, use_info)
 				il_generator.generate_array_write ({IL_CONST}.il_ref, 0)
 				i := i + 1
 			end
@@ -504,7 +504,7 @@ feature -- CECIL code generation
 			until
 				i > nb
 			loop
-				l_generics.item (i).generate_cecil_value (buffer, a_context_type)
+				l_generics.i_th (i).generate_cecil_value (buffer, a_context_type)
 				buffer.put_two_character (',', '%N')
 				i := i + 1
 			end
@@ -531,7 +531,7 @@ feature -- CECIL code generation
 			until
 				i > nb
 			loop
-				ba.append_natural_32 (l_generics.item (i).sk_value (a_context_type))
+				ba.append_natural_32 (l_generics.i_th (i).sk_value (a_context_type))
 				i := i + 1
 			end
 		end
@@ -572,7 +572,7 @@ feature -- IL code generation
 						i > count
 					loop
 						Result.append (sep)
-						tmp := l_generics.item (i).generic_il_type_name (a_context_type).twin
+						tmp := l_generics.i_th (i).generic_il_type_name (a_context_type).twin
 						tmp.remove_head (tmp.last_index_of ('.', tmp.count))
 						Result.append (tmp)
 						i := i + 1
@@ -600,7 +600,7 @@ feature -- IL code generation
 			until
 				i > count
 			loop
-				generics.item (i).dispatch_anchors (a_context_class)
+				generics.i_th (i).dispatch_anchors (a_context_class)
 				i := i + 1
 			end
 		end
@@ -628,7 +628,7 @@ feature {TYPE_A} -- Helpers
 				until
 					i > nb
 				loop
-					if not generics.item (i).internal_is_valid_for_class (a_class) then
+					if not generics.i_th (i).internal_is_valid_for_class (a_class) then
 						Result := False
 						i := nb + 1
 					else
@@ -678,8 +678,8 @@ feature {TYPE_A} -- Helpers
 							until
 								i <= 0
 							loop
-								parameter := generics.item (i)
-								other_parameter := gen_type.generics.item (i)
+								parameter := generics.i_th (i)
+								other_parameter := gen_type.generics.i_th (i)
 								if
 									parameter.same_as (other_parameter) or else
 									parameter.is_expanded and then other_parameter.is_formal
@@ -751,11 +751,11 @@ feature {TYPE_A} -- Helpers
 			until
 				i > count
 			loop
-				l_type := l_generics.item (i)
+				l_type := l_generics.i_th (i)
 				if l_type.actual_type.is_formal or l_type.is_reference then
 					if a_level = 0 then
 							-- We are now analyzing the B part in A [B]
-						l_new_generics.put (create {FORMAL_A}.make (False, False, i), i)
+						l_new_generics.put_i_th (create {FORMAL_A}.make (False, False, i), i)
 					else
 							-- We are now analyzing the X part in A [B [X]]
 							-- which can only happen if B [X] is expanded. In that case, we
@@ -764,9 +764,9 @@ feature {TYPE_A} -- Helpers
 							-- we put the first constraint in the list as we use this for sorting
 							-- the CLASS_TYPE for code generation (See eweasel test#multicon060).
 						if base_class.generics.i_th (i).is_multi_constrained (base_class.generics) then
-							l_new_generics.put (base_class.constrained_types (i).first.type, i)
+							l_new_generics.put_i_th (base_class.constrained_types (i).first.type, i)
 						else
-							l_new_generics.put (base_class.constrained_type (i).as_marks_free, i)
+							l_new_generics.put_i_th (base_class.constrained_type (i).as_marks_free, i)
 						end
 					end
 				else
@@ -774,7 +774,7 @@ feature {TYPE_A} -- Helpers
 						-- store the basic type data, rather than a formal
 						-- generic paramter to save some time at run-time
 						-- when computing the dynamic type.
-					l_new_generics.put (l_type.internal_generic_derivation (a_level + 1), i)
+					l_new_generics.put_i_th (l_type.internal_generic_derivation (a_level + 1), i)
 				end
 				i := i + 1
 			end
@@ -805,7 +805,7 @@ feature {TYPE_A} -- Helpers
 				until
 					i > nb or else not Result
 				loop
-					l_type := l_generics.item (i)
+					l_type := l_generics.i_th (i)
 						-- We use `actual_type' here because if this is an anchor, then we need to know
 						-- if the anchor is a formal since it is crucial for the comparison.
 					if l_type.actual_type.is_formal and current_type /= Void then
@@ -815,7 +815,7 @@ feature {TYPE_A} -- Helpers
 							-- G is INTEGER. If we were not doing that, we would have to
 							-- create additional objects.
 						l_formal ?= l_type.actual_type
-						l_type := current_type.generics.item (l_formal.position)
+						l_type := current_type.generics.i_th (l_formal.position)
 					end
 					if current_type /= Void and then attached {LIKE_CURRENT} l_type.actual_type as l_like_current then
 							-- If actual generic parameter is `like Current' and that we have a context type, then
@@ -825,17 +825,17 @@ feature {TYPE_A} -- Helpers
 					if l_type.actual_type.is_formal or l_type.is_reference then
 						if a_level = 0 then
 								-- We are now comparing the B part in A [B]								
-							l_formal ?= l_other_generics.item (i)
+							l_formal ?= l_other_generics.i_th (i)
 							Result := l_formal /= Void and then l_formal.position = i
 						else
 								-- We are now analyzing the X part in A [B [X]]
 								-- which can only happen if B [X] is expanded. In that case
 								-- we just check that for X the corresponding actual in `other' is
 								-- also a reference.
-							Result := l_other_generics.item (i).is_reference
+							Result := l_other_generics.i_th (i).is_reference
 						end
 					else
-						Result := l_type.internal_same_generic_derivation_as (current_type, l_other_generics.item (i), a_level + 1)
+						Result := l_type.internal_same_generic_derivation_as (current_type, l_other_generics.i_th (i), a_level + 1)
 					end
 					i := i + 1
 				end
@@ -883,7 +883,7 @@ feature -- Primitives
 			until
 				i > count
 			loop
-				generics.item (i).update_dependance (feat_depend)
+				generics.i_th (i).update_dependance (feat_depend)
 				i := i + 1
 			end
 		end
@@ -910,7 +910,7 @@ feature -- Primitives
 			until
 				i > count or else Result
 			loop
-				Result := generics.item (i).has_expanded
+				Result := generics.i_th (i).has_expanded
 				i := i + 1
 			end
 		end
@@ -927,7 +927,7 @@ feature -- Primitives
 			until
 				i = nb
 			loop
-				if not generics.item (i).is_full_named_type then
+				if not generics.i_th (i).is_full_named_type then
 					Result := False
 					i := nb - 1
 				end
@@ -946,7 +946,7 @@ feature -- Primitives
 			until
 				i > count or else Result
 			loop
-				Result := generics.item (i).has_formal_generic
+				Result := generics.i_th (i).has_formal_generic
 				i := i + 1
 			end
 		end
@@ -963,7 +963,7 @@ feature -- Primitives
 			until
 				i <= 0 or else Result
 			loop
-				Result := g.item (i).is_loose
+				Result := g.i_th (i).is_loose
 				i := i - 1
 			end
 		end
@@ -982,7 +982,7 @@ feature -- Primitives
 			until
 				i <= 0
 			loop
-				l_prev_type := l_old_generics.item (i)
+				l_prev_type := l_old_generics.i_th (i)
 				l_new_type := l_prev_type.deep_actual_type
 				if l_prev_type /= l_new_type then
 					if l_new_generics = Void then
@@ -990,7 +990,7 @@ feature -- Primitives
 						Result := Result.duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
-					l_new_generics.put (l_new_type, i)
+					l_new_generics.put_i_th (l_new_type, i)
 				end
 				i := i - 1
 			end
@@ -1010,7 +1010,7 @@ feature -- Primitives
 			until
 				i <= 0
 			loop
-				l_prev_type := l_old_generics.item (i)
+				l_prev_type := l_old_generics.i_th (i)
 				l_new_type := l_prev_type.context_free_type
 				if l_prev_type /= l_new_type then
 					if l_new_generics = Void then
@@ -1018,13 +1018,13 @@ feature -- Primitives
 						Result := Result.duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
-					l_new_generics.put (l_new_type, i)
+					l_new_generics.put_i_th (l_new_type, i)
 				end
 				i := i - 1
 			end
 		end
 
-	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): like Current
+	actual_argument_type (a_arg_types: ARRAYED_LIST [TYPE_A]): like Current
 		local
 			i: INTEGER
 			l_old_generics, l_new_generics: like generics
@@ -1037,7 +1037,7 @@ feature -- Primitives
 			until
 				i <= 0
 			loop
-				l_prev_type := l_old_generics.item (i)
+				l_prev_type := l_old_generics.i_th (i)
 				l_new_type := l_prev_type.actual_argument_type (a_arg_types)
 				if l_prev_type /= l_new_type then
 					if l_new_generics = Void then
@@ -1045,7 +1045,7 @@ feature -- Primitives
 						Result := Result.duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
-					l_new_generics.put (l_new_type, i)
+					l_new_generics.put_i_th (l_new_type, i)
 				end
 				i := i - 1
 			end
@@ -1067,7 +1067,7 @@ feature -- Primitives
 			until
 				i <= 0
 			loop
-				old_type := old_generics.item (i)
+				old_type := old_generics.i_th (i)
 				new_type := old_type.formal_instantiation_in (type, constraint, written_id)
 				if new_type /= old_type then
 						-- Record a new type of a generic parameter.
@@ -1076,7 +1076,7 @@ feature -- Primitives
 						Result := Result.duplicate_for_instantiation
 						new_generics := Result.generics
 					end
-					new_generics.put (new_type, i)
+					new_generics.put_i_th (new_type, i)
 				end
 				i := i - 1
 			end
@@ -1098,7 +1098,7 @@ feature -- Primitives
 			until
 				i <= 0
 			loop
-				old_type := old_generics.item (i)
+				old_type := old_generics.i_th (i)
 				new_type := old_type.instantiation_in (type, written_id)
 				if new_type /= old_type then
 						-- Record a new type of a generic parameter.
@@ -1107,7 +1107,7 @@ feature -- Primitives
 						Result := Result.duplicate_for_instantiation
 						new_generics := Result.generics
 					end
-					new_generics.put (new_type, i)
+					new_generics.put_i_th (new_type, i)
 				end
 				i := i - 1
 			end
@@ -1126,14 +1126,14 @@ feature -- Primitives
 			until
 				i > nb
 			loop
-				l_old_generic := l_generics.item (i)
+				l_old_generic := l_generics.i_th (i)
 				l_new_generic := l_old_generic.adapted_in (a_class_type)
 				if l_old_generic /= l_new_generic then
 					if Result = Void then
 						Result := duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
-					l_new_generics.put (l_new_generic, i)
+					l_new_generics.put_i_th (l_new_generic, i)
 				end
 				i := i + 1
 			end
@@ -1155,14 +1155,14 @@ feature -- Primitives
 			until
 				i > nb
 			loop
-				l_old_generic := l_generics.item (i)
+				l_old_generic := l_generics.i_th (i)
 				l_new_generic := l_old_generic.skeleton_adapted_in (a_class_type)
 				if l_old_generic /= l_new_generic then
 					if Result = Void then
 						Result := duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
-					l_new_generics.put (l_new_generic, i)
+					l_new_generics.put_i_th (l_new_generic, i)
 				end
 				i := i + 1
 			end
@@ -1187,14 +1187,14 @@ feature -- Primitives
 			until
 				i > nb
 			loop
-				l_old_generic := l_generics.item (i)
+				l_old_generic := l_generics.i_th (i)
 				l_new_generic := l_old_generic.formal_instantiated_in (class_type)
 				if l_old_generic /= l_new_generic then
 					if Result = Void then
 						Result := duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
-					l_new_generics.put (l_new_generic, i)
+					l_new_generics.put_i_th (l_new_generic, i)
 				end
 				i := i + 1
 			end
@@ -1219,14 +1219,14 @@ feature -- Primitives
 			until
 				i > nb
 			loop
-				l_old_generic := l_generics.item (i)
+				l_old_generic := l_generics.i_th (i)
 				l_new_generic := l_old_generic.instantiated_in (class_type)
 				if l_old_generic /= l_new_generic then
 					if Result = Void then
 						Result := duplicate_for_instantiation
 						l_new_generics := Result.generics
 					end
-					l_new_generics.put (l_new_generic, i)
+					l_new_generics.put_i_th (l_new_generic, i)
 				end
 				i := i + 1
 			end
@@ -1250,14 +1250,14 @@ feature -- Primitives
 					until
 						i > nb
 					loop
-						l_old_generic := l_generics.item (i)
+						l_old_generic := l_generics.i_th (i)
 						l_new_generic := l_old_generic.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
 						if l_old_generic /= l_new_generic then
 							if Result = Void then
 								Result := duplicate_for_instantiation
 								l_new_generics := Result.generics
 							end
-							l_new_generics.put (l_new_generic, i)
+							l_new_generics.put_i_th (l_new_generic, i)
 						end
 						i := i + 1
 					end
@@ -1290,8 +1290,8 @@ feature -- Primitives
 					until
 						i > count or else not Result
 					loop
-						Result := gen_type_generics.item (i).
-							conform_to (a_context_class, generics.item (i))
+						Result := gen_type_generics.i_th (i).
+							conform_to (a_context_class, generics.i_th (i))
 						i := i + 1
 					end
 				end
@@ -1325,7 +1325,7 @@ feature -- Primitives
 			formal_type ?= type
 			if formal_type /= Void then
 					-- Instantiation of a formal generic
-				Result := generics.item (formal_type.position).actual_type
+				Result := generics.i_th (formal_type.position).actual_type
 			elseif type.is_like then
 					-- We do not want to loose the fact that it is an anchor
 					-- as otherwise we would break eweasel test exec206, but we
@@ -1377,7 +1377,7 @@ feature -- Primitives
 			until
 				i > count or else Result
 			loop
-				Result := generics.item (i).has_like
+				Result := generics.i_th (i).has_like
 				i := i + 1
 			end
 		end
@@ -1393,7 +1393,7 @@ feature -- Primitives
 			until
 				i > count or else Result
 			loop
-				Result := generics.item (i).has_like_argument
+				Result := generics.i_th (i).has_like_argument
 				i := i + 1
 			end
 		end
@@ -1409,7 +1409,7 @@ feature -- Primitives
 			until
 				i > count or else Result
 			loop
-				Result := generics.item (i).has_like_current
+				Result := generics.i_th (i).has_like_current
 				i := i + 1
 			end
 		end
@@ -1423,11 +1423,11 @@ feature -- Primitives
 			from
 				i := 1
 				count := generics.count
-				create duplicate_generics.make (1, count)
+				create duplicate_generics.make (count)
 			until
 				i > count
 			loop
-				duplicate_generics.put (generics.item (i).duplicate, i)
+				duplicate_generics.extend (generics.i_th (i).duplicate)
 				i := i + 1
 			end
 			Result := twin
@@ -1459,7 +1459,7 @@ feature -- Primitives
 				until
 					i > generic_count or else not Result
 				loop
-					Result := generics.item (i).good_generics
+					Result := generics.i_th (i).good_generics
 					i := i + 1
 				end
 			end
@@ -1478,7 +1478,7 @@ feature -- Primitives
 			until
 				i > nb
 			loop
-				l_generics.item (i).check_labels (a_context_class, a_node)
+				l_generics.i_th (i).check_labels (a_context_class, a_node)
 				i := i + 1
 			end
 		end
@@ -1503,8 +1503,8 @@ feature -- Primitives
 						until
 							i > generic_count or else (Result /= Void)
 						loop
-							if not generics.item (i).good_generics then
-								Result := generics.item (i).error_generics
+							if not generics.i_th (i).good_generics then
+								Result := generics.i_th (i).error_generics
 							end
 							i := i + 1
 						end
@@ -1553,7 +1553,7 @@ feature -- Primitives
 			l_constraint_item: TYPE_A
 			l_formal_constraint: FORMAL_A
 			l_generic_constraint: GEN_TYPE_A
-			l_generic_parameters: ARRAY[TYPE_A]
+			l_generic_parameters: like generics
 			l_formal_generic_parameter: FORMAL_A
 			l_generic_parameter: TYPE_A
 			l_conform: BOOLEAN
@@ -1565,7 +1565,7 @@ feature -- Primitives
 			l_class := base_class
 			l_generic_parameters := generics
 
-			l_generic_parameter := l_generic_parameters.item(i)
+			l_generic_parameter := l_generic_parameters.i_th(i)
 			l_constraints := l_class.constraints (i)
 			from
 				l_constraints.start
@@ -1578,7 +1578,7 @@ feature -- Primitives
 					check l_formal_constraint /= Void end
 						-- Replace the formal with its 'instantiation' of the current generic derivation.
 						--| `l_constraint_item' can indeed still be a formal, but now has to be resolved by using `a_type_context'
-					l_constraint_item := l_generic_parameters.item(l_formal_constraint.position)
+					l_constraint_item := l_generic_parameters.i_th (l_formal_constraint.position)
 				elseif l_constraint_item.has_generics and then not l_constraint_item.generics.is_empty then
 						-- We substitude all occurrences of formals in the constraint with the instantiation of the corresponding formal in our generic derivation.
 					l_generic_constraint ?= l_constraint_item.deep_twin
@@ -1637,7 +1637,7 @@ feature -- Primitives
 			end
 		end
 
-	substitute (new_generics: ARRAY [TYPE_A])
+	substitute (new_generics: like generics)
 			-- Take the arguments from `new_generics' to create an
 			-- effective representation of the current GEN_TYPE
 		require
@@ -1654,12 +1654,12 @@ feature -- Primitives
 			until
 				i > count
 			loop
-				constraint_type := generics.item (i)
+				constraint_type := generics.i_th (i)
 
 				if constraint_type.is_formal then
 					formal_type ?= constraint_type
 					pos := formal_type.position
-					generics.force (new_generics.item (pos), i)
+					generics.put_i_th (new_generics.i_th (pos), i)
 				elseif constraint_type.generics /= Void then
 					gen_type ?= constraint_type
 					gen_type.substitute (new_generics)
@@ -1902,7 +1902,7 @@ feature -- Primitives
 			until
 				i > nb or else Result
 			loop
-				gen_param := generics.item (i)
+				gen_param := generics.i_th (i)
 				if gen_param.has_expanded then
 					Result := gen_param.expanded_deferred
 				end
@@ -1924,7 +1924,7 @@ feature -- Primitives
 			until
 				i > nb or else not Result
 			loop
-				gen_param := generics.item (i)
+				gen_param := generics.i_th (i)
 				if gen_param.has_expanded then
 					Result := gen_param.valid_expanded_creation (a_class)
 				end

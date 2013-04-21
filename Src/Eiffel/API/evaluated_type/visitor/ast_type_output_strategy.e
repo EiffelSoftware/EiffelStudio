@@ -142,7 +142,7 @@ feature {TYPE_A} -- Visitors
 				until
 					i > count
 				loop
-					a_type.generics.item (i).process (Current)
+					a_type.generics.i_th (i).process (Current)
 					if i /= count then
 						text_formatter.process_symbol_text (ti_comma)
 						text_formatter.add_space
@@ -234,7 +234,7 @@ feature {TYPE_A} -- Visitors
 					text_formatter.process_local_text (a_type.label_name (i))
 					text_formatter.process_symbol_text (ti_colon)
 					text_formatter.add_space
-					a_type.generics.item (i).process (Current)
+					a_type.generics.i_th (i).process (Current)
 					if i /= count then
 						text_formatter.process_symbol_text (ti_semi_colon)
 						text_formatter.add_space

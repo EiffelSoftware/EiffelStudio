@@ -142,7 +142,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A
+	actual_argument_type (a_arg_types: ARRAYED_LIST [TYPE_A]): TYPE_A
 			-- Type for conformance.
 			-- `actual_type' is the declared type and is the wrong one for
 			-- conformance validation.
@@ -151,11 +151,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 				valid_position: a_arg_types.valid_index (position)
 			end
 				-- Preserve attachment status of the current type.
-			Result := a_arg_types.item (position).to_other_attachment (Current)
+			Result := a_arg_types.i_th (position).to_other_attachment (Current)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

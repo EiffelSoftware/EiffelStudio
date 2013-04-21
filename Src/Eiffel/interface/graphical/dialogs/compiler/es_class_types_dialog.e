@@ -235,7 +235,7 @@ feature {NONE} -- Basic operations
 			l_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_generator: EB_EDITOR_TOKEN_GENERATOR
 			l_type: CL_TYPE_A
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			i, l_upper: INTEGER
 		do
 			l_type := a_class_type.type
@@ -306,7 +306,7 @@ invariant
 	associated_class_attached: attached associated_class
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

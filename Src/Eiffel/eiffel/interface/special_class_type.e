@@ -53,7 +53,7 @@ feature -- Access
 		do
 				-- No need to call `meta_type' here since this must have been done already when
 				-- creating `type'.
-			Result := type.generics.item (1)
+			Result := type.generics.first
 		end
 
 	type: GEN_TYPE_A
@@ -1682,7 +1682,7 @@ feature -- IL code generation
 					has_generics: special_type.generics /= Void
 					valid_index: special_type.generics.valid_index (1)
 				end
-				l_element_type := special_type.generics.item (1)
+				l_element_type := special_type.generics.first
 				if l_element_type.is_formal and not first_generic.is_formal then
 						-- Type that was provided to us didn't have much type information, we have
 						-- to rely on what we have from `Current' if it is not formal.

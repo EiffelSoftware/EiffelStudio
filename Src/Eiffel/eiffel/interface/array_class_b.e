@@ -100,12 +100,16 @@ feature {NONE}
 
 	area_type: GEN_TYPE_A
 			-- Type SPECIAL [T]
+		local
+			l_generics: ARRAYED_LIST [TYPE_A]
 		do
-			create Result.make (System.special_id, <<actual_type.generics [1]>>)
+			create l_generics.make (1)
+			l_generics.extend (actual_type.generics.first)
+			create Result.make (System.special_id, l_generics)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

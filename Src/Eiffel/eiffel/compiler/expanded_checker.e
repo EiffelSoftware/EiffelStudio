@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	recursive_check_type (a_type: TYPE_A)
 		local
 			ass_c: CLASS_C
-			generics: ARRAY [TYPE_A]
+			generics: ARRAYED_LIST [TYPE_A]
 			i: INTEGER
 			vlec: VLEC
 		do
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 				until
 					i > generics.upper
 				loop
-					recursive_check_type (generics.item (i))
+					recursive_check_type (generics.i_th (i))
 					i := i + 1
 				end
 			end
@@ -173,7 +173,7 @@ invariant
 	id_set_not_void: id_set /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

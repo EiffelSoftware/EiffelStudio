@@ -52,7 +52,7 @@ feature -- Processing
 		local
 			type_i: CL_TYPE_A;
 			i, nb: INTEGER;
-			generics: ARRAY [TYPE_A];
+			generics: ARRAYED_LIST [TYPE_A];
 			insertion_list: FILTER_LIST;
 		do
 				-- Evaluation of a type class
@@ -101,7 +101,7 @@ feature -- Processing
 					until
 						i > nb
 					loop
-						dispatch (generics.item (i).actual_type, a_class)
+						dispatch (generics.i_th (i).actual_type, a_class)
 						i := i + 1
 					end
 				end
@@ -267,12 +267,12 @@ feature {NONE} -- Predefined types
 			array_compiled: System.array_class.is_compiled;
 		local
 			any_type: CL_TYPE_A;
-			generics: ARRAY [TYPE_A];
+			generics: ARRAYED_LIST [TYPE_A];
 		do
 				-- Not once because array_id and any_id can change
-			create generics.make (1, 1)
+			create generics.make (1)
 			create any_type.make (System.any_id)
-			generics.put (any_type, 1)
+			generics.extend (any_type)
 
 			create Result.make (System.array_id, generics)
 		end;
@@ -281,12 +281,9 @@ feature {NONE} -- Predefined types
 			-- Default tuple type: TUPLE
 		require
 			tuple_compiled: System.tuple_class.is_compiled
-		local
-			generics: ARRAY [TYPE_A]
 		do
 				-- Not once because tuple_id can change
-			create generics.make (1, 0)
-			create Result.make (System.tuple_id, generics)
+			create Result.make (System.tuple_id, create {ARRAYED_LIST [TYPE_A]}.make (0))
 		end;
 
 	Function_type_a: GEN_TYPE_A
@@ -298,14 +295,14 @@ feature {NONE} -- Predefined types
 			tuple_compiled: System.tuple_class.is_compiled
 		local
 			any_type: CL_TYPE_A
-			generics: ARRAY [TYPE_A]
+			generics: ARRAYED_LIST [TYPE_A]
 		do
 				-- Not once because function_id can change
-			create generics.make (1, 3)
+			create generics.make (3)
 			create any_type.make (System.any_id)
-			generics.put (any_type, 1)
-			generics.put (Tuple_type_a, 2)
-			generics.put (any_type, 3)
+			generics.extend (any_type)
+			generics.extend (Tuple_type_a)
+			generics.extend (any_type)
 
 			create Result.make (System.function_class_id, generics)
 		end
@@ -319,13 +316,13 @@ feature {NONE} -- Predefined types
 			tuple_compiled: System.tuple_class.is_compiled
 		local
 			any_type: CL_TYPE_A
-			generics: ARRAY [TYPE_A]
+			generics: ARRAYED_LIST [TYPE_A]
 		do
 				-- Not once because function_id can change
-			create generics.make (1, 2)
+			create generics.make (2)
 			create any_type.make (System.any_id)
-			generics.put (any_type, 1)
-			generics.put (Tuple_type_a, 2)
+			generics.extend (any_type)
+			generics.extend (Tuple_type_a)
 
 			create Result.make (System.predicate_class_id, generics)
 		end
@@ -339,13 +336,13 @@ feature {NONE} -- Predefined types
 			tuple_compiled: System.tuple_class.is_compiled
 		local
 			any_type: CL_TYPE_A
-			generics: ARRAY [TYPE_A]
+			generics: ARRAYED_LIST [TYPE_A]
 		do
 				-- Not once because procedure_id can change
-			create generics.make (1, 2)
+			create generics.make (2)
 			create any_type.make (System.any_id)
-			generics.put (any_type, 1)
-			generics.put (Tuple_type_a, 2)
+			generics.extend (any_type)
+			generics.extend (Tuple_type_a)
 
 			create Result.make (System.procedure_class_id, generics)
 		end
@@ -356,12 +353,12 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 			-- Default array type.
 			-- Not a once since `array_id' might change.
 		local
-			true_gen: ARRAY [TYPE_A]
+			true_gen: ARRAYED_LIST [TYPE_A]
 			any_type_a : TYPE_A
 		do
-			create true_gen.make (1, 1)
+			create true_gen.make (1)
 			any_type_a := system.any_class.compiled_class.actual_type
-			true_gen.put (any_type_a, 1);
+			true_gen.extend (any_type_a)
 			create Result.make (System.array_id, true_gen)
 		end;
 

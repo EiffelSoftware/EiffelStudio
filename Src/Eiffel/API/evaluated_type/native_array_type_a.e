@@ -30,14 +30,14 @@ feature -- IL code generation
 	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING
 			-- Name of current class
 		do
-			Result := generics.item (1).il_type_name (a_prefix, a_context_type).twin
+			Result := generics.first.il_type_name (a_prefix, a_context_type).twin
 			Result.append ("[]")
 		end
 
 	generic_il_type_name (a_context_type: TYPE_A): STRING
 			-- Name of current class
 		do
-			Result := generics.item (1).generic_il_type_name (a_context_type).twin
+			Result := generics.first.generic_il_type_name (a_context_type).twin
 			Result.append ("[]")
 		end
 
@@ -50,7 +50,7 @@ feature -- IL code generation
 		local
 			l_native: NATIVE_ARRAY_TYPE_A
 		do
-			Result ?= generics.item (1)
+			Result ?= generics.first
 			if Result = Void then
 				Result := object_type
 			else
@@ -84,7 +84,7 @@ invariant
 	count_set: generics.count = 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -97,22 +97,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

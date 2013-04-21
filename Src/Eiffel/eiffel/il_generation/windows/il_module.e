@@ -855,7 +855,7 @@ feature {NONE} -- Implementations: signatures
 				check
 					l_formal_not_void: l_formal /= Void
 				end
-				l_other_type := a_context_type.type.generics.item (l_formal.position)
+				l_other_type := a_context_type.type.generics.i_th (l_formal.position)
 				if l_other_type.is_formal then
 					a_sig.set_type (l_type.element_type, 0)
 				else
@@ -882,7 +882,7 @@ feature {NONE} -- Implementations: signatures
 				l_native_array_type ?= l_type
 				if l_native_array_type /= Void then
 					a_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					set_signature_type (a_sig, l_native_array_type.generics.item (1), a_context_type)
+					set_signature_type (a_sig, l_native_array_type.generics.first, a_context_type)
 				else
 					a_sig.set_type (l_type.element_type,
 						actual_class_type_token (l_type.static_type_id (a_context_type.type)))
@@ -3617,7 +3617,7 @@ feature {NONE} -- Convenience
 			l_typed_pointer: TYPED_POINTER_A
 		do
 			l_typed_pointer ?= a_type
-			Result := l_typed_pointer.generics.item (1)
+			Result := l_typed_pointer.generics.first
 		ensure
 			by_ref_type_not_void: Result /= Void
 		end

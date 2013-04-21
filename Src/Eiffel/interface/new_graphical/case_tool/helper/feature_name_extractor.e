@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			i, nb: INTEGER
 			formal: FORMAL_A
 		do
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 				until
 					i > nb
 				loop
-					Result.append (suppliers_name_compiled (l_generics.item (i)))
+					Result.append (suppliers_name_compiled (l_generics.i_th (i)))
 					i := i + 1
 				end
 				Result.append ("]")
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

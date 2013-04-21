@@ -1319,7 +1319,7 @@ feature -- Class info
 					i > nb
 				loop
 					l_ext_class := Void
-					l_type := l_gen_type.generics.item (i)
+					l_type := l_gen_type.generics.i_th (i)
 					if l_type.is_formal then
 							-- It is a formal, simply put ANY here
 						l_class_type := any_type.associated_class_type (Void)
@@ -6005,7 +6005,7 @@ feature -- Array manipulation
 				duplicate_top
 				generate_local_assignment (index_variable)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
-				cl_type_i ?= array_type.generics.item (1)
+				cl_type_i ?= array_type.generics.first
 				check
 					cl_type_i_attached: cl_type_i /= Void
 				end
@@ -7482,7 +7482,7 @@ feature {NONE} -- Implementation: generation
 				loop
 					duplicate_top
 					put_integer_32_constant (i - 1)
-					l_gen_type.generics.item (i).generate_gen_type_il (Current, True)
+					l_gen_type.generics.i_th (i).generate_gen_type_il (Current, True)
 					generate_array_write ({IL_CONST}.il_ref, 0)
 					i := i + 1
 				end

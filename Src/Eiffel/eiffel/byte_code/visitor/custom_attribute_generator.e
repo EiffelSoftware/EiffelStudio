@@ -638,7 +638,7 @@ feature {NONE} -- Implemention
 						l_cl_type.generics.count = 1
 				end
 					-- Mark the type of elements.
-				insert_field_or_prop_type (l_cl_type.generics.item (1))
+				insert_field_or_prop_type (l_cl_type.generics.first)
 			else
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boxed)
 			end

@@ -35,7 +35,7 @@ feature -- Access
 			has_generics: type.generics /= Void
 			good_generic_count: type.generics.count = 1
 		do
-			Result := type.generics.item (1)
+			Result := type.generics.first
 		end
 
 	il_type_name: STRING
@@ -61,7 +61,7 @@ feature -- Access
 			cl_type: CL_TYPE_A
 			l_name: STRING
 		do
-			cl_type ?=  type.generics.item (1)
+			cl_type ?=  type.generics.first
 			if cl_type = Void then
 				cl_type := object_type
 			end
@@ -95,7 +95,7 @@ feature -- IL code generation
 			generic_type_id: INTEGER
 		do
 			if first_generic.is_true_expanded then
-				l_actual_generic_parameter := array_type.generics.item (1)
+				l_actual_generic_parameter := array_type.generics.first
 				if l_actual_generic_parameter.actual_type.is_formal then
 						-- Type that was provided to us didn't have much type information, we have
 						-- to rely on what we have from `Current'.
@@ -137,7 +137,7 @@ feature -- IL code generation
 			check
 				l_actual_array_type_not_void: l_actual_array_type /= Void
 			end
-			l_actual_generic_parameter := l_actual_array_type.generics.item (1)
+			l_actual_generic_parameter := l_actual_array_type.generics.first
 			if l_actual_generic_parameter.actual_type.is_formal and not first_generic.is_formal then
 					-- Type that was provided to us didn't have much type information, we have
 					-- to rely on what we have from `Current'.
@@ -261,7 +261,7 @@ invariant
 	il_generation: System.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

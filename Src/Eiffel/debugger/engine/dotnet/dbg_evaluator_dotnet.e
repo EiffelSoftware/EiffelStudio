@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 			l_class: ICOR_DEBUG_CLASS
 			l_adv: ABSTRACT_DEBUG_VALUE
 
-			l_gens: ARRAY [TYPE_A]
+			l_gens: ARRAYED_LIST [TYPE_A]
 			l_gens_nb: INTEGER
 		do
 			if a_type_i.has_associated_class_type (Void)then
@@ -1045,7 +1045,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

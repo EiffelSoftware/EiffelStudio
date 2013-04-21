@@ -313,7 +313,7 @@ feature {NONE} -- Visitor implementation
 		local
 			l_class_i: CLASS_I
 			l_class_c: CLASS_C
-			l_actual_generic: ARRAY [TYPE_A]
+			l_actual_generic: ARRAYED_LIST [TYPE_A]
 			l_generics: TYPE_LIST_AS
 			i, count: INTEGER
 			l_has_error: BOOLEAN
@@ -328,7 +328,7 @@ feature {NONE} -- Visitor implementation
 					from
 						i := 1
 						count := l_generics.count
-						create l_actual_generic.make (1, count)
+						create l_actual_generic.make (count)
 						l_type := l_class_c.partial_actual_type (l_actual_generic, l_as.is_expanded,
 							l_as.has_separate_mark)
 					until
@@ -341,7 +341,7 @@ feature {NONE} -- Visitor implementation
 								-- we need to mark it.
 							l_gen_type.set_is_actual_generic_parameter (True)
 						end
-						l_actual_generic.put (last_type, i)
+						l_actual_generic.extend (last_type)
 						i := i + 1
 					end
 				else
@@ -367,7 +367,7 @@ feature {NONE} -- Visitor implementation
 		local
 			l_class_i: CLASS_I
 			l_class_c: CLASS_C
-			l_actual_generic: ARRAY [TYPE_A]
+			l_actual_generic: ARRAYED_LIST [TYPE_A]
 			i, g, count: INTEGER
 			l_type: NAMED_TUPLE_TYPE_A
 			l_generics: EIFFEL_LIST [TYPE_DEC_AS]
@@ -384,9 +384,8 @@ feature {NONE} -- Visitor implementation
 					i := 1
 					g := 1
 					count := l_as.generic_count
-					create l_actual_generic.make (1, count)
+					create l_actual_generic.make (count)
 					create l_names.make_filled (0, count)
-					create l_type.make (l_class_c.class_id, l_actual_generic, l_names)
 				until
 					i > count or l_has_error
 				loop
@@ -403,13 +402,14 @@ feature {NONE} -- Visitor implementation
 					until
 						l_id_list.after
 					loop
-						l_actual_generic.put (last_type, i)
+						l_actual_generic.extend (last_type)
 						l_names.put (l_id_list.item, i - 1)
 						i := i + 1
 						l_id_list.forth
 					end
 					g := g + 1
 				end
+				create l_type.make (l_class_c.class_id, l_actual_generic, l_names)
 				if l_has_error then
 					last_type := Void
 				else

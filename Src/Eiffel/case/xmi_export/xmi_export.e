@@ -799,7 +799,7 @@ feature {NONE} -- Implementation
 		do
 			if a_feature.type.has_associated_class then
 					-- Is first generic known?
-				l_type := a_feature.type.generics.item (1)
+				l_type := a_feature.type.generics.i_th (1)
 				if l_type.has_associated_class then
 					feature_type := xmi_class_by_class_c (l_type.base_class)
 				end
@@ -1144,20 +1144,20 @@ feature {NONE} -- Implementation
 				l_cnt > l_number
 			loop
 				if l_multiple_generics then
-					if a_feature.type.generics.item (l_cnt).has_associated_class then
-						full_type_name.append ("," + a_feature.type.generics.item (l_cnt).base_class.name_in_upper)
+					if a_feature.type.generics.i_th (l_cnt).has_associated_class then
+						full_type_name.append ("," + a_feature.type.generics.i_th (l_cnt).base_class.name_in_upper)
 					else
-						if attached {FORMAL_A} a_feature.type.generics.item (l_cnt).actual_type as l_formal then
+						if attached {FORMAL_A} a_feature.type.generics.i_th (l_cnt).actual_type as l_formal then
 								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
 							l_name := a_feature.associated_class.generics.i_th (l_formal.position).name.name
 							full_type_name.append ("," + l_name)
 						end
 					end
 				else
-					if a_feature.type.generics.item (l_cnt).has_associated_class then
-						full_type_name.append (a_feature.type.generics.item (l_cnt).base_class.name_in_upper)
+					if a_feature.type.generics.i_th (l_cnt).has_associated_class then
+						full_type_name.append (a_feature.type.generics.i_th (l_cnt).base_class.name_in_upper)
 					else
-						if attached {FORMAL_A} a_feature.type.generics.item (l_cnt).actual_type as l_formal then
+						if attached {FORMAL_A} a_feature.type.generics.i_th (l_cnt).actual_type as l_formal then
 								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
 							l_name := a_feature.associated_class.generics.i_th (l_formal.position).name.name
 							full_type_name.append (l_name)

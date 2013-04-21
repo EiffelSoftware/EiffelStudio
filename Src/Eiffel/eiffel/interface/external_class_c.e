@@ -1393,7 +1393,7 @@ feature {NONE} -- Implementation
 			l_result: CLASS_I
 			l_class: CLASS_C
 			l_is_array: BOOLEAN
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			l_array_type: CONSUMED_ARRAY_TYPE
 			l_type_a: CL_TYPE_A
 			vtct: VTCT
@@ -1409,8 +1409,8 @@ feature {NONE} -- Implementation
 			if l_is_array then
 				l_type_a := internal_type_from_consumed_type (force_compilation, l_array_type.element_type)
 				if l_type_a /= Void then
-					create l_generics.make (1, 1)
-					l_generics.put (l_type_a, 1)
+					create l_generics.make (1)
+					l_generics.extend (l_type_a)
 					create {NATIVE_ARRAY_TYPE_A} Result.make (
 						System.native_array_class.compiled_class.class_id, l_generics)
 				end
@@ -1573,15 +1573,15 @@ feature {NONE} -- Implementation
 					check
 						one_generic_parameter: cl.generics.count = 1
 						lower_is_one: cl.generics.lower = 1
-						has_class: cl.generics.item (1).base_class /= Void
+						has_class: cl.generics.first.base_class /= Void
 					end
-					syntactical_suppliers.force (cl.generics.item (1).base_class)
+					syntactical_suppliers.force (cl.generics.first.base_class)
 				end
 			end
 		ensure
 			inserted_class: cl /= Void implies syntactical_suppliers.has (cl.base_class)
 			inserted_generic_parameter: (cl /= Void and then cl.has_generics) implies
-				syntactical_suppliers.has (cl.generics.item (1).base_class)
+				syntactical_suppliers.has (cl.generics.first.base_class)
 		end
 
 	prefix_infix_names: PREFIX_INFIX_NAMES

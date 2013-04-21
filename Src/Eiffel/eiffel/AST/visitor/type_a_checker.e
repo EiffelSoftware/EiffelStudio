@@ -475,7 +475,7 @@ feature {TYPE_A} -- Visitors
 	process_gen_type_a (a_type: GEN_TYPE_A)
 			-- Process `a_type'.
 		local
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			i, nb: INTEGER
 			l_has_error: BOOLEAN
 			t: TYPE_A
@@ -493,10 +493,10 @@ feature {TYPE_A} -- Visitors
 				loop
 						-- Restore context type before processing next generic type.
 					last_type := t
-					l_generics.item (i).process (Current)
+					l_generics.i_th (i).process (Current)
 					l_has_error := l_has_error or else last_type = Void
 					if not l_has_error then
-						l_generics.put (last_type, i)
+						l_generics.put_i_th (last_type, i)
 					end
 					i := i + 1
 				end

@@ -673,13 +673,13 @@ feature -- Access
 
 	adapted_in (class_type: CLASS_TYPE): TYPE_A
 		do
-			Result := class_type.type.generics.item (position)
+			Result := class_type.type.generics.i_th (position)
 		end
 
 	skeleton_adapted_in (class_type: CLASS_TYPE): TYPE_A
 			-- <Precursor>
 		do
-			Result := class_type.type.generics.item (position)
+			Result := class_type.type.generics.i_th (position)
 				-- We optimize the type only if it is a basic type which is not a TYPED_POINTER.
 			if not Result.is_basic or Result.is_typed_pointer then
 				Result := Current
@@ -691,7 +691,7 @@ feature -- Access
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		do
-			Result := separate_adapted (class_type.generics.item (position).to_other_attachment (Current))
+			Result := separate_adapted (class_type.generics.i_th (position).to_other_attachment (Current))
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A

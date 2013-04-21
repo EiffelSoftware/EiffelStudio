@@ -170,7 +170,7 @@ feature -- Code generation
 				class_type := types.item
 				dtype := class_type.type_id - 1
 				gen_type ?= class_type.type
-				gen_param := gen_type.generics.item (1)
+				gen_param := gen_type.generics.first
 				if gen_param.is_character then
 					if gen_param.is_character_32 then
 						wchar_dtype := dtype
@@ -318,9 +318,12 @@ feature {NONE} -- Implementation
 			-- Required signature for feature `to_array' of class SPECIAL
 		local
 			l_gen_type: GEN_TYPE_A
+			l_generics: ARRAYED_LIST [TYPE_A]
 		do
 			create Result
-			create l_gen_type.make (system.array_id, <<actual_type.generics [1]>>)
+			create l_generics.make (1)
+			l_generics.extend (actual_type.generics.first)
+			create l_gen_type.make (system.array_id, l_generics)
 			if not lace_class.is_void_unsafe then
 				l_gen_type.set_is_attached
 			end
@@ -346,7 +349,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

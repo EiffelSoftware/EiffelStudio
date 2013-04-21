@@ -129,7 +129,7 @@ feature {NONE} -- Status report
 				check
 					l_special_type_not_void: l_special_type /= Void
 				end
-				Result := l_special_type.generics.item (1)
+				Result := l_special_type.generics.first
 			end
 
 feature {NONE} -- Implementation
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

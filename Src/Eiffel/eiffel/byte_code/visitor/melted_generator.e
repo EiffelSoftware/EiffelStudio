@@ -215,7 +215,7 @@ feature {NONE} -- Visitors
 			i: INTEGER
 		do
 			l_real_ty ?= context.real_type (a_node.type)
-			l_target_type := l_real_ty.generics.item (1)
+			l_target_type := l_real_ty.generics.first
 
 				-- We first create a SPECIAL in which we will store the information above before
 				-- creating the ARRAY using `make_from_special'.

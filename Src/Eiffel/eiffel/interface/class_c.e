@@ -1725,20 +1725,20 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 	Array_of_string: GEN_TYPE_A
 			-- Type ARRAY [STRING]
 		local
-			array_generics: ARRAY [TYPE_A]
+			array_generics: ARRAYED_LIST [TYPE_A]
 			string_type: CL_TYPE_A
 		once
 			create string_type.make (System.string_8_id)
 			string_type.set_attached_mark
-			create array_generics.make (1, 1)
-			array_generics.put (string_type, 1)
+			create array_generics.make (1)
+			array_generics.extend (string_type)
 			create Result.make (System.array_id, array_generics)
 			Result.set_attached_mark
 		ensure
 			array_of_string_not_void: Result /= Void
 			result_is_attached: Result.is_attached
 			result_has_generic: Result.generics.count = 1
-			result_g_is_attached: Result.generics.item (1).is_attached
+			result_g_is_attached: Result.generics.first.is_attached
 		end
 
 feature -- Order relation for inheritance and topological sort
@@ -2123,7 +2123,7 @@ feature -- Actual class type
 			]"
 		local
 			i, count: INTEGER
-			actual_generic: ARRAY [TYPE_A]
+			actual_generic: ARRAYED_LIST [TYPE_A]
 		do
 			if generics = Void then
 				Result := actual_type
@@ -2131,12 +2131,12 @@ feature -- Actual class type
 				from
 					i := 1
 					count := generics.count
-					create actual_generic.make (1, count)
+					create actual_generic.make (count)
 					create {GEN_TYPE_A} Result.make (class_id, actual_generic)
 				until
 					i > count
 				loop
-					actual_generic.put (single_constraint (i), i)
+					actual_generic.extend (single_constraint (i))
 					i := i + 1
 				end
 			end
@@ -2153,16 +2153,16 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 			-- Initialize `actual_type'.
 		local
 			a: CL_TYPE_A
-			t: ARRAY [TYPE_A]
+			t: ARRAYED_LIST [TYPE_A]
 		do
 			if not attached generics as g then
 				create {CL_TYPE_A} a.make (class_id)
 			else
-				create t.make_empty
+				create t.make (g.count)
 				across
 					g as c
 				loop
-					t.force (type_a_generator.evaluate_type (c.item.formal, Current), t.upper + 1)
+					t.extend (type_a_generator.evaluate_type (c.item.formal, Current))
 				end
 				a := create_generic_type (t)
 			end
@@ -2170,7 +2170,7 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 			actual_type := a.as_attached_in (Current)
 		end
 
-	create_generic_type (g: ARRAY [TYPE_A]): GEN_TYPE_A
+	create_generic_type (g: ARRAYED_LIST [TYPE_A]): GEN_TYPE_A
 			-- Create generic type with actual generics `g' for the current class.
 		require
 			g_attached: attached g
@@ -2182,7 +2182,7 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 
 feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A
+	partial_actual_type (gen: ARRAYED_LIST [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
@@ -2548,7 +2548,7 @@ end
 			-- required by this type for code generation.
 		local
 			g: GEN_TYPE_A
-			t: ARRAY [TYPE_A]
+			t: ARRAYED_LIST [TYPE_A]
 			p: TYPE_A
 			c: CL_TYPE_A
 			i: INTEGER
@@ -2748,8 +2748,8 @@ feature -- Validity class
 				if
 					l_feature = Void or else
 					l_feature.argument_count /= 2 or else
-					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments.to_array).is_reference or else
-					not l_feature.arguments.i_th (2).actual_argument_type (l_feature.arguments.to_array).is_reference or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.arguments.i_th (2).actual_argument_type (l_feature.arguments).is_reference or else
 					not l_feature.type.is_boolean
 				then
 					error_handler.insert_error (
@@ -2760,7 +2760,7 @@ feature -- Validity class
 					l_feature = Void or else
 					l_feature.argument_count /= 1 or else
 					not l_feature.arguments.i_th (1).is_like_current or else
-					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments.to_array).is_reference or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
 					not l_feature.type.is_boolean
 				then
 					error_handler.insert_error (
@@ -2779,7 +2779,7 @@ feature -- Validity class
 					l_feature = Void or else
 					l_feature.argument_count /= 1 or else
 					not l_feature.arguments.i_th (1).is_like_current or else
-					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments.to_array).is_reference or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
 					not l_feature.type.is_void
 				then
 					error_handler.insert_error (

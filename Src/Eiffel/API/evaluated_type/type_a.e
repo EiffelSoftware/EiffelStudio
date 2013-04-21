@@ -327,7 +327,7 @@ feature -- Properties
 			Result := has_associated_class
 		end
 
-	generics: ARRAY [TYPE_A]
+	generics: ARRAYED_LIST [TYPE_A]
 			-- Actual generic types
 		do
 			-- Void
@@ -1110,7 +1110,7 @@ feature -- Access
 					-- We replace `H' with `COMPARABLE' and check whether `STRING' conforms to `COMPARABLE'.					
 				l_formal_a ?= a_target_type
 				check indeed_a_formal_a: l_formal_a /= Void end
-				l_target_type := a_gen_type.generics.item (l_formal_a.position)
+				l_target_type := a_gen_type.generics.i_th (l_formal_a.position)
 			else
 				l_target_type := a_target_type
 			end
@@ -1195,7 +1195,7 @@ feature -- Access
 		do
 		end
 
-	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A
+	actual_argument_type (a_arg_types: ARRAYED_LIST [TYPE_A]): TYPE_A
 			-- Type including like argument process based on `a_arg_types'.
 		require
 			a_arg_types_not_void: a_arg_types /= Void

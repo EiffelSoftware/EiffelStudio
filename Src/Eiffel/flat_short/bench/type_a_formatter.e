@@ -98,7 +98,7 @@ feature {TYPE_A} -- Visitors
 				until
 					i > count
 				loop
-					a_type.generics.item (i).process (Current)
+					a_type.generics.i_th (i).process (Current)
 					if i /= count then
 						ctxt.process_symbol_text (ti_Comma)
 						ctxt.put_space

@@ -116,10 +116,10 @@ feature {NONE} -- Implementation
 	area_type: GEN_TYPE_A
 			-- Type SPECIAL [CHARACTER]
 		local
-			gen: ARRAY [TYPE_A]
+			gen: ARRAYED_LIST [TYPE_A]
 		do
-			create gen.make (1, 1)
-			gen.put (character_type, 1)
+			create gen.make (1)
+			gen.extend (character_type)
 			create Result.make (System.special_id, gen)
 		ensure
 			area_type_not_void: area_type /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -856,7 +856,7 @@ feature {NONE} -- Visitors
 			l_special_info: CREATE_TYPE
 		do
 			l_real_ty ?= context.real_type (a_node.type)
-			l_target_type := l_real_ty.generics.item (1)
+			l_target_type := l_real_ty.generics.first
 
 				-- Creation of SPECIAL
 			l_special_info := a_node.special_info.updated_info

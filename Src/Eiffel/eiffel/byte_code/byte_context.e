@@ -1300,7 +1300,7 @@ feature -- Access
 				not attached {FORMAL_A} Result as formal or else formal.has_multi_constrained
 			loop
 				formal_position := formal.position
-				Result := a_context_type.generics.item (formal_position)
+				Result := a_context_type.generics.i_th (formal_position)
 				if attached {FORMAL_A} Result as actual_formal then
 					if actual_formal.is_multi_constrained (a_context_type.base_class) then
 						create {MULTI_FORMAL_A} Result.make (True, actual_formal.is_expanded, actual_formal.position)

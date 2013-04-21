@@ -196,7 +196,7 @@ feature -- Access
 			end
 		end
 
-	generics: ARRAY [TYPE_A]
+	generics: ARRAYED_LIST [TYPE_A]
 			-- Actual generic types
 		do
 			if conformance_type /= Void then

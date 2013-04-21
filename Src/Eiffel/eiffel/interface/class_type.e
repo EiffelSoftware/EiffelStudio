@@ -168,7 +168,7 @@ feature -- Access
 		local
 			l_type: TYPE_A
 			i, nb: INTEGER
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 		do
 			Result := associated_class /= Void and then
 				system.class_type_of_id (type_id) = Current and then
@@ -186,7 +186,7 @@ feature -- Access
 				until
 					i > nb or else not Result
 				loop
-					l_type := l_generics.item (i)
+					l_type := l_generics.i_th (i)
 					if attached {FORMAL_A} l_type as l_formal then
 							-- Fix eweasel test#incr388 by verifying that the constraint
 							-- is still a reference constraint.
@@ -363,7 +363,7 @@ feature -- Status report
 			conformance_table_not_void: conformance_table /= Void
 			final_mode: byte_context.final_mode
 		local
-			l_generics: ARRAY [TYPE_A]
+			l_generics: ARRAYED_LIST [TYPE_A]
 			l_type_feat: TYPE_FEATURE_I
 			l_ancestor_class, l_class: CLASS_C
 			l_formal: FORMAL_A
@@ -397,14 +397,14 @@ feature -- Status report
 									-- If actual generic parameter at position `i' in `a_type' is expanded
 									-- then we rely on CLASS_TYPE conformance. We could change this in the
 									-- future when we are handling generic expanded types.
-								l_type := l_generics.item (i).actual_type
+								l_type := l_generics.i_th (i).actual_type
 								if not l_type.is_expanded and not l_type.is_formal and not l_type.is_none then
 									check l_type_has_class: l_type.has_associated_class end
 									l_type_feat := l_class.generic_features.item (l_ancestor_class.formal_at_position (i).rout_id_set.first)
 									check l_type_feat_not_void: l_type_feat /= Void end
 									if l_type_feat.is_formal then
 										l_formal ?= l_type_feat.type
-										l_descendant_type := type.generics.item (l_formal.position)
+										l_descendant_type := type.generics.i_th (l_formal.position)
 										if l_descendant_type.is_expanded then
 											Result := l_descendant_type.base_class.simple_conform_to (l_type.base_class)
 										end

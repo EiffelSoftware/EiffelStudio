@@ -247,7 +247,7 @@ feature -- Access
 			Result := actual_type.associated_class_type (a_context_type)
 		end
 
-	generics: ARRAY [TYPE_A]
+	generics: ARRAYED_LIST [TYPE_A]
 			-- <Precursor>
 		do
 			if attached actual_type as a then

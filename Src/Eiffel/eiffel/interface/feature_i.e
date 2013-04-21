@@ -2663,20 +2663,20 @@ end
 			end
 		end
 
-	special_arguments: ARRAY [TYPE_A]
+	special_arguments: ARRAYED_LIST [TYPE_A]
 		local
 			i, nb: INTEGER
 		do
 			from
 				fixme ("we should resolve argument types early on in `init_arg' from PROCEDURE_I")
 				nb := argument_count
-				create Result.make (1, nb)
+				create Result.make (nb)
 				i := 1
 				nb := nb + 1
 			until
 				i = nb
 			loop
-				Result.put (arguments.i_th (i).actual_type, i)
+				Result.extend (arguments.i_th (i).actual_type)
 				i := i + 1
 			end
 		end

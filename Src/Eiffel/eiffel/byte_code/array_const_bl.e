@@ -72,7 +72,7 @@ feature
 			special_info.analyze
 
 			real_ty ?= context.real_type (type)
-			target_gen_type := real_ty.generics.item (1)
+			target_gen_type := real_ty.generics.first
 
 			get_register
 			create array_area_reg.make (Reference_c_type)
@@ -142,7 +142,7 @@ feature
 			target_gen_type: TYPE_A
 		do
 			real_ty := context.real_type_in (special_info.type, context.context_cl_type)
-			target_gen_type := real_ty.generics.item (1)
+			target_gen_type := real_ty.generics.first
 			generate_special_creation (target_gen_type)
 			fill_special (target_gen_type)
 			if context.workbench_mode then

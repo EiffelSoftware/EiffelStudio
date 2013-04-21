@@ -69,11 +69,11 @@ feature {TYPE_A}
 			-- Process `a_type'.
 		local
 			l_type: GEN_TYPE_A
-			l_derived_generics: ARRAY [TYPE_A]
+			l_derived_generics: ARRAYED_LIST [TYPE_A]
 			i, l_upper: INTEGER
 		do
 			l_type := a_type.duplicate
-			create l_derived_generics.make (a_type.generics.lower, a_type.generics.upper)
+			create l_derived_generics.make (a_type.generics.count)
 
 			from
 				i := a_type.generics.lower
@@ -81,8 +81,8 @@ feature {TYPE_A}
 			until
 				i > l_upper
 			loop
-				a_type.generics.item (i).process (Current)
-				l_derived_generics.put (last_type, i)
+				a_type.generics.i_th (i).process (Current)
+				l_derived_generics.put_i_th (last_type, i)
 				i := i + 1
 			end
 			l_type.set_generics (l_derived_generics)

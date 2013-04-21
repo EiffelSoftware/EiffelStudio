@@ -643,7 +643,7 @@ feature {NONE} -- Normalization of types
 			-- are mapped to the proper formal generic parameter of `a_sanitized_type'.
 		local
 			i, nb: INTEGER
-			l_generics, l_new_generics: ARRAY [TYPE_A]
+			l_generics, l_new_generics: ARRAYED_LIST [TYPE_A]
 			l_type: TYPE_A
 		do
 			Result := a_type
@@ -655,14 +655,14 @@ feature {NONE} -- Normalization of types
 				until
 					i > nb
 				loop
-					l_type := l_generics.item (i).actual_type
+					l_type := l_generics.i_th (i).actual_type
 					if attached {FORMAL_A} l_type as l_formal then
 						if l_formal.position /= i then
 							if l_new_generics = Void then
 								Result := Result.duplicate_for_instantiation
 								l_new_generics := Result.generics
 							end
-							l_new_generics.put (a_sanitized_type.generics.item (i), i)
+							l_new_generics.put_i_th (a_sanitized_type.generics.i_th (i), i)
 						end
 					elseif l_type.has_formal_generic then
 							-- There is a formal generic, but then it becomes harder to substitute that formal
@@ -671,7 +671,7 @@ feature {NONE} -- Normalization of types
 							Result := Result.duplicate_for_instantiation
 							l_new_generics := Result.generics
 						end
-						l_new_generics.put (a_sanitized_type.generics.item (i), i)
+						l_new_generics.put_i_th (a_sanitized_type.generics.i_th (i), i)
 					end
 					i := i + 1
 				end

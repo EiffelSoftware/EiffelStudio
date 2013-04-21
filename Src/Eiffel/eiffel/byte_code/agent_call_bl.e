@@ -177,7 +177,7 @@ feature -- Code generation
 				if is_predicate then
 					type := create {BOOLEAN_A}
 				else
-					type := cl_type.generics.item (3)
+					type := cl_type.generics.i_th (3)
 				end
 			else
 				type := create {VOID_A}
@@ -295,7 +295,7 @@ feature {NONE} --Implementation
 				if is_predicate then
 					l_ret_type := boolean_type.c_type
 				else
-					l_ret_type := a_type.generics.item (3).c_type
+					l_ret_type := a_type.generics.i_th (3).c_type
 				end
 			else
 				l_ret_type := void_type.c_type
@@ -326,7 +326,7 @@ feature {NONE} --Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

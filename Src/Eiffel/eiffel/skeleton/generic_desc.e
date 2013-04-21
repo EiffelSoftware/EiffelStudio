@@ -90,7 +90,7 @@ feature -- Instantiation
 				-- we use the expanded type instead.
 			if attached {FORMAL_A} l_type as l_formal then
 				l_has_formal := True
-				l_generic_type := class_type.type.generics.item (l_formal.position)
+				l_generic_type := class_type.type.generics.i_th (l_formal.position)
 				if l_generic_type.is_expanded then
 					l_type := l_generic_type
 				end
@@ -160,7 +160,7 @@ feature -- Helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

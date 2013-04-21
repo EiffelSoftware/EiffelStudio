@@ -1300,7 +1300,7 @@ feature {NONE} -- Implementation
 			a_type_not_void: a_type /= Void
 		local
 			l_feat_name: EB_NAME_WITH_TYPE_FOR_COMPLETION
-			l_array: ARRAY [TYPE_A]
+			l_array: ARRAYED_LIST [TYPE_A]
 			i: INTEGER
 			l_type: TYPE_A
 		do
@@ -1310,7 +1310,7 @@ feature {NONE} -- Implementation
 			until
 				i > l_array.upper
 			loop
-				l_type := a_type.generics.item (i).actual_type
+				l_type := a_type.generics.i_th (i).actual_type
 				if l_type.is_loose then
 					l_type := l_type.instantiation_in (l_type, a_type.base_class.class_id)
 				end

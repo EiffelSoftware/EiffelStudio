@@ -139,7 +139,7 @@ feature -- Actual class type
 			"See {CLASS_C}.constraint_actual_type obsolete clause."
 		local
 			i, nb: INTEGER
-			actual_generic: ARRAY [TYPE_A]
+			actual_generic: ARRAYED_LIST [TYPE_A]
 		do
 			if generics = Void then
 				Result := actual_type
@@ -147,12 +147,12 @@ feature -- Actual class type
 				from
 					i := 1
 					nb := generics.count
-					create actual_generic.make (1, nb)
+					create actual_generic.make (nb)
 					create {NATIVE_ARRAY_TYPE_A} Result.make (class_id, actual_generic)
 				until
 					i > nb
 				loop
-					actual_generic.put (single_constraint (i), i)
+					actual_generic.extend (single_constraint (i))
 					i := i + 1
 				end
 			end
@@ -161,7 +161,7 @@ feature -- Actual class type
 
 feature {NONE} -- Initialization
 
-	create_generic_type (g: ARRAY [TYPE_A]): GEN_TYPE_A
+	create_generic_type (g: ARRAYED_LIST [TYPE_A]): GEN_TYPE_A
 			-- <Precursor>
 		do
 			create {NATIVE_ARRAY_TYPE_A} Result.make (class_id, g)
@@ -169,7 +169,7 @@ feature {NONE} -- Initialization
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A
+	partial_actual_type (gen: ARRAYED_LIST [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
@@ -286,7 +286,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

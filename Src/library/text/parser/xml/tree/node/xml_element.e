@@ -464,22 +464,22 @@ feature -- Query
 	joined_content: STRING_32
 		local
 			c: CURSOR
-			elts: like elements
+			lst: like internal_nodes
 		do
 			create Result.make_empty
-			elts := elements
-			c := elts.cursor
+			lst := internal_nodes
+			c := lst.cursor
 			from
-				elts.start
+				lst.start
 			until
-				elts.after
+				lst.after
 			loop
-				if attached {XML_CHARACTER_DATA} elts.item as l_data then
+				if attached {XML_CHARACTER_DATA} lst.item as l_data then
 					Result.append_string (l_data.content)
 				end
-				elts.forth
+				lst.forth
 			end
-			elts.go_to (c)
+			lst.go_to (c)
 		end
 
 	contents: LIST [XML_CHARACTER_DATA]
@@ -487,22 +487,22 @@ feature -- Query
 			-- (Create a new list at each call.)
 		local
 			c: CURSOR
-			elts: like internal_nodes
+			lst: like internal_nodes
 		do
 			create {LINKED_LIST [XML_CHARACTER_DATA]} Result.make
-			elts := internal_nodes
-			c := elts.cursor
+			lst := internal_nodes
+			c := lst.cursor
 			from
-				elts.start
+				lst.start
 			until
-				elts.after
+				lst.after
 			loop
-				if attached {XML_CHARACTER_DATA} elts.item as att then
+				if attached {XML_CHARACTER_DATA} lst.item as att then
 					Result.force (att)
 				end
-				elts.forth
+				lst.forth
 			end
-			elts.go_to (c)
+			lst.go_to (c)
 		end
 
 feature -- Element change

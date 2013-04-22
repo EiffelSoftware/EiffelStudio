@@ -431,17 +431,12 @@ feature -- Query
 
 feature -- Conversion
 
-	string: READABLE_STRING_8
-			-- String representation.
-			-- scheme://username:password@hostname/path?query#fragment
-		local
-			s: STRING_8
+	append_to_string (s: STRING_8)
+			-- Append string representation of Current into `s'.
 		do
 			if attached scheme as l_scheme and then not l_scheme.is_empty then
-				create s.make_from_string (l_scheme)
+				s.append (l_scheme)
 				s.append_character (':')
-			else
-				create s.make_empty
 			end
 			s.append (hier)
 			if attached query as q then
@@ -452,6 +447,16 @@ feature -- Conversion
 				s.append_character ('#')
 				s.append (f)
 			end
+		end
+
+	string: READABLE_STRING_8
+			-- String representation.
+			-- scheme://username:password@hostname/path?query#fragment
+		local
+			s: STRING_8
+		do
+			create s.make_empty
+			append_to_string (s)
 			Result := s
 		end
 

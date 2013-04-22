@@ -23,6 +23,11 @@ feature {NONE} -- Initialization
 			initialize
 		end
 
+	make_with_path (a_path: PATH)
+		do
+			make_with_layout (create {IRON_LAYOUT}.make_with_path (a_path))
+		end
+
 	initialize
 		do
 		end

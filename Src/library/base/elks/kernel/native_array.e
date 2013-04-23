@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	NATIVE_ARRAY [G]
 
 invariant

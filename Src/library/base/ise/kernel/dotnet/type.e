@@ -59,7 +59,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= generic_parameter_count
 		do
-			Result := internal.type_of_type (type_id)
+			Result := internal.type_of_type (internal.generic_dynamic_type_of_type (type_id, i))
 		ensure
 			generic_parameter_not_void: Result /= Void
 		end

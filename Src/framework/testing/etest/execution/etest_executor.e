@@ -24,10 +24,7 @@ inherit
 			cancel
 		end
 
-	AST_TYPE_A_GENERATOR
-		export
-			{NONE}
-		end
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 	DISPOSABLE_SAFE
 

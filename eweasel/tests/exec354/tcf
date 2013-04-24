@@ -1,0 +1,20 @@
+test_name 	 agent-target-expanded
+test_description A system has a call to an agent with an open target of type TEST2, a non-expanded class. When used with an expanded instance of TEST2, it would faild at runtime when checking the validity of the TUPLE in .NET mode.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+
+-- In classic mode the code needs to be frozen as it includes new generic types with C externals (ROUTINE, ...)
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

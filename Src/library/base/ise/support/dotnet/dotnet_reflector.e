@@ -764,7 +764,7 @@ feature {NONE} -- Cached data
 			internal_dynamic_type_string_table_not_void: Result /= Void
 		end
 
-feature {TYPE, INTERNAL, REFLECTOR, REFLECTED_OBJECT} -- Implementation
+feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 
 	private_type_field_name: SYSTEM_STRING = "$$____type"
 			-- .NET name for fields that stores generic types if any.
@@ -995,6 +995,7 @@ feature {TYPE, INTERNAL, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			l_class_type_name: STRING_32
 			nb: INTEGER
 			l_mark: CHARACTER_32
+			l_is_expanded: BOOLEAN
 		do
 				-- Load data from all assemblies in case it is not yet done.
 			load_assemblies
@@ -1023,6 +1024,11 @@ feature {TYPE, INTERNAL, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 						-- Remove `attached' and the white character after it.					
 					l_class_type_name.remove_head (11)
 					l_class_type_name.left_adjust
+				elseif (nb >= 10 and l_class_type_name.substring_index ("expanded", 1) = 1) then
+						-- Remove `expanded' and the white character after it.					
+					l_class_type_name.remove_head (9)
+					l_class_type_name.left_adjust
+					l_is_expanded := True
 				end
 			end
 			eiffel_meta_type_mapping.search (mapped_type (l_class_type_name))
@@ -1031,10 +1037,38 @@ feature {TYPE, INTERNAL, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 					-- Or possibly a basic type with its various associated referenced types.
 					-- Nevertheless the check fails for CHARACTER_32 because it is mapped to a NATURAL_32, this
 					-- is why it is commented out for the meantime.
---				check
---					only_one_element: l_found_list.count = 1 or else attached {RT_BASIC_TYPE} l_found_list.first
---				end
-				Result := l_found_list.first
+				if l_found_list.count > 1 and then not attached {RT_BASIC_TYPE} l_found_list.first then
+						-- If a list contains more than one item, we chose the item with the same expanded status.
+						-- Unfortunately, this only works for type such as `expanded X' where X is not declared expanded.
+						-- If `X' is expanded, then `l_is_expanded' is False and `l_dotnet_type.is_value_type' is True.
+						-- This is why that in the event we do not find anything, we try again by assuming that X is expanded.
+					from
+						l_found_list.start
+					until
+						l_found_list.after or else Result /= Void
+					loop
+						if attached l_found_list.item.dotnet_type as l_dotnet_type and then l_dotnet_type.is_value_type = l_is_expanded then
+							Result := l_found_list.item
+						end
+						l_found_list.forth
+					end
+					if Result = Void then
+						from
+							l_is_expanded := True
+							l_found_list.start
+						until
+							l_found_list.after or else Result /= Void
+						loop
+							if attached l_found_list.item.dotnet_type as l_dotnet_type and then l_dotnet_type.is_value_type = l_is_expanded then
+								Result := l_found_list.item
+							end
+							l_found_list.forth
+						end
+					end
+					check has_result: Result /= Void end
+				else
+					Result := l_found_list.first
+				end
 			else
 					-- Let's see if it is a partially well-formed Eiffel generic class:
 					-- 1 - it must have at least one `[' preceded by some characters (l_start_pos > 1)
@@ -1732,4 +1766,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERNAL
+end

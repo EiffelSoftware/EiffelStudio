@@ -30,7 +30,7 @@ create
 	make_filled,
 	make_from_native_array
 
-feature {DOTNET_REFLECTOR, INTERNAL} -- Initialization
+feature {DOTNET_REFLECTOR} -- Initialization
 
 	make_empty (n: INTEGER)
 			-- Create a special object for `n' entries.

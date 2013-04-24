@@ -56,7 +56,7 @@ feature -- Status setting
 		local
 			l_type: INTEGER
 		do
-			l_type := internal_object.dynamic_type (a_exception)
+			l_type := a_exception.type_id
 			ignored_exceptions.force (l_type, l_type)
 		end
 
@@ -65,7 +65,7 @@ feature -- Status setting
 		local
 			l_type: INTEGER
 		do
-			l_type := internal_object.dynamic_type (a_exception)
+			l_type := a_exception.type_id
 			ignored_exceptions.remove (l_type)
 		end
 
@@ -84,25 +84,25 @@ feature -- Status report
 	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is ignorable.
 		do
-			Result := not unignorable_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := not unignorable_exceptions.has (a_exception.type_id)
 		end
 
 	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raisable.
 		do
-			Result := not unraisable_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := not unraisable_exceptions.has (a_exception.type_id)
 		end
 
 	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is not raised.
 		do
-			Result := ignored_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := ignored_exceptions.has (a_exception.type_id)
 		end
 
 	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raised.
 		do
-			Result := not ignored_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := not ignored_exceptions.has (a_exception.type_id)
 		end
 
 feature {EXCEPTIONS} -- Backward compatibility support
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation, ignoring
 			l_type: INTEGER
 		once
 			create Result.make (1)
-			l_type := internal_object.dynamic_type ({VOID_TARGET})
+			l_type := ({VOID_TARGET}).type_id
 			Result.force (l_type, l_type)
 		end
 
@@ -310,9 +310,9 @@ feature {NONE} -- Implementation, ignoring
 			l_type: INTEGER
 		once
 			create Result.make (2)
-			l_type := internal_object.dynamic_type ({ROUTINE_FAILURE})
+			l_type := ({ROUTINE_FAILURE}).type_id
 			Result.force (l_type, l_type)
-			l_type := internal_object.dynamic_type ({OLD_VIOLATION})
+			l_type := ({OLD_VIOLATION}).type_id
 			Result.force (l_type, l_type)
 		end
 
@@ -482,12 +482,6 @@ feature {NONE} -- Implementation, exception chain
 			Result.put (0, "create_and_call_root_object")
 		end
 
-	internal_object: INTERNAL
-			-- Internal object access
-		once
-			create Result
-		end
-
 feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 
 	internal_raise (e_code: INTEGER; msg: SYSTEM_STRING)
@@ -610,7 +604,7 @@ feature {NONE} -- Exception codes, Implementation of RT_EXCEPTION_MANAGER
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

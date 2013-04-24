@@ -1,0 +1,74 @@
+Table of features that are supported by all operating systems.
+
+POSIX: x means accessible with nl_langinfo, s means accessible with localeconv (according to X/open)
+Some stuff can be used with glibc nl_lang_info  - they claim it's specified by X/Open  but that's not  what the standard seems to say
+
+Information			NLS	Posix	.Net
+
+Name of language	
+...	Localised		x	
+...	English			x
+...	Abbreviated	 	x
+...	Native 			x
+Country code - check what iso	x
+Name of country	
+... 	Localised		x
+... 	English			x
+... 	Abbreviated		x
+... 	Native			x
+
+List item separator		x
+System of measure (US or SI)	x
+Positive sign			x
+Negative sign			x
+Positive sign position		x
+Negative sign position		x
+
+Number list item separator	n
+Decimal separator		x	x
+Thousands separator		x	x
+Digit grouping			x
+Number of fractional digits	x
+Number of leading zeros 	x
+Negative number formatting	x
+
+Localised currency symbol	x	x
+ISO currency designator		x
+Monetary decimal separator	x
+Monetary thousands separator	x
+Monetary digit grouping		x
+Number of digits in currency	x
+ISO nbr. of digits in currency	x
+Currency symbol placement (pos) x	x
+Currency symbol placement (neg) x
+
+Date separator	(don't need)	x
+Time separator	(don't need)	x
+
+Short date format string	x	n
+Long date format string		x	x
+Date+Time format string		x	x
+Era date format string (long?)	?	x
+Era date+time format string	?	x
+Era time format			?	x
+Era descriptions		?	x (ERA)
+
+Short time format string	n	x (T_FMT_AMPM)
+Long time format string		x	x (T_FMT)
+
+Long date format ordering	x
+Short date format ordering	x
+
+
+AM designator			x	x
+PM designator			x	x
+24-hour or 12 hour time		x
+Type of calendar		x
+First day of week		x
+First day of year		x
+Names of weekday		x	x
+Abbreviated names of weekdays	x	x
+Names of months			x	x
+Abbreviated names of months	x	x
+
+Alternative digits		x	x

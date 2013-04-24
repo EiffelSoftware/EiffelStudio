@@ -1,0 +1,30 @@
+The following classes have been made obsolete from 
+version 3.3.7:
+
+Kernel classe:
+IO_HANDLER
+
+Oui widget classes:
+LABEL_G, PUSH_BG, SEPARATOR_G, TOGGLE_BG, SCROLL_LIST
+LIST_MAN, MESSAGE, PROMPT
+
+Context data classes:
+CIRCNOT_DATA, FOCSOUT_DATA, MAPREQ_DATA, SELCLR_DATA
+CIRCREQ_DATA, FOCUSIN_DATA, MESSAGE_DATA, SELNOT_DATA
+CLRMAP_DATA, GRAPEXP_DATA, MULTIPL_DATA, SELREQ_DATA
+CONFNOT_DATA, GRAVNOT_DATA, NOEXP_DATA, TOGGLE_DATA
+CONFREQ_DATA, KEYMAP_DATA, PROPERT_DATA, UNMAP_DATA
+CREATE_DATA, LEAVE_DATA, REPAREN_DATA, VISIBLE_DATA
+DESTROY_DATA, MAPNOT_DATA, RESIZE_DATA, ENTER_DATA     
+MAPPING_DATA, SCALE_DATA
+
+To include these obsolete classes into your application
+you must follow these steps:
+
+1. If you are using MOTIF, change the declaration of the toolkit 
+   initialization from MOTIF to OBSOLETE_MOTIF (for windows, change 
+   the declaration from MS_WINDOWS to OBSOLETE_MS_WINDOWS)
+2. Include the following clusters into your Ace file:
+   obsolete_oui:    "$ISE_EIFFEL/library/vision/obsolete/oui";
+   obsolete_toolkit:"$ISE_EIFFEL/library/vision/obsolete/toolkit";
+   obsolete_motif:  "$ISE_EIFFEL/library/vision/obsolete/motif";

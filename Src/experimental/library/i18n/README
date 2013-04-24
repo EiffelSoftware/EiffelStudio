@@ -1,0 +1,56 @@
+Eiffel internationalisation (i18n) library, version 1.0
+
+BLABLA
+
+This library is distributed under the Eiffel Forum License v2; a copy of this license can be found in the file "forum.txt" or at http://www.eiffel-nice.org/license/eiffel-forum-license-2.txt .  
+
+INSTALLATION
+
+You will have to set an environment variable called EIFFEL_I18N that points to the directory that you installed the library into - that is, the directory containing the library's .ecf file.
+You will also have to compile the library's C-code.
+
+Linux:
+
+	From the root directory of the library execute the following commands: 
+	
+	cd Clib/
+	finish-freezing -library
+	
+Under Windows for use without .NET:
+
+	Please make sure you have the environment variables ISE_EIFFEL and ISE_C_COMPILER defined.
+	This should have been done during installation of EiffelStudio; if not please refer to it's documentation.  ISE_EIFFEL should point to your EiffelStudio installation and ISE_C_COMPILER should indicate your C compiler ('msc' or 'bcb').
+	If you are using the Borland compiler, you just need to run the 'make_bcb.bat' file in the Clib\ directory.
+	
+	If you are using Microsoft Visual Studio, you'll have to play with environment variables for a bit longer.
+	You can follow the instructions given at http://eiffelsoftware.origo.ethz.ch/index.php/Windows_32-bit_C_compiler , or you can try doing it yourself.
+	In our case this involved:
+		1. Making sure ISE_EIFFEL, ISE_C_COMPILER and ISE_PLATFORM were set.
+		2. Changing the INCLUDE variable to contain something like
+			C:\Program Files\Microsoft Visual Studio .NET 2003\SDK\v1.1\include\;
+			C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\Include;
+			C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\include;
+		3. Changing the PATH variable to contain something like
+			C:\Program Files\Microsoft Visual Studio .NET 2003\SDK\v1.1\Bin\;
+			C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\bin;
+			C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE;
+	Once the enviroment variables are set correctly you should be able to run 'make_msc.bat'.
+	Alternatively I suggest using the Borland compiler, as it does not require making sure utilities dispersed across half your hard drive are pointer to in $PATH.
+		
+	
+Under Windows with .NET:
+
+	No extra compilation required.
+
+DOCUMENTATION
+
+Both a user guide and a developer guide can be found in the "doc" directory. As the names indicate, the user guide explains how to use the library and documents it's features, whereas the developer guide is intended for people who want to extend or modify the library. 
+HTML and text formats are available. 
+
+Up-to-date and/or prettier versions can be found at the following two URLS:
+http://eiffelsoftware.origo.ethz.ch/index.php/Internationalization/User_guide
+http://eiffelsoftware.origo.ethz.ch/index.php/Internationalization/Developer_guide
+
+HISTORY
+
+1.0: initial release

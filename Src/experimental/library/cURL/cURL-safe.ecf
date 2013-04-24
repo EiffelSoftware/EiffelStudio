@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="curl" uuid="D51EF190-6157-4B47-8E73-FA93DCBB7A71" library_target="curl">
+	<target name="curl">
+		<description>cURL: libcURL wrapper library for Eiffel.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/temp$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" cat_call_detection="false" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<external_include location="$(ISE_LIBRARY)\library\cURL\spec\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/cURL/spec/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/eiffel_curl.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/MTeiffel_curl.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mteiffel_curl.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ileiffel_curl.lib">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
+			</condition>
+		</external_object>
+		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="curl" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/spec$</exclude>
+				<exclude>/Clib$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+				<exclude>/mac$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+				<exclude>/gtk$</exclude>
+				<condition>
+					<platform value="macintosh"/>
+					<custom name="vision_implementation" value="cocoa"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+				<exclude>/mac$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
+				</condition>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="curl_dotnet" extends="curl">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

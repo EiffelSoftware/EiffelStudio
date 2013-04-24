@@ -1,0 +1,78 @@
+
+
+Test of locale: tg_TJ@Cyrl
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Дш
+  Сш
+  Чш
+  Пш
+  Ҷм
+  Шн
+  Яш
+    Full day names:
+  Душанбе
+  Сешанбе
+  Чоршанбе
+  Панҷшанбе
+  Ҷумъа
+  Шанбе
+  Яш
+    Abbreviated month names:
+  Янв
+  Фев
+  Мар
+  Апр
+  Май
+  Июн
+  Июл
+  Авг
+  Сен
+  Окт
+  Ноя
+  Дек
+    Full month names:
+  Январ
+  Феврал
+  Март
+  Апрел
+  Май
+  Июн
+  Июл
+  Август
+  Сентябр
+  Октябр
+  Ноябр
+  Декабр
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 Феврал 2009 11:45:30, day: Ҷумъа
+
+CURRENCY INFO TEST
+    cur dec sep: ';'
+    cur gr.sep: ''
+    Grouping: 03
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'т.р.'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'TJS'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539;23 т.р.
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

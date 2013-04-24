@@ -1,0 +1,130 @@
+msgid ""
+msgstr ""
+"Language-Team: YOUR TEAM HERE\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Last-Translator: YOUR NAME HERE\n"
+
+
+
+msgid ""
+"Members of the team:\n   - Leo Fellmann\n   - Etienne Reichenbach\n   - Bernd "
+"Schoeller\n   - Martino Trosi\n   - Hong Zhang"
+msgstr ""
+
+
+msgid "Application"
+msgstr ""
+
+
+msgid ""
+"Demo application made by i18n Team ETHZ\n\nFor bugs, suggestions or other, ple"
+"ase write a mail to: es-i18n@origo.ethz.ch\n\n"
+msgstr ""
+
+
+msgid "french"
+msgstr ""
+
+
+msgid "Full date-time: $1"
+msgstr ""
+
+
+msgid "Update date and time"
+msgstr ""
+
+
+msgid "A hovercraft costs you: $1"
+msgstr ""
+
+
+msgid "Buy a hovercraft"
+msgstr ""
+
+
+msgid "english"
+msgstr ""
+
+
+msgid "Your have $1 on your bank conto"
+msgstr ""
+
+
+msgid "chinese"
+msgstr ""
+
+
+msgid "The mortage rate is $1%"
+msgstr ""
+
+
+msgid "File"
+msgstr ""
+
+
+msgid "greek"
+msgstr ""
+
+
+msgid "Select language"
+msgstr ""
+
+
+msgid "arabic"
+msgstr ""
+
+
+msgid "hebrew"
+msgstr ""
+
+
+msgid "Time: $1"
+msgstr ""
+
+
+msgid "italian"
+msgstr ""
+
+
+msgid "sell hovercraft"
+msgstr ""
+
+
+msgid "Date: $1"
+msgstr ""
+
+
+msgid "japanese"
+msgstr ""
+
+
+msgid "russian"
+msgstr ""
+
+
+msgid "About Dialog"
+msgstr ""
+
+
+msgid "OK"
+msgstr ""
+
+
+msgid "My hovercraft is full of eels"
+msgid_plural "My $1 hovercraft are full of eels"
+msgstr[0] ""
+
+
+msgid "About"
+msgstr ""
+
+
+msgid "You can sell a hovercraft for $1"
+msgstr ""
+
+msgid "This string is written in the application's sourcecode"
+msgstr "This is an example of locale that is (probably) not on the system\n"
+"in this case the translation will come from mo file \"xx_XX.mo\" "
+"and the formattings rules used are the predefined of the library"

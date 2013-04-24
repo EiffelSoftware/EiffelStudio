@@ -1,0 +1,78 @@
+
+
+Test of locale: tn_ZA
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Mos.
+  Lbd.
+  Lbr.
+  Lbn.
+  Lbt.
+  Lmt.
+  Ltp.
+    Full day names:
+  Mosupologo
+  Labobedi
+  Laboraro
+  Labone
+  Labotlhano
+  Lamatlhatso
+  Latshipi
+    Abbreviated month names:
+  Fer.
+  Tlhak.
+  Mop.
+  Mor.
+  Motsh.
+  Seet.
+  Phukw.
+  Phatw.
+  Lwets.
+  Diph.
+  Ngwan.
+  Sed.
+    Full month names:
+  Ferikgong
+  Tlhakole
+  Mopitloe
+  Moranang
+  Motsheganong
+  Seetebosigo
+  Phukwi
+  Phatwe
+  Lwetse
+  Diphalane
+  Ngwanatsele
+  Sedimothole
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 Tlhakole 2009 11:45:30 am, day: Labotlhano
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'R'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'ZAR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: R 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

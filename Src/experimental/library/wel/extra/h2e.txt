@@ -1,0 +1,93 @@
+README file for h2e
+
+------------------
+Copyright (C) 1995
+Interactive Software Engineering Inc.
+All rights reserved. Duplication and distribution prohibited.
+
+270 Storke Road, Suite 7, Goleta, CA 93117 USA
+Telephone 805-685-1006
+Fax 805-685-6869
+Electronic mail <info@eiffel.com>
+Customer support e-mail <support@eiffel.com>
+-------------------
+
+This file contains some information and details on how to use
+h2e.
+
+
+1. What does the program do?
+----------------------------
+
+The program is written to search .h files for occurrences of
+the type:
+
+#define ID_CURSOR 1
+#define ID_MENU 1
+
+The program will convert this to an Eiffel class like:
+
+class
+	ID
+
+feature -- Access
+
+	Id_cursor: INTEGER is 1
+	Id_menu: INTEGER is 1
+
+end -- class ID
+
+These Eiffel constants will become features of the class given
+on the command-line. This class will be stored in an outputfile
+which can be specified on the command-line. Default storage will
+be in the file: classname.e
+
+The program only converts integer-constants. It will ignore
+lines like:
+
+#define A_ID
+#define A_STRING "letters"
+#define A_MACRO(x,y) ((x) * (y))
+
+Note:	The first letter of the identifier in Eiffel is
+	a capital letter and any following letters are lowercase
+	letters.
+
+Typically, you can use this program to generate an Eiffel class
+which contains resource identifiers.
+
+
+2. Usage 
+--------
+
+	h2e <classname> <inputfile> [outputfile]
+
+The program should be called with at least two command-line
+arguments. The first argument is the name of the Eiffel class
+which will be used for storing the integer constants. The second
+argument is the filename of the file you want to process. The
+third argument is the name of the outputfile in which the
+the Eiffel class is declared. This argument is optional.
+If you don't specify this argument at the command-line, it will
+be set as the classname with extension ".e". If you do specify
+the filename of the ouputfile, this filename will be used to
+store the Eiffel class. To illustrate this, two examples are
+provided.
+
+Example 1: h2e window_constants windows.h
+Example 2: h2e window_constants windows.h win_constants.e
+
+Note that the outputfile in example 1 will be: window_constants.e
+and in example 2 the outputfile will be: win_constants.e
+In both examples the class name of the Eiffel class will be
+WINDOW_CONSTANTS, and the file to process will be windows.h
+
+N.B. some important notes are:
+
+1. Any existing files will be overwritten!
+   The program does not check whether an outputfile
+   already exists.
+
+2. Do not use special characters at the command-line!
+   Especially be sure to use a valid classname, otherwise
+   you will have to change it afterwards.

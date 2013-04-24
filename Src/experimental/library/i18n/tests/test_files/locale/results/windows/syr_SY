@@ -1,0 +1,78 @@
+
+
+Test of locale: syr_SY
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  ܏ܒ ܏ܒܫ
+  ܏ܓ ܏ܒܫ
+  ܏ܕ ܏ܒܫ
+  ܏ܗ ܏ܒܫ
+  ܏ܥܪܘܒ
+  ܏ܫܒ
+  ܏ܐ ܏ܒܫ
+    Full day names:
+  ܬܪܝܢ ܒܫܒܐ
+  ܬܠܬܐ ܒܫܒܐ
+  ܐܪܒܥܐ ܒܫܒܐ
+  ܚܡܫܐ ܒܫܒܐ
+  ܥܪܘܒܬܐ
+  ܫܒܬܐ
+  ܚܕ ܒܫܒܐ
+    Abbreviated month names:
+  ܏ܟܢ ܏ܒ
+  ܫܒܛ
+  ܐܕܪ
+  ܢܝܣܢ
+  ܐܝܪ
+  ܚܙܝܪܢ
+  ܬܡܘܙ
+  ܐܒ
+  ܐܝܠܘܠ
+  ܏ܬܫ ܏ܐ
+  ܏ܬܫ ܏ܒ
+  ܏ܟܢ ܏ܐ
+    Full month names:
+  ܟܢܘܢ ܐܚܪܝ
+  ܫܒܛ
+  ܐܕܪ
+  ܢܝܣܢ
+  ܐܝܪ
+  ܚܙܝܪܢ
+  ܬܡܘܙ
+  ܐܒ
+  ܐܝܠܘܠ
+  ܬܫܪܝ ܩܕܝܡ
+  ܬܫܪܝ ܐܚܪܝ
+  ܟܢܘܢ ܩܕܝܡ
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 ܫܒܛ, 2009 11:45:30 ܩ.ܛ, day: ܥܪܘܒܬܐ
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: '+'
+    Grouping: 030
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'ل.س.‏'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'SYP'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ل.س.‏ 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

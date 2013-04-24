@@ -1,0 +1,78 @@
+
+
+Test of locale: gsw_FR
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Mo.
+  Di.
+  Mi.
+  Du.
+  Fr.
+  Sà.
+  Su.
+    Full day names:
+  Mondàà
+  Dienschdàà
+  Mittwuch
+  Dunnerschdàà
+  Fridàà
+  Sàmschdàà
+  Sundàà
+    Abbreviated month names:
+  Jän.
+  Fev.
+  März
+  Apr.
+  Mai
+  Jüni
+  Jüli
+  Aug.
+  Sept.
+  Okt.
+  Now.
+  Dez.
+    Full month names:
+  Jänner
+  Feverje
+  März
+  Àpril
+  Mai
+  Jüni
+  Jüli
+  Augscht
+  September
+  Oktower
+  Nowember
+  Dezember
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Fridàà 19 Feverje 2009 11:45:30, day: Fridàà
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'€'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'EUR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 €
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

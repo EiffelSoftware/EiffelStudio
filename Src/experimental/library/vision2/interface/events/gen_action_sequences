@@ -1,0 +1,212 @@
+#!/usr/bin/perl -w
+#===============================================================================
+# gen_action_sequences
+#-------------------------------------------------------------------------------
+# This program translates an action sequence definition file into a collection
+# of eiffel classes. 
+# The deffinition file has one like per difinition like this:
+# name: description; arg_name: ARG_TYPE; arg_name: ARG_TYPE etc
+#-------------------------------------------------------------------------------
+# Date: $Date$
+# Revision: $Revision$
+#===============================================================================
+
+%descs = ();
+%argss = ();
+%arg_namess = ();
+%arg_typess = ();
+%wrapper_argss = ();
+
+while (<>) {
+	# Initiailize some arrays.
+	@args = ();
+	@arg_names = ();
+	@arg_types = ();
+	# Ignore empty lines, those starting with whitespace and comments.
+	if (!/^[\n 	#].*/) {
+		chomp;
+		@fields = split (/;[ 	]*/,$_);
+		# Grab the name and the description.
+		$name = shift (@fields);
+		@parts = split (/:[ 	]*/,$name);
+		$name = $parts[0];
+		$desc = $parts[1];
+
+		# Grab the arguments.
+		foreach $field (@fields) {
+			push (@args, $field);
+			@parts = split (/:[	 ]*/,$field);
+			push (@arg_names, $parts[0]);
+			push (@arg_types, $parts[1]);
+		}
+
+		# Save everything for later.
+		$descs{$name} = [ @desc ];
+		$argss{$name} = [ @args ];
+		$arg_namess{$name} = [ @arg_names ];
+		$arg_typess{$name} = [ @arg_types ];
+
+		# Prepare the class name.
+		$_ = $name;
+		tr/[a-z]/[A-Z]/;
+		$classname = "$_\_ACTION_SEQUENCE";
+		$_ = $classname;
+		tr/[A-Z]/[a-z]/;
+		$lower_classname = $_;
+
+		# Status message.
+		print "$classname\n";
+
+		# Prepare the event data type, and some handy argument list strings.
+		$data_type = "TUPLE [";
+		$data_type2 = "TUPLE [";
+		$wrapper_args = "";
+		$open_args = "";
+		$arg_name_array = "";
+		$arg_name_list = "";
+		if ($#args >= 0) {
+			@ats = @arg_types;
+			@ans = @arg_names;
+			$t = shift (@ats);
+			$n = shift (@ans);
+			$arg_name_array = "\"$n\"";
+			$arg_name_list = "a_$n";
+			$data_type = "$data_type$t";
+			$data_type2 = "$data_type2$n";
+			$last_type = $t;
+			for ($i = 0; $i < @ats ; $i++) {
+				$arg_name_array = "$arg_name_array, \"$ans[$i]\"";
+				$arg_name_list = "$arg_name_list, a_$ans[$i]";
+				$data_type = "$data_type, $ats[$i]";
+				if ($last_type eq $ats[$i]) {
+					$data_type2 = "$data_type2, $ans[$i]";
+				} else {
+					$data_type2 = "$data_type2: $last_type; $ans[$i]";
+				}
+				$last_type = $ats[$i]
+			}
+			$data_type2 = "$data_type2: $last_type";
+
+			foreach $field (@args) {
+				$wrapper_args = "${wrapper_args}a_$field; ";
+				$open_args = "${open_args}?, ";
+			}
+			$wrapper_argss{$name} = $wrapper_args;
+		}
+		$data_type = "$data_type]";
+		$data_type2 = "$data_type2]";
+
+		# Open our output file.
+		open (OH, ">" . "$lower_classname.e");
+
+#===============================================================================
+# Dump the classtext.
+#===============================================================================
+print OH <<EOT;
+indexing
+	description:
+		"Action sequence $desc."
+	status: "Generated!"
+	keywords: "$name"
+	date: "Generated!"
+	revision: "Generated!"
+
+class
+	$classname
+
+inherit
+	EV_ACTION_SEQUENCE [$data_type]
+	-- EV_ACTION_SEQUENCE [$data_type2]
+	-- (ETL3 TUPLE with named parameters)
+	
+creation
+	default_create
+
+feature -- Access
+
+	force_extend (action: PROCEDURE [ANY, TUPLE]) is
+			-- Extend without type checking.
+		do
+			extend (~wrapper (${open_args}action))
+		end
+
+	wrapper (${wrapper_args}action: PROCEDURE [ANY, TUPLE]) is
+			-- Use this to circumvent tuple type checking. (at your own risk!)
+			-- Calls `action' passing all other arguments.
+		do
+			action.call ([$arg_name_list])
+		end
+end
+EOT
+#===============================================================================
+# End of classtext
+#===============================================================================
+
+		close(OH)
+
+	}
+}
+
+#===============================================================================
+# CVS log
+#===============================================================================
+#
+# $Log$
+# Revision 1.6  2001/06/07 23:08:18  rogers
+# Merged DEVEL branch into Main trunc.
+#
+# Revision 1.1.2.5  2000/10/02 19:13:11  oconnor
+# removed unused filtering stuff
+#
+# Revision 1.1.2.4  2000/08/30 16:02:48  oconnor
+# added event data description to indexing
+#
+# Revision 1.1.2.3  2000/07/23 21:12:56  oconnor
+# initial
+#
+# Revision 1.1.2.2  2000/05/03 19:09:54  oconnor
+# mergred from HEAD
+#
+# Revision 1.5  2000/02/28 21:16:37  oconnor
+# formatting
+#
+# Revision 1.4  2000/02/15 18:44:06  oconnor
+# added force_extend
+#
+# Revision 1.3  2000/02/14 11:40:46  oconnor
+# merged changes from prerelease_20000214
+#
+# Revision 1.1.2.1.2.2  2000/02/05 05:58:00  oconnor
+# fixed filter bug
+#
+# Revision 1.1.2.1.2.1  1999/11/24 22:48:07  brendel
+# Just managed to compile figure cluster example.
+#
+# Revision 1.1.2.1  1999/11/13 01:21:28  brendel
+# First integration of new event system.
+#
+# Revision 1.10  1999/10/29 16:37:04  oconnor
+# fixed broken filter code
+#
+# Revision 1.9  1999/10/28 23:01:16  oconnor
+# rearanged filter generation/init a little
+#
+# Revision 1.8  1999/10/28 22:09:43  oconnor
+# added filter stuff
+#
+# Revision 1.7  1999/10/28 00:28:52  oconnor
+# added warning comment to generated code
+#
+# Revision 1.6  1999/10/27 20:48:43  oconnor
+# added some more comments
+#
+# Revision 1.5  1999/10/27 20:43:30  oconnor
+# added cvs date revision keywords
+#
+# Revision 1.4  1999/10/27 20:42:30  oconnor
+# added cvs log keyword
+#
+#
+#===============================================================================
+# End of CVS log
+#===============================================================================

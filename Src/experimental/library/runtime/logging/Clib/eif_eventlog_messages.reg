@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\eventlog\Application\EiffelSyslog]
+"CategoryCount"=dword:00000008
+"TypesSupported"=dword:00000007
+"CategoryMessageFile"="eif_eventlog_messages.dll"
+"EventMessageFile"="eif_eventlog_messages.dll"
+"ParameterMessageFile"="eif_eventlog_messages.dll"

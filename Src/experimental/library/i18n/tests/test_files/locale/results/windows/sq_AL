@@ -1,0 +1,78 @@
+
+
+Test of locale: sq_AL
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Hën
+  Mar
+  Mër
+  Enj
+  Pre
+  Sht
+  Die
+    Full day names:
+  e hënë
+  e martë
+  e mërkurë
+  e enjte
+  e premte
+  e shtunë
+  e diel
+    Abbreviated month names:
+  Jan
+  Shk
+  Mar
+  Pri
+  Maj
+  Qer
+  Kor
+  Gsh
+  Sht
+  Tet
+  Nën
+  Dhj
+    Full month names:
+  janar
+  shkurt
+  mars
+  prill
+  maj
+  qershor
+  korrik
+  gusht
+  shtator
+  tetor
+  nëntor
+  dhjetor
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 20090219 11:45:30.pd, day: e premte
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'Lek'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'ALL'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 Lek
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

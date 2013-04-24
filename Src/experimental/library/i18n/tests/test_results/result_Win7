@@ -1,0 +1,43 @@
+# AutoTest results for i18n-tests (07/11/2012 20:13)
+I18N_TEST_DICTIONARY.test_dictionary: pass
+I18N_TEST_DICTIONARY_2.test_dictionary_2: pass
+I18N_TEST_LOCALE.test_all_locales: pass
+I18N_TEST_LOCALE.test_difference_on_platforms: FAIL (Formatting resuls are different on platforms.)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EXCEPTIONS.raise)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Formatting resuls are different on platforms.:
+		<00000000027A5BB8>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000027A5BB8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000027A5BB8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<00000000027A5B38>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      raise @3                                            
+		<00000000027A2898>  (From EXCEPTIONS)      Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @5                                           
+		<00000000027A2898>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		I18N_TEST_LOCALE    assert @2                                           
+		<00000000027A2808>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		I18N_TEST_LOCALE    test_difference_on_platforms @1
+		<00000000027A2808>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+I18N_TEST_MO_FILE.test_mo_file: pass
+I18N_TEST_TRANSLATION.test_translation: pass

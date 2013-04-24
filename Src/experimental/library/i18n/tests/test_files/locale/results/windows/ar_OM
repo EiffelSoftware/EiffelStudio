@@ -1,0 +1,78 @@
+
+
+Test of locale: ar_OM
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  الإثنين
+  الثلاثاء
+  الأربعاء
+  الخميس
+  الجمعة
+  السبت
+  الأحد
+    Full day names:
+  الإثنين
+  الثلاثاء
+  الأربعاء
+  الخميس
+  الجمعة
+  السبت
+  الأحد
+    Abbreviated month names:
+  يناير
+  فبراير
+  مارس
+  أبريل
+  مايو
+  يونيو
+  يوليو
+  أغسطس
+  سبتمبر
+  أكتوبر
+  نوفمبر
+  ديسمبر
+    Full month names:
+  يناير
+  فبراير
+  مارس
+  أبريل
+  مايو
+  يونيو
+  يوليو
+  أغسطس
+  سبتمبر
+  أكتوبر
+  نوفمبر
+  ديسمبر
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 فبراير, 2009 11:45:30 ص, day: الجمعة
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '3'
+    currency symbol:'ر.ع.‏'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '3'
+    INT currency symbol:'OMR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ر.ع.‏ 1324539.234
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

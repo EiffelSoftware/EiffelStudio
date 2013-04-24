@@ -1,0 +1,38 @@
+// ******************************************************************************
+// * This is an automatically generated file containing the ribbon resource for *
+// * your application.                                                          *
+// ******************************************************************************
+
+#include ".\ribbon_1.h"
+
+STRINGTABLE 
+BEGIN
+    tab_1_LabelTitle_RESID L"Buttons" /* LabelTitle tab_1_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    group_1_LabelTitle_RESID L"Button Group" /* LabelTitle group_1_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_1_LabelTitle_RESID L"Button 1" /* LabelTitle button_1_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_2_LabelTitle_RESID L"Button 2" /* LabelTitle button_2_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_3_LabelTitle_RESID L"Test Menu Button" /* LabelTitle button_3_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    InternalCmd2_LabelTitle_RESID L"Label:InternalCmd2" /* LabelTitle InternalCmd2_LabelTitle_RESID: (null) */
+END
+
+APPLICATION_RIBBON    UIFILE    "ribbon_1.bml"

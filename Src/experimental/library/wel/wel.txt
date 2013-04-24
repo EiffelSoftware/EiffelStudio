@@ -1,0 +1,179 @@
+Windows Eiffel Library (WEL)
+ISE, Inc.
+----------------------------
+
+What is WEL?
+------------
+
+The new Windows Eiffel Library (WEL), which has been designed to 
+make Windows programming easier, more reliable, more convenient, 
+and more powerful.
+
+The most obvious definition of WEL is that it is an encapsulation of 
+Windows primitives, making it possible for users of Graphical Eiffel 
+for Windows to have direct access to the Windows graphical API. 
+
+But this is only part of the truth. WEL provides considerable benefits 
+of its own: the ability to work in a much simpler, move convenient and 
+safer way than if you were using the Windows primitives directly, for
+example from C. 
+
+This advantage comes from the abstraction facilities of Eiffel, which 
+make it possible to encapsulate many low-level details so that 
+developers can concentrate on the functionality, not implementation 
+requirements. 
+
+So even for specific and OS-dependent tasks such as using a particular 
+graphical API, the benefits of the Eiffel method and of reusable Eiffel 
+components will show up quickly.
+
+
+What's new?
+-----------
+
+o WEL is not compatible with Windows 3.x any more. Only Windows 95 and
+  Windows NT are now supported. That's why the `Win32' cluster has been removed.
+  The Windows 95/NT controls are now merged in the `Controls' cluster.
+
+o New Windows 95/NT classes
+  WEL provides new Windows 95/NT-specific classes. To use them, you need a
+  recent common controls header file (commctrl.h) provided with Microsoft
+  Visual C++ 4.1 and Borland C++ 4.52.
+  See example `Comctrls'.
+
+o New command model
+  WEL provides a new command model (EiffelVision-like).
+  See example `Commands'.
+
+o New H2E utility
+  The interface has been improved, it's easier than ever to use it.
+
+o New WEL tutorial
+  A tutorial to learn WEL step by step.
+  See directory $ISE_EIFFEL\examples\wel\tutorial.
+  This tutorial is also available on our WEB site at:
+  http://www.eiffel.com/doc/manuals/technology/wel/tutorial/index.html
+
+o New WEL reference manual
+  This manual describes all the WEL classes (description, interface, example).
+
+o New WEL Examples
+  `Timer', `Fontenum', `Stddlgs', `Comctrls', `Magnify', `Richedit', `Commands'.
+
+
+Important note for WEL 1.x users
+--------------------------------
+
+If you use `default_process_message' to process Wm_notify message, you have to
+use now `on_notify'.
+
+
+What WEL does not include yet?
+------------------------------
+
+o Some Windows 95 common controls: Animation Controls,
+  Drag List Boxes, Header Controls, Hot-Key Controls, Image Lists,
+  List View Controls, Property Sheets.
+
+o Find and replace common dialog box.
+
+
+Resource file
+-------------
+
+The resource file name must have the same name as the system name specified in
+the Ace file.
+
+When you change the resource file (.RC), you have to freeze the system in
+order to recompile the resource file and see the effect. A quicker way consists
+of running the make utility (`make' for Borland or `nmake' for Microsoft) in
+.\EIFGEN\W_CODE. But first, make sure to delete the .RES file.
+
+If you have created a resource file using Microsoft Developer Studio, you will
+probably need to change the file $ISE_EIFFEL\studio\spec\windows\config\msc\config.eif.
+Retrieve the following portion of text:
+
+-------------
+$appl.res: $appl.rc working.ico $appl.ico Makefile appl.ico
+	if exist ..\..\*.ico xcopy ..\..\*.ico .
+	if exist ..\..\*.cur xcopy ..\..\*.cur .
+	if exist ..\..\*.bmp xcopy ..\..\*.bmp .
+	if exist ..\..\*.h xcopy ..\..\*.h .
+	rc -I..\.. -r $appl.rc
+-------------
+
+and modify the last line by:
+
+	rc -i..\.. -ic:\msdev\mfc\include -r $appl.rc
+
+
+H2E utility
+-----------
+
+H2E is a convenient tool to generate an Eiffel class which contains resource
+identifiers. The program and the documentation are in $ISE_EIFFEL\util. The source
+code is in $ISE_EIFFEL\library\wel\extra.
+
+
+The WEL C library
+-----------------
+
+`wel.lib' contains some C-functions needed by WEL. If you need to
+recompile this library read the file $ISE_EIFFEL\library\wel\clib\readme.txt.
+
+
+Examples
+--------
+
+WEL includes a few examples (Eiffel classes and an executable) which are:
+
+o Minimal: The minimal WEL program (in terms of lines of code able to
+  create a Windows application).
+
+o Hello: The famous ``Hello, World!'' program in WEL.
+
+o XY: A simple program that shows the coordinates of the mouse
+  when the button is pressed.
+
+o Menus: This example illustrates dynamic creation of menus and
+  track popup menus.
+
+o Cursors: This example demonstrates how to change the cursor.
+
+o MDI: A basic Muliple Document Interface application.
+
+o Controls: This example demontrates several Windows controls.
+
+o Fun: Some funny stuff using the GDI classes of WEL.
+
+o Pizza: Order your pizza with WEL.
+
+o Brushes: A nice example to illustrate the brushes.
+
+o Bmpview: A MDI bitmap file viewer (16-color bitmaps only).
+
+o Windows: Shows the different kind of windows.
+
+o Printer: A simple example to print a page.
+
+o Xcell: A pretty nice card game.
+
+o Stddlgs: Shows all the standard dialog boxes available.
+
+o Comctrls: Shows the new Windows 95/NT common controls supported by WEL.
+
+o Fontenum: Demonstrates the font enumeration capability.
+
+o Timer: Shows how to use Windows timers.
+
+o Magnify: Tool to magnify a part of your screen.
+
+o Richedit: A small word processor based on the rich edit control.
+
+o Commands: Demonstrates the new command model of WEL.
+
+Enjoy!
+
+--
+The WEL team 
+<wel@eiffel.com>

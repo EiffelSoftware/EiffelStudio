@@ -1,0 +1,43 @@
+The EiffelStore library provides a consistent set of 
+classes for writing object oriented Eiffel applications that need 
+to handle persistent objects.
+
+The library interface consists of two sets:
+
+1) A set of general purpose classes designed regardless of any data 
+ management system used, to be found in directory 
+ $ISE_LIBRARY/library/store/interface, and that you always need in your universe
+
+2) Specific classes, referred to by the interface classes, bridging
+  the application to selected data management systems called ``handles''. 
+  The set of handles may be found:
+
+   * in directory $ISE_LIBRARY/library/store/dbms
+
+   * in the directory $ISE_LIBRARY/library/store/dbms/rdbms/{server_name}   
+   with {server_name} corresponding to a selected relational database 
+   management system.
+
+   The best way to use them is to include the corresponding configuration file
+   $ISE_LIBRARY/library/store/dbms/rdbms/{server_name}/{server_name.ecf}
+
+   Additional support classes are also needed in your universe
+   regardless of the selected handle. They are located in:
+   
+   * directory $ISE_LIBRARY/library/store/support and 
+      $ISE_LIBRARY/library/store/dbms/support
+
+Example classes are located in $ISE_EIFFEL/examples/store
+
+EiffelStore has currently only been tested with:
+		EiffelStudio 5.7
+   		Oracle8 8.0.4
+		ODBC 3.0
+
+Documentation
+-------------
+   The user's manual is in Postscript format in directory /doc
+   (cover page + content in US LTR format)
+
+Then, to install EiffelStore external libraries, go to directory 
+$ISE_EIFFEL/library/store/install (a README file provides full instructions).

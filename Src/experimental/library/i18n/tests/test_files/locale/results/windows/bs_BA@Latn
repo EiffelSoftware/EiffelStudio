@@ -1,0 +1,78 @@
+
+
+Test of locale: bs_BA@Latn
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  pon
+  uto
+  sri
+  čet
+  pet
+  sub
+  ned
+    Full day names:
+  ponedjeljak
+  utorak
+  srijeda
+  četvrtak
+  petak
+  subota
+  nedjelja
+    Abbreviated month names:
+  jan
+  feb
+  mar
+  apr
+  maj
+  jun
+  jul
+  avg
+  sep
+  okt
+  nov
+  dec
+    Full month names:
+  januar
+  februar
+  mart
+  april
+  maj
+  juni
+  juli
+  avgust
+  septembar
+  oktobar
+  novembar
+  decembar
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19. februar 2009 11:45:30, day: petak
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'KM'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'BAM'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 KM
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

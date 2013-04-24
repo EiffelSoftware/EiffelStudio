@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+
+	
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+<title>Eiffel internationalization library - User guide</title>
+		
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/skins/monobook/main.css?7"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" href="css/commonPrint.css"><!--[if lt IE 5.5000]><style type="text/css">@import "/skins/monobook/IE50Fixes.css";</style><![endif]--><!--[if IE 5.5000]><style type="text/css">@import "/skins/monobook/IE55Fixes.css";</style><![endif]--><!--[if IE 6]><style type="text/css">@import "/skins/monobook/IE60Fixes.css";</style><![endif]--><!--[if IE 7]><style type="text/css">@import "/skins/monobook/IE70Fixes.css?1";</style><![endif]--><!--[if lt IE 7]><script type="text/javascript" src="/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		
+		
+		
+		
+		
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/skins';</script>
+		<script type="text/javascript" src="css/wikibits.js"><!-- wikibits js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style><!-- Head Scripts --></head><body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Eiffel internationalization library - User guide</h1>
+		<div id="bodyContent">
+			
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<table id="toc" class="toc" summary="Contents"><tbody><tr><td><div id="toctitle"><h2>Contents</h2> <span class="toctoggle">[<a href="javascript:toggleToc()" class="internal" id="togglelink">hide</a>]</span></div>
+<ul>
+<li class="toclevel-1"><a href="#Overview"><span class="tocnumber">1</span> <span class="toctext">Overview</span></a></li>
+<li class="toclevel-1"><a href="#Interface"><span class="tocnumber">2</span> <span class="toctext">Interface</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Choosing_a_locale"><span class="tocnumber">2.1</span> <span class="toctext">Choosing a locale</span></a></li>
+<li class="toclevel-2"><a href="#Using_your_locale"><span class="tocnumber">2.2</span> <span class="toctext">Using your locale</span></a>
+<ul>
+<li class="toclevel-3"><a href="#String_translation"><span class="tocnumber">2.2.1</span> <span class="toctext">String translation</span></a>
+<ul>
+<li class="toclevel-4"><a href="#Interface_2"><span class="tocnumber">2.2.1.1</span> <span class="toctext">Interface</span></a></li>
+<li class="toclevel-4"><a href="#Usage"><span class="tocnumber">2.2.1.2</span> <span class="toctext">Usage</span></a></li>
+<li class="toclevel-4"><a href="#Misuse"><span class="tocnumber">2.2.1.3</span> <span class="toctext">Misuse</span></a></li>
+</ul>
+</li>
+<li class="toclevel-3"><a href="#Formatting"><span class="tocnumber">2.2.2</span> <span class="toctext">Formatting</span></a>
+<ul>
+<li class="toclevel-4"><a href="#Interface_3"><span class="tocnumber">2.2.2.1</span> <span class="toctext">Interface</span></a></li>
+<li class="toclevel-4"><a href="#Usage_2"><span class="tocnumber">2.2.2.2</span> <span class="toctext">Usage</span></a>
+<ul>
+<li class="toclevel-5"><a href="#Date_formatting"><span class="tocnumber">2.2.2.2.1</span> <span class="toctext">Date formatting</span></a></li>
+<li class="toclevel-5"><a href="#Value_and_currency_formatting"><span class="tocnumber">2.2.2.2.2</span> <span class="toctext">Value and currency formatting</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#String_extraction"><span class="tocnumber">3</span> <span class="toctext">String extraction</span></a></li>
+<li class="toclevel-1"><a href="#Datasources"><span class="tocnumber">4</span> <span class="toctext">Datasources</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Mo_files"><span class="tocnumber">4.1</span> <span class="toctext">Mo files</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></tbody></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=1" title="Edit section: Overview">edit</a>]</div><a name="Overview"></a><h2>Overview</h2>
+<p>The <a href="http://eiffelsoftware.origo.ethz.ch/index.php/I18n" title="I18n">i18n</a> library is intended to enable localisation of Eiffel programs.
+</p><p><i>localisation</i> is the process of adapting a piece of software to a specific place - the <i>locale</i>, often expressed as a combination of language and country codes.
+</p><p>This normally means not only displaying strings in the
+appropriate language, but also adapting number formatting, date and
+time formatting etc. to use local conventions.
+The i18n library provides formatting facilities for numbers, currency
+values and dates, and the ability to identify and load translated
+strings at run-time.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=2" title="Edit section: Interface">edit</a>]</div><a name="Interface"></a><h2>Interface</h2>
+<p>The library provides most of it's services through one class:
+LOCALE. This presents all formatting and translation facilities for a
+given locale.
+LOCALE objects can't be created directly: one must go though the
+LOCALE_MANAGER class. A LOCALE_MANAGER finds out what information for
+which locales is available, and offers a list to chose from. It will
+then load the information for the chosen locale into a LOCALE object
+and give it to you. With this LOCALE object you can do the really
+interesting things, like formatting dates and translating strings.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=3" title="Edit section: Choosing a locale">edit</a>]</div><a name="Choosing_a_locale"></a><h3>Choosing a locale</h3>
+<p>First you must have a LOCALE_MANAGER. For details on creating them, please see the <b>Datasources</b>
+section.
+If you just want to use whatever locale is the default on the user's
+machine, as in most cases, then it's easy to get a LOCALE object: just
+call default_locale.
+</p>
+<pre class="eiffel">my_locale&nbsp;:= locale_mananger.<span style="color: rgb(0, 0, 96);">default_locale</span></pre>
+<p>If you want a specific locale, it's going to be a bit more
+complicated.
+A LOCALE_MANAGER knows what locales are available and exactly what
+information is available for a specific locale.
+You can get a list of all locales that are available to some degree by
+calling the available_locales feature.
+A locale is identified by a LOCALE_ID object, and normally this has two
+components: language code and country code.
+For example, the US english locale has language code "en" and country
+code "US". If you've found a locale id that you like in the list
+returned by available_locales, you can check exactly what is available
+for it by using </p>
+<pre class="eiffel">has_translations <span style="color: rgb(255, 0, 0);">(</span>a_locale_id: I18N_LOCALE_ID<span style="color: rgb(255, 0, 0);">)</span>: <a href="http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+BOOLEAN&amp;btnI=I%27m+Feeling+Lucky"><span style="color: rgb(128, 0, 0);">BOOLEAN</span></a>
+has_localised_translations <span style="color: rgb(255, 0, 0);">(</span>a_locale_id: I18N_LOCALE_ID<span style="color: rgb(255, 0, 0);">)</span>: <a href="http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+BOOLEAN&amp;btnI=I%27m+Feeling+Lucky"><span style="color: rgb(128, 0, 0);">BOOLEAN</span></a>
+has_formatting_info <span style="color: rgb(255, 0, 0);">(</span>a_locale_id: I18N_LOCALE_ID<span style="color: rgb(255, 0, 0);">)</span>: <a href="http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+BOOLEAN&amp;btnI=I%27m+Feeling+Lucky"><span style="color: rgb(128, 0, 0);">BOOLEAN</span></a></pre>
+<p>(The difference between a translation and a localised translation is
+that a localised translation is specific to a region: fr_CA or de_CH,
+for example. A translation is specific only to a language: fr or de,
+for example)
+</p><p>You can then retrieve the corresponding LOCALE object by calling locale_with_id, providing the desired LOCALE_ID.
+</p><p><br>
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=4" title="Edit section: Using your locale">edit</a>]</div><a name="Using_your_locale"></a><h3>Using your locale</h3>
+<p>Now you've got a LOCALE. After the initial burst of euphoria has faded away, what can you do with it?
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=5" title="Edit section: String translation">edit</a>]</div><a name="String_translation"></a><h4>String translation</h4>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=6" title="Edit section: Interface">edit</a>]</div><a name="Interface_2"></a><h5>Interface</h5>
+<pre class="eiffel">translation <span style="color: rgb(255, 0, 0);">(</span>original: STRING_GENERAL<span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span>
+plural_translation <span style="color: rgb(255, 0, 0);">(</span>original_singular, original_plural: STRING_GENERAL; plural_form&nbsp;: <a href="http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+INTEGER&amp;btnI=I%27m+Feeling+Lucky"><span style="color: rgb(128, 0, 0);">INTEGER</span></a><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span>
+formatted_string <span style="color: rgb(255, 0, 0);">(</span>original: STRING_GENERAL; token_values: <a href="http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+TUPLE&amp;btnI=I%27m+Feeling+Lucky"><span style="color: rgb(128, 0, 0);">TUPLE</span></a><span style="color: rgb(255, 0, 0);">[</span>STRING_GENERAL<span style="color: rgb(255, 0, 0);">]</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span></pre>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=7" title="Edit section: Usage">edit</a>]</div><a name="Usage"></a><h5>Usage</h5>
+<p>In naïvely written software, you can often spot things like
+</p>
+<pre class="eiffel">io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft is full of eels"</span><span style="color: rgb(255, 0, 0);">)</span></pre>
+<p>We'll use this example to illustrate the use of the string translation features of the i18n library.
+</p><p>If, as above, there is just one constant string to translate, the solution is very easy: simply use the translate function.
+The resulting code would look like this
+</p>
+<pre class="eiffel">io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span>my_locale.<span style="color: rgb(0, 0, 96);">translation</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft is full of eels"</span><span style="color: rgb(255, 0, 0);">)</span><span style="color: rgb(255, 0, 0);">)</span></pre>
+<p>If the translate function can't find a translation for this string
+it will simply return the original string - better then nothing!
+</p><p>But life is, of course, not always that simple. What if we have
+to deal with plurals? The "traditional" way of doing this is something
+like:
+</p>
+<pre class="eiffel">n&nbsp;:= number_of_hovercraft
+<span style="color: rgb(6, 0, 255); font-weight: bold;">if</span> n = <span style="color: rgb(255, 0, 0);">1</span> <span style="color: rgb(6, 0, 255); font-weight: bold;">then</span>
+	io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft is full of eels"</span><span style="color: rgb(255, 0, 0);">)</span>
+<span style="color: rgb(6, 0, 255); font-weight: bold;">else</span>
+	io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft are full of eels"</span><span style="color: rgb(255, 0, 0);">)</span>
+<span style="color: rgb(6, 0, 255); font-weight: bold;">end</span></pre>
+<p>This is not so easy to translate as the above. Why can't we just translate both strings? 
+</p><p>Depending on the language, there may be up to 4 different types
+of plural forms, used in strange and exotic ways. Clearly, it is
+important to know exactly _how_ many hovercraft there are so that we
+can choose the right plural form. This can be done by the
+plural_translation function, which we can use in this way:
+</p>
+<pre class="eiffel">n&nbsp;:= number_of_hovercraft
+io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span>my_locale.<span style="color: rgb(0, 0, 96);">plural_translation</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft is full of eels"</span>,<span style="color: rgb(0, 128, 160);">"My hovercraft are full of eels"</span>,n<span style="color: rgb(255, 0, 0);">)</span><span style="color: rgb(255, 0, 0);">)</span></pre>
+<p>This function will choose and return a translation in the correct
+plural form. If it can't find one, it will behave like translate and
+return either the original singular string or the original plural
+string, following English grammatical rules.
+</p><p>Often even the above is not enough. What if you want to tell
+the world exactly how many hovercraft you have? You might write
+something like this:
+</p>
+<pre class="eiffel">n&nbsp;:= number_of_hovercraft
+<span style="color: rgb(6, 0, 255); font-weight: bold;">if</span> n = <span style="color: rgb(255, 0, 0);">1</span> <span style="color: rgb(6, 0, 255); font-weight: bold;">then</span>
+	io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft is full of eels"</span><span style="color: rgb(255, 0, 0);">)</span>
+<span style="color: rgb(6, 0, 255); font-weight: bold;">else</span>
+	io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My "</span>+n.<span style="color: rgb(0, 0, 96);">out</span>+<span style="color: rgb(0, 128, 160);">" hovercraft are full of eels"</span><span style="color: rgb(255, 0, 0);">)</span>
+<span style="color: rgb(6, 0, 255); font-weight: bold;">end</span></pre>
+<p>How can plural_translation handle this? It needs some reinforcements: the solution is to also use <i>string templates</i>.
+This means that we can embed codes like "$1" in a string and replace them in the translation by the actual values.
+Let's see how this works:
+</p>
+<pre class="eiffel">n&nbsp;:= number_of_hovercraft
+plural_string&nbsp;:= my_locale.<span style="color: rgb(0, 0, 96);">plural_translation</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft is full of eels"</span>,<span style="color: rgb(0, 128, 160);">"My $1 hovercraft are full of eels"</span>,n<span style="color: rgb(255, 0, 0);">)</span>
+io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span>my_locale.<span style="color: rgb(0, 0, 96);">formatted_string</span><span style="color: rgb(255, 0, 0);">(</span>plural_string, <span style="color: rgb(255, 0, 0);">[</span>n<span style="color: rgb(255, 0, 0);">]</span><span style="color: rgb(255, 0, 0);">)</span><span style="color: rgb(255, 0, 0);">)</span></pre>
+<p>To replace the <i>escape codes</i>, such as $1, $2, we use the
+function formatted_string. This replaces all the escape codes it finds by
+the values in a tuple that you give to it a an argument.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=8" title="Edit section: Misuse">edit</a>]</div><a name="Misuse"></a><h5>Misuse</h5>
+<p>It is not a good idea, generally speaking, to do something like the following:
+</p>
+<pre class="eiffel">n&nbsp;:= number_of_eels
+io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span>my_locale.<span style="color: rgb(0, 0, 96);">translation</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"My hovercraft has "</span>+n.<span style="color: rgb(0, 0, 96);">out</span>+<span style="color: rgb(0, 128, 160);">"eels"</span><span style="color: rgb(255, 0, 0);">)</span><span style="color: rgb(255, 0, 0);">)</span></pre>
+<p>There are two reasons for this:
+</p>
+<ul><li> What the translation function will see as an argument is
+runtime-dependant. It may correspond to an actual entry in the
+datasource, if you are careful, but in the example above it probably
+won't unless you have entries for every possible value of n. This is
+the reason for which we have the formatted_string feature in LOCALE -
+please use it!
+</li></ul>
+<ul><li>When you want to generate a .po file to give to translators,
+this sort of thing is not going to make the command that extracts it
+very happy. What will happen is that it will extract the first constant
+STRING argument and ignore the rest, so your .po file will have an "My
+hovercraft has " entry and unless you correct this by hand very
+probably at runtime the i18n library will not be able to find a
+translation. </li></ul>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=9" title="Edit section: Formatting">edit</a>]</div><a name="Formatting"></a><h4>Formatting</h4>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=10" title="Edit section: Interface">edit</a>]</div><a name="Interface_3"></a><h5>Interface</h5>
+<p>DATE_FORMATTER provides:
+</p>
+<pre class="eiffel">formatted_date<span style="color: rgb(255, 0, 0);">(</span>date:DATE<span style="color: rgb(255, 0, 0);">)</span>:STRING_<span style="color: rgb(255, 0, 0);">32</span> 
+formatted_time<span style="color: rgb(255, 0, 0);">(</span>time: TIME<span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span> 
+formatted_date_time<span style="color: rgb(255, 0, 0);">(</span>date_time:DATE_TIME<span style="color: rgb(255, 0, 0);">)</span>:STRING_<span style="color: rgb(255, 0, 0);">32</span></pre>
+<p>CURRENCY_FORMATTER provides:
+</p>
+<pre class="eiffel">formatted_currency <span style="color: rgb(255, 0, 0);">(</span>a_value: REAL_<span style="color: rgb(255, 0, 0);">64</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span></pre>
+<p>VALUE_FORMATTER provides:
+</p>
+<pre class="eiffel">formatted_integer_<span style="color: rgb(255, 0, 0);">8</span> <span style="color: rgb(255, 0, 0);">(</span>a_integer_<span style="color: rgb(255, 0, 0);">8</span>: INTEGER_<span style="color: rgb(255, 0, 0);">8</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span> 
+formatted_integer_<span style="color: rgb(255, 0, 0);">16</span> <span style="color: rgb(255, 0, 0);">(</span>a_integer_<span style="color: rgb(255, 0, 0);">16</span>: INTEGER_<span style="color: rgb(255, 0, 0);">16</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span> 
+formatted_integer_<span style="color: rgb(255, 0, 0);">32</span> <span style="color: rgb(255, 0, 0);">(</span>a_integer_<span style="color: rgb(255, 0, 0);">32</span>: INTEGER_<span style="color: rgb(255, 0, 0);">32</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span>
+formatted_integer_<span style="color: rgb(255, 0, 0);">64</span> <span style="color: rgb(255, 0, 0);">(</span>a_integer_<span style="color: rgb(255, 0, 0);">64</span>: INTEGER_<span style="color: rgb(255, 0, 0);">64</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span> 
+formatted_real_<span style="color: rgb(255, 0, 0);">32</span> <span style="color: rgb(255, 0, 0);">(</span>a_real_<span style="color: rgb(255, 0, 0);">32</span>: REAL_<span style="color: rgb(255, 0, 0);">32</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span> 
+formatted_real_<span style="color: rgb(255, 0, 0);">64</span> <span style="color: rgb(255, 0, 0);">(</span>a_real_<span style="color: rgb(255, 0, 0);">64</span>: REAL_<span style="color: rgb(255, 0, 0);">64</span><span style="color: rgb(255, 0, 0);">)</span>: STRING_<span style="color: rgb(255, 0, 0);">32</span></pre>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=11" title="Edit section: Usage">edit</a>]</div><a name="Usage_2"></a><h5>Usage</h5>
+<p>The LOCALE class makes 3 formatters accessible to clients: a
+VALUE_FORMATTER, a DATE_FORMATTER and a CURRENCY_FORMATTER, exposed as
+features under the names value_formatter, date_formatter and
+currency_formatter respectively.
+Using these formatters is fairly straightforward: you simply call the
+appropriate function for the type of object that you want to format.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=12" title="Edit section: Date formatting">edit</a>]</div><a name="Date_formatting"></a><h6>Date formatting</h6>
+<p>The DATE_FORMATTER class can format EiffelTime DATE, TIME and
+DATE_TIME classes in a way appropriate to the locale. For example, to
+get a string representation of today's date in a given locale, you
+might write:
+</p>
+<pre class="eiffel">io.<span style="color: rgb(0, 0, 96);">put_string</span><span style="color: rgb(255, 0, 0);">(</span>my_locale.<span style="color: rgb(0, 0, 96);">formatted_date</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(6, 0, 255); font-weight: bold;">create</span> <span style="color: rgb(255, 0, 0);">{</span>DATE<span style="color: rgb(255, 0, 0);">}</span>.<span style="color: rgb(0, 0, 96);">make_now</span><span style="color: rgb(255, 0, 0);">)</span><span style="color: rgb(255, 0, 0);">)</span></pre>
+<p>Currently eras of non-gregorian calendars are not well supported.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=13" title="Edit section: Value and currency formatting">edit</a>]</div><a name="Value_and_currency_formatting"></a><h6>Value and currency formatting</h6>
+<p>The VALUE_FORMATTER and CURRENCY_FORMATTER classes can format
+integers and reals according to the conventions of a given locale -
+number of digits after the decimal separator, the decimal separator
+itself, grouping of digits and so on.
+</p><p>Using them is just as easy as DATE_FORMATTER: just call the
+function appropriate to the type of object who's value you want to
+format.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=14" title="Edit section: String extraction">edit</a>]</div><a name="String_extraction"></a><h2>String extraction</h2>
+<p>Somebody has to translate all these strings. Mostly, this isn't a
+programmer, so somehow you have to be able to give this translator a
+list of strings that you want translated. </p><p>We can extract these strings from your application fairly
+easily by simply looking at the arguments for each call to translation or
+plural_translation. By clicking on a handy button in EiffelStudio, these
+strings will be extracted and placed in a <a href="http://www.gnu.org/software/gettext/manual/html_node/gettext_9.html#SEC9" class="external text" title="http://www.gnu.org/software/gettext/manual/html_node/gettext_9.html#SEC9" rel="nofollow">.po file</a>.
+</p><p>If you are using the es-i18n branch, this command is in the
+"Tools" menu ("Generate .po"). One click and it will prompt you for a
+location to write the .po file to. This is basically all there is to
+it.
+It is helpful to understand how it works (see the 'Misuse' section): it
+extracts the arguments of calls to the translation and plural_translation
+functions. Largely it will not behave satisfactorily if the string is
+made up of several parts glued together at run-time.
+</p><p>A .po file is a reasonably widespread format for storing
+strings to be translated. There are several tools to aid translation of
+these files, such as <a href="http://www.poedit.org/" class="external text" title="http://www.poedit.org/" rel="nofollow">poEdit</a> for Windows and <a href="http://kbabel.kde.org/" class="external text" title="http://kbabel.kde.org/" rel="nofollow">KBabel</a> or <a href="http://gtranslator.sourceforge.net/" class="external text" title="http://gtranslator.sourceforge.net/" rel="nofollow">gtranslator</a> for KDE and Gnome. 
+There are also many tools to convert .po files to other formats, such as the xml <a href="http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=xliff" class="external text" title="http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=xliff" rel="nofollow">xliff format</a>. 
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=15" title="Edit section: Datasources">edit</a>]</div><a name="Datasources"></a><h2>Datasources</h2>
+<p>The library has to load the translated strings from somewhere -
+sadly we can't do on the fly translation but if you can, please tell
+us!
+Instead we load the strings from a datasource. This is appropriately
+generic: it could be anything, from a database to a system that queries
+a server via RPC or SOAP, but currently we only have one
+implementation: files. And in fact, we only support one type of file:
+the .mo file format. The library can't guess the type of datasource you
+want to use, so you have to tell it when you create a LOCALE_MANAGER.
+This is done via an <i>uri</i>. Currently all uris are interpreted as
+directories where string catalog files may be found, and any .mo files
+in this directory will be used by the i18n library. This means that
+creating a LOCALE_MANAGER looks somewhat like this:
+</p>
+<pre class="eiffel"><span style="color: rgb(6, 0, 255); font-weight: bold;">create</span> my_locale_manager.<span style="color: rgb(0, 0, 96);">make</span><span style="color: rgb(255, 0, 0);">(</span><span style="color: rgb(0, 128, 160);">"/path/to/my/files"</span><span style="color: rgb(255, 0, 0);">)</span></pre>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/User_guide&amp;action=edit&amp;section=16" title="Edit section: Mo files">edit</a>]</div><a name="Mo_files"></a><h3>Mo files</h3>
+<p>The mo file format is defined by the GNU <a href="http://www.gnu.org/software/gettext/" class="external text" title="http://www.gnu.org/software/gettext/" rel="nofollow">gettext</a> library, a widely-used C library that allows localisation of text strings. We support UTF-8 encoded mo files.
+</p><p>How do you get these .mo files? Once your translator has
+finished translating a .po file, you can convert it into a .mo file by
+using the <i>msgfmt</i> tool, which is obtainable as part of the
+gettext package under unix and distributed with poEdit under Windows.
+The resulting mo file should be named with the locale identifier of the
+locale it is intended for (zh_CN.mo or de_CH.mo, for example) or the
+language identifier of the target language (zh or de, for example) and
+placed in the appropriate directory - this is to say, the one that you
+give to LOCALE_MANAGER as an uri.
+</p><p>The .mo file should then be seen and used by the i18n library.
+</p>
+</body></html>

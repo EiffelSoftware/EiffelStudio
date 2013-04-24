@@ -1,0 +1,10 @@
+Global TODO list for the i18n project:
+
+Medium/long-term:
+
+* Support for independant formatters
+* Support for multi-file translations
+* Some system similar to gettext domains?
+* OS X support
+
+

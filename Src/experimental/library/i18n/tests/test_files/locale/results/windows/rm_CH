@@ -1,0 +1,78 @@
+
+
+Test of locale: rm_CH
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  gli
+  ma
+  me
+  gie
+  ve
+  so
+  du
+    Full day names:
+  glindesdi
+  mardi
+  mesemna
+  gievgia
+  venderdi
+  sonda
+  dumengia
+    Abbreviated month names:
+  schan
+  favr
+  mars
+  avr
+  matg
+  zercl
+  fan
+  avust
+  sett
+  oct
+  nov
+  dec
+    Full month names:
+  schaner
+  favrer
+  mars
+  avrigl
+  matg
+  zercladur
+  fanadur
+  avust
+  settember
+  october
+  november
+  december
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: venderdi, 19 favrer 2009 11:45:30, day: venderdi
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'fr.'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'CHF'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: fr. 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: '''
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123'559.23

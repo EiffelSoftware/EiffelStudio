@@ -1,0 +1,51 @@
+Please read more from http://docs.eiffel.com/book/solutions/date-time-string-conversion.
+
+                      DATE / TIME to STRING Conversion
+
+----------------------------------------------------------------------------
+
+DATE / TIME to STRING format conversion codes
+
+Code 	Description
+dd 	day - numeric
+[0]dd 	day - numeric (padded with '0' to 2 figures)
+ddd 	day - text (3 letters e.g "MON", "TUE")
+yyyy 	year - numeric (4 figures)
+yy 	year - numeric (2 figures)
+mm 	month - numeric
+[0]mm 	month - numeric (padded with '0' to 2 figures)
+mmm 	month - text (3 letters e.g "DEC", "JAN")
+hh 	hour - numeric (24 hour clock scale by default)
+[0]hh 	hour - numeric (padded with '0' to 2 figures)
+hh12 	hour - numeric (12 hour clock scale)
+mi 	minute - numeric
+[0]mi 	minute - numeric (padded with '0' to 2 figures)
+ss 	seconds - numeric
+[0]ss 	seconds - numeric (padded with '0' to 2 figures)
+ff<n> 	fractional seconds - numeric (precise to <n> figures)
+am 	meridiem indicator. Includes "AM" for ante meridiem times (before noon) and "PM" for post meridiem times (after noon).
+':', '/', '-' and ',' 	separators e.g. "03/FEB/08"
+
+
+These are some examples of output with their associated format code:
+Code 				Output
+yy/mm/dd 			08/2/3
+mmm-[0]dd-yy 			FEB-03-08
+dd,mm,yyyy 			3,2,2008
+hh-mi-ss 			13-6-32
+hh12,mi,ss 			1,6,32
+hh12:[0]mi:[0]ss:ff2 am 	1:06:32.25 PM
+[0]hh:[0]mi:[0]ss.ff3 		13:06:32.248
+[0]mm/dd/yy hh12:mi:ss.ff3 	02/3/08 1:6:32.248 
+
+--|----------------------------------------------------------------
+--| EiffelTime: library of reusable components for ISE Eiffel.
+--| Copyright (c) 1984-2010, Eiffel Software and others.
+--| license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+--|
+--| Eiffel Software
+--| 5949 Hollister Ave., Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Website http://www.eiffel.com
+--| Customer support http://support.eiffel.com
+--|----------------------------------------------------------------

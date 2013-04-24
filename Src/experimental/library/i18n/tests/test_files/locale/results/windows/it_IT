@@ -1,0 +1,78 @@
+
+
+Test of locale: it_IT
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  lun
+  mar
+  mer
+  gio
+  ven
+  sab
+  dom
+    Full day names:
+  lunedì
+  martedì
+  mercoledì
+  giovedì
+  venerdì
+  sabato
+  domenica
+    Abbreviated month names:
+  gen
+  feb
+  mar
+  apr
+  mag
+  giu
+  lug
+  ago
+  set
+  ott
+  nov
+  dic
+    Full month names:
+  gennaio
+  febbraio
+  marzo
+  aprile
+  maggio
+  giugno
+  luglio
+  agosto
+  settembre
+  ottobre
+  novembre
+  dicembre
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: venerdì 19 febbraio 2009 11:45:30, day: venerdì
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'€'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'EUR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: € 1324539,23
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

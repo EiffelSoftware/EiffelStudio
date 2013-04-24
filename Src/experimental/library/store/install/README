@@ -1,0 +1,27 @@
+
+EiffelStore
+-----------
+
+Installation 
+
+1. Make sure the environment variables ISE_EIFFEL and ISE_PLATFORM are set.
+
+2. Configure your setup for the database
+
+3. Install the C-libraries:
+
+	Start your databases kernels if needed (most of the C-libraries are based
+	on DBMS libraries, but some of them use a precompiler which needs to access
+	the database kernel).
+
+	Go in the directory specific to the handle you are using and perform the
+	following actions. For instance, for the ODBC handle:
+
+	* Windows:
+		cd %ISE_EIFFEL%\library\store\dbms\rdbms\odbc\Clib
+		finish_freezing -library
+
+	* Unix:
+		cd $ISE_EIFFEL/library/store/dbms/rdbms/odbc/Clib
+		finish_freezing -library
+

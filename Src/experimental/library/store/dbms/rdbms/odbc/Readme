@@ -1,0 +1,2 @@
+The ODBC class is the database specification file. An instance of 
+this class is used as generic parameter in EiffelStore.

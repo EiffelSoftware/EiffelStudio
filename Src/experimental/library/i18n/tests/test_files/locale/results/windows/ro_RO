@@ -1,0 +1,78 @@
+
+
+Test of locale: ro_RO
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  L
+  Ma
+  Mi
+  J
+  V
+  S
+  D
+    Full day names:
+  luni
+  marţi
+  miercuri
+  joi
+  vineri
+  sâmbătă
+  duminică
+    Abbreviated month names:
+  ian.
+  feb.
+  mar.
+  apr.
+  mai.
+  iun.
+  iul.
+  aug.
+  sep.
+  oct.
+  nov.
+  dec.
+    Full month names:
+  ianuarie
+  februarie
+  martie
+  aprilie
+  mai
+  iunie
+  iulie
+  august
+  septembrie
+  octombrie
+  noiembrie
+  decembrie
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 februarie 2009 11:45:30, day: vineri
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'lei'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'RON'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 lei
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

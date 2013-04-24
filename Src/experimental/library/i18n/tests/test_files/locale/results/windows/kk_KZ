@@ -1,0 +1,78 @@
+
+
+Test of locale: kk_KZ
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Дс
+  Сс
+  Ср
+  Бс
+  Жм
+  Сн
+  Жк
+    Full day names:
+  Дүйсенбі
+  Сейсенбі
+  Сәрсенбі
+  Бейсенбі
+  Жұма
+  Сенбі
+  Жексенбі
+    Abbreviated month names:
+  Қаң
+  Ақп
+  Нау
+  Сәу
+  Мам
+  Мау
+  Шіл
+  Там
+  Қыр
+  Қаз
+  Қар
+  Жел
+    Full month names:
+  қаңтар
+  ақпан
+  наурыз
+  сәуір
+  мамыр
+  маусым
+  шілде
+  тамыз
+  қыркүйек
+  қазан
+  қараша
+  желтоқсан
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 ақпан 2009 ж. 11:45:30, day: Жұма
+
+CURRENCY INFO TEST
+    cur dec sep: '-'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'Т'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'KZT'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: Т 1324539-23
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

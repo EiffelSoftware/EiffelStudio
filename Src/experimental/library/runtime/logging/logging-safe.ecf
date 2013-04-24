@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="logging" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCE" library_target="logging">
+	<target name="logging">
+		<description>Logging Cluster - Provide 1 interface to various logging mechanisms
+      		Copyright (c) 2010, ITPassion Ltd, Eiffel Software and others
+			Eiffel Forum License v2</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		</option>
+		<external_include location="$(ISE_LIBRARY)/library/runtime/logging/Clib"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<cluster name="logging" location=".\" recursive="true">
+			<option namespace="Logging">
+			</option>
+		</cluster>
+	</target>
+</system>

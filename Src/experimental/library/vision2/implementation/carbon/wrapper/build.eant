@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<project name="carbon" default="help">
+
+  <description>
+    description: "ewg carbon wrapper"
+  </description>
+
+  <inherit>
+    <parent location="${EWG}/misc/ewg_library.eant">
+      <redefine target="init_ewg"/>
+    </parent>
+  </inherit>
+
+  <!-- Implementation -->
+
+  <target name="init_ewg">
+    <set name="system_dir" value="${ISE_LIBRARY_CARBON}/library/vision2/implementation/carbon/wrapper"/>
+    <set name="ewg.library_name" value="carbon"/>
+    <set name="ewg.short_header_name" value="Carbon/Carbon.h"/>
+    <set name="ewg.full_header_name" value="/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Headers/Carbon.h"/>
+    <set name="ewg.use_config_file" value="True"/>
+    <geant target="carbon_init"/>
+  </target>
+
+  <target name="carbon_init">
+    <set name="ewg.c_compile.options" value="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4"/>
+  </target>
+
+</project>

@@ -1,0 +1,28 @@
+INCLUDE_PATH = -I. -Id:\eiffel43\bench\spec\$(ISE_PLATFORM)\include -Id:\Eiffel43\library\GIF\Clib\gd_lib
+CC = cl
+CPP = cl
+CFLAGS = -Ox -MT -YX -nologo $(INCLUDE_PATH)
+MAKE = nmake
+MKDEP =   --
+MV = copy
+RANLIB = echo
+RM = del
+RMDIR = rd
+SHAREDLINK = link
+MY_OBJECTS = gif_library.obj 
+ALL_OBJECTS = gif_library.c
+.SUFFIXES:.cpp
+
+all: gif_library.lib
+.c.obj::
+	$(CC) $(CFLAGS) -c $<
+
+gif_library.lib: $(MY_OBJECTS) 
+	lib /OUT:gif_library.lib $(MY_OBJECTS)
+	
+clean: local_clean
+clobber: local_clobber
+
+local_clean::
+	$(RM) core *.obj
+

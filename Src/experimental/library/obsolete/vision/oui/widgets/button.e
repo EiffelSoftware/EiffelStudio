@@ -1,0 +1,191 @@
+note
+
+	description: "General button"
+	legal: "See notice at end of class.";
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class
+
+	BUTTON
+
+inherit
+
+	FONTABLE
+		rename
+			implementation as font_implementation
+		end;
+
+	PRIMITIVE
+		redefine
+			implementation, is_fontable
+		end
+
+feature -- Access
+
+	text: STRING
+			-- Text of current button
+		require
+			exists: not destroyed
+		do
+			Result:= implementation.text
+		end;
+
+feature -- Status setting
+
+	allow_recompute_size
+			-- Allow current button to recompute its size according to
+			-- changes on its text.
+		require
+			exists: not destroyed
+		do
+			implementation.allow_recompute_size
+		end;
+
+	forbid_recompute_size
+			-- Forbid current button to recompute its size according to
+			-- changes on its text.
+		require
+			exists: not destroyed
+		do
+			implementation.forbid_recompute_size
+		end;
+
+	set_center_alignment
+			-- Set text alignment of current label to center
+		require
+			exists: not destroyed
+		do
+			implementation.set_center_alignment
+		end;
+
+	set_left_alignment
+			-- Set text alignment of current label to left.
+		require
+			exists: not destroyed
+		do
+			implementation.set_left_alignment
+		end;
+
+	set_text (a_text: STRING)
+			-- Set current button text to `a_text'.
+		require
+			exists: not destroyed;
+			not_text_void: a_text /= Void
+		do
+			implementation.set_text (a_text)
+		ensure
+			text_set: equal (without_ampersands (text), without_ampersands (a_text))
+			-- The comparison has to be done without
+			-- ampersands, because X version will change
+			-- the position of ampersand to the first
+			-- occurrence of the letter. (For ex. "Save 
+			-- &as" becomes "S&ave as"
+		end
+
+feature -- Element change
+
+	add_activate_action (a_command: COMMAND; argument: ANY)
+			-- Add `a_command' to the list of action to be executed when current
+			-- arrow button is activated.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed;
+			valid_command: a_command /= Void
+		do
+			implementation.add_activate_action (a_command, argument)
+		end;
+
+	add_arm_action (a_command: COMMAND; argument: ANY)
+			-- Add `a_command' to the list of action to be executed when current
+			-- arrow button is armed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed;
+			valid_command: a_command /= Void
+		do
+			implementation.add_arm_action (a_command, argument)
+		end;
+
+	add_release_action (a_command: COMMAND; argument: ANY)
+			-- Add `a_command' to the list of action to be executed when current
+			-- arrow button is released.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed;
+			valid_command: a_command /= Void
+		do
+			implementation.add_release_action (a_command, argument)
+		end;
+
+feature -- Removal
+
+	remove_activate_action (a_command: COMMAND; argument: ANY)
+			-- Remove `a_command' with `argument' from the list of action
+			-- to be executed when current arrow button is activated.
+		require
+			exists: not destroyed;
+			valid_command: a_command /= Void
+		do
+			implementation.remove_activate_action (a_command, argument)
+		end;
+
+	remove_arm_action (a_command: COMMAND; argument: ANY)
+			-- Remove `a_command' with `argument' from the list of action
+			-- to be executed when current arrow button is armed.
+		require
+			exists: not destroyed;
+			valid_command: a_command /= Void
+		do
+			implementation.remove_arm_action (a_command, argument)
+		end;
+
+	remove_release_action (a_command: COMMAND; argument: ANY)
+			-- Remove `a_command' with `argument' from the list of action
+			-- to be executed when current arrow button is released.
+		require
+			exists: not destroyed;
+			valid_command: a_command /= Void
+		do
+			implementation.remove_release_action (a_command, argument)
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
+
+	is_fontable: BOOLEAN = true;
+			-- Is current widget an heir of FONTABLE ?
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
+
+	implementation: BUTTON_I;
+			-- Implementation of button
+
+feature {NONE} -- Implementation
+
+	without_ampersands (a_text: STRING): STRING
+			-- Returns a string which is a_text without ampersands
+		do
+			Result := a_text.twin
+			Result.prune_all('&')
+		end
+
+note
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+end -- class BUTTON
+

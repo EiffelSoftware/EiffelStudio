@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="editor" uuid="7521917C-F584-4F7F-AF8B-DF0F91BFA290" library_target="editor">
+	<target name="editor">
+		<description>Editor library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/eiffel$</exclude>
+			<exclude>/tests$</exclude>
+			<exclude>/text_formatter\.e$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option full_class_checking="false" cat_call_detection="false" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex-safe.ecf" readonly="true"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg-safe.ecf" readonly="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml-safe.ecf" readonly="true">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</library>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="true"/>
+		<cluster name="document" location="document\" recursive="true">
+			<option namespace="Editor.Document">
+			</option>
+		</cluster>
+		<cluster name="editor" location=".\">
+			<option namespace="Editor">
+			</option>
+		</cluster>
+		<cluster name="managers" location="managers\" recursive="true">
+			<option namespace="Editor.Managers">
+			</option>
+		</cluster>
+		<cluster name="text_window" location="text_window\" recursive="true">
+			<option namespace="Editor.TextWindow">
+			</option>
+			<file_rule>
+				<exclude>^/text/lexer/syntax_definitions</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="editor_dotnet" extends="editor">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

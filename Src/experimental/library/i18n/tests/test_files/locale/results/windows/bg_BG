@@ -1,0 +1,78 @@
+
+
+Test of locale: bg_BG
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  пон
+  вт
+  ср
+  четв
+  пет
+  съб
+  нед
+    Full day names:
+  понеделник
+  вторник
+  сряда
+  четвъртък
+  петък
+  събота
+  неделя
+    Abbreviated month names:
+  ян
+  февр
+  март
+  апр
+  май
+  юни
+  юли
+  авг
+  септ
+  окт
+  ноември
+  дек
+    Full month names:
+  януари
+  февруари
+  март
+  април
+  май
+  юни
+  юли
+  август
+  септември
+  октомври
+  ноември
+  декември
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 февруари 2009 г. 11:45:30 ч., day: петък
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'лв.'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'BGN'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 лв.
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

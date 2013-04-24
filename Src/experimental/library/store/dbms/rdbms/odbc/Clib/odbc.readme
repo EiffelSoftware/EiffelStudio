@@ -1,0 +1,358 @@
+                  Characteristics of EiffelStore on ODBC
+                  ======================================
+
+     
+    1. Version
+    The current EiffelStore on ODBC is developped on ODBC 3.0, and the
+examples are tested on the drivers of SDK2.1 with 32 bits in the
+environment of Window NT.
+
+    2. Data Source
+    In ODBC, you can use different Data Sources supported by the corresponding 
+Drivers. So, EiffelStore on ODBC provides feature "set_data_source" in class 
+DATABASE_APPL [ODBC] so that users can tell EiffelStore on ODBC which data source will be 
+used. Users of EiffelStore on ODBC have to set the data source before connect 
+to database, otherwise, there are errors.
+
+
+    3. Connection to Data Source
+    Although ODBC supports multi-connection to different data sources at the
+same time, EiffelStore on ODBC only support single-connection to one data
+source at a time in order to keep the interface compatible with EiffelStore on 
+other RDBMS.
+    In fact, if user wants to transfer data among different data sources, the 
+"container" mechanism of Eiffel can be used. For example, associate a container
+with a DB_SELECTION class, fetch the database records from a data source and 
+store them into the container by connecting to the "source" data source, then
+put the objects in the container to another data source by connecting to the 
+"destination" data source.
+
+
+    4. Identifier of SQL in EiffelStore on ODBC
+    Some DBMSes support identifiers containing blank(' '), but some don't.
+The principle of EiffelStore on ODBC is: if the underlying Driver for a Xbase
+support the feature, EiffelStore on ODBC will also support it without user's 
+other work if the identifier is set by a feature of a EiffelStore classes(
+EiffelStore on ODBC will, if necessary, automatically brace such identifier 
+with the  "identifier quoting string" of the underlying driver).
+    For example, if the underlying driver is for Access, which support such 
+feature, you can set the table name in DB_REPOSITORY or the procedure name 
+in DB_PROC with a string containing blanks, such as "Product List" and 
+"Salary of Employee".
+    But if a user wants to use such identifier in a SQL statement directly, 
+it's the responsibility of the user to brace it with the "identifier quoting 
+string", which is ` for Access Driver. So, if a user wants to execute a SQL 
+statement with DB_SELECTION to search all information in table "Product List" 
+by an Access driver, he/she should use the following SQL statement:
+    select * from `Product List`
+instead of: 
+    select * from Product List
+
+    Some DBMSes(most of Xbases) are not sensitive to the case of letter in 
+identifier, but some do. So, please pay attention to it when you write 
+application using EiffelStore on ODBC.
+ 
+
+    5. User Name and Password
+    Some XBases do not support the concept of "user" and associated "password".
+So, whether the user name and password set by feature "login" or 
+"login_and_connect" are useful is determined by the underlying Driver and 
+corresponding Data Base Management System(DBMS).
+
+
+    6. Stored Procedure
+    If the underlying DBMS and the corresponding driver of a data source 
+supports stored procedure, user of EiffelStore on ODBC can "call" stored 
+procedures, but can't create or drop stored procedures from class DB_REPOSITORY(_ODBC), 
+because at present, the drivers don't support such functions. If user tries to 
+perform such functions, EiffelStore on ODBC will just print out a simple message 
+and ignore the requests(don't generate errors).
+    Now, EiffelStore on ODBC only supports the stored procedures which does not 
+contain "OUTPUT" parameters or "RETURN" parameter; and we have only tested 
+stored procedure of EiffelStore on ODBC in the environment of Access[MicroSoft]. 
+
+
+    7. How EiffelStore on ODBC supports the Eiffel Data Types?
+    EiffelStore on ODBC supports the data types of Eiffel in the way represented
+by the following table:
+
+         Mapping Table of Data Types Among ODBC SQL, C and Eiffel
+         --------------------------------------------------------
+
+-------------------------------------------------------------------------
+ODBC SQL Data Types           |    C Data Types     | Eiffel Data Types
+------------------------------+---------------------+--------------------
+*CHAR, VARCHAR,               |       CHAR          |      STRING
+(with length great  than 2)   |                     |
++LONGVARCH,                   |                     |
+++SQL_BINARY, ++SQL_VARBINARY,|                     |
+++SQL_LONGVARBINARY           |                     |
+------------------------------+---------------------+--------------------
+*CHAR(1)                      |       CHAR          |      CHARACTER
+------------------------------+---------------------+--------------------
+*BIT                          |       CHAR          |      BOOLEAN
+------------------------------+---------------------+--------------------
+*BIGINT                       |       LONG          |      INTEGER
+TINYINT                       |       CHAR          |      INTEGER
+SMALLINT                      |       SHORT         |      INTEGER
+INTEGER                       |       INT           |      INTEGER
+------------------------------+---------------------+--------------------
+*REAL                         |       FLOAT         |      REAL
+------------------------------+---------------------+--------------------
+*FLOAT, DOUBLE PRECISION,     |       DOUBLE        |      DOUBLE
+DECIMAL, NUMERIC              |                     |
+------------------------------+---------------------|--------------------
+*TIMESTAMP                    |   TIMESTAMP_STRUCT  |    ABSOLUTE_DATE
+DATE                          |      DATE_STRUCT    |    ABSOLUTE_DATE
+TIME                          |      TIME_STRUCT    |    ABSOLUTE_DATE
+-------------------------------------------------------------------------
+
++    indicates that the ODBC SQL Data Type does not directly come from 
+     SQL_92.
+++   indicates that they come from BIT and BIT VARYING of SQL_92 
+     respectively. 
+*    indicates that the OOBC SQL Data Type is the one used when we map 
+     the data type of an Eiffel Class' field to the data type of an ODBC 
+     table's field.
+
+(1) When we map a record(tuple) of an ODBC database table to an Eiffel
+object, we'll map all data types in the ODBC SQL Data Types of the table
+to the corresponding Eiffel data type listed in the table.
+    For example, from the ODBC table created by the following SQL statement:
+         CREATE TABLE person (
+            name             CHAR(40),
+            birthday         DATE,
+            address          VARCHAR(60),
+            salary           REAL,
+            real_estate      FLOAT,
+            retired          BIT,
+            spouse           CHAR(40),
+            children_number  INTEGER, 
+            experience       CHAR(200)
+        )
+EiffelStore on ODBC will usually generate the following Eiffel class:
+        class PERSON
+        feature
+            name             STRING
+            birthday         ABSOLUTE_DATE
+            address          STRING
+            salary           REAL
+            real_estate      DOUBLE
+            retired          BOOLEAN
+            spouse           STRING
+            children_number  INTEGER
+            experience       STRING
+        end -- class PERSON
+
+    Some XBases, eg. Dbase, Fox(Pro), their only numberal 
+data type is NUMBERIC, so their drivers convert all ODBC numberal data
+types(TINYINT, SMALLINT, INTEGER, BIGINT, REAL, FLOAT, DECIMAL, NUMBERIC)
+into NUMBERIC, which is mapped into Eiffel data type DOUBLE by EiffelStore
+on ODBC. 
+    Some XBases, eg Dbase, Fox(Pro), support a shorter length of field
+name(eg. 10) than Eiffel, their drivers will cut the field names to the max 
+length supported by them. 
+    So, if we use the above SQL statement to create a table in a Dbase or 
+Fox(Pro) data source and then ask EiffelStore to generate a Eiffel 
+class from the table, we'll get: 
+        class PERSON
+        feature
+            name             STRING
+            birthday         ABSOLUTE_DATE
+            address          STRING
+            salary           DOUBLE
+            real_estat       DOUBLE
+            retired          BOOLEAN
+            spouse           STRING
+            children_n       DOUBLE
+            experience       STRING
+        end -- class PERSON
+
+(2)  When we map an Eiffel object to a record(tuple) of an ODBC database 
+table, we'll map all data type listed in the Eiffel Data Type column to 
+the data type leaded by "*" in ODBC SQL Data Types column.
+    For example, from the above Eiffel class, EiffelStore on ODBC will 
+usually create an table which is equivalent to the one generated by the 
+following SQL statement:
+         CREATE TABLE person (
+            name             CHAR(_length),
+            birthday         TIMESTAMP,
+            address          CHAR(_length),
+            salary           REAL,
+            real_estate      FLOAT, 
+            retired          TEXT,              
+            spouse           CHAR(_length),
+            children_number  INT, 
+            experience       CHAR(_length),
+        )
+where _length is determined by the corresponding Eiffel STRING's count,
+capacity and max string length we defined in system(254 at present, because
+the max length of CHAR, VARCHAR is 254, and most of the XBases don't support
+LONG VARCHAR).
+    Whether we can generate the same Eiffel class as the one in (1) 
+from the above ODBC table is determined if the underlying XBase has some 
+special limitations(eg, the ones discussed in (1)).
+
+(3) EiffelStore on ODBC use BIT to represent Eiffel's BOOLEAN, and interprets
+the values from database in the following way:
+    if the BIT's value is 0, then the Eiffel BOOLEAN's value is false; 
+otherwise, the Eiffel BOOLEAN's value is true.
+
+(4) User of EiffelStore on ODBC should pay attention to the following fact:
+the max lengthes of table name supported by XBases(eg, 8 for Dbase and Fox)
+are usually not the same as the max length of class name of Eiffel.
+    For example, if you created a table according to Eiffel class "customers",
+what you get is a table with name "customer", where the ending "s" is cut
+off. So, in this case, either SQL statement "select * from customer" or 
+"select * from customers" will get the same result. But in some ODBC 
+statement, "customer" and "customers" are distinguished, for example,
+if you use SQLTables to get information about the table, you will success if
+you use "customer" but fail(get nothing) if you use "customers".
+ 
+
+    8. Execution Mode of SQL statement in EiffelStore on ODBC
+    Although just like other RDBMS, ODBC provides two execution modes 
+for SQL statements: EXECUTE IMMEDIATE and EXECUTE DYNAMIC(which can be 
+divided into PREPARE and EXECUTE, PREPARE and DESCRIBE furtherly), and 
+EXECUTE DYNAMIC is more efficient than EXECUTE IMMEDIATE for some SQL 
+statement(because the late one interprets the SQL statement and makes 
+execution plan for it every time the same SQL statement is performed), but 
+EiffelStore has not provided any mechanism to let users to tell EiffelStore 
+to repeatly perform a SQL statement executed before, users give EiffelStore 
+a database request just by giving a SQL statement, so EiffelStore can't 
+reuse the SQL statement's execution plan prepared before. Based on the 
+reason, EiffelStore on ODBC only use EXECUTE IMMEDIATE mode in class 
+DATABASE_CHANGE [ODBC] to perform non-select SQL statements. 
+
+
+    9. About Tailing Blanks of a String
+    EiffelStore on ODBC will cut all tailing BLANKs from a string. For
+example, if you insert a string value "I am a  student...  " into EiffelStore
+on ODBC, and then retrieve it from EiffelStore on ODBC, you will get
+"I am a  student...". Because almost all Xbases stores any CHAR string by adding 
+tail blanks to the width of the field. For example, if a field is CHAR(20), and a 
+user tries to insert value 'Good Morning!' into the field, What  
+inserted in database is 'Good Morning!       '. So, when we retrieve a string 
+from database with trailing blanks, we can't know if the trailing 
+blanks are inserted by user or appended by Xbases.
+
+
+    10. Default Values for NULL Data Base Field
+    EiffelStore on ODBC assigns a default value to Eiffel object if
+the corresponding data base field's value is NULL(if the corresponding ODBC
+driver supports NULL value). The following table describes the default values:
+   Eiffel Data Type       Default Value if Database Field's Value is NULL
+   ----------------       -----------------------------------------------
+   INTEGER                    0
+   REAL                       0.0
+   DOUBLE                     0.0
+   BOOLEAN                    false
+   STRING                     ""(empty string)
+   CHARACTER                  ' '(space)
+   ABSOLUTE_DATE              1/1/1991 0:0:0(day/month/year h:m:s)
+
+   In Database which supports NULL value, the result of any expression which 
+contains a NULL value as one of its operands is still NULL. So, please pay 
+attention to this fact.
+   For example, if an INTEGER Eiffel object gets value 0 from a data base
+field f1, but when you try to use the following SQL statement to increate
+f1:
+  update db_book set f1 = f1 + 100
+(assume f1 is a field of database table db_book)
+sometimes you will find that you still get 0 if you get the INTEGER Eiffel
+object's value from the database field f1 again. If this occurs, you should
+be aware that the value of the corresponding database field is NULL.
+
+
+    11. The Extension of ODBC to SQL
+    ODBC extended SQL in some way. Please refer to "Microsoft ODBC 3.0 Programming 
+Reference" for more detail.
+    What a user of EiffelStore on ODBC should pay special attention is: 
+In the following cases, user should use ESCAPE clause:
+(1). Date and Time Literals
+   Eg., For the above database table, we should use the following statement to
+insert a record
+insert into person(name, birthday, address, salary)
+            values('Test', {d '1966-10-10'}, 'Santa Barbara', 4000)
+instead of
+insert into person(name, birthday, address, salary)
+            values('Test', '1966-10-10', 'Santa Barbara', 4000)
+(2). Outer Joins
+(3). Scalar Functions
+   (i) Numberic Functions: abs(*), cosin(*), ...
+   (ii) String Functions: concat, substring, ...
+   (iii) Time and Date Functions: curdate(), ...
+   (iV) System Functions: user(), ...
+   (V) Conversion Function: convert(XX,XX)
+(4). Stored Procedure Invocation
+
+
+    12. The Problems of Current ODBC Drivers for Various XBases.
+    At present, not all drivers for various XBases support the same set 
+of SQL statements. The following table listed some problems of different
+drivers(the result can be verified from ODBC TEST32, an application program
+of ODBC provided by Microsoft):
+-----------------------------------------------------------------------
+Driver \ Some SQL    |   INSERT   |   UPDATE   |   DELETE   |  STORED
+ Name   \ Statements |            |            |            | PROCEDURE
+---------------------+------------+------------+------------+----------
+sdk21-Access32       |     S      |     S      |     S      |    NP
+---------------------+------------+------------+------------+----------
+sdk21-Csv32          |     S      |     E      |     E      |
+---------------------+------------+------------+------------+----------
+sdk21-Dbase32        |     S      |     S      |     I      |
+---------------------+------------+------------+------------+----------
+sdk21-Excel32        |     U      |     U      |     U      |
+---------------------+------------+------------+------------+----------
+sdk21-Fox32          |     S      |     S      |     I      |
+---------------------+------------+------------+------------+----------
+sdk21-Paradox32      |     H      |     U      |     U      |
+---------------------+------------+------------+------------+----------
+sdk21-Txt32          |     S      |     E      |     E      |
+-----------------------------------------------------------------------
+    S: successfully support
+    E: explicitly do not support
+    I: implicitly do not support(i.e., it can successfully perform the 
+       corresponding SQL statement, but there is not effect)
+    H: successfully only for the first corresponding SQL statement, but
+       fail for the next one
+    U: unknown(because the corresponding data source provided with ODBC by
+       Microsoft is read-only database)
+    NP: successful only for the stored procedures without parameters(please
+    refer to item 3 above)
+
+    
+    13. How to Access Database Catalog in EieeflStore on ODBC
+    ODBC does not provide Database Catalog Tables for us to access directly.
+So you can't use SQL statements to get catalog information in ODBC.
+In your EiffelStore program, you can use the following statements
+    SQLTables(table_name)
+    SQLTables()
+    SQLColumns(table_name)
+    SQLProcedures(proc_name)
+    SQLProcedures()
+to:
+    Get the information of the table indicated by "table_name" in the database
+    Get the information of all tables in the database
+    Get the information of all columns of the table indicated by "table_name"
+    Get the information of the stored procedure indicated by "proc_name"
+    Get the information of all stored procedures in the database
+One of the examples for nesting is based on catalog, you can refer to it.
+In the example "esql", you can type in the above commands to access data
+base catalog. 
+
+   
+    14. Preparation of Using EiffelStore on ODBC
+    Before using EiffelStore on ODBC, you should properly install the ODBC 
+Drivers and ODBC data sources which will be used by your application. 
+Please refer to SDK ODBC installation manual for detail.
+    In the ACE files of the examples of EiffelStore on ODBC, we use library
+"ODBC32.lib", please make sure that the path names specified in these
+files for the library are correct in your own PC environment.
+
+
+    15. How to use EiffelStore on ODBC in your application program? 
+    Just in the same way as EiffelStore on other DBMS except not forgetting 
+to set data source before connect to data base(you can refer to the on-line 
+examples).
+

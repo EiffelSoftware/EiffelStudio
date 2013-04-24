@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+
+	
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Eiffel internationalization library - Developer guide</title>
+		
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/skins/monobook/main.css?7"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" href="css/commonPrint.css"><!--[if lt IE 5.5000]><style type="text/css">@import "/skins/monobook/IE50Fixes.css";</style><![endif]--><!--[if IE 5.5000]><style type="text/css">@import "/skins/monobook/IE55Fixes.css";</style><![endif]--><!--[if IE 6]><style type="text/css">@import "/skins/monobook/IE60Fixes.css";</style><![endif]--><!--[if IE 7]><style type="text/css">@import "/skins/monobook/IE70Fixes.css?1";</style><![endif]--><!--[if lt IE 7]><script type="text/javascript" src="/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		
+		
+		
+		
+		
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/skins';</script>
+		<script type="text/javascript" src="css/wikibits.js"><!-- wikibits js --></script>
+	
+		<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style><!-- Head Scripts --></head><body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Eiffel internationalization library - Developer guide</h1>
+		<div id="bodyContent">
+			
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<table id="toc" class="toc" summary="Contents"><tbody><tr><td><div id="toctitle"><h2>Contents</h2> <span class="toctoggle">[<a href="javascript:toggleToc()" class="internal" id="togglelink">hide</a>]</span></div>
+<ul>
+<li class="toclevel-1"><a href="#General_architecture_of_the_i18n_library"><span class="tocnumber">1</span> <span class="toctext">General architecture of the i18n library</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Where_does_the_information_come_from.3F"><span class="tocnumber">1.1</span> <span class="toctext">Where does the information come from?</span></a></li>
+<li class="toclevel-2"><a href="#Interface"><span class="tocnumber">1.2</span> <span class="toctext">Interface</span></a></li>
+<li class="toclevel-2"><a href="#Formatting_information"><span class="tocnumber">1.3</span> <span class="toctext">Formatting information</span></a></li>
+<li class="toclevel-2"><a href="#Translations"><span class="tocnumber">1.4</span> <span class="toctext">Translations</span></a>
+<ul>
+<li class="toclevel-3"><a href="#File_data_source"><span class="tocnumber">1.4.1</span> <span class="toctext">File data source</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Possible_expansion_points"><span class="tocnumber">2</span> <span class="toctext">Possible expansion points</span></a>
+<ul>
+<li class="toclevel-2"><a href="#New_file_formats"><span class="tocnumber">2.1</span> <span class="toctext">New file formats</span></a></li>
+<li class="toclevel-2"><a href="#Data_sources"><span class="tocnumber">2.2</span> <span class="toctext">Data sources</span></a>
+<ul>
+<li class="toclevel-3"><a href="#New_data_sources"><span class="tocnumber">2.2.1</span> <span class="toctext">New data sources</span></a></li>
+<li class="toclevel-3"><a href="#FILE_MANAGER"><span class="tocnumber">2.2.2</span> <span class="toctext">FILE_MANAGER</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2"><a href="#New_dictionaries"><span class="tocnumber">2.3</span> <span class="toctext">New dictionaries</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></tbody></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=1" title="Edit section: General architecture of the i18n library">edit</a>]</div><a name="General_architecture_of_the_i18n_library"></a><h1>General architecture of the i18n library</h1>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=2" title="Edit section: Where does the information come from?">edit</a>]</div><a name="Where_does_the_information_come_from.3F"></a><h2>Where does the information come from?</h2>
+<p>The i18n library must obviously knows how to format things and finds
+translations for many different locales. Translations are
+application-dependant and thus we only have to deal with them on an
+infrastructural basis - the actual information is supplied by the user.
+However formatting information is not. Instead, we can fetch this from
+the operating system.
+</p><p>This leads us to divide the library into three main parts: 
+</p>
+<ol><li>A part which organises and provides translations from a user-supplied data source.
+</li><li>A part which retrieves formatting information from the host operating system
+</li><li>A part which provides an interface to the information
+</li></ol>
+<div class="thumb tright"><div style="width: 495px;">
+
+
+<img src="img/I18n_overview.png" alt="General structure of the i18n library" height="308" width="493"> 
+General structure of the i18n library</div></div></div>
+
+
+
+
+
+<p>An overview of the structure is provided to the right: the two
+central classes, LOCALE and LOCALE_MANAGER are the main interface
+classes. The rightmost class, HOST_LOCALE, is responsible for fetching
+the formatting information, and the leftmost class, DATASOURCE_MANAGER,
+must deal with finding the translation of strings. </p><p>In addition there are several classes that are used to
+encapsulate information, not shown on diagrams to avoid them resembling
+a web drawn by an overcaffeinated spider.
+</p><p>Note: the 'I18N' prefix of class names is omitted in the text for clarity.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=3" title="Edit section: Interface">edit</a>]</div><a name="Interface"></a><h2>Interface</h2>
+<p>The main two classes of the interface are, as has been previously
+stated, LOCALE and LOCALE_MANAGER.
+LOCALE represents all operations associated with a given locale:
+formatting and translation. This is the class that clients use to
+actually localise things, but all it does is provide wrapper functions:
+the translations are retrieved from a DICTIONARY (more on this later)
+provided to it on creation, and the formatting is done by specialised
+formatting classes (DATE_FORMATTER, VALUE_FORMATTER, STRING_FORMATTER
+and CURRENCY_FORMATTER) which are also operated with information passed
+in a LOCALE_INFO object to the LOCALE on creation.
+</p><p>Obviously it should not be the user's job to do all this
+initialisation. This is why there must be a class that is in charge of
+presenting the user with a choice of locales and giving the user a
+correctly initialised LOCALE for the locale ultimately chosen.
+This class is LOCALE_MANAGER. A LOCALE_MANAGER uses an implementation
+of HOST_LOCALE and a DATASOURCE_MANAGER to find out for which locales
+formatting information and/or translations are available and can
+provide the client with a list of supported locales.
+A locale is identified by a LOCALE_ID object; this is not only used
+internally but also by the client when requesting a LOCALE object.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=4" title="Edit section: Formatting information">edit</a>]</div><a name="Formatting_information"></a><h2>Formatting information</h2>
+
+<div class="thumb tright"><div style="width: 472px;">
+
+<img src="img/I18n_locale_information.png" alt="Section of the i18n library that retrieves locale information" height="174" width="470"></a>  
+Section of the i18n library that retrieves locale information</div></div></div>
+
+
+<p>Most major operating systems have an API that provides localisation
+information. Often they also allow clients to format dates, times and
+values directly. We decided that instead of directly using the
+formatting functions of the operating system, we would write our own
+formatters in Eiffel. Retrieving the required information, however,
+still has to be done in C. Depending on the operating system, this is a
+more-or-less simple process.
+</p><p>The formatting information for a given locale is stored in
+objects of class LOCALE_INFO. Each LOCALE_INFO is initialized on
+creation with (what we think are sensible) default values, as not all
+platforms provide all the same information.
+</p><p>LOCALE_MANAGER is able to retrieve the LOCALE_ID of the default
+locale, filled LOCALE_INFOS and a list of locales with formatting
+information from a HOST_LOCALE_IMP.
+</p><p>The deferred class HOST_LOCALE* specifies the interface for
+operating system-specific implementations, and the right effective
+class, HOST_LOCALE_IMP, is included in the system through a conditional
+statement in the .ecf platform. This class normally makes use of C
+externals to actually access the formatting information, although the
+.NET implementation is an exception. The main jobs that it has are:
+assembling a list of supported locales, creating, filling and returning
+a LOCALE_INFO for a given locale, and identifying the locale set as
+default in the operating system preferences.
+Currently there are HOST_LOCALE_IMP classes for .NET, Windows, and what
+should be more or less POSIX - only, for now, tested under linux.
+</p><p><br>
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=5" title="Edit section: Translations">edit</a>]</div><a name="Translations"></a><h2>Translations</h2>
+
+
+<div class="thumb tright">
+<div style="width: 502px;">
+
+<img src="img/500px-I18n_translation.png" alt="Section of the i18n library that retrieves translations"  height="213" width="500"></a>  
+
+
+Section of the i18n library that retrieves translations</div></div></div>
+
+
+
+<p><br>The part of the library that provides translated strings is
+slightly more complicated. The strings come from a so-called data
+source (or datasource, depending on preference). The uri given to a
+LOCALE_MANAGER on creation is examined by a URI_PARSER, which decides
+what sort of data source this uri represents. It then creates an
+appropriate DATASOURCE_MANAGER* with this uri and returns it to the
+LOCALE_MANAGER.
+</p><p>From this point onwards the DATASOURCE_MANAGER* is responsible
+for the main operations involving translations: providing a list of
+locales and languages for which a translation is present, and providing
+the translation in form of a DICTIONARY* for a given locale.
+A DICTIONARY* is nothing more then a collection of translated strings,
+with functions to access them. There are several effective descendants,
+as the best way to store the strings may depend on several factors
+(singular/plural ration, data source itself, etc.). The LOCALE_MANAGER
+gets the relevant DICTIONARY* from the DATASOURCE_MANAGER* and passes
+it to the LOCALE on creation. The LOCALE can then retrieve
+translations.
+</p><p>If there are translations for both a locale itself and it's
+language, the DATASOURCE_MANAGER* will of course return a DICTIONARY*
+containing the translations specifically for that locale. If there is
+no translation for the locale but one exists for it's language, that
+will be used.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=6" title="Edit section: File data source">edit</a>]</div><a name="File_data_source"></a><h3>File data source </h3>
+<p>The file datasource works in the following way:
+The FILE_MANAGER, an effective DATASOURCE_MANAGER*, has a
+chain-of-responsibility built from FILE_HANDLER*s.
+There are two operations provided by this chain of responsibility:
+determining the scope of a file (i.e which language or locale it
+corresponds to) and providing a DICTIONARY* containing the strings from
+this file. By using this chain and a list of files in the current
+directory, the FILE_MANAGER can list available locales, list available
+languages and provide DICTIONARY* objects. The precise type of
+DICTIONARY* provided is dependant on the type of file.
+</p><p>Each FILE_HANDLER* works by using a FILE* object, which provides the actual parsing functionality for a given file type.
+Currently the only supported file type is the .mo file format, so this is the only example I may provide.
+</p><p><br>
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=7" title="Edit section: Possible expansion points">edit</a>]</div><a name="Possible_expansion_points"></a><h1>Possible expansion points</h1>
+<p>We hope our library is reasonably extensible. In particular, we foresee the following areas of expansion:
+</p><p><br>
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=8" title="Edit section: New file formats">edit</a>]</div><a name="New_file_formats"></a><h2>New file formats</h2>
+<p>Currently we only support the .po/.mo file format. This is because
+we have limited time and resources and we also feel that the .mo file
+format is the best current choice, as it it provides plural form
+handling.
+However, there are other file formats. Trolltech has their own format,
+there is a Solaris message catalog format, presumably some Windows
+formats, and OS X also has a native format.
+</p><p>In order to add support for one of these formats - or your own!
+- it's necessary to write both FILE* and FILE_HANDLER* implementations.
+Then the new effective descendant of FILE_HANDLER* must be added to the
+chain-of-responsibility (called <i>chain</i>) in the <i>make</i> feature of FILE_MANAGER.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=9" title="Edit section: Data sources">edit</a>]</div><a name="Data_sources"></a><h2>Data sources</h2>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=10" title="Edit section: New data sources">edit</a>]</div><a name="New_data_sources"></a><h3>New data sources</h3>
+<p>Currently we only have one implementation of DATASOURCE_MANAGER*.
+But maybe a file is not suited to everything.
+A possible data source, however far-fetched, might be a database: all
+strings could be fetched via queries.
+Or maybe all strings could be fetched via SOAP or RPC from a remote
+machine, to ensure up-to-date translations.
+More realistically one could certainly imagine a data source that
+checks the locally-stored translations and fetches the latest version
+remotely if there has been changes.
+The easiest way to do such things is of course to write a new effective
+descendant of DATASTRUCTURE*.
+This may or may not require a new implementation of DICTIONARY* - for a
+system that fetches strings on.demand rather then loading them all at
+initialisation, a new DICTIONARY* would certainly be advisable!
+</p><p>To make the library know about a new DATASOURCE_MANAGER*,
+URI_PARSER must be told how to recognise an uri that requires it. It is
+advisable to choose a nice prefix.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=11" title="Edit section: FILE_MANAGER">edit</a>]</div><a name="FILE_MANAGER"></a><h3>FILE_MANAGER</h3>
+<p>Currently FILE_MANAGER has the simplistic policy of only examining
+files in the current directory and trusting their name. It is very well
+possible that there is a project policy of placing each locale in it's
+own directory (KDE does this) or of having a translation spanned over
+multiple .mo files for one locale.
+</p><p>A good place to implement such a project-dependant policy is a descendant of FILE_MANAGER, or an entirely new data source.
+</p>
+<div class="editsection" style="float: right; margin-left: 5px;">[<a href="http://eiffelsoftware.origo.ethz.ch/index.php?title=Internationalization/Developer_guide&amp;action=edit&amp;section=12" title="Edit section: New dictionaries">edit</a>]</div><a name="New_dictionaries"></a><h2>New dictionaries</h2>
+<p>New dictionaries might be required by new data sources. Or maybe the
+translations used by your project can be stored in a more efficient way
+then the general case - one could imagine a dictionary that takes
+advantage of singular/plural distribution, or that is keyed to the way
+translations are stored in a particular file format.
+To add a new dictionary, it's sufficient to write an implementation of
+DICTIONARY* and to make sure it's used.
+</p>
+</body></html>

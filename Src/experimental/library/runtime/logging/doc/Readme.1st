@@ -1,0 +1,41 @@
+Eiffel Logging Cluster
+======================
+
+This document describes the contents of the Logging Cluster
+- doc		Contains documentation about the implementation
+- examples	Contains examples that one can use to check implementation
+		specific concepts
+- library	Contains the library and the implementation of the functionality
+
+Documents Directory
+-------------------
+
+- Readme.1st		This file
+- Arch_and_Impl.pdf	The Architecture and Implementation documentation,
+			in PDF format. Originals may be kept in the SVN tree.
+
+Examples Directory
+------------------
+
+- eventlog	A logging example that emits messages to the Windows Event Log
+- filelog	A logging example that emits messages to a user provided
+		log file
+- multilog	A logging example that emits messages to a number of different
+		destinations
+- multiplatform	A logging example that works 1-to-1 on multiple platforms
+- syslog	A logging example that emits message the the Unix syslog daemon
+
+Library Directory
+-----------------
+
+- log_appl.e	Functionality for logging messages and configuring the logging
+		cluster
+- log_writer.e	Abstract notion of a log writer that can be inherited in order
+		to provide your own logging mechanism
+- logging.ecf	The Eiffel Compile File that holds the definitions of this
+		library
+- writers/*.e	Specific log writers
+
+The Eiffel Logging Cluster is provided under the Eiffel Forum License v2.
+
+(C) 2010 by ITPassion Ltd, Eiffel Software and others

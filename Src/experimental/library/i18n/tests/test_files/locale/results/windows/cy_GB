@@ -1,0 +1,78 @@
+
+
+Test of locale: cy_GB
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Llun
+  Maw
+  Mer
+  Iau
+  Gwe
+  Sad
+  Sul
+    Full day names:
+  Dydd Llun
+  Dydd Mawrth
+  Dydd Mercher
+  Dydd Iau
+  Dydd Gwener
+  Dydd Sadwrn
+  Dydd Sul
+    Abbreviated month names:
+  Ion
+  Chwe
+  Maw
+  Ebr
+  Mai
+  Meh
+  Gor
+  Aws
+  Med
+  Hyd
+  Tach
+  Rhag
+    Full month names:
+  Ionawr
+  Chwefror
+  Mawrth
+  Ebrill
+  Mai
+  Mehefin
+  Gorffennaf
+  Awst
+  Medi
+  Hydref
+  Tachwedd
+  Rhagfyr
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 Chwefror 2009 11:45:30, day: Dydd Gwener
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'£'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'GBP'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: £ 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

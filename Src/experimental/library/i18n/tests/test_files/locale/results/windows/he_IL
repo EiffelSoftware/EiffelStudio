@@ -1,0 +1,78 @@
+
+
+Test of locale: he_IL
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  יום ב
+  יום ג
+  יום ד
+  יום ה
+  יום ו
+  שבת
+  יום א
+    Full day names:
+  יום שני
+  יום שלישי
+  יום רביעי
+  יום חמישי
+  יום שישי
+  שבת
+  יום ראשון
+    Abbreviated month names:
+  ינו
+  פבר
+  מרץ
+  אפר
+  מאי
+  יונ
+  יול
+  אוג
+  ספט
+  אוק
+  נוב
+  דצמ
+    Full month names:
+  ינואר
+  פברואר
+  מרץ
+  אפריל
+  מאי
+  יוני
+  יולי
+  אוגוסט
+  ספטמבר
+  אוקטובר
+  נובמבר
+  דצמבר
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: יום שישי 19 פברואר 2009 11:45:30, day: יום שישי
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'₪'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'ILS'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ₪ 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

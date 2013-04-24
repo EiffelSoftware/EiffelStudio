@@ -1,0 +1,78 @@
+
+
+Test of locale: es_HN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  lun
+  mar
+  mié
+  jue
+  vie
+  sáb
+  dom
+    Full day names:
+  lunes
+  martes
+  miércoles
+  jueves
+  viernes
+  sábado
+  domingo
+    Abbreviated month names:
+  ene
+  feb
+  mar
+  abr
+  may
+  jun
+  jul
+  ago
+  sep
+  oct
+  nov
+  dic
+    Full month names:
+  enero
+  febrero
+  marzo
+  abril
+  mayo
+  junio
+  julio
+  agosto
+  septiembre
+  octubre
+  noviembre
+  diciembre
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: viernes, 19 de febrero de 2009 11:45:30 a.m., day: viernes
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 03
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'L.'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'HNL'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: L. 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

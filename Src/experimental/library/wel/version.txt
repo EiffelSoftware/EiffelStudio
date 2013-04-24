@@ -1,0 +1,5 @@
+Windows Eiffel Library, Version 2.5, January 1, 2000.
+
+Copyright (c) Interactive Software Engineering Inc., 1995-2000
+Use subject to restrictions of customer license.
+Duplication prohibited except under terms of customer license.

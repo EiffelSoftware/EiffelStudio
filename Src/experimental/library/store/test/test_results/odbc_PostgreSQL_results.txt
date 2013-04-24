@@ -1,0 +1,304 @@
+# AutoTest results for test_store (07/23/2012 11:17)
+TEST_DATA_CORRECTNESS.test_quotes_in_string: pass
+TEST_DATA_CORRECTNESS.test_trailing_blanks: FAIL (DB Error occurredODBC ERROR: <4>, Inter code: <7>
+ Native Err#=7 , SQLSTATE=42601, Error_Info=';
+Error while executing the query'
+)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EXCEPTIONS.raise)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        DB Error occurredODBC ERROR: <4>, Inter code: <7>
+		 Native Err#=7 , SQLSTATE=42601, Error_Info=':
+		<00000000029591E8>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000029591E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000029591E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<0000000002959168>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      raise @3                                            
+		<0000000002952848>  (From EXCEPTIONS)      Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @5                                           
+		<0000000002952848>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_DATA_CORRECTNESS
+		                    assert @2              
+		<0000000002952798>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_DATA_CORRECTNESS
+		                    trailing_blanks_load_data @8
+		<0000000002952798>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_DATA_CORRECTNESS
+		                    test_trailing_blanks @6
+		<0000000002952798>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_ERROR_MESSAGE.test_error_message: unresolved (Evaluator Died)
+	The evaluator process which was executing test TEST_ERROR_MESSAGE.test_error_message terminated unexpectedly with exit code -1073741819. Any output from the
+	evaluator is printed below.
+	
+	No Output Available
+TEST_EXTENDED_SELECT.test_extended_select: pass
+TEST_GUID_TYPE.test_uuid_type: FAIL (Number of results is not expected)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EXCEPTIONS.raise)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Number of results is not expected:
+		<00000000029009E8>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000029009E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000029009E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<0000000002900968>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      raise @3                                            
+		<00000000028FB248>  (From EXCEPTIONS)      Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @5                                           
+		<00000000028FB248>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_GUID_TYPE      assert @2                                           
+		<00000000028FB1A8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_GUID_TYPE      uuid_type_make_selection @6
+		<00000000028FB1A8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_GUID_TYPE      test_uuid_type @6                                   
+		<00000000028FB1A8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_LENGTH_OF_COLUMN_NAME.test: unresolved (is_ok)
+	on_prepare: ok
+	test routine: exceptional (Precondition violation in TEST_LENGTH_OF_COLUMN_NAME.load_data)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		DB_STORE            put @3                 is_ok:                       
+		<00000000029251D8>                         Precondition violated.        Fail
+		-------------------------------------------------------------------------------
+		TEST_LENGTH_OF_COLUMN_NAME
+		                    load_data @11          
+		<0000000002912768>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_LENGTH_OF_COLUMN_NAME
+		                    test @5                
+		<0000000002912768>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
+	The evaluator process which was executing test TEST_MULTIPLE_THREAD.test_multiple_thread terminated unexpectedly with exit code 1. Any output from the
+	evaluator is printed below.
+	
+	
+
+	test_store: system execution failed.
+
+	Following is the set of recorded exceptions:
+
+	
+
+	******************************** Thread exception *****************************
+
+	In thread           Child thread           0x264 (thread id)
+
+	*******************************************************************************
+
+	-------------------------------------------------------------------------------
+
+	Class / Object      Routine                Nature of exception           Effect
+
+	-------------------------------------------------------------------------------
+
+	DB_SELECTION        load_result @2         is_ok:                       
+
+	<00000000028A4968>                         Precondition violated.        Fail
+
+	-------------------------------------------------------------------------------
+
+	DATA_OPERATION_THREAD
+
+	                    make_selection @3      
+
+	<00000000027F6DB8>                         Routine failure.              Fail
+
+	-------------------------------------------------------------------------------
+
+	DATA_OPERATION_THREAD
+
+	                    execute @16            
+
+	<00000000027F6DB8>                         Routine failure.              Fail
+
+	-------------------------------------------------------------------------------
+
+	DATA_OPERATION_THREAD
+
+	                    thr_main @3            
+
+	<00000000027F6DB8>  (From THREAD)          Routine failure.              Rescue
+
+	-------------------------------------------------------------------------------
+
+	EQA_EVALUATOR       root's creation                                     
+
+	<00000000027E0588>                         Routine failure.              Exit
+
+	-------------------------------------------------------------------------------
+
+TEST_NESTED_TRANSACTION.test: pass
+TEST_NUMERIC_TYPES.test_numeric_types: FAIL (Result is not expected)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EXCEPTIONS.raise)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Result is not expected:
+		<00000000029288B8>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000029288B8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000029288B8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<0000000002941798>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      raise @3                                            
+		<000000000292ADF8>  (From EXCEPTIONS)      Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @5                                           
+		<000000000292ADF8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  assert @2                                           
+		<000000000292AD58>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  numeric_types_make_selection @16
+		<000000000292AD58>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  test_numeric_types @6                               
+		<000000000292AD58>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_NUMERIC_TYPES.test_numeric_types_use_decimal_mode: FAIL (Result is not expected)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EXCEPTIONS.raise)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Result is not expected:
+		<00000000028F4238>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000028F4238>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000028F4238>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<00000000028F41B8>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      raise @3                                            
+		<00000000028D2858>  (From EXCEPTIONS)      Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @5                                           
+		<00000000028D2858>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  assert @2                                           
+		<00000000028D27B8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  numeric_types_with_decimal_make_selection @17
+		<00000000028D27B8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  test_numeric_types_use_decimal_mode @8
+		<00000000028D27B8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_PROCEDURE.test_procedure: FAIL (Procedure does not exist.)
+	output:
+		
+		===== Try to Create Stored Procedure through EiffelStore on ODBC =====
+		Sorry, the PostgreSQL driver does not support such function at present.
+		======================================================================
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EXCEPTIONS.raise)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Procedure does not exist.:
+		<00000000029288B8>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000029288B8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000029288B8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<000000000299E208>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      raise @3                                            
+		<0000000002982848>  (From EXCEPTIONS)      Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @5                                           
+		<0000000002982848>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_PROCEDURE      assert @2                                           
+		<00000000029827A8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_PROCEDURE      basic_select_make_selection @25
+		<00000000029827A8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_PROCEDURE      test_procedure @6                                   
+		<00000000029827A8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_SELECT.test_basic_select: pass
+TEST_TRANSACTION.test: pass

@@ -1,0 +1,78 @@
+
+
+Test of locale: POSIX
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Sun
+  Mon
+  Tue
+  Wed
+  Thu
+  Fri
+  Sat
+    Full day names:
+  Sunday
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+    Abbreviated month names:
+  Jan
+  Feb
+  Mar
+  Apr
+  May
+  Jun
+  Jul
+  Aug
+  Sep
+  Oct
+  Nov
+  Dec
+    Full month names:
+  January
+  February
+  March
+  April
+  May
+  June
+  July
+  August
+  September
+  October
+  November
+  December
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Thu Feb 19 11:45:30 2009, day: Thursday
+
+CURRENCY INFO TEST
+    cur dec sep: ''
+    cur gr.sep: ''
+    Grouping: 0
+    cur nr list sep: ';'
+    cur num after dec: '127'
+    currency symbol:''
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '127'
+    INT currency symbol:''
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted:  1324539
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ''
+    value nr list sep.: ';'
+    Grouping: 0
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123559.23

@@ -1,0 +1,78 @@
+
+
+Test of locale: smj_SE
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  mán
+  dis
+  gas
+  duor
+  bier
+  láv
+  ájl
+    Full day names:
+  mánnodahka
+  dijstahka
+  gasskavahkko
+  duorastahka
+  bierjjedahka
+  lávvodahka
+  ájllek
+    Abbreviated month names:
+  ådåj
+  guov
+  snju
+  vuor
+  moar
+  bieh
+  snji
+  bårg
+  ragá
+  gålg
+  basá
+  javl
+    Full month names:
+  ådåjakmánno
+  guovvamánno
+  sjnjuktjamánno
+  vuoratjismánno
+  moarmesmánno
+  biehtsemánno
+  sjnjilltjamánno
+  bårggemánno
+  ragátmánno
+  gålgådismánno
+  basádismánno
+  javllamánno
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: guovvamánno 19. b. 2009 11:45:30, day: bierjjedahka
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'kr'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'SEK'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 kr
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

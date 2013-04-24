@@ -1,0 +1,78 @@
+
+
+Test of locale: ig_NG
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Aje
+  Ise
+  Ojo
+  Ojo
+  Eti
+  Aba
+  Aik
+    Full day names:
+  Aje
+  Isegun
+  Ojo'ru
+  Ojo'bo
+  Eti
+  Abameta
+  Aiku
+    Abbreviated month names:
+  mbu.
+  ibu.
+  ato.
+  ano.
+  ise
+  isi
+  asa
+  asa.
+  ito.
+  iri.
+  n'of.
+  n'ib.
+    Full month names:
+  Onwa mbu
+  Onwa ibua
+  Onwa ato
+  Onwa ano
+  Onwa ise
+  Onwa isi
+  Onwa asa
+  Onwa asato
+  Onwa itolu
+  Onwa iri
+  Onwa iri n'ofu
+  Onwa iri n'ibua
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Eti, Onwa ibua 19, 2009 11:45:30 ututu, day: Eti
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'N'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'NIO'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: N 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

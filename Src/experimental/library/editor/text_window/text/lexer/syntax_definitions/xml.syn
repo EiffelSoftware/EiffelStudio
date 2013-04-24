@@ -1,0 +1,17 @@
+CatchAll $P
+Character (('\''$P'\'') | ('\'''\\'['t'|'n'|'r'|'f']'\'') | ('\''+('0'..'7')'\''))
+Comment ("<!--" -> "-->")
+Integer $Z
+Operator ('+' | '?' | '*' | '&' | '<' | '>' | '=')
+Real $R
+Space ' '
+String ("\"" -> "\"")
+Tab '\t'
+Newline ('\n')
+Text ~('a'..'z') *(~('a'..'z') | '_' | ('0'..'9'))
+
+-- Keywords
+xml
+version
+encoding
+standalone

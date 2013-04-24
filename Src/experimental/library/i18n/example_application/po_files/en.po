@@ -1,0 +1,121 @@
+msgid ""
+msgstr ""
+"Language-Team: YOUR TEAM HERE\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Last-Translator: Leo Fellmann <leof@student.ethz.ch>\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2006-10-22 19:20+0100\n"
+
+msgid ""
+"Members of the team:\n"
+"   - Leo Fellmann\n"
+"   - Etienne Reichenbach\n"
+"   - Bernd Schoeller\n"
+"   - Martino Trosi\n"
+"   - Hong Zhang"
+msgstr ""
+"Members of the team:\n"
+"   - Leo Fellmann\n"
+"   - Etienne Reichenbach\n"
+"   - Bernd Schoeller\n"
+"   - Martino Trosi\n"
+"   - Hong Zhang"
+
+msgid "Application"
+msgstr "Application"
+
+msgid ""
+"Demo application made by i18n Team ETHZ\n"
+"\n"
+"For bugs, suggestions or other, please write a mail to: es-i18n@origo.ethz.ch\n"
+"\n"
+msgstr ""
+"Demo application made by i18n Team ETHZ\n"
+"\n"
+"For bugs, suggestions or other, please write a mail to: es-i18n@origo.ethz.ch\n"
+"\n"
+
+msgid "french"
+msgstr "french"
+
+msgid "Full date-time: $1"
+msgstr "Full date-time: $1"
+
+msgid "Update date and time"
+msgstr "Update date and time"
+
+msgid "A hovercraft costs you: $1"
+msgstr "A hovercraft costs you: $1"
+
+msgid "Buy a hovercraft"
+msgstr "Buy a hovercraft"
+
+msgid "english"
+msgstr "english"
+
+msgid "Your have $1 on your bank conto"
+msgstr "You have $1 in your bank account"
+
+msgid "chinese"
+msgstr "chinese"
+
+msgid "The mortage rate is $1%"
+msgstr "The mortage rate is $1%"
+
+msgid "File"
+msgstr "File"
+
+msgid "greek"
+msgstr "greek"
+
+msgid "Select language"
+msgstr "Select language"
+
+msgid "arabic"
+msgstr "arabic"
+
+msgid "hebrew"
+msgstr "hebrew"
+
+msgid "Time: $1"
+msgstr "Time: $1"
+
+msgid "italian"
+msgstr "italian"
+
+msgid "sell hovercraft"
+msgstr "Sell a hovercraft"
+
+msgid "Date: $1"
+msgstr "Date: $1"
+
+msgid "japanese"
+msgstr "japanese"
+
+msgid "russian"
+msgstr "russian"
+
+msgid "About Dialog"
+msgstr "About Dialog"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "My hovercraft is full of eels"
+msgid_plural "My $1 hovercraft are full of eels"
+msgstr[0] "My hovercraft is full of eels"
+msgstr[1] "My $1 hovercraft are full of eels"
+
+msgid "About"
+msgstr "About"
+
+msgid "You can sell a hovercraft for $1"
+msgstr "You can sell a hovercraft for $1"
+
+msgid "This string is written in the application's sourcecode"
+msgstr "English translation :-)"
+

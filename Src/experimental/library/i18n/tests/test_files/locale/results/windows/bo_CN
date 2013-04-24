@@ -1,0 +1,78 @@
+
+
+Test of locale: bo_CN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  ཟླ་བ།
+  མིག་དམར།
+  ལྷག་པ།
+  ཕུར་བུ།
+  པ་སངས།
+  སྤེན་པ།
+  ཉི་མ།
+    Full day names:
+  གཟའ་ཟླ་བ།
+  གཟའ་མིག་དམར།
+  གཟའ་ལྷག་པ།
+  གཟའ་ཕུར་བུ།
+  གཟའ་པ་སངས།
+  གཟའ་སྤེན་པ།
+  གཟའ་ཉི་མ།
+    Abbreviated month names:
+  ཟླ་ ༡
+  ཟླ་ ༢
+  ཟླ་ ༣
+  ཟླ་ ༤
+  ཟླ་ ༥
+  ཟླ་ ༦
+  ཟླ་ ༧
+  ཟླ་ ༨
+  ཟླ་ ༩
+  ཟླ་ ༡༠
+  ཟླ་ ༡༡
+  ཟླ་ ༡༢
+    Full month names:
+  སྤྱི་ཟླ་དང་པོ།
+  སྤྱི་ཟླ་གཉིས་པ།
+  སྤྱི་ཟླ་གསུམ་པ།
+  སྤྱི་ཟླ་བཞི་པ།
+  སྤྱི་ཟླ་ལྔ་པ།
+  སྤྱི་ཟླ་དྲུག་པ།
+  སྤྱི་ཟླ་བདུན་པ།
+  སྤྱི་ཟླ་བརྒྱད་པ།
+  སྤྱི་ཟླ་དགུ་པ།
+  སྤྱི་ཟླ་བཅུ་པོ།
+  སྤྱི་ཟླ་བཅུ་གཅིག་པ།
+  སྤྱི་ཟླ་བཅུ་གཉིས་པ།
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 2009ལོའི་ཟླ 2ཚེས 19 11:45:30, day: གཟའ་པ་སངས།
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 03
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'¥'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'CNY'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ¥ 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

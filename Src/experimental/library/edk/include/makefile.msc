@@ -1,0 +1,30 @@
+# edk.lib - Makefile for Microsoft C
+
+CC = cl
+#ISE_EIFFEL = "C:\Program Files\Eiffel Software\Eiffel68"
+#ISE_PLATFORM = win64
+
+# Finalized Version
+CFLAGS = -nologo -c -Ox -W4 -I..\include -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -DNONAMELESSUNION -D_UNICODE -DUNICODE
+
+# Debug Version
+#CFLAGS = -c -Zi -nologo -Od -W4 -I..\include -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -DNONAMELESSUNION -D_UNICODE -DUNICODE
+
+all:: edk.lib
+	del *.obj
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = 	edk.obj 
+
+edk.obj: edk.c
+
+edk.lib: $(OBJ)
+	if exist $@ del $@
+	lib /NOLOGO /OUT:$@ $(OBJ)
+	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\$(ISE_PLATFORM) mkdir ..\spec\msc\$(ISE_PLATFORM)
+	if not exist ..\spec\msc\$(ISE_PLATFORM)\lib mkdir ..\spec\msc\$(ISE_PLATFORM)\lib
+	copy $@ ..\spec\msc\$(ISE_PLATFORM)\lib

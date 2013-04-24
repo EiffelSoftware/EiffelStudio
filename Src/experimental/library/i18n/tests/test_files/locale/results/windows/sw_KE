@@ -1,0 +1,78 @@
+
+
+Test of locale: sw_KE
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Jumat.
+  Juman.
+  Jumat.
+  Alh.
+  Iju.
+  Jumam.
+  Jumap.
+    Full day names:
+  Jumatatu
+  Jumanne
+  Jumatano
+  Alhamisi
+  Ijumaa
+  Jumamosi
+  Jumapili
+    Abbreviated month names:
+  Jan
+  Feb
+  Mac
+  Apr
+  Mei
+  Jun
+  Jul
+  Ago
+  Sep
+  Okt
+  Nov
+  Dec
+    Full month names:
+  Januari
+  Februari
+  Machi
+  Aprili
+  Mei
+  Juni
+  Julai
+  Agosti
+  Septemba
+  Oktoba
+  Novemba
+  Decemba
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Ijumaa, Februari 19, 2009 11:45:30 am, day: Ijumaa
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'S'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'KES'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: S 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

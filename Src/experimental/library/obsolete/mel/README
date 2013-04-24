@@ -1,0 +1,13 @@
+Before using the vision libraries you must compile
+the C libraries in the Clib directory.
+There is a Makefile.SH in each subdirectory.
+
+You will need to make sure that the parent directory
+for X11/includes is defined or included in the make file.
+
+Then place the archive produced in each subdirectory in the
+directory $EIFFEL4/library/mel/spec/$PLATFORM/lib.
+
+This will need to be done on for each platform you will
+be running mel on.
+

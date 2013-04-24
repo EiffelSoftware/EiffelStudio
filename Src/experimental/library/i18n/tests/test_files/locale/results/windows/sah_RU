@@ -1,0 +1,78 @@
+
+
+Test of locale: sah_RU
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Бн
+  Оп
+  Ср
+  Чп
+  Бт
+  Сб
+  Бс
+    Full day names:
+  бэнидиэнньик
+  оптуорунньук
+  сэрэдэ
+  чэппиэр
+  бээтинсэ
+  субуота
+  баскыһыанньа
+    Abbreviated month names:
+  тхс
+  олн
+  кул
+  мст
+  ыам
+  бэс
+  отй
+  атр
+  блҕ
+  алт
+  стн
+  ахс
+    Full month names:
+  Тохсунньу
+  Олунньу
+  Кулун тутар
+  Муус устар
+  Ыам ыйа
+  Бэс ыйа
+  От ыйа
+  Атырдьах ыйа
+  Балаҕан ыйа
+  Алтынньы
+  Сэтинньи
+  Ахсынньы
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Олунньу 19 2009 с. 11:45:30, day: бээтинсэ
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'с.'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'RUB'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 с.
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

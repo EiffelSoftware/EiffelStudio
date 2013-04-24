@@ -1,0 +1,24 @@
+INCLUDE_PATH = -I. -I$(EIFFEL4)/bench/spec/linux-glibc/include -I$(EIFFEL4)/library/gif/Clib/c -I$(EIFFEL4)/library/gif/Clib/gd_lib
+CC = cc
+CPP = cc
+CFLAGS = -O $(INCLUDE_PATH)
+MAKE = nmake
+MKDEP =   --
+MV = copy
+RANLIB = echo
+RM = del
+RMDIR = rd
+SHAREDLINK = link
+MY_OBJECTS = gif_library.o
+.SUFFIXES:.cpp
+
+all: $(MY_OBJECTS)
+.c.obj::
+	$(CC) $(CFLAGS) -c $<
+
+clean: local_clean
+clobber: local_clobber
+
+local_clean::
+	$(RM) core *.o
+

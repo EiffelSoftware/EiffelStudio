@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project name="build_curl" default="help">
+
+	<description>
+		description: "cURL library compilation"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile">
+		<echo message="- Compile [cURL]" />
+		<geant target="compile" file="build.eant" dir="Clib" 
+			reuse_variables="true" />
+	</target>
+	
+	<target name="clean">
+		<echo message="- Clean [cURL]" />
+		<delete directory="spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" />
+	</target>
+
+	<target name="clobber" depend="clean" />
+	
+</project>

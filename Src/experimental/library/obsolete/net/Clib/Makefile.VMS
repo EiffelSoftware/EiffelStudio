@@ -1,0 +1,219 @@
+# Makefile generated for EIFFEL_SRC:[library.net.Clib]
+# by David_S using from Makefile.SH on 
+#   EIFFEL_SRC:[library.net.Clib]Makefile.vms
+
+
+TOP = /EIFFEL_SRC/library
+TOPDIR = EIFFEL_SRC:[LIBRARY
+CURRENT = net/Clib
+DIR = [.net.clib]
+
+
+########################################################################
+# Parameters set by Configure -- edit config.sh if changes are needed
+
+#AR = libr/create
+#CC = cc
+CTAGS = ctags
+JCFLAGS = $(CFLAGS) /jcflag
+LINT = lint
+MAKE = make
+MKDEP = /home/tomh/Eiffel3/C/mkdep $(DPFLAGS) --
+MV = move
+#RANLIB = dirl
+#RM = purge/log
+SED = /bin/sed
+
+########################################################################
+# Automatically generated parameters -- do not edit
+
+SOURCES =  $(LSRCS)
+OBJECTS = 
+NET_LIBS = net.olb MTnet.olb # libnet.so libmtnet.so
+
+########################################################################
+# Jmake rules for building libraries, programs, scripts, and data files
+# $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
+
+########################################################################
+# Force 'make depend' to be performed first -- do not edit
+
+.FORCE_DEPEND::
+
+all :: .FORCE_DEPEND
+
+########################################################################
+# Start of Jmakefile
+
+#DPFLAGS = /inc=$(TOP)/prefix=all/names=as_is
+#DPFLAGS = /incl=($(TOP),[-.run-time])/prefix=all
+#CINCLUDES = /incl=($(DECC_INCLUDES),EIFFEL_SRC:[C.run-time])
+#DPFLAGS = $(CINCLUDES)$(CDEFINES)
+#CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
+#CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include -I\$(EIFFEL_SRC)/C/run-time/include
+#CFLAGS = $optimize $ccflags $large -I$rt_include
+CINCLUDES = EIFFEL_SRC:[C.run-time.include]
+# define vms specific symbols for compiling, etc.
+include EIFFEL_SRC:[C]Makeinc.VMS
+
+SMODE = local.c network.c network_r.c storable.c
+
+LSRCS = $(SMODE)
+
+MT_OBJECTS = \
+	MTlocal.obj \
+	MTnetwork.obj \
+	MTnetwork_r.obj \
+	MThostname.obj \
+	MTsyncpoll.obj \
+	MTstorable.obj \
+
+OBJECTS = \
+	local.obj \
+	network.obj \
+	network_r.obj \
+	hostname.obj \
+	syncpoll.obj \
+	storable.obj \
+
+#LOBJ = $(OBJECTS)
+#$(LOBJ) : []netvmsdef.h # $(EXTRA_DEPENDENCIES)
+ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
+$(ALL_OBJECTS) : []netvmsdef.h $(EXTRA_DEPENDENCIES)
+
+all :: $(NET_LIBS) 
+
+# build local objects
+obj : $(ALL_OBJECTS)
+# build local objects, libraries
+lib : $(NET_LIBS)
+
+LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
+$(LISTINGS) : $(EXTRA_DEPENDENCIES)
+listings : $(LISTINGS)
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+net.olb :: $(OBJECTS)
+	libr/create/insert $@ $^
+	-purge/nolog *.*obj*
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+MTnet.olb :: $(MT_OBJECTS) 
+	libr/create/insert $@ $^
+	purge/nolog *.*obj*
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+
+# delivery library targets
+
+EIFLIB = ISE_EIFFEL\:[library.net.spec.$(ISE_PLATFORM).lib]
+eiflib : $(EIFLIB) $(EIFLIB)net.olb $(EIFLIB)MTnet.olb
+all :: eiflib
+
+$(EIFLIB) :
+	create/directory/version_limit=10 $(EIFLIB)
+
+$(EIFLIB)net.olb : []net.olb
+	$(COPY) $^ $(EIFLIB)
+
+$(EIFLIB)MTnet.olb : []MTnet.olb
+	$(COPY) $^ $(EIFLIB)
+
+clean :
+	$(RM) *.obj;*,*.dia;*,*.olb;*
+
+clobber : clean
+	$(RM) config.sh Makefile 
+
+#
+#
+
+local_realclean::
+#	$(RM) libidr.olb
+
+#libMel.olb : $(LOBJ)
+#	libr/create/insert $@ *.obj
+#	libr/create/insert $@ $^
+
+ifneq ($(CSSUF),)
+libidr.olb$(CSSUF): $(LOBJ$(CSSUF))
+	libr/create/insert $@ *.obj$(CSSUF)
+endif
+
+depend:: ../mkdep
+
+../mkdep:
+	@echo "You have to run Configure in $(TOP) first."; exit 1
+
+depend::
+	($(SED) '/^# DO NOT DELETE/q' Makefile && \
+	$(MKDEP) $(SOURCES) | \
+	$(SED) 's/: \.\//: /; /\/usr\/include/d' \
+	) > Makefile.new
+	cp Makefile Makefile.bak
+	cp Makefile.new Makefile
+	$(RM) Makefile.new
+
+lint:
+	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
+
+########################################################################
+# Common rules for all Makefiles -- do not edit
+
+emptyrule::
+
+clean: local_clean
+realclean: local_realclean
+clobber: local_clobber
+
+local_clean::
+#	$(RM) core *~ *.obj
+
+local_realclean:: local_clean
+
+local_clobber:: local_realclean
+	$(RM) Makefile config.sh
+
+Makefile.SH: Jmakefile
+	-@if test -f $(TOP)/.package; then \
+		if test -f Makefile.SH; then \
+			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+		fi; \
+		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	else touch $@; exit 0; fi
+
+Makefile: Makefile.SH
+	/bin/sh Makefile.SH
+
+tags::
+	$(CTAGS) -w *.[ch]
+	$(CTAGS) -xw *.[ch] > tags
+
+local_clobber::
+	$(RM) tags
+
+########################################################################
+# Empty rules for directories with no sub-directories -- do not edit
+
+install::
+	@echo "install in $(CURRENT) done."
+
+deinstall::
+	@echo "deinstall in $(CURRENT) done."
+
+install.man::
+	@echo "install.man in $(CURRENT) done."
+
+deinstall.man::
+	@echo "deinstall.man in $(CURRENT) done."
+
+Makefiles::
+
+Makefiles.SH::
+
+########################################################################
+# Dependencies generated by make depend
+# DO NOT DELETE THIS LINE -- make depend relies on it
+

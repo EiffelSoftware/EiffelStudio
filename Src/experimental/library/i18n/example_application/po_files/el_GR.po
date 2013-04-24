@@ -1,0 +1,128 @@
+msgid ""
+msgstr ""
+"Language-Team: YOUR TEAM HERE\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Last-Translator: YOUR NAME HERE\n"
+
+
+
+msgid ""
+"Members of the team:\n   - Leo Fellmann\n   - Etienne Reichenbach\n   - Bernd "
+"Schoeller\n   - Martino Trosi\n   - Hong Zhang"
+msgstr ""
+"Μέλη της ομάδας:\n   - Leo Fellmann\n   - Etienne Reichenbach\n   - Bernd "
+"Schoeller\n   - Martino Trosi\n   - Hong Zhang"
+
+msgid "Application"
+msgstr "Εφαρμογή"
+
+
+msgid ""
+"Demo application made by i18n Team ETHZ\n\nFor bugs, suggestions or other, ple"
+"ase write a mail to: es-i18n@origo.ethz.ch\n\n"
+msgstr ""
+"αίτηση επίδειξης που υποβάλλεται από i18n την ομάδα ETHZ\n\nγια"
+ "τα ζωύφια, προτάσεις ή άλλη, παρακαλώ γράφει ένα ταχυδρομείο σε: ES- i18n@origo.ethz.ch\n\n"
+
+msgid "arabic"
+msgstr "αραβικά [ar]"
+
+msgid "italian"
+msgstr "ιταλικά [it]"
+
+msgid "greek"
+msgstr "ελληνικά [gr]"
+
+msgid "hebrew"
+msgstr "εβραϊκά [he]"
+
+msgid "japanese"
+msgstr "ιαπωνικά [ja]"
+
+msgid "russian"
+msgstr "ρωσικά [ru]"
+
+msgid "chinese"
+msgstr "κινεζικά [zh_CN"
+
+msgid "english"
+msgstr "αγγλικά [en]"
+
+msgid "french"
+msgstr "γαλλικά [fr]"
+
+msgid "hungarian"
+msgstr "ουγγρικά [hu]"
+
+msgid "Unknown"
+msgstr "Αγνωστος"
+
+
+msgid "Full date-time: $1"
+msgstr "Πλήρης χρόνος ημερομηνίας: $1"
+
+
+msgid "Update date and time"
+msgstr "Ημερομηνία και χρόνος αναπροσαρμογών"
+
+
+msgid "A hovercraft costs you: $1"
+msgstr "Ένα hovercraft σας κοστίζει: $1"
+
+
+msgid "Buy a hovercraft"
+msgstr "Αγοράστε ένα hovercraft"
+
+msgid "Your have $1 on your bank conto"
+msgstr "Σας έχει $1 στον τραπεζικό λογαριασμό σας"
+
+
+msgid "The mortage rate is $1%"
+msgstr "Το ποσοστό υποθηκών είναι $1%"
+
+
+msgid "File"
+msgstr "αρχείο"
+
+
+msgid "Select language"
+msgstr "Επιλέξτε τη γλώσσα"
+
+
+msgid "Time: $1"
+msgstr "χρόνος: $1"
+
+msgid "sell hovercraft"
+msgstr "πωλήστε το hovercraft"
+
+
+msgid "Date: $1"
+msgstr "Ημερομηνία: $1"
+
+
+msgid "About Dialog"
+msgstr "Περίπου διάλογος"
+
+
+msgid "OK"
+msgstr "εντάξει"
+
+
+msgid "My hovercraft is full of eels"
+msgid_plural "My $1 hovercraft are full of eels"
+msgstr[0] "Το hovercraft μου είναι πλήρες των χελιών"
+msgstr[1] "Το hovercraft $1 μου είναι πλήρες των χελιών"
+
+
+msgid "About"
+msgstr "Περίπου"
+
+
+msgid "You can sell a hovercraft for $1"
+msgstr "Μπορείτε να πωλήσετε ένα hovercraft για $1"
+
+msgid "This string is written in the application's sourcecode"
+msgstr "Greek translation"
+

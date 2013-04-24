@@ -1,0 +1,322 @@
+#!/usr/bin/perl -w
+#===============================================================================
+# gen_event_sensitive
+#-------------------------------------------------------------------------------
+# This program translates an event type definition file into a collection
+# of eiffel classes. 
+# The definition file has one like per definition like this:
+# name: TYPE description of when event is triggered.
+#-------------------------------------------------------------------------------
+# Date: $Date$
+# Revision: $Revision$
+#===============================================================================
+
+$need_gtk_imp = "no";
+
+while (<>) {
+	# Grep for lines starting --|AS:
+	if ((/^class/) || (/^deferred class/)) {
+		($klass = <>) =~ s/[ 	\n]*//g;
+		$_ = $klass;
+		tr/[A-Z]/[a-z]/;
+		$klass_lower = $_;
+		open (IF_FILE, ">" . "${klass_lower}_action_sequences.e");
+		print IF_FILE <<EOT;
+indexing
+	description:
+		"Action sequences for $klass."
+	status: "Generated!"
+	keywords: "event, action, sequence"
+	date: "Generated!"
+	revision: "Generated!"
+
+deferred class
+	 ${klass}_ACTION_SEQUENCES
+
+inherit
+	ANY
+		undefine
+			default_create
+		end
+
+feature {NONE} -- Implementation
+
+	implementation: ${klass}_ACTION_SEQUENCES_I
+
+feature -- Event handling
+
+EOT
+		open (I_FILE, ">" . "../../implementation/implementation_interface/events/${klass_lower}_action_sequences_i.e");
+		print I_FILE <<EOT;
+indexing
+	description:
+		"Action sequences for ${klass}_I."
+	status: "Generated!"
+	keywords: "event, action, sequence"
+	date: "Generated!"
+	revision: "Generated!"
+
+deferred class
+	 ${klass}_ACTION_SEQUENCES_I
+
+EOT
+
+		open (W_IMP_FILE, ">" . "../../implementation/mswin/events/${klass_lower}_action_sequences_imp.e");
+		print W_IMP_FILE <<EOT;
+indexing
+	description:
+		"Action sequences for ${klass}_IMP."
+	status: "Generated!"
+	keywords: "event, action, sequence"
+	date: "Generated!"
+	revision: "Generated!"
+
+deferred class
+	 ${klass}_ACTION_SEQUENCES_IMP
+
+inherit
+	${klass}_ACTION_SEQUENCES_I
+
+feature -- Event handling
+
+EOT
+
+		open (G_IMP_FILE, ">" . "../../implementation/gtk/events/${klass_lower}_action_sequences_imp.e");
+		print G_IMP_FILE <<EOT;
+indexing
+	description:
+		"Action sequences for ${klass}_IMP."
+	status: "Generated!"
+	keywords: "event, action, sequence"
+	date: "Generated!"
+	revision: "Generated!"
+
+deferred class
+	 ${klass}_ACTION_SEQUENCES_IMP
+
+inherit
+	${klass}_ACTION_SEQUENCES_I
+
+	_PLACE_HOLDER_
+
+feature -- Event handling
+
+EOT
+	}
+	if (/--\|AS:.*/) {
+		chomp;
+		@fields = split (/:[ 	]*/,$_);
+		shift (@fields);
+		# Grab the name and the description.
+		$name = shift (@fields);
+		$type = shift (@fields);
+		$cmnt = shift (@fields);
+		$gtk_signal = shift (@fields);
+		if (! $gtk_signal) {
+			$gtk_signal = "none";
+		}
+		$gtk_signal_eif = $gtk_signal;
+		$gtk_signal_eif =~ tr/-/_/;
+		$gtk_translator = shift (@fields);
+		if (! $gtk_translator) {
+			$gtk_translator = "default_translate";
+		}
+		$gtk_widget = shift (@fields);
+		if (! $gtk_widget) {
+			$gtk_widget = "none";
+		}
+
+#===============================================================================
+# Dump the classtext.
+#===============================================================================
+print IF_FILE <<EOT;
+
+	${name}_actions: ${type} is
+			-- Actions to be performed ${cmnt}
+		do
+			Result := implementation.${name}_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+EOT
+
+#===============================================================================
+# End of classtext... Dump the _I class text.
+#===============================================================================
+print I_FILE <<EOT;
+
+feature -- Event handling
+
+	${name}_actions: ${type} is
+			-- Actions to be performed ${cmnt}
+		do
+			if ${name}_actions_internal = Void then
+				${name}_actions_internal :=
+					 create_${name}_actions
+			end
+			Result := ${name}_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_${name}_actions: ${type} is
+			-- Create a ${name} action sequence.
+		deferred
+		end
+
+	${name}_actions_internal: ${type}
+			-- Implementation of once per object `${name}_actions'.
+
+EOT
+#===============================================================================
+# End of _I classtext... Dump the _IMP class text.
+#===============================================================================
+
+
+if ("${gtk_signal}" ne "none") {
+
+	$need_gtk_imp = "yes";
+
+print G_IMP_FILE <<EOT;
+	create_${name}_actions: ${type} is
+			-- Create a ${name} action sequence.
+			-- Attach to GTK "${gtk_signal}" signal.
+		do
+			create Result
+EOT
+
+if ("${gtk_widget}" ne "none") {
+	print G_IMP_FILE <<EOT;
+			--real_connect_signal_to_actions (${gtk_widget}, Gtk_signal_${gtk_signal_eif}, Result, ${gtk_translator})
+			real_connect_signal_to_actions (${gtk_widget}, "${gtk_signal}", Result, ${gtk_translator})
+		end
+	
+	${gtk_widget}: POINTER is deferred end
+
+EOT
+} else {
+	print G_IMP_FILE <<EOT;
+			--connect_signal_to_actions (Gtk_signal_${gtk_signal_eif}, Result, ${gtk_translator})
+			connect_signal_to_actions ("${gtk_signal}", Result, ${gtk_translator})
+		end
+
+EOT
+}
+
+print G_IMP_FILE <<EOT;
+--	Gtk_signal_${gtk_signal_eif}: INTEGER is
+--		once
+--			Result := C.gtk_signal_name ("${gtk_signal}")
+--		end
+
+EOT
+
+} else {
+
+print G_IMP_FILE <<EOT;
+	create_${name}_actions: ${type} is
+			-- Create a ${name} action sequence.
+		do
+			create Result
+		end
+
+EOT
+
+}
+
+print W_IMP_FILE <<EOT;
+	create_${name}_actions: ${type} is
+			-- Create a ${name} action sequence.
+		do
+			create Result
+		end
+
+EOT
+
+#===============================================================================
+# End of _IMP classtext.
+#===============================================================================
+
+	}
+}
+print IF_FILE <<EOT;
+end
+EOT
+close(IF_FILE);
+print I_FILE <<EOT;
+end
+EOT
+close(I_FILE);
+print W_IMP_FILE <<EOT;
+end
+EOT
+close(W_IMP_FILE);
+print G_IMP_FILE <<EOT;
+end
+EOT
+close(G_IMP_FILE);
+
+	open (G_IMP_FILE, "<" . "../../implementation/gtk/events/${klass_lower}_action_sequences_imp.e");
+	open (G_IMP_TMP, ">" . "../../implementation/gtk/events/${klass_lower}_action_sequences_imp.e.tmp");
+	while (<G_IMP_FILE>) {
+		if (/_PLACE_HOLDER_/) {
+			if ($need_gtk_imp eq "yes") {
+				print G_IMP_TMP "EV_ANY_IMP undefine dispose, destroy end\n";
+			}
+		} else {
+			print G_IMP_TMP;
+		}
+	}
+	close(G_IMP_FILE);
+	close(G_IMP_TMP);
+	rename "../../implementation/gtk/events/${klass_lower}_action_sequences_imp.e.tmp",
+			"../../implementation/gtk/events/${klass_lower}_action_sequences_imp.e";
+
+#===============================================================================
+# CVS log
+#===============================================================================
+#
+# $Log$
+# Revision 1.2  2001/06/07 23:08:18  rogers
+# Merged DEVEL branch into Main trunc.
+#
+# Revision 1.1.2.11  2000/09/05 23:43:22  oconnor
+# oops
+#
+# Revision 1.1.2.10  2000/09/05 23:24:47  oconnor
+# commented out signals by id stuff pending EV_ANY_IMP support
+#
+# Revision 1.1.2.9  2000/09/05 22:53:25  oconnor
+# used ids, not strings to connect to GTK signals
+#
+# Revision 1.1.2.8  2000/08/30 16:10:25  oconnor
+# undefine destroy when inheriting EV_ANY_IMP
+#
+# Revision 1.1.2.7  2000/08/10 17:55:19  oconnor
+# fixed perl warning
+#
+# Revision 1.1.2.6  2000/08/10 17:42:58  oconnor
+# output cosmetics
+#
+# Revision 1.1.2.5  2000/08/09 20:58:45  oconnor
+# use ev_clone instead of clone as per instructions from manus
+#
+# Revision 1.1.2.4  2000/08/08 20:38:24  rogers
+# Added redefinition of clone to defunct clone, and an export to {NONE}
+# of this feature, so it is added correctly into any generated class texts.
+#
+# Revision 1.1.2.3  2000/07/31 18:37:16  king
+# Updated internal export clause
+#
+# Revision 1.1.2.2  2000/07/26 01:17:52  oconnor
+# cosmetics
+#
+# Revision 1.1.2.1  2000/07/23 21:15:49  oconnor
+# initial
+#
+#===============================================================================
+# End of CVS log
+#===============================================================================

@@ -1,0 +1,126 @@
+msgid ""
+msgstr ""
+"Language-Team: YOUR TEAM HERE\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Last-Translator: hong\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2006-10-22 00:12+0100\n"
+
+msgid ""
+"Members of the team:\n"
+"   - Leo Fellmann\n"
+"   - Etienne Reichenbach\n"
+"   - Bernd Schoeller\n"
+"   - Martino Trosi\n"
+"   - Hong Zhang"
+msgstr ""
+"项目参与：	\n"
+"	- Leo Fellmann\n"
+"	- Etienne Reichenbach\n"
+"	- Bernd Schoeller\n"
+"	- Martino Trosi\n"
+"	-张红（Hong Zhang)"
+
+msgid "Application"
+msgstr "应用程序"
+
+msgid ""
+"Demo application made by i18n Team ETHZ\n"
+"\n"
+"For bugs, suggestions or other, please write a mail to: es-i18n@origo.ethz.ch\n"
+"\n"
+msgstr ""
+"演示程序由苏黎世工学院i18n组制作，\n"
+"\n"
+"如果有任何建议及不妥之处，请发信至 es-i18n@origo.ethz.ch\n"
+"\n"
+
+msgid "french"
+msgstr "法语"
+
+msgid "Full date-time: $1"
+msgstr "时间日期全称: $1"
+
+msgid "Update date and time"
+msgstr "更新日期和时间"
+
+msgid "A hovercraft costs you: $1"
+msgstr "一艘气垫船价值是:  $1"
+
+msgid "Buy a hovercraft"
+msgstr "买一艘气垫船"
+
+msgid "english"
+msgstr "英语"
+
+msgid "Your have $1 on your bank conto"
+msgstr "你的账户里有 $1 "
+
+msgid "chinese"
+msgstr "汉语 "
+
+msgid "The mortage rate is $1%"
+msgstr "贷款率为: $1%"
+
+msgid "File"
+msgstr "文件"
+
+msgid "greek"
+msgstr "希腊语"
+
+msgid "Select language"
+msgstr "选择语言"
+
+msgid "arabic"
+msgstr "阿拉伯语"
+
+msgid "hebrew"
+msgstr "希伯莱语"
+
+msgid "Time: $1"
+msgstr "时间: $1"
+
+msgid "italian"
+msgstr "意大利语"
+
+msgid "sell hovercraft"
+msgstr "卖气垫船"
+
+msgid "Date: $1"
+msgstr "日期: $1"
+
+msgid "japanese"
+msgstr "日语"
+
+msgid "russian"
+msgstr "俄罗斯语"
+
+msgid "hungarian"
+msgstr "匈牙利語 [hu]"
+
+msgid "Unknown"
+msgstr "未知"
+
+msgid "About Dialog"
+msgstr "相关信息"
+
+msgid "OK"
+msgstr "可以了"
+
+msgid "My hovercraft is full of eels"
+msgid_plural "My $1 hovercraft are full of eels"
+msgstr[0] "我的那$1艘气垫船里装的全是鳗鱼"
+
+msgid "About"
+msgstr "关于"
+
+msgid "You can sell a hovercraft for $1"
+msgstr "一艘气垫船可卖$1"
+
+msgid "This string is written in the application's sourcecode"
+msgstr "The chinese is an example of language "
+"with no distinction between the singular and plural form"

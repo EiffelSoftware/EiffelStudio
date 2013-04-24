@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project name="build_curl_clib" default="help">
+
+	<description>
+		description: "cURL Clib library compilation"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<exec executable="finish_freezing -library" />
+	</target>
+	
+	<target name="clean" >
+	</target>
+
+	<target name="clobber" depend="clean" />
+	
+</project>

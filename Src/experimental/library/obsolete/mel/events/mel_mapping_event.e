@@ -1,0 +1,73 @@
+note
+
+	description: 
+		"Implementation of XMappingEvent."
+	legal: "See notice at end of class.";
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	MEL_MAPPING_EVENT
+
+inherit
+
+	MEL_EVENT
+
+create
+	make
+
+feature -- Access
+
+	count: INTEGER
+			-- Number of keycode changed
+		do
+			Result := c_event_count (handle)
+		end;
+
+	request: INTEGER
+			-- Request value
+		do
+			Result := c_event_request (handle)
+		end;
+
+	first_keycode: INTEGER
+			-- First keycode that was changed
+		do
+			Result := c_event_first_keycode (handle)
+		end;
+
+feature {NONE} -- Implementation
+
+	c_event_count (event_ptr: POINTER): INTEGER
+		external
+			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
+		end;
+
+	c_event_request (event_ptr: POINTER): INTEGER
+		external
+			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
+		end;
+
+	c_event_first_keycode (event_ptr: POINTER): INTEGER
+		external
+			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
+		end;
+
+note
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+end -- class MEL_MAPPING_EVENT
+
+

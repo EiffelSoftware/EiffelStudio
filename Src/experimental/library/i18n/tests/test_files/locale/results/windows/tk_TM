@@ -1,0 +1,78 @@
+
+
+Test of locale: tk_TM
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Sb
+  Çb
+  Pb
+  An
+  Şb
+  Ýb
+  Db
+    Full day names:
+  Sişenbe
+  Çarşenbe
+  Penşenbe
+  Anna
+  Şenbe
+  Ýekşenbe
+  Duşenbe
+    Abbreviated month names:
+  Ýan
+  Few
+  Mart
+  Apr
+  Maý
+  lýun
+  lýul
+  Awg
+  Sen
+  Okt
+  Not
+  Dek
+    Full month names:
+  Ýanwar
+  Fewral
+  Mart
+  Aprel
+  Maý
+  lýun
+  lýul
+  Awgust
+  Sentýabr
+  Oktýabr
+  Noýabr
+  Dekabr
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 2009 ý. Fewral 19 11:45:30, day: Şenbe
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'m.'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'TMT'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 m.
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

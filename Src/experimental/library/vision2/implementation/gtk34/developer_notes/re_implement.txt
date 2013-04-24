@@ -1,0 +1,73 @@
+==========================================================================
+CLASS:	[CLASS_NAME]
+DATE:	[YYYYMMDD]
+WHO:	[LOGINNAME]
+[NOTES HERE]
+==========================================================================
+CLASS:	ev_multi_column_list_row_imp
+DATE:	19990827
+WHO:	king
+add_select_command
+add_unselect_command
+==========================================================================
+CLASS:	ev_status_bar_item_imp
+DATE:	19990827
+WHO:	king
+set_width
+==========================================================================
+CLASS:	ev_tree_item_imp
+DATE:	19990827
+WHO:	king
+destroy
+add_select_command
+add_unselect_command
+add_subtree_command
+add_item
+remove_item
+argument_array
+==========================================================================
+CLASS:	ev_fontable_imp
+DATE:	19990827
+WHO:	king
+font
+set_font_list
+set_from_imp
+==========================================================================
+CLASS:	ev_widget_imp
+DATE:	19990827
+WHO:	king
+font
+set_width
+add_enter_notify_command
+add_leave_notify_command
+add_get_focus_command
+add_lose_focus_command
+dimensions_set (POST_CONDITION)
+==========================================================================
+CLASS:	ev_untitled_window_imp
+DATE:	19990827
+WHO:	king
+add_close_command
+add_resize_command
+add_move_command
+connect_to_application
+==========================================================================
+CLASS:	ev_combo_box_imp
+DATE:	19990827
+WHO:	king
+selected_item
+set_extended_height
+==========================================================================
+CLASS:	ev_list_imp
+DATE:	19990827
+WHO:	king
+selected_item
+clear_items
+==========================================================================
+CLASS:	ev_tree_imp
+DATE:	19990827
+WHO:	king
+make
+selected_item
+add_item
+remove_item

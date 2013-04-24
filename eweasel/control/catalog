@@ -1675,7 +1675,8 @@ test	none-and-attachement			exec349	tcf pass execution conformance
 test	wrong-type-in-tuple				exec350	tcf pass execution tuple
 test	nested-expanded-copy-2			exec351 tcf pass execution expanded
 test	integer-is-greater-equal-seg	exec352 tcf pass execution
-test	equality-operator-semantics	exec353 tcf pass execution equality attached_types
+test	equality-operator-semantics		exec353 tcf pass execution equality attached_types
+test	agent-target-expanded			exec354 tcf pass execution expanded
 
 -- Once specific
 

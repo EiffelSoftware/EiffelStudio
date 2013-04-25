@@ -33,6 +33,9 @@ feature -- Command
 			l_result := l_orignal_dc.set_di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_bits, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			l_info.dispose
 			l_orignal_dc.delete
+				-- Quick way to release the majority of the memory allocated
+				-- for the image bits.
+			l_bits.resize (0)
 		end
 
 feature -- Query
@@ -50,6 +53,7 @@ feature -- Query
 			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			l_info.dispose
+			l_dc.delete
 		ensure
 			not_void: Result /= Void
 		end
@@ -68,6 +72,7 @@ feature -- Query
 			l_info.header.set_height (- l_info.header.height)
 			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			l_info.dispose
+			l_dc.delete
 		end
 
 	bits_pointer_of_image_bottom_up (a_bitmap: WEL_BITMAP): MANAGED_POINTER
@@ -86,6 +91,7 @@ feature -- Query
 			l_header.set_height (- l_header.height)
 			Result := l_dc.di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			l_info.dispose
+			l_dc.delete
 		end
 
 	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO
@@ -100,6 +106,7 @@ feature -- Query
 		do
 			create l_dc.make
 			create Result.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			l_dc.delete
 		end
 
 feature -- Brush Query

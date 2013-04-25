@@ -45,7 +45,7 @@ feature -- Access
 	file_name: PATH
 			-- Full file name of the class.
 		do
-			Result := base_location.build_path (path, {STRING_32} "").extended (base_name)
+			Result := base_location.build_path (path, base_name)
 		end
 
 feature {NONE} -- Type anchor

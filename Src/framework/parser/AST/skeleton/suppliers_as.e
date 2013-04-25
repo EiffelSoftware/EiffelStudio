@@ -23,7 +23,7 @@ feature -- Insertion
 	insert_supplier_id (id: ID_AS)
 			-- Insert a new supplier name in `supplier_ids', if
 			-- not already present.
-		require else
+		require
 			good_argument: id /= Void
 		local
 			l_suppliers: like supplier_ids
@@ -39,7 +39,7 @@ feature -- Insertion
 	insert_light_supplier_id (id: ID_AS)
 			-- Insert a new supplier name in `light_supplier_ids', if
 			-- not already present.
-		require else
+		require
 			good_argument: id /= Void
 		local
 			l_suppliers: like light_supplier_ids

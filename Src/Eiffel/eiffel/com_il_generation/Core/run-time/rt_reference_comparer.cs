@@ -38,6 +38,7 @@ indexing
 	
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace EiffelSoftware.Runtime {
 
@@ -51,8 +52,12 @@ feature -- Comparison
 	}
 
 	public int GetHashCode(object obj)
+		// Provide the default implementation of GetHashCode for all objects
+		// to avoid there is no side effects of calling `GetHashCode'. See eweasel
+		// test#store001 where such as side effect of marking objects would trigger
+		// the `hash_code' computation of the STRING class.
 	{
-		return obj.GetHashCode();
+		return RuntimeHelpers.GetHashCode(obj);
 	}
 
 }

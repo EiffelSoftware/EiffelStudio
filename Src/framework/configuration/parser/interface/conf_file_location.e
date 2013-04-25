@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	build_path (a_directory, a_file: READABLE_STRING_32): like evaluated_path
-			-- Add `a_directory' and `a_filename' to current directory.
+			-- Add `a_directory' and `a_file' to current directory.
 			-- `a_directory' can be in any format.
 		local
 			l_dir: STRING_32
@@ -71,7 +71,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

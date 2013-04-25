@@ -39,6 +39,10 @@
 				<exclude>/support/mismatch_information.e$</exclude>
 				<exclude>/support/operating_environment.e$</exclude>
 				<exclude>/support/single_math.e$</exclude>
+				<exclude>/support/reflector.e$</exclude>
+				<exclude>/support/reflected_object.e$</exclude>
+				<exclude>/support/reflected_reference_object.e$</exclude>
+				<exclude>/support/reflected_copy_semantics_object.e$</exclude>
 				<exclude>/kernel/console.e$</exclude>
 				<exclude>/kernel/directory.e$</exclude>
 				<exclude>/kernel/directory_name.e$</exclude>

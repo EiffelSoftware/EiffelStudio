@@ -454,7 +454,10 @@ feature -- Status report
 	file_name: PATH
 			-- Full file name of the class.
 		do
-			Result := group.location.build_path (path, {STRING_32} "").extended (base_name)
+			Result := group.location.build_path (path, {STRING_32} "")
+			if not base_name.is_empty then
+				Result := Result.extended (base_name)
+			end
 		ensure
 			file_name_not_void: Result /= Void
 		end

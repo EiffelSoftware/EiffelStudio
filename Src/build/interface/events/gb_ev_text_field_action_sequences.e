@@ -49,7 +49,7 @@ feature -- Access
 			check
 				text_field_not_void: text_field /= Void
 			end
-			if action_sequence.is_equal ("return_actions") then
+			if action_sequence.same_string ("return_actions") then
 				if adding then
 					notify_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
 					text_field.return_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))

@@ -148,8 +148,8 @@ feature -- Access
 					-- or `Current' represents a window, as nothing may be replaced by a window.
 					-- Currently, windows are fixed and may not be replaced.
 
-				if object.type.is_equal (Ev_window_string) or object.type.is_equal (Ev_titled_window_string) or object.type.is_equal (Ev_dialog_string) or
-					type.is_equal (Ev_window_string) or type.is_equal (Ev_titled_window_string) or type.is_equal (Ev_dialog_string) then
+				if object.type.same_string (Ev_window_string) or object.type.same_string (Ev_titled_window_string) or object.type.same_string (Ev_dialog_string) or
+					type.same_string (Ev_window_string) or type.same_string (Ev_titled_window_string) or type.same_string (Ev_dialog_string) then
 					Result := False
 				end
 

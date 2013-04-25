@@ -8,7 +8,7 @@ note
 
 deferred class
 	GB_EV_TEXTABLE_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
 		undefine
@@ -16,7 +16,7 @@ inherit
 		redefine
 			ev_type
 		end
-	
+
 	GB_CONSTANTS
 
 feature -- Access
@@ -34,16 +34,16 @@ feature -- Access
 			line_entry_type: BOOLEAN
 		do
 			create Result.make_with_components (components)
-			
+
 			if is_instance_of (first, dynamic_type_from_string ("EV_TEXT")) or is_instance_of (first, dynamic_type_from_string ("EV_LABEL")) then
-				line_entry_type := multiple_line_entry	
+				line_entry_type := multiple_line_entry
 			else
 				line_entry_type := single_line_entry
 			end
 			initialize_attribute_editor (Result)
 			create text_entry.make (Current, Result, text_string, Gb_ev_textable_text, Gb_ev_textable_text_tooltip,
 				agent set_text (?), agent validate_true (?), line_entry_type, components)
-				
+
 				-- Menu separators have the textable features not exported, to prevent
 				-- calling, so if the obejct represented by `Current' is a menu separator,
 				-- we must hide it, to prevent text modification. It must be created, and hidden
@@ -51,7 +51,7 @@ feature -- Access
 			if is_instance_of (first, dynamic_type_from_string ("EV_MENU_SEPARATOR")) then
 				text_entry.hide
 			end
-				
+
 			update_attribute_editor
 
 			disable_all_items (Result)
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		do
 			text_entry.update_constant_display (first.text)
 		end
-		
+
 	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type)
 			-- Add events necessary for `vision2_object'.
 		do
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 
 	has_user_events: BOOLEAN = True
 		-- Does `Current' have user events which must be set?
-	
+
 	start_timer
 			-- Start a timer, which is used as a delay between an event begin
 			-- received by `user_event_widget' and `check_state'.
@@ -102,18 +102,18 @@ feature {NONE} -- Implementation
 			timer.actions.extend (agent check_state)
 			timer.actions.extend (agent timer.destroy)
 		end
-		
+
 	check_state
 			-- Update the display window representation of
 			-- the gauge, to reflect change from user.
 		do
-			if user_event_widget.has_focus and then not user_event_widget.text.is_equal (objects.first.text) then
+			if user_event_widget.has_focus and then not user_event_widget.text.same_string (objects.first.text) then
 				for_first_object (agent {EV_TEXTABLE}.set_text (user_event_widget.text))
 				update_editors
 				enable_project_modified
 			end
 		end
-		
+
 	user_event_widget: EV_TEXT_COMPONENT
 		-- Used to handle the events on the builder window.
 
@@ -123,12 +123,12 @@ feature {NONE} -- Implementation
 			for_all_objects (agent {EV_TEXTABLE}.set_text (a_text))
 			update_editors
 		end
-		
+
 	text_entry: GB_STRING_INPUT_FIELD
 		-- Input field for text.
 
 	Text_string: STRING = "Text";
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

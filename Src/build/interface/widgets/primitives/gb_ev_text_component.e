@@ -8,7 +8,7 @@ note
 
 class
 	GB_EV_TEXT_COMPONENT
-	
+
 	-- The following properties from EV_TEXT_COMPONENT are manipulated by `Current'.
 	-- Is_editable - Performed on the real object and the display_object child.
 
@@ -19,7 +19,7 @@ inherit
 		redefine
 			ev_type
 		end
-		
+
 	GB_EV_TEXT_COMPONENT_EDITOR_CONSTRUCTOR
 
 feature {GB_XML_STORE} -- Output
@@ -31,7 +31,7 @@ feature {GB_XML_STORE} -- Output
 				add_element_containing_string (element, Is_editable_string, False_string)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		local
@@ -39,11 +39,11 @@ feature {GB_XML_STORE} -- Output
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_editable_string)
-			if element_info /= Void and then element_info.data.is_equal (False_string) then
-				for_all_objects (agent {EV_TEXT_COMPONENT}.disable_edit)	
+			if element_info /= Void and then element_info.data.same_string (False_string) then
+				for_all_objects (agent {EV_TEXT_COMPONENT}.disable_edit)
 			end
 		end
-		
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
@@ -57,7 +57,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_editable_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					Result.extend (info.actual_name_for_feature_call + "enable_edit")
 				else
 					Result.extend (info.actual_name_for_feature_call + "disable_edit")

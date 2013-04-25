@@ -170,8 +170,8 @@ feature -- Access
 			loop
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
-					if not current_element.name.is_equal (Item_string) and
-						not current_element.name.is_equal ("item_text") then
+					if not current_element.name.same_string (Item_string) and
+						not current_element.name.same_string ("item_text") then
 						create info
 						info.set_name (current_element.name)
 						info.set_element (current_element)
@@ -182,7 +182,7 @@ feature -- Access
 						loop
 							inner_element ?= current_element.item_for_iteration
 							if inner_element /= Void  then
-								if inner_element.name.is_equal (Constant_string) then
+								if inner_element.name.same_string (Constant_string) then
 									from
 										inner_element.start
 									until
@@ -258,7 +258,7 @@ feature -- Access
 				element.off or found
 			loop
 				current_element ?= element.item_for_iteration
-				if current_element /= Void and then current_element.name.is_equal (a_name) then
+				if current_element /= Void and then current_element.name.same_string (a_name) then
 					found := True
 					Result := current_element
 				end
@@ -362,7 +362,7 @@ feature -- Access
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (node_name) then
+					if current_name.same_string (node_name) then
 						element.remove_at
 					else
 						remove_nodes_recursive (current_element, node_name)
@@ -400,7 +400,7 @@ feature -- Access
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (node_name) then
+					if current_name.same_string (node_name) then
 						elements.extend (current_element)
 					end
 					all_elements_by_name_internal (current_element, node_name, elements)

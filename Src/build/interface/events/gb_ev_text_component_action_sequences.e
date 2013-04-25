@@ -19,8 +19,8 @@ feature -- Status Report
 
 	has_name (a_feature_name: STRING): BOOLEAN
 		do
-			Result := a_feature_name.is_equal (change_actions_name) or
-				a_feature_name.is_equal (text_change_actions_name)
+			Result := a_feature_name.same_string (change_actions_name) or
+				a_feature_name.same_string (text_change_actions_name)
 		end
 
 feature -- Access
@@ -36,7 +36,7 @@ feature -- Access
 	name (a_type: STRING; an_index: INTEGER): STRING
 			--| Special implementation to handle renaming of `change_actions' into `text_change_actions' in EV_SPIN_BUTTON.	
 		do
-			if a_type.is_equal ({GB_CONSTANTS}.ev_spin_button_string) then
+			if a_type.same_string ({GB_CONSTANTS}.ev_spin_button_string) then
 				Result := text_change_actions_name
 			else
 				Result := change_actions_name
@@ -69,7 +69,7 @@ feature -- Access
 			check
 				text_component_not_void: text_component /= Void
 			end
-			if action_sequence.is_equal (change_actions_name) then
+			if action_sequence.same_string (change_actions_name) then
 				if adding then
 					spin_button ?= text_component
 					notify_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))

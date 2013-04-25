@@ -59,7 +59,7 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 			update_pixmap
 		ensure
 			object_assigned: object = an_object
-			text_assigned: text.is_equal (object.type.substring (4, object.type.count))
+			text_assigned: text.same_string_general (object.type.substring (4, object.type.count))
 		end
 
 feature {EV_ANY} -- Initialization

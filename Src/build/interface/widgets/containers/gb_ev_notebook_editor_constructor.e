@@ -305,13 +305,13 @@ feature {NONE} -- Implementation
 			-- `Result' is integer value corresponding
 			-- to `text' tab style. i.e. "Ev_tab_left_string".
 		do
-			if text.is_equal (Ev_tab_top_string) then
+			if text.same_string (Ev_tab_top_string) then
 				Result := first.Tab_top
-			elseif text.is_equal (Ev_tab_bottom_string) then
+			elseif text.same_string (Ev_tab_bottom_string) then
 				Result := first.Tab_bottom
-			elseif text.is_equal (Ev_tab_right_string) then
+			elseif text.same_string (Ev_tab_right_string) then
 				Result := first.Tab_right
-			elseif text.is_equal (Ev_tab_left_string) then
+			elseif text.same_string (Ev_tab_left_string) then
 				Result := first.Tab_left
 			else
 				check

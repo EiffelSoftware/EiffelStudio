@@ -8,7 +8,7 @@ note
 
 class
 	GB_EV_TOOL_BAR
-	
+
 	-- The following properties from EV_TOOL_BAR are manipulated by `Current'.
 	-- Is_sensitive - Performed on the real object only. Not the display object.
 
@@ -17,9 +17,9 @@ inherit
 		undefine
 			attribute_editor
 		end
-		
+
 	GB_EV_TOOL_BAR_EDITOR_CONSTRUCTOR
-	
+
 	DEFAULT_OBJECT_STATE_CHECKER
 		export
 			{NONE} all
@@ -51,14 +51,14 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Has_vertical_button_style_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					for_all_objects (agent {EV_TOOL_BAR}.enable_vertical_button_style)
 				else
 					for_all_objects (agent {EV_TOOL_BAR}.disable_vertical_button_style)
 				end
 			end
 		end
-		
+
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
@@ -70,7 +70,7 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Has_vertical_button_style_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					Result.extend (info.actual_name_for_feature_call + "enable_vertical_button_style")
 				else
 					Result.extend (info.actual_name_for_feature_call + "disable_vertical_button_style")

@@ -158,7 +158,7 @@ feature -- Basic operation
 			until
 				off or found
 			loop
-				if item.text.is_equal (component_name) then
+				if item.text.same_string_general (component_name) then
 					found := True
 					remove
 				end
@@ -169,7 +169,7 @@ feature -- Basic operation
 				end
 			end
 			component := components.tools.component_viewer.component
-			if component /= Void and then component.name.is_equal (component_name) then
+			if component /= Void and then component.name.same_string (component_name) then
 				components.tools.component_viewer.clear
 			end
 			check
@@ -195,8 +195,8 @@ feature -- Basic operation
 			end
 
 				--|FIXME Why can we not support windows and dialogs?
-			if standard_object_stone.object_type.is_equal (Ev_titled_window_string) or
-				standard_object_stone.object_type.is_equal (ev_dialog_string) then
+			if standard_object_stone.object_type.same_string (Ev_titled_window_string) or
+				standard_object_stone.object_type.same_string (ev_dialog_string) then
 				Result := False
 			end
 			else

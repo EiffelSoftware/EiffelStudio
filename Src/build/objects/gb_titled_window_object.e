@@ -76,7 +76,7 @@ feature -- Access
 		local
 			env: EV_ENVIRONMENT
 		do
-			if a_component.root_element_type.is_equal (Ev_menu_bar_string) then
+			if a_component.root_element_type.same_string (Ev_menu_bar_string) then
 					-- Custom addition for menu bar components.
 				add_new_menu_bar_component (a_component)
 			else
@@ -104,10 +104,10 @@ feature -- Access
 			if color_stone = Void then
 				object_stone ?= object_representation
 				if object_stone /= Void then
-					if object_stone.object_type.is_equal (ev_menu_bar_string) then
+					if object_stone.object_type.same_string (ev_menu_bar_string) then
 						Result := object.menu_bar = Void
 					end
-					if object_stone.object_type.is_equal (ev_titled_window_string) or object_stone.object_type.is_equal (ev_dialog_string) then
+					if object_stone.object_type.same_string (ev_titled_window_string) or object_stone.object_type.same_string (ev_dialog_string) then
 						Result := False
 					end
 				end

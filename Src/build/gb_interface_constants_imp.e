@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				content.is_equal ("")
+				content.is_empty
 			loop
 				line_contents := first_line (content)
 				if line_contents.count /= 1 then

@@ -70,14 +70,14 @@ feature -- Basic operations
 					-- This is essential for "not has" used at end of this feature.
 				names.replace (item_lower)
 				if item_lower.count > hint_name_lower.count and
-					item_lower.substring (1, hint_name_lower.count).is_equal (hint_name_lower) then
-					matches := matches + 1	
+					item_lower.substring (1, hint_name_lower.count).same_string (hint_name_lower) then
+					matches := matches + 1
 				end
 				names.forth
 			end
 				-- Increase matches for initial suggested name.
 			matches := matches + 1
-			
+
 			suggested_result := hint_name_lower + "_" + matches.out
 			if names.has (suggested_result) then
 				from
@@ -96,7 +96,7 @@ feature -- Basic operations
 				Result_is_uniqe_name: not names.has (Result)
 			end
 		end
-		
+
 	unique_name_from_hash_table (existing_names: HASH_TABLE [STRING, STRING]; hint_name: STRING): STRING
 			-- `Result' is a STRING guaranteed not to exist in `existing_names', based on `hint_name.
 		require
@@ -119,7 +119,7 @@ feature -- Basic operations
 				Result_is_uniqe_name: not existing_names.has (Result)
 			end
 		end
-		
+
 
 	undo_last_character (text_field: EV_TEXT_FIELD)
 			-- Remove last character added to `text_field'.
@@ -138,7 +138,7 @@ feature -- Basic operations
 					text_field.set_text (text_field.text.substring (1, text_field.text.count - 1))
 					text_field.set_caret_position (current_caret_position - 1)
 				elseif current_caret_position = 2 then
-					text_field.set_text (text_field.text.substring (2, text_field.text.count))	
+					text_field.set_text (text_field.text.substring (2, text_field.text.count))
 					text_field.set_caret_position (1)
 				else
 					text_field.set_text (text_field.text.substring (1, current_caret_position - 2) + text_field.text.substring (current_caret_position, text_field.text.count))
@@ -146,7 +146,7 @@ feature -- Basic operations
 				end
 				text_field.change_actions.resume
 		end
-		
+
 	pixmap_file_title_to_constant_name (file_title: STRING): STRING
 			-- Convert `file_title' which is the title of a file on disk
 			-- to a prompted name for a constant value.
@@ -160,8 +160,8 @@ feature -- Basic operations
 		ensure
 			result_not_void: Result /= Void
 		end
-		
-		
+
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

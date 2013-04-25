@@ -8,10 +8,10 @@ note
 
 deferred class
 	GB_EV_ACTION_SEQUENCE
-	
+
 inherit
 	ANY
-	
+
 	GB_CONSTANTS
 		export {NONE}
 			all
@@ -24,7 +24,7 @@ feature -- Access
 		do
 			Result := argument_types.count
 		end
-		
+
 	argument_types: ARRAYED_LIST [STRING]
 			-- All argument types of action sequence represented by `Current'.
 		deferred
@@ -34,7 +34,7 @@ feature -- Access
 			-- All argument names of action sequence represented by `Current'.
 		deferred
 		end
-		
+
 	argument_types_as_string: STRING
 			-- `Result' is string representing argument types
 			-- of `Current'. i.e. BOOLEAN INTEGER INTEGER
@@ -58,7 +58,7 @@ feature -- Access
 			result_void_implies_count_zero: Result = Void implies count = 0
 			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
-	
+
 	open_arguments: STRING
 			--`Result' is string representing open arguments
 			-- of `Current'. i.e. ?, ?, ?
@@ -82,7 +82,7 @@ feature -- Access
 			result_void_implies_count_zero: Result = Void implies count = 0
 			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
-		
+
 	parameter_list: STRING
 			-- `Result' is string representatiion of paramters.
 			-- i.e. an_x, a_y: INTEGER; count: DOUBLE
@@ -98,7 +98,7 @@ feature -- Access
 				loop
 					Result := Result + argument_names.item
 					if argument_types.index /= argument_types.count then
-						if (argument_types @ (argument_types.index + 1)).is_equal (argument_types.item) then
+						if (argument_types @ (argument_types.index + 1)).same_string (argument_types.item) then
 							Result := Result + ", "
 						else
 							Result := Result  + ": " + argument_types.item + "; "
@@ -114,7 +114,7 @@ feature -- Access
 			result_void_implies_count_zero: Result = Void implies count = 0
 			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
-		
+
 	debugging_info: STRING
 			-- `Result' is a string representation
 			-- which when compiled will generate debugging

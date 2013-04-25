@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			current_text := name_field.text.as_lower
 			if not valid_class_name (current_text) or not components.object_handler.valid_constant_name (current_text) or
 				reserved_words.has (current_text) or Build_reserved_words.has (current_text) or
-				(components.constants.string_is_constant_name (current_text) and then not components.constants.all_constants.item (current_text).type.is_equal (type_combo_box.text)) then
+				(components.constants.string_is_constant_name (current_text) and then not components.constants.all_constants.item (current_text).type.same_string (type_combo_box.text)) then
 				name_field.set_foreground_color (red)
 				new_button.disable_sensitive
 				modify_button.disable_sensitive
@@ -282,10 +282,10 @@ feature {NONE} -- Implementation
 			-- Update status of `add_button' based on state of current input.
 		do
 			if modify_constant /= Void then
-				if type_combo_box.selected_item.text.is_equal (String_constant_type) then
-					if modify_constant.name.is_equal (name_field.text) then
+				if type_combo_box.selected_item.text.same_string_general (String_constant_type) then
+					if modify_constant.name.same_string (name_field.text) then
 						new_button.disable_sensitive
-						if string_input.text.is_equal (modify_constant.value_as_string) then
+						if string_input.text.same_string (modify_constant.value_as_string) then
 							modify_button.disable_sensitive
 						elseif name_field_valid then
 							modify_button.enable_sensitive
@@ -294,10 +294,10 @@ feature {NONE} -- Implementation
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end
-				elseif type_combo_box.selected_item.text.is_equal (Integer_constant_type) and modify_constant /= Void then
-					if modify_constant.name.is_equal (name_field.text) then
+				elseif type_combo_box.selected_item.text.same_string (Integer_constant_type) and modify_constant /= Void then
+					if modify_constant.name.same_string (name_field.text) then
 						new_button.disable_sensitive
-					if integer_input.text.is_equal (modify_constant.value_as_string) then
+					if integer_input.text.same_string (modify_constant.value_as_string) then
 							modify_button.disable_sensitive
 						elseif name_field_valid then
 							modify_button.enable_sensitive
@@ -306,31 +306,31 @@ feature {NONE} -- Implementation
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end
-				elseif type_combo_box.selected_item.text.is_equal (directory_constant_type) and modify_constant /= Void then
-					if modify_constant.name.is_equal (name_field.text) then
+				elseif type_combo_box.selected_item.text.same_string (directory_constant_type) and modify_constant /= Void then
+					if modify_constant.name.same_string (name_field.text) then
 						new_button.disable_sensitive
 						modify_button.enable_sensitive
 					else
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end
-				elseif type_combo_box.selected_item.text.is_equal (color_constant_type) and modify_constant /= Void then
-					if modify_constant.name.is_equal (name_field.text) then
+				elseif type_combo_box.selected_item.text.same_string (color_constant_type) and modify_constant /= Void then
+					if modify_constant.name.same_string (name_field.text) then
 						new_button.disable_sensitive
 						modify_button.enable_sensitive
 					else
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end
-				elseif type_combo_box.selected_item.text.is_equal (font_constant_type) and modify_constant /= Void then
-					if modify_constant.name.is_equal (name_field.text) then
+				elseif type_combo_box.selected_item.text.same_string_general (font_constant_type) and modify_constant /= Void then
+					if modify_constant.name.same_string (name_field.text) then
 						new_button.disable_sensitive
 						modify_button.enable_sensitive
 					else
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end
-				elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
+				elseif type_combo_box.selected_item.text.same_string_general (Pixmap_constant_type) then
 					new_button.enable_sensitive
 					modify_button.enable_sensitive
 				end
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (string_input)
-			if not display_all_types.is_selected and not currently_selected_type.is_equal (String_constant_type) then
+			if not display_all_types.is_selected and not currently_selected_type.same_string (String_constant_type) then
 				rebuild_for_selected_type (string_item.text)
 			end
 			currently_selected_type := String_constant_type
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (integer_input)
-			if not display_all_types.is_selected and not currently_selected_type.is_equal (Integer_constant_type) then
+			if not display_all_types.is_selected and not currently_selected_type.same_string (Integer_constant_type) then
 				rebuild_for_selected_type (integer_item.text)
 			end
 			currently_selected_type := Integer_constant_type
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (color_input)
-			if not display_all_types.is_selected and not currently_selected_type.is_equal (color_constant_type) then
+			if not display_all_types.is_selected and not currently_selected_type.same_string (color_constant_type) then
 				rebuild_for_selected_type (color_item.text)
 			end
 			currently_selected_type := Color_constant_type
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (font_input)
-			if not display_all_types.is_selected and not currently_selected_type.is_equal (font_constant_type) then
+			if not display_all_types.is_selected and not currently_selected_type.same_string (font_constant_type) then
 				rebuild_for_selected_type (font_item.text)
 			end
 			currently_selected_type := Font_constant_type
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 			end
 			remove_displayed_input_field
 			entry_selection_parent.extend (directory_input)
-			if not display_all_types.is_selected and not currently_selected_type.is_equal (Directory_constant_type) then
+			if not display_all_types.is_selected and not currently_selected_type.same_string (Directory_constant_type) then
 				rebuild_for_selected_type (directory_item.text)
 			end
 			currently_selected_type := Directory_constant_type
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 				entry_selection_parent.extend (box)
 			end
 
-			if not display_all_types.is_selected and not currently_selected_type.is_equal (Pixmap_constant_type) then
+			if not display_all_types.is_selected and not currently_selected_type.same_string (Pixmap_constant_type) then
 				rebuild_for_selected_type (pixmap_item.text)
 			end
 			currently_selected_type := Pixmap_constant_type
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 			elseif color_input.parent /= Void then
 				create a_color_dialog
 				a_color_dialog.show_modal_to_window (Current)
-				if not a_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+				if not a_color_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					create add_constant_command.make (create {GB_COLOR_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_color_dialog.color, components), components)
 					add_constant_command.execute
 					name_field.remove_text
@@ -523,12 +523,12 @@ feature {NONE} -- Implementation
 			elseif font_input.parent /= Void then
 				create a_font_dialog
 				a_font_dialog.show_modal_to_window (Current)
-				if not a_font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+				if not a_font_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					create add_constant_command.make (create {GB_FONT_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_font_dialog.font, components), components)
 					add_constant_command.execute
 					name_field.remove_text
 				end
-			elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
+			elseif type_combo_box.selected_item.text.same_string_general (Pixmap_constant_type) then
 				select_pixmap
 			end
 		end
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 				a_color_dialog.set_title (select_color_location_modify_string + color_constant.name + "%"")
 				a_color_dialog.set_color (color_constant.value)
 				a_color_dialog.show_modal_to_window (Current)
-				if not a_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+				if not a_color_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					color_constant.modify_value (a_color_dialog.color)
 				end
 					-- Now update the representation of the constant in the list.
@@ -589,7 +589,7 @@ feature {NONE} -- Implementation
 				a_font_dialog.set_title (select_font_location_modify_string + font_constant.name + "%"")
 				a_font_dialog.set_font (font_constant.value)
 				a_font_dialog.show_modal_to_window (Current)
-				if not a_font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+				if not a_font_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					font_constant.modify_value (a_font_dialog.font)
 				end
 				row := constants_list.i_th (modify_constant_index)
@@ -617,7 +617,7 @@ feature {NONE} -- Implementation
 					loop
 						pixmap_constant ?= constants_list.item.data
 						if pixmap_constant /= Void and then not pixmap_constant.is_absolute and then
-							pixmap_constant.directory.is_equal (directory_constant.name) then
+							pixmap_constant.directory.same_string (directory_constant.name) then
 							constants_list.item.set_pixmap (pixmap_constant.pixmap)
 						end
 						constants_list.forth
@@ -942,17 +942,17 @@ feature {NONE} -- Implementation
 			color_item.select_actions.block
 			font_item.select_actions.block
 			select_named_combo_item (type_combo_box, modify_constant.type)
-			if modify_constant.type.is_equal (String_constant_type) then
+			if modify_constant.type.same_string (String_constant_type) then
 				string_item_selected
-			elseif modify_constant.type.is_equal (Integer_constant_type) then
+			elseif modify_constant.type.same_string (Integer_constant_type) then
 				integer_item_selected
-			elseif modify_constant.type.is_equal (Directory_constant_type) then
+			elseif modify_constant.type.same_string (Directory_constant_type) then
 				directory_item_selected
-			elseif modify_constant.type.is_equal (Pixmap_constant_type) then
+			elseif modify_constant.type.same_string (Pixmap_constant_type) then
 				pixmap_item_selected
-			elseif modify_constant.type.is_equal (Color_constant_type) then
+			elseif modify_constant.type.same_string (Color_constant_type) then
 				color_item_selected
-			elseif modify_constant.type.is_equal (Font_constant_type) then
+			elseif modify_constant.type.same_string (Font_constant_type) then
 				font_item_selected
 			end
 			string_item.select_actions.resume
@@ -996,9 +996,9 @@ feature {NONE} -- Implementation
 	rebuild_for_selected_type (a_type: STRING)
 			-- Rebuild `constants_list' to only show types corresponding to `a_type'.
 		require
-			type_valid: a_type.is_equal (all_constant_type) or components.constants.Supported_types.has (a_type)
+			type_valid: a_type.same_string (all_constant_type) or components.constants.Supported_types.has (a_type)
 		local
-			temp_constants: HASH_TABLE [GB_CONSTANT, STRING]
+			temp_constants: STRING_TABLE [GB_CONSTANT]
 		do
 			parent_window (constants_list).lock_update
 			constants_list.wipe_out
@@ -1008,7 +1008,7 @@ feature {NONE} -- Implementation
 			until
 				temp_constants.off
 			loop
-				if a_type.is_equal (All_constant_type) or temp_constants.item (temp_constants.key_for_iteration).type.is_equal (a_type) then
+				if a_type.same_string (All_constant_type) or temp_constants.item (temp_constants.key_for_iteration).type.same_string (a_type) then
 					constants_list.extend (temp_constants.item (temp_constants.key_for_iteration).as_multi_column_list_row)
 				end
 				temp_constants.forth

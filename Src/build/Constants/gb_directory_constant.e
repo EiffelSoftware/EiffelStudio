@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 			create referers.make (4)
 			create cross_referers.make (4)
 		ensure
-			name_set: name.is_equal (a_name) and name /= a_name
-			value_set: value.is_equal (a_Value) and value /= a_value
+			name_set: name.same_string (a_name) and name /= a_name
+			value_set: value.same_string (a_Value) and value /= a_value
 			components_set: components = a_components
 		end
 

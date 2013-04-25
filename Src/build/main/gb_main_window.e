@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			else
 				temp_title.append ("EiffelBuild")
 			end
-			if not title.is_equal (temp_title) then
+			if not title.same_string_general (temp_title) then
 				set_title (temp_title)
 			end
 		end
@@ -688,10 +688,10 @@ feature {NONE} -- Implementation
 
 					index := info_string.index_of ('_', 1)
 					state := info_string.substring (1, index - 1)
-					if state.is_equal ("maximized") then
+					if state.same_string ("maximized") then
 						maximized_index := counter
 					end
-					if state.is_equal ("minimized") then
+					if state.same_string ("minimized") then
 						minimized_items.extend (True)
 					else
 						minimized_items.extend (False)
@@ -911,10 +911,10 @@ feature {NONE} -- Implementation
 			if components.system_status.project_modified then
 				create question.make_with_text (Exit_save_warning)
 				question.show_modal_to_window (Current)
-				if question.selected_button.is_equal (constants.ev_yes) then
+				if question.selected_button.same_string_general (constants.ev_yes) then
 					must_save := True
 				end
-				if not question.selected_button.is_equal (constants.ev_cancel) then
+				if not question.selected_button.same_string_general (constants.ev_cancel) then
 					must_exit := True
 				end
 			else
@@ -1138,7 +1138,7 @@ feature {NONE} -- Debugging Implementation
 			if an_x > tool_bar.width - 40 then
 				debug_entry_key.append (a_button.out)
 			end
-			if debug_entry_key.is_equal ("131311") then
+			if debug_entry_key.same_string ("131311") then
 				components.status_bar.set_timed_status_text ("Debug mode entered")
 				components.system_status.enable_debug_mode
 			end

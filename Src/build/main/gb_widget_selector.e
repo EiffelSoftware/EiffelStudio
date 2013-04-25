@@ -240,7 +240,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 				confirmation_dialog.set_icon_pixmap (icon_build_window @ 1)
 				confirmation_dialog.set_title ("Object still referenced")
 				confirmation_dialog.show_modal_to_window (parent_window (widget))
-				if confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+				if confirmation_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					a_directory.recursive_do_all (agent flatten_associated_instances)
 					actual_delete_directory (a_directory)
 				end
@@ -1339,7 +1339,7 @@ feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Impleme
 				create file_name.make_from_string (directory.name)
 				file_name.extend (items.item)
 				create iterated_directory.make (file_name)
-				if iterated_directory.exists and not items.item.is_equal (".") and not items.item.is_equal ("..") then
+				if iterated_directory.exists and not items.item.same_string (".") and not items.item.same_string ("..") then
 						-- Set the parent path before we add the current item to `represented_path'.
 					parent_path := represented_path.twin
 					represented_path.extend (items.item)

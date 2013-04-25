@@ -78,7 +78,7 @@ feature -- Access
 					all_children.off
 				loop
 					check
-						types_correct: all_children.item.type.is_equal (all_instance_children.item.type)
+						types_correct: all_children.item.type.same_string (all_instance_children.item.type)
 					end
 					all_instance_children.forth
 					all_children.forth

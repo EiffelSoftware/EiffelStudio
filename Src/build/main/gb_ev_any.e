@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 			-- If `s' starts with `indent' then strip this indent.
 			-- This is used in the code generation routines.
 		do
-			if s.substring (1, indent.count).is_equal (indent) then
+			if s.substring (1, indent.count).same_string (indent) then
 				Result := s.substring (indent.count + 1, s.count)
 			else
 				Result := s

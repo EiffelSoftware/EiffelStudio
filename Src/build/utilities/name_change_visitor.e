@@ -55,7 +55,7 @@ feature {NONE} -- Basic operations
 			until
 				parents.off or parent_as /= Void
 			loop
-				if inherited_class_name.is_equal (parents.item.type.class_name.name_8) then
+				if inherited_class_name.same_string (parents.item.type.class_name.name_8) then
 					parent_as := parents.item
 				end
 				parents.forth

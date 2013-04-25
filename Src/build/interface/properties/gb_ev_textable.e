@@ -8,7 +8,7 @@ note
 
 class
 	GB_EV_TEXTABLE
-	
+
 	-- The following properties from EV_TEXTABLE are manipulated by `Current'.
 	-- Text - Performed on the real object and the display_object child.
 
@@ -19,14 +19,14 @@ inherit
 			set_up_user_events,
 			has_user_events
 		end
-		
+
 	EV_FRAME_CONSTANTS
 			export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	EV_ANY_HANDLER
 		undefine
 			default_create
@@ -36,7 +36,7 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 	DEFAULT_OBJECT_STATE_CHECKER
 		export
 			{NONE} all
@@ -52,11 +52,11 @@ feature {GB_XML_STORE} -- Output
 			textable: EV_TEXTABLE
 		do
 			textable ?= default_object_by_type (class_name (first))
-			if not textable.text.is_equal (objects.first.text) or uses_constant (Text_string) then
+			if not textable.text.same_string (objects.first.text) or uses_constant (Text_string) then
 				add_string_element (element, Text_string, objects.first.text)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		local
@@ -71,7 +71,7 @@ feature {GB_XML_STORE} -- Output
 				for_all_objects (agent {EV_TEXTABLE}.set_text (retrieve_and_set_string_value (text_string)))
 			end
 		end
-		
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]

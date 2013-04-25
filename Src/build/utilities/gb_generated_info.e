@@ -119,7 +119,7 @@ feature -- Access
 		do
 			if is_root_object then
 				if generate_as_client then
-					if type.is_equal (ev_titled_window_string) or type.is_equal (ev_dialog_string) then
+					if type.same_string (ev_titled_window_string) or type.same_string (ev_dialog_string) then
 						Result := client_window_string.twin
 					else
 						Result := client_widget_string.twin
@@ -230,16 +230,14 @@ feature -- Status setting
 			element := an_element
 		end
 
-	add_new_supported_type (a_type: STRING)
-			-- Add `a_type' to `supported_types'.
+	add_supported_types (a_type: STRING; an_element: XM_ELEMENT)
+			-- Extend `supported_types' with `a_type' and `supported_type_elements' with `an_element'.
 		do
 			supported_types.extend (a_type)
-		end
-
-	add_new_type_element (an_element: XM_ELEMENT)
-			-- Add `an_element' to `supported_type_elements'.
-		do
 			supported_type_elements.extend (an_element)
+		ensure
+			inserted_in_supported_types: supported_types.has (a_type)
+			inserted_in_supported_type_elements: supported_type_elements.has (an_element)
 		end
 
 	add_new_event (event: GB_ACTION_SEQUENCE_INFO)

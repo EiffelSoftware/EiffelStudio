@@ -49,7 +49,7 @@ feature -- Access
 			check
 				gauge_not_void: gauge /= Void
 			end
-			if action_sequence.is_equal ("change_actions") then
+			if action_sequence.same_string ("change_actions") then
 				if adding then
 					value_change_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_VALUE_CHANGE_ACTION_SEQUENCE"))
 					gauge.change_actions.extend (value_change_sequence.display_agent (action_sequence, string_handler))

@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 		local
 			widget: EV_WIDGET
 		do
-			if prompt_label.text.is_equal (widget_size_prompt) then
+			if prompt_label.text.same_string_general (widget_size_prompt) then
 				widget := (first @ (list.index_of (list.selected_item, 1)))
 					-- We do not enlarge the display widget, as they are already
 					-- larger.

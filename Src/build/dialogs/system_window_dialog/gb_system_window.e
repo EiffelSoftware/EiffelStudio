@@ -154,7 +154,7 @@ feature {NONE} -- Events
 		do
 			create directory_dialog
 			directory_dialog.show_modal_to_window (Current)
-			if directory_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if directory_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				generation_location_display.set_text (directory_dialog.path.name)
 				generation_location_display.set_tooltip (generation_location_display.text)
 			end
@@ -199,15 +199,15 @@ feature {NONE} -- Implementation
 			else
 				debugging_check_button.disable_select
 			end
-			if project_settings.attributes_local.is_equal (True_string) then
+			if project_settings.attributes_local.same_string (True_string) then
 				attributes_local_check_button.enable_select
-			elseif project_settings.attributes_local.is_equal (False_string) then
+			elseif project_settings.attributes_local.same_string (False_string) then
 				attributes_class_check_button.enable_select
 				attributes_exported_check_button.enable_select
-			elseif project_settings.attributes_local.is_equal (False_optimal_string) then
+			elseif project_settings.attributes_local.same_string (False_optimal_string) then
 				attributes_class_check_button.enable_select
 				attributes_optimal_check_button.enable_select
-			elseif project_settings.attributes_local.is_equal (False_non_exported_string) then
+			elseif project_settings.attributes_local.same_string (False_non_exported_string) then
 				attributes_class_check_button.enable_select
 				attributes_not_exported_check_button.enable_Select
 			end

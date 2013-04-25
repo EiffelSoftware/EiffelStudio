@@ -81,8 +81,8 @@ feature -- Basic operations
 					dialog.set_icon_pixmap (Icon_build_window @ 1)
 					dialog.show_modal_to_window (components.tools.main_window)
 						-- Do nothing if cancel was pressed.
-					if not dialog.selected_button.is_equal (Ev_cancel) then
-						if dialog.selected_button.is_equal (Ev_yes) then
+					if not dialog.selected_button.same_string_general (Ev_cancel) then
+						if dialog.selected_button.same_string_general (Ev_yes) then
 							-- Must now save.
 							components.commands.save_command.execute
 						end

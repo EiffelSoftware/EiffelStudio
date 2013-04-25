@@ -532,7 +532,7 @@ feature -- Basic operation
 			until
 				objects.off or Result
 			loop
-				if objects.item_for_iteration.name.as_lower.is_equal (a_string) then
+				if objects.item_for_iteration.name.as_lower.same_string (a_string) then
 					Result := True
 				end
 				object_events := objects.item_for_iteration.events
@@ -541,7 +541,7 @@ feature -- Basic operation
 				until
 					object_events.off
 				loop
-					if a_string.is_equal (object_events.item.feature_name.as_lower) then
+					if a_string.same_string (object_events.item.feature_name.as_lower) then
 						Result := True
 					end
 					object_events.forth
@@ -611,7 +611,7 @@ feature -- Basic operation
 						current_window_object := window_objects.item
 							-- We ensure that if the object is a window, we do not compare
 							-- it with itself.
-						if current_window_object.name.as_lower.is_equal (object_name.as_lower) then
+						if current_window_object.name.as_lower.same_string (object_name.as_lower) then
 							if (not compare_original_object and then current_window_object /= an_object) or compare_original_object then
 								Result := True
 							end
@@ -631,7 +631,7 @@ feature -- Basic operation
 			if (not compare_original_object and then original_object /= an_object) or compare_original_object then
 				name_lower := object_name.as_lower
 				current_name_lower := an_object.name.as_lower
-				if current_name_lower.is_equal (name_lower) then
+				if current_name_lower.same_string (name_lower) then
 					string_is_object_name_result := True
 				end
 			end
@@ -680,7 +680,7 @@ feature -- Basic operation
 							-- No need to loop if already found.
 						object_events.off or string_is_feature_name_result
 					loop
-						if name_lower.is_equal (object_events.item.feature_name) then
+						if name_lower.same_string (object_events.item.feature_name) then
 							string_is_feature_name_result := True
 						end
 						object_events.forth
@@ -763,7 +763,7 @@ feature -- Basic operation
 						-- No need to loop if already found not to match.
 					object_events.off or not existing_feature_matches_result
 				loop
-					if feature_name.is_equal (object_events.item.feature_name) then
+					if feature_name.same_string (object_events.item.feature_name) then
 						action_sequence1 ?= new_instance_of (dynamic_type_from_string ("GB_" + type))
 						check
 							action_sequence_not_void: action_sequence1 /= Void

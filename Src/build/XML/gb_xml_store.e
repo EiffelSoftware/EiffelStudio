@@ -263,7 +263,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			application_element, window_element,
 			new_type_element: XM_ELEMENT
 			namespace: XM_NAMESPACE
-			constants_list: HASH_TABLE [GB_CONSTANT, STRING]
+			constants_list: STRING_TABLE [GB_CONSTANT]
 		do
 			object_count := components.object_handler.objects.count
 			objects_written := 0

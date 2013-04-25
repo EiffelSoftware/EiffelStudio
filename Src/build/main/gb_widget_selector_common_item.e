@@ -84,7 +84,7 @@ feature -- Status setting
 			name := a_name
 			tree_item.set_text (name)
 		ensure
-			name_set: name.is_equal (a_name)
+			name_set: name.same_string (a_name)
 		end
 
 	set_parent (new_parent: GB_WIDGET_SELECTOR_COMMON_ITEM)
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 				l_children.off or Result /= Void
 			loop
 				current_window_item ?= l_children.item
-				if l_children.item.name.is_equal (current_text) or else (current_window_item /= Void and current_text.is_equal (current_window_item.object.name.as_upper)) then
+				if l_children.item.name.same_string (current_text) or else (current_window_item /= Void and current_text.same_string (current_window_item.object.name.as_upper)) then
 					if texts.index = texts.count then
 						Result ?= l_children.item
 					else

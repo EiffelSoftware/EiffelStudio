@@ -81,7 +81,7 @@ feature -- Access
 			obejct_comparison_on: Result.object_comparison
 		end
 
-	all_constants: HASH_TABLE [GB_CONSTANT, STRING]
+	all_constants: STRING_TABLE [GB_CONSTANT]
 		-- All constants accessible by name.
 
 	integer_constants: ARRAYED_LIST [GB_CONSTANT]
@@ -132,7 +132,7 @@ feature -- Access
 				pixmap_constant ?= pixmap_constants.item
 				if pixmap_constant.is_absolute then
 					pixmap_as_lower := pixmap_constant.value.as_lower
-					if pixmap_as_lower.is_equal (path_as_lower) then
+					if pixmap_as_lower.same_string (path_as_lower) then
 						Result := pixmap_constant.name
 					end
 				end
@@ -157,7 +157,7 @@ feature -- Access
 			loop
 				directory_constant ?= directory_constants.item
 				constant_as_lower := directory_constant.value.as_lower
-				if constant_as_lower.is_equal (path_as_lower) then
+				if constant_as_lower.same_string (path_as_lower) then
 					Result := directory_constant.name
 				end
 				directory_constants.forth
@@ -182,7 +182,7 @@ feature -- Access
 			loop
 				directory_constant ?= directory_constants.item
 				constant_as_lower := directory_constant.value.as_lower
-				if constant_as_lower.is_equal (path_as_lower) then
+				if constant_as_lower.same_string (path_as_lower) then
 					Result.extend (directory_constant.name)
 				end
 				directory_constants.forth
@@ -205,7 +205,7 @@ feature -- Access
 				directory_constants.off or Result /= Void
 			loop
 				directory_constant ?= directory_constants.item
-				if directory_constant.name.as_lower.is_equal (name_as_lower) then
+				if directory_constant.name.is_case_insensitive_equal (name_as_lower) then
 					Result := directory_constant
 				end
 				directory_constants.forth
@@ -238,13 +238,13 @@ feature -- Element change
 			directory_constant: GB_DIRECTORY_CONSTANT
 			referers: ARRAYED_LIST [GB_CONSTANT_CONTEXT]
 		do
-			if a_constant.type.is_equal (String_constant_type) then
+			if a_constant.type.same_string (String_constant_type) then
 				string_constants.prune_all (a_constant)
-			elseif a_constant.type.is_equal (Integer_constant_type) then
+			elseif a_constant.type.same_string (Integer_constant_type) then
 				integer_constants.prune_all (a_constant)
-			elseif a_constant.type.is_equal (Directory_constant_type) then
+			elseif a_constant.type.same_string (Directory_constant_type) then
 				directory_constants.prune_all (a_constant)
-			elseif a_constant.type.is_equal (Pixmap_constant_type) then
+			elseif a_constant.type.same_string (Pixmap_constant_type) then
 				pixmap_constants.prune_all (a_constant)
 				pixmap_constant ?= a_constant
 					-- Update cross referers.
@@ -398,7 +398,7 @@ feature -- Element change
 			if element_info /= Void then
 				type := (element_info.data)
 			end
-			if type.is_equal (Pixmap_constant_type) and not deferred_building then
+			if type.same_string (Pixmap_constant_type) and not deferred_building then
 					-- Ensure that pixmap constants are built last, due to their dependencies
 					-- on directory constants.
 				deferred_elements.extend (element)
@@ -411,10 +411,10 @@ feature -- Element change
 				if element_info /= Void then
 					value := (element_info.data)
 				end
-				if type.is_equal (Pixmap_constant_type) then
+				if type.same_string (Pixmap_constant_type) then
 					element_info := full_information @ (Is_absolute_string)
 					if element_info /= Void then
-						if element_info.data.is_equal (True_string) then
+						if element_info.data.same_string (True_string) then
 							is_absolute := True
 						else
 							is_absolute := False
@@ -458,7 +458,7 @@ feature -- Element change
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Constant_string) then
+					if current_name.same_string (Constant_string) then
 
 						full_information := get_unique_full_info (element)
 						constant := all_constants.item ((full_information @ Constant_string).data)
@@ -529,19 +529,19 @@ feature {NONE} -- Implementation
 			color_constant: GB_COLOR_CONSTANT
 			font_constant: GB_FONT_CONSTANT
 		do
-			if type.is_equal (Integer_constant_type) then
+			if type.same_string (Integer_constant_type) then
 				create integer_constant.make_with_name_and_value (name, value.to_integer, components)
 				add_integer (integer_constant)
-			elseif type.is_equal (String_constant_type) then
+			elseif type.same_string (String_constant_type) then
 				create string_constant.make_with_name_and_value (name, value, components)
 				add_string (string_constant)
-			elseif type.is_equal (Directory_constant_type) then
+			elseif type.same_string (Directory_constant_type) then
 				create directory_constant.make_with_name_and_value (name, value, components)
 				add_directory (directory_constant)
-			elseif type.is_equal (color_constant_type) then
+			elseif type.same_string (color_constant_type) then
 				create color_constant.make_with_name_and_value (name, build_color_from_string (value), components)
 				add_color (color_constant)
-			elseif type.is_equal (font_constant_type) then
+			elseif type.same_string (font_constant_type) then
 				create font_constant.make_with_name_and_value (name, build_font_from_string (value), components)
 				add_font (font_constant)
 			end

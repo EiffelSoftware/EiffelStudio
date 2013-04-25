@@ -122,8 +122,8 @@ feature {GB_SET_ROOT_WINDOW_COMMAND, GB_WIDGET_SELECTOR} -- Status Setting
 		do
 			if not components.system_status.loading_project then
 				if widget_selector.selected_directory = Void and (widget_selector.selected_window /= Void and then
-					(widget_selector.selected_window.object.type.is_equal (ev_titled_window_string) or
-					widget_selector.selected_window.object.type.is_equal (ev_dialog_string)) and components.object_handler.root_window_object /= widget_selector.selected_window.object) then
+					(widget_selector.selected_window.object.type.same_string (ev_titled_window_string) or
+					widget_selector.selected_window.object.type.same_string (ev_dialog_string)) and components.object_handler.root_window_object /= widget_selector.selected_window.object) then
 					root_window_button.enable_sensitive
 				else
 					root_window_button.disable_sensitive

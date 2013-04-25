@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 				-- still valid.
 			if object.object /= Void then
 				stripped_text := remove_leading_and_trailing_spaces (text_field.text)
-				if not stripped_text.is_equal (value_on_entry) then
+				if not stripped_text.same_string (value_on_entry) then
 					if not stripped_text.is_empty and stripped_text.is_integer then
 						validate_agent.call ([stripped_text.to_integer])
 						if validate_agent.last_result then

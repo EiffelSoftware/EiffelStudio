@@ -246,9 +246,9 @@ feature -- Basic operation
 				current_element ?= an_element.item_for_iteration
 				if current_element /= Void then
 				current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						current_type := current_element.attribute_by_name (type_string).value
-						if current_type.is_equal (directory_string) then
+						if current_type.same_string (directory_string) then
 							from
 								current_element.start
 							until
@@ -257,7 +257,7 @@ feature -- Basic operation
 								window_element ?= current_element.item_for_iteration
 								if window_element /= Void then
 									current_name := window_element.name
-									if current_name.is_equal (Internal_properties_string) then
+									if current_name.same_string (Internal_properties_string) then
 										full_information := get_unique_full_info (window_element)
 										element_info := full_information @ (name_string)
 
@@ -271,12 +271,12 @@ feature -- Basic operation
 							end
 							parse_directories (current_element, parent_directories)
 							parent_directories.prune_all (parent_directories.last)
-						elseif current_type.is_equal (Constants_string) then
+						elseif current_type.same_string (Constants_string) then
 
 						else
 							reset_generation_constants_for_class
 							prepass_xml (current_element, document_info, 1)
-							if window_to_generate = Void or else document_info.name.as_lower.is_equal (window_to_generate.as_lower) then
+							if window_to_generate = Void or else document_info.name.as_lower.same_string (window_to_generate.as_lower) then
 								directory_name := generated_path
 								from
 									parent_directories.start
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 			constants_file: PLAIN_TEXT_FILE
 			constants_content: STRING
 			generated_constants_string: STRING
-			all_constants: HASH_TABLE [GB_CONSTANT, STRING]
+			all_constants: STRING_TABLE [GB_CONSTANT]
 			constant: GB_CONSTANT
 			integer_constant: GB_INTEGER_CONSTANT
 			string_constant: GB_STRING_CONSTANT
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 			constants_file_name: PATH
 			constants_file: PLAIN_TEXT_FILE
 			generated_constants_string: STRING
-			all_constants: HASH_TABLE [GB_CONSTANT, STRING]
+			all_constants: STRING_TABLE [GB_CONSTANT]
 			constant: GB_CONSTANT
 			integer_constant: GB_INTEGER_CONSTANT
 			string_constant: GB_STRING_CONSTANT
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 					-- Now that we have loaded the class file template, we must
 					-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
 					-- if we are generating a dialog.
-				if info.type.is_equal ("EV_DIALOG") then
+				if info.type.same_string ("EV_DIALOG") then
 					class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
 				end
 
@@ -804,7 +804,7 @@ feature {NONE} -- Implementation
 					-- as client. Also export `initialize' as necessary. If client, then it
 					-- must be exported to {ANY}.
 				if info.generate_as_client then
-					if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
+					if info.type.same_string (ev_titled_window_string) or info.type.same_string (ev_dialog_string) then
 						add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_window_feature, custom_feature_tag)
 					elseif info.type.substring_index ("ITEM", 1) = 0 then
 						add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_widget_feature, custom_feature_tag)
@@ -876,7 +876,7 @@ feature {NONE} -- Implementation
 					else
 						temp_string := "inherit" + Indent_less_two + project_settings.constants_class_name.as_upper + "%N%Nfeature -- Access%N" + indent_less_two
 					end
-					if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
+					if info.type.same_string (ev_titled_window_string) or info.type.same_string (ev_dialog_string) then
 						temp_string.append (client_window_string)
 					else
 						temp_string.append (client_widget_string)
@@ -912,7 +912,7 @@ feature {NONE} -- Implementation
 					else
 						temp_string := Window_inheritance_part1.twin + project_settings.constants_class_name.as_upper + Window_inheritance_part2.twin
 					end
-					if not info.type.is_equal (Ev_titled_window_string)  then
+					if not info.type.same_string (Ev_titled_window_string)  then
 						temp_string.replace_substring_all (Ev_titled_window_string, info.type)
 					end
 					add_generated_string (class_text, temp_string, inheritance_tag)
@@ -987,7 +987,7 @@ feature {NONE} -- Implementation
 					-- Now that we have loaded the class file template, we must
 					-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
 					-- if we are generating a dialog.
-				if info.type.is_equal ("EV_DIALOG") then
+				if info.type.same_string ("EV_DIALOG") then
 					class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
 				end
 
@@ -1005,7 +1005,7 @@ feature {NONE} -- Implementation
 
 				if info.generate_as_client then
 						-- There are different sets of setting code for windows and dialogs, or widgets.
-					if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
+					if info.type.same_string (ev_titled_window_string) or info.type.same_string (ev_dialog_string) then
 						temp_string := redefined_window_creation
 					else
 						temp_string := redefined_creation
@@ -1109,12 +1109,12 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						if not in_reference then
 							prepass_xml (current_element, info.new_child, depth + 1)
 						end
 					else
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							full_information := get_unique_full_info (current_element)
 							element_info := full_information @ (name_string)
 							if element_info /= Void then
@@ -1147,10 +1147,10 @@ feature {NONE} -- Implementation
 							info.set_id (element_info.data.to_integer)
 							info.generated_info_by_id.force (info, info.id)
 							info.names_by_id.force (info.name, info.id)
-						elseif current_name.is_equal (Events_string) then
+						elseif current_name.same_string (Events_string) then
 							prepass_xml (current_element, info, depth + 1)
 								-- We must now loop through the element, and retrieve all the events.
-						elseif current_name.is_equal (Event_string) then
+						elseif current_name.same_string (Event_string) then
 								-- Now record all events for the current object.
 							from
 								current_element.start
@@ -1165,8 +1165,7 @@ feature {NONE} -- Implementation
 								current_element.forth
 							end
 						else
-							info.supported_types.extend (current_name)
-							info.supported_type_elements.extend (current_element)
+							info.add_supported_types (current_name, current_element)
 						end
 					end
 				end
@@ -1237,7 +1236,7 @@ feature {NONE} -- Implementation
 				new_object := components.object_handler.build_object_from_string (generated_info.type)
 				code_for_insert := generated_info.name.twin
 				if generated_info.associated_root_object_id > 0 and components.object_handler.object_from_id (generated_info.associated_root_object_id).generate_as_client then
-					if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
+					if generated_info.type.same_string (ev_titled_window_string) or generated_info.type.same_string (ev_dialog_string) then
 						code_for_insert.append ("." + client_window_string)
 					else
 						code_for_insert.append ("." + client_widget_string)
@@ -1253,7 +1252,7 @@ feature {NONE} -- Implementation
 						end
 					else
 						if info.generate_as_client then
-							if generated_info.parent.type.is_equal (ev_titled_window_string) or generated_info.parent.type.is_equal (ev_dialog_string) then
+							if generated_info.parent.type.same_string (ev_titled_window_string) or generated_info.parent.type.same_string (ev_dialog_string) then
 								add_build (client_window_string +  "." + new_object.extend_xml_representation (code_for_insert))
 							else
 								add_build (client_widget_string + "." + new_object.extend_xml_representation (code_for_insert))
@@ -1267,7 +1266,7 @@ feature {NONE} -- Implementation
 				elseif not generated_info.is_root_object then
 					-- Tables need to use put, but this is done in conjunction with the placement.
 					-- So here, we do not add the children of the table, as it will be done later.
-					if generated_info.parent /= Void and then generated_info.parent.type /= Void and then not generated_info.parent.type.is_equal (Ev_table_string) then
+					if generated_info.parent /= Void and then generated_info.parent.type /= Void and then not generated_info.parent.type.same_string (Ev_table_string) then
 						add_build (generated_info.parent.name + "." + new_object.extend_xml_representation (code_for_insert))
 					end
 				end
@@ -1372,7 +1371,7 @@ feature {NONE} -- Implementation
 						if generated_info.is_root_object then
 							local_name := ""
 							if info.generate_as_client then
-								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
+								if generated_info.type.same_string (ev_titled_window_string) or generated_info.type.same_string (ev_dialog_string) then
 									local_name := Client_window_string + "."
 								else
 									local_name := client_widget_string + "."
@@ -1384,7 +1383,7 @@ feature {NONE} -- Implementation
 
 							-- Adjust event names that have been renamed in Vision2 interface
 						renamed_action_sequence_name := modified_action_sequence_name (generated_info.type, action_sequence_info)
-						if action_sequence_info.name.is_equal ("close_request_actions") then
+						if action_sequence_info.name.same_string ("close_request_actions") then
 							l_generate_close_actions := False
 						end
 
@@ -1400,7 +1399,7 @@ feature {NONE} -- Implementation
 						if not all_generated_events.has (action_sequence_info.feature_name.as_lower) then
 							all_generated_events.extend (action_sequence_info.feature_name.as_lower)
 								-- Use `Current' in comment if the event is connected to the window.
-							if generated_info.type.is_equal (Ev_titled_window_string) then
+							if generated_info.type.same_string (Ev_titled_window_string) then
 								comment_object_name := "Current"
 							else
 								comment_object_name := generated_info.name
@@ -1444,8 +1443,8 @@ feature {NONE} -- Implementation
 
 			if
 				l_generate_close_actions and then
-				(generated_info.type.is_equal (ev_window_string) or
-				generated_info.type.is_equal (ev_titled_window_string))
+				(generated_info.type.same_string (ev_window_string) or
+				generated_info.type.same_string (ev_titled_window_string))
 			then
 					-- Now we must connect the close event of the window if no `close_actions' have been added by user
 					-- and we are handling a window.
@@ -1510,15 +1509,15 @@ feature {NONE} -- Implementation
 
 					-- Need to generate slightly different code dependent
 					-- on whether the atrributes are local or not.
-				if project_settings.attributes_local.is_equal (True_string) then
+				if project_settings.attributes_local.same_string (True_string) then
 
 					add_item_to_hash_table (name, local_type, locals)
-				elseif project_settings.attributes_local.is_equal (false_string) or
-					(project_settings.attributes_local.is_equal (False_optimal_string) and not generated_info.generated_name) then
+				elseif project_settings.attributes_local.same_string (false_string) or
+					(project_settings.attributes_local.same_string (False_optimal_string) and not generated_info.generated_name) then
 
 					add_item_to_hash_table (name, local_type, exported_attributes)
-				elseif (project_settings.attributes_local.is_equal (False_optimal_string) and generated_info.generated_name)
-				or project_settings.attributes_local.is_equal (false_non_exported_string) then
+				elseif (project_settings.attributes_local.same_string (False_optimal_string) and generated_info.generated_name)
+				or project_settings.attributes_local.same_string (false_non_exported_string) then
 					add_item_to_hash_table (name, local_type, non_exported_attributes)
 				else
 					check

@@ -65,7 +65,7 @@ feature -- Basic operations
 			text_entry.set_text (a_text)
 			text_entry.change_actions.resume
 		ensure
-			text_set: text_entry.text.is_equal (a_text)
+			text_set: text_entry.text.same_string_general (a_text)
 		end
 
 	hide_label

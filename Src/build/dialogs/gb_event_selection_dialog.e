@@ -508,9 +508,9 @@ feature {NONE} -- Implementation
 			until
 				events.off or matched = True
 			loop
-				if events.item.name.is_equal (info.name) and
-					events.item.class_name.is_equal (info.class_name) and
-					events.item.type.is_equal (info.type) then
+				if events.item.name.same_string (info.name) and
+					events.item.class_name.same_string (info.class_name) and
+					events.item.type.same_string (info.type) then
 					check
 						feature_name_not_empty: not events.item.name.is_empty
 					end
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 						until
 							counter1 > all_text_fields.count or other_type /= Void
 						loop
-							if (all_text_fields @ counter1).text.as_lower.is_equal (current_text_field.text.as_lower) and
+							if (all_text_fields @ counter1).text.as_lower.same_string_general (current_text_field.text.as_lower) and
 								counter1 /= counter and
 								(all_check_buttons @ counter1).is_selected then
 								other_type := all_types @ counter1
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation
 				counter > all_check_buttons.count or Result
 			loop
 				if (all_check_buttons @ counter).is_selected and index /= counter then
-					if (all_text_fields @ counter).text.as_lower.is_equal (current_name) then
+					if (all_text_fields @ counter).text.as_lower.same_string_general (current_name) then
 						Result :=True
 					end
 				end

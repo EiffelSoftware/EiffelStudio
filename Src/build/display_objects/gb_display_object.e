@@ -31,7 +31,7 @@ feature -- Initialization
 			extend (child)
 		ensure
 			child_assigned_correctly: child = a_child
-			text_assigned_correctly: text.is_equal (a_name)
+			text_assigned_correctly: text.same_string_general (a_name)
 			count_now_one: count = 1
 		end
 

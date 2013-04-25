@@ -176,7 +176,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				current_element ?= window.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						if object = Void then
 								-- As `titled_window_object' = Void it means we must rebuild all the children,
 								-- as we are not updating an existing object, and the children must be created.
@@ -184,12 +184,12 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						end
 					else
 							-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							an_object.modify_from_xml (current_element)
 							components.object_handler.add_object_to_objects (an_object)
 							an_object.widget_selector_item.unparent
 							parent_common_item.add_alphabetically (an_object.widget_selector_item)
-						elseif current_name.is_equal (Events_string) then
+						elseif current_name.same_string (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
 							extract_event_information (current_element, an_object)
@@ -233,7 +233,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- `Result' is the new object.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.is_equal (Item_string)
+			element_type_is_item: element.name.same_string (Item_string)
 		local
 			new_object: GB_OBJECT
 		do
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			-- Build a new object from information in `element' into `object'.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.is_equal (Item_string)
+			element_type_is_item: element.name.same_string (Item_string)
 		local
 			new_object: GB_OBJECT
 		do
@@ -278,16 +278,16 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 							-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, object)
-					elseif current_name.is_equal (Events_string) then
+					elseif current_name.same_string (Events_string) then
 							-- We now add the event information from `current_element'
 							-- into `object'.
 						extract_event_information (current_element, object)
 					else
 							-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							object.modify_from_xml (current_element)
 						else
 
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			-- Generate event information into `object', from `element'.
 		require
 			element_not_void: element /= Void
-			element_type_is_events: element.name.is_equal (Events_string)
+			element_type_is_events: element.name.same_string (Events_string)
 		local
 			current_element: XM_ELEMENT
 			current_name: STRING
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Event_string) then
+					if current_name.same_string (Event_string) then
 						from
 							current_element.start
 						until
@@ -405,9 +405,9 @@ feature {NONE} -- Implementation
 				current_element ?= an_element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						current_type := current_element.attribute_by_name (type_string).value
-						if current_type.is_equal (directory_string) then
+						if current_type.same_string (directory_string) then
 							from
 								current_element.start
 							until
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 								window_element ?= current_element.item_for_iteration
 								if window_element /= Void then
 									current_name := window_element.name
-									if current_name.is_equal (Internal_properties_string)  then
+									if current_name.same_string (Internal_properties_string)  then
 										create new_directory_item.make_with_name ("", components)
 										new_directory_item.modify_from_xml (window_element)
 										parent_common_item.add_alphabetically (new_directory_item)
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 								current_element.forth
 							end
 							build_window_structure (current_element, new_directory_item)
-						elseif current_type.is_equal (Constants_string) then
+						elseif current_type.same_string (Constants_string) then
 							from
 								current_element.start
 							until

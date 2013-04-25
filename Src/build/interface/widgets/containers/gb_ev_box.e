@@ -16,21 +16,21 @@ class
 	-- Is_item_expanded - Performed on the real object and the display_object child
 
 inherit
-	
+
 	GB_EV_ANY
 		undefine
 			attribute_editor
 		redefine
 			modify_from_xml_after_build
 		end
-		
+
 	GB_XML_UTILITIES
 		undefine
 			default_create
 		end
-		
+
 	GB_EV_BOX_EDITOR_CONSTRUCTOR
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create
@@ -49,13 +49,13 @@ feature {GB_XML_STORE} -- Output
 			end
 				-- Padding is 0 by default.
 			if objects.first.padding_width > 0 or uses_constant (Padding_string) then
-				add_integer_element (element, Padding_string, objects.first.padding_width)	
+				add_integer_element (element, Padding_string, objects.first.padding_width)
 			end
 				-- Border is 0 by default.
 			if objects.first.border_width > 0 or uses_constant (Border_string) then
 				add_integer_element (element, Border_string, objects.first.border_width)
 			end
-			
+
 				-- If there are one or more children in the box, then we always
 				-- store the string of details. This could be changed to be made smarter
 				-- at some point, so we only store if one ore more are not expanded.
@@ -78,17 +78,17 @@ feature {GB_XML_STORE} -- Output
 				add_element_containing_string (element, Is_item_expanded_string, temp_string)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		local
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
-			
+
 			element_info := full_information @ (Is_homogeneous_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					for_all_objects (agent {EV_BOX}.enable_homogeneous)
 				else
 					for_all_objects (agent {EV_BOX}.disable_homogeneous)
@@ -98,15 +98,15 @@ feature {GB_XML_STORE} -- Output
 			if attribute_set (Padding_string) then
 				for_all_objects (agent {EV_BOX}.set_padding_width (retrieve_and_set_integer_value (Padding_string)))
 			end
-			
+
 			if attribute_set (Border_string) then
 				for_all_objects (agent {EV_BOX}.set_border_width (retrieve_and_set_integer_value (Border_string)))
 			end
-		
+
 				-- We set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
 		end
-		
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
@@ -121,17 +121,17 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_homogeneous_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					Result.extend (info.actual_name_for_feature_call + "enable_homogeneous")
 				else
 					Result.extend (info.actual_name_for_feature_call + "disable_homogeneous")
 				end
 			end
-			
+
 			if attribute_set (Padding_string) then
 				Result.append (build_set_code_for_integer (padding_string, info.actual_name_for_feature_call, "set_padding ("))
 			end
-			
+
 			if attribute_set (Border_string) then
 				Result.append (build_set_code_for_integer (border_string, info.actual_name_for_feature_call, "set_border_width ("))
 			end
@@ -150,14 +150,14 @@ feature {GB_CODE_GENERATOR} -- Output
 				loop
 						-- We only generate code for all the children that are disabled as they
 						-- are expanded by default.
-					if element_info.data @ children.index /= '1' then						
+					if element_info.data @ children.index /= '1' then
 						Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.item.ev_any_access_name + ")")
 					end
 					children.forth
 				end
 			end
 		end
-		
+
 feature {GB_DEFERRED_BUILDER} -- Status setting
 
 	modify_from_xml_after_build (element: XM_ELEMENT)
@@ -174,7 +174,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			element_info := full_information @ (Is_item_expanded_string)
 				-- We only stored the expanded information if there were
 				-- children.
-			if element_info /= Void then			
+			if element_info /= Void then
 				temp_string := element_info.data
 				second ?= (objects @ 2)
 				box_parent1 ?= first
@@ -198,7 +198,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					else
 						box_parent1.disable_item_expand (first.item)
 						box_parent2.disable_item_expand (second.item)
-						
+
 							-- Now flag the child object as non expanded.
 						children.i_th (first.index).disable_expanded_in_box
 					end

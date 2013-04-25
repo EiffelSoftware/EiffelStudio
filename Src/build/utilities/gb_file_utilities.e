@@ -24,7 +24,7 @@ feature -- Basic operations
 			file: RAW_FILE
 			new_file_name, old_file_name: FILE_NAME
 		do
-			if not old_name.is_equal (new_name) then
+			if not old_name.same_string (new_name) then
 				create new_file_name.make_from_string (directory_path.name)
 				new_file_name.extend (new_name)
 				create old_file_name.make_from_string (directory_path.name)
@@ -47,7 +47,7 @@ feature -- Basic operations
 			file: RAW_FILE
 			new_file_name, old_file_name: FILE_NAME
 		do
-			if not original.name.is_equal (new.name) then
+			if not original.name.same_string (new.name) then
 				create new_file_name.make_from_string (new.name)
 				create old_file_name.make_from_string (original.name)
 				new_file_name.extend (file_name)

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			components := a_components
 			set_name (a_name)
 		ensure
-			name_set: name.is_equal (a_name)
+			name_set: name.same_string (a_name)
 			components_set: components = a_components
 		end
 

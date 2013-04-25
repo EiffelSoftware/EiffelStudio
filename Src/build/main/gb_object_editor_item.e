@@ -61,7 +61,7 @@ feature -- Status Setting
 		do
 			type_represented := a_type
 		ensure
-			type_represented.is_equal (a_type)
+			type_represented = a_type
 		end
 
 	set_creating_class (a_class: GB_EV_ANY)

@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 			set_attributes (a_name, a_value, a_directory, a_filename, absolute, a_components)
 			retrieve_pixmap_image
 		ensure
-			name_set: name.is_equal (a_name) and name /= a_name
-			value_set: value.is_equal (a_Value) and value /= a_value
+			name_set: name.same_string (a_name) and name /= a_name
+			value_set: value.same_string (a_Value) and value /= a_value
 			components_set: components = a_components
 		end
 
@@ -76,8 +76,8 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 				create referers.make (4)
 			end
 		ensure
-			name_set: name.is_equal (a_name) and name /= a_name
-			value_set: value.is_equal (a_Value) and value /= a_value
+			name_set: name.same_string (a_name) and name /= a_name
+			value_set: value.same_string (a_Value) and value /= a_value
 			components_set: components = a_components
 		end
 

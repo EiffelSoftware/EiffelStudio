@@ -126,7 +126,7 @@ feature -- Basic operations
 				buffer := file.last_string
 					-- This checks that the file actually is a valid Build file, the fact
 					-- that 54 charaters are checked is arbitary.
-				if buffer.count < 54 or (buffer.substring (1, 54).is_equal (xml_format + "<Project_setting")) then
+				if buffer.count < 54 or (buffer.substring (1, 54).same_string (xml_format + "<Project_setting")) then
 					Result := load_and_parse_xml_file (file_name)
 						-- Assign `True' to `last_load_successful' so it can be queried
 						-- externally.

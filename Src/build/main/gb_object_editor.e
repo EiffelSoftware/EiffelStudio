@@ -261,7 +261,7 @@ feature -- Status setting
 			-- `Result' is editor item of type `a_type', contained
 			-- in `Current'. Void if none exists.
 		require
-			type_starts_ev: a_type.count > 3 and a_type.substring (1, 3).is_equal ("EV_")
+			type_starts_ev: a_type.count > 3 and a_type.substring (1, 3).same_string ("EV_")
 		local
 			editor_item: GB_OBJECT_EDITOR_ITEM
 		do
@@ -271,7 +271,7 @@ feature -- Status setting
 				item_parent.off or Result /= Void
 			loop
 				editor_item ?= item_parent.item
-				if editor_item /= Void and (editor_item.type_represented).is_equal (a_type) then
+				if editor_item /= Void and (editor_item.type_represented).same_string (a_type) then
 					Result := editor_item
 				end
 				item_parent.forth
@@ -302,7 +302,7 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			input_field_not_void: input_field /= Void
 			a_constant_not_void: a_constant /= Void
 		do
-			if input_field.type.is_equal (a_constant.type) then
+			if input_field.type.same_string (a_constant.type) then
 				input_field.constant_added (a_constant)
 			end
 		end
@@ -319,7 +319,7 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			input_field_not_void: input_field /= Void
 			a_constant_not_void: a_constant /= Void
 		do
-			if input_field.type.is_equal (a_constant.type) then
+			if input_field.type.same_string (a_constant.type) then
 				input_field.constant_added (a_constant)
 			end
 		end
@@ -338,7 +338,7 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			input_field_not_void: input_field /= Void
 			a_constant_not_void: a_constant /= Void
 		do
-			if input_field.type.is_equal (a_constant.type) then
+			if input_field.type.same_string (a_constant.type) then
 				input_field.constant_removed (a_constant)
 			end
 		end
@@ -368,7 +368,7 @@ feature {GB_OBJECT_EDITORS} -- Implementation
 			if name_in_use (name_field.text) or (object.is_top_level_object and name_field.text.is_empty) then
 				object.cancel_edited_name
 				check
-					object_names_now_equal: object.edited_name.is_equal (object.name)
+					object_names_now_equal: object.edited_name.same_string (object.name)
 				end
 				set_title_from_name
 				update_editors_for_name_change
@@ -377,7 +377,7 @@ feature {GB_OBJECT_EDITORS} -- Implementation
 			else
 					-- Now check that the name has actually changed. If it has not changed,
 					-- then do nothing.
-				if not object.edited_name.is_equal (object.name) then
+				if not object.edited_name.same_string (object.name) then
 						-- Use the text in `name_field' as the new name of the object.
 						-- We have guaranteed that the name is unique at this point.
 					create command_name_change.make (object, object.edited_name, object.name, components)
@@ -568,8 +568,8 @@ feature {NONE} -- Implementation
 					-- Now we add the button which will bring up the events window.
 					-- We do not display the events button if the type is a tool bar separator
 					-- or a menu separator, as the export status of the events is hidden.
-				if not object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") and
-				not object.type.is_equal ("EV_MENU_SEPARATOR") then
+				if not object.type.same_string ("EV_TOOL_BAR_SEPARATOR") and
+				not object.type.same_string ("EV_MENU_SEPARATOR") then
 					create event_selection_button
 					create tool_bar
 					tool_bar.extend (event_selection_button)
@@ -740,7 +740,7 @@ feature {NONE} -- Implementation
 				create my_dialog.make_with_text (Duplicate_name_warning_part1 + name_field.text + Duplicate_name_warning_part2)
 				my_dialog.show_modal_to_window (parent_window (Current))
 				my_dialog.destroy
-				if my_dialog.selected_button.is_equal ("Modify") then
+				if my_dialog.selected_button.same_string_general ("Modify") then
 					restore_name_field (name_field.text, previous_caret_position)
 				else
 						-- Restore name as edit was "cancelled".
@@ -748,7 +748,7 @@ feature {NONE} -- Implementation
 						-- Reflect changes in all editors.
 					update_editors_for_name_change
 				end
-			elseif not object.edited_name.is_equal (object.name) then
+			elseif not object.edited_name.same_string (object.name) then
 
 					-- This is a command so it is added to the history. Pressing Return
 					-- does accept the name, even though we still have the focus in the text field
@@ -770,7 +770,7 @@ feature {NONE} -- Implementation
 			name_field.set_caret_position (caret_position)
 			name_field.set_focus
 		ensure
-			text_set: name_field.text.is_equal (a_text)
+			text_set: name_field.text.same_string_general (a_text)
 			caret_position_set: name_field.caret_position = caret_position
 			focus_set: name_field.has_focus
 		end

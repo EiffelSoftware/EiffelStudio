@@ -50,7 +50,7 @@ feature -- Access
 			check
 				button_not_void: button /= Void
 			end
-			if action_sequence.is_equal ("select_actions") then
+			if action_sequence.same_string ("select_actions") then
 				if adding then
 					notify_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
 					button.select_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))

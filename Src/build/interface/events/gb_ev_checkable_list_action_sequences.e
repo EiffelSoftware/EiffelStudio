@@ -52,14 +52,14 @@ feature -- Access
 			check
 				checkable_list_not_void: checkable_list /= Void
 			end
-			if action_sequence.is_equal (names @ 1) then
+			if action_sequence.same_string (names @ 1) then
 				if adding then
 					create item_check_sequence
 					checkable_list.check_actions.extend (item_check_sequence.display_agent (action_sequence, string_handler))
 				else
 					remove_only_added (checkable_list.check_actions)
 				end
-			elseif action_sequence.is_equal (names @ 2) then
+			elseif action_sequence.same_string (names @ 2) then
 				if adding then
 					create item_check_sequence
 					checkable_list.uncheck_actions.extend (item_check_sequence.display_agent (action_sequence, string_handler))

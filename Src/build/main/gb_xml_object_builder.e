@@ -77,14 +77,14 @@ feature -- Access
 				current_element ?= xml_element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						-- Add the new objects as children.
 						build_new_object (current_element, a_new_object, is_component)
 
 					else
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							a_new_object.modify_from_xml (current_element)
-						elseif current_name.is_equal (Events_string) then
+						elseif current_name.same_string (Events_string) then
 							extract_event_information (current_element, a_new_object)
 						else
 							gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
@@ -121,7 +121,7 @@ feature -- Access
 			-- Build a new object from information in `element'.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.is_equal (Item_string)
+			element_type_is_item: element.name.same_string (Item_string)
 		local
 			a_new_object: GB_OBJECT
 			current_element: XM_ELEMENT
@@ -140,14 +140,14 @@ feature -- Access
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, a_new_object, is_component)
 					else
 						-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							a_new_object.modify_from_xml (current_element)
-						elseif current_name.is_equal (Events_string) then
+						elseif current_name.same_string (Events_string) then
 							-- No events handled.
 						else
 
@@ -302,12 +302,12 @@ feature -- Access
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						-- The element represents an item, so we must add new objects.
 						convert_element_to_instance (current_element, id, depth + 1)
 					else
 						-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							index := element.index
 							current_index := current_element.index
 							full_information := get_unique_full_info (current_element)
@@ -324,7 +324,7 @@ feature -- Access
 									loop
 										internal_current_element ?= current_element.item_for_iteration
 										if internal_current_element /= Void then
-											if internal_current_element.name.is_equal (reference_id_string) then
+											if internal_current_element.name.same_string (reference_id_string) then
 												current_element.remove_at
 											end
 										end
@@ -336,7 +336,7 @@ feature -- Access
 							end
 							element.go_i_th (index)
 							current_element.go_i_th (current_index.min (current_element.count))
-						elseif current_name.is_equal (Events_string) then
+						elseif current_name.same_string (Events_string) then
 							-- No events handled.
 						else
 						end
@@ -370,12 +370,12 @@ feature -- Access
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						-- The element represents an item, so we must add new objects.
 						update_xml (current_element, all_elements, all_ids)
 					else
 						-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							index := element.index
 							full_information := get_unique_full_info (current_element)
 							element_info := full_information @ reference_id_string
@@ -386,7 +386,7 @@ feature -- Access
 								reference_found := True
 							end
 							element.go_i_th (index)
-						elseif current_name.is_equal (Events_string) then
+						elseif current_name.same_string (Events_string) then
 							-- No events handled.
 						else
 						end
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			-- Generate event information into `object', from `element'.
 		require
 			element_not_void: element /= Void
-			element_type_is_events: element.name.is_equal (Events_string)
+			element_type_is_events: element.name.same_string (Events_string)
 		local
 			current_element: XM_ELEMENT
 			current_name: STRING
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Event_string) then
+					if current_name.same_string (Event_string) then
 						from
 							current_element.start
 						until

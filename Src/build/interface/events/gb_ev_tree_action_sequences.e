@@ -52,14 +52,14 @@ feature -- Access
 			check
 				tree_not_void: tree /= Void
 			end
-			if action_sequence.is_equal (names @ 1) then
+			if action_sequence.same_string (names @ 1) then
 				if adding then
 					create notify_sequence
 					tree.select_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))
 				else
 					remove_only_added (tree.select_actions)
 				end
-			elseif action_sequence.is_equal (names @ 2) then
+			elseif action_sequence.same_string (names @ 2) then
 				if adding then
 					create notify_sequence
 					tree.select_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))

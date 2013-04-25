@@ -14,22 +14,22 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 	GB_CONSTANTS
-	
+
 	INTERNAL
 		undefine
 			default_create
 		end
-	
+
 feature -- Access
 
 	ev_type: EV_COLORIZABLE
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING = "EV_COLORIZABLE"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -42,9 +42,9 @@ feature -- Access
 		do
 			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
-			
+
 			reset_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_recycle_bin_color")
-			
+
 			create label.make_with_text (gb_ev_colorizable_foreground_color)
 			Result.extend (label)
 			Result.disable_item_expand (label)
@@ -62,7 +62,7 @@ feature -- Access
 			horizontal_box.extend (tool_bar)
 			horizontal_box.disable_item_expand (tool_bar)
 			Result.extend (horizontal_box)
-			
+
 			create label.make_with_text (gb_ev_colorizable_background_color)
 			Result.extend (label)
 			Result.disable_item_expand (label)
@@ -85,7 +85,7 @@ feature -- Access
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
-		
+
 	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 		do
 			actually_set_foreground_color (stone.color)
 		end
-		
+
 	accept_background_color_stone (stone: GB_COLOR_STONE)
 			-- Set background color, based on settings of `stone'.
 		require
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			update_editors
 			update_attribute_editor
 		end
-		
+
 	restore_foreground_color
 			-- Restore `foreground_color' of objects to originals.
 		local
@@ -181,11 +181,11 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (background_color)
 			color_dialog.show_modal_to_window (parent_window (parent_editor))
-			if color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if color_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				actually_set_background_color (color_dialog.color)
 			end
 		end
-		
+
 	actually_set_background_color (color: EV_COLOR)
 			-- Actually update the background colors.
 		local
@@ -213,11 +213,11 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (foreground_color)
 			color_dialog.show_modal_to_window (parent_window (parent_editor))
-			if color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if color_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				actually_set_foreground_color (color_dialog.color)
 			end
 		end
-		
+
 	actually_set_foreground_color (color: EV_COLOR)
 			-- Actually update the foreground colors.
 		local
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			foreground_color := color
 			update_editors
 		end
-		
+
 	valid_color (a_color: EV_COLOR): BOOLEAN
 			-- Is `a_color' a valid color?
 		do
@@ -237,13 +237,13 @@ feature {NONE} -- Implementation
 
 	foreground_color: EV_COLOR
 	background_color: EV_COLOR
-	
+
 	b_area, f_area: EV_DRAWING_AREA
-	
+
 	color_dialog: EV_COLOR_DIALOG
-	
+
 	foreground_color_entry: GB_COLOR_INPUT_FIELD
-	
+
 	background_color_entry: GB_COLOR_INPUT_FIELD;
 
 note

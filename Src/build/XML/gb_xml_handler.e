@@ -184,7 +184,7 @@ feature -- Basic operations
 			loop
 				create error_dialog.make_with_text ({STRING_32} "Unable to write to file : " + component_filename.name + ".%NPlease check file permissions and try again.")
 				error_dialog.show_modal_to_window (components.tools.main_window)
-				if error_dialog.selected_button.is_equal (ev_abort) then
+				if error_dialog.selected_button.same_string_general (ev_abort) then
 					cancelled := True
 				end
 			end
@@ -259,7 +259,7 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 			loop
 				internal_element ?= component_element.item_for_iteration
 				current_name := internal_element.name
-				if current_name.is_equal (Item_string) then
+				if current_name.same_string (Item_string) then
 					Result := internal_element.attribute_by_name (type_string).value
 				end
 				component_element.forth

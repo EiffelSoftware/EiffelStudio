@@ -44,7 +44,7 @@ feature -- Access
 			initialize_attribute_editor (Result)
 				-- Tool bar and menu separators do inherit from EV_PIXMAPABLE,
 				-- however, the facilities are not exported.
-			if not (object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") or object.type.is_equal ("EV_MENU_SEPARATOR")) then
+			if not (object.type.same_string ("EV_TOOL_BAR_SEPARATOR") or object.type.same_string ("EV_MENU_SEPARATOR")) then
 				create pixmap_input_field.make (Current, Result, pixmap_path_string, "Pixmap", "Pixmap", agent execute,
 					agent validate, agent return_pixmap, agent return_pixmap_path, components)
 				update_attribute_editor

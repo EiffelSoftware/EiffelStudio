@@ -50,7 +50,7 @@ feature -- Basic Operation
 				components.history.add_command (Current)
 			end
 			if object.is_top_level_object then
-				if not new_name.as_lower.is_equal (old_name.as_lower) then
+				if not new_name.is_case_insensitive_equal (old_name) then
 						-- If only the type (Upper or Lower) of the named has changed, then there is no
 						-- need to rename files.
 					components.tools.widget_selector.update_class_files_of_window (object, old_name, new_name)
@@ -75,7 +75,7 @@ feature -- Basic Operation
 			object.set_name (old_name)
 			object ?= object
 			if object.is_top_level_object then
-				if not new_name.as_lower.is_equal (old_name.as_lower) then
+				if not new_name.is_case_insensitive_equal (old_name) then
 						-- If only the type (Upper or Lower) of the named has changed, then there is no
 						-- need to rename files.
 					components.tools.widget_selector.update_class_files_of_window (object, new_name, old_name)

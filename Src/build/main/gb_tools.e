@@ -161,7 +161,7 @@ feature -- Access
 			until
 				tools.off or Result /= Void
 			loop
-				if name.is_equal (tools.item.storable_name) then
+				if name.same_string (tools.item.storable_name) then
 					Result := tools.item
 				end
 				tools.forth
@@ -216,9 +216,9 @@ feature -- Access
 		require
 			name_not_void: a_name /= Void
 		do
-			if a_name.is_equal (tool_name_as_storable (Component_selector_name)) or
-				a_name.is_equal (tool_name_as_storable (Type_selector_name)) or
-				a_name.is_equal (tool_name_as_storable (Widget_selector_name)) then
+			if a_name.same_string (tool_name_as_storable (Component_selector_name)) or
+				a_name.same_string (tool_name_as_storable (Type_selector_name)) or
+				a_name.same_string (tool_name_as_storable (Widget_selector_name)) then
 				Result := True
 			end
 		end

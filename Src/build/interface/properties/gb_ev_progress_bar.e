@@ -8,7 +8,7 @@ note
 
 class
 	GB_EV_PROGRESS_BAR
-	
+
 	-- The following properties from EV_PROGRESS_BAR are manipulated by `Current'.
 	-- Is_segmented - Performed on the real object and the display object.
 
@@ -17,7 +17,7 @@ inherit
 		undefine
 			attribute_editor
 		end
-		
+
 	GB_EV_PROGRESS_BAR_EDITOR_CONSTRUCTOR
 
 feature {GB_XML_STORE} -- Output
@@ -38,14 +38,14 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_segmented_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					for_first_object (agent {EV_PROGRESS_BAR}.enable_segmentation)
 				else
 					for_first_object (agent {EV_PROGRESS_BAR}.disable_segmentation)
 				end
 			end
 		end
-		
+
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO):ARRAYED_LIST [STRING]
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
@@ -57,7 +57,7 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_segmented_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					Result.extend (info.actual_name_for_feature_call + "enable_segmentation")
 				else
 					Result.extend (info.actual_name_for_feature_call + "disable_segmentation")

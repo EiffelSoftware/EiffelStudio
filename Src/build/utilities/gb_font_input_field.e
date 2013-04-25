@@ -278,7 +278,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			end
 			font_dialog.set_font (fontable.font)
 			font_dialog.show_modal_to_window (parent_window (Current))
-			if font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if font_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				execute_agent (font_dialog.font)
 			end
 		end

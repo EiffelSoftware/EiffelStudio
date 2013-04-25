@@ -41,7 +41,7 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_sensitive_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					for_first_object (agent {EV_SENSITIVE}.enable_sensitive)
 				else
 					for_first_object (agent {EV_SENSITIVE}.disable_sensitive)
@@ -60,7 +60,7 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_sensitive_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					Result.extend (info.actual_name_for_feature_call + "enable_sensitive")
 				else
 					Result.extend (info.actual_name_for_feature_call + "disable_sensitive")

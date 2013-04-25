@@ -305,7 +305,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 		do
 			create color_dialog
 			color_dialog.show_modal_to_window (parent_window (Current))
-			if color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if color_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				execute_agent (color_dialog.color)
 			end
 		end

@@ -207,7 +207,7 @@ feature -- Basic operation
 				set_boolean_attribute (data @ debugging_output_string, agent enable_debugging_output, agent disable_debugging_output)
 				set_string_attribute (data @ attributes_local_string, agent set_attributes_locality)
 				if data.has (client_of_window_string) then
-					if data.item (client_of_window_string).is_equal (true_string) then
+					if data.item (client_of_window_string).same_string (true_string) then
 						loaded_project_had_client_information := True
 					end
 				end
@@ -247,7 +247,7 @@ feature -- Status Setting
 		do
 			project_type := a_type
 		ensure
-			set: project_type.is_equal (a_type)
+			set: project_type = a_type
 		end
 
 	set_project_location (location: STRING)
@@ -257,7 +257,7 @@ feature -- Status Setting
 		do
 			project_location := location
 		ensure
-			project_location.is_equal (location)
+			project_location.same_string (location)
 		end
 
 	set_main_window_class_name (name: STRING)
@@ -268,7 +268,7 @@ feature -- Status Setting
 		do
 			main_window_class_name := name.twin
 		ensure
-			main_window_class_name.is_equal (name)
+			main_window_class_name.same_string (name)
 		end
 
 	set_application_class_name (name: STRING)
@@ -279,7 +279,7 @@ feature -- Status Setting
 		do
 			application_class_name := name.twin
 		ensure
-			application_class_name.is_equal (name)
+			application_class_name.same_string (name)
 		end
 
 	set_constants_class_name (name: STRING)
@@ -290,7 +290,7 @@ feature -- Status Setting
 		do
 			constants_class_name := name.twin
 		ensure
-			constants_class_name.is_equal (name)
+			constants_class_name.same_string (name)
 		end
 
 	set_project_name (name: STRING)
@@ -300,7 +300,7 @@ feature -- Status Setting
 		do
 			project_name := name
 		ensure
-			project_name.is_equal (name)
+			project_name.same_string (name)
 		end
 
 	enable_complete_project
@@ -342,8 +342,8 @@ feature -- Status Setting
 	set_attributes_locality (locality: STRING)
 			-- Assign `locality' to `attributes_local'.
 		require
-			valid_locality: locality.is_equal (True_string) or locality.is_equal (False_string) or
-				locality.is_equal (False_optimal_string) or locality.is_equal (false_non_exported_string)
+			valid_locality: locality.same_string (True_string) or locality.same_string (False_string) or
+				locality.same_string (False_optimal_string) or locality.same_string (false_non_exported_string)
 		do
 			attributes_local := locality
 		end
@@ -377,7 +377,7 @@ feature -- Status Setting
 		do
 			generation_location := location.twin
 		ensure
-			location_set: generation_location.is_equal (location)
+			location_set: generation_location.same_string (location)
 		end
 
 feature {GB_FILE_OPEN_COMMAND}
@@ -449,11 +449,11 @@ feature {NONE} --Implementation
 			-- If `a_string' is `True_string' then call `true_agent', else call `false_agent'.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_valid: a_string.is_equal (true_string) or a_string.is_equal (false_string)
+			a_string_valid: a_string.same_string (true_string) or a_string.same_string (false_string)
 			true_agent_not_void: true_agent /= Void
 			false_agent_not_void: false_agent /= Void
 		do
-			if a_string. is_equal (True_string) then
+			if a_string. same_string (True_string) then
 				true_agent.call ([])
 			else
 				false_agent.call ([])

@@ -87,7 +87,7 @@ feature -- Basic operations
 			loop
 				create_project := True
 				dialog.show_modal_to_window (components.tools.main_window)
-				if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+				if dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					cancelled := True
 				end
 					-- If a directory was chosen.
@@ -98,7 +98,7 @@ feature -- Basic operations
 						create conf_dialog.make_with_text (Project_exists_warning)
 						conf_dialog.set_icon_pixmap (Icon_build_window @ 1)
 						conf_dialog.show_modal_to_window (components.tools.main_window)
-						if not conf_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+						if not conf_dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 							create_project := False
 						end
 					end
@@ -108,7 +108,7 @@ feature -- Basic operations
 							create directory_conf.make_with_text (Directory_exists_warning)
 							directory_conf.set_icon_pixmap (Icon_build_window @ 1)
 							directory_conf.show_modal_to_window (components.tools.main_window)
-							if directory_conf.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+							if directory_conf.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 								directory.create_dir
 							end
 						end

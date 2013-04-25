@@ -47,7 +47,7 @@ feature -- Basic operation.
 				-- "column_resize_actions" was renamed with CVS version 1.6 of this file so
 				-- that Build no longer generated an obsolete action sequence. We change the
 				-- name manually so old projects may be loaded.
-			if a_name.is_equal ("column_resize_actions") then
+			if a_name.same_string ("column_resize_actions") then
 				a_name := "column_resized_actions"
 			end
 
@@ -75,8 +75,8 @@ feature -- Basic operation.
 			-- events are renamed.
 		do
 			Result := action_sequence_info.name
-			if current_type.is_equal (Ev_spin_button_string) then
-				if action_sequence_info.class_name.is_equal ("EV_TEXT_COMPONENT_ACTION_SEQUENCES") then
+			if current_type.same_string (Ev_spin_button_string) then
+				if action_sequence_info.class_name.same_string ("EV_TEXT_COMPONENT_ACTION_SEQUENCES") then
 					Result := "text_change_actions"
 				end
 			end

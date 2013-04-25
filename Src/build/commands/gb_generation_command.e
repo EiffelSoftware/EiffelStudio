@@ -92,7 +92,7 @@ feature -- Basic operations
 				create confirmation_dialog.make_with_text (Not_all_windows_named_string)
 				confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				confirmation_dialog.show_modal_to_window (components.tools.main_window)
-				if confirmation_dialog.selected_button.is_equal ("OK") then
+				if confirmation_dialog.selected_button.same_string_general ("OK") then
 					components.object_handler.add_default_names (objects)
 				end
 			end

@@ -8,23 +8,23 @@ note
 
 deferred class
 	GB_EV_FRAME_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
 		end
-		
+
 	EV_FRAME_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 feature -- Access
 
 	ev_type: EV_FRAME
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING = "EV_FRAME"
 		-- String representation of object_type modifyable by `Current'.
 
@@ -55,7 +55,7 @@ feature -- Access
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
-		
+
 	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -78,7 +78,7 @@ feature -- Access
 
 			combo_box.select_actions.resume
 		end
-		
+
 feature {NONE} -- Implementation
 
 	initialize_agents
@@ -93,17 +93,17 @@ feature {NONE} -- Implementation
 		do
 			for_all_objects (agent {EV_FRAME}.set_style (style_from_text (combo_box.selected_item.text)))
 		end
-		
+
 	style_from_text (text: STRING): INTEGER
 			-- `Result' is value of Ev_frame_constants matching `text'.
 		do
-			if text.is_equal (Ev_frame_lowered_string) then
+			if text.same_string (Ev_frame_lowered_string) then
 				Result := Ev_frame_lowered
-			elseif text.is_equal (Ev_frame_raised_string) then
+			elseif text.same_string (Ev_frame_raised_string) then
 				Result := Ev_frame_raised
-			elseif text.is_equal (Ev_frame_etched_in_string) then
+			elseif text.same_string (Ev_frame_etched_in_string) then
 				Result := Ev_frame_etched_in
-			elseif text.is_equal (Ev_frame_etched_out_string) then
+			elseif text.same_string (Ev_frame_etched_out_string) then
 				Result := Ev_frame_etched_out
 			else
 				check
@@ -114,17 +114,17 @@ feature {NONE} -- Implementation
 
 	combo_box: EV_COMBO_BOX
 		-- Holds current selection.
-		
+
 	label: EV_LABEL
 		-- Identifies `combo_box'.
-		
+
 	Style_string: STRING = "Style"
-	
+
 	Ev_frame_lowered_string: STRING = "Ev_frame_lowered"
 	Ev_frame_raised_string: STRING = "Ev_frame_raised"
 	Ev_frame_etched_in_string: STRING = "Ev_frame_etched_in"
 	Ev_frame_etched_out_string: STRING = "Ev_frame_etched_out"
-	
+
 	item_lowered, item_raised, item_etched_in, item_etched_out: EV_LIST_ITEM;
 
 note

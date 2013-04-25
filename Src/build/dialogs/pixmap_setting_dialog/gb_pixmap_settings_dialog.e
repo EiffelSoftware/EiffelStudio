@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 				else
 					pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, file_path, file_title, True, components)
 				end
-				if not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and
+				if not pixmap_constant.is_absolute and pixmap_constant.directory.same_string (file_path) and
 					components.constants.matching_directory_constant_name (file_path) = Void then
 					create warning_dialog.make_with_components (components)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 									add_absolute_constant (pixmap_constant)
 								end
 						else
-							if not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and added_directory_name = Void and
+							if not pixmap_constant.is_absolute and pixmap_constant.directory.same_string (file_path) and added_directory_name = Void and
 								components.constants.matching_directory_constant_name (file_path) = Void then
 									-- If constant is relative, and a name has not been entered for a directory, and the add directory has
 									-- not already been shown, then retrieve a name for the directroy, and add both,
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 								else
 									cancelled := True
 								end
-							elseif not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and added_directory_name /= Void then
+							elseif not pixmap_constant.is_absolute and pixmap_constant.directory.same_string (file_path) and added_directory_name /= Void then
 									-- If constant is relative, no directory name has been specified, and a directory has already been selected from
 									-- `warning_dialog', add the constant relative to that directory. May only occur if multiple pixmaps are being added.
 								pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute, components)
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			loop
 				shown_once := True
 				dialog.show_modal_to_window (Current)
-				if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+				if not dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					pixmap_list.wipe_out
 					if not mode_is_modify then
 						reset_labels
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 					error_dialog.show_modal_to_window (Current)
 				end
 			end
-			if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+			if not dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 				if not mode_is_modify then
 					absolute_text.set_text (get_unique_pixmap_name (file_title))
 					relative_text.set_text (get_unique_pixmap_name (file_title))
@@ -645,12 +645,12 @@ feature {NONE} -- Implementation
 			if not rescued then
 				create dialog
 				dialog.show_modal_to_window (Current)
-				if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+				if not dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					pixmap_list.wipe_out
 					reset_labels
 				end
 			end
-			if not dialog.path.is_empty or not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+			if not dialog.path.is_empty or not dialog.selected_button.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 				if not rescued then
 					pixmap_list.check_actions.block
 					file_path := dialog.directory
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 				end
 
 			end
-			if not pixmap_constant.directory.is_empty and not pixmap_constant.directory.is_equal (file_path) then
+			if not pixmap_constant.directory.is_empty and not pixmap_constant.directory.same_string (file_path) then
 				relative_directory_combo.set_text (pixmap_constant.directory)
 			end
 				--As the selected item has changed, update the display in the naming fields.

@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			tree_item.set_pebble (Current)
 			is_grayed_out := True
 		ensure
-			name_set: name.is_equal (a_name)
+			name_set: name.same_string (a_name)
 			components_set: components = a_components
 		end
 

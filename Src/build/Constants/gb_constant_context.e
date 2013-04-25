@@ -7,16 +7,16 @@ note
 
 class
 	GB_CONSTANT_CONTEXT
-	
+
 inherit
 	ANY
 		redefine
 			is_equal
 		end
-	
+
 create
 	make_with_context
-	
+
 feature {NONE} -- Initialization
 
 	make_with_context (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, a_field: STRING)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			modify (a_constant, an_object, a_property, a_field)
 		end
-		
+
 feature -- Status_setting
 
 	modify (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, a_field: STRING)
@@ -54,13 +54,13 @@ feature -- Access
 
 	object: GB_OBJECT
 		-- Object in which `constant' is used.
-		
+
 	property: STRING
 		-- Name of property class referencing `constant'.
-		
+
 	field: STRING
 		-- Name of attribute class referencing `constant'.
-		
+
 feature -- Measurement
 
 	is_equal (other: GB_CONSTANT_CONTEXT): BOOLEAN
@@ -72,15 +72,15 @@ feature -- Measurement
 		do
 			if constant = other.constant and
 				object = other.object and
-				property.is_equal (other.property) and
-				field.is_equal (other.property) then
+				property.same_string (other.property) and
+				field.same_string (other.property) then
 				Result := True
 			end
 		end
-		
+
 	is_destroyed: BOOLEAN
 		-- Has `Current' been destroyed?
-		
+
 feature -- Destruction
 
 	destroy
@@ -103,7 +103,7 @@ feature -- Destruction
 			unreferenced: not (old constant).referers.has (Current) and
 				not (old object).constants.has (property + field)
 		end
-		
+
 
 invariant
 	constant_not_void: not is_destroyed implies constant /= Void

@@ -48,7 +48,7 @@ feature -- Access
 			check
 				notebook_not_void: notebook /= Void
 			end
-			if action_sequence.is_equal (names @ 1) then
+			if action_sequence.same_string (names @ 1) then
 				if adding then
 					create notify_sequence
 					notebook.selection_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))

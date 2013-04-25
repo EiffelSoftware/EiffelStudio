@@ -8,7 +8,7 @@ note
 
 class
 	GB_EV_TEXT_ALIGNABLE
-	
+
 	-- The following properties from EV_TEXT_ALIGNABLE are manipulated by `Current'.
 	-- Text_alignment - Performed on the real object and the display_object child
 
@@ -17,19 +17,19 @@ inherit
 		undefine
 			attribute_editor
 		end
-		
+
 	GB_EV_TEXT_ALIGNABLE_EDITOR_CONSTRUCTOR
-		
+
 	EV_FRAME_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	DEFAULT_OBJECT_STATE_CHECKER
 		undefine
 			default_create
 		end
-		
+
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XM_ELEMENT)
@@ -54,13 +54,13 @@ feature {GB_XML_STORE} -- Output
 				alignment_text := Ev_textable_right_string
 			else
 				check
-					error: False					
+					error: False
 				end
 			end
 			add_element_containing_string (element, text_alignment_string, alignment_text)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		local
@@ -69,16 +69,16 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_alignment_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (Ev_textable_left_string) then
+				if element_info.data.same_string (Ev_textable_left_string) then
 					for_all_objects (agent {EV_TEXT_ALIGNABLE}.align_text_left)
-				elseif element_info.data.is_equal (Ev_textable_center_string) then
+				elseif element_info.data.same_string (Ev_textable_center_string) then
 					for_all_objects (agent {EV_TEXT_ALIGNABLE}.align_text_center)
-				elseif element_info.data.is_equal (Ev_textable_right_string) then
+				elseif element_info.data.same_string (Ev_textable_right_string) then
 					for_all_objects (agent {EV_TEXT_ALIGNABLE}.align_text_right)
 				end
 			end
 		end
-		
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
@@ -92,11 +92,11 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_alignment_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (Ev_textable_left_string) then
+				if element_info.data.same_string (Ev_textable_left_string) then
 					Result.extend (info.actual_name_for_feature_call + "align_text_left")
-				elseif element_info.data.is_equal (Ev_textable_center_string) then
+				elseif element_info.data.same_string (Ev_textable_center_string) then
 					Result.extend (info.actual_name_for_feature_call + "align_text_center")
-				elseif element_info.data.is_equal (Ev_textable_right_string) then
+				elseif element_info.data.same_string (Ev_textable_right_string) then
 					Result.extend (info.actual_name_for_feature_call + "align_text_right")
 				end
 			end

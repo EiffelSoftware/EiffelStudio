@@ -169,11 +169,11 @@ feature -- Access
 	short_type: STRING
 			-- Result is a short version of type with "EV_" removed from start.
 		require
-			valid_type: type.count > 4 and type.substring (1, 3).is_equal ("EV_")
+			valid_type: type.count > 4 and type.substring (1, 3).same_string ("EV_")
 		do
 			Result := type.substring (4, type.count)
 		ensure
-			Result_correct : ("EV_" + Result).is_equal (type)
+			Result_correct : ("EV_" + Result).same_string (type)
 		end
 
 	parent_object: GB_OBJECT
@@ -1198,8 +1198,8 @@ feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WIDGET_SELECTOR} -- Basic 
 			edited_name := new_name
 			update_representations_for_name_or_type_change
 		ensure
-			name_assigned: name.is_equal (new_name)
-			edited_name_set: name.is_equal (new_name)
+			name_assigned: name.same_string (new_name)
+			edited_name_set: edited_name.same_string (new_name)
 		end
 
 	update_representations_for_name_or_type_change
@@ -1394,7 +1394,7 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 			edited_name := a_name
 			update_representations_for_name_or_type_change
 		ensure
-			name_set: edited_name.is_equal (a_name)
+			name_set: edited_name.same_string (a_name)
 		end
 
 	cancel_edited_name
@@ -1413,7 +1413,7 @@ feature {GB_WIDGET_SELECTOR_ITEM, GB_GENERAL_UTILITIES} -- Implementation
 			-- When we are not editing, `edited_name' and `name' are
 			-- identical.
 		do
-			if edited_name.is_equal (name) then
+			if edited_name.same_string (name) then
 				Result := name
 			else
 				Result := edited_name
@@ -1804,7 +1804,7 @@ feature {NONE} -- Implementation
 			else
 				titled_window_object ?= obj2
 				if titled_window_object /= Void then
-					if new_type.is_equal (menu_bar_string) then
+					if new_type.same_string (menu_bar_string) then
 						if titled_window_object.object.menu_bar /= Void then
 							components.status_bar.set_status_text (status_start + "ointed target (" + obj2.short_type + ") already has a menu bar.")
 						end
@@ -2029,7 +2029,7 @@ feature {NONE} -- Contract support
 						until
 							new_linear_representation.off or Result = False
 						loop
-							if not new_linear_representation.item.type.is_equal (current_linear_representation.item.type) then
+							if not new_linear_representation.item.type.same_string (current_linear_representation.item.type) then
 								Result := False
 							end
 							new_linear_representation.forth

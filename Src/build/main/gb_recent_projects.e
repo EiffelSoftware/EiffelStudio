@@ -46,7 +46,7 @@ feature -- Basic operations
 			until
 				counter > recent_projects.count
 			loop
-				if recent_projects.item (counter).as_lower.is_equal (lower_location) then
+				if recent_projects.item (counter).as_lower.same_string (lower_location) then
 					has_project := True
 					project_index := counter
 				end

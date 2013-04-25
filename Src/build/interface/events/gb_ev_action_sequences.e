@@ -25,7 +25,7 @@ feature -- Status Report
 		require
 			a_feature_name_not_void: a_feature_name /= Void
 		do
-			Result := names.has (a_feature_name)
+			Result := across names as l_name some l_name.item.same_string (a_feature_name) end
 		end
 
 	valid_index (a_index: INTEGER): BOOLEAN
@@ -41,8 +41,15 @@ feature -- Access
 		require
 			a_feature_name_not_void: a_feature_name /= Void
 			has_name: has_name (a_feature_name)
+		local
+			l_index: INTEGER
 		do
-			Result := types.i_th (names.index_of (a_feature_name, 1))
+			across names as l_names until l_index /= 0 loop
+				if l_names.item.same_string (a_feature_name) then
+					l_index := l_names.cursor_index
+				end
+			end
+			Result := types.i_th (l_index)
 		end
 
 	name (a_type: STRING; an_index: INTEGER): STRING

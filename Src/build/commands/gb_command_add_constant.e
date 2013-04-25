@@ -53,22 +53,22 @@ feature -- Basic Operation
 			font_constant: GB_FONT_CONSTANT
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
-			if internal_constant.type.is_equal (Integer_constant_type) then
+			if internal_constant.type.same_string (Integer_constant_type) then
 				integer_constant ?= internal_constant
 				components.constants.add_integer (integer_constant)
-			elseif internal_constant.type.is_equal (String_constant_type) then
+			elseif internal_constant.type.same_string (String_constant_type) then
 				string_constant ?= internal_constant
 				components.constants.add_string (string_constant)
-			elseif internal_constant.type.is_equal (Pixmap_constant_type) then
+			elseif internal_constant.type.same_string (Pixmap_constant_type) then
 				pixmap_constant ?= internal_constant
 				components.constants.add_pixmap (pixmap_constant)
-			elseif internal_constant.type.is_equal (Directory_constant_type) then
+			elseif internal_constant.type.same_string (Directory_constant_type) then
 				directory_constant ?= internal_constant
 				components.constants.add_directory (directory_constant)
-			elseif internal_constant.type.is_equal (Color_constant_type) then
+			elseif internal_constant.type.same_string (Color_constant_type) then
 				color_constant ?= internal_constant
 				components.constants.add_color (color_constant)
-			elseif internal_constant.type.is_equal (Font_constant_type) then
+			elseif internal_constant.type.same_string (Font_constant_type) then
 				font_constant ?= internal_constant
 				components.constants.add_font (font_constant)
 			end

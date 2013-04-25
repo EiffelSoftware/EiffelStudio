@@ -8,25 +8,25 @@ note
 
 deferred class
 	GB_EV_TEXT_ALIGNABLE_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
 		end
-		
+
 feature -- Access
 
 	ev_type: EV_TEXT_ALIGNABLE
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING = "EV_TEXT_ALIGNABLE"
 		-- String representation of object_type modifyable by `Current'.
 
 	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
-		do	
+		do
 			create Result.make_with_components (components)
 			Result.set_padding_width (object_editor_vertical_padding_width)
 			initialize_attribute_editor (Result)
@@ -51,7 +51,7 @@ feature -- Access
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
-		
+
 	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -67,15 +67,15 @@ feature -- Access
 			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
 				item_center.enable_select
 			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
-				item_right.enable_select	
+				item_right.enable_select
 			else
 				check
-					error: False					
+					error: False
 				end
 			end
 			combo_box.select_actions.resume
 		end
-		
+
 feature {NONE} -- Implementation
 
 	initialize_agents
@@ -88,11 +88,11 @@ feature {NONE} -- Implementation
 	selection_changed
 			-- Selection in `combo_box' changed.
 		do
-			if combo_box.selected_item.text.is_equal (Ev_textable_left_string) then
+			if combo_box.selected_item.text.same_string_general (Ev_textable_left_string) then
 				for_all_objects (agent {EV_TEXT_ALIGNABLE}.align_text_left)
-			elseif combo_box.selected_item.text.is_equal (Ev_textable_center_string) then
+			elseif combo_box.selected_item.text.same_string_general (Ev_textable_center_string) then
 				for_all_objects (agent {EV_TEXT_ALIGNABLE}.align_text_center)
-			elseif combo_box.selected_item.text.is_equal (Ev_textable_right_string) then
+			elseif combo_box.selected_item.text.same_string_general (Ev_textable_right_string) then
 				for_all_objects (agent {EV_TEXT_ALIGNABLE}.align_text_right)
 			else
 				check
@@ -105,15 +105,15 @@ feature {NONE} -- Implementation
 
 	combo_box: EV_COMBO_BOX
 		-- Holds current selection.
-		
+
 	label: EV_LABEL
 		-- Identifies `combo_box'.
-		
+
 	text_entry: EV_TEXT_FIELD
 
 	Text_string: STRING = "Text"
 	Text_alignment_string: STRING = "Text_alignment"
-	
+
 	Ev_textable_left_string: STRING = "Left"
 	Ev_textable_center_string: STRING = "Center"
 	Ev_textable_right_string: STRING = "Right";

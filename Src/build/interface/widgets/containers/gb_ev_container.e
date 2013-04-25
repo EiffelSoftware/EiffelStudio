@@ -10,23 +10,23 @@ class
 	GB_EV_CONTAINER
 
 inherit
-	
+
 	GB_EV_ANY
 		undefine
 			attribute_editor
 		redefine
 			modify_from_xml_after_build
 		end
-		
+
 	GB_EV_CONTAINER_EDITOR_CONSTRUCTOR
-		
+
 	INTERNAL
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		export
 			{NONE} all
@@ -62,14 +62,14 @@ feature {GB_XML_STORE} -- Output
 				add_element_containing_string (element, merged_groups_string, groups_string)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		do
 				-- We set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
 		end
-		
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
@@ -101,7 +101,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					if components.object_handler.object_from_id (linked_groups.item).is_top_level_object then
 						other_info := info.generated_info_by_id.item (linked_groups.item)
 						if other_info.generate_as_client then
-							if other_info.type.is_equal (ev_titled_window_string) or other_info.type.is_equal (ev_dialog_string) then
+							if other_info.type.same_string (ev_titled_window_string) or other_info.type.same_string (ev_dialog_string) then
 								window_actual_name_for_feature_call.append (client_window_string)
 							else
 								window_actual_name_for_feature_call.append (client_widget_string)
@@ -118,7 +118,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				end
 			end
 		end
-		
+
 feature {GB_DEFERRED_BUILDER} -- Status setting
 
 
@@ -145,13 +145,13 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 						check
 							only_one_space_per_value: temp_string @ (counter + 1) /= ' '
 						end
-						found_id := (temp_string.substring (last_space, counter - 1)).to_integer						
+						found_id := (temp_string.substring (last_space, counter - 1)).to_integer
 						last_space := counter + 1
 					elseif counter = temp_string.count then
 						found_id := (temp_string.substring (last_space, counter)).to_integer
 					end
 					merged_object ?= components.object_handler.object_from_id (found_id)
-					
+
 --					check
 --						merged_object_was_container: merged_object /= Void
 --					end
@@ -185,8 +185,8 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			radio_group_link.set_pebble (radio_group_link)
 			radio_group_link.set_object (an_object)
 			radio_group_link.set_gb_ev_container (Current)
-			
-			merged_list.extend (radio_group_link)				
+
+			merged_list.extend (radio_group_link)
 				-- We must now create a new addition for all containers that
 				-- were already linked to `an_object'.
 			container ?= an_object.object
@@ -214,7 +214,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				-- to each object.
 			link_to_object (an_object)
 		end
-			
+
 	update_linked_names
 			-- For all items in `merged_list', update
 			-- their texts to reflect the current state of
@@ -237,7 +237,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 		end
 
 feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
-		
+
 	unlink_group (group_link: GB_RADIO_GROUP_LINK)
 			--
 		local
@@ -256,7 +256,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				object_was_container: grouped_container /= Void
 			end
 			grouped_container.unmerge_radio_button_groups (container)
-			
+
 				-- Now, unlink the Vision2 object associated
 				-- with GB_OBJECT.display_object
 			link_display_object ?= group_link.object.display_object
@@ -272,17 +272,17 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				-- Removed `group_link' from display of
 				-- merged containers.
 			merged_list.prune_all (group_link)
-			
+
 				-- Updated object editors that may be affected by this
 				-- attribute change.
 			update_object_editors_for_radio_unmerge (group_link.object, parent_editor)
 				-- Destroy `group_link' as it is no longer needed.
 			group_link.destroy
-			
+
 				-- Now update the project status, as something has changed.
 			enable_project_modified
 		end
-		
+
 	update_object_editors_for_radio_unmerge (unmerged_object: GB_OBJECT; calling_editor: GB_OBJECT_EDITOR)
 			-- For every item in `editors', updated, to reflect an unmerging of `merged_object'.
 		local
@@ -299,12 +299,12 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				editor := editors.item
 				editor_container ?= editor.object.object
 				if editor /= calling_editor and editor_container /= Void then
-					editor.update_current_object	
+					editor.update_current_object
 				end
 				editors.forth
 			end
 		end
-		
+
 	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -322,7 +322,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			groups := container.merged_radio_button_groups
 			if groups /= Void then
 				if groups.count = merged_list.count then
-					update_linked_names	
+					update_linked_names
 				else
 				merged_list.wipe_out
 				from

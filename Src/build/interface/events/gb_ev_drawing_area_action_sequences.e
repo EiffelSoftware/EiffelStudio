@@ -49,7 +49,7 @@ feature -- Access
 			check
 				drawing_area_not_void: drawing_area /= Void
 			end
-			if action_sequence.is_equal ("expose_actions") then
+			if action_sequence.same_string ("expose_actions") then
 				if adding then
 					geometry_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_GEOMETRY_ACTION_SEQUENCE"))
 					drawing_area.expose_actions.extend (geometry_sequence.display_agent (action_sequence, string_handler))

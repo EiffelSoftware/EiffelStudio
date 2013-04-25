@@ -133,7 +133,7 @@ feature -- Status setting
 		do
 			if constants_button.is_selected then
 				if constants_combo_box.selected_item /= Void and then
-					constants_combo_box.selected_item.text.is_equal (constant.name) then
+					constants_combo_box.selected_item.text.same_string_general (constant.name) then
 					constants_button.disable_select
 				end
 			end
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			-- Does `constants_combo_box' contain the select item entry?
 		do
 			if not constants_combo_box.is_empty then
-				Result := constants_combo_box.i_th (1).text.is_equal (select_constant_string)
+				Result := constants_combo_box.i_th (1).text.same_string_general (select_constant_string)
 			end
 		end
 

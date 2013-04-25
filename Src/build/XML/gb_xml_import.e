@@ -163,11 +163,11 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				current_element ?= window.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						build_new_object (current_element, an_object)
 					else
 							-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							is_processing_window := True
 							process_names (current_element)
 							is_processing_window := False
@@ -186,7 +186,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							an_object.widget_selector_item.unparent
 							parent_common_item.add_alphabetically (an_object.widget_selector_item)
 							parent_common_item.expand
-						elseif current_name.is_equal (Events_string) then
+						elseif current_name.same_string (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
 							extract_event_information (current_element, an_object)
@@ -230,7 +230,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- `Result' is the new object.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.is_equal (Item_string)
+			element_type_is_item: element.name.same_string (Item_string)
 		local
 			new_object: GB_OBJECT
 		do
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			-- Build a new object from information in `element' into `object'.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.is_equal (Item_string)
+			element_type_is_item: element.name.same_string (Item_string)
 		local
 			new_object: GB_OBJECT
 		do
@@ -308,16 +308,16 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 							-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, object)
-					elseif current_name.is_equal (Events_string) then
+					elseif current_name.same_string (Events_string) then
 							-- We now add the event information from `current_element'
 							-- into `object'.
 						extract_event_information (current_element, object)
 					else
 							-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.same_string (Internal_properties_string) then
 							process_names (current_element)
 							object.modify_from_xml (current_element)
 						else
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			-- Generate event information into `object', from `element'.
 		require
 			element_not_void: element /= Void
-			element_type_is_events: element.name.is_equal (Events_string)
+			element_type_is_events: element.name.same_string (Events_string)
 		local
 			current_element: XM_ELEMENT
 			current_name: STRING
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Event_string) then
+					if current_name.same_string (Event_string) then
 						from
 							current_element.start
 						until
@@ -459,10 +459,10 @@ feature {NONE} -- Implementation
 				current_element ?= application_element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						current_type := current_element.attribute_by_name (type_string).value
 
-						if current_type.is_equal (Constants_string) then
+						if current_type.same_string (Constants_string) then
 							constants_element := current_element
 							from
 								constants_element.start
@@ -516,9 +516,9 @@ feature {NONE} -- Implementation
 				if current_element /= Void then
 					cursor1 := current_element.new_cursor
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						current_type := current_element.attribute_by_name (type_string).value
-						if current_type.is_equal (Constants_string) then
+						if current_type.same_string (Constants_string) then
 							constants_element := current_element
 							from
 								constants_element.start
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 											-- Now update the pointed directory, if it is a pixmap constant,
 											-- as the directory to which it points may have been renamed.
 										element_info := full_information @ (Type_string)
-										if element_info.data.is_equal ("PIXMAP") then
+										if element_info.data.same_string ("PIXMAP") then
 											if an_element /= Void then
 												element_info := full_information @ Directory_string
 												previous_directory := element_info.data
@@ -583,9 +583,9 @@ feature {NONE} -- Implementation
 				current_element ?= application_element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						current_type := current_element.attribute_by_name (type_string).value
-						if not current_type.is_equal (Constants_string) then
+						if not current_type.same_string (Constants_string) then
 							update_constant_references_in_xml (current_element)
 						end
 					end
@@ -630,9 +630,9 @@ feature {NONE} -- Implementation
 				current_element ?= an_element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Item_string) then
+					if current_name.same_string (Item_string) then
 						current_type := current_element.attribute_by_name (type_string).value
-						if current_type.is_equal (directory_string) then
+						if current_type.same_string (directory_string) then
 							from
 								current_element.start
 							until
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 								window_element ?= current_element.item_for_iteration
 								if window_element /= Void then
 									current_name := window_element.name
-									if current_name.is_equal (Internal_properties_string)  then
+									if current_name.same_string (Internal_properties_string)  then
 										full_information := get_unique_full_info (window_element)
 										element_info := full_information @ (name_string)
 										check
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 								current_element.forth
 							end
 							build_window_structure (current_element, directory_item)
-						elseif current_type.is_equal (Constants_string) then
+						elseif current_type.same_string (Constants_string) then
 							from
 								current_element.start
 							until
@@ -763,7 +763,7 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
-					if current_name.is_equal (Internal_properties_string) then
+					if current_name.same_string (Internal_properties_string) then
 						cursor := current_element.new_cursor
 						retrieve_names (current_element)
 						current_element.go_to (cursor)

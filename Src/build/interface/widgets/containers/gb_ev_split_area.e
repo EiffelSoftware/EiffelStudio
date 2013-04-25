@@ -13,21 +13,21 @@ class
 	-- Is_item_expanded - Perform on both objects.
 
 inherit
-	
+
 	GB_EV_ANY
 		undefine
 			attribute_editor
 		redefine
 			modify_from_xml_after_build
 		end
-		
+
 	GB_XML_UTILITIES
 		undefine
 			default_create
 		end
-		
+
 	GB_EV_SPLIT_AREA_EDITOR_CONSTRUCTOR
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create
@@ -51,14 +51,14 @@ feature {GB_XML_STORE} -- Output
 				add_element_containing_integer (element, is_item_expanded_string, value)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		do
 				-- We set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
 		end
-		
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
@@ -74,20 +74,20 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (is_item_expanded_string)
 			if element_info /= Void then
 				children := info.children
-				if element_info.data.is_equal ("0") then
+				if element_info.data.same_string ("0") then
 					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
 					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
-				elseif element_info.data.is_equal ("1") then
+				elseif element_info.data.same_string ("1") then
 					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
 					Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
-				elseif element_info.data.is_equal ("2") then
+				elseif element_info.data.same_string ("2") then
 						-- Always enabled a split item first since both cannot be disabled at the same time.
 					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
 					Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
 				end
 			end
 		end
-		
+
 feature {GB_DEFERRED_BUILDER} -- Status setting
 
 	modify_from_xml_after_build (element: XM_ELEMENT)
@@ -99,21 +99,21 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_item_expanded_string)
-			
+
 			if element_info /= Void then
 				second ?= object.real_display_object
-				if element_info.data.is_equal ("0") then
+				if element_info.data.same_string ("0") then
 					first.enable_item_expand (first.first)
 					first.enable_item_expand (first.second)
 					second.enable_item_expand (second.first)
 					second.enable_item_expand (second.second)
-				elseif element_info.data.is_equal ("1") then
+				elseif element_info.data.same_string ("1") then
 						-- Always enabled a split item first since both cannot be disabled at the same time.
 					first.enable_item_expand (first.first)
 					first.disable_item_expand (first.second)
 					second.enable_item_expand (second.first)
 					second.disable_item_expand (second.second)
-				elseif element_info.data.is_equal ("2") then
+				elseif element_info.data.same_string ("2") then
 						-- Always enabled a split item first since both cannot be disabled at the same time.
 					first.enable_item_expand (first.second)
 					first.disable_item_expand (first.first)

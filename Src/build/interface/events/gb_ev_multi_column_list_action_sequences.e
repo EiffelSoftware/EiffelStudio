@@ -59,28 +59,28 @@ feature -- Access
 			check
 				multi_column_list_not_void: multi_column_list /= Void
 			end
-			if action_sequence.is_equal (names @ 1) then
+			if action_sequence.same_string (names @ 1) then
 				if adding then
 					create multi_column_row_sequence
 					multi_column_list.select_actions.extend (multi_column_row_sequence.display_agent (action_sequence, string_handler))
 				else
 					remove_only_added (multi_column_list.select_actions)
 				end
-			elseif action_sequence.is_equal (names @ 2) then
+			elseif action_sequence.same_string (names @ 2) then
 				if adding then
 					create multi_column_row_sequence
 					multi_column_list.deselect_actions.extend (multi_column_row_sequence.display_agent (action_sequence, string_handler))
 				else
 					remove_only_added (multi_column_list.deselect_actions)
 				end
-			elseif action_sequence.is_equal (names @ 3) then
+			elseif action_sequence.same_string (names @ 3) then
 				if adding then
 					create column_action_sequence
 					multi_column_list.column_title_click_actions.extend (column_action_sequence.display_agent (action_sequence, string_handler))
 				else
 					remove_only_added (multi_column_list.column_title_click_actions)
 				end
-			elseif action_sequence.is_equal (names @ 4) then
+			elseif action_sequence.same_string (names @ 4) then
 				if adding then
 					create column_action_sequence
 					multi_column_list.column_resized_actions.extend (column_action_sequence.display_agent (action_sequence, string_handler))

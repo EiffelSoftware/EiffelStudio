@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			value := a_value.twin
 			create referers.make (4)
 		ensure
-			name_set: name.is_equal (a_name) and name /= a_name
-			value_set: value.is_equal (a_Value) and value /= a_value
+			name_set: name.same_string (a_name) and name /= a_name
+			value_set: value.same_string (a_Value) and value /= a_value
 			components_set: components = a_components
 		end
 
@@ -122,7 +122,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			end
 			value := new_value
 		ensure
-			value_set: value.is_equal (new_value)
+			value_set: value.same_string (new_value)
 		end
 
 invariant

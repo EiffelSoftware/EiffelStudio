@@ -315,7 +315,7 @@ feature -- Basic operations
 			until
 				combo_box.off or selected
 			loop
-				if combo_box.item.text.as_lower.is_equal (lower_text) then
+				if combo_box.item.text.as_lower.same_string_general (lower_text) then
 					combo_box.item.enable_select
 				end
 				combo_box.forth
@@ -334,7 +334,7 @@ feature -- Basic operations
 			until
 				item_list.off or Result /= Void
 			loop
-				if item_list.item.text.as_lower.is_equal (lower_text) then
+				if item_list.item.text.as_lower.same_string_general (lower_text) then
 					Result := item_list.item
 				end
 				item_list.forth
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 			until
 				tree_list.off or Result /= Void
 			loop
-				if tree_list.item.text.is_equal (current_text) then
+				if tree_list.item.text.same_string_general (current_text) then
 					if texts.index = texts.count then
 						Result ?= tree_list.item
 					else

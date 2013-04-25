@@ -8,7 +8,7 @@ note
 
 class
 	GB_EV_DESELECTABLE
-	
+
 	-- The following properties from EV_DESELECTABLE are manipulated by `Current'.
 	-- Is_selectable - Performed on the real object and the display_object.
 
@@ -19,14 +19,14 @@ inherit
 			set_up_user_events,
 			has_user_events
 		end
-		
+
 	GB_EV_DESELECTABLE_EDITOR_CONSTRUCTOR
-	
+
 	DEFAULT_OBJECT_STATE_CHECKER
 		undefine
 			default_create
 		end
-		
+
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XM_ELEMENT)
@@ -48,13 +48,13 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_selected_string)
 			if element_info /= Void then
-					if element_info.data.is_equal (True_string) then
+					if element_info.data.same_string (True_string) then
 						if first.is_selectable then
 								-- In the case of a item components, we will create it
 								-- before inserting it into the parent. Therefore, `is_selectable'
 								-- is not True. This is a very obscure case, but
 								-- posible, hence the check here.
-							for_all_objects (agent {EV_DESELECTABLE}.enable_select)	
+							for_all_objects (agent {EV_DESELECTABLE}.enable_select)
 						end
 					else
 						for_all_objects (agent {EV_DESELECTABLE}.disable_select)
@@ -75,7 +75,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_selected_string)
 			if element_info /= Void then
-				if element_info.data.is_equal (True_string) then
+				if element_info.data.same_string (True_string) then
 					Result.extend (info.actual_name_for_feature_call + "enable_select")
 				else
 					Result.extend (info.actual_name_for_feature_call + "disable_select")

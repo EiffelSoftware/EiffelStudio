@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			internal_error_string := description
 		ensure
-			Error_string_set: Error_string = description
+			Error_string_set: internal_error_string.same_string_general (description)
 		end
 
 	make_com_error

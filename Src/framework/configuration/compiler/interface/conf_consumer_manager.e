@@ -585,14 +585,10 @@ feature {NONE} -- Consuming
 			create l_unique_paths.make_caseless (10)
 
 			on_consume_assemblies
-			from
-				l_emitter := il_emitter
-				create l_paths.make_empty
-				an_assemblies.start
-			until
-				an_assemblies.after
-			loop
-				l_a := an_assemblies.item_for_iteration
+			l_emitter := il_emitter
+			create l_paths.make_empty
+			across an_assemblies as l_assembly loop
+				l_a := l_assembly.item
 				if l_a.is_non_local_assembly then
 					l_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token, True)
 				else
@@ -603,7 +599,6 @@ feature {NONE} -- Consuming
 						l_paths.append_character (';')
 					end
 				end
-				an_assemblies.forth
 			end
 			if not l_paths.is_empty then
 				l_paths.remove_tail (1)
@@ -631,13 +626,9 @@ feature {NONE} -- Consuming
 			create l_unique_paths.make_caseless (10)
 
 			on_consume_assemblies
-			from
-				create l_paths.make_empty
-				an_assemblies.start
-			until
-				an_assemblies.after
-			loop
-				l_a := an_assemblies.item_for_iteration
+			create l_paths.make_empty
+			across an_assemblies as l_assembly loop
+				l_a := l_assembly.item
 				if not l_a.is_non_local_assembly then
 					l_path := l_a.location.evaluated_path.name
 					if not l_unique_paths.has (l_path) then
@@ -646,7 +637,6 @@ feature {NONE} -- Consuming
 						l_paths.append_character (';')
 					end
 				end
-				an_assemblies.forth
 			end
 			if not l_paths.is_empty then
 				l_paths.remove_tail (1)

@@ -65,7 +65,11 @@ feature {GB_XML_STORE} -- Output
 					first.off
 				loop
 					if first.pixmap_paths.item (first.index) /= Void or uses_constant (Item_pixmap_string + first.index.out)  then
-						add_string_element (item_pixmap_element, Item_pixmap_string + first.index.out, first.pixmap_paths.item (first.index).name)
+						if attached first.pixmap_paths.item (first.index) as l_path then
+							add_string_element (item_pixmap_element, Item_pixmap_string + first.index.out, l_path.name)
+						else
+							add_string_element (item_pixmap_element, Item_pixmap_string + first.index.out, Void)
+						end
 					end
 					first.forth
 				end

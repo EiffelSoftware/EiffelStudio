@@ -101,7 +101,6 @@ feature {NONE} -- Implementation
 			if i > 0 then
 				Result := Result.substring (1, i-1)
 				Result.replace_substring_all (".", "/")
-				Result.precede ('/')
 			else
 				Result := ""
 			end
@@ -125,7 +124,7 @@ invariant
 	dotnet_name_ok: dotnet_name /= Void and then not dotnet_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

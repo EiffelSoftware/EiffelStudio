@@ -1517,6 +1517,8 @@ feature {NONE}-- Implementation
 			found_class := Void
 			if attached {CLASSC_STONE} stone_in_click_ast (current_token.pos_in_text) as l_stone then
 				found_class := l_stone.e_class
+			elseif attached {CLASSC_STONE} current_token.pebble as l_class_c_stone then
+				found_class := l_class_c_stone.e_class
 			end
 
 			l_end_match := scan_for_type (current_token, current_line, Void)
@@ -1621,12 +1623,10 @@ feature {NONE}-- Implementation
 						create l_analyzer.make_with_feature (l_class, l_feature)
 						l_result := l_analyzer.scan (l_token, l_line)
 						if l_result /= Void and then l_result.has_current_frame then
-							if not l_result.current_frame.is_empty then
-								l_locals := l_result.current_frame.all_locals
-								l_name := a_name.as_string_32
-								if l_locals.has (l_name) then
-									Result := l_locals.item (l_name)
-								end
+							l_locals := l_result.current_frame.all_locals
+							l_name := a_name.as_string_32
+							if l_locals.has (l_name) then
+								Result := l_locals.item (l_name)
 							end
 						else
 							if attached {HASH_TABLE [detachable TYPE_A, STRING_32]} locals_from_local_entities_finder as l_found_locals then
@@ -2172,7 +2172,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 
 	feature_body_keywords: ARRAY [STRING]
 		once
-			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "recue", "unique", "is", "assign">>
+			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "rescue", "unique", "is", "assign">>
 		end
 
 	feature_contract_keywords: ARRAY [STRING]
@@ -2182,7 +2182,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 
 	feature_executable_keywords: ARRAY [STRING]
 		once
-				-- We treat assgin as fake executable.
+				-- We treat assign as fake executable.
 			Result := <<"do", "once", "rescue", "assign">>
 		end
 

@@ -4305,7 +4305,7 @@ feature -- Object creation
 		do
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_conformance_class_name,
-				"load_type_of_object", Static_type, <<type_info_class_name>>,
+				"load_type_of_object", Static_type, <<system_object_class_name>>,
 				type_class_name,
 				False)
 		end
@@ -7354,7 +7354,7 @@ feature -- Generic conformance
 			generate_array_creation (runtime_type_id)
 		end
 
-	generate_generic_type_settings (gen_type: GEN_TYPE_A)
+	generate_generic_type_settings (gen_type: TYPE_A)
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		do
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
@@ -7372,6 +7372,39 @@ feature -- Generic conformance
 			-- Generate a NONE_TYPE instance.
 		do
 			create_object (none_type_id)
+		end
+
+	generate_generating_type_instance (a_gen_type: TYPE_A)
+			-- Generate an instance of the generic type `a_gen_type' where the type
+			-- of the actual generic parameter is the type of the object on top
+			-- of the stack.
+			-- Useful to generate {ANY}.generating_type.
+		local
+			l_obj_var: INTEGER
+		do
+				-- First we store the top to a local variable.
+			byte_context.add_local (any_type)
+			l_obj_var := Byte_context.local_list.count
+			put_dummy_local_info (any_type, l_obj_var)
+			generate_local_assignment (l_obj_var)
+
+				-- Create the RT_GENERIC_TYPE instance
+			create_object (generic_type_id)
+			duplicate_top
+			put_integer_32_constant (1)
+			generate_array_creation (runtime_type_id)
+				-- Write the type of current object to the type array at position `0'.
+			duplicate_top
+			put_integer_32_constant (0)
+			generate_local (l_obj_var)
+			load_type
+			generate_array_write ({IL_CONST}.il_ref, 0)
+
+				-- Now set the RT_GENERIC_TYPE instance with the proper details
+			generate_generic_type_settings (a_gen_type)
+
+				-- Create the `gen_type' instance.
+			create_generic_object (a_gen_type.implementation_id (current_class_type.type))
 		end
 
 feature {NONE} -- Implementation: generation

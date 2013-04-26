@@ -1261,7 +1261,7 @@ feature -- Generic conformance
 		deferred
 		end
 
-	generate_generic_type_settings (gen_type: GEN_TYPE_A)
+	generate_generic_type_settings (gen_type: TYPE_A)
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		require
 			gen_type_not_void: gen_type /= Void
@@ -1270,6 +1270,17 @@ feature -- Generic conformance
 
 	generate_none_type_instance
 			-- Generate a NONE_TYPE instance.
+		deferred
+		end
+
+	generate_generating_type_instance (a_gen_type: TYPE_A)
+			-- Generate an instance of the generic type `a_gen_type' where the type
+			-- of the actual generic parameter is the type of the object on top
+			-- of the stack.
+			-- Useful to generate {ANY}.generating_type.
+		require
+			a_type_not_void: a_gen_type /= Void
+			has_one_generic: attached a_gen_type.generics as l_generics and then l_generics.count = 1
 		deferred
 		end
 

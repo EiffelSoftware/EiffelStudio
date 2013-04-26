@@ -1808,13 +1808,18 @@ feature -- Generic conformance
 		do
 		end
 
-	generate_generic_type_settings (gen_type: GEN_TYPE_A)
+	generate_generic_type_settings (gen_type: TYPE_A)
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		do
 		end
 
 	generate_none_type_instance
 			-- Generate a NONE_TYPE instance.
+		do
+		end
+
+	generate_generating_type_instance (a_gen_type: TYPE_A)
+			-- <Precursor>
 		do
 		end
 

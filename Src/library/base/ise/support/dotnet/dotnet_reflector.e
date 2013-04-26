@@ -161,8 +161,14 @@ feature -- Creation
 			-- Return type for type id `type_id'.
 		require
 			type_id_nonnegative: type_id >= 0
+		local
+			l_type_name: STRING
 		do
-			check attached {detachable like type_of_type} new_instance_of (dynamic_type_from_string ("TYPE [" + type_name_of_type (type_id) + "]")) as l_result then
+			create l_type_name.make (30)
+			l_type_name.append ("TYPE [")
+			l_type_name.append (type_name_of_type (type_id))
+			l_type_name.append_character (']')
+			check attached {detachable like type_of_type} new_instance_of (dynamic_type_from_string (l_type_name)) as l_result then
 				Result := l_result
 			end
 		ensure
@@ -995,7 +1001,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			l_class_type_name: STRING_32
 			nb: INTEGER
 			l_mark: CHARACTER_32
-			l_is_expanded: BOOLEAN
+			l_is_expanded, l_is_reference: BOOLEAN
 		do
 				-- Load data from all assemblies in case it is not yet done.
 			load_assemblies
@@ -1029,6 +1035,11 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 					l_class_type_name.remove_head (9)
 					l_class_type_name.left_adjust
 					l_is_expanded := True
+				elseif (nb >= 11 and l_class_type_name.substring_index ("reference", 1) = 1) then
+						-- Remove `expanded' and the white character after it.					
+					l_class_type_name.remove_head (10)
+					l_class_type_name.left_adjust
+					l_is_reference := True
 				end
 			end
 			eiffel_meta_type_mapping.search (mapped_type (l_class_type_name))
@@ -1039,33 +1050,49 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 					-- is why it is commented out for the meantime.
 				if l_found_list.count > 1 and then not attached {RT_BASIC_TYPE} l_found_list.first then
 						-- If a list contains more than one item, we chose the item with the same expanded status.
-						-- Unfortunately, this only works for type such as `expanded X' where X is not declared expanded.
-						-- If `X' is expanded, then `l_is_expanded' is False and `l_dotnet_type.is_value_type' is True.
-						-- This is why that in the event we do not find anything, we try again by assuming that X is expanded.
-					from
-						l_found_list.start
-					until
-						l_found_list.after or else Result /= Void
-					loop
-						if attached l_found_list.item.dotnet_type as l_dotnet_type and then l_dotnet_type.is_value_type = l_is_expanded then
-							Result := l_found_list.item
-						end
-						l_found_list.forth
-					end
-					if Result = Void then
+						-- Unfortunately, this only works for type such as `expanded X' where X is not declared expanded,
+						-- or `reference X' where X is declared expanded.
+						-- If `X' has no qualification, we have to pick the type whose implementation has no mark (either
+						-- expanded or reference).
+					if l_is_expanded then
 						from
-							l_is_expanded := True
 							l_found_list.start
 						until
 							l_found_list.after or else Result /= Void
 						loop
-							if attached l_found_list.item.dotnet_type as l_dotnet_type and then l_dotnet_type.is_value_type = l_is_expanded then
+							if attached l_found_list.item.dotnet_type as l_dotnet_type and then l_dotnet_type.is_value_type then
+								Result := l_found_list.item
+							end
+							l_found_list.forth
+						end
+					elseif l_is_reference then
+						from
+							l_found_list.start
+						until
+							l_found_list.after or else Result /= Void
+						loop
+							if attached l_found_list.item.dotnet_type as l_dotnet_type and then not l_dotnet_type.is_value_type then
 								Result := l_found_list.item
 							end
 							l_found_list.forth
 						end
 					end
-					check has_result: Result /= Void end
+					if Result = Void then
+							-- Case where we just got X without without knowing if the class
+							-- was originally declared expanded or not.
+						from
+							l_found_list.start
+						until
+							l_found_list.after or else Result /= Void
+						loop
+							l_type := internal_pure_implementation_type (l_found_list.item)
+							if not l_type.has_expanded_mark and then not l_type.has_reference_mark then
+									-- We found our type.
+								Result := l_found_list.item
+							end
+							l_found_list.forth
+						end
+					end
 				else
 					Result := l_found_list.first
 				end
@@ -1263,14 +1290,16 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			l_cas: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
 			j, l_count: INTEGER
 			retried: BOOLEAN
-			l_class_type: RT_CLASS_TYPE
+			l_class_type: detachable RT_CLASS_TYPE
 			l_gen_type: RT_GENERIC_TYPE
 			l_rt_array: NATIVE_ARRAY [detachable RT_TYPE]
-			l_any_type, l_interface_type: SYSTEM_TYPE
+			l_any_type, l_interface_type: detachable SYSTEM_TYPE
 			l_formal_type: RT_FORMAL_TYPE
 			l_list: ARRAYED_LIST [RT_CLASS_TYPE]
 			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 			l_attribute_type_name: STRING_32
+			l_attr_name: detachable SYSTEM_STRING
+			l_eiffel_type_info: SYSTEM_TYPE
 		do
 			if not retried then
 				l_provider := a_type
@@ -1278,6 +1307,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 				if attached a_type.name as l_type_name and then not l_type_name.ends_with ("\&") then
 					l_cas := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
 				end
+				l_eiffel_type_info := {EIFFEL_TYPE_INFO}
 				if
 					l_cas /= Void and then l_cas.count > 0 and then
 					attached {EIFFEL_NAME_ATTRIBUTE} l_cas.item (0) as l_name_attr
@@ -1330,12 +1360,22 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 						l_interface_type := interface_type (a_type)
 						l_class_type.set_type (l_interface_type.type_handle)
 					end
+					l_attr_name := l_name_attr.name
+				else
+						-- Only add .NET types to the pictures.
+					if not l_eiffel_type_info.is_assignable_from (a_type) then
+						create l_class_type.make
+						l_interface_type := interface_type (a_type)
+						l_class_type.set_type (l_interface_type.type_handle)
+						l_attr_name := a_type.full_name;
+					end
+				end
 
+				if l_interface_type /= Void and l_class_type /= Void then
 						-- Update `interface_to_implementation'
 					interface_to_implementation.add (l_interface_type, a_type)
-
 						-- Update `eiffel_meta_type_mapping' if we can get the name
-					if attached l_name_attr.name as l_attr_name then
+					if l_attr_name /= Void then
 						create l_attribute_type_name.make_from_cil (l_attr_name)
 						eiffel_meta_type_mapping.search (mapped_type (l_attribute_type_name))
 						if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_item then

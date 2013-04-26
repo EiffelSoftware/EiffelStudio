@@ -107,6 +107,40 @@ feature -- Status Report
 		return type.Value.GetHashCode();
 	}
 
+	public bool has_expanded_mark ()
+		// Is the base class of Current not expanded but current type is an expanded derivation?
+	{
+		bool Result;
+		Object [] l_ca;
+
+		l_ca = Type.GetTypeFromHandle (type).GetCustomAttributes
+			(typeof (EIFFEL_CLASS_TYPE_MARK_ATTRIBUTE), false);
+
+		if (l_ca != null && l_ca.Length == 1) {
+			Result = (((EIFFEL_CLASS_TYPE_MARK_ATTRIBUTE) l_ca [0]).mark == CLASS_TYPE_MARK_ENUM.expanded_mark);
+		} else {
+			Result = false;
+		}
+		return Result;
+	}
+
+	public bool has_reference_mark ()
+		// Is the base class of Current expanded but current type is a reference derivation?
+	{
+		bool Result;
+		Object [] l_ca;
+
+		l_ca = Type.GetTypeFromHandle (type).GetCustomAttributes
+			(typeof (EIFFEL_CLASS_TYPE_MARK_ATTRIBUTE), false);
+
+		if (l_ca != null && l_ca.Length == 1) {
+			Result = (((EIFFEL_CLASS_TYPE_MARK_ATTRIBUTE) l_ca [0]).mark == CLASS_TYPE_MARK_ENUM.reference_mark);
+		} else {
+			Result = false;
+		}
+		return Result;
+	}
+
 	public override String class_name ()
 		// Name of object's generating type who has Current as an EIFFEL_DERIVATION
 		// (type of which it is a direct instance)
@@ -132,7 +166,13 @@ feature -- Status Report
 					// of System.Array and not a vector array. But that will do for now.
 				Result = "NATIVE_ARRAY";
 			} else {
-				Result = l_type.Name;
+				if (typeof(EIFFEL_TYPE_INFO).IsAssignableFrom (l_type)) {
+						// For an Eiffel generated type
+					Result = l_type.Name;
+				} else {
+						// A .NET type, so we get the full name
+					Result = l_type.FullName;
+				}
 			}
 		}
 

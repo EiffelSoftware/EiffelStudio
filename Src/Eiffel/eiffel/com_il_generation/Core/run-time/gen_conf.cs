@@ -114,17 +114,23 @@ public class GENERIC_CONFORMANCE {
 		return create_instance (an_obj.GetType (), l_type);
 	}
 
-	public static RT_TYPE load_type_of_object (EIFFEL_TYPE_INFO an_obj)
+	public static RT_TYPE load_type_of_object (object an_obj)
 		// Given an Eiffel object `an_obj' extract its type information.
 	{
 		RT_GENERIC_TYPE l_gen_type;
 		RT_CLASS_TYPE Result;
+		EIFFEL_TYPE_INFO l_obj = an_obj as EIFFEL_TYPE_INFO;
 
-		l_gen_type = an_obj.____type ();
+		if (l_obj != null) {
+			l_gen_type = l_obj.____type ();
+		} else {
+			l_gen_type = null;
+		}
 
 		if (l_gen_type == null) {
-				// It is not a generic type, so we can simply find its type through
-				// Reflection and then creates a RT_CLASS_TYPE object.
+				// It is not an Eiffel generic type or it is a .NET type, so we can simply
+				// find its type through Reflection and then creates a RT_CLASS_TYPE object.
+				// Note that .NET generic types are treated as non-generic.
 			Result = new RT_CLASS_TYPE ();
 			Result.set_type (an_obj.GetType ().TypeHandle);
 		} else {

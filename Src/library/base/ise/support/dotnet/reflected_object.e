@@ -1,172 +1,21 @@
 note
-	description: "[
-		Accessor to an object. Useful to manipulate fields of an object, or
-		an expanded field of an object without causing any copying.
-		If applied to an expanded type, a copy will be manipulated.
-		]"
-	implementation_details: "[
-		The GC might be moving objects, some of the routines are actually builtin.
-		]"
+	description: "Common ancestor for object inspection."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	REFLECTED_OBJECT
 
 inherit
 	REFLECTOR_CONSTANTS
 
-create
-	make
-
-create {REFLECTED_OBJECT}
-	make_for_expanded_field
-
-feature {NONE} -- Initialization
-
-	make (a_object: ANY)
-			-- Setup a proxy to `a_object'.
-		require
-			not_expanded_object: True
-		do
-			enclosing_object := a_object
-			dynamic_type := helper.dynamic_type (a_object)
-			physical_offset := 0
-		ensure
-			enclosing_object_set: enclosing_object = a_object
-			no_physical_offset: physical_offset = 0
-		end
-
-	make_for_expanded_field (a_enclosing_object: REFLECTED_OBJECT; i: INTEGER)
-			-- Setup a proxy to expanded field located at the `i'-th field of `a_enclosing_object'.
-		require
-			i_th_field_is_expanded: a_enclosing_object.is_field_statically_expanded (i)
-		do
-			enclosing_object := a_enclosing_object.enclosing_object
-			dynamic_type := a_enclosing_object.field_static_type (i)
-			physical_offset := i
-			reflected_parent_object := a_enclosing_object
-			field_info := helper.get_members (a_enclosing_object.dynamic_type).i_th (i)
-		ensure
-			enclosing_object_set: enclosing_object = a_enclosing_object.enclosing_object
-		end
-
 feature -- Access
 
 	object: ANY
-			-- Associated object for Current
+			-- Associated object for Current.
 			-- It might be a copy if Current is expanded.
-		do
-			if physical_offset = 0 then
-				Result := enclosing_object
-			else
-				check attached internal_field (physical_offset) as v then
-					Result := v
-				end
-			end
+		deferred
 		end
-
-	enclosing_object: ANY
-			-- Enclosing object containing `object' or a reference to `object.
-
-feature {REFLECTED_OBJECT} -- Access
-
-	physical_offset: INTEGER
-			-- In classic Eiffel, actual offset in bytes of `object' in `enclosing_object'.
-			-- In .NET Eiffel, field offset of `object' in `enclosing_object'.
-
-	reflected_parent_object: detachable REFLECTED_OBJECT
-			-- Path to Current attribute.
-
-	field_info: detachable FIELD_INFO
-			-- Field used by `reflected_parent_object' object to access `object'.
-
-feature -- Status report
-
-	is_instance_of (type_id: INTEGER): BOOLEAN
-			-- Is `object' an instance of type `type_id'?
-		require
-			object_not_void: object /= Void
-			type_id_nonnegative: type_id >= 0
-		do
-			Result := helper.type_conforms_to (dynamic_type, type_id)
-		end
-
-	is_special: BOOLEAN
-			-- Is `object' special?
-		do
-			Result := helper.is_special_type (dynamic_type)
-		ensure
-			definition: physical_offset /= 0 implies not Result
-		end
-
-	is_special_of_reference: BOOLEAN
-			-- Is Current a SPECIAL [XX] where `XX' is a reference type?
-		do
-			Result := helper.is_special_any_type (dynamic_type)
-		end
-
-	is_tuple: BOOLEAN
-			-- Is `object' a TUPLE?
-		do
-			Result := helper.is_tuple_type (dynamic_type)
-		ensure
-			definition: physical_offset /= 0 implies not Result
-		end
-
-	is_field_transient (i: INTEGER): BOOLEAN
-			-- Is `i'-th field of `object' a transient attribute?
-			-- I.e. an attribute that does not need to be stored?
-		require
-			index_large_enough: i >= 1
-			index_small_enough: i <= field_count
-		do
-			Result := helper.is_field_transient_of_type (i, dynamic_type)
-		end
-
-	is_field_statically_expanded (i: INTEGER): BOOLEAN
-			-- Is `i'-th field of `object' a user-defined expanded attribute?
-		require
-			index_large_enough: i >= 1
-			index_small_enough: i <= field_count
-		do
-			Result := helper.is_field_expanded_of_type (i, dynamic_type)
-		end
-
-	is_field_statically_attached (i: INTEGER): BOOLEAN
-			-- Is `i'-th field of `object' defined as attached?
-		require
-			index_large_enough: i >= 1
-			index_small_enough: i <= field_count
-		do
-			Result := False
-		end
-
-	field_conforms_to (a_source_type, a_field_type: INTEGER): BOOLEAN
-			-- Does `a_source_type' conform to `a_field_type'?
-			--| Different from `type_conforms_to' since possible attachment mark of `a_field_type'
-			--| is discarded.
-		require
-			a_source_type_non_negative: a_source_type >= 0
-			a_field_type_non_negative: a_field_type >= 0
-		do
-			Result := helper.field_conforms_to (a_source_type, a_field_type)
-		end
-
-feature -- Settings
-
-	set_object (a_obj: ANY)
-			-- Update Current to represent a new reflected object.
-		do
-			enclosing_object := a_obj
-			physical_offset := 0
-			dynamic_type := helper.dynamic_type (a_obj)
-		ensure
-			enclosing_object_set: enclosing_object = a_obj
-			no_physical_offset: physical_offset = 0
-		end
-
-feature -- Access
 
 	class_name: STRING
 			-- Name of the class associated with `object'
@@ -241,20 +90,117 @@ feature -- Access
 		do
 			Result := internal_field (i)
 		end
+feature {REFLECTED_OBJECT} -- Access
 
-	expanded_field (i: INTEGER): REFLECTED_OBJECT
-			-- Object representation of the `i'-th field of `object'
-			-- which is expanded. We provide a wrapper that enables
-			-- direct editing of the field without duplicating
-			-- the expanded object.
+	physical_offset: INTEGER
+			-- In classic Eiffel, actual offset in bytes of `object' in `enclosing_object'.
+			-- In .NET Eiffel, field offset of `object' in `enclosing_object'.
+
+	enclosing_object: separate ANY
+			-- Enclosing object containing `object' or a reference to `object.
+
+	reflected_parent_object: detachable REFLECTED_OBJECT
+			-- Path to Current attribute.
+
+	field_info: detachable FIELD_INFO
+			-- Field used by `reflected_parent_object' object to access `object'.
+
+feature -- Status report
+
+	is_instance_of (type_id: INTEGER): BOOLEAN
+			-- Is `object' an instance of type `type_id'?
+		require
+			object_not_void: object /= Void
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := helper.type_conforms_to (dynamic_type, type_id)
+		end
+
+	is_special: BOOLEAN
+			-- Is `object' special?
+		do
+			Result := helper.is_special_type (dynamic_type)
+		end
+
+	is_special_of_reference: BOOLEAN
+			-- Is Current a SPECIAL [XX] where `XX' is a reference type?
+		do
+			Result := helper.is_special_any_type (dynamic_type)
+		end
+
+	is_tuple: BOOLEAN
+			-- Is `object' a TUPLE?
+		do
+			Result := helper.is_tuple_type (dynamic_type)
+		end
+
+	is_field_transient (i: INTEGER): BOOLEAN
+			-- Is `i'-th field of `object' a transient attribute?
+			-- I.e. an attribute that does not need to be stored?
 		require
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count
-			expanded_field: field_type (i) = expanded_type
-			not_special: not is_special
 		do
-			create Result.make_for_expanded_field (Current, i)
+			Result := helper.is_field_transient_of_type (i, dynamic_type)
 		end
+
+	is_field_statically_expanded (i: INTEGER): BOOLEAN
+			-- Is `i'-th field of `object' a user-defined expanded attribute?
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count
+		do
+			Result := helper.is_field_expanded_of_type (i, dynamic_type)
+		end
+
+	is_copy_semantics_field (i: INTEGER): BOOLEAN
+			-- Is `i'-th field of `object' a reference with copy-semantics properties?
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count
+			is_reference_field: field_type (i) = reference_type
+		local
+			l_obj: detachable SYSTEM_OBJECT
+		do
+			l_obj := internal_field (i)
+			Result := l_obj /= Void and then attached l_obj.get_type as l_type and then l_type.is_value_type
+		end
+
+	is_special_copy_semantics_item (i: INTEGER): BOOLEAN
+			-- Is `i'-th field of `object' a reference with copy-semantics properties?
+		require
+			is_special_of_reference: is_special_of_reference
+			valid_index: attached {ABSTRACT_SPECIAL} object as l_spec and then l_spec.valid_index (i)
+		local
+			l_obj: detachable SYSTEM_OBJECT
+		do
+			if attached {SPECIAL [detachable separate SYSTEM_OBJECT]} object as l_spec then
+				l_obj := l_spec.item (i)
+				Result := l_obj /= Void and then attached l_obj.get_type as l_type and then l_type.is_value_type
+			end
+		end
+
+	is_field_statically_attached (i: INTEGER): BOOLEAN
+			-- Is `i'-th field of `object' defined as attached?
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count
+		do
+			Result := False
+		end
+
+	field_conforms_to (a_source_type, a_field_type: INTEGER): BOOLEAN
+			-- Does `a_source_type' conform to `a_field_type'?
+			--| Different from `type_conforms_to' since possible attachment mark of `a_field_type'
+			--| is discarded.
+		require
+			a_source_type_non_negative: a_source_type >= 0
+			a_field_type_non_negative: a_field_type >= 0
+		do
+			Result := helper.field_conforms_to (a_source_type, a_field_type)
+		end
+
+feature -- Access
 
 	field_name (i: INTEGER): STRING
 			-- Name of `i'-th field of `object'
@@ -275,7 +221,7 @@ feature -- Access
 			index_small_enough: i <= field_count
 			not_special: not is_special
 		do
-			check False end
+			check False then end
 			Result := i * 4
 		end
 
@@ -299,6 +245,39 @@ feature -- Access
 			Result := helper.field_static_type_of_type (i, dynamic_type)
 		ensure
 			field_type_nonnegative: Result >= 0
+		end
+
+	copy_semantics_field (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
+			-- Object attached to the `i'-th field of `object'
+			-- (directly or through a reference)
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count
+			not_special: not is_special
+			reference_field: field_type (i) = reference_type and is_copy_semantics_field (i)
+		deferred
+		end
+
+	special_copy_semantics_item (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
+			-- Object attached to the `i'th item of special.
+		require
+			is_special_reference: is_special_of_reference
+			valid_index: attached {ABSTRACT_SPECIAL} object as l_spec and then l_spec.valid_index (i)
+		do
+			create Result.make_special (Current, i)
+		end
+
+	expanded_field (i: INTEGER): REFLECTED_OBJECT
+			-- Object representation of the `i'-th field of `object'
+			-- which is expanded. We provide a wrapper that enables
+			-- direct editing of the field without duplicating
+			-- the expanded object.
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count
+			expanded_field: field_type (i) = expanded_type
+			not_special: not is_special
+		deferred
 		end
 
 	character_8_field (i: INTEGER): CHARACTER_8
@@ -678,21 +657,19 @@ feature -- Measurement
 	physical_size_64: NATURAL_64
 			-- Space occupied by `object' in bytes
 		do
-			Result := {ISE_RUNTIME}.object_size (enclosing_object)
+			Result := {ISE_RUNTIME}.object_size (object)
 		end
 
 	deep_physical_size_64: NATURAL_64
 			-- Space occupied by `object' and its children in bytes
 		local
 			l_traverse: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
-			l_objects: detachable ARRAYED_LIST [ANY]
 		do
 			create l_traverse
 			l_traverse.set_root_object (object)
 			l_traverse.set_is_skip_transient (False)
 			l_traverse.traverse
-			l_objects := l_traverse.visited_objects
-			if l_objects /= Void then
+			if attached l_traverse.visited_objects as l_objects then
 				from
 					l_objects.start
 				until

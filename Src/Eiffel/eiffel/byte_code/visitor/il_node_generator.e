@@ -4296,7 +4296,7 @@ feature {NONE} -- Implementation: Feature calls
 				{PREDEFINED_NAMES}.deep_clone_name_id,
 				{PREDEFINED_NAMES}.standard_clone_name_id
 			then
-			generate_clone_routine (a_node.feature_name_id, l_return_type)
+				generate_clone_routine (a_node.feature_name_id, l_return_type)
 
 			when
 				{PREDEFINED_NAMES}.copy_name_id,
@@ -4709,22 +4709,27 @@ feature {NONE} -- Implementation: Feature calls
 			valid_feature_name:
 				a_node.feature_name_id = {PREDEFINED_NAMES}.generating_type_name_id
 		local
-			l_label: IL_LABEL
+			l_label, l_end_label: IL_LABEL
 		do
 			if system.is_using_new_generating_type then
 					-- Check validity of target.
 				generate_call_on_void_target (target_type, True)
 					-- Call feature on this object if its type inherits ANY.
 				l_label := il_generator.create_label
-				il_generator.generate_is_true_instance_of (any_type)
+				l_end_label := il_generator.create_label
 				il_generator.duplicate_top
+				il_generator.generate_is_true_instance_of (any_type)
 				il_generator.branch_on_true (l_label)
-					-- For a non-Eiffel class we cannot easily get the actual type so for the time being we will
-					-- yield an exception.
-				il_generator.generate_raise_exception ({EXCEP_CONST}.precondition,
-						"Feature {ANY}.generating_type not implemented for .NET class")
+					-- For a non-Eiffel class we will do the best we can. It works
+					-- fine for reference type, but if the code is generated from a context
+					-- we the type is not reference but used with an expanded type then it might
+					-- not work. See eweasel test#dotnet0xx.
+				il_generator.generate_generating_type_instance (context.real_type (a_node.type))
+				il_generator.branch_to (l_end_label)
 				il_generator.mark_label (l_label)
+				il_generator.generate_is_true_instance_of (any_type)
 				generate_il_normal_call (a_node, written_type, True)
+				il_generator.mark_label (l_end_label)
 			else
 					-- In compatibility mode `generating_type' return STRING.
 				generate_string_routine (a_node, written_type)

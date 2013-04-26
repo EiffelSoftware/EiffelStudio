@@ -185,10 +185,13 @@ feature -- Query
 			l_feature: like context_feature
 			l_parsed_locals: HASH_TABLE [TYPE_AS, STRING_32]
 			l_locals: HASH_TABLE [TYPE_AS, STRING_32]
+			l_parent_locals: HASH_TABLE [TYPE_A, STRING_32]
 			l_generator: like type_a_generator
 			l_checker: like type_a_checker
-			l_name: STRING_32
-			l_type: TYPE_A
+			l_name, l_anchor_name: STRING_32
+			l_type, l_solved_type: TYPE_A
+			l_parent_frame: ES_EDITOR_ANALYZER_FRAME
+			l_exit: BOOLEAN
 		do
 			if attached internal_locals as l_result then
 				Result := l_result
@@ -215,10 +218,36 @@ feature -- Query
 					l_name := l_locals.key_for_iteration
 					l_type := l_generator.evaluate_type (l_locals.item_for_iteration, l_class)
 					if l_type /= Void then
-						l_type := l_checker.solved (l_type, l_locals.item_for_iteration)
+						l_solved_type := l_checker.solved (l_type, l_locals.item_for_iteration)
+						if l_solved_type = Void then
+								-- We have an unsolveable type at this level in the context frame.
+								-- Either the type doesn't exist or it is an unprefixed object test local.
+							if
+								attached {UNEVALUATED_LIKE_TYPE} l_type as l_uneval_like_type
+							then
+									-- See if we can find a match in the parent frame locals as the local variable info is not stored in the feature_i.
+								from
+									l_parent_frame := Current
+									l_anchor_name := l_uneval_like_type.anchor
+								until
+									l_exit
+								loop
+									l_parent_frame := l_parent_frame.parent
+									l_parent_locals := l_parent_frame.locals
+									if l_parent_locals.has (l_anchor_name) then
+										l_solved_type := l_parent_locals.item (l_anchor_name)
+										l_exit := True
+									else
+										l_exit := l_parent_frame.is_stop_frame
+									end
+								end
+							end
+						end
+					else
+						l_solved_type := Void
 					end
-					if l_type /= Void and then l_type.is_valid then
-						Result.force (l_type, l_name)
+					if l_solved_type /= Void and then l_solved_type.is_valid then
+						Result.force (l_solved_type, l_name)
 					elseif not Result.has (l_name) then
 						Result.force (Void, l_name)
 					end
@@ -459,7 +488,7 @@ invariant
 	--non_circular_parent: has_parent implies parent /= Void and then not is_parented_to_current (parent)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -291,7 +291,7 @@ feature {NONE} -- Events
 			a_event_item_is_persistent: a_event_item.is_persistent
 			not_current_contains_a_event: not all_items.has (a_event_item)
 		do
-			if is_interface_usable and then item_added_event.is_interface_usable then
+			if is_interface_usable and then item_removed_event.is_interface_usable then
 				item_removed_event.publish ([Current, a_event_item])
 			end
 		end

@@ -79,6 +79,7 @@ feature -- Basic operations
 			l_context: AST_CONTEXT
 			l_checker: ES_EXPRESSION_ANALYZER_FEATURE_CHECKER_GENERATOR
 			l_eval_locals: HASH_TABLE [TYPE_A, STRING_32]
+			l_local_type: TYPE_A
 			l_expression: STRING_32
 			l_saved: BOOLEAN
 			retried: BOOLEAN
@@ -107,7 +108,10 @@ feature -- Basic operations
 					create l_checker.make (l_context)
 					l_eval_locals := a_info.current_frame.all_locals
 					from l_eval_locals.start until l_eval_locals.after loop
-						l_checker.add_local (l_eval_locals.item_for_iteration, l_eval_locals.key_for_iteration)
+						l_local_type := l_eval_locals.item_for_iteration
+						if l_local_type /= Void then
+							l_checker.add_local (l_local_type, l_eval_locals.key_for_iteration)
+						end
 						l_eval_locals.forth
 					end
 
@@ -129,7 +133,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

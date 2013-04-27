@@ -96,12 +96,9 @@ feature -- Access
 
 	frozen disk_id: NATURAL_8
 			-- The user specified media disk id
-		local
-			l_opt: ARGUMENT_NATURAL_OPTION
 		once
 			Result := 1
-			l_opt ?= option_of_name (disk_id_switch)
-			if l_opt /= Void then
+			if attached {ARGUMENT_NATURAL_OPTION} option_of_name (disk_id_switch) as l_opt then
 				if l_opt.has_value then
 					Result := l_opt.natural_8_value
 				end

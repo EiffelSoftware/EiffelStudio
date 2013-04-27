@@ -1086,7 +1086,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 							l_found_list.after or else Result /= Void
 						loop
 							l_type := internal_pure_implementation_type (l_found_list.item)
-							if not l_type.has_expanded_mark and then not l_type.has_reference_mark then
+							if l_type /= Void and then not l_type.has_expanded_mark and then not l_type.has_reference_mark then
 									-- We found our type.
 								Result := l_found_list.item
 							end

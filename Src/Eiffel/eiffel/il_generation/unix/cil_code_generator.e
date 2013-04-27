@@ -1007,6 +1007,11 @@ feature -- Generic conformance
 		do
 		end
 
+	generate_generating_type_instance (a_gen_type: TYPE_A)
+			-- <Precursor>
+		do
+		end
+
 feature {CIL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom attribute definition
 
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE)

@@ -14,6 +14,7 @@
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="msil_use_optimized_precompile" value="true"/>
+		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false">
 		</library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">

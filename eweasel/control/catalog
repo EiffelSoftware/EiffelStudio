@@ -2740,36 +2740,36 @@ test 	qat-with-secret-features	anchor068 tcf fail anchored_type
 test 	qat-instantiated-in-crash-4 	anchor069 tcf fail finalizing formal generic anchored_type
 
 -- SCOOP
-test	scoop-access-smoke				scoop001 tcf pass scoop execution
-test	scoop-argument-validity				scoop002 tcf pass scoop validity expanded
-test	scoop-hanging-1					scoop003 tcf pass scoop execution
-test	scoop-basic-argument-formal-nested	scoop004 tcf pass scoop execution
-test	scoop-separate-like-current			scoop005 tcf pass scoop execution
-test	scoop-result-validity				scoop006 tcf pass scoop validity expanded
-test	scoop-external-call				scoop007 tcf pass scoop execution
-test	scoop-freeze-condition				scoop008 tcf pass scoop execution incrementality
-test	scoop-wait-condition				scoop009 tcf pass scoop execution assertion
-test	scoop-request-chain-exception			scoop011 tcf pass scoop execution exception
-test	scoop-false-wait-condition			scoop012 tcf pass scoop execution assertion exception
-test	scoop-inline-separate-call			scoop013 tcf fail scoop finalizing inlining
-test	scoop-separate-expanded				scoop014 tcf pass scoop expanded
-test	scoop-separate-patterns-crash			scoop015 tcf pass scoop finalizing
-test	scoop-finalize-c-failure			scoop016 tcf pass scoop finalizing c_compilation
-test	scoop-separate-call-to-constant			scoop017 tcf pass scoop execution
-test	scoop-once-per-object				scoop018 tcf pass scoop execution incrementality once
-test	scoop-top-exception				scoop019 tcf pass scoop
-test	scoop-separate-formal				scoop020 tcf pass scoop formal generic conformance validity
-test	scoop-object-test				scoop021 tcf pass scoop formal generic conformance object_test execution
-test	scoop-undetected-vuer				scoop022 tcf fail scoop validity incrementality
-test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop termination expanded generic
-test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop execution
-test	scoop-expanded-separate				scoop025 tcf pass scoop expanded execution
-test	scoop-unnested-logging				scoop026 tcf pass scoop execution
-test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop execution
-test	scoop-sequential-processor-creation		scoop028 tcf pass scoop execution
-test	scoop-recursive-processor-creation		scoop029 tcf pass scoop execution
-test	scoop-agent-validity				scoop030 tcf pass scoop validity expanded agents conformance
-test	scoop-agent-call				scoop031 tcf pass scoop agents execution
+test	scoop-access-smoke				scoop001 tcf pass scoop execution multithreaded
+test	scoop-argument-validity				scoop002 tcf pass scoop validity expanded multithreaded
+test	scoop-hanging-1					scoop003 tcf pass scoop execution multithreaded
+test	scoop-basic-argument-formal-nested	scoop004 tcf pass scoop execution multithreaded
+test	scoop-separate-like-current			scoop005 tcf pass scoop execution multithreaded
+test	scoop-result-validity				scoop006 tcf pass scoop validity expanded multithreaded
+test	scoop-external-call				scoop007 tcf pass scoop execution multithreaded
+test	scoop-freeze-condition				scoop008 tcf pass scoop execution incrementality multithreaded
+test	scoop-wait-condition				scoop009 tcf pass scoop execution assertion multithreaded
+test	scoop-request-chain-exception			scoop011 tcf pass scoop execution exception multithreaded
+test	scoop-false-wait-condition			scoop012 tcf pass scoop execution assertion exception multithreaded
+test	scoop-inline-separate-call			scoop013 tcf fail scoop finalizing inlining multithreaded
+test	scoop-separate-expanded				scoop014 tcf pass scoop expanded multithreaded
+test	scoop-separate-patterns-crash			scoop015 tcf pass scoop finalizing multithreaded
+test	scoop-finalize-c-failure			scoop016 tcf pass scoop finalizing c_compilation multithreaded
+test	scoop-separate-call-to-constant			scoop017 tcf pass scoop execution multithreaded
+test	scoop-once-per-object				scoop018 tcf pass scoop execution incrementality once multithreaded
+test	scoop-top-exception				scoop019 tcf pass scoop multithreaded
+test	scoop-separate-formal				scoop020 tcf pass scoop formal generic conformance validity multithreaded
+test	scoop-object-test				scoop021 tcf pass scoop formal generic conformance object_test execution multithreaded
+test	scoop-undetected-vuer				scoop022 tcf fail scoop validity incrementality multithreaded
+test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop termination expanded generic multithreaded
+test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop execution multithreaded
+test	scoop-expanded-separate				scoop025 tcf pass scoop expanded execution multithreaded
+test	scoop-unnested-logging				scoop026 tcf pass scoop execution multithreaded
+test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop execution multithreaded
+test	scoop-sequential-processor-creation		scoop028 tcf pass scoop execution multithreaded
+test	scoop-recursive-processor-creation		scoop029 tcf pass scoop execution multithreaded
+test	scoop-agent-validity				scoop030 tcf pass scoop validity expanded agents conformance multithreaded
+test	scoop-agent-call				scoop031 tcf pass scoop agents execution multithreaded
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

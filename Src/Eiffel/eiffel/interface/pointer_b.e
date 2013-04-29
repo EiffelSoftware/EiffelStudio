@@ -76,7 +76,7 @@ feature {CLASS_TYPE_AS} -- Actual class type
 		do
 			if is_typed_pointer then
 				if gen /= Void then
-					create {TYPED_POINTER_A} Result.make (class_id, gen)
+					create {TYPED_POINTER_A} Result.make_typed (gen.first)
 				else
 					create Result.make (class_id)
 				end

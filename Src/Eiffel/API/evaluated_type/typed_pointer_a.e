@@ -42,7 +42,7 @@ inherit
 		end
 
 create
-	make, make_typed
+	make_typed
 
 feature {NONE} -- Initialization
 
@@ -50,10 +50,12 @@ feature {NONE} -- Initialization
 			-- Set `pointed_type' with `a_type'.
 		require
 			a_type_not_void: a_type /= Void
+		local
+			l_generics: like generics
 		do
-			create generics.make (1)
-			generics.extend (a_type)
-			cl_make (base_class.class_id)
+			create l_generics.make (1)
+			l_generics.extend (a_type)
+			make (base_class.class_id, l_generics)
 		ensure
 			pointed_type_set: pointed_type = a_type
 		end
@@ -115,6 +117,7 @@ feature {COMPILER_EXPORTER} -- Access
 			if class_declaration_mark = expanded_mark then
 				Result.set_expanded_class_mark
 			end
+			Result.set_is_frozen_upper_bound (is_frozen_upper_bound)
 			Result.set_reference_mark
 		end
 

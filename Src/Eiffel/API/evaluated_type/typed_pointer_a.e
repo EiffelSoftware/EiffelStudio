@@ -117,7 +117,6 @@ feature {COMPILER_EXPORTER} -- Access
 			if class_declaration_mark = expanded_mark then
 				Result.set_expanded_class_mark
 			end
-			Result.set_is_frozen_upper_bound (is_frozen_upper_bound)
 			Result.set_reference_mark
 		end
 

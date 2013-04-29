@@ -345,26 +345,27 @@ feature -- Output
 			Result.append (s)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		local
 			q: detachable CLASS_C
 			i: INTEGER
 			n: STRING
 			f: detachable E_FEATURE
 		do
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
-			ext_append_marks (st)
-			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
-			st.add_space
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_curly)
-			qualifier.ext_append_to (st, c)
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_curly)
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
+			ext_append_marks (a_text_formatter)
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
+			a_text_formatter.add_space
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_curly)
+			qualifier.ext_append_to (a_text_formatter, a_context_class)
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_curly)
 			from
 				q := qualifier.base_class
 			until
 				i >= chain.count
 			loop
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_dot)
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_dot)
 				if attached q and then q.has_feature_table then
 					f := q.feature_with_name_id (chain [i])
 				else
@@ -372,18 +373,18 @@ feature -- Output
 				end
 				n := names_heap.item (chain [i])
 				if attached f then
-					st.add_feature (f, n)
+					a_text_formatter.add_feature (f, n)
 				elseif attached q then
-					st.add_feature_name (n, q)
+					a_text_formatter.add_feature_name (n, q)
 				else
-					st.process_feature_name_text (n, Void)
+					a_text_formatter.process_feature_name_text (n, Void)
 				end
 				i := i + 1
 			end
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
-			st.add_space
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
+			a_text_formatter.add_space
 			if is_valid then
-				actual_type.ext_append_to (st, c)
+				actual_type.ext_append_to (a_text_formatter, a_context_class)
 			end
 		end
 
@@ -503,7 +504,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

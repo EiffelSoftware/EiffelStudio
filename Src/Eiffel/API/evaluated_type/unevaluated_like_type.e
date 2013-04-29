@@ -96,13 +96,14 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 			-- Append Current type to `st'.
 		do
-			ext_append_marks (st)
-			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
-			st.add_space
-			st.add (anchor)
+			ext_append_marks (a_text_formatter)
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
+			a_text_formatter.add_space
+			a_text_formatter.add (anchor)
 		end
 
 	dump: STRING

@@ -251,16 +251,17 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		do
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
-			ext_append_marks (st)
-			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
-			st.add_space
-			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Current, Void)
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
-			st.add_space
-			conformance_type.ext_append_to (st, c)
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
+			ext_append_marks (a_text_formatter)
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
+			a_text_formatter.add_space
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Current, Void)
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
+			a_text_formatter.add_space
+			conformance_type.ext_append_to (a_text_formatter, a_context_class)
 		end
 
 feature -- IL code generation

@@ -105,27 +105,28 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 			-- Append Current type to `st'.
 		local
 			i: INTEGER
 		do
-			ext_append_marks (st)
+			ext_append_marks (a_text_formatter)
 			if qualifier.is_like then
-				qualifier.ext_append_to (st, c)
+				qualifier.ext_append_to (a_text_formatter, a_context_class)
 			else
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
-				st.add_space
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_curly)
-				qualifier.ext_append_to (st, c)
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_curly)
+				a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_curly)
+				qualifier.ext_append_to (a_text_formatter, a_context_class)
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_curly)
 			end
 			from
 			until
 				i >= chain.count
 			loop
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_dot)
-				st.add (names_heap.item (chain [i]))
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_dot)
+				a_text_formatter.add (names_heap.item (chain [i]))
 				i := i + 1
 			end
 		end

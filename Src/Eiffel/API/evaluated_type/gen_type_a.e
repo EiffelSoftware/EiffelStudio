@@ -319,31 +319,32 @@ feature -- Output
 			end
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		local
 			i, count: INTEGER
 		do
 				-- Append classname "TUPLE"
-			Precursor {CL_TYPE_A} (st, c)
+			Precursor {CL_TYPE_A} (a_text_formatter, a_context_class)
 
 			count := generics.count
 				-- TUPLE may have zero generic parameters
 			if count > 0 then
-				st.add_space
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
 				from
 					i := 1
 				until
 					i > count
 				loop
-					generics.i_th (i).ext_append_to (st, c)
+					generics.i_th (i).ext_append_to (a_text_formatter, a_context_class)
 					if i /= count then
-						st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_Comma)
-						st.add_space
+						a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_Comma)
+						a_text_formatter.add_space
 					end
 					i := i + 1
 				end
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
 			end
 		end
 

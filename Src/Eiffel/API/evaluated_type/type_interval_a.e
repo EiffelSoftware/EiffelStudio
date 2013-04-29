@@ -81,14 +81,14 @@ feature -- Output
 			Result.append (upper.dump)
 		end
 
-	ext_append_to (a_text_formatter: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
 			-- <Precursor>
 		do
-			lower.ext_append_to (a_text_formatter, c)
+			lower.ext_append_to (a_text_formatter, a_context_class)
 			a_text_formatter.add_space
 			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_dotdot, Void)
 			a_text_formatter.add_space
-			upper.ext_append_to (a_text_formatter, c)
+			upper.ext_append_to (a_text_formatter, a_context_class)
 		end
 
 note

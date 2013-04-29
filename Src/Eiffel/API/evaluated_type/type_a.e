@@ -929,7 +929,7 @@ feature -- Attachment properties
 feature -- Output
 
 	frozen append_to (a_text_formatter: TEXT_FORMATTER)
-			-- Append `Current' to `text'.
+			-- Append `Current' to `a_text_formatter'.
 		do
 			ext_append_to (a_text_formatter, Void)
 		end
@@ -944,11 +944,15 @@ feature -- Output
 		deferred
 		end
 
-	ext_append_to (a_text_formatter: TEXT_FORMATTER; c: CLASS_C)
-			-- Append `Current' to `text'.
-			-- `f' is used to retreive the generic type or argument name as string.
-			-- This replaces the old "G#2" or "arg#1" texts in feature signature views.
-			-- Actually used in FORMAL_A and LIKE_ARGUMENT.
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- Append `Current' to `a_text_formatter'.
+			-- `a_context_class' is used to retrieve the generic type name for a
+			-- formal generic parameter written in `a_context_class'.
+			-- This replaces the "G#2" text by the actual formal generic parameter name.
+			-- Actually used in FORMAL_A.
+			--| Note: It used to handle LIKE_ARGUMENT as well by changing "arg#1" by the
+			--| actual argument name, but this was dropped when we started to only use
+			--| `a_context_class'.
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		deferred

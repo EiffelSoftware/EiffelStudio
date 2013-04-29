@@ -102,24 +102,25 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		do
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
-			ext_append_marks (st)
-			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
-			st.add_space
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
+			ext_append_marks (a_text_formatter)
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
+			a_text_formatter.add_space
 			--Martins 2/6/2007: this code here does not work anymore because of switch from E_FAETURE to CLASS_C
 			-- As it has to be removed anyway we do not spent any effort to enable it again.
-			-- if c /= Void then
-				--st.process_local_text (c.arguments.argument_names.i_th (position))
+			-- if a_context_class /= Void then
+				--a_text_formatter.process_local_text (a_context_class.arguments.argument_names.i_th (position))
 			--else
-			st.add ({SHARED_TEXT_ITEMS}.ti_Argument_index)
-			st.add_int (position)
+			a_text_formatter.add ({SHARED_TEXT_ITEMS}.ti_Argument_index)
+			a_text_formatter.add_int (position)
 
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
-			st.add_space
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
+			a_text_formatter.add_space
 			if is_valid then
-				actual_type.ext_append_to (st, c)
+				actual_type.ext_append_to (a_text_formatter, a_context_class)
 			end
 		end
 

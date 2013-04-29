@@ -65,20 +65,21 @@ feature -- Output
 	dump: STRING = "NONE"
 			-- Dumped trace
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		do
 			if
 				not has_attached_mark and then not has_detachable_mark and then
 				not is_attached and then not is_implicitly_attached
 			then
 					-- There is no explicit attachment mark, let's put an assumed one.
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
-				st.add_space
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
+				a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
+				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
+				a_text_formatter.add_space
 			end
-			ext_append_marks (st)
-			st.add ({SHARED_TEXT_ITEMS}.ti_none_class)
+			ext_append_marks (a_text_formatter)
+			a_text_formatter.add ({SHARED_TEXT_ITEMS}.ti_none_class)
 		end
 
 feature -- Generic conformance

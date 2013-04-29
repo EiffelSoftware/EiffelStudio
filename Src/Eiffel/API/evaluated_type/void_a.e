@@ -74,9 +74,10 @@ feature -- Output
 	dump: STRING = "Void"
 			-- Dumped trace
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		do
-			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_void, Void)
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_void, Void)
 		end
 
 feature {COMPILER_EXPORTER}

@@ -441,29 +441,30 @@ feature -- Output
 			Result.append_integer (position)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		local
 			s: STRING
 			l_class: CLASS_AS
 		do
-			ext_append_marks (st)
-			if c /= Void then
-				l_class := c.ast
+			ext_append_marks (a_text_formatter)
+			if a_context_class /= Void then
+				l_class := a_context_class.ast
 				if l_class.generics /= Void and then l_class.generics.valid_index (position) then
 					s := l_class.generics.i_th (position).name.name.as_upper
-					st.process_generic_text (s)
+					a_text_formatter.process_generic_text (s)
 				else
 						-- We are in case where actual generic position does not match
 						-- any generics in written class of `f'. E.g: A [H, G] inherits
 						-- from B [G], therefore in B, `G' at position 2 does not make sense.
 						--| FIXME: Manu 05/29/2002: we cannot let this happen, the reason is
 						-- due to bad initialization of `f' in wrong class.
-					st.add ({SHARED_TEXT_ITEMS}.Ti_generic_index)
-					st.add_int (position)
+					a_text_formatter.add ({SHARED_TEXT_ITEMS}.Ti_generic_index)
+					a_text_formatter.add_int (position)
 				end
 			else
-				st.add ({SHARED_TEXT_ITEMS}.Ti_generic_index)
-				st.add_int (position)
+				a_text_formatter.add ({SHARED_TEXT_ITEMS}.Ti_generic_index)
+				a_text_formatter.add_int (position)
 			end
 		end
 

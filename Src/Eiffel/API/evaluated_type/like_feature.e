@@ -178,30 +178,31 @@ feature -- Output
 			Result.append (s)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
+			-- <Precursor>
 		local
 			ec: CLASS_C
 			l_feat: E_FEATURE
 			l_full_feat_name: STRING_32
 		do
 			ec := Eiffel_system.class_of_id (class_id)
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
-			ext_append_marks (st)
-			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
-			st.add_space
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
+			ext_append_marks (a_text_formatter)
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
+			a_text_formatter.add_space
 			if ec.has_feature_table then
 				l_feat := ec.feature_with_name (feature_name)
 			end
 			l_full_feat_name := encoding_converter.utf8_to_utf32 (feature_name)
 			if l_feat /= Void then
-				st.add_feature (l_feat, l_full_feat_name)
+				a_text_formatter.add_feature (l_feat, l_full_feat_name)
 			else
-				st.add_feature_name (l_full_feat_name, ec)
+				a_text_formatter.add_feature_name (l_full_feat_name, ec)
 			end
-			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
-			st.add_space
+			a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
+			a_text_formatter.add_space
 			if is_valid then
-				actual_type.ext_append_to (st, c)
+				actual_type.ext_append_to (a_text_formatter, a_context_class)
 			end
 		end
 

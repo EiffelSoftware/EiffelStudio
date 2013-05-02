@@ -412,6 +412,9 @@ feature {NONE} -- Helpers
 			if is_compatible_mode and a_path.substring_index ("compatible", 1) = 0 then
 				create p.make_from_string (a_path)
 				Result := p.extended ("compatible").name
+			elseif is_experimental_mode and a_path.substring_index ("experimental", 1) = 0 then
+				create p.make_from_string (a_path)
+				Result := p.extended ("experimental").name
 			else
 				Result := a_path
 			end

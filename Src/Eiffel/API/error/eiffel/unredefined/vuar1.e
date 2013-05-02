@@ -44,10 +44,10 @@ feature -- Output
 			if called_feature /= Void then
 				print_called_feature (a_text_formatter);
 				a_text_formatter.add_new_line;
-				a_text_formatter.add ("Number of actuals: ");
-				a_text_formatter.add_int (argument_count);
 				a_text_formatter.add (" Number of formals: ");
 				a_text_formatter.add_int (formal_count);
+				a_text_formatter.add ("Number of actuals: ");
+				a_text_formatter.add_int (argument_count);
 			elseif called_local /= Void then
 				a_text_formatter.add ("Local variable name: ");
 				a_text_formatter.add (called_local);
@@ -81,7 +81,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -823,6 +823,8 @@ feature {NONE} -- Implementation
 
 	contract_widget_from_row (a_row: EV_GRID_ROW): detachable EV_WIDGET
 			-- Contract widget from a grid row
+		require
+			a_row_set: a_row /= Void
 		local
 			l_viewer: ES_CONTRACT_VIEWER_WIDGET
 			l_c: CLASS_C
@@ -834,6 +836,7 @@ feature {NONE} -- Implementation
 			l_padding: EV_CELL
 			l_sep: EV_HORIZONTAL_SEPARATOR
 			l_widget: EV_WIDGET
+			l_screen: EV_RECTANGLE
 		do
 			create l_v
 
@@ -898,13 +901,15 @@ feature {NONE} -- Implementation
 				if attached last_contract_widget as l_cw then
 					l_cw.recycle
 				end
+				l_screen := (create {EV_SCREEN}).monitor_area_from_position (screen_x, screen_y)
 				create l_viewer.make
 				last_contract_widget := l_viewer
 				l_viewer.is_showing_full_contracts := True
-				l_viewer.set_context (l_c, l_f)
 				l_viewer.set_auto_check_visible (False)
 				l_viewer.set_is_showing_comments (False)
 				l_viewer.set_is_showing_edit_contract_button (False)
+				l_viewer.set_maximum_widget_width (l_screen.width - {ES_UI_CONSTANTS}.horizontal_padding * 2)
+				l_viewer.set_context (l_c, l_f)
 				l_widget := l_viewer.widget
 				l_v.extend (l_widget)
 				color_propogator.propagate_colors (l_widget, Void, contract_background_color, Void)

@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -170,10 +175,16 @@ feature {NONE} -- Implementation
 
 	create_object_grid: ES_OBJECTS_GRID
 			-- Create object grid
+		local
+			l_expand_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
 		do
 			create Result.make_with_name ("", "")
-			Result.row_expand_actions.extend (agent on_grid_size_changed)
-			Result.row_collapse_actions.extend (agent on_grid_size_changed)
+				-- Do it on idle to ensure that the expansion actions on rows
+				-- has been called to give correct required height.
+			l_expand_action := agent (r: EV_GRID_ROW)
+				do ev_application.do_once_on_idle (agent on_grid_size_changed (r)) end
+			Result.row_expand_actions.extend (l_expand_action)
+			Result.row_collapse_actions.extend (l_expand_action)
 			Result.disable_vertical_overscroll
 			Result.hide_header
 
@@ -249,9 +260,9 @@ feature {NONE} -- Implementation
 					l_height := l_grid.row_height
 				else
 					l_height := l_grid.virtual_height.min (l_screen.height - l_grid.screen_y.max (0))
-					if l_grid.is_horizontal_scroll_bar_show_requested and then l_grid.is_vertical_scroll_bar_show_requested then
-						l_width := l_width + l_grid.vertical_scroll_bar.width
-					end
+				end
+				if l_grid.is_horizontal_scroll_bar_show_requested and then l_grid.is_vertical_scroll_bar_show_requested then
+					l_width := l_width + l_grid.vertical_scroll_bar.width
 				end
 				if l_grid.is_header_displayed then
 					l_height := l_height + l_grid.header.height

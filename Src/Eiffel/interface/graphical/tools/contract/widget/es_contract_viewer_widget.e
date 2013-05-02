@@ -85,6 +85,9 @@ feature {NONE} -- Access
 	is_showing_comments_internal: BOOLEAN
 			-- Internal valuable for showing comments.
 
+	maximum_widget_width: INTEGER
+			-- Max widget width
+
 feature -- Element change
 
 	set_context (a_class: attached like context_class; a_feature: attached like context_feature)
@@ -194,6 +197,19 @@ feature -- Status setting
 			end
 		end
 
+	set_maximum_widget_width (a_w: INTEGER)
+			-- Set `maximum_widget_width' with `a_w'.
+		require
+			a_w_not_negative: a_w >= 0
+		do
+			maximum_widget_width := a_w
+			if is_shown and then has_context then
+				update_context
+			end
+		ensure
+			maximum_widget_width_set: maximum_widget_width = a_w
+		end
+
 feature {NONE} -- Basic operation
 
 	update_context
@@ -218,6 +234,7 @@ feature {NONE} -- Basic operation
 			l_tokens: LIST [EDITOR_TOKEN]
 			l_width: INTEGER
 			l_no_comment: STRING_32
+			l_grid_width: INTEGER
 		do
 				-- Clear the contract grid
 			l_grid := contract_grid
@@ -351,9 +368,14 @@ feature {NONE} -- Basic operation
 					end
 				end
 
-				l_grid.set_minimum_size (l_width + 20, l_height + 6)
-				l_grid.column (1).set_width (l_width + 2)
+				if maximum_widget_width > 0 then
+					l_grid_width := (l_width + 20).min (maximum_widget_width)
+				else
+					l_grid_width := l_width + 20
+				end
 
+				l_grid.set_minimum_size (l_grid_width, l_height + 6)
+				l_grid.column (1).set_width ((l_grid_width - 18).max (0))
 
 				if l_feature.is_procedure or else l_feature.is_function then
 					edit_contract_label.enable_sensitive

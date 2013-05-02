@@ -59,7 +59,8 @@ feature -- Output
 			l_actual_type ?= actual_type
 			l_formal_type ?= formal_type
 			if l_actual_type /= Void and then l_formal_type /= Void then
-				l_same_class_name := l_actual_type.base_class.name.is_equal (l_formal_type.base_class.name)
+				l_same_class_name := l_actual_type.class_id /= l_formal_type.class_id and then
+					l_actual_type.base_class.name.is_equal (l_formal_type.base_class.name)
 			end
 
 			print_called_feature (a_text_formatter);
@@ -69,21 +70,21 @@ feature -- Output
 			a_text_formatter.add ("Argument position: ");
 			a_text_formatter.add_int (argument_position);
 			a_text_formatter.add_new_line;
-			a_text_formatter.add ("Actual argument type: ");
-			actual_type.append_to (a_text_formatter);
-			if l_same_class_name then
-				a_text_formatter.add (" (from ")
-				a_text_formatter.add_group (l_actual_type.base_class.lace_class.group,
-					l_actual_type.base_class.lace_class.target.name)
-				a_text_formatter.add (")")
-			end
-			a_text_formatter.add_new_line;
 			a_text_formatter.add ("Formal argument type: ");
 			formal_type.append_to (a_text_formatter);
 			if l_same_class_name then
 				a_text_formatter.add (" (from ")
 				a_text_formatter.add_group (l_formal_type.base_class.lace_class.group,
 					l_formal_type.base_class.lace_class.target.name)
+				a_text_formatter.add (")")
+			end
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Actual argument type: ");
+			actual_type.append_to (a_text_formatter);
+			if l_same_class_name then
+				a_text_formatter.add (" (from ")
+				a_text_formatter.add_group (l_actual_type.base_class.lace_class.group,
+					l_actual_type.base_class.lace_class.target.name)
 				a_text_formatter.add (")")
 			end
 			a_text_formatter.add_new_line;
@@ -115,7 +116,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

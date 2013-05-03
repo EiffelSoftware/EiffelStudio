@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 				-- This is seemingly pointless because it calls Precursor, but do not remove because this
 				-- routine is frozen for a reason!
 			Precursor {EB_TOOL} (a_window, a_tool)
+			create internal_deferred_on_show_actions
 		end
 
     on_before_initialize
@@ -464,6 +465,21 @@ feature -- Basic operations
             is_initialized: (develop_window/= Void and then not develop_window.is_recycling and not develop_window.is_recycled) implies is_initialized
         end
 
+	execute_until_shown (a_procedure: PROCEDURE [ANY, TUPLE])
+			-- Execute `a_procedure' until the panel is shown.
+			-- Execute the procedure if the panel is already shown.
+		require
+			a_procedure_set: a_procedure /= Void
+		do
+			if is_initialized and then is_shown then
+				a_procedure.apply
+			else
+				if not internal_deferred_on_show_actions.has (a_procedure) then
+					internal_deferred_on_show_actions.extend_kamikaze (a_procedure)
+				end
+			end
+		end
+
 feature {NONE} -- Basic operations
 
 	show_help
@@ -847,6 +863,7 @@ feature {NONE} -- Action handlers
 			is_shown: is_shown
 			user_widget_is_displayed: user_widget.is_displayed
 		do
+			internal_deferred_on_show_actions.call (Void)
 		end
 
 	on_focus_in
@@ -1088,6 +1105,9 @@ feature {NONE} -- Internal implementation cache
     internal_right_tool_bar_widget: detachable CELL [detachable like right_tool_bar_widget]
             -- Cached version of `right_tool_bar_widget'
 
+	internal_deferred_on_show_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions that have been deferred in `on_show'
+
 feature {NONE} -- Internationalization
 
 	tt_show_help: STRING = "Click to show the $1 tool help documentation."
@@ -1096,7 +1116,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

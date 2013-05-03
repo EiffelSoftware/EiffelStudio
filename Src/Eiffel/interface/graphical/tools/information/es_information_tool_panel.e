@@ -121,23 +121,22 @@ feature {NONE} -- Status report
 	is_visit_requested: BOOLEAN
 			-- Is backgroud visiting requested?
 
-	refresh_list_requested: BOOLEAN
-			-- Refresh list requested?
-
 feature {ES_INFORMATION_TOOL_COMMANDER_I, ES_EIS_TOOL_WIDGET} -- Basic operations
 
 	refresh_list
 			-- Refresh the entry list.
+		local
+			l_agent: like refresh_list_agent
 		do
 			if not is_initialized then
 				initialize
 			end
-			if is_shown then
-				user_widget.refresh_list
-				refresh_list_requested := False
-			else
-				refresh_list_requested := True
+			l_agent := refresh_list_agent
+			if l_agent = Void then
+				l_agent := agent user_widget.refresh_list
+				refresh_list_agent := l_agent
 			end
+			execute_until_shown (l_agent)
 		end
 
 	request_eis_visit
@@ -226,10 +225,6 @@ feature {NONE} -- Action handlers
 			if is_visit_requested then
 				perform_auto_background_visiting
 			end
-			if refresh_list_requested then
-				user_widget.refresh_list
-				refresh_list_requested := False
-			end
 		end
 
 	on_focus_in
@@ -313,6 +308,11 @@ feature {NONE} -- Constants
 
 	auto_sweep_session_id: STRING = "com.eiffel.eis_tool.auto_sweep";
 			-- Session IDs
+
+feature {NONE} -- Access
+
+	refresh_list_agent: detachable PROCEDURE [ANY, TUPLE];
+			-- Agent of `user_widget.refresh_list'
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

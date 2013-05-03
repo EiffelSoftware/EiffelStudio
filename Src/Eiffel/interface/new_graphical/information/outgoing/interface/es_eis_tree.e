@@ -13,7 +13,8 @@ inherit
 		redefine
 			build_tree,
 			on_post_folder_loaded,
-			internal_recycle
+			internal_recycle,
+			refresh
 		end
 
 	CONF_ACCESS
@@ -234,6 +235,19 @@ feature -- Operation
 			-- to show if there is information connected to the node.
 		do
 			recursive_render_information_signs (Current)
+		end
+
+	refresh
+			-- <Precursor>
+		local
+			l_agent: like build_tree_agent
+		do
+			l_agent := build_tree_agent
+			if l_agent = Void then
+				l_agent := agent build_tree
+				build_tree_agent := l_agent
+			end
+			eis_tool_widget.panel.execute_until_shown (l_agent)
 		end
 
 feature -- Access
@@ -478,6 +492,9 @@ feature {NONE} -- Access
 
 	managed_tags: SORTED_TWO_WAY_LIST [STRING_32];
 			-- Sorted tags. Do not change directly out of EIS observer.
+
+	build_tree_agent: detachable PROCEDURE [ANY, TUPLE]
+			-- Agent of `build_tree'
 
 invariant
 	eis_tool_widget_not_void: eis_tool_widget /= Void

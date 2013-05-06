@@ -29,7 +29,8 @@ inherit
 			on_event_item_added,
 			on_event_item_removed,
 			on_event_item_changed,
-			on_event_item_adopted
+			on_event_item_adopted,
+			on_event_item_clean_up
 		end
 
 feature {NONE} -- Initialization
@@ -404,7 +405,7 @@ feature {NONE} -- Query
 				i = 0
 			loop
 				l_row := l_grid.row (i)
-				if l_row.data = a_event_item then
+				if l_row.data = a_event_item and l_row.subrow_count > 0 then
 					Result := l_row
 					i := 0
 				else
@@ -1139,6 +1140,10 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 					check
 						item_count_big_enough: item_count >= 1
 					end
+					if l_row.subrow_count > 0 then
+						check only_one_subrow: l_row.subrow_count = 1 end
+						grid_events.remove_and_clear_subrows_from (l_row)
+					end
 
 					l_selected := l_row.is_selected
 
@@ -1147,7 +1152,7 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 
 					from l_row_item_count := l_row.count until l_row_item_count = 0 loop
 						l_item := l_row.item (l_row_item_count)
-						if not l_item.is_destroyed then
+						if l_item /= Void and then not l_item.is_destroyed then
 								-- Force call of pointer leave actions
 							l_item.pointer_leave_actions.call (Void)
 						end
@@ -1249,6 +1254,21 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
 		end
 
+	on_event_item_clean_up (a_service: EVENT_LIST_S)
+			-- <Precursor>
+		do
+			Precursor (a_service)
+
+			if is_initialized then
+				grid_events.remove_and_clear_all_rows
+				item_count := 0
+					-- Last item to be removed
+				update_content_applicable_widgets (False)
+			end
+		ensure then
+			grid_events_cleaned_up: is_initialized implies grid_events.row_count = 0
+		end
+
 feature {NONE} -- Action handlers
 
 	on_grid_events_item_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM)
@@ -1306,7 +1326,7 @@ invariant
 	grid_events_attached: (is_initialized and is_interface_usable) implies attached grid_events
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

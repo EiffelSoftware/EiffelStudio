@@ -61,6 +61,8 @@ feature{NONE} -- Initialization
 	initialize_tooltip_defaults
 			-- Initializes tool tip defaults for all EiffelStudio tool tips
 		do
+			lock_update
+
 			Precursor
 
 			set_border_line_width (1)
@@ -77,6 +79,9 @@ feature{NONE} -- Initialization
 
 			enable_label_font
 			enable_text_wrap
+
+			unlock_update
+			try_call_setting_change_actions
 		end
 
 feature -- Status report
@@ -107,7 +112,7 @@ feature -- Status setting
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

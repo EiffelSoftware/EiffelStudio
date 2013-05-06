@@ -36,7 +36,10 @@ inherit
 			default_create
 		redefine
 			set_last_picked_item,
-			required_component_width
+			required_component_width,
+			lock_update,
+			unlock_update,
+			try_call_setting_change_actions
 		end
 
 	EVS_GRID_SEARCHABLE_ITEM
@@ -65,6 +68,8 @@ feature{NONE} -- Initialization
 
 	initialize
 		do
+			lock_update
+
 			align_text_left
 			align_text_vertically_center
 			set_left_border (1)
@@ -77,6 +82,8 @@ feature{NONE} -- Initialization
 			setting_change_actions.extend (agent safe_redraw)
 			initialize_item
 			Precursor
+
+			unlock_update
 		end
 
 feature -- Access
@@ -401,6 +408,29 @@ feature -- Setting
 			stone_function := a_function
 		ensure
 			stone_function_set: stone_function = a_function
+		end
+
+feature -- Lock/Unlock
+
+	lock_update
+			-- <Precursor>
+		do
+			Precursor
+			editor_token_text.lock_update
+		end
+
+	unlock_update
+			-- <Precursor>
+		do
+			Precursor
+			editor_token_text.unlock_update
+		end
+
+	try_call_setting_change_actions
+			-- <Precursor>
+		do
+			editor_token_text.try_call_setting_change_actions
+			Precursor
 		end
 
 feature -- Searchable
@@ -861,7 +891,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

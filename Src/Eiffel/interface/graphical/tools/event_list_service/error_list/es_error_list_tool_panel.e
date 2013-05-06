@@ -25,6 +25,7 @@ inherit
 			on_unlocked,
 			on_event_item_added,
 			on_event_item_removed,
+			on_event_item_clean_up,
 			on_handle_key,
 			create_right_tool_bar_items,
 			create_clickable_tooltip
@@ -193,6 +194,9 @@ feature {NONE} -- Access
 	syntax_errors: DS_ARRAYED_LIST [EVENT_LIST_ERROR_ITEM_I]
 			-- List of managed syntax errors, used to perform error adoption.
 			-- Note: Adoption takes place when a compiler reports an error and then the editor it opened.
+
+	last_tooltip_item: detachable EV_GRID_ITEM
+			-- Last item that brings up tooltip
 
 feature {NONE} -- Access: Help
 
@@ -483,7 +487,7 @@ feature {NONE} -- Basic operations
 				l_remove.select_actions.extend (agent remove_event_list_row (a_item.row))
 				l_menu.extend (l_remove)
 
-				if grid_events.selected_rows /= Void and then not grid_events.selected_rows.is_empty then
+				if grid_events.has_selected_row then
 						-- Remove, multiple
 					create l_remove.make_with_text (interface_names.m_remove_all)
 					l_remove.set_pixmap (stock_pixmaps.general_delete_icon)
@@ -512,7 +516,6 @@ feature {NONE} -- Basic operations
 			l_item: EV_GRID_LABEL_ITEM
 			l_error: ERROR
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
-			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_content: LIST [EDITOR_TOKEN]
 			l_pixmap: EV_PIXMAP
 			l_row: EV_GRID_ROW
@@ -574,37 +577,18 @@ feature {NONE} -- Basic operations
 					-- Set row height
 				a_row.set_height (l_editor_item.label_font_height.max ({ES_UI_CONSTANTS}.grid_row_height))
 
-					-- Build full error text
-				create l_gen.make
-				l_gen.enable_multiline
-				tracer.trace (l_gen, l_error, {ERROR_TRACER}.normal)
-				l_lines := l_gen.lines
-				if not l_lines.is_empty then
-					l_tip := create_clickable_tooltip (l_lines, l_editor_item, a_row)
-					a_row.select_actions.extend (agent l_tip.restart_tooltip_timer)
-
-						-- Sub row full error
-					if a_row.subrow_count = 0 then
-							-- No subrow, add one.
-							-- Note: A sub row will exist if the information is being updated
-						a_row.insert_subrow (1)
-					else
-							-- The row is being updated, so preserve any original state.
-						l_is_updating := True
-					end
-					l_row := a_row.subrow (1)
-					create l_item
-					l_item.disable_full_select
-					l_row.set_item (category_column, l_item)
-
-					l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
-					l_row.set_height (l_tip.required_tooltip_height)
-						-- No extra initialization needed so update `l_editor_item' to reflect settings.
-					l_editor_item.try_call_setting_change_actions
-					l_row.set_item (error_column, l_editor_item)
-				elseif a_row.subrow_count > 0 then
-					a_row.remove_subrow (a_row.subrow (1))
+					-- Build full error text row, the actually building is deferred to expansion action.
+					-- Only update the row if there was already a subrow.
+				if a_row.subrow_count = 0 then
+					a_row.insert_subrow (1)
+				else
+					populate_error_subrow (a_row)
+						-- The row is being updated, so preserve any original state.
+					l_is_updating := True
 				end
+
+				l_tip := create_clickable_tooltip (agent generate_lines_for_tooltip (l_error), l_editor_item, a_row)
+				a_row.select_actions.extend (agent l_tip.restart_tooltip_timer)
 
 					-- Context
 				tracer.trace (l_gen, l_error, {ERROR_TRACER}.context)
@@ -722,7 +706,7 @@ feature {NONE} -- Basic operations
 	update_content_applicable_widgets (a_enable: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_enable and grid_events.selected_rows.count >= 1 then
+			if a_enable and grid_events.has_selected_row then
 				error_info_command.enable_sensitive
 				delete_button.enable_sensitive
 			else
@@ -781,6 +765,64 @@ feature {NONE} -- Basic operations
 			warnings_button.set_text (l_text)
 
 			update_tool_title_and_pixmap
+		end
+
+	populate_error_subrow (a_parent_row: EV_GRID_ROW)
+			-- Populate/update subrow of `a_parent_row'.
+		require
+			a_parent_row_not_void: a_parent_row /= Void
+			a_parent_row_has_data: attached {EVENT_LIST_ITEM_I} a_parent_row.data
+		local
+			l_gen: EB_EDITOR_TOKEN_GENERATOR
+			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_lines: LIST [EIFFEL_EDITOR_LINE]
+			l_row: EV_GRID_ROW
+			l_item: EV_GRID_LABEL_ITEM
+			l_grid_item: EV_GRID_ITEM
+		do
+			if attached {EVENT_LIST_ITEM_I} a_parent_row.data as l_event and then attached {ERROR} l_event.data as l_error then
+				create l_gen.make
+				l_gen.enable_multiline
+				tracer.trace (l_gen, l_error, {ERROR_TRACER}.normal)
+				l_lines := l_gen.lines
+				if not l_lines.is_empty then
+					l_grid_item := a_parent_row.item (error_column)
+
+						-- Sub row full error
+					if a_parent_row.subrow_count = 0 then
+							-- No subrow, add one.
+							-- Note: A sub row will exist if the information is being updated
+						a_parent_row.insert_subrow (1)
+					end
+
+					l_row := a_parent_row.subrow (1)
+					l_row.set_data (l_event)
+					create l_item
+					l_item.disable_full_select
+					l_row.set_item (category_column, l_item)
+
+					l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
+						-- No extra initialization needed so update `l_editor_item' to reflect settings.
+					l_editor_item.try_call_setting_change_actions
+					l_row.set_height (l_editor_item.required_height_for_text_and_component)
+					l_row.set_item (error_column, l_editor_item)
+				end
+			end
+		end
+
+	generate_lines_for_tooltip (a_error: ERROR): LIST [EIFFEL_EDITOR_LINE]
+			-- Generate lines for tooltip of `a_error'.
+		require
+			a_error_not_void: a_error /= Void
+		local
+			l_gen: EB_EDITOR_TOKEN_GENERATOR
+		do
+			create l_gen.make
+			l_gen.enable_multiline
+			tracer.trace (l_gen, a_error, {ERROR_TRACER}.normal)
+			Result := l_gen.lines
+		ensure
+			Result_set: Result /= Void
 		end
 
 feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
@@ -917,6 +959,27 @@ feature {NONE} -- Event handlers
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
+	on_event_item_clean_up (a_service: EVENT_LIST_S)
+			-- <Precursor>
+		do
+			if not is_initialized then
+					-- We have to perform initialization to set the icon and counter
+					-- Synchronization with the event list service is surpress to prevent duplication of event items being added.
+				is_event_list_synchronized_on_initialized := False
+				initialize
+			end
+				-- Hide the tooltip if possible
+			if attached last_tooltip_item as l_item and then not l_item.is_destroyed then
+				l_item.pointer_leave_actions.call (Void)
+			end
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service)
+			set_error_count (0)
+			set_warning_count (0)
+			update_content_applicable_navigation_buttons
+		ensure then
+			is_initialized: is_initialized
+		end
+
 	on_session_value_changed (a_session: SESSION; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
@@ -994,12 +1057,12 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			a_row_attached: attached a_row
 		local
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+--			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
-			l_rows := grid_events.selected_rows
-			if l_rows.is_empty then
+--			l_rows := grid_events.selected_rows
+--			if l_rows.is_empty then
 --				fix_button.disable_sensitive
-			end
+--			end
 		end
 
 	on_row_expanded (a_row: EV_GRID_ROW)
@@ -1014,6 +1077,10 @@ feature {NONE} -- Action handlers
 			a_row_has_grid_events_as_parent: a_row.parent = grid_events
 			a_row_is_expanded: a_row.is_expanded
 		do
+				-- We don't rebuild the subrow when it is already there built on the same event.
+			if attached {EVENT_LIST_ITEM_I} a_row.data as l_event and then (a_row.subrow_count = 0 or else a_row.subrow (1).data /= l_event) then
+				populate_error_subrow (a_row)
+			end
 			if not is_expanding_all_errors then
 				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
 				a_row.enable_select
@@ -1231,7 +1298,7 @@ feature {NONE} -- Action handlers
 			l_event: EVENT_LIST_ITEM_I
 			l_error: ERROR
 		do
-			if not grid_events.selected_rows.is_empty then
+			if grid_events.has_selected_row then
 					-- Retrieve event item set from {ES_EVENT_LIST_TOOL_PANEL_BASE}.on_event_added
 				l_event ?= grid_events.selected_rows.first.data
 				if l_event /= Void then
@@ -1405,7 +1472,7 @@ feature {NONE} -- Factory
 			filter_button_attached: filter_button /= Void
 		end
 
-	create_clickable_tooltip (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
+	create_clickable_tooltip (a_lines: FUNCTION [ANY, TUPLE, LIST [EIFFEL_EDITOR_LINE]]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
 			-- <Precursor>
 		local
 			l_just_created: BOOLEAN
@@ -1416,9 +1483,14 @@ feature {NONE} -- Factory
 			Result := Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}(a_lines, a_item, a_row)
 			if l_just_created then
 				Result.veto_tooltip_display_functions.extend (agent: BOOLEAN
-																do
-																	Result := should_tooltip_be_displayed
-																end)
+					do
+						Result := should_tooltip_be_displayed
+					end)
+				Result.before_display_actions.extend (agent (a_it: EV_GRID_ITEM)
+					do
+						last_tooltip_item := a_it
+					end (a_item)
+					)
 			end
 		end
 
@@ -1447,7 +1519,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

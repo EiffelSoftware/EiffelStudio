@@ -225,7 +225,7 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-	create_clickable_tooltip (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
+	create_clickable_tooltip (a_lines: FUNCTION [ANY, TUPLE, LIST [EIFFEL_EDITOR_LINE]]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
 			-- Creates a new clickable tool tip with the context of `a_lines' and attaches itself it `a_item'
 			--
 			-- Note: If `a_item' already had a tool tip created for it, no new tool tip will be created but the same
@@ -241,7 +241,6 @@ feature {NONE} -- Factory
 			a_item_is_parented: a_item.is_parented
 			a_item_data_unattached_or_is_tool_tip: a_item.data = Void or else (({EB_EDITOR_TOKEN_TOOLTIP}) #? a_item.data) /= Void
 		local
-			l_tokens: like tokens_list_from_lines
 			l_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			Result ?= a_item.data
@@ -252,16 +251,23 @@ feature {NONE} -- Factory
 					l_select_actions := a_item.select_actions
 				end
 				create Result.make (a_item.pointer_enter_actions, a_item.pointer_leave_actions, l_select_actions, agent a_item.is_destroyed)
+					-- The following settings do not refresh GUI.
+					-- Otherwise, lock_update should be called.
 				Result.enable_pointer_on_tooltip
-				a_item.set_data (Result)
-			end
-
-			l_tokens := tokens_list_from_lines (a_lines)
-			Result.set_tooltip_text (l_tokens)
-			if not l_tokens.is_empty then
 				Result.enable_tooltip
-			else
-				Result.disable_tooltip
+				Result.before_display_actions.extend (agent (a_tooltip: EB_EDITOR_TOKEN_TOOLTIP; a_lines_func: FUNCTION [ANY, TUPLE, LIST [EIFFEL_EDITOR_LINE]])
+					local
+						l_tokens: like tokens_list_from_lines
+					do
+						l_tokens := tokens_list_from_lines (a_lines_func.item (Void))
+						a_tooltip.set_tooltip_text (l_tokens)
+						if not l_tokens.is_empty then
+							a_tooltip.enable_tooltip
+						else
+							a_tooltip.disable_tooltip
+						end
+					end (Result, a_lines))
+				a_item.set_data (Result)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -274,7 +280,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

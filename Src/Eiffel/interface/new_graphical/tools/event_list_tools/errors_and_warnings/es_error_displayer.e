@@ -20,7 +20,8 @@ inherit
 			trace_warnings as trace_compiler_warnings
 		redefine
 			clear_compiler_errors,
-			clear_compiler_warnings
+			clear_compiler_warnings,
+			clear_display
 		end
 
 create
@@ -126,6 +127,30 @@ feature {NONE} -- Helpers
 		end
 
 feature -- Basic operations
+
+	clear_display
+			-- <Precursor>
+		local
+			l_service: detachable EVENT_LIST_S
+			l_context_cookies: like {EVENT_LIST_S}.context_cookies
+		do
+			if event_list.is_service_available then
+				l_service := event_list.service
+				l_context_cookies := l_service.context_cookies
+				if
+					(l_context_cookies.count = 1 and then (l_context_cookies.has (warning_context) or else l_context_cookies.has (error_context))) or else
+					(l_context_cookies.count = 2 and then (l_context_cookies.has (warning_context) and then l_context_cookies.has (error_context)))
+				then
+						-- If the events contains and only contains error or warning events,
+						-- publish clean up event. Do this to optimize cleaning up the error list tool.
+					l_service.lock
+					l_service.clean_up_event_items
+					l_service.unlock
+				elseif not l_context_cookies.is_empty then
+					Precursor
+				end
+			end
+		end
 
 	clear (a_cookie: UUID)
 			-- Clears all error/warnings associated with a cookie.
@@ -490,7 +515,7 @@ invariant
 	window_manager_attached: window_manager /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

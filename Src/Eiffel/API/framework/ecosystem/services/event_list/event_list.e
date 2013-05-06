@@ -38,6 +38,8 @@ feature {NONE} -- Initialization
 			auto_dispose (item_changed_event)
 			create item_adopted_event
 			auto_dispose (item_adopted_event)
+			create item_clean_up_event
+			auto_dispose (item_clean_up_event)
 		end
 
 feature {NONE} -- Clean up
@@ -77,6 +79,13 @@ feature -- Access
 			-- <Precursor>
 		do
 			Result := internal_event_items
+		end
+
+
+	context_cookies: ARRAYED_LIST [UUID]
+			-- <Precursor>
+		do
+			create Result.make_from_array (internal_event_items_index.current_keys)
 		end
 
 feature -- Extension
@@ -185,6 +194,27 @@ feature -- Removal
 			end
 		end
 
+	clean_up_event_items
+			-- <Precursor>
+		local
+			l_locked: BOOLEAN
+		do
+			lock
+			l_locked := True
+				-- Remove all items.
+			internal_event_items.wipe_out
+				-- Remove all index events.
+			internal_event_items_index.wipe_out
+			on_item_clean_up
+
+			l_locked := False
+			unlock
+		rescue
+			if l_locked then
+				unlock
+			end
+		end
+
 feature -- Basic operations
 
 	adopt_event_item (a_new_cookie: UUID; a_event_item: EVENT_LIST_ITEM_I)
@@ -241,6 +271,9 @@ feature -- Events
 	item_adopted_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
 			-- <Precursor>
 
+	item_clean_up_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S]]
+			-- <Precursor>
+
 feature -- Events: Connection point
 
 	event_list_connection: EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
@@ -256,7 +289,8 @@ feature -- Events: Connection point
 							Result := << [item_added_event, agent ia_observer.on_event_item_added],
 								[item_adopted_event, agent ia_observer.on_event_item_adopted],
 								[item_changed_event, agent ia_observer.on_event_item_changed],
-								[item_removed_event, agent ia_observer.on_event_item_removed] >>
+								[item_removed_event, agent ia_observer.on_event_item_removed],
+								[item_clean_up_event, agent ia_observer.on_event_item_clean_up] >>
 						end, lockable_connection)
 				automation.auto_dispose (Result)
 				internal_event_list_connection := Result
@@ -330,6 +364,16 @@ feature {NONE} -- Events
 		do
 			if is_interface_usable and then item_adopted_event.is_interface_usable then
 				item_adopted_event.publish ([Current, a_event_item, a_new_cookie, a_old_cookie])
+			end
+		end
+
+	on_item_clean_up
+			-- Called after items have been clean up.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if is_interface_usable and then item_clean_up_event.is_interface_usable then
+				item_clean_up_event.publish ([Current])
 			end
 		end
 

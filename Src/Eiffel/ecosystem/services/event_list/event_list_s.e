@@ -113,6 +113,15 @@ feature -- Access
 				end)
 		end
 
+	context_cookies: ARRAYED_LIST [UUID]
+			-- Maintained cookies
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Access: Connecton
 
 	event_list_connection: EVENT_CONNECTION_I [EVENT_LIST_OBSERVER, EVENT_LIST_S]
@@ -164,6 +173,13 @@ feature -- Events
 
 	item_adopted_event: attached EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
 			-- Events called when an event list item is adopted by another parent.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+	item_clean_up_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S]]
+			-- Events called when event list items have been cleaned up.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -235,6 +251,15 @@ feature -- Removal
 			events_removed: items (a_context_cookie).is_empty
 		end
 
+	clean_up_event_items
+			-- Removes all events, from the list of events managed by this service.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			events_removed: all_items.is_empty
+		end
+
 feature -- Query
 
 	is_valid_context_cookie (a_context_cookie: UUID): BOOLEAN
@@ -263,7 +288,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

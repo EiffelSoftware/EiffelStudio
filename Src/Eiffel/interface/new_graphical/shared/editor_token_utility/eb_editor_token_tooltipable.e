@@ -32,7 +32,11 @@ inherit
 				remove_overriden_line_height,
 				is_overriden_font_set,
 				is_overriden_line_height_set,
-				is_text_wrap_enabled
+				is_text_wrap_enabled,
+				lock_update,
+				unlock_update,
+				lock_count,
+				try_call_setting_change_actions
 		redefine
 			set_tooltip_text
 		end
@@ -297,7 +301,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

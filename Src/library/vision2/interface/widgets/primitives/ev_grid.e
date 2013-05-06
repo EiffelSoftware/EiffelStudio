@@ -2082,6 +2082,36 @@ feature -- Status report
 			Result := implementation.find_next_item (a_row_index, a_column_index, look_left, a_is_tab_navigatable)
 		end
 
+	has_selected_row: BOOLEAN
+			-- Has selected row?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.has_selected_row
+		ensure
+			Result_implies_selected_rows_not_empty: Result implies not selected_rows.is_empty
+		end
+
+	has_selected_column: BOOLEAN
+			-- Has selected column?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.has_selected_column
+		ensure
+			Result_implies_selected_columns_not_empty: Result implies not selected_columns.is_empty
+		end
+
+	has_selected_item: BOOLEAN
+			-- Has selected items?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.has_selected_item
+		ensure
+			Result_implies_selected_items_not_empty: Result implies not selected_items.is_empty
+		end
+
 feature -- Element change
 
 	insert_new_row (i: INTEGER)

@@ -2365,6 +2365,63 @@ feature -- Status report
 			end
 		end
 
+	has_selected_row: BOOLEAN
+			-- Has selected row?
+		local
+			i: INTEGER
+			l_count: INTEGER
+			l_row: detachable EV_GRID_ROW_I
+		do
+			if is_row_selection_enabled then
+				Result := not internal_selected_rows.is_empty
+			else
+				from
+					i := 1
+					l_count := row_count
+				until
+					i > l_count or else Result
+				loop
+					l_row := rows @ i
+					if l_row /= Void and then l_row.is_selected then
+						Result := True
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	has_selected_column: BOOLEAN
+			-- Has selected column?
+		local
+			temp_columns: like columns
+			i: INTEGER
+			a_column: detachable EV_GRID_COLUMN_I
+		do
+			from
+				temp_columns := columns
+				i := 1
+			until
+				i > temp_columns.count or else Result
+			loop
+				a_column := temp_columns @ i
+				check a_column /= Void end
+				if a_column.is_selected then
+					Result := True
+				end
+				i := i + 1
+			end
+		end
+
+	has_selected_item: BOOLEAN
+			-- Has selected items?
+		do
+			if is_row_selection_enabled then
+				Result := has_selected_row
+			else
+				Result := not internal_selected_items.is_empty
+			end
+		end
+
 feature -- Element change
 
 	enable_drawables_have_focus

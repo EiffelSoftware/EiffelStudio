@@ -551,22 +551,22 @@ feature {NONE} -- Status
 			-- several possible conditions.
 			-- Possible control codes are the following:
 
-	Inserted: INTEGER = unique
+	Inserted: INTEGER = 1
 			-- Insertion successful
 
-	Found_constant: INTEGER = unique
+	Found_constant: INTEGER = 2
 			-- Key found
 
-	Changed: INTEGER = unique
+	Changed: INTEGER = 3
 			-- Change successful
 
-	Removed: INTEGER = unique
+	Removed: INTEGER = 4
 			-- Remove successful
 
-	Conflict: INTEGER = unique
+	Conflict: INTEGER = 5
 			-- Could not insert an already existing key
 
-	Not_found_constant: INTEGER = unique
+	Not_found_constant: INTEGER = 6
 			-- Key not found
 
 	is_map: BOOLEAN
@@ -651,7 +651,7 @@ invariant
 	count_big_enough: 0 <= count
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

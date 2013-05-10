@@ -156,6 +156,9 @@ feature -- Package
 			inf.put (l_package.id, "id")
 			inf.put (a_package.name, "name")
 			inf.put (a_package.description, "description")
+			if attached a_package.owner as o then
+				inf.put (o.name, "owner")
+			end
 			inf.save_to (p.extended ("package.info"))
 		end
 
@@ -208,6 +211,11 @@ feature -- Package
 				create Result.make (a_id.to_string_8)
 				Result.set_name (inf.item ("name"))
 				Result.set_description (inf.item ("description"))
+				if attached inf.item ("owner") as s_owner then
+					if attached user (s_owner) as o then
+						Result.set_owner (o)
+					end
+				end
 				across
 					inf as c
 				loop

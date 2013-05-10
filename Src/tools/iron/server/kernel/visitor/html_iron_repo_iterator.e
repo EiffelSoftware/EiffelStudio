@@ -50,6 +50,11 @@ feature -- Visit
 				s.append (" <span class=%"packageid%">(")
 				s.append (p.id)
 				s.append (")</span>")
+				if attached p.owner as l_owner then
+					s.append ("<span class=%"owner%">")
+					s.append (html_encoder.encoded_string (l_owner.name))
+					s.append ("</span>")
+				end
 				if attached p.description as l_description then
 					s.append ("<div class=%"description%">")
 					s.append (l_description)
@@ -68,7 +73,6 @@ feature -- Visit
 						s.append (" -- ")
 						s.append (date_as_string (dt))
 					end
-
 					s.append (")</div>")
 				end
 			end

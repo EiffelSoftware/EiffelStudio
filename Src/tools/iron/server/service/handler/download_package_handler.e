@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {DOWNLOAD_PACKAGE_HANDLER}."
+	description: "Summary description for {ARCHIVE_PACKAGE_HANDLER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	DOWNLOAD_PACKAGE_HANDLER
+	ARCHIVE_PACKAGE_HANDLER
 
 inherit
 	WSF_URI_TEMPLATE_HANDLER
@@ -22,11 +22,30 @@ feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			if req.is_get_request_method then
-				handle_download_package (req, res)
+			if is_method_get (req) then
+				handle_get (req, res)
+			elseif is_method_post (req) then
+				handle_post (req, res)
+			elseif is_method_delete (req)  then
+				handle_delete (req, res)
 			else
 				res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
 			end
+		end
+
+	handle_get (req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			handle_download_package (req, res)
+		end
+
+	handle_post (req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
+		end
+
+	handle_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
 		end
 
 	handle_download_package (req: WSF_REQUEST; res: WSF_RESPONSE)

@@ -11,6 +11,8 @@ class
 inherit
 	CONF_ACCESS
 
+	SHARED_CONF_SETTING
+
 create
 	make
 
@@ -22,6 +24,12 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 		do
 			factory := a_factory
+
+				-- Initialize configuration lib setup, this is done once.
+			initialize_conf_setting
+
+				-- Refresh mapping in case it was updated since last configuration processing
+			conf_location_mapper.refresh
 		ensure
 			factory_set: factory = a_factory
 		end
@@ -71,7 +79,7 @@ feature -- Access
 feature -- Basic operation
 
 	retrieve_configuration (a_file: READABLE_STRING_32)
-			-- Retreive the configuration in `a_file' and make it available in `last_system'.
+			-- Retrieve the configuration in `a_file' and make it available in `last_system'.
 		require
 			a_file_ok: a_file /= Void
 		local
@@ -202,7 +210,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

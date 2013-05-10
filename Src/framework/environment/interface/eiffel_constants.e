@@ -22,6 +22,9 @@ feature -- Variable names
 			-- Location of the Eiffel library folder.
 			-- note: it can be the same as ise_library_env
 
+	ise_iron_path_env: STRING = "ISE_IRON_PATH"
+			-- Location of the iron libraries installation
+
 	ise_precomp_env: STRING = "ISE_PRECOMP"
 			-- Precompile location.
 
@@ -66,7 +69,7 @@ feature -- Version
 			-- Minor release version.
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

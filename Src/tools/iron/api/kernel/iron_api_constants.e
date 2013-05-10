@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	iron_variable_name: STRING = "IRON"
+	iron_variable_name: STRING = "IRON_PATH"
 
 	version_variable_name: STRING = "IRON_VERSION"
 

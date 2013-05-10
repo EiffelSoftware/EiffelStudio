@@ -22,9 +22,6 @@ feature {NONE} -- Initialization
 		do
 			if attached execution_environment.item ({IRON_API_CONSTANTS}.iron_variable_name) as s then
 				create p.make_from_string (s)
-			elseif attached execution_environment.item ("ISE_USER_FILES") as s then
-				create p.make_from_string (s)
-				p := p.extended ("iron")
 			else
 				create p.make_current
 				p := p.extended ("iron")

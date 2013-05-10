@@ -34,15 +34,13 @@ feature {NONE} -- Initialization
 			cmd: READABLE_STRING_32
 			task: detachable IRON_TASK
 			iron: IRON
-			lay: IRON_LAYOUT
 		do
 			if argument_count > 0 then
 				cmd := argument (1)
 				task := task_by_name (cmd, task_arguments (argument_array))
 			end
 			if task /= Void then
-				create lay.make_default
-				create iron.make (lay)
+				create iron.make (iron_layout)
 				task.process (iron)
 			else
 				io.error.put_string ("Usage: command ...%N")
@@ -103,6 +101,11 @@ feature {NONE} -- Initialization
 feature -- Status
 
 feature -- Access
+
+	iron_layout: IRON_LAYOUT
+		do
+			create Result.make_default
+		end
 
 feature -- Change
 

@@ -629,7 +629,7 @@ feature -- Directories (top-level)
 			--   On Mac: ~/Eiffel User Files/7.x/precomp/spec/$ISE_PLATFORM
 			--   On Unix: ~/.es/Eiffel User Files/7.x/precomp/spec/$ISE_PLATFORM
 			-- Otherwise
-			--   $ISE_EIFFEL/studio/spec/$ISE_PLATFORM
+			--   $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 		require
 			is_valid_environment: is_valid_environment
 		local
@@ -654,6 +654,51 @@ feature -- Directories (top-level)
 						-- directory and if this is not writable, users will
 						-- get an error.
 					Result := installation_precompilation_path (a_is_dotnet)
+				end
+			else
+				create Result.make_from_string (l_value)
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	installation_iron_path: PATH
+			-- path where the iron is located in the installation directory.
+			-- With platform: $ISE_EIFFEL/iron
+			-- Without: /usr/share/eiffelstudio-7.x/iron
+		require
+			is_valid_environment: is_valid_environment
+		do
+			Result := shared_path.extended (iron_name)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	iron_path: PATH
+			-- Actual location of the iron installed libraries.
+			-- When ISE_IRON_PATH is defined:
+			--   $ISE_IRON_PATH
+			-- Otherwise if `is_user_files_supported':
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\7.x\iron
+			--   On Mac: ~/Eiffel User Files/7.x/iron
+			--   On Unix: ~/.es/Eiffel User Files/7.x/iron
+			-- Otherwise
+			--   $ISE_EIFFEL/iron
+		require
+			is_valid_environment: is_valid_environment
+		local
+			l_value: like get_environment_32
+			l_dn_name: STRING_32
+		do
+			l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_iron_path_env)
+			if l_value = Void or else l_value.is_empty then
+				if is_user_files_supported then
+					Result := user_files_path.extended (iron_name)
+				else
+						-- No user file is specified, we use the installation
+						-- directory and if this is not writable, users will
+						-- get an error.
+					Result := installation_iron_path 
 				end
 			else
 				create Result.make_from_string (l_value)
@@ -1883,6 +1928,9 @@ feature -- Directory constants (top-level)
 
 	precomp_name: STRING = "precomp"
 			-- Precompile library location
+
+	iron_name: STRING = "iron"
+			-- Iron libraries location
 
 feature -- Directory constants (dotnet)
 

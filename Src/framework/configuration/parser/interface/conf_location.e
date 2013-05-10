@@ -9,7 +9,6 @@ deferred class
 	CONF_LOCATION
 
 inherit
-
 	CONF_VALIDITY
 		redefine
 			is_equal
@@ -31,6 +30,11 @@ inherit
 
 	SHARED_EXECUTION_ENVIRONMENT
 		redefine
+			is_equal
+		end
+
+	SHARED_CONF_SETTING
+		undefine
 			is_equal
 		end
 
@@ -134,6 +138,11 @@ feature -- Access queries
 						-- Check if last variable was extracted correctly
 					l_stop := l_old_i = i
 				end
+			end
+
+				-- Handle mapping (iron, ...)
+			if attached conf_location_mapper.mapped_path (l_result) as l_mapping then
+				l_result := l_mapping
 			end
 
 				-- Handle file incasesensitivity under windows
@@ -272,7 +281,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

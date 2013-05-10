@@ -377,7 +377,7 @@ feature {NONE} -- Query
 			l_item: EB_GRID_EDITOR_TOKEN_ITEM
 		do
 			l_row := grid.row (a_row)
-			if attached {TUPLE [name: READABLE_STRING_8; prev, new: detachable TEST_STATE]} l_row.data as l_stuple then
+			if attached {TUPLE [name: READABLE_STRING_GENERAL; prev, new: detachable TEST_STATE]} l_row.data as l_stuple then
 				if a_column = 1 then
 					Result := create_test_item (l_stuple.name)
 				else
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_formatted_test (a_test_suite: TEST_SUITE_S; a_name: READABLE_STRING_8)
+	print_formatted_test (a_test_suite: TEST_SUITE_S; a_name: READABLE_STRING_GENERAL)
 			-- Print formatted version of test to token writer
 		do
 			if a_test_suite.has_test (a_name) then
@@ -707,7 +707,7 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	create_test_item (a_name: READABLE_STRING_8): EB_GRID_EDITOR_TOKEN_ITEM
+	create_test_item (a_name: READABLE_STRING_GENERAL): EB_GRID_EDITOR_TOKEN_ITEM
 			-- Create new grid item displaying test for given name
 		require
 			a_name_attached: a_name /= Void
@@ -716,7 +716,7 @@ feature {NONE} -- Factory
 			has_printed_test := False
 			perform_with_test_suite (agent print_formatted_test (?, a_name))
 			if not has_printed_test then
-				token_writer.process_basic_text (a_name.as_string_32)
+				token_writer.process_basic_text (a_name)
 			end
 			Result.set_text_with_tokens (token_writer.last_line.content)
 			reset_token_writer

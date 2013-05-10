@@ -18,14 +18,16 @@ inherit
 create
 	make
 
-feature -- Execution	
+feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			if req.is_get_request_method then
+			if is_method_get (req) then
 				handle_view_package (req, res)
-			elseif req.is_post_request_method or req.is_request_method ({WSF_REQUEST_METHODS}.method_put) then
+			elseif is_method_post (req) or is_method_put (req) then
 				handle_update_package (req, res)
+			elseif is_method_delete (req) then
+				handle_delete_package (req, res)
 			else
 				res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
 			end
@@ -95,6 +97,11 @@ feature -- Execution
 			else
 				res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
 			end
+		end
+
+	handle_delete_package (req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
 		end
 
 feature -- Documentation

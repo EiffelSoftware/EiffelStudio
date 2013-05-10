@@ -1,13 +1,14 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Objects that ..."
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	IRON_REPO_SERVER
 
 inherit
+
 	IRON_REPO_CONSTANTS
 
 	WSF_LAUNCHABLE_SERVICE
@@ -18,9 +19,11 @@ inherit
 		end
 
 	WSF_URI_HELPER_FOR_ROUTED_SERVICE
+
 	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_SERVICE
 
---	WSF_ROUTED_SERVICE
+		--	WSF_ROUTED_SERVICE
+
 	WSF_ROUTED_SKELETON_SERVICE
 		rename
 			execute as execute_router
@@ -40,9 +43,7 @@ inherit
 	SHARED_EXECUTION_ENVIRONMENT
 
 create
-	make_and_launch,
-	make_and_launch_cgi,
-	make_and_launch_libfcgi
+	make_and_launch, make_and_launch_cgi, make_and_launch_libfcgi
 
 feature {NONE} -- Initialization
 
@@ -70,7 +71,7 @@ feature {NONE} -- Initialization
 			initialize_filter
 			Precursor
 			service_options := create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("iron.ini")
---			set_service_option ("force_single_threaded", True)
+				--			set_service_option ("force_single_threaded", True)
 		end
 
 feature {NONE} -- Launcher
@@ -81,6 +82,7 @@ feature {NONE} -- Launcher
 		end
 
 	is_cgi: BOOLEAN
+
 	is_libfcgi: BOOLEAN
 
 	launch (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
@@ -100,25 +102,22 @@ feature -- Iron
 
 	iron: IRON_REPO
 
-feature -- Router and Filter		
+feature -- Router and Filter
 
 	create_filter
 			-- Create `filter'
 		local
-			f,l_filter: detachable WSF_FILTER
+			f, l_filter: detachable WSF_FILTER
 			fh: WSF_CUSTOM_HEADER_FILTER
 		do
 			l_filter := Void
-
 			create fh.make (1)
 			fh.set_next (l_filter)
 			fh.custom_header.put_header ("X-IronServer: " + version)
 			l_filter := fh
-
 			create {WSF_MAINTENANCE_FILTER} f
 			f.set_next (l_filter)
 			l_filter := f
-
 			create {WSF_DEBUG_FILTER} f
 			f.set_next (l_filter)
 			l_filter := f
@@ -127,13 +126,11 @@ feature -- Router and Filter
 --			f.set_next (l_filter)
 --			l_filter := f
 
-
 			if not (is_libfcgi or is_cgi) then
 				create {WSF_LOGGING_FILTER} f
 				f.set_next (l_filter)
 				l_filter := f
 			end
-
 			filter := l_filter
 		end
 
@@ -161,16 +158,15 @@ feature -- Router and Filter
 			h_edit: EDIT_PACKAGE_HANDLER
 			h_package: PACKAGE_HANDLER
 			h_package_map: PACKAGE_MAP_HANDLER
-			h_zip_package: DOWNLOAD_PACKAGE_HANDLER
+			h_zip_package: ARCHIVE_PACKAGE_HANDLER
 			h_package_fetcher: FETCH_PACKAGE_HANDLER
 			h_fs: WSF_FILE_SYSTEM_HANDLER
 		do
-			--|  Servername: http://iron.eiffel.com/
-			--|  /admin/package/  POST
-			--|  /admin/package/{pid}  GET PUT DELETE
+				--|  Servername: http://iron.eiffel.com/
+				--|  /admin/package/  POST
+				--|  /admin/package/{pid}  GET PUT DELETE
 
 			map_uri_template_agent ("/debug/{name}", agent handle_debug)
-
 			create h_admin.make (iron)
 			map_uri_with_request_methods ("/access/", new_auth_uri_handler (h_admin), router.methods_get) -- Admin::home
 			map_uri_template_with_request_methods ("/access/{version}/", new_auth_uri_template_handler (h_admin), router.methods_get) -- Admin::home
@@ -189,8 +185,8 @@ feature -- Router and Filter
 				-- REST or web
 			map_uri_template_with_request_methods ("/access/{version}/package/", new_auth_uri_template_handler (h_package), router.methods_post) -- Create
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}", h_package, router.methods_get) --  Get package data
-			map_uri_template_with_request_methods ("/access/{version}/package/{id}", new_auth_uri_template_handler (h_package), router.methods_put_post) --  Update package			
-			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", h_zip_package, router.methods_get) --  Get archive package data			
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}", new_auth_uri_template_handler (h_package), router.methods_put_post) --  Update package
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", h_zip_package, router.methods_get_post + router.methods_delete) --  Get archive package data
 
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map", h_package_map, router.methods_get) --  Get map
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map{/map}", h_package_map, router.methods_get) --  Get map and allow ?method= .. hack
@@ -199,63 +195,57 @@ feature -- Router and Filter
 			map_uri_template_with_request_methods ("/access/{version}/package/", h_search, router.methods_get) -- Search
 
 --			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("POST archive"), router.methods_post) --  Upload package archive
---			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("PUT archive"), router.methods_put) --  Update package archive			
---			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("GET archive"), router.methods_get) --  Download package archive						
---			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("DELETE archive"), router.methods_delete) --  Delete package archive									
-
+--			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("PUT archive"), router.methods_put) --  Update package archive
+--			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("GET archive"), router.methods_get) --  Download package archive
+--			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("DELETE archive"), router.methods_delete) --  Delete package archive
 
 			map_uri_with_request_methods ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (iron)), router.methods_get) --  Shutdown server
 
 			create h_fs.make_hidden ("db")
 			router.handle ("/access/db/", h_fs)
-
 			router.handle ("/access/api/", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router))
-
 			router.handle ("/access", create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent redirect_to_home))
-
 			create h_package_fetcher.make (iron)
 			map_uri_template_with_request_methods ("/{version}/{domain}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
 
 			router.handle ("/favicon.ico", create {WSF_URI_AGENT_HANDLER}.make (agent handle_favicon))
-
+			router.handle ("/", create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent handle_home))
 		end
 
 feature -- Access
 
-        handle_debug (req: WSF_REQUEST; res: WSF_RESPONSE)
-                local
-                        s: STRING_8
-                        h: HTTP_HEADER
-                do
-                        if req.is_get_request_method then
-                                s := "debug"
-                                create h.make_with_count (1)
-                                h.put_content_type_text_html
-                                h.put_content_length (s.count)
-                                res.put_header_lines (h)
-                                res.put_string (s)
-                        else
-                                create s.make (30_000)
-                                across
-                                        req.form_parameters as c
-                                loop
-                                        s.append (c.item.url_encoded_name)
-                                        s.append ("=")
-                                        s.append (c.item.string_representation)
-                                        s.append ("<br/>")
-                                end
-                                if s.is_empty then
-                                        req.read_input_data_into (s)
-                                end
-
-                                create h.make_with_count (1)
-                                h.put_content_type_text_html
-                                h.put_content_length (s.count)
-                                res.put_header_lines (h)
-                                res.put_string (s)
-                        end
-                end
-
+	handle_debug (req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			s: STRING_8
+			h: HTTP_HEADER
+		do
+			if req.is_get_request_method then
+				s := "debug"
+				create h.make_with_count (1)
+				h.put_content_type_text_html
+				h.put_content_length (s.count)
+				res.put_header_lines (h)
+				res.put_string (s)
+			else
+				create s.make (30_000)
+				across
+					req.form_parameters as c
+				loop
+					s.append (c.item.url_encoded_name)
+					s.append ("=")
+					s.append (c.item.string_representation)
+					s.append ("<br/>")
+				end
+				if s.is_empty then
+					req.read_input_data_into (s)
+				end
+				create h.make_with_count (1)
+				h.put_content_type_text_html
+				h.put_content_length (s.count)
+				res.put_header_lines (h)
+				res.put_string (s)
+			end
+		end
 
 feature -- Change
 
@@ -284,7 +274,7 @@ feature -- Handler
 
 	not_yet_implemented_uri_template_handler (msg: READABLE_STRING_8): WSF_URI_TEMPLATE_HANDLER
 		do
-			create {WSF_URI_TEMPLATE_AGENT_HANDLER} Result.make (agent not_yet_implemented (?, ?, msg))
+			create {WSF_URI_TEMPLATE_AGENT_HANDLER} Result.make (agent not_yet_implemented(?, ?, msg))
 		end
 
 	not_yet_implemented (req: WSF_REQUEST; res: WSF_RESPONSE; msg: detachable READABLE_STRING_8)
@@ -301,6 +291,15 @@ feature -- Handler
 	handle_favicon (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
 			res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+		end
+
+	handle_home (a_path: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: IRON_REPO_HTML_RESPONSE
+		do
+			create r.make (req, iron)
+			r.set_body ("<a href=%"" + req.script_url ("/access/") + "%">Your account</a>")
+			res.send (r)
 		end
 
 end

@@ -59,6 +59,38 @@ feature -- Access
 			end
 		end
 
+feature -- Request
+
+	method_query_parameter: STRING = "method"
+
+	is_method_get (req: WSF_REQUEST): BOOLEAN
+		do
+			Result := req.is_get_request_method
+		end
+
+	is_method_delete (req: WSF_REQUEST): BOOLEAN
+		do
+			Result := req.is_request_method ({HTTP_REQUEST_METHODS}.method_get)
+				or else (
+					req.is_get_request_method and then
+					attached req.query_parameter (method_query_parameter) as m and then m.is_case_insensitive_equal ("put")
+				)
+		end
+
+	is_method_post (req: WSF_REQUEST): BOOLEAN
+		do
+			Result := req.is_post_request_method
+		end
+
+	is_method_put (req: WSF_REQUEST): BOOLEAN
+		do
+			Result := req.is_request_method ({HTTP_REQUEST_METHODS}.method_put)
+				or else (
+					req.is_post_request_method and then
+					attached req.query_parameter (method_query_parameter) as m and then m.is_case_insensitive_equal ("put")
+				)
+		end
+
 feature -- Package
 
 	new_package_edit_form (p: detachable IRON_REPO_PACKAGE; req: WSF_REQUEST; validating: BOOLEAN): WSF_FORM
@@ -182,6 +214,16 @@ feature -- Package
 					create p.make (l_path_id)
 				else
 					create p.make_empty
+				end
+
+				if attached current_user (req) as l_user then
+					if attached p.owner as o and then not o.name.is_case_insensitive_equal (l_user.name) then
+						fd.report_error ("Onbly owner can modify current package.")
+					else
+						p.set_owner (l_user)
+					end
+				else
+					fd.report_error ("Operation restricted to allowed user.")
 				end
 				if not fd.has_error then
 					if attached fd.string_item ("name") as l_name then

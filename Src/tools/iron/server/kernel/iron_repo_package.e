@@ -68,6 +68,8 @@ feature -- Access
 
 	id: IMMUTABLE_STRING_8
 
+	owner: detachable IRON_REPO_USER
+
 	name: detachable READABLE_STRING_32
 
 	domain: detachable READABLE_STRING_32
@@ -164,6 +166,11 @@ feature -- Change
 		do
 			archive_path := v
 			get_archive_info
+		end
+
+	set_owner (u: like owner)
+		do
+			owner := u
 		end
 
 feature {NONE} -- Implementation

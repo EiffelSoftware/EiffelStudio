@@ -22,16 +22,12 @@ feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			if
-				req.is_request_method ({WSF_REQUEST_METHODS}.method_delete)
-				or attached {WSF_STRING} req.query_parameter ("method") as p_method and then
-				   p_method.is_case_insensitive_equal ("delete")
-			then
-				handle_delete_package_map (req, res)
-			elseif req.is_post_request_method then
+			if is_method_post (req) then
 				handle_create_package_map (req, res)
-			elseif req.is_get_request_method then
+			elseif is_method_get (req) then
 				handle_view_package_map (req, res)
+			elseif is_method_delete (req) then
+				handle_delete_package_map (req, res)
 			else
 				res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
 			end

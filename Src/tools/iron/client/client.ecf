@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="client" uuid="AE13AA0B-2F14-4EC7-BA55-9AD4889B2715">
-	<target name="client">
+	<target name="iron_client">
 		<root class="IRON_CLIENT" feature="make"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
@@ -32,5 +32,10 @@
 		<cluster name="application" location=".\application\" recursive="true"/>
 		<cluster name="kernel" location=".\kernel\" recursive="true"/>
 		<cluster name="support" location="..\support\" recursive="true"/>
+	</target>
+	<target name="client" extends="iron_client">
+		<root class="ES_IRON_CLIENT" feature="make"/>
+		<cluster name="es_application" location=".\es_application\" recursive="true"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 	</target>
 </system>

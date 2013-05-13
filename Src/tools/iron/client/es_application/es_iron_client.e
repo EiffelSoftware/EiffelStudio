@@ -29,7 +29,7 @@ feature -- Access
 			else
 				create {EC_EIFFEL_LAYOUT} e_lay
 			end
-			create Result.make_with_path (e_lay.user_files_path.extended ("iron"))
+			create Result.make_with_path (e_lay.iron_path)
 		end
 
 end

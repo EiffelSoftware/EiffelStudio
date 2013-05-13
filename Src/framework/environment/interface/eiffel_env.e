@@ -688,7 +688,6 @@ feature -- Directories (top-level)
 			is_valid_environment: is_valid_environment
 		local
 			l_value: like get_environment_32
-			l_dn_name: STRING_32
 		do
 			l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_iron_path_env)
 			if l_value = Void or else l_value.is_empty then
@@ -698,7 +697,7 @@ feature -- Directories (top-level)
 						-- No user file is specified, we use the installation
 						-- directory and if this is not writable, users will
 						-- get an error.
-					Result := installation_iron_path 
+					Result := installation_iron_path
 				end
 			else
 				create Result.make_from_string (l_value)

@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 				i := a_arguments.lower
 				l_upper := a_arguments.upper
 			until
-				i > l_upper
+				i + j > l_upper
 			loop
 				l_arg := a_arguments[i + j]
 				j := j + 1

@@ -38,6 +38,7 @@ feature {NONE} -- Init
 		do
 			md5_computer.update_from_string (u.utf_32_string_to_utf_8_string_8 (a_content))
 			Result := md5_computer.digest_as_string
+			md5_computer.reset
 		ensure
 			Result_set: Result /= Void
 		end

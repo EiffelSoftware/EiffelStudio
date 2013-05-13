@@ -4,9 +4,10 @@ note
 					
 					Usage: 
 						1. Call one or more update* to input source to encode.
-						2. Call *digest* to get the computed result.
-					To start a new computation without calls to *digest*,
-					`reset' must be called.
+						2. Call *digest* to get the computed result. 
+						
+						Note that calls of *digest* does not reset previous result.
+						To start new computation, `reset' must be called.
 				]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,14 +35,33 @@ feature -- Access
 
 	digest: SPECIAL [NATURAL_8]
 			-- <Precursor>
+		local
+			l_buffer_offset: like buffer_offset
+			l_byte_count: like byte_count
+			l_h1, l_h2, l_h3, l_h4: NATURAL_32
 		do
+				-- Save state
+			l_buffer_offset := buffer_offset
+			l_byte_count := byte_count
+			l_h1 := h1
+			l_h2 := h2
+			l_h3 := h3
+			l_h4 := h4
+
 			finish
 			create Result.make_filled (0, 16)
 			from_natural_32_le (h1, Result, 0)
 			from_natural_32_le (h2, Result, 4)
 			from_natural_32_le (h3, Result, 8)
 			from_natural_32_le (h4, Result, 12)
-			reset
+
+				-- Restore state, so that further `update_*' can be called.
+			buffer_offset := l_buffer_offset
+			byte_count := l_byte_count
+			h1 := l_h1
+			h2 := l_h2
+			h3 := l_h3
+			h4 := l_h4
 		end
 
 	digest_count: INTEGER = 64
@@ -50,6 +70,7 @@ feature -- Access
 feature -- Element Change
 
 	reset
+			-- Reset computation.
 		do
 			byte_count := 0
 			buffer_offset := 0

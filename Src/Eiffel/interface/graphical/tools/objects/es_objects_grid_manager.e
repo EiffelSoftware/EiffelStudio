@@ -62,19 +62,14 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 
 	pre_activate_cell (ei: EV_GRID_ITEM)
 			-- Process special operation before cell `ei' get activated
-		local
-			evi: ES_OBJECTS_GRID_VALUE_CELL
-			ost: OBJECT_STONE
-			p: ES_OBJECTS_GRID
 		do
-			if object_viewer_cmd /= Void then
-				evi ?= ei
-				if evi /= Void and then evi.is_parented and then evi.row /= Void then
-					p ?= ei.parent
-					if p /= Void then
-						ost ?= p.grid_pebble_from_cell (evi)
-						if ost /= Void and then object_viewer_cmd.accepts_stone (ost) then
-							evi.set_button_action (agent object_viewer_cmd.set_stone (ost))
+			if attached object_viewer_cmd as l_viewer_cmd then
+				if attached {ES_OBJECTS_GRID_VALUE_CELL} ei as evi and then evi.is_parented and then evi.row /= Void then
+					if not evi.is_for_high_potential_effect_value then
+						if attached {ES_OBJECTS_GRID} ei.parent as p then
+							if attached {OBJECT_STONE} p.grid_pebble_from_cell (evi) as ost and then l_viewer_cmd.accepts_stone (ost) then
+								evi.set_button_action (agent l_viewer_cmd.set_stone (ost))
+							end
 						end
 					end
 				end
@@ -282,7 +277,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

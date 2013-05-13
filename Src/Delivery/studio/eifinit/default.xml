@@ -33,6 +33,7 @@
 	<PREF NAME="debugger.always_show_callstack_tool_when_stopping" DESCRIPTION="Always show the callstack tool, when the execution stops (note: if the tool is closed, do not open it)."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.show_debug_tooltip" DESCRIPTION="Show debug tooltip that displays realtime value of the expression under mouse pointer?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.show_debug_tooltip_delay" DESCRIPTION="Delay in milliseconds before showing the debug tooltip."><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="debugger.always_evaluate_potential_side_effect_expression" DESCRIPTION="Always evaluate expression with potential side effect?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="debugger.dotnet.keep_stepping_info_dotnet_feature" DESCRIPTION="Should we always try to debug non-Eiffel code in case it calls back into some Eiffel code?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
 	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Properties;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>

@@ -1116,7 +1116,7 @@ feature {NONE} -- Event handling
 			if is_auto then
 				if debugger_manager.safe_application_is_stopped then
 					if not evl.evaluated then
-						evl.side_effect_forbidden := True
+						evl.side_effect_forbidden := not preferences.debug_tool_data.always_evaluate_potential_side_effect_expression
 						evl.evaluate
 					else
 						--| Should not occurred since `evl' has just been created
@@ -1127,6 +1127,7 @@ feature {NONE} -- Event handling
 					expr_item.set_auto_expression (True)
 				end
 			else
+				evl.side_effect_forbidden := not preferences.debug_tool_data.always_evaluate_potential_side_effect_expression
 				expr_item := new_watched_item_from_expression_evaluation (evl, watches_grid)
 			end
 

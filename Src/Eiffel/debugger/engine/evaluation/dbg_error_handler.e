@@ -105,6 +105,12 @@ feature -- Status report
 			Result := has_error_with_code (Cst_error_evaluation_aborted)
 		end
 
+	has_side_effect_forbidden_error: BOOLEAN
+			-- Has an error due to side effect forbidden error?
+		do
+			Result := has_error_with_code (cst_side_effect_forbidden_error_evaluation)
+		end
+
 feature -- Error notification: main categories
 
 	notify_error (a_code: INTEGER; a_tag, a_msg: detachable STRING_GENERAL)
@@ -214,7 +220,7 @@ feature -- Error notification: evaluation error
 
 	notify_error_evaluation_side_effect_forbidden
 		do
-			notify_error_evaluation (Debugger_names.Cst_error_evaluation_side_effect_forbidden)
+			notify_error (cst_side_effect_forbidden_error_evaluation, Void, Debugger_names.Cst_error_evaluation_side_effect_forbidden)
 		end
 
 	notify_error_evaluation_unable_to_get_context_object
@@ -425,6 +431,9 @@ feature {NONE} -- Error: specified constants
 	Cst_error_evaluation_aborted: INTEGER= 	0b0100_0010
 			-- Evaluation aborted
 
+	Cst_side_effect_forbidden_error_evaluation: INTEGER = 0b0100_0100
+			-- Side effect forbidden error
+
 feature {NONE} -- Implementation: Status report
 
 	has_error_with_code (a_code: INTEGER): BOOLEAN
@@ -460,7 +469,7 @@ invariant
 	error_list_attached: error_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

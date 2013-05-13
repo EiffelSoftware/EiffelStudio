@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 feature -- Events
 
 	propagate_pointer_move (x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
@@ -142,6 +147,17 @@ feature {NONE} -- Implementation
 					if l_object_grid = Void then
 						l_object_grid := create_object_grid
 						l_tooltip_window.set_popup_widget (l_object_grid)
+						l_tooltip_window.popup_window.hide_actions.extend (
+							agent
+							do
+								if
+									attached object_grid as l_object_grid and then
+									attached l_object_grid.activated_item as l_item
+								then
+									l_item.deactivate
+								end
+							end
+						)
 						object_grid := l_object_grid
 					end
 					l_object_grid.wipe_out
@@ -152,10 +168,11 @@ feature {NONE} -- Implementation
 					create l_dbg_expr.make_with_context (l_e)
 					create l_dbg_eval.make (l_dbg_expr)
 					if not l_dbg_eval.evaluated then
-						l_dbg_eval.side_effect_forbidden := True
+						l_dbg_eval.side_effect_forbidden := not preferences.debug_tool_data.always_evaluate_potential_side_effect_expression
 						l_dbg_eval.evaluate
 					end
 					create l_line.make_with_expression_evaluation (l_dbg_eval, l_object_grid)
+					last_expression_line := l_line
 					l_row := l_object_grid.extended_new_row
 					l_line.attach_to_row (l_row)
 					l_line.request_refresh
@@ -169,6 +186,39 @@ feature {NONE} -- Implementation
 
 					l_tooltip_window.show_on_side (l_rec, 0, 0)
 					last_expression := a_expr
+				end
+			end
+		end
+
+	pre_activate_cell (ei: EV_GRID_ITEM)
+			-- Process special operation before cell `ei' get activated
+		do
+			if attached {EB_DEBUGGER_MANAGER} debugger_manager as l_mnger and then attached l_mnger.object_viewer_cmd as l_viewer_cmd then
+				if attached {ES_OBJECTS_GRID_VALUE_CELL} ei as evi and then evi.is_parented and then evi.row /= Void then
+					if evi.is_for_high_potential_effect_value then
+						evi.set_button_action (agent ev_application.do_once_on_idle (
+							agent
+							do
+								if attached last_expression_line as l_line then
+									l_line.request_reevaluate_expression_allowing_side_effect
+									last_expression_line := Void
+								end
+							end
+						))
+					else
+						if attached {ES_OBJECTS_GRID} ei.parent as p then
+							if attached {OBJECT_STONE} p.grid_pebble_from_cell (evi) as ost and then l_viewer_cmd.accepts_stone (ost) then
+								evi.set_button_action (agent (a_viewer_cmd: EB_OBJECT_VIEWER_COMMAND; a_stone: OBJECT_STONE)
+									require
+										a_viewer_cmd_set: a_viewer_cmd /= Void
+										a_stone_set: a_stone /= Void
+									do
+										a_viewer_cmd.set_stone (a_stone)
+										hide_tooltip
+									end (l_viewer_cmd, ost))
+							end
+						end
+					end
 				end
 			end
 		end
@@ -187,6 +237,7 @@ feature {NONE} -- Implementation
 			Result.row_collapse_actions.extend (l_expand_action)
 			Result.disable_vertical_overscroll
 			Result.hide_header
+			Result.set_pre_activation_action (agent pre_activate_cell)
 
 			open_viewer_shortcut 		:= preferences.debug_tool_data.new_open_viewer_shortcut
 			goto_home_shortcut 			:= preferences.debug_tool_data.new_goto_home_shortcut
@@ -313,6 +364,9 @@ feature {NONE} -- Implementation
 
 	last_expression: detachable READABLE_STRING_GENERAL;
 			-- Last expression analyzed for the debugger
+
+	last_expression_line: detachable ES_OBJECTS_GRID_EXPRESSION_LINE
+			-- Last expression line
 
 feature {NONE} -- Shortcuts
 

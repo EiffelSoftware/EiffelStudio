@@ -1956,10 +1956,10 @@ feature {NONE} -- Evaluation: implementation
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		do
+			notify_potential_side_effect
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
-				notify_potential_side_effect
 				prepare_dbg_evaluation
 				Dbg_evaluator.evaluate_static_function (f, cl, params)
 				retrieve_dbg_evaluation
@@ -2026,10 +2026,10 @@ feature {NONE} -- Evaluation: implementation
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		do
+			notify_potential_side_effect
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
-				notify_potential_side_effect
 				if a_target /= Void and then a_target.is_void then
 					dbg_error_handler.notify_error_evaluation_call_on_void (f.feature_name)
 				elseif on_class and then not f.is_process_or_thread_relative_once then
@@ -2048,10 +2048,10 @@ feature {NONE} -- Evaluation: implementation
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		do
+			notify_potential_side_effect
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
-				notify_potential_side_effect
 				if a_target /= Void and then a_target.is_void then
 					dbg_error_handler.notify_error_evaluation_call_on_void (f.feature_name)
 				else
@@ -2072,10 +2072,10 @@ feature {NONE} -- Evaluation: implementation
 		local
 			l_addr: DBG_ADDRESS
 		do
+			notify_potential_side_effect
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
-				notify_potential_side_effect
 				if debugger_manager.is_dotnet_project then
 						-- FIXME: What about static ? check ...
 					if a_target /= Void then

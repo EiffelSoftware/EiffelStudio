@@ -155,6 +155,12 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := show_debug_tooltip_delay_preference.value
 		end
 
+	always_evaluate_potential_side_effect_expression: BOOLEAN
+			-- Always evaluate expression with potential side effect?
+		do
+			Result := always_evaluate_potential_side_effect_expression_preference.value
+		end
+
 	new_edit_selected_shortcut: ES_KEY_SHORTCUT
 		do
 			Result := new_shortcut ({EV_KEY_CONSTANTS}.key_f2, False, False, False)
@@ -211,6 +217,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	move_down_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
 	show_debug_tooltip_preference: BOOLEAN_PREFERENCE
 	show_debug_tooltip_delay_preference: INTEGER_PREFERENCE
+	always_evaluate_potential_side_effect_expression_preference: BOOLEAN_PREFERENCE
 
 	objects_tool_layout_preference: ARRAY_PREFERENCE
 
@@ -294,6 +301,7 @@ feature -- Preference Strings
 	always_show_callstack_tool_when_stopping_string: STRING = "debugger.always_show_callstack_tool_when_stopping"
 	show_debug_tooltip_string: STRING = "debugger.show_debug_tooltip"
 	show_debug_tooltip_delay_string: STRING = "debugger.show_debug_tooltip_delay"
+	always_evaluate_potential_side_effect_expression_string: STRING = "debugger.always_evaluate_potential_side_effect_expression"
 	default_expanded_view_size_string: STRING = "debugger.default_expanded_view_size"
 	move_up_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_up_watch_expression"
 	move_down_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_down_watch_expression"
@@ -347,6 +355,7 @@ feature {NONE} -- Implementation
 							end
 						end
 				)
+			always_evaluate_potential_side_effect_expression_preference := l_manager.new_boolean_preference_value (l_manager, always_evaluate_potential_side_effect_expression_string, False)
 
 			move_up_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_up_watch_expression_shortcut_string, [True, False, True, "up"])
 			move_down_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_down_watch_expression_shortcut_string,  [True, False, True, "down"])

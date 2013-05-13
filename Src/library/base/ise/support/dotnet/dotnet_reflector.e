@@ -206,7 +206,7 @@ feature -- Status report
 			fixme ("It might return True if another class is called SPECIAL")
 			if attached {RT_GENERIC_TYPE} pure_implementation_type (type_id) as l_gen_type and then l_gen_type.count = 1 then
 				l_class_name := l_gen_type.class_name
-				Result := l_class_name /= Void and then l_class_name.equals (("SPECIAL").to_cil)
+				Result := l_class_name /= Void and then l_class_name.equals (special_class_name)
 			end
 		end
 
@@ -775,6 +775,12 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 	private_type_field_name: SYSTEM_STRING = "$$____type"
 			-- .NET name for fields that stores generic types if any.
 
+	invalid_type_name_ending: SYSTEM_STRING = "\&"
+			-- Invalid type name ending
+
+	special_class_name: SYSTEM_STRING = "SPECIAL"
+			-- SPECIAL class name
+
 	next_dynamic_type_id: CELL [INTEGER]
 			-- ID for dynamic type (each generic derivation get a new ID)
 		once
@@ -1304,7 +1310,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			if not retried then
 				l_provider := a_type
 					-- To avoid exceptions, we do not load types that have a & in them.
-				if attached a_type.name as l_type_name and then not l_type_name.ends_with ("\&") then
+				if attached a_type.name as l_type_name and then not l_type_name.ends_with (invalid_type_name_ending) then
 					l_cas := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
 				end
 				l_eiffel_type_info := {EIFFEL_TYPE_INFO}

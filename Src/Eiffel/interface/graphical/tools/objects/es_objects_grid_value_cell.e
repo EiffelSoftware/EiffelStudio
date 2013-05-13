@@ -69,11 +69,18 @@ feature -- Query
 				create hb
 				hb.extend (text_label)
 				create button
-				button.set_pixmap (Mini_pixmaps.debugger_expand_info_icon)
+				if is_for_high_potential_effect_value then
+					button.set_pixmap (Mini_pixmaps.evaluation_refresh_icon)
+				else
+					button.set_pixmap (Mini_pixmaps.debugger_expand_info_icon)
+				end
 				hb.extend (button)
 				hb.disable_item_expand (button)
 
 				popup_window.extend (hb)
+					-- To make sure that the window is top most when 
+					-- the parent window is disconnected from window manager.
+				popup_window.disconnect_from_window_manager
 				button.set_minimum_height (h)
 			end
 			is_activated := True
@@ -101,11 +108,22 @@ feature -- Properties
 
 	button: EV_BUTTON
 
+	is_for_high_potential_effect_value: BOOLEAN
+			-- Is for high potential effect value?
+
 feature -- Change
 
 	set_button_action (v: like button_action)
 		do
 			button_action := v
+		end
+
+	set_for_high_potential_effect_value (a_b: BOOLEAN)
+			-- Set for high potential effect value style
+		do
+			is_for_high_potential_effect_value := a_b
+		ensure
+			value_set: is_for_high_potential_effect_value = is_for_high_potential_effect_value
 		end
 
 feature {NONE} -- Impl
@@ -117,7 +135,7 @@ feature {NONE} -- Impl
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

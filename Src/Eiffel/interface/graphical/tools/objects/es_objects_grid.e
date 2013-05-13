@@ -752,12 +752,16 @@ feature {NONE} -- Grid items activation
 		end
 
 	pre_activation_action: PROCEDURE [ANY, TUPLE [EV_GRID_ITEM]]
+			-- Called before an item is activated.
 
 feature -- Grid items activation change
 
 	set_pre_activation_action (v: like pre_activation_action)
+			-- Set `pre_activation_action' with `v'.
 		do
 			pre_activation_action := v
+		ensure
+			pre_activation_action_set: pre_activation_action = v
 		end
 
 feature {ES_OBJECTS_GRID_MANAGER} -- Keep object

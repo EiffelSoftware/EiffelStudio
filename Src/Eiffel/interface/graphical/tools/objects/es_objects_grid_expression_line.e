@@ -160,7 +160,7 @@ feature {NONE} -- Refresh implementation
 			else
 				if debugger_manager.safe_application_is_stopped then
 					if is_auto_expression then
-						evl.side_effect_forbidden := True
+						evl.side_effect_forbidden := not preferences.debug_tool_data.always_evaluate_potential_side_effect_expression
 					end
 					if evl.evaluated then
 						evl.update
@@ -404,6 +404,41 @@ feature -- Graphical changes
 			grid_cell_set_text (glab, v)
 		end
 
+	set_side_effect_forbidden_value
+			-- Set value to show there is potential side effect of the expression.
+		require
+			is_attached_to_row: is_attached_to_row
+		local
+			glab: EV_GRID_LABEL_ITEM
+			l_cell: like new_cell_value
+		do
+			if attached {EV_GRID_LABEL_ITEM} cell (Col_expression_result_index) as i then
+				glab := i
+			else
+				l_cell := new_cell_value
+				l_cell.set_for_high_potential_effect_value (True)
+				l_cell.set_button_action (
+					agent ev_application.do_once_on_idle (agent request_reevaluate_expression_allowing_side_effect)
+				)
+				glab := l_cell
+				set_cell (Col_expression_result_index, glab)
+			end
+			grid_cell_set_text (glab, interface_names.l_evaluation_stopped_to_avoid_side_effect)
+		end
+
+	request_reevaluate_expression_allowing_side_effect
+			-- Reevaluate the expression ignoring side effect.
+		local
+			l_request: ES_DISCARDABLE_QUESTION_PROMPT
+			l_cancelled: BOOLEAN
+		do
+			if attached expression_evaluation as l_expre then
+				l_expre.set_side_effect_forbidden (False)
+				l_expre.update
+				request_refresh
+			end
+		end
+
 	update_expression_on_deactivate (a_item: ES_OBJECTS_GRID_EXPRESSION_CELL)
 			-- Update Current data with expression data from `a_item'
 		require
@@ -599,10 +634,16 @@ feature -- Graphical changes
 							end
 							set_expression_info (s32)
 
-							create glab
-							grid_cell_set_text (glab, interface_names.l_error_occurred_click)
-							glab.pointer_double_press_actions.force_extend (agent show_error_dialog (l_error_message))
-							row.set_item (Col_expression_result_index, glab)
+							if evl.has_side_effect_forbidden_error then
+									-- Set a special side effect forbidden value
+									-- to allow refreshing and evaluating anyway.
+								set_side_effect_forbidden_value
+							else
+								create glab
+								grid_cell_set_text (glab, interface_names.l_error_occurred_click)
+								glab.pointer_double_press_actions.force_extend (agent show_error_dialog (l_error_message))
+								row.set_item (Col_expression_result_index, glab)
+							end
 
 							if evl.has_error_exception then
 								set_error_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)

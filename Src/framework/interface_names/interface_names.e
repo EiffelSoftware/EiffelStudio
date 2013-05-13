@@ -1321,6 +1321,7 @@ feature -- Label texts
 		do
 			Result := locale.formatted_string (locale.translation("Error on expression : %"$1%""), [a_expression])
 		end
+	l_evaluation_stopped_to_avoid_side_effect: STRING_32 	do Result := locale.translation("Evaluation stopped to avoid potential side effect. (double click to evaluate)")	end
 
 	l_breakable_indexes_range (a_upper: INTEGER): STRING_32
 		require

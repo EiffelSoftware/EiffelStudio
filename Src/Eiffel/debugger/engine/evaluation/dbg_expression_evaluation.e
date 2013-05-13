@@ -158,6 +158,12 @@ feature -- Status report
 			Result := dbg_error_handler.has_error_syntax
 		end
 
+	has_side_effect_forbidden_error: BOOLEAN
+			-- Has side effect forbidden error?
+		do
+			Result := dbg_error_handler.has_side_effect_forbidden_error
+		end
+
 feature -- Status
 
 	assertions_ignored: BOOLEAN
@@ -358,7 +364,7 @@ invariant
 	expression_attached: expression /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

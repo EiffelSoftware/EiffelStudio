@@ -25,6 +25,29 @@ feature -- Test routines
 			assert ("", md5_string ("12345678901234567890123456789012345678901234567890123456789012345678901234567890").is_case_insensitive_equal ("57edf4a22be3c955ac49da2e2107b67a"))
 		end
 
+	test_md5_no_reset
+			-- Test MD5 without reset.
+		do
+			assert ("", update_md5_string_no_reset ("").is_case_insensitive_equal ("d41d8cd98f00b204e9800998ecf8427e"))
+			assert ("", update_md5_string_no_reset ("a").is_case_insensitive_equal ("0cc175b9c0f1b6a831c399e269772661"))
+				-- "abc"
+			assert ("", update_md5_string_no_reset ("bc").is_case_insensitive_equal ("900150983cd24fb0d6963f7d28e17f72"))
+				-- "abcdefghijklmnopqrstuvwxyz"
+			assert ("", update_md5_string_no_reset ("defghijklmnopqrstuvwxyz").is_case_insensitive_equal ("c3fcd3d76192e4007dfb496cca67e13b"))
+		end
+
+	test_md5_no_reset_1
+			--
+		local
+			l_md5_string: STRING
+		do
+			l_md5_string := md5_string ("abc")
+			assert ("", not l_md5_string.is_case_insensitive_equal (update_md5_string_no_reset ("")))
+			assert ("", not l_md5_string.is_case_insensitive_equal (update_md5_string_no_reset ("a")))
+			assert ("", not l_md5_string.is_case_insensitive_equal (update_md5_string_no_reset ("b")))
+			assert ("", l_md5_string.is_case_insensitive_equal (update_md5_string_no_reset ("c")))
+		end
+
 	test_file
 			-- Test computaton from file
 		local
@@ -48,15 +71,28 @@ feature {NONE} -- Implementation
 		do
 			md5.update_from_string (a_str)
 			Result := md5.digest_as_string
+			md5.reset
 		end
 
 	md5_from_file (a_file: FILE): STRING
 		do
 			md5.update_from_io_medium (a_file)
 			Result := md5.digest_as_string
+			md5.reset
+		end
+
+	update_md5_string_no_reset (a_str: STRING): STRING
+		do
+			md5_1.update_from_string (a_str)
+			Result := md5_1.digest_as_string
 		end
 
 	md5: MD5
+		once
+			create Result.make
+		end
+
+	md5_1: MD5
 		once
 			create Result.make
 		end

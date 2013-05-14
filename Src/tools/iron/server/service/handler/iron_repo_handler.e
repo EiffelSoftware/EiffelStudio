@@ -146,6 +146,7 @@ feature -- Download
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			f: detachable RAW_FILE
 			bp: detachable PATH
+			d: DIRECTORY
 			i: INTEGER
 		do
 			if attached current_user (req) as l_user then
@@ -154,7 +155,16 @@ feature -- Download
 					create ctx.make
 					l_sess.set_max_redirects (-1)
 					l_sess.set_is_insecure (True)
-					create bp.make_from_string ("tmp-download-" + l_user.name)
+					if attached iron.basedir as p_basedir then
+						bp := p_basedir.extended ("tmp")
+					else
+						create bp.make_from_string ("tmp")
+					end
+					create d.make_with_path (bp)
+					if not d.exists then
+						d.recursive_create_dir
+					end
+					bp := bp.extended ("tmp-download-" + l_user.name)
 					from
 						i := 0
 					until

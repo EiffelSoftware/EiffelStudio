@@ -23,9 +23,6 @@ create
 feature {NONE} -- Initialization
 
 	make (req: WSF_REQUEST; a_iron: like iron)
-		local
-			css: CSS_TEXT
-			css_style: CSS_STYLE
 		do
 			iron := a_iron
 			request := req
@@ -33,7 +30,6 @@ feature {NONE} -- Initialization
 
 			make_response
 
---			head_lines.force ("<style type=%"text/css%">" + css.string + "</style>%N")
 			add_style (req.absolute_script_url (iron.html_page (iron_version, "style.css")), Void)
 		end
 

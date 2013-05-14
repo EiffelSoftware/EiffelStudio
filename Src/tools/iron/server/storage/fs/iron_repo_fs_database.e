@@ -199,7 +199,6 @@ feature -- Package
 	delete_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE)
 		local
 			p: PATH
-			b: BOOLEAN
 			f: RAW_FILE
 		do
 			p := package_path (v, a_package.id).extended ("archive.zip")

@@ -162,7 +162,7 @@ feature -- Router and Filter
 			h_package_map: PACKAGE_MAP_HANDLER
 			h_zip_package: ARCHIVE_PACKAGE_HANDLER
 			h_package_fetcher: FETCH_PACKAGE_HANDLER
-			h_fs: WSF_FILE_SYSTEM_HANDLER
+--			h_fs: WSF_FILE_SYSTEM_HANDLER
 		do
 				--|  Servername: http://iron.eiffel.com/
 

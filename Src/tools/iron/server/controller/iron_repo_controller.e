@@ -40,8 +40,8 @@ feature {NONE} -- Initialization
 							if arg.is_case_insensitive_equal ("server") then
 								i := n -- exit loop
 								create {IRON_REPO_CONTROLLER_SERVER_TASK} op
-							elseif arg.is_case_insensitive_equal ("database") then
-								create {IRON_REPO_CONTROLLER_DATABASE_TASK} op.make (argument_array.subarray (i + 1, n))
+							elseif arg.is_case_insensitive_equal ("system") then
+								create {IRON_REPO_CONTROLLER_SYSTEM_TASK} op.make (argument_array.subarray (i + 1, n))
 							elseif arg.is_case_insensitive_equal ("user") then
 								create {IRON_REPO_CONTROLLER_USER_TASK} op.make (argument_array.subarray (i + 1, n))
 							end
@@ -59,9 +59,9 @@ feature {NONE} -- Initialization
 				print ("Command: " + argument (0) + "%N")
 				print ("IRON version: " + version)
 				print ("%N")
-				print ("usage: ironctl {server|database|user}%N")
+				print ("usage: ironctl {server|system|user}%N")
 				print ("%Tserver: launch the server.%N")
-				print ("%Tdatabase: operations on database.%N")
+				print ("%Tsystem: various configuration operations (database, ...) .%N")
 				print ("%Tuser: user management.%N")
 			end
 		end
@@ -94,9 +94,10 @@ feature -- Database
 			if attached execution_environment.item ({IRON_REPO_CONSTANTS}.IRON_REPO_variable_name) as s then
 				create p.make_from_string (s)
 			else
-				create p.make_from_string ("iron-db")
+				create p.make_from_string ("iron")
 			end
-			create iron.make (create {IRON_REPO_FS_DATABASE}.make_with_path (p.absolute_path.canonical_path))
+			p := p.absolute_path.canonical_path
+			create iron.make (create {IRON_REPO_FS_DATABASE}.make_with_path (p.extended ("repo")), p)
 		end
 
 	iron: IRON_REPO

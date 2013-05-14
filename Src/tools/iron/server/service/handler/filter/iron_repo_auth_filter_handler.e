@@ -42,6 +42,7 @@ feature -- Basic operations
 				req.set_execution_variable ("{IRON_REPO}.user", l_user)
 				execute_next (req, res)
 			else
+				req.set_execution_variable ("{IRON_REPO}.user", Void)
 				handle_unauthorized ("Unauthorized", req, res)
 			end
 		end

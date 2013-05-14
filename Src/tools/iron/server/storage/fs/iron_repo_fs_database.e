@@ -162,7 +162,7 @@ feature -- Package
 			inf.save_to (p.extended ("package.info"))
 		end
 
-	save_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE; a_file: WSF_UPLOADED_FILE)
+	save_uploaded_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE; a_file: WSF_UPLOADED_FILE)
 		local
 			p: PATH
 			b: BOOLEAN
@@ -171,6 +171,44 @@ feature -- Package
 			b := a_file.move_to (p.name.to_string_8)
 			if b then
 				a_package.set_archive_path (p)
+			end
+		end
+
+	save_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE; a_file: PATH; a_keep_source_file: BOOLEAN)
+		local
+			p: PATH
+			src,tgt: RAW_FILE
+		do
+			p := package_path (v, a_package.id).extended ("archive.zip")
+			create src.make_with_path (a_file)
+			if src.exists then
+				if a_keep_source_file then
+					create tgt.make_with_path (p)
+					tgt.open_write
+					src.open_read
+					src.copy_to (tgt)
+					src.close
+					tgt.close
+				else
+					src.rename_path (p)
+				end
+				a_package.set_archive_path (p)
+			end
+		end
+
+	delete_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE)
+		local
+			p: PATH
+			b: BOOLEAN
+			f: RAW_FILE
+		do
+			p := package_path (v, a_package.id).extended ("archive.zip")
+			create f.make_with_path (p)
+			if f.exists then
+				f.delete
+				a_package.set_archive_path (Void)
+
+				update_package (v, a_package)
 			end
 		end
 
@@ -183,8 +221,13 @@ feature -- Package
 			create d1.make_with_path (package_path (v, p.id))
 			create dt.make_now_utc
 
-			l_path := trash_path.extended (p.id).appended ("-" + dt.definite_duration (create {DATE_TIME}.make_from_epoch (0)).seconds_count.out)
+			l_path := trash_path (v)
 			create d2.make_with_path (l_path)
+			if not d2.exists then
+				d2.recursive_create_dir
+			end
+
+			create d2.make_with_path (l_path.extended (p.id).appended ("-" + dt.definite_duration (create {DATE_TIME}.make_from_epoch (0)).seconds_count.out))
 			if not d2.exists then
 				d1.rename_path (d2.path)
 				p.reset_id
@@ -433,9 +476,9 @@ feature {NONE} -- Initialization
 			Result := path.extended ("packages").extended ("_index_").extended (v.value).extended (a_id)
 		end
 
-	trash_path: PATH
+	trash_path (v: IRON_REPO_VERSION): PATH
 		do
-			Result := path.extended ("packages").extended ("_index_").extended ("trash")
+			Result := path.extended ("packages").extended ("_index_").extended (v.value).extended ("trash")
 		end
 
 end

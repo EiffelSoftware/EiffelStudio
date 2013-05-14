@@ -61,12 +61,29 @@ feature -- Package
 			package (v, old a_package.id) = Void
 		end
 
-	save_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE; a_file: WSF_UPLOADED_FILE)
+	save_uploaded_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE; a_file: WSF_UPLOADED_FILE)
 		require
 			has_id: a_package.has_id
 		deferred
 		ensure
 			has_archive: a_package.has_archive
+		end
+
+	save_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE; a_file: PATH; a_keep_source_file: BOOLEAN)
+		require
+			has_id: a_package.has_id
+		deferred
+		ensure
+			has_archive: a_package.has_archive
+		end
+
+	delete_package_archive (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE)
+		require
+			has_id: a_package.has_id
+			has_archive: a_package.has_archive
+		deferred
+		ensure
+			has_no_archive: not a_package.has_archive
 		end
 
 	package (v: IRON_REPO_VERSION; a_id: READABLE_STRING_GENERAL): detachable IRON_REPO_PACKAGE

@@ -131,6 +131,8 @@ feature -- Router and Filter
 				f.set_next (l_filter)
 				l_filter := f
 			end
+
+
 			filter := l_filter
 		end
 
@@ -163,10 +165,19 @@ feature -- Router and Filter
 			h_fs: WSF_FILE_SYSTEM_HANDLER
 		do
 				--|  Servername: http://iron.eiffel.com/
-				--|  /admin/package/  POST
-				--|  /admin/package/{pid}  GET PUT DELETE
 
+				--| Optional			
 			map_uri_template_agent ("/debug/{name}", agent handle_debug)
+			if attached iron.basedir as p_basedir then
+				router.handle ("/access/db/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("repo").utf_8_name))
+				router.handle ("/access/html/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("html").utf_8_name))
+			end
+			map_uri_with_request_methods ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (iron)), router.methods_get) --  Shutdown server
+
+				--| Documentation
+			router.handle ("/access/api/", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router))
+
+				--| Admin access
 			create h_admin.make (iron)
 			map_uri_with_request_methods ("/access/", new_auth_uri_handler (h_admin), router.methods_get) -- Admin::home
 			map_uri_template_with_request_methods ("/access/{version}/", new_auth_uri_template_handler (h_admin), router.methods_get) -- Admin::home
@@ -185,8 +196,9 @@ feature -- Router and Filter
 				-- REST or web
 			map_uri_template_with_request_methods ("/access/{version}/package/", new_auth_uri_template_handler (h_package), router.methods_post) -- Create
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}", h_package, router.methods_get) --  Get package data
-			map_uri_template_with_request_methods ("/access/{version}/package/{id}", new_auth_uri_template_handler (h_package), router.methods_put_post) --  Update package
-			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", h_zip_package, router.methods_get_post + router.methods_delete) --  Get archive package data
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}", new_auth_uri_template_handler (h_package), router.methods_put_post + router.methods_delete) --  Update package
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", h_zip_package, router.methods_get) --  Get archive package data
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", new_auth_uri_template_handler (h_zip_package), router.methods_post + router.methods_delete) --  Get archive package data
 
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map", h_package_map, router.methods_get) --  Get map
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map{/map}", h_package_map, router.methods_get) --  Get map and allow ?method= .. hack
@@ -194,20 +206,13 @@ feature -- Router and Filter
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map{/map}", new_auth_uri_template_handler (h_package_map), router.methods_delete + router.methods_post) -- Create/Delete mapping
 			map_uri_template_with_request_methods ("/access/{version}/package/", h_search, router.methods_get) -- Search
 
---			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("POST archive"), router.methods_post) --  Upload package archive
---			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("PUT archive"), router.methods_put) --  Update package archive
---			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("GET archive"), router.methods_get) --  Download package archive
---			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", not_yet_implemented_uri_template_handler ("DELETE archive"), router.methods_delete) --  Delete package archive
-
-			map_uri_with_request_methods ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (iron)), router.methods_get) --  Shutdown server
-
-			create h_fs.make_hidden ("db")
-			router.handle ("/access/db/", h_fs)
-			router.handle ("/access/api/", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router))
 			router.handle ("/access", create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent redirect_to_home))
+
+				--| Package access			
 			create h_package_fetcher.make (iron)
 			map_uri_template_with_request_methods ("/{version}/{domain}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
 
+				--| Misc access
 			router.handle ("/favicon.ico", create {WSF_URI_AGENT_HANDLER}.make (agent handle_favicon))
 			router.handle ("/", create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent handle_home))
 		end

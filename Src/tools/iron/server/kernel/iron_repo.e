@@ -12,9 +12,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (db: like database)
+	make (db: like database; a_basedir: detachable PATH)
 		do
 			database := db
+			basedir := a_basedir
 		end
 
 feature -- Access
@@ -26,7 +27,19 @@ feature -- Access
 
 	database: IRON_REPO_DATABASE
 
+	basedir: detachable PATH
+			-- Basedir if any
+
 feature -- Access: url
+
+	html_page (v: detachable IRON_REPO_VERSION; s: READABLE_STRING_8): READABLE_STRING_8
+		do
+			if v /= Void then
+				Result := "/access/" + v.value + "/html/" + s
+			else
+				Result := "/access/html/" + s
+			end
+		end
 
 	page (v: detachable IRON_REPO_VERSION; p: READABLE_STRING_8): READABLE_STRING_8
 		do

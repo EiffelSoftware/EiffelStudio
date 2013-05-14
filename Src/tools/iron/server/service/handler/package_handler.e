@@ -22,12 +22,12 @@ feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			if is_method_get (req) then
-				handle_view_package (req, res)
-			elseif is_method_post (req) or is_method_put (req) then
+			if is_method_post (req) or is_method_put (req) then
 				handle_update_package (req, res)
 			elseif is_method_delete (req) then
 				handle_delete_package (req, res)
+			elseif is_method_get (req) then
+				handle_view_package (req, res)
 			else
 				res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
 			end
@@ -81,10 +81,8 @@ feature -- Execution
 			f: detachable like new_package_edit_form
 --			r: IRON_HTML_RESPONSE
 		do
-			if attached {WSF_STRING} req.path_parameter ("id") as p_id then
-				if attached iron.database.package (iron_version (req), p_id.value) as l_package then
-					f := new_package_edit_form (l_package, req, True)
-				end
+			if attached package_from_id_path_parameter (req, "id") as l_package then
+				f := new_package_edit_form (l_package, req, True)
 			else
 				f := new_package_edit_form (Void, req, True)
 			end
@@ -101,7 +99,12 @@ feature -- Execution
 
 	handle_delete_package (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
+			if attached package_from_id_path_parameter (req, "id") as l_package then
+				iron.database.delete_package (iron_version (req), l_package)
+				res.redirect_now (iron.package_list_web_page (iron_version (req)))
+			else
+				res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+			end
 		end
 
 feature -- Documentation

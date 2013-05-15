@@ -151,10 +151,10 @@ feature -- Settings
 	set_experimental_mode
 			-- Set compiler in experimental mode.
 		do
-				-- In the 6.6. release, it has no effect.
---			flags.put (flags.item | experimental_mode_flag)
---		ensure
---			is_experimental_mode: is_experimental_mode
+				-- In the 7.3 release, it has the effect of enabling type interval.
+			flags.put (flags.item | experimental_mode_flag)
+		ensure
+			is_experimental_mode: is_experimental_mode
 		end
 
 	set_full_class_checking_mode

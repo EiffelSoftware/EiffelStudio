@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (db: like database; a_basedir: detachable PATH)
+	make (db: like database; a_basedir: PATH)
 		do
 			database := db
 			basedir := a_basedir
@@ -27,8 +27,8 @@ feature -- Access
 
 	database: IRON_REPO_DATABASE
 
-	basedir: detachable PATH
-			-- Basedir if any
+	basedir: PATH
+			-- Base directory for iron system
 
 feature -- Access: url
 

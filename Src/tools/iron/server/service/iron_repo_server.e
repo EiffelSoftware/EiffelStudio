@@ -109,29 +109,45 @@ feature -- Router and Filter
 		local
 			f, l_filter: detachable WSF_FILTER
 			fh: WSF_CUSTOM_HEADER_FILTER
+			cfg: IRON_CONFIGURATION_FILTER
 		do
 			l_filter := Void
+
+			create cfg
+			cfg.uploaded_file_path := iron.basedir.extended ("tmp")
+			cfg.set_next (l_filter)
+			l_filter := cfg
+
+			-- Header
 			create fh.make (1)
 			fh.set_next (l_filter)
 			fh.custom_header.put_header ("X-IronServer: " + version)
 			l_filter := fh
+
+			-- Maintenance
 			create {WSF_MAINTENANCE_FILTER} f
 			f.set_next (l_filter)
 			l_filter := f
-			create {WSF_DEBUG_FILTER} f
-			f.set_next (l_filter)
-			l_filter := f
 
---			create {WSF_100_CONTINUE_FILTER} f
---			f.set_next (l_filter)
---			l_filter := f
+			debug ("iron")
+				-- Debug
+				create {WSF_DEBUG_FILTER} f
+				f.set_next (l_filter)
+				l_filter := f
+			end
 
 			if not (is_libfcgi or is_cgi) then
+				-- Logging for nino
 				create {WSF_LOGGING_FILTER} f
 				f.set_next (l_filter)
 				l_filter := f
 			end
 
+--			if attached iron.basedir as p_basedir then
+--				create {WSF_FILE_SYSTEM_FILTER} f.make_with_path (p_basedir.extended ("html"))
+--				f.set_next (l_filter)
+--				l_filter := f
+--			end
 
 			filter := l_filter
 		end

@@ -17,8 +17,8 @@
 
 
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf" readonly="false"/>
-		<library name="http" location="..\lib\EWF\library\network\protocol\http\http-safe.ecf" readonly="false"/>
-		<library name="http_client" location="..\lib\EWF\library\network\http_client\http_client-safe.ecf" readonly="false">
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf" readonly="false"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true"/>
 			</option>

@@ -21,6 +21,24 @@ feature -- Access
 			Result := scope [index]
 		end
 
+	has_unset: BOOLEAN
+			-- <Precursor>
+		local
+			index: like scope.upper
+		do
+			from
+				index := scope.upper
+			until
+				index <= 0
+			loop
+				if not scope [index] then
+					Result := True
+					index := 1
+				end
+				index := index - 1
+			end
+		end
+
 feature -- Status report: variables
 
 	max_count: INTEGER

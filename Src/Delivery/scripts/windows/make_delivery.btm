@@ -249,12 +249,6 @@ iff not defined NO_COMPILE then
 	cdd %INIT_DIR
 	give_time_to compile exes
 
-	remtrace Include the Eiffel Web Framework EWF
-	call include_ewf.btm
-	cdd %INIT_DIR
-	give_time_to include EWF
-
-
 	iff not defined NO_WIZARDS then
 		remtrace Generate the precompilation and the "new project" wizards
 		call make_wizards.btm

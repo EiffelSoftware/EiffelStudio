@@ -245,10 +245,6 @@ if [ ! "$NO_COMPILE" ]; then
 	. ./make_exes
 	cd $INIT_DIR
 
-	remtrace Include Eiffel Web Framework EWF
-	. ./include_ewf
-	cd $INIT_DIR
-
 	if [ ! "$NO_WIZARDS" ]; then
 		remtrace Generate the precompilation and the \"new project\" wizards
 		. ./make_wizards

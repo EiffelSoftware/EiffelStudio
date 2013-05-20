@@ -2,43 +2,26 @@ class TEST
 
 create
 	make,
-	make_agent,
-	make_self
+	make_agent
 
 feature {NONE}
 
 	make
-			-- Initialize object.
+			-- Use an agent before initializing all attributes.
 		local
 			t: TEST
 		do
-			create a
-			create t.make_self
 			create t.make_agent (agent do_nothing)
+			create a
 		end
 
 feature {NONE} -- Initialization
 
-	make_self
-			-- Call Current before initializing all the attributes.
-		do
-			make
-			access_current
-		end
-
 	make_agent (x: PROCEDURE [ANY, TUPLE])
 			-- Call agent `x' before initializing all the attributes of `Current'.
 		do
-			make
 			x.call (Void) -- VEVI
-		end
-
-feature -- Access
-
-	access_current
-			-- Make a call on `Current'.
-		do
-			Current.do_nothing -- VEVI
+			make
 		end
 
 feature {NONE} -- Access

@@ -226,7 +226,7 @@ feature -- Router and Filter
 
 				--| Package access			
 			create h_package_fetcher.make (iron)
-			map_uri_template_with_request_methods ("/{version}/{domain}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
+			map_uri_template_with_request_methods ("/{version}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
 
 				--| Misc access
 			router.handle ("/favicon.ico", create {WSF_URI_AGENT_HANDLER}.make (agent handle_favicon))

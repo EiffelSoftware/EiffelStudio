@@ -38,13 +38,12 @@ feature -- Execution
 			r: IRON_REPO_HTML_RESPONSE
 			s: STRING_8
 			v: READABLE_STRING_8
+			l_parent: detachable READABLE_STRING_8
+			i: INTEGER
 			f: WSF_FORM
 			fi: WSF_FORM_TEXT_INPUT
 		do
-			if
-				attached {WSF_STRING} req.path_parameter ("id") as p_id and then
-			 	attached iron.database.package (iron_version (req), p_id.value) as l_package
-			then
+			if attached package_from_id_path_parameter (req, "id") as l_package	then
 				r := new_response_message (req)
 				r.add_menu ("View", iron.package_view_web_page (iron_version (req), l_package))
 				create s.make_empty
@@ -58,7 +57,15 @@ feature -- Execution
 						lst as c
 					loop
 						s.append ("<li>")
-						s.append ("<a href=%"" + "/" + v + c.item + "%">/" + v + " " + c.item + "</a>")
+						i := c.item.last_index_of ('/', c.item.count)
+						s.append ("<a href=%"" + "/" + v + "%">/" + v + "</a> ")
+						if i > 0 then
+							l_parent := c.item.substring (1, i)
+							s.append ("<a href=%"" + "/" + v + l_parent + "%">" + l_parent + "</a>")
+							s.append ("<a href=%"" + "/" + v + c.item + "%">" + c.item.substring ( i+1, c.item.count) + "</a>")
+						else
+							s.append ("<a href=%"" + "/" + v + c.item + "%"> " + c.item + " </a>")
+						end
 						s.append (" <a style=%"color: red;%" href=%"" + iron.package_map_web_page (iron_version (req), l_package, c.item) + "?method=DELETE%">DEL</a>")
 						s.append ("</li>%N")
 					end
@@ -75,7 +82,7 @@ feature -- Execution
 				r.set_body (s)
 				res.send (r)
 			else
-				res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
+				res.send (new_not_found_response_message (req))
 			end
 		end
 
@@ -85,21 +92,78 @@ feature -- Execution
 			m: IRON_REPO_HTML_RESPONSE
 			s: STRING
 		do
-			m := new_response_message (req)
+			if attached package_from_id_path_parameter (req, "id") as l_package	then
+				if has_permission_to_modify_package (req, l_package) then
+					m := new_response_message (req)
 
-			create s.make_empty
-			if
-				attached {WSF_STRING} req.path_parameter ("id") as p_id and then
-			 	attached iron.database.package (iron_version (req), p_id.value) as l_package
-			then
-				m.add_menu ("View", iron.package_view_web_page (iron_version (req), l_package))
+					create s.make_empty
 
-				if attached req.string_item ("map") as s_path then
-					l_path := s_path
+					m.add_menu ("View", iron.package_view_web_page (iron_version (req), l_package))
+
+					if attached req.string_item ("map") as s_path then
+						l_path := s_path
+					end
+					if l_path = Void then
+						if
+							attached {WSF_TABLE} req.item ("map") as p_map
+						then
+							create l_path.make_empty
+							across
+								p_map as c
+							loop
+								if not l_path.is_empty then
+									l_path.append_character ('/')
+								end
+								l_path.append (c.item.string_representation)
+							end
+						end
+					end
+					if l_path /= Void then
+						if l_path.starts_with ("/") then
+							l_path.remove_head (1)
+						end
+						if attached iron.database.package_by_path (iron_version (req), l_path) as p_curr then
+							s.append ("Already associated to " + m.html_encoded_string (p_curr.human_identifier))
+						else
+							iron.database.associate_package_with_path (iron_version (req), l_package, l_path)
+							if iron.database.package_by_path (iron_version (req), l_path) ~ l_package then
+								-- succeed
+								s.append ("association created.")
+							else
+								-- failure
+								s.append ("association creation failed.")
+							end
+						end
+					else
+						s.append ("Missing map parameter.")
+					end
+					s.append ("<div>")
+					s.append ("<a href=%"" + iron.package_map_web_page (iron_version (req), l_package, Void) + "%">"+ m.html_encoded_string (l_package.human_identifier) +"</a>")
+					s.append ("</div>")
+					m.set_body (s)
+
+					res.send (m)
+				else
+					res.send (new_not_permitted_response_message (req))
 				end
-				if l_path = Void then
+			else
+				res.send (new_not_found_response_message (req))
+			end
+		end
+
+	handle_delete_package_map (req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_path: STRING_32
+			m: IRON_REPO_HTML_RESPONSE
+			s: STRING
+		do
+			if attached package_from_id_path_parameter (req, "id") as l_package then
+				if has_permission_to_modify_package (req, l_package) then
+					m := new_response_message (req)
+					create s.make_empty
+					m.add_menu ("View", iron.package_view_web_page (iron_version (req), l_package))
 					if
-						attached {WSF_TABLE} req.item ("map") as p_map
+						attached {WSF_TABLE} req.path_parameter ("map") as p_map
 					then
 						create l_path.make_empty
 						across
@@ -110,87 +174,33 @@ feature -- Execution
 							end
 							l_path.append (c.item.string_representation)
 						end
-					end
-				end
-				if l_path /= Void then
-					if l_path.starts_with ("/") then
-						l_path.remove_head (1)
-					end
-					if attached iron.database.package_by_path (iron_version (req), l_path) as p_curr then
-						s.append ("Already associated to " + m.html_encoded_string (p_curr.human_identifier))
-					else
-						iron.database.associate_package_with_path (iron_version (req), l_package, l_path)
 						if iron.database.package_by_path (iron_version (req), l_path) ~ l_package then
-							-- succeed
-							s.append ("association created.")
+							iron.database.unassociate_package_with_path (iron_version (req), l_package, l_path)
+							if iron.database.package_by_path (iron_version (req), l_path) = Void then
+								-- succeed
+								s.append ("association removed.")
+							else
+								-- failure
+								s.append ("association removal failed.")
+							end
 						else
-							-- failure
-							s.append ("association creation failed.")
-						end
-					end
-				else
-					s.append ("Missing map parameter.")
-				end
-				s.append ("<div>")
-				s.append ("<a href=%"" + iron.package_map_web_page (iron_version (req), l_package, Void) + "%">"+ m.html_encoded_string (l_package.human_identifier) +"</a>")
-				s.append ("</div>")
-			else
-				s.append ("Missing package id parameter.")
-			end
-			m.set_body (s)
-
-			res.send (m)
-		end
-
-	handle_delete_package_map (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			l_path: STRING_32
-			m: IRON_REPO_HTML_RESPONSE
-			s: STRING
-		do
-			m := new_response_message (req)
-			create s.make_empty
-			if
-				attached {WSF_STRING} req.path_parameter ("id") as p_id and then
-			 	attached iron.database.package (iron_version (req), p_id.value) as l_package
-			then
-				m.add_menu ("View", iron.package_view_web_page (iron_version (req), l_package))
-				if
-					attached {WSF_TABLE} req.path_parameter ("map") as p_map
-				then
-					create l_path.make_empty
-					across
-						p_map as c
-					loop
-						if not l_path.is_empty then
-							l_path.append_character ('/')
-						end
-						l_path.append (c.item.string_representation)
-					end
-					if iron.database.package_by_path (iron_version (req), l_path) ~ l_package then
-						iron.database.unassociate_package_with_path (iron_version (req), l_package, l_path)
-						if iron.database.package_by_path (iron_version (req), l_path) = Void then
-							-- succeed
-							s.append ("association removed.")
-						else
-							-- failure
-							s.append ("association removal failed.")
+							s.append ("Not associated.")
 						end
 					else
-						s.append ("Not associated.")
+						s.append ("Missing map parameter.")
 					end
-				else
-					s.append ("Missing map parameter.")
-				end
-				s.append ("<div>")
-				s.append ("<a href=%"" + iron.package_map_web_page (iron_version (req), l_package, Void) + "%">"+ m.html_encoded_string (l_package.human_identifier) +"</a>")
-				s.append ("</div>")
-			else
-				s.append ("Missing package id parameter.")
-			end
-			m.set_body (s)
+					s.append ("<div>")
+					s.append ("<a href=%"" + iron.package_map_web_page (iron_version (req), l_package, Void) + "%">"+ m.html_encoded_string (l_package.human_identifier) +"</a>")
+					s.append ("</div>")
+					m.set_body (s)
 
-			res.send (m)
+					res.send (m)
+				else
+					res.send (new_not_permitted_response_message (req))
+				end
+			else
+				res.send (new_not_found_response_message (req))
+			end
 		end
 
 feature -- Documentation

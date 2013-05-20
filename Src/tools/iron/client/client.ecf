@@ -36,6 +36,7 @@
 	</target>
 	<target name="client" extends="iron_client">
 		<root class="ES_IRON_CLIENT" feature="make"/>
+		<setting name="executable_name" value="iron"/>
 		<setting name="console_application" value="true"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<cluster name="es_application" location=".\es_application\" recursive="true"/>

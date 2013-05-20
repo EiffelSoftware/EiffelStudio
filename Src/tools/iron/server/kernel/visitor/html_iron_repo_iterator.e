@@ -36,6 +36,15 @@ feature {NONE} -- Initialization
 
 	version: IRON_REPO_VERSION
 
+	user: detachable IRON_REPO_USER
+
+feature -- Change	
+
+	set_user (u: like user)
+		do
+			user := u
+		end
+
 feature -- Visit
 
 	visit_package (p: IRON_REPO_PACKAGE)
@@ -50,11 +59,6 @@ feature -- Visit
 				s.append (" <span class=%"packageid%">(")
 				s.append (p.id)
 				s.append (")</span>")
-				if attached p.owner as l_owner then
-					s.append ("<span class=%"owner%">")
-					s.append (html_encoder.encoded_string (l_owner.name))
-					s.append ("</span>")
-				end
 				if attached p.description as l_description then
 					s.append ("<div class=%"description%">")
 					s.append (l_description)
@@ -74,6 +78,21 @@ feature -- Visit
 						s.append (date_as_string (dt))
 					end
 					s.append (")</div>")
+				end
+				if attached p.owner as l_owner then
+					if attached user as u then
+						if u.same_user (l_owner) then
+							s.append ("<div>")
+							s.append ("<span class=%"owner%">You are the maintainer</span>")
+							s.append ("</div>")
+						elseif u.is_administrator then
+							s.append ("<div>")
+							s.append ("<span class=%"owner%">Maintainer: ")
+							s.append (html_encoder.encoded_string (l_owner.name))
+							s.append ("</span>")
+							s.append ("</div>")
+						end
+					end
 				end
 			end
 			s.append ("</li>")

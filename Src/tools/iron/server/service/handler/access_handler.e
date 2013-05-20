@@ -62,6 +62,25 @@ feature -- Execution
 					s := "..."
 				end
 
+				if attached current_user (req) as u then
+					s.append ("<h2>")
+					s.append ("Account ")
+					s.append (m.html_encoded_string (u.name))
+					s.append ("</h2>")
+					if attached u.roles as l_roles then
+						s.append ("<div>")
+						s.append ("<span>Roles:")
+						across
+							l_roles as c
+						loop
+							s.append (" ")
+							s.append (m.html_encoded_string (c.item.name))
+						end
+						s.append ("</span>")
+						s.append ("</div>")
+					end
+				end
+
 				if attached {WSF_STRING} req.item ("redirection") as l_redir then
 					m.set_location (l_redir.value)
 				end

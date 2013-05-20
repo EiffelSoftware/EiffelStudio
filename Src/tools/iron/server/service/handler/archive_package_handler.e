@@ -55,8 +55,8 @@ feature -- Execution
 		local
 			cl: CELL [detachable PATH]
 		do
-			if is_authenticated (req) then
-				if attached package_from_id_path_parameter (req, "id") as l_package then
+			if attached package_from_id_path_parameter (req, "id") as l_package then
+				if has_permission_to_modify_package (req, l_package) then
 					if attached {WSF_UPLOADED_FILE} req.form_parameter ("file") as l_uploaded_file then
 						iron.database.save_uploaded_package_archive (iron_version (req), l_package, l_uploaded_file)
 						redirect_to_package_view (req, res, l_package)
@@ -72,27 +72,28 @@ feature -- Execution
 						res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
 					end
 				else
-					res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+					res.send (create {IRON_REPO_HTML_RESPONSE}.make_not_permitted (req, iron))
 				end
 			else
-				res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
+				res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
 			end
 		end
 
 	handle_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			if is_authenticated (req) then
-				if attached package_from_id_path_parameter (req, "id") as l_package then
+			if attached package_from_id_path_parameter (req, "id") as l_package then
+				if has_permission_to_modify_package (req, l_package) then
 					if l_package.has_archive then
 						iron.database.delete_package_archive (iron_version (req), l_package)
 					end
 					redirect_to_package_view (req, res, l_package)
 				else
-					res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+					res.send (create {IRON_REPO_HTML_RESPONSE}.make_not_permitted (req, iron))
 				end
 			else
-				res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
+				res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
 			end
+
 		end
 
 	handle_download_package (req: WSF_REQUEST; res: WSF_RESPONSE)

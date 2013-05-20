@@ -68,6 +68,15 @@ feature -- User
 			if attached iron_info (user_path (u)) as inf then
 				if attached inf.item ("name") as l_username and then u.is_case_insensitive_equal (u) then
 					create Result.make (u)
+					if attached inf.item ("roles") as s_roles then
+						if attached s_roles.split (',') as l_roles then
+							across
+								l_roles as c
+							loop
+								Result.add_role (create {IRON_REPO_USER_ROLE}.make (c.item))
+							end
+						end
+					end
 				end
 			end
 		end
@@ -376,7 +385,7 @@ feature -- Package
 					d.recursive_create_dir
 				end
 				create f.make_with_path (p)
-				if not f.exists then
+				if not f.exists or else f.is_access_writable then
 					f.open_write
 					f.put_string (a_package.id)
 					f.put_new_line
@@ -429,6 +438,50 @@ feature -- Package
 							check attached t.path.entry as e and then e.name.same_string_general (l_pack.id) end
 							Result.force (l_pack)
 						end
+					end
+				end
+			end
+		end
+
+	path_browse_index (v: IRON_REPO_VERSION; a_path: READABLE_STRING_GENERAL): detachable ARRAYED_LIST [READABLE_STRING_32]
+		local
+			d: detachable DIRECTORY
+			p: PATH
+			err: BOOLEAN
+			u: FILE_UTILITIES
+		do
+			p := path.extended ("packages").extended (v.value)
+			across
+				a_path.split ('/') as c
+			until
+				d /= Void or err
+			loop
+				if not c.item.is_empty then
+					p := p.extended (c.item)
+					if u.directory_path_exists (p) then
+						-- skip
+					elseif u.file_path_exists (p) then
+						create d.make_with_path (p)
+					else
+						err := True
+					end
+				end
+			end
+			if d /= Void then
+				-- skip
+			elseif err then
+				d := Void
+			elseif p /= Void then
+				create d.make_with_path (p)
+			end
+			if d /= Void and then d.exists then
+				create Result.make (5)
+				across
+					d.entries as e
+				loop
+					if e.item.is_current_symbol or e.item.is_parent_symbol then
+					else
+						Result.force (e.item.name)
 					end
 				end
 			end

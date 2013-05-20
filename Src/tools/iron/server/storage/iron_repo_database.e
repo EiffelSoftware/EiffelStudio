@@ -122,4 +122,8 @@ feature -- Package
 		deferred
 		end
 
+	path_browse_index (v: IRON_REPO_VERSION; a_path: READABLE_STRING_GENERAL): detachable ITERABLE [READABLE_STRING_32]
+		deferred
+		end
+
 end

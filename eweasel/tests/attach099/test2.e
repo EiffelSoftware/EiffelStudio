@@ -2,19 +2,17 @@ class TEST
 
 create
 	make,
-	make_agent,
 	make_self
 
 feature {NONE}
 
 	make
-			-- Create expanded objects that need to initialize their attributes.
+			-- Use `Current' before initializing all attributes.
 		local
 			t: TEST
 		do
-			create a
 			create t.make_self
-			create t.make_agent (agent do_nothing)
+			create a
 		end
 
 feature {NONE} -- Initialization
@@ -23,13 +21,6 @@ feature {NONE} -- Initialization
 			-- Call Current before initializing all the attributes.
 		do
 			access_current
-			make
-		end
-
-	make_agent (x: PROCEDURE [ANY, TUPLE])
-			-- Call agent `x' before initializing all the attributes of `Current'.
-		do
-			x.call (Void) -- VEVI
 			make
 		end
 

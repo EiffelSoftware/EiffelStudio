@@ -2,7 +2,7 @@ class TEST
 
 create
 	make,
-	make_self_local
+	make_self_attribute
 
 feature {NONE}
 
@@ -11,25 +11,26 @@ feature {NONE}
 		local
 			t: TEST
 		do
-			create t.make_self_local
+			create t.make_self_attribute
 			create a
+			create b
 		end
 
 feature {NONE} -- Initialization
 
-	make_self_local
+	make_self_attribute
 			-- Fulfil targeted conditions for `Current' before initializing all the attributes.
-		local
-			x: ANY
 		do
-			x := Current -- VEVI
-			if Void ~ x then end
+			a := Current -- VEVI
+			if a /~ Void then end
+			b := Current
+			if a /~ Void then end
 			make
 		end
 
 feature {NONE} -- Access
 
-	a: ANY
+	a, b: ANY
 			-- Storage.
 
 end

@@ -282,6 +282,17 @@ iff not exist estudio.exe then
 endiff
 move estudio.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
+remtrace Recompile quick_finalize
+cdd %EIFFEL_SRC\tools\iron\client
+clean_project
+finalize client.ecf
+cleanup_eiffel client iron.exe
+iff not exist iron.exe then
+	remtrace Could not finalize a new iron
+	CANCEL
+endiff
+move iron.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+
 remtrace get GDI+ for platforms that don't have it
 cdd %EIFFEL_SRC\tools
 co %DEFAULT_ISE_SVN/Src/tools/gdiplus gdiplus

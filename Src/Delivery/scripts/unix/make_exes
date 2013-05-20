@@ -189,6 +189,18 @@ fi
 clean_project
 move estudio.tar.bz2 $EXPORT_DIR/bin
 
+remtrace Recompile iron
+cd $EIFFEL_SRC/tools/iron/client
+clean_project
+finalize client.ecf client
+tgz_ccode client client.tar.bz2
+if [ ! -f client.tar.bz2 ]; then
+	echo Could not finalize a new client
+	CANCEL
+fi
+clean_project
+move client.tar.bz2 $EXPORT_DIR/bin
+
 cd $INIT_DIR
 . ./make_tools
 

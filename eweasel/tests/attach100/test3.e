@@ -2,7 +2,7 @@ class TEST
 
 create
 	make,
-	make_self
+	make_agent
 
 feature {NONE}
 
@@ -11,16 +11,16 @@ feature {NONE}
 		local
 			t: TEST
 		do
-			create t.make_self
+			create t.make_agent (agent do_nothing)
 			create a
 		end
 
 feature {NONE} -- Initialization
 
-	make_self
-			-- Fulfil targeted conditions for `Current' before initializing all the attributes.
+	make_agent (x: PROCEDURE [ANY, TUPLE])
+			-- Fulfil targeted conditions for agent `x' before initializing all the attributes of `Current'.
 		do
-			if Current ~ Void then end -- VEVI
+			if Void /~ x then end -- VEVI
 			make
 		end
 

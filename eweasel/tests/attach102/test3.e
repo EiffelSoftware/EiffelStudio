@@ -5,8 +5,9 @@ inherit
 
 create
 	make,
-	make_self_qualified,
-	make_self_unqualified
+	make_from,
+	make_self_creation_expression,
+	make_self_creation_instruction
 
 feature {NONE}
 
@@ -15,27 +16,32 @@ feature {NONE}
 		local
 			t: TEST
 		do
-			create t.make_self_qualified
-			create t.make_self_unqualified
+			create t.make_self_creation_expression
+			create t.make_self_creation_instruction
 			create a
+		end
+
+	make_from (x: ANY)
+			-- Make sure `x' is targeted.
+		do
+			x.do_nothing
 		end
 
 feature {NONE} -- Initialization
 
-	make_self_unqualified
-			-- Fulfil targeted conditions for `Current' before initializing all the attributes.
-		do
-			access (Current) -- VEVI
-			make
-		end
-
-	make_self_qualified
+	make_self_creation_instruction
 			-- Fulfil targeted conditions for `Current' before initializing all the attributes.
 		local
 			t: TEST
 		do
-			create t.make
-			t.access (Current) -- VEVI
+			create t.make_from (Current) -- VEVI
+			make
+		end
+
+	make_self_creation_expression
+			-- Fulfil targeted conditions for `Current' before initializing all the attributes.
+		do
+			if create {TEST}.make_from (Current) = Void then end -- VEVI
 			make
 		end
 

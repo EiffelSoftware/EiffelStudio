@@ -11,6 +11,21 @@ compile_result	ok
 copy_raw	test2.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error TEST VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI
+compile_result	validity_error TEST VEVI VEVI
+
+copy_raw	test3.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_error TEST VEVI VEVI
+
+copy_raw	test4.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_error TEST VEVI VEVI VEVI
+
+copy_raw	test5.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_error TEST VEVI VEVI VEVI VEVI VEVI
 
 test_end

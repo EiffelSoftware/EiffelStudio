@@ -1,0 +1,160 @@
+body{
+	padding:0px;
+	margin:0px;
+	background:#c7c7c7;
+	color:#848484;
+	font:10px/14px Tahoma, sans-serif;
+}
+
+div, p, ul, h2, h3, h4, img, form{padding:0px; margin:0px;}
+ul{list-style-type:none;}
+
+.clear{
+clear:both;
+}
+
+.frame {
+	border: 1px solid #D5E6E0;
+}
+
+.text1 {
+	font: 11px/14px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color:#000;
+	font-weight:bold;
+}
+.text2 {
+	font: 11px/14px Tahoma, Geneva, sans-serif;
+	color:#000;
+	font-weight:normal;
+}
+.text3 {
+	font: 10px/14px Tahoma, Geneva, sans-serif;
+	color:#000;
+	font-weight:normal;
+}
+
+.text4 {
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#052578;
+	font-weight:bold;
+}
+.text5 {
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#052578;
+	font-weight:bold;
+}
+
+
+a:link {
+	font: 11px/14px Tahoma, Geneva, sans-serif;
+	color:#000;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a:visited{
+	font: 11px/14px Tahoma, Geneva, sans-serif;
+	color:#000;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a:hover {
+	font: 11px/14px Tahoma, Geneva, sans-serif;
+	color:#000;
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+a.a:link {
+	font: 10px/14px Tahoma, Geneva, sans-serif;
+	color:#19a1cb;
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+a.a:visited{
+	font: 10px/14px Tahoma, Geneva, sans-serif;
+	color:#19a1cb;
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+a.a:hover {
+	font: 10px/14px Tahoma, Geneva, sans-serif;
+	color:#000;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a.b:link {
+	font: 10px/18px Tahoma, Geneva, sans-serif;
+	color:#848484;
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+a.b:visited{
+	font: 10px/18px Tahoma, Geneva, sans-serif;
+	color:#848484;
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+a.b:hover {
+	font: 10px/18px Tahoma, Geneva, sans-serif;
+	color:#000;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a.c:link {
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a.c:visited{
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a.c:hover {
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+a.d:link {
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a.d:visited{
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	font-weight:normal;
+	text-decoration:none;
+}
+
+a.d:hover {
+	font: 10px/12px Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+input, textarea, select{
+border:#fff 1px solid;
+background-color:#d6e6e0;
+font:10px/12px Tahoma, sans-serif; color:#000; 
+}
+a.adv:link {text-decoration: none; font-weight:bold; color:#000;}
+a.adv:hover {text-decoration: none; font-weight:bold; color:#000;}
+a.adv:visited {text-decoration: none; font-weight:bold; color:#000;}

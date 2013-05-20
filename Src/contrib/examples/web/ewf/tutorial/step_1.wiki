@@ -1,0 +1,25 @@
+Back to the [[README.wiki|index]] 
+or go to [[step_2.wiki|step 2]]
+
+= Tutorial Step 1 =
+* '''Goal''': learn how to get and install the Eiffel Web Framework
+* '''Requirement''': EiffelStudio should be installed
+
+== Get EWF package ==
+=== From the archive ===
+* Get recent archive from https://github.com/EiffelWebFramework/EWF/downloads
+
+=== From the source ===
+* '''Requirement''': install [http://www.git-scm.org/ git] on your machine
+	
+ $ git clone --recursive https://github.com/EiffelWebFramework/EWF.git ewf
+
+== Install EWF ==
+For now, there is nothing specific to do.
+
+(Note: if you want to use the "http_client" library, you will need to do a few extra steps to eventually compile Eiffel Curl.)
+
+Back to the [[README.wiki|index]] 
+or go to [[step_2.wiki|step 2]]
+
+

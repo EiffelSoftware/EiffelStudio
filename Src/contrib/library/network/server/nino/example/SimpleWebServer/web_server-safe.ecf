@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="web_server" uuid="B1D3254D-A58E-4259-9796-8A2843A511A9">
+	<target name="web_server">
+		<root class="APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option debug="true" warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+			<debug name="nino" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<library name="nino" location="..\..\nino-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<cluster name="src" location=".\" recursive="true"/>
+	</target>
+</system>

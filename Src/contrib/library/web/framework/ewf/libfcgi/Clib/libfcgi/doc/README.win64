@@ -1,0 +1,83 @@
+ChangeLog from 2.4.0 to 2.4.0-x64:
+
+* Fixed to support 64bit build of library and sample executables for Windows.
+* Fixed socklen_t detection failure problem in configure script for Linux.
+
+
+What we've done to support 64bit build:
+
+* Converted Win32/*.{dsw,dsp} files to Win32/*.{sln,vcproj} files
+  (Visual Studio 2008 solution/project files).
+* Added platform "x64" for Visual Studio solution.
+* Fixed type size problem (pointer, size_t, etc.)
+  to support both 32/64 bit build
+  using intptr_t, uintptr_t, and so on.
+* Fixed to check range of each numeric variable with ASSERT()
+  before using type cast for demotion(narrowing).
+* Replaced several standard functions to recommended ones.
+  getpid() --> _getpid(), and so on.
+* Fixed several functions to support both 32/64 bit build.
+  AlignInt8(), AlignPtr8(), and so on.
+* Removed almost all build warnings on Visual Studio 2008.
+  with PreprocessorDefinitions:
+  _SCL_SECURE_NO_WARNINGS and _CRT_SECURE_NO_WARNINGS.
+* Removed almost all build warnings on Linux.
+
+
+Current status:
+
+* Tested the patch on Windows Server 2008 SP1 (64bit).
+  with apache httpd 2.2.10 (32bit) and mod_fastcgi-SNAP-0811090952.
+  Both 32/64 bit sample executables are working.
+  We could not build and test two samples: threaded and log-dump.
+* Tested the patch on CentOS 5.3 (64bit) with gcc-4.3.3.
+  For 32bit build, we used gcc -m32 option.
+  Both 32/64 bit sample executables are working except log-dump.
+  We could not find out the usage of log-dump
+  so that we could not test it.
+
+
+How to build:
+
+1. For Windows
+
+1-1. Extract fastcgi-2.4.0.tar.gz
+
+> tar xzf fastcgi-2.4.0.tar.gz
+
+1-2. Apply this fastcgi-2.4.0-x64.patch
+
+> cd fastcgi-2.4.0
+> patch -p1 < ../fastcgi-2.4.0-x64.patch
+
+1-3. Open fastcgi-2.4.0/Win32/FastCGI.sln with Visual Studio 2008 and build.
+
+Debug and Release build on Win32 and x64 are supported.
+
+Build with 'nmake' is not supported, since we could not find out
+suitable project converter and we can use 'devenv' command line instead.
+
+
+2. For Linux
+
+2-1. Do the same process as (1-1).
+2-2. Do the same process as (1-2).
+
+2-3. Remake configure script.
+
+> libtoolize -c -f
+> aclocal
+> autoheader
+> automake -a -c -f
+> autoconf
+
+2-4. Configure and make
+
+> ./configure
+> make
+> make install
+
+If you need, NDEBUG preprocessor definition should be specified
+to eliminate ASSERT check for release build.
+
+

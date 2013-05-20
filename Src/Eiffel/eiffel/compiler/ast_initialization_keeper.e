@@ -16,6 +16,11 @@ feature -- Access
 		deferred
 		end
 
+	has_unset: BOOLEAN
+			-- Are there any unset variables?
+		deferred
+		end
+
 feature -- Status report: variables
 
 	count: like max_count

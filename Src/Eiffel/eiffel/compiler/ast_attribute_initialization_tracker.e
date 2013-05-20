@@ -34,6 +34,12 @@ feature -- Access
 			Result := keeper.is_set (position)
 		end
 
+	has_unset: BOOLEAN
+			-- Are there any unset attributes?
+		do
+			Result := keeper.has_unset
+		end
+
 feature -- Measurement
 
 	attribute_count: INTEGER_32
@@ -90,7 +96,7 @@ invariant
 	keeper_attached: keeper /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

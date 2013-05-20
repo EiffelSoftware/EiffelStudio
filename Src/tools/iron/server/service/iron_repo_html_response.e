@@ -18,7 +18,10 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_body,
+	make_not_permitted,
+	make_not_found
 
 feature {NONE} -- Initialization
 
@@ -31,6 +34,24 @@ feature {NONE} -- Initialization
 			make_response
 
 			add_style (req.absolute_script_url (iron.html_page (iron_version, "style.css")), Void)
+		end
+
+	make_with_body (b: READABLE_STRING_8; req: WSF_REQUEST; a_iron: like iron)
+		do
+			make (req, a_iron)
+			set_body (b)
+		end
+
+	make_not_permitted (req: WSF_REQUEST; a_iron: like iron)
+		do
+			make (req, a_iron)
+			set_body ("Operation not permitted.")
+		end
+
+	make_not_found (req: WSF_REQUEST; a_iron: like iron)
+		do
+			make (req, a_iron)
+			set_body ("Resource not found.")
 		end
 
 	iron: IRON_REPO

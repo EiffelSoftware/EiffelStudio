@@ -39,6 +39,8 @@ feature -- Execution
 			it: HTML_IRON_REPO_ITERATOR
 			s: STRING_8
 			v: READABLE_STRING_8
+			i: INTEGER
+			l_path: READABLE_STRING_8
 		do
 			if
 				attached {WSF_STRING} req.path_parameter ("id") as p_id and then
@@ -47,6 +49,7 @@ feature -- Execution
 				create s.make (1024)
 				s.append ("<ul>")
 				create it.make (s, req, iron, iron_version (req))
+				it.set_user (current_user (req))
 				it.visit_package (l_package)
 				if attached iron.database.path_associated_with_package (iron_version (req), l_package) as lst then
 					s.append ("<ul><strong><a href=%""+ iron.package_map_web_page (iron_version (req), l_package, Void) +"%">Associated URIs</a></strong>%N")
@@ -55,7 +58,14 @@ feature -- Execution
 						lst as c
 					loop
 						s.append ("<li>")
-						s.append ("<a href=%"" + "/" + v + c.item + "%">/" + v + c.item + "</a>")
+						l_path := c.item
+						i := l_path.last_index_of ('/', l_path.count)
+						if i > 0 then
+							s.append ("<a href=%"" + "/" + v + l_path.substring (1, i) + "%">/" + v + l_path.substring (1, i) + "</a> ")
+							s.append ("<a href=%"" + "/" + v + l_path + "%">" + l_path.substring (i+1, l_path.count) + "</a>")
+						else
+							s.append ("<a href=%"" + "/" + v + l_path + "%">/" + v + l_path + "</a>")
+						end
 						s.append ("</li>%N")
 					end
 					s.append ("</ul>")
@@ -88,22 +98,22 @@ feature -- Execution
 			end
 			if f /= Void then
 				f.process (req, Void, agent on_package_edit_form_processed (?, req, res))
---				r := new_response_message (req)
---				create l_theme
---				r.set_body (f.to_html (l_theme))
---				res.send (r)
 			else
-				res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+				res.send (create {IRON_REPO_HTML_RESPONSE}.make_not_found (req, iron))
 			end
 		end
 
 	handle_delete_package (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
 			if attached package_from_id_path_parameter (req, "id") as l_package then
-				iron.database.delete_package (iron_version (req), l_package)
-				res.redirect_now (iron.package_list_web_page (iron_version (req)))
+				if has_permission_to_modify_package (req, l_package) then
+					iron.database.delete_package (iron_version (req), l_package)
+					res.redirect_now (iron.package_list_web_page (iron_version (req)))
+				else
+					res.send (create {IRON_REPO_HTML_RESPONSE}.make_not_permitted (req, iron))
+				end
 			else
-				res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+				res.send (create {IRON_REPO_HTML_RESPONSE}.make_not_found (req, iron))
 			end
 		end
 

@@ -50,6 +50,7 @@ feature -- Execution
 				create s.make_empty
 				if lst /= Void then
 					create html_vis.make (s, req, iron, iron_version (req))
+					html_vis.set_user (current_user (req))
 					html_vis.visit_package_iterable (lst)
 				end
 

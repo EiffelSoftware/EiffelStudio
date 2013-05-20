@@ -75,6 +75,17 @@ feature -- Access
 			end
 		end
 
+	has_permission_to_modify_package (req: WSF_REQUEST; a_package: IRON_REPO_PACKAGE): BOOLEAN
+		do
+			if attached current_user (req) as u then
+				if attached a_package.owner as o then
+					Result := u.same_user (o) or else u.is_administrator
+				else
+					Result := u.is_administrator
+				end
+			end
+		end
+
 feature -- Request: methods
 
 	method_query_parameter: STRING = "_method"
@@ -362,33 +373,36 @@ feature -- Package form
 						p.set_description (l_description)
 					end
 				end
-				if not fd.has_error then
-					if p.has_id then
-						iron.database.update_package (iron_version (req), p)
-						m.add_normal_message ("Package updated [" + p.id + "]")
-					else
-						iron.database.update_package (iron_version (req), p)
-						m.add_normal_message ("Package created [" + p.id + "]")
-					end
+				if has_permission_to_modify_package (req, p) then
+					if not fd.has_error then
+						if p.has_id then
+							iron.database.update_package (iron_version (req), p)
+							m.add_normal_message ("Package updated [" + p.id + "]")
+						else
+							iron.database.update_package (iron_version (req), p)
+							m.add_normal_message ("Package created [" + p.id + "]")
+						end
 
-					if attached {WSF_UPLOADED_FILE} fd.item ("archive") as l_file then
-						iron.database.save_uploaded_package_archive (iron_version (req), p, l_file)
-					elseif attached {WSF_STRING} fd.item ("archive-url") as l_archive_url then
-						create cl_path.put (Void)
-						download (l_archive_url.url_encoded_value, cl_path, req)
-						if attached cl_path.item as l_downloaded_path then
-							iron.database.save_package_archive (iron_version (req), p, l_downloaded_path, False)
+						if attached {WSF_UPLOADED_FILE} fd.item ("archive") as l_file then
+							iron.database.save_uploaded_package_archive (iron_version (req), p, l_file)
+						elseif attached {WSF_STRING} fd.item ("archive-url") as l_archive_url then
+							create cl_path.put (Void)
+							download (l_archive_url.url_encoded_value, cl_path, req)
+							if attached cl_path.item as l_downloaded_path then
+								iron.database.save_package_archive (iron_version (req), p, l_downloaded_path, False)
+							end
 						end
 					end
+					m.set_title ("Package [" + p.id  + "]")
+					s.prepend ("<a href=%"" + req.script_url (iron.package_view_web_page (iron_version (req), p)) + "%">View package</a>")
+
+					m.set_location (req.absolute_script_url (iron.package_view_web_page (iron_version (req), p)))
+
+					m.set_body (s)
+					res.send (m)
+				else
+					res.send (create {IRON_REPO_HTML_RESPONSE}.make_not_permitted (req, iron))
 				end
-
-				m.set_title ("Package [" + p.id  + "]")
-				s.prepend ("<a href=%"" + req.script_url (iron.package_view_web_page (iron_version (req), p)) + "%">View package</a>")
-
-				m.set_location (req.absolute_script_url (iron.package_view_web_page (iron_version (req), p)))
-
-				m.set_body (s)
-				res.send (m)
 			end
 		end
 
@@ -407,6 +421,25 @@ feature -- Factory
 				Result.add_menu ("List of packages", iron.package_list_web_page (iron_version (req)))
 				Result.add_menu ("New package", iron.package_create_web_page (iron_version (req)))
 			end
+		end
+
+	new_not_permitted_response_message (req: WSF_REQUEST): IRON_REPO_HTML_RESPONSE
+		do
+			Result := new_response_message (req)
+			Result.set_body ("Operation not permitted.")
+		end
+
+	new_not_found_response_message (req: WSF_REQUEST): IRON_REPO_HTML_RESPONSE
+		do
+			Result := new_response_message (req)
+			Result.set_body ("Resource not found.")
+		end
+
+feature {NONE} -- Implementation
+
+	url_encoder: URL_ENCODER
+		once
+			create Result
 		end
 
 end

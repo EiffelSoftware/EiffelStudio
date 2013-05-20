@@ -1,0 +1,4 @@
+h1 { border: solid 1px #00f; margin: 5px; padding: 5px; background-color: #009; color: #fff; margin: 10px;}
+form { border: solid 1px #999; margin: 20px; padding: 10px;}
+img { width: 60%; }
+img.hover { width: 100%; }

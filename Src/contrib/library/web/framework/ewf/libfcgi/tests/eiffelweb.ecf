@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="eiffelweb" uuid="6A03BC65-BD03-4B68-B51E-2543F9471D42">
+	<target name="eiffelweb">
+		<root cluster="application" class="APPLICATION_ROOT" feature="make"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="fcgi" location="..\libfcgi.ecf" readonly="false"/>
+		<cluster name="application" location=".\" recursive="true"/>
+	</target>
+</system>

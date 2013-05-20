@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="connector_cgi" uuid="D55DC7A7-AAFA-43C6-B432-A192FF64141E" library_target="connector_null">
+	<target name="connector_null">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>
+		<library name="http" location="../../../../../../network/protocol/http/http.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+</system>

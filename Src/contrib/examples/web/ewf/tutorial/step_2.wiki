@@ -1,0 +1,55 @@
+Back to the [[step_1.wiki|step 1]] 
+or go to [[step_3.wiki|step 3]]
+
+----
+
+= Tutorial Step 2 =
+* '''Goal''': Build a simple Hello World application
+* '''Requirements''': 
+** know how to compile with Eiffel (EiffelStudio).
+** [[step_1.wiki|Previous step]]  completed
+
+
+== "hello" project ==
+* using the "wsf" library:
+** It provides service, request, response, ...
+* using the "default_nino" library
+** This is used to build the application in a portable manner, but for this compilation, it uses Eiffel Web Nino as connector.
+** We use Eiffel Web Nino for this tutorial, because there is no need to configure any apache, iis, and so on. And it is convenient to execute inside EiffelStudio
+
+* To see the result, you should open http://localhost/ on your web browser. Note if the application is using another port such as 9999, you should open http://localhost:9999/
+
+* You will find inside [[step_2]] the "hello" project
+** target "hello" provides a very simple implementation (But by default, it is using port 80 with Eiffel Web Nino, which might already be busy by other application)
+** target "hello_custom" which uses almost the same code, but in addition, you can use the ewf.ini file to precise the port number (9999 for this example)
+
+* To see the result, open http://localhost/ in a web browser.
+* Note, if the application is using port different from 80, such as 9999, open http://localhost:9999/
+
+* Eiffel code
+ class
+     HELLO_APPLICATION
+ 
+ inherit
+     WSF_DEFAULT_RESPONSE_SERVICE
+ 
+ create
+     make_and_launch
+ 
+ feature {NONE} -- Initialization
+ 
+     response (req: WSF_REQUEST): WSF_PAGE_RESPONSE
+             -- Computed response message.
+         do
+             create Result.make
+             Result.put_string ("Hello World")
+         end
+ 
+ end
+
+
+----
+
+Back to the [[step_1.wiki|step 1]] 
+or go to [[step_3.wiki|step 3]]
+

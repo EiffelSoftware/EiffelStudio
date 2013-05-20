@@ -1,0 +1,148 @@
+body,h1,h2,h3,p,quote,small,form,input,ul,li,ol,label{
+	/* Simple page reset */
+	margin:0;
+	padding:0;
+}
+
+body{
+	/* Setting default text color, background and a font stack */
+	color:#cccccc;
+	font-size:0.825em;
+	background: url(img/background.jpg) no-repeat center top #252525;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+.menuUL li{
+	/* This will arrange the LI-s next to each other */
+	display:inline;
+}
+
+.menuUL li a,.menuUL li a:visited{
+	/* Styling the hyperlinks of the menu as buttons */
+	
+	float:left;
+	font-weight:bold;
+	background:url(img/button_bg.jpg) repeat-x center bottom #666666;
+	
+	/* display:block allows for additinal CSS rules to take effect, such as paddings: */
+	display:block;
+	border:1px solid #4D4D4D;
+	color:#CCCCCC;
+	border-top-color:#565656;
+	
+	padding:4px 6px;
+	margin:4px 5px;
+	height:16px;
+	
+	
+	/* Setting a CSS3 box shadow around the button */
+	
+	-moz-box-shadow:0 0 1px black;
+	-webkit-box-shadow:0 0 1px black;
+	box-shadow:0 0 1px black;
+	
+	/* CSS3 text shadow */
+	text-shadow:0 1px black;
+}
+
+.menuUL li a:hover{
+	/* On hover show the top, lighter, part of the background: */
+	background-position:center top;
+	text-decoration:none;
+}
+
+#navigation{
+	/* The navigation menu bar: */
+	background:#222222;
+	border:1px solid #111111;
+	float:left;
+	padding:5px 10px;
+}
+
+#navigation,.menuUL li a{
+	/* CSS3 rounded corners for both the navigation bar and the buttons: */
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	-khtml-border-radius:4px;
+	border-radius:4px;
+}
+
+#stage{
+	/* The stage contains the individual divs that comprise the halftone icon: */
+	height:300px;
+	position:absolute;
+	right:50px;
+	top:20px;
+	width:400px;
+}
+
+.dot{
+	/* The stage contains 192 .dot divs: */
+	float:left;
+	height:25px;
+	width:25px;
+}
+
+.dot.active{
+	/* When assigned the active class, the div shows a background image of a dot: */
+	background:url(img/dot.png) no-repeat center center;
+}
+
+.clear{
+	/* Old-school clear fix hack to clear the floats: */
+	clear:both;
+}
+
+#main{
+	margin:0 auto;
+	position:relative;
+	width:900px;
+}
+
+/* The styles below are only necessary for the demo page */
+
+h1{
+	background:#222222;
+	border-bottom:1px solid black;
+	font-size:1.5em;
+	font-weight:normal;
+	margin-bottom:15px;
+	padding:15px;
+	text-align:center;
+}
+
+h2 {
+	font-size:0.9em;
+	font-weight:normal;
+	padding-right:40px;
+	position:relative;
+	right:0;
+	text-align:right;
+	text-transform:uppercase;
+	top:-48px;
+}
+
+a, a:visited {
+	color:#0196e3;
+	text-decoration:none;
+	outline:none;
+}
+
+a:hover{
+	text-decoration:underline;
+}
+
+p.tutInfo{
+	/* The tutorial info on the bottom of the page */
+	padding:10px 0;
+	text-align:center;
+	position:absolute;
+	bottom:0px;
+	background:#222222;
+	border-top:1px solid black;
+	width:100%;
+}
+
+h1,h2,p.tutInfo{
+	font-family:"Myriad Pro",Arial,Helvetica,sans-serif;
+}

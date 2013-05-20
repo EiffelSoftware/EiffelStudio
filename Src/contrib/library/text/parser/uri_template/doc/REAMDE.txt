@@ -1,0 +1,5 @@
+Most recent http://code.google.com/p/uri-templates/source/browse/trunk
+
+wget http://tools.ietf.org/rfc/rfc6570.txt -O uritemplate-RFC6570
+
+# Check http://code.google.com/p/uri-templates/source/browse/trunk for work in progress

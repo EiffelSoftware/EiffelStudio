@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="wsf_openshift" uuid="39488429-3940-4360-9A32-FE53298C2CA2" library_target="wsf_openshift">
+	<target name="wsf_openshift">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="ewsgi" location="../../ewsgi/ewsgi-safe.ecf"/>
+		<library name="wsf" location="../wsf-safe.ecf"/>
+		<library name="wsf_connector_nino" location="nino-safe.ecf"/>
+		<cluster name="wsf_openshift" location="./openshift" recursive="true"/>
+	</target>
+</system>

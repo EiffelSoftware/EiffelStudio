@@ -1,0 +1,50 @@
+= How to configure FCGI =
+== Apache2/Windows ==
+* in apache2/conf/httpd.conf add 
+  LoadModule fcgid_module modules/mod_fcgid.so
+
+* and for instance, you can put the following code to test the tests/eiffelweb example
+ 
+  <IfModule mod_fcgid.c>
+   FcgidIdleTimeout 60
+   FcgidBusyScanInterval 120
+   FcgidProcessLifeTime 1600 
+   #7200
+   FcgidMaxProcesses 5
+   FcgidMaxProcessesPerClass 100
+   FcgidMinProcessesPerClass 100
+   FcgidConnectTimeout 8
+   FcgidIOTimeout 3000
+   FcgidBusyTimeout 3200
+   FcgidPassHeader Authorization 
+
+   
+   alias /eiffelweb/ "c:/_dev/EiffelWebReloaded/library/fcgi/tests/EIFGENs/eiffelweb/W_code/"
+   <Location /eiffelweb/>
+     AddHandler fcgid-script .exe
+     Options Indexes FollowSymLinks ExecCGI 
+     
+     Order allow,deny
+     Allow from all
+   </Location>
+  </IfModule>
+
+
+== IIS/Windows ==
+* When you install IIS on Windows 7, you just need to enable to CGI module which also include the FastCGI module
+* otherwise, have a look at http://www.iis.net/download/FastCGI and also http://learn.iis.net/page.aspx/375/set-up-fastcgi-for-php/
+* Then open the IIS Manager
+  Modules: to check you really have FastCGIModule
+  Handler Mappings and then "Add Module Mapping"
+     Request path: *.exe
+     Module: FastCgiModule
+     Executable (optional): c:\_dev\EiffelWebReloaded\library\fcgi\tests\EIFGENs\eiffelweb\W_code\eiffelweb.exe
+     Name: Eiffel Web Solution using FastCGI on IIS
+	
+
+= Notes =
+* The notes in this readme are very basic, mainly to test your executable. 
+* You will need to configure more precisely your httpd server to fulfill your needs
+
+== for execution ==
+* On Windows, be sure to have the libfcgi.dll in your path (or in same folder as executable)

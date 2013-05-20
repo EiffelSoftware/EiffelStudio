@@ -1,0 +1,5747 @@
+diff -Nrub fcgi-2.4.0/README.win64 fcgi-2.4.0-x64/README.win64
+--- fcgi-2.4.0/README.win64	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/README.win64	2009-07-02 13:59:42.136851000 +0900
+@@ -0,0 +1,83 @@
++ChangeLog from 2.4.0 to 2.4.0-x64:
++
++* Fixed to support 64bit build of library and sample executables for Windows.
++* Fixed socklen_t detection failure problem in configure script for Linux.
++
++
++What we've done to support 64bit build:
++
++* Converted Win32/*.{dsw,dsp} files to Win32/*.{sln,vcproj} files
++  (Visual Studio 2008 solution/project files).
++* Added platform "x64" for Visual Studio solution.
++* Fixed type size problem (pointer, size_t, etc.)
++  to support both 32/64 bit build
++  using intptr_t, uintptr_t, and so on.
++* Fixed to check range of each numeric variable with ASSERT()
++  before using type cast for demotion(narrowing).
++* Replaced several standard functions to recommended ones.
++  getpid() --> _getpid(), and so on.
++* Fixed several functions to support both 32/64 bit build.
++  AlignInt8(), AlignPtr8(), and so on.
++* Removed almost all build warnings on Visual Studio 2008.
++  with PreprocessorDefinitions:
++  _SCL_SECURE_NO_WARNINGS and _CRT_SECURE_NO_WARNINGS.
++* Removed almost all build warnings on Linux.
++
++
++Current status:
++
++* Tested the patch on Windows Server 2008 SP1 (64bit).
++  with apache httpd 2.2.10 (32bit) and mod_fastcgi-SNAP-0811090952.
++  Both 32/64 bit sample executables are working.
++  We could not build and test two samples: threaded and log-dump.
++* Tested the patch on CentOS 5.3 (64bit) with gcc-4.3.3.
++  For 32bit build, we used gcc -m32 option.
++  Both 32/64 bit sample executables are working except log-dump.
++  We could not find out the usage of log-dump
++  so that we could not test it.
++
++
++How to build:
++
++1. For Windows
++
++1-1. Extract fastcgi-2.4.0.tar.gz
++
++> tar xzf fastcgi-2.4.0.tar.gz
++
++1-2. Apply this fastcgi-2.4.0-x64.patch
++
++> cd fastcgi-2.4.0
++> patch -p1 < ../fastcgi-2.4.0-x64.patch
++
++1-3. Open fastcgi-2.4.0/Win32/FastCGI.sln with Visual Studio 2008 and build.
++
++Debug and Release build on Win32 and x64 are supported.
++
++Build with 'nmake' is not supported, since we could not find out
++suitable project converter and we can use 'devenv' command line instead.
++
++
++2. For Linux
++
++2-1. Do the same process as (1-1).
++2-2. Do the same process as (1-2).
++
++2-3. Remake configure script.
++
++> libtoolize -c -f
++> aclocal
++> autoheader
++> automake -a -c -f
++> autoconf
++
++2-4. Configure and make
++
++> ./configure
++> make
++> make install
++
++If you need, NDEBUG preprocessor definition should be specified
++to eliminate ASSERT check for release build.
++
++
+diff -Nrub fcgi-2.4.0/Win32/FastCGI.sln fcgi-2.4.0-x64/Win32/FastCGI.sln
+--- fcgi-2.4.0/Win32/FastCGI.sln	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/FastCGI.sln	2009-07-02 13:59:25.506079500 +0900
+@@ -0,0 +1,122 @@
++﻿
++Microsoft Visual Studio Solution File, Format Version 10.00
++# Visual Studio 2008
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "authorizer", "authorizer.vcproj", "{239D906A-62A8-469E-92DF-56905B8E69A1}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgifcgi", "cgifcgi.vcproj", "{C344735B-630F-4D1F-BB09-251C462ADA64}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo", "echo.vcproj", "{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo_cpp", "echo-cpp.vcproj", "{66A92564-9D0C-485E-BF22-8CE643C37E6C}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echox", "echox.vcproj", "{81E2800A-94C3-403C-BD72-D544CA6E19D1}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libfcgi", "libfcgi.vcproj", "{F162F443-9841-498C-8476-42034E8A60CE}"
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "logdump", "logdump.vcproj", "{9A4F793B-B2C7-428A-BB41-10D9DA3E1741}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "size", "size.vcproj", "{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "threaded", "threaded.vcproj", "{0133C5DE-15A5-44FB-8457-964980A6C3F6}"
++	ProjectSection(ProjectDependencies) = postProject
++		{F162F443-9841-498C-8476-42034E8A60CE} = {F162F443-9841-498C-8476-42034E8A60CE}
++	EndProjectSection
++EndProject
++Global
++	GlobalSection(SolutionConfigurationPlatforms) = preSolution
++		Debug|Win32 = Debug|Win32
++		Debug|x64 = Debug|x64
++		Release|Win32 = Release|Win32
++		Release|x64 = Release|x64
++	EndGlobalSection
++	GlobalSection(ProjectConfigurationPlatforms) = postSolution
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Debug|Win32.ActiveCfg = Debug|Win32
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Debug|Win32.Build.0 = Debug|Win32
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Debug|x64.ActiveCfg = Debug|x64
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Debug|x64.Build.0 = Debug|x64
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Release|Win32.ActiveCfg = Release|Win32
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Release|Win32.Build.0 = Release|Win32
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Release|x64.ActiveCfg = Release|x64
++		{239D906A-62A8-469E-92DF-56905B8E69A1}.Release|x64.Build.0 = Release|x64
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Debug|Win32.ActiveCfg = Debug|Win32
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Debug|Win32.Build.0 = Debug|Win32
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Debug|x64.ActiveCfg = Debug|x64
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Debug|x64.Build.0 = Debug|x64
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Release|Win32.ActiveCfg = Release|Win32
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Release|Win32.Build.0 = Release|Win32
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Release|x64.ActiveCfg = Release|x64
++		{C344735B-630F-4D1F-BB09-251C462ADA64}.Release|x64.Build.0 = Release|x64
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Debug|Win32.ActiveCfg = Debug|Win32
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Debug|Win32.Build.0 = Debug|Win32
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Debug|x64.ActiveCfg = Debug|x64
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Debug|x64.Build.0 = Debug|x64
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Release|Win32.ActiveCfg = Release|Win32
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Release|Win32.Build.0 = Release|Win32
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Release|x64.ActiveCfg = Release|x64
++		{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}.Release|x64.Build.0 = Release|x64
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Debug|Win32.ActiveCfg = Debug|Win32
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Debug|Win32.Build.0 = Debug|Win32
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Debug|x64.ActiveCfg = Debug|x64
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Debug|x64.Build.0 = Debug|x64
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Release|Win32.ActiveCfg = Release|Win32
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Release|Win32.Build.0 = Release|Win32
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Release|x64.ActiveCfg = Release|x64
++		{66A92564-9D0C-485E-BF22-8CE643C37E6C}.Release|x64.Build.0 = Release|x64
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Debug|Win32.ActiveCfg = Debug|Win32
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Debug|Win32.Build.0 = Debug|Win32
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Debug|x64.ActiveCfg = Debug|x64
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Debug|x64.Build.0 = Debug|x64
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Release|Win32.ActiveCfg = Release|Win32
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Release|Win32.Build.0 = Release|Win32
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Release|x64.ActiveCfg = Release|x64
++		{81E2800A-94C3-403C-BD72-D544CA6E19D1}.Release|x64.Build.0 = Release|x64
++		{F162F443-9841-498C-8476-42034E8A60CE}.Debug|Win32.ActiveCfg = Debug|Win32
++		{F162F443-9841-498C-8476-42034E8A60CE}.Debug|Win32.Build.0 = Debug|Win32
++		{F162F443-9841-498C-8476-42034E8A60CE}.Debug|x64.ActiveCfg = Debug|x64
++		{F162F443-9841-498C-8476-42034E8A60CE}.Debug|x64.Build.0 = Debug|x64
++		{F162F443-9841-498C-8476-42034E8A60CE}.Release|Win32.ActiveCfg = Release|Win32
++		{F162F443-9841-498C-8476-42034E8A60CE}.Release|Win32.Build.0 = Release|Win32
++		{F162F443-9841-498C-8476-42034E8A60CE}.Release|x64.ActiveCfg = Release|x64
++		{F162F443-9841-498C-8476-42034E8A60CE}.Release|x64.Build.0 = Release|x64
++		{9A4F793B-B2C7-428A-BB41-10D9DA3E1741}.Debug|Win32.ActiveCfg = Debug|Win32
++		{9A4F793B-B2C7-428A-BB41-10D9DA3E1741}.Debug|x64.ActiveCfg = Debug|x64
++		{9A4F793B-B2C7-428A-BB41-10D9DA3E1741}.Release|Win32.ActiveCfg = Release|Win32
++		{9A4F793B-B2C7-428A-BB41-10D9DA3E1741}.Release|x64.ActiveCfg = Release|x64
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Debug|Win32.ActiveCfg = Debug|Win32
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Debug|Win32.Build.0 = Debug|Win32
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Debug|x64.ActiveCfg = Debug|x64
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Debug|x64.Build.0 = Debug|x64
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Release|Win32.ActiveCfg = Release|Win32
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Release|Win32.Build.0 = Release|Win32
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Release|x64.ActiveCfg = Release|x64
++		{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}.Release|x64.Build.0 = Release|x64
++		{0133C5DE-15A5-44FB-8457-964980A6C3F6}.Debug|Win32.ActiveCfg = Debug|Win32
++		{0133C5DE-15A5-44FB-8457-964980A6C3F6}.Debug|x64.ActiveCfg = Debug|x64
++		{0133C5DE-15A5-44FB-8457-964980A6C3F6}.Release|Win32.ActiveCfg = Release|Win32
++		{0133C5DE-15A5-44FB-8457-964980A6C3F6}.Release|x64.ActiveCfg = Release|x64
++	EndGlobalSection
++	GlobalSection(SolutionProperties) = preSolution
++		HideSolutionNode = FALSE
++	EndGlobalSection
++EndGlobal
+diff -Nrub fcgi-2.4.0/Win32/authorizer.vcproj fcgi-2.4.0-x64/Win32/authorizer.vcproj
+--- fcgi-2.4.0/Win32/authorizer.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/authorizer.vcproj	2009-07-02 13:59:25.509009000 +0900
+@@ -0,0 +1,458 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="authorizer"
++	ProjectGUID="{239D906A-62A8-469E-92DF-56905B8E69A1}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\examples\authorizer\Release"
++			IntermediateDirectory=".\..\examples\authorizer\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples\authorizer\Release/authorizer.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\authorizer\Release/authorizer.pch"
++				AssemblerListingLocation=".\..\examples\authorizer\Release/"
++				ObjectFile=".\..\examples\authorizer\Release/"
++				ProgramDataBaseFileName=".\..\examples\authorizer\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\authorizer\Release/authorizer.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\authorizer\Release/authorizer.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples\authorizer\Release/authorizer.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\authorizer\Release/authorizer.pch"
++				AssemblerListingLocation=".\..\examples\authorizer\Release/"
++				ObjectFile=".\..\examples\authorizer\Release/"
++				ProgramDataBaseFileName=".\..\examples\authorizer\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\authorizer\Release/authorizer.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\authorizer\Release/authorizer.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\..\examples/authorizer/Debug"
++			IntermediateDirectory=".\..\examples/authorizer/Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples/authorizer/Debug/authorizer.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\..\examples/authorizer/Debug/authorizer.pch"
++				AssemblerListingLocation=".\..\examples/authorizer/Debug/"
++				ObjectFile=".\..\examples/authorizer/Debug/"
++				ProgramDataBaseFileName=".\..\examples/authorizer/Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples/authorizer/Debug/authorizer.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\..\examples/authorizer/Debug/authorizer.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples/authorizer/Debug/authorizer.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples/authorizer/Debug/authorizer.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\..\examples/authorizer/Debug/authorizer.pch"
++				AssemblerListingLocation=".\..\examples/authorizer/Debug/"
++				ObjectFile=".\..\examples/authorizer/Debug/"
++				ProgramDataBaseFileName=".\..\examples/authorizer/Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples/authorizer/Debug/authorizer.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\..\examples/authorizer/Debug/authorizer.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples/authorizer/Debug/authorizer.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\examples\authorizer.c"
++				>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/cgifcgi.vcproj fcgi-2.4.0-x64/Win32/cgifcgi.vcproj
+--- fcgi-2.4.0/Win32/cgifcgi.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/cgifcgi.vcproj	2009-07-02 13:59:25.511938500 +0900
+@@ -0,0 +1,458 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="cgifcgi"
++	ProjectGUID="{C344735B-630F-4D1F-BB09-251C462ADA64}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\cgi-fcgi\Release"
++			IntermediateDirectory=".\..\cgi-fcgi\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\cgi-fcgi\Release/cgifcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\cgi-fcgi\Release/cgifcgi.pch"
++				AssemblerListingLocation=".\..\cgi-fcgi\Release/"
++				ObjectFile=".\..\cgi-fcgi\Release/"
++				ProgramDataBaseFileName=".\..\cgi-fcgi\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\cgi-fcgi\Release\cgi-fcgi.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\cgi-fcgi\Release/cgifcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\cgi-fcgi\Release/cgifcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\cgi-fcgi\Release/cgifcgi.pch"
++				AssemblerListingLocation=".\..\cgi-fcgi\Release/"
++				ObjectFile=".\..\cgi-fcgi\Release/"
++				ProgramDataBaseFileName=".\..\cgi-fcgi\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\cgi-fcgi\Release\cgi-fcgi.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\cgi-fcgi\Release/cgifcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\../cgi-fcgi/Debug"
++			IntermediateDirectory=".\../cgi-fcgi/Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\../cgi-fcgi/Debug/cgifcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../cgi-fcgi/Debug/cgifcgi.pch"
++				AssemblerListingLocation=".\../cgi-fcgi/Debug/"
++				ObjectFile=".\../cgi-fcgi/Debug/"
++				ProgramDataBaseFileName=".\../cgi-fcgi/Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\cgi-fcgi\Debug\cgi-fcgi.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../cgi-fcgi/Debug/cgi-fcgi.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../cgi-fcgi/Debug/cgifcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\../cgi-fcgi/Debug/cgifcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../cgi-fcgi/Debug/cgifcgi.pch"
++				AssemblerListingLocation=".\../cgi-fcgi/Debug/"
++				ObjectFile=".\../cgi-fcgi/Debug/"
++				ProgramDataBaseFileName=".\../cgi-fcgi/Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\cgi-fcgi\Debug\cgi-fcgi.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../cgi-fcgi/Debug/cgi-fcgi.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../cgi-fcgi/Debug/cgifcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\cgi-fcgi\cgi-fcgi.c"
++				>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/echo-cpp.vcproj fcgi-2.4.0-x64/Win32/echo-cpp.vcproj
+--- fcgi-2.4.0/Win32/echo-cpp.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/echo-cpp.vcproj	2009-07-02 13:59:25.513891500 +0900
+@@ -0,0 +1,458 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="echo_cpp"
++	ProjectGUID="{66A92564-9D0C-485E-BF22-8CE643C37E6C}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\../examples/echo-cpp\Debug"
++			IntermediateDirectory=".\../examples/echo-cpp\Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\../examples/echo-cpp\Debug/echo-cpp.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/echo-cpp\Debug/echo-cpp.pch"
++				AssemblerListingLocation=".\../examples/echo-cpp\Debug/"
++				ObjectFile=".\../examples/echo-cpp\Debug/"
++				ProgramDataBaseFileName=".\../examples/echo-cpp\Debug/"
++				BrowseInformation="1"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\../examples/echo-cpp\Debug/echo-cpp.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/echo-cpp\Debug/echo-cpp.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/echo-cpp\Debug/echo-cpp.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\../examples/echo-cpp\Debug/echo-cpp.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/echo-cpp\Debug/echo-cpp.pch"
++				AssemblerListingLocation=".\../examples/echo-cpp\Debug/"
++				ObjectFile=".\../examples/echo-cpp\Debug/"
++				ProgramDataBaseFileName=".\../examples/echo-cpp\Debug/"
++				BrowseInformation="1"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\../examples/echo-cpp\Debug/echo-cpp.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/echo-cpp\Debug/echo-cpp.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/echo-cpp\Debug/echo-cpp.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\examples\echo-cpp\Release"
++			IntermediateDirectory=".\..\examples\echo-cpp\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples\echo-cpp\Release/echo-cpp.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\echo-cpp\Release/echo-cpp.pch"
++				AssemblerListingLocation=".\..\examples\echo-cpp\Release/"
++				ObjectFile=".\..\examples\echo-cpp\Release/"
++				ProgramDataBaseFileName=".\..\examples\echo-cpp\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\echo-cpp\Release/echo-cpp.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\echo-cpp\Release/echo-cpp.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples\echo-cpp\Release/echo-cpp.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\echo-cpp\Release/echo-cpp.pch"
++				AssemblerListingLocation=".\..\examples\echo-cpp\Release/"
++				ObjectFile=".\..\examples\echo-cpp\Release/"
++				ProgramDataBaseFileName=".\..\examples\echo-cpp\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\echo-cpp\Release/echo-cpp.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\echo-cpp\Release/echo-cpp.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\examples\echo-cpp.cpp"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/echo.vcproj fcgi-2.4.0-x64/Win32/echo.vcproj
+--- fcgi-2.4.0/Win32/echo.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/echo.vcproj	2009-07-02 13:59:25.515844500 +0900
+@@ -0,0 +1,462 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="echo"
++	ProjectGUID="{55EAF1D1-E623-44E9-AE25-A7C170BE2D32}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\examples\echo\Release"
++			IntermediateDirectory=".\..\examples\echo\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples\echo\Release/echo.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\echo\Release/echo.pch"
++				AssemblerListingLocation=".\..\examples\echo\Release/"
++				ObjectFile=".\..\examples\echo\Release/"
++				ProgramDataBaseFileName=".\..\examples\echo\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\echo\Release/echo.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\echo\Release/echo.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples\echo\Release/echo.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\echo\Release/echo.pch"
++				AssemblerListingLocation=".\..\examples\echo\Release/"
++				ObjectFile=".\..\examples\echo\Release/"
++				ProgramDataBaseFileName=".\..\examples\echo\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\echo\Release/echo.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\echo\Release/echo.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\../examples/echo\Debug"
++			IntermediateDirectory=".\../examples/echo\Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\../examples/echo\Debug/echo.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/echo\Debug/echo.pch"
++				AssemblerListingLocation=".\../examples/echo\Debug/"
++				ObjectFile=".\../examples/echo\Debug/"
++				ProgramDataBaseFileName=".\../examples/echo\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\../examples/echo\Debug/echo.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/echo\Debug/echo.pdb"
++				GenerateMapFile="true"
++				MapFileName=".\../examples/echo\Debug/echo.map"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/echo\Debug/echo.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\../examples/echo\Debug/echo.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/echo\Debug/echo.pch"
++				AssemblerListingLocation=".\../examples/echo\Debug/"
++				ObjectFile=".\../examples/echo\Debug/"
++				ProgramDataBaseFileName=".\../examples/echo\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\../examples/echo\Debug/echo.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/echo\Debug/echo.pdb"
++				GenerateMapFile="true"
++				MapFileName=".\../examples/echo\Debug/echo.map"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/echo\Debug/echo.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\examples\echo.c"
++				>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/echox.vcproj fcgi-2.4.0-x64/Win32/echox.vcproj
+--- fcgi-2.4.0/Win32/echox.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/echox.vcproj	2009-07-02 13:59:25.518774000 +0900
+@@ -0,0 +1,458 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="echox"
++	ProjectGUID="{81E2800A-94C3-403C-BD72-D544CA6E19D1}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\examples\echo-x\Release"
++			IntermediateDirectory=".\..\examples\echo-x\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples\echo-x\Release/echox.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\echo-x\Release/echox.pch"
++				AssemblerListingLocation=".\..\examples\echo-x\Release/"
++				ObjectFile=".\..\examples\echo-x\Release/"
++				ProgramDataBaseFileName=".\..\examples\echo-x\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\echo-x\Release\echo-x.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\echo-x\Release/echox.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples\echo-x\Release/echox.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\echo-x\Release/echox.pch"
++				AssemblerListingLocation=".\..\examples\echo-x\Release/"
++				ObjectFile=".\..\examples\echo-x\Release/"
++				ProgramDataBaseFileName=".\..\examples\echo-x\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\echo-x\Release\echo-x.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\echo-x\Release/echox.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\../examples/echo-x\Debug"
++			IntermediateDirectory=".\../examples/echo-x\Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\../examples/echo-x\Debug/echox.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/echo-x\Debug/echox.pch"
++				AssemblerListingLocation=".\../examples/echo-x\Debug/"
++				ObjectFile=".\../examples/echo-x\Debug/"
++				ProgramDataBaseFileName=".\../examples/echo-x\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\echo-x\Debug\echo-x.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/echo-x\Debug/echo-x.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/echo-x\Debug/echox.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\../examples/echo-x\Debug/echox.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/echo-x\Debug/echox.pch"
++				AssemblerListingLocation=".\../examples/echo-x\Debug/"
++				ObjectFile=".\../examples/echo-x\Debug/"
++				ProgramDataBaseFileName=".\../examples/echo-x\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\echo-x\Debug\echo-x.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/echo-x\Debug/echo-x.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/echo-x\Debug/echox.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\examples\echo-x.c"
++				>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/libfcgi.vcproj fcgi-2.4.0-x64/Win32/libfcgi.vcproj
+--- fcgi-2.4.0/Win32/libfcgi.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/libfcgi.vcproj	2009-07-02 13:59:25.521703500 +0900
+@@ -0,0 +1,712 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="libfcgi"
++	ProjectGUID="{F162F443-9841-498C-8476-42034E8A60CE}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\..\libfcgi\Debug"
++			IntermediateDirectory=".\..\libfcgi\Debug"
++			ConfigurationType="2"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++				CommandLine="copy ..\include\fcgi_config_x86.h ..\include\fcgi_config.h"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\libfcgi\Debug/libfcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;WIN32;_CONSOLE;LIBFCGI_EXPORTS;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\..\libfcgi\Debug/libfcgi.pch"
++				AssemblerListingLocation=".\..\libfcgi\Debug/"
++				ObjectFile=".\..\libfcgi\Debug/"
++				ProgramDataBaseFileName=".\..\libfcgi\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="Ws2_32.lib"
++				OutputFile=".\..\libfcgi\Debug/libfcgi.dll"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\..\libfcgi\Debug/libfcgi.pdb"
++				GenerateMapFile="true"
++				MapFileName=".\..\libfcgi\Debug/libfcgi.map"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				ImportLibrary=".\..\libfcgi\Debug/libfcgi.lib"
++				TargetMachine="1"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\libfcgi\Debug/libfcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="2"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++				CommandLine="copy ..\include\fcgi_config_x86.h ..\include\fcgi_config.h"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\libfcgi\Debug/libfcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;WIN32;_CONSOLE;LIBFCGI_EXPORTS;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\..\libfcgi\Debug/libfcgi.pch"
++				AssemblerListingLocation=".\..\libfcgi\Debug/"
++				ObjectFile=".\..\libfcgi\Debug/"
++				ProgramDataBaseFileName=".\..\libfcgi\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="Ws2_32.lib"
++				OutputFile=".\..\libfcgi\Debug/libfcgi.dll"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\..\libfcgi\Debug/libfcgi.pdb"
++				GenerateMapFile="true"
++				MapFileName=".\..\libfcgi\Debug/libfcgi.map"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				ImportLibrary=".\..\libfcgi\Debug/libfcgi.lib"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\libfcgi\Debug/libfcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\libfcgi\Release"
++			IntermediateDirectory=".\..\libfcgi\Release"
++			ConfigurationType="2"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++				CommandLine="copy ..\include\fcgi_config_x86.h ..\include\fcgi_config.h"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\libfcgi\Release/libfcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;NDEBUG;WIN32;_CONSOLE;LIBFCGI_EXPORTS;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\libfcgi\Release/libfcgi.pch"
++				AssemblerListingLocation=".\..\libfcgi\Release/"
++				ObjectFile=".\..\libfcgi\Release/"
++				ProgramDataBaseFileName=".\..\libfcgi\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="Ws2_32.lib"
++				OutputFile=".\..\libfcgi\Release/libfcgi.dll"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				GenerateDebugInformation="true"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				ImportLibrary=".\..\libfcgi\Release/libfcgi.lib"
++				TargetMachine="1"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\libfcgi\Release/libfcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="2"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++				CommandLine="copy ..\include\fcgi_config_x86.h ..\include\fcgi_config.h"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\libfcgi\Release/libfcgi.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;NDEBUG;WIN32;_CONSOLE;LIBFCGI_EXPORTS;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\libfcgi\Release/libfcgi.pch"
++				AssemblerListingLocation=".\..\libfcgi\Release/"
++				ObjectFile=".\..\libfcgi\Release/"
++				ProgramDataBaseFileName=".\..\libfcgi\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="Ws2_32.lib"
++				OutputFile=".\..\libfcgi\Release/libfcgi.dll"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				GenerateDebugInformation="true"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				ImportLibrary=".\..\libfcgi\Release/libfcgi.lib"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\libfcgi\Release/libfcgi.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\libfcgi\fcgi_stdio.c"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++			<File
++				RelativePath="..\libfcgi\fcgiapp.c"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++			<File
++				RelativePath="..\libfcgi\fcgio.cpp"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++						WarningLevel="3"
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++						WarningLevel="3"
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++			<File
++				RelativePath="..\libfcgi\os_unix.c"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++			<File
++				RelativePath="..\libfcgi\os_win32.c"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++			<File
++				RelativePath="..\libfcgi\strerror.c"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++			<File
++				RelativePath="..\include\fastcgi.h"
++				>
++			</File>
++			<File
++				RelativePath="..\include\fcgi_config.h"
++				>
++			</File>
++			<File
++				RelativePath="..\include\fcgi_config_x86.h"
++				>
++			</File>
++			<File
++				RelativePath="..\include\fcgi_stdio.h"
++				>
++			</File>
++			<File
++				RelativePath="..\include\fcgiapp.h"
++				>
++			</File>
++			<File
++				RelativePath="..\include\fcgimisc.h"
++				>
++			</File>
++			<File
++				RelativePath="..\include\fcgio.h"
++				>
++			</File>
++			<File
++				RelativePath="..\include\fcgios.h"
++				>
++			</File>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/logdump.vcproj fcgi-2.4.0-x64/Win32/logdump.vcproj
+--- fcgi-2.4.0/Win32/logdump.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/logdump.vcproj	2009-07-02 13:59:25.523656500 +0900
+@@ -0,0 +1,462 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="logdump"
++	ProjectGUID="{9A4F793B-B2C7-428A-BB41-10D9DA3E1741}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\examples\log-dump\Release"
++			IntermediateDirectory=".\..\examples\log-dump\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples\log-dump\Release/logdump.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\log-dump\Release/logdump.pch"
++				AssemblerListingLocation=".\..\examples\log-dump\Release/"
++				ObjectFile=".\..\examples\log-dump\Release/"
++				ProgramDataBaseFileName=".\..\examples\log-dump\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\log-dump\Release\log-dump.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\log-dump\Release/logdump.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples\log-dump\Release/logdump.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\log-dump\Release/logdump.pch"
++				AssemblerListingLocation=".\..\examples\log-dump\Release/"
++				ObjectFile=".\..\examples\log-dump\Release/"
++				ProgramDataBaseFileName=".\..\examples\log-dump\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\log-dump\Release\log-dump.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\log-dump\Release/logdump.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\../examples/log-dump\Debug"
++			IntermediateDirectory=".\../examples/log-dump\Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\../examples/log-dump\Debug/logdump.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/log-dump\Debug/logdump.pch"
++				AssemblerListingLocation=".\../examples/log-dump\Debug/"
++				ObjectFile=".\../examples/log-dump\Debug/"
++				ProgramDataBaseFileName=".\../examples/log-dump\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\log-dump\Debug\log-dump.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/log-dump\Debug/log-dump.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/log-dump\Debug/logdump.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\../examples/log-dump\Debug/logdump.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/log-dump\Debug/logdump.pch"
++				AssemblerListingLocation=".\../examples/log-dump\Debug/"
++				ObjectFile=".\../examples/log-dump\Debug/"
++				ProgramDataBaseFileName=".\../examples/log-dump\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile="..\examples\log-dump\Debug\log-dump.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/log-dump\Debug/log-dump.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/log-dump\Debug/logdump.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\examples\log-dump.c"
++				>
++				<FileConfiguration
++					Name="Release|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/size.vcproj fcgi-2.4.0-x64/Win32/size.vcproj
+--- fcgi-2.4.0/Win32/size.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/size.vcproj	2009-07-02 13:59:25.525609500 +0900
+@@ -0,0 +1,458 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="size"
++	ProjectGUID="{9B8472A2-3CB4-449B-AEB4-DD185BD2494E}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\../examples/size\Debug"
++			IntermediateDirectory=".\../examples/size\Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\../examples/size\Debug/size.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/size\Debug/size.pch"
++				AssemblerListingLocation=".\../examples/size\Debug/"
++				ObjectFile=".\../examples/size\Debug/"
++				ProgramDataBaseFileName=".\../examples/size\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\../examples/size\Debug/size.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/size\Debug/size.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/size\Debug/size.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\../examples/size\Debug/size.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\../examples/size\Debug/size.pch"
++				AssemblerListingLocation=".\../examples/size\Debug/"
++				ObjectFile=".\../examples/size\Debug/"
++				ProgramDataBaseFileName=".\../examples/size\Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\../examples/size\Debug/size.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\../examples/size\Debug/size.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\../examples/size\Debug/size.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\examples\size\Release"
++			IntermediateDirectory=".\..\examples\size\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples\size\Release/size.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\size\Release/size.pch"
++				AssemblerListingLocation=".\..\examples\size\Release/"
++				ObjectFile=".\..\examples\size\Release/"
++				ProgramDataBaseFileName=".\..\examples\size\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\size\Release/size.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\size\Release/size.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples\size\Release/size.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\size\Release/size.pch"
++				AssemblerListingLocation=".\..\examples\size\Release/"
++				ObjectFile=".\..\examples\size\Release/"
++				ProgramDataBaseFileName=".\..\examples\size\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\size\Release/size.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\size\Release/size.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\examples\size.c"
++				>
++				<FileConfiguration
++					Name="Debug|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|Win32"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/Win32/threaded.vcproj fcgi-2.4.0-x64/Win32/threaded.vcproj
+--- fcgi-2.4.0/Win32/threaded.vcproj	1970-01-01 09:00:00.000000000 +0900
++++ fcgi-2.4.0-x64/Win32/threaded.vcproj	2009-07-02 13:59:25.528539000 +0900
+@@ -0,0 +1,462 @@
++<?xml version="1.0" encoding="shift_jis"?>
++<VisualStudioProject
++	ProjectType="Visual C++"
++	Version="9.00"
++	Name="threaded"
++	ProjectGUID="{0133C5DE-15A5-44FB-8457-964980A6C3F6}"
++	TargetFrameworkVersion="0"
++	>
++	<Platforms>
++		<Platform
++			Name="Win32"
++		/>
++		<Platform
++			Name="x64"
++		/>
++	</Platforms>
++	<ToolFiles>
++	</ToolFiles>
++	<Configurations>
++		<Configuration
++			Name="Release|Win32"
++			OutputDirectory=".\..\examples\threaded\Release"
++			IntermediateDirectory=".\..\examples\threaded\Release"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples\threaded\Release/threaded.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\threaded\Release/threaded.pch"
++				AssemblerListingLocation=".\..\examples\threaded\Release/"
++				ObjectFile=".\..\examples\threaded\Release/"
++				ProgramDataBaseFileName=".\..\examples\threaded\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\threaded\Release/threaded.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\threaded\Release/threaded.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Release|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="NDEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples\threaded\Release/threaded.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="2"
++				InlineFunctionExpansion="2"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;NDEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501;_SECURE_SCL=0"
++				StringPooling="true"
++				RuntimeLibrary="2"
++				EnableFunctionLevelLinking="true"
++				PrecompiledHeaderFile=".\..\examples\threaded\Release/threaded.pch"
++				AssemblerListingLocation=".\..\examples\threaded\Release/"
++				ObjectFile=".\..\examples\threaded\Release/"
++				ProgramDataBaseFileName=".\..\examples\threaded\Release/"
++				WarningLevel="3"
++				SuppressStartupBanner="true"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="NDEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples\threaded\Release/threaded.exe"
++				LinkIncremental="1"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Release"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples\threaded\Release/threaded.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|Win32"
++			OutputDirectory=".\..\examples/threaded/Debug"
++			IntermediateDirectory=".\..\examples/threaded/Debug"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="1"
++				TypeLibraryName=".\..\examples/threaded/Debug/threaded.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\..\examples/threaded/Debug/threaded.pch"
++				AssemblerListingLocation=".\..\examples/threaded/Debug/"
++				ObjectFile=".\..\examples/threaded/Debug/"
++				ProgramDataBaseFileName=".\..\examples/threaded/Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="4"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples/threaded/Debug/threaded.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\..\examples/threaded/Debug/threaded.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples/threaded/Debug/threaded.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++		<Configuration
++			Name="Debug|x64"
++			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
++			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
++			ConfigurationType="1"
++			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
++			UseOfMFC="0"
++			ATLMinimizesCRunTimeLibraryUsage="false"
++			CharacterSet="2"
++			>
++			<Tool
++				Name="VCPreBuildEventTool"
++			/>
++			<Tool
++				Name="VCCustomBuildTool"
++			/>
++			<Tool
++				Name="VCXMLDataGeneratorTool"
++			/>
++			<Tool
++				Name="VCWebServiceProxyGeneratorTool"
++			/>
++			<Tool
++				Name="VCMIDLTool"
++				PreprocessorDefinitions="_DEBUG"
++				MkTypLibCompatible="true"
++				SuppressStartupBanner="true"
++				TargetEnvironment="3"
++				TypeLibraryName=".\..\examples/threaded/Debug/threaded.tlb"
++				HeaderFileName=""
++			/>
++			<Tool
++				Name="VCCLCompilerTool"
++				Optimization="0"
++				AdditionalIncludeDirectories="..\include"
++				PreprocessorDefinitions="_WIN64;WIN32;_DEBUG;_CONSOLE;WINVER=0x501;_WIN32_WINNT=0x501"
++				MinimalRebuild="true"
++				BasicRuntimeChecks="3"
++				RuntimeLibrary="3"
++				PrecompiledHeaderFile=".\..\examples/threaded/Debug/threaded.pch"
++				AssemblerListingLocation=".\..\examples/threaded/Debug/"
++				ObjectFile=".\..\examples/threaded/Debug/"
++				ProgramDataBaseFileName=".\..\examples/threaded/Debug/"
++				BrowseInformation="1"
++				WarningLevel="4"
++				SuppressStartupBanner="true"
++				DebugInformationFormat="3"
++			/>
++			<Tool
++				Name="VCManagedResourceCompilerTool"
++			/>
++			<Tool
++				Name="VCResourceCompilerTool"
++				PreprocessorDefinitions="_DEBUG"
++				Culture="1033"
++			/>
++			<Tool
++				Name="VCPreLinkEventTool"
++			/>
++			<Tool
++				Name="VCLinkerTool"
++				AdditionalDependencies="libfcgi.lib"
++				OutputFile=".\..\examples/threaded/Debug/threaded.exe"
++				LinkIncremental="2"
++				SuppressStartupBanner="true"
++				AdditionalLibraryDirectories="..\libfcgi\Debug"
++				GenerateDebugInformation="true"
++				ProgramDatabaseFile=".\..\examples/threaded/Debug/threaded.pdb"
++				RandomizedBaseAddress="1"
++				DataExecutionPrevention="0"
++				TargetMachine="17"
++			/>
++			<Tool
++				Name="VCALinkTool"
++			/>
++			<Tool
++				Name="VCManifestTool"
++			/>
++			<Tool
++				Name="VCXDCMakeTool"
++			/>
++			<Tool
++				Name="VCBscMakeTool"
++				SuppressStartupBanner="true"
++				OutputFile=".\..\examples/threaded/Debug/threaded.bsc"
++			/>
++			<Tool
++				Name="VCFxCopTool"
++			/>
++			<Tool
++				Name="VCAppVerifierTool"
++			/>
++			<Tool
++				Name="VCPostBuildEventTool"
++			/>
++		</Configuration>
++	</Configurations>
++	<References>
++	</References>
++	<Files>
++		<Filter
++			Name="Source Files"
++			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++			>
++			<File
++				RelativePath="..\examples\threaded.c"
++				>
++				<FileConfiguration
++					Name="Release|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Release|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|Win32"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++				<FileConfiguration
++					Name="Debug|x64"
++					ExcludedFromBuild="true"
++					>
++					<Tool
++						Name="VCCLCompilerTool"
++						AdditionalIncludeDirectories=""
++						PreprocessorDefinitions=""
++					/>
++				</FileConfiguration>
++			</File>
++		</Filter>
++		<Filter
++			Name="Header Files"
++			Filter="h;hpp;hxx;hm;inl"
++			>
++		</Filter>
++		<Filter
++			Name="Resource Files"
++			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++			>
++		</Filter>
++	</Files>
++	<Globals>
++	</Globals>
++</VisualStudioProject>
+diff -Nrub fcgi-2.4.0/acinclude.m4 fcgi-2.4.0-x64/acinclude.m4
+--- fcgi-2.4.0/acinclude.m4	2001-12-21 12:12:50.000000000 +0900
++++ fcgi-2.4.0-x64/acinclude.m4	2009-07-02 13:59:25.530492000 +0900
+@@ -27,14 +27,12 @@
+ 		   [Define if there's a fileno() prototype in stdio.h])],
+ 	    AC_MSG_RESULT([no]))
+ 
+-    if test "$HAVE_SYS_SOCKET_H"; then
+ 	AC_MSG_CHECKING([for socklen_t in sys/socket.h])
+ 	AC_EGREP_HEADER([socklen_t], [sys/socket.h],
+ 	    [AC_MSG_RESULT([yes])
+ 	     AC_DEFINE([HAVE_SOCKLEN], [1],
+ 			       [Define if the socklen_t typedef is in sys/socket.h])],
+ 	   AC_MSG_RESULT([no]))
+-    fi
+ 
+     #--------------------------------------------------------------------
+     #  Do we need cross-process locking on this platform?
+diff -Nrub fcgi-2.4.0/cgi-fcgi/cgi-fcgi.c fcgi-2.4.0-x64/cgi-fcgi/cgi-fcgi.c
+--- fcgi-2.4.0/cgi-fcgi/cgi-fcgi.c	2001-09-01 10:14:28.000000000 +0900
++++ fcgi-2.4.0-x64/cgi-fcgi/cgi-fcgi.c	2009-07-02 13:59:25.534398000 +0900
+@@ -33,6 +33,8 @@
+ #include <io.h>
+ #else
+ extern char **environ;
++#include <stdint.h>
++#include <limits.h>
+ #endif
+ 
+ #ifdef HAVE_SYS_PARAM_H
+@@ -52,6 +54,11 @@
+ #include "fastcgi.h"
+ #include "fcgios.h"
+ 
++#ifdef _WIN32
++#define ACCESS _access
++#else
++#define ACCESS access
++#endif
+ 
+ static int wsReadPending = 0;
+ static int fcgiReadPending = 0;
+@@ -86,8 +93,11 @@
+ static int GetPtr(char **ptr, int n, Buffer *pBuf)
+ {
+     int result;
++    intptr_t ptrDiff;
+     *ptr = pBuf->next;
+-    result = min(n, pBuf->stop - pBuf->next);
++    ptrDiff = pBuf->stop - pBuf->next;
++    ASSERT(0 <= ptrDiff && ptrDiff <= INT_MAX);
++    result = min(n, (int)ptrDiff);
+     pBuf->next += result;
+     return result;
+ }
+@@ -220,7 +230,7 @@
+     /* Touch unused parameters to avoid warnings */
+     dc = NULL;
+ 
+-    assert(fcgiReadPending == TRUE);
++    ASSERT(fcgiReadPending == TRUE);
+     fcgiReadPending = FALSE;
+     count = bytesRead;
+ 
+@@ -250,7 +260,7 @@
+              * First priority is to complete the header.
+              */
+             count = GetPtr(&ptr, sizeof(header) - headerLen, &fromAS);
+-            assert(count > 0);
++            ASSERT(count > 0);
+             memcpy(&header + headerLen, ptr, count);
+             headerLen += count;
+             if(headerLen < sizeof(header)) {
+@@ -378,9 +388,9 @@
+     /* Touch unused parameters to avoid warnings */
+     dc = NULL;
+ 
+-    assert(fromWS.next == fromWS.stop);
+-    assert(fromWS.next == &fromWS.buff[0]);
+-    assert(wsReadPending == TRUE);
++    ASSERT(fromWS.next == fromWS.stop);
++    ASSERT(fromWS.next == &fromWS.buff[0]);
++    ASSERT(wsReadPending == TRUE);
+     wsReadPending = FALSE;
+ 
+     if(bytesRead < 0) {
+@@ -412,13 +422,13 @@
+ 
+ static void AppServerWriteHandler(ClientData dc, int bytesWritten)
+ {
+-    int length = fromWS.stop - fromWS.next;
++    intptr_t length = fromWS.stop - fromWS.next;
+ 
+     /* Touch unused parameters to avoid warnings */
+     dc = NULL;
+ 
+-    assert(length > 0);
+-    assert(fcgiWritePending == TRUE);
++    ASSERT(length > 0);
++    ASSERT(fcgiWritePending == TRUE);
+ 
+     fcgiWritePending = FALSE;
+     if(bytesWritten < 0) {
+@@ -449,16 +459,18 @@
+  */
+ static void ScheduleIo(void)
+ {
+-    int length;
++    intptr_t length;
+ 
+     /*
+      * Move data between standard in and the FastCGI connection.
+      */
++    length = fromWS.stop - fromWS.next;
+     if(!fcgiWritePending && appServerSock != -1 &&
+-       ((length = fromWS.stop - fromWS.next) != 0)) {
+-	if(OS_AsyncWrite(appServerSock, 0, fromWS.next, length,
++       (length != 0)) {
++        ASSERT(0 <= length && length <= INT_MAX);
++        if(OS_AsyncWrite(appServerSock, 0, fromWS.next, (int)length,
+ 			 AppServerWriteHandler,
+-			 (ClientData)appServerSock) == -1) {
++                         (ClientData)(intptr_t)appServerSock) == -1) {
+ 	    FCGIexit(OS_Errno);
+ 	} else {
+ 	    fcgiWritePending = TRUE;
+@@ -474,7 +486,7 @@
+ 
+ 	if(OS_AsyncRead(appServerSock, 0, fromAS.next, BUFFLEN,
+ 			AppServerReadHandler,
+-			(ClientData)appServerSock) == -1) {
++                        (ClientData)(intptr_t)appServerSock) == -1) {
+ 	    FCGIexit(OS_Errno);
+ 	} else {
+ 	    fcgiReadPending = TRUE;
+@@ -518,7 +530,7 @@
+         exit(OS_Errno);
+     }
+ 
+-    if(access(appPath, X_OK) == -1) {
++    if(ACCESS(appPath, X_OK) == -1) {
+ 	fprintf(stderr, "%s is not executable\n", appPath);
+ 	exit(1);
+     }
+@@ -556,6 +568,7 @@
+         unsigned char *headerBuffPtr,
+         int *headerLenPtr) {
+     unsigned char *startHeaderBuffPtr = headerBuffPtr;
++    intptr_t ptrDiff;
+ 
+     ASSERT(nameLen >= 0);
+     if (nameLen < 0x80) {
+@@ -575,7 +588,9 @@
+         *headerBuffPtr++ = (unsigned char) (valueLen >> 8);
+         *headerBuffPtr++ = (unsigned char) valueLen;
+     }
+-    *headerLenPtr = headerBuffPtr - startHeaderBuffPtr;
++    ptrDiff = headerBuffPtr - startHeaderBuffPtr;
++    ASSERT(0 <= ptrDiff && ptrDiff <= INT_MAX);
++    *headerLenPtr = (int)ptrDiff;
+ }
+ 
+ 
+@@ -639,8 +654,8 @@
+ 				exit(-1);
+ 			}
+ 			if((av[ac] = (char *)malloc(strlen(tp1)+1)) == NULL) {
+-			    fprintf(stderr, "Cannot allocate %d bytes\n",
+-				    strlen(tp1)+1);
++                            fprintf(stderr, "Cannot allocate %llu bytes\n",
++                                    (unsigned long long)strlen(tp1)+1);
+ 			    exit(-1);
+ 			}
+ 			strcpy(av[ac++], tp1);
+@@ -658,7 +673,7 @@
+ 	    } else if (!strcmp(argv[i], "-jitcgi")) {
+ 	        DebugBreak();
+ 	    } else if (!strcmp(argv[i], "-dbgfcgi")) {
+-	        putenv("DEBUG_FCGI=TRUE");
++                _putenv("DEBUG_FCGI=TRUE");
+ #endif
+ 	    } else if(!strcmp(argv[i], "-start")) {
+ 		*doBindPtr = FALSE;
+@@ -724,11 +739,13 @@
+     FCGX_Stream *paramsStream;
+     int numFDs;
+     unsigned char headerBuff[8];
+-    int headerLen, valueLen;
++    int headerLen;
++    intptr_t valueLen;
+     char *equalPtr;
+     FCGI_BeginRequestRecord beginRecord;
+     int	doBind, doStart, nServers;
+     char appPath[MAXPATHLEN], bindPath[MAXPATHLEN];
++    intptr_t ptrDiff;
+ 
+     if(ParseArgs(argc, argv, &doBind, &doStart,
+ 		   (char *) &bindPath, (char *) &appPath, &nServers)) {
+@@ -803,14 +820,17 @@
+             exit(1000);
+         }
+         valueLen = strlen(equalPtr + 1);
++        ASSERT(0 <= valueLen && valueLen <= INT_MAX);
++        ptrDiff = equalPtr - *envp;
++        ASSERT(0 <= ptrDiff && ptrDiff < INT_MAX);
+         FCGIUtil_BuildNameValueHeader(
+-                equalPtr - *envp,
+-                valueLen,
++            (int)ptrDiff,
++            (int)valueLen,
+                 &headerBuff[0],
+                 &headerLen);
+         if(FCGX_PutStr((char *) &headerBuff[0], headerLen, paramsStream) < 0
+-                || FCGX_PutStr(*envp, equalPtr - *envp, paramsStream) < 0
+-                || FCGX_PutStr(equalPtr + 1, valueLen, paramsStream) < 0) {
++           || FCGX_PutStr(*envp, (int)ptrDiff, paramsStream) < 0
++           || FCGX_PutStr(equalPtr + 1, (int)valueLen, paramsStream) < 0) {
+             exit(FCGX_GetError(paramsStream));
+         }
+     }
+diff -Nrub fcgi-2.4.0/examples/echo-cpp.cpp fcgi-2.4.0-x64/examples/echo-cpp.cpp
+--- fcgi-2.4.0/examples/echo-cpp.cpp	2002-02-25 09:46:17.000000000 +0900
++++ fcgi-2.4.0-x64/examples/echo-cpp.cpp	2009-07-02 13:59:25.538304000 +0900
+@@ -40,6 +40,12 @@
+ #include "fcgio.h"
+ #include "fcgi_config.h"  // HAVE_IOSTREAM_WITHASSIGN_STREAMBUF
+ 
++#ifdef _WIN32
++#define GETPID _getpid
++#else
++#define GETPID getpid
++#endif
++
+ using namespace std;
+ 
+ // Maximum number of bytes allowed to be read from stdin
+@@ -55,10 +61,10 @@
+     cout << "</PRE>\n";
+ }
+ 
+-static long gstdin(FCGX_Request * request, char ** content)
++static uintptr_t gstdin(FCGX_Request * request, char ** content)
+ {
+     char * clenstr = FCGX_GetParam("CONTENT_LENGTH", request->envp);
+-    unsigned long clen = STDIN_MAX;
++    uintptr_t clen = STDIN_MAX;
+ 
+     if (clenstr)
+     {
+@@ -99,7 +105,7 @@
+ int main (void)
+ {
+     int count = 0;
+-    long pid = getpid();
++    long pid = GETPID();
+ 
+     streambuf * cin_streambuf  = cin.rdbuf();
+     streambuf * cout_streambuf = cout.rdbuf();
+@@ -133,7 +139,7 @@
+         // many http clients (browsers) don't support it (so
+         // the connection deadlocks until a timeout expires!).
+         char * content;
+-        unsigned long clen = gstdin(&request, &content);
++        uintptr_t clen = gstdin(&request, &content);
+ 
+         cout << "Content-type: text/html\r\n"
+                 "\r\n"
+diff -Nrub fcgi-2.4.0/examples/echo-x.c fcgi-2.4.0-x64/examples/echo-x.c
+--- fcgi-2.4.0/examples/echo-x.c	2001-06-20 00:06:17.000000000 +0900
++++ fcgi-2.4.0-x64/examples/echo-x.c	2009-07-02 13:59:25.541233500 +0900
+@@ -28,6 +28,12 @@
+ extern char **environ;
+ #endif
+ 
++#ifdef _WIN32
++#define GETPID _getpid
++#else
++#define GETPID getpid
++#endif
++
+ #include "fcgiapp.h"
+ 
+ static void PrintEnv(FCGX_Stream *out, char *label, char **envp)
+@@ -54,7 +60,7 @@
+            "\r\n"
+            "<title>FastCGI echo (fcgiapp version)</title>"
+            "<h1>FastCGI echo (fcgiapp version)</h1>\n"
+-           "Request number %d,  Process ID: %d<p>\n", ++count, getpid());
++                     "Request number %d,  Process ID: %d<p>\n", ++count, GETPID());
+ 
+         if (contentLength != NULL)
+             len = strtol(contentLength, NULL, 10);
+diff -Nrub fcgi-2.4.0/examples/echo.c fcgi-2.4.0-x64/examples/echo.c
+--- fcgi-2.4.0/examples/echo.c	1999-07-28 09:29:37.000000000 +0900
++++ fcgi-2.4.0-x64/examples/echo.c	2009-07-02 13:59:25.545139500 +0900
+@@ -28,6 +28,12 @@
+ extern char **environ;
+ #endif
+ 
++#ifdef _WIN32
++#define GETPID _getpid
++#else
++#define GETPID getpid
++#endif
++
+ #include "fcgi_stdio.h"
+ 
+ 
+@@ -53,7 +59,7 @@
+ 	    "\r\n"
+ 	    "<title>FastCGI echo</title>"
+ 	    "<h1>FastCGI echo</h1>\n"
+-            "Request number %d,  Process ID: %d<p>\n", ++count, getpid());
++               "Request number %d,  Process ID: %d<p>\n", ++count, GETPID());
+ 
+         if (contentLength != NULL) {
+             len = strtol(contentLength, NULL, 10);
+diff -Nrub fcgi-2.4.0/examples/threaded.c fcgi-2.4.0-x64/examples/threaded.c
+--- fcgi-2.4.0/examples/threaded.c	2001-11-20 12:23:21.000000000 +0900
++++ fcgi-2.4.0-x64/examples/threaded.c	2009-07-02 13:59:25.549045500 +0900
+@@ -24,7 +24,8 @@
+ 
+ static void *doit(void *a)
+ {
+-    int rc, i, thread_id = (int)a;
++    int rc, i;
++    intptr_t thread_id = (intptr_t)a;
+     pid_t pid = getpid();
+     FCGX_Request request;
+     char *server_name;
+@@ -71,7 +72,7 @@
+ 
+ int main(void)
+ {
+-    int i;
++    intptr_t i;
+     pthread_t id[THREAD_COUNT];
+ 
+     FCGX_Init();
+diff -Nrub fcgi-2.4.0/libfcgi/fcgi_stdio.c fcgi-2.4.0-x64/libfcgi/fcgi_stdio.c
+--- fcgi-2.4.0/libfcgi/fcgi_stdio.c	2001-09-01 10:09:30.000000000 +0900
++++ fcgi-2.4.0-x64/libfcgi/fcgi_stdio.c	2009-07-02 13:59:25.552951500 +0900
+@@ -19,6 +19,8 @@
+ #include <stdarg.h> /* for va_arg */
+ #include <stdlib.h> /* for malloc */
+ #include <string.h> /* for strerror */
++#include <assert.h>
++#include <limits.h>
+ 
+ #include "fcgi_config.h"
+ 
+@@ -56,6 +58,8 @@
+ 
+ #define popen _popen
+ #define pclose _pclose
++#define fdopen _fdopen
++#define fileno _fileno
+ 
+ #endif /* _WIN32 */
+ 
+@@ -662,8 +666,10 @@
+         if((size * nmemb) == 0) {
+             return 0;
+         }
+-        n = FCGX_GetStr((char *) ptr, size * nmemb, fp->fcgx_stream);
+-        return (n/size);
++        ASSERT(size * nmemb < (size_t)INT_MAX);
++        n = FCGX_GetStr((char *) ptr, (int)(size * nmemb), fp->fcgx_stream);
++        ASSERT(n >= 0);
++        return ((size_t)n/size);
+     }
+     return (size_t)EOF;
+ }
+@@ -677,8 +683,10 @@
+         if((size * nmemb) == 0) {
+             return 0;
+         }
+-        n = FCGX_PutStr((char *) ptr, size * nmemb, fp->fcgx_stream);
+-        return (n/size);
++        ASSERT(size * nmemb < (size_t)INT_MAX);
++        n = (size_t)FCGX_PutStr((char *) ptr, (int)(size * nmemb), fp->fcgx_stream);
++        ASSERT(n >= 0);
++        return ((size_t)n/size);
+     }
+     return (size_t)EOF;
+ }
+diff -Nrub fcgi-2.4.0/libfcgi/fcgiapp.c fcgi-2.4.0-x64/libfcgi/fcgiapp.c
+--- fcgi-2.4.0/libfcgi/fcgiapp.c	2001-12-13 07:54:10.000000000 +0900
++++ fcgi-2.4.0-x64/libfcgi/fcgiapp.c	2009-07-02 13:59:25.558810500 +0900
+@@ -24,6 +24,10 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/types.h>
++#ifndef _WIN32
++#include <stdint.h>
++#include <limits.h>
++#endif
+ 
+ #include "fcgi_config.h"
+ 
+@@ -63,6 +67,12 @@
+ #define LONG_DOUBLE long double
+ #endif
+ 
++#ifdef _WIN64
++#define ABS(a) _abs64(a)
++#else
++#define ABS(a) abs(a)
++#endif
++
+ /*
+  * Globals
+  */
+@@ -85,7 +95,7 @@
+ 
+ static char *StringCopy(char *str)
+ {
+-    int strLen = strlen(str);
++    size_t strLen = strlen(str);
+     char *newString = (char *)Malloc(strLen + 1);
+     memcpy(newString, str, strLen);
+     newString[strLen] = '\000';
+@@ -142,7 +152,7 @@
+  */
+ int FCGX_GetStr(char *str, int n, FCGX_Stream *stream)
+ {
+-    int m, bytesMoved;
++    intptr_t m, bytesMoved;
+ 
+     if (stream->isClosed || ! stream->isReader || n <= 0) {
+         return 0;
+@@ -166,15 +176,21 @@
+             memcpy(str, stream->rdNext, m);
+             bytesMoved += m;
+             stream->rdNext += m;
+-            if(bytesMoved == n)
+-                return bytesMoved;
++            if(bytesMoved == n) {
++                ASSERT(INT_MIN <= bytesMoved && bytesMoved <= INT_MAX);
++                return (int)bytesMoved;
++            }
+             str += m;
+         }
+-        if(stream->isClosed || !stream->isReader)
+-            return bytesMoved;
++        if(stream->isClosed || !stream->isReader) {
++            ASSERT(INT_MIN <= bytesMoved && bytesMoved <= INT_MAX);
++            return (int)bytesMoved;
++        }
+         stream->fillBuffProc(stream);
+-        if (stream->isClosed)
+-            return bytesMoved;
++        if (stream->isClosed) {
++            ASSERT(INT_MIN <= bytesMoved && bytesMoved <= INT_MAX);
++            return (int)bytesMoved;
++        }
+ 
+         stream->stopUnget = stream->rdNext;
+     }
+@@ -309,7 +325,7 @@
+  */
+ int FCGX_PutStr(const char *str, int n, FCGX_Stream *stream)
+ {
+-    int m, bytesMoved;
++    intptr_t m, bytesMoved;
+ 
+     /*
+      * Fast path: room for n bytes in the buffer
+@@ -330,8 +346,10 @@
+             memcpy(stream->wrNext, str, m);
+             bytesMoved += m;
+             stream->wrNext += m;
+-            if(bytesMoved == n)
+-                return bytesMoved;
++            if(bytesMoved == n) {
++                ASSERT(INT_MIN <= bytesMoved && bytesMoved <= INT_MAX);
++                return (int)bytesMoved;
++            }
+             str += m;
+ 	}
+         if(stream->isClosed || stream->isReader)
+@@ -355,7 +373,9 @@
+  */
+ int FCGX_PutS(const char *str, FCGX_Stream *stream)
+ {
+-    return FCGX_PutStr(str, strlen(str), stream);
++    size_t sz = strlen(str);
++    ASSERT(sz <= INT_MAX);
++    return FCGX_PutStr(str, (int)sz, stream);
+ }
+ 
+ /*
+@@ -406,15 +426,17 @@
+     /*
+      * Max size of a format specifier is 1 + 5 + 7 + 7 + 2 + 1 + slop
+      */
+-static void CopyAndAdvance(char **destPtr, char **srcPtr, int n);
++static void CopyAndAdvance(char **destPtr, char **srcPtr, intptr_t n);
+ 
+ int FCGX_VFPrintF(FCGX_Stream *stream, const char *format, va_list arg)
+ {
+     char *f, *fStop, *percentPtr, *p, *fmtBuffPtr, *buffPtr;
+-    int op, performedOp, sizeModifier, buffCount = 0, buffLen, specifierLength;
+-    int fastPath, n, auxBuffLen = 0, buffReqd, minWidth, precision, exp;
++    intptr_t op, performedOp, sizeModifier, buffCount = 0, buffLen;
++    intptr_t fastPath, n, auxBuffLen = 0, minWidth, precision;
++    int exp;
++    intptr_t specifierLength, buffReqd;
+     char *auxBuffPtr = NULL;
+-    int streamCount = 0;
++    intptr_t streamCount = 0;
+     char fmtBuff[FMT_BUFFLEN];
+     char buff[PRINTF_BUFFLEN];
+ 
+@@ -439,9 +461,11 @@
+         percentPtr = (char *)memchr(f, '%', fStop - f);
+         if(percentPtr == NULL) percentPtr = fStop;
+         if(percentPtr != f) {
+-            if(FCGX_PutStr(f, percentPtr - f, stream) < 0)
++            intptr_t ptrDiff = percentPtr - f;
++            ASSERT(0 <= ptrDiff && ptrDiff < INT_MAX);
++            if(FCGX_PutStr(f, (int)ptrDiff, stream) < 0)
+                 goto ErrorReturn;
+-            streamCount += percentPtr - f;
++            streamCount += (int)ptrDiff;
+             f = percentPtr;
+             if(f == fStop) break;
+ 	}
+@@ -506,14 +530,14 @@
+                 if(n == 0) {
+                     if(*p == '*') {
+                         minWidth = va_arg(arg, int);
+-                        if(abs(minWidth) > 999999)
++                        if(ABS(minWidth) > 999999)
+                             goto ErrorReturn;
+ 			/*
+ 			 * The following use of strlen rather than the
+ 			 * value returned from sprintf is because SUNOS4
+ 			 * returns a char * instead of an int count.
+ 			 */
+-			sprintf(fmtBuffPtr, "%d", minWidth);
++                        sprintf(fmtBuffPtr, "%lld", (long long)minWidth);
+                         fmtBuffPtr += strlen(fmtBuffPtr);
+                         p++;
+ 	            } else {
+@@ -542,7 +566,7 @@
+ 			 * value returned from sprintf is because SUNOS4
+ 			 * returns a char * instead of an int count.
+ 			 */
+-			    sprintf(fmtBuffPtr, "%d", precision);
++                            sprintf(fmtBuffPtr, "%lld", (long long)precision);
+ 			    fmtBuffPtr += strlen(fmtBuffPtr);
+                             p++;
+ 	                } else {
+@@ -764,11 +788,13 @@
+                     switch(sizeModifier) {
+                         case ' ':
+                             intPtrArg = va_arg(arg, int *);
+-                            *intPtrArg = streamCount;
++                    ASSERT(INT_MIN <= streamCount && streamCount <= INT_MAX);
++                    *intPtrArg = (int)streamCount;
+                             break;
+                         case 'l':
+                             longPtrArg = va_arg(arg, long *);
+-                            *longPtrArg = streamCount;
++                    ASSERT(LONG_MIN <= streamCount && streamCount <= LONG_MAX);
++                    *longPtrArg = (long)streamCount;
+                             break;
+                         case 'h':
+                             shortPtrArg = (short *) va_arg(arg, short *);
+@@ -835,7 +861,8 @@
+         } /* for (;;) */
+         ASSERT(buffCount < buffLen);
+         if(buffCount > 0) {
+-            if(FCGX_PutStr(buffPtr, buffCount, stream) < 0)
++            ASSERT(0 <= buffCount && buffCount <= INT_MAX);
++            if(FCGX_PutStr(buffPtr, (int)buffCount, stream) < 0)
+                 goto ErrorReturn;
+             streamCount += buffCount;
+         } else if(buffCount < 0) {
+@@ -848,18 +875,19 @@
+     streamCount = -1;
+   NormalReturn:
+     if(auxBuffPtr != NULL) free(auxBuffPtr);
+-    return streamCount;
++    ASSERT(INT_MIN <= streamCount && streamCount <= INT_MAX);
++    return (int)streamCount;
+ }
+ 
+ /*
+  * Copy n characters from *srcPtr to *destPtr, then increment
+  * both *srcPtr and *destPtr by n.
+  */
+-static void CopyAndAdvance(char **destPtr, char **srcPtr, int n)
++static void CopyAndAdvance(char **destPtr, char **srcPtr, intptr_t n)
+ {
+     char *dest = *destPtr;
+     char *src = *srcPtr;
+-    int i;
++    intptr_t i;
+     for (i = 0; i < n; i++)
+         *dest++ = *src++;
+     *destPtr = dest;
+@@ -1075,7 +1103,7 @@
+  */
+ static void PutParam(ParamsPtr paramsPtr, char *nameValue)
+ {
+-    int size;
++    intptr_t size;
+ 
+     *paramsPtr->cur++ = nameValue;
+     size = paramsPtr->cur - paramsPtr->vec;
+@@ -1102,7 +1130,7 @@
+  */
+ char *FCGX_GetParam(const char *name, FCGX_ParamArray envp)
+ {
+-    int len;
++    intptr_t len;
+     char **p;
+ 
+ 	if (name == NULL || envp == NULL) return NULL;
+@@ -1269,8 +1297,8 @@
+  *
+  *----------------------------------------------------------------------
+  */
+-static int AlignInt8(unsigned n) {
+-    return (n + 7) & (UINT_MAX - 7);
++static intptr_t AlignInt8(intptr_t n) {
++    return (n + 7) & ~7;
+ }
+ 
+ /*
+@@ -1284,9 +1312,7 @@
+  *----------------------------------------------------------------------
+  */
+ static unsigned char *AlignPtr8(unsigned char *p) {
+-    unsigned long u = (unsigned long) p;
+-    u = ((u + 7) & (ULONG_MAX - 7)) - u;
+-    return p + u;
++    return (unsigned char *)((((uintptr_t)p) + 7) & ~7);
+ }
+ 
+ 
+@@ -1359,9 +1385,9 @@
+ 
+ 
+ 
+-static int write_it_all(int fd, char *buf, int len)
++static intptr_t write_it_all(int fd, char *buf, intptr_t len)
+ {
+-    int wrote;
++    intptr_t wrote;
+ 
+     while (len) {
+         wrote = OS_Write(fd, buf, len);
+@@ -1386,7 +1412,7 @@
+ static void EmptyBuffProc(struct FCGX_Stream *stream, int doClose)
+ {
+     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
+-    int cLen, eLen;
++    intptr_t cLen, eLen;
+     /*
+      * If the buffer contains stream data, fill in the header.
+      * Pad the record to a multiple of 8 bytes in length.  Padding
+@@ -1403,9 +1429,11 @@
+              */
+             memset(stream->wrNext, 0, eLen - cLen);
+             stream->wrNext += eLen - cLen;
++            ASSERT(0 <= cLen && cLen <= INT_MAX);
++            ASSERT(0 <= eLen - cLen && eLen - cLen <= INT_MAX);
+             *((FCGI_Header *) data->buff)
+                     = MakeHeader(data->type,
+-                            data->reqDataPtr->requestId, cLen, eLen - cLen);
++                             data->reqDataPtr->requestId, (int)cLen, (int)(eLen - cLen));
+         } else {
+             stream->wrNext = data->buff;
+ 	}
+@@ -1459,7 +1487,7 @@
+     char response[64]; /* 64 = 8 + 3*(1+1+14+1)* + padding */
+     char *responseP = &response[FCGI_HEADER_LEN];
+     char *name, value = '\0';
+-    int len, paddedLen;
++    intptr_t len, paddedLen;
+     if(type == FCGI_GET_VALUES) {
+         ReadParams(paramsPtr, stream);
+         if((FCGX_GetError(stream) != 0) || (data->contentLen != 0)) {
+@@ -1480,21 +1508,24 @@
+             }
+             if(name != NULL) {
+                 len = strlen(name);
+-                sprintf(responseP, "%c%c%s%c", len, 1, name, value);
++                sprintf(responseP, "%c%c%s%c", (int)len, 1, name, value);
+                 responseP += len + 3;
+ 	    }
+         }
+         len = responseP - &response[FCGI_HEADER_LEN];
+         paddedLen = AlignInt8(len);
++        ASSERT(0 <= len && len <= INT_MAX);
++        ASSERT(0 <= paddedLen - len && paddedLen - len <= INT_MAX);
+         *((FCGI_Header *) response)
+             = MakeHeader(FCGI_GET_VALUES_RESULT, FCGI_NULL_REQUEST_ID,
+-                         len, paddedLen - len);
++                         (int)len, (int)(paddedLen - len));
+         FreeParams(&paramsPtr);
+     } else {
+         paddedLen = len = sizeof(FCGI_UnknownTypeBody);
++        ASSERT(0 <= len && len <= INT_MAX);
+         ((FCGI_UnknownTypeRecord *) response)->header
+             = MakeHeader(FCGI_UNKNOWN_TYPE, FCGI_NULL_REQUEST_ID,
+-                         len, 0);
++                         (int)len, 0);
+         ((FCGI_UnknownTypeRecord *) response)->body
+             = MakeUnknownTypeBody(type);
+     }
+@@ -1627,6 +1658,7 @@
+     FCGI_Header header;
+     int headerLen = 0;
+     int status, count;
++    intptr_t ptrDiff;
+ 
+     for (;;) {
+         /*
+@@ -1647,7 +1679,9 @@
+          * more content bytes, deliver all that are present in data->buff.
+          */
+         if(data->contentLen > 0) {
+-            count = min(data->contentLen, data->buffStop - stream->rdNext);
++            ptrDiff = data->buffStop - stream->rdNext;
++            ASSERT(0 <= ptrDiff && ptrDiff <= INT_MAX);
++            count = min(data->contentLen, (int)ptrDiff);
+             data->contentLen -= count;
+             if(!data->skip) {
+                 stream->wrNext = stream->stop = stream->rdNext + count;
+@@ -1666,7 +1700,9 @@
+          * the client) was padded, skip over the padding bytes.
+          */
+         if(data->paddingLen > 0) {
+-            count = min(data->paddingLen, data->buffStop - stream->rdNext);
++            ptrDiff = data->buffStop - stream->rdNext;
++            ASSERT(0 <= ptrDiff && ptrDiff <= INT_MAX);
++            count = min(data->paddingLen, (int)ptrDiff);
+             data->paddingLen -= count;
+             stream->rdNext += count;
+             if(data->paddingLen > 0) {
+@@ -1685,8 +1721,10 @@
+         /*
+          * Fill header with bytes from the input buffer.
+          */
++        ptrDiff = data->buffStop - stream->rdNext;
++        ASSERT(0 <= ptrDiff && ptrDiff <= INT_MAX);
+         count = min((int)sizeof(header) - headerLen,
+-                        data->buffStop - stream->rdNext);
++                    (int)ptrDiff);
+         memcpy(((char *)(&header)) + headerLen, stream->rdNext, count);
+         headerLen += count;
+         stream->rdNext += count;
+@@ -1754,6 +1792,7 @@
+ static FCGX_Stream *NewStream(
+         FCGX_Request *reqDataPtr, int bufflen, int isReader, int streamType)
+ {
++    intptr_t bufflen_p;
+     /*
+      * XXX: It would be a lot cleaner to have a NewStream that only
+      * knows about the type FCGX_Stream, with all other
+@@ -1765,7 +1804,9 @@
+     FCGX_Stream *stream = (FCGX_Stream *)Malloc(sizeof(FCGX_Stream));
+     FCGX_Stream_Data *data = (FCGX_Stream_Data *)Malloc(sizeof(FCGX_Stream_Data));
+     data->reqDataPtr = reqDataPtr;
+-    bufflen = AlignInt8(min(max(bufflen, 32), FCGI_MAX_LENGTH + 1));
++    bufflen_p = AlignInt8(min(max(bufflen, 32), FCGI_MAX_LENGTH + 1));
++    ASSERT(0 <= bufflen_p && bufflen_p <= INT_MAX);
++    bufflen = (int)bufflen_p;
+     data->bufflen = bufflen;
+     data->mBuff = (unsigned char *)Malloc(bufflen);
+     data->buff = AlignPtr8(data->mBuff);
+@@ -2306,4 +2347,3 @@
+     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
+     data->reqDataPtr->appStatus = status;
+ }
+-
+diff -Nrub fcgi-2.4.0/libfcgi/fcgio.cpp fcgi-2.4.0-x64/libfcgi/fcgio.cpp
+--- fcgi-2.4.0/libfcgi/fcgio.cpp	2002-02-25 05:12:22.000000000 +0900
++++ fcgi-2.4.0-x64/libfcgi/fcgio.cpp	2009-07-02 13:59:25.562716500 +0900
+@@ -22,8 +22,14 @@
+ #define DLLAPI  __declspec(dllexport)
+ #endif
+ 
++#ifndef _WIN32
++#include <stdint.h>
+ #include <limits.h>
++#endif
++
++#include <assert.h>
+ #include "fcgio.h"
++#include "fcgimisc.h"
+ 
+ using std::streambuf;
+ using std::istream;
+@@ -63,12 +69,13 @@
+ {
+     if (this->bufsize)
+     {
+-        int plen = pptr() - pbase();
++        intptr_t plen = pptr() - pbase();
+ 
+         if (plen) 
+         {
+-            if (FCGX_PutStr(pbase(), plen, this->fcgx) != plen) return EOF;
+-            pbump(-plen);
++            ASSERT(0 <= plen && plen <= INT_MAX);
++            if (FCGX_PutStr(pbase(), (int)plen, this->fcgx) != plen) return EOF;
++            pbump((int)(-plen));
+         }
+     }
+ 
+@@ -103,7 +110,8 @@
+     {
+         if (in_avail() == 0)
+         {
+-            int glen = FCGX_GetStr(eback(), this->bufsize, this->fcgx);
++            ASSERT(0 <= this->bufsize && this->bufsize <= INT_MAX);
++            int glen = FCGX_GetStr(eback(), (int)(this->bufsize), this->fcgx);
+             if (glen <= 0) return EOF;
+ 
+             setg(eback(), eback(), eback() + glen);
+diff -Nrub fcgi-2.4.0/libfcgi/os_win32.c fcgi-2.4.0-x64/libfcgi/os_win32.c
+--- fcgi-2.4.0/libfcgi/os_win32.c	2002-03-06 03:15:15.000000000 +0900
++++ fcgi-2.4.0-x64/libfcgi/os_win32.c	2009-07-02 13:59:25.566622500 +0900
+@@ -128,6 +128,16 @@
+ 
+ static BOOLEAN libInitialized = FALSE;
+ 
++HANDLE strToHandle(char *str)
++{
++#ifdef _WIN64
++    return (HANDLE)_atoi64(str);
++#else
++    return (HANDLE)atoi(str);
++#endif
++}
++
++
+ /*
+  *--------------------------------------------------------------
+  *
+@@ -226,7 +236,7 @@
+ static void StdinThread(void * startup) 
+ {
+     int doIo = TRUE;
+-    unsigned long fd;
++    ULONG_PTR fd;
+     unsigned long bytesRead;
+     POVERLAPPED_REQUEST pOv;
+ 
+@@ -353,7 +363,7 @@
+     val = getenv(SHUTDOWN_EVENT_NAME);
+     if (val != NULL) 
+     {
+-        HANDLE shutdownEvent = (HANDLE) atoi(val);
++        HANDLE shutdownEvent = strToHandle(val);
+ 
+         if (_beginthread(ShutdownRequestThread, 0, shutdownEvent) == -1)
+         {
+@@ -367,7 +377,7 @@
+         val = getenv(MUTEX_VARNAME);
+         if (val != NULL) 
+         {
+-            acceptMutex = (HANDLE) atoi(val);
++            acceptMutex = strToHandle(val);
+         }
+     }
+ 
+@@ -456,8 +466,10 @@
+  */
+     }
+ 
++    ASSERT(INT_MIN <= (intptr_t)stdioHandles[STDIN_FILENO] &&
++           (intptr_t)stdioHandles[STDIN_FILENO] <= INT_MAX);
+     if ((fakeFd = Win32NewDescriptor(FD_PIPE_SYNC,
+-				     (int)stdioHandles[STDIN_FILENO],
++                                     (int)(intptr_t)stdioHandles[STDIN_FILENO],
+ 				     STDIN_FILENO)) == -1) {
+         return -1;
+     } else {
+@@ -490,7 +502,7 @@
+     if((cLenPtr = getenv("CONTENT_LENGTH")) != NULL &&
+        atoi(cLenPtr) > 0) {
+         hStdinThread = (HANDLE) _beginthread(StdinThread, 0, NULL);
+-	if (hStdinThread == (HANDLE) -1) {
++        if (hStdinThread == (HANDLE)(LONG_PTR) -1) {
+ 	    printf("<H2>OS_LibInit Failed to create STDIN thread!  ERROR: %d</H2>\r\n\r\n",
+ 		   GetLastError());
+ 	    return -1;
+@@ -511,8 +523,10 @@
+ 	exit(99);
+     }
+ 
++    ASSERT(INT_MIN <= (intptr_t)stdioHandles[STDOUT_FILENO] &&
++           (intptr_t)stdioHandles[STDOUT_FILENO] <= INT_MAX);
+     if ((fakeFd = Win32NewDescriptor(FD_PIPE_SYNC,
+-				     (int)stdioHandles[STDOUT_FILENO],
++                                     (int)(intptr_t)stdioHandles[STDOUT_FILENO],
+ 				     STDOUT_FILENO)) == -1) {
+         return -1;
+     } else {
+@@ -528,8 +542,10 @@
+         DebugBreak();
+ 	exit(99);
+     }
++    ASSERT(INT_MIN <= (intptr_t)stdioHandles[STDERR_FILENO] &&
++           (intptr_t)stdioHandles[STDERR_FILENO] <= INT_MAX);
+     if ((fakeFd = Win32NewDescriptor(FD_PIPE_SYNC,
+-				     (int)stdioHandles[STDERR_FILENO],
++                                     (int)(intptr_t)stdioHandles[STDERR_FILENO],
+ 				     STDERR_FILENO)) == -1) {
+         return -1;
+     } else {
+@@ -731,7 +747,9 @@
+ 	        return -5;
+ 	    }
+ 
+-        pseudoFd = Win32NewDescriptor(listenType, listenSock, -1);
++        ASSERT(INT_MIN <= (intptr_t)listenSock &&
++               (intptr_t)listenSock <= INT_MAX);
++        pseudoFd = Win32NewDescriptor(listenType, (int)(intptr_t)listenSock, -1);
+         
+         if (pseudoFd == -1) 
+         {
+@@ -772,7 +790,9 @@
+             return -9;
+         }
+ 
+-        pseudoFd = Win32NewDescriptor(listenType, (int) hListenPipe, -1);
++        ASSERT(INT_MIN <= (intptr_t)hListenPipe &&
++               (intptr_t)hListenPipe <= INT_MAX);
++        pseudoFd = Win32NewDescriptor(listenType, (int)(intptr_t)hListenPipe, -1);
+         
+         if (pseudoFd == -1) 
+         {
+@@ -818,7 +838,7 @@
+         if (*bindPath != ':')
+         {
+             char * p = strchr(bindPath, ':');
+-            int len = p - bindPath + 1;
++            intptr_t len = p - bindPath + 1;
+ 
+             host = malloc(len);
+             strncpy(host, bindPath, len);
+@@ -855,7 +875,8 @@
+ 	        return -1;
+ 	    }
+ 
+-	    pseudoFd = Win32NewDescriptor(FD_SOCKET_SYNC, sock, -1);
++        ASSERT(INT_MIN <= (intptr_t)sock && (intptr_t)sock <= INT_MAX);
++        pseudoFd = Win32NewDescriptor(FD_SOCKET_SYNC, (int)(intptr_t)sock, -1);
+ 	    if (pseudoFd == -1) 
+         {
+ 	        closesocket(sock);
+@@ -890,7 +911,8 @@
+             return -1;
+         }
+ 
+-        pseudoFd = Win32NewDescriptor(FD_PIPE_ASYNC, (int) hPipe, -1);
++        ASSERT(INT_MIN <= (intptr_t)hPipe && (intptr_t)hPipe <= INT_MAX);
++        pseudoFd = Win32NewDescriptor(FD_PIPE_ASYNC, (int)(intptr_t)hPipe, -1);
+         
+         if (pseudoFd == -1) 
+         {
+@@ -945,7 +967,8 @@
+ 	case FD_PIPE_SYNC:
+ 	case FD_PIPE_ASYNC:
+ 
+-	    if (ReadFile(fdTable[fd].fid.fileHandle, buf, len, &bytesRead, NULL)) 
++        ASSERT(0 <= len && len <= ULONG_MAX);
++        if (ReadFile(fdTable[fd].fid.fileHandle, buf, (DWORD)len, &bytesRead, NULL))
+         {
+             ret = bytesRead;
+         }
+@@ -959,7 +982,8 @@
+ 	case FD_SOCKET_SYNC:
+ 	case FD_SOCKET_ASYNC:
+ 
+-        ret = recv(fdTable[fd].fid.sock, buf, len, 0);
++        ASSERT(0 <= len && len <= INT_MAX);
++        ret = recv(fdTable[fd].fid.sock, buf, (int)len, 0);
+ 	    if (ret == SOCKET_ERROR) 
+         {
+ 		    fdTable[fd].Errno = WSAGetLastError();
+@@ -1008,7 +1032,8 @@
+ 	case FD_PIPE_SYNC:
+ 	case FD_PIPE_ASYNC:
+ 
+-        if (WriteFile(fdTable[fd].fid.fileHandle, buf, len, &bytesWritten, NULL)) 
++        ASSERT(0 <= len && len <= ULONG_MAX);
++        if (WriteFile(fdTable[fd].fid.fileHandle, buf, (DWORD)len, &bytesWritten, NULL))
+         {
+             ret = bytesWritten;
+         }
+@@ -1022,7 +1047,8 @@
+ 	case FD_SOCKET_SYNC:
+ 	case FD_SOCKET_ASYNC:
+ 
+-        ret = send(fdTable[fd].fid.sock, buf, len, 0);
++        ASSERT(0 <= len && len <= INT_MAX);
++        ret = send(fdTable[fd].fid.sock, buf, (int)len, 0);
+         if (ret == SOCKET_ERROR) 
+         {
+ 		    fdTable[fd].Errno = WSAGetLastError();
+@@ -1385,7 +1411,7 @@
+         {
+             struct timeval tv;
+             fd_set rfds;
+-            int sock = fdTable[fd].fid.sock;
++            SOCKET sock = fdTable[fd].fid.sock;
+             int rv;
+             char trash[1024];
+    
+@@ -1393,10 +1419,12 @@
+ 
+             do 
+             {
++#pragma warning( disable : 4127 )
+ 	            FD_SET(sock, &rfds);
++#pragma warning( default : 4127 )
+ 	            tv.tv_sec = 2;
+ 	            tv.tv_usec = 0;
+-	            rv = select(sock + 1, &rfds, NULL, NULL, &tv);
++                rv = select(0, &rfds, NULL, NULL, &tv);
+             }
+             while (rv > 0 && recv(sock, trash, sizeof(trash), 0) > 0);
+         }
+@@ -1463,12 +1491,12 @@
+  */
+ int OS_DoIo(struct timeval *tmo)
+ {
+-    unsigned long fd;
++    ULONG_PTR fd;
+     unsigned long bytes;
+     POVERLAPPED_REQUEST pOv;
+     struct timeb tb;
+-    int ms;
+-    int ms_last;
++    time_t ms;
++    time_t ms_last;
+     int err;
+ 
+     /* XXX
+@@ -1486,8 +1514,9 @@
+     while (ms >= 0) {
+ 	if(tmo && (ms = tmo->tv_sec*1000 + tmo->tv_usec/1000)> 100)
+ 	    ms = 100;
++        ASSERT(0 <= ms && ms < 0xFFFFFFFF);
+ 	if (!GetQueuedCompletionStatus(hIoCompPort, &bytes, &fd,
+-	    (LPOVERLAPPED *)&pOv, ms) && !pOv) {
++           (LPOVERLAPPED *)&pOv, (DWORD)ms) && !pOv) {
+ 	    err = WSAGetLastError();
+ 	    return 0; /* timeout */
+         }
+@@ -1542,7 +1571,7 @@
+                                      LPWSABUF  dc3,
+                                      LPWSABUF  dc4,
+                                      GROUP     *dc5,
+-                                     DWORD     data)
++                                     DWORD_PTR data)
+ {
+     struct sockaddr_in *sockaddr = (struct sockaddr_in *) lpCallerId->buf;
+ 
+@@ -1613,7 +1642,8 @@
+         }
+     }
+ 
+-    ipcFd = Win32NewDescriptor(FD_PIPE_SYNC, (int) hListen, -1);
++    ASSERT(INT_MIN <= (intptr_t)hListen && (intptr_t)hListen <= INT_MAX);
++    ipcFd = Win32NewDescriptor(FD_PIPE_SYNC, (int)(intptr_t)hListen, -1);
+ 	if (ipcFd == -1) 
+     {
+         DisconnectNamedPipe(hListen);
+@@ -1640,7 +1670,7 @@
+             FD_ZERO(&readfds);
+ 
+ #pragma warning( disable : 4127 ) 
+-            FD_SET((unsigned int) hListen, &readfds);
++            FD_SET((SOCKET)hListen, &readfds);
+ #pragma warning( default : 4127 ) 
+ 
+             if (select(0, &readfds, NULL, NULL, &timeout) == 0)
+@@ -1672,11 +1702,11 @@
+ 
+         closesocket(hSock);
+ #else
+-        hSock = WSAAccept((unsigned int) hListen,                    
++        hSock = WSAAccept((SOCKET)hListen,
+                           &sockaddr,  
+                           &sockaddrLen,               
+                           isAddrOKCallback,  
+-                          (DWORD) webServerAddrs);
++                          (DWORD_PTR) webServerAddrs);
+ 
+         if (hSock != INVALID_SOCKET)
+         {
+@@ -1697,7 +1727,8 @@
+         return -1;
+     }
+     
+-    ipcFd = Win32NewDescriptor(FD_SOCKET_SYNC, hSock, -1);
++    ASSERT(INT_MIN <= (intptr_t)hSock && (intptr_t)hSock <= INT_MAX);
++    ipcFd = Win32NewDescriptor(FD_SOCKET_SYNC, (int)(intptr_t)hSock, -1);
+ 	if (ipcFd == -1) 
+     {
+ 	    closesocket(hSock);

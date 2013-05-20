@@ -6,7 +6,7 @@ note
 	legal: "See notice at end of class."
 	keywords: "implementation, gtk, any, base"
 	status: "See notice at end of class."
-	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class

@@ -5,7 +5,7 @@ note
 					generated files everytime
 						]"
 	date: "$Date$"
-	revision: "$Revision: 87361 $"
+	revision: "$Revision$"
 
 deferred class
 	GROUP_1_IMP

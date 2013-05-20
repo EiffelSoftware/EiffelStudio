@@ -24,6 +24,12 @@ feature -- Access
 			Result := scope.bit_test (index - 1)
 		end
 
+	has_unset: BOOLEAN
+			-- <Precursor>
+		do
+			Result := (({NATURAL_64} 1) |<< count - 1) + {NATURAL_64} 0x8000000000000000 /= scope
+		end
+
 feature -- Status report: variables
 
 	max_count: INTEGER = 63
@@ -38,7 +44,7 @@ feature {NONE} -- Status report
 			s: like scope
 		do
 			s := inner_scopes.item
-			Result := s - (s & scope) = 0
+			Result := (s & scope) = s
 		end
 
 feature -- Modification: variables
@@ -58,7 +64,7 @@ feature -- Modification: variables
 	set_all
 			-- Mark that all variables are not void.
 		do
-			scope := {NATURAL_64}.max_value
+			scope := (({NATURAL_64} 1) |<< count - 1) + {NATURAL_64} 0x8000000000000000
 		end
 
 feature {NONE} -- Modification: nesting
@@ -85,7 +91,7 @@ feature {NONE} -- Duplication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

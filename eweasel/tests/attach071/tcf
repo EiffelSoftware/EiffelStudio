@@ -1,4 +1,3 @@
-
 test_name 	 self-init-attribute-non-void-safe
 test_description The initializer for a self-initializing attribute is not called when system is compiled in non-void safe mode
 
@@ -6,11 +5,10 @@ copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
-compile_result  ok
+compile_result  validity_warning TEST VWAB
 
 execute_work 	NONE 	exec_output1
-execute_result 	ok
-compare		exec_output1 output
+execute_result  failed
 
 compile_frozen
 compile_result 	ok
@@ -19,7 +17,6 @@ c_compile_work
 c_compile_result ok
 
 execute_work 	NONE 	exec_output2
-execute_result 	ok
-compare		exec_output2 output
+execute_result 	failed
 
 test_end

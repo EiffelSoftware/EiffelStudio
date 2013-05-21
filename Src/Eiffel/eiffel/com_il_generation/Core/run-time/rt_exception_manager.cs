@@ -1,8 +1,8 @@
 /*
 indexing
 	description: "Interface for Eiffel exception manager."
-	date: "$Date: 2007-03-20 19:44:05 +0800 (Tue, 20 Mar 2007) $"
-	revision: "$Revision: 67392 $"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt"
 	licensing_options:	"http://www.eiffel.com/licensing"

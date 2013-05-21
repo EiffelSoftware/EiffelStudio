@@ -1,8 +1,8 @@
 /*
 indexing
 	description: "Representation of a CHARACTER_32 basic type. Only used to get the proper RT_BASIC_TYPE."
-	date: "$Date: 2006-02-22 18:29:02 -0800 (Wed, 22 Feb 2006) $"
-	revision: "$Revision: 57134 $"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt"
 	licensing_options:	"http://www.eiffel.com/licensing"

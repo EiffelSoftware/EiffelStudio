@@ -1,8 +1,8 @@
 /*
 indexing
 	description: "Custom attribute to save version of Eiffel class in metadata."
-	date: "$Date: 2006-02-22 18:29:02 -0800 (Wed, 22 Feb 2006) $"
-	revision: "$Revision: 57134 $"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt"
 	licensing_options:	"http://www.eiffel.com/licensing"

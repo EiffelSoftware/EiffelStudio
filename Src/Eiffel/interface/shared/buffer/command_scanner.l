@@ -4,8 +4,8 @@ indexing
 	description: "Scanners for external commands"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2006-11-22 01:54:06 +0100 (Wed, 22 Nov 2006) $"
-	revision: "$Revision: 65185 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 
 class EB_COMMAND_SCANNER

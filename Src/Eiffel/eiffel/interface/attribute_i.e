@@ -541,6 +541,7 @@ feature -- Element Change
 			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
 			other.set_extension (extension)
+			other.set_has_body (has_body)
 			other.set_is_require_else (is_require_else)
 			other.set_is_ensure_then (is_ensure_then)
 			other.set_has_precondition (has_precondition)

@@ -335,6 +335,9 @@ set EWEASEL=%EIFFEL_SRC\eweasel
 finalize eweasel.ecf eweasel_st
 cleanup_eiffel eweasel_st eweasel.exe
 move eweasel.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
+finalize eweasel.ecf eweasel_mt
+cleanup_eiffel eweasel_mt eweasel-mt.exe
+move eweasel-mt.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
 set EWEASEL=%OLD_EWEASEL
 set OLD_EWEASEL=
 

@@ -518,7 +518,6 @@ feature {NONE} -- Basic operations
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
 			l_content: LIST [EDITOR_TOKEN]
 			l_pixmap: EV_PIXMAP
-			l_row: EV_GRID_ROW
 			l_pos_token: EDITOR_TOKEN_NUMBER
 			l_line: EIFFEL_EDITOR_LINE
 			l_context_stone: STONE
@@ -638,10 +637,6 @@ feature {NONE} -- Basic operations
 			end
 
 				-- Fill empty items
-			if l_row /= Void then
-				grid_events.grid_row_fill_empty_cells (l_row)
-				l_row.set_height (l_row.height + 2)
-			end
 			grid_events.grid_row_fill_empty_cells (a_row)
 			a_row.set_height (a_row.height + 2)
 
@@ -806,6 +801,8 @@ feature {NONE} -- Basic operations
 					l_editor_item.try_call_setting_change_actions
 					l_row.set_height (l_editor_item.required_height_for_text_and_component)
 					l_row.set_item (error_column, l_editor_item)
+					l_row.set_height (l_row.height + 2)
+					grid_events.grid_row_fill_empty_cells (l_row)
 				end
 			end
 		end

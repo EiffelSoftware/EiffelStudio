@@ -121,8 +121,8 @@ feature -- Command
 			l_state_1, l_state_2: MA_MEMORY_STATE
 			l_info_dlg: EV_INFORMATION_DIALOG
 		do
-			if grid_from_state.selected_rows.count > 0 then
-				if grid_to_state.selected_rows.count > 0 then
+			if grid_from_state.has_selected_row then
+				if grid_to_state.has_selected_row then
 					l_state_2 := states.i_th (grid_to_state.selected_rows.first.index)
 					l_state_1 := states.i_th (grid_from_state.selected_rows.first.index)
 					grid_util.grid_remove_and_clear_all_rows (grid_changed)
@@ -393,14 +393,14 @@ invariant
 	grid_increased_not_void: grid_changed /= Void
 	grid_data_not_void: grid_data /= Void
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

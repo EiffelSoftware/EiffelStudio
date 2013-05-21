@@ -1334,7 +1334,7 @@ feature {NONE} -- Configuration setting
 		local
 			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
-			if grid.selected_rows /= Void and then not grid.selected_rows.is_empty then
+			if grid.has_selected_row then
 				l_item ?= grid.selected_rows.first.item (1)
 				check
 					valid_item: l_item /= Void
@@ -1390,7 +1390,7 @@ feature {NONE} -- Configuration setting
 		local
 			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
-			if grid.selected_rows /= Void and then not grid.selected_rows.is_empty then
+			if grid.has_selected_row then
 				l_item ?= grid.selected_rows.first.item (1)
 				check
 					valid_item: l_item /= Void

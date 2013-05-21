@@ -226,7 +226,7 @@ feature -- Query
 		local
 			lrow: EV_GRID_ROW
 		do
-			if profiles_grid.row_count > 0 and then not profiles_grid.selected_rows.is_empty then
+			if profiles_grid.row_count > 0 and then profiles_grid.has_selected_row then
 				lrow := profiles_grid.selected_rows.first
 				Result := profile_from_row (lrow)
 			end
@@ -550,13 +550,10 @@ feature -- Status Setting
 		end
 
 	on_show
-		local
-			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
 			if profiles_grid /= Void then
-				l_selected_rows := profiles_grid.selected_rows
-				if not l_selected_rows.is_empty then
-					l_selected_rows.first.ensure_visible
+				if profiles_grid.has_selected_row then
+					profiles_grid.selected_rows.first.ensure_visible
 				end
 			end
 		end

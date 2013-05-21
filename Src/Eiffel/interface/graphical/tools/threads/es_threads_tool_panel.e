@@ -217,12 +217,9 @@ feature -- Status setting
 	selected_row: EV_GRID_ROW
 		require
 			single_row_selection_enabled: grid.is_single_row_selection_enabled
-		local
-			rows: LIST [EV_GRID_ROW]
 		do
-			rows := grid.selected_rows
-			if not rows.is_empty then
-				Result := rows.first
+			if grid.has_selected_row then
+				Result := grid.selected_rows.first
 			end
 		end
 

@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 				do
 					if
 						attached {EB_DEBUGGER_MANAGER} debugger_manager as l_manager and then attached l_manager.object_viewer_cmd as l_cmd and then
-						attached object_grid as g and then g.selected_rows.count > 0
+						attached object_grid as g and then g.has_selected_row
 					then
 						if attached {OBJECT_STONE} g.grid_pebble_from_row_and_column (g.selected_rows.first, Void) as ost then
 							l_cmd.set_stone (ost)

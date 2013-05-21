@@ -211,12 +211,11 @@ feature -- Query
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-		local
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
-			l_rows := edit_contract_grid.selected_rows
-			if not l_rows.is_empty then
-				Result ?= l_rows.last.data
+			if edit_contract_grid.has_selected_row then
+				if attached {like selected_source} edit_contract_grid.selected_rows.last.data as l_result then
+					Result := l_result
+				end
 			end
 		end
 
@@ -608,7 +607,7 @@ feature -- Modification
 				check False end
 			end
 		ensure
-			internal_context_contracts_detached: edit_contract_grid.selected_rows.is_empty implies internal_context_contracts = Void
+			internal_context_contracts_detached: not edit_contract_grid.has_selected_row implies internal_context_contracts = Void
 		end
 
 feature {NONE} -- Helpers
@@ -1133,7 +1132,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

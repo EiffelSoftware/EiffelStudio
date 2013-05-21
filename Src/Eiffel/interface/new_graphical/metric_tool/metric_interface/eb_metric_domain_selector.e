@@ -476,8 +476,8 @@ feature{NONE} -- Actions
 			l_row_cnt: INTEGER
 			l_row: EV_GRID_ROW
 		do
-			l_select_rows := grid.selected_rows
-			if not l_select_rows.is_empty then
+			if grid.has_selected_row then
+				l_select_rows := grid.selected_rows
 				l_smallest_row_index := grid.row_count
 				from
 					l_select_rows.start

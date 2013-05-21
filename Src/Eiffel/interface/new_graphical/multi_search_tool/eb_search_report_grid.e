@@ -593,7 +593,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 	on_grid_row_double_clicked (a, b, c : INTEGER; d, e, f: DOUBLE; g, h: INTEGER; a_row: EV_GRID_ROW)
 			-- A row is clicked by mouse pointer.
 		do
-			if not selected_rows.is_empty then
+			if has_selected_row then
 				if selected_rows.first = a_row then
 					go_to_line_of_editor (a_row)
 				end
@@ -602,31 +602,27 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 
 	on_key_pressed (a_key: EV_KEY)
 			-- On key pressed.
-		local
-			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
 			Precursor {ES_GRID}(a_key)
 			inspect a_key.code
 			when key_enter then
-				if not selected_rows.is_empty then
+				if has_selected_row then
 					go_to_line_of_editor (selected_rows.first)
 				end
 			when key_home then
 				if row_count > 0 then
 					remove_selection
 					select_row (1)
-					l_selected_rows := selected_rows
-					if not l_selected_rows.is_empty then
-						l_selected_rows.first.ensure_visible
+					if has_selected_row then
+						selected_rows.first.ensure_visible
 					end
 				end
 			when key_end then
 				if row_count > 0 then
 					remove_selection
 					select_row (row_count)
-					l_selected_rows := selected_rows
-					if not l_selected_rows.is_empty then
-						l_selected_rows.first.ensure_visible
+					if has_selected_row then
+						selected_rows.first.ensure_visible
 					end
 				end
 			else
@@ -735,7 +731,6 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 		local
 			l_row: EV_GRID_ROW
 			l_row_index: INTEGER
-			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
 			if not multi_search_performer.off then
 				l_row := grid_row_by_data (multi_search_performer.item)
@@ -745,15 +740,13 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			elseif row_count > 0 then
 				l_row_index := 1
 			end
-			l_selected_rows := selected_rows
-			if not l_selected_rows.is_empty then
-				(l_selected_rows @ 1).disable_select
+			if has_selected_row then
+				(selected_rows @ 1).disable_select
 			end
 			if l_row_index > 0 and l_row_index <= row_count then
 				select_row (l_row_index)
-				l_selected_rows := selected_rows
-				if not l_selected_rows.is_empty then
-					go_to_line_of_editor (l_selected_rows @ 1)
+				if has_selected_row then
+					go_to_line_of_editor (selected_rows @ 1)
 				end
 			end
 		end
@@ -785,7 +778,7 @@ invariant
 	search_tool_set: search_tool /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -361,13 +361,10 @@ feature -- Tree construction
 			end
 		end
 
-	selected_row: EV_GRID_ROW
+	selected_row: detachable EV_GRID_ROW
 			-- Selected row
-		local
-			lst: like  selected_rows
 		do
-			lst := selected_rows
-			if not lst.is_empty then
+			if has_selected_row then
 				Result := selected_rows.first
 			end
 		end

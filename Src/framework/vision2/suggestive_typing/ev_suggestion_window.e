@@ -212,11 +212,8 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
 	is_navigable: BOOLEAN
 			-- Can current being traversed using left and right arrow keys?
 			--| This happens when you have tree items in the list.
-		local
-			l_rows: detachable ARRAYED_LIST [EV_GRID_ROW]
 		do
-			l_rows := grid.selected_rows
-			Result := not l_rows.is_empty and l_rows.first.is_expanded
+			Result := grid.has_selected_row and then grid.selected_rows.first.is_expanded
 		end
 
 	go_first
@@ -261,8 +258,8 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
 			l_offset: INTEGER
 		do
 			l_grid := grid
-			l_rows := l_grid.selected_rows
-			if not l_rows.is_empty then
+			if l_grid.has_selected_row then
+				l_rows := l_grid.selected_rows
 				ix := l_rows.first.index
 				l_grid.remove_selection
 				if a_is_forward then
@@ -307,8 +304,8 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
 			else
 				l_target_row := first_visible_row (l_grid)
 			end
-			l_rows := l_grid.selected_rows
-			if not l_rows.is_empty then
+			if l_grid.has_selected_row then
+				l_rows := l_grid.selected_rows
 				l_grid.remove_selection
 				l_row := l_rows.first
 				if l_row = l_target_row then
@@ -442,11 +439,9 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 			-- Perform suggestion with selected item and close window.
 		local
 			l_grid: like grid
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
 			l_grid := grid
-			l_rows := l_grid.selected_rows
-			if not l_rows.is_empty and then attached {like row_data_type} l_rows.first.data as l_data then
+			if l_grid.has_selected_row and then attached {like row_data_type} l_grid.selected_rows.first.data as l_data then
 				field.insert_suggestion (l_data)
 				field.close_actions.call ([l_data])
 			end

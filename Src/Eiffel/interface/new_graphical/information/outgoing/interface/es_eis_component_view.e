@@ -64,7 +64,7 @@ feature -- HELP_CONTEXT_I, Access
 		local
 			l_eis_entry: detachable EIS_ENTRY
 		do
-			if eis_grid.selected_rows.count > 0 and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
+			if eis_grid.has_selected_row and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
 				l_eis_entry := l_entry
 			end
 			if l_eis_entry /= Void and then attached l_eis_entry.source as l_src and then not l_src.is_empty then
@@ -78,7 +78,7 @@ feature -- HELP_CONTEXT_I, Access
 	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		do
-			if eis_grid.selected_rows.count > 0 and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
+			if eis_grid.has_selected_row and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
 				Result := create {HELP_SECTION_EIS_ENTRY}.make (l_entry)
 			end
 		end
@@ -86,7 +86,7 @@ feature -- HELP_CONTEXT_I, Access
 	help_context_description: detachable STRING_32
 			-- An optional description of the context.
 		do
-			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
+			if eis_grid.has_selected_row and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
 				eis_output.process (l_entry)
 				Result := eis_output.last_output_code
 			end
@@ -96,7 +96,7 @@ feature -- HELP_CONTEXT_I, Access
 			-- <Precursor>
 			-- Help provider computed from selected eis entry
 		do
-			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_eis_entry then
+			if eis_grid.has_selected_row and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_eis_entry then
 				Result := help_provider_from_protocol (l_eis_entry.protocol)
 			else
 				check entry_not_attached: False end
@@ -293,7 +293,7 @@ feature -- Query
 	is_help_available: BOOLEAN
 			--
 		do
-			Result := Precursor {HELP_CONTEXT_I} and then not eis_grid.selected_rows.is_empty
+			Result := Precursor {HELP_CONTEXT_I} and then eis_grid.has_selected_row
 		end
 
 	same_view (a_view: like Current): BOOLEAN
@@ -447,7 +447,7 @@ feature {NONE} -- Events
 					end
 				end
 			elseif (ev_key.code = {EV_KEY_CONSTANTS}.key_left or ev_key.code = {EV_KEY_CONSTANTS}.key_right) and then component_editable then
-				if eis_grid.selected_rows.count >= 1 then
+				if eis_grid.has_selected_row then
 					if attached eis_grid.selected_rows.first as l_row then
 						l_row.item (1).activate
 					end

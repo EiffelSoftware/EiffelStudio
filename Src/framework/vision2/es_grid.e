@@ -984,14 +984,17 @@ feature -- Grid helpers
 		end
 
 	single_selected_row: detachable EV_GRID_ROW
+			-- Single selected row
 		require
 			single_row_selection: is_single_row_selection_enabled or (is_multiple_row_selection_enabled and selected_rows.count <= 1)
 		local
 			l_rows: like selected_rows
 		do
-			l_rows := selected_rows
-			if l_rows.count = 1 then
-				Result := l_rows.first
+			if has_selected_row then
+				l_rows := selected_rows
+				if l_rows.count = 1 then
+					Result := l_rows.first
+				end
 			end
 		end
 

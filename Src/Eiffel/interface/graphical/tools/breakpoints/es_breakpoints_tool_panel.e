@@ -1275,8 +1275,8 @@ feature {NONE} -- Events on grid
 					g.select_all_rows
 				end
 			else
-				l_selected_rows := g.selected_rows
-				if not l_selected_rows.is_empty then
+				if g.has_selected_row then
+					l_selected_rows := g.selected_rows
 					inspect a_key.code
 					when {EV_KEY_CONSTANTS}.key_space then
 						from
@@ -1427,7 +1427,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

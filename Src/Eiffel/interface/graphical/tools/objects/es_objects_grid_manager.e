@@ -170,8 +170,8 @@ feature -- Clipboard related
 			lrow: EV_GRID_ROW
 			i, c,d, doffset: INTEGER
 		do
-			lrows := grid.selected_rows
-			if lrows.count > 0 then
+			if grid.has_selected_row then
+				lrows := grid.selected_rows
 					--| Keep only displayed selected rows, and sort them
 				from
 					create lrows_index.make

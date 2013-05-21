@@ -593,11 +593,14 @@ feature {NONE} -- Actions
 
 	remove_custom
 			-- Remove a custom condition.
+		local
+			l_row: EV_GRID_ROW
 		do
-			if not custom.selected_rows.is_empty then
+			if custom.has_selected_row then
+				l_row := custom.selected_rows.first
 				if
-					attached {TEXT_PROPERTY [STRING_GENERAL]} custom.selected_rows.first.item (1) as l_key and then
-					attached {TEXT_PROPERTY [STRING_GENERAL]} custom.selected_rows.first.item (3) as l_value
+					attached {TEXT_PROPERTY [STRING_GENERAL]} l_row.item (1) as l_key and then
+					attached {TEXT_PROPERTY [STRING_GENERAL]} l_row.item (3) as l_value
 				then
 					data.remove_custom (l_key.value, l_value.value)
 				end

@@ -100,7 +100,7 @@ feature -- Status report
 	has_selected_item: BOOLEAN
 			-- Does current has a selected item?
 		do
-			Result := not projects_list.selected_rows.is_empty
+			Result := projects_list.has_selected_row
 		end
 
 	is_empty: BOOLEAN

@@ -378,7 +378,7 @@ feature{NONE} -- Implementation/Actions
 			l_index: INTEGER
 			l_data: TUPLE [metric: STRING; coefficient: STRING]
 		do
-			if not metric_grid.selected_rows.is_empty then
+			if metric_grid.has_selected_row then
 				l_row := metric_grid.selected_rows.first
 				l_index := l_row.index
 				if l_row.data /= Void and then l_index > 1 then
@@ -402,7 +402,7 @@ feature{NONE} -- Implementation/Actions
 			l_index: INTEGER
 			l_data: TUPLE [metric: STRING; coefficient: STRING]
 		do
-			if not metric_grid.selected_rows.is_empty then
+			if metric_grid.has_selected_row then
 				l_row := metric_grid.selected_rows.first
 				l_index := l_row.index
 				if l_row.data /= Void and then l_index < metric_grid.row_count - 1 then

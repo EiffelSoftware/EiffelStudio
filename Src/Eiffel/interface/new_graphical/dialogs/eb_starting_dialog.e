@@ -268,7 +268,7 @@ feature {NONE} -- Execution
 			-- Handle case when an item has been deselected and whether or not
 			-- the `OK' button should be activated.
 		do
-			if wizards_list.selected_rows.is_empty and then not open_project.has_selected_item then
+			if not wizards_list.has_selected_row and then not open_project.has_selected_item then
 				ok_button.disable_sensitive
 			else
 				ok_button.enable_sensitive
@@ -281,7 +281,7 @@ feature {NONE} -- Execution
 			update_preferences
 			ok_selected := True
 				-- Create a new project using an ISE Wizard
-			if not wizards_list.selected_rows.is_empty then
+			if wizards_list.has_selected_row then
 				check parent_window_not_void: parent_window /= Void end
 				create_new_project_using_wizard
 
@@ -356,7 +356,7 @@ feature {NONE} -- Execution
 			li: EV_GRID_LABEL_ITEM
 			currently_selected_wizard: EB_NEW_PROJECT_WIZARD
 		do
-			if not wizards_list.selected_rows.is_empty then
+			if wizards_list.has_selected_row then
 				li ?= wizards_list.selected_rows.first.item (1)
 				if li /= Void and then li.text.is_equal (Interface_names.l_basic_application) then
 						-- Create a blank project
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 			selected_item: EV_GRID_LABEL_ITEM
 			l_translated_name: STRING_32
 		do
-			if not wizards_list.selected_rows.is_empty then
+			if wizards_list.has_selected_row then
 				selected_item ?= wizards_list.selected_rows.first.item (1)
 			end
 			if selected_item /= Void then
@@ -649,7 +649,7 @@ feature {NONE} -- Private attributes
 			-- Widget for opening a project using a config file.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -274,8 +274,8 @@ feature{NONE} -- Actions
 			l_row_index: INTEGER
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
-				l_selected_rows := grid.selected_rows
-				if not l_selected_rows.is_empty then
+				if grid.has_selected_row then
+					l_selected_rows := grid.selected_rows
 					l_row_index := l_selected_rows.first.index
 					on_remove_dropped_row (l_selected_rows.first)
 					if l_row_index > grid.row_count then

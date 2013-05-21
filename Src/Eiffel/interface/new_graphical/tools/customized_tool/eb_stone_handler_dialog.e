@@ -291,7 +291,7 @@ feature{NONE} -- Actions
 	on_row_deselected (a_row: EV_GRID_ROW)
 			-- Action to be performed when `a_row' is deselected.			
 		do
-			if grid.selected_rows.is_empty then
+			if not grid.has_selected_row then
 				remove_button.disable_sensitive
 			end
 		end

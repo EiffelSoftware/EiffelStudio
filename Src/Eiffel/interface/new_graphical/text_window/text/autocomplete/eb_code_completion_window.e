@@ -612,7 +612,7 @@ feature {NONE} -- Option behaviour
 			l_list := choice_list
 			lock_update
 				-- Save selected item
-			if not l_list.selected_rows.is_empty then
+			if l_list.has_selected_row then
 				local_name ?= l_list.selected_rows.first.data
 				check
 					local_name_not_void: local_name /= Void
@@ -644,7 +644,7 @@ feature {NONE} -- Option behaviour
 		do
 			l_list := choice_list
 			lock_update
-			if not l_list.selected_rows.is_empty then
+			if l_list.has_selected_row then
 				local_index := l_list.selected_rows.first.index
 			end
 			build_displayed_list (buffered_input)
@@ -1056,7 +1056,7 @@ feature {NONE} -- Implementation
 	close_and_complete
 			-- close the window and perform completion with selected item
 		do
-			if not choice_list.selected_rows.is_empty then
+			if choice_list.has_selected_row then
 					-- Delete current token so it is later replaced by the completion text
 				if not buffered_input.is_empty then
 					remove_characters_entered_since_display
@@ -1092,7 +1092,7 @@ feature {NONE} -- Implementation
 			local_name: STRING_GENERAL
 			l_row: EV_GRID_ROW
 		do
-			if not choice_list.selected_rows.is_empty then
+			if choice_list.has_selected_row then
 				if character_to_append = '(' then
 					character_to_append := '%U'
 				end
@@ -1137,7 +1137,7 @@ feature {NONE} -- Implementation
 			l_name_item: NAME_FOR_COMPLETION
 			local_name: STRING_GENERAL
 		do
-			if not choice_list.selected_rows.is_empty then
+			if choice_list.has_selected_row then
 				l_row := choice_list.selected_rows.first
 				l_name_item ?= l_row.data
 				check

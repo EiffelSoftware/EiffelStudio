@@ -591,7 +591,7 @@ feature {NONE} -- Basic operations: Navigation
 
 				if l_valid_rows then
 						-- There are selectable rows
-					if l_grid.selected_rows.is_empty then
+					if not l_grid.has_selected_row then
 							-- Fetch last row's root row
 						l_row := l_grid.row (l_row_count)
 						if l_row.parent_row /= Void then
@@ -711,7 +711,7 @@ feature {NONE} -- Basic operations: Navigation
 				if l_valid_rows then
 						-- There are selectable rows
 
-					if l_grid.selected_rows.is_empty then
+					if not l_grid.has_selected_row then
 							-- Fetch last row's root row
 						l_row := l_grid.row (1)
 					else

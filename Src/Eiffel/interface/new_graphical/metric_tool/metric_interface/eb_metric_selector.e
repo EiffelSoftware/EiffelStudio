@@ -477,8 +477,8 @@ feature{NONE} -- Actions
 			l_grid: like metric_grid
 		do
 			l_grid := metric_grid
-			l_selected_rows := l_grid.selected_rows
-			if not l_selected_rows.is_empty then
+			if l_grid.has_selected_row then
+				l_selected_rows := l_grid.selected_rows
 				l_row := l_selected_rows.first
 				l_source_unit ?= l_row.data
 				if l_source_unit /= Void then
@@ -507,7 +507,7 @@ feature{NONE} -- Actions
 	on_row_deselected (a_row: EV_GRID_ROW)
 			-- Action to be performed when `a_row' is deselected
 		do
-			if metric_grid.selected_rows.is_empty then
+			if not metric_grid.has_selected_row then
 				move_unit_down_btn.disable_sensitive
 				move_unit_up_btn.disable_sensitive
 				metric_selected_actions.call ([Void])

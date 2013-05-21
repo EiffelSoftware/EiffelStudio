@@ -98,7 +98,7 @@ feature -- Actions
 				l_choice_list.pointer_button_release_item_actions.wipe_out
 				l_choice_list.pointer_motion_actions.wipe_out
 
-				if has_user_selected_item and then not l_choice_list.selected_rows.is_empty then
+				if has_user_selected_item and then l_choice_list.has_selected_row then
 					l_item ?= l_choice_list.selected_rows.first.item (1)
 					if l_item /= Void then
 						set_text (l_item.text)

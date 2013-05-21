@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 		do
 			if choice_list /= Void and then not choice_list.is_destroyed then
 				choice_list.focus_out_actions.wipe_out
-				if has_user_selected_item and then not choice_list.selected_rows.is_empty then
+				if has_user_selected_item and then choice_list.has_selected_row then
 					l_item ?= choice_list.selected_rows.first.item (1)
 					if l_item /= Void then
 						if attached {EB_GRID_LISTABLE_CHOICE_ITEM_ITEM} l_item.data as lt_selected_item and then lt_selected_item /= selected_item then

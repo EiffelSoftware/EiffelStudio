@@ -396,7 +396,7 @@ feature {NONE} -- Cursor movement
 			l_last_selectable: INTEGER
 		do
 			if choice_list.row_count > 0 then
-				if not choice_list.selected_items.is_empty then
+				if choice_list.has_selected_row then
 					lock_update
 					l_selected_row := choice_list.selected_rows.first.index
 					if not choice_list.visible_row_indexes.has (l_selected_row) then
@@ -438,8 +438,8 @@ feature {NONE} -- Cursor movement
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
 			if choice_list.row_count > 0 then
-				l_rows := choice_list.selected_rows
-				if not l_rows.is_empty then
+				if choice_list.has_selected_row then
+					l_rows := choice_list.selected_rows
 					lock_update
 					l_selected_row := l_rows.first.index
 					if not choice_list.visible_row_indexes.has (l_selected_row) then
@@ -480,8 +480,8 @@ feature {NONE} -- Cursor movement
 		do
 			l_list := choice_list
 			if l_list.row_count > 0 then
-				l_rows := l_list.selected_rows
-				if not l_rows.is_empty then
+				if l_list.has_selected_row then
+					l_rows := l_list.selected_rows
 					ix := l_rows.first.index
 					l_list.remove_selection
 					from
@@ -505,9 +505,8 @@ feature {NONE} -- Cursor movement
 							i := l_list.row_count
 						end
 					end
-					l_rows := l_list.selected_rows
-					if not l_rows.is_empty then
-						l_rows.first.ensure_visible
+					if l_list.has_selected_row then
+						l_list.selected_rows.first.ensure_visible
 					end
 				end
 			end
@@ -524,8 +523,8 @@ feature {NONE} -- Cursor movement
 		do
 			l_list := choice_list
 			if l_list.row_count > 0 then
-				l_rows := l_list.selected_rows
-				if not l_rows.is_empty then
+				if l_list.has_selected_row then
+					l_rows := l_list.selected_rows
 					ix := l_rows.first.index
 					l_list.remove_selection
 					from
@@ -549,9 +548,8 @@ feature {NONE} -- Cursor movement
 							i := 1
 						end
 					end
-					l_rows := l_list.selected_rows
-					if not l_rows.is_empty then
-						l_rows.first.ensure_visible
+					if l_list.has_selected_row then
+						l_list.selected_rows.first.ensure_visible
 					end
 				end
 			end
@@ -567,8 +565,8 @@ feature {NONE} -- Cursor movement
 		do
 			l_list := choice_list
 			if l_list.row_count > 0 then
-				l_rows := l_list.selected_rows
-				if not l_rows.is_empty then
+				if l_list.has_selected_row then
+					l_rows := l_list.selected_rows
 					ix := l_rows.first.index
 					l_row := l_list.row (ix)
 					if l_row.is_expandable then
@@ -581,9 +579,8 @@ feature {NONE} -- Cursor movement
 							end
 						end
 					end
-					l_rows := l_list.selected_rows
-					if not l_rows.is_empty then
-						l_rows.first.ensure_visible
+					if l_list.has_selected_row then
+						l_list.selected_rows.first.ensure_visible
 					end
 				end
 			end
@@ -600,8 +597,8 @@ feature {NONE} -- Cursor movement
 		do
 			l_list := choice_list
 			if l_list.row_count > 0 then
-				l_rows := l_list.selected_rows
-				if not l_rows.is_empty then
+				if l_list.has_selected_row then
+					l_rows := l_list.selected_rows
 					ix := l_rows.first.index
 					l_row := l_list.row (ix)
 					if l_row.is_expandable and then l_row.is_expanded then
@@ -647,9 +644,8 @@ feature {NONE} -- Cursor movement
 						l_list.row (i).enable_select
 					end
 				end
-				l_rows := l_list.selected_rows
-				if not l_rows.is_empty then
-					l_rows.first.ensure_visible
+				if l_list.has_selected_row then
+					l_list.selected_rows.first.ensure_visible
 				end
 			end
 		end
@@ -932,7 +928,7 @@ feature {NONE} -- Implementation
 	close_and_complete
 			-- close the window and perform completion with selected item
 		do
-			if not choice_list.selected_rows.is_empty then
+			if choice_list.has_selected_row then
 					-- Delete current token so it is later replaced by the completion text
 				if buffered_input /= Void and then not buffered_input.is_empty then
 					remove_characters_entered_since_display
@@ -953,8 +949,8 @@ feature {NONE} -- Implementation
 		do
 			continue_completion := False
 			l_list := choice_list
-			l_rows := l_list.selected_rows
-			if not l_rows.is_empty then
+			if l_list.has_selected_row then
+				l_rows := l_list.selected_rows
 				if character_to_append = '(' then
 					character_to_append := '%U'
 				end
@@ -1055,8 +1051,8 @@ feature {NONE} -- Implementation
 		do
 			l_list := choice_list
 			if l_list.column_count > 0 and then l_list.row_count > 0 then
-				l_rows := l_list.selected_rows
-				if l_list.is_displayed and then not l_rows.is_empty then
+				if l_list.is_displayed and then l_list.has_selected_row then
+					l_rows := l_list.selected_rows
 					l_select_row_visible := l_list.visible_row_indexes.has (l_rows.first.index)
 				end
 				i := l_list.column (1).required_width_of_item_span (1, l_list.row_count) + 3
@@ -1329,10 +1325,8 @@ feature {NONE} -- String matching
 					l_list.row (current_index).enable_select
 				end
 				if is_displayed then
-					l_rows := l_list.selected_rows
-					if not l_rows.is_empty then
-						l_row := l_rows.first
-						l_row.ensure_visible
+					if l_list.has_selected_row then
+						l_list.selected_rows.first.ensure_visible
 					end
 				end
 			end
@@ -1455,7 +1449,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

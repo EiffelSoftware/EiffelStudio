@@ -348,7 +348,7 @@ feature{NONE} -- Actions
 			l_row_index: INTEGER
 			l_row_count: INTEGER
 		do
-			if not item_grid.selected_rows.is_empty then
+			if item_grid.has_selected_row then
 				l_row := item_grid.selected_rows.first
 				l_row_index := l_row.index
 				l_descriptor := data_from_row (l_row)
@@ -395,7 +395,7 @@ feature{NONE} -- Actions
 	on_item_deselected (a_row: EV_GRID_ROW)
 			-- Action to be performed if `a_row' is deselected in `item_grid'
 		do
-			if item_grid.selected_rows.is_empty then
+			if not item_grid.has_selected_row then
 				property_grid.hide
 				empty_selection_label.show
 				remove_button.disable_sensitive
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 				descriptor_row_table.item (last_selected_descriptor).enable_select
 			else
 				l_grid := item_grid
-				if l_grid.selected_rows.is_empty and then l_grid.row_count > 0 then
+				if not l_grid.has_selected_row and then l_grid.row_count > 0 then
 					l_grid.row (1).enable_select
 					l_grid.set_focus
 				end

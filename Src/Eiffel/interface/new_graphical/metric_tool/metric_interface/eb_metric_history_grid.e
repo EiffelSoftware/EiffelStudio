@@ -232,8 +232,8 @@ feature -- Actions
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_space or a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				selection_change_actions.block
-				l_selected_rows := grid.selected_rows
-				if not l_selected_rows.is_empty then
+				if grid.has_selected_row then
+					l_selected_rows := grid.selected_rows
 					from
 						l_selected_rows.start
 					until

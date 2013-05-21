@@ -799,7 +799,7 @@ feature {NONE} -- Event handling
 		do
 			if
 				object_viewer_cmd /= Void and then
-				attached watches_grid as g and then g.selected_rows.count > 0
+				attached watches_grid as g and then g.has_selected_row
 			then
 				if attached {OBJECT_STONE} g.grid_pebble_from_row_and_column (g.selected_rows.first, Void) as ost then
 					object_viewer_cmd.set_stone (ost)
@@ -904,8 +904,8 @@ feature {NONE} -- Event handling
 			if update_commands_on_expressions_delayer /= Void then
 				update_commands_on_expressions_delayer.cancel_request
 			end
-			lst := watches_grid.selected_rows
-			if not lst.is_empty then
+			if watches_grid.has_selected_row then
+				lst := watches_grid.selected_rows
 				from
 					lst.start
 					l_new_exp_row := new_expression_row

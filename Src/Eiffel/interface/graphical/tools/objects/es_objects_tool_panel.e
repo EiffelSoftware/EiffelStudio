@@ -1409,7 +1409,7 @@ feature {NONE} -- Impl : Stack objects grid
 					and then not ev_application.alt_pressed
 					and then not ev_application.shift_pressed
 				then
-					if grid.selected_rows.count > 0 then
+					if grid.has_selected_row then
 						if attached {OBJECT_STONE} grid.grid_pebble_from_row_and_column (grid.selected_rows.first, Void) as ost then
 							object_viewer_cmd.set_stone (ost)
 						end

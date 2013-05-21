@@ -340,8 +340,8 @@ feature {NONE} -- Actions
 			l_row: EV_GRID_ROW
 			l_metric: EB_METRIC_IMPORT_GRID_ROW
 		do
-			l_rows := grid.selected_rows
-			if not l_rows.is_empty then
+			if grid.has_selected_row then
+				l_rows := grid.selected_rows
 				l_row := l_rows.first
 				l_metric ?= l_row.data
 				if l_metric /= Void then
@@ -568,13 +568,11 @@ feature{NONE} -- Implementation
 			l_missing_metrics: LINKED_LIST [STRING]
 			l_unselected_metrics: LINKED_LIST [STRING]
 			l_current_selected_metric: EB_METRIC_IMPORT_GRID_ROW
-			l_selected_rows: LIST [EV_GRID_ROW]
 		do
 			l_grid := grid
 			if a_keep_selection then
-				l_selected_rows := l_grid.selected_rows
-				if not l_selected_rows.is_empty then
-					l_current_selected_metric ?= l_selected_rows.first.data
+				if l_grid.has_selected_row then
+					l_current_selected_metric ?= l_grid.selected_rows.first.data
 				end
 			end
 			l_grid.remove_and_clear_all_rows

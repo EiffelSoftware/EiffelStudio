@@ -2623,8 +2623,8 @@ test	attached-attribute-initialization		attach077 tcf pass attached_types void_s
 test	detachable-formal-attached-constraint		attach078 tcf pass attached_types formal generic constraint conformance validity
 test	empty-attribute-body-bogus-vevi			attach079 tcf pass attached_types validity attribute
 test	bogus-object-test						attach080 tcf pass attached_types object_test execution
-test	nonconforming-inheritance-bogus-vevi		attach081 tcf fail attached_types non-conforming attribute
-test	repeated-inheritance-bogus-vevi			attach082 tcf fail attached_types attribute
+test	nonconforming-inheritance-bogus-vevi		attach081 tcf pass attached_types non-conforming attribute
+test	repeated-inheritance-bogus-vevi			attach082 tcf pass attached_types attribute
 test	self-initializing-attribute-gc		attach083 tcf pass attached_types void_safe attribute self_init execution
 test	manifest-string-type			attach084 tcf pass attached_types void_safe execution
 test	initialized-after-unreachable		attach085 tcf pass attached_types void_safe unreachable_code

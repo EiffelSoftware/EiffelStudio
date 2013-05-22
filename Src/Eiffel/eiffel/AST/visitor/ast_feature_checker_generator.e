@@ -167,7 +167,7 @@ feature -- Type checking
 			if a_is_safe_to_check_inherited then
 				process_inherited_assertions (a_feature, False)
 			end
-			check_vevi
+			check_creation
 		end
 
 	type_check_and_code (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_replicated_in_current_class: BOOLEAN)
@@ -225,7 +225,7 @@ feature -- Type checking
 					end
 				end
 			end
-			check_vevi
+			check_creation
 		end
 
 	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN)
@@ -383,15 +383,15 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 
 feature {NONE} -- Internal type checking
 
-	check_vevi
-			-- Check VEVI for attributes.
+	check_creation
+			-- Check VEVI for attributes and record information necessary to check validity rules for targeted expressions.
 		local
 			c: CLASS_C
 			creators: HASH_TABLE [EXPORT_I, STRING_8]
 		do
 			c := context.current_class
-				-- Optimization: skip deferred classes and those without attributes.
-			if not c.is_deferred and then is_void_safe_initialization (c) and then not c.skeleton.is_empty then
+				-- Optimization: skip deferred classes.
+			if not c.is_deferred and then is_void_safe_initialization (c) then
 				creators := c.creators
 					-- Check if the current feature is a creation procedure.
 				if

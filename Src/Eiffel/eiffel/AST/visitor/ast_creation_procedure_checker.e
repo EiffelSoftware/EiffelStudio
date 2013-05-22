@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Validator of creation procedures that ensures they set all the attributes as required."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
+	date: "$Date: 2012-02-01 23:20:47 +0400$"
 	revision: "$Revision$"
 
 class
@@ -15,8 +15,13 @@ inherit
 			process_access_feat_as,
 			process_access_id_as,
 			process_access_inv_as,
+			process_address_current_as,
 			process_assign_as,
+			process_bin_eq_as,
+			process_bin_ne_as,
+			process_binary_as,
 			process_case_as,
+			process_converted_expr_as,
 			process_creation_as,
 			process_creation_expr_as,
 			process_current_as,
@@ -36,23 +41,19 @@ inherit
 			process_result_as,
 			process_retry_as,
 			process_routine_as,
-			process_routine_creation_as
+			process_routine_creation_as,
+			process_un_old_as,
+			process_unary_as
 		end
 
 	SHARED_ERROR_HANDLER
-		export {NONE}
-			all
-		end
+		export {NONE} all end
 
 	SHARED_SERVER
-		export {NONE}
-			all
-		end
+		export {NONE} all end
 
 	SHARED_WORKBENCH
-		export {NONE}
-			all
-		end
+		export {NONE} all end
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
@@ -66,14 +67,36 @@ feature {NONE} -- Creation
 		require
 			f_attached: f /= Void
 			c_attached: c /= Void
+		local
+			s: GENERIC_SKELETON
+			i: INTEGER
 		do
+			tmp_creation_server.remove_procedure (f.rout_id_set.first, c.current_class.class_id)
 			creation_procedure := f
 			context := c
 			create {ARRAYED_STACK [INTEGER_32]} bodies.make (1)
 				-- Last entry is used to track initialization of a result in an attribute with a body.
 			create attribute_initialization.make (c.attributes.count + 1)
+			create uninitialized_keeper.make (1)
+			create {AST_COLLECTION_KEEPER} keeper.make_from_array (<<attribute_initialization.keeper, uninitialized_keeper>>)
+			from
+				s := current_class.skeleton
+				i := s.count
+			until
+				i <= 0
+			loop
+				if not current_class.feature_of_feature_id (s [i].feature_id).type.is_initialization_required then
+						-- Mark an attribute that does not require initialization as set.
+					attribute_initialization.set_attribute (i)
+				end
+				i := i - 1
+			end
 			process (f)
-			check_attributes (f.body.last_token (Void))
+			use_current (f.body.last_token (Void))
+			check_attributes
+			if has_qualified_call then
+				tmp_creation_server.set_has_qualified_call (has_qualified_call, f.rout_id_set.first, current_class.class_id)
+			end
 		end
 
 feature {NONE} -- Processing
@@ -87,14 +110,15 @@ feature {NONE} -- Processing
 			g: FEATURE_I
 			s: ASSERT_ID_SET
 			a: INH_ASSERT_INFO
-			p: FEATURE_AS
-			b: ROUTINE_AS
 			i: INTEGER
 			q: BOOLEAN
+			c: BOOLEAN
 		do
 			g := context.current_feature
 			q := is_qualified
 			is_qualified := False
+			c := is_creation
+			is_creation := False
 			context.set_current_feature (f)
 				-- Put body index to stack to avoid recursion
 			bodies.put (f.body_index)
@@ -108,13 +132,11 @@ feature {NONE} -- Processing
 				loop
 					a := s.item (i)
 					check a_attached: a /= Void end
-					if a.has_precondition then
-						p := body_server.item (a.written_in, a.body_index)
-						check
-							p_attached: p /= Void
-						end
-						b ?= p.body.content
-						check b_attached: b /= Void end
+					if
+						a.has_precondition and then
+						attached body_server.item (a.written_in, a.body_index) as p and then
+						attached {ROUTINE_AS} p.body.content as b
+					then
 						context.set_written_class (system.class_of_id (a.written_in))
 						b.precondition.process (Current)
 					end
@@ -133,13 +155,10 @@ feature {NONE} -- Processing
 				loop
 					a := s.item (i)
 					check a_attached: a /= Void end
-					if a.has_postcondition then
-						p := body_server.item (a.written_in, a.body_index)
-						check
-							p_attached: p /= Void
-						end
-						b ?= p.body.content
-						check b_attached: b /= Void end
+					if a.has_postcondition and then
+						attached body_server.item (a.written_in, a.body_index) as p and then
+						attached {ROUTINE_AS} p.body.content as b
+					then
 						context.set_written_class (system.class_of_id (a.written_in))
 						b.postcondition.process (Current)
 					end
@@ -148,56 +167,95 @@ feature {NONE} -- Processing
 			end
 				-- Remove body index
 			bodies.remove
+			is_creation := c
 			is_qualified := q
 			context.set_current_feature (g)
 			context.set_written_class (g.written_class)
 		end
 
-	check_attributes (l: LOCATION_AS)
-			-- Verify that all attributes are properly initialized at location `l'.
-		require
-			l_attached: l /= Void
+	check_attributes
+			-- Verify that all attributes are properly initialized.
+		do
+			collect_unset_attributes
+			if attached unset_attributes as u then
+					-- Report error if necessary.
+				error_handler.insert_error (create {VEVI}.make_attributes
+					(u, current_class.class_id, creation_procedure, uninitialized_keeper.location, uninitialized_keeper.written_feature))
+			end
+				-- Mark all attributes as set to avoid reporting duplicate errors.
+			attribute_initialization.set_all
+				-- It's safe to assume that now Current is initialized.
+			uninitialized_keeper.unuse
+		end
+
+	collect_unset_attributes
+			-- Collect attributes that are not set in `unset_attributes'.
 		local
 			s: GENERIC_SKELETON
 			i: INTEGER
+			e: NATURAL_32
+			f: FEATURE_I
+			u: like unset_attributes
 		do
-			if not is_checking_all then
-					-- Avoid recursion because all attributes will be checked anyway.
-				is_checking_all := True
-					-- Make sure attribute initialization checks do not affect each other.
-					-- Treat each attribute initialization in its own section that does not interfere with the other one.
-				attribute_initialization.keeper.enter_realm
-				from
-					s := current_class.skeleton
-					i := s.count
-				until
-					i <= 0
-				loop
-					check_attribute (current_class.feature_of_feature_id (s [i].feature_id), l)
-					i := i - 1
-					if i > 0 then
-							-- Move to the next independent section of checks.
-						attribute_initialization.keeper.save_sibling
+			if
+				not is_checking_all and then
+				uninitialized_keeper.is_used
+			then
+				if attribute_initialization.has_unset then
+						-- Avoid recursion because all attributes will be checked anyway.
+					is_checking_all := True
+						-- Make sure attribute initialization checks do not affect each other.
+						-- Treat each attribute initialization in its own section that does not interfere with the other one.
+					keeper.enter_realm
+					from
+						e := error_handler.error_level
+						s := current_class.skeleton
+						i := s.count
+					until
+						i <= 0
+					loop
+						if not attribute_initialization.is_attribute_set (i) and then not is_checking_one then
+							f := current_class.feature_of_feature_id (s [i].feature_id)
+							check_attribute (f)
+							if is_unset then
+								if not attached u then
+									create u.make (1)
+								end
+								u.extend (f)
+							end
+							if i > 1 and then e = error_handler.error_level then
+									-- Move to the next independent section of checks if there are no errors.
+									-- If there are errors, avoid reporting repeated errors.
+								keeper.save_sibling
+							end
+						end
+							-- It's safe to assume that the attribute that was checked, is initialized.
+						attribute_initialization.set_attribute (i)
+						i := i - 1
 					end
-						-- It's safe to assume that the attribute that was checked, is initialized.
-					attribute_initialization.set_attribute (i + 1)
+						-- Avoid affecting outer scopes with updated attribute status information.
+					keeper.leave_optional_realm
+				else
+						-- Update initialization status of Current.
+					uninitialized_keeper.unuse
 				end
-				attribute_initialization.keeper.leave_realm
 					-- All attributes are checked.
 				is_checking_all := False
 			end
+				-- Report attributes that are not set.
+			unset_attributes := u
 		end
 
-	check_attribute (f: FEATURE_I; l: LOCATION_AS)
-			-- Verify that the attribute `f' is initialized if required at location `l'
-			-- including recursive check of self-initializing attribute body and
-			-- report error if the attribute is not set and is not self-initializing.
+	check_attribute (f: FEATURE_I)
+			-- Verify that the attribute `f' is initialized if required
+			-- including recursive check of self-initializing attribute body
+			-- and set `is_unset' if the attribute is not set and is not self-initializing.
 		require
 			f_attached: f /= Void
-			l_attached: l /= Void
 		local
 			i: INTEGER
 			is_processed: BOOLEAN
+			is_attribute_unset: BOOLEAN
 		do
 			if not is_checking_one then
 					-- It's OK to check an attribute.
@@ -205,7 +263,6 @@ feature {NONE} -- Processing
 				is_checking_one := is_checking_all
 				i := context.attributes.item (f.feature_id)
 				if
-					f.type.is_initialization_required and then
 					not attribute_initialization.is_attribute_set (i) and then
 					attached {ATTRIBUTE_I} f as a
 				then
@@ -219,20 +276,28 @@ feature {NONE} -- Processing
 							process (f)
 						end
 					end
-						-- Recheck if attribute is set that could happen when
+						-- Recheck if attribute is set.
 					if not is_processed and then not attribute_initialization.is_attribute_set (i) then
 							-- Attribute is not properly initialized.
-						error_handler.insert_error (create {VEVI}.make_attribute
-							(f, current_class.class_id, creation_procedure, context, l))
+						is_attribute_unset := True
 					end
-						-- Mark that the attribute is initialized because it is self-initializing
-						-- or just to avoid repeated errors.
-					attribute_initialization.set_attribute (i)
 				end
 					-- Unblock recursion for single attribute checks.
 				is_checking_one := False
 			end
+				-- Record status of the attribute.
+				-- Local variable is required to avoid issues with recursive calls.
+			is_unset := is_attribute_unset
 		end
+
+feature {NONE} -- Access
+
+	is_unset: BOOLEAN
+			-- Is attribute passed to `check_attribute' unset?
+
+	unset_attributes: detachable ARRAYED_LIST [FEATURE_I]
+			-- Attributes that are not set at the point where they are checked
+			-- by `collect_unset_attributes'.
 
 feature {AST_EIFFEL} -- Visitor: routine body
 
@@ -245,9 +310,9 @@ feature {AST_EIFFEL} -- Visitor: routine body
 			else
 					-- Attributes set by a once feature are not initialized,
 					-- because the next call to it will not execute the body.
-				attribute_initialization.keeper.enter_realm
+				keeper.enter_realm
 				Precursor (a)
-				attribute_initialization.keeper.leave_optional_realm
+				keeper.leave_optional_realm
 			end
 		end
 
@@ -295,20 +360,29 @@ feature {AST_EIFFEL} -- Visitor: access to features
 								process (f)
 							elseif f.is_attribute then
 									-- Check attribute initialization.
-								check_attribute (f, a.feature_name)
+								check_attribute (f)
+								if is_unset then
+									error_handler.insert_error (create {VEVI}.make_attribute
+										(f, current_class.class_id, creation_procedure, a.feature_name, context.current_feature))
+										-- Mark that the attribute is initialized to avoid repeated errors.
+									attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+								end
 							end
 						end
 					end
 				else
 					i := a.class_id
 					if system.has_class_of_id (i) and then attached system.class_of_id (i) as c then
-							-- Look for the feature in the recorded class.
+							-- Look for a feature in the recorded class.
 						f := c.feature_of_name_id (a.feature_name.name_id)
 							-- `f' is the feature in the ancestor class.
-							-- Evaluating the corresponding descendant version can improve
-							-- the reachability analysis.
+							-- Evaluating the corresponding descendant version
+							-- can improve reachability analysis.
 						debug ("to_implement")
 							;(create {REFACTORING_HELPER}).to_implement ("Find version of the feature in a descendant class")
+						end
+						if not error_handler.has_error and then attached f and then is_creation then
+							record_creation (f, a)
 						end
 					end
 				end
@@ -333,6 +407,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 			rc: INTEGER_32
 			t: CLASS_TYPE_AS
 		do
+			safe_process (a.parameters)
 			t := a.parent_base_class
 			if t /= Void then
 				i := Universe.class_named (t.class_name.name, context.current_class.group)
@@ -378,6 +453,42 @@ feature {AST_EIFFEL} -- Visitor: access to features
 			end
 		end
 
+feature {NONE} -- Dependency
+
+	record_creation (f: FEATURE_I; a: ACCESS_FEAT_AS)
+			-- Record that current feature calls creation procedure `f' in `a'.
+		require
+			is_creation
+		local
+			has_reference_argument: BOOLEAN
+			reported_attributes: detachable SPECIAL [INTEGER]
+		do
+				-- Check whether creation procedure has reference arguments
+				-- otherwise it may not depend on uninitialized objects.
+			if attached f.arguments as arguments then
+				has_reference_argument := across arguments as p some not p.item.is_expanded end
+			end
+			if has_reference_argument then
+					-- Record dependency.
+				collect_unset_attributes
+				if attached unset_attributes as u then
+						-- There are some unset attributes.
+						-- Record them for potential error report.
+					create reported_attributes.make_empty (u.count)
+					across
+						u as q
+					loop
+						reported_attributes.extend (q.item.rout_id_set.first)
+					end
+					tmp_creation_server.put_uninitialized_creation
+						(f.rout_id_set.first, a.class_id, creation_procedure.rout_id_set.first, current_class.class_id,
+						reported_attributes, uninitialized_keeper.location, uninitialized_keeper.written_feature.rout_id_set.first)
+				else
+					tmp_creation_server.put_creation (f.rout_id_set.first, a.class_id, creation_procedure.rout_id_set.first, current_class.class_id)
+				end
+			end
+		end
+
 feature {AST_EIFFEL} -- Visitor: Agents
 
 	process_routine_creation_as (a: ROUTINE_CREATION_AS)
@@ -398,7 +509,7 @@ feature {AST_EIFFEL} -- Visitor: Agents
 			then
 					-- Strict void safety: the agent implicitly relies on "Current".
 					-- The latter has to be initialized.
-				check_attributes (a.start_location)
+				use_current (a.feature_name)
 			end
 		end
 
@@ -410,15 +521,15 @@ feature {AST_EIFFEL} -- Visitor: Agents
 				-- Record current error level to avoid reporting errors
 				-- when there are issues with target and arguments.
 			e := error_handler.error_level
-				-- Check target and arguments.
-			Precursor (a)
+				-- Check arguments.
+			safe_process (a.operands)
 			if
 				error_handler.error_level = e and then
 				current_class.lace_class.is_void_safe_construct
 			then
 					-- Strict void safety: the agent implicitly relies on "Current".
 					-- The latter has to be initialized.
-				check_attributes (a.start_location)
+				use_current (a.feature_name)
 			end
 		end
 
@@ -426,9 +537,13 @@ feature {AST_EIFFEL} -- Visitor: Result
 
 	process_result_as (a: RESULT_AS)
 		do
-			if context.current_feature.is_attribute then
-					-- Correct use of result is checked during general routine body check.
-					-- Here it's sufficient to know that it is set.
+			if context.current_feature.is_attribute and then not attribute_initialization.is_attribute_set (result_position) then
+				if not is_attachment and then current_class.lace_class.is_void_safe_initialization then
+						-- Result is not properly set.
+					error_handler.insert_error (create {VEVI}.make_result (context, a))
+				end
+					-- Mark Result as properly set
+					-- because now it is attached or to avoid repeated errors.
 				attribute_initialization.set_attribute (result_position)
 			end
 		end
@@ -436,14 +551,37 @@ feature {AST_EIFFEL} -- Visitor: Result
 feature {AST_EIFFEL} -- Visitor: Current
 
 	process_current_as (a: CURRENT_AS)
+			-- <Precursor>
 		do
-				-- All attributes have to be set before `Current' can be used.
-			check_attributes (a)
+			use_current (a)
+		end
+
+	process_address_current_as (a: ADDRESS_CURRENT_AS)
+			-- <Precursor>
+		do
+			use_current (a.current_keyword)
 		end
 
 	process_like_cur_as (a: LIKE_CUR_AS)
+			-- <Precursor>
 		do
 				-- `Current' used as an anchor is safe.
+		end
+
+feature {NONE} -- Current tracking
+
+	use_current (location: LOCATION_AS)
+			-- Record that "Current" is used at `location'.
+		do
+				-- All attributes have to be set before `Current' can be used.
+			if not uninitialized_keeper.is_used and then attribute_initialization.has_unset then
+					-- Objects may be uninitialized, but they are tracked.
+				uninitialized_keeper.use (location, context.current_feature)
+			end
+			if current_class.is_expanded then
+					-- Objects of expanded type should be initialized.
+				check_attributes
+			end
 		end
 
 feature {AST_EIFFEL} -- Visitor: reattachment
@@ -459,10 +597,14 @@ feature {AST_EIFFEL} -- Visitor: reattachment
 	process_creation_as (a: CREATION_AS)
 		local
 			q: BOOLEAN
+			c: BOOLEAN
 		do
 			q := is_qualified
 			is_qualified := True
+			c := is_creation
+			is_creation := True
 			safe_process (a.call)
+			is_creation := c
 			is_qualified := q
 			is_attachment := True
 			a.target.process (Current)
@@ -482,21 +624,21 @@ feature {AST_EIFFEL} -- Visitor: compound
 		do
 			a.interval.process (Current)
 			process_compound (a.compound)
-			attribute_initialization.keeper.save_sibling
+			keeper.save_sibling
 		end
 
 	process_debug_as (a: DEBUG_AS)
 		do
-			attribute_initialization.keeper.enter_realm
+			keeper.enter_realm
 			process_compound (a.compound)
-			attribute_initialization.keeper.leave_optional_realm
+			keeper.leave_optional_realm
 		end
 
 	process_elseif_as (a: ELSIF_AS)
 		do
 			a.expr.process (Current)
 			process_compound (a.compound)
-			attribute_initialization.keeper.save_sibling
+			keeper.save_sibling
 		end
 
 	process_guard_as (a: GUARD_AS)
@@ -516,33 +658,33 @@ feature {AST_EIFFEL} -- Visitor: compound
 					attribute_initialization.set_all
 				end
 			end
-			attribute_initialization.keeper.enter_realm
+			keeper.enter_realm
 			process_compound (a.compound)
-			attribute_initialization.keeper.leave_realm
+			keeper.leave_realm
 		end
 
 	process_if_as (a: IF_AS)
 		do
 			a.condition.process (Current)
-			attribute_initialization.keeper.enter_realm
+			keeper.enter_realm
 			process_compound (a.compound)
-			attribute_initialization.keeper.save_sibling
+			keeper.save_sibling
 			safe_process (a.elsif_list)
 			process_compound (a.else_part)
-			attribute_initialization.keeper.save_sibling
-			attribute_initialization.keeper.leave_realm
+			keeper.save_sibling
+			keeper.leave_realm
 		end
 
 	process_inspect_as (a: INSPECT_AS)
 		do
 			a.switch.process (Current)
-			attribute_initialization.keeper.enter_realm
+			keeper.enter_realm
 			safe_process (a.case_list)
 			if a.else_part /= Void then
 				process_compound (a.else_part)
-				attribute_initialization.keeper.save_sibling
+				keeper.save_sibling
 			end
-			attribute_initialization.keeper.leave_realm
+			keeper.leave_realm
 		end
 
 	process_loop_as (a: LOOP_AS)
@@ -552,11 +694,11 @@ feature {AST_EIFFEL} -- Visitor: compound
 			safe_process (a.invariant_part)
 			safe_process (a.stop)
 			if a.compound /= Void then
-				attribute_initialization.keeper.enter_realm
-				attribute_initialization.keeper.save_sibling
+				keeper.enter_realm
+				keeper.save_sibling
 				process_compound (a.compound)
-				attribute_initialization.keeper.save_sibling
-				attribute_initialization.keeper.leave_realm
+				keeper.save_sibling
+				keeper.leave_realm
 			end
 			safe_process (a.variant_part)
 			if not attached a.iteration and then attached {BOOL_AS} a.stop as b and then not b.value then
@@ -579,16 +721,16 @@ feature {AST_EIFFEL} -- Visitor: compound
 		do
 			if a.is_attribute then
 					-- Make sure result position is never set except during checking of an attribute body.
-				attribute_initialization.keeper.enter_realm
+				keeper.enter_realm
 			end
 				-- Process feature body.
 			safe_process (a.precondition)
-			attribute_initialization.keeper.enter_realm
+			keeper.enter_realm
 			a.routine_body.process (Current)
 			safe_process (a.postcondition)
-			attribute_initialization.keeper.save_sibling
+			keeper.save_sibling
 			safe_process (a.rescue_clause)
-			attribute_initialization.keeper.leave_realm
+			keeper.leave_realm
 			if a.is_attribute then
 					-- Check if "Result" is properly set.
 				if attribute_initialization.is_attribute_set (result_position) then
@@ -601,7 +743,7 @@ feature {AST_EIFFEL} -- Visitor: compound
 				end
 					-- Discard any initialization information because
 					-- execution of attribute body is not guaranteed.
-				attribute_initialization.keeper.leave_optional_realm
+				keeper.leave_optional_realm
 				if attached f then
 						-- Mark attribute as initialized.
 					attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
@@ -611,46 +753,127 @@ feature {AST_EIFFEL} -- Visitor: compound
 
 feature {AST_EIFFEL} -- Visitor: nested call
 
+	process_bin_eq_as (a: BIN_EQ_AS)
+			-- <Precursor>
+		do
+				-- Avoid defaulting to `process_binary_as'.
+			a.left.process (Current)
+			a.right.process (Current)
+		end
+
+	process_bin_ne_as (a: BIN_NE_AS)
+			-- <Precursor>
+		do
+			process_bin_eq_as (a)
+		end
+
+	process_binary_as (a: BINARY_AS)
+			-- <Precursor>
+		do
+			debug ("to_implement") -- TODO
+				(create {REFACTORING_HELPER}).to_implement ("Exclude expanded and separate types from qualified calls.")
+			end
+			Precursor (a)
+			record_qualified_call (a)
+		end
+
+	process_converted_expr_as (a: CONVERTED_EXPR_AS)
+			-- <Precursor>
+		do
+			Precursor (a)
+			record_qualified_call (a)
+		end
+
 	process_creation_expr_as (a: CREATION_EXPR_AS)
+			-- <Precursor>
 		local
 			q: BOOLEAN
+			c: BOOLEAN
 		do
 			q := is_qualified
 			is_qualified := True
+			c := is_creation
+			is_creation := True
 			Precursor (a)
+			is_creation := c
 			is_qualified := q
 		end
 
 	process_nested_expr_as (a: NESTED_EXPR_AS)
+			-- <Precursor>
 		local
 			q: BOOLEAN
+			c: BOOLEAN
 		do
 			q := is_qualified
+			c := is_creation
 			a.target.process (Current)
 			is_qualified := True
+			is_creation := False
 			a.message.process (Current)
+			is_creation := c
 			is_qualified := q
+			record_qualified_call (a)
 		end
 
 	process_nested_as (a: NESTED_AS)
+			-- <Precursor>
 		local
 			q: BOOLEAN
+			c: BOOLEAN
 		do
 			q := is_qualified
+			c := is_creation
 			a.target.process (Current)
 			is_qualified := True
+			is_creation := False
 			a.message.process (Current)
+			is_creation := c
 			is_qualified := q
+			record_qualified_call (a)
+		end
+
+	process_un_old_as (a: UN_OLD_AS)
+			-- <Precursor>
+		do
+				-- Avoid defaulting to `process_unary_as'.
+			a.expr.process (Current)
+		end
+
+	process_unary_as (a: UNARY_AS)
+			-- <Precursor>
+		do
+			debug ("to_implement") -- TODO
+				(create {REFACTORING_HELPER}).to_implement ("Exclude expanded and separate types from qualified calls.")
+			end
+			Precursor (a)
+			record_qualified_call (a)
 		end
 
 	process_eiffel_list (a: EIFFEL_LIST [AST_EIFFEL])
+			-- <Precursor>
 		local
 			q: BOOLEAN
+			c: BOOLEAN
 		do
 			q := is_qualified
 			is_qualified := False
+			c := is_creation
+			is_creation := False
 			Precursor (a)
+			is_creation := c
 			is_qualified := q
+		end
+
+	record_qualified_call (a: AST_EIFFEL)
+			-- Record that a construct `a' corresponds to a qualified call.
+		do
+				-- Flag construct as using a qualified call.
+			has_qualified_call := True
+				-- Make sure the call is not made when uninitialized Current is used.
+			if current_class.lace_class.is_void_safe_construct then
+				check_attributes
+			end
 		end
 
 feature {NONE} -- Status report
@@ -661,11 +884,17 @@ feature {NONE} -- Status report
 	is_qualified: BOOLEAN
 			-- Is qualified call being performed?
 
+	is_creation: BOOLEAN
+			-- Is creation call being performed?
+
 	is_checking_all: BOOLEAN
 			-- Are all attributes being checked?
 
 	is_checking_one: BOOLEAN
 			-- Is an attribute being checked?
+
+	has_qualified_call: BOOLEAN
+			-- Is there a qualified call?
 
 feature {NONE} -- Access
 
@@ -690,6 +919,12 @@ feature {NONE} -- Access
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
 			-- Storage to track attributes usage
 
+	uninitialized_keeper: AST_SINGLE_USE_KEEPER
+			-- Keeper to track use of uninitialized `Current'.
+
+	keeper: AST_NESTING_KEEPER
+			-- Keeper to track variables.
+
 	result_position: INTEGER
 			-- Position of result in the `attributes_initialization'.
 		do
@@ -700,7 +935,7 @@ feature {NONE} -- Access
 			-- Bodies that are being processed
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

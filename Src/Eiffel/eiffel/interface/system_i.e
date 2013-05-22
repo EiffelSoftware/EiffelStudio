@@ -2901,6 +2901,7 @@ end
 			feature_server.take_control (tmp_feature_server)
 			feature_table_cache.wipe_out
 			Depend_server.take_control (Tmp_depend_server)
+			creation_server.take_control (tmp_creation_server)
 			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server)
 			M_feature_server.take_control (Tmp_m_feature_server)
 			M_rout_id_server.take_control (Tmp_m_rout_id_server)
@@ -3450,11 +3451,13 @@ feature {NONE} -- Implementation
 				Ast_server.remove (id)
 				Inv_ast_server.remove (id)
 				Depend_server.remove (id)
+				creation_server.remove (id)
 				M_rout_id_server.remove (id)
 				M_desc_server.remove (id)
 				Tmp_inv_byte_server.remove (id)
 				Tmp_ast_server.remove (id)
 				Tmp_depend_server.remove (id)
+				tmp_creation_server.remove (id)
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 

@@ -60,37 +60,41 @@ feature {NONE} -- Parsing and initialization
 		local
 			i, lim: INTEGER
 			iref: INTEGER_REF
+			ts: like original_string
 		do
-			lim := original_string.count
+			ts := original_string
+			lim := ts.count
 
 			i := original_position
 			--| The character at spos is, per contract,
 			--| the leading percent sign
-			token.extend (original_string.item (i))
+			token.extend (ts.item (i))
 			i := i + 1
-			if original_string.item (i) = '#' then --| Decoration tag
-				token.extend (original_string.item (i))
-				i := i + 1
-			end
-			-- Capture alignment specifier, if any
-			inspect original_string.item (i)
-			when '-', '=', '+' then
-				token.extend (original_string.item (i))
-				set_alignment (original_string.item (i))
+			inspect ts.item (i)
+			when '#', '~' then --| Decoration and Agent flags
+				token.extend (ts.item (i))
 				i := i + 1
 			else
 			end
-			if original_string.item (i).is_digit then --| Field width
+			-- Capture alignment specifier, if any
+			inspect ts.item (i)
+			when '-', '=', '+' then
+				token.extend (ts.item (i))
+				set_alignment (ts.item (i))
+				i := i + 1
+			else
+			end
+			if ts.item (i).is_digit then --| Field width
 				create iref
 				iref.set_item (i)
 				extract_field_width (iref)
 				i := iref.item
-			elseif original_string.item (i) = '.' then
+			elseif ts.item (i) = '.' then
 				-- Might be a floating point format missing an overall 
 				-- field width, or might be a list or decimal separator
 				if i < lim
-					and then original_string.item (i+1) = 'd'
-						or original_string.item (i+1) = 'L'
+					and then ts.item (i+1) = 'd'
+						or ts.item (i+1) = 'L'
 				 then
 					 -- Leave stream intact, without advance.
 					 --
@@ -107,7 +111,7 @@ feature {NONE} -- Parsing and initialization
 			--| Now get the type specifier
 			extract_type_specifier (i)
 			if is_typed and not has_format_error then
-				if is_float then
+				if is_float or is_percent then
 					if not has_fractional_field_width then
 						fractional_field_width := K_printf_dflt_fp_fractional_width
 					end
@@ -207,10 +211,14 @@ feature {NONE} -- Parsing and initialization
 				format_type := K_printf_fmt_type_character
 			when 'b' then
 				format_type := K_printf_fmt_type_binary
-			when 'L' then
-				format_type := K_printf_fmt_type_list
+			when 'A' then
+				format_type := K_printf_fmt_type_agent
 			when 'B' then
 				format_type := K_printf_fmt_type_boolean
+			when 'L' then
+				format_type := K_printf_fmt_type_list
+			when 'P' then
+				format_type := K_printf_fmt_type_percent
 			else
 				if pos < original_string.count
 					and then original_string.item (pos+1) = 'L'
@@ -292,6 +300,10 @@ feature {AEL_PF_FORMATTING_ROUTINES} -- Argument formatting
 					tstr := int_arg_out
 				elseif is_list then
 					tstr := list_arg_out
+				elseif is_agent then
+					tstr := agent_arg_out
+				elseif is_percent then
+					tstr := percent_arg_out
 				else
 					check 
 						untyped: not is_typed
@@ -352,6 +364,17 @@ feature {AEL_PF_FORMATTING_ROUTINES} -- Value scanning
 					buf, spos, ec, field_width, is_decorated, thousands_separator)
 			elseif is_list then
 				Result := pfsr.list_at (buf, spos, ec, field_width, list_separator)
+			elseif is_agent then
+				-- RFO TODO.  Make this less horrific
+				check
+					agent_scan_unsupported: False
+				end
+			elseif is_percent then
+				-- RFO TODO.  This is simply float.  Need to be 
+				-- implemented properly for percent, checking for 
+				-- trailing percent symbol and dividing value by 100
+				Result := pfsr.double_at (
+					buf, spos, ec, field_width, fractional_field_width, is_decorated)
 			else
 				check 
 					untyped: not is_typed
@@ -444,7 +467,7 @@ feature {AEL_PF_SCAN_ROUTINES} -- Private context queries
 			-- Character used to align and justify in field
 		do
 --			if (is_float or (is_integer and not is_binary)) then
-			if is_float or is_integer then
+			if is_float or is_percent or is_integer then
 				Result := private_pad_character
 				if is_binary and Result = '0' then
 					-- If zero-padded binary,
@@ -604,6 +627,18 @@ feature {AEL_PF_TYPE_ROUTINES} -- Type queries
 			Result := format_type = K_printf_fmt_type_list
 		end
 
+	is_agent: BOOLEAN
+			-- Does format expect a TUPLE [ANY, FUNCTION] argument?
+		do
+			Result := format_type = K_printf_fmt_type_agent
+		end
+
+	is_percent: BOOLEAN
+			-- Does format expect a float arg (to be interpreted as percent)?
+		do
+			Result := format_type = K_printf_fmt_type_percent
+		end
+
 --|========================================================================
 feature {AEL_PF_TYPE_ROUTINES} -- Visible type queries
 --|========================================================================
@@ -629,7 +664,7 @@ feature {AEL_PF_TYPE_ROUTINES} -- Visible type queries
 			-- integer argument value?
 
  --|========================================================================
-feature {NONE} -- Implementation
+feature {NONE} -- Output Implementation
  --|========================================================================
 
 	string_arg_out: STRING
@@ -688,6 +723,14 @@ feature {NONE} -- Implementation
 
 	float_arg_out: STRING
 			-- Formatted floating point argument
+		do
+			Result := real_arg_out (False)
+		end
+
+	real_arg_out (pf: BOOLEAN): STRING
+			-- Formatted floating point argument
+			-- If 'pf' format as a percentage by multiplying the value by 
+			-- 100 and appending a percent symbol after the number
 		local
 			ta: detachable ANY
 			tda: detachable REAL_64_REF
@@ -719,6 +762,10 @@ feature {NONE} -- Implementation
 					--| Argument type mismatch
 					has_arg_type_error := True
 				else
+					if pf then
+						-- Percent format; multiply value by 100
+						tda := tda * 100.0
+					end
 					parts := printf_fmt_funcs.double_parts (tda)
 					whole_out := parts.first
 					fract_out := parts.last
@@ -738,6 +785,9 @@ feature {NONE} -- Implementation
 					else
 						Result := printf_fmt_funcs.double_parts_out (
 							whole_out, fract_out, fractional_field_width)
+					end
+					if pf then
+						Result.extend ('%%')
 					end
 				end
 			end
@@ -944,10 +994,34 @@ feature {NONE} -- Implementation
 			tla: LINEAR [detachable ANY]
 			ta: detachable ANY
 			sep: STRING
+			tt: detachable TUPLE
+			tfunc: detachable FUNCTION [ ANY, TUPLE, STRING]
+			lin_first, lin_last: BOOLEAN
 		do
+			-- Arg must be a list unless the agent flag was provided, in 
+			-- which case the arg must be a tuple, the first item of 
+			-- which is a list
 			Result := ""
 			sep := list_separator
-			tca := any_to_container (argument)
+			tt := any_to_tuple (argument)
+			if tt /= Void then
+				--| Arg must be a TUPLE [LIST, FUNCTION]
+				if tt.count /= 2 then
+					add_arg_type_error (
+						original_string, original_position,
+						expected_class_name, argument_class_name)
+				else
+					tca := any_to_container (tt.reference_item (1))
+					if 
+						attached {FUNCTION [ANY,TUPLE,STRING]}
+						tt.reference_item (2) as ltf
+					 then
+						 tfunc := ltf
+					end
+				end
+			else
+				tca := any_to_container (argument)
+			end
 			if tca = Void then
 				--| Argument doesn't match
 				has_arg_type_error := True
@@ -959,18 +1033,26 @@ feature {NONE} -- Implementation
 				end
 			else
 				tla := tca.linear_representation
+				lin_first := True
 				from tla.start
 				until tla.exhausted
 				loop
 					ta := tla.item
-					if ta /= Void then
+					if tfunc /= Void then
+						tla.forth
+						lin_last := tla.exhausted
+						Result.append (tfunc.item ([ta, lin_first, lin_last]))
+						lin_first := False
+					elseif ta /= Void then
 						Result.append (ta.out)
 					else
 						Result.append ("Void")
 					end
-					tla.forth
-					if not tla.exhausted then
-						Result.append (sep)
+					if tfunc = Void then
+						tla.forth --| already advanced for agent case
+						if  not tla.exhausted then
+							Result.append (sep)
+						end
 					end
 				end
 			end
@@ -979,6 +1061,45 @@ feature {NONE} -- Implementation
 		end
 
 	--|--------------------------------------------------------------
+
+	agent_arg_out: STRING
+			-- Agent-formatted argument
+		do
+			Result := ""
+			if
+				attached
+				{TUPLE [ANY, FUNCTION [ANY, TUPLE [detachable ANY], STRING]]}
+				argument as targ
+			 then
+				 if
+					 attached {FUNCTION [ANY, TUPLE [detachable ANY], STRING]}
+					 targ.item (2) as tfunc
+				  then
+					  Result := tfunc.item ([targ.item (1)])
+				 else
+					 Result := "Void"
+				 end
+			 else
+				 Result := "Void"
+			 end
+		ensure
+			exists: Result /= Void
+		end
+
+	--|--------------------------------------------------------------
+
+	percent_arg_out: STRING
+			-- Floating point argument, formatted as a percentage
+			-- Value provided is multiplied by 100 and a percent sign appended
+		do
+			Result := real_arg_out (True)
+		ensure
+			exists: Result /= Void
+		end
+
+--|========================================================================
+feature {NONE} -- Output Support
+--|========================================================================
 
 	aligned (tstr: STRING): STRING
 			-- Copy of given string aligned into field width
@@ -1103,7 +1224,7 @@ feature {AEL_PF_FORMATTING_ROUTINES} -- Type representation
 			elseif is_integer then
 --				Result := "INTEGER"
 				Result := (create {INTERNAL}).class_name (ti)
-			elseif is_float then
+			elseif is_float or is_percent then
 				Result := "DOUBLE/REAL"
 			elseif is_string then
 --				Result := "STRING"

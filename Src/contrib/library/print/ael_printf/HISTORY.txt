@@ -1,5 +1,17 @@
 History
 
+010 23-Feb-2013
+    Added percent, agent and list+agent formats.
+    Agent format support required addition of the agent flag, '~' 
+    in place of the decoration flag ('#') (i.e. a single format 
+    token can have either a decoration flag or an agent flag but 
+    not both).  Alignment flags are unaffected.
+    Tweaked arg parsing to interpret any single list arg as an arg
+    list.  The alternative (the previous interpretation) would be 
+    to allow single-arg containers but fail to recognize 
+    containers for list format when they are alone in a an actual 
+    arg list like an array.
+
 009 14-Nov-2012
     Added hex dump routines (axdump, amemdump, lxdump, lmemdump)
     Updated PDF document, HISTORY.txt and README.txt

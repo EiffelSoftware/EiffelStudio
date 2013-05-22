@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-	make_from_separate (other: separate READABLE_STRING_32)
+	make_from_separate (other: separate READABLE_STRING_GENERAL)
 			-- Initialize current string from `other'.
 		require
 			other_not_void: other /= Void
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 			until
 				i = nb
 			loop
-				l_area.put (other.area.item (i), i)
+				l_area.put (other.item (i + 1), i)
 				i := i + 1
 			end
 			count := nb

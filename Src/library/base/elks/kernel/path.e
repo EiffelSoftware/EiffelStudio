@@ -120,7 +120,8 @@ create {PATH}
 create
 	make_empty,
 	make_current,
-	make_from_string
+	make_from_string,
+	make_from_separate
 
 feature {NONE} -- Initialization
 
@@ -173,6 +174,19 @@ feature {NONE} -- Initialization
 			is_normalized: is_normalized
 			roundtrip: True -- name.same_string_general (a_path) with all duplicated separators removed except for the first two in UNC path.
 			roundtrip_with_trailing: True -- name.same_string_general (a_path) with all trailing directory separators removed from `a_path' except if this is a root.
+		end
+
+	make_from_separate (a_path: separate PATH)
+			-- Initialize from separate `a_path'.
+		require
+			a_path_not_void: a_path /= Void
+		do
+			create storage.make_from_separate (a_path.storage)
+			is_normalized := True
+			reset_internal_data
+		ensure
+			not_empty: not a_path.is_empty implies not is_empty
+			is_normalized: is_normalized
 		end
 
 feature {NONE} -- Internal initialization

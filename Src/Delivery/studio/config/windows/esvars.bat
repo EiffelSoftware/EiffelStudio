@@ -16,3 +16,4 @@ set PATH=%PATH%;%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin;%ISE_EIFFEL%\tools\s
 REM Set mingw path if currently set C compiler.
 if %ISE_C_COMPILER%==mingw set PATH=%ISE_EIFFEL%\gcc\windows\mingw\bin;%ISE_EIFFEL%\gcc\windows\msys\1.0\bin;%PATH%;
 
+cd "%ISE_EIFFEL%"

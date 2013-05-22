@@ -140,7 +140,7 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="is_void_safe" type="xs:boolean" use="optional"/>
-		<xs:attribute name="syntax" use="optional" default="transitional">
+		<xs:attribute name="syntax" use="optional" default="standard">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:enumeration value="obsolete"/>

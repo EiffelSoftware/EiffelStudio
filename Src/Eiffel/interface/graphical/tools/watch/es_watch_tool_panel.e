@@ -1127,7 +1127,8 @@ feature {NONE} -- Event handling
 					expr_item.set_auto_expression (True)
 				end
 			else
-				evl.side_effect_forbidden := not preferences.debug_tool_data.always_evaluate_potential_side_effect_expression
+					-- Always evaluate in Watch tool to keep consistent behavior.
+				evl.side_effect_forbidden := False
 				expr_item := new_watched_item_from_expression_evaluation (evl, watches_grid)
 			end
 

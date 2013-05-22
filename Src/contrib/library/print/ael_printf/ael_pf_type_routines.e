@@ -60,7 +60,7 @@ feature -- Type matching
 						tin32 /= Void or tin64 /= Void
 				else
 					inspect fp.format_type
-					when K_printf_fmt_type_float then
+					when K_printf_fmt_type_float, K_printf_fmt_type_percent then
 						tr32 := any_to_real_32_ref (arg)
 						tr64 := any_to_real_64_ref (arg)
 						Result := tr32 /= Void or tr64 /= Void
@@ -79,6 +79,9 @@ feature -- Type matching
 						tfa := any_to_finite (arg)
 						tta := any_to_tuple (arg)
 						Result := tfa /= Void or tta /= Void
+					when K_printf_fmt_type_agent then
+						tta := any_to_tuple (arg)
+						Result := tta /= Void
 					else
 						-- False
 					end
@@ -89,6 +92,13 @@ feature -- Type matching
 --|========================================================================
 feature -- Type conversion
 --|========================================================================
+
+	any_to_array (v: detachable ANY): detachable ARRAY [detachable ANY]
+		do
+			if attached {ARRAY [detachable ANY]} v as ta then
+				Result := ta
+			end
+		end
 
 	any_to_finite (v: detachable ANY): detachable FINITE [detachable ANY]
 		do

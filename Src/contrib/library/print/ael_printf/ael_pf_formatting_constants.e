@@ -58,6 +58,8 @@ feature {NONE} -- Format type codes
 	K_printf_fmt_type_binary: INTEGER = 8
 	K_printf_fmt_type_list: INTEGER = 9
 	K_printf_fmt_type_boolean: INTEGER = 10
+	K_printf_fmt_type_agent: INTEGER = 11
+	K_printf_fmt_type_percent: INTEGER = 12
 
  --|========================================================================
 feature {NONE} -- Error codes
@@ -142,9 +144,12 @@ feature {NONE} -- Validation
 	is_valid_printf_first_fmt_char (c: CHARACTER): BOOLEAN
 		do
 			inspect c
-			when '#', '-', '+', '=' then
+			when '#', '-', '+', '=', '~' then
 				--| Decoration and alignment flags
 				Result := True
+				-- '#' is the decoration flag
+				-- '-', '+' and '=' are alignment flags
+				-- '~' is the agent flag
 			else
 				if is_valid_printf_type_specifier (c) then
 					Result := True
@@ -312,17 +317,17 @@ feature -- Help
 
 	printf_help_message: STRING
 		do
-			create Result.make (2000)
+			create Result.make (3072)
 			Result.append ("{
- The various string formatting routines provide a means
- by which to format strings for output or other purposes
- in a manner reminiscent of the traditional printf functions 
- in C and similar languages.
+ The various string formatting routines provide a means by which to
+ format strings for output or other purposes in a manner reminiscent of
+ the traditional printf functions in C and similar languages.
 
   Format string construction (in order):
 
     %
     [<decoration_flag>]
+    [<agent_flag>]
     [<alignment_flag>]
     [<fill_specifier>]
     [<field_width>]
@@ -332,11 +337,14 @@ feature -- Help
 
     <decoration_flag> ::=  '#'
       Decoration consumes part of the field width
-      Decoration is applies as follows:
+      Decoration is applied as follows:
         "0x" preceding hexadecimal values
         "0" preceding octal values
         "b" following binary values
         Decimal values show delimiters at thousands (commas by default)
+
+    <agent_flag> ::=  '~'
+      Valid for List formats only.  Cannot be combined with decoration flag
 
     <alignment_flag> ::=  '-' |   '+'  |  '='
                          (left   right  centered)
@@ -350,6 +358,8 @@ feature -- Help
     <field_type> ::=  <character>
 
       Field type can be at least on of the following:
+        'A' denotes an Agent expression.  Argument must be a function
+            that accepts an argument of type ANY and returns a STRING.
         'B' denotes a BOOLEAN expression
             This shows as "True" or "False"
         'b' denotes a BINARY INTEGER expression
@@ -373,8 +383,13 @@ feature -- Help
         'L' denotes a list (or any container)
             Type specifier can be preceded by a delimiter character
             with which to separate list items (default is blank).
-            Alignment characters cannot be uses a delimiters.
+            Alignment characters cannot be used a delimiters.
+            In place of a delimiter, the agent flag ('~') can be used.
+            In that case, the argument must be a TUPLE [CONTAINER,FUNCTION]
+            instead of a container alone.
         'o' denotes an OCTAL INTEGER expression
+        'P' denotes a PERCENT expression (float value multiplied by 100
+            and followed by a percent symbol in the output
         's' denotes character STRING
         'u' denotes an UNSIGNED DECIMAL INTEGER expression
         'x' denotes a HEXADECIMAL INTEGER expression
@@ -382,11 +397,10 @@ feature -- Help
  In use, a class calls one of the printf routines with at least
  a format string and an argument list.
 
- The argument list is any proper descendent of FINITE, and is most often
- a manifest ARRAY or a LINKED_LIST.  It can also be Void if there are no
- arguments.
  The argument list contains the arguments that align (positionally) with
  the format specifiers in the format string.
+ The argument list, when indeed it holds multiple arguments, can be either a
+ TUPLE or a proper descendent of FINITE.
 
  Clients wishing access to the printf functions should inherit
  the AEL_PRINTF class.  It is also possible to instantiate the
@@ -414,6 +428,17 @@ end -- class AEL_PF_FORMATTING_CONSTANTS
 --|----------------------------------------------------------------------
 --| History
 --|
+--| 008 23-Feb-2013
+--|     Added support for percent, agent and list+agent formats.
+--|     Agent format support required addition of the agent flag, '~' 
+--|     in place of the decoration flag ('#') (i.e. a single format 
+--|     token can have either a decoration flag or an agent flag but 
+--|     not both).  Alignment flags are unaffected.
+--|     Tweaked arg parsing to interpret any single list arg as an arg
+--|     list.  The alternative (the previous interpretation) would be 
+--|     to allow single-arg containers but fail to recognize 
+--|     containers for list format when they are alone in a an actual 
+--|     arg list like an array.
 --| 007 03-Apr-2011
 --|     Added default_printf_thousands_delimiter and related routines 
 --|     to support non-default separators when grouping decimals.

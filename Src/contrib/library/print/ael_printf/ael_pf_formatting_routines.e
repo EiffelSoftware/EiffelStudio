@@ -29,10 +29,16 @@ feature -- Core formatter
 			--
 			-- 'args' can be:
 			--   A TUPLE containing arguments
-			--   A data structure conforming to FINITE
+			--   A data structure conforming to FINITE (e.g. ARRAY or LIST)
 			--   An individual object reference relating to a single
 			--   format item
 			--   Or, if no arguments are needed, simply Void
+			--
+			--   N.B.
+			--   There is potential for confusion/ambiguity.  Per policy, 
+			--   when the outermost type of the arg list is an ARRAY, 
+			--   it is interpreted as an argument list and NOT as a 
+			--   single argument that happens to be an ARRAY.
 			--
 			-- A complete description is embedded within the help_message
 			-- function elsewhere in this class.
@@ -51,25 +57,34 @@ feature -- Core formatter
 			arglist: detachable FINITE [detachable ANY]
 			argtuple: detachable TUPLE []
 			arg: detachable ANY
+			argarray: detachable ARRAY [detachable ANY]
 		do
 			create tokens.make
 			if args /= Void then
-				arglist := any_to_finite (args)
-				if arglist /= Void then
-					ts := any_to_string (args)
-					if ts /= Void then
-						-- Strings are indexable, but we want the
-						-- whole string, not each character
-						arglist := << ts >>
-					end
-					arg_count := arglist.count
+				-- If args is an array, then interpret it as a list of 
+				-- args and not as a single arg that happens to be a list
+				argarray := any_to_array (args)
+				if argarray /= Void then
+					arglist := argarray
+					arg_count := argarray.count
 				else
-					argtuple := any_to_tuple (args)
-					if argtuple /= Void then
-						arg_count := argtuple.count
+					arglist := any_to_finite (args)
+					if arglist /= Void then
+						ts := any_to_string (args)
+						if ts /= Void then
+							-- Strings are indexable, but we want the
+							-- whole string, not each character
+							arglist := << ts >>
+						end
+						arg_count := arglist.count
 					else
-						arg_count := 1
-						arglist := << args >>
+						argtuple := any_to_tuple (args)
+						if argtuple /= Void then
+							arg_count := argtuple.count
+						else
+							arg_count := 1
+							arglist := << args >>
+						end
 					end
 				end
 				last_printf_errors.wipe_out
@@ -136,18 +151,11 @@ feature -- Core formatter
 											-- Strings are indexable, but we want the
 											-- whole string, not the idxth character
 											arg := ts
-										elseif (idx = 1 and fp_count = 1 and fp.is_list)
-											and tic = Void
-										 then
-											 --RFO
-											-- If the arg is supposed to be a container,
-											 -- check fmt count.  If there is only one
-											 -- arg and the fmt calls for a container,
-											 -- then the arg list might be the arg.
-											 -- Can happen only w/ a single arg
-											 -- Argv is the argument itself
-											 arg := tis
 										else
+											-- If arg is a container, then it 
+											-- must be interpreted as an arg 
+											-- list and not as a single 
+											-- container arg
 											arg := tis.item (idx)
 										end
 									else -- not indexable
@@ -832,6 +840,17 @@ end -- class AEL_PF_FORMATTING_ROUTINES
 --|----------------------------------------------------------------------
 --| History
 --|
+--| 010 23-Feb-2013
+--|     Added support for percent, agent and list+agent formats.
+--|     Agent format support required addition of the agent flag, '~' 
+--|     in place of the decoration flag ('#') (i.e. a single format 
+--|     token can have either a decoration flag or an agent flag but 
+--|     not both).  Alignment flags are unaffected.
+--|     Tweaked arg parsing to interpret any single list arg as an arg
+--|     list.  The alternative (the previous interpretation) would be 
+--|     to allow single-arg containers but fail to recognize 
+--|     containers for list format when they are alone in a an actual 
+--|     arg list like an array.
 --| 009 18-May-2011
 --|     Replaced integer_to_hex function with natural_to_hex.
 --| 008 03-Apr-2011

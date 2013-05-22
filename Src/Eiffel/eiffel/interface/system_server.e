@@ -30,6 +30,7 @@ feature -- Initialization
 			create inv_ast_server.make
 			create inv_byte_server.make
 			create depend_server.make
+			create creation_server.make
 			create m_feat_tbl_server.make
 			create m_feature_server.make
 			create m_rout_id_server.make
@@ -46,6 +47,7 @@ feature -- Purge of compilation files
 				server_controler.remove_useless_files
 			end
 			depend_server.cache.wipe_out
+			creation_server.cache.wipe_out
 			inv_byte_server.cache.wipe_out
 			byte_server.cache.wipe_out
 			ast_server.cache.wipe_out
@@ -91,6 +93,9 @@ feature -- Access
 	depend_server: DEPEND_SERVER;
 			-- Server for dependances for incremental type check
 
+	creation_server: CREATION_SERVER
+			-- Server for creation procedure checks.
+
 	m_feat_tbl_server: M_FEAT_TBL_SERVER;
 			-- Server of byte code description of melted feature tables
 
@@ -124,6 +129,7 @@ invariant
 	inv_ast_server_not_void: inv_ast_server /= Void
 	inv_byte_server_not_void: inv_byte_server /= Void
 	depend_server_not_void: depend_server /= Void
+	creation_server_not_void: creation_server /= Void
 	m_feat_tbl_server_not_void: m_feat_tbl_server /= Void
 	m_feature_server_not_void: m_feature_server /= Void
 	m_rout_id_server_not_void: m_rout_id_server /= Void
@@ -131,7 +137,7 @@ invariant
 	match_list_server_not_void: match_list_server /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

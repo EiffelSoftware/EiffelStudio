@@ -1016,8 +1016,8 @@ feature -- Third pass: byte code production and type check
 							-- Update the client/supplier relations for the current
 							-- class
 						update_suppliers (new_suppliers)
-
 					end
+					tmp_creation_server.update (class_id)
 
 					if has_features_to_melt then
 						Degree_1.insert_class (Current)

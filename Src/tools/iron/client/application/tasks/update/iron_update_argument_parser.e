@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			task := a_task
 			make_parser (False, False, False)
 			set_argument_source (a_task.argument_source)
+			is_using_builtin_switches := not is_verbose_switch_used
 --			set_is_using_separated_switch_values (False)
 --			set_non_switched_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
 		end
@@ -58,8 +59,8 @@ feature {NONE} -- Switches
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -71,15 +72,15 @@ feature {NONE} -- Switches
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			Eiffel Software
@@ -88,5 +89,4 @@ feature {NONE} -- Switches
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

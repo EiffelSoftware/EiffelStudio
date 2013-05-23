@@ -233,14 +233,14 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_library (a_name: STRING_32; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_LIBRARY
+	new_library (a_name: STRING_32; a_location: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_LIBRARY
 			-- Create a `CONF_LIBRARY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_file_not_void: a_file /= Void
+			a_location_not_void: a_location /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, new_location_from_full_path (a_file.as_string_32, a_target), a_target)
+			create Result.make (a_name, new_location_from_full_path (a_location.as_string_32, a_target), a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -302,7 +302,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

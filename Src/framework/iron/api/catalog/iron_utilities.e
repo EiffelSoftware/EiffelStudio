@@ -12,12 +12,118 @@ inherit
 
 feature -- Archiving
 
-	build_package_archive (a_package: IRON_PACKAGE; a_folder: PATH; a_target_file: PATH)
+	build_package_archive_command (a_source: PATH; a_archive: PATH; a_layout: IRON_LAYOUT): STRING_32
+		local
+			p: detachable PATH
 		do
+			if attached execution_environment.item ("IRON_BUILD_ARCHIVE_COMMAND_PATTERN") as l_pattern then
+				create Result.make_from_string (l_pattern)
+				Result.replace_substring_all ({STRING_32} "##SOURCEDIR##", a_source.name)
+				if attached a_archive.entry as e then
+					Result.replace_substring_all ({STRING_32} "##ARCHIVEDIR##", a_archive.parent.name)
+					Result.replace_substring_all ({STRING_32} "##ARCHIVENAME##", e.name)
+				else
+					Result.replace_substring_all ({STRING_32} "##ARCHIVEDIR##", ".")
+					Result.replace_substring_all ({STRING_32} "##ARCHIVENAME##", a_archive.name)
+				end
+			else
+				create Result.make_empty
+				p := a_layout.binaries_path
+				if p = Void then
+					create p.make_current
+				end
+				p := p.extended ("iron_build_archive")
+				if {PLATFORM}.is_windows then
+					p := p.appended_with_extension ("bat")
+				end
+				Result.append (p.name)
+				Result.append_string_general (" %"")
+				Result.append (a_source.name)
+				Result.append_string_general ("%"")
+				if attached a_archive.entry as e then
+					Result.append_string_general (" %"")
+					Result.append (a_archive.parent.name)
+					Result.append_string_general ("%"")
 
+					Result.append_string_general (" %"")
+					Result.append (e.name)
+					Result.append_string_general ("%"")
+
+				else
+					Result.append_string_general (" . %"")
+					Result.append (a_archive.name)
+					Result.append_string_general ("%"")
+				end
+			end
 		end
 
-	extract_package_archive (a_package: IRON_PACKAGE; a_target_folder: PATH; a_create_dir_if_missing: BOOLEAN)
+	extract_package_archive_command (a_archive: PATH; a_folder: PATH; a_layout: IRON_LAYOUT): STRING_32
+		local
+			p: detachable PATH
+		do
+			if attached execution_environment.item ("IRON_EXTRACT_ARCHIVE_COMMAND_PATTERN") as l_pattern then
+				create Result.make_from_string (l_pattern)
+				Result.replace_substring_all ({STRING_32} "##ARCHIVENAME##", a_archive.name)
+				Result.replace_substring_all ({STRING_32} "##FOLDERNAME##", a_folder.name)
+			else
+				create Result.make_empty
+				p := a_layout.binaries_path
+				if p = Void then
+					create p.make_current
+				end
+				p := p.extended ("iron_extract_archive")
+				if {PLATFORM}.is_windows then
+					p := p.appended_with_extension ("bat")
+				end
+
+				Result.append (p.name)
+				Result.append_string_general (" %"")
+				Result.append (a_archive.name)
+				Result.append_string_general ("%"")
+				Result.append_string_general (" %"")
+				Result.append (a_folder.name)
+				Result.append_string_general ("%"")
+			end
+		end
+
+	build_package_archive (a_package: IRON_PACKAGE; a_folder: PATH; a_target_file: PATH; a_layout: IRON_LAYOUT)
+		require
+			folder_exists: (create {FILE_UTILITIES}).directory_path_exists (a_folder)
+		local
+			d: DIRECTORY
+			proc_fact: PROCESS_FACTORY
+			proc: PROCESS
+			cmd: STRING_32
+			p: PATH
+			f: RAW_FILE
+		do
+			p := a_folder.absolute_path
+			create d.make_with_path (p)
+			if d.exists then
+				create proc_fact
+				cmd := build_package_archive_command (a_folder, a_target_file, a_layout)
+				debug
+					print (cmd + "%N")
+				end
+				proc := proc_fact.process_launcher_with_command_line (cmd, p.name)
+				proc.redirect_output_to_file (".tmp.output.proc")
+				proc.redirect_error_to_same_as_output
+				proc.launch
+				if proc.launched then
+					proc.wait_for_exit
+				end
+				create f.make_with_name (".tmp.output.proc")
+				delete_file (f)
+
+				-- target archive file.
+				create f.make_with_path (a_target_file)
+				if f.exists then
+					a_package.set_archive_uri (path_to_uri_string (a_target_file))
+				end
+			end
+		end
+
+	extract_package_archive (a_package: IRON_PACKAGE; a_target_folder: PATH; a_create_dir_if_missing: BOOLEAN; a_layout: IRON_LAYOUT)
 		require
 			a_package.has_archive_file_uri
 		local
@@ -36,13 +142,7 @@ feature -- Archiving
 
 			if attached a_package.archive_path as l_archive_path then
 				create proc_fact
-				create cmd.make_empty
-				cmd.append ({STRING_32} "C:\apps\utility\7-Zip\7z.exe")
-				cmd.append_string_general (" x -bd -y ")
-				cmd.append_string_general ("%"")
-				cmd.append_string_general (l_archive_path.name)
-				cmd.append_string_general ("%"")
-				cmd.append_string_general (" -o%""+ p.name + {STRING_32} "%"")
+				cmd := extract_package_archive_command (l_archive_path, p, a_layout)
 				debug
 					print (cmd + "%N")
 				end
@@ -52,7 +152,6 @@ feature -- Archiving
 				proc.launch
 				if proc.launched then
 					proc.wait_for_exit
---					proc.terminate_tree
 				end
 				create f.make_with_name (".tmp.output.proc")
 				delete_file (f)

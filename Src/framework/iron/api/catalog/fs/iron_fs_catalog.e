@@ -228,12 +228,6 @@ feature -- Package operations
 			Result := (create {IRON_UTILITIES}).path_to_uri_string (p)
 		end
 
---	uri_to_path (u: URI): PATH
---		do
-
---			Result := (create {IRON_UTILITIES}).uri_to_path (u)
---		end
-
 	download_package (a_package: IRON_PACKAGE)
 		local
 			cl: like new_client
@@ -248,6 +242,7 @@ feature -- Package operations
 				if attached cl.new_session (l_uri.string) as sess then
 --					sess.add_header ("Accept", "application/zip")
 					create ctx.make
+					sess.set_timeout (0)
 
 					p := layout.package_archive_path (a_package)
 					create f.make_with_path (p)
@@ -262,9 +257,16 @@ feature -- Package operations
 					f.create_read_write
 					ctx.set_output_content_file (f)
 					if attached sess.get ("", ctx) as res then
-						a_package.set_archive_uri (path_to_uri_string (p.absolute_path.canonical_path))
+						if res.error_occurred then
+							f.close
+							f.delete
+						else
+							a_package.set_archive_uri (path_to_uri_string (p.absolute_path.canonical_path))
+							f.close
+						end
+					else
+						-- never occurs
 					end
-					f.close
 				end
 			end
 		end
@@ -283,7 +285,7 @@ feature -- Package operations
 			if l_uri /= Void then
 				if a_package.has_archive_file_uri then
 					p := layout.package_installation_path (a_package)
-					print ("Installing " + p.utf_8_name + "%N")
+--					print ("Installing " + p.utf_8_name + "%N")
 					create ipu
 					ensure_folder_exists (p.parent)
 
@@ -310,7 +312,7 @@ feature -- Package operations
 						f.close
 					end
 
-					ipu.extract_package_archive (a_package, p, True)
+					ipu.extract_package_archive (a_package, p, True, layout)
 
 					installed_packages.force (a_package)
 				else

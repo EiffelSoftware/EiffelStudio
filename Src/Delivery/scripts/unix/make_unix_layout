@@ -145,5 +145,6 @@ if [ $ISE_PLATFORM != "unix" ]; then
     mv $LIB_DIR/library/net/spec/$ISE_PLATFORM $LIB_DIR/library/net/spec/unix
     mv $LIB_DIR/library/obsolete/net/spec/$ISE_PLATFORM $LIB_DIR/library/obsolete/net/spec/unix
     mv $SHARE_DIR/studio/config/$ISE_PLATFORM $SHARE_DIR/studio/config/unix
+    mv $SHARE_DIR/tools/iron/spec/$ISE_PLATFORM $SHARE_DIR/studio/config/unix
 fi
 cd $OLD_PWD

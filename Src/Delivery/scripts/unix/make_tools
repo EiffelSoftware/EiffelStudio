@@ -2,6 +2,18 @@
 
 remtrace Should be called by make_delivery
 
+#remtrace Recompile iron
+cd $EIFFEL_SRC/tools/iron/client
+clean_project
+finalize client.ecf client
+tgz_ccode client iron.tar.bz2
+if [ ! -f iron.tar.bz2 ]; then
+	echo Could not finalize a new iron
+	CANCEL
+fi
+clean_project
+move iron.tar.bz2 $EXPORT_DIR/bin
+
 #remtrace Recompile syntax_updater
 cd $EIFFEL_SRC/tools/syntax_updater
 clean_project

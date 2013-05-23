@@ -1,42 +1,89 @@
 note
-	description: "Summary description for {IRON_UPDATE_TASK}."
+	description: "Summary description for {IRON_PACKAGE_TASK}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_UPDATE_TASK
+	IRON_PACKAGE_TASK
 
 inherit
 	IRON_TASK
+
+	IRON_EXPORTER
+		rename
+			print as print_any
+		end
 
 create
 	make
 
 feature -- Access
 
-	name: STRING = "update"
+	name: STRING = "package"
 			-- Iron client task
 
 feature -- Execute
 
 	process (a_iron: IRON)
 		local
-			args: IRON_UPDATE_ARGUMENT_PARSER
+			args: IRON_PACKAGE_ARGUMENT_PARSER
 		do
 			create args.make (Current)
 			args.execute (agent execute (args, a_iron))
 		end
 
-	execute (args: IRON_UPDATE_ARGUMENTS; a_iron: IRON)
+	execute (args: IRON_PACKAGE_ARGUMENTS; a_iron: IRON)
+		local
+			d: detachable PATH
 		do
-			print ("Updating iron data ...%N")
-			if args.is_simulation then
-
+			if
+				attached args.username as u and
+				attached args.password as p and
+				attached args.repository as repo_url and
+				attached args.operation as op
+			then
+				if args.is_create then
+					localized_print_error ({STRING_32} "[" + op + {STRING_32} "] Not yet supported!")
+				elseif args.is_modify then
+					localized_print_error ({STRING_32} "[" + op + {STRING_32} "] Not yet supported!")
+				else
+					localized_print_error ({STRING_32} "[" + op + {STRING_32} "] Not yet supported!")
+				end
 			else
-				a_iron.catalog_api.update
+				localized_print_error ({STRING_32} "[ERROR] Missing required arguments!")
 			end
 		end
+
+
+	data_object (p: PATH): detachable JSON_OBJECT
+		local
+			jp: JSON_PARSER
+			f: PLAIN_TEXT_FILE
+			s: STRING
+		do
+			create f.make_with_path (p)
+			if f.exists and then f.is_access_readable then
+				f.open_read
+				from
+					create s.make_empty
+				until
+					f.exhausted
+				loop
+					f.read_stream (1_024)
+					s.append (f.last_string)
+				end
+				f.close
+
+				create jp.make_parser (s)
+				if attached {JSON_OBJECT} jp.parse as jo and then jp.is_parsed then
+
+				end
+
+			end
+
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

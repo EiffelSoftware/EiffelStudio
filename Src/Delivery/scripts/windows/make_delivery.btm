@@ -82,6 +82,10 @@ else
 endiff
 cdd %STUDIO_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" ren windows %ISE_PLATFORM
+
+cdd %STUDIO_DIR\tools\iron\spec
+if not "windows"=="%ISE_PLATFORM" ren windows %ISE_PLATFORM
+
 cdd %STUDIO_DIR\studio\lang
 fullrd po_files
 fullrd script

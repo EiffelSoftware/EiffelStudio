@@ -176,7 +176,7 @@ feature -- Router and Filter
 			h_edit: EDIT_PACKAGE_HANDLER
 			h_package: PACKAGE_HANDLER
 			h_package_map: PACKAGE_MAP_HANDLER
-			h_zip_package: ARCHIVE_PACKAGE_HANDLER
+			h_archive_package: ARCHIVE_PACKAGE_HANDLER
 			h_package_fetcher: FETCH_PACKAGE_HANDLER
 --			h_fs: WSF_FILE_SYSTEM_HANDLER
 		do
@@ -199,7 +199,7 @@ feature -- Router and Filter
 			map_uri_template_with_request_methods ("/access/{version}/", new_auth_uri_template_handler (h_admin), router.methods_get) -- Admin::home
 
 			create h_create.make (iron)
-			create h_zip_package.make (iron)
+			create h_archive_package.make (iron)
 			create h_search.make (iron)
 			create h_package.make (iron)
 			create h_edit.make (iron)
@@ -213,8 +213,8 @@ feature -- Router and Filter
 			map_uri_template_with_request_methods ("/access/{version}/package/", new_auth_uri_template_handler (h_package), router.methods_post) -- Create
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}", h_package, router.methods_get) --  Get package data
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}", new_auth_uri_template_handler (h_package), router.methods_put_post + router.methods_delete) --  Update package
-			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", h_zip_package, router.methods_get) --  Get archive package data
-			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", new_auth_uri_template_handler (h_zip_package), router.methods_post + router.methods_delete) --  Get archive package data
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", h_archive_package, router.methods_get) --  Get archive package data
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", new_auth_uri_template_handler (h_archive_package), router.methods_post + router.methods_delete) --  Get archive package data
 
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map", h_package_map, router.methods_get) --  Get map
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map{/map}", h_package_map, router.methods_get) --  Get map and allow ?method= .. hack

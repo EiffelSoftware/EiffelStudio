@@ -86,7 +86,7 @@ feature -- Query
 
 	package_archive_path (a_package: IRON_PACKAGE): PATH
 		do
-			Result := archives_path.extended_path (safe_package_path (a_package)).appended_with_extension ("zip")
+			Result := archives_path.extended_path (safe_package_path (a_package))
 		end
 
 	package_installation_path (a_package: IRON_PACKAGE): PATH

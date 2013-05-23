@@ -1,26 +1,52 @@
 note
-	description: "Summary description for {IRON_REPO_CONSTANTS}."
+	description: "Summary description for {IRON_PACKAGE_ARGUMENTS}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	IRON_REPO_CONSTANTS
+deferred class
+	IRON_PACKAGE_ARGUMENTS
+
+inherit
+	IRON_ARGUMENTS
 
 feature -- Access
 
-	major: INTEGER = 0
-	minor: INTEGER = 1
-	built: STRING = "0005"
-
-	version: STRING
-		do
-			Result := major.out + "." + minor.out + "." + built
+	username: detachable IMMUTABLE_STRING_32
+		deferred
 		end
 
-feature -- Access
+	password: detachable IMMUTABLE_STRING_32
+		deferred
+		end
 
-	iron_repo_variable_name: STRING = "IRON_REPO"
+	is_create: BOOLEAN
+		deferred
+		end
+
+	is_modify: BOOLEAN
+		deferred
+		end
+
+	is_archive: BOOLEAN
+		deferred
+		end
+
+	is_delete: BOOLEAN
+		deferred
+		end
+
+	data_file: detachable PATH
+		deferred
+		end
+
+	operation: detachable IMMUTABLE_STRING_32
+		deferred
+		end
+
+	repository: detachable IMMUTABLE_STRING_32
+		deferred
+		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

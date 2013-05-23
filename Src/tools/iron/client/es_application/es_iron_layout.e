@@ -1,26 +1,40 @@
 note
-	description: "Summary description for {IRON_REPO_CONSTANTS}."
-	author: ""
+	description: "Summary description for {ES_IRON_LAYOUT}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_REPO_CONSTANTS
+	ES_IRON_LAYOUT
 
-feature -- Access
-
-	major: INTEGER = 0
-	minor: INTEGER = 1
-	built: STRING = "0005"
-
-	version: STRING
-		do
-			Result := major.out + "." + minor.out + "." + built
+inherit
+	IRON_LAYOUT
+		redefine
+			binaries_path
 		end
 
-feature -- Access
+create
+	make
 
-	iron_repo_variable_name: STRING = "IRON_REPO"
+feature {NONE} -- Initialization
+
+	make (e: like eiffel_layout)
+			-- Initialize with Eiffel layout `e'
+		do
+			eiffel_layout := e
+			make_with_path (e.iron_path)
+		end
+
+	eiffel_layout: EIFFEL_ENV
+			-- Associated Eiffel Layout
+
+feature -- Access		
+
+	binaries_path: detachable PATH
+			-- Binaries path if available.
+			--| $ISE_EIFFEL/tools/iron/spec/$ISE_PLATFORM/bin
+		once
+			Result := eiffel_layout.tools_path.extended ("iron").extended ("spec").extended (eiffel_layout.eiffel_platform).extended ("bin")
+		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

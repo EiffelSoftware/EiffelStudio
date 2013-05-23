@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="client" uuid="AE13AA0B-2F14-4EC7-BA55-9AD4889B2715">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="client" uuid="AE13AA0B-2F14-4EC7-BA55-9AD4889B2715">
 	<target name="iron_client">
 		<root class="IRON_CLIENT" feature="make"/>
 		<file_rule>
@@ -8,6 +8,7 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+			<assertions precondition="true" postcondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="iron"/>
@@ -36,8 +37,8 @@
 	</target>
 	<target name="client" extends="iron_client">
 		<root class="ES_IRON_CLIENT" feature="make"/>
-		<setting name="executable_name" value="iron"/>
 		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="iron"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<cluster name="es_application" location=".\es_application\" recursive="true"/>
 	</target>

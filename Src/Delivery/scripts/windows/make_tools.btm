@@ -6,6 +6,17 @@ safe_md %STUDIO_DIR\tools\spec
 safe_md %STUDIO_DIR\tools\spec\%ISE_PLATFORM
 safe_md %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
+remtrace Recompile iron
+cdd %EIFFEL_SRC\tools\iron\client
+clean_project
+finalize client.ecf client
+cleanup_eiffel client iron.exe
+iff not exist iron.exe then
+	remtrace Could not finalize a new iron
+	CANCEL
+endiff
+move iron.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
 remtrace Recompile syntax_updater
 cdd %EIFFEL_SRC\tools\syntax_updater
 clean_project

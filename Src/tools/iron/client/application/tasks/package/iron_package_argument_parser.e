@@ -1,25 +1,23 @@
 note
 	description: "[
-			Summary description for {IRON_REPOSITORY_ARGUMENT_PARSER}.
+			Summary description for {IRON_PACKAGE_ARGUMENT_PARSER}.
 						
-				iron repository ...
+				iron package {create|modify|archive} --user username --pwd password --repository http://iron.eiffel.com/7.3/ --data data_file
 		]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_REPOSITORY_ARGUMENT_PARSER
+	IRON_PACKAGE_ARGUMENT_PARSER
 
 inherit
-	ARGUMENT_SINGLE_PARSER
+	IRON_ARGUMENT_SINGLE_PARSER
 		rename
 			make as make_parser
-		redefine
-			switch_groups
 		end
 
-	IRON_REPOSITORY_ARGUMENTS
+	IRON_PACKAGE_ARGUMENTS
 
 create
 	make
@@ -41,43 +39,78 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_listing: BOOLEAN
+	username: detachable IMMUTABLE_STRING_32
 		do
-			Result := has_option (list_switch)
+			if
+				has_option (username_switch) and then
+				attached option_of_name (username_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
 		end
 
-	repository_url: detachable IMMUTABLE_STRING_32
+	password: detachable IMMUTABLE_STRING_32
+		do
+			if
+				has_option (password_switch) and then
+				attached option_of_name (password_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
+	is_create: BOOLEAN
+		do
+			if attached operation as op then
+				Result := op.is_case_insensitive_equal ("create")
+			end
+		end
+
+	is_modify: BOOLEAN
+		do
+			if attached operation as op then
+				Result := op.is_case_insensitive_equal ("modify")
+			end
+		end
+
+	is_archive: BOOLEAN
+		do
+			if attached operation as op then
+				Result := op.is_case_insensitive_equal ("archive")
+			end
+		end
+
+	is_delete: BOOLEAN
+		do
+			if attached operation as op then
+				Result := op.is_case_insensitive_equal ("delete")
+			end
+		end
+
+	data_file: detachable PATH
+		do
+			if
+				has_option (data_switch) and then
+				attached option_of_name (data_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
+	operation: detachable IMMUTABLE_STRING_32
 		do
 			if has_non_switched_argument then
 				Result := value
 			end
 		end
 
-	repository_to_add: detachable IMMUTABLE_STRING_8
-		local
-			v: IMMUTABLE_STRING_32
+	repository: detachable IMMUTABLE_STRING_32
 		do
 			if
-				has_option (add_switch) and then
-				attached option_of_name (add_switch) as opt
+				has_option (repo_switch) and then
+				attached option_of_name (repo_switch) as opt
 			then
-				v := opt.value
-				if v.is_valid_as_string_8 then
-					create Result.make_from_string (v.as_string_8)
-				end
-			end
-		end
-
-	repository_to_remove: detachable IMMUTABLE_STRING_32
-		local
-			v: IMMUTABLE_STRING_32
-		do
-			if
-				has_option (remove_switch) and then
-				attached option_of_name (remove_switch) as opt
-			then
-				v := opt.value
-				create Result.make_from_string (v)
+				create Result.make_from_string (opt.value)
 			end
 		end
 
@@ -92,19 +125,19 @@ feature {NONE} -- Usage
 
 	non_switched_argument_name: IMMUTABLE_STRING_32
 		once
-			create Result.make_from_string ({STRING_32} "uri")
+			create Result.make_from_string ({STRING_32} "operation")
 		end
 
 	non_switched_argument_description: IMMUTABLE_STRING_32
 			--  <Precursor>
 		once
-			create Result.make_from_string ({STRING_32} "Repository uri (including version)")
+			create Result.make_from_string ({STRING_32} "Operations: create, modify, archive, delete, list ..")
 		end
 
 	non_switched_argument_type: IMMUTABLE_STRING_32
 			--  <Precursor>
 		once
-			create Result.make_from_string ({STRING_32} "uri")
+			create Result.make_from_string ({STRING_32} "action")
 		end
 
 feature {NONE} -- Switches
@@ -113,26 +146,19 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (12)
-			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "List repositories", True, False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (add_switch, "Add repository", True, False, "name", "Registration name for associated url", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (remove_switch, "Remove repository", True, False, "name_or_url", "Registered name or repository url including the version", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (username_switch, "Username", False, True, "username", "required username", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (password_switch, "Password", False, True, "password", "required password", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (repo_switch, "Repository", True, False, "url", "Repository url including the version", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (data_switch, "Data file", False, False, "file", "File describing the data (check documentation for the format)", False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end
 
-	switch_groups: attached ARRAYED_LIST [attached ARGUMENT_GROUP]
-			-- Valid switch grouping
-		once
-			create Result.make (3)
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (list_switch)>>, False))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (add_switch)>>, True))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (remove_switch)>>, False))
-		end
-
-	list_switch: STRING = "l|list"
-	add_switch: STRING = "a|add"
-	remove_switch: STRING = "d|remove"
+	username_switch: STRING = "u|username"
+	password_switch: STRING = "p|password"
+	repo_switch: STRING = "r|repository"
+	data_switch: STRING = "d|data"
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
@@ -165,5 +191,4 @@ feature {NONE} -- Switches
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

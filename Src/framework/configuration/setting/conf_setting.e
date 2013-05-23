@@ -72,12 +72,14 @@ feature -- Initialization: Iron
 	initialize_iron
 		local
 			l_iron_mapping: CONF_LOCATION_IRON_MAPPING
+			lay: IRON_LAYOUT
 		do
 			if not iron_initialized then
 					-- Custom mapping for IRON...		
 				if is_eiffel_layout_defined then
 						-- Using ISE Eiffel Environment
-					create l_iron_mapping.make (eiffel_layout.iron_path)
+					create lay.make_with_path (eiffel_layout.iron_path)
+					create l_iron_mapping.make (lay)
 					conf_location_mapper.register (l_iron_mapping)
 					iron_initialized := True
 				end

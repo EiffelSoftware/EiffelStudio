@@ -3,7 +3,7 @@ note
 				Mapping between
 			 		- a iron location as specified in Eiffel Configuration File (.ecf)
 						i.e http://iron.eiffel.com/....
-					- and the local path of the installed library (if it was already installed)			
+					- and the local path of the installed library (if it was already installed)
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,13 +19,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: PATH)
-			-- Initialize Current with `a_path' if provided.
+	make (a_layout: IRON_LAYOUT)
+			-- Initialize Current with `a_layout'.
 		do
-			iron_path := a_path
+			iron_layout := a_layout
 		end
 
-	iron_path: PATH
+	iron_layout: IRON_LAYOUT
 
 feature -- Access
 
@@ -43,7 +43,7 @@ feature -- Access
 				update_location_to_uri (l_uri)
 				l_iron_api := iron_api
 				if l_iron_api = Void then
-					create l_iron_api.make_with_path (iron_path)
+					create l_iron_api.make_with_layout (iron_layout)
 					iron_api := l_iron_api
 				end
 				if attached l_iron_api.local_path_associated_with_uri (l_uri) as p then

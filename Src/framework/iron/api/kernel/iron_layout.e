@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {IRON_LAYOUT}."
-	author: ""
+	description: "[
+			Environment for various iron related path and resources ....
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -37,6 +38,24 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	path: PATH
+
+	binaries_path: detachable PATH
+			-- Binaries path if available.
+			--| Could be $IRON_PATH/spec/$ISE_PLATFORM/bin
+			--| Could be $ISE_EIFFEL/tools/iron/spec/$ISE_PLATFORM/bin
+			--| ...
+		local
+			s: detachable READABLE_STRING_32
+		once
+			if attached execution_environment.item ("IRON_PLATFORM") as e then
+				s := e
+			elseif attached execution_environment.item ("ISE_PLATFORM") as e then
+				s := e
+			end
+			if s /= Void then
+				Result := path.extended ("spec").extended (s).extended ("bin")
+			end
+		end
 
 	repositories_configuration_file: PATH
 		once

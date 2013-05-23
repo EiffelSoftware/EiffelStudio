@@ -81,13 +81,15 @@ feature {NONE} -- Initialization
 			if attached tasks.item (a_name) as t then
 				Result := t.factory_function.item ([args])
 			end
+		ensure
+			Result /= Void implies a_name.same_string (Result.name)
 		end
 
 	tasks: STRING_TABLE [TUPLE [factory_function: FUNCTION [ANY, TUPLE [ARRAY [IMMUTABLE_STRING_32]], IRON_TASK]; description: READABLE_STRING_GENERAL]]
 		once
 			create Result.make_caseless (7 + 1)
 
-			Result.force ([agent (args: like task_arguments): IRON_UPDATE_TASK    do create Result.make (args) end, "Update package information.."], "update")
+			Result.force ([agent (args: like task_arguments): IRON_UPDATE_TASK   do create Result.make (args) end, "Update package information.."], "update")
 			Result.force ([agent (args: like task_arguments): IRON_LIST_TASK    do create Result.make (args) end, "list packages.."], "list")
 			Result.force ([agent (args: like task_arguments): IRON_INSTALL_TASK do create Result.make (args) end, "install package"], "install")
 			Result.force ([agent (args: like task_arguments): IRON_INFO_TASK    do create Result.make (args) end, "information about a package"], "info")
@@ -95,10 +97,12 @@ feature {NONE} -- Initialization
 			Result.force ([agent (args: like task_arguments): IRON_REMOVE_TASK  do create Result.make (args) end, "remove a package"], "remove")
 			Result.force ([agent (args: like task_arguments): IRON_REPOSITORY_TASK  do create Result.make (args) end, "manage repository"], "repository")
 
-			Result.force ([agent (args: like task_arguments): IRON_TESTING_TASK    do create Result.make (args) end, "Testing.."], "testing")
-		end
+			Result.force ([agent (args: like task_arguments): IRON_PACKAGE_TASK  do create Result.make (args) end, "manage remote package (auth required)"], "package")
 
-feature -- Status
+			debug ("iron")
+				Result.force ([agent (args: like task_arguments): IRON_TESTING_TASK    do create Result.make (args) end, "Testing.."], "testing")
+			end
+		end
 
 feature -- Access
 
@@ -107,11 +111,36 @@ feature -- Access
 			create Result.make_default
 		end
 
-feature -- Change
 
-feature {NONE} -- Implementation
-
-invariant
-	--	invariant_clause: True
-
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

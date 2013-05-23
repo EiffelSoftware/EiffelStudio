@@ -1,26 +1,28 @@
 note
-	description: "Summary description for {IRON_REPO_CONSTANTS}."
+	description: "Summary description for {IRON_ARGUMENT_SINGLE_PARSER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	IRON_REPO_CONSTANTS
+deferred class
+	IRON_ARGUMENT_SINGLE_PARSER
 
-feature -- Access
-
-	major: INTEGER = 0
-	minor: INTEGER = 1
-	built: STRING = "0005"
-
-	version: STRING
-		do
-			Result := major.out + "." + minor.out + "." + built
+inherit
+	ARGUMENT_SINGLE_PARSER
+		undefine
+			sub_system_name
 		end
 
 feature -- Access
 
-	iron_repo_variable_name: STRING = "IRON_REPO"
+	sub_system_name: IMMUTABLE_STRING_32
+		do
+			Result := task.name
+		end
+
+	task: IRON_TASK
+		deferred
+		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

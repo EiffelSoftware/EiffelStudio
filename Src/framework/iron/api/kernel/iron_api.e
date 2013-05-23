@@ -12,10 +12,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
-		do
-			make_with_layout (create {IRON_LAYOUT}.make_default)
-		end
+--	make
+--		do
+--			make_with_layout (create {IRON_LAYOUT}.make_default)
+--		end
 
 	make_with_layout (a_layout: like layout)
 		do
@@ -23,10 +23,10 @@ feature {NONE} -- Initialization
 			initialize
 		end
 
-	make_with_path (a_path: PATH)
-		do
-			make_with_layout (create {IRON_LAYOUT}.make_with_path (a_path))
-		end
+--	make_with_path (a_path: PATH)
+--		do
+--			make_with_layout (create {IRON_LAYOUT}.make_with_path (a_path))
+--		end
 
 	initialize
 		do

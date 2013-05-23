@@ -14,9 +14,7 @@ inherit
 		end
 
 create
-	make,
-	make_with_layout,
-	make_with_path
+	make_with_layout
 
 feature {NONE} -- Initialization
 

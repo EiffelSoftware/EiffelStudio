@@ -11,7 +11,7 @@ feature -- Access
 
 	major: INTEGER = 0
 	minor: INTEGER = 1
-	built: STRING = "0005"
+	built: STRING = "0006"
 
 	version: STRING
 		do

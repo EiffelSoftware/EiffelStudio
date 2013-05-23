@@ -51,7 +51,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
 		local
-			l_item, l_other: detachable ANY
+			l_item, l_other: detachable separate ANY
 			l_count, i: INTEGER
 		do
 			l_count := item.count
@@ -60,7 +60,7 @@ feature -- Comparison
 				from i := 1 until not Result or else i > l_count loop
 					l_item := item.item (i)
 					l_other := other.item [i]
-					Result := equal (l_item, l_other)
+					Result := l_item ~ l_other
 					i := i + 1
 				end
 			end

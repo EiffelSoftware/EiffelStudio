@@ -1,0 +1,30 @@
+#!/bin/sh
+# 
+# 
+#	Script to extract an iron package archive
+# 	usage: prog {archive_path} {folder_directory} 
+#
+# ex: $ISE_EIFFEL\tools\iron\spec\$ISE_PLATFORM\bin\iron_extract_archive.bat iron_archives\base.tar.bz2 libs\base
+#	Maintainer: Eiffel Software
+
+T_HERE=`pwd`
+
+T_ARCHIVE_NAME=$1
+T_FOLDER_DIR=$2
+
+if [ ! -f "${T_ARCHIVE_NAME}" ]; then
+	echo ERROR: Can not find "${T_ARCHIVE_NAME}"!
+	exit 1
+fi
+
+if [ ! -d "${T_FOLDER_DIR}" ]; then
+	mkdir "${T_FOLDER_DIR}"
+fi
+if [ ! -d "${T_FOLDER_DIR}" ]; then
+	echo ERROR: Can not create "${T_FOLDER_DIR}"!
+	exit 1
+fi
+
+cd "${T_FOLDER_DIR}"
+tar xjfp "${T_ARCHIVE_NAME}" 
+

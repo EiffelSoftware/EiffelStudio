@@ -36,23 +36,28 @@ feature -- Archiving
 				if {PLATFORM}.is_windows then
 					p := p.appended_with_extension ("bat")
 				end
+				Result.append_character ('%"')
 				Result.append (p.name)
-				Result.append_string_general (" %"")
+				Result.append_character ('%"')
+				Result.append_character (' ')
+				Result.append_character ('%"')
 				Result.append (a_source.name)
-				Result.append_string_general ("%"")
+				Result.append_character ('%"')
 				if attached a_archive.entry as e then
-					Result.append_string_general (" %"")
+					Result.append_character (' ')
+					Result.append_character ('%"')
 					Result.append (a_archive.parent.name)
-					Result.append_string_general ("%"")
+					Result.append_character ('%"')
 
-					Result.append_string_general (" %"")
+					Result.append_character (' ')
+					Result.append_character ('%"')
 					Result.append (e.name)
-					Result.append_string_general ("%"")
-
+					Result.append_character ('%"')
 				else
-					Result.append_string_general (" . %"")
+					Result.append_string_general (" . ")
+					Result.append_character ('%"')
 					Result.append (a_archive.name)
-					Result.append_string_general ("%"")
+					Result.append_character ('%"')
 				end
 			end
 		end
@@ -75,14 +80,17 @@ feature -- Archiving
 				if {PLATFORM}.is_windows then
 					p := p.appended_with_extension ("bat")
 				end
-
+				Result.append_character ('%"')
 				Result.append (p.name)
-				Result.append_string_general (" %"")
+				Result.append_character ('%"')
+				Result.append_character (' ')
+				Result.append_character ('%"')
 				Result.append (a_archive.name)
-				Result.append_string_general ("%"")
-				Result.append_string_general (" %"")
+				Result.append_character ('%"')
+				Result.append_character (' ')
+				Result.append_character ('%"')
 				Result.append (a_folder.name)
-				Result.append_string_general ("%"")
+				Result.append_character ('%"')
 			end
 		end
 
@@ -136,6 +144,9 @@ feature -- Archiving
 		do
 			p := a_target_folder.absolute_path
 			create d.make_with_path (p)
+			if d.exists then
+				d.recursive_delete
+			end
 			if not d.exists then
 				d.recursive_create_dir
 			end
@@ -147,13 +158,13 @@ feature -- Archiving
 					print (cmd + "%N")
 				end
 				proc := proc_fact.process_launcher_with_command_line (cmd, p.name)
-				proc.redirect_output_to_file (".tmp.output.proc")
+				proc.redirect_output_to_file (p.extended (".tmp.output.proc").name)
 				proc.redirect_error_to_same_as_output
 				proc.launch
 				if proc.launched then
 					proc.wait_for_exit
 				end
-				create f.make_with_name (".tmp.output.proc")
+				create f.make_with_path (p.extended (".tmp.output.proc"))
 				delete_file (f)
 			end
 		end
@@ -162,7 +173,7 @@ feature -- Archiving
 		local
 			retried: INTEGER
 		do
-			if retried > 5 then
+			if retried <= 5 then
 				if f.exists then
 					f.delete
 				end

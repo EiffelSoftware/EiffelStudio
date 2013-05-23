@@ -176,7 +176,7 @@ feature -- Package
 			p: PATH
 			b: BOOLEAN
 		do
-			p := package_path (v, a_package.id).extended ("archive.zip")
+			p := package_path (v, a_package.id).extended ("archive")
 			b := a_file.move_to (p.name.to_string_8)
 			if b then
 				a_package.set_archive_path (p)
@@ -188,7 +188,7 @@ feature -- Package
 			p: PATH
 			src,tgt: RAW_FILE
 		do
-			p := package_path (v, a_package.id).extended ("archive.zip")
+			p := package_path (v, a_package.id).extended ("archive")
 			create src.make_with_path (a_file)
 			if src.exists then
 				if a_keep_source_file then
@@ -210,7 +210,7 @@ feature -- Package
 			p: PATH
 			f: RAW_FILE
 		do
-			p := package_path (v, a_package.id).extended ("archive.zip")
+			p := package_path (v, a_package.id).extended ("archive")
 			create f.make_with_path (p)
 			if f.exists then
 				f.delete
@@ -280,15 +280,16 @@ feature -- Package
 						Result.put (c.item, c.key)
 					end
 				end
-				z := p.extended ("package.zip")
+				z := p.extended ("package")
+					--| Should we have a specific ext
 				if u.file_path_exists (z) then
 					Result.set_archive_path (z.absolute_path)
 				else
-					z := p.extended ("archive.zip")
+					z := p.extended ("archive")
 					if u.file_path_exists (z) then
 						Result.set_archive_path (z.absolute_path)
 					else
-						z := p.extended (a_id.to_string_32 + ".zip")
+						z := p.extended (a_id.to_string_32)
 						if u.file_path_exists (z) then
 							Result.set_archive_path (z.absolute_path)
 						end

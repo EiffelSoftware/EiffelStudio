@@ -19,7 +19,7 @@ feature -- Version
 
 	minor: NATURAL_16 = 1
 
-	built: STRING = "0005"
+	built: STRING = "0006"
 
 	version: IMMUTABLE_STRING_8
 		local

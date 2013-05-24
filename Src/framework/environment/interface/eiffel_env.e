@@ -669,7 +669,7 @@ feature -- Directories (top-level)
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result := shared_path.extended (iron_name)
+			Result := shared_path.extended ("tools").extended (iron_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

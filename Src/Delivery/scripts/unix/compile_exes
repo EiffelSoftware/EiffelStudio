@@ -109,7 +109,8 @@ fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
 
 #iron tool.
-move $INSTALL_DIR/tools/iron/spec/unix/* $INSTALL_DIR/tools/iron/spec/$ISE_PLATFORM
+move $INSTALL_DIR/tools/iron/spec/unix $INSTALL_DIR/tools/iron/spec/$ISE_PLATFORM
+fullrd $INSTALL_DIR/tools/iron/spec/windows
 
 #Creates the tools directory
 safe_md $INSTALL_DIR/tools

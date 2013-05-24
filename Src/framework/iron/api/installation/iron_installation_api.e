@@ -58,9 +58,10 @@ feature -- Access
 	is_installed (a_package: IRON_PACKAGE): BOOLEAN
 			-- Is `a_package' installed?
 		local
-			u: FILE_UTILITIES
+			d: DIRECTORY
 		do
-			Result := u.directory_path_exists (layout.package_installation_path (a_package))
+			create d.make_with_path (layout.package_installation_path (a_package))
+			Result := d.exists and then not d.is_empty
 		end
 
 	package_associated_with_id (a_id: READABLE_STRING_GENERAL): detachable IRON_PACKAGE

@@ -24,8 +24,6 @@ inherit
 	IRON_ARGUMENT_MULTI_PARSER
 		rename
 			make as make_parser
-		redefine
-			switch_groups
 		end
 
 	IRON_INSTALL_ARGUMENTS
@@ -49,6 +47,12 @@ feature {NONE} -- Initialization
 	task: IRON_TASK
 
 feature -- Access
+
+	installing_all: BOOLEAN
+			-- Install all available packages?
+		do
+			Result := has_option (all_switch)
+		end
 
 	resources: LIST [IMMUTABLE_STRING_32]
 		once
@@ -110,21 +114,14 @@ feature {NONE} -- Switches
 		once
 			create Result.make (2)
 			Result.extend (create {ARGUMENT_SWITCH}.make (file_switch, "Package file", True, True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (all_switch, "Install all available packages", True, False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end
 
-	switch_groups: attached ARRAYED_LIST [attached ARGUMENT_GROUP]
-			-- Valid switch grouping
-		once
-			create Result.make (1)
---			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (x86_switch), switch_of_name (use_compiler_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
---			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (manual_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
---			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_compilers_switch), switch_of_name (x86_switch)>>, False))
-		end
-
 	file_switch: STRING = "f|file"
+	all_switch: STRING = "a|all"
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

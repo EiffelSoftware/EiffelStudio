@@ -38,20 +38,29 @@ feature -- Install task
 	tk_not_found: STRING_32
 		do Result := {STRING_32} "not found" end
 
+	tk_not_installed: STRING_32
+		do Result := {STRING_32} "not installed !" end
+
 	tk_already_installed: STRING_32
 		do Result := {STRING_32} "already installed !" end
 
 	tk_successfully_installed: STRING_32
 		do Result := {STRING_32} "successfully installed !" end
 
+	tk_successfully_removed: STRING_32
+		do Result := {STRING_32} "successfully removed !" end
+
 	tk_failed: STRING_32
 		do Result := {STRING_32} "failed !" end
 
 	m_installing (s: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Installing %"$1%" ...", [s]) end
+		do Result := string_with_args ("Installing %"$1%" ", [s]) end
+
+	m_removing (s: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Removing %"$1%" ", [s]) end
 
 	m_searching (s: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Searching %"$1%" ...", [s]) end
+		do Result := string_with_args ("Searching %"$1%" ", [s]) end
 
 	m_several_packages_for_name (s: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("several packages for name %"$1%"!", [s]) end
@@ -64,9 +73,8 @@ feature -- Info task
 	tk_associated_paths: STRING_32
 		do Result := {STRING_32} "associated paths"	end
 
-
 	m_title_information_for (s: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Information for %"$1%" ...", [s]) end
+		do Result := string_with_args ("Information for %"$1%" ", [s]) end
 
 	m_information_for (a_title, a_id, a_repo_url: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("$1%N id=$2%N repository=$3", [a_title, a_id, a_repo_url]) end
@@ -77,10 +85,10 @@ feature -- Repository task
 		do Result := {STRING_32} "Updating repositories ..." end
 
 	m_registering_repository (a_name: READABLE_STRING_GENERAL; a_url: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Registering repository %"$1%" [$2] ...", [a_name, a_url]) end
+		do Result := string_with_args ("Registering repository %"$1%" [$2] ", [a_name, a_url]) end
 
 	m_unregistering_repository (a_name_or_uri: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Un-Registering repository [$2] ...", [a_name_or_uri]) end
+		do Result := string_with_args ("Un-Registering repository [$2] ", [a_name_or_uri]) end
 
 feature {NONE} -- Implementation
 

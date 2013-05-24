@@ -12,6 +12,10 @@ inherit
 
 feature -- Access
 
+	removing_all: BOOLEAN
+		deferred
+		end
+
 	resources: LIST [IMMUTABLE_STRING_32]
 		deferred
 		end

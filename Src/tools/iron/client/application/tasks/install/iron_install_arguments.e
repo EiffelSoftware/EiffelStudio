@@ -12,6 +12,11 @@ inherit
 
 feature -- Access
 
+	installing_all: BOOLEAN
+			-- Install all available packages?
+		deferred
+		end
+
 	resources: LIST [IMMUTABLE_STRING_32]
 		deferred
 		end

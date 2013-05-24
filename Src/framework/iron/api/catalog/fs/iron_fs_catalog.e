@@ -280,6 +280,7 @@ feature -- Package operations
 			f: RAW_FILE
 			j: STRING
 			js: JSON_STRING
+			d: DIRECTORY
 		do
 			l_uri := a_package.archive_uri
 			if l_uri /= Void then
@@ -289,32 +290,37 @@ feature -- Package operations
 					create ipu
 					ensure_folder_exists (p.parent)
 
-					if attached a_package.json_item as l_json then
-						create j.make (l_json.count)
-						j.append_character ('{')
-						j.append ("%"repository%": {")
-						j.append ("%"uri%":")
-						js := a_package.repository.uri.string
-						j.append (js.representation)
-						j.append_character (',')
-						j.append ("%"version%":")
-						js := a_package.repository.version
-						j.append (js.representation)
-						j.append_character ('}')
-						j.append_character (',')
-						j.append ("%"package%":")
-						j.append (l_json)
-						j.append_character ('}')
-
-						create f.make_with_path (p.appended_with_extension ("info"))
-						f.create_read_write
-						f.put_string (j)
-						f.close
-					end
-
 					ipu.extract_package_archive (a_package, p, True, layout)
+					create d.make_with_path (p)
+					if d.exists then
+						if not d.is_empty then
+							if attached a_package.json_item as l_json then
+								create j.make (l_json.count)
+								j.append_character ('{')
+								j.append ("%"repository%": {")
+								j.append ("%"uri%":")
+								js := a_package.repository.uri.string
+								j.append (js.representation)
+								j.append_character (',')
+								j.append ("%"version%":")
+								js := a_package.repository.version
+								j.append (js.representation)
+								j.append_character ('}')
+								j.append_character (',')
+								j.append ("%"package%":")
+								j.append (l_json)
+								j.append_character ('}')
 
-					installed_packages.force (a_package)
+								create f.make_with_path (p.appended_with_extension ("info"))
+								f.create_read_write
+								f.put_string (j)
+								f.close
+							end
+							installed_packages.force (a_package)
+						else
+							d.recursive_delete
+						end
+					end
 				else
 						-- missing local archive
 					download_package (a_package)

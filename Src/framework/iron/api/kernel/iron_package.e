@@ -81,18 +81,17 @@ feature -- Access
 
 	human_identifier: STRING_32
 		do
+			create Result.make_from_string (repository.url)
+			Result.append_character (' ')
 			if attached name as l_name then
-				create Result.make_from_string (l_name)
+				Result.append (l_name)
 				debug
 					Result.append_character (' ')
 					Result.append_string_general (id)
 				end
 			else
-				create Result.make_from_string_general (id)
+				Result.append_string_general (id)
 			end
-			Result.append (" (")
-			Result.append (repository.url)
-			Result.append (")")
 
 			debug
 				across

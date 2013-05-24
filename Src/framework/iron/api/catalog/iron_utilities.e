@@ -163,6 +163,11 @@ feature -- Archiving
 				proc.launch
 				if proc.launched then
 					proc.wait_for_exit
+					if not proc.last_termination_successful then
+						-- failure
+					end
+				else
+					-- failure
 				end
 				create f.make_with_path (p.extended (".tmp.output.proc"))
 				delete_file (f)

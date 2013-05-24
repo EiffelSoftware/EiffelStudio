@@ -33,6 +33,16 @@ feature -- Access
 			catalog.update
 		end
 
+	available_packages: ARRAYED_LIST [IRON_PACKAGE]
+		do
+			create Result.make (10)
+			across
+				repositories as c
+			loop
+				Result.append (c.item.available_packages)
+			end
+		end
+
 	repositories: LIST [IRON_REPOSITORY]
 		do
 			Result := catalog.repositories

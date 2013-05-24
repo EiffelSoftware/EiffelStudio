@@ -661,10 +661,10 @@ feature {NONE} -- Implementation
 			if not retried then
 				create l_date.make_now
 				create l_file.make_with_path (a_file_name)
+				l_file.open_append
 				if l_file.is_empty then
 					l_file.put_string ({UTF_CONVERTER}.utf_8_bom_to_string_8)
 				end
-				l_file.open_append
 				l_file.put_string ("**********************************************************************%N")
 				l_file.put_string ("Date: ")
 				l_file.put_string (l_date.out)

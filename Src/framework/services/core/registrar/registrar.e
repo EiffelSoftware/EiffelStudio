@@ -43,8 +43,6 @@ feature {NONE} -- Clean up
 	safe_dispose (a_explicit: BOOLEAN)
 			-- <Precursor>
 		local
-			l_keys: DS_LINEAR [K]
-			l_key: detachable K
 			l_automation: like automation
 		do
 			if a_explicit then

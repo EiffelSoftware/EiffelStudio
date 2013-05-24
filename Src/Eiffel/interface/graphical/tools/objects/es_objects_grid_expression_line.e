@@ -428,9 +428,6 @@ feature -- Graphical changes
 
 	request_reevaluate_expression_allowing_side_effect
 			-- Reevaluate the expression ignoring side effect.
-		local
-			l_request: ES_DISCARDABLE_QUESTION_PROMPT
-			l_cancelled: BOOLEAN
 		do
 			if attached expression_evaluation as l_expre then
 				l_expre.set_side_effect_forbidden (False)

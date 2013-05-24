@@ -33,7 +33,7 @@ feature -- Access
 			-- Binaries path if available.
 			--| $ISE_EIFFEL/tools/iron/spec/$ISE_PLATFORM/bin
 		once
-			Result := eiffel_layout.tools_path.extended ("iron").extended ("spec").extended (eiffel_layout.eiffel_platform).extended ("bin")
+			Result := eiffel_layout.installation_iron_path.extended ("spec").extended (eiffel_layout.eiffel_platform).extended ("bin")
 		end
 
 note

@@ -232,6 +232,11 @@ if [ ! "$NO_COMPILE" ]; then
 	exprt $DEFAULT_ISE_SVN/Src/tools/activation activation
 	exprt $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
 
+	remtrace Install iron files
+	safe_md $INSTALL_DIR/tools
+	cd $INSTALL_DIR/tools
+	exprt $DEFAULT_ISE_SVN/Src/tools/iron/delivery/iron iron
+
 	remtrace Update all libraries
 	cd $INIT_DIR
 	set -- library $GTK_DIR

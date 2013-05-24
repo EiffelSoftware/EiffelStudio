@@ -23,7 +23,7 @@ if not exist "%T_FOLDER_DIR%\archive.tar.bz2" goto failure
 
 
 chdir "%T_FOLDER_DIR%"
-%~dp0bzip2.exe -cd archive.tar.bz2 | %~dp0tar.exe xp > :NUL
+"%~dp0bzip2.exe" -cd archive.tar.bz2 | "%~dp0tar.exe" xp > :NUL
 if %ERRORLEVEL% NEQ 0 echo ERR=%ERRORLEVEL%
 
 del archive.tar.bz2

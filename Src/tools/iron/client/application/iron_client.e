@@ -20,8 +20,20 @@ class
 
 inherit
 	ARGUMENTS_32
+		rename
+			print as print_any
+		end
 
 	SHARED_EXECUTION_ENVIRONMENT
+		rename
+			print as print_any
+		end
+
+	LOCALIZED_PRINTER
+		rename
+			print as print_any,
+			localized_print as print
+		end
 
 create
 	make
@@ -39,8 +51,11 @@ feature {NONE} -- Initialization
 				cmd := argument (1)
 				task := task_by_name (cmd, task_arguments (argument_array))
 			end
+
+			create iron.make (iron_layout)
+			initialize_iron (iron)
+
 			if task /= Void then
-				create iron.make (iron_layout)
 				task.process (iron)
 			else
 				io.error.put_string ("Usage: command ...%N")
@@ -50,6 +65,12 @@ feature {NONE} -- Initialization
 					io.error.put_string ("%T " + c.key.to_string_8 + " : " + c.item.description.to_string_8 + "%N")
 				end
 			end
+		end
+
+	initialize_iron (a_iron: IRON)
+			-- Initialize `a_iron' if needed
+		do
+
 		end
 
 	task_arguments (args: ARRAY [IMMUTABLE_STRING_32]): ARRAY [IMMUTABLE_STRING_32]

@@ -10,10 +10,27 @@ class
 inherit
 	IRON_CLIENT
 		redefine
-			iron_layout
+			iron_layout,
+			initialize_iron
 		end
 
 	EIFFEL_LAYOUT
+		rename
+			print as print_any
+		export
+			{NONE} all
+		end
+
+	IRON_NAMES
+		rename
+			print as print_any
+		export
+			{NONE} all
+		end
+
+	IRON_EXPORTER
+		rename
+			print as print_any
 		export
 			{NONE} all
 		end
@@ -21,15 +38,39 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialization
+
+	initialize_iron (a_iron: IRON)
+			-- Initialize `a_iron' if needed
+		local
+			repo: IRON_REPOSITORY
+		do
+			if
+				a_iron.catalog_api.repositories.is_empty and then
+				is_eiffel_layout_defined
+			then
+					-- Initialize default repo
+				print ("First initialization with default repository...%N")
+				create repo.make (create {URI}.make_from_string ("http://iron.eiffel.com/"), {EIFFEL_CONSTANTS}.major_version.out + "." + {EIFFEL_CONSTANTS}.minor_version.out)
+				print (m_registering_repository ("iron", repo.url))
+				io.put_new_line
+				a_iron.catalog_api.register_repository ("iron", repo)
+
+				print (m_updating_repositories)
+				io.put_new_line
+				a_iron.catalog_api.update
+				io.put_new_line
+			end
+		end
+
 feature -- Access
 
 	iron_layout: ES_IRON_LAYOUT
 		do
-			if is_eiffel_layout_defined then
-				create Result.make (eiffel_layout)
-			else
-				create Result.make (create {EC_EIFFEL_LAYOUT})
+			if not is_eiffel_layout_defined then
+				set_eiffel_layout (create {EC_EIFFEL_LAYOUT})
 			end
+			create Result.make (eiffel_layout)
 		end
 
 note

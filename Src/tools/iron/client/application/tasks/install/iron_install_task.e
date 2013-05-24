@@ -31,69 +31,89 @@ feature -- Execute
 	execute (args: IRON_INSTALL_ARGUMENTS; a_iron: IRON)
 		local
 			l_package: detachable IRON_PACKAGE
+			lst: ARRAYED_LIST [IRON_PACKAGE]
 		do
-			across
-				args.resources as c
-			loop
-				print (m_searching (c.item))
-				print_new_line
-				l_package := Void
-				if c.item.starts_with ("http://") or c.item.starts_with ("https://") then
-					-- url
-					l_package := a_iron.catalog_api.package_associated_with_uri (c.item)
-				else
-					-- name (or uuid) ?
-					if attached a_iron.catalog_api.packages_associated_with_name (c.item) as lst and then not lst.is_empty then
-						if lst.count = 1 then
-							l_package := lst.first
-						else
-							if args.is_batch then
-								print ("  -> ")
-								print (m_several_packages_for_name (c.item))
-								print_new_line
+			if args.installing_all then
+				lst := a_iron.catalog_api.available_packages
+			else
+				create lst.make (args.resources.count)
+				across
+					args.resources as c
+				loop
+					print (m_searching (c.item))
+					print_new_line
+					l_package := Void
+					if c.item.starts_with ("http://") or c.item.starts_with ("https://") then
+						-- url
+						l_package := a_iron.catalog_api.package_associated_with_uri (c.item)
+					else
+						-- name (or uuid) ?
+						if attached a_iron.catalog_api.packages_associated_with_name (c.item) as l_packages and then not l_packages.is_empty then
+							if l_packages.count = 1 then
+								l_package := l_packages.first
 							else
-								across
-									lst as p
-								loop
-									-- Selection ..
-									-- FIXME: to implemente
+								if args.is_batch then
+									print ("  -> ")
+									print (m_several_packages_for_name (c.item))
+									print_new_line
+								else
+									across
+										lst as p
+									loop
+										-- Selection ..
+										-- FIXME: to implement
+									end
 								end
 							end
 						end
+						if l_package = Void then
+							l_package := a_iron.catalog_api.package_associated_with_id (c.item)
+						end
 					end
-					if l_package = Void then
-						l_package := a_iron.catalog_api.package_associated_with_id (c.item)
+					if l_package /= Void then
+						lst.force (l_package)
+					else
+						print ("  -> ")
+						print (tk_not_found)
+						print_new_line
 					end
 				end
-				if l_package = Void then
-					print ("  -> ")
-					print (tk_not_found)
-					print_new_line
-				elseif a_iron.installation_api.is_installed (l_package) then
-					print ("  -> ")
-					print (tk_already_installed)
-					print_new_line
-					print ("  [")
-					print (a_iron.layout.package_installation_path (l_package).name)
-					print ("]%N")
-				else
+			end
+			if not lst.is_empty then
+				across
+					lst as c
+				loop
+					l_package := c.item
 					print (m_installing (l_package.human_identifier))
-					print_new_line
-					print ("  -> ")
-					if args.is_simulation then
-						print (tk_simulated)
+					if a_iron.installation_api.is_installed (l_package) then
+						print (" -> ")
+						print (tk_already_installed)
 						print_new_line
-					else
-						a_iron.catalog_api.install_package (l_package)
-						if a_iron.installation_api.is_installed (l_package) then
-							print (tk_successfully_installed)
-							print_new_line
+						if args.verbose then
 							print ("  [")
 							print (a_iron.layout.package_installation_path (l_package).name)
 							print ("]%N")
-						else
-							print (tk_failed)
+						end
+					else
+						if args.is_simulation then
+							print (" -> ")
+							print (tk_simulated)
 							print_new_line
+						else
+							a_iron.catalog_api.install_package (l_package)
+							print (" -> ")
+							if a_iron.installation_api.is_installed (l_package) then
+								print (tk_successfully_installed)
+								print_new_line
+								if args.verbose then
+									print ("  [")
+									print (a_iron.layout.package_installation_path (l_package).name)
+									print ("]%N")
+								end
+							else
+								print (tk_failed)
+								print_new_line
+							end
 						end
 					end
 				end

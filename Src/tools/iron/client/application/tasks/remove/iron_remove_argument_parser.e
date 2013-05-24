@@ -39,6 +39,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	removing_all: BOOLEAN
+		do
+			Result := has_option (all_switch)
+		end
+
 	resources: LIST [IMMUTABLE_STRING_32]
 		once
 			create {ARRAYED_LIST [IMMUTABLE_STRING_32]} Result.make (values.count)
@@ -81,10 +86,13 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (2)
+			Result.extend (create {ARGUMENT_SWITCH}.make (all_switch, "Uninstall all installed packages", True, False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end
+
+	all_switch: STRING = "a|all"
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

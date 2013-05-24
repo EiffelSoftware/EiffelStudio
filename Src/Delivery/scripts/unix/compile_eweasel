@@ -6,3 +6,5 @@ export EWEASEL
 cd $EWEASEL
 untgz_ccode eweasel no_cancel
 move eweasel $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM/bin
+untgz_ccode eweasel-mt no_cancel
+move eweasel-mt $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM/bin

@@ -34,8 +34,16 @@ if [ ! -f eweasel.tar.bz2 ]; then
 	CANCEL
 fi
 clean_project
+finalize eweasel.ecf eweasel_mt
+tgz_ccode eweasel_mt eweasel-mt.tar.bz2
+if [ ! -f eweasel-mt.tar.bz2 ]; then
+	echo Could not finalize eweasel
+	CANCEL
+fi
+clean_project
 safe_md $EXPORT_DIR/eweasel
 move eweasel.tar.bz2 $EXPORT_DIR/eweasel
+move eweasel-mt.tar.bz2 $EXPORT_DIR/eweasel
 cd $EIFFEL_SRC/eweasel
 tgz source
 move source.tar.bz2 $EXPORT_DIR/eweasel

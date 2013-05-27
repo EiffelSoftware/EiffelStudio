@@ -17,7 +17,7 @@ feature -- Initialization
 			-- Creation procedure.
 		local
 			l_obj: TEST1
-			l_reflected: REFLECTED_OBJECT
+			l_reflected: REFLECTED_REFERENCE_OBJECT
 			l_counter, l_new_counter: INTEGER
 		do
 			create l_obj.make

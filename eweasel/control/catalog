@@ -623,6 +623,7 @@ test	catcall-at-runtime-detection	catcall006 tcf pass catcall
 test	wrong-catcall-reported-on-generic-expanded	catcall007 tcf pass catcall
 test	wrong-catcall-on-function-tuple	catcall008 tcf fail catcall
 test	catcall-on-tuple-insertion	catcall009 tcf fail catcall tuple
+test	simple-catcall-2			catcall010 tcf fail catcall
 
 -- Incrementality tests
 
@@ -2667,6 +2668,7 @@ test	field-basic-type-inconsistency	reflection004 tcf pass reflection
 test	field-type-inconsistency		reflection005 tcf pass reflection 
 test	storable-version-data			reflection006 tcf pass reflection storable
 test	copy-semantics-reflection		reflection007 tcf pass reflection
+test	type-gc-crash					reflection008 tcf pass reflection runtime
 
 -- Tests for anchored types
 test	qat-evaluation-order			anchor001 tcf pass anchored_type

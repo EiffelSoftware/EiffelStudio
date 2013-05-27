@@ -1,0 +1,15 @@
+test_name simple-catcall-2
+test_description A catcall should be reported when performing a call with the wrong argument type in descendants.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw x.e $CLUSTER x.e
+copy_raw y.e $CLUSTER y.e
+copy_raw u.e $CLUSTER u.e
+copy_raw v.e $CLUSTER v.e
+copy_raw w.e $CLUSTER w.e
+
+compile_melted
+compile_result	validity_error TEST Catcall
+
+test_end

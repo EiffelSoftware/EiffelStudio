@@ -51,6 +51,8 @@ remtrace process
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/process process
 remtrace ribbon
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/ribbon ribbon
+remtrace runtime
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/runtime runtime
 remtrace store
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/store store
 remtrace testing

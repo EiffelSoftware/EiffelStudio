@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			router := a_router
 			make (req)
+			set_suggestion_only_method (True)
 		end
 
 feature -- Access
@@ -36,11 +37,22 @@ feature -- Settings
 	documentation_included: BOOLEAN
 			-- Include self-documentation from `router' in the response?
 
+	suggestion_only_method: BOOLEAN
+			-- Display only suggestion for `req' method ?
+
 feature -- Change
 
 	set_documentation_included (b: BOOLEAN)
 		do
 			documentation_included := b
+		end
+
+	set_suggestion_only_method (b: BOOLEAN)
+			-- Set `suggestion_only_method' to `b'
+		do
+			suggestion_only_method := b
+		ensure
+			suggestion_only_method_set: suggestion_only_method = b
 		end
 
 feature {WSF_RESPONSE} -- Output
@@ -138,10 +150,14 @@ feature {NONE} -- Implementation
 	not_found_message (req: WSF_REQUEST): WSF_NOT_FOUND_RESPONSE
 		local
 			vis: WSF_ROUTER_AGENT_ITERATOR
+			l_method: detachable READABLE_STRING_8
 		do
 			Result := Precursor (req)
 			if documentation_included then
 				create vis
+				if suggestion_only_method then
+					l_method := req.request_method
+				end
 				vis.on_item_actions.extend (agent (i: WSF_ROUTER_ITEM; r: WSF_NOT_FOUND_RESPONSE; m: detachable READABLE_STRING_8)
 						local
 							l_is_hidden: BOOLEAN
@@ -174,7 +190,7 @@ feature {NONE} -- Implementation
 									r.add_suggested_text (s, Void)
 								end
 							end
-						end (?, Result, req.request_method))
+						end (?, Result, l_method))
 				vis.process_router (router)
 			end
 		end

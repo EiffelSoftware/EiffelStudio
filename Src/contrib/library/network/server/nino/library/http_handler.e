@@ -94,11 +94,6 @@ feature -- Inherited Features
 			end
 		rescue
 			log ("HTTP Connection Server shutdown due to exception. Please relaunch manually.")
-			if is_verbose then
-				if attached (create {EXCEPTION_MANAGER}).last_exception as e then
-					
-				end
-			end
 
 			if l_listening_socket /= Void then
 				l_listening_socket.cleanup

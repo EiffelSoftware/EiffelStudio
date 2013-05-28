@@ -151,14 +151,14 @@ feature -- Element change
 
 	set_upload_data (a_data: like upload_data)
 		require
-			has_no_upload_data: not has_upload_data
+			has_no_upload_data: a_data /= Void implies not has_upload_data
 		do
 			upload_data := a_data
 		end
 
 	set_upload_filename (a_fn: like upload_filename)
 		require
-			has_no_upload_filename: not has_upload_filename
+			has_no_upload_filename: a_fn /= Void implies not has_upload_filename
 		do
 			upload_filename := a_fn
 		end

@@ -443,9 +443,7 @@ feature -- Conversion
 					end
 				end
 				s.append (c.item)
-				if s.item (s.count) /= ';' then
-					s.append_character (';')
-				end
+				s.append_character (';')
 				n := n + 1
 			end
 		end

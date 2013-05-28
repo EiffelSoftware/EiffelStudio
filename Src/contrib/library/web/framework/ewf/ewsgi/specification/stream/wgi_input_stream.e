@@ -123,6 +123,46 @@ feature -- Input
 			character_read: not end_of_input implies last_appended_count > 0
 		end
 
+	append_to_file (a_file: FILE; nb: INTEGER)
+			-- Append at most `nb' characters read from input stream
+			-- to `a_file'
+			-- Set `last_appended_count' to the number of characters actually read.
+			-- (Note that even if at least `nb' characters are available
+			-- in the input stream, there is no guarantee that they
+			-- will all be read.)
+		require
+			is_open_read: is_open_read
+			not_end_of_input: not end_of_input
+			a_file_attached: a_file /= Void
+			a_file_is_open_write: a_file.is_open_write
+			nb_large_enough: nb > 0
+		local
+			i, end_pos: INTEGER
+			l_count: INTEGER
+		do
+			from
+				i := a_string.count + 1
+				end_pos := i + nb - 1
+			until
+				i > end_pos
+			loop
+				read_character
+				a_file.put_character (last_character)
+				l_count := l_count + 1
+				if end_of_input then
+						-- Jump out of the loop.
+					i := end_pos + 1
+				else
+					i := i + 1
+				end
+			end
+			last_appended_count := l_count
+		ensure
+			nb_char_read_large_enough: last_appended_count >= 0
+			nb_char_read_small_enough: last_appended_count <= nb
+			character_read: not end_of_input implies last_appended_count > 0
+		end
+
 feature -- Access
 
 	last_string: STRING_8

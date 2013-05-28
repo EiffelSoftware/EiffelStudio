@@ -208,7 +208,7 @@ feature -- Access: Input
 					from
 						n := 8_192
 					until
-						n = 0
+						n = 0 or l_input.end_of_input
 					loop
 						l_input.append_to_string (buf, n)
 						if l_input.last_appended_count < n then
@@ -225,6 +225,47 @@ feature -- Access: Input
 				end
 				if raw_input_data_recorded then
 					set_raw_input_data (buf)
+				end
+			end
+		end
+
+	read_input_data_into_file (a_file: FILE)
+			-- retrieve the content from the `input' stream into `s'
+			-- warning: if the input data has already been retrieved
+			--          you might not get anything
+		require
+			a_file_is_open_write: a_file.is_open_write
+		local
+			s: STRING
+			l_input: WGI_INPUT_STREAM
+			l_raw_data: detachable STRING_8
+			n: INTEGER
+		do
+			if raw_input_data_recorded and then attached raw_input_data as d then
+				a_file.put_string (d)
+			else
+				if raw_input_data_recorded then
+					create l_raw_data.make_empty
+				end
+				l_input := input
+				from
+					n := 8_192
+					create s.make (n)
+				until
+					n = 0 or l_input.end_of_input
+				loop
+					l_input.append_to_string (s, n)
+					a_file.put_string (s)
+					if l_raw_data /= Void then
+						l_raw_data.append (s)
+					end
+					s.wipe_out
+					if l_input.last_appended_count < n then
+						n := 0
+					end
+				end
+				if l_raw_data /= Void then
+					set_raw_input_data (l_raw_data)
 				end
 			end
 		end

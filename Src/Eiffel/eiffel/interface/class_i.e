@@ -245,10 +245,10 @@ feature -- Access
 			Result := not is_void_unsafe and options.is_attached_by_default
 		end
 
-	is_void_safe_call: BOOLEAN
-			-- Should feature call target be attached?
+	is_void_unsafe: BOOLEAN
+			-- Is current class compiled without any void-safety mechanism enabled?
 		do
-			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_none
 		end
 
 	is_void_safe_conformance: BOOLEAN
@@ -260,19 +260,23 @@ feature -- Access
 	is_void_safe_initialization: BOOLEAN
 			-- Should attached entities be property set before use?
 		do
-			Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
+			Result :=
+				options.void_safety.index /= {CONF_OPTION}.void_safety_index_none and then
+				options.void_safety.index /= {CONF_OPTION}.void_safety_index_conformance
+		end
+
+	is_void_safe_call: BOOLEAN
+			-- Should feature call target be attached?
+		do
+			Result :=
+				options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
+				options.void_safety.index = {CONF_OPTION}.void_safety_index_all
 		end
 
 	is_void_safe_construct: BOOLEAN
 			-- Should only mode-independent void-safety constructs be taken into account?
 		do
-			Result := options.is_strictly_void_safe
-		end
-
-	is_void_unsafe: BOOLEAN
-			-- Is current class compiled without any void-safety mechanism enabled?
-		do
-			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_none
+			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
 		end
 
 	is_void_safety_supported (other: CLASS_I): BOOLEAN
@@ -281,8 +285,18 @@ feature -- Access
 			inspect other.options.void_safety.index
 			when {CONF_OPTION}.void_safety_index_none then
 				Result := True
-			when {CONF_OPTION}.void_safety_index_initialization then
+			when {CONF_OPTION}.void_safety_index_conformance then
 				Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
+			when {CONF_OPTION}.void_safety_index_initialization then
+				Result :=
+					options.void_safety.index /= {CONF_OPTION}.void_safety_index_none and then
+					options.void_safety.index /= {CONF_OPTION}.void_safety_index_conformance
+			when {CONF_OPTION}.void_safety_index_transitional then
+				Result :=
+					options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
+					options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+			when {CONF_OPTION}.void_safety_index_all then
+				Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
 			else
 				Result := options.void_safety.index = other.options.void_safety.index
 			end

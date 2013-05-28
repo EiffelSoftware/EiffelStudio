@@ -260,7 +260,10 @@ feature {NONE} -- Implementation
 		do
 			l_target := a_project.universe.target
 			create l_factory
-			if l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
+			if
+				l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
+				l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+			then
 				l_location := testing_library_path_safe
 			else
 				l_location := testing_library_path

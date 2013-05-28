@@ -14,82 +14,82 @@ feature {NONE} -- Constants
 			-- xml header
 
 	namespace_1_0_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-0-0"
-			-- Namespace of the 5.7 release
+			-- Namespace of the 5.7 release.
 
 	schema_1_0_0: STRING_32
-			-- Schema of the 5.7 release
+			-- Schema of the 5.7 release.
 		once
 			Result := namespace_1_0_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 		end
 
 	namespace_1_2_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-2-0"
-			-- Namespace of the 6.0 release
+			-- Namespace of the 6.0 release.
 
 	schema_1_2_0: STRING_32
-			-- Schema of the 6.0 release
+			-- Schema of the 6.0 release.
 		once
 			Result := namespace_1_2_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd"
 		end
 
 	namespace_1_3_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-3-0"
-			-- Namespace of the 6.1 release
+			-- Namespace of the 6.1 release.
 
 	schema_1_3_0: STRING_32
-			-- Schema of the 6.1 release
+			-- Schema of the 6.1 release.
 		once
 			Result := namespace_1_3_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd"
 		end
 
 	namespace_1_4_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-4-0"
-			-- Namespace of the 6.2 release
+			-- Namespace of the 6.2 release.
 
 	schema_1_4_0: STRING_32
-			-- Schema of the 6.2 release
+			-- Schema of the 6.2 release.
 		once
 			Result := namespace_1_4_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd"
 		end
 
 	namespace_1_5_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-5-0"
-			-- Namespace of the 6.4 release
+			-- Namespace of the 6.4 release.
 
 	schema_1_5_0: STRING_32
-			-- Schema of the 6.4 release
+			-- Schema of the 6.4 release.
 		once
 			Result := namespace_1_5_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd"
 		end
 
 	namespace_1_6_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-6-0"
-			-- Namespace of the 6.6 release
+			-- Namespace of the 6.6 release.
 
 	schema_1_6_0: STRING_32
-			-- Schema of the 6.6 release
+			-- Schema of the 6.6 release.
 		once
 			Result := namespace_1_6_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd"
 		end
 
 	namespace_1_7_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-7-0"
-			-- Namespace of the 6.7 release
+			-- Namespace of the 6.7 release.
 
 	schema_1_7_0: STRING_32
-			-- Schema of the 6.7 release
+			-- Schema of the 6.7 release.
 		once
 			Result := namespace_1_7_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd"
 		end
 
 	namespace_1_8_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-8-0"
-			-- Namespace of the 6.8 release
+			-- Namespace of the 6.8 release.
 
 	schema_1_8_0: STRING_32
-			-- Schema of the 6.8 release
+			-- Schema of the 6.8 release.
 		once
 			Result := namespace_1_8_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd"
 		end
 
 	namespace_1_9_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-9-0"
-			-- Namespace of the 7.0 release
+			-- Namespace of the 7.0 release.
 
 	schema_1_9_0: STRING_32
-			-- Schema of the 7.0 release
+			-- Schema of the 7.0 release.
 		once
 			Result := namespace_1_9_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 		end
@@ -103,16 +103,25 @@ feature {NONE} -- Constants
 			Result := namespace_1_10_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd"
 		end
 
+	namespace_1_11_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-11-0"
+			-- Namespace of the 7.3 release.
+
+	schema_1_11_0: STRING_32
+			-- Schema of the 7.3 release.
+		once
+			Result := namespace_1_11_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd"
+		end
+
 	Latest_namespace: READABLE_STRING_32
 			-- Latest configuration namespace.
 		once
-			Result := namespace_1_10_0
+			Result := namespace_1_11_0
 		end
 
 	Latest_schema: STRING_32
 			-- Latest schema location.
 		once
-			Result := schema_1_10_0
+			Result := schema_1_11_0
 		end
 
 feature -- Status report
@@ -145,6 +154,7 @@ feature -- Normalization
 			elseif n.same_string (namespace_1_8_0) then Result := namespace_1_8_0
 			elseif n.same_string (namespace_1_9_0) then Result := namespace_1_9_0
 			elseif n.same_string (namespace_1_10_0) then Result := namespace_1_10_0
+			elseif n.same_string (namespace_1_11_0) then Result := namespace_1_11_0
 			elseif n.same_string (latest_namespace) then Result := latest_namespace
 			else
 					-- Unknown namespace.
@@ -187,7 +197,7 @@ feature {NONE} -- Ordering
 	namespace_order: STRING_TABLE [NATURAL]
 			-- Order numbers associated with namespaces.
 		once
-			create Result.make (10)
+			create Result.make (11)
 			Result.compare_objects
 			Result.extend (1, namespace_1_0_0)
 			Result.extend (2, namespace_1_2_0)
@@ -199,10 +209,11 @@ feature {NONE} -- Ordering
 			Result.extend (8, namespace_1_8_0)
 			Result.extend (9, namespace_1_9_0)
 			Result.extend (10, namespace_1_10_0)
+			Result.extend (11, namespace_1_11_0)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

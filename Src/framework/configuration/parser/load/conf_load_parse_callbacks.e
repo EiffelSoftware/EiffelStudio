@@ -1350,34 +1350,55 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_attached_by_default"))
 				end
 			end
+			if attached current_attributes.item (at_void_safety) as l_void_safety then
+				if includes_this_or_after (namespace_1_5_0) then
+					if current_option.void_safety.is_valid_item (l_void_safety) then
+						current_option.void_safety.put (l_void_safety)
+						if includes_this_or_before (namespace_1_10_0) then
+								-- Adapt indexes to earlier namespace.
+							inspect
+								current_option.void_safety.index
+							when
+								{CONF_OPTION}.void_safety_index_none,
+								{CONF_OPTION}.void_safety_index_initialization
+							then
+									-- Use as is.
+							when {CONF_OPTION}.void_safety_index_all then
+									-- Use lower void-safety setting.
+								current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
+							else
+									-- Report unknown value.
+								set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
+							end
+						end
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
+					end
+				else
+					report_unknown_attribute ("void_safety")
+				end
+			end
 			if attached current_attributes.item (at_is_void_safe) as l_is_void_safe then
-				if includes_this_or_before (namespace_1_4_0) or else includes_this_or_after (namespace_1_9_0) then
+				if
+					includes_this_or_before (namespace_1_4_0) or else
+					(includes_this_or_after (namespace_1_9_0) and then
+					includes_this_or_before (namespace_1_10_0))
+				then
 					if l_is_void_safe.is_boolean then
 						if includes_this_or_before (namespace_1_4_0) then
 							if l_is_void_safe.to_boolean then
-								current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
+								current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
 							else
 								current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_none)
 							end
-						else
-							current_option.set_is_strictly_void_safe (l_is_void_safe.to_boolean)
+						elseif l_is_void_safe.to_boolean then
+							current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
 						end
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
 					end
 				else
 					report_unknown_attribute ("is_void_safe")
-				end
-			end
-			if attached current_attributes.item (at_void_safety) as l_void_safety then
-				if includes_this_or_after (namespace_1_5_0) then
-					if current_option.void_safety.is_valid_item (l_void_safety) then
-						current_option.void_safety.put (l_void_safety)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
-					end
-				else
-					report_unknown_attribute ("void_safety")
 				end
 			end
 			if attached current_attributes.item (at_syntax_level) as l_syntax_level then
@@ -1902,6 +1923,11 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
+					namespace.same_string (namespace_1_11_0)
+				then
+						-- Use the defaults of ES 7.3.
+					o.merge (default_options_7_3)
+				elseif
 					namespace.same_string (namespace_1_10_0) or else
 					namespace.same_string (namespace_1_9_0)
 				then
@@ -2644,6 +2670,14 @@ feature {NONE} -- Implementation state transitions
 
 feature {NONE} -- Default options
 
+	default_options_7_3: CONF_OPTION
+			-- Default options of 7.3.
+		once
+			create Result.make_7_3
+		ensure
+			result_attached: Result /= Void
+		end
+
 	default_options_7_0: CONF_OPTION
 			-- Default options of 7.0.
 		once
@@ -2682,7 +2716,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

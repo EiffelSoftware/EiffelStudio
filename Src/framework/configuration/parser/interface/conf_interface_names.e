@@ -342,12 +342,16 @@ feature -- Option names and descriptions
 	option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
 	option_void_safety_description: STRING_32 do Result := locale.translation ("%
 		%Void safety level the source code should provide:%
-		% None - void safety is not checked at all;%
-		% On demand - entities of attached type are ensured to be properly initialized;%
-		% Complete - all void safety validity rules are checked%
-	%") end
+		% No - void safety is not checked at all;%
+		% Conformance - attachment status is taken into account when checking for type conformance;%
+		% Initialization - entities of attached type are ensured to be properly initialized;%
+		% Transitional - most void safety rules are checked;%
+		% Complete - all void safety validity rules are checked.%
+		%") end
 	option_void_safety_none_name: STRING_32 do Result := locale.translation ("No void safety") end
-	option_void_safety_initialization_name: STRING_32 do Result := locale.translation ("On demand void safety") end
+	option_void_safety_conformance_name: STRING_32 do Result := locale.translation ("Conformance void safety") end
+	option_void_safety_initialization_name: STRING_32 do Result := locale.translation ("Initialization void safety") end
+	option_void_safety_transitional_name: STRING_32 do Result := locale.translation ("Transitional void safety") end
 	option_void_safety_all_name: STRING_32 do Result := locale.translation ("Complete void safety") end
 
 	option_syntax_name: STRING_32 do Result := locale.translation ("Syntax") end
@@ -867,7 +871,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

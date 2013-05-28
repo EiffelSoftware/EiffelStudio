@@ -134,7 +134,10 @@ feature {NONE} -- Initialization
 			vb2.extend (l_padding)
 
 				-- Void-Safe check
-			if target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
+			if
+				target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
+				target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+			then
 				create l_void_safe_check.make_with_text ("Show only Void-Safe libraries")
 				l_void_safe_check.enable_select
 				l_void_safe_check.select_actions.extend (agent on_void_safe_check_selected)
@@ -414,7 +417,12 @@ feature {NONE} -- Actions
 				if not l_loader.is_error and then attached l_loader.last_system as l_system then
 					if not attached l_system.library_target as l_target then
 						prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
-					elseif (not attached void_safe_check as l_check) or else (not l_check.is_selected or else l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all) then
+					elseif
+						(not attached void_safe_check as l_check) or else
+						not l_check.is_selected or else
+						l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
+						l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+					then
 						on_library_selected (l_system, l_fn)
 					else
 						prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_system, l_fn), Void)
@@ -459,7 +467,8 @@ feature {NONE} -- Action handlers
 				if
 					l_show_all or else (
 						attached {CONF_TARGET} l_row.data as l_target and then
-						l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+						(l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
+						l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all)
 					)
 				then
 					l_row.show
@@ -633,7 +642,11 @@ feature {NONE} -- Basic operation
 						end
 					end
 
-					if l_show_void_safe_only and then l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_all then
+					if
+						l_show_void_safe_only and then
+						l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_transitional and then
+						l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_all
+					then
 							-- The library is not Void-Safe, hide it if showing only Void-Safe libraries.
 						l_row.hide
 					else
@@ -773,7 +786,7 @@ feature {NONE} -- Constants
 	location_column: INTEGER = 2
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

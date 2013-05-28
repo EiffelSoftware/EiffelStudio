@@ -550,6 +550,48 @@ feature -- Comparison
 				equal (debugs, other.debugs)
 		end
 
+	is_void_safety_supported (other: CONF_OPTION): BOOLEAN
+			-- Does current setting provide the same or better void-safety level than `other'?
+		do
+			inspect other.void_safety.index
+			when void_safety_index_none then
+				Result := True
+			when void_safety_index_conformance then
+				Result := void_safety.index /= void_safety_index_none
+			when void_safety_index_initialization then
+				Result :=
+					void_safety.index /= void_safety_index_none and then
+					void_safety.index /= void_safety_index_conformance
+			when void_safety_index_transitional then
+				Result :=
+					void_safety.index = void_safety_index_transitional or else
+					void_safety.index = void_safety_index_all
+			when void_safety_index_all then
+				Result := void_safety.index = void_safety_index_all
+			else
+				Result := void_safety.index = other.void_safety.index
+			end
+		end
+
+	is_void_safety_sufficient (other: CONF_OPTION): BOOLEAN
+			-- Does current setting provide the void-safety level than is sufficient to be used by the client with the setting `other'?
+		do
+			inspect other.void_safety.index
+			when
+				void_safety_index_none,
+				void_safety_index_conformance,
+				void_safety_index_initialization
+			then
+					-- Targets of feature calls are not checked,
+					-- so it's OK to mix different levels as a feature call on void target is still possible.
+				Result := True
+			else
+				Result := is_void_safety_supported (other)
+			end
+		ensure
+			sufficient_if_supported: is_void_safety_supported (other) implies Result
+		end
+
 feature -- Merging
 
 	merge_client (other: like Current)

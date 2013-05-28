@@ -51,29 +51,11 @@ feature -- Execution
 				create it.make (s, req, iron, iron_version (req))
 				it.set_user (current_user (req))
 				it.visit_package (l_package)
-				if attached iron.database.path_associated_with_package (iron_version (req), l_package) as lst then
-					s.append ("<ul><strong><a href=%""+ iron.package_map_web_page (iron_version (req), l_package, Void) +"%">Associated URIs</a></strong>%N")
-					v := iron_version (req).value
-					across
-						lst as c
-					loop
-						s.append ("<li>")
-						l_path := c.item
-						i := l_path.last_index_of ('/', l_path.count)
-						if i > 0 then
-							s.append ("<a href=%"" + "/" + v + l_path.substring (1, i) + "%">/" + v + l_path.substring (1, i) + "</a> ")
-							s.append ("<a href=%"" + "/" + v + l_path + "%">" + l_path.substring (i+1, l_path.count) + "</a>")
-						else
-							s.append ("<a href=%"" + "/" + v + l_path + "%">/" + v + l_path + "</a>")
-						end
-						s.append ("</li>%N")
-					end
-					s.append ("</ul>")
-				end
 
 				if is_authenticated (req) then
-					s.append ("<div><a href=%""+ req.script_url (iron.package_edit_web_page (iron_version (req), l_package)) +"%"Edit this package</a></div>")
+					s.append ("<div><a href=%""+ req.script_url (iron.package_edit_web_page (iron_version (req), l_package)) +"%">Edit this package</a></div>")
 				end
+				s.append ("</ul>")
 				r := new_response_message (req)
 				r.add_menu ("Edit", iron.package_edit_web_page (iron_version (req), l_package))
 				r.add_menu ("Map", iron.package_map_web_page (iron_version (req), l_package, Void))

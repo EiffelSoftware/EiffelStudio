@@ -33,6 +33,7 @@ feature -- Execution
 				if args[1].is_case_insensitive_equal ("initialize") then
 					initialize_database (iron)
 					initialize_css_style (iron)
+					initialize_folders (iron)
 				elseif args[1].is_case_insensitive_equal ("init-db") then
 					initialize_database (iron)
 				elseif args[1].is_case_insensitive_equal ("dump") then
@@ -81,6 +82,18 @@ feature -- Execution
 		do
 			if not a_iron.database.is_available then
 				a_iron.database.initialize
+			end
+		end
+
+	initialize_folders (a_iron: IRON_REPO)
+		local
+			p: PATH
+			d: DIRECTORY
+		do
+			p := a_iron.basedir.extended ("tmp")
+			create d.make_with_path (p)
+			if not d.exists then
+				d.recursive_create_dir
 			end
 		end
 

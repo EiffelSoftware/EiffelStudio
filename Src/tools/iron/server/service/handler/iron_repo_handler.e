@@ -397,7 +397,7 @@ feature -- Package form
 
 						if attached {WSF_UPLOADED_FILE} fd.item ("archive") as l_file then
 							iron.database.save_uploaded_package_archive (iron_version (req), p, l_file)
-						elseif attached {WSF_STRING} fd.item ("archive-url") as l_archive_url then
+						elseif attached {WSF_STRING} fd.item ("archive-url") as l_archive_url and then not l_archive_url.is_empty then
 							create cl_path.put (Void)
 							download (l_archive_url.url_encoded_value, cl_path, req)
 							if attached cl_path.item as l_downloaded_path then

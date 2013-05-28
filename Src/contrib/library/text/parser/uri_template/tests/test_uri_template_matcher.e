@@ -72,14 +72,6 @@ feature -- Matcher
 			create tpl.make ("/hello{/vars}")
 			uri_template_match (tpl, "/hello/foo/bar", <<["vars", "/foo/bar"], ["vars[1]", "foo"], ["vars[2]", "bar"]>>, <<>>)
 
-			create tpl.make ("/hello/{var}")
-			uri_template_match (tpl, "/hello/foobar", <<["var", "foobar"]>>, <<>>)
-			uri_template_mismatch (tpl, "/hello/foo/bar")
-			uri_template_mismatch (tpl, "/hello/foobar/")
-
-
-			create tpl.make ("/hello{/vars}")
-			uri_template_match (tpl, "/hello/foo/bar", <<["vars", "/foo/bar"], ["vars[1]", "foo"], ["vars[2]", "bar"]>>, <<>>)
 
 --			create tpl.make ("/hello/{name}.{format}/foo{?foo};crazy={idea}")
 ----			uri_template_match (tpl, "/hello/Joce.xml/foo", <<["name", "Joce"], ["format", "xml"]>>, <<>>)

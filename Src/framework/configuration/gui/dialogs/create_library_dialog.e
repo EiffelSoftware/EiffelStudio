@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize.
 		local
-			l_void_safe_check: EV_CHECK_BUTTON
 			l_btn: EV_BUTTON
 			vb, vb2, l_padding: EV_VERTICAL_BOX
 			hb, hbf, hb1, hb2: EV_HORIZONTAL_BOX
@@ -118,6 +117,9 @@ feature {NONE} -- Initialization
 			l_col := libraries_grid.column (name_column)
 			l_col.set_title (conf_interface_names.dialog_create_library_name)
 			l_col.set_width (100)
+			l_col := libraries_grid.column (void_safety_column)
+			l_col.set_title (conf_interface_names.dialog_create_library_void_safety)
+			l_col.set_width (100)
 			l_col := libraries_grid.column (location_column)
 			l_col.set_title (conf_interface_names.dialog_create_library_location)
 			l_col.set_width (100)
@@ -132,20 +134,6 @@ feature {NONE} -- Initialization
 			l_padding.extend (libraries_grid)
 
 			vb2.extend (l_padding)
-
-				-- Void-Safe check
-			if
-				target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
-				target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all
-			then
-				create l_void_safe_check.make_with_text ("Show only Void-Safe libraries")
-				l_void_safe_check.enable_select
-				l_void_safe_check.select_actions.extend (agent on_void_safe_check_selected)
-				vb2.extend (l_void_safe_check)
-				vb2.disable_item_expand (l_void_safe_check)
-
-				void_safe_check := l_void_safe_check
-			end
 
 				-- name
 			create vb2
@@ -417,12 +405,7 @@ feature {NONE} -- Actions
 				if not l_loader.is_error and then attached l_loader.last_system as l_system then
 					if not attached l_system.library_target as l_target then
 						prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
-					elseif
-						(not attached void_safe_check as l_check) or else
-						not l_check.is_selected or else
-						l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
-						l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all
-					then
+					elseif l_target.options.is_void_safety_sufficient (target.options) then
 						on_library_selected (l_system, l_fn)
 					else
 						prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_system, l_fn), Void)
@@ -440,44 +423,6 @@ feature {NONE} -- Action handlers
 		do
 			name.set_text (a_library.library_target.name)
 			location.set_text (a_location)
-		end
-
-	on_void_safe_check_selected
-			-- Called when the Void-Safe option is selected
-		require
-			void_safe_check_attached: void_safe_check /= Void
-			libraries_grid_attached: libraries_grid /= Void
-		local
-			l_grid: like libraries_grid
-			l_row: EV_GRID_ROW
-			l_show_all: BOOLEAN
-			i, nb: INTEGER
-		do
-			l_grid := libraries_grid
-
-			l_grid.lock_update
-			l_show_all := not void_safe_check.is_selected
-			from
-				i := 1
-				nb := l_grid.row_count
-			until
-				i > nb
-			loop
-				l_row := l_grid.row (i)
-				if
-					l_show_all or else (
-						attached {CONF_TARGET} l_row.data as l_target and then
-						(l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
-						l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all)
-					)
-				then
-					l_row.show
-				else
-					l_row.hide
-				end
-				i := i + 1
-			end
-			l_grid.unlock_update
 		end
 
 	on_ok
@@ -581,10 +526,9 @@ feature {NONE} -- Basic operation
 			l_item: EV_GRID_LABEL_ITEM
 			l_col: EV_GRID_COLUMN
 			l_name_width: INTEGER
+			l_void_safety_width: INTEGER
 			l_path: READABLE_STRING_GENERAL
 			l_description: STRING_32
-			l_void_safe_check: like void_safe_check
-			l_show_void_safe_only: BOOLEAN
 			l_filter: detachable STRING_32
 			l_filter_engine: detachable KMP_WILD
 		do
@@ -594,8 +538,6 @@ feature {NONE} -- Basic operation
 			l_libraries_table := libraries_table
 			l_libraries_sorted_keys := libraries_sorted_keys
 			if l_libraries_table /= Void and l_libraries_sorted_keys /= Void and then l_libraries_sorted_keys.count > 0 then
-				l_void_safe_check := void_safe_check
-				l_show_void_safe_only := l_void_safe_check /= Void and then l_void_safe_check.is_selected
 
 				l_libraries := populated_configuration_libraries
 
@@ -642,22 +584,13 @@ feature {NONE} -- Basic operation
 						end
 					end
 
-					if
-						l_show_void_safe_only and then
-						l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_transitional and then
-						l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_all
-					then
-							-- The library is not Void-Safe, hide it if showing only Void-Safe libraries.
-						l_row.hide
-					else
-						if l_filter_engine /= Void then
-							l_filter_engine.set_text (l_target.name)
-							if not l_filter_engine.pattern_matches then
-								l_row.hide
-							end
-						else
-							l_row.show
+					if l_filter_engine /= Void then
+						l_filter_engine.set_text (l_target.name)
+						if not l_filter_engine.pattern_matches then
+							l_row.hide
 						end
+					else
+						l_row.show
 					end
 
 						-- Library name
@@ -665,6 +598,22 @@ feature {NONE} -- Basic operation
 					l_item.set_tooltip (l_description)
 					l_row.set_item (name_column, l_item)
 					l_name_width := l_name_width.max (l_item.required_width + 10)
+
+						-- Void safety status.
+					create l_item.make_with_text (conf_interface_names.option_void_safety_value [l_target.options.void_safety.index])
+					l_item.set_tooltip (conf_interface_names.option_void_safety_value_description [l_target.options.void_safety.index])
+					if l_target.options.is_void_safety_supported (target.options) then
+							-- Library void-safety setting perfectly matches the one used by the target.
+						l_item.set_pixmap (conf_pixmaps.general_tick_icon)
+					elseif l_target.options.is_void_safety_sufficient (target.options) then
+							-- Library void-safety setting is usable by the target with a warning.
+						l_item.set_pixmap (conf_pixmaps.general_warning_icon)
+					else
+							-- Library void-safety setting is too weak for the target.
+						l_row.hide
+					end
+					l_row.set_item (void_safety_column, l_item)
+					l_void_safety_width := l_void_safety_width.max (l_item.required_width + 10)
 
 						-- Location
 					create l_item.make_with_text (l_path)
@@ -783,7 +732,13 @@ feature {NONE} -- Basic operation
 feature {NONE} -- Constants
 
 	name_column: INTEGER = 1
-	location_column: INTEGER = 2
+			-- Index of a column with a library name.
+
+	void_safety_column: INTEGER = 2
+			-- Index of a column with void-safety status.
+
+	location_column: INTEGER = 3
+			-- Index of a column with a library location.
 
 ;note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

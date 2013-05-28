@@ -340,19 +340,51 @@ feature -- Option names and descriptions
 	option_is_attached_by_default_description: STRING_32 do Result := locale.translation ("Are types without explicit attachment mark considered attached?") end
 
 	option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
-	option_void_safety_description: STRING_32 do Result := locale.translation ("%
-		%Void safety level the source code should provide:%
-		% No - void safety is not checked at all;%
-		% Conformance - attachment status is taken into account when checking for type conformance;%
-		% Initialization - entities of attached type are ensured to be properly initialized;%
-		% Transitional - most void safety rules are checked;%
-		% Complete - all void safety validity rules are checked.%
-		%") end
-	option_void_safety_none_name: STRING_32 do Result := locale.translation ("No void safety") end
-	option_void_safety_conformance_name: STRING_32 do Result := locale.translation ("Conformance void safety") end
-	option_void_safety_initialization_name: STRING_32 do Result := locale.translation ("Initialization void safety") end
-	option_void_safety_transitional_name: STRING_32 do Result := locale.translation ("Transitional void safety") end
-	option_void_safety_all_name: STRING_32 do Result := locale.translation ("Complete void safety") end
+	option_void_safety_description: STRING_32 once
+			Result := locale.translation ("Void safety level the source code provides.") +
+				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_none] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_none] + ";" +
+				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_conformance] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_conformance] + ";" +
+				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_initialization] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_initialization] + ";" +
+				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_transitional] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_transitional] + ";" +
+				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_all] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_all] + "."
+		end
+	option_void_safety_value: ARRAYED_LIST [STRING_32]
+			-- Name of a void safety option value indexed by the corresponding option index.
+		once
+			create Result.make_from_array (<<
+				locale.translation ("No"),
+				locale.translation ("Conformance"),
+				locale.translation ("Initialization"),
+				locale.translation ("Transitional"),
+				locale.translation ("Complete")
+			>>)
+		ensure
+			valid_index:
+				Result.valid_index ({CONF_OPTION}.void_safety_index_none) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_conformance) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_initialization) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_transitional) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_all)
+		end
+	option_void_safety_value_description: ARRAYED_LIST [STRING_32]
+			-- Name of a void safety option value indexed by the corresponding option index.
+		once
+			create Result.make_from_array (<<
+				locale.translation ("Void safety is not guaranteed"),
+				locale.translation ("Attachment status is respected in type conformance checks"),
+				locale.translation ("Entities of attached type are properly initialized"),
+				locale.translation ("Void safety rules are satisfied except for initialization checks for unqualified agents and allowing CAPs for preconditions and check instructions"),
+				locale.translation ("All void safety rules are satisfied")
+			>>)
+		ensure
+			valid_index:
+				Result.valid_index ({CONF_OPTION}.void_safety_index_none) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_conformance) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_initialization) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_transitional) and
+				Result.valid_index ({CONF_OPTION}.void_safety_index_all)
+		end
+
 
 	option_syntax_name: STRING_32 do Result := locale.translation ("Syntax") end
 	option_syntax_description: STRING_32 do Result := locale.translation ("Variant of syntax used in source code") end
@@ -496,6 +528,7 @@ feature -- Create library dialog
 	dialog_create_library_title: STRING_32 do Result := locale.translation ("Add Library")	end
 	dialog_create_library_defaults: STRING_32 do Result := locale.translation ("Default libraries")	end
 	dialog_create_library_name: STRING_32 do Result := locale.translation ("Name")	end
+	dialog_create_library_void_safety: STRING_32 do Result := locale.translation ("Void safety")	end
 	dialog_create_library_location: STRING_32 do Result := locale.translation ("Location")	end
 
 feature -- Create precompile dialog
@@ -571,7 +604,7 @@ feature -- Validation warnings
 			Result := locale.formatted_string (locale.translation ("There is already a group with name %"$1%"."), [a_group])
 		end
 	file_is_not_a_library: STRING_32 do Result := locale.translation ("The selected configuration file is not a library.%NPlease make sure the library is a valid Eiffel Configuration File and is has a library target.") end
-	add_non_void_safe_library: STRING_32 do Result := locale.translation ("The selected library is not Void-Safe. Do you still want to utilize it?%N%NNote: Using non-Void-Safe libraries in a void-safe system can cause library incompatibilities.") end
+	add_non_void_safe_library: STRING_32 do Result := locale.translation ("The selected library is not Void-Safe-compatible with the current target. Do you still want to utilize it?%N%NNote: Using non-Void-Safe-compatible libraries in a void-safe system can cause library incompatibilities.") end
 
 	assembly_no_location: STRING_32 do Result := locale.translation ("No location specified.") end
 

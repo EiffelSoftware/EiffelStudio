@@ -35,7 +35,6 @@ feature -- Execute
 
 	execute (args: IRON_PACKAGE_ARGUMENTS; a_iron: IRON)
 		local
-			d: detachable PATH
 			l_data: like data_from
 			uri: URI
 			sess: HTTP_CLIENT_SESSION
@@ -79,6 +78,10 @@ feature -- Execute
 									localized_print_error ("[Error] operation failed!")
 									print_new_line
 									localized_print_error (resp.error_message)
+									print_new_line
+									err := True
+								elseif resp.status = 401 then
+									localized_print_error ("[Error] not authorized!")
 									print_new_line
 									err := True
 								else
@@ -161,6 +164,10 @@ feature -- Execute
 								localized_print_error ("[Error] operation failed!")
 								print_new_line
 								localized_print_error (resp.error_message)
+								print_new_line
+								err := True
+							elseif resp.status = 401 then
+								localized_print_error ("[Error] not authorized!")
 								print_new_line
 								err := True
 							else

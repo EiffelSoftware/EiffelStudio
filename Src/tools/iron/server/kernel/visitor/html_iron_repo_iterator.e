@@ -50,7 +50,10 @@ feature -- Visit
 	visit_package (p: IRON_REPO_PACKAGE)
 		local
 			s: like buffer
+			v: READABLE_STRING_8
 			l_size: INTEGER
+			l_path: READABLE_STRING_8
+			i: INTEGER
 		do
 			s := buffer
 			s.append ("<li class=%"package%">")
@@ -79,6 +82,27 @@ feature -- Visit
 					end
 					s.append (")</div>")
 				end
+
+				if attached iron.database.path_associated_with_package (version, p) as lst then
+					s.append ("<ul class=%"paths%"><strong><a href=%""+ iron.package_map_web_page (version, p, Void) +"%">Edit associated URIs</a></strong>%N")
+					v := version.value
+					across
+						lst as c
+					loop
+						s.append ("<li>")
+						l_path := c.item
+						i := l_path.last_index_of ('/', l_path.count)
+						if i > 0 then
+							s.append ("<a href=%"" + "/" + v + l_path.substring (1, i) + "%">/" + v + l_path.substring (1, i) + "</a> ")
+							s.append ("<a href=%"" + "/" + v + l_path + "%">" + l_path.substring (i+1, l_path.count) + "</a>")
+						else
+							s.append ("<a href=%"" + "/" + v + l_path + "%">/" + v + l_path + "</a>")
+						end
+						s.append ("</li>%N")
+					end
+					s.append ("</ul>")
+				end
+
 				if attached p.owner as l_owner then
 					if attached user as u then
 						if u.same_user (l_owner) then

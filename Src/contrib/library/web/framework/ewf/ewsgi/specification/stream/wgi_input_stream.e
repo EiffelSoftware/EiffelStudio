@@ -137,26 +137,34 @@ feature -- Input
 			a_file_is_open_write: a_file.is_open_write
 			nb_large_enough: nb > 0
 		local
+			s: like last_string
 			i, end_pos: INTEGER
 			l_count: INTEGER
+			n: INTEGER
+			l_remaining: INTEGER
 		do
 			from
-				i := a_string.count + 1
-				end_pos := i + nb - 1
+				n := nb.min (2_048)
+				l_remaining := nb - n
 			until
-				i > end_pos
+				l_remaining = 0 or n = 0
 			loop
-				read_character
-				a_file.put_character (last_character)
-				l_count := l_count + 1
-				if end_of_input then
-						-- Jump out of the loop.
-					i := end_pos + 1
+				read_string (n)
+				s := last_string
+				a_file.put_string (s)
+				if end_of_input or s.count < n then
+					n := s.count
+						-- no more data
+					l_remaining := l_remaining - n
+					n := 0
 				else
-					i := i + 1
+					n := s.count
+					l_remaining := l_remaining - n
 				end
 			end
-			last_appended_count := l_count
+			last_appended_count := nb - l_remaining
+				-- Clean `last_string'
+			last_string.wipe_out
 		ensure
 			nb_char_read_large_enough: last_appended_count >= 0
 			nb_char_read_small_enough: last_appended_count <= nb
@@ -206,7 +214,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

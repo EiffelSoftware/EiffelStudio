@@ -221,6 +221,34 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	general_tick_icon: EV_PIXMAP
+			-- Access to 'tick' pixmap.
+		deferred
+		ensure
+			general_tick_icon_attached: Result /= Void
+		end
+
+	general_tick_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'tick' pixmap pixel buffer.
+		deferred
+		ensure
+			general_tick_icon_buffer_attached: Result /= Void
+		end
+
+	general_warning_icon: EV_PIXMAP
+			-- Access to 'warning' pixmap.
+		deferred
+		ensure
+			general_warning_icon_attached: Result /= Void
+		end
+
+	general_warning_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'warning' pixmap pixel buffer.
+		deferred
+		ensure
+			general_warning_icon_buffer_attached: Result /= Void
+		end
+
 	new_precompiled_library_icon: EV_PIXMAP
 		deferred
 		ensure
@@ -588,7 +616,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

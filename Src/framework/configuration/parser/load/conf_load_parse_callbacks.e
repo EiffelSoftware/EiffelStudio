@@ -1259,16 +1259,17 @@ feature {NONE} -- Implementation attribute processing
 			group: current_group /= Void
 		local
 			l_old_name, l_new_name: like current_attributes.item
-			l_virtual_group: CONF_VIRTUAL_GROUP
 		do
-			l_virtual_group ?= current_group
-			check
-				virtual_group: l_virtual_group /= Void
-			end
 			l_old_name := current_attributes.item (at_old_name)
 			l_new_name := current_attributes.item (at_new_name)
 			if l_old_name /= Void and l_new_name /= Void then
-				l_virtual_group.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
+				if attached {CONF_VIRTUAL_GROUP} current_group as l_virtual_group then
+					l_virtual_group.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
+				else
+					check
+						virtual_group: False
+					end
+				end
 			elseif l_old_name /= Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_renaming_no_new (l_old_name))
 			elseif l_new_name /= Void then

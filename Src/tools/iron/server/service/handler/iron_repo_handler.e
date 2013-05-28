@@ -155,10 +155,7 @@ feature -- Download
 		local
 			cl: LIBCURL_HTTP_CLIENT
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			f: detachable RAW_FILE
-			bp: detachable PATH
-			d: DIRECTORY
-			i: INTEGER
+			f: detachable FILE
 		do
 			if attached current_user (req) as l_user then
 				create cl.make
@@ -166,29 +163,7 @@ feature -- Download
 					create ctx.make
 					l_sess.set_max_redirects (-1)
 					l_sess.set_is_insecure (True)
-					if attached iron.basedir as p_basedir then
-						bp := p_basedir.extended ("tmp")
-					else
-						create bp.make_from_string ("tmp")
-					end
-					create d.make_with_path (bp)
-					if not d.exists then
-						d.recursive_create_dir
-					end
-					bp := bp.extended ("tmp-download-" + l_user.name)
-					from
-						i := 0
-					until
-						f /= Void or i > 100
-					loop
-						i := i + 1
-						create f.make_with_path (bp.appended ("__" + i.out))
-						if f.exists then
-							f := Void
-						else
-							f.open_write
-						end
-					end
+					f := new_temporary_output_file ("tmp-download-" + l_user.name)
 					if f /= Void and then f.is_open_write then
 						ctx.set_output_content_file (f)
 						if attached l_sess.get ("", ctx) as resp then
@@ -198,6 +173,43 @@ feature -- Download
 					end
 				end
 			end
+		end
+
+	new_temporary_output_file (n: detachable READABLE_STRING_8): detachable FILE
+		local
+			bp: detachable PATH
+			d: DIRECTORY
+			i: INTEGER
+		do
+			if attached iron.basedir as p_basedir then
+				bp := p_basedir.extended ("tmp")
+			else
+				create bp.make_from_string ("tmp")
+			end
+			create d.make_with_path (bp)
+			if not d.exists then
+				d.recursive_create_dir
+			end
+			if n /= Void then
+				bp := bp.extended ("tmp-download-" + n)
+			else
+				bp := bp.extended ("tmp")
+			end
+			from
+				i := 0
+			until
+				Result /= Void or i > 100
+			loop
+				i := i + 1
+				create {RAW_FILE} Result.make_with_path (bp.appended ("__" + i.out))
+				if Result.exists then
+					Result := Void
+				else
+					Result.open_write
+				end
+			end
+		ensure
+			Result /= Void implies Result.is_open_write
 		end
 
 feature -- Package

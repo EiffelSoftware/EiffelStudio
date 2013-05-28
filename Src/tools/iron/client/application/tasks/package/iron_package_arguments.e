@@ -20,11 +20,27 @@ feature -- Access
 		deferred
 		end
 
+	package_name: detachable IMMUTABLE_STRING_32
+		deferred
+		end
+
+	package_description: detachable IMMUTABLE_STRING_32
+		deferred
+		end
+
+	package_archive_file: detachable PATH
+		deferred
+		end
+
+	package_archive_source: detachable PATH
+		deferred
+		end
+
 	is_create: BOOLEAN
 		deferred
 		end
 
-	is_modify: BOOLEAN
+	is_update: BOOLEAN
 		deferred
 		end
 

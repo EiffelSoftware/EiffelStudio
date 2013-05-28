@@ -26,22 +26,19 @@ feature {NONE} -- Initialization
 
 	catalog: IRON_CATALOG
 
-feature -- Access
+feature -- Change
 
 	update
 		do
 			catalog.update
 		end
 
-	available_packages: ARRAYED_LIST [IRON_PACKAGE]
+	update_repository (repo: IRON_REPOSITORY; is_silent: BOOLEAN)
 		do
-			create Result.make (10)
-			across
-				repositories as c
-			loop
-				Result.append (c.item.available_packages)
-			end
+			catalog.update_repository (repo, is_silent)
 		end
+
+feature -- Access: repositories		
 
 	repositories: LIST [IRON_REPOSITORY]
 		do
@@ -56,6 +53,24 @@ feature -- Access
 	unregister_repository (a_name_or_uri: READABLE_STRING_GENERAL)
 		do
 			catalog.unregister_repository (a_name_or_uri)
+		end
+
+	repository (a_uri: URI): detachable IRON_REPOSITORY
+			-- Registered repository related to `a_uri'.
+		do
+			Result := catalog.repository (a_uri)
+		end
+
+feature -- Access: package	
+
+	available_packages: ARRAYED_LIST [IRON_PACKAGE]
+		do
+			create Result.make (10)
+			across
+				repositories as c
+			loop
+				Result.append (c.item.available_packages)
+			end
 		end
 
 	available_path_associated_with_uri (a_uri_string: READABLE_STRING_GENERAL): detachable PATH

@@ -62,6 +62,8 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature -- Access		
+
 	layout: IRON_LAYOUT
 
 feature -- Access: repository
@@ -104,6 +106,19 @@ feature -- Access: repository
 				repo_conf.save
 			end
 			load_repositories
+		end
+
+	repository (a_version_uri: URI): detachable IRON_REPOSITORY
+		do
+			across
+				repositories as c
+			until
+				Result /= Void
+			loop
+				if c.item.version_uri.is_same_uri (a_version_uri) then
+					Result := c.item
+				end
+			end
 		end
 
 feature -- Acces: package
@@ -181,8 +196,43 @@ feature -- Operation
 			across
 				repositories as c
 			loop
-				update_repository (c.item)
+				update_repository (c.item, False)
 			end
+		end
+
+	update_repository (repo: IRON_REPOSITORY; is_silent: BOOLEAN)
+		local
+			cl: HTTP_CLIENT
+		do
+			if not is_silent then
+				print ("Updating repository " + repo.uri.string + " version=" + repo.version + " ...%N")
+			end
+			cl := new_client
+			if attached cl.new_session (repo.uri.string) as sess then
+				sess.add_header ("Accept", "application/json")
+				if attached sess.get ("/access/" + repo.version + "/package/", Void) as res then
+					if res.error_occurred then
+						if not is_silent then
+							print ("ERROR: connection%N")
+						end
+					elseif attached res.body as l_body then
+						repo.available_packages.wipe_out
+						import_packages_from_json (l_body, repo, is_silent)
+						if not is_silent and then repo.available_packages.is_empty then
+							print ("ERROR: invalid data!%N")
+						end
+					else
+						if not is_silent then
+							print ("ERROR: empty%N")
+						end
+					end
+				else
+					if not is_silent then
+						print ("ERROR: connection%N")
+					end
+				end
+			end
+			save_repository (repo)
 		end
 
 	fill_repository (repo: IRON_REPOSITORY)
@@ -367,35 +417,7 @@ feature -- Package operations
 
 feature -- Restricted
 
-	update_repository (repo: IRON_REPOSITORY)
-		local
-			cl: HTTP_CLIENT
-		do
-			print ("Updating repository " + repo.uri.string + " version=" + repo.version + " ...%N")
-			cl := new_client
-			if attached cl.new_session (repo.uri.string) as sess then
-				sess.add_header ("Accept", "application/json")
-				if attached sess.get ("/access/" + repo.version + "/package/", Void) as res then
-					if res.error_occurred then
-						print ("ERROR: connection%N")
-					elseif attached res.body as l_body then
-						repo.available_packages.wipe_out
-						import_packages_from_json (l_body, repo)
-						if repo.available_packages.is_empty then
-							print ("ERROR: invalid data!%N")
-						end
-					else
-						print ("ERROR: empty%N")
-					end
-				else
-					print ("ERROR: connection%N")
-				end
-			end
-			print ("Updating repository " + repo.uri.string + " version=" + repo.version + " : completed.%N")
-			save_repository (repo)
-		end
-
-	import_packages_from_json (a_json_string: READABLE_STRING_8; repo: IRON_REPOSITORY)
+	import_packages_from_json (a_json_string: READABLE_STRING_8; repo: IRON_REPOSITORY; is_silent: BOOLEAN)
 		local
 			f: JSON_TO_IRON_FACTORY
 		do
@@ -405,9 +427,11 @@ feature -- Restricted
 					lst as p
 				loop
 					repo.put_package (p.item)
-					print ("- ")
-					print (p.item.human_identifier)
-					print ("%N")
+					if not is_silent then
+						print ("- ")
+						print (p.item.human_identifier)
+						print ("%N")
+					end
 				end
 			end
 		end

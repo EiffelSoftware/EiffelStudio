@@ -214,7 +214,7 @@ feature -- Router and Filter
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}", h_package, router.methods_get) --  Get package data
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}", new_auth_uri_template_handler (h_package), router.methods_put_post + router.methods_delete) --  Update package
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", h_archive_package, router.methods_get) --  Get archive package data
-			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", new_auth_uri_template_handler (h_archive_package), router.methods_post + router.methods_delete) --  Get archive package data
+			map_uri_template_with_request_methods ("/access/{version}/package/{id}/archive", new_auth_uri_template_handler (h_archive_package), router.methods_post + router.methods_put + router.methods_delete) --  Get archive package data
 
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map", h_package_map, router.methods_get) --  Get map
 			map_uri_template_with_request_methods ("/access/{version}/package/{id}/map{/map}", h_package_map, router.methods_get) --  Get map and allow ?method= .. hack

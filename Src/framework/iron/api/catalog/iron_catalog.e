@@ -13,6 +13,8 @@ feature -- Access
 		deferred
 		end
 
+feature -- Access: repository		
+
 	repositories: LIST [IRON_REPOSITORY]
 		deferred
 		end
@@ -24,6 +26,12 @@ feature -- Access
 	unregister_repository (a_name_or_uri: READABLE_STRING_GENERAL)
 		deferred
 		end
+
+	repository (a_version_uri: URI): detachable IRON_REPOSITORY
+		deferred
+		end
+
+feature -- Access: packages
 
 	installed_packages: LIST [IRON_PACKAGE]
 		deferred
@@ -40,13 +48,11 @@ feature -- Access
 	package_associated_with_id (a_id: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
 		do
 			across
-				available_packages as p
+				repositories as c
 			until
 				Result /= Void
 			loop
-				if a_id.is_case_insensitive_equal (p.item.id) then
-					Result := p.item
-				end
+				Result := c.item.package_associated_with_id (a_id)
 			end
 		end
 
@@ -59,28 +65,10 @@ feature -- Access
 			across
 				repositories as c
 			until
-				repo /= Void
+				Result /= Void
 			loop
 				if s.starts_with (c.item.url) then
-					repo := c.item
-				end
-			end
-			if repo /= Void then
-				s := s.substring (repo.url.count + 1, s.count)
-				across
-					repo.available_packages as p
-				until
-					Result /= Void
-				loop
-					across
-						p.item.associated_paths as pn
-					until
-						Result /= Void
-					loop
-						if s.starts_with (pn.item) then
-							Result := p.item
-						end
-					end
+					Result := c.item.package_associated_with_uri (a_uri)
 				end
 			end
 		end
@@ -91,11 +79,10 @@ feature -- Access
 		do
 			create {ARRAYED_LIST [IRON_PACKAGE]} Result.make (1)
 			across
-				available_packages as p
+				repositories as r
 			loop
-				l_package := p.item
-				if l_package.is_named (a_name) then
-					Result.force (l_package)
+				if attached r.item.packages_associated_with_name (a_name) as lst then
+					Result.append (lst)
 				end
 			end
 			if Result.is_empty then
@@ -107,6 +94,11 @@ feature -- Operation
 
 	update
 			-- Update catalog.
+		deferred
+		end
+
+	update_repository (repo: IRON_REPOSITORY; is_silent: BOOLEAN)
+			-- Update repository `repo'.
 		deferred
 		end
 

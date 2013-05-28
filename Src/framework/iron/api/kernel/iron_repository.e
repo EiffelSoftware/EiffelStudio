@@ -59,12 +59,20 @@ feature {NONE} -- Initialization
 			end
 			create l_uri.make_from_string (a_uri.string)
 			l_uri.set_path (l_path)
+			if v.ends_with ("/") then
+				v := v.substring (1, v.count - 1)
+			end
 			make (l_uri, v)
 		end
 
 feature -- Access
 
 	uri: URI
+
+	version_uri: URI
+		do
+			create Result.make_from_string (uri.string + "/" + version)
+		end
 
 	version: IMMUTABLE_STRING_8
 
@@ -95,6 +103,63 @@ feature -- Access
 						if a_relative_path /= Void then
 							a_relative_path.wipe_out
 							a_relative_path.append (a_path.substring (p.item.count + 1, a_path.count))
+						end
+					end
+				end
+			end
+		end
+
+	package_associated_with_id (a_id: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
+		do
+			across
+				available_packages as p
+			until
+				Result /= Void
+			loop
+				if a_id.is_case_insensitive_equal (p.item.id) then
+					Result := p.item
+				end
+			end
+		end
+
+	packages_associated_with_name (a_name: READABLE_STRING_GENERAL): detachable LIST [IRON_PACKAGE]
+		local
+			l_package: detachable IRON_PACKAGE
+		do
+			create {ARRAYED_LIST [IRON_PACKAGE]} Result.make (1)
+			across
+				available_packages as p
+			loop
+				l_package := p.item
+				if l_package.is_named (a_name) then
+					Result.force (l_package)
+				end
+			end
+			if Result.is_empty then
+				Result := Void
+			end
+		end
+
+	package_associated_with_uri (a_uri: URI): detachable IRON_PACKAGE
+		local
+			repo: detachable IRON_REPOSITORY
+			s: STRING
+		do
+			s := a_uri.string
+			if s.starts_with (url) then
+				s := s.substring (url.count + 1, s.count)
+				across
+					available_packages as p
+				until
+					Result /= Void
+				loop
+					across
+						p.item.associated_paths as pn
+					until
+						Result /= Void
+					loop
+						if s.starts_with (pn.item) then
+							Result := p.item
 						end
 					end
 				end

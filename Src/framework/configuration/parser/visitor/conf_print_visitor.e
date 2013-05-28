@@ -60,6 +60,8 @@ feature -- Update
 			-- Set `namespace' to `a_namespace'.
 		require
 			a_namespace_ok: a_namespace /= Void and then not a_namespace.is_empty
+			known_namespace: is_namespace_known (a_namespace)
+			normalized_namespace: normalized_namespace (a_namespace) = a_namespace
 		do
 			namespace := a_namespace
 		ensure
@@ -71,6 +73,9 @@ feature -- Update
 		require
 			a_schema_ok: a_schema /= Void and then not a_schema.is_empty
 		do
+			debug ("to_implement")
+				(create {REFACTORING_HELPER}).to_implement ("Set schema from a namespace.")
+			end
 			schema := a_schema
 		ensure
 			schema_set: schema = a_schema
@@ -865,10 +870,32 @@ feature {NONE} -- Implementation
 					append_text (" is_attached_by_default=%""+an_options.is_attached_by_default.out.as_lower+"%"")
 				end
 				if an_options.void_safety.is_set then
-					append_text (" void_safety=%"" + an_options.void_safety.out + "%"")
-				end
-				if an_options.is_strictly_void_safe_configured then
-					append_text (" is_void_safe=%"" + an_options.is_strictly_void_safe.out.as_lower + "%"")
+					if is_after_or_equal (namespace, namespace_1_11_0) then
+							-- Current namespace.
+						l_str := an_options.void_safety.out
+					else
+							-- Earlier namespaces with less void-safety levels.
+						inspect
+							an_options.void_safety.index
+						when {CONF_OPTION}.void_safety_index_none then
+							l_str := "none"
+						when
+							{CONF_OPTION}.void_safety_index_conformance,
+							{CONF_OPTION}.void_safety_index_initialization
+						then
+							l_str := "initialization"
+						else
+							l_str := "all"
+						end
+						if is_after_or_equal (namespace, namespace_1_9_0) then
+							if an_options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
+								append_text (" is_void_safe=%"true%"")
+							else
+								append_text (" is_void_safe=%"false%"")
+							end
+						end
+					end
+					append_text (" void_safety=%"" + l_str + "%"")
 				end
 				if an_options.syntax.is_set then
 					append_text (" syntax=%"" + an_options.syntax.out + "%"")

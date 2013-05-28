@@ -182,7 +182,9 @@ feature {NONE} -- Implementation
 				conf_interface_names.option_void_safety_description,
 				create {ARRAYED_LIST [STRING_32]}.make_from_array (
 					<<conf_interface_names.option_void_safety_none_name,
+					conf_interface_names.option_void_safety_conformance_name,
 					conf_interface_names.option_void_safety_initialization_name,
+					conf_interface_names.option_void_safety_transitional_name,
 					conf_interface_names.option_void_safety_all_name>>),
 				an_options.void_safety,
 				c
@@ -709,7 +711,7 @@ feature {NONE} -- Refresh displayed data.
 			-- Last added choice property
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

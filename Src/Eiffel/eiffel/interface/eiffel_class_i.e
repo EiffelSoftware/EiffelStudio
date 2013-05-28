@@ -224,10 +224,7 @@ feature {COMPILER_EXPORTER} -- Setting
 							-- Class should be reparsed.
 						is_modified := True
 					end
-					if
-						new_options.void_safety.index /= old_options.void_safety.index or else
-						new_options.is_strictly_void_safe /= old_options.is_strictly_void_safe
-					then
+					if new_options.void_safety.index /= old_options.void_safety.index then
 							-- Class should be reparsed and rechecked for validity of interface and code.
 						is_modified := True
 						if attached c then
@@ -287,7 +284,7 @@ invariant
 	name_in_upper: name.as_upper.is_equal (name)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

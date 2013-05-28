@@ -27,14 +27,15 @@ create
 	default_create,
 	make_6_3,
 	make_6_4,
-	make_7_0
+	make_7_0,
+	make_7_3
 
 feature {NONE} -- Creation
 
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			make_7_0
+			make_7_3
 		end
 
 	make_6_3
@@ -57,10 +58,15 @@ feature {NONE} -- Creation
 			create syntax.make (syntax_name, syntax_index_standard)
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			is_attached_by_default := True
-				-- Uncomment the line below once all libraries
-				-- have been converted to Void-safe.
---				is_full_class_checking := True
---				is_void_safe := True
+		end
+
+	make_7_3
+			-- Initialize options to the defaults of 7.3.
+		do
+			create syntax.make (syntax_name, syntax_index_standard)
+			create void_safety.make (void_safety_name, void_safety_index_transitional)
+			is_attached_by_default := True
+			is_full_class_checking := True
 		end
 
 feature -- Status
@@ -92,9 +98,6 @@ feature -- Status
 	is_attached_by_default_configured: BOOLEAN
 			-- Is `is_attached_by_default' configured?
 
-	is_strictly_void_safe_configured: BOOLEAN
-			-- Is `is_strictly_void_safe' configured?
-
 	is_empty: BOOLEAN
 			-- Is `Current' empty? No settings are set?
 		do
@@ -109,7 +112,6 @@ feature -- Status
 				is_cat_call_detection_configured or
 				is_attached_by_default_configured or
 				void_safety.is_set or
-				is_strictly_void_safe_configured or
 				assertions /= Void or
 				local_namespace /= Void or
 				warnings /= Void or
@@ -220,9 +222,6 @@ feature -- Access, stored in configuration file
 	is_attached_by_default: BOOLEAN
 			-- Is type declaration considered attached by default?
 
-	is_strictly_void_safe: BOOLEAN
-			-- Are the most strict rules applied for void safety?
-
 	description: STRING_32
 			-- A description about the options.
 
@@ -256,23 +255,29 @@ feature {NONE} -- Access: syntax
 feature -- Access: void safety
 
 	void_safety: CONF_VALUE_CHOICE
-			-- Void safety option
+			-- Void safety option.
 
 	void_safety_index_none: NATURAL_8 = 1
-			-- Option index for no void safety
+			-- Option index for no void safety.
 
-	void_safety_index_initialization: NATURAL_8 = 2
-			-- Option index for selective void safety
+	void_safety_index_conformance: NATURAL_8 = 2
+			-- Option index for void safety with selected conformance checks.
 
-	void_safety_index_all: NATURAL_8 = 3
-			-- Option index for total void safety
+	void_safety_index_initialization: NATURAL_8 = 3
+			-- Option index for void safety with selected initialization checks.
+
+	void_safety_index_transitional: NATURAL_8 = 4
+			-- Option index for void safety with CAP for preconditions and check instructions and without unqualified agent checks.
+
+	void_safety_index_all: NATURAL_8 = 5
+			-- Option index for total void safety.
 
 feature {NONE} -- Access: void safety
 
 	void_safety_name: ARRAY [READABLE_STRING_32]
-			-- Available values for `void_safety' option
+			-- Available values for `void_safety' option.
 		once
-			Result := <<{STRING_32} "none", {STRING_32} "initialization", {STRING_32} "all">>
+			Result := <<{STRING_32} "none", {STRING_32} "conformance", {STRING_32} "initialization", {STRING_32} "transitional", {STRING_32} "all">>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -454,16 +459,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_attached_by_default_configured: is_attached_by_default_configured
 		end
 
-	set_is_strictly_void_safe (v: BOOLEAN)
-			-- Set `is_strictly_void_safe' to `v'.
-		do
-			is_strictly_void_safe_configured := True
-			is_strictly_void_safe := v
-		ensure
-			is_strictly_void_safe_set: is_strictly_void_safe = v
-			is_strictly_void_safe_configured: is_strictly_void_safe_configured
-		end
-
 	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
@@ -531,8 +526,6 @@ feature -- Comparison
 			and then equal (local_namespace, other.local_namespace)
 			and then equal (namespace, other.namespace)
 			and then void_safety.is_equal (other.void_safety)
-			and then is_strictly_void_safe = other.is_strictly_void_safe
-			and then is_strictly_void_safe_configured = other.is_strictly_void_safe_configured
 			and then syntax.is_equal (other.syntax)
 			and then equal (warnings, other.warnings)
 			then
@@ -552,7 +545,6 @@ feature -- Comparison
 				is_attached_by_default = other.is_attached_by_default and
 				is_trace = other.is_trace and
 				void_safety.index = other.void_safety.index and
-				is_strictly_void_safe = other.is_strictly_void_safe and
 				syntax.index = other.syntax.index and
 				equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
@@ -650,10 +642,6 @@ feature -- Merging
 					is_attached_by_default := other.is_attached_by_default
 				end
 				void_safety.set_safely (other.void_safety)
-				if not is_strictly_void_safe_configured then
-					is_strictly_void_safe_configured := other.is_strictly_void_safe_configured or else is_strictly_void_safe /= other.is_strictly_void_safe
-					is_strictly_void_safe := other.is_strictly_void_safe
-				end
 				syntax.set_safely (other.syntax)
 			end
 		end
@@ -666,7 +654,7 @@ invariant
 	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

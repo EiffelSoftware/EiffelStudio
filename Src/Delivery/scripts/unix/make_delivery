@@ -235,7 +235,7 @@ if [ ! "$NO_COMPILE" ]; then
 	remtrace Install iron files
 	safe_md $INSTALL_DIR/tools
 	cd $INSTALL_DIR/tools
-	exprt $DEFAULT_ISE_SVN/Src/tools/iron/delivery/iron iron
+	exprt $DEFAULT_ORIGO_SVN/Src/tools/iron/delivery/iron iron
 
 	remtrace Update all libraries
 	cd $INIT_DIR

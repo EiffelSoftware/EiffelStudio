@@ -94,7 +94,7 @@ feature -- Archiving
 			end
 		end
 
-	build_package_archive (a_package: IRON_PACKAGE; a_folder: PATH; a_target_file: PATH; a_layout: IRON_LAYOUT)
+	build_package_archive (a_package: detachable IRON_PACKAGE; a_folder: PATH; a_target_file: PATH; a_layout: IRON_LAYOUT)
 		require
 			folder_exists: (create {FILE_UTILITIES}).directory_path_exists (a_folder)
 		local
@@ -103,13 +103,19 @@ feature -- Archiving
 			proc: PROCESS
 			cmd: STRING_32
 			p: PATH
-			f: RAW_FILE
+			f: detachable RAW_FILE
 		do
 			p := a_folder.absolute_path
 			create d.make_with_path (p)
 			if d.exists then
+				create f.make_with_path (a_target_file)
+				if f.exists then
+					f.delete
+				end
+				f := Void
+
 				create proc_fact
-				cmd := build_package_archive_command (a_folder, a_target_file, a_layout)
+				cmd := build_package_archive_command (a_folder, a_target_file.absolute_path, a_layout)
 				debug
 					print (cmd + "%N")
 				end
@@ -126,7 +132,9 @@ feature -- Archiving
 				-- target archive file.
 				create f.make_with_path (a_target_file)
 				if f.exists then
-					a_package.set_archive_uri (path_to_uri_string (a_target_file))
+					if a_package /= Void then
+						a_package.set_archive_uri (path_to_uri_string (a_target_file))
+					end
 				end
 			end
 		end

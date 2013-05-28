@@ -22,7 +22,7 @@ feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			if is_method_post (req) then
+			if is_method_post (req) or is_method_put (req) then
 				handle_post (req, res)
 			elseif is_method_delete (req) then
 				handle_delete (req, res)
@@ -68,8 +68,14 @@ feature -- Execution
 						else
 							res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
 						end
-					else
-						res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
+					elseif req.content_length_value > 0 then
+						if attached new_temporary_output_file ("tmp-uploaded-file") as f then
+							req.read_input_data_into_file (f)
+							f.close
+							iron.database.save_package_archive (iron_version (req), l_package, f.path, False)
+						else
+							res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
+						end
 					end
 				else
 					res.send (create {IRON_REPO_HTML_RESPONSE}.make_not_permitted (req, iron))

@@ -59,6 +59,46 @@ feature -- Access
 			end
 		end
 
+	package_name: detachable IMMUTABLE_STRING_32
+		do
+			if
+				has_option (package_name_switch) and then
+				attached option_of_name (package_name_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
+	package_description: detachable IMMUTABLE_STRING_32
+		do
+			if
+				has_option (package_description_switch) and then
+				attached option_of_name (package_description_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
+	package_archive_file: detachable PATH
+		do
+			if
+				has_option (package_archive_file_switch) and then
+				attached option_of_name (package_archive_file_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
+	package_archive_source: detachable PATH
+		do
+			if
+				has_option (package_archive_source_switch) and then
+				attached option_of_name (package_archive_source_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
 	is_create: BOOLEAN
 		do
 			if attached operation as op then
@@ -66,10 +106,10 @@ feature -- Access
 			end
 		end
 
-	is_modify: BOOLEAN
+	is_update: BOOLEAN
 		do
 			if attached operation as op then
-				Result := op.is_case_insensitive_equal ("modify")
+				Result := op.is_case_insensitive_equal ("update")
 			end
 		end
 
@@ -131,7 +171,7 @@ feature {NONE} -- Usage
 	non_switched_argument_description: IMMUTABLE_STRING_32
 			--  <Precursor>
 		once
-			create Result.make_from_string ({STRING_32} "Operations: create, modify, archive, delete, list ..")
+			create Result.make_from_string ({STRING_32} "Operations: create, update, delete, list ..")
 		end
 
 	non_switched_argument_type: IMMUTABLE_STRING_32
@@ -146,10 +186,14 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (12)
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (username_switch, "Username", False, True, "username", "required username", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (password_switch, "Password", False, True, "password", "required password", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (username_switch, "Username", False, False, "username", "required username", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (password_switch, "Password", False, False, "password", "required password", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (repo_switch, "Repository", True, False, "url", "Repository url including the version", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (data_switch, "Data file", False, False, "file", "File describing the data (check documentation for the format)", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (data_switch, "Data file", True, False, "file", "File describing the data (check documentation for the format)", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_name_switch, "Package name", True, False, "name", "package name, override value from 'data file'", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_description_switch, "Package description", True, False, "description", "package description, override value from 'data file'", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_file_switch, "Package archive file", True, False, "path-to-archive", "archive file, override value from 'data file'", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_source_switch, "Package archive source", True, False, "folder", "Source folder used to build the archive, override value from 'data file'", False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
@@ -159,6 +203,11 @@ feature {NONE} -- Switches
 	password_switch: STRING = "p|password"
 	repo_switch: STRING = "r|repository"
 	data_switch: STRING = "d|data"
+
+	package_name_switch: STRING = "package-name"
+	package_description_switch: STRING = "package-description"
+	package_archive_file_switch: STRING = "package-archive-file"
+	package_archive_source_switch: STRING = "package-archive-source"
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

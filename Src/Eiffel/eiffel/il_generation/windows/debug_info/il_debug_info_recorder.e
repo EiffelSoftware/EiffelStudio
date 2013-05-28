@@ -1318,8 +1318,7 @@ feature {NONE}-- Implementation for save and load task
 			-- Add data contained in `a_fn' into current structure
 		local
 			retried: BOOLEAN
-			l_retrieved: ANY
-			l_retrieved_object: IL_DEBUG_INFO_STORAGE
+			l_retrieved: detachable ANY
 
 			l_dbg_system_name: STRING
 			l_dbg_info_project_path: like {IL_DEBUG_INFO_STORAGE}.project_path
@@ -1344,8 +1343,7 @@ feature {NONE}-- Implementation for save and load task
 					l_il_info_file.close
 
 						--| Get values
-					l_retrieved_object ?= l_retrieved
-					if l_retrieved_object /= Void then
+					if attached {IL_DEBUG_INFO_STORAGE} l_retrieved as l_retrieved_object then
 						l_dbg_system_name		:= l_retrieved_object.system_name
 						l_dbg_info_project_path	:= l_retrieved_object.project_path
 						l_dbg_info_modules      := l_retrieved_object.modules_debugger_info

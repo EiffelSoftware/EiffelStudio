@@ -180,12 +180,7 @@ feature {NONE} -- Implementation
 			add_choice_property (
 				conf_interface_names.option_void_safety_name,
 				conf_interface_names.option_void_safety_description,
-				create {ARRAYED_LIST [STRING_32]}.make_from_array (
-					<<conf_interface_names.option_void_safety_none_name,
-					conf_interface_names.option_void_safety_conformance_name,
-					conf_interface_names.option_void_safety_initialization_name,
-					conf_interface_names.option_void_safety_transitional_name,
-					conf_interface_names.option_void_safety_all_name>>),
+				conf_interface_names.option_void_safety_value,
 				an_options.void_safety,
 				c
 			)

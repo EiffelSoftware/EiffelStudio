@@ -282,24 +282,15 @@ feature -- Access
 	is_void_safety_supported (other: CLASS_I): BOOLEAN
 			-- Does class provide the same or better void-safety level than `other'?
 		do
-			inspect other.options.void_safety.index
-			when {CONF_OPTION}.void_safety_index_none then
-				Result := True
-			when {CONF_OPTION}.void_safety_index_conformance then
-				Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
-			when {CONF_OPTION}.void_safety_index_initialization then
-				Result :=
-					options.void_safety.index /= {CONF_OPTION}.void_safety_index_none and then
-					options.void_safety.index /= {CONF_OPTION}.void_safety_index_conformance
-			when {CONF_OPTION}.void_safety_index_transitional then
-				Result :=
-					options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
-					options.void_safety.index = {CONF_OPTION}.void_safety_index_all
-			when {CONF_OPTION}.void_safety_index_all then
-				Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
-			else
-				Result := options.void_safety.index = other.options.void_safety.index
-			end
+			Result := options.is_void_safety_supported (other.options)
+		end
+
+	is_void_safety_sufficient (other: CLASS_I): BOOLEAN
+			-- Does class provide the void-safety level than is sufficient to be used by the client `other'?
+		do
+			Result := options.is_void_safety_sufficient (other.options)
+		ensure
+			sufficient_if_supported: is_void_safety_supported (other) implies Result
 		end
 
 	is_syntax_obsolete: BOOLEAN

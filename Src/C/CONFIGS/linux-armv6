@@ -167,18 +167,18 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags='$CFLAGS'
 else
-	ccflags='-pipe'
+	ccflags='-pipe -D_GNU_SOURCE'
 fi
 if [ -n "$CPP" ]; then
 	cpp='$CPP'
 else
-	cpp='/usr/bin/cpp'
+	cpp='g++'
 fi
 ccldflags=''
 if [ -n "$CPPFLAGS" ]; then
 	cppflags='$CPPFLAGS'
 else
-	cppflags='-pipe'
+	cppflags='$ccflags'
 fi
 cpp_stuff='42'
 defvoidused='15'
@@ -200,7 +200,7 @@ platform_arch=''
 voidflags='15'
 #Check value for next 1
 warning_level='-Wall'
-wkoptimize=" $binary_format $platform_arch"
+wkoptimize="-O0 $binary_format $platform_arch"
 
 #Makefiles
 ar='ar'
@@ -210,14 +210,14 @@ concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
 if [ -n "$LD" ]; then
-        ld='$LD'
+	ld='$LD'
 else
-        ld='ld'
+	ld='ld'
 fi
 lintflags=''
 ldflags=" $binary_format $platform_arch"
 ldsharedflags="$ldflags -shared -o"
-libs=' '
+libs='-lm'
 ln='/bin/ln'
 if [ -n "$MAKE" ]; then
 	make='$MAKE'
@@ -228,7 +228,7 @@ mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
-mtlibs="$libs"
+mtlibs="$libs -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'
@@ -236,8 +236,8 @@ ranlib=':'
 shared_prefix='lib'
 shared_suffix='.so'
 shared_rt_suffix='.so'
-sharedlibs=' '
-mtsharedlibs='-lpthread'
+sharedlibs='-lm'
+mtsharedlibs='-lm -lpthread'
 sharedlibversion='.7.3'
 sharedlink='ld'
 suffix='.a'

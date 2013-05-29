@@ -36,6 +36,10 @@ feature -- Access
 		deferred
 		end
 
+	package_indexes: detachable LIST [IMMUTABLE_STRING_32]
+		deferred
+		end
+
 	is_create: BOOLEAN
 		deferred
 		end

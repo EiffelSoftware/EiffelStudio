@@ -136,6 +136,7 @@ feature -- Package
 			inf: detachable IRON_REPO_INFO
 			uuidg: UUID_GENERATOR
 			l_uuid: UUID
+			hdate: HTTP_DATE
 		do
 			if a_package.has_id then
 				l_package := package (v, a_package.id)
@@ -162,6 +163,9 @@ feature -- Package
 				d.recursive_create_dir
 			end
 
+				-- Update last modified
+			l_package.set_last_modified_now
+
 				-- Save information
 			create inf.make_empty
 			if attached l_package.items as tb then
@@ -175,6 +179,11 @@ feature -- Package
 			inf.put (l_package.id, "id")
 			inf.put (a_package.name, "name")
 			inf.put (a_package.description, "description")
+			if attached l_package.last_modified as dt then
+				create hdate.make_from_date_time (dt)
+				inf.put (hdate.rfc1123_string, "last-modified")
+			end
+
 			if attached a_package.owner as o then
 				inf.put (o.name, "owner")
 			end
@@ -257,6 +266,7 @@ feature -- Package
 			inf: like iron_info
 			z,p: like package_path
 			u: FILE_UTILITIES
+			hdate: HTTP_DATE
 		do
 			p := package_path (v, a_id)
 			inf := iron_info (p.extended ("package.info"))
@@ -277,6 +287,11 @@ feature -- Package
 						Result.set_owner (o)
 					end
 				end
+				if attached inf.item ("last-modified") as dt then
+					create hdate.make_from_string (dt.to_string_8)
+					Result.set_last_modified (hdate.date_time)
+				end
+
 				across
 					inf as c
 				loop

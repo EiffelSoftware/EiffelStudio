@@ -118,6 +118,11 @@ feature -- Visit
 						end
 					end
 				end
+				if attached p.last_modified as dt then
+					s.append ("<span class=%"lastmodified%">")
+					append_formatted_date_to (dt, s)
+					s.append ("</span>")
+				end
 			end
 			s.append ("</li>")
 		end
@@ -134,6 +139,14 @@ feature -- Visit
 		end
 
 feature {NONE} -- Implementation
+
+	append_formatted_date_to (dt: DATE_TIME; s: STRING)
+		local
+			hd: HTTP_DATE
+		do
+			create hd.make_from_date_time (dt)
+			hd.append_date_time_to_rfc1123_string (dt, s)
+		end
 
 	size_as_string (s: INTEGER): STRING_8
 		do

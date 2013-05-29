@@ -84,7 +84,6 @@ feature -- Execution
 									end
 									s.append ("</a> ")
 									s.append ("<span class=%"packageid%">")
-									s.append_character ('#')
 									s.append (l_package.id)
 									s.append ("</span>")
 									s.append ("</li>")

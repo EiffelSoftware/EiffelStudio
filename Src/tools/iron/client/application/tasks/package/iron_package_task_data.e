@@ -34,7 +34,7 @@ feature -- Access
 
 	source: detachable PATH
 
-	maps: detachable ARRAYED_LIST [READABLE_STRING_32]
+	indexes: detachable ARRAYED_LIST [READABLE_STRING_32]
 
 feature -- Change
 
@@ -83,17 +83,17 @@ feature -- Change
 			end
 		end
 
-	add_map (m: READABLE_STRING_32)
+	add_index (m: READABLE_STRING_32)
 		local
-			l_maps: like maps
+			l_indexes: like indexes
 		do
 			if not m.is_empty then
-				l_maps := maps
-				if l_maps = Void then
-					create l_maps.make (1)
-					maps := l_maps
+				l_indexes := indexes
+				if l_indexes = Void then
+					create l_indexes.make (1)
+					indexes := l_indexes
 				end
-				l_maps.force (m)
+				l_indexes.force (m)
 			end
 		end
 
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			description := Void
 			source := Void
 			archive := Void
-			maps := Void
+			indexes := Void
 
 			if attached ini.item ("name") as l_name_8 then
 				name := utf.utf_8_string_8_to_escaped_string_32 (l_name_8)
@@ -126,8 +126,8 @@ feature {NONE} -- Implementation
 			across
 				ini as c
 			loop
-				if attached c.item as s and then c.key.starts_with ("map") then
-					add_map (utf.utf_8_string_8_to_escaped_string_32 (s))
+				if attached c.item as s and then c.key.starts_with ("index") then
+					add_index (utf.utf_8_string_8_to_escaped_string_32 (s))
 				end
 			end
 		end

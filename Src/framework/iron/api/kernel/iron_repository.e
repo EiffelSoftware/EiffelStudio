@@ -142,7 +142,6 @@ feature -- Access
 
 	package_associated_with_uri (a_uri: URI): detachable IRON_PACKAGE
 		local
-			repo: detachable IRON_REPOSITORY
 			s: STRING
 		do
 			s := a_uri.string

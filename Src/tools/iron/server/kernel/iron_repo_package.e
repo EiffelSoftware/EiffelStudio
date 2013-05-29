@@ -72,9 +72,11 @@ feature -- Access
 
 	name: detachable READABLE_STRING_32
 
-	domain: detachable READABLE_STRING_32
+--	domain: detachable READABLE_STRING_32
 
 	description: detachable READABLE_STRING_32
+
+	last_modified: detachable DATE_TIME
 
 	has_archive: BOOLEAN
 		do
@@ -144,14 +146,14 @@ feature -- Change
 			end
 		end
 
-	set_domain (v: detachable READABLE_STRING_GENERAL)
-		do
-			if v /= Void then
-				domain := v.to_string_32
-			else
-				domain := Void
-			end
-		end
+--	set_domain (v: detachable READABLE_STRING_GENERAL)
+--		do
+--			if v /= Void then
+--				domain := v.to_string_32
+--			else
+--				domain := Void
+--			end
+--		end
 
 	set_description (v: detachable READABLE_STRING_GENERAL)
 		do
@@ -171,6 +173,16 @@ feature -- Change
 	set_owner (u: like owner)
 		do
 			owner := u
+		end
+
+	set_last_modified (dt: like last_modified)
+		do
+			last_modified := dt
+		end
+
+	set_last_modified_now
+		do
+			create last_modified.make_now_utc
 		end
 
 feature {NONE} -- Implementation

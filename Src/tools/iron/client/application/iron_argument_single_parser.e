@@ -11,6 +11,21 @@ inherit
 	ARGUMENT_SINGLE_PARSER
 		undefine
 			sub_system_name
+		redefine
+			is_using_unix_switch_style,
+			switch_prefixes
+		end
+
+feature {NONE} -- Status report		
+
+	is_using_unix_switch_style: BOOLEAN = True
+			-- <Precursor>
+			--| Avoid using /flag ...
+
+	switch_prefixes: ARRAY [CHARACTER_32]
+			-- Prefixes used to indicate a command line switch.
+		once
+			Result := <<'-'>>
 		end
 
 feature -- Access

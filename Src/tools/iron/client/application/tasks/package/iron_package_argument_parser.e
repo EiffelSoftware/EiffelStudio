@@ -2,7 +2,7 @@ note
 	description: "[
 			Summary description for {IRON_PACKAGE_ARGUMENT_PARSER}.
 						
-				iron package {create|modify|archive} --user username --pwd password --repository http://iron.eiffel.com/7.3/ --data data_file
+				iron package {create|update|delete} --user username --pwd password --repository http://iron.eiffel.com/7.3 --data data_file
 		]"
 	author: ""
 	date: "$Date$"
@@ -96,6 +96,15 @@ feature -- Access
 				attached option_of_name (package_archive_source_switch) as opt
 			then
 				create Result.make_from_string (opt.value)
+			end
+		end
+
+	package_indexes: detachable ARRAYED_LIST [IMMUTABLE_STRING_32]
+		do
+			if has_option (package_index_switch) and then
+				attached options_values_of_name (package_index_switch) as lst
+			then
+				Result := lst
 			end
 		end
 
@@ -194,6 +203,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_description_switch, "Package description", True, False, "description", "package description, override value from 'data file'", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_file_switch, "Package archive file", True, False, "path-to-archive", "archive file, override value from 'data file'", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_source_switch, "Package archive source", True, False, "folder", "Source folder used to build the archive, override value from 'data file'", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_index_switch, "Associated package path (c.f full iron URI)", True, True, "path", "relative path from repository url", False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
@@ -208,6 +218,7 @@ feature {NONE} -- Switches
 	package_description_switch: STRING = "package-description"
 	package_archive_file_switch: STRING = "package-archive-file"
 	package_archive_source_switch: STRING = "package-archive-source"
+	package_index_switch: STRING = "index"
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

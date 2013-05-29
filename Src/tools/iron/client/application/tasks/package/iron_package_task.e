@@ -60,6 +60,14 @@ feature -- Execute
 						l_name := l_data.name
 						l_id := l_data.id
 
+						if attached args.package_indexes as l_indexes then
+							across
+								l_indexes as c
+							loop
+								l_data.add_index (c.item)
+							end
+						end
+
 						a_iron.catalog_api.update_repository (repo, True)
 						if l_name /= Void then
 							l_package := package_by_name_from_repo (repo, l_name)
@@ -73,15 +81,16 @@ feature -- Execute
 							if l_package /= Void then
 								sess := new_client_session (repo, u, p)
 								create ctx.make_with_credentials_required
+								ctx.add_header ("Accept", "application/json")
 								resp := sess.delete ("/access/" + repo.version + "/package/" + l_package.id, ctx)
 								if resp.error_occurred then
-									localized_print_error ("[Error] operation failed!")
+									print ("[Error] operation failed!")
 									print_new_line
-									localized_print_error (resp.error_message)
+									print (resp.error_message)
 									print_new_line
 									err := True
 								elseif resp.status = 401 then
-									localized_print_error ("[Error] not authorized!")
+									print ("[Error] not authorized!")
 									print_new_line
 									err := True
 								else
@@ -91,11 +100,11 @@ feature -- Execute
 								end
 							else
 								if l_name /= Void then
-									localized_print_error ({STRING_32} "[Error] Could not find package named %"" + l_name + "%" !")
+									print ({STRING_32} "[Error] Could not find package named %"" + l_name + "%" !")
 								elseif l_id /= Void then
-									localized_print_error ({STRING_32} "[Error] Could not find package with id %"" + l_id + "%" !")
+									print ({STRING_32} "[Error] Could not find package with id %"" + l_id + "%" !")
 								else
-									localized_print_error ({STRING_32} "[Error] Could not find package !")
+									print ({STRING_32} "[Error] Could not find package !")
 								end
 								print_new_line
 								err := True
@@ -104,9 +113,9 @@ feature -- Execute
 							if l_package /= Void then
 								err := True
 								if l_name /= Void then
-									localized_print_error ({STRING_32} "[Error] a package with name %"" + l_name + "%" already exists!")
+									print ({STRING_32} "[Error] a package with name %"" + l_name + "%" already exists!")
 								else
-									localized_print_error ({STRING_32} "[Error] please provide a non empty name!")
+									print ({STRING_32} "[Error] please provide a non empty name!")
 								end
 								print_new_line
 							end
@@ -115,17 +124,17 @@ feature -- Execute
 								if l_package = Void then
 									err := True
 									if l_name /= Void then
-										localized_print_error ({STRING_32} "[Error] Could not find package named %"" + l_name + "%" !")
+										print ({STRING_32} "[Error] Could not find package named %"" + l_name + "%" !")
 									elseif l_id /= Void then
-										localized_print_error ({STRING_32} "[Error] Could not find package with id %"" + l_id + "%" !")
+										print ({STRING_32} "[Error] Could not find package with id %"" + l_id + "%" !")
 									else
-										localized_print_error ({STRING_32} "[Error] Could not find package !")
+										print ({STRING_32} "[Error] Could not find package !")
 									end
 									print_new_line
 								end
 							else
 								err := True
-								localized_print_error ({STRING_32} "[" + op + {STRING_32} "] Not yet supported!")
+								print ({STRING_32} "[" + op + {STRING_32} "] Not yet supported!")
 								print_new_line
 							end
 						end
@@ -133,6 +142,7 @@ feature -- Execute
 						if not done and not err then
 							sess := new_client_session (repo, u, p)
 							create ctx.make_with_credentials_required
+							ctx.add_header ("Accept", "application/json")
 							if l_id /= Void then
 								ctx.add_form_parameter ("id", l_id)
 							end
@@ -147,35 +157,39 @@ feature -- Execute
 								if l_package /= Void then
 									l_package.set_archive_uri (Void)
 								end
-								localized_print_error ({STRING_32} "Building the archive from folder %"" + src.name + {STRING_32} "%" %N")
+								print ({STRING_32} "Building the archive from folder %"" + src.name + {STRING_32} "%" %N")
 								(create {IRON_UTILITIES}).build_package_archive (l_package, src, tgt, a_iron.layout)
 								l_archive_path := tgt.absolute_path
 							elseif attached l_data.archive as l_archive then
 								l_archive_path := l_archive
 							end
 							if l_package /= Void then
-								localized_print_error ({STRING_32} "Update package %"" + l_package.id + {STRING_32} "%" %N")
+								print ({STRING_32} "Update package %"" + l_package.human_identifier + {STRING_32} "%" %N")
 								resp := sess.post ("/access/" + repo.version + "/package/" + l_package.id, ctx, Void)
 							else
-								localized_print_error ({STRING_32} "Create new package %N")
+								if l_name /= Void then
+									print ({STRING_32} "Create new package %"" + l_name + "%"%N")
+								else
+									print ({STRING_32} "Create new package %N")
+								end
 								resp := sess.post ("/access/" + repo.version + "/package/", ctx, Void)
 							end
 							if resp.error_occurred then
-								localized_print_error ("[Error] operation failed!")
+								print ("[Error] operation failed!")
 								print_new_line
-								localized_print_error (resp.error_message)
+								print (resp.error_message)
 								print_new_line
 								err := True
 							elseif resp.status = 401 then
-								localized_print_error ("[Error] not authorized!")
+								print ("[Error] not authorized!")
 								print_new_line
 								err := True
 							else
 								if l_package /= Void then
-									localized_print_error ({STRING_32} "Package updated.")
+									print ({STRING_32} "Package %""+ l_package.human_identifier + {STRING_32} "%" updated.")
 									print_new_line
 								else
-									localized_print_error ({STRING_32} "Package created.")
+									print ({STRING_32} "Package created.")
 									print_new_line
 									a_iron.catalog_api.update_repository (repo, True)
 									if l_name /= Void then
@@ -187,23 +201,51 @@ feature -- Execute
 								end
 								debug
 									if attached resp.body as l_body then
-										localized_print_error (l_body)
+										print (l_body)
 										print_new_line
 									end
 								end
 							end
 							if not err and l_package /= Void then
+								if attached l_data.indexes as l_paths then
+									print ({STRING_32} "Adding indexes:%N")
+									create ctx.make_with_credentials_required
+									ctx.add_header ("Accept", "application/json")
+									ctx.add_form_parameter ("id", l_package.id.to_string_32)
+									across
+										l_paths as c
+									loop
+										print ({STRING_32} "  - " + c.item)
+										print_new_line
+										ctx.add_form_parameter ("map[]", c.item.to_string_8)
+									end
+									resp := sess.post ("/access/" + repo.version + "/package/" + l_package.id + "/map", ctx, Void)
+									if resp.error_occurred then
+										print ("[Error] path association failed!")
+										print_new_line
+										print (resp.error_message)
+										print_new_line
+										err := True
+									else
+										if l_paths.count > 1 then
+											print ("Package successfully associated with indexes!")
+										else
+											print ("Package successfully associated with index!")
+										end
+										print_new_line
+									end
+								end
 								if l_archive_path /= Void then
 --									sess.set_proxy ("localhost", 8888)
 									ctx.set_upload_filename (l_archive_path.utf_8_name)
 									ctx.add_header ("Content-Type", "application/zip")
 									sess.set_timeout (-1)
-									localized_print_error ({STRING_32} "Uploading package archive ...%N")
+									print ({STRING_32} "Uploading package archive ...%N")
 									resp := sess.post ("/access/" + repo.version + "/package/" + l_package.id + "/archive", ctx, Void)
 									if resp.error_occurred then
-										localized_print_error ("[Error] archive uploading failed!")
+										print ("[Error] archive uploading failed!")
 										print_new_line
-										localized_print_error (resp.error_message)
+										print (resp.error_message)
 										print_new_line
 										err := True
 									else
@@ -215,17 +257,17 @@ feature -- Execute
 							end
 						end
 					else
-						localized_print_error ({STRING_32} "missing or invalid input data!")
+						print ({STRING_32} "missing or invalid input data!")
 						print_new_line
 					end
 				else
-					localized_print_error ({STRING_32} "repository url [" + repo_url + "] is not known or invalid!")
+					print ({STRING_32} "repository url [" + repo_url + "] is not known or invalid!")
 					print_new_line
-					localized_print_error ({STRING_32} "hint: iron repository --add name " + repo_url + " !")
+					print ({STRING_32} "hint: iron repository --add name " + repo_url + " !")
 					print_new_line
 				end
 			else
-				localized_print_error ({STRING_32} "[ERROR] Missing required arguments!")
+				print ({STRING_32} "[ERROR] Missing required arguments!")
 				print_new_line
 			end
 		end
@@ -242,8 +284,8 @@ feature -- Execute
 				create Result.make
 				if attached args.package_name as l_name then
 					Result.set_name (l_name)
-				else
-					localized_print_error ("Name? >")
+				elseif not args.is_batch then
+					print ("Name? >")
 					io.read_line
 					Result.set_name (io.last_string.to_string_32)
 				end
@@ -251,8 +293,8 @@ feature -- Execute
 				if not args.is_delete then
 					if attached args.package_description as l_desc then
 						Result.set_description (l_desc)
-					else
-						localized_print_error ("Description? >")
+					elseif not args.is_batch then
+						print ("Description? >")
 						io.read_line
 						Result.set_description (io.last_string.to_string_32)
 					end
@@ -261,12 +303,12 @@ feature -- Execute
 						Result.set_archive (l_file)
 					elseif attached args.package_archive_source as l_src then
 						Result.set_source (l_src)
-					else
-						localized_print_error ("Archive file? >")
+					elseif not args.is_batch then
+						print ("Archive file? >")
 						io.read_line
 						Result.set_archive (create {PATH}.make_from_string (io.last_string))
 						if Result.archive = Void then
-							localized_print_error ("Source folder? >")
+							print ("Source folder? >")
 							io.read_line
 							Result.set_source (create {PATH}.make_from_string (io.last_string))
 						end

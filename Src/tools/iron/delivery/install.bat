@@ -11,6 +11,8 @@ set TARGET_EIFGENS_EXE=%~dp0EIFGENs\client\F_code\iron.exe
 if "%ISE_PLATFORM%" == "" goto failure
 
 echo Compile iron executable
+echo Clean previous EIFGENS
+rd /q/s %~dp0EIFGENs\client
 if not exist "%TARGET_EIFGENS_EXE%" "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ecb.exe" -config "%~dp0..\client\client.ecf" -target client -finalize -c_compile -project_path .
 
 if not exist "%TARGET_EIFGENS_EXE%" goto failure

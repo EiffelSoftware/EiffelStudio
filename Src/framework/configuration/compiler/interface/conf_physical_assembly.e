@@ -298,7 +298,7 @@ feature -- Access queries
 			create Result
 				-- But we have to treat classes as void-safe, as otherwise
 				-- nothing from an assembly can be used in a void-safe project.
-			Result.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
+			Result.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
 		end
 
 	class_options: STRING_TABLE [CONF_OPTION]
@@ -433,7 +433,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

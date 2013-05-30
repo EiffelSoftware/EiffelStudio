@@ -523,7 +523,7 @@ feature -- Plug and Makefile file
 			if (system.array_make_name = Void) or not System.uses_precompiled or final_mode then
 				array_cl := System.class_of_id (System.array_id)
 					--! Array ref type (i.e. ARRAY[ANY])
-				cl_type := System.Instantiator.Array_type.associated_class_type (Void);
+				cl_type := System.Instantiator.array_type_a.associated_class_type (Void);
 				id := cl_type.type_id
 				arr_type_id := cl_type.type_id
 				creators := array_cl.creators
@@ -539,7 +539,7 @@ feature -- Plug and Makefile file
 					system.set_array_make_name (arr_make_name)
 				end
 			else
-				cl_type := System.Instantiator.Array_type.associated_class_type (Void)
+				cl_type := System.Instantiator.Array_type_a.associated_class_type (Void)
 				arr_type_id := cl_type.type_id
 				arr_make_name := system.array_make_name
 			end

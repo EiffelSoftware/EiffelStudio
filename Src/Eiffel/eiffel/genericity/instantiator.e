@@ -124,20 +124,8 @@ feature -- Processing
 				i := i + 1
 			end
 
-				-- Check array class
-			check_array_class
-
-				-- Check tuple class
-			check_tuple_class
-
-				-- Check function class
-			check_function_class
-
-				-- Check predicate class
-			check_predicate_class
-
-				-- Check procedure class
-			check_procedure_class
+				-- Ensures that all required classes are properly registered
+			check_required_classes
 
 				-- Remove the obsolete types
 			clean_standalone
@@ -193,81 +181,51 @@ feature -- Access
 
 feature {NONE} -- Checks for predefined types
 
-	check_array_class
-			-- Force an array type in the system
+	check_required_classes
+			-- Check that the associated types of all required
+			-- classes are properly registered.
 		require
-			any_compiled: System.any_class.is_compiled;
-			array_compiled: System.array_class.is_compiled;
-		local
-			array_cl: CLASS_C;
-		do
-			array_cl := System.array_class.compiled_class;
-			dispatch (Array_type_a, array_cl);
-		end;
-
-	check_tuple_class
-			-- Force a tuple type in the system
-		require
-			tuple_compiled: System.tuple_class.is_compiled
-		local
-			tuple_cl: CLASS_C;
-		do
-			tuple_cl := System.tuple_class.compiled_class;
-			dispatch (Tuple_type_a, tuple_cl);
-		end;
-
-	check_function_class
-			-- Force a function type in the system
-		require
-			function_compiled: System.function_class.is_compiled
 			any_compiled: System.any_class.is_compiled
 			array_compiled: System.array_class.is_compiled
 			tuple_compiled: System.tuple_class.is_compiled
-		local
-			funct_cl: CLASS_C;
-		do
-			funct_cl := System.function_class.compiled_class;
-			dispatch (Function_type_a, funct_cl);
-		end;
-
-	check_procedure_class
-			-- Force a procedure type in the system
-		require
 			procedure_compiled: System.procedure_class.is_compiled
-			any_compiled: System.any_class.is_compiled
-			array_compiled: System.array_class.is_compiled
-			tuple_compiled: System.tuple_class.is_compiled
-		local
-			proc_cl: CLASS_C;
-		do
-			proc_cl := System.procedure_class.compiled_class;
-			dispatch (Procedure_type_a, proc_cl);
-		end;
-
-	check_predicate_class
-			-- Force a predicate type in the system
-		require
+			function_compiled: System.function_class.is_compiled
 			predicate_compiled: System.predicate_class.is_compiled
-			any_compiled: System.any_class.is_compiled
-			array_compiled: System.array_class.is_compiled
-			tuple_compiled: System.tuple_class.is_compiled
 		local
-			pred_cl: CLASS_C;
+			l_context_class: CLASS_C
 		do
-			pred_cl := System.predicate_class.compiled_class;
-			dispatch (Predicate_type_a, pred_cl);
-		end;
+				-- Check array class
+			l_context_class := System.array_class.compiled_class
+			dispatch (Array_type_a, l_context_class)
 
-feature {NONE} -- Predefined types
+				-- Check tuple class
+			l_context_class := System.tuple_class.compiled_class
+			dispatch (Tuple_type_a, l_context_class)
+
+				-- Check function class
+			l_context_class := System.function_class.compiled_class
+			dispatch (Function_type_a, l_context_class)
+
+				-- Check predicate class
+			l_context_class := System.predicate_class.compiled_class
+			dispatch (Predicate_type_a, l_context_class)
+
+				-- Check procedure class
+			l_context_class := System.procedure_class.compiled_class
+			dispatch (Procedure_type_a, l_context_class)
+		end
+
+feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES} -- Predefined types
 
 	Array_type_a: GEN_TYPE_A
-			-- Default array type
+			-- Default array type.
+			-- Not a once since `array_id' might change.
 		require
 			any_compiled: System.any_class.is_compiled;
 			array_compiled: System.array_class.is_compiled;
 		local
-			any_type: CL_TYPE_A;
-			generics: ARRAYED_LIST [TYPE_A];
+			any_type: CL_TYPE_A
+			generics: ARRAYED_LIST [TYPE_A]
 		do
 				-- Not once because array_id and any_id can change
 			create generics.make (1)
@@ -276,6 +234,8 @@ feature {NONE} -- Predefined types
 
 			create Result.make (System.array_id, generics)
 		end;
+
+feature -- Predefined types
 
 	Tuple_type_a: TUPLE_TYPE_A
 			-- Default tuple type: TUPLE
@@ -346,21 +306,6 @@ feature {NONE} -- Predefined types
 
 			create Result.make (System.procedure_class_id, generics)
 		end
-
-feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
-
-	array_type: GEN_TYPE_A
-			-- Default array type.
-			-- Not a once since `array_id' might change.
-		local
-			true_gen: ARRAYED_LIST [TYPE_A]
-			any_type_a : TYPE_A
-		do
-			create true_gen.make (1)
-			any_type_a := system.any_class.compiled_class.actual_type
-			true_gen.extend (any_type_a)
-			create Result.make (System.array_id, true_gen)
-		end;
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

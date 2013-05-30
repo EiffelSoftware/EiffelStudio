@@ -38,7 +38,7 @@ feature -- Access
 	type: GEN_TYPE_A
 			-- Type of byte code strip expression
 		do
-			Result := Instantiator.array_type
+			Result := Instantiator.array_type_a
 		end
 
 	used (r: REGISTRABLE): BOOLEAN
@@ -94,7 +94,7 @@ invariant
 	set_exists: feature_ids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -69,12 +69,12 @@ feature -- Execution
 						then
 							m := new_response_message (req)
 							create s.make_empty
-							s.append ("<ul>")
+							s.append ("<ul class=%"package-index%">")
 							across
 								lst as e
 							loop
 								if attached iron.database.package_by_path (iron_version (req), v + "/" + e.item) as l_package then
-									s.append ("<li>")
+									s.append ("<li class=%"package-inline%">")
 									s.append ("<a href=%""+ iron.package_view_web_page (iron_version (req), l_package) +"%"> ")
 									s.append (m.html_encoded_string (e.item))
 									if attached l_package.name as l_name and then not l_name.same_string (e.item) then
@@ -88,7 +88,7 @@ feature -- Execution
 									s.append ("</span>")
 									s.append ("</li>")
 								elseif attached {ITERABLE [READABLE_STRING_32]} iron.database.path_browse_index (iron_version (req), v + "/" + e.item) then
-									s.append ("<li>")
+									s.append ("<li class=%"package-folder-inline%">")
 									s.append ("<a href=%""+ req.script_url (req.path_info))
 									if s.item (s.count) /= '/' then
 										s.append_character ('/')
@@ -98,7 +98,7 @@ feature -- Execution
 									s.append ("/</a>")
 									s.append ("</li>")
 								else
-									s.append ("<li>? ")
+									s.append ("<li class=%"package-inline-unknown%">? ")
 									s.append (m.html_encoded_string (e.item))
 									s.append (" ?</a>")
 									s.append ("</li>")

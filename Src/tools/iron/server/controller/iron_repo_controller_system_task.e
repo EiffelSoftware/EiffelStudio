@@ -216,6 +216,21 @@ feature -- Execution
 					css.add_selector_style ("ul.menu li", "display: inline; border: solid 1px #900; padding: 2px 5px 2px 5px;")
 					css.add_selector_style ("ul.menu li:hover", "background-color: #FF9")
 
+					create css_style.make
+					css_style.put_border (Void, "solid", "1px", "#ddd")
+					css_style.put_padding ("2px", "2px", "2px", "15px")
+					css.add_selector_style (".package-index li", css_style)
+
+					css.add_selector_style (".package-index li .packageid", "display: none")
+
+					create css_style.make
+					css_style.put_border ("left", "solid", "10px", "#ddf")
+					css_style.put_padding ("2px", "2px", "2px", "5px")
+					css_style.put_background_color ("#fafaff")
+					css.add_selector_style (".package-index li.package-folder-inline", css_style)
+
+					css.add_selector_style (".package-index li.package-folder-inline:after", "content: %" ...%"")
+
 					f.open_write
 					f.put_string (css.string)
 					f.close

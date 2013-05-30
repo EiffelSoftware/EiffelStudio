@@ -59,7 +59,7 @@ feature -- Visit
 			s.append ("<li class=%"package%">")
 			if attached p.name as l_name then
 				s.append ("<span class=%"name%"><a href=%""+ request.script_url (iron.package_view_web_page (version, p)) + "%">" + html_encoder.encoded_string (l_name) + "</a></span>")
-				s.append (" <span class=%"packageid%">(")
+				s.append ("<span class=%"packageid%">(")
 				s.append (p.id)
 				s.append (")</span>")
 				if attached p.description as l_description then
@@ -68,9 +68,6 @@ feature -- Visit
 					s.append ("</div>")
 				end
 				if attached p.archive_path as l_archive_path then
---					s.append ("<span>(archive=")
---					s.append (l_archive_path.name.to_string_8)
---					s.append (")</span>")
 					s.append ("<div class=%"archive%"><a href=%""+ request.script_url (iron.package_archive_web_page (version, p)) + "%">Archive</a>")
 					s.append (" (")
 					l_size := p.archive_file_size
@@ -84,17 +81,17 @@ feature -- Visit
 				end
 
 				if attached iron.database.path_associated_with_package (version, p) as lst then
-					s.append ("<ul class=%"paths%"><strong><a href=%""+ iron.package_map_web_page (version, p, Void) +"%">Edit associated URIs</a></strong>%N")
+					s.append ("<ul class=%"uri-list%"><strong><a href=%""+ iron.package_map_web_page (version, p, Void) +"%">Edit associated URIs</a></strong>%N")
 					v := version.value
 					across
 						lst as c
 					loop
-						s.append ("<li>")
+						s.append ("<li class=%"uri%">")
 						l_path := c.item
 						i := l_path.last_index_of ('/', l_path.count)
 						if i > 0 then
 							s.append ("<a href=%"" + "/" + v + l_path.substring (1, i) + "%">/" + v + l_path.substring (1, i) + "</a> ")
-							s.append ("<a href=%"" + "/" + v + l_path + "%">" + l_path.substring (i+1, l_path.count) + "</a>")
+							s.append ("<a href=%"" + "/" + v + l_path + "%">" + l_path.substring (i + 1, l_path.count) + "</a>")
 						else
 							s.append ("<a href=%"" + "/" + v + l_path + "%">/" + v + l_path + "</a>")
 						end
@@ -106,12 +103,12 @@ feature -- Visit
 				if attached p.owner as l_owner then
 					if attached user as u then
 						if u.same_user (l_owner) then
-							s.append ("<div>")
-							s.append ("<span class=%"owner%">You are the maintainer</span>")
+							s.append ("<div class=%"owner%">")
+							s.append ("<span>You are the maintainer</span>")
 							s.append ("</div>")
 						elseif u.is_administrator then
-							s.append ("<div>")
-							s.append ("<span class=%"owner%">Maintainer: ")
+							s.append ("<div class=%"owner%">")
+							s.append ("<span>Maintainer: ")
 							s.append (html_encoder.encoded_string (l_owner.name))
 							s.append ("</span>")
 							s.append ("</div>")
@@ -119,9 +116,9 @@ feature -- Visit
 					end
 				end
 				if attached p.last_modified as dt then
-					s.append ("<span class=%"lastmodified%">")
+					s.append ("<div class=%"lastmodified%"><span>")
 					append_formatted_date_to (dt, s)
-					s.append ("</span>")
+					s.append ("</span></div>")
 				end
 			end
 			s.append ("</li>")
@@ -134,6 +131,7 @@ feature -- Visit
 				it as c
 			loop
 				visit_package (c.item)
+				buffer.append_character ('%N')
 			end
 			buffer.append ("</ul>%N")
 		end

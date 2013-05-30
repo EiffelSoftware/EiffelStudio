@@ -1,6 +1,6 @@
 note
 	description: "[
-			Summary description for {IRON_PACKAGE_ARGUMENT_PARSER}.
+			Summary description for {IRON_SHARE_ARGUMENT_PARSER}.
 						
 				iron package {create|update|delete} --user username --pwd password --repository http://iron.eiffel.com/7.3 --data data_file
 		]"
@@ -9,7 +9,7 @@ note
 	revision: "$Revision$"
 
 class
-	IRON_PACKAGE_ARGUMENT_PARSER
+	IRON_SHARE_ARGUMENT_PARSER
 
 inherit
 	IRON_ARGUMENT_SINGLE_PARSER
@@ -17,7 +17,7 @@ inherit
 			make as make_parser
 		end
 
-	IRON_PACKAGE_ARGUMENTS
+	IRON_SHARE_ARGUMENTS
 
 create
 	make

@@ -13,7 +13,7 @@ set IRON_CREATE_OPTS=create -u jfiat -p IR0jPx31_ --repository http://iron.eiffe
 set IRON_UPDATE_OPTS=update -u jfiat -p IR0jPx31_ --repository http://iron.eiffel.com/7.3 --batch
 rem set IRON_CREATE_OPTS=create -u jfiat -p test --repository http://localhost:9090/7.3
 
-set IRON_CMD=iron.exe package
+set IRON_CMD=iron.exe share
 %IRON_CMD% %IRON_CREATE_OPTS% --package-name "base" --package-description "Eiffel Base: Kernel library classes, data structure, I/O" --package-archive-source "%TMP_SOURCE_TOPDIR%\base"
 
 %IRON_CMD% %IRON_CREATE_OPTS% --package-name "api_wrapper" --package-description "API wrapper: Make it easy to call C routines from dynamically loaded shared libraries" --package-archive-source "%TMP_SOURCE_TOPDIR%\api_wrapper"

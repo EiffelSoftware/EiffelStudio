@@ -92,13 +92,13 @@ feature {NONE} -- Usage
 
 	non_switched_argument_name: IMMUTABLE_STRING_32
 		once
-			create Result.make_from_string ({STRING_32} "package id or uri")
+			create Result.make_from_string ({STRING_32} "package name, id or uri")
 		end
 
 	non_switched_argument_description: IMMUTABLE_STRING_32
 			--  <Precursor>
 		once
-			create Result.make_from_string ({STRING_32} "Package id or full url")
+			create Result.make_from_string ({STRING_32} "Package name, id or full url")
 		end
 
 	non_switched_argument_type: IMMUTABLE_STRING_32

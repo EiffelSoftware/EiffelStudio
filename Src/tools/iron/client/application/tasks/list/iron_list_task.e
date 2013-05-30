@@ -44,9 +44,6 @@ feature -- Execute
 					across
 						l_packages as p
 					loop
-						print ("  ")
-						print (tk_package)
-						print (": ")
 						print (p.item.human_identifier)
 						print_new_line
 					end
@@ -63,19 +60,19 @@ feature -- Execute
 						l_repositories as c
 					loop
 						l_packages := c.item.available_packages
-						print ("  ")
 						if l_packages /= Void and then not l_packages.is_empty then
 							print (m_repository (c.item.uri.string, c.item.version))
 							print_new_line
 							across
 								l_packages as p
 							loop
-								print ("  - ")
-								print (tk_package)
-								print (": ")
 								print (p.item.human_identifier)
 								if not p.item.has_archive_uri then
 									print (" !No archive available! ")
+								end
+
+								if a_iron.installation_api.is_installed (p.item) then
+									print (" [Installed] ")
 								end
 
 								print_new_line
@@ -84,7 +81,7 @@ feature -- Execute
 								across
 									p.item.associated_paths as cur
 								loop
-									print ("  %T")
+									print (" - ")
 									print (cur.item)
 									print_new_line
 								end

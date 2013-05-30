@@ -57,21 +57,29 @@ feature -- Execute
 			print (m_information_for (a_package.human_identifier, a_package.id, a_package.repository.url))
 			print_new_line
 			if a_iron.installation_api.is_installed (a_package) then
-				print (" ")
+				print ("  ")
 				print (tk_installation)
-				print ("=")
+				print (": ")
 				print (a_iron.layout.package_installation_path (a_package).name)
 				print_new_line
 			end
+			if attached a_package.description as l_description then
+				print_new_line
+				print ("  description: ")
+				print (l_description)
+				print_new_line
+			end
+
 			if attached a_package.associated_paths as l_paths and then not l_paths.is_empty then
-				print (" ")
-				print (tk_associated_paths)
-				print (":")
+				print_new_line
+				print ("  ")
+				print (tk_associated_uris)
+				print (": ")
 				print_new_line
 				across
 					l_paths as c
 				loop
-					print ("   - ");
+					print ("    - ");
 					print (a_package.repository.url)
 					print (c.item); print ("%N")
 				end
@@ -83,21 +91,22 @@ feature -- Execute
 					if c.key.starts_with ("_") then
 						-- ignored
 						if args.verbose then
-							print (" ")
+							print ("  ")
 							print (c.key)
-							print ("=")
+							print (": ")
 							print (c.item);
 							print ("%N")
 						end
 					else
-						print (" ")
+						print ("  ")
 						print (c.key)
-						print ("=")
+						print (": ")
 						print (c.item);
 						print ("%N")
 					end
 				end
 			end
+
 		end
 
 note

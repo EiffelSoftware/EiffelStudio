@@ -118,6 +118,10 @@ feature -- Execute
 					end
 				end
 			end
+			if not args.files.is_empty then
+				print ("[ERROR] Installing package from file is not yet implemented!")
+				print_new_line
+			end
 		end
 
 note

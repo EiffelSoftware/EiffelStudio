@@ -64,13 +64,13 @@ feature {NONE} -- Initialization
 				loop
 					io.error.put_string ("%T " + c.key.to_string_8 + " : " + c.item.description.to_string_8 + "%N")
 				end
+				io.error.put_string ("note: command {action} --help: gives specific help usage on action {action}.%N")
 			end
 		end
 
 	initialize_iron (a_iron: IRON)
 			-- Initialize `a_iron' if needed
 		do
-
 		end
 
 	task_arguments (args: ARRAY [IMMUTABLE_STRING_32]): ARRAY [IMMUTABLE_STRING_32]
@@ -112,13 +112,13 @@ feature {NONE} -- Initialization
 
 			Result.force ([agent (args: like task_arguments): IRON_UPDATE_TASK   do create Result.make (args) end, "Update package information.."], "update")
 			Result.force ([agent (args: like task_arguments): IRON_LIST_TASK    do create Result.make (args) end, "list packages.."], "list")
-			Result.force ([agent (args: like task_arguments): IRON_INSTALL_TASK do create Result.make (args) end, "install package"], "install")
-			Result.force ([agent (args: like task_arguments): IRON_INFO_TASK    do create Result.make (args) end, "information about a package"], "info")
 			Result.force ([agent (args: like task_arguments): IRON_SEARCH_TASK  do create Result.make (args) end, "search package"], "search")
+			Result.force ([agent (args: like task_arguments): IRON_INFO_TASK    do create Result.make (args) end, "information about a package"], "info")
+			Result.force ([agent (args: like task_arguments): IRON_INSTALL_TASK do create Result.make (args) end, "install package"], "install")
 			Result.force ([agent (args: like task_arguments): IRON_REMOVE_TASK  do create Result.make (args) end, "remove a package"], "remove")
-			Result.force ([agent (args: like task_arguments): IRON_REPOSITORY_TASK  do create Result.make (args) end, "manage repository"], "repository")
 
-			Result.force ([agent (args: like task_arguments): IRON_PACKAGE_TASK  do create Result.make (args) end, "manage remote package (auth required)"], "package")
+			Result.force ([agent (args: like task_arguments): IRON_REPOSITORY_TASK  do create Result.make (args) end, "manage repository list"], "repository")
+			Result.force ([agent (args: like task_arguments): IRON_SHARE_TASK  do create Result.make (args) end, "share and manage your package (auth required)"], "share")
 
 			debug ("iron")
 				Result.force ([agent (args: like task_arguments): IRON_TESTING_TASK    do create Result.make (args) end, "Testing.."], "testing")

@@ -70,14 +70,14 @@ feature -- Info task
 	tk_installation: STRING_32
 		do Result := {STRING_32} "installation"	end
 
-	tk_associated_paths: STRING_32
-		do Result := {STRING_32} "associated paths"	end
+	tk_associated_uris: STRING_32
+		do Result := {STRING_32} "associated URIs"	end
 
 	m_title_information_for (s: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("Information for %"$1%" ", [s]) end
 
 	m_information_for (a_title, a_id, a_repo_url: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("$1%N id=$2%N repository=$3", [a_title, a_id, a_repo_url]) end
+		do Result := string_with_args ("[ $1 ]%N%N  id: $2%N  repository: $3", [a_title, a_id, a_repo_url]) end
 
 feature -- Repository task
 

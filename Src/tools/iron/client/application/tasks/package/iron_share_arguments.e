@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {IRON_PACKAGE_ARGUMENTS}."
+	description: "Summary description for {IRON_SHARE_ARGUMENTS}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	IRON_PACKAGE_ARGUMENTS
+	IRON_SHARE_ARGUMENTS
 
 inherit
 	IRON_ARGUMENTS

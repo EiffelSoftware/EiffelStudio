@@ -40,18 +40,18 @@ feature -- Execute
 				print ("%" ...%N")
 				if c.item.starts_with ("http://") or c.item.starts_with ("https://") then
 					if attached a_iron.installation_api.local_path_associated_with_uri (c.item) as l_path then
-						print ("# Installed:%N  ")
+						print ("Installed:%N  ")
 						print (l_path.name)
 						print ("%N")
 					end
 					if attached a_iron.catalog_api.available_path_associated_with_uri (c.item) as l_path then
-						print ("# Available:%N  ")
+						print ("Available:%N  ")
 						print (l_path.name)
 						print ("%N")
 					end
 				else
 					if attached a_iron.installation_api.packages_associated_with_name (c.item) as lst then
-						print ("# Installed inside %"")
+						print ("Installed inside %"")
 						s := a_iron.layout.packages_path.name
 						print (s)
 						print ("%":%N")
@@ -66,7 +66,7 @@ feature -- Execute
 						end
 					end
 					if attached a_iron.catalog_api.packages_associated_with_name (c.item) as lst then
-						print ("# Available:%N")
+						print ("Available:%N")
 						across
 							lst as p
 						loop

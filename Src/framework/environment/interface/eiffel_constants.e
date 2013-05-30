@@ -25,6 +25,9 @@ feature -- Variable names
 	ise_iron_path_env: STRING = "ISE_IRON_PATH"
 			-- Location of the iron libraries installation
 
+	iron_path_env: STRING = "IRON_PATH"
+			-- Location of the iron libraries installation, if `ise_iron_path_env' is not defined.
+			
 	ise_precomp_env: STRING = "ISE_PRECOMP"
 			-- Precompile location.
 

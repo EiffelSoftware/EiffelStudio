@@ -55,7 +55,7 @@ feature -- Access
 			l_client_window: like internal_client_window
 		do
 			l_client_window := internal_client_window
-			check l_client_window_attached: l_client_window /= Void end
+			check l_client_window_attached: l_client_window /= Void then end
 			Result := l_client_window
 		end
 
@@ -147,7 +147,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

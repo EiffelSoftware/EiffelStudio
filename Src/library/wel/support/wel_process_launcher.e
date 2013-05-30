@@ -101,7 +101,7 @@ feature -- Basic Operations
 				spawn (a_command_line, a_working_directory)
 			end
 			l_output_pipe := output_pipe
-			check l_output_pipe /= Void end
+			check l_output_pipe /= Void then end
 			l_output_pipe.close_input
 			l_block_size := Block_size
 			from
@@ -116,7 +116,7 @@ feature -- Basic Operations
 				l_output_pipe.read_stream (l_block_size)
 			end
 			l_process_info := process_info
-			check l_process_info /= Void end
+			check l_process_info /= Void then end
 			last_launch_successful := {WEL_API}.wait_for_single_object (l_process_info.process_handle,
 				{WEL_API}.infinite) = {WEL_API}.wait_object_0
 			if last_launch_successful then
@@ -134,7 +134,7 @@ feature -- Basic Operations
 			l_output_pipe.close_output
 
 			l_input_pipe := input_pipe
-			check l_input_pipe /= Void end
+			check l_input_pipe /= Void then end
 			l_input_pipe.close_input
 			l_input_pipe.close_output
 		end
@@ -157,7 +157,7 @@ feature -- Basic Operations
 				finished
 			loop
 				l_process_info := process_info
-				check l_process_info /= Void end
+				check l_process_info /= Void then end
 				a_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
 				check
 					valid_external_call_2: a_boolean
@@ -186,7 +186,7 @@ feature -- Basic Operations
 		do
 			if last_launch_successful then
 				l_process_info := process_info
-				check l_process_info /= Void end
+				check l_process_info /= Void then end
 				l_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
 				if l_boolean then
 					if last_process_result = {WEL_API}.still_active then
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			create process_info.make
 			create l_ws_command_line.make (a_command_line)
 			l_process_info := process_info
-			check l_process_info /= Void end
+			check l_process_info /= Void then end
 			l_envs := environment_variables_as_wel_string
 			if l_envs /= Void then
 				l_envs_ptr := l_envs.item

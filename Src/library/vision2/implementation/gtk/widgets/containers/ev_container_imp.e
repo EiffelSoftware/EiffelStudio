@@ -74,15 +74,22 @@ feature -- Element change
 		do
 			if attached item as l_item then
 				w ?= l_item.implementation
-				check w /= Void end
-				on_removed_item (w)
-				gtk_container_remove (container_widget, w.c_object)
+				if w /= Void then
+					on_removed_item (w)
+					gtk_container_remove (container_widget, w.c_object)
+				else
+					check w_is_void: False end
+				end
+
 			end
 			if v /= Void then
 				w ?= v.implementation
-				check w /= Void end
-				gtk_insert_i_th (container_widget, w.c_object, 1)
-				on_new_item (w)
+				if w /= Void then
+					gtk_insert_i_th (container_widget, w.c_object, 1)
+					on_new_item (w)
+				else
+					check w_is_void: False end
+				end
 			end
 		end
 
@@ -277,7 +284,7 @@ feature -- Status setting
 					an_item_imp ?= eif_object_from_c (
 						{GTK}.gtk_widget_struct_parent (a_item_pointer)
 					)
-					check an_item_imp_not_void: an_item_imp /= Void end
+					check an_item_imp_not_void: an_item_imp /= Void then end
 					set_radio_group (an_item_imp.radio_group)
 				else
 					set_radio_group (NULL)
@@ -308,7 +315,7 @@ feature -- Status setting
 			if attached background_pixmap as l_background_pixmap then
 				pix_imp ?= l_background_pixmap.implementation
 			end
-			check pix_imp /= Void end
+			check pix_imp /= Void then end
 
 			a_style := {GTK}.gtk_style_copy ({GTK}.gtk_widget_struct_style (c_object))
 			pix_ptr := {GTK}.gdk_pixmap_ref (pix_imp.drawable)
@@ -497,14 +504,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_CONTAINER_IMP

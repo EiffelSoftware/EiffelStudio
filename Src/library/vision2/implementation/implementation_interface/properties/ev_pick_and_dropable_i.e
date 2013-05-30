@@ -305,7 +305,7 @@ feature {EV_ANY_I} -- Implementation
 			target := pointed_target
 			real_target ?= target
 			application ?= environment.implementation.application_i
-			check application /= Void end
+			check application /= Void then end
 			if application.pnd_motion_actions_internal /= Void then
 				application.pnd_motion_actions.call ([a_x, a_y, real_target])
 			end
@@ -402,7 +402,7 @@ feature {EV_ANY_I} -- Implementation
 			loop
 				window_imp ?= windows.item.implementation
 				check
-					window_implementation_not_void: window_imp /= Void
+					window_implementation_not_void: window_imp /= Void then
 				end
 				window_imp.update_for_pick_and_drop (starting)
 				windows.forth
@@ -460,14 +460,14 @@ invariant
 		attached pebble_function as l_pebble_function implies l_pebble_function.valid_operands ([1,1])
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

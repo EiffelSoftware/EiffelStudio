@@ -50,11 +50,13 @@ feature {NONE} -- Implementation
 			v_imp: detachable EV_WIDGET_IMP
 		do
 			v_imp ?= v.implementation
-			check v_imp /= Void end
-			gtk_insert_i_th (list_widget, v_imp.c_object, i - 1)
-			child_array.go_i_th (i)
-			child_array.put_left (v)
-			on_new_item (v_imp)
+			check v_imp /= Void then end
+			if v_imp /= Void then
+				gtk_insert_i_th (list_widget, v_imp.c_object, i - 1)
+				child_array.go_i_th (i)
+				child_array.put_left (v)
+				on_new_item (v_imp)
+			end
 		end
 
 	remove_i_th (i: INTEGER)
@@ -67,12 +69,14 @@ feature {NONE} -- Implementation
 				-- Store the index in case it is changed as a result of an event on the pass back to gtk
 			v_imp ?= i_th (i).implementation
 			check v_imp /= Void end
-			child_array.go_i_th (i)
-			child_array.remove
-			on_removed_item (v_imp)
-			gtk_container_remove (list_widget, v_imp.c_object)
-			index := a_index
-				-- The call to gtk_container_remove might indirectly fire an event which changes the index so we reset just to make sure
+			if v_imp /= Void then
+				child_array.go_i_th (i)
+				child_array.remove
+				on_removed_item (v_imp)
+				gtk_container_remove (list_widget, v_imp.c_object)
+				index := a_index
+					-- The call to gtk_container_remove might indirectly fire an event which changes the index so we reset just to make sure				
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -90,7 +94,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

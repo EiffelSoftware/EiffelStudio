@@ -127,7 +127,7 @@ feature -- Access
 		do
 			create Result
 			font_imp ?= Result.implementation
-			check font_imp /= Void end
+			check font_imp /= Void then end
 			create a_wel_font.make_indirect (log_font)
 			font_imp.set_by_wel_font (a_wel_font)
 
@@ -168,7 +168,7 @@ feature -- Status setting
 			l_log_font: WEL_LOG_FONT
 		do
 			font_imp ?= a_font.implementation
-			check font_imp /= Void end
+			check font_imp /= Void then end
 			if font_imp.internal_face_name /= Void then
 				set_face_name (font_imp.internal_face_name)
 			end
@@ -209,7 +209,7 @@ feature -- Status setting
 			color_imp: detachable EV_COLOR_IMP
 		do
 			color_imp ?= a_color.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			set_text_color (color_imp)
 		end
 
@@ -219,7 +219,7 @@ feature -- Status setting
 			color_imp: detachable EV_COLOR_IMP
 		do
 			color_imp ?= a_color.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			wel_set_background_color (color_imp)
 		end
 
@@ -376,14 +376,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

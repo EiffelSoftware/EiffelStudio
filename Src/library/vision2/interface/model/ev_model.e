@@ -514,7 +514,7 @@ feature -- Status settings
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			l_world.set_capture_figure (Current)
 		ensure
 			capture_set: has_capture
@@ -529,7 +529,7 @@ feature -- Status settings
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			l_world.remove_capture_figure
 		ensure
 			capture_released: not has_capture
@@ -1050,7 +1050,7 @@ invariant
 	is_transfomable_implies_rotatable_and_scalable: is_transformable implies (is_rotatable and is_scalable)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

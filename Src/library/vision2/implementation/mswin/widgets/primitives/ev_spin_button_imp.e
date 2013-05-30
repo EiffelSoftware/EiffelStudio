@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 		do
 			create text_comp
 			l_internal_text_field ?= text_comp.implementation
-			check l_internal_text_field /= Void end
+			check l_internal_text_field /= Void then end
 			internal_text_field := l_internal_text_field
 			wel_make (default_parent, "")
 
@@ -234,7 +234,7 @@ feature {EV_ANY_I} -- Access
 	value: INTEGER
 			-- Current value.
 		do
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			Result := internal_arrows_control.position
 		end
 
@@ -244,14 +244,14 @@ feature {EV_ANY_I} -- Access
 	minimum: INTEGER
 			-- Minimum value.
 		do
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			Result := internal_arrows_control.minimum
 		end
 
 	maximum: INTEGER
 			-- Maximum value.
 		do
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			Result := internal_arrows_control.maximum
 		end
 
@@ -308,7 +308,7 @@ feature -- Setting
 	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
 		do
 			Precursor {EV_GAUGE_IMP} (a_tooltip)
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			internal_arrows_control.set_tooltip (a_tooltip)
 		end
 
@@ -326,7 +326,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Make object sensitive to user input.
 		do
 			internal_text_field.enable_sensitive
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			internal_arrows_control.enable
 			Precursor {EV_GAUGE_IMP}
 		end
@@ -335,7 +335,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Make object desensitive to user input.
 		do
 			internal_text_field.disable_sensitive
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			internal_arrows_control.disable
 			Precursor {EV_GAUGE_IMP}
 		end
@@ -357,7 +357,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 	wel_set_value (i :INTEGER)
 			-- Assign `i`' to `value'.
 		do
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			internal_arrows_control.set_position (i)
 				-- We must now store the value
 			last_change_value := i
@@ -368,7 +368,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 			-- bounds of `Current'.
 		do
 				-- Adapt interval
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			internal_arrows_control.set_range (i, j)
 
 				-- Set value so that it is within bound [i..j].
@@ -386,10 +386,10 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 			local_font_windows: detachable EV_FONT_IMP
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
-			check private_font /= Void end
+			check private_font /= Void then end
 			local_font_windows ?= private_font.implementation
 			check
-				valid_font: local_font_windows /= Void
+				valid_font: local_font_windows /= Void then
 			end
 			internal_text_field.wel_set_font (local_font_windows.wel_font)
 				-- We don't need the WEL private font anymore since it is set by user.
@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 			txt: like text
 			val: INTEGER
 		do
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			txt := text
 			txt.prune_all (',')
 			if txt.is_integer then
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation
 
 	on_size (size_type, a_width, a_height: INTEGER)
 		do
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			internal_arrows_control.move_and_resize
 				(a_width - spin_width, 0, spin_width, a_height, True)
 			internal_text_field.set_move_and_size
@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 		(a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			wel_move_and_resize (a_x, a_y, a_width, a_height, repaint)
-			check internal_arrows_control /= Void end
+			check internal_arrows_control /= Void then end
 			internal_arrows_control.move_and_resize
 				(a_width - spin_width, 0, spin_width, a_height, repaint)
 			internal_text_field.ev_apply_new_size
@@ -816,7 +816,7 @@ invariant
 	internal_arrows_control_not_void:  is_initialized implies internal_arrows_control /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

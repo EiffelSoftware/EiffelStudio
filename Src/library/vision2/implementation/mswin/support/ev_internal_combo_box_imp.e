@@ -81,7 +81,7 @@ feature -- Access
 			l_result: detachable EV_COMBO_BOX_IMP
 		do
 			l_result ?= wel_parent
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			parent_not_void: parent /= Void
@@ -396,10 +396,10 @@ feature {NONE} -- Implementation
 
 		do
 			int ?= control
-			check int /= Void end
+			check int /= Void then end
 			w ?= int.parent
 			check
-				is_a_combo_box: w /= Void
+				is_a_combo_box: w /= Void then
 			end
 			if w.background_color_imp /= Void or
 				w.foreground_color_imp /= Void
@@ -408,8 +408,8 @@ feature {NONE} -- Implementation
 					-- to apply `background_color' to `control'.
 				background_color ?= w.background_color.implementation
 				foreground_color ?= w.foreground_color.implementation
-				check background_color /= Void end
-				check foreground_color /= Void end
+				check background_color /= Void then end
+				check foreground_color /= Void then end
 				paint_dc.set_text_color (foreground_color)
 				paint_dc.set_background_color (background_color)
 				brush := allocated_brushes.get (Void, background_color)
@@ -455,14 +455,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -69,7 +69,7 @@ feature -- Access
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			pixmap_imp.set_from_xpm_data (collate_pixmap_xpm)
 		end
 
@@ -80,7 +80,7 @@ feature -- Access
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			pixmap_imp.set_from_xpm_data (no_collate_pixmap_xpm)
 		end
 
@@ -91,7 +91,7 @@ feature -- Access
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			pixmap_imp.set_from_xpm_data (landscape_pixmap_xpm)
 		end
 
@@ -102,7 +102,7 @@ feature -- Access
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			pixmap_imp.set_from_xpm_data (portrait_pixmap_xpm)
 		end
 
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 				a_cs := a_stock_id
 				create Result
 				pixbuf_imp ?= Result.implementation
-				check pixbuf_imp /= Void end
+				check pixbuf_imp /= Void then end
 				pixbuf_imp.set_from_stock_id (a_cs.item)
 			else
 				create Result
@@ -291,14 +291,14 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

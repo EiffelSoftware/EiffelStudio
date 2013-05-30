@@ -54,7 +54,7 @@ feature -- Access
 			if parent_imp /= Void then
 				pickable_parent ?= parent_imp
 				check
-					parent_is_item_list: pickable_parent /= Void
+					parent_is_item_list: pickable_parent /= Void then
 				end
 				Result := pickable_parent.top_level_window_imp
 			end
@@ -160,7 +160,7 @@ feature -- Access
 			if parent_imp /= Void then
 				pickable_parent ?= parent_imp
 				check
-					parent_is_item_list: pickable_parent /= Void
+					parent_is_item_list: pickable_parent /= Void then
 				end
 				pickable_parent.set_pointer_style (c)
 			end
@@ -213,7 +213,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

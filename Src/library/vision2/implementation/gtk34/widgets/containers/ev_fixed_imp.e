@@ -44,15 +44,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			set_c_object ({GTK}.gtk_layout_new ({GTK}.null_pointer, {GTK}.null_pointer))
-			{GTK2}.gtk_layout_set_size (container_widget, internal_x_y_offset * 2, internal_x_y_offset * 2)
-
-
-				-- Set fixed origin
-			{GTK}.gtk_adjustment_set_value (horizontal_adjustment, internal_x_y_offset)
-			{GTK}.gtk_adjustment_set_value (vertical_adjustment, internal_x_y_offset)
-			{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
-			{GTK}.gtk_adjustment_value_changed (vertical_adjustment)
-
+			{GTK2}.gtk_layout_set_size (container_widget, 32768, 32768)
 			Precursor
 		end
 
@@ -76,10 +68,10 @@ feature -- Status setting
 			l_alloc: POINTER
 		do
 			w_imp ?= a_widget.implementation
-			check w_imp /= Void end
+			check w_imp /= Void then end
 			l_parent_box := {GTK}.gtk_widget_get_parent (w_imp.c_object)
 
-			{GTK2}.gtk_layout_move (container_widget, l_parent_box, a_x + internal_x_y_offset, a_y + internal_x_y_offset)
+			{GTK2}.gtk_layout_move (container_widget, l_parent_box, a_x, a_y)
 
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
@@ -90,11 +82,17 @@ feature -- Status setting
 			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
 			{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
 
-			if (a_y + a_height > height) then
-				{GTK2}.gtk_widget_set_minimum_size (container_widget, -1, a_y + a_height)
+			l_alloc.memory_free
+
+			if (a_x + a_width > minimum_width) then
+				set_minimum_width (a_x + a_width)
 			end
 
-			l_alloc.memory_free
+			if (a_y + a_height > minimum_height) then
+				set_minimum_height (a_y + a_height)
+			end
+
+			{GTK}.gtk_container_check_resize (l_parent_box)
 		end
 
 	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
@@ -111,7 +109,7 @@ feature -- Status setting
 			w_imp: detachable EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			check w_imp /= Void end
+			check w_imp /= Void then end
 			set_item_position_and_size (a_widget, x_position_of_child (w_imp), y_position_of_child (w_imp), a_width, a_height)
 		end
 
@@ -153,7 +151,7 @@ feature {EV_ANY_I} -- Implementation
 			l_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.g_value_init_int (l_gvalue)
 			{GTK2}.gtk_container_child_get_property (container_widget, l_item, l_x.item, l_gvalue)
-			Result := {GTK2}.g_value_get_int (l_gvalue) - internal_x_y_offset
+			Result := {GTK2}.g_value_get_int (l_gvalue)
 			l_gvalue.memory_free
 		end
 
@@ -168,7 +166,7 @@ feature {EV_ANY_I} -- Implementation
 			l_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.g_value_init_int (l_gvalue)
 			{GTK2}.gtk_container_child_get_property (container_widget, l_item, l_y.item, l_gvalue)
-			Result := {GTK2}.g_value_get_int (l_gvalue) - internal_x_y_offset
+			Result := {GTK2}.g_value_get_int (l_gvalue)
 			l_gvalue.memory_free
 		end
 
@@ -205,7 +203,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

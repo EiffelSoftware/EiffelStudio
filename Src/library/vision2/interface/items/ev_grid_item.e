@@ -61,7 +61,7 @@ feature -- Access
 			l_par: like parent
 		do
 			l_par := parent
-			check l_par_attached: l_par /= Void end
+			check l_par_attached: l_par /= Void then end
 			Result := l_par
 		end
 
@@ -364,7 +364,7 @@ invariant
 		attached parent as l_parent and row.parent_row /= Void implies width = (column.width - horizontal_indent).max (0)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

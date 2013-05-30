@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			end
 			if l_selected_item /= Void then
 				l_selected_item_imp ?= l_selected_item.implementation
-				check l_selected_item_imp /= Void end
+				check l_selected_item_imp /= Void then end
 				if l_selected_item_imp.select_actions_internal /= Void then
 					l_selected_item_imp.select_actions.call (Void)
 				end
@@ -371,7 +371,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

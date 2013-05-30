@@ -69,7 +69,7 @@ feature -- Status
 			l_list: like list
 		do
 			l_list := list
-			check l_list /= Void end
+			check l_list /= Void then end
 			Result := l_list.is_empty
 		end
 
@@ -79,7 +79,7 @@ feature -- Status
 			l_list: like list
 		do
 			l_list := list
-			check l_list /= Void end
+			check l_list /= Void then end
 			Result := l_list.count
 		end
 
@@ -143,7 +143,7 @@ feature {NONE} -- GUI building
 			extend (list)
 
 			build_text_field ("Entry: ")
-			check text_field /= Void end
+			check text_field /= Void then end
 
 			text_field.change_actions.extend (agent update_button_status)
 			text_field.return_actions.extend (agent add_item_in)
@@ -207,6 +207,8 @@ feature {NONE} -- Action
 			list_item: EV_LIST_ITEM
 			txt: STRING_32
 		do
+			check list /= Void then end
+			check text_field /= Void then end
 			txt := text_field.text
 			if not txt.is_empty and (is_entry_valid = Void or else is_entry_valid.item ([txt])) then
 				create list_item.make_with_text (txt)
@@ -232,6 +234,8 @@ feature {NONE} -- Action
 		local
 			list_item: detachable EV_LIST_ITEM
 		do
+			check list /= Void then end
+			check text_field /= Void then end
 			list_item := list.selected_item
 			if list_item /= Void  then
 				list.prune (list_item)
@@ -251,8 +255,9 @@ feature {NONE} -- Action
 			list_item: detachable EV_LIST_ITEM
 			txt: STRING_32
 		do
-			check text_field /= Void end
-			check apply_button /= Void end
+			check text_field /= Void then end
+			check apply_button /= Void then end
+			check list /= Void then end
 			txt := text_field.text
 			list_item := list.selected_item
 			if not txt.is_empty and then list_item /= Void then
@@ -275,11 +280,11 @@ feature {NONE} -- Action
 			l_text: STRING_32
 			l_item: detachable EV_LIST_ITEM
 		do
-			check text_field /= Void end
-			check list /= Void end
-			check add_button /= Void end
-			check apply_button /= Void end
-			check remove_button /= Void end
+			check text_field /= Void then end
+			check list /= Void then end
+			check add_button /= Void then end
+			check apply_button /= Void then end
+			check remove_button /= Void then end
 			l_text := text_field.text
 			l_item := list.selected_item
 
@@ -320,14 +325,14 @@ invariant
 	remove_button_not_void: remove_button /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

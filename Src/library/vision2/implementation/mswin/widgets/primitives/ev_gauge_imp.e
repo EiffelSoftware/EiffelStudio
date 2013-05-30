@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			-- Default initialization of `Current'.
 		do
 			create value_range.make (0, 100)
-			value_range.change_actions.extend (agent set_range)
 			initialize_gauge_control
 			Precursor {EV_PRIMITIVE_IMP}
+			value_range.change_actions.extend (agent set_range)
 		end
 
 	initialize_gauge_control
@@ -191,14 +191,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_GAUGE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_GAUGE_IMP

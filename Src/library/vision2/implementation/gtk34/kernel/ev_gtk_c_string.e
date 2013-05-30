@@ -39,9 +39,9 @@ feature {NONE} -- Initialization
 		local
 			l_ptr: MANAGED_POINTER
 		do
-			l_ptr := a_path.to_pointer (Void)
-			string_length := l_ptr.count - 1
-			item := {GTK}.g_malloc (l_ptr.count)
+			l_ptr := a_path.to_pointer
+ 			string_length := l_ptr.count - 1
+ 			item := {GTK}.g_malloc (l_ptr.count)
 			item.memory_copy (l_ptr.item, l_ptr.count)
 			is_shared := False
 		end
@@ -294,7 +294,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

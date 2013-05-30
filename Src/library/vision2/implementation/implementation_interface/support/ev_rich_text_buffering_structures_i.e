@@ -90,7 +90,7 @@ feature -- Status Setting
 			height_in_half_points: INTEGER
 		do
 			hashed_character_format := a_format.attached_interface.hash_value
-			check hashed_character_format /= Void end
+			check hashed_character_format /= Void then end
 			if not hashed_formats.has (hashed_character_format) then
 				hashed_formats.put (a_format.attached_interface, hashed_character_format)
 				formats.extend (a_format.attached_interface)
@@ -207,7 +207,7 @@ feature {EV_ANY_I} -- Status Setting
 			l_rich_text: like rich_text
 		do
 			l_rich_text := rich_text
-			check l_rich_text /= Void end
+			check l_rich_text /= Void then end
 			create paragraph_start_indexes.make (50)
 			create paragraph_formats.make (50)
 
@@ -254,7 +254,7 @@ feature {EV_ANY_I} -- Status Setting
 			l_current_format: like current_format
 		do
 			l_rich_text := rich_text
-			check l_rich_text /= Void end
+			check l_rich_text /= Void then end
 
 			last_load_successful := True
 			if rtf_text.item (1) = rtf_open_brace_character then
@@ -347,7 +347,7 @@ feature {EV_ANY_I} -- Status Setting
 				loop
 					key_index := all_paragraph_format_keys.index
 					paragraph_format := all_paragraph_formats.item (all_paragraph_format_keys.item)
-					check paragraph_format /= Void end
+					check paragraph_format /= Void then end
 					if key_index < keys_count then
 						l_rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), all_paragraph_indexes.i_th (key_index + 1), paragraph_format)
 					else
@@ -477,13 +477,13 @@ feature {NONE} -- Implementation
 			l_rich_text: like rich_text
 		do
 			l_current_format := current_format
-			check l_current_format /= Void end
+			check l_current_format /= Void then end
 
 			l_rich_text := rich_text
-			check l_rich_text /= Void end
+			check l_rich_text /= Void then end
 
-			check all_formats /= Void end
-			check all_colors /= Void end
+			check all_formats /= Void then end
+			check all_colors /= Void then end
 
 			if not all_formats.has (l_current_format.character_format_out) then
 					-- Only create a new character format if an equivalent one does not already
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 					character_format.set_background_color (l_color)
 				end
 
-				check all_fonts /= Void end
+				check all_fonts /= Void then end
 				if attached all_fonts.item (l_current_format.character_format) as l_font then
 					a_font := l_font.twin
 					if l_current_format.is_bold then
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 			l_current_format: like current_format
 		do
 			l_current_format := current_format
-			check l_current_format /= Void end
+			check l_current_format /= Void then end
 			tag_start_position := index
 			create tag.make_empty
 			create tag_value.make_empty
@@ -887,7 +887,7 @@ feature {NONE} -- Implementation
 			current_character: CHARACTER_32
 			a_color: EV_COLOR
 		do
-			check all_colors /= Void end
+			check all_colors /= Void then end
 			depth := 1
 			from
 				move_main_iterator (1)
@@ -1101,9 +1101,11 @@ feature {NONE} -- Implementation
 				format.append_integer (pixels_to_half_points (a_format.bottom_spacing * 10))
 			end
 			format.append_character (' ')
-			paragraph_formats.extend (format)
+			if paragraph_formats /= Void then
+				paragraph_formats.extend (format)
+			end
 		ensure
-			formats_count_increased: paragraph_formats.count = old paragraph_formats.count + 1
+			formats_count_increased: attached paragraph_formats and then paragraph_formats.count = old paragraph_formats.count + 1
 		end
 
 
@@ -1363,14 +1365,14 @@ invariant
 	rich_text_not_void: rich_text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

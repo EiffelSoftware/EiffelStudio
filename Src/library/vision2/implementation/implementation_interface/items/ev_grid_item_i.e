@@ -59,7 +59,7 @@ feature -- Access
 			l_column_i: like column_i
 		do
 			l_column_i := column_i
-			check l_column_i /= Void end
+			check l_column_i /= Void then end
 			Result := l_column_i.attached_interface
 		ensure
 			column_not_void: Result /= Void
@@ -81,7 +81,7 @@ feature -- Access
 			l_row_i: like row_i
 		do
 			l_row_i := row_i
-			check l_row_i /= Void end
+			check l_row_i /= Void then end
 			Result := l_row_i.attached_interface
 		ensure
 			row_not_void: Result /= Void
@@ -230,7 +230,7 @@ feature -- Status setting
 		do
 			l_selected := is_selected
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			l_row := row
 			l_column := column
 
@@ -277,7 +277,7 @@ feature -- Status setting
 		do
 			l_selected := is_selected
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			l_row := row
 			l_column := column
 
@@ -331,12 +331,12 @@ feature -- Status setting
 				-- which affects the size of the viewable area in which `Current'
 				-- is to be displayed.
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			l_parent_i.recompute_horizontal_scroll_bar
 			l_parent_i.recompute_vertical_scroll_bar
 
 			l_column_i := column_i
-			check l_column_i /= Void end
+			check l_column_i /= Void then end
 
 				-- We can simply call `ensure_visible' on the row first, as the item
 				-- always matches the row offsets. However for the column it is not so simple
@@ -488,7 +488,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 		do
 			if not is_selected then
 				l_parent_i := parent_i
-				check l_parent_i /= Void end
+				check l_parent_i /= Void then end
 				if l_parent_i.is_row_selection_enabled and then attached row_i as l_row_i then
 						-- We are in row selection mode so we manipulate the parent row directly
 					l_row_i.enable_select
@@ -646,7 +646,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			l_parent_i: like parent_i
 		do
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 				-- Retrieve properties from interface
 			focused := l_parent_i.drawables_have_focus
 
@@ -697,7 +697,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 						end
 					end
 				end
-				check l_result /= Void end
+				check l_result /= Void then end
 			end
 			Result := l_result
 		ensure
@@ -730,7 +730,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 						end
 					end
 				end
-				check l_result /= Void end
+				check l_result /= Void then end
 			end
 			Result := l_result
 		ensure
@@ -747,7 +747,7 @@ feature {NONE} -- Implementation
 			l_parent: like parent
 		do
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 			Result := l_parent
 		end
 
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 			l_parent_i: like parent_i
 		do
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			Result := l_parent_i
 		end
 
@@ -771,7 +771,7 @@ feature {NONE} -- Implementation
 			l_column_i: like column_i
 		do
 			l_column_i := column_i
-			check l_column_i /= Void end
+			check l_column_i /= Void then end
 			Result := l_column_i
 		end
 
@@ -787,7 +787,7 @@ invariant
 	hash_code_valid: is_initialized implies ((not is_parented and hash_code = 0) or (is_parented and then hash_code > 0))
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

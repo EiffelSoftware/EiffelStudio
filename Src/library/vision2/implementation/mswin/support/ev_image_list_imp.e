@@ -205,7 +205,7 @@ feature {NONE} -- Implementation (Private features)
 			pixmap_imp		: detachable EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			info := image_list_info
 
 				-- Try to get the icon
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation (Private features)
 					-- `icon' already in image list so set
 					-- `image_index' to this.
 				loc_tuple := info.item (item_value)
-				check loc_tuple /= Void end
+				check loc_tuple /= Void then end
 				last_position := loc_tuple.position
 			end
 
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation (Private features)
 			pixmap_imp		: detachable EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			info := image_list_info
 
 				-- Try to get the icon
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation (Private features)
 				if item_value /= 0 and then info.has (item_value) then
 						-- `icon' already in image list so set `image_index' to this.
 					loc_tuple := info.item (item_value)
-					check loc_tuple /= Void end
+					check loc_tuple /= Void then end
 					last_position := loc_tuple.position
 				end
 			end
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation (Private features)
 			pixmap_imp		: detachable EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			info := image_list_info
 
 				-- Try to get the icon
@@ -332,7 +332,9 @@ feature {NONE} -- Implementation (Private features)
 			l_converted_bitmap_dc: WEL_MEMORY_DC
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			if pixmap_imp = Void then
+				check pixmap_imp /= Void then end
+			end
 			if (pixmap_imp.height /= bitmaps_height) or
 			   (pixmap_imp.width /= bitmaps_width)
 			then
@@ -343,13 +345,13 @@ feature {NONE} -- Implementation (Private features)
 					bitmaps_height
 					)
 				pixmap_imp ?= resized_pixmap.implementation
-				check pixmap_imp /= Void end
+				check pixmap_imp /= Void then end
 			end
 
 			bitmap := pixmap_imp.get_bitmap
 			if pixmap_imp.has_mask then
 				mask_bitmap := pixmap_imp.get_mask_bitmap
-				check mask_bitmap /= Void end
+				check mask_bitmap /= Void then end
 				create l_mask_bitmap_dc.make
 				l_mask_bitmap_dc.select_bitmap (mask_bitmap)
 				create l_converted_bitmap_dc.make_by_dc (l_mask_bitmap_dc)
@@ -402,7 +404,7 @@ feature {NONE} -- Implementation (Attributes, Constants, ...)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

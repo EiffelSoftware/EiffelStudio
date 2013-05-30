@@ -44,13 +44,13 @@ feature {NONE} -- Implementation
 			v_imp ?= v.implementation
 
 			check
-				v_imp_not_void: v_imp /= Void
+				v_imp_not_void: v_imp /= Void then
 			end
 			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
 			wel_win ?= Current
 			check
-				wel_win_not_void: wel_win /= Void
+				wel_win_not_void: wel_win /= Void then
 			end
 			v_imp.wel_set_parent (wel_win)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
@@ -65,10 +65,10 @@ feature {NONE} -- Implementation
 			v_imp: detachable EV_WIDGET_IMP
 		do
 			v := i_th (i)
-			check v /= Void end
+			check v /= Void then end
 			v_imp ?= v.implementation
 			check
-				v_imp_not_void: v_imp /= Void
+				v_imp_not_void: v_imp /= Void then
 			end
 			remove_item_actions.call ([v_imp.attached_interface])
 			ev_children.go_i_th (i)
@@ -100,7 +100,7 @@ feature {EV_ANY_I} -- WEL Implementation
 					Result or ev_children.after
 				loop
 					l_item := ev_children.item
-					check l_item /= Void end
+					check l_item /= Void then end
 					Result := l_item.is_control_in_window (hwnd_control)
 					ev_children.forth
 				end
@@ -144,9 +144,9 @@ feature {EV_ANY_I} -- WEL Implementation
 					off or l_result /= Void
 				loop
 					w := item
-					check w /= Void end
+					check w /= Void then end
 					w_imp ?= w.implementation
-					check w_imp /= Void end
+					check w_imp /= Void then end
 					if forwards then
 						l_result := w_imp.next_tabstop_widget (start_widget, 1, forwards)
 					else
@@ -170,7 +170,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
 			go_to (l_cursor)
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -179,7 +179,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

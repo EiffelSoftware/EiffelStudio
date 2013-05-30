@@ -79,7 +79,7 @@ feature -- Element change
 				remove_item_actions.call ([l_item])
 				v_imp ?= item_imp
 				check
-					v_imp_not_void: v_imp /= Void
+					v_imp_not_void: v_imp /= Void then
 				end
 				item := Void
 				v_imp.set_parent_imp (Void)
@@ -98,15 +98,17 @@ feature -- Element change
 		local
 			v_imp: detachable EV_WIDGET_IMP
 		do
-			v.implementation.on_parented
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
+			if v /= Void then
+				v.implementation.on_parented
+				v_imp ?= v.implementation
+				check
+					v_imp_not_void: v_imp /= Void then
+				end
+				v_imp.set_parent_imp (Current)
+				item := v
+				notify_change (nc_minsize, Current, False)
+				new_item_actions.call ([v])
 			end
-			v_imp.set_parent_imp (Current)
-			item := v
-			notify_change (nc_minsize, Current, False)
-			new_item_actions.call ([v])
 		end
 
 	put, replace (v: like item)
@@ -174,7 +176,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			if l_result = Void and search_pos = 1 and item /= Void and is_sensitive then
 					-- Otherwise search the child.
 				w := item_imp
-				check w /= Void end
+				check w /= Void then end
 				if forwards then
 					l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 				else
@@ -189,7 +191,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			if l_result = Void then
 				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -237,14 +239,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

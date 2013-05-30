@@ -129,7 +129,7 @@ feature -- Status Report
 			format_imp: detachable EV_PARAGRAPH_FORMAT_IMP
 		do
 			format_imp ?= format.implementation
-			check format_imp /= Void end
+			check format_imp /= Void then end
 			modify_paragraph_internal (start_line, end_line, format_imp, format_imp.dummy_paragraph_format_range_information)
 		end
 
@@ -363,7 +363,7 @@ feature -- Status Report
 			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			a_format_imp ?= format.implementation
-			check a_format_imp /= Void end
+			check a_format_imp /= Void then end
 			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, applicable_attributes)
 		end
 
@@ -374,7 +374,7 @@ feature -- Status Report
 			format_imp: detachable EV_PARAGRAPH_FORMAT_IMP
 		do
 			format_imp ?= format.implementation
-			check format_imp /= Void end
+			check format_imp /= Void then end
 			modify_paragraph_internal (start_position, end_position, format_imp, applicable_attributes)
 		end
 
@@ -484,14 +484,13 @@ feature -- Status report
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text_attributes, a_text_appearance: POINTER
 			a_font_description: POINTER
-			l_color: POINTER
 			font_size, font_weight, font_style: INTEGER
 			a_family: EV_GTK_C_STRING
 			a_change: BOOLEAN
 			l_result: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			l_result ?= (create {EV_CHARACTER_FORMAT}).implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			create a_text_iter.make
 			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, character_index - 2)
 			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
@@ -523,23 +522,23 @@ feature -- Status report
 
 			l_result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
 
-			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.foreground_rgba_string.item, $l_color)
-			l_result.set_fcolor (
-				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
-				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
-				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
-			)
+--			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.foreground_rgba_string.item, $l_color)
+--			l_result.set_fcolor (
+--				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
+--				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
+--				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
+--			)
 
-			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.background_rgba_string.item, $l_color)
-			l_result.set_bcolor (
-				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
-				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
-				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
-			)
+--			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.background_rgba_string.item, $l_color)
+--			l_result.set_bcolor (
+--				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
+--				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
+--				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
+--			)
 
 			l_result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
 
-			gtk_text_attributes_free (a_text_attributes)
+--			gtk_text_attributes_free (a_text_attributes)
 			Result := l_result
 		end
 
@@ -563,7 +562,7 @@ feature -- Status setting
 		do
 			if not is_destroyed then
 				a_format_imp ?= format.implementation
-				check a_format_imp /= Void end
+				check a_format_imp /= Void then end
 				modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 			end
 		end
@@ -582,7 +581,7 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, {GTK2}.gtk_text_buffer_new (default_pointer))
 			end
 			a_format_imp ?= format.implementation
-			check a_format_imp /= Void end
+			check a_format_imp /= Void then end
 			modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
 
@@ -611,7 +610,7 @@ feature -- Status setting
 					buffer_length := {GTK2}.gtk_text_buffer_get_char_count (append_buffer) + 1
 					append_text_internal (append_buffer, a_text)
 					a_format_imp ?= format.implementation
-					check a_format_imp /= Void end
+					check a_format_imp /= Void then end
 					{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_start_iter.item, buffer_length - 1)
 					{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_end_iter.item, {GTK2}.gtk_text_buffer_get_char_count (append_buffer))
 					a_format_imp.apply_character_format_to_text_buffer (a_format_imp.dummy_character_format_range_information, append_buffer, temp_start_iter.item, temp_end_iter.item)
@@ -962,7 +961,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

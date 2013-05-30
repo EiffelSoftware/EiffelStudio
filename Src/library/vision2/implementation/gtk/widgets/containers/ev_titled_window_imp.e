@@ -221,7 +221,7 @@ feature -- Element change
 		do
 			pixmap_imp ?= an_icon.twin.implementation
 			check
-				icon_implementation_exists: pixmap_imp /= Void
+				icon_implementation_exists: pixmap_imp /= Void then
 			end
 			icon_pixmap_internal := pixmap_imp.interface
 			{GTK}.gdk_window_set_icon ({GTK}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)

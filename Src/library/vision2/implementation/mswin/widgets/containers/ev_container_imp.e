@@ -55,12 +55,12 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'. Precusor and create new_item_actions.
 		do
 			create radio_group.make
+			create remove_item_actions
+			Precursor {EV_WIDGET_IMP}
 			new_item_actions.extend (agent disable_widget_sensitivity)
 			new_item_actions.extend (agent add_radio_button)
-			create remove_item_actions
 			remove_item_actions.extend (agent enable_widget_sensitivity)
 			remove_item_actions.extend (agent remove_radio_button)
-			Precursor {EV_WIDGET_IMP}
 		end
 
 feature -- Access
@@ -248,7 +248,7 @@ feature {NONE} -- WEL Implementation
 				if application_imp.themes_active and then attached {EV_LABEL_IMP} w as label then
 					disable_default_processing
 					brush := background_brush
-					check brush /= Void end
+					check brush /= Void then end
 					theme_drawer.draw_widget_background (label, paint_dc, create {WEL_RECT}.make (0, 0, w.width, w.height), brush)
 						-- Set background of `paint_dc' to transparant so that Windows does not draw
 						-- over the background we have just drawn.
@@ -435,9 +435,9 @@ feature {NONE} -- WEL Implementation
 				create tvinfotip.make_by_pointer (info.item)
 
 				tree ?= info.window_from
-				check tree /= Void end
+				check tree /= Void then end
 				tooltip := tree.get_tooltip
-				check tooltip /= Void end
+				check tooltip /= Void then end
 					-- Bring the tooltip to the front.
 					-- For some reason without this, it is shown behind
 					-- the window.
@@ -446,7 +446,7 @@ feature {NONE} -- WEL Implementation
 				tree.all_ev_children.search (tvinfotip.hitem)
 				if tree.all_ev_children.found then
 					temp_node := tree.all_ev_children.found_item
-					check temp_node /= Void end
+					check temp_node /= Void then end
 					if temp_node.tooltip /= Void and
 						not temp_node.tooltip.is_empty
 					then
@@ -464,19 +464,19 @@ feature {NONE} -- WEL Implementation
 				list ?= info.window_from
 				if list = Void then
 					multi_column_list ?= info.window_from
-					check multi_column_list /= Void end
+					check multi_column_list /= Void then end
 					tooltip := multi_column_list.get_tooltip
 					multi_column_list_row := multi_column_list.i_th (lvninfotip.iitem + 1)
-					check multi_column_list_row /= Void end
+					check multi_column_list_row /= Void then end
 					multi_column_list_row_imp := multi_column_list_row.implementation
 					create string.make (multi_column_list_row_imp.tooltip)
 				else
 					tooltip := list.get_tooltip
 					list_item := list.i_th (lvninfotip.iitem + 1)
-					check list_item /= Void end
+					check list_item /= Void then end
 					create string.make (list_item.implementation.tooltip)
 				end
-				check tooltip /= Void end
+				check tooltip /= Void then end
 				tooltip.set_z_order (Hwnd_top)
 
 					-- Copy tooltip to allocated memory location.
@@ -490,7 +490,7 @@ feature {NONE} -- WEL Implementation
 				set_message_return_value (to_lresult (1))
 			elseif info.code = ({WEL_RICH_EDIT_MESSAGE_CONSTANTS}.en_selchange) then
 				rich_text ?= info.window_from
-				check rich_text /= Void end
+				check rich_text /= Void then end
 				create selchange.make_by_nmhdr (info)
 				rich_text.on_en_selchange (selchange.selection_type, selchange.character_range)
 			elseif info.code = {WEL_NM_CONSTANTS}.nm_click then
@@ -549,13 +549,13 @@ feature {NONE} -- Implementation, focus event
 			loop
 				widget_imp ?= l.item.implementation
 				check
-					widget_imp_non_void: widget_imp /= Void
+					widget_imp_non_void: widget_imp /= Void then
 				end
 				widget_imp.redraw_current_push_button (focused_button)
 				l.forth
 			end
 			if cs /= Void then
-				check cur /= Void end
+				check cur /= Void then end
 				cs.go_to (cur)
 			end
 		end
@@ -649,7 +649,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			c_imp: detachable EV_CONTAINER_IMP
 		do
 			c_imp ?= other.implementation
-			check c_imp /= Void end
+			check c_imp /= Void then end
 			Result := c_imp.radio_group = radio_group
 		end
 
@@ -719,7 +719,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		do
 			w_imp ?= w.implementation
 			check
-				widget_imp_not_void: w_imp /= Void
+				widget_imp_not_void: w_imp /= Void then
 			end
 			l_interface := interface
 			if attached l_interface and then not l_interface.implementation.is_sensitive then
@@ -738,7 +738,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		do
 			w_imp ?= w.implementation
 			check
-				widget_imp_not_void: w_imp /= Void
+				widget_imp_not_void: w_imp /= Void then
 			end
 			l_interface := interface
 			if attached l_interface and then not l_interface.implementation.is_sensitive then
@@ -755,7 +755,7 @@ feature -- Status setting
 			peer: detachable EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation
-			check peer /= Void end
+			check peer /= Void then end
 			l := peer.radio_group
 			if l /= radio_group then
 				from
@@ -778,7 +778,7 @@ feature -- Status setting
 			original_selected_button: detachable EV_RADIO_BUTTON_IMP
 		do
 			peer ?= a_container.implementation
-			check peer /= Void end
+			check peer /= Void then end
 			l := radio_group
 			from
 				l.start
@@ -786,7 +786,7 @@ feature -- Status setting
 				l.off
 			loop
 				r ?= l.item
-				check r /= Void end
+				check r /= Void then end
 				if r.is_selected then
 						-- Store originally selected button,
 						-- for selection of necessary button at
@@ -853,14 +853,14 @@ invariant
 	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

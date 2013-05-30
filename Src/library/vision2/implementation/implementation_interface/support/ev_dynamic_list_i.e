@@ -234,7 +234,7 @@ feature -- Cursor movement
 		do
 			dlc ?= p
 			check
-				dlc_not_void: dlc /= Void
+				dlc_not_void: dlc /= Void then
 			end
 			if dlc.after then
 				index := count + 1
@@ -500,7 +500,7 @@ invariant
 		index <= count + 1)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

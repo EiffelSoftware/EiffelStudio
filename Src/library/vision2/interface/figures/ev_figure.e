@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			p: EV_RELATIVE_POINT
 			l_object_id: like object_id
 		do
+			create_interface_objects
 			assign_draw_id
 			is_show_requested := True
 			internal_is_sensitive := True
@@ -325,7 +326,7 @@ feature -- Status setting
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			l_world.set_capture_figure (Current)
 		ensure
 			capture_set: has_capture
@@ -339,7 +340,7 @@ feature -- Status setting
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			l_world.remove_capture_figure
 		ensure
 			capture_released: not has_capture
@@ -652,14 +653,14 @@ invariant
 	points_items_not_void: all_points_exist (points)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -73,7 +73,7 @@ feature -- Access
 			l_scroller: like scroller
 		do
 			l_scroller := scroller
-			check l_scroller /= Void end
+			check l_scroller /= Void then end
 			Result := l_scroller.horizontal_line
 		end
 
@@ -84,7 +84,7 @@ feature -- Access
 			l_scroller: like scroller
 		do
 			l_scroller := scroller
-			check l_scroller /= Void end
+			check l_scroller /= Void then end
 			Result := l_scroller.vertical_line
 		end
 
@@ -96,7 +96,7 @@ feature -- Element change
 			l_scroller: like scroller
 		do
 			l_scroller := scroller
-			check l_scroller /= Void end
+			check l_scroller /= Void then end
 			l_scroller.set_horizontal_line (a_step)
 		end
 
@@ -106,7 +106,7 @@ feature -- Element change
 			l_scroller: like scroller
 		do
 			l_scroller := scroller
-			check l_scroller /= Void end
+			check l_scroller /= Void then end
 			l_scroller.set_vertical_line (a_step)
 		end
 
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 				is_in_size_call := True
 
 				l_scroller := scroller
-				check l_scroller /= Void end
+				check l_scroller /= Void then end
 
 					-- Local variables for fast access later in computation
 				imp_w := imp.width
@@ -413,7 +413,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

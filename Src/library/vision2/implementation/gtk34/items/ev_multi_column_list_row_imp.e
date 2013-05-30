@@ -361,7 +361,7 @@ feature {EV_ANY_I} -- Implementation
 			-- the same rows in the same order than in the gtk
 			-- part.
 			l_parent_imp := parent_imp
-			check l_parent_imp /= Void end
+			check l_parent_imp /= Void then end
 			Result := l_parent_imp.ev_children.index_of (Current, 1)
 		end
 
@@ -370,7 +370,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

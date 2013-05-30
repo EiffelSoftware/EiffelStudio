@@ -176,9 +176,9 @@ feature -- Basic operations
 						end
 					else
 						l_visible_indexes_to_row_indexes := g.visible_indexes_to_row_indexes
-						check l_visible_indexes_to_row_indexes /= Void end
+						check l_visible_indexes_to_row_indexes /= Void then end
 						l_row_offsets := g.row_offsets
-						check l_row_offsets /= Void end
+						check l_row_offsets /= Void then end
 							-- We now perform a binary search on `row_offsets' to find the highest row index with a vertical offset
 							-- that is less than `invalid_y_start'.
 						from
@@ -235,7 +235,7 @@ feature -- Basic operations
 							-- We have now found the first item that intersects the span, so we can iterate the visible indexes, constructing `result'
 							-- until we have passed the span length.
 						l_row_indexes_to_visible_indexes := g.row_indexes_to_visible_indexes
-						check l_row_indexes_to_visible_indexes /= Void end
+						check l_row_indexes_to_visible_indexes /= Void then end
 						l_first_visible := l_row_indexes_to_visible_indexes.i_th (l_found_index) + 1
 						l_found_index := l_visible_indexes_to_row_indexes.i_th (l_first_visible)
 						Result.extend (l_found_index)
@@ -745,14 +745,15 @@ feature -- Basic operations
 								if not g.uses_row_offsets then
 									current_item_y_position := (row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
 									current_row_height := row_height
-								else
-									check row_offsets /= Void end
+								elseif row_offsets /= Void then
 									current_item_y_position := (row_offsets @ (current_row_index)) - (internal_client_y - vertical_buffer_offset)
 									if g.is_row_height_fixed then
 										current_row_height := row_height
 									else
 										current_row_height := current_row.height
 									end
+								else
+									check row_offsets /= Void end
 								end
 
 								if is_tree_enabled then
@@ -818,7 +819,9 @@ feature -- Basic operations
 									end
 									current_column_index := visible_column_indexes.item
 									current_column := g.columns @ current_column_index
-									check current_column /= Void end
+									if current_column = Void then
+										check current_column /= Void then end
+									end
 									current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
 
 										-- If the current column has a width of 0, then there is no need to
@@ -1058,7 +1061,7 @@ feature -- Basic operations
 																-- We iterate backwards from the current position and for each subsequent parent node, determine
 																-- if a line must be drawn.
 															from
-																check parent_row_i /= Void end
+																check parent_row_i /= Void then end
 																loop_current_row := parent_row_i
 																loop_parent_row := parent_row_i.parent_row_i
 															until
@@ -1100,7 +1103,7 @@ feature -- Basic operations
 											elseif drawing_subrow and then current_column_index < node_index then
 													-- We may have to draw grandparent connection nodes.
 												from
-													check parent_row_i /= Void end
+													check parent_row_i /= Void then end
 													loop_parent_row := parent_row_i.parent_row_i
 													Item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
 												until
@@ -1174,7 +1177,7 @@ feature -- Basic operations
 														-- If the grid column being drawn matches that in which the
 														-- node of `parent_row_i' is contained, then vertical lines must be drawn
 														-- to connect the lines.
-													check parent_row_i /= Void end
+													check parent_row_i /= Void then end
 													if current_row = parent_row_i.subrows [parent_row_i.subrow_count] then
 															-- We are drawing the last subrow of `parent_row_i' so we only draw the vertical line to the center of the line.
 														item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
@@ -1270,7 +1273,7 @@ feature -- Basic operations
 							v_y := (row_height * (row_count))
 							rectangle_height := internal_client_height - (v_y - internal_client_y)
 						else
-							check row_offsets /= Void end
+							check row_offsets /= Void then end
 							v_y := row_offsets @ (row_count + 1)
 							rectangle_height := internal_client_height - (v_y - internal_client_y)
 						end
@@ -1447,7 +1450,7 @@ invariant
 	temp_rectangle_not_void: temp_rectangle /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

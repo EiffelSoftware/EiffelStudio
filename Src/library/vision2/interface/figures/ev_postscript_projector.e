@@ -145,12 +145,12 @@ feature -- Basic operations
 				-- Full projection.
 				output_to_postscript
 				l_filename := filename
-				check l_filename /= Void end
+				check l_filename /= Void then end
 				create l_file.make_with_path (l_filename)
 				l_file.open_write
 				file := l_file
 				l_postscript_result := postscript_result
-				check l_postscript_result /= Void end
+				check l_postscript_result /= Void then end
 				l_file.put_string (l_postscript_result)
 				l_file.close
 				file := Void
@@ -160,7 +160,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

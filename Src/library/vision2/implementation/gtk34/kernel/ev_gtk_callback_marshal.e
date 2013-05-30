@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 
 			elseif retry_count = 1 then
 				app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
-				check app_imp /= Void end
+				check app_imp /= Void then end
 				app_imp.on_exception_action (app_imp.new_exception)
 			end
 		rescue
@@ -337,7 +337,7 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

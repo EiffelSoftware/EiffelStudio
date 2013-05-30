@@ -62,9 +62,9 @@ feature -- Access
 		do
 			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			{GTK2}.gdk_region_intersect (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
@@ -75,9 +75,9 @@ feature -- Access
 		do
 			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			{GTK2}.gdk_region_union (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
@@ -88,9 +88,9 @@ feature -- Access
 		do
 			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			{GTK2}.gdk_region_subtract (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
@@ -101,9 +101,9 @@ feature -- Access
 		do
 			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			{GTK2}.gdk_region_xor (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
@@ -116,7 +116,7 @@ feature -- Duplication
 		do
 			dispose
 			l_region_imp ?= other.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			gdk_region := {GTK2}.gdk_region_copy (l_region_imp.gdk_region)
 		end
 
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 		do
 			if other /= Void then
 				l_region_imp ?= other.implementation
-				check l_region_imp /= Void end
+				check l_region_imp /= Void then end
 				Result := {GTK}.gdk_region_equal (gdk_region, l_region_imp.gdk_region)
 			end
 		end
@@ -157,14 +157,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -31,12 +31,11 @@ feature {NONE} -- Initialization
 			make_with_drawable (a_drawable)
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
-			register_basic_figures
 			widget := a_widget
+			project_agent := agent project
+			register_basic_figures
 			area_x := 0
 			area_y := 0
-
-			project_agent := agent project
 
 			widget.pointer_motion_actions.extend (agent mouse_move)
 			widget.pointer_button_press_actions.extend (agent button_press)
@@ -63,7 +62,7 @@ feature {NONE} -- Initialization
 			area := a_drawable
 		end
 
-	project_agent: PROCEDURE [like Current, TUPLE]
+	project_agent: detachable PROCEDURE [like Current, TUPLE] note option: stable attribute end
 		-- Agent used for projection.
 
 feature -- Access
@@ -101,7 +100,7 @@ feature -- Element change
 		do
 			if buffer_used then
 				l_area := area
-				check l_area /= Void end
+				check l_area /= Void then end
 				area_x := a_x
 				area_y := a_y
 				create u.make (0, 0, l_area.width, l_area.height)
@@ -151,7 +150,7 @@ feature -- Basic operations
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			drawable.set_background_color (l_world.background_color)
 			drawable.clear_rectangle (u.left, u.top, u.width, u.height)
 
@@ -288,7 +287,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void end
+				check event_fig /= Void then end
 				action := event_fig.internal_pointer_button_press_actions
 				if action /= Void and then event_fig.is_sensitive then
 					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
@@ -326,7 +325,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void end
+				check event_fig /= Void then end
 				action := event_fig.internal_pointer_double_press_actions
 				if action /= Void and then event_fig.is_sensitive then
 					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
@@ -365,7 +364,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void end
+				check event_fig /= Void then end
 				action := event_fig.internal_pointer_button_release_actions
 				if action /= Void and then event_fig.is_sensitive then
 					action.call ([w_x, w_y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
@@ -505,7 +504,7 @@ feature {NONE} -- Event implementation
 				until
 					event_fig = Void
 				loop
-					check event_fig /= Void end
+					check event_fig /= Void then end
 					action := event_fig.internal_pointer_motion_actions
 					if action /= Void and then event_fig.is_sensitive then
 						action.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
@@ -520,7 +519,7 @@ feature {NONE} -- Event implementation
 					end
 				end
 				if p or else not world.valid then
-					if attached {EV_APPLICATION} ev_application as l_app then
+					if attached {EV_APPLICATION} ev_application as l_app and then project_agent /= Void then
 						l_app.do_once_on_idle (project_agent)
 					end
 				end
@@ -672,7 +671,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

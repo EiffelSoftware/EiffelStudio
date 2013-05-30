@@ -105,11 +105,12 @@ feature {NONE} -- WEL Implementation
 						-- `Current' in which it is parented. Therefore we must clear the background
 						-- of `Current' that is not occupied by `tool_bar'.
 				bk_brush := toolbar.background_brush
-				check bk_brush /= Void end
 				invalid_rect.set_top (invalid_rect.top + current_height)
 				theme_drawer := toolbar.application_imp.theme_drawer
-				theme_drawer.draw_widget_background (toolbar, paint_dc, invalid_rect, bk_brush)
-				bk_brush.delete
+				if bk_brush /= Void then
+					theme_drawer.draw_widget_background (toolbar, paint_dc, invalid_rect, bk_brush)
+					bk_brush.delete
+				end
 			end
 				--| Disable the default windows processing and return correct
 				--| value to Windows, i.e. nonzero value.
@@ -131,14 +132,14 @@ feature {NONE} -- WEL Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_INTERNAL_TOOL_BAR_IMP

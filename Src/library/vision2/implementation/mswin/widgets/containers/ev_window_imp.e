@@ -192,8 +192,7 @@ feature -- Initialization
 			ub_imp ?= upper_bar.implementation
 			lb_imp ?= lower_bar.implementation
 			check
-				ub_imp_not_void: ub_imp /= Void
-				lb_imp_not_void: lb_imp /= Void
+				ub_imp /= Void and lb_imp /= Void then
 			end
 			ub_imp.on_parented
 			lb_imp.on_parented
@@ -425,11 +424,11 @@ feature -- Element change
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= a_menu_bar.implementation
-			check mb_imp /= Void end
+			check mb_imp /= Void then end
 			set_menu (mb_imp)
 			mb ?= a_menu_bar.implementation
 			check
-				implementation_not_void: mb /= Void
+				implementation_not_void: mb /= Void then
 			end
 			mb.set_parent_imp (Current)
 			compute_minimum_height (False)
@@ -443,7 +442,7 @@ feature -- Element change
 			if attached menu_bar as l_menu_bar then
 				mb ?= l_menu_bar.implementation
 				check
-					implementation_not_void: mb /= Void
+					implementation_not_void: mb /= Void then
 				end
 				mb.set_parent_imp (Void)
 				menu_bar := Void
@@ -469,7 +468,7 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
-				check acc_imp /= Void end
+				check acc_imp /= Void then end
 				accel_list.put (an_accel, acc_imp.hash_code)
 			end
 		end
@@ -482,7 +481,7 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
-				check acc_imp /= Void end
+				check acc_imp /= Void then end
 				accel_list.remove (acc_imp.hash_code)
 			end
 		end
@@ -499,7 +498,7 @@ feature {NONE} -- Implementation
 
 			if attached menu_bar as l_menu_bar then
 				mb_imp ?= l_menu_bar.implementation
-				check mb_imp /= Void end
+				check mb_imp /= Void then end
 				mb_imp.rebuild_control
 			end
 		end
@@ -530,14 +529,14 @@ feature {NONE} -- Implementation
 			if not upper_bar.is_empty then
 				bar_imp ?= upper_bar.implementation
 				check
-					bar_imp_not_void: bar_imp /= Void
+					bar_imp_not_void: bar_imp /= Void then
 				end
 				bar_imp.set_move_and_size (0, 0, client_width, client_y)
 			end
 			if not lower_bar.is_empty then
 				bar_imp ?= lower_bar.implementation
 				check
-					bar_imp_not_void: bar_imp /= Void
+					bar_imp_not_void: bar_imp /= Void then
 				end
 				bar_imp.set_move_and_size (0,
 					client_y + client_height + 1,
@@ -552,7 +551,7 @@ feature {NONE} -- Implementation
 		do
 			if attached menu_bar as l_menu_bar then
 				menu_bar_imp ?= l_menu_bar.implementation
-				check menu_bar_imp /= Void end
+				check menu_bar_imp /= Void then end
 				menu_bar_imp.menu_item_clicked (menu_id)
 			end
 		end
@@ -564,7 +563,7 @@ feature {NONE} -- Implementation
 		do
 			if has_menu and then attached menu_bar as l_menu_bar then
 				menu_bar_imp ?= l_menu_bar.implementation
-				check menu_bar_imp /= Void end
+				check menu_bar_imp /= Void then end
 				menu_bar_imp.menu_opened (a_menu)
 			end
 		end
@@ -780,7 +779,7 @@ feature {EV_ANY_I} -- Implementation
 				if not upper_bar.is_empty then
 					bar_imp ?= upper_bar.implementation
 					check
-						bar_imp_not_void: bar_imp /= Void
+						bar_imp_not_void: bar_imp /= Void then
 					end
 					bar_imp.set_move_and_size (0, 0, client_width, client_y)
 				end
@@ -793,7 +792,7 @@ feature {EV_ANY_I} -- Implementation
 				if not lower_bar.is_empty then
 					bar_imp ?= lower_bar.implementation
 					check
-						bar_imp_not_void: bar_imp /= Void
+						bar_imp_not_void: bar_imp /= Void then
 					end
 					bar_imp.set_move_and_size (0,
 						client_y + client_height + 1,
@@ -1067,7 +1066,7 @@ feature {EV_ANY_I} -- Implementation
 					l_windows.after
 				loop
 					l_imp ?= l_windows.item.implementation
-					check not_void: l_imp /= Void end
+					check not_void: l_imp /= Void then end
 					l_tool_window ?= l_windows.item
 			      -- UNDOCUMENTED FEATURE:
 			      -- If the other window being activated/deactivated (i.e. not the one that
@@ -1086,7 +1085,7 @@ feature {EV_ANY_I} -- Implementation
 						l_windows.after
 					loop
 						l_imp ?= l_windows.item.implementation
-						check not_void: l_imp /= Void end
+						check not_void: l_imp /= Void then end
 						l_tool_window ?= l_windows.item
 
 						-- We don't send message to ourself
@@ -1294,9 +1293,9 @@ feature {EV_ANY_I} -- Implementation
 				-- A window cannot receive the tabstop, so we simply
 				-- continue the search within `item'.
 			l_item := item
-			check l_item /= Void end
+			check l_item /= Void then end
 			w ?= l_item.implementation
-			check w /= Void end
+			check w /= Void then end
 			if forwards then
 				Result := w.next_tabstop_widget (start_widget, 1, forwards)
 			else
@@ -1421,7 +1420,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 
 			if a_parent /= Void then
 				l_window ?= a_parent.implementation
-				check not_void: l_window /= Void end
+				check not_void: l_window /= Void then end
 
 				make_child (l_window, "")
 
@@ -1453,7 +1452,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 		do
 			if a_widget /= Void then
 				l_imp ?= a_widget.implementation
-				check not_void: l_imp /= Void end
+				check not_void: l_imp /= Void then end
 				l_imp.wel_set_parent (application_imp.silly_main_window)
 			end
 		end
@@ -1467,7 +1466,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 		do
  			if a_widget /= Void then
  				l_widget_imp ?= a_widget.implementation
- 				check l_widget_imp /= Void end
+ 				check l_widget_imp /= Void then end
 				l_widget_imp.wel_set_parent (a_parent_imp)
 			end
 		end
@@ -1551,14 +1550,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

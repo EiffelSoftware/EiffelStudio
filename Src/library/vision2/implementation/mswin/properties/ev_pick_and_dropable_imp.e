@@ -277,7 +277,7 @@ feature {EV_ANY_I} -- Implementation
 					else
 						l_win ?= Current
 						check
-							l_win_not_void: l_win /= Void
+							l_win_not_void: l_win /= Void then
 						end
 						pt.client_to_screen (l_win)
 					end
@@ -357,7 +357,7 @@ feature {EV_ANY_I} -- Implementation
 
 				create env
 				l_pebble := pebble
-				check l_pebble /= Void end
+				check l_pebble /= Void then end
 				if
 					(a_button = 3 and is_pnd_in_transport) or
 					(a_button = 1 and is_dnd_in_transport)
@@ -710,14 +710,14 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 			l_result: detachable EV_APPLICATION_IMP
 		do
 			l_result ?= application_implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

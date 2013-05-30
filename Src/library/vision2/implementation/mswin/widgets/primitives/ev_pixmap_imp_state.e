@@ -239,13 +239,13 @@ feature -- Misc.
 			if l_has_mask then
 				create mask_dc.make
 				tmp_mask_bitmap := get_mask_bitmap
-				check tmp_mask_bitmap /= Void end
+				check tmp_mask_bitmap /= Void then end
 				mask_dc.select_bitmap (tmp_mask_bitmap)
 				mask_dc_item := mask_dc.item
 			end
 
 			l_interface := interface
-			check l_interface /= Void end
+			check l_interface /= Void then end
 			Result.set_originating_pixmap (l_interface)
 			from
 				a_width := width * 4
@@ -285,10 +285,10 @@ feature -- Misc.
 			end
 
 			if l_has_mask then
-				check mask_dc /= Void end
+				check mask_dc /= Void then end
 				mask_dc.unselect_bitmap
 				mask_dc.delete
-				check tmp_mask_bitmap /= Void end
+				check tmp_mask_bitmap /= Void then end
 				tmp_mask_bitmap.decrement_reference
 				tmp_mask_bitmap := Void
 			end
@@ -311,7 +311,7 @@ feature -- Misc.
 			l_result: detachable WEL_ICON
 		do
 			l_result ?= build_graphical_resource (True)
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
@@ -323,7 +323,7 @@ feature -- Misc.
 			l_result: detachable WEL_CURSOR
 		do
 			l_result ?= build_graphical_resource (False)
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
@@ -336,9 +336,9 @@ feature -- Misc.
 			l_interface: like interface
 		do
 			l_interface := interface
-			check l_interface /= Void end
+			check l_interface /= Void then end
 			l_pixel_buffer ?= a_pixel_buffer.implementation
-			check l_pixel_buffer /= Void end
+			check l_pixel_buffer /= Void then end
 			l_pixel_buffer.draw_to_drawable (l_interface)
 		end
 
@@ -403,7 +403,7 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 				mem_dc.pat_blt (0, 0, width, height,
 				raster_operations.whiteness)
 				tmp_mask_bitmap := get_mask_bitmap
-				check tmp_mask_bitmap /= Void end
+				check tmp_mask_bitmap /= Void then end
 				create l_mask_bitmap_dc.make_by_dc (mem_dc)
 				l_mask_bitmap_dc.select_bitmap (tmp_mask_bitmap)
 					-- We need to invert the mask as Windows uses 0 for Opaque and 1 for Transparent.
@@ -502,7 +502,7 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

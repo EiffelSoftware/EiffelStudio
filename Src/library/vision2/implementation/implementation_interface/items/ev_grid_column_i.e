@@ -254,7 +254,7 @@ feature -- Status setting
 			is_locked := True
 
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 
 			create l_locked_column.make (l_parent_i, a_position, Current)
 			locked_column := l_locked_column
@@ -326,7 +326,7 @@ feature -- Status setting
 				-- which affects the size of the viewable area in which `Current'
 				-- is to be displayed.
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			l_parent_i.recompute_horizontal_scroll_bar
 			l_parent_i.recompute_vertical_scroll_bar
 
@@ -384,7 +384,7 @@ feature -- Status setting
 		do
 			from
 				l_parent_i := parent_i
-				check l_parent_i /= Void end
+				check l_parent_i /= Void then end
 				item_counter := start_row
 				parent_row_count := l_parent_i.row_count
 				internal_row_data := l_parent_i.internal_row_data
@@ -469,7 +469,7 @@ feature -- Status report
 				Result := True
 				a_count := count
 				a_parent_i := parent_i
-				check a_parent_i /= Void end
+				check a_parent_i /= Void then end
 				a_index := index
 			until
 				not Result or else i > a_count
@@ -511,7 +511,7 @@ feature -- Element change
 			l_parent_i: like parent_i
 		do
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			l_parent_i.set_item (index, i, a_item)
 		ensure
 			item_set: item (i) = a_item
@@ -589,7 +589,7 @@ feature -- Element change
 				i := 1
 				a_count := count
 				a_parent_i := parent_i
-				check a_parent_i /= Void end
+				check a_parent_i /= Void then end
 				a_index := index
 			until
 				i > a_count
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 		do
 			l_is_selected := is_selected
 			a_parent_i := parent_i
-			check a_parent_i /= Void end
+			check a_parent_i /= Void then end
 			from
 				i := 1
 				a_count := count
@@ -774,7 +774,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 			l_parent: like parent
 		do
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 			Result := l_parent
 		end
 
@@ -786,7 +786,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 			l_parent_i: like parent_i
 		do
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			Result := l_parent_i
 		end
 

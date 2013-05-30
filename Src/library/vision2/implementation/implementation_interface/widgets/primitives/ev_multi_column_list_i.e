@@ -84,7 +84,7 @@ feature -- Status report
 		do
 			if a_column <= column_titles.count then
 				l_result := column_titles @ a_column
-				check l_result /= Void end
+				check l_result /= Void then end
 				Result := l_result.twin
 			else
 				create Result.make_empty
@@ -513,7 +513,7 @@ invariant
 	ev_children_not_void: ev_children /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

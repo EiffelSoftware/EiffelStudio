@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			a_widget := a_popup.item
 
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 
 				-- Due to the drawing hack for text which assumes that text is by default drawing
 				-- {EV_GRID_LABEL_ITEM}.default_left_border pixels to the right, we need to check
@@ -225,7 +225,7 @@ invariant
 	text_field_parented_during_activation: attached text_field as l_field implies l_field.has_parent
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

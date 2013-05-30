@@ -65,7 +65,7 @@ feature -- Initialization
 			l_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			l_imp ?= a_pointer_style.implementation
-			check l_imp /= Void end
+			check l_imp /= Void then end
 			set_with_resource (l_imp.wel_cursor)
 		end
 
@@ -76,7 +76,7 @@ feature -- Initialization
 			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
 		do
 			l_pixel_buffer ?= a_pixel_buffer.implementation
-			check not_void: l_pixel_buffer /= Void end
+			check not_void: l_pixel_buffer /= Void then end
 			l_gdip_bitmap := l_pixel_buffer.gdip_bitmap
 			if l_gdip_bitmap /= Void and then color_depth = 32 then
 					-- We create a 32bit DIB bitmap if possible, so current can have alpha informations.
@@ -170,7 +170,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			l_bitmap_imp: detachable EV_BITMAP_IMP
 		do
 			l_bitmap_imp ?= a_mask.implementation
-			check l_bitmap_imp /= Void end
+			check l_bitmap_imp /= Void then end
 			private_mask_bitmap := l_bitmap_imp.drawable
 			l_bitmap_imp.drawable.increment_reference
 		end
@@ -255,7 +255,7 @@ feature -- Access
 				end
 			end
 			l_private_bitmap := private_bitmap
-			check l_private_bitmap /= Void end
+			check l_private_bitmap /= Void then end
 			l_private_bitmap.increment_reference
 			Result := l_private_bitmap
 		ensure then
@@ -323,7 +323,7 @@ feature {EV_ANY_I} -- Status setting
 
 				-- Stretch the bitmap
 			tmp_bitmap := private_bitmap
-			check tmp_bitmap /= Void end
+			check tmp_bitmap /= Void then end
 			private_bitmap := stretch_wel_bitmap (
 				tmp_bitmap,
 				new_width,
@@ -1304,9 +1304,9 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 				update_needed := other_simple_imp.update_needed
 			else
 				other_imp ?= other_interface.implementation
-				check other_imp /= Void end
+				check other_imp /= Void then end
 				l_private_bitmap := other_imp.get_bitmap
-				check l_private_bitmap /= Void end
+				check l_private_bitmap /= Void then end
 				private_bitmap := l_private_bitmap
 				private_bitmap_id := l_private_bitmap.object_id
 
@@ -1752,7 +1752,7 @@ feature {NONE} -- Implementation
 			if icon_info = Void then
 				exception_raise ("Unable to retrieve icon information")
 			end
-			check icon_info /= Void end
+			check icon_info /= Void then end
 			icon_info.enable_reference_tracking_on_bitmaps
 
 				-- Retrieve the new `bitmap' and `mask_bitmap' from
@@ -1800,7 +1800,7 @@ feature {NONE} -- Implementation
 				private_mask_bitmap := l_private_mask_bitmap
 
 				a_wel_bitmap := get_mask_bitmap
-				check a_wel_bitmap /= Void end
+				check a_wel_bitmap /= Void then end
 				mem2_dc.select_bitmap (a_wel_bitmap)
 
 					-- Copy the first half of `icon_mask_bitmap' into
@@ -1941,7 +1941,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 		do
 			promote_to_drawable
 			a_drawable_pixmap ?= attached_interface.implementation
-			check a_drawable_pixmap /= Void end
+			check a_drawable_pixmap /= Void then end
 			Result := a_drawable_pixmap.sub_pixmap (area)
 		end
 

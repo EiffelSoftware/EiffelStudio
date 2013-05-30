@@ -193,7 +193,7 @@ feature -- Status setting
 				if private_font /= Void then
 					font_imp ?= private_font.implementation
 					check
-						font_not_void: font_imp /= Void
+						font_not_void: font_imp /= Void then
 					end
 					w := extra_width + font_imp.string_width (l_text)
 					h := h.max (19 * font_imp.height // 9)
@@ -315,7 +315,7 @@ feature -- Element change
 				if attached private_font as l_private_font then
 					font_imp ?= l_private_font.implementation
 					check
-						font_not_void: font_imp /= Void
+						font_not_void: font_imp /= Void then
 					end
 					size_difference := font_imp.string_width (wel_text)
 				elseif attached private_wel_font as l_private_wel_font then
@@ -326,7 +326,7 @@ feature -- Element change
 			end
 
 			internal_pixmap_state ?= l_private_pixmap.implementation
-			check internal_pixmap_state /= Void end
+			check internal_pixmap_state /= Void then end
 			l_internal_bitmap := internal_pixmap_state.get_bitmap
 			internal_bitmap := l_internal_bitmap
 			l_internal_bitmap.decrement_reference
@@ -453,7 +453,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			if color_imp = Void then
 				create color
 				color_imp ?= color.implementation
-				check color_imp /= Void end
+				check color_imp /= Void then end
 				color_imp.set_with_system_id ({WEL_COLOR_CONSTANTS}.Color_btnface)
 			end
 			create Result.make_solid (color_imp)
@@ -543,14 +543,14 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Now set both the font and background colors of `memory_dc'.
 			color_imp ?= background_color.implementation
 			check
-				color_imp_not_void: color_imp /= Void
+				color_imp_not_void: color_imp /= Void then
 			end
 			memory_dc.set_background_color (color_imp)
 				-- We are unable to query the font directly from `dc', so we set it ourselves.
 			if private_font /= Void then
 				font_imp ?= private_font.implementation
 				check
-					font_not_void: font_imp /= Void
+					font_not_void: font_imp /= Void then
 				end
 				memory_dc.select_font (font_imp.wel_font)
 			elseif attached private_wel_font as l_private_wel_font then
@@ -616,7 +616,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				--`internal_pixmap_state' and store its width in `image_width'.
 			if attached private_pixmap as l_private_pixmap then
 				internal_pixmap_state ?= l_private_pixmap.implementation
-				check internal_pixmap_state /= Void end
+				check internal_pixmap_state /= Void then end
 					-- Compute values for re-sizing
 				image_width := internal_pixmap_state.width
 				image_height := internal_pixmap_state.height
@@ -672,7 +672,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			else
 				color_imp ?= default_foreground_color_imp
 			end
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, wel_text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, color_imp)
 
 				-- If we have a pixmap set on `Current', then we must draw it.
@@ -682,7 +682,7 @@ feature {EV_ANY_I} -- Drawing implementation
 					-- Retrieve the image of `Current'.
 
 				wel_bitmap := internal_bitmap
-				check wel_bitmap /= Void end
+				check wel_bitmap /= Void then end
 					-- Perform the drawing.
 				if internal_pixmap_state.has_mask then
 					mask_bitmap := internal_pixmap_state.get_mask_bitmap
@@ -698,7 +698,7 @@ feature {EV_ANY_I} -- Drawing implementation
 					l_icon := internal_pixmap_state.build_icon
 					color_imp ?= background_color.implementation
 					check
-						color_imp_not_void: color_imp /= Void
+						color_imp_not_void: color_imp /= Void then
 					end
 					if not is_sensitive then
 						l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (wel_bitmap, l_icon, memory_dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
@@ -774,7 +774,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			l_result: detachable EV_COLOR_IMP
 		once
 			l_result ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			result_not_void: result /= Void
@@ -806,14 +806,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_BUTTON_IMP

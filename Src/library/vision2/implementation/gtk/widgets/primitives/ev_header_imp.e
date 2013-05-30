@@ -73,7 +73,7 @@ feature -- Initialization
 				-- Set an empty text to the dummy item so that the minimum height of header takes the default label size in to account.
 			dummy_item.set_text ("  ")
 			dummy_imp ?= dummy_item.implementation
-			check dummy_imp /= Void end
+			check dummy_imp /= Void then end
 			{GTK2}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
 			dummy_imp.set_width (1)
 			{GTK2}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
@@ -135,10 +135,12 @@ feature -- Element change
 			end
 			item_imp ?= v.implementation
 			check item_imp /= Void end
-			child_array.go_i_th (i)
-			child_array.put_left (v)
-			{GTK2}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
-			item_imp.set_parent_imp (Current)
+			if item_imp /= Void then
+				child_array.go_i_th (i)
+				child_array.put_left (v)
+				{GTK2}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
+				item_imp.set_parent_imp (Current)
+			end
 		end
 
 	remove_i_th (a_position: INTEGER)
@@ -149,8 +151,10 @@ feature -- Element change
 			child_array.go_i_th (a_position)
 			item_imp ?= child_array.item.implementation
 			check item_imp /= Void end
-			item_imp.set_parent_imp (Void)
-			{GTK2}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
+			if item_imp /= Void then
+				item_imp.set_parent_imp (Void)
+				{GTK2}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
+			end
 			child_array.remove
 		end
 
@@ -214,8 +218,10 @@ feature {NONE} -- Implementation
 				loop
 					a_item_imp ?= item.implementation
 					check a_item_imp /= Void end
-					if {GTK2}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
-						Result := index
+					if a_item_imp /= Void then
+						if {GTK2}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
+							Result := index
+						end
 					end
 					forth
 				end
@@ -279,7 +285,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			end
 
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 			l_x_coord := (virtual_x_position + l_x_offset) - l_parent.virtual_x_position
 			l_x_coord := l_x_coord.max (0).min (l_x_offset)
 

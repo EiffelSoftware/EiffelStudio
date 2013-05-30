@@ -70,11 +70,10 @@ feature -- Initialization
 			l_result: INTEGER
 			l_process: POINTER
 		do
-			Precursor
-			create blocking_windows_stack.make (5)
+			create reusable_message.make
 			init_instance
 			init_application
-			tooltip_delay := no_tooltip_delay_assigned
+			create blocking_windows_stack.make (5)
 
 				-- This is a hack to ensure that `silly_main_window' exists before
 				-- we create any widgets. If this is not the case, then `themes_active' fails
@@ -85,9 +84,13 @@ feature -- Initialization
 				-- Initialize the theme drawer to the correct version for
 				-- the current platform.
 			update_theme_drawer
+
+			Precursor
+
+			tooltip_delay := no_tooltip_delay_assigned
+
 			dispatcher.set_exception_callback (agent on_exception_action)
 
-			create reusable_message.make
 			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 			set_application_main_window (silly_main_window)
 
@@ -735,14 +738,14 @@ invariant
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_APPLICATION_IMP

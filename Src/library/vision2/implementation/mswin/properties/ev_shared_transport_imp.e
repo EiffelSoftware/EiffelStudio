@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 				-- called to change the shape of the cursor.
 			cursor_pixmap := a_new_cursor
 			l_pointer_style_imp ?= a_new_cursor.implementation
-			check not_void: l_pointer_style_imp /= Void end
+			check not_void: l_pointer_style_imp /= Void then end
 
 			l_wel_cursor := l_pointer_style_imp.wel_cursor
 			l_wel_cursor.increment_reference
@@ -112,14 +112,14 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Im
 			-- Cursor used on the widget.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -42,7 +42,7 @@ feature -- Element change
 			l_internal_pixmap: like internal_pixmap
 		do
 			l_internal_pixmap ?= a_pixmap.twin.implementation
-			check l_internal_pixmap /= Void end
+			check l_internal_pixmap /= Void then end
 			internal_pixmap := l_internal_pixmap
 			internal_set_pixmap (l_internal_pixmap, l_internal_pixmap.width, l_internal_pixmap.height)
 		end
@@ -65,7 +65,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			internal_remove_pixmap
 			l_internal_pixmap ?= internal_pixmap
-			check l_internal_pixmap /= Void end
+			check l_internal_pixmap /= Void then end
 			if a_width /= l_internal_pixmap.width or else a_height /= l_internal_pixmap.height then
 				-- We need to scale pixmap before it is placed in to pixmap holder			
 				a_pixmap_imp.stretch (a_width, a_height)
@@ -113,14 +113,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- EV_PIXMAPABLE_IMP

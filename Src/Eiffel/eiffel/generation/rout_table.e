@@ -568,12 +568,12 @@ feature {NONE} -- Implementation
 
 			buffer.generate_function_signature (l_result_string, a_wrapped_name, False, Void, l_arg_names, l_arg_types)
 			buffer.generate_block_open
-			buffer.put_new_line
 			l_seed_type := l_seed_c_pattern.result_type
 			l_type := l_c_pattern.result_type
 			if not l_seed_type.is_void then
 				check actual_not_void: not l_type.is_void end
 				if l_seed_type.same_as (l_type) then
+					buffer.put_new_line
 					buffer.put_string ({C_CONST}.return); buffer.put_character (' ')
 				else
 						-- The declaration are different, we need to adapt the return type.
@@ -585,16 +585,22 @@ feature {NONE} -- Implementation
 					end
 						-- In this case, we need to box the result type and for that we need
 						-- to store the boxed result in `Result' and the actual result in `r'.
+					buffer.put_gtcx
+					buffer.put_new_line
 					l_seed_type.generate (buffer)
 					buffer.put_character (' ')
 					buffer.put_string ({C_CONST}.result_name)
 					buffer.put_character (';')
+					buffer.put_new_line;
+					buffer.put_string ("int l_eif_optimize_return = eif_optimize_return;")
 					buffer.put_new_line;
 					l_type.generate (buffer)
 					buffer.put_character (' ')
 					buffer.put_four_character ('r', ' ', '=', ' ')
 					l_is_return_value_boxed := True
 				end
+			else
+				buffer.put_new_line
 			end
 			buffer.put_string (a_routine_name)
 			buffer.put_character ('(')
@@ -632,10 +638,8 @@ feature {NONE} -- Implementation
 					-- an object all the time, only when necessary.
 				l_seed_type := l_seed_c_pattern.result_type
 				l_type := l_c_pattern.result_type
-				buffer.generate_block_open
-				buffer.put_gtcx
 				buffer.put_new_line
-				buffer.put_string ("if (eif_optimize_return) {")
+				buffer.put_string ("if (l_eif_optimize_return) {")
 				buffer.indent
 				buffer.put_new_line
 				buffer.put_string ("eif_optimize_return = 0;")
@@ -679,7 +683,6 @@ feature {NONE} -- Implementation
 				buffer.exdent
 				buffer.put_new_line
 				buffer.put_character ('}')
-				buffer.generate_block_close
 			end
 			buffer.generate_block_close
 		end

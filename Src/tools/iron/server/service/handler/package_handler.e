@@ -38,14 +38,10 @@ feature -- Execution
 			r: IRON_REPO_HTML_RESPONSE
 			it: HTML_IRON_REPO_ITERATOR
 			s: STRING_8
-			v: READABLE_STRING_8
-			i: INTEGER
-			l_path: READABLE_STRING_8
+			l_package: detachable IRON_REPO_PACKAGE
 		do
-			if
-				attached {WSF_STRING} req.path_parameter ("id") as p_id and then
-			 	attached iron.database.package (iron_version (req), p_id.value) as l_package
-			then
+			l_package := package_from_id_path_parameter (req, "id")
+			if l_package /= Void then
 				create s.make (1024)
 				s.append ("<ul>")
 				create it.make (s, req, iron, iron_version (req))

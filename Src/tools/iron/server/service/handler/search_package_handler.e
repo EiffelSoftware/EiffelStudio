@@ -39,12 +39,35 @@ feature -- Execution
 		local
 			h: WSF_HEADER
 			s: detachable STRING
-			lst: detachable ITERABLE [IRON_REPO_PACKAGE]
+			lst: detachable LIST [IRON_REPO_PACKAGE]
 			html_vis: HTML_IRON_REPO_ITERATOR
 			html: IRON_REPO_HTML_RESPONSE
 			json_vis: JSON_V1_IRON_REPO_ITERATOR
 		do
-			lst := iron.database.packages (iron_version (req), 1, 0)
+			if 
+				attached {WSF_STRING} req.query_parameter ("name") as l_searched_name and then 
+				not l_searched_name.is_empty 
+			then
+				lst := iron.database.packages (iron_version (req), 1, 0)
+				if lst /= Void then
+					from
+						lst.start
+					until
+						lst.after
+					loop
+						if
+							attached lst.item.name as l_name and then
+							l_name.is_case_insensitive_equal_general (l_searched_name.value)
+						then
+							lst.forth
+						else
+							lst.remove
+						end
+					end
+				end
+			else
+				lst := iron.database.packages (iron_version (req), 1, 0)
+			end
 			if req.is_content_type_accepted ("text/html") then
 				html := new_response_message (req)
 				create s.make_empty

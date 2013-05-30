@@ -317,16 +317,6 @@ feature -- Output
 	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
 			-- <Precursor>
 		do
-			if
-				not has_attached_mark and then not has_detachable_mark and then
-				not is_attached and then not is_implicitly_attached
-			then
-					-- There is no explicit attachment mark, let's put an assumed one.
-				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
-				a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
-				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
-				a_text_formatter.add_space
-			end
 			ext_append_marks (a_text_formatter)
 			if has_expanded_mark then
 				a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_expanded_keyword, Void)

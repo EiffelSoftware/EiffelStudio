@@ -294,7 +294,7 @@ feature -- Basic operations
 					-- as a temporary item holder must have been created to
 					-- hold the item within the dialog.
 				l_item_source_being_docked ?= item_source_being_docked
-				check l_item_source_being_docked /= Void end
+				check l_item_source_being_docked /= Void then end
 				if attached l_item_source_being_docked.parent as l_parent then
 					dockable_dialog_source ?= l_parent.parent
 				end
@@ -320,29 +320,29 @@ feature -- Basic operations
 							original_widget_window := l_top_level_window_imp.interface
 							original_parent ?= l_widget_source_being_docked.attached_interface.parent
 							check
-								original_parent_not_void: original_parent /= Void
+								original_parent_not_void: original_parent /= Void then
 							end
 							l_dockable_dialog_target.set_original_parent (original_parent)
 							l_dockable_dialog_target.set_original_parent_index (position_in_parent (l_widget_source_being_docked))
 						else
 
-							check l_item_source_being_docked /= Void end
+							check l_item_source_being_docked /= Void then end
 							temp_widget_parent ?= l_item_source_being_docked.parent_imp
 							check
-								parent_is_widget: temp_widget_parent /= Void
+								parent_is_widget: temp_widget_parent /= Void then
 							end
 							if attached temp_widget_parent.top_level_window_imp as l_top_level_window_imp then
 								original_widget_window := l_top_level_window_imp.interface
 							end
-							check original_widget_window /= Void end
+							check original_widget_window /= Void then end
 							temp_parent ?= l_item_source_being_docked.attached_interface.parent
 							check
-								parent_not_void: temp_parent /= Void
+								parent_not_void: temp_parent /= Void then
 							end
 							l_dockable_dialog_target.set_original_parent (temp_parent)
 							tool_bar_button_imp ?= l_item_source_being_docked
 							check
-								item_was_tool_bar_button: tool_bar_button_imp /= Void
+								item_was_tool_bar_button: tool_bar_button_imp /= Void then
 							end
 							l_dockable_dialog_target.set_original_parent_index (position_in_parent (tool_bar_button_imp))
 
@@ -350,7 +350,7 @@ feature -- Basic operations
 								-- On Windows, it does not return back to its original state.
 							tool_bar ?= temp_parent
 							check
-								tool_bar_not_void: tool_bar /= Void
+								tool_bar_not_void: tool_bar /= Void then
 							end
 							temp_index := l_dockable_dialog_target.original_parent_index - 1
 							if (not tool_bar.is_empty) and temp_index >= 1 then
@@ -374,25 +374,25 @@ feature -- Basic operations
 						if l_widget_source_being_docked /= Void then
 							l_dockable_dialog_target.extend (l_widget_source_being_docked.attached_interface)
 						else
-							check l_item_source_being_docked /= Void end
+							check l_item_source_being_docked /= Void then end
 							create tool_bar
 							l_dockable_dialog_target.extend (tool_bar)
 							tool_bar_button ?= l_item_source_being_docked.interface
 							check
-								item_was_tool_bar_button: tool_bar_button /= Void
+								item_was_tool_bar_button: tool_bar_button /= Void then
 							end
 							tool_bar.extend (tool_bar_button)
 						end
 
 						dialog_imp ?= l_dockable_dialog_target.implementation
 						check
-							dialog_imp_not_void: dialog_imp /= Void
+							dialog_imp_not_void: dialog_imp /= Void then
 						end
 						dialog_imp.enable_closeable
 						l_dockable_dialog_target.close_request_actions.extend (agent close_dockable_dialog (l_dockable_dialog_target))
 						move_dialog_to_pointer (l_dockable_dialog_target)
 						if attached source_being_docked as l_source_being_docked and then l_source_being_docked.is_external_docking_relative then
-							check original_widget_window /= Void end
+							check original_widget_window /= Void then end
 							l_dockable_dialog_target.show_relative_to_window (original_widget_window)
 						else
 							l_dockable_dialog_target.show
@@ -411,7 +411,7 @@ feature -- Basic operations
 				dropping_in_source := True
 				target_widget ?= dockable_target.implementation
 				check
-					target_widget_not_void: target_widget /= Void
+					target_widget_not_void: target_widget /= Void then
 				end
 				target_container_interface ?= target_widget.interface
 			end
@@ -424,12 +424,12 @@ feature -- Basic operations
 				tool_bar ?= dockable_target
 				if not (tool_bar /= Void and l_widget_source_being_docked /= Void) then
 					locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
-					check l_widget_source_being_docked /= Void end
+					check l_widget_source_being_docked /= Void then end
 					if locked_in_here and l_widget_source_being_docked.top_level_window /= Void then
-						check container /= Void end
+						check container /= Void then end
 						container_imp ?= container.implementation
 						check
-							container_not_void: container_imp /= Void
+							container_not_void: container_imp /= Void then
 						end
 							-- FIXME This protection appears to be required as from time to
 							-- time `top_level_window_imp' returns `Void'. Need to understand
@@ -458,12 +458,12 @@ feature -- Basic operations
 
 			if l_widget_source_being_docked = Void then
 					-- We must now handle items that are supported by the docking mechanism.
-				check l_item_source_being_docked /= Void end
+				check l_item_source_being_docked /= Void then end
 				tool_bar_button ?= l_item_source_being_docked.interface
 					-- The only item that is currently dockable is a
 					-- tool bar button hence the check.
 				check
-					tool_bar_button_not_void: tool_bar_button /= Void
+					tool_bar_button_not_void: tool_bar_button /= Void then
 				end
 				tool_bar ?= dockable_target
 				if tool_bar /= Void then
@@ -473,10 +473,10 @@ feature -- Basic operations
 					if insert_sep.parent /= Void then
 						original_tool_bar ?= l_item_source_being_docked.parent
 						check
-							original_tool_bar_not_void: original_tool_bar /= Void
+							original_tool_bar_not_void: original_tool_bar /= Void then
 						end
 						tool_bar_item ?= tool_bar_button
-						check tool_bar_item /= Void end
+						check tool_bar_item /= Void then end
 						insert_index := original_tool_bar.index_of (insert_sep, 1)
 						original_index := original_tool_bar.index_of (tool_bar_item, 1)
 						moved_within_same_parent := tool_bar_item.parent = tool_bar
@@ -496,7 +496,7 @@ feature -- Basic operations
 						if original_tool_bar = tool_bar then
 							tool_bar_imp ?= tool_bar.implementation
 							check
-								tool_bar_imp_not_void: tool_bar_imp /= Void
+								tool_bar_imp_not_void: tool_bar_imp /= Void then
 							end
 							tool_bar_imp.block_selection_for_docking
 						end
@@ -512,7 +512,7 @@ feature -- Basic operations
 					-- we remove it, or else, insert a separator to the right.
 				tool_bar_imp ?= tool_bar.implementation
 				check
-					tool_bar_imp_not_void: tool_bar_imp /= Void
+					tool_bar_imp_not_void: tool_bar_imp /= Void then
 				end
 				if tool_bar.i_th (tool_bar_imp.insertion_position + 1) = tool_bar_button then
 					temp_index := tool_bar.index_of (tool_bar_button, 1)
@@ -562,7 +562,7 @@ feature -- Basic operations
 						tool_bar_button.pointer_motion_actions.resume
 					else
 						check
-							type_not_supported: False
+							type_not_supported: False then
 						end
 					end
 				end
@@ -628,10 +628,10 @@ feature -- Basic operations
 			if tool_bar /= Void then
 				old_tool_bar ?= dialog_item
 				check
-					old_parent_was_tool_bar: old_tool_bar /= Void
+					old_parent_was_tool_bar: old_tool_bar /= Void then
 				end
 				tool_bar_button ?= old_tool_bar.i_th (1)
-				check tool_bar_button /= Void end
+				check tool_bar_button /= Void then end
 				old_tool_bar.wipe_out
 				original_index := dockable_dialog.original_parent_index
 
@@ -651,7 +651,7 @@ feature -- Basic operations
 				target_i ?= l_original_parent.implementation
 			end
 			check
-				target_not_void: target_i /= Void
+				target_not_void: target_i /= Void then
 			end
 			if target_i.docked_actions_internal /= Void then
 				target_i.docked_actions.call ([dockable_source])
@@ -725,10 +725,10 @@ feature {NONE} -- Implementation
 			else
 				a_tool_bar_button ?= a_dockable_source.interface
 				check
-					source_was_widget_or_tool_bar_button: a_tool_bar_button /= Void
+					source_was_widget_or_tool_bar_button: a_tool_bar_button /= Void then
 				end
 				tool_bar ?= a_tool_bar_button.parent
-				check tool_bar /= Void end
+				check tool_bar /= Void then end
 				Result := tool_bar.index_of (a_tool_bar_button, 1)
 			end
 		end
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation
 						if target /= Void then
 						container ?= target
 						check
-							container_not_void: container /= Void
+							container_not_void: container /= Void then
 						end
 							if insert_label.parent /= container then
 								remove_insert_label
@@ -874,7 +874,7 @@ feature {NONE} -- Implementation
 										end
 									end
 									l_top_level_window_imp := box.top_level_window_imp
-									check l_top_level_window_imp /= Void end
+									check l_top_level_window_imp /= Void then end
 									l_top_level_window_imp.lock_update
 									remove_insert_label
 									cursor := box.cursor
@@ -995,9 +995,9 @@ feature {NONE} -- Implementation
 					target ?= l_parent.implementation
 				end
 				l_widget_source_being_docked := widget_source_being_docked
-				check l_widget_source_being_docked /= Void end
+				check l_widget_source_being_docked /= Void then end
 				check
-					target_not_void: target /= Void
+					target_not_void: target /= Void then
 				end
 				box ?= insert_label.parent
 				if box /= Void then
@@ -1028,17 +1028,17 @@ feature {NONE} -- Implementation
 			do
 				tool_bar ?= insert_sep.parent
 				check
-					parent_was_tool_bar: tool_bar /= Void
+					parent_was_tool_bar: tool_bar /= Void then
 				end
 				if attached item_source_being_docked as l_item_source then
 					tool_bar_item ?= l_item_source.interface
 				end
 				check
-					tool_bar_item_not_void: tool_bar_item /= Void
+					tool_bar_item_not_void: tool_bar_item /= Void then
 				end
 				source ?= tool_bar_item
 				check
-					source_not_void: source /= Void
+					source_not_void: source /= Void then
 				end
 				insert_index := tool_bar.index_of (insert_sep, 1)
 				tool_bar.put_i_th (tool_bar_item, tool_bar.index_of (insert_sep, 1))
@@ -1081,7 +1081,7 @@ invariant
 	dock_executing: is_dock_executing implies widget_source_being_docked /= Void or item_source_being_docked /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

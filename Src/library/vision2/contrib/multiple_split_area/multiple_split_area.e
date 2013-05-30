@@ -526,7 +526,7 @@ feature -- Status setting
 				tool := external_representation.item
 				dockable_dialog ?= parent_window (tool)
 				check
-					parent_window_was_dialog: dockable_dialog /= Void
+					parent_window_was_dialog: dockable_dialog /= Void then
 				end
 				dockable_dialog.wipe_out
 				dockable_dialog.destroy
@@ -964,7 +964,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 							-- If `a_holder' is immediately above `holder', then
 							-- do not allow docking to the top, as it is already
 							-- positioned there.
-						check cell /= Void end
+						check cell /= Void then end
 						holder.label_box.set_real_target (cell)
 					end
 					create cell
@@ -1302,7 +1302,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				lower_holder := all_holders.i_th (next_non_minimized_down (position_of_tool))
 				transfer_box_contents (a_tool.upper_box, lower_holder.upper_box)
 				l_parent := a_tool.parent
-				check l_parent /= Void end
+				check l_parent /= Void then end
 				lower_holder.upper_box.extend (l_parent)
 					-- Now transfer all contents of `a_tool' upper bar?
 					-- This would keep all the minimized widgets together in the same box????
@@ -1315,7 +1315,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				remove_tool_from_parent (a_tool)
 				lower_holder := i_th_holder (position_of_tool - 1)
 				l_parent := a_tool.parent
-				check l_parent /= Void end
+				check l_parent /= Void then end
 				lower_holder.lower_box.extend (l_parent)
 				update_all_minimize_buttons
 			end
@@ -1538,7 +1538,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		do
 			l_parent := a_tool.parent
 			check
-				l_parent_not_void: l_parent /= Void
+				l_parent_not_void: l_parent /= Void then
 			end
 			if attached l_parent.parent as l_parent_parent then
 				l_parent_parent.prune_all (l_parent)
@@ -1583,9 +1583,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				counter <= 1
 			loop
 				parent_split_area ?= all_split_areas.i_th (counter - 1)
-				check parent_split_area /= Void end
+				check parent_split_area /= Void then end
 				current_split_area ?= all_split_areas.i_th (counter)
-				check current_split_area /= Void end
+				check current_split_area /= Void then end
 				if current_split_area.is_empty then
 					parent_split_area.prune_all (current_split_area)
 				else
@@ -1613,7 +1613,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				parent_split_area ?= all_split_areas.i_th (counter + 1)
 				if parent_split_area /= Void then
 					current_split_area ?= all_split_areas.i_th (counter)
-					check current_split_area /= Void end
+					check current_split_area /= Void then end
 					if current_split_area.is_empty then
 						parent_split_area.prune_all (current_split_area)
 					else
@@ -1637,7 +1637,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		do
 			from
 				parent_split_area ?= split_area
-				check parent_split_area /= Void end
+				check parent_split_area /= Void then end
 			until
 				parent_split_area.parent /= Void
 			loop
@@ -1730,7 +1730,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				all_holders.forth
 			end
 			if minimized_count = count - 1 then
-				check non_minimized_holder /= Void end
+				check non_minimized_holder /= Void then end
 				non_minimized_holder.disable_minimize_button
 			end
 			all_holders.go_to (cursor)
@@ -2001,7 +2001,7 @@ feature {NONE} -- Implementation
 				linear_representation.forth
 			end
 			if count > 1 and minimized_count = count - 1 then
-				check first_minimized /= Void end
+				check first_minimized /= Void then end
 				restore_minimized_tool (holder_of_widget (first_minimized))
 				if attached minimize_pixmap as l_minimize_pixmap then
 					holder_of_widget (first_minimized).minimize_button.set_pixmap (l_minimize_pixmap)
@@ -2279,7 +2279,7 @@ invariant
 	minimized_states_not_void: minimized_states /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

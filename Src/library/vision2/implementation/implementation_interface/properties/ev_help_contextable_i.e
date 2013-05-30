@@ -54,7 +54,7 @@ feature -- Element change
 			internal_help_context := an_help_context
 			on_help_context_changed
 		ensure
-			help_context_assigned: attached help_context as l_help_context and then l_help_context.is_equal (an_help_context)
+			help_context_assigned: attached help_context as l_help_context and then l_help_context ~ an_help_context
 		end
 
 	remove_help_context
@@ -90,14 +90,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -76,7 +76,7 @@ feature -- Access
 			--| FIXME IEK Refactor this with default font code in EV_APPLICATION_IMP
 			create Result
 			font_imp ?= Result.implementation
-			check font_imp /= Void end
+			check font_imp /= Void then end
 
 			a_utf8_ptr := {GTK}.gtk_font_selection_dialog_get_font_name (c_object)
 			create a_cs.share_from_pointer (a_utf8_ptr)
@@ -99,7 +99,7 @@ feature -- Access
 				font_names.forth
 			end
 
-			check selected_font_name /= Void end
+			check selected_font_name /= Void then end
 			font_imp.set_face_name (selected_font_name.twin)
 			font_imp.preferred_families.extend (selected_font_name.twin)
 
@@ -135,7 +135,7 @@ feature -- Element change
 			a_font_des_str: POINTER
 		do
 			font_imp ?= a_font.implementation
-			check font_imp /= Void end
+			check font_imp /= Void then end
 			a_font_des_str := {GTK2}.pango_font_description_to_string (font_imp.font_description)
 			if a_font_des_str /= default_pointer then
 				create a_cs.make_from_pointer (a_font_des_str)
@@ -166,7 +166,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FONT_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

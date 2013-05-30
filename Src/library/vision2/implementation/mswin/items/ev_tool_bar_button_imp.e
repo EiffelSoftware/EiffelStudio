@@ -135,7 +135,7 @@ feature -- Access
 					create Result
 					pix_imp ?= Result.implementation
 					check
-						pix_imp /= Void
+						pix_imp /= Void then
 					end
 					if attached parent_imp as l_parent_imp and then attached l_parent_imp.default_imagelist as l_default_imagelist then
 						image_list := l_default_imagelist
@@ -162,7 +162,7 @@ feature -- Access
 					create Result
 					pix_imp ?= Result.implementation
 					check
-						pix_imp /= Void
+						pix_imp /= Void then
 					end
 					if attached parent_imp as l_parent_imp and then attached l_parent_imp.hot_imagelist as l_hot_imagelist then
 						an_icon := l_hot_imagelist.get_icon (image_index, Ild_normal)
@@ -360,7 +360,7 @@ feature -- Element change
 			l_private_pixmap: like private_pixmap
 		do
 			l_parent_imp := parent_imp
-			check l_parent_imp /= Void end
+			check l_parent_imp /= Void then end
 			default_imagelist := l_parent_imp.default_imagelist
 			if l_parent_imp.has_false_image_list and has_pixmap then
 					-- In this situation, a false image list is being used in `parent_imp' to
@@ -376,7 +376,7 @@ feature -- Element change
 				-- to the control if it's not already done.
 			if default_imagelist = Void then
 				if has_pixmap then
-					check l_private_pixmap /= Void end
+					check l_private_pixmap /= Void then end
 					l_parent_imp.setup_image_list (l_private_pixmap.width, l_private_pixmap.height)
 					l_parent_imp.disable_false_image_list
 				else
@@ -402,7 +402,7 @@ feature -- Element change
 				if local_pixmap = Void then
 					local_pixmap := pixmap
 				end
-				check local_pixmap /= Void end
+				check local_pixmap /= Void then end
 
 				if has_gray_pixmap then
 					local_gray_pixmap := private_gray_pixmap
@@ -414,10 +414,10 @@ feature -- Element change
 						-- have the same bitmap.
 					local_gray_pixmap := local_pixmap
 				end
-				check local_gray_pixmap /= Void end
+				check local_gray_pixmap /= Void then end
 					-- Look for `gray_pixmap' and `pixmap' in the imagelist
-				check default_imagelist /= Void end
-				check hot_imagelist /= Void end
+				check default_imagelist /= Void then end
+				check hot_imagelist /= Void then end
 				default_imagelist.pixmap_position (local_gray_pixmap)
 				hot_imagelist.pixmap_position (local_pixmap)
 				gray_pixmap_position := default_imagelist.last_position
@@ -441,7 +441,7 @@ feature -- Element change
 				image_index := default_imagelist.last_position
 
 					-- Destroy the pixmaps.
-				check l_private_pixmap /= Void end
+				check l_private_pixmap /= Void then end
 				l_private_pixmap.destroy
 				private_pixmap := Void
 				if attached private_gray_pixmap as l_private_gray_pixmap then
@@ -561,14 +561,14 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TOOL_BAR_BUTTON_IMP

@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			radio_item_pointer, l_null: POINTER
 		do
 			an_item_imp ?= v.implementation
-			check an_item_imp /= Void end
+			check an_item_imp /= Void then end
 			an_index := index
 			insert_menu_item (an_item_imp, pos)
 			sep_imp ?= an_item_imp
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= child_array.i_th (a_position).implementation
 			check
-				item_imp_not_void: item_imp /= Void
+				item_imp_not_void: item_imp /= Void then
 			end
 			{GTK}.gtk_container_remove (list_widget, item_imp.c_object)
 			child_array.go_i_th (a_position)
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			else
 				sep_imp ?= item_imp
 				l_interface := interface
-				check l_interface /= Void end
+				check l_interface /= Void then end
 				if sep_imp /= Void and then a_position <= l_interface.count then
 						-- We merge subsequent radio menu items with previous ones.
 					sep_imp := separator_imp_by_index (a_position)
@@ -265,14 +265,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MENU_ITEM_LIST_IMP

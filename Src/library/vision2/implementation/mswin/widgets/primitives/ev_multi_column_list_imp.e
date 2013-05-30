@@ -235,7 +235,7 @@ feature -- Status setting
 		do
 			item_imp ?= an_item.implementation
 			check
-				item_imp_not_void: item_imp /= Void
+				item_imp_not_void: item_imp /= Void then
 			end
 			ensure_visible (internal_get_index (item_imp) - 1)
 		end
@@ -381,7 +381,7 @@ feature -- Status setting
 			l_background_color_imp: like background_color_imp
 		do
 			l_background_color_imp ?= color.implementation
-			check l_background_color_imp /= Void end
+			check l_background_color_imp /= Void then end
 			background_color_imp := l_background_color_imp
 			set_text_background_color (l_background_color_imp)
 			wel_set_background_color (l_background_color_imp)
@@ -397,7 +397,7 @@ feature -- Status setting
 			l_foreground_color_imp: like foreground_color_imp
 		do
 			l_foreground_color_imp ?= color.implementation
-			check l_foreground_color_imp /= Void end
+			check l_foreground_color_imp /= Void then end
 			foreground_color_imp := l_foreground_color_imp
 			set_text_foreground_color (l_foreground_color_imp)
 			if is_displayed then
@@ -672,9 +672,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					-- Add image to the item if one is set.
 				if item_index = 1 and then row.internal_pixmap /= Void then
 					l_image_list := image_list
-					check l_image_list /= Void end
+					check l_image_list /= Void then end
 					l_internal_pixmap := row.internal_pixmap
-					check l_internal_pixmap /= Void end
+					check l_internal_pixmap /= Void then end
 					l_image_list.add_pixmap (l_internal_pixmap)
 					litem.set_image (l_image_list.last_position)
 				end
@@ -866,7 +866,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 				setup_image_list
 			end
 			l_image_list := image_list
-			check l_image_list /= Void end
+			check l_image_list /= Void then end
 
 			l_image_list.add_pixmap (a_pixmap)
 			image_index := l_image_list.last_position
@@ -1346,14 +1346,14 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

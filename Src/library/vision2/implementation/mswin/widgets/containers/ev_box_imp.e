@@ -157,7 +157,7 @@ feature {EV_ANY, EV_ANY_I}-- Status report
 			else
 				child_imp ?= child.implementation
 				check
-					valid_cast: child_imp /= Void
+					valid_cast: child_imp /= Void then
 				end
 				Result := not l_non_expandable_children.has
 					(ev_children.index_of (child_imp, 1))
@@ -179,7 +179,7 @@ feature {EV_ANY, EV_ANY_I}-- Status setting
 				-- First, we find the index of the child.
 			child_imp ?= child.implementation
 			check
-				valid_cast: child_imp /= Void
+				valid_cast: child_imp /= Void then
 			end
 			an_index := ev_children.index_of (child_imp, 1)
 
@@ -236,7 +236,7 @@ feature -- Contract support
    			child_imp: detachable EV_WIDGET_IMP
    		do
  			child_imp ?= new_child
- 			check child_imp /= Void end
+ 			check child_imp /= Void then end
  			Result := ev_children.has (child_imp)
  		end
 
@@ -251,7 +251,7 @@ feature {NONE} -- Basic operation
 		do
 			wid_imp ?= wid.implementation
 			check
-				child_implementation_not_void: wid_imp /= Void
+				child_implementation_not_void: wid_imp /= Void then
 			end
 			an_index := ev_children.index_of (wid_imp, 1)
 			if attached non_expandable_children as l_non_expandable_children then
@@ -283,7 +283,7 @@ feature {NONE} -- Basic operation
 		do
 			wid_imp ?= wid.implementation
 			check
-				child_implementation_not_void: wid_imp /= Void
+				child_implementation_not_void: wid_imp /= Void then
 			end
 			an_index := ev_children.index_of (wid_imp, 1)
 
@@ -418,14 +418,14 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -78,7 +78,7 @@ feature {EV_ANY_I} -- Access
 			l_filename: like filename
 		do
 			l_filename := filename
-			check l_filename /= Void end
+			check l_filename /= Void then end
 			if not attached_interface.context.output_to_file then
 					-- Create the named pipe
 				a_cs := l_filename.native_string
@@ -99,9 +99,11 @@ feature {EV_ANY_I} -- Access
 			l_file: like file
 		do
 			l_file := file
-			check l_file /= Void end
-			l_file.put_string (ps_code.to_string_8)
-			l_file.put_new_line
+			check l_file /= Void then end
+			if l_file /= Void then
+				l_file.put_string (ps_code.to_string_8)
+				l_file.put_new_line
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -148,7 +150,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PRINT_PROJECTOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

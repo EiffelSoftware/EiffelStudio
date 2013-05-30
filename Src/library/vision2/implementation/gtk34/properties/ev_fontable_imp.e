@@ -42,7 +42,7 @@ feature -- Status setting
 				l_private_font := a_font.twin
 				private_font := l_private_font
 				font_imp ?= l_private_font.implementation
-				check font_imp /= Void end
+				check font_imp /= Void then end
 
 				if font_imp.font_is_default then
 						-- If we are setting with the default font then we set to NULL so that its size is controlled by the user
@@ -72,14 +72,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FONTABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_FONTABLE_IMP

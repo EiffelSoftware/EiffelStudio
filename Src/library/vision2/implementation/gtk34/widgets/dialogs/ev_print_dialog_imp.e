@@ -75,11 +75,11 @@ feature {NONE} -- Initialization
 			create printer_vbox1
 			create printer_rdo.make_with_text ("Printer")
 			printer_vbox1.extend (printer_rdo)
-			printer_rdo.select_actions.force_extend (agent set_output_to_printer)
+
 			create file_rdo.make_with_text ("File")
 			printer_vbox1.extend (file_rdo)
 			printer_hbox.extend (printer_vbox1)
-			file_rdo.select_actions.force_extend (agent set_output_to_file)
+
 			create printer_vbox2
 			create printer_txt.make_with_text ("a printer")
 			printer_vbox2.extend (printer_txt)
@@ -96,23 +96,23 @@ feature {NONE} -- Initialization
 			range_vbox.set_border_width (5)
 			create all_rdo.make_with_text ("All pages")
 			range_vbox.extend (all_rdo)
-			all_rdo.select_actions.force_extend (agent range_spin_buttons_disable_sensitive)
+
 			create range_hbox
 			create range_rdo.make_with_text ("Range")
 			range_hbox.extend (range_rdo)
-			range_rdo.select_actions.force_extend (agent range_spin_buttons_enable_sensitive)
+
 			range_hbox.extend (create {EV_LABEL}.make_with_text ("from "))
 			create from_spn.make_with_value_range (create {INTEGER_INTERVAL}.make (1, 1))
-			from_spn.change_actions.force_extend (agent from_spin_button_value_change)
+
 			range_hbox.extend (from_spn)
 			range_hbox.extend (create {EV_LABEL}.make_with_text ("to "))
 			create to_spn.make_with_value_range (create {INTEGER_INTERVAL}.make (1, 1))
-			to_spn.change_actions.force_extend (agent to_spin_button_value_change)
+
 			range_hbox.extend (to_spn)
 			range_vbox.extend (range_hbox)
 			create selection_rdo.make_with_text ("Selection")
 			range_vbox.extend (selection_rdo)
-			selection_rdo.select_actions.force_extend (agent range_spin_buttons_disable_sensitive)
+
 			range_vbox.merge_radio_button_groups (range_hbox)
 			range_spin_buttons_disable_sensitive
 			create range_frame.make_with_text ("Page Range")
@@ -134,7 +134,7 @@ feature {NONE} -- Initialization
 			copies_hbox2.extend (pixmap)
 			pixmap.draw_pixmap (0, 0, def_pix_imp.No_collate_pixmap)
 			create collate_chk.make_with_text ("Collate")
-			collate_chk.select_actions.force_extend (agent toggle_collate_pages)
+
 			copies_hbox2.extend (collate_chk)
 			copies_vbox.extend (copies_hbox2)
 			create copies_frame.make_with_text ("Copies")
@@ -183,22 +183,37 @@ feature {NONE} -- Initialization
 			main_dialog_container.extend (button_hbox)
 
 			container_imp ?= main_dialog_container.implementation
-			check container_imp /= Void end
+			check container_imp /= Void then end
 			{GTK}.gtk_container_add (hbox, container_imp.c_object)
 
-			cancel_btn.select_actions.extend (agent on_cancel)
-			print_btn.select_actions.extend (agent on_ok)
+
 			print_btn_imp ?= print_btn.implementation
-			check print_btn_imp /= Void end
+			check print_btn_imp /= Void then end
 			print_btn_imp.enable_can_default
 			cancel_btn_imp ?= cancel_btn.implementation
-			check cancel_btn_imp /= Void end
+			check cancel_btn_imp /= Void then end
 			cancel_btn_imp.enable_can_default
 			{GTK}.gtk_widget_grab_default (print_btn_imp.visual_widget)
 			enable_closeable
 			minimum_from_page := 1
 			maximum_to_page := 1
 			forbid_resize
+
+				-- Initialize agents at end due to void-safety.
+
+			printer_rdo.select_actions.force_extend (agent set_output_to_printer)
+			file_rdo.select_actions.force_extend (agent set_output_to_file)
+			all_rdo.select_actions.force_extend (agent range_spin_buttons_disable_sensitive)
+			range_rdo.select_actions.force_extend (agent range_spin_buttons_enable_sensitive)
+			from_spn.change_actions.force_extend (agent from_spin_button_value_change)
+			selection_rdo.select_actions.force_extend (agent range_spin_buttons_disable_sensitive)
+			to_spn.change_actions.force_extend (agent to_spin_button_value_change)
+
+			collate_chk.select_actions.force_extend (agent toggle_collate_pages)
+
+			cancel_btn.select_actions.extend (agent on_cancel)
+			print_btn.select_actions.extend (agent on_ok)
+
 			set_is_initialized (True)
 		end
 
@@ -529,28 +544,28 @@ feature {NONE} -- Implementation
 
 	page_type_combo: EV_COMBO_BOX
 
-	Letter: STRING = "Letter"
-	Legal: STRING = "Legal"
-	Executive: STRING = "Executive"
-	Ledger: STRING = "Ledger"
-	A4: STRING = "A4"
-	A5: STRING = "A5"
-	B5: STRING = "B5"
-	C5: STRING = "C5"
+	Letter: STRING_32 = "Letter"
+	Legal: STRING_32 = "Legal"
+	Executive: STRING_32 = "Executive"
+	Ledger: STRING_32 = "Ledger"
+	A4: STRING_32 = "A4"
+	A5: STRING_32 = "A5"
+	B5: STRING_32 = "B5"
+	C5: STRING_32 = "C5"
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PRINT_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PRINT_DIALOG_IMP

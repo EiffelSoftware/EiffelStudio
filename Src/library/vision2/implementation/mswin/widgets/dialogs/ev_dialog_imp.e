@@ -75,7 +75,7 @@ feature -- Initialization
 			make
 
 			l_interface ?= other_imp.interface
-			check l_interface /= Void end
+			check l_interface /= Void then end
 
 			assign_interface (l_interface)
 
@@ -203,7 +203,7 @@ feature -- Basic operations
 					attached attached_interface.default_push_button as l_interface_default_push_button
 				then
 					button_imp ?= l_interface_default_push_button.implementation
-					check button_imp /= Void end
+					check button_imp /= Void then end
 					set_default_push_button (l_interface_default_push_button)
 					button_imp.set_focus
 				end
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 		do
 			create l_screen
 			l_screen_imp ?= l_screen.implementation
-			check l_screen_imp_not_void: l_screen_imp /= Void end
+			check l_screen_imp_not_void: l_screen_imp /= Void then end
 			if attached parent_window as l_parent_window and then l_parent_window.is_displayed then
 				x_pos := l_parent_window.x_position + (l_parent_window.width - width) // 2
 				y_pos := l_parent_window.y_position + (l_parent_window.height - height) // 2
@@ -530,14 +530,14 @@ feature {EV_ANY, EV_ANY_I}
 			-- Interface for `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

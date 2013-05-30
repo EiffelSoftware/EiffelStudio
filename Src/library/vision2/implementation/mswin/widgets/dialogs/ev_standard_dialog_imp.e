@@ -36,7 +36,7 @@ feature -- Status setting
 
 			set_blocking_window (a_window)
 			modal_to ?= a_window.implementation
-			check modal_to /= Void end
+			check modal_to /= Void then end
 			activate (modal_to)
 			set_blocking_window (Void)
 
@@ -81,7 +81,7 @@ feature -- Deferred
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

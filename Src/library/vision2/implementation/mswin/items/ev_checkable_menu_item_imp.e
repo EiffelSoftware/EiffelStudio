@@ -134,7 +134,7 @@ feature {NONE} -- WEL Implementation
 			l_real_text: like real_text
 		do
 			l_real_text := real_text
-			check l_real_text /= Void end
+			check l_real_text /= Void then end
 			text_height := menu_font.string_height (l_real_text)
 			create memory_rect.make (0, 0, rect.width, text_height)
 
@@ -205,7 +205,7 @@ feature {NONE} -- WEL Implementation
 			edge_rect.dispose
 
 			l_pixmap_imp := pixmap_imp
-			check l_pixmap_imp /= Void end
+			check l_pixmap_imp /= Void then end
 
 				-- Draw the pixmap
 			icon_top_position := (rect.top + rect.bottom - l_pixmap_imp.height - 2) // 2
@@ -311,14 +311,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

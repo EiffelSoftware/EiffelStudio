@@ -1493,7 +1493,7 @@ feature -- Status setting
 		end
 
 	set_row_count_to (a_row_count: INTEGER)
-			-- Resize `Current' to have `a_row_count' columns.
+			-- Resize `Current' to have `a_row_count' rows.
 		require
 			not_destroyed: not is_destroyed
 			a_row_count_non_negative: a_row_count >= 0
@@ -2564,7 +2564,7 @@ feature -- Contract support
 					end
 				end
 			end
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			result_not_void: Result /= Void

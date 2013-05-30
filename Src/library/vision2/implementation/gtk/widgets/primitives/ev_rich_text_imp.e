@@ -129,7 +129,7 @@ feature -- Status Report
 			format_imp: detachable EV_PARAGRAPH_FORMAT_IMP
 		do
 			format_imp ?= format.implementation
-			check format_imp /= Void end
+			check format_imp /= Void then end
 			modify_paragraph_internal (start_line, end_line, format_imp, format_imp.dummy_paragraph_format_range_information)
 		end
 
@@ -368,7 +368,7 @@ feature -- Status Report
 			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			a_format_imp ?= format.implementation
-			check a_format_imp /= Void end
+			check a_format_imp /= Void then end
 			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, applicable_attributes)
 		end
 
@@ -379,7 +379,7 @@ feature -- Status Report
 			format_imp: detachable EV_PARAGRAPH_FORMAT_IMP
 		do
 			format_imp ?= format.implementation
-			check format_imp /= Void end
+			check format_imp /= Void then end
 			modify_paragraph_internal (start_position, end_position, format_imp, applicable_attributes)
 		end
 
@@ -496,7 +496,7 @@ feature -- Status report
 			l_result: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			l_result ?= (create {EV_CHARACTER_FORMAT}).implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			create a_text_iter.make
 			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, character_index - 2)
 			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
@@ -568,7 +568,7 @@ feature -- Status setting
 		do
 			if not is_destroyed then
 				a_format_imp ?= format.implementation
-				check a_format_imp /= Void end
+				check a_format_imp /= Void then end
 				modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 			end
 		end
@@ -587,7 +587,7 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, {GTK2}.gtk_text_buffer_new (default_pointer))
 			end
 			a_format_imp ?= format.implementation
-			check a_format_imp /= Void end
+			check a_format_imp /= Void then end
 			modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
 
@@ -616,7 +616,7 @@ feature -- Status setting
 					buffer_length := {GTK2}.gtk_text_buffer_get_char_count (append_buffer) + 1
 					append_text_internal (append_buffer, a_text)
 					a_format_imp ?= format.implementation
-					check a_format_imp /= Void end
+					check a_format_imp /= Void then end
 					{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_start_iter.item, buffer_length - 1)
 					{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_end_iter.item, {GTK2}.gtk_text_buffer_get_char_count (append_buffer))
 					a_format_imp.apply_character_format_to_text_buffer (a_format_imp.dummy_character_format_range_information, append_buffer, temp_start_iter.item, temp_end_iter.item)
@@ -955,14 +955,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_RICH_TEXT_IMP

@@ -203,7 +203,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if a_cursor /= previously_set_pointer_style then
 				if a_cursor /= Void then
 					a_cursor_imp ?= a_cursor.implementation
-					check a_cursor_imp /= Void end
+					check a_cursor_imp /= Void then end
 					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 				end
 				a_window := {GTK}.gtk_widget_get_window (c_object)
@@ -329,7 +329,7 @@ feature -- Status report
 		local
 			l_win: detachable EV_WINDOW_IMP
 		do
-			Result := {GTK2}.gtk_widget_get_mapped (c_object)
+			Result := c_object /= default_pointer and then {GTK2}.gtk_widget_get_mapped (c_object)
 				-- If Current is shown, let's check that it's top parent window is shown too.
 			if Result then
 				l_win := top_level_window_imp
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -58,14 +58,16 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 		do
 			wid_imp ?= child.implementation
 			check wid_imp /= Void end
-			{GTK}.gtk_box_query_child_packing (
-				container_widget,
-				wid_imp.c_object,
-				$expand,
-				$fill,
-				$pad,
-				$pack_type
-			)
+			if wid_imp /= Void then
+				{GTK}.gtk_box_query_child_packing (
+					container_widget,
+					wid_imp.c_object,
+					$expand,
+					$fill,
+					$pad,
+					$pack_type
+				)
+			end
 			Result := expand.to_boolean
 		end
 
@@ -97,22 +99,24 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 		do
 			wid_imp ?= child.implementation
 			check wid_imp /= Void end
-			{GTK}.gtk_box_query_child_packing (
-				container_widget,
-				wid_imp.c_object,
-				$old_expand,
-				$fill,
-				$pad,
-				$pack_type
-			)
-			{GTK}.gtk_box_set_child_packing (
-				container_widget,
-				wid_imp.c_object,
-				flag,
-				fill.to_boolean,
-				pad,
-				pack_type
-			)
+			if wid_imp /= Void then
+				{GTK}.gtk_box_query_child_packing (
+					container_widget,
+					wid_imp.c_object,
+					$old_expand,
+					$fill,
+					$pad,
+					$pack_type
+				)
+				{GTK}.gtk_box_set_child_packing (
+					container_widget,
+					wid_imp.c_object,
+					flag,
+					fill.to_boolean,
+					pad,
+					pack_type
+				)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -139,14 +143,14 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

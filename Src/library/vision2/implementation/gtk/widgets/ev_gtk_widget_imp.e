@@ -225,7 +225,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if a_cursor /= previously_set_pointer_style then
 				if a_cursor /= Void then
 					a_cursor_imp ?= a_cursor.implementation
-					check a_cursor_imp /= Void end
+					check a_cursor_imp /= Void then end
 					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 				end
 				a_window := {GTK}.gtk_widget_struct_window (c_object)
@@ -349,7 +349,7 @@ feature -- Status report
 		local
 			l_win: detachable EV_WINDOW_IMP
 		do
-			Result := {GTK}.gtk_object_struct_flags (c_object) & {GTK}.GTK_MAPPED_ENUM = {GTK}.GTK_MAPPED_ENUM
+			Result := c_object /= default_pointer and then {GTK}.gtk_object_struct_flags (c_object) & {GTK}.GTK_MAPPED_ENUM = {GTK}.GTK_MAPPED_ENUM
 				-- If Current is shown, let's check that it's top parent window is shown too.
 			if Result then
 				l_win := top_level_window_imp
@@ -419,14 +419,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

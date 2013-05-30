@@ -199,9 +199,9 @@ feature -- Contract support
 			widget ?= Current
 			if widget = Void then
 				tool_bar_button ?= Current
-				check tool_bar_button /= Void end
+				check tool_bar_button /= Void then end
 				tool_bar ?= tool_bar_button.parent
-				check tool_bar /= Void end
+				check tool_bar /= Void then end
 				Result := tool_bar.has (tool_bar_button)
 				if not Result then
 					widget := tool_bar_button.parent
@@ -210,7 +210,7 @@ feature -- Contract support
 			if widget /= Void then
 				container ?= source
 				check
-					source_is_a_container: container /= Void
+					source_is_a_container: container /= Void then
 				end
 				Result := container.has_recursive (widget)
 			end
@@ -249,14 +249,14 @@ invariant
 	parent_permits_docking: is_dockable implies parent_of_source_allows_docking
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

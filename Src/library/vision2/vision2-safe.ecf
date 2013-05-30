@@ -8,7 +8,7 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional" namespace="EiffelSoftware.Library">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" is_void_safe="true"  syntax="transitional" namespace="EiffelSoftware.Library">
 			<warning name="syntax" enabled="false"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>

@@ -15,7 +15,8 @@ inherit
 	EV_FIGURE_GROUP
 		redefine
 			default_create,
-			snap_to_grid
+			snap_to_grid,
+			create_interface_objects
 		end
 
 create
@@ -30,19 +31,21 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize actions.
 		do
-			initialize
 			Precursor
+			initialize
+		end
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			create start_actions
+			create end_actions
+			create move_actions
 		end
 
 	initialize
 			-- Set action sequences.
 		do
-			create start_actions
-			create end_actions
-			create move_actions
-			pointer_button_press_actions.extend (agent on_start_resizing)
-			pointer_motion_actions.extend (agent on_resizing)
-			pointer_button_release_actions.extend (agent on_stop_resizing)
 			show_agent := agent on_enter
 			hide_agent := agent on_leave
 			is_always_shown := True
@@ -51,6 +54,9 @@ feature {NONE} -- Initialization
 			maximum_x := Max_integer
 			maximum_y := Max_integer
 			is_snapping := True
+			pointer_button_press_actions.extend (agent on_start_resizing)
+			pointer_motion_actions.extend (agent on_resizing)
+			pointer_button_release_actions.extend (agent on_stop_resizing)
 		end
 
 feature -- Access
@@ -89,8 +95,12 @@ feature -- Status setting
 			if not is_always_shown then
 				is_always_shown := True
 				show
-				pointer_leave_actions.prune_all (hide_agent)
-				pointer_enter_actions.prune_all (show_agent)
+				if hide_agent /= Void then
+					pointer_leave_actions.prune_all (hide_agent)
+				end
+				if show_agent /= Void then
+					pointer_enter_actions.prune_all (show_agent)
+				end
 			end
 		ensure
 			is_always_shown: is_always_shown
@@ -102,8 +112,12 @@ feature -- Status setting
 			if is_always_shown then
 				is_always_shown := False
 				hide
-				pointer_leave_actions.put_front (hide_agent)
-				pointer_enter_actions.put_front (show_agent)
+				if hide_agent /= Void then
+					pointer_leave_actions.put_front (hide_agent)
+				end
+				if show_agent /= Void then
+					pointer_enter_actions.put_front (show_agent)
+				end
 			end
 		ensure
 			not_always_shown: not is_always_shown
@@ -188,10 +202,10 @@ feature {NONE} -- Events
 	Min_integer: INTEGER = -100000
 			-- Lowest possible integer value.
 
-	show_agent: PROCEDURE [ANY, TUPLE]
+	show_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Connected to `enter_actions'.
 
-	hide_agent: PROCEDURE [ANY, TUPLE]
+	hide_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Connected to `leave_actions'.
 
 	on_enter
@@ -213,7 +227,7 @@ feature {NONE} -- Events
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			wx := l_world.point.x
 			if attached point.origin as l_point_origin and then l_point_origin /= l_world.point then
 				px := (l_point_origin.x_abs / l_point_origin.scale_x_abs).rounded
@@ -228,7 +242,7 @@ feature {NONE} -- Events
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			wy := l_world.point.y
 			if attached point.origin as l_point_origin and then l_point_origin /= l_world.point then
 				py := (l_point_origin.y_abs / l_point_origin.scale_y_abs).rounded
@@ -245,7 +259,7 @@ feature {NONE} -- Events
 				start_actions.call (Void)
 				enable_capture
 				l_origin := point.origin
-				check l_origin /= Void end
+				check l_origin /= Void then end
 				rel_x := (x / l_origin.scale_x_abs).rounded - point.x
 				rel_y := (y / l_origin.scale_y_abs).rounded - point.y
 			end
@@ -263,9 +277,13 @@ feature {NONE} -- Events
 		do
 			if has_capture then
 				l_world := world
-				check l_world /= Void end
+				if l_world = Void then
+					check l_world /= Void then end
+				end
 				l_point_origin := point.origin
-				check l_point_origin /= Void end
+				if l_point_origin = Void then
+					check l_point_origin /= Void then end
+				end
 				scx := l_point_origin.scale_x_abs
 				scy := l_point_origin.scale_y_abs
 				tx := (x / scx).rounded - rel_x
@@ -275,7 +293,9 @@ feature {NONE} -- Events
 				if attached real_position_agent as l_real_position_agent then
 					l_real_position_agent.call ([tx, ty])
 					t := l_real_position_agent.last_result
-					check t /= Void end
+					if t = Void then
+						check t /= Void then end
+					end
 					new_x := t.integer_item (1)
 					new_y := t.integer_item (2)
 				else
@@ -308,14 +328,14 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

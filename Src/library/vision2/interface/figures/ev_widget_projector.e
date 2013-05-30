@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 			make_with_drawable (a_drawable)
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
-			register_basic_figures
 			widget := a_widget
+			register_basic_figures
 			area_x := 0
 			area_y := 0
 			widget.pointer_motion_actions.extend (agent mouse_move)
@@ -54,8 +54,8 @@ feature {NONE} -- Initialization
 			a_buffer_not_void: a_buffer /= Void
 			a_widget_not_void: a_widget /= Void
 		do
-			make_with_drawable_widget (a_world, a_buffer, a_widget)
 			area := a_drawable
+			make_with_drawable_widget (a_world, a_buffer, a_widget)
 		end
 
 feature -- Access
@@ -91,7 +91,7 @@ feature -- Element change
 			l_area: like area
 		do
 			l_area := area
-			check l_area /= Void end
+			check l_area /= Void then end
 			area_x := a_x
 			area_y := a_y
 			create u.make (0, 0, l_area.width, l_area.height)
@@ -380,7 +380,7 @@ feature {NONE} -- Event implementation
 					until
 						event_fig = same_fig
 					loop
-						check event_fig /= Void end
+						check event_fig /= Void then end
 						call_actions (event_fig,
 							event_fig.internal_pointer_enter_actions, Void)
 						p := True
@@ -535,14 +535,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

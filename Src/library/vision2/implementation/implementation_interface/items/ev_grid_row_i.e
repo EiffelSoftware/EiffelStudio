@@ -126,7 +126,7 @@ feature -- Access
 			l_row: detachable EV_GRID_ROW_I
 		do
 			l_row := subrows.i_th (i)
-			check l_row /= Void end
+			check l_row /= Void then end
 			Result := l_row.attached_interface
 		ensure
 			subrow_not_void: Result /= Void
@@ -224,7 +224,7 @@ feature -- Access
 				a_count := count
 				create Result.make (a_count)
 				temp_parent_i := parent_i
-				check temp_parent_i /= Void end
+				check temp_parent_i /= Void then end
 			until
 				i > a_count
 			loop
@@ -299,7 +299,7 @@ feature -- Access
 				i := 1
 				a_index := index
 				a_parent_i := parent_i
-				check a_parent_i /= Void end
+				check a_parent_i /= Void then end
 				a_count := count
 			until
 				i > a_count
@@ -333,7 +333,7 @@ feature -- Access
 				a_count := count
 				a_index := index
 				l_parent_i := parent_i
-				check l_parent_i /= Void end
+				check l_parent_i /= Void then end
 			until
 				not Result or else i > a_count
 			loop
@@ -466,9 +466,9 @@ feature -- Status report
 			l_parent_i: like parent_i
 		do
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			current_row_list := l_parent_i.internal_row_data @ index
-			check current_row_list /= Void end
+			check current_row_list /= Void then end
 			column_list_area := l_parent_i.columns.area
 			current_row_list_count := current_row_list.count
 			row_count := count
@@ -478,8 +478,9 @@ feature -- Status report
 				a_item /= Void or else counter = row_count
 			loop
 				a_column := (column_list_area @ counter)
-				check a_column /= Void end
-				a_physical_index := a_column.physical_index
+				if a_column /= Void then
+					a_physical_index := a_column.physical_index
+				end
 				if a_physical_index < current_row_list_count then
 					a_item := current_row_list @ a_physical_index
 				end
@@ -527,7 +528,7 @@ feature -- Status setting
 			l_locked_row: like locked_row
 		do
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 			if is_locked then
 				unlock
 			end
@@ -573,7 +574,7 @@ feature -- Status setting
 			if not is_expanded then
 				is_expanded := True
 				l_parent_i := parent_i
-				check l_parent_i /= Void end
+				check l_parent_i /= Void then end
 				if subrow_count > 0 then
 						-- If `Current' has children then compute and redraw.
 						-- If `is_ensured_expandable' then it is possible that there
@@ -621,7 +622,7 @@ feature -- Status setting
 		do
 			if is_expanded then
 				l_parent_i := parent_i
-				check l_parent_i /= Void end
+				check l_parent_i /= Void then end
 				is_expanded := False
 
 				update_parent_expanded_node_counts_recursively (- contained_expanded_items_recursive)
@@ -891,7 +892,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					-- add at a position in `parent_i' based on the item before the insert
 					-- As this item may have rows of it's own the subrow count recursive must also be added.
 				l_subrow := subrows.i_th (a_subrow_index - 1)
-				check l_subrow /= Void end
+				check l_subrow /= Void then end
 				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
 			end
 			if attached parent as l_parent_i then
@@ -928,7 +929,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			row_imp.set_subrow_index (0)
 
 			l_parent_i := parent_i
-			check l_parent_i /= Void end
+			check l_parent_i /= Void then end
 
 			if row_imp.subrow_count > 0 then
 					-- Now update the depth properties for each subrow of `a_row' (if any).
@@ -940,8 +941,9 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					i > last_changed_subrow_index
 				loop
 					l_row_i := l_parent_i.rows.i_th (i)
-					check l_row_i /= Void end
-					l_row_i.update_depths_in_tree
+					if l_row_i /= Void then
+						l_row_i.update_depths_in_tree
+					end
 					i := i + 1
 				end
 			end
@@ -1002,7 +1004,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					l_subrows.shift_items (a_subrow_index, a_subrow_index + rows_to_insert, l_original_subrow_count - a_subrow_index + 1)
 				end
 				l_parent_i := parent_i
-				check l_parent_i /= Void end
+				check l_parent_i /= Void then end
 			until
 				i = j
 			loop
@@ -1042,7 +1044,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		do
 			if not is_selected then
 				l_parent_i := parent_i
-				check l_parent_i /= Void end
+				check l_parent_i /= Void then end
 				if l_parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
 					if l_parent_i.is_single_row_selection_enabled then
 						l_parent_i.remove_selection
@@ -1105,7 +1107,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			from
 				i := count
 				a_parent_i := parent_i
-				check a_parent_i /= Void end
+				check a_parent_i /= Void then end
 				a_index := index
 			until
 				i = 0
@@ -1395,10 +1397,10 @@ feature {NONE} -- Implementation
 				Result := Result + 1
 					-- Add one for the current row which is now hidden.
 				l_row := l_subrows.i_th (a_subrow_index)
-				check l_row /= Void end
-				Result := Result + l_row.expanded_subrow_count_recursive
-					-- Add the number of expanded items for that row.
-
+				if l_row /= Void then
+					Result := Result + l_row.expanded_subrow_count_recursive
+						-- Add the number of expanded items for that row.					
+				end
 				a_subrow_index := a_subrow_index + 1
 			end
 		ensure
@@ -1437,7 +1439,7 @@ feature -- Contract Support
 			l_parent: like parent
 		do
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 			Result := l_parent
 		end
 
@@ -1455,7 +1457,7 @@ invariant
 	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = 0) or else (parent /= Void and then hash_code > 0))
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

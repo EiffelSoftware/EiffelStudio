@@ -93,7 +93,9 @@ feature -- Status report
 				if child_array.item /= Void then
 					a_list_item_imp ?= child_array.item.implementation
 					check a_list_item_imp /= Void end
-					a_enable_flag := a_list_item_imp.is_transport_enabled
+					if a_list_item_imp /= Void then
+						a_enable_flag := a_list_item_imp.is_transport_enabled
+					end
 				end
 				i := i + 1
 			end
@@ -287,9 +289,13 @@ feature -- Insertion
 			{GTK2}.g_value_take_string (str_value, a_cs.item)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
 			check a_list_item_imp /= Void end
-			l_list_iter := a_list_item_imp.list_iter
-			check l_list_iter /= Void end
-			{GTK2}.gtk_list_store_set_value (list_store, l_list_iter.item, 1, str_value)
+			if a_list_item_imp /= Void then
+				l_list_iter := a_list_item_imp.list_iter
+				check l_list_iter /= Void end
+				if l_list_iter /= Void then
+					{GTK2}.gtk_list_store_set_value (list_store, l_list_iter.item, 1, str_value)
+				end
+			end
 		end
 
 	g_value_string_struct: POINTER
@@ -308,12 +314,12 @@ feature -- Insertion
 			a_pixbuf: POINTER
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			check a_list_item_imp /= Void end
+			check a_list_item_imp /= Void then end
 			a_list_iter := a_list_item_imp.list_iter
-			check a_list_iter /= Void end
+			check a_list_iter /= Void then end
 			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
 			{GTK2}.g_object_unref (a_pixbuf)
 		end
@@ -325,9 +331,9 @@ feature -- Insertion
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			check a_list_item_imp /= Void end
+			check a_list_item_imp /= Void then end
 			l_list_iter := a_list_item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			{GTK2}.gtk_list_store_set_pixbuf (list_store, l_list_iter.item, 0, NULL)
 		end
 
@@ -338,7 +344,7 @@ feature -- Insertion
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 		do
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
 
 			child_array.go_i_th (i)
@@ -378,14 +384,18 @@ feature {NONE} -- Implementation
 			clear_selection
 			item_imp ?= (child_array @ (an_index)).implementation
 			check item_imp /= Void end
-			item_imp.set_parent_imp (Void)
-			l_list_iter := item_imp.list_iter
-			check l_list_iter /= Void end
-			{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
-			-- remove the row from the `ev_children'
-			child_array.go_i_th (an_index)
-			child_array.remove
-			--update_pnd_status
+			if item_imp /= Void then
+				item_imp.set_parent_imp (Void)
+				l_list_iter := item_imp.list_iter
+				check l_list_iter /= Void end
+				if l_list_iter /= Void then
+					{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
+					-- remove the row from the `ev_children'
+					child_array.go_i_th (an_index)
+					child_array.remove
+				end
+				--update_pnd_status
+			end
 		end
 
 	new_list_store: POINTER
@@ -397,7 +407,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 			create character_string_buffer.make (4)
 
-			Precursor
+
 
 			gtk_is_launchable := gtk_init_check
 
@@ -74,6 +74,8 @@ feature {NONE} -- Initialization
 			create window_oids.make
 
 			default_font_name_internal := ""
+
+			Precursor
 
 			if gtk_is_launchable then
 				initialize_threading
@@ -222,7 +224,7 @@ feature {EV_ANY_I} -- Implementation
 				if current_window.has_focus then
 					if current_window.full then
 						l_window_imp ?= current_window.implementation
-						check l_window_imp /= Void end
+						check l_window_imp /= Void then end
 						l_widget_ptr := {GTK}.gtk_window_get_focus (l_window_imp.c_object)
 						if l_widget_ptr /= {GTK}.null_pointer then
 							l_widget_imp ?= eif_object_from_gtk_object (l_widget_ptr)
@@ -1301,7 +1303,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			l_widget: detachable EV_WIDGET
 		once
 			l_widget ?= default_window
-			check l_widget /= Void end
+			check l_widget /= Void then end
 			Result := l_widget
 		end
 
@@ -1317,7 +1319,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			l_result: detachable EV_WINDOW_IMP
 		once
 			l_result ?= default_window.implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -1400,7 +1402,7 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -235,7 +235,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 		once
 			create env
 			l_app_imp ?= env.implementation.application_i
-			check l_app_imp /= Void end
+			check l_app_imp /= Void then end
 			Result := l_app_imp
 		end
 
@@ -249,7 +249,7 @@ feature -- Measurement
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

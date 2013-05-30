@@ -68,6 +68,7 @@ feature -- Initialization
 			-- Initialize `Current'.
 		do
 			create wel_font.make_indirect (Default_wel_log_font)
+			internal_face_name := Default_wel_log_font.face_name
 
 				-- Create and setup the preferred font face mechanism
 			create preferred_families
@@ -79,7 +80,6 @@ feature -- Initialization
 			shape := convert_font_shape(Default_wel_log_font.italic)
 			weight := convert_font_weight(Default_wel_log_font.weight)
 			family := family_screen
-			internal_face_name := Default_wel_log_font.face_name
 			update_internal_is_proportional(Default_wel_log_font)
 			set_is_initialized (True)
 		end
@@ -202,7 +202,7 @@ feature -- Element change
 			l_preferred_families: like preferred_families
 		do
 			font_imp ?= other.implementation
-			check font_imp /= Void end
+			check font_imp /= Void then end
 			log_font := font_imp.wel_font.log_font
 			create new_wel_font.make_indirect (log_font)
 			set_by_wel_font (new_wel_font)
@@ -762,7 +762,7 @@ invariant
 	wel_font_exists: wel_font /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

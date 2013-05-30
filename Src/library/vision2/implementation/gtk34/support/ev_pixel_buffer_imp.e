@@ -10,6 +10,7 @@ class
 	EV_PIXEL_BUFFER_IMP
 
 inherit
+
 	EV_PIXEL_BUFFER_I
 
 	DISPOSABLE
@@ -66,8 +67,10 @@ feature -- Initialization
 			l_pixbuf: POINTER
 		do
 			l_pixmap_imp ?= a_pixmap.implementation
-			check l_pixmap_imp /= Void end
---			l_pixbuf := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
+			check
+				l_pixmap_imp /= Void
+			end
+				--			l_pixbuf := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
 			set_gdkpixbuf (l_pixbuf)
 		end
 
@@ -134,12 +137,11 @@ feature -- Command
 			i: INTEGER
 		do
 			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check l_app_imp /= Void end
+			check
+				l_app_imp /= Void then
+			end
 			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
-			if
-				attached a_file_name.name.split ('.') as l_list and then
-				not l_list.is_empty
-			then
+			if attached a_file_name.name.split ('.') as l_list and then not l_list.is_empty then
 				l_extension := l_list.last.as_upper
 				if l_extension.is_equal ({STRING_32} "JPEG") then
 					l_extension := {STRING_32} "JPG"
@@ -175,7 +177,6 @@ feature -- Command
 					else
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
-
 				end
 			else
 				(create {EXCEPTIONS}).raise ("Could not save image file.")
@@ -191,11 +192,12 @@ feature -- Command
 			l_error: POINTER
 			l_pointer: POINTER
 		do
-			-- Same as Windows {EV_PIXEL_BUFFER_IMP} implementation, using PNG format as default
+				-- Same as Windows {EV_PIXEL_BUFFER_IMP} implementation, using PNG format as default
 			create l_file_type.set_with_eiffel_string ("png")
-
 			l_result := {GTK}.gdk_pixbuf_save_to_buffer (gdk_pixbuf, $l_pointer, $l_buffer_size, l_file_type.item, $l_error)
-			check success: l_result /= 0 end
+			check
+				success: l_result /= 0
+			end
 			if l_result /= 0 then
 				create Result.own_from_pointer (l_pointer, l_buffer_size)
 			end
@@ -211,15 +213,41 @@ feature -- Command
 			if {GTK}.gtk_maj_ver >= 2 then
 				create Result
 				l_pixmap_imp ?= Result.implementation
-				check l_pixmap_imp /= Void end
+				check
+					l_pixmap_imp /= Void then
+				end
 				l_pixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 				l_pixmap_imp.set_pixmap_from_pixbuf (l_pixbuf)
 				{GTK2}.g_object_unref (l_pixbuf)
 			else
 				l_internal_pixmap := internal_pixmap
-				check l_internal_pixmap /= Void end
+				check
+					l_internal_pixmap /= Void then
+				end
 				Result := l_internal_pixmap.sub_pixmap (a_rect)
 			end
+		end
+
+	stretched (a_width, a_height: INTEGER): EV_PIXEL_BUFFER
+			-- <Precursor>
+		local
+			l_imp: detachable EV_PIXEL_BUFFER_IMP
+			l_pixbuf: POINTER
+			l_scale_type: INTEGER_32
+		do
+			create Result
+			l_imp ?= Result.implementation
+			check l_imp /= Void then
+			end
+			if a_width <= 16 and then a_height <= 16 then
+				l_scale_type := {GTK2}.gdk_interp_nearest
+			else
+				l_scale_type := {GTK2}.gdk_interp_bilinear
+			end
+			l_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (gdk_pixbuf, a_width, a_height, l_scale_type)
+				-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
+			l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
+			{GTK2}.g_object_unref (l_pixbuf)
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
@@ -232,7 +260,9 @@ feature -- Command
 			if {GTK}.gtk_maj_ver >= 2 then
 				create Result
 				l_imp ?= Result.implementation
-				check l_imp /= Void end
+				check
+					l_imp /= Void then
+				end
 				l_pixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
 				l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
@@ -241,7 +271,9 @@ feature -- Command
 				create Result
 				l_internal_pixmap := sub_pixmap (a_rect)
 				l_imp ?= Result.implementation
-				check l_imp /= Void end
+				check
+					l_imp /= Void then
+				end
 				l_imp.set_internal_pixmap (l_internal_pixmap)
 			end
 		end
@@ -257,13 +289,12 @@ feature -- Command
 		do
 			l_n_channels := {GTK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
 			l_bytes_per_sample := {GTK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
-
 			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
-
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
-
 			l_managed_pointer := reusable_managed_pointer
-			check l_managed_pointer /= Void end
+			check
+				l_managed_pointer /= Void then
+			end
 			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
@@ -280,13 +311,12 @@ feature -- Command
 		do
 			l_n_channels := {GTK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
 			l_bytes_per_sample := {GTK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
-
 			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
-
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
-
 			l_managed_pointer := reusable_managed_pointer
-			check l_managed_pointer /= Void end
+			check
+				l_managed_pointer /= Void then
+			end
 			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + (l_bytes_per_sample * l_n_channels).to_integer_32)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
 
@@ -311,29 +341,28 @@ feature -- Command
 			l_string_size := a_font.string_size (a_text)
 			l_width := (l_x + l_string_size.width).min (width) - l_x
 			l_height := (l_y + l_string_size.height).min (height) - l_y
-
 			create l_pixmap.make_with_size (l_width, l_height)
 			l_pixmap.set_font (a_font)
-
 			l_grey_value := 75
 			l_composite_alpha := 200
-
 			create l_color.make_with_8_bit_rgb (l_grey_value, l_grey_value, l_grey_value)
 
 				-- Create a pixmap with a grey background so that anti-aliasing is not so harsh.
 			l_pixmap.set_background_color (l_color)
 			l_pixmap.clear
 			l_pixmap.draw_text_top_left (0, 0, a_text)
-
 			l_pixmap_imp ?= l_pixmap.implementation
-			check l_pixmap_imp /= Void end
-
+			check
+				l_pixmap_imp /= Void
+			end
 			create l_pixbuf
 			l_pixbuf_imp ?= l_pixbuf.implementation
-			check l_pixbuf_imp /= Void end
+			check
+				l_pixbuf_imp /= Void
+			end
 
 				-- Retrieve pixbuf from drawable and set the previous background color 'l_grey_value' to transparent alpha.
---			l_pixbuf_ptr := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
+				--			l_pixbuf_ptr := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
 			l_pixbuf_ptr2 := {GTK2}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
 				-- Clean up
 			{GTK2}.g_object_unref (l_pixbuf_ptr)
@@ -354,13 +383,15 @@ feature -- Command
 			l_x, l_y: INTEGER
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check l_pixel_buffer_imp /= Void end
-			-- We must make sure dest rectangle not larger than source rectangle
-			-- http://library.gnome.org/devel/gdk-pixbuf/stable/gdk-pixbuf-scaling.html#gdk-pixbuf-composite
-			-- They say:
-			-- When the destination rectangle contains parts not in the source image, the data at the edges
-			-- of the source image is replicated to infinity.
-			-- We modify `l_dest_width' and `l_dest_height' to avoid it, so it will consistent with Windows implementation
+			check
+				l_pixel_buffer_imp /= Void then
+			end
+				-- We must make sure dest rectangle not larger than source rectangle
+				-- http://library.gnome.org/devel/gdk-pixbuf/stable/gdk-pixbuf-scaling.html#gdk-pixbuf-composite
+				-- They say:
+				-- When the destination rectangle contains parts not in the source image, the data at the edges
+				-- of the source image is replicated to infinity.
+				-- We modify `l_dest_width' and `l_dest_height' to avoid it, so it will consistent with Windows implementation
 			l_x := a_x
 			l_y := a_y
 			l_dest_width := l_pixel_buffer_imp.width
@@ -380,8 +411,8 @@ feature -- Command
 				end
 			end
 
-			-- We also have to make sure, dest rectangle not larger than source image, otherwise the API will not draw the image and this is
-			-- not consitent with Windows implementation
+				-- We also have to make sure, dest rectangle not larger than source image, otherwise the API will not draw the image and this is
+				-- not consitent with Windows implementation
 			if l_x + l_dest_width > width then
 				l_dest_width := width - l_x
 				if l_x > width then
@@ -400,7 +431,6 @@ feature -- Command
 					l_dest_height := 0
 				end
 			end
-
 			{GTK2}.gdk_pixbuf_composite (l_pixel_buffer_imp.gdk_pixbuf, gdk_pixbuf, l_x, l_y, l_dest_width, l_dest_height, a_x, a_y, 1, 1, {GTK2}.gdk_interp_hyper, 255)
 		end
 
@@ -458,10 +488,10 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implementation
 
 	reusable_managed_pointer: detachable MANAGED_POINTER
-		-- Managed pointer used for inspecting current.
+			-- Managed pointer used for inspecting current.
 
 	internal_pixmap: detachable EV_PIXMAP
-		-- Pixmap used for fallback implementation on gtk 1.2
+			-- Pixmap used for fallback implementation on gtk 1.2
 
 	set_gdkpixbuf (a_pixbuf: POINTER)
 			-- Set `gdk_pixbuf' to `a_pixbuf'.
@@ -481,7 +511,6 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 			else
 				gdk_pixbuf := default_pointer
 			end
-
 		end
 
 	set_internal_pixmap (a_pixmap: like internal_pixmap)
@@ -493,7 +522,7 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 		end
 
 	gdk_pixbuf: POINTER
-		-- Pointer to the GdkPixbuf structure.
+			-- Pointer to the GdkPixbuf structure.
 
 	destroy
 			-- Destroy `Current'.
@@ -521,13 +550,15 @@ feature {NONE} -- Obsolete
 			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check l_pixel_buffer_imp /= Void end
+			check
+				l_pixel_buffer_imp /= Void then
+			end
 			{GTK2}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

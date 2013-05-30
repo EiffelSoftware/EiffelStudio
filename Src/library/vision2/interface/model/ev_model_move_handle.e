@@ -36,8 +36,6 @@ feature {NONE} -- Initialization
 			create rotate_actions
 			create scale_x_actions
 			create scale_y_actions
-			show_agent := agent on_enter
-			hide_agent := agent on_leave
 			Precursor {EV_MODEL_GROUP}
 		end
 
@@ -57,6 +55,8 @@ feature {NONE} -- Initialization
 			scale_button := 3
 			rotate_button := 2
 			Precursor {EV_MODEL_GROUP}
+			show_agent := agent on_enter
+			hide_agent := agent on_leave
 			pointer_button_press_actions.extend (agent on_start_resizing)
 			pointer_motion_actions.extend (agent on_resizing)
 			pointer_button_release_actions.extend (agent on_stop_resizing)
@@ -122,8 +122,12 @@ feature -- Status setting
 			if not is_always_shown then
 				is_always_shown := True
 				show
-				pointer_leave_actions.prune_all (hide_agent)
-				pointer_enter_actions.prune_all (show_agent)
+				if hide_agent /= Void then
+					pointer_leave_actions.prune_all (hide_agent)
+				end
+				if show_agent /= Void then
+					pointer_enter_actions.prune_all (show_agent)
+				end
 			end
 		ensure
 			is_always_shown: is_always_shown
@@ -135,8 +139,12 @@ feature -- Status setting
 			if is_always_shown then
 				is_always_shown := False
 				hide
-				pointer_leave_actions.put_front (hide_agent)
-				pointer_enter_actions.put_front (show_agent)
+				if hide_agent /= Void then
+					pointer_leave_actions.put_front (hide_agent)
+				end
+				if show_agent /= Void then
+					pointer_enter_actions.put_front (show_agent)
+				end
 			end
 		ensure
 			not_always_shown: not is_always_shown
@@ -303,10 +311,10 @@ feature {NONE} -- Events
 	Min_integer: INTEGER = -100000
 			-- Lowest possible integer value.
 
-	show_agent: PROCEDURE [ANY, TUPLE]
+	show_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Connected to `enter_actions'.
 
-	hide_agent: PROCEDURE [ANY, TUPLE]
+	hide_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Connected to `leave_actions'.
 
 	on_enter
@@ -340,7 +348,7 @@ feature {NONE} -- Events
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			Result := l_world.x_to_grid (ax)
 		end
 
@@ -350,7 +358,7 @@ feature {NONE} -- Events
 			l_world: like world
 		do
 			l_world := world
-			check l_world /= Void end
+			check l_world /= Void then end
 			Result := l_world.y_to_grid (ay)
 		end
 
@@ -507,7 +515,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

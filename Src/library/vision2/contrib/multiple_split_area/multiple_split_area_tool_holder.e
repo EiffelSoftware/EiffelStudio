@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 
 
 			if l_platform.is_windows then
-				check frame /= Void end
+				check frame /= Void then end
 				frame.extend (vertical_box)
 			else
 				main_box.extend (vertical_box)
@@ -140,10 +140,10 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 		do
 			l_parent ?= parent
 			check
-				l_parent_not_void: l_parent /= Void
+				l_parent_not_void: l_parent /= Void then
 			end
 			l_result ?= l_parent.i_th (3)
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			result_not_void: Result /= Void
@@ -160,10 +160,10 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 		do
 			l_parent ?= parent
 			check
-				l_parent_not_void: l_parent /= Void
+				l_parent_not_void: l_parent /= Void then
 			end
 			l_result ?= l_parent.i_th (1)
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			result_not_void: Result /= Void
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 			if dialog = Void then
 				if attached main_box.parent as l_main_box_parent then
 					l_data := l_main_box_parent.data
-					check l_data /= Void end
+					check l_data /= Void then end
 					check
 						data_is_integer: l_data.out.is_integer
 					end
@@ -722,7 +722,7 @@ invariant
 	minimum_size_cell_empty: minimum_size_cell.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

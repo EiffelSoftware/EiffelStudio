@@ -84,7 +84,7 @@ feature -- Access
 				Result > 0 or else i > count or else mouse_ptr_wid = default_pointer
 			loop
 				a_wid ?= i_th (i).implementation
-				check a_wid /= Void end
+				check a_wid /= Void then end
 				tab_label := {GTK}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
 				if mouse_ptr_wid = tab_label or else mouse_ptr_wid = {GTK}.gtk_widget_struct_parent (mouse_ptr_wid) then
 					Result := i
@@ -116,7 +116,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			a_cs: EV_GTK_C_STRING
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			if a_event_box /= default_pointer then
 				a_hbox := {GTK}.gtk_bin_struct_child (a_event_box)
@@ -143,7 +143,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			pix_imp: detachable EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			if a_event_box /= default_pointer then
 				a_hbox := {GTK}.gtk_bin_struct_child (a_event_box)
@@ -154,7 +154,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 				if a_pixbuf /= default_pointer then
 					create Result
 					pix_imp ?= Result.implementation
-					check pix_imp /= Void end
+					check pix_imp /= Void then end
 					pix_imp.set_pixmap_from_pixbuf (a_pixbuf)
 				end
 			end
@@ -230,7 +230,7 @@ feature {EV_NOTEBOOK} -- Status setting
 		do
 			item_imp ?= an_item.implementation
 			check
-				an_item_has_implementation: item_imp /= Void
+				an_item_has_implementation: item_imp /= Void then
 			end
 			{GTK}.gtk_notebook_set_page (
 				visual_widget,
@@ -297,7 +297,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 			a_event_box, a_hbox, a_list, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			a_cs := a_text
 			ensure_tab_label (item_imp.c_object)
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
@@ -316,7 +316,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 			a_pix_imp: detachable EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			ensure_tab_label (item_imp.c_object)
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			a_hbox := {GTK}.gtk_bin_struct_child (a_event_box)
@@ -327,7 +327,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 
 			if a_pixmap /= Void then
 				a_pix_imp ?= a_pixmap.implementation
-				check a_pix_imp /= Void end
+				check a_pix_imp /= Void then end
 				a_pixbuf := a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 				{GTK2}.gtk_image_set_from_pixbuf (a_image, a_pixbuf)
 			else
@@ -369,7 +369,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

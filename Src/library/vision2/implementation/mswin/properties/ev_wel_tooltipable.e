@@ -35,7 +35,7 @@ feature -- Element change
 			l_window: like tooltip_window
 		do
 			l_app ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check l_app_not_void: l_app /= Void end
+			check l_app_not_void: l_app /= Void then end
 			if not a_tooltip.is_empty then
 				if tool_info /= Void then
 					tool_info.set_text (a_tooltip)
@@ -62,8 +62,9 @@ feature -- Element change
 						-- be an internal tooltip.
 					check
 						tool_info_not_void: tool_info /= Void
+					then
+						l_app.internal_tooltip.remove_tool (tool_info)
 					end
-					l_app.internal_tooltip.remove_tool (tool_info)
 				end
 			end
 				-- Assign `a_tooltip' to `tooltip'.
@@ -99,14 +100,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -180,9 +180,9 @@ feature -- Status setting
 			a_path: POINTER
 		do
 			list_item_imp ?= an_item.implementation
-			check list_item_imp /= Void end
+			check list_item_imp /= Void then end
 			l_list_iter := list_item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_path := {GTK2}.gtk_tree_model_get_path (list_store, l_list_iter.item)
 			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
 			{GTK2}.gtk_tree_path_free (a_path)
@@ -217,9 +217,9 @@ feature -- Status setting
 		do
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_item_imp ?= (child_array @ an_index).implementation
-			check a_item_imp /= Void end
+			check a_item_imp /= Void then end
 			l_list_iter := a_item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			{GTK2}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
 		end
 
@@ -232,9 +232,9 @@ feature -- Status setting
 		do
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_item_imp ?= (child_array @ an_index).implementation
-			check a_item_imp /= Void end
+			check a_item_imp /= Void then end
 			l_list_iter := a_item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			{GTK2}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 		end
 
@@ -343,7 +343,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			loop
 				if not previous_selection.has (new_selection.item) then
 					an_item ?= new_selection.item.implementation
-					check an_item /= Void end
+					check an_item /= Void then end
 					newly_selected_items.extend (an_item)
 				end
 				previous_selection.prune_all (new_selection.item)
@@ -355,7 +355,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				previous_selection.off
 			loop
 				an_item ?= previous_selection.item.implementation
-				check an_item /= Void end
+				check an_item /= Void then end
 				if an_item.deselect_actions_internal /= Void then
 					an_item.deselect_actions.call (Void)
 				end
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

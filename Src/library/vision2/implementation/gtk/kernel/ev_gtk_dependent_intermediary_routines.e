@@ -42,7 +42,7 @@ feature -- Implementation
 			pnd_par: detachable EV_PND_DEFERRED_ITEM_PARENT
 		do
 			pnd_par ?= c_get_eif_reference_from_object_id (a_c_object)
-			check pnd_par /= Void end
+			check pnd_par /= Void then end
 			pnd_par.on_mouse_button_event (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
@@ -191,8 +191,11 @@ feature -- Implementation
 			l_any_imp: detachable EV_ANY_IMP
 		do
 			l_any_imp ?= eif_id_object (a_object_id)
-			check l_any_imp /= Void end
-			l_any_imp.process_gdk_event (n_args, args)
+			if l_any_imp /= Void then
+				l_any_imp.process_gdk_event (n_args, args)
+			else
+				check event_object_not_coupled: False end
+			end
 		end
 
 feature {EV_ANY_I} -- Externals
@@ -206,14 +209,14 @@ feature {EV_ANY_I} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

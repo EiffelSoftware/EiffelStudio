@@ -164,7 +164,9 @@ feature {NONE} -- Implementation
 					if not previous_selection.has (new_selection.item) then
 						an_item ?= new_selection.item.implementation
 						check an_item /= Void end
-						newly_selected_items.extend (an_item)
+						if an_item /= Void then
+							newly_selected_items.extend (an_item)
+						end
 					end
 					previous_selection.prune_all (new_selection.item)
 					new_selection.forth
@@ -176,7 +178,9 @@ feature {NONE} -- Implementation
 				loop
 					an_item ?= previous_selection.item.implementation
 					check an_item /= Void end
-					call_deselect_actions (an_item)
+					if an_item /= Void then
+						call_deselect_actions (an_item)
+					end
 					previous_selection.forth
 				end
 
@@ -611,7 +615,7 @@ feature -- Status setting
 		do
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			l_list_iter := (ev_children @ an_index).list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			{GTK2}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
 			if selection_signal_id = 0 then
 				a_row_imp := ev_children.i_th (an_index)
@@ -628,7 +632,7 @@ feature -- Status setting
 		do
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			l_list_iter := (ev_children @ an_index).list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			{GTK2}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 			if selection_signal_id = 0 then
 				a_row_imp := ev_children.i_th (an_index)
@@ -1041,7 +1045,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			{GTK2}.g_value_set_string (str_value, a_cs.item)
 
 			a_list_iter := ev_children.i_th (a_row).list_iter
-			check a_list_iter /= Void end
+			check a_list_iter /= Void then end
 			{GTK2}.gtk_list_store_set_value (list_store, a_list_iter.item, a_column, str_value)
 		end
 
@@ -1060,10 +1064,10 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_pixbuf: POINTER
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_iter := ev_children.i_th (a_row).list_iter
-			check a_list_iter /= Void end
+			check a_list_iter /= Void then end
 			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
 			{GTK2}.object_unref (a_pixbuf)
 		end
@@ -1074,7 +1078,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_list_iter := ev_children.i_th (a_row).list_iter
-			check a_list_iter /= Void end
+			check a_list_iter /= Void then end
 			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, NULL)
 		end
 
@@ -1131,9 +1135,9 @@ feature {NONE} -- Implementation
 			a_path: POINTER
 		do
 			list_item_imp ?= a_item.implementation
-			check list_item_imp /= Void end
+			check list_item_imp /= Void then end
 			l_list_iter := list_item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_path := {GTK2}.gtk_tree_model_get_path (list_store, l_list_iter.item)
 			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
 			{GTK2}.gtk_tree_path_free (a_path)
@@ -1147,29 +1151,31 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= v.implementation
 			check item_imp /= Void end
-			item_imp.set_parent_imp (Current)
+			if item_imp /= Void then
+				item_imp.set_parent_imp (Current)
 
-				-- Make sure list is large enough to fit `item_imp'
-			if v.count > column_count then
-				create_list (v.count)
+					-- Make sure list is large enough to fit `item_imp'
+				if v.count > column_count then
+					create_list (v.count)
+				end
+
+					-- update the list of rows of the column list:			
+				ev_children.go_i_th (i)
+				ev_children.put_left (item_imp)
+
+					-- Add row to model
+				create a_tree_iter.make
+				item_imp.set_list_iter (a_tree_iter)
+				{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
+				update_child (item_imp, ev_children.count)
+
+				if item_imp.is_transport_enabled then
+					update_pnd_connection (True)
+				end
+
+				child_array.go_i_th (i)
+				child_array.put_left (v)
 			end
-
-				-- update the list of rows of the column list:			
-			ev_children.go_i_th (i)
-			ev_children.put_left (item_imp)
-
-				-- Add row to model
-			create a_tree_iter.make
-			item_imp.set_list_iter (a_tree_iter)
-			{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
-			update_child (item_imp, ev_children.count)
-
-			if item_imp.is_transport_enabled then
-				update_pnd_connection (True)
-			end
-
-			child_array.go_i_th (i)
-			child_array.put_left (v)
 		end
 
 	remove_i_th (a_position: INTEGER)
@@ -1183,13 +1189,15 @@ feature {NONE} -- Implementation
 			item_imp.set_parent_imp (Void)
 			l_list_iter := item_imp.list_iter
 			check l_list_iter /= Void end
-			{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
-			-- remove the row from the `ev_children'
-			ev_children.go_i_th (a_position)
-			ev_children.remove
-			child_array.go_i_th (a_position)
-			child_array.remove
-			update_pnd_status
+			if l_list_iter /= Void then
+				{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
+				-- remove the row from the `ev_children'
+				ev_children.go_i_th (a_position)
+				ev_children.remove
+				child_array.go_i_th (a_position)
+				child_array.remove
+				update_pnd_status
+			end
 		end
 
 feature -- Access
@@ -1234,14 +1242,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MULTI_COLUMN_LIST_IMP

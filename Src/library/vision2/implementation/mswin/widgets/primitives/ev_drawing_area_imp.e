@@ -87,7 +87,7 @@ feature -- Access
 	dc: WEL_DC
 			-- The device context of the control.
 		do
-			check internal_paint_dc /= Void end
+			check internal_paint_dc /= Void then end
 			Result := internal_paint_dc
 		end
 
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			-- Release the dc if not already released
 		do
 			if not in_paint then
-				check internal_paint_dc /= Void end
+				check internal_paint_dc /= Void then end
 				if internal_paint_dc.exists then
 					internal_paint_dc.release
 				end
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			-- Get the dc if not already get.
 		do
 			if not in_paint then
-				check internal_paint_dc /= Void end
+				check internal_paint_dc /= Void then end
 				if not internal_paint_dc.exists then
 					internal_paint_dc.get
 					internal_paint_dc.set_background_transparent
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 					])
 
 					-- Switch back the dc from paint_dc to screen_dc.
-				check screen_dc /= Void end
+				check screen_dc /= Void then end
 				internal_paint_dc := screen_dc
 				in_paint := False
 
@@ -325,14 +325,14 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 			-- dc we use when painting outside a WM_PAINT message
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_DRAWING_AREA_IMP

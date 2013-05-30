@@ -98,18 +98,20 @@ feature {NONE} -- Initialization
 			other_imp_not_void: a_other_imp /= Void
 		do
 			create post_creation_update_actions
-				-- Assign id of `a_other_imp' to `id'.
-			id := a_other_imp.id
-			other_imp := a_other_imp
-			copy_attributes
-				-- Now remove the menu from `a_other_imp'.
-				-- If we do not do this, then we are unable
-				-- to set the menu in `Current'.
-			a_other_imp.attached_interface.remove_menu_bar
-			if attached other_imp.interface as l_interface then
-				interface := l_interface
-			else
-				check False end
+			check a_other_imp /= Void then
+					-- Assign id of `a_other_imp' to `id'.
+				id := a_other_imp.id
+				other_imp := a_other_imp
+				copy_attributes
+					-- Now remove the menu from `a_other_imp'.
+					-- If we do not do this, then we are unable
+					-- to set the menu in `Current'.
+				a_other_imp.attached_interface.remove_menu_bar
+				if attached other_imp.interface as l_interface then
+					interface := l_interface
+				else
+					check False end
+				end
 			end
 		end
 
@@ -232,6 +234,7 @@ feature {NONE} -- Implementation
 		require
 			other_window_not_void: other_imp /= Void
 		do
+			check other_imp /= Void then end
 			create dialog_children.make
 			lower_bar := other_imp.lower_bar
 			upper_bar := other_imp.upper_bar
@@ -403,7 +406,7 @@ feature {NONE} -- Implementation
 		local
 			button_imp: detachable EV_BUTTON_IMP
 		do
-			check other_imp /= Void end
+			check other_imp /= Void then end
 				-- Copy the attributes from the window to the dialog
 			copy_attributes
 			post_creation_update_actions.call (Void)
@@ -437,7 +440,7 @@ feature {NONE} -- Implementation
 				attached default_push_button as l_interface_default_push_button
 			then
 				button_imp ?= l_interface_default_push_button.implementation
-				check button_imp /= Void end
+				check button_imp /= Void then end
 				set_default_push_button (l_interface_default_push_button)
 				button_imp.set_focus
 			end
@@ -456,7 +459,7 @@ feature {NONE} -- Implementation
 			loc_item_imp: detachable EV_WIDGET_IMP
 		do
 			--| FIXME handle EV_SPLIT_AREA_IMP and EV_TABLE_IMP
-			check other_imp /= Void end
+			check other_imp /= Void then end
 			loc_item_imp ?= other_imp.item_imp
 			if loc_item_imp /= Void then
 				loc_item_imp.set_top_level_window_imp (Current)
@@ -510,8 +513,8 @@ feature {NONE} -- Implementation
 		do
 			create l_screen
 			l_screen_imp ?= l_screen.implementation
-			check l_screen_imp_not_void: l_screen_imp /= Void end
-			check parent_window /= Void end
+			check l_screen_imp_not_void: l_screen_imp /= Void then end
+			check parent_window /= Void then end
 			if parent_window /= Void and then parent_window.is_displayed then
 				x_pos := parent_window.x_position + (parent_window.width - width) // 2
 				y_pos := parent_window.y_position + (parent_window.height - height) // 2
@@ -613,7 +616,7 @@ feature {NONE} -- Implementation
 			paint_dc.set_background_color (wel_background_color)
 			paint_dc.set_text_color (wel_foreground_color)
 			l_background_brush := background_brush
-			check l_background_brush /= Void end
+			check l_background_brush /= Void then end
 			set_message_return_value (l_background_brush.item)
 			--| FIXME Julian should we really delete this brush here?
 			--| doesn't seem to make much difference to GDI count, is it necessary?
@@ -658,14 +661,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

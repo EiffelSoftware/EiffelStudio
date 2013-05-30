@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 		do
 			wel_win ?= interface_item.implementation
 			check
-				wel_win_not_void: wel_win /= Void
+				wel_win_not_void: wel_win /= Void then
 			end
 			wel_win.parent_ask_resize (a_width, a_height)
 			if
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 				-- the best solution. Julian 07/17/02
 			l_item_imp := item_imp
 			check
-				has_item: l_item_imp /= Void
+				has_item: l_item_imp /= Void then
 			end
 			if scroller /= Void then
 				if is_horizontal_scroll_bar_visible then
@@ -232,7 +232,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

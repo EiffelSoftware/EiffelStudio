@@ -129,13 +129,11 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			Result := l_scroller.horizontal_position
+			if attached scroller as l_scroller then
+				Result := l_scroller.horizontal_position
+			end
 		ensure
 			result_small_enough: Result <= maximal_horizontal_position
 			result_large_enough: Result >= minimal_horizontal_position
@@ -146,13 +144,11 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			Result := l_scroller.vertical_position
+			if attached scroller as l_scroller then
+				Result := l_scroller.vertical_position
+			end
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 			result_large_enough: Result >= minimal_vertical_position
@@ -163,13 +159,11 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			Result := l_scroller.maximal_horizontal_position
+			if attached scroller as l_scroller then
+				Result := l_scroller.maximal_horizontal_position
+			end
 		ensure
 			result_large_enough: Result >= minimal_horizontal_position
 		end
@@ -179,13 +173,11 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			Result := l_scroller.maximal_vertical_position
+			if attached scroller as l_scroller then
+				Result := l_scroller.maximal_vertical_position
+			end
 		ensure
 			result_large_enough: Result >= minimal_vertical_position
 		end
@@ -195,13 +187,11 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			Result := l_scroller.minimal_horizontal_position
+			if attached scroller as l_scroller then
+				Result := l_scroller.minimal_horizontal_position
+			end
 		ensure
 			result_small_enough: Result <= maximal_horizontal_position
 		end
@@ -211,13 +201,11 @@ feature -- Status report
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			Result := l_scroller.minimal_vertical_position
+			if attached scroller as l_scroller then
+				Result := l_scroller.minimal_vertical_position
+			end
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 		end
@@ -292,13 +280,10 @@ feature -- Status setting
 			position_small_enough: attached scroller as l_scroller_var and then
 				l_scroller_var.valid_maximal_horizontal_position (position)
 			position_large_enough: position >= minimal_horizontal_position
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
-				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			l_scroller.set_horizontal_position (position)
+			if attached scroller as l_scroller then
+				l_scroller.set_horizontal_position (position)
+			end
 		ensure
 			horizontal_position_set: horizontal_position = position
 		end
@@ -311,13 +296,10 @@ feature -- Status setting
 			position_small_enough: attached scroller as l_scroller_var and then
 				l_scroller_var.valid_maximal_vertical_position (position)
 			position_large_enough: position >= minimal_vertical_position
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
-				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			l_scroller.set_vertical_position (position)
+			if attached scroller as l_scroller then
+				l_scroller.set_vertical_position (position)
+			end
 		ensure
 			vertical_position_set: vertical_position = position
 		end
@@ -330,13 +312,11 @@ feature -- Status setting
 			exists: exists
 			scroller_exists: scroller /= Void
 			consistent_range: minimum <= maximum
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			l_scroller.set_horizontal_range (minimum, maximum)
+			if attached scroller as l_scroller then
+				l_scroller.set_horizontal_range (minimum, maximum)
+			end
 		ensure
 			minimal_horizontal_position_set: minimal_horizontal_position =
 				minimum
@@ -352,13 +332,11 @@ feature -- Status setting
 			exists: exists
 			scroller_exists: scroller /= Void
 			consistent_range: minimum <= maximum
-		local
-			l_scroller: like scroller
 		do
-			l_scroller := scroller
 				-- Per precondition
-			check l_scroller_attached: l_scroller /= Void end
-			l_scroller.set_vertical_range (minimum, maximum)
+			if attached scroller as l_scroller then
+				l_scroller.set_vertical_range (minimum, maximum)
+			end
 		ensure
 			minimal_vertical_position_set: minimal_vertical_position =
 				minimum
@@ -1045,7 +1023,7 @@ feature {WEL_DISPATCHER}
 				if l_commands /= Void and then commands_enabled and then l_commands.has (msg) then
 					l_message := l_commands.item (msg)
 						-- Per checking.
-					check l_message_attached: l_message /= Void end
+					check l_message_attached: l_message /= Void then end
 					l_message.execute (Current, msg, wparam, lparam)
 				end
 			end
@@ -1173,7 +1151,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

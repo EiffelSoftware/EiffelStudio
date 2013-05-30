@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 		do
 			l_buffer := buffer
 				-- Per precondition
-			check l_buffer_attached: l_buffer /= Void end
+			check l_buffer_attached: l_buffer /= Void then end
 			if is_unicode_data then
 				create l_uni_str.share_from_pointer_and_count (l_buffer.item, l_buffer.count)
 				l_text := l_uni_str.substring (1, l_uni_str.count)
@@ -66,14 +66,14 @@ invariant
 	text_not_void: text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

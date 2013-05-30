@@ -126,7 +126,7 @@ feature -- Basic operations
 		do
 			l_window := application_main_window
 				-- Per precondition.
-			check l_window_attached: l_window /= Void end
+			check l_window_attached: l_window /= Void then end
 			if attached {WEL_MAIN_DIALOG} l_window as l_dialog then
 				l_dialog.activate
 			end
@@ -263,7 +263,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

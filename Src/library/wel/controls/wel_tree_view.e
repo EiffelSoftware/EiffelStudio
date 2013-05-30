@@ -537,9 +537,12 @@ feature -- Element change
 			last_item := {WEL_API}.send_message_result (item, Tvm_insertitem, to_wparam (0), an_item.item)
 			an_item.tree_view_item.set_h_item (last_item)
 			l_user_item := an_item.user_tree_view_item
-				-- Per precondition
-			check l_user_item_attached: l_user_item /= Void end
-			l_user_item.set_h_item (last_item)
+				-- Per precondition			
+			if l_user_item /= Void then
+				l_user_item.set_h_item (last_item)
+			else
+				check l_user_item_attached: l_user_item /= Void end
+			end
 		ensure
 			new_count: count = old count + 1
 		end
@@ -837,14 +840,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

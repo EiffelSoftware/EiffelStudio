@@ -64,7 +64,7 @@ feature -- Access
 		do
 			l_bitmap := internal_mask_bitmap
 				-- Per precondition.
-			check l_bitmap_attached: l_bitmap /= Void end
+			check l_bitmap_attached: l_bitmap /= Void then end
 			Result := l_bitmap
 		ensure
 			Result_not_void: Result /= Void
@@ -87,7 +87,7 @@ feature -- Access
 		do
 			l_bitmap := internal_color_bitmap
 				-- Per precondition.
-			check l_bitmap_attached: l_bitmap /= Void end
+			check l_bitmap_attached: l_bitmap /= Void then end
 			Result := l_bitmap
 		ensure
 			Result_not_void: Result /= Void
@@ -172,13 +172,13 @@ feature -- Status Setting
 			l_bitmap: detachable WEL_BITMAP
 		do
 			l_bitmap := internal_mask_bitmap
-			check l_bitmap_attached: l_bitmap /= Void end
+			check l_bitmap_attached: l_bitmap /= Void then end
 			l_bitmap.enable_reference_tracking
 			internal_mask_bitmap_object_id := l_bitmap.object_id
 
 			if has_color_bitmap then
 				l_bitmap := internal_color_bitmap
-				check l_bitmap_attached: l_bitmap /= Void end
+				check l_bitmap_attached: l_bitmap /= Void then end
 				l_bitmap.enable_reference_tracking
 				internal_color_bitmap_object_id := l_bitmap.object_id
 			end
@@ -433,14 +433,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

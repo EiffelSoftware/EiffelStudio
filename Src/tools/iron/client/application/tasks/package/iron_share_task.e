@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {IRON_PACKAGE_TASK}."
+	description: "Summary description for {IRON_SHARE_TASK}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_PACKAGE_TASK
+	IRON_SHARE_TASK
 
 inherit
 	IRON_TASK
@@ -27,13 +27,13 @@ feature -- Execute
 
 	process (a_iron: IRON)
 		local
-			args: IRON_PACKAGE_ARGUMENT_PARSER
+			args: IRON_SHARE_ARGUMENT_PARSER
 		do
 			create args.make (Current)
 			args.execute (agent execute (args, a_iron))
 		end
 
-	execute (args: IRON_PACKAGE_ARGUMENTS; a_iron: IRON)
+	execute (args: IRON_SHARE_ARGUMENTS; a_iron: IRON)
 		local
 			l_data: like data_from
 			uri: URI
@@ -272,7 +272,7 @@ feature -- Execute
 			end
 		end
 
-	data_from (args: IRON_PACKAGE_ARGUMENTS): detachable IRON_PACKAGE_TASK_DATA
+	data_from (args: IRON_SHARE_ARGUMENTS): detachable IRON_SHARE_TASK_DATA
 		local
 			u: FILE_UTILITIES
 			p: detachable PATH

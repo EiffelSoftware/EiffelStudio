@@ -50,18 +50,16 @@ feature {ENCODING} -- Access
 			-- Stream prepresentation of last converted string.
 		require
 			last_conversion_successful: last_conversion_successful
-		local
-			l_result: detachable STRING_8
-			l_last: like last_converted_string
 		do
-			l_last := last_converted_string
-			check l_last_not_void: l_last /= Void end -- implied by precondition `last_conversion_successful'
-			if last_was_wide_string then
-				l_result := string_16_to_stream (l_last.as_string_32)
-			else
-				l_result := string_general_to_stream (l_last)
+			check
+				from_precondition: attached last_converted_string as l_last
+			then
+				if last_was_wide_string then
+					Result := string_16_to_stream (l_last.as_string_32)
+				else
+					Result := string_general_to_stream (l_last)
+				end
 			end
-			Result := l_result
 		ensure
 			last_converted_stream_not_void: Result /= Void
 		end
@@ -201,7 +199,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

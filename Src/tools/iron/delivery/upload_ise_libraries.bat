@@ -1,6 +1,9 @@
 @echo off
 setlocal
 
+if not exist "%~dp0set_credential.bat" goto create_set_credential_script
+@call %~dp0set_credential.bat
+
 set T_HERE=%cd%
 if "%ISE_PLATFORM%" == "" goto failure
 
@@ -9,9 +12,10 @@ set TMP_SOURCE_TOPDIR=%~dp0%\_libs
 if exist %TMP_SOURCE_TOPDIR% svn update _libs
 if not exist %TMP_SOURCE_TOPDIR% svn checkout https://svn.eiffel.com/eiffelstudio/trunk/Src/library _libs
 
-set IRON_CREATE_OPTS=create -u jfiat -p IR0jPx31_ --repository http://iron.eiffel.com/7.3 --batch
-set IRON_UPDATE_OPTS=update -u jfiat -p IR0jPx31_ --repository http://iron.eiffel.com/7.3 --batch
-rem set IRON_CREATE_OPTS=create -u jfiat -p test --repository http://localhost:9090/7.3
+set TMP_IRON_REPOSITORY=http://iron.eiffel.com/7.3
+
+set IRON_CREATE_OPTS=create -u %IRON_USERNAME% -p %IRON_PASSWORD% --repository %TMP_IRON_REPOSITORY% --batch
+set IRON_UPDATE_OPTS=update -u %IRON_USERNAME% -p %IRON_PASSWORD% --repository %TMP_IRON_REPOSITORY% --batch
 
 set IRON_CMD=iron.exe share
 %IRON_CMD% %IRON_CREATE_OPTS% --package-name "base" --package-description "Eiffel Base: Kernel library classes, data structure, I/O" --package-archive-source "%TMP_SOURCE_TOPDIR%\base"
@@ -146,6 +150,14 @@ rem %IRON_CMD% %IRON_UPDATE_OPTS% --package-name "uri"  --index "/es/library/tex
 %IRON_CMD% %IRON_UPDATE_OPTS% --package-name "time" --index "/es/library/utility/time/time"
 
 goto end
+
+:create_set_credential_script
+echo tooo
+echo set IRON_USERNAME=put-your-username > %~dp0set_credential.bat
+echo set IRON_PASSWORD=put-your-password >> %~dp0set_credential.bat
+echo edit the file "%~dp0set_credential.bat" to set your username and password
+goto end
+
 :failure
 echo failed!
 endlocal

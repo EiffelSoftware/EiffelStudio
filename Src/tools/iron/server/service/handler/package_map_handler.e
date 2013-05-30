@@ -91,6 +91,8 @@ feature -- Execution
 			l_path: detachable STRING_32
 			m: IRON_REPO_HTML_RESPONSE
 			s: STRING
+			l_repo_url: STRING
+			err: BOOLEAN
 		do
 			if attached package_from_id_path_parameter (req, "id") as l_package	then
 				if has_permission_to_modify_package (req, l_package) then
@@ -119,19 +121,31 @@ feature -- Execution
 						end
 					end
 					if l_path /= Void then
-						if l_path.starts_with ("/") then
-							l_path.remove_head (1)
+						l_repo_url := req.absolute_script_url ("/" + iron_version (req).value)
+						if l_path.starts_with (l_repo_url) then
+							l_path.remove_head (l_repo_url.count)
 						end
-						if attached iron.database.package_by_path (iron_version (req), l_path) as p_curr then
-							s.append ("Already associated to " + m.html_encoded_string (p_curr.human_identifier))
+						if l_path.has (':') or l_path.has_substring ("..") then
+							-- invalid path
+							err := True
+							s.append ("Invalid map parameter (should not contain ':' or '..' )")
 						else
-							iron.database.associate_package_with_path (iron_version (req), l_package, l_path)
-							if iron.database.package_by_path (iron_version (req), l_path) ~ l_package then
-								-- succeed
-								s.append ("association created.")
+							if l_path.starts_with ("/") then
+								l_path.remove_head (1)
+							end
+							if attached iron.database.package_by_path (iron_version (req), l_path) as p_curr then
+								s.append ("Already associated to " + m.html_encoded_string (p_curr.human_identifier))
+								err := True
 							else
-								-- failure
-								s.append ("association creation failed.")
+								iron.database.associate_package_with_path (iron_version (req), l_package, l_path)
+								if iron.database.package_by_path (iron_version (req), l_path) ~ l_package then
+									-- succeed
+									s.append ("association created.")
+								else
+									-- failure
+									s.append ("association creation failed.")
+									err := True
+								end
 							end
 						end
 					else

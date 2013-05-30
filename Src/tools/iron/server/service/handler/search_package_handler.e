@@ -43,13 +43,18 @@ feature -- Execution
 			html_vis: HTML_IRON_REPO_ITERATOR
 			html: IRON_REPO_HTML_RESPONSE
 			json_vis: JSON_V1_IRON_REPO_ITERATOR
+			l_title: detachable READABLE_STRING_32
+			l_found_count: INTEGER
+			l_total_count: INTEGER
 		do
-			if 
-				attached {WSF_STRING} req.query_parameter ("name") as l_searched_name and then 
-				not l_searched_name.is_empty 
+			if
+				attached {WSF_STRING} req.query_parameter ("name") as l_searched_name and then
+				not l_searched_name.is_empty
 			then
+				l_title := {STRING_32} "Search IRON packages with name=%"" + l_searched_name.value + "%""
 				lst := iron.database.packages (iron_version (req), 1, 0)
 				if lst /= Void then
+					l_total_count := lst.count
 					from
 						lst.start
 					until
@@ -64,9 +69,14 @@ feature -- Execution
 							lst.remove
 						end
 					end
+					l_found_count := lst.count
 				end
 			else
 				lst := iron.database.packages (iron_version (req), 1, 0)
+				if lst /= Void then
+					l_total_count := lst.count
+					l_found_count := lst.count
+				end
 			end
 			if req.is_content_type_accepted ("text/html") then
 				html := new_response_message (req)
@@ -78,7 +88,12 @@ feature -- Execution
 				end
 
 					-- Create new package
-				html.set_title ("List of available IRON packages")
+				if l_title /= Void then
+					html.set_title (html.html_encoded_string (l_title))
+				else
+					html.set_title ("List of available IRON packages")
+				end
+				s.append ("<div>Found " + l_found_count.out + " out of " + l_total_count.out + " items.</div>")
 				html.set_body (s)
 				res.send (html)
 			else

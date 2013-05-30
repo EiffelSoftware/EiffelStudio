@@ -67,7 +67,10 @@ feature -- Change
 				roles := l_roles
 			end
 			l_roles.extend (r)
-			if r.name.is_case_insensitive_equal ("admin") then
+			if
+				r.name.is_case_insensitive_equal ("admin") or
+				r.name.is_case_insensitive_equal ("administrator")
+			then
 				is_administrator := True
 			end
 		end

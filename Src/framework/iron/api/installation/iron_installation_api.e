@@ -133,6 +133,7 @@ feature -- Access
 	local_path_associated_with_uri (a_uri: READABLE_STRING_GENERAL): detachable PATH
 		local
 			s,r: STRING
+			l_pn_item: READABLE_STRING_8
 			l_package: detachable IRON_PACKAGE
 			repo_url: READABLE_STRING_8
 			iri: IRI
@@ -156,10 +157,14 @@ feature -- Access
 						until
 							l_package /= Void
 						loop
-							if s.starts_with (pn.item) then
+							l_pn_item := pn.item
+							if 
+								s.starts_with (l_pn_item) and then
+								(s.count = l_pn_item.count or else s.item (l_pn_item.count + 1) = '/')
+							then
 								l_package := p.item
 								r.wipe_out
-								r.append (s.substring (pn.item.count + 1, s.count))
+								r.append (s.substring (l_pn_item.count + 1, s.count))
 							end
 						end
 					end

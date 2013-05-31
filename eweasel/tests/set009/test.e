@@ -7,7 +7,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Execute test.
 		do
 			linked_set_append

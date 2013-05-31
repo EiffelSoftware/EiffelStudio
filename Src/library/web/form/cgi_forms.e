@@ -17,13 +17,12 @@ feature -- Access
 		require
 			field_not_void: field_name /= Void;
 			field_exists: field_defined (field_name)
-		local
-			l_list: detachable LINKED_LIST [STRING_8]
 		do
-			l_list := form_data.item (field_name)
-				-- Per precondition
-			check l_list_attached: l_list /= Void end
-			Result := l_list.first
+			check
+				from_precondition: attached form_data.item (field_name) as l
+			then
+				Result := l.first
+			end
 		ensure
 			value_exists: Result /= Void
 		end
@@ -35,12 +34,12 @@ feature -- Access
 			field_exists: field_defined (field_name)
 		local
 			s: STRING
-			l_list: detachable LINKED_LIST [STRING_8]
 		do
-			l_list := form_data.item (field_name)
-				-- Per precondition
-			check l_list_attached: l_list /= Void end
-			s := l_list.first
+			check
+				from_precondition: attached form_data.item (field_name) as l_list
+			then
+				s := l_list.first
+			end
 			s.to_lower
 			if s.is_equal ("on") then
 				Result := True
@@ -56,13 +55,12 @@ feature -- Access
 		require
 			field_not_void: field_name /= Void
 			field_exists: field_defined (field_name)
-		local
-			l_list: detachable LINKED_LIST [STRING_8]
 		do
-			l_list := form_data.item (field_name)
-				-- Per precondition
-			check l_list_attached: l_list /= Void end
-			Result := l_list
+			check
+				from_precondition: attached form_data.item (field_name) as r
+			then
+				Result := r
+			end
 		ensure
 			value_exists: Result /= Void
 		end
@@ -81,13 +79,12 @@ feature -- Advanced Access
 		require
 			field_not_void: field_name /= Void
 			field_exists: field_defined (field_name)
-		local
-			l_list: detachable LINKED_LIST [STRING_8]
 		do
-			l_list := form_data.item (field_name)
-				-- Per precondition
-			check l_list_attached: l_list /= Void end
-			Result := l_list.count
+			check
+				from_precondition: attached form_data.item (field_name) as l
+			then
+				Result := l.count
+			end
 		ensure
 			valid_count: Result >= 0
 		end
@@ -97,13 +94,12 @@ feature -- Advanced Access
 		require
 			field_not_void: field_name /= Void
 			field_exists: field_defined (field_name)
-		local
-			l_list: detachable LINKED_LIST [STRING_8]
 		do
-			l_list := form_data.item (field_name)
-				-- Per precondition
-			check l_list_attached: l_list /= Void end
-			Result := l_list
+			check
+				from_precondition: attached form_data.item (field_name) as r
+			then
+				Result := r
+			end
 		ensure
 			valid_count: Result.count = value_count (field_name)
 		end
@@ -127,14 +123,14 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

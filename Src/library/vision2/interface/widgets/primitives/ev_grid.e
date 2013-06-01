@@ -2540,7 +2540,7 @@ feature -- Contract support
 			end
 		end
 
-	highest_parent_row_within_bounds (lower_index, upper_index: INTEGER): EV_GRID_ROW
+	highest_parent_row_within_bounds (lower_index, upper_index: INTEGER): detachable EV_GRID_ROW
 			-- Return the highest level `parent_row' recursively of row `upper_index'
 			-- that has an index greater or equal to `lower_index'.
 		require
@@ -2550,7 +2550,6 @@ feature -- Contract support
 			valid_upper_index: upper_index >= lower_index and upper_index <= row_count
 		local
 			l_row: EV_GRID_ROW
-			l_result: detachable EV_GRID_ROW
 		do
 			l_row := row (upper_index)
 			from
@@ -2560,12 +2559,10 @@ feature -- Contract support
 				if attached l_row.parent_row as l_parent_row then
 					l_row := l_parent_row
 					if l_row.index > lower_index then
-						l_result := l_row
+						Result := l_row
 					end
 				end
 			end
-			check l_result /= Void then end
-			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end

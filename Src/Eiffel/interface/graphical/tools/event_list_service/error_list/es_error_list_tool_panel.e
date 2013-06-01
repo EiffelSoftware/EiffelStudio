@@ -590,6 +590,7 @@ feature {NONE} -- Basic operations
 				a_row.select_actions.extend (agent l_tip.restart_tooltip_timer)
 
 					-- Context
+				create l_gen.make
 				tracer.trace (l_gen, l_error, {ERROR_TRACER}.context)
 				if l_gen.last_line /= Void then
 					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)

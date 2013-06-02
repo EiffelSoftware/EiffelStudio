@@ -2563,8 +2563,6 @@ feature -- Contract support
 					end
 				end
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 	rows_may_be_moved (a_first_row_index, a_row_count: INTEGER): BOOLEAN

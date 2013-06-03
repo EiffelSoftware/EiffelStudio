@@ -8,6 +8,9 @@ class
 
 inherit
 	NETWORK_STREAM_SOCKET
+		redefine
+			make
+		end
 
 create
 	make_server_by_address_and_port,
@@ -17,6 +20,13 @@ create {NETWORK_STREAM_SOCKET}
 	make_from_descriptor_and_address
 
 feature {NONE} -- Initialization
+
+	make
+			-- Create a network stream socket.
+		do
+			Precursor
+			set_reuse_address
+		end
 
 	make_server_by_address_and_port (an_address: INET_ADDRESS; a_port: INTEGER)
 			-- Create server socket on `an_address' and `a_port'.

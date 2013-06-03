@@ -45,7 +45,7 @@ feature {NONE} -- Initlization
 			l_pix_buf_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pix_buf_imp ?= a_pixel_buffer.implementation
-			check l_pix_buf_imp /= Void end
+			check l_pix_buf_imp /= Void then end
 			set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
 			set_x_hotspot (a_x_hotspot)
 			set_y_hotspot (a_x_hotspot)
@@ -127,7 +127,7 @@ feature {NONE} -- Initlization
 			a_pix_imp: detachable EV_PIXMAP_IMP
 		do
 			a_pix_imp ?= a_cursor.implementation
-			check a_pix_imp /= Void end
+			check a_pix_imp /= Void then end
 			set_gdkpixbuf (a_pix_imp.pixbuf_from_drawable)
 			set_x_hotspot (a_cursor.x_hotspot)
 			set_y_hotspot (a_cursor.y_hotspot)
@@ -139,7 +139,7 @@ feature {NONE} -- Initlization
 			a_pix_imp: detachable EV_PIXMAP_IMP
 		do
 			a_pix_imp ?= a_pixmap.implementation
-			check a_pix_imp /= Void end
+			check a_pix_imp /= Void then end
 			set_gdkpixbuf (a_pix_imp.pixbuf_from_drawable)
 			set_x_hotspot (a_hotspot_x)
 			set_y_hotspot (a_hotspot_y)
@@ -282,7 +282,7 @@ feature -- Duplication
 			l_pointer_style_imp: detachable like Current
 		do
 			l_pointer_style_imp ?= a_pointer_style.implementation
-			check l_pointer_style_imp /= Void end
+			check l_pointer_style_imp /= Void then end
 			if l_pointer_style_imp.gdk_pixbuf /= default_pointer then
 				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
 			end
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -101,20 +101,21 @@ feature {NONE} -- Implementation
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 			err: WEL_ERROR
 		do
-			check a_parent /= Void end
-				-- Initialise the common controls
-			create common_controls_dll.make
+			check a_parent /= Void then
+					-- Initialise the common controls
+				create common_controls_dll.make
 
-				-- Register the dialog to set `wel_item' later.
-			register_dialog
+					-- Register the dialog to set `wel_item' later.
+				register_dialog
 
-				-- Launch the right dialog box modal
-			result_id := cwin_dialog_box_indirect (
-				main_args.current_instance.item,
-				dlg_template.item,
-				a_parent.item,
-				cwel_dialog_procedure_address
-				)
+					-- Launch the right dialog box modal
+				result_id := cwin_dialog_box_indirect (
+					main_args.current_instance.item,
+					dlg_template.item,
+					a_parent.item,
+					cwel_dialog_procedure_address
+					)
+			end
 			debug ("VISION2_WINDOWS")
 				if result_id = 0 or result_id = -1 then
 					create err
@@ -148,14 +149,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

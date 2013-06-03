@@ -308,7 +308,7 @@ feature -- Element change
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= a_menu_bar.implementation
-			check mb_imp /= Void end
+			check mb_imp /= Void then end
 			mb_imp.set_parent_window_imp (Current)
 			{GTK}.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			{GTK}.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
@@ -321,7 +321,7 @@ feature -- Element change
 		do
 			if attached menu_bar as l_menu_bar then
 				mb_imp ?= l_menu_bar.implementation
-				check mb_imp /= Void end
+				check mb_imp /= Void then end
 				mb_imp.remove_parent_window
 				{GTK}.gtk_container_remove (vbox, mb_imp.list_widget)
 			end
@@ -338,7 +338,7 @@ feature {NONE} -- Accelerators
 			l_override_key: detachable STRING
 		do
 			acc_imp ?= an_accel.implementation
-			check acc_imp /= Void end
+			check acc_imp /= Void then end
 			accel_list.put (an_accel, acc_imp.hash_code)
 			if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
 				l_override_key := once "F10"
@@ -363,7 +363,7 @@ feature {NONE} -- Accelerators
 			acc_imp: detachable EV_ACCELERATOR_IMP
 		do
 			acc_imp ?= an_accel.implementation
-			check acc_imp /= Void end
+			check acc_imp /= Void then end
 			accel_list.remove (acc_imp.hash_code)
 		end
 
@@ -452,13 +452,13 @@ feature {NONE} -- Implementation
 			{GTK}.gtk_widget_show (container_widget)
 
 			bar_imp ?= upper_bar.implementation
-			check bar_imp /= Void end
+			check bar_imp /= Void then end
 
 			{GTK}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 			{GTK}.gtk_box_pack_start (vbox, container_widget, True, True, 0)
 
 			bar_imp ?= lower_bar.implementation
-			check bar_imp /= Void end
+			check bar_imp /= Void then end
 
 			{GTK}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
@@ -635,14 +635,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_WINDOW_IMP

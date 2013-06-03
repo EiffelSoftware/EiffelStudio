@@ -179,12 +179,12 @@ feature {NONE} -- Access
 			a_code_page_name_not_void: a_code_page_name /= Void
 			a_code_page_name_not_empty: not a_code_page_name.is_empty
 			a_code_page_valid: is_code_page_valid (a_code_page_name)
-		local
-			l_result: detachable STRING
 		do
-			l_result := code_pages.item (a_code_page_name.as_lower)
-			check l_result_not_void: l_result /= Void end -- Implied by precondition `a_code_page_valid'
-			Result := l_result
+			check
+				from_precondition: attached code_pages.item (a_code_page_name.as_lower) as r
+			then
+				Result := r
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

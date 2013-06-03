@@ -4,7 +4,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "environment, global, system"
-	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -45,7 +45,7 @@ feature -- Access
 			app_imp: detachable EV_APPLICATION_IMP
 		once
 			app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check app_imp /= Void end
+			check app_imp /= Void then end
 			Result := app_imp.readable_pixbuf_formats.linear_representation
 			Result.compare_objects
 		end
@@ -83,20 +83,20 @@ feature -- Access
 			app_imp: detachable EV_APPLICATION_IMP
 		once
 			app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check app_imp /= Void end
+			check app_imp /= Void then end
 			Result := app_imp.font_names_on_system.linear_representation
 			Result.compare_objects
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

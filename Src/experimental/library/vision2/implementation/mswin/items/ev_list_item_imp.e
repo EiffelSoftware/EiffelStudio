@@ -121,7 +121,7 @@ feature -- Access
 					create Result
 					pix_imp ?= Result.implementation
 					check
-						pix_imp /= Void
+						pix_imp /= Void then
 					end
 					if attached parent_imp as l_parent_imp and then attached l_parent_imp.image_list as l_image_list then
 						image_icon := l_image_list.get_icon (image_index, Ild_normal)
@@ -356,7 +356,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 			l_parent_imp: like parent_imp
 		do
 			l_parent_imp := parent_imp
-			check l_parent_imp /= Void end
+			check l_parent_imp /= Void then end
 			if has_pixmap then
 				image_list := l_parent_imp.image_list
 					-- Create the image list and associate it
@@ -365,7 +365,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 					l_parent_imp.setup_image_list
 					image_list := l_parent_imp.image_list
 				end
-				check image_list /= Void end
+				check image_list /= Void then end
 
 				if attached private_pixmap as l_private_pixmap then
 					image_list.add_pixmap (l_private_pixmap)
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			elseif attached parent as l_parent then
-				check l_parent_imp /= Void end
+				check l_parent_imp /= Void then end
 				if {WEL_API}.send_message_result_boolean (a_list.wel_item, lvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(l_parent_imp.index_of (interface, 1)), a_rect.item) then
 					bounds_rect.set_rect (l_parent.screen_x+a_rect.left, l_parent.screen_y+a_rect.top, l_parent.screen_x+a_rect.right, l_parent.screen_y+a_rect.bottom)
 				else
@@ -480,14 +480,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

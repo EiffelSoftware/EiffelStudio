@@ -122,11 +122,11 @@ feature {NONE} -- Implementation
 				Result := True
 			elseif not Result and first /= Void then
 				l_widget_imp := first_imp
-				check l_widget_imp /= Void end
+				check l_widget_imp /= Void then end
 				Result := l_widget_imp.is_control_in_window (hwnd_control)
 			elseif not Result and second /= Void then
 				l_widget_imp := second_imp
-				check l_widget_imp /= Void end
+				check l_widget_imp /= Void then end
 				Result := l_widget_imp.is_control_in_window (hwnd_control)
 			end
 		end
@@ -367,14 +367,14 @@ feature {NONE} -- Implementation
 			if attached first as l_first then
 				widget_imp ?= l_first.implementation
 				check
-					widget_implementation_not_void: widget_imp /= Void
+					widget_implementation_not_void: widget_imp /= Void then
 				end
 				widget_imp.set_top_level_window_imp (a_window)
 			end
 			if attached second as l_second then
 				widget_imp ?= l_second.implementation
 				check
-					widget_implementation_not_void: widget_imp /= Void
+					widget_implementation_not_void: widget_imp /= Void then
 				end
 				widget_imp.set_top_level_window_imp (a_window)
 			end
@@ -429,18 +429,18 @@ feature {NONE} -- Implementation
 					if forwards then
 						if search_pos = 1 and then attached first as l_first then
 							w ?= l_first.implementation
-							check w /= Void end
+							check w /= Void then end
 							l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 						end
 						if l_result = Void and then attached second as l_second then
 							w ?= l_second.implementation
-							check w /= Void end
+							check w /= Void then end
 							l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 						end
 					else
 						if search_pos = 2 and attached second as l_second then
 							w ?= l_second.implementation
-							check w /= Void end
+							check w /= Void then end
 							container ?= w.interface
 							if container /= Void then
 								l_result := w.next_tabstop_widget (start_widget, container.count, forwards)
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 						end
 						if l_result = Void and then attached first as l_first then
 							w ?= l_first.implementation
-							check w /= Void end
+							check w /= Void then end
 							container ?= w.interface
 							if container /= Void then
 								l_result := w.next_tabstop_widget (start_widget, container.count, forwards)
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 			if l_result = Void then
 				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -535,14 +535,14 @@ feature {NONE} -- WEL internal
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_SPLIT_AREA_IMP

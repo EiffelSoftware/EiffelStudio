@@ -129,9 +129,9 @@ feature -- Access
 			a_gvalue: POINTER
 		do
 			item_imp ?= list_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			l_list_iter := item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			Result := {GTK2}.g_value_get_boolean (a_gvalue)
@@ -149,9 +149,9 @@ feature -- Status setting
 			a_gvalue: POINTER
 		do
 			item_imp ?= tree_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			l_list_iter := item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			{GTK2}.g_value_set_boolean (a_gvalue, True)
@@ -171,9 +171,9 @@ feature -- Status setting
 			a_gvalue: POINTER
 		do
 			item_imp ?= tree_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			l_list_iter := item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			{GTK2}.g_value_set_boolean (a_gvalue, False)
@@ -189,14 +189,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_CHECKABLE_TREE_IMP

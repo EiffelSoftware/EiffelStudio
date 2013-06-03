@@ -357,7 +357,7 @@ feature {NONE} -- Events
 		local
 			l_selected_row: detachable EV_GRID_ROW
 		do
-			if not grid.selected_rows.is_empty then
+			if grid.has_selected_row then
 				l_selected_row := grid.selected_rows.first
 			end
 
@@ -575,7 +575,7 @@ feature {NONE} -- Events
 			inspect
 				k.code
 			when {EV_KEY_CONSTANTS}.key_enter then
-				if not grid.selected_rows.is_empty then
+				if grid.has_selected_row then
 					l_row := grid.selected_rows.first
 					if attached {PREFERENCE} l_row.data then
 						check l_row.count >= col_value_index end
@@ -595,7 +595,7 @@ feature {NONE} -- Events
 					end
 				end
 			when {EV_KEY_CONSTANTS}.key_space then
-				if not grid.selected_rows.is_empty then
+				if grid.has_selected_row then
 					l_row :=  grid.selected_rows.first
 					if
 						l_row.count >= col_value_index and then

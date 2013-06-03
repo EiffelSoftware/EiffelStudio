@@ -46,15 +46,24 @@ feature -- Initialization
 				create kamikaze_action_mutex.make
 			end
 
-				-- Initialize contextual help.
-			create f1_key.make_with_code ({EV_KEY_CONSTANTS}.Key_f1)
-			set_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, False))
-			set_contextual_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, True))
-			create {EV_SIMPLE_HELP_ENGINE} help_engine
-
 				-- Create and initialize action sequences.
 			create pnd_targets.make (8)
 			create dockable_targets.make (8)
+
+
+				-- Initialize contextual help.
+			create {EV_SIMPLE_HELP_ENGINE} help_engine
+			create f1_key.make_with_code ({EV_KEY_CONSTANTS}.Key_f1)
+				-- Create accelerators before hand to satisfy void safety
+			create help_accelerator.make_with_key_combination (f1_key, False, False, False)
+			create contextual_help_accelerator.make_with_key_combination (f1_key, False, False, True)
+
+			help_handler_procedure := agent help_handler
+			contextual_help_handler_procedure := agent enable_contextual_help
+
+				-- Hookup accelerators with implementation.
+			set_help_accelerator (help_accelerator)
+			set_contextual_help_accelerator (contextual_help_accelerator)
 
 				-- Set this thread as the gui thread.
 			is_gui_thread_cell.put (True)
@@ -371,12 +380,12 @@ feature -- Element Change
 			an_accelerator_not_void: an_accelerator /= Void
 		do
 			help_accelerator := an_accelerator
-			if not help_accelerator.actions.has (help_handler_procedure) then
+			if help_handler_procedure /= Void and then not help_accelerator.actions.has (help_handler_procedure) then
 				help_accelerator.actions.extend (help_handler_procedure)
 			end
 		ensure
 			help_accelerator_assigned: help_accelerator = an_accelerator
-			help_accelerator_complete: help_accelerator.actions.has (help_handler_procedure)
+			help_accelerator_complete: attached help_handler_procedure and then help_accelerator.actions.has (help_handler_procedure)
 		end
 
 	set_contextual_help_accelerator (an_accelerator: EV_ACCELERATOR)
@@ -385,12 +394,12 @@ feature -- Element Change
 			an_accelerator_not_void: an_accelerator /= Void
 		do
 			contextual_help_accelerator := an_accelerator
-			if not contextual_help_accelerator.actions.has (contextual_help_handler_procedure) then
+			if contextual_help_handler_procedure /= Void and then not contextual_help_accelerator.actions.has (contextual_help_handler_procedure) then
 				contextual_help_accelerator.actions.extend (contextual_help_handler_procedure)
 			end
 		ensure
 			contextual_help_accelerator_assigned: contextual_help_accelerator = an_accelerator
-			contextual_help_accelerator_complete: contextual_help_accelerator.actions.has (contextual_help_handler_procedure)
+			contextual_help_accelerator_complete: attached contextual_help_handler_procedure and then contextual_help_accelerator.actions.has (contextual_help_handler_procedure)
 		end
 
 	set_help_engine (an_engine:  EV_HELP_ENGINE)
@@ -781,8 +790,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 						sensitive ?= trg
 						if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
 							l_has_targets := True
-							if not l_configurable_item_added then
-								check a_configure_agent /= Void end
+							if not l_configurable_item_added and then a_configure_agent /= Void then
 								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
 								l_configurable_item_added := True
 							end
@@ -1065,7 +1073,7 @@ feature -- Implementation
 			l_result: detachable EXCEPTION
 		do
 			l_result := exception_manager.last_exception
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			new_exception_not_void: Result /= Void
@@ -1103,11 +1111,8 @@ feature {NONE} -- Implementation
  	old_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Button press actions of window being used whie contextual help is enabled
 
-	help_handler_procedure: PROCEDURE [ANY, TUPLE]
+	help_handler_procedure: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Help handler procedure associated with help accelerator
-		once
-			Result := agent help_handler
-		end
 
 	help_handler
 			-- Display contextual help for currently focused widget.
@@ -1120,11 +1125,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	contextual_help_handler_procedure: PROCEDURE [ANY, TUPLE]
+	contextual_help_handler_procedure: detachable PROCEDURE [ANY, TUPLE]  note option: stable attribute end
 			-- Help handler procedure associated with context help accelerator
-		once
-			Result := agent enable_contextual_help
-		end
 
 	contextual_help_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Called when mouse pointer is pressed while contextual help is enabled
@@ -1191,7 +1193,7 @@ feature {NONE} -- Implementation
 						a_widget_list.forth
 					end
 					if chain /= Void then
-						check cursor /= Void end
+						check cursor /= Void then end
 						chain.go_to (cursor)
 					end
 				end
@@ -1208,7 +1210,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -218,7 +218,7 @@ feature -- Access
 					Result := x_position + l_parent.screen_x
 					l_wind := top_level_window_imp
 					if l_parent = l_wind then
-						check l_wind /= Void end
+						check l_wind /= Void then end
 							-- Parent is a window, since `screen_y' for a window gives
 							-- the coordinate of the top left corner of the window within
 							-- the screen, we need to add the the frame and the border
@@ -243,7 +243,7 @@ feature -- Access
 					Result := y_position + l_parent.screen_y
 					l_wind := top_level_window_imp
 					if l_wind = l_parent then
-						check l_wind /= Void end
+						check l_wind /= Void then end
 							-- Parent is a window, since `screen_y' for a window gives
 							-- the coordinate of the top left corner of the window within
 							-- the screen, we need to add the title bar if any, the frame,
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 			create Result.make (a_x, a_y)
 			ww ?= Current
 			check
-				wel_window_not_void: ww/= Void
+				wel_window_not_void: ww/= Void then
 			end
 			Result.client_to_screen (ww)
 		end
@@ -873,7 +873,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 						l_accel := l_accel_list.item_for_iteration
 						if l_accel /= Void then
 							l_accel_imp ?= l_accel.implementation
-							check l_accel_imp /= Void end
+							check l_accel_imp /= Void then end
 								-- Search for an accelerator based on current key combinations.
 							Result := l_accel_list.item (l_accel_imp.hash_code_function (a_key_code, application_imp.ctrl_pressed, application_imp.alt_pressed, application_imp.shift_pressed))
 						end
@@ -1245,9 +1245,9 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementati
 			cursor_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			l_cursor_pixmap := cursor_pixmap
-			check l_cursor_pixmap /= Void end
+			check l_cursor_pixmap /= Void then end
 			cursor_imp ?= l_cursor_pixmap.implementation
-			check cursor_imp /= Void end
+			check cursor_imp /= Void then end
 			wel_cursor := cursor_imp.wel_cursor
 			wel_cursor.increment_reference
 
@@ -1529,7 +1529,7 @@ feature -- Deferred features
 					-- If parent is void then return `start_widget', it is possible for latent messages to
 					-- indirectly call this routine
 				l_result ?= start_widget.implementation
-				check l_result /= Void end
+				check l_result /= Void then end
 			end
 			Result := l_result
 		ensure
@@ -1628,7 +1628,7 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

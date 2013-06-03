@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 		do
 			create a_buffer
 			create drawable_cell.put (a_buffer)
+			create drawable_position
 			make_with_drawable_widget_and_buffer (
 				a_world,
 				a_drawing_area,
@@ -70,7 +71,7 @@ feature {NONE} -- Initialization
 				a_drawing_area)
 			a_drawing_area.expose_actions.extend (agent on_paint)
 			a_drawing_area.resize_actions.extend (agent resize_buffer)
-			create drawable_position
+
 
 			recenter_agent := agent
 				do
@@ -154,7 +155,7 @@ feature -- Element change
 				move_buffer
 			elseif area_centered then
 				area_centered := False
-				if attached {EV_APPLICATION} ev_application as l_app then
+				if attached {EV_APPLICATION} ev_application as l_app and then attached recenter_agent then
 					l_app.do_once_on_idle (recenter_agent)
 				end
 			end
@@ -263,7 +264,7 @@ feature {NONE} -- Implementation
 			l_area: like area
 		do
 			l_area := area
-			check l_area /= Void end
+			check l_area /= Void then end
 			area_centered := True
 			create buffer_bounds.make (
 				(area_x - l_area.width * (Buffer_scale_factor - 1) / 2).rounded,
@@ -297,7 +298,7 @@ feature {NONE} -- Implementation
 			l_area: like area
 		do
 			l_area := area
-			check l_area /= Void end
+			check l_area /= Void then end
 			Result :=
 				area_x > drawable_position.x
 					and then
@@ -308,7 +309,7 @@ feature {NONE} -- Implementation
 				area_y + l_area.height < drawable_position.y + drawable.height
 		end
 
-	recenter_agent: PROCEDURE [ANY, TUPLE]
+	recenter_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Agent for recentering on idle.
 
 	area_centered: BOOLEAN
@@ -318,7 +319,7 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

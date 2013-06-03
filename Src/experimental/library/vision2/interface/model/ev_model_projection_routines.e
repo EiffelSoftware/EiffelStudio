@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			else
 				bbox := f.last_update_rectangle
 			end
-			check bbox /= Void end
+			check bbox /= Void then end
 			if bbox.has_area and then bbox.intersects (rect) then
 				-- If we paint f we have to add it
 				-- to the invalidate rectangle. That way
@@ -213,14 +213,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

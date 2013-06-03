@@ -491,10 +491,10 @@ feature -- Status report
 		do
 			l_commands := commands
 				-- Per precondition
-			check l_commands_attached: l_commands /= Void end
+			check l_commands_attached: l_commands /= Void then end
 			l_message := l_commands.item (message)
 				-- Per precondition
-			check l_message_attached: l_message /= Void end
+			check l_message_attached: l_message /= Void then end
 			Result := l_message.command
 		ensure
 			result_not_void: Result /= Void
@@ -511,10 +511,10 @@ feature -- Status report
 		do
 			l_commands := commands
 				-- Per precondition
-			check l_commands_attached: l_commands /= Void end
+			check l_commands_attached: l_commands /= Void then end
 			l_message := l_commands.item (message)
 				-- Per precondition
-			check l_message_attached: l_message /= Void end
+			check l_message_attached: l_message /= Void then end
 			Result := l_message.argument
 		end
 
@@ -962,7 +962,7 @@ feature -- Basic operations
 		do
 			l_commands := commands
 				-- Per precondition
-			check l_commands_attached: l_commands /= Void end
+			check l_commands_attached: l_commands /= Void then end
 			l_commands.remove (message)
 		ensure
 			command_removed: not command_exists (message)
@@ -2069,7 +2069,7 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 			if l_commands /= Void and then commands_enabled and then l_commands.has (msg) then
 				l_message := l_commands.item (msg)
 					-- Per checking.
-				check l_message_attached: l_message /= Void end
+				check l_message_attached: l_message /= Void then end
 				l_message.execute (Current, msg, wparam, lparam)
 			end
 		end
@@ -2760,7 +2760,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

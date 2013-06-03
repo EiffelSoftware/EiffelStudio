@@ -175,7 +175,7 @@ feature -- Status setting
 			if a_color /= Void then
 				color := {GTK}.c_gdk_color_struct_allocate
 				l_foreground_color_imp := foreground_color_imp
-				check l_foreground_color_imp /= Void end
+				check l_foreground_color_imp /= Void then end
 				{GTK}.set_gdk_color_struct_red (color, l_foreground_color_imp.red_16_bit)
 				{GTK}.set_gdk_color_struct_green (color, l_foreground_color_imp.green_16_bit)
 				{GTK}.set_gdk_color_struct_blue (color, l_foreground_color_imp.blue_16_bit)
@@ -252,14 +252,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

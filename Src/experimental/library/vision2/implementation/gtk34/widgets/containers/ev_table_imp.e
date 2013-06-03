@@ -121,15 +121,17 @@ feature -- Status settings
 			Precursor {EV_TABLE_I} (v, a_column, a_row, column_span, row_span)
 			item_imp ?= v.implementation
 			check item_imp /= Void end
-			on_new_item (item_imp)
-			{GTK}.gtk_table_attach_defaults (
-					container_widget,
-					item_imp.c_object,
-					a_column - 1,
-					a_column - 1 + column_span,
-					a_row - 1,
-					a_row - 1 + row_span
-			)
+			if item_imp /= Void then
+				on_new_item (item_imp)
+				{GTK}.gtk_table_attach_defaults (
+						container_widget,
+						item_imp.c_object,
+						a_column - 1,
+						a_column - 1 + column_span,
+						a_row - 1,
+						a_row - 1 + row_span
+				)
+			end
 		end
 
 	remove (v: EV_WIDGET)
@@ -140,8 +142,10 @@ feature -- Status settings
 			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
 			check item_imp /= Void end
-			on_removed_item (item_imp)
-			{GTK}.gtk_container_remove (container_widget, item_imp.c_object)
+			if item_imp /= Void then
+				on_removed_item (item_imp)
+				{GTK}.gtk_container_remove (container_widget, item_imp.c_object)
+			end
 		end
 
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
@@ -275,7 +279,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

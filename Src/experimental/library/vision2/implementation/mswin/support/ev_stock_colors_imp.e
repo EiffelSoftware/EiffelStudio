@@ -18,7 +18,7 @@ feature -- Access
 		do
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id (Wel_color_constants.Color_btnface)
 		end
 
@@ -30,7 +30,7 @@ feature -- Access
 		do
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id
 				(Wel_color_constants.Color_btnhighlight)
 		end
@@ -43,7 +43,7 @@ feature -- Access
 		do
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id (Wel_color_constants.Color_btnshadow)
 		end
 
@@ -55,7 +55,7 @@ feature -- Access
 		do
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id
 				(Wel_color_constants.Color_inactiveborder)
 		end
@@ -87,14 +87,14 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

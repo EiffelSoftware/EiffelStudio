@@ -213,13 +213,13 @@ feature -- Element change
 			if private_font /= Void then
 				font_imp ?= private_font.implementation
 				check
-					font_not_void: font_imp /= Void
+					font_not_void: font_imp /= Void then
 				end
 				t := font_imp.string_size (l_text)
 			elseif attached private_wel_font as l_private_wel_font then
 				t := l_private_wel_font.string_size (l_text)
 			end
-			check t /= Void end
+			check t /= Void then end
 			text_width := t.width
 			text_height := t.height
 		end
@@ -412,7 +412,7 @@ feature {NONE} -- WEL Implementation
 
 			create r.make (0,0,0,0)
 			bk_brush := background_brush
-			check bk_brush /= Void end
+			check bk_brush /= Void then end
 
 			theme_drawer.draw_widget_background (Current, memory_dc, invalid_rect, bk_brush)
 
@@ -467,7 +467,7 @@ feature {NONE} -- WEL Implementation
 				if attached private_font as l_private_font then
 					font_imp ?= l_private_font.implementation
 					check
-						font_not_void: font_imp /= Void
+						font_not_void: font_imp /= Void then
 					end
 					memory_dc.select_font (font_imp.wel_font)
 				elseif attached private_wel_font as l_private_wel_font then
@@ -482,7 +482,7 @@ feature {NONE} -- WEL Implementation
 				else
 					color_imp ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
 				end
-				check color_imp /= Void end
+				check color_imp /= Void then end
 				theme_drawer.draw_text (open_theme, memory_dc, bp_groupbox, gbs_disabled, text, dt_center, is_sensitive, text_rect, color_imp)
 			end
 			if not l_is_remote then
@@ -520,14 +520,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FRAME note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_FRAME_IMP

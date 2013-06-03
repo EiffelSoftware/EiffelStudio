@@ -309,7 +309,7 @@ feature -- Element change
 		do
 			rectangle_struct := {GTK}.c_gdk_rectangle_struct_allocate
 			a_region_imp ?= a_region.implementation
-			check a_region_imp /= Void end
+			check a_region_imp /= Void then end
 			{GTK}.gdk_region_get_clipbox (a_region_imp.gdk_region, rectangle_struct)
 				-- Set the gc clip area.
 			create gc_clip_area.make (
@@ -342,7 +342,7 @@ feature -- Element change
 			tile := l_tile
 			l_tile.copy (a_pixmap)
 			tile_imp ?= l_tile.implementation
-			check tile_imp /= Void end
+			check tile_imp /= Void then end
 			{GTK}.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
 
@@ -663,7 +663,7 @@ feature -- Drawing operations
 			l_back_buffer: POINTER
 		do
 			a_pixbuf_imp ?= a_pixel_buffer.implementation
-			check a_pixbuf_imp /= Void end
+			check a_pixbuf_imp /= Void then end
 			if supports_pixbuf_alpha then
 				{GTK2}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
 			else
@@ -750,7 +750,7 @@ feature -- Drawing operations
 						l_dest_clip.resize (l_dest_intersection.width, l_dest_intersection.y)
 
 						pixmap_imp ?= a_pixmap.implementation
-						check pixmap_imp /= Void end
+						check pixmap_imp /= Void then end
 
 						if pixmap_imp.mask /= default_pointer then
 							{GTK}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
@@ -785,7 +785,7 @@ feature -- Drawing operations
 		do
 			create Result
 			pix_imp ?= Result.implementation
-			check pix_imp /= Void end
+			check pix_imp /= Void then end
 			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
 			pix_imp.set_pixmap_from_pixbuf (a_pix)
 			{GTK2}.object_unref (a_pix)
@@ -1225,14 +1225,14 @@ invariant
 	gc_not_void: is_usable implies gc /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_DRAWABLE_IMP

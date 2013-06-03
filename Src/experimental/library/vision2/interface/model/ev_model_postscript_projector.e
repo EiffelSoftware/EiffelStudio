@@ -50,9 +50,9 @@ feature {NONE} -- Initialization
 		do
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
-			register_basic_figures
-			filename := a_path
 			create drawable
+			filename := a_path
+			register_basic_figures
 			drawable.set_margins (default_left_margin, default_bottom_margin)
 			drawable.set_page_size (Letter, False)
 		end
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

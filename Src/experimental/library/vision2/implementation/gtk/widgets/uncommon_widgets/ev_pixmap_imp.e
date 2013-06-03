@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			l_pixbuf: POINTER
 		do
 			a_pointer_style_imp ?= a_pointer_style.implementation
-			check a_pointer_style_imp /= Void end
+			check a_pointer_style_imp /= Void then end
 
 			if a_pointer_style_imp.predefined_cursor_code > 0 then
 				-- We are building from a stock cursor.
@@ -143,7 +143,7 @@ feature {NONE} -- Initialization
 			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check l_pixel_buffer_imp /= Void end
+			check l_pixel_buffer_imp /= Void then end
 			set_pixmap_from_pixbuf (l_pixel_buffer_imp.gdk_pixbuf)
 		end
 
@@ -297,7 +297,7 @@ feature -- Element change
 			a_mask_imp: detachable EV_BITMAP_IMP
 		do
 			a_mask_imp ?= a_mask.implementation
-			check a_mask_imp /= Void end
+			check a_mask_imp /= Void then end
 			copy_from_gdk_data (drawable, a_mask_imp.drawable, width, height)
 		end
 
@@ -356,7 +356,7 @@ feature -- Duplication
 			other_imp: detachable EV_PIXMAP_IMP
 		do
 			other_imp ?= other.implementation
-			check other_imp /= Void end
+			check other_imp /= Void then end
 			copy_from_gdk_data (other_imp.drawable, other_imp.mask, other_imp.width, other_imp.height)
 			internal_xpm_data := other_imp.internal_xpm_data
 		end
@@ -534,7 +534,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

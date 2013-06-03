@@ -163,7 +163,7 @@ feature -- Element change
 					-- We need to create a new `private_font' that has an escapement set.
 				l_font := font
 				l_font_imp ?= l_font.implementation
-				check l_font_imp /= Void end
+				check l_font_imp /= Void then end
 				l_log_font := l_font_imp.wel_font.log_font
 				l_log_font.set_escapement ((angle * 1800 / 3.14).rounded)
 				--l_log_font.set_orientation ((angle * 1800 / 3.14).rounded)
@@ -411,13 +411,13 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				l_draw_font := private_wel_font
 				if l_draw_font = Void then
 					l_font_imp ?= internal_font.implementation
-					check l_font_imp /= Void end
+					check l_font_imp /= Void then end
 					l_draw_font := l_font_imp.wel_font
 				end
 					 -- Draw the text
 				l_mem_dc.select_font (l_draw_font)
 				l_color_imp ?= foreground_color.implementation
-				check l_color_imp /= Void end
+				check l_color_imp /= Void then end
 				l_mem_dc.set_text_color (l_color_imp)
 
 					-- Set transparent because the background is drawn according to the label's set background color
@@ -476,14 +476,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LABEL note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_LABEL_IMP

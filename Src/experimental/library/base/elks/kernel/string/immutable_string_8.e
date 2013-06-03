@@ -24,7 +24,7 @@ inherit
 		rename
 			same_string as same_string_general,
 			same_characters as same_characters_general,
-			same_caseless_characters as same_caseless_characters_general,			
+			same_caseless_characters as same_caseless_characters_general,
 			starts_with as starts_with_general,
 			ends_with as ends_with_general,
 			is_case_insensitive_equal as is_case_insensitive_equal_general,
@@ -43,7 +43,8 @@ create
 	make_filled,
 	make_from_string,
 	make_from_c,
-	make_from_cil
+	make_from_cil,
+	make_from_separate
 
 create {IMMUTABLE_STRING_8}
 	make_from_area_and_bounds

@@ -78,7 +78,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_result: detachable EV_APPLICATION_IMP
 		once
 			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

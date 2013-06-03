@@ -55,7 +55,7 @@ feature -- Status setting
 			l_parent_box: POINTER
 		do
 			l_widget_imp ?= a_widget.implementation
-			check l_widget_imp /= Void end
+			check l_widget_imp /= Void then end
 			l_parent_box := {GTK}.gtk_event_box_new
 			{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
 			{GTK}.gtk_container_add (l_parent_box, l_widget_imp.c_object)
@@ -77,7 +77,7 @@ feature -- Status setting
 			l_alloc: POINTER
 		do
 			w_imp ?= a_widget.implementation
-			check w_imp /= Void end
+			check w_imp /= Void then end
 			l_parent_box := {GTK}.gtk_widget_struct_parent (w_imp.c_object)
 
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
@@ -98,7 +98,7 @@ feature -- Status setting
 			l_parent_box, l_parent_window, l_fixed_child: POINTER
 		do
 			w_imp ?= a_widget.implementation
-			check w_imp /= Void end
+			check w_imp /= Void then end
 			l_parent_box := {GTK}.gtk_widget_struct_parent (w_imp.c_object)
 
 			if app_implementation.rubber_band_is_drawn then
@@ -120,7 +120,7 @@ feature -- Status setting
 			w_imp: detachable EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			check w_imp /= Void end
+			check w_imp /= Void then end
 			set_item_position_and_size (a_widget, x_position_of_child (w_imp), y_position_of_child (w_imp), a_width, a_height)
 		end
 
@@ -195,14 +195,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_FIXED

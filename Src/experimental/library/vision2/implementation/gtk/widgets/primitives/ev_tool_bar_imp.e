@@ -147,7 +147,9 @@ feature -- Implementation
 			loop
 				l_item_imp ?= (child_array @ i).implementation
 				check l_item_imp /= Void end
-				l_width := l_width + l_item_imp.width
+				if l_item_imp /= Void then
+					l_width := l_width + l_item_imp.width
+				end
 				if a_x < l_width then
 					Result ?= l_item_imp
 				end
@@ -218,7 +220,7 @@ feature -- Implementation
 			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			v_imp ?= v.implementation
-			check v_imp /= Void end
+			check v_imp /= Void then end
 			v_imp.set_item_parent_imp (Current)
 			{GTK2}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
 
@@ -245,7 +247,7 @@ feature -- Implementation
 		do
 			child_array.go_i_th (i)
 			imp ?= child_array.i_th (i).implementation
-			check imp /= Void end
+			check imp /= Void then end
 
 			r ?= imp
 			if r /= Void then
@@ -276,7 +278,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

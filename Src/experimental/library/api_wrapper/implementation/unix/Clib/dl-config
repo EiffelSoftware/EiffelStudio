@@ -23,6 +23,9 @@ fi
 while test $# -gt 0; do
 	case $1 in
 		--library)
+		if echo "$ISE_PLATFORM" | grep "solaris" >/dev/null 2>&1; then
+			echo -ldl
+ 		fi
 		if echo "$ISE_PLATFORM" | grep "linux" >/dev/null 2>&1; then
 			echo -ldl
  		fi

@@ -380,8 +380,8 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			buffer.generate_paragraph_information (l_text)
 			paragraph_indexes := buffer.paragraph_start_indexes
 			paragraph_formats := buffer.paragraph_formats
-			check paragraph_formats /= Void end
-			check paragraph_indexes /= Void end
+			check paragraph_formats /= Void then end
+			check paragraph_indexes /= Void then end
 
 			current_lower_line_index := 1
 			last_paragraph_change := 1
@@ -632,7 +632,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

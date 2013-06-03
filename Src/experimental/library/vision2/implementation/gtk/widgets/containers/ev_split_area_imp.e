@@ -54,7 +54,7 @@ feature -- Access
 			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
 			{GTK}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
@@ -67,7 +67,7 @@ feature -- Access
 			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
 			{GTK}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
@@ -81,7 +81,7 @@ feature -- Access
 		do
 			if has (an_item) and then an_item /= Void then
 				item_imp ?= an_item.implementation
-				check item_imp /= Void end
+				check item_imp /= Void then end
 				item_imp.set_parent_imp (Void)
 				{GTK}.gtk_container_remove ({GTK}.gtk_widget_struct_parent (item_imp.c_object), item_imp.c_object)
 				if an_item = first then
@@ -154,14 +154,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_SPLIT_AREA_IMP

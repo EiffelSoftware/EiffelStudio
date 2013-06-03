@@ -205,7 +205,7 @@ feature -- Query
 			end
 			l_int := cwin_get_theme_sys_color (a_theme, a_color_id)
 			debug ("VISION2_WINDOWS")
-				check l_wel_err /= Void end
+				check l_wel_err /= Void then end
 				if l_wel_err.last_error_code /= 0 then
 					l_wel_err.display_last_error
 				end
@@ -303,14 +303,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

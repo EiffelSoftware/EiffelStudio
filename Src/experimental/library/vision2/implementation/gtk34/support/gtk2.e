@@ -3143,6 +3143,11 @@ feature -- Externals
 			"C signature (gchar*): GtkTextTag* use <ev_gtk.h>"
 		end
 
+	frozen gtk_text_view_window_to_buffer_coords (a_text_view: POINTER; a_window_type: NATURAL_8; a_window_x, a_window_y: INTEGER; a_buffer_x, a_buffer_y: TYPED_POINTER [INTEGER])
+		external
+			"C signature (GtkTextView*, GtkTextWindowType, gint, gint, gint*, gint*) use <ev_gtk.h>"
+		end
+
 	frozen gtk_text_buffer_new (a_text_tag_table: POINTER): POINTER
 		external
 			"C signature (GtkTextTagTable*): GtkTextBuffer* use <ev_gtk.h>"
@@ -3231,6 +3236,11 @@ feature -- Externals
 	frozen gtk_text_view_backward_display_line (a_text_view: POINTER; a_text_iter: POINTER): BOOLEAN
 		external
 			"C signature (GtkTextView*, GtkTextIter*): gboolean use <ev_gtk.h>"
+		end
+
+	frozen gtk_text_view_get_iter_at_location (a_text_view, a_text_iter: POINTER; a_x, a_y: INTEGER)
+		external
+			"C signature (GtkTextView*, GtkTextIter*, gint, gint) use <ev_gtk.h>"
 		end
 
 	frozen gtk_text_view_forward_display_line_end (a_text_view: POINTER; a_text_iter: POINTER): BOOLEAN
@@ -3329,7 +3339,7 @@ feature -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

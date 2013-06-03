@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			if a_selected_item /= previous_selected_item then
 				if attached previous_selected_item as l_previous_selected_item then
 					previous_selected_item_imp ?= l_previous_selected_item.implementation
-					check previous_selected_item_imp /= Void end
+					check previous_selected_item_imp /= Void then end
 					if previous_selected_item_imp.deselect_actions_internal /= Void then
 						previous_selected_item_imp.deselect_actions.call (Void)
 					end
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 				end
 				if a_selected_item /= Void then
 					a_selected_item_imp ?= a_selected_item.implementation
-					check a_selected_item_imp /= Void end
+					check a_selected_item_imp /= Void then end
 					if a_selected_item_imp.select_actions_internal /= Void then
 						a_selected_item_imp.select_actions.call (Void)
 					end
@@ -299,17 +299,17 @@ feature -- Status report
 			from
 				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes * a_depth)
 				a_tree_node := i_th (mp.read_integer_32 (0) + 1)
-				check a_tree_node /= Void end
+				check a_tree_node /= Void then end
 				i := 1
 			until
 				i = a_depth
 			loop
 				a_tree_node := a_tree_node.i_th (mp.read_integer_32 (i * {PLATFORM}.integer_32_bytes) + 1)
-				check a_tree_node /= Void end
+				check a_tree_node /= Void then end
 				i := i + 1
 			end
 			l_result ?= a_tree_node.implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -341,9 +341,9 @@ feature -- Implementation
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			tree_item_imp ?= an_item.implementation
-			check tree_item_imp /= Void end
+			check tree_item_imp /= Void then end
 			l_list_iter := tree_item_imp.list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_path := {GTK2}.gtk_tree_model_get_path (tree_store, l_list_iter.item)
 			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
 			{GTK2}.gtk_tree_path_free (a_path)
@@ -405,7 +405,9 @@ feature -- Implementation
 				if l_child_array.item /= Void then
 					a_tree_node_imp ?= l_child_array.item.implementation
 					check a_tree_node_imp /= Void end
-					a_enable_flag := a_tree_node_imp.is_transport_enabled_iterator
+					if a_tree_node_imp /= Void then
+						a_enable_flag := a_tree_node_imp.is_transport_enabled_iterator
+					end
 				end
 				i := i + 1
 			end
@@ -586,14 +588,14 @@ feature {EV_TREE_NODE_IMP}
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes * a_depth)
 					current_depth_index := mp.read_integer_32 (0) + 1
 					a_tree_node_imp ?= child_array.i_th (current_depth_index).implementation
-					check a_tree_node_imp /= Void end
+					check a_tree_node_imp /= Void then end
 					i := 1
 				until
 					i = a_depth
 				loop
 					current_depth_index := mp.read_integer_32 (i * {PLATFORM}.integer_32_bytes) + 1
 					a_tree_node_imp ?= a_tree_node_imp.child_array.i_th (current_depth_index).implementation
-					check a_tree_node_imp /= Void end
+					check a_tree_node_imp /= Void then end
 					i := i + 1
 				end
 				Result := a_tree_node_imp
@@ -619,16 +621,18 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= v.implementation
 			check item_imp /= Void end
-			item_imp.set_parent_imp (Current)
+			if item_imp /= Void then
+				item_imp.set_parent_imp (Current)
 
-			child_array.go_i_th (i)
-			child_array.put_left (v)
+				child_array.go_i_th (i)
+				child_array.put_left (v)
 
-			item_imp.add_item_and_children_to_parent_tree (Current, Void, i)
-			update_row_pixmap (item_imp)
+				item_imp.add_item_and_children_to_parent_tree (Current, Void, i)
+				update_row_pixmap (item_imp)
 
-			if item_imp.is_transport_enabled_iterator then
-				update_pnd_connection (True)
+				if item_imp.is_transport_enabled_iterator then
+					update_pnd_connection (True)
+				end
 			end
 		end
 
@@ -640,14 +644,18 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= (child_array @ (a_position)).implementation
 			check item_imp /= Void end
-				-- Remove from tree if present
-			l_list_iter := item_imp.list_iter
-			check l_list_iter /= Void end
-			{GTK2}.gtk_tree_store_remove (tree_store, l_list_iter.item)
-			item_imp.set_parent_imp (Void)
-			child_array.go_i_th (a_position)
-			child_array.remove
-			update_pnd_status
+			if item_imp /= Void then
+					-- Remove from tree if present
+				l_list_iter := item_imp.list_iter
+				check l_list_iter /= Void end
+				if l_list_iter /= Void then
+					{GTK2}.gtk_tree_store_remove (tree_store, l_list_iter.item)
+					item_imp.set_parent_imp (Void)
+					child_array.go_i_th (a_position)
+					child_array.remove
+					update_pnd_status
+				end
+			end
 		end
 
 feature {EV_TREE_NODE_IMP} -- Implementation
@@ -664,7 +672,9 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			{GTK2}.g_value_unset (a_g_value_string_struct)
 			l_list_iter := a_tree_node_imp.list_iter
 			check l_list_iter /= Void end
-			{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, 1, a_g_value_string_struct)
+			if l_list_iter /= Void then
+				{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, 1, a_g_value_string_struct)
+			end
 			a_string := {GTK2}.g_value_get_string (a_g_value_string_struct)
 			if a_string /= default_pointer then
 				a_cs := App_implementation.reusable_gtk_c_string
@@ -688,7 +698,9 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			{GTK2}.g_value_take_string (str_value, a_cs.item)
 			l_list_iter := a_tree_node_imp.list_iter
 			check l_list_iter /= Void end
-			{GTK2}.gtk_tree_store_set_value (tree_store, l_list_iter.item, 1, str_value)
+			if l_list_iter /= Void then
+				{GTK2}.gtk_tree_store_set_value (tree_store, l_list_iter.item, 1, str_value)
+			end
 		end
 
 	g_value_string_struct: POINTER
@@ -707,7 +719,9 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_pix := a_tree_node_imp.gdk_pixbuf
 			l_list_iter := a_tree_node_imp.list_iter
 			check l_list_iter /= Void end
-			{GTK2}.gtk_tree_store_set_pixbuf (tree_store, l_list_iter.item, 0, a_pix)
+			if l_list_iter /= Void then
+				{GTK2}.gtk_tree_store_set_pixbuf (tree_store, l_list_iter.item, 0, a_pix)
+			end
 		end
 
 	tree_store: POINTER
@@ -774,14 +788,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TREE_IMP

@@ -126,10 +126,10 @@ feature {EV_ANY_I} -- Access
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
-				implementation_not_void: widget_imp /= Void
+				implementation_not_void: widget_imp /= Void then
 			end
 			l_widget_child := find_widget_child (widget_imp)
-			check l_widget_child /= Void end
+			check l_widget_child /= Void then end
 			Result := l_widget_child.left_attachment + 1
 		end
 
@@ -142,10 +142,10 @@ feature {EV_ANY_I} -- Access
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
-				implementation_not_void: widget_imp /= Void
+				implementation_not_void: widget_imp /= Void then
 			end
 			l_widget_child := find_widget_child (widget_imp)
-			check l_widget_child /= Void end
+			check l_widget_child /= Void then end
 			Result := l_widget_child.top_attachment + 1
 		end
 
@@ -158,10 +158,10 @@ feature {EV_ANY_I} -- Access
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
-				implementation_not_void: widget_imp /= Void
+				implementation_not_void: widget_imp /= Void then
 			end
 			widget_child := find_widget_child (widget_imp)
-			check widget_child /= Void end
+			check widget_child /= Void then end
 			Result := widget_child.right_attachment - widget_child.left_attachment
 		end
 
@@ -174,10 +174,10 @@ feature {EV_ANY_I} -- Access
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
-				implementation_not_void: widget_imp /= Void
+				implementation_not_void: widget_imp /= Void then
 			end
 			widget_child := find_widget_child (widget_imp)
-			check widget_child /= Void end
+			check widget_child /= Void then end
 			Result := widget_child.bottom_attachment - widget_child.top_attachment
 		end
 
@@ -314,7 +314,7 @@ feature {EV_ANY_I} -- Status settings
 			child.implementation.on_parented
 			child_imp ?= child.implementation
 			check
-				valid_child: child_imp /= Void
+				valid_child: child_imp /= Void then
 			end
 				-- Set the parent of `child_imp'.
 			child_imp.set_parent_imp (Current)
@@ -352,13 +352,13 @@ feature {EV_ANY_I} -- Status settings
 				-- Retrieve implementation of `v'.
 			widget_imp ?= v.implementation
 			check
-				implementation_not_void: widget_imp /= Void
+				implementation_not_void: widget_imp /= Void then
 			end
 				-- Call `remove_item_actions' for `Current'.
 			remove_item_actions.call ([widget_imp.attached_interface])
 				-- Retrieve the table child for `tchild'.
 			tchild := find_widget_child (widget_imp)
-			check tchild /= Void end
+			check tchild /= Void then end
 				-- Remove the table child from `ev_children'.
 			ev_children.prune_all (tchild)
 
@@ -379,10 +379,10 @@ feature {EV_ANY_I} -- Status settings
 			Precursor {EV_TABLE_I} (v, a_column, a_row)
 			child_imp ?= v.implementation
 			check
-				valid_child: child_imp /= Void
+				valid_child: child_imp /= Void then
 			end
 			table_child := find_widget_child (child_imp)
-			check table_child /= Void end
+			check table_child /= Void then end
 			table_child.set_attachment
 				(a_row - 1, a_column - 1, table_child.bottom_attachment - table_child.top_attachment + a_row - 1, table_child.right_attachment - table_child.left_attachment + a_column - 1)
 			notify_change (Nc_minsize, Current, False)
@@ -397,10 +397,10 @@ feature {EV_ANY_I} -- Status settings
 			Precursor {EV_TABLE_I} (v, column_span, row_span)
 			child_imp ?= v.implementation
 			check
-				valid_child: child_imp /= Void
+				valid_child: child_imp /= Void then
 			end
 			table_child := find_widget_child (child_imp)
-			check table_child /= Void end
+			check table_child /= Void then end
 			table_child.set_attachment
 				(table_child.top_attachment, table_child.left_attachment, table_child.top_attachment + row_span, table_child.left_attachment + column_span)
 			notify_change (Nc_minsize, Current, False)
@@ -421,10 +421,10 @@ feature {EV_ANY_I} -- Status settings
 					-- so that they will work correctly. Julian.
 				child_imp ?= v.implementation
 				check
-					valid_child: child_imp /= Void
+					valid_child: child_imp /= Void then
 				end
 				table_child := find_widget_child (child_imp)
-				check table_child /= Void end
+				check table_child /= Void then end
 				table_child.set_attachment
 				(a_row - 1, a_column - 1, a_row + row_span - 1, a_column + column_span - 1)
 
@@ -1133,7 +1133,7 @@ feature {NONE} -- Implementation
 					l_item_list.off or l_result /= Void
 				loop
 					w ?= l_item_list.item.implementation
-					check w /= Void end
+					check w /= Void then end
 					if forwards then
 						l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 					else
@@ -1169,14 +1169,14 @@ invariant
 	ev_children_not_void: ev_children /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

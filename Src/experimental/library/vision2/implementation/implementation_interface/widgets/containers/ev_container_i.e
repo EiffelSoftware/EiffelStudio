@@ -34,7 +34,7 @@ feature -- Access
 			l_item: like item
 		do
 			l_item := item
-			check l_item /= Void end
+			check l_item /= Void then end
 			Result := l_item
 		end
 
@@ -120,7 +120,7 @@ feature -- Status setting
 					-- and add `other' to group.
 			elseif container_i.internal_merged_radio_button_groups = Void then
 				l_internal_merged_radio_button_groups := internal_merged_radio_button_groups
-				check l_internal_merged_radio_button_groups /= Void end
+				check l_internal_merged_radio_button_groups /= Void then end
 				container_i.set_internal_merged_radio_button_group (l_internal_merged_radio_button_groups)
 				l_internal_merged_radio_button_groups.extend (other)
 
@@ -129,7 +129,7 @@ feature -- Status setting
 			elseif internal_merged_radio_button_groups = Void then
 				set_internal_merged_radio_button_group (container_i.internal_merged_radio_button_groups)
 				l_internal_merged_radio_button_groups := container_i.internal_merged_radio_button_groups
-				check l_internal_merged_radio_button_groups /= Void end
+				check l_internal_merged_radio_button_groups /= Void then end
 				l_internal_merged_radio_button_groups.extend (attached_interface)
 
 					-- If `Current' and `other' already share the same list, they must be already
@@ -146,9 +146,9 @@ feature -- Status setting
 				end
 					-- Store the original count so we only need to update as few groups as possible.
 				l_internal_merged_radio_button_groups := internal_merged_radio_button_groups
-				check l_internal_merged_radio_button_groups /= Void end
+				check l_internal_merged_radio_button_groups /= Void then end
 				original_count := l_internal_merged_radio_button_groups.count
-				check l_internal_merged_radio_button_groups /= Void end
+				check l_internal_merged_radio_button_groups /= Void then end
 				if attached container_i.internal_merged_radio_button_groups as l_container_merged_radio_groups then
 					l_internal_merged_radio_button_groups.append (l_container_merged_radio_groups)
 				end
@@ -177,13 +177,13 @@ feature -- Status setting
 			l_internal_merged_radio_button_groups: like internal_merged_radio_button_groups
 		do
 			container_i ?= other.implementation
-			check container_i /= Void end
+			check container_i /= Void then end
 				-- `other' is now no longer part of a group, so
 				-- set the internal group to Void
 			container_i.set_internal_merged_radio_button_group (Void)
 
 			l_internal_merged_radio_button_groups := internal_merged_radio_button_groups
-			check l_internal_merged_radio_button_groups /= Void end
+			check l_internal_merged_radio_button_groups /= Void then end
 
 				-- Now remove `other' from internal group of `Current'.
 			l_internal_merged_radio_button_groups.prune_all (other)
@@ -192,7 +192,7 @@ feature -- Status setting
 				-- `interface', then set group to `Void'.
 			if l_internal_merged_radio_button_groups.count = 1 then
 				check
-					container_must_be_interface: l_internal_merged_radio_button_groups @ 1 = interface
+					container_must_be_interface: l_internal_merged_radio_button_groups @ 1 = interface then
 				end
 				internal_merged_radio_button_groups := Void
 			end
@@ -231,7 +231,7 @@ feature -- Basic operations
 				l.forth
 			end
 			if cs /= Void then
-				check cur /= Void end
+				check cur /= Void then end
 				cs.go_to (cur)
 			end
 		ensure
@@ -267,7 +267,7 @@ feature -- Basic operations
 				l.forth
 			end
 			if cs /= Void then
-				check cur /= Void end
+				check cur /= Void then end
 				cs.go_to (cur)
 			end
 		ensure
@@ -442,7 +442,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
-				check c /= Void end
+				check c /= Void then end
 				cs.go_to (c)
 			end
 		end
@@ -477,7 +477,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
-				check c /= Void end
+				check c /= Void then end
 				cs.go_to (c)
 			end
 		end
@@ -512,7 +512,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
-				check cur /= Void end
+				check cur /= Void then end
 				cs.go_to (cur)
 			end
 		end
@@ -547,7 +547,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
-				check cur /= Void end
+				check cur /= Void then end
 				cs.go_to (cur)
 			end
 		end
@@ -569,14 +569,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

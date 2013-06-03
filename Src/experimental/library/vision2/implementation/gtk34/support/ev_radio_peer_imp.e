@@ -2,7 +2,7 @@ note
 	description: "Eiffel Vision radio peer. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -37,7 +37,7 @@ feature -- Status report
 						peer_imp ?= eif_object_from_c (wid_obj)
 						if peer_imp /= Void then
 							l_interface ?= peer_imp.interface
-							check l_interface /= Void end
+							check l_interface /= Void then end
 							Result.extend (l_interface)
 						end
 					end
@@ -70,7 +70,7 @@ feature -- Status report
 					end
 					cur := {GTK}.gslist_struct_next (cur)
 				end
-				check l_result /= Void end
+				check l_result /= Void then end
 				Result := l_result
 			end
 		end
@@ -107,14 +107,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RADIO_PEER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_RADIO_PEER

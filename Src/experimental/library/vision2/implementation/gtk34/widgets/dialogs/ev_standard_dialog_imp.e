@@ -24,10 +24,10 @@ inherit
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
 
-	EV_DIALOG_CONSTANTS
-		export
-			{NONE} all
-		end
+--	EV_DIALOG_CONSTANTS
+--		export
+--			{NONE} all
+--		end
 
 feature -- Access
 
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_button: detachable STRING_32
+	selected_button: detachable IMMUTABLE_STRING_32
 			-- Label of the last clicked button.
 
 feature -- Status setting
@@ -152,7 +152,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

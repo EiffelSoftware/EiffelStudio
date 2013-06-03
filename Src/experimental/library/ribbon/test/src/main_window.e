@@ -5,7 +5,7 @@ note
 		]"
 	generator: "EiffelBuild"
 	date: "$Date$"
-	revision: "$Revision: 87361 $"
+	revision: "$Revision$"
 
 class
 	MAIN_WINDOW

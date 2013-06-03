@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 
 			if other.has_mask then
 				other_mask_bitmap := other.get_mask_bitmap
-				check other_mask_bitmap /= Void end
+				check other_mask_bitmap /= Void then end
 				create l_internal_mask_bitmap.make_by_bitmap(
 					other_mask_bitmap
 					)
@@ -266,7 +266,7 @@ feature -- Access
 		do
 			create Result
 			a_pixmap_imp ?= Result.implementation
-			check a_pixmap_imp /= Void end
+			check a_pixmap_imp /= Void then end
 			create reusable_dc.make_by_dc (dc)
 			create a_private_bitmap.make_compatible (dc, area.width, area.height)
 			reusable_dc.select_bitmap (a_private_bitmap)
@@ -315,7 +315,7 @@ feature -- Access
 		do
 			dc.unselect_bitmap
 			l_internal_bitmap := internal_bitmap
-			check l_internal_bitmap /= Void end
+			check l_internal_bitmap /= Void then end
 			create Result.make_by_bitmap (l_internal_bitmap)
 			Result.enable_reference_tracking
 			dc.select_bitmap (l_internal_bitmap)
@@ -380,7 +380,7 @@ feature -- Status setting
 				dc.unselect_bitmap
 			end
 			l_internal_bitmap := internal_bitmap
-			check l_internal_bitmap /= Void end
+			check l_internal_bitmap /= Void then end
 			l_resized_bitmap := resize_wel_bitmap (
 				l_internal_bitmap,
 				new_width,
@@ -405,7 +405,7 @@ feature -- Status setting
 				l_resized_bitmap_dc.select_bitmap (l_resized_bitmap)
 
 				l_internal_mask_bitmap := internal_mask_bitmap
-				check l_internal_mask_bitmap /= Void end
+				check l_internal_mask_bitmap /= Void then end
 
 					-- Create a new opaque mask of size `new_width', `new_height'.
 				l_resized_bitmap_dc.pat_blt (0, 0, new_width, new_height, {WEL_RASTER_OPERATIONS_CONSTANTS}.whiteness)
@@ -451,7 +451,7 @@ feature -- Status setting
 
 				-- Get rid of the old bitmap
 			l_internal_bitmap := internal_bitmap
-			check l_internal_bitmap /= Void end
+			check l_internal_bitmap /= Void then end
 			l_internal_bitmap.decrement_reference
 			internal_bitmap := Void
 
@@ -466,7 +466,7 @@ feature -- Status setting
 
 					-- Get rid of the old bitmap
 				l_internal_mask_bitmap := internal_mask_bitmap
-				check l_internal_mask_bitmap /= Void end
+				check l_internal_mask_bitmap /= Void then end
 				l_internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void
 				l_mask_dc.unselect_bitmap
@@ -508,13 +508,13 @@ feature -- Element change
 			l_internal_mask_bitmap := internal_mask_bitmap
 			if l_internal_mask_bitmap /= Void then
 				l_mask_dc := mask_dc
-				check l_mask_dc /= Void end
+				check l_mask_dc /= Void then end
 				l_mask_dc.unselect_all
 				l_mask_dc.delete
 				l_internal_mask_bitmap.decrement_reference
 			end
 			l_bitmap_imp ?= a_mask.implementation
-			check l_bitmap_imp /= Void end
+			check l_bitmap_imp /= Void then end
 			other_mask_bitmap := l_bitmap_imp.drawable
 			create l_internal_mask_bitmap.make_by_bitmap (other_mask_bitmap)
 			internal_mask_bitmap := l_internal_mask_bitmap
@@ -656,7 +656,7 @@ feature {NONE} -- Private Implementation
 				-- Create a simple pixmap
 			create dummy_interface
 			l_result ?= dummy_interface.implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -782,7 +782,7 @@ feature -- Delegated features
 		do
 			promote_to_widget
 			new_imp ?= attached_interface.implementation
-			check new_imp /= Void end
+			check new_imp /= Void then end
 			new_imp.disable_capture
 		end
 
@@ -822,7 +822,7 @@ feature -- Delegated features
 		do
 			promote_to_widget
 			new_imp ?= attached_interface.implementation
-			check new_imp /= Void end
+			check new_imp /= Void then end
 			new_imp.enable_capture
 		end
 
@@ -893,7 +893,7 @@ feature -- Delegated features
 		do
 			promote_to_widget
 			new_imp ?= attached_interface.implementation
-			check new_imp /= Void end
+			check new_imp /= Void then end
 			new_imp.set_pointer_style(c)
 		end
 
@@ -905,7 +905,7 @@ feature -- Delegated features
 		do
 			promote_to_widget
 			new_imp ?= attached_interface.implementation
-			check new_imp /= Void end
+			check new_imp /= Void then end
 			new_imp.internal_set_pointer_style (c)
 		end
 
@@ -1153,7 +1153,7 @@ invariant
 		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -68,8 +68,10 @@ feature {NONE} -- Implementation
 					bk_brush := background_brush
 				end
 				check bk_brush /= Void end
-				create r.make (cur_width_div_two + 1, 0, width, height)
-				paint_dc.fill_rect (r, bk_brush)
+				if bk_brush /= Void then
+					create r.make (cur_width_div_two + 1, 0, width, height)
+					paint_dc.fill_rect (r, bk_brush)
+				end
 			end
 
 			if bk_brush /= Void then
@@ -91,14 +93,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VERTICAL_SEPARATOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_VERTICAL_SEPARATOR_IMP

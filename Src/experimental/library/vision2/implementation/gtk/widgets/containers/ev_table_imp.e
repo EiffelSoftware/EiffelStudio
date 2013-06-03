@@ -122,7 +122,7 @@ feature -- Status settings
 		do
 			Precursor {EV_TABLE_I} (v, a_column, a_row, column_span, row_span)
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			on_new_item (item_imp)
 			{GTK}.gtk_table_attach_defaults (
 					container_widget,
@@ -141,7 +141,7 @@ feature -- Status settings
 		do
 			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			on_removed_item (item_imp)
 			{GTK}.gtk_container_remove (container_widget, item_imp.c_object)
 		end
@@ -295,14 +295,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TABLE_IMP

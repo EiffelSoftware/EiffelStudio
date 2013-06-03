@@ -2,7 +2,7 @@ note
 	description: "Eiffel Vision viewport. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -77,7 +77,6 @@ feature -- Element change
 	set_offset (a_x, a_y: INTEGER)
 			-- Set viewport offset to `a_x', `a_y'.
 		local
-			l_null: POINTER
 			l_x_offset_changed, l_y_offset_changed: BOOLEAN
 		do
 			l_x_offset_changed := a_x /= internal_x_offset
@@ -110,26 +109,22 @@ feature -- Element change
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			w_imp: detachable EV_WIDGET_IMP
 			l_parent_box: POINTER
 			l_c_object: POINTER
-			l_item: like item
 			l_alloc: POINTER
 		do
-			l_item := item
-			check l_item /= Void end
-			w_imp ?= l_item.implementation
-			check w_imp /= Void end
-			l_c_object := w_imp.c_object
-			l_parent_box := {GTK}.gtk_widget_get_parent (l_c_object)
+			if attached item as l_item and then attached {EV_WIDGET_IMP} l_item.implementation as w_imp then
+				l_c_object := w_imp.c_object
+				l_parent_box := {GTK}.gtk_widget_get_parent (l_c_object)
 
-			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
-			{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
-			{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
-			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
-			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
-			l_alloc.memory_free
+				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+				{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
+				{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
+				{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
+				{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
+				{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
+				l_alloc.memory_free
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -203,7 +198,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

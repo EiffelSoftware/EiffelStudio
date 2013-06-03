@@ -177,7 +177,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Call the expose actions for the drawing area.
 		local
 			l_x, l_y, l_width, l_height: REAL_64
-			l_drawable: POINTER
 		do
 			in_expose_actions := True
 
@@ -245,7 +244,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -164,7 +164,7 @@ feature -- Status report
 			l_x, l_y, l_width, l_height: INTEGER
 		do
 			l_window_imp ?= a_window.implementation
-			check l_window_imp /= Void end
+			check l_window_imp /= Void then end
 			l_mon_num := {GTK2}.gdk_screen_get_monitor_at_window ({GTK2}.gdk_screen_get_default, {GTK}.gtk_widget_get_window (l_window_imp.c_object))
 
 			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 			l_result: detachable EV_APPLICATION_IMP
 		once
 			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -554,7 +554,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

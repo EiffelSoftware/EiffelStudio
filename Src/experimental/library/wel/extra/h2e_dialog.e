@@ -50,7 +50,7 @@ feature -- Access
 		do
 			l_edit := internal_eiffel_file_edit
 				-- Per invariant
-			check l_edit_attached: l_edit /= Void end
+			check l_edit_attached: l_edit /= Void then end
 			Result := l_edit
 		end
 
@@ -60,7 +60,7 @@ feature -- Access
 		do
 			l_edit := internal_h_file_edit
 				-- Per invariant
-			check l_edit_attached: l_edit /= Void end
+			check l_edit_attached: l_edit /= Void then end
 			Result := l_edit
 		end
 
@@ -70,7 +70,7 @@ feature -- Access
 		do
 			l_edit := internal_class_name_edit
 				-- Per invariant
-			check l_edit_attached: l_edit /= Void end
+			check l_edit_attached: l_edit /= Void then end
 			Result := l_edit
 		end
 
@@ -80,7 +80,7 @@ feature -- Access
 		do
 			l_button := internal_translate_button
 				-- Per invariant
-			check l_button_attached: l_button /= Void end
+			check l_button_attached: l_button /= Void then end
 			Result := l_button
 		end
 
@@ -310,7 +310,7 @@ invariant
 	internal_translate_button_attached: internal_translate_button /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

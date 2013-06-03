@@ -106,6 +106,14 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
+	sub_system_name: detachable IMMUTABLE_STRING_32
+			-- Sub system name
+			--| this can be used in relation with ARGUMENT_STRING_SOURCE for instance
+			--| when the real usage is  `system_name foobar' and the rest `...'
+			--| and not only `system_name ...' then `sub_system_name' is `foobar'
+		do
+		end
+
 	frozen arguments: ARRAY [IMMUTABLE_STRING_32]
 			-- The list of actual arguments, which takes into account compounded arguments when using
 			-- Unix-style switches.
@@ -1324,7 +1332,14 @@ feature {NONE} -- Output
 			l_cfg: STRING_32
 			l_cursor: CURSOR
 		do
-			l_name := system_name
+			if 
+				attached sub_system_name as l_sub_system_name and then 
+				not l_sub_system_name.is_empty 
+			then
+				create l_name.make_from_string (system_name + " " + l_sub_system_name)
+			else
+				l_name := system_name
+			end
 			localized_print ("USAGE: %N")
 
 			l_cfgs := command_option_configurations

@@ -163,13 +163,13 @@ feature -- Status setting
 			l_parent_imp: like parent_imp
 		do
 			l_parent_imp := parent_imp
-			check l_parent_imp /= Void end
+			check l_parent_imp /= Void then end
 			image_list := l_parent_imp.image_list
 			if image_list = Void then
 				l_parent_imp.setup_image_list
 				image_list := l_parent_imp.image_list
 			end
-			check image_list /= Void end
+			check image_list /= Void then end
 			if attached private_pixmap as l_private_pixmap then
 				image_list.add_pixmap (l_private_pixmap)
 					-- Set the `iimage' to the index of the image to be used
@@ -296,14 +296,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

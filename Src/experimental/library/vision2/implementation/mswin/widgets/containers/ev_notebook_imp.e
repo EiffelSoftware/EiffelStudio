@@ -577,7 +577,7 @@ feature {NONE} -- WEL Implementation
 			ww: detachable EV_WIDGET_IMP
 		do
 			ww ?= selected_window
-			check ww /= Void end
+			check ww /= Void then end
 			ww.show_window (ww.wel_item, sw_show)
 
 			if selection_actions_internal /= Void then
@@ -670,13 +670,13 @@ feature {NONE} -- Implementation
 
 			v_imp ?= v.implementation
 			check
-				v_imp_not_void: v_imp /= Void
+				v_imp_not_void: v_imp /= Void then
 			end
 			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
 			wel_win ?= v_imp
 			check
-				wel_win_not_void: wel_win /= Void
+				wel_win_not_void: wel_win /= Void then
 			end
 			create wel_tci.make
 			wel_tci.set_text ("")
@@ -704,11 +704,11 @@ feature {NONE} -- Implementation
 		do
 			v_imp ?= i_th (i).implementation
 			check
-				v_imp_not_void: v_imp /= Void
+				v_imp_not_void: v_imp /= Void then
 			end
 			wel_win ?= v_imp
 			check
-				wel_win_not_void: wel_win /= Void
+				wel_win_not_void: wel_win /= Void then
 			end
 			remove_item_actions.call ([v_imp.attached_interface])
 			ev_children.go_i_th (i)
@@ -751,7 +751,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 		do
 			child_imp ?= v.implementation
 			check
-				child_imp_not_void: child_imp /= Void
+				child_imp_not_void: child_imp /= Void then
 			end
 			an_index := get_child_index (child_imp)
 				-- Only select a page if it is not already selected.
@@ -768,7 +768,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			child_index := get_child_index (item_imp)
 			create a_wel_item.make
 			a_wel_item.set_text (a_text)
@@ -791,7 +791,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			l_image_list: like image_list
 		do
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			child_index := get_child_index (item_imp)
 			create a_wel_item.make
 				-- Ensure that the item mask allows `iimage' to be a required member.
@@ -851,7 +851,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 					create Result
 					pix_imp ?= Result.implementation
 					check
-						pix_imp /= Void
+						pix_imp /= Void then
 					end
 					image_icon.enable_reference_tracking
 					pix_imp.set_with_resource (image_icon)
@@ -876,7 +876,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			child_index := get_child_index (item_imp)
 			a_wel_item := get_item (child_index - 1)
 			Result := a_wel_item.text
@@ -941,9 +941,9 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 							-- We only need to search the item if it is the currently
 							-- selected item, as all other items may not be tabbed to.
 						w := item
-						check w /= Void end
+						check w /= Void then end
 						w_imp ?= w.implementation
-						check w_imp /= Void end
+						check w_imp /= Void then end
 						if forwards then
 							l_result := w_imp.next_tabstop_widget (start_widget, 1, forwards)
 						else
@@ -967,7 +967,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			if l_result = Void then
 				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -1014,7 +1014,7 @@ feature {NONE} -- Font implementation
 				if private_font /= Void then
 					local_font_windows ?= private_font.implementation
 					check
-						valid_font: local_font_windows /= Void
+						valid_font: local_font_windows /= Void then
 					end
 					wel_set_font (local_font_windows.wel_font)
 				else
@@ -1031,7 +1031,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

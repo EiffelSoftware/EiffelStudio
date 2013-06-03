@@ -31,9 +31,9 @@ feature -- Access
 			else
 				create Result
 				font_imp ?= Result.implementation
-				check font_imp /= Void end
+				check font_imp /= Void then end
 				l_private_wel_font := private_wel_font
-				check l_private_wel_font /= Void end
+				check l_private_wel_font /= Void then end
 				create private_font_twin.make_indirect (l_private_wel_font.log_font)
 				font_imp.set_by_wel_font (private_font_twin)
 				private_font := Result
@@ -84,7 +84,7 @@ feature -- Status setting
 			private_font := ft
 			local_font_windows ?= private_font.implementation
 			check
-				valid_font: local_font_windows /= Void
+				valid_font: local_font_windows /= Void then
 			end
 			wel_set_font (local_font_windows.wel_font)
 
@@ -131,14 +131,14 @@ feature {NONE} -- Implementation : The wel values, are deferred here, but
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

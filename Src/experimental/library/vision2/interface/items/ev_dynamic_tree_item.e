@@ -116,7 +116,7 @@ feature -- Access
 				last_subtree_function_call_time = 0
 			then
 				l_subtree_function := subtree_function
-				check l_subtree_function /= Void end
+				check l_subtree_function /= Void then end
 				l_subtree_function.call (Void)
 				last_subtree_function_call_time := now
 			end
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			end
 			subtree_function_call
 			l_subtree_function := subtree_function
-			check l_subtree_function /= Void end
+			check l_subtree_function /= Void then end
 			linear := l_subtree_function.last_result
 			if linear /= Void then
 				cs ?= linear
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 					linear.forth
 				end
 				if cs /= Void then
-					check c /= Void end
+					check c /= Void then end
 					cs.go_to (c)
 				end
 			end
@@ -230,14 +230,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

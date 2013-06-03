@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			u: UTF_CONVERTER
 		do
 			l_ps_result := postscript_result
-			check l_ps_result /= Void end
+			check l_ps_result /= Void then end
 			u.utf_32_string_into_utf_8_string_8 (a_code, l_ps_result)
 			l_ps_result.append_character ('%N')
 		end
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			u: UTF_CONVERTER
 		do
 			l_ps_result := postscript_result
-			check l_ps_result /= Void end
+			check l_ps_result /= Void then end
 			u.utf_32_string_into_utf_8_string_8 (a_code, l_ps_result)
 		end
 
@@ -513,14 +513,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

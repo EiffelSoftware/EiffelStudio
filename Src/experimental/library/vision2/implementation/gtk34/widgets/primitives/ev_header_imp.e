@@ -73,7 +73,7 @@ feature -- Initialization
 				-- Set an empty text to the dummy item so that the minimum height of header takes the default label size in to account.
 			dummy_item.set_text ("  ")
 			dummy_imp ?= dummy_item.implementation
-			check dummy_imp /= Void end
+			check dummy_imp /= Void then end
 			{GTK2}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
 			dummy_imp.set_width (1)
 			{GTK2}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
@@ -134,7 +134,7 @@ feature -- Element change
 					-- We are taking the dummy right column in to account
 			end
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			{GTK2}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
@@ -148,7 +148,7 @@ feature -- Element change
 		do
 			child_array.go_i_th (a_position)
 			item_imp ?= child_array.item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			item_imp.set_parent_imp (Void)
 			{GTK2}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			child_array.remove
@@ -220,7 +220,9 @@ feature {NONE} -- Implementation
 					loop
 						a_item_imp ?= i_th (i).implementation
 						check a_item_imp /= Void end
-						{GTK2}.g_object_get_integer (a_item_imp.c_object, l_cs.item, $l_button_x)
+						if a_item_imp /= Void then
+							{GTK2}.g_object_get_integer (a_item_imp.c_object, l_cs.item, $l_button_x)
+						end
 						if l_button_x < l_x then
 							Result := Result + 1
 						else
@@ -288,7 +290,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

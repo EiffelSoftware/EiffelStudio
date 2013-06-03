@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			l_pixbuf: POINTER
 		do
 			a_pointer_style_imp ?= a_pointer_style.implementation
-			check a_pointer_style_imp /= Void end
+			check a_pointer_style_imp /= Void then end
 
 			if a_pointer_style_imp.predefined_cursor_code > 0 then
 				-- We are building from a stock cursor.
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check l_pixel_buffer_imp /= Void end
+			check l_pixel_buffer_imp /= Void then end
 			set_pixmap_from_pixbuf (l_pixel_buffer_imp.gdk_pixbuf)
 		end
 
@@ -473,7 +473,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

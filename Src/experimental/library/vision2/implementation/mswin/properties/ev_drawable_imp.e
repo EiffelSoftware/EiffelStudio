@@ -107,7 +107,7 @@ feature -- Access
 		do
 			create Result
 			a_pixmap_imp ?= Result.implementation
-			check a_pixmap_imp /= Void end
+			check a_pixmap_imp /= Void then end
 			create reusable_dc.make_by_dc (dc)
 			create a_private_bitmap.make_compatible (dc, area.width, area.height)
 			reusable_dc.select_bitmap (a_private_bitmap)
@@ -182,9 +182,9 @@ feature -- Element change
 			background_color_imp: detachable EV_COLOR_IMP
 		do
 			a_color_imp ?= a_color.implementation
-			check a_color_imp /= Void end
+			check a_color_imp /= Void then end
 			background_color_imp ?= background_color.implementation
-			check background_color_imp /= Void end
+			check background_color_imp /= Void then end
 			if a_color_imp.item /= background_color_imp.item then
 				background_color_imp.set_color (a_color_imp.item)
 					-- update current background brush (lazzy evaluation)
@@ -199,9 +199,9 @@ feature -- Element change
 			foreground_color_imp: detachable EV_COLOR_IMP
 		do
 			a_color_imp ?= a_color.implementation
-			check a_color_imp /= Void end
+			check a_color_imp /= Void then end
 			foreground_color_imp ?= foreground_color.implementation
-			check foreground_color_imp /= Void end
+			check foreground_color_imp /= Void then end
 			if a_color_imp.item /= foreground_color_imp.item then
 				foreground_color_imp.set_color (a_color_imp.item)
 					-- update current pen & brush (lazzy evaluation)
@@ -266,7 +266,7 @@ feature -- Element change
 			l_region_box: WEL_RECT
 		do
 			region ?= a_region.implementation
-			check region /= Void end
+			check region /= Void then end
 				-- Set the clip area to the bounding area of the region.
 			l_region_box := region.get_region_box
 			create clip_area.make (l_region_box.x, l_region_box.y, l_region_box.width, l_region_box.height)
@@ -563,7 +563,7 @@ feature -- Drawing operations
 			l_bounding_area: like bounding_area
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			l_bounding_area := bounding_area
 			l_bounding_area.move_and_resize (0, 0, pixmap_imp.width, pixmap_imp.height)
 			draw_sub_pixmap (x, y, a_pixmap, l_bounding_area)
@@ -582,7 +582,7 @@ feature -- Drawing operations
 			l_src_rect, l_dest_rect: WEL_RECT
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check l_pixel_buffer_imp /= Void end
+			check l_pixel_buffer_imp /= Void then end
 			create l_src_rect.make (area.left, area.top, area.right, area.bottom)
 			create l_dest_rect.make (x, y, x + area.width, y + area.height)
 			l_pixel_buffer_imp.draw_to_drawable_with_dest_rect_src_rect (attached_interface, l_dest_rect, l_src_rect)
@@ -614,7 +614,7 @@ feature -- Drawing operations
 			l_x, l_y: INTEGER
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			pixmap_height := pixmap_imp.height
 			pixmap_width := pixmap_imp.width
 			source_x := area.x
@@ -645,7 +645,7 @@ feature -- Drawing operations
 							-- If the dc's are already available then we use them without reffing
 						source_bitmap_dc := source_drawable.dc
 						l_mask_dc := source_drawable.mask_dc
-						check l_mask_dc /= Void end
+						check l_mask_dc /= Void then end
 						source_mask_bitmap := l_mask_dc.bitmap
 					else
 							-- Retrieve Source bitmap
@@ -658,8 +658,8 @@ feature -- Drawing operations
 							-- Retrieve Mask bitmap
 						source_mask_bitmap := pixmap_imp.get_mask_bitmap
 					end
-					check source_bitmap_dc /= Void end
-					check source_mask_bitmap /= Void end
+					check source_bitmap_dc /= Void then end
+					check source_mask_bitmap /= Void then end
 
 					dest_dc.mask_blt (x, y, source_width, source_height, source_bitmap_dc, 0, 0, source_mask_bitmap, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
 
@@ -667,7 +667,7 @@ feature -- Drawing operations
 					if source_drawable = Void then
 						source_bitmap_dc.unselect_bitmap
 						source_bitmap_dc.delete
-						check source_bitmap /= Void end
+						check source_bitmap /= Void then end
 						source_bitmap.decrement_reference
 						source_mask_bitmap.decrement_reference
 					end
@@ -1063,11 +1063,11 @@ feature {NONE} -- Implementation
 		do
 			if private_font /= Void then
 				font_imp ?= private_font.implementation
-				check font_imp /= Void end
+				check font_imp /= Void then end
 				Result := font_imp.wel_font
 			else
 				l_private_wel_font := private_wel_font
-				check l_private_wel_font /= Void end
+				check l_private_wel_font /= Void then end
 				Result := l_private_wel_font
 			end
 		end
@@ -1077,7 +1077,7 @@ feature {NONE} -- Implementation
 			l_result: detachable WEL_COLOR_REF
 		do
 			l_result ?= background_color.implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			not_void: Result /= Void
@@ -1088,7 +1088,7 @@ feature {NONE} -- Implementation
 			l_result: detachable WEL_COLOR_REF
 		do
 			l_result ?= foreground_color.implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			not_void: Result /= Void
@@ -1136,7 +1136,7 @@ feature {NONE} -- Implementation
 
 				if attached tile as l_tile then
 					pix_imp ?= l_tile.implementation
-					check pix_imp /= Void end
+					check pix_imp /= Void then end
 					a_wel_bitmap := pix_imp.get_bitmap
 					l_internal_brush := allocated_brushes.get(
 						a_wel_bitmap, Void)
@@ -1148,7 +1148,7 @@ feature {NONE} -- Implementation
 				end
 				internal_initialized_brush := True
 			end
-			check l_internal_brush /= Void end
+			check l_internal_brush /= Void then end
 			internal_brush := l_internal_brush
 
 				-- Unselect previously selected brush.
@@ -1203,7 +1203,7 @@ feature {NONE} -- Implementation
 					internal_pen := l_internal_pen
 					internal_initialized_pen := True
 				end
-				check l_internal_pen /= Void end
+				check l_internal_pen /= Void then end
 
 				dc.select_pen (l_internal_pen)
 			end

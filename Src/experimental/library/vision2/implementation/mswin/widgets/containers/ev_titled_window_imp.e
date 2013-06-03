@@ -109,7 +109,7 @@ feature -- Access
 			if attached current_icon_pixmap as l_current_icon_pixmap then
 				create Result
 				ev_pixmap_imp ?= Result.implementation
-				check ev_pixmap_imp /= Void end
+				check ev_pixmap_imp /= Void then end
 				ev_pixmap_imp.set_with_resource (l_current_icon_pixmap)
 			else
 					-- Icon is not valid, return the default icon.
@@ -226,16 +226,16 @@ feature -- Element change
 			previous_icon_pixmap: detachable WEL_ICON
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			icon := pixmap_imp.icon
 			if icon = Void then
 				pixmap_imp ?= a_pixmap.implementation
-				check pixmap_imp /= Void end
+				check pixmap_imp /= Void then end
 				built_icon := pixmap_imp.build_icon
 				built_icon.enable_reference_tracking
 				icon := built_icon
 			end
-			check icon /= Void end
+			check icon /= Void then end
 
 				-- Remember the icon
 
@@ -339,7 +339,7 @@ feature {EV_ANY_I} -- Implementation
 			if attached menu_bar as l_menu_bar then
 				menu_bar_imp ?= l_menu_bar.implementation
 				check
-					menu_imp_not_void: menu_bar_imp /= Void
+					menu_imp_not_void: menu_bar_imp /= Void then
 				end
 				if not menu_bar_imp.wel_count_empty then
 					Result := Result + menu_bar_height
@@ -472,11 +472,11 @@ feature {NONE} -- WEL Implementation
 		do
 			fixme (once "[We should copy all attributes and action sequences.]")
 			l_ub_imp ?= new_box.implementation
-			check l_ub_imp /= Void end
+			check l_ub_imp /= Void then end
 			if l_ub_imp.wel_item /= default_pointer then
 				from
 					l_or_imp ?= original_box.implementation
-					check l_or_imp /= Void end
+					check l_or_imp /= Void then end
 						-- We remove `original_box' from Current as otherwise we would
 						-- be violating the `parent_contains_current' invariant.
 					l_or_imp.set_parent_imp (Void)
@@ -491,7 +491,7 @@ feature {NONE} -- WEL Implementation
 				new_box.set_padding (original_box.padding)
 				new_box.set_border_width (original_box.border_width)
 				check
-					ub_imp_not_void: l_ub_imp /= Void
+					ub_imp_not_void: l_ub_imp /= Void then
 				end
 				l_ub_imp.on_parented
 				l_ub_imp.wel_set_parent (Current)
@@ -515,14 +515,14 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

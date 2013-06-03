@@ -75,7 +75,7 @@ feature -- Status setting
 				-- Add `a_widget' to `Current'.
 			a_widget.implementation.on_parented
 			v_imp ?= a_widget.implementation
-			check v_imp /= Void end
+			check v_imp /= Void then end
 			ev_children.go_i_th (count + 1)
 			ev_children.put_left (v_imp)
 			wel_win ?= Current
@@ -99,7 +99,7 @@ feature -- Status setting
 			wel_win: detachable EV_WIDGET_IMP
 		do
 			wel_win ?= a_widget.implementation
-			check wel_win /= Void end
+			check wel_win /= Void then end
 			wel_win.ev_move (a_x, a_y)
 			wel_win.parent_ask_resize (a_width, a_height)
 			wel_win.invalidate
@@ -115,7 +115,7 @@ feature -- Status setting
 			application_implementation.erase_rubber_band
 			wel_win ?= a_widget.implementation
 			check
-				wel_win_not_void: wel_win /= Void
+				wel_win_not_void: wel_win /= Void then
 			end
 			wel_win.ev_move (an_x, a_y)
 			wel_win.invalidate
@@ -130,7 +130,7 @@ feature -- Status setting
 		do
 			wel_win ?= a_widget.implementation
 			check
-				wel_win_not_void: wel_win /= Void
+				wel_win_not_void: wel_win /= Void then
 			end
 			wel_win.parent_ask_resize (a_width, a_height)
 			notify_change (Nc_minsize, wel_win, False)
@@ -379,7 +379,7 @@ feature {NONE} -- WEL Implementation
 			else
 				-- Using GDI instead of GDI+
 				bk_brush := background_brush
-				check bk_brush /= Void end
+				check bk_brush /= Void then end
 				paint_dc.fill_region (main_region, bk_brush)
 
 					-- Clean up GDI objects
@@ -404,7 +404,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -56,7 +56,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			wid_imp: detachable EV_WIDGET_IMP
 		do
 			wid_imp ?= child.implementation
-			check wid_imp /= Void end
+			check wid_imp /= Void then end
 			{GTK}.gtk_box_query_child_packing (
 				container_widget,
 				wid_imp.c_object,
@@ -94,7 +94,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			wid_imp: detachable EV_WIDGET_IMP
 		do
 			wid_imp ?= child.implementation
-			check wid_imp /= Void end
+			check wid_imp /= Void then end
 			set_child_expandable_internal (container_widget, wid_imp.c_object, flag)
 			if attached {EV_VERTICAL_BOX_IMP} Current then
 				{GTK}.gtk_widget_set_vexpand(wid_imp.c_object, flag)
@@ -158,7 +158,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

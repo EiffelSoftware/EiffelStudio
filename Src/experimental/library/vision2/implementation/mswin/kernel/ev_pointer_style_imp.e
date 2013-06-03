@@ -72,9 +72,9 @@ feature -- Initlization
 				wel_cursor := l_private_cursor
 			else
 				l_imp ?= a_pixmap.implementation
-				check l_imp /= Void end
+				check l_imp /= Void then end
 				l_wel_cursor ?= l_imp.build_graphical_resource (False)
-				check l_wel_cursor /= Void end
+				check l_wel_cursor /= Void then end
 				wel_cursor := l_wel_cursor
 				wel_cursor.enable_reference_tracking
 			end
@@ -111,7 +111,7 @@ feature -- Command
 			l_icon_info: detachable WEL_ICON_INFO
 		do
 			l_icon_info := wel_cursor.get_icon_info
-			check l_icon_info /= Void end
+			check l_icon_info /= Void then end
 			wel_cursor.decrement_reference
 			if a_is_x then
 				l_icon_info.set_x_hotspot (a_position)
@@ -145,7 +145,7 @@ feature -- Query
 			l_icon_info: detachable WEL_ICON_INFO
 		do
 			l_icon_info := wel_cursor.get_icon_info
-			check l_icon_info /= Void end
+			check l_icon_info /= Void then end
 			Result := l_icon_info.width
 			l_icon_info.delete
 		end
@@ -156,7 +156,7 @@ feature -- Query
 			l_icon_info: detachable WEL_ICON_INFO
 		do
 			l_icon_info := wel_cursor.get_icon_info
-			check l_icon_info /= Void end
+			check l_icon_info /= Void then end
 			Result := l_icon_info.height
 			l_icon_info.delete
 		end
@@ -222,7 +222,7 @@ feature -- Duplication
 		do
 				-- Copy wel_cursor from `a_pointer_style'
 			a_pointer_style_imp ?= a_pointer_style.implementation
-			check a_pointer_style_imp /= Void end
+			check a_pointer_style_imp /= Void then end
 			wel_cursor := a_pointer_style_imp.wel_cursor.twin
 		end
 
@@ -257,9 +257,9 @@ feature {NONE} -- Implementation
 			l_icon_info.set_y_hotspot (a_y_hotspot)
 
 			l_wel_bitmap := wel_bitmap
-			check l_wel_bitmap /= Void end
+			check l_wel_bitmap /= Void then end
 			l_wel_mask_bitmap := wel_mask_bitmap
-			check l_wel_mask_bitmap /= Void end
+			check l_wel_mask_bitmap /= Void then end
 			l_icon_info.set_color_bitmap (l_wel_bitmap)
 			l_icon_info.set_mask_bitmap (l_wel_mask_bitmap)
 
@@ -281,16 +281,16 @@ feature {NONE} -- Implementation
 			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
 		do
 			l_buffer_imp ?= a_pixel_buffer.implementation
-			check not_void: l_buffer_imp /= Void end
+			check not_void: l_buffer_imp /= Void then end
 			if l_buffer_imp.is_gdi_plus_installed then
 				l_gdip_bitmap ?= l_buffer_imp.gdip_bitmap
-				check l_gdip_bitmap /= Void end
+				check l_gdip_bitmap /= Void then end
 				wel_bitmap := l_gdip_bitmap.new_bitmap
 			else
 				l_pixmap ?= l_buffer_imp.pixmap
-				check l_pixmap /= Void end
+				check l_pixmap /= Void then end
 				l_pixmap_imp ?= l_pixmap.implementation
-				check not_void: l_pixmap_imp /= Void end
+				check not_void: l_pixmap_imp /= Void then end
 				wel_bitmap := l_pixmap_imp.get_bitmap
 			end
 
@@ -353,14 +353,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

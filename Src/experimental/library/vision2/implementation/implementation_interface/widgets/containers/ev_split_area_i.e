@@ -96,7 +96,7 @@ feature -- Status setting
 		deferred
 		ensure
 			first_set: first = an_item
-			an_item_parent_is_current: an_item.parent = interface
+			an_item_parent_is_current: attached an_item as l_item and then l_item.parent ~ interface
 			an_item_not_expanded: not is_item_expanded (an_item)
 		end
 
@@ -110,7 +110,7 @@ feature -- Status setting
 		deferred
 		ensure
 			second_set: second = an_item
-			an_item_parent_is_current: an_item.parent = interface
+			an_item_parent_is_current: attached an_item as l_item and then l_item.parent ~ interface
 			an_item_expanded: is_item_expanded (an_item)
 		end
 
@@ -301,14 +301,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

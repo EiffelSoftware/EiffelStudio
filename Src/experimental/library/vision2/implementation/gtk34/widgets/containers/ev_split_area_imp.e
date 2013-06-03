@@ -54,7 +54,7 @@ feature -- Access
 			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
 			first := an_item
 			set_item_resize (an_item, False)
@@ -66,7 +66,7 @@ feature -- Access
 			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
 			second := an_item
 			set_item_resize (an_item, True)
@@ -79,7 +79,7 @@ feature -- Access
 		do
 			if has (an_item) and then an_item /= Void then
 				item_imp ?= an_item.implementation
-				check item_imp /= Void end
+				check item_imp /= Void then end
 				item_imp.set_parent_imp (Void)
 				{GTK}.gtk_container_remove ({GTK}.gtk_widget_get_parent (item_imp.c_object), item_imp.c_object)
 				if an_item = first then
@@ -160,7 +160,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

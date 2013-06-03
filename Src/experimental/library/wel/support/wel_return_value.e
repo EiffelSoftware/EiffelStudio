@@ -41,12 +41,11 @@ feature -- Access
 			check
 				not_void: l_message_return_value_area /= Void
 				good_area: l_message_return_value_area.count >= level_count
-			end
-
-			check
 				valid_level_count: level_count > 0
 			end
-			Result := l_message_return_value_area.item (level_count - 1)
+			if l_message_return_value_area /= Void then
+				Result := l_message_return_value_area.item (level_count - 1)
+			end
 		end
 
 	default_processing: BOOLEAN
@@ -81,13 +80,11 @@ feature -- Element Change
 			if l_has_return_value_area = Void then
 					-- Areas need to be created first.
 				create l_has_return_value_area.make_filled (False, Initial_area_size)
-				create l_message_return_value_area.make_filled (default_pointer, Initial_area_size)
 				has_return_value_area := l_has_return_value_area
-				message_return_value_area := l_message_return_value_area
 			end
-
-			check
-				message_return_value_area_not_void: l_message_return_value_area /= Void
+			if l_message_return_value_area = Void then
+				create l_message_return_value_area.make_filled (default_pointer, Initial_area_size)
+				message_return_value_area := l_message_return_value_area
 			end
 
 			if l_has_return_value_area.count < level_count then
@@ -140,17 +137,11 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW}
 	increment_level
 			-- Called from WEL_DISPATCHER when the window-procedure
 			-- is called.
-		local
-			l_has_return_value_area: like has_return_value_area
 		do
 			level_count := level_count + 1
-
-			if has_return_value then
-				l_has_return_value_area := has_return_value_area
-				check l_has_return_value_area_attached: l_has_return_value_area /= Void end
+			if has_return_value and then attached has_return_value_area as l_has_return_value_area then
 				l_has_return_value_area.put (False, level_count - 1)
 			end
-
 			if not default_processing then
 				set_default_processing (True)
 			end
@@ -185,7 +176,7 @@ feature {NONE} -- Implementation
 	Area_resize_increment: INTEGER = 2;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

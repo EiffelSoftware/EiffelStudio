@@ -4,7 +4,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "colorizible"
-	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -166,7 +166,7 @@ feature -- Status setting
 			if a_color /= Void then
 				color := {GTK}.c_gdk_rgba_struct_allocate
 				l_foreground_color_imp := foreground_color_imp
-				check l_foreground_color_imp /= Void end
+				check l_foreground_color_imp /= Void then end
 				{GTK}.set_gdk_rgba_struct_red (color, l_foreground_color_imp.red)
 				{GTK}.set_gdk_rgba_struct_green (color, l_foreground_color_imp.green)
 				{GTK}.set_gdk_rgba_struct_blue (color, l_foreground_color_imp.blue)
@@ -234,7 +234,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

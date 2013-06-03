@@ -209,7 +209,7 @@ feature -- Status setting
 			l_parent: like parent
 		do
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 			lock_at_position (virtual_x_position - l_parent.virtual_x_position)
 		ensure
 			is_locked: is_locked
@@ -301,7 +301,7 @@ feature -- Status setting
 			l_parent: like parent
 		do
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 			header_item.resize_to_content
 			set_width (required_width_of_item_span (1, l_parent.row_count).max (header_item.width))
 		ensure
@@ -456,7 +456,7 @@ feature -- Contract support
 				a_count := count
 				a_index := index
 				l_parent := parent
-				check l_parent /= Void end
+				check l_parent /= Void then end
 			until
 				i > a_count or not Result
 			loop
@@ -481,7 +481,7 @@ feature -- Contract support
 			from
 				i := 1
 				l_parent := parent
-				check l_parent /= Void end
+				check l_parent /= Void then end
 				Result := True
 				a_count := count
 				a_index := index

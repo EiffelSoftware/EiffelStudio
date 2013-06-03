@@ -124,8 +124,6 @@ feature -- Element change
 		end
 
 	add_header_lines (lst: ITERABLE [READABLE_STRING_8])
-		local
-			i: INTEGER
 		do
 			across
 				lst as c
@@ -233,7 +231,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

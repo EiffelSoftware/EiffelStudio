@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 				actual_source := source
 				source_imp ?= source.implementation
 				check
-					source_valid: source_imp /= Void
+					source_valid: source_imp /= Void then
 				end
 				application_imp.dock_started (source_imp)
 			end
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 				--interface.pointer_motion_actions.block
 						-- Block `pointer_motion_actions'.
 				l_actual_source := actual_source
-				check l_actual_source /= Void end
+				check l_actual_source /= Void then end
 				initialize_transport (a_screen_x, a_screen_y, l_actual_source)
 
 				application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_normal)
@@ -204,10 +204,10 @@ feature {NONE} -- Implementation
 			loop
 				tool_bar ?= a_parent.implementation
 				check
-					tool_bar_not_void: tool_bar /= Void
+					tool_bar_not_void: tool_bar /= Void then
 				end
 				button ?= a_parent.i_th (counter).implementation
-				check button /= Void end
+				check button /= Void then end
 				tool_bar.internal_reset_button (button)
 				counter := counter + 1
 			end
@@ -242,14 +242,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

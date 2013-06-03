@@ -25,12 +25,13 @@ feature -- Initialization
 			element_ok: element_name /= Void
 			element_exists: jni.find_class (element_name) /= Void
 		local
-			element_type: detachable JAVA_CLASS
 			l_jarray: like jarray
 		do
-			element_type := jni.find_class (element_name)
-			check element_type_not_void: element_type /= Void end -- Implied by the precondition.
-			l_jarray := jni.new_object_array (size, element_type.java_class_id, default_pointer)
+			check
+				from_precondition: attached jni.find_class (element_name) as element_type
+			then
+				l_jarray := jni.new_object_array (size, element_type.java_class_id, default_pointer)
+			end
 			check l_jarray_not_default: l_jarray /= default_pointer end
 			make_from_pointer (l_jarray)
 		end
@@ -68,7 +69,7 @@ feature -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

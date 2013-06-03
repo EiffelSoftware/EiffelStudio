@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 		do
 			l_buffer := buffer
 				-- Per precondition
-			check l_buffer_attached: l_buffer /= Void end
+			check l_buffer_attached: l_buffer /= Void then end
 			if last_position > string.count then
 				l_buffer.set_from_pointer (l_buffer.item, 0)
 			else
@@ -88,7 +88,7 @@ invariant
 	positive_last_position: last_position > 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

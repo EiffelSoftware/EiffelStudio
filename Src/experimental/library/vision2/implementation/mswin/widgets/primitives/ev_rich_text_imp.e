@@ -227,8 +227,6 @@ feature -- Initialization
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
 			create tab_positions
-			tab_positions.internal_add_actions.extend (agent update_tab_positions)
-			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 
 				-- Calculate the default tab space. In a rich edit control, it is
 				-- Half an Inch, so query the horizontal resolution and divide by 2.
@@ -248,6 +246,9 @@ feature -- Initialization
 			rich_text := Current
 
 			Precursor {EV_TEXT_IMP}
+
+			tab_positions.internal_add_actions.extend (agent update_tab_positions)
+			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 			enable_all_notifications
 		end
 
@@ -322,7 +323,7 @@ feature -- Status report
 		do
 			create Result
 			l_char_format ?= Result.implementation
-			check l_char_format /= Void end
+			check l_char_format /= Void then end
 			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (scf_selection), l_char_format.item)
 		ensure
 			result_not_void: Result /= Void
@@ -336,7 +337,7 @@ feature -- Status report
 			l_result: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			l_result ?= internal_selected_character_format.implementation
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			result_not_void: Result /= Void
@@ -385,7 +386,7 @@ feature -- Status report
 		do
 			create Result
 			imp ?= Result.implementation
-			check imp /= Void end
+			check imp /= Void then end
 			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), imp.item)
 		ensure
 			result_not_void: Result /= Void
@@ -803,7 +804,7 @@ feature -- Status setting
 			set_selection (first_pos - 1, last_pos - 1)
 			wel_character_format ?= format.implementation
 			check
-				wel_character_format_not_void: wel_character_format /= Void
+				wel_character_format_not_void: wel_character_format /= Void then
 			end
 			set_character_format_selection (wel_character_format)
 			safe_restore_caret
@@ -829,7 +830,7 @@ feature -- Status setting
 			set_selection (start_position - 1, end_position - 1)
 			wel_character_format ?= format.implementation
 			check
-				wel_character_format_not_void: wel_character_format /= Void
+				wel_character_format_not_void: wel_character_format /= Void then
 			end
 			if applicable_attributes.font_shape = True then
 				mask := mask | cfm_italic
@@ -1021,7 +1022,7 @@ feature -- Status setting
 					formats.off
 				loop
 					character_format_i ?= formats.item.implementation
-					check character_format_i /= Void end
+					check character_format_i /= Void then end
 					build_font_from_format (character_format_i)
 					formats.forth
 				end
@@ -1355,7 +1356,7 @@ feature -- Status setting
 			safe_store_caret
 			wel_character_format ?= format.implementation
 			check
-				wel_character_format_not_void: wel_character_format /= Void
+				wel_character_format_not_void: wel_character_format /= Void then
 			end
 			set_character_format_selection (wel_character_format)
 			safe_restore_caret
@@ -1423,7 +1424,7 @@ feature -- Status setting
 		do
 			l_background_color_imp ?= color.implementation
 			background_color_imp := l_background_color_imp
-			check l_background_color_imp /= Void end
+			check l_background_color_imp /= Void then end
 			wel_set_background_color (l_background_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
@@ -1508,7 +1509,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 		do
 			font_imp ?= a_font.implementation
 			check
-				font_imp_not_void: font_imp /= Void
+				font_imp_not_void: font_imp /= Void then
 			end
 			Result := font_imp.wel_font.log_font.char_set
 		end
@@ -1608,7 +1609,7 @@ feature {NONE} -- Implementation
 			safe_store_caret
 			set_selection (start_position - 1, end_position - 1)
 			paragraph ?= format.implementation
-			check paragraph /= Void end
+			check paragraph /= Void then end
 			paragraph.set_mask (mask)
 			set_paragraph_format (paragraph)
 			safe_restore_caret
@@ -1631,7 +1632,7 @@ feature {NONE} -- Implementation
 			Result.append_character ('{')
 			a_font_imp ?= a_font.implementation
 			check
-				font_imp_not_void: a_font_imp /= Void
+				font_imp_not_void: a_font_imp /= Void then
 			end
 			log_font := a_font_imp.wel_font.log_font
 			current_family := a_font_imp.family
@@ -1719,7 +1720,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

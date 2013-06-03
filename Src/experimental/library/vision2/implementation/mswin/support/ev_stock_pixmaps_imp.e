@@ -78,7 +78,7 @@ feature -- Default pixmaps
 
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			pixmap_imp.set_with_default
 		end
 
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			create wel_icon.make_by_predefined_id (Idi_constant)
 			wel_icon.enable_reference_tracking
 			pixbuf_imp ?= Result.implementation
-			check pixbuf_imp /= Void end
+			check pixbuf_imp /= Void then end
 			pixbuf_imp.set_from_icon (wel_icon)
 			wel_icon.decrement_reference
 		end
@@ -119,21 +119,21 @@ feature {NONE} -- Implementation
 
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
-			check pixmap_imp /= Void end
+			check pixmap_imp /= Void then end
 			pixmap_imp.set_with_resource (wel_icon)
 
 			wel_icon.decrement_reference
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

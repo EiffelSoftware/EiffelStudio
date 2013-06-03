@@ -1203,7 +1203,7 @@ feature -- Basic operations
 			if palette_selected then
 				l_palette := palette
 					-- Per check `palette_selected'.
-				check l_palette_attached: l_palette /= Void end
+				check l_palette_attached: l_palette /= Void then end
 				bitmap_dc.select_palette (l_palette)
 				bitmap_dc.realize_palette
 			end
@@ -1232,7 +1232,7 @@ feature -- Basic operations
 			if palette_selected then
 				l_palette := palette
 					-- Per check `palette_selected'.
-				check l_palette_attached: l_palette /= Void end
+				check l_palette_attached: l_palette /= Void then end
 				bitmap_dc.select_palette (l_palette)
 				bitmap_dc.realize_palette
 			end

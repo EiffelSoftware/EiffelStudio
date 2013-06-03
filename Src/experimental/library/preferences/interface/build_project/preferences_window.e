@@ -131,7 +131,7 @@ feature {NONE} -- Events
 	on_preference_changed (a_pref: PREFERENCE)
 			-- Set the preference value to the newly entered value in the edit item.
 		do
-			if not grid.selected_rows.is_empty then
+			if grid.has_selected_row then
 				if attached {FONT_PREFERENCE} a_pref as l_font_pref then
 					grid.selected_rows.first.set_height (l_font_pref.value.height.max (default_row_height))
 				end
@@ -273,7 +273,7 @@ feature {NONE} -- Events
 		do
 			if k /= Void then
 				if k.code = {EV_KEY_CONSTANTS}.key_enter then
-					if not grid.selected_rows.is_empty then
+					if grid.has_selected_row then
 						if attached grid.selected_rows.first.item (4) as l_item then
 							if attached {PREFERENCE_WIDGET} l_item.data as l_preference_widget then
 								l_preference_widget.show

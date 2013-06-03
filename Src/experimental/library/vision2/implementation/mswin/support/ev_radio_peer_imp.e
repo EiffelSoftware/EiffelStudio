@@ -69,7 +69,7 @@ feature -- Status report
 				end
 				l_result := interface
 			end
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		end
 
@@ -94,7 +94,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 			internal_set_radio_group (a_list)
 			l_radio_group := radio_group
-			check l_radio_group /= Void end
+			check l_radio_group /= Void then end
 			l_radio_group.extend (Current)
 			if l_radio_group.count = 1 then
 				enable_select
@@ -113,11 +113,11 @@ feature {EV_ANY_I} -- Implementation
 			l_radio_group: like radio_group
 		do
 			l_radio_group := radio_group
-			check l_radio_group /= Void end
+			check l_radio_group /= Void then end
 			l_radio_group.start
 			l_radio_group.prune (Current)
 			check
-				removed: not l_radio_group.has (Current)
+				removed: not l_radio_group.has (Current) then
 			end
 			if is_selected and then not l_radio_group.is_empty then
 				l_radio_group.first.enable_select
@@ -136,14 +136,14 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

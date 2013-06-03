@@ -66,7 +66,7 @@ feature -- Access
 			if l_result = Void then
 				l_result := parent_window_of (Current)
 			end
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
@@ -105,7 +105,7 @@ feature -- Status
 			l_field: like field
 		do
 			l_field := field
-			check l_field /= Void end
+			check l_field /= Void then end
 			create Result.make_from_string (l_field.text)
 		ensure
 			result_not_void: Result /= Void
@@ -130,7 +130,7 @@ feature -- Settings
 			l_field: like field
 		do
 			l_field := field
-			check l_field /= Void end
+			check l_field /= Void then end
 			l_field.set_text (p)
 		ensure
 			path_set: path.same_string_general (p)
@@ -145,7 +145,7 @@ feature -- Settings
 			l_field: like field
 		do
 			l_field := field
-			check l_field /= Void end
+			check l_field /= Void then end
 			l_field.set_text (p.name)
 		ensure
 			path_set: file_path.name ~ p.name
@@ -166,7 +166,7 @@ feature -- Settings
 			l_browse_button: like browse_button
 		do
 			l_browse_button := browse_button
-			check l_browse_button /= Void end
+			check l_browse_button /= Void then end
 			l_browse_button.select_actions.wipe_out
 			l_browse_button.select_actions.extend (agent browse_for_open_file (filter))
 		end
@@ -178,7 +178,7 @@ feature -- Settings
 			l_browse_button: like browse_button
 		do
 			l_browse_button := browse_button
-			check l_browse_button /= Void end
+			check l_browse_button /= Void then end
 			l_browse_button.select_actions.wipe_out
 			l_browse_button.select_actions.extend (agent browse_for_save_file (filter))
 		end
@@ -190,7 +190,7 @@ feature -- Settings
 			l_browse_button: like browse_button
 		do
 			l_browse_button := browse_button
-			check l_browse_button /= Void end
+			check l_browse_button /= Void then end
 			l_browse_button.select_actions.wipe_out
 			l_browse_button.select_actions.extend (agent browse_for_directory)
 		end
@@ -248,7 +248,7 @@ feature {NONE} -- GUI building
 			browse_button := l_browse_button
 
 			l_field := field
-			check l_field /= Void end
+			check l_field /= Void then end
 			l_hbox.extend (l_field)
 			l_hbox.extend (l_browse_button)
 			l_hbox.disable_item_expand (l_browse_button)
@@ -329,7 +329,7 @@ feature {NONE} -- GUI building
 			l_field: like field
 		do
 			l_field := field
-			check l_field /= Void end
+			check l_field /= Void then end
 			create Result.make_from_string (l_field.text)
 			if Result.is_empty then
 				Result := default_start_path
@@ -372,7 +372,7 @@ invariant
 	browse_button_not_void: browse_button /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

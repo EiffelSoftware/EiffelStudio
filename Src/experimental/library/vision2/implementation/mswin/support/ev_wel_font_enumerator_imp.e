@@ -85,14 +85,21 @@ feature {NONE} -- Basic operations
 			face_found: STRING_32
 		do
 			face_found := elf.log_font.face_name.twin
-			check internal_font_faces /= Void end
-			check text_metrics /= Void end
-			check log_fonts /= Void end
-			if not internal_font_faces.has (face_found) then
+			if internal_font_faces = Void then
+				check internal_font_faces /= Void end
+			elseif not internal_font_faces.has (face_found) then
 				internal_font_faces.extend (face_found)
 			end
-			text_metrics.put (tm.twin, face_found)
-			log_fonts.put (elf.log_font, face_found)
+			if text_metrics = Void then
+				check text_metrics /= Void end
+			else
+				text_metrics.put (tm.twin, face_found)
+			end
+			if log_fonts = Void then
+				check log_fonts /= Void end
+			else
+				log_fonts.put (elf.log_font, face_found)
+			end
 		end
 
 	internal_font_faces: detachable ARRAYED_LIST [STRING_32]
@@ -103,14 +110,14 @@ feature {NONE} -- Basic operations
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

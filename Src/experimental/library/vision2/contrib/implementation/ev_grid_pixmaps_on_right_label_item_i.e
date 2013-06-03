@@ -96,7 +96,7 @@ feature {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM} -- change
 			l_pix: like pixmaps_on_right
 		do
 			l_pix := pixmaps_on_right
-			check l_pix_attached: l_pix /= Void end
+			check l_pix_attached: l_pix /= Void then end
 			l_pix.put (p, i)
 			if is_parented and not is_destroyed then
 				redraw
@@ -144,14 +144,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

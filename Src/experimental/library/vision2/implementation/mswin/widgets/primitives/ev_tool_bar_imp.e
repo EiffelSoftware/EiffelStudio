@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			theme_drawer: EV_THEME_DRAWER_IMP
 		do
 			bk_brush := background_brush
-			check bk_brush /= Void end
+			check bk_brush /= Void then end
 			theme_drawer := application_imp.theme_drawer
 			theme_drawer.draw_widget_background (Current, paint_dc, invalid_rect, bk_brush)
 			bk_brush.delete
@@ -134,13 +134,15 @@ feature {NONE} -- Initialization
 			create ev_children.make (2)
 			Precursor {EV_ITEM_LIST_IMP}
 			create radio_group.make
+
+				--| FIXME IEK `child_cell' needs to be created explicitly before `ctrl' due to use of `Current'
+			create child_cell
+
 			new_item_actions.extend (agent add_button)
 			new_item_actions.extend (agent add_radio_button)
 			new_item_actions.extend (agent add_toggle_button)
 			remove_item_actions.extend (agent remove_radio_button)
 
-				--| FIXME IEK `child_cell' needs to be created explicitly before `ctrl' due to use of `Current'
-			create child_cell
 			create ctrl.make_with_toolbar (default_parent, Current)
 			wel_make (ctrl, 0)
 				-- For some reasons most of the time on Windows XP with a manifest file
@@ -173,7 +175,7 @@ feature -- Access
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			if l_bar.parent = default_parent then
 				Result := Void
 			else
@@ -197,11 +199,11 @@ feature -- Access
 			if is_show_requested then
 				if wel_parent /= Void then
 					l_bar := bar
-					check l_bar /= Void end
+					check l_bar /= Void then end
 					rect := l_bar.window_rect
 					create point.make (rect.x, rect.y)
 					l_parent := l_bar.parent
-					check l_parent /= Void end
+					check l_parent /= Void then end
 					point.screen_to_client (l_parent)
 					Result := point.x
 				else
@@ -228,11 +230,11 @@ feature -- Access
 			if is_show_requested then
 				if wel_parent /= Void then
 					l_bar := bar
-					check l_bar /= Void end
+					check l_bar /= Void then end
 					rect := l_bar.window_rect
 					create point.make (rect.x, rect.y)
 					l_parent := l_bar.parent
-					check l_parent /= Void end
+					check l_parent /= Void then end
 					point.screen_to_client (l_parent)
 					Result := point.y
 				else
@@ -249,7 +251,7 @@ feature -- Access
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			Result := flag_set (l_bar.style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 		end
 
@@ -270,7 +272,7 @@ feature -- Status report
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			Result := flag_set (l_bar.style, Ws_visible)
 		end
 
@@ -292,7 +294,7 @@ feature -- Status setting
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			show_window (l_bar.item, {WEL_WINDOW_CONSTANTS}.Sw_show)
 			p_imp := parent_imp
 			if p_imp /= Void then
@@ -307,7 +309,7 @@ feature -- Status setting
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			show_window (l_bar.item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
 			p_imp := parent_imp
 			if p_imp /= Void then
@@ -343,7 +345,7 @@ feature -- Status setting
 				l_parent_imp.attached_interface.prune (attached_interface)
 			end
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			l_bar.destroy
 			if attached default_imagelist as l_default_imagelist then
 				destroy_toolbar_default_imagelist (l_default_imagelist)
@@ -433,7 +435,7 @@ feature -- Element change
 				create but.make_button (-1, button.id)
 			end
 
-			check but /= Void end
+			check but /= Void then end
 
 				-- First, we take care of the pixmap,
 			if button.has_pixmap then
@@ -801,7 +803,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 				local_children.forth
 			end
 			check
-				button_with_command_id_exists: l_result /= Void
+				button_with_command_id_exists: l_result /= Void then
 			end
 			Result := l_result
 		end
@@ -1002,7 +1004,7 @@ feature {NONE} -- WEL Implementation
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			l_bar.move_and_resize (a_x, a_y, a_width, height, repaint)
 			reposition
 		end
@@ -1014,7 +1016,7 @@ feature {NONE} -- WEL Implementation
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			l_bar.resize (a_width, height)
 			reposition
 		end
@@ -1025,7 +1027,7 @@ feature {NONE} -- WEL Implementation
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			l_bar.move (a_x, a_y)
 		end
 
@@ -1035,7 +1037,7 @@ feature {NONE} -- WEL Implementation
 			l_bar: like bar
 		do
 			l_bar := bar
-			check l_bar /= Void end
+			check l_bar /= Void then end
 			l_bar.set_parent (a_parent)
 		end
 
@@ -1087,7 +1089,7 @@ feature {NONE} -- WEL Implementation
 			l_button: detachable EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
 		do
 			l_button ?= button_associated_with_id (info.button_id)
-			check dropdown_notify_only_happen_on_dropdown_button: l_button /= Void end
+			check dropdown_notify_only_happen_on_dropdown_button: l_button /= Void then end
 			l_button.attached_interface.drop_down_actions.call ([])
 		end
 
@@ -1133,7 +1135,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			t_imp: detachable EV_TOOL_BAR_IMP
 		do
 			t_imp ?= other.implementation
-			check t_imp /= Void end
+			check t_imp /= Void then end
 			Result := t_imp.radio_group = radio_group
 		end
 
@@ -1170,7 +1172,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 		do
 			button_imp ?= w.implementation
 			check
-				implementation_not_void: button_imp /= Void
+				implementation_not_void: button_imp /= Void then
 			end
 			if not button_imp.is_sensitive then
 				disable_button (button_imp.id)
@@ -1246,7 +1248,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
-			check but /= Void end
+			check but /= Void then end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.left
 		end
@@ -1258,7 +1260,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
-			check but /= Void end
+			check but /= Void then end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.top
 		end
@@ -1270,7 +1272,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
-			check but /= Void end
+			check but /= Void then end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := screen_x + button_rectangle.left
 		end
@@ -1282,7 +1284,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
-			check but /= Void end
+			check but /= Void then end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := screen_y + button_rectangle.top
 		end
@@ -1294,7 +1296,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
-			check but /= Void end
+			check but /= Void then end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.width
 		end
@@ -1306,7 +1308,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
-			check but /= Void end
+			check but /= Void then end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.height
 		end
@@ -1316,14 +1318,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TOOL_BAR_IMP

@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 				insert_separator_item (sep_imp, pos)
 			else
 				menu_item_imp ?= item_imp
-				check menu_item_imp /= Void end
+				check menu_item_imp /= Void then end
 				menu_imp ?= menu_item_imp
 				if menu_imp /= Void then
 					insert_menu (menu_imp, pos)
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			rgroup: detachable like radio_group
 		do
 			menu_item_imp ?= item_imp
-			check menu_item_imp /= Void end
+			check menu_item_imp /= Void then end
 			pos := ev_children.index_of (menu_item_imp, 1)
 
 				-- Enable `menu_item_imp' if necessary.
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 					radio_imp.remove_from_radio_group
 				else
 					sep_imp ?= item_imp
-					check sep_imp /= Void end
+					check sep_imp /= Void then end
 					if attached sep_imp.radio_group as l_radio_group then
 						if not l_radio_group.is_empty then
 							-- Merge `rgroup' with the one from `sep_imp'.
@@ -547,14 +547,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

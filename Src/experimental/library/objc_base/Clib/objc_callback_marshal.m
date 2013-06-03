@@ -1,8 +1,8 @@
 /*
 indexing
 	description: "C features for OBJC_CALLBACK_MARSHAL"
-	date: "$Date: 2009-04-26 22:46:55 +0200 (So, 26 Apr 2009) $"
-	revision: "$Revision: 78382 $"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 */
 

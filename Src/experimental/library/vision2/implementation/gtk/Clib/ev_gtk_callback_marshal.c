@@ -1,8 +1,8 @@
 /*
 indexing
 	description: "C features of EV_GTK_CALLBACK_MARSHAL, see ev_callback_marshal.e."
-	date: "$Date: $"
-	revision: "$Revision: $"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

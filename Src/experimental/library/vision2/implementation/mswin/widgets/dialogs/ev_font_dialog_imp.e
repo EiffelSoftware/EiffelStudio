@@ -91,7 +91,7 @@ feature -- Access
 				create wel_font.make_indirect (log_font)
 				create ev_font
 				font_imp ?= ev_font.implementation
-				check font_imp /= Void end
+				check font_imp /= Void then end
 				font_imp.set_by_wel_font (wel_font)
 				Result := ev_font
 			else
@@ -127,7 +127,7 @@ feature -- Element change
 			font_imp: detachable EV_FONT_IMP
 		do
 			font_imp ?= a_font.implementation
-			check font_imp /= Void end
+			check font_imp /= Void then end
 			font_imp.update_preferred_faces ({STRING_32} "")
 			set_log_font (font_imp.wel_log_font)
 		end
@@ -276,14 +276,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FONT_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_FONT_DIALOG_IMP

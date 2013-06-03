@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			height := other.height
 			width := other.width
 			l_internal_bitmap := other.internal_bitmap
-			check l_internal_bitmap /= Void end
+			check l_internal_bitmap /= Void then end
 			l_internal_bitmap.increment_reference
 			internal_bitmap := l_internal_bitmap
 			internal_mask_bitmap := other.internal_mask_bitmap
@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 				l_rect.set_rect (0, 0, window_width, window_height)
 
 				if internal_mask_bitmap = Void then
-					check l_bitmap /= Void end
+					check l_bitmap /= Void then end
 					create l_bitmap_info.make_by_dc (l_bitmap_dc, l_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 					if l_bitmap_info /= Void and then l_bitmap_info.header.bit_count = 32 and then
 						(l_bitmap.ppv_bits /= default_pointer or l_bitmap.is_made_by_dib) then

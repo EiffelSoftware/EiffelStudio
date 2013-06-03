@@ -70,7 +70,7 @@ feature -- Formatting
 			a_args_attached: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		local
-			l_arg: detachable ANY
+			l_arg: detachable separate ANY
 			l_count: INTEGER
 			l_arg_count: INTEGER
 			l_match: BOOLEAN
@@ -120,12 +120,14 @@ feature -- Formatting
 						if l_digit.is_integer then
 							l_index := l_digit.to_integer
 							if l_index > 0 and l_index <= l_arg_count then
-								l_arg := a_args[l_index]
+								l_arg := a_args [l_index]
 								if l_arg /= Void then
 									if attached {READABLE_STRING_GENERAL} l_arg as l_str then
 										Result.append_string_general (l_str)
+									elseif attached {separate READABLE_STRING_GENERAL} l_arg as l_str then
+										Result.append_string_general (create {STRING_32}.make_from_separate (l_str))
 									else
-										Result.append_string_general (l_arg.out)
+										Result.append_string_general (out_from_separate (l_arg))
 									end
 								end
 							end
@@ -260,6 +262,14 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
+feature {NONE} -- Implemenetation
+
+	out_from_separate (a_any: separate ANY): STRING
+			-- Out from separate
+		do
+			create Result.make_from_separate (a_any.out)
+		end
+
 feature {NONE} -- Symbols
 
 	open_char: CHARACTER = '{'
@@ -269,8 +279,8 @@ feature {NONE} -- Symbols
 			-- Index close character
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -86,9 +86,9 @@ feature -- Status report
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			par_tree := parent_tree_imp
-			check par_tree /= Void end
+			check par_tree /= Void then end
 			l_list_iter := list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_tree_path := {GTK2}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
 			Result := {GTK2}.gtk_tree_view_row_expanded (par_tree.tree_view, a_tree_path)
 			{GTK2}.gtk_tree_path_free (a_tree_path)
@@ -206,7 +206,7 @@ feature {EV_ANY_I} -- Status setting
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				l_list_iter := list_iter
-				check l_list_iter /= Void end
+				check l_list_iter /= Void then end
 				a_selection := {GTK2}.gtk_tree_view_get_selection (par_tree.tree_view)
 				{GTK2}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
 				par_tree.ensure_item_visible (attached_interface)
@@ -223,7 +223,7 @@ feature {EV_ANY_I} -- Status setting
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				l_list_iter := list_iter
-				check l_list_iter /= Void end
+				check l_list_iter /= Void then end
 				a_selection := {GTK2}.gtk_tree_view_get_selection (par_tree.tree_view)
 				{GTK2}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 			end
@@ -238,9 +238,9 @@ feature {EV_ANY_I} -- Status setting
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			par_tree := parent_tree_imp
-			check par_tree /= Void end
+			check par_tree /= Void then end
 			l_list_iter := list_iter
-			check l_list_iter /= Void end
+			check l_list_iter /= Void then end
 			a_tree_path := {GTK2}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
 			if a_flag then
 				{GTK2}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
@@ -358,7 +358,9 @@ feature -- PND
 					if child_array.i_th (i) /= Void then
 						a_tree_node_imp ?= child_array.i_th (i).implementation
 						check a_tree_node_imp /= Void end
-						Result := a_tree_node_imp.is_transport_enabled_iterator
+						if a_tree_node_imp /= Void then
+							Result := a_tree_node_imp.is_transport_enabled_iterator
+						end
 					end
 					i := i + 1
 				end
@@ -446,7 +448,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				i > child_array.count
 			loop
 				item_imp ?= (child_array @ i).implementation
-				check item_imp /= Void end
+				check item_imp /= Void then end
 				item_imp.add_item_and_children_to_parent_tree (a_parent_tree, Current, i)
 				i := i + 1
 			end
@@ -542,7 +544,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				-- Clean up previous pixmap if any
 			dispose
 			a_pix_imp ?= a_pixmap.implementation
-			check a_pix_imp /= Void end
+			check a_pix_imp /= Void then end
 			gdk_pixbuf := a_pix_imp.pixbuf_from_drawable
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
@@ -576,7 +578,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			if gdk_pixbuf /= default_pointer then
 				create Result
 				pix_imp ?= Result.implementation
-				check pix_imp /= Void end
+				check pix_imp /= Void then end
 				pix_imp.set_pixmap_from_pixbuf (gdk_pixbuf)
 			end
 		end
@@ -591,7 +593,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			par_t_imp: detachable EV_TREE_IMP
 		do
 			item_imp ?= v.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
@@ -631,12 +633,12 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				end
 			end
 			item_imp ?= (child_array @ (a_position)).implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 				-- Remove from tree if present
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
 				l_list_iter := item_imp.list_iter
-				check l_list_iter /= Void end
+				check l_list_iter /= Void then end
 				{GTK2}.gtk_tree_store_remove (par_tree_imp.tree_store, l_list_iter.item)
 			end
 			item_imp.set_parent_imp (Void)
@@ -674,14 +676,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE_NODE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TREE_NODE_IMP

@@ -67,6 +67,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
+			create_implementation_objects
+				--| Needed for Void safety.
+
 			focused_selection_color := default_focused_selection_color
 			non_focused_selection_color := default_non_focused_selection_color
 			focused_selection_text_color := default_focused_selection_text_color
@@ -87,7 +90,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id (wel_color_constants.color_highlight)
 		end
 
@@ -98,7 +101,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id (wel_color_constants.color_btnface)
 		end
 
@@ -109,7 +112,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id (wel_color_constants.color_highlighttext)
 		end
 
@@ -120,7 +123,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 			color_imp ?= Result.implementation
-			check color_imp /= Void end
+			check color_imp /= Void then end
 			color_imp.set_with_system_id (wel_color_constants.color_btntext)
 		end
 
@@ -142,10 +145,11 @@ feature -- Access
 				tuple.height := 0
 			else
 				font_imp ?= f.implementation
-				check font_imp /= Void end
-				l_size_tuple := font_imp.string_size_no_offset (s)
-				tuple.width := l_size_tuple.width
-				tuple.height := l_size_tuple.height
+				if font_imp /= Void then
+					l_size_tuple := font_imp.string_size_no_offset (s)
+					tuple.width := l_size_tuple.width
+					tuple.height := l_size_tuple.height
+				end
 			end
 		end
 
@@ -178,7 +182,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_GRID note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

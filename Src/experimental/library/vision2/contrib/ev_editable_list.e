@@ -90,7 +90,7 @@ feature -- Status setting
 		do
 			go_i_th (widget_row)
 			l_saved_text := saved_text
-			check l_saved_text /= Void end
+			check l_saved_text /= Void then end
 			item.put_i_th (l_saved_text, widget_column)
 		end
 
@@ -306,7 +306,7 @@ feature {NONE} -- Actions
 	hide_window_on_timer
 			--
 		do
-			check hide_timer /= Void end
+			check hide_timer /= Void then end
 			hide_timer.destroy
 			if attached internal_dialog as l_internal_dialog then
 				l_internal_dialog.hide
@@ -333,14 +333,14 @@ feature {NONE} -- Actions
 			l_error_dialog: like error_dialog
 		do
 			l_widget := widget
-			check l_widget /= Void end
+			check l_widget /= Void then end
 			if attached selected_item as l_selected_item then
 				if unique_column_values then
 					if is_valid_text (l_widget.text, widget_column, index_of (l_selected_item, 1)) then
 						l_selected_item.put_i_th (l_widget.text, widget_column)
 					else
 						l_saved_text := saved_text
-						check l_saved_text /= Void end
+						check l_saved_text /= Void then end
 						l_widget.set_text (l_saved_text)
 						create l_error_dialog.make_with_text
 							("This column identifier is in use by another row.%N Please choose another.")
@@ -366,7 +366,7 @@ feature {NONE} -- Actions
 			button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
 			a_container ?= a_container_arg.linear_representation
-			check a_container /= Void end
+			check a_container /= Void then end
 			from
 				a_container.start
 			until
@@ -415,7 +415,7 @@ feature {NONE} -- Commands
 					widget ?= textable
 				end
 				l_widget := widget
-				check l_widget /= Void end
+				check l_widget /= Void then end
 
 
 
@@ -433,7 +433,7 @@ feature {NONE} -- Commands
 				l_widget.key_release_actions.extend (agent on_key_release (?, l_internal_dialog))
 
 				l_saved_text := saved_text
-				check l_saved_text /= Void end
+				check l_saved_text /= Void then end
 				l_widget.set_text (l_saved_text)
 				l_widget.focus_out_actions.extend (agent focus_lost)
 			end
@@ -461,7 +461,7 @@ feature {NONE} -- Commands
 			l_internal_dialog: like internal_dialog
 		do
 			l_internal_dialog := internal_dialog
-			check l_internal_dialog /= Void end
+			check l_internal_dialog /= Void then end
 			l_internal_dialog.set_size (dialog_width, dialog_height)
 			l_internal_dialog.show_relative_to_window (relative_window)
 			calculate_x_offset (0)
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 			l_selected_item: detachable EV_LIST_ITEM
 		do
 			l_selected_item := combo_box.selected_item
-			check l_selected_item /= Void end
+			check l_selected_item /= Void then end
 			i_th (widget_row).put_i_th (l_selected_item.text, widget_column)
 		end
 
@@ -636,14 +636,14 @@ invariant
 	editable_columns_not_void: editable_columns /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

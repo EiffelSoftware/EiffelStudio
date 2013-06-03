@@ -48,9 +48,9 @@ feature -- Element Change
 		do
 			create Result
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_and)
 		end
 
@@ -61,9 +61,9 @@ feature -- Element Change
 		do
 			create Result
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_or)
 		end
 
@@ -74,9 +74,9 @@ feature -- Element Change
 		do
 			create Result
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_diff)
 		end
 
@@ -87,9 +87,9 @@ feature -- Element Change
 		do
 			create Result
 			l_result_imp ?= Result.implementation
-			check l_result_imp /= Void end
+			check l_result_imp /= Void then end
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_xor)
 		end
 
@@ -101,7 +101,7 @@ feature -- Duplication
 			l_region_imp: detachable EV_REGION_IMP
 		do
 			l_region_imp ?= a_region.implementation
-			check l_region_imp /= Void end
+			check l_region_imp /= Void then end
 			cwin_combine_rgn (item, l_region_imp.item, default_pointer, {WEL_RGN_CONSTANTS}.rgn_xor)
 		end
 
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 		do
 			if other /= Void then
 				l_region_imp ?= other.implementation
-				check l_region_imp /= Void end
+				check l_region_imp /= Void then end
 				Result := is_equal (l_region_imp)
 			end
 		end
@@ -127,14 +127,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -39,12 +39,12 @@ feature -- Access
 			-- List all options.
 		require
 			options_set: options_set
-		local
-			l_result: detachable like internal_options
 		do
-			l_result := internal_options
-			check l_result_not_void: l_result /= Void end -- Implied from the precondition
-			Result := l_result
+			check
+				from_precondition: attached internal_options as r
+			then
+				Result := r
+			end
 		ensure
 			options_count_valid: number_of_option = options.count
 		end
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

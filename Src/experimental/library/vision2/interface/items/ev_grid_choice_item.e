@@ -98,7 +98,7 @@ feature -- Actions
 				l_choice_list.pointer_button_release_item_actions.wipe_out
 				l_choice_list.pointer_motion_actions.wipe_out
 
-				if has_user_selected_item and then not l_choice_list.selected_rows.is_empty then
+				if has_user_selected_item and then l_choice_list.has_selected_row then
 					l_item ?= l_choice_list.selected_rows.first.item (1)
 					if l_item /= Void then
 						set_text (l_item.text)
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			l_choice_list: like choice_list
 		do
 			l_choice_list := choice_list
-			check l_choice_list /= Void end
+			check l_choice_list /= Void then end
 
 				-- Reset choice list to a 1x1 grid with no item
 				-- We do not use wipeout as this has the side effect of resizing any previously set column widths.
@@ -230,10 +230,10 @@ feature {NONE} -- Implementation
 			l_mouse: EV_COORDINATE
 		do
 			l_parent := parent
-			check l_parent /= Void end
+			check l_parent /= Void then end
 
 			l_screen ?= (create {EV_SCREEN}).implementation
-			check l_screen_not_void: l_screen /= Void end
+			check l_screen_not_void: l_screen /= Void then end
 				-- We limit our positionning on the current monitor, where the click occurred,
 				-- for better user experience.
 			l_mouse := l_screen.pointer_position

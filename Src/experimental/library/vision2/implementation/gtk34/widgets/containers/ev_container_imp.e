@@ -75,14 +75,18 @@ feature -- Element change
 			if attached item as l_item then
 				w ?= l_item.implementation
 				check w /= Void end
-				on_removed_item (w)
-				gtk_container_remove (container_widget, w.c_object)
+				if w /= Void then
+					on_removed_item (w)
+					gtk_container_remove (container_widget, w.c_object)
+				end
 			end
 			if v /= Void then
 				w ?= v.implementation
 				check w /= Void end
-				gtk_insert_i_th (container_widget, w.c_object, 1)
-				on_new_item (w)
+				if w /= Void then
+					gtk_insert_i_th (container_widget, w.c_object, 1)
+					on_new_item (w)
+				end
 			end
 		end
 
@@ -277,7 +281,7 @@ feature -- Status setting
 					an_item_imp ?= eif_object_from_c (
 						{GTK}.gtk_widget_get_parent (a_item_pointer)
 					)
-					check an_item_imp_not_void: an_item_imp /= Void end
+					check an_item_imp_not_void: an_item_imp /= Void then end
 					set_radio_group (an_item_imp.radio_group)
 				else
 					set_radio_group (NULL)
@@ -499,7 +503,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

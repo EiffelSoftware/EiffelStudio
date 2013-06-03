@@ -62,7 +62,7 @@ feature {NONE} -- Status Setting
 			is_maximum_split_position_computed := False
 			v.implementation.on_parented
 			l_imp ?= v.implementation
-			check l_imp_not_void: l_imp /= Void end
+			check l_imp_not_void: l_imp /= Void then end
 			l_imp.set_parent_imp (Current)
 			first := v
 			disable_item_expand (v)
@@ -84,7 +84,7 @@ feature {NONE} -- Status Setting
 			is_maximum_split_position_computed := False
 			v.implementation.on_parented
 			l_imp ?= v.implementation
-			check l_imp_not_void: l_imp /= Void end
+			check l_imp_not_void: l_imp /= Void then end
 			l_imp.set_parent_imp (Current)
 			second := v
 			notify_change (Nc_minsize, Current, False)
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 		do
 			if first_visible and not second_visible then
 				l_first_imp := first_imp
-				check l_first_imp /= Void end
+				check l_first_imp /= Void then end
 				if originator then
 					l_first_imp.set_move_and_size (0, 0, a_width, a_height)
 				else
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 
 			if second_visible and not first_visible then
 				l_second_imp := second_imp
-				check l_second_imp /= Void end
+				check l_second_imp /= Void then end
 				if originator then
 					l_second_imp.set_move_and_size (0, 0, a_width, a_height)
 				else
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			if first_visible and second_visible then
 				l_first_imp := first_imp
 				l_second_imp := second_imp
-				check l_first_imp /= Void and then l_second_imp /= Void end
+				check l_first_imp /= Void and then l_second_imp /= Void then end
 				if originator then
 					l_first_imp.set_move_and_size (0, 0, internal_split_position, a_height)
 					l_second_imp.set_move_and_size
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 				-- not bringing the window it was contained in to the front.
 				-- This fixes this.
 			l_top_level_window_imp := top_level_window_imp
-			check l_top_level_window_imp /= Void end
+			check l_top_level_window_imp /= Void then end
 			l_top_level_window_imp.move_to_foreground
 				-- We must check that we are in the correct location for the split area,
 				-- as if a notebook is placed inside, there are areas of `Current' that receive
@@ -414,14 +414,14 @@ feature {NONE} -- WEL internal
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

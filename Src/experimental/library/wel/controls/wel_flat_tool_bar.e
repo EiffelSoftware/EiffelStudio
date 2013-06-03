@@ -218,7 +218,7 @@ feature -- Element change
 					-- Insert the bitmap into the image list.
 				l_default_image_list := default_image_list
 					-- Per poscondition of `setup_image_list'.
-				check l_default_image_list_attached: l_default_image_list /= Void end
+				check l_default_image_list_attached: l_default_image_list /= Void then end
 				l_default_image_list.add_icon (a_icon)
 
 				last_bitmap_index := l_default_image_list.last_position
@@ -253,7 +253,7 @@ feature -- Element change
 					-- Insert the bitmap into the image lists.
 				l_disabled_image_list := disabled_image_list
 					-- Per poscondition of `setup_disabled_image_list'.
-				check l_disabled_image_list_attached: l_disabled_image_list /= Void end
+				check l_disabled_image_list_attached: l_disabled_image_list /= Void then end
 				l_disabled_image_list.add_icon (an_icon)
 
 					-- Update the position
@@ -282,7 +282,7 @@ feature -- Element change
 					-- Insert the bitmap into the image lists.
 				l_hot_image_list := hot_image_list
 					-- Per poscondition of `setup_image_list'.
-				check l_hot_image_list_attached: l_hot_image_list /= Void end
+				check l_hot_image_list_attached: l_hot_image_list /= Void then end
 				l_hot_image_list.add_icon (an_icon)
 
 					-- Update the position
@@ -311,7 +311,7 @@ feature -- Element change
 					-- Insert the bitmap into the image list.
 				l_default_image_list := default_image_list
 					-- Per poscondition of `setup_image_list'.
-				check l_default_image_list_attached: l_default_image_list /= Void end
+				check l_default_image_list_attached: l_default_image_list /= Void then end
 				l_default_image_list.add_bitmap (a_bitmap)
 
 				last_bitmap_index := l_default_image_list.last_position
@@ -342,7 +342,7 @@ feature -- Element change
 					-- Insert the bitmap into the image lists.
 				l_disabled_image_list := disabled_image_list
 					-- Per poscondition of `setup_disabled_image_list'.
-				check l_disabled_image_list_attached: l_disabled_image_list /= Void end
+				check l_disabled_image_list_attached: l_disabled_image_list /= Void then end
 				l_disabled_image_list.add_bitmap (a_bitmap)
 
 					-- Update the position
@@ -371,7 +371,7 @@ feature -- Element change
 					-- Insert the bitmap into the image lists.
 				l_hot_image_list := hot_image_list
 					-- Per poscondition of `setup_image_list'.
-				check l_hot_image_list_attached: l_hot_image_list /= Void end
+				check l_hot_image_list_attached: l_hot_image_list /= Void then end
 				l_hot_image_list.add_bitmap (a_bitmap)
 
 					-- Update the position
@@ -405,7 +405,7 @@ feature -- Element change
 					-- Insert the bitmap into the image list.
 				l_default_image_list := default_image_list
 					-- Per poscondition of `setup_image_list'.
-				check l_default_image_list_attached: l_default_image_list /= Void end
+				check l_default_image_list_attached: l_default_image_list /= Void then end
 				l_default_image_list.add_masked_bitmap (a_bitmap, a_mask_bitmap)
 
 				last_bitmap_index := l_default_image_list.last_position
@@ -438,7 +438,7 @@ feature -- Element change
 					-- Insert the bitmap into the image list.
 				l_disabled_image_list := disabled_image_list
 					-- Per poscondition of `setup_disabled_image_list'.
-				check l_disabled_image_list_attached: l_disabled_image_list /= Void end
+				check l_disabled_image_list_attached: l_disabled_image_list /= Void then end
 				l_disabled_image_list.add_masked_bitmap (a_bitmap, a_mask_bitmap)
 
 				last_disabled_bitmap_index := l_disabled_image_list.last_position
@@ -468,7 +468,7 @@ feature -- Element change
 					-- Insert the bitmap into the image list.
 				l_hot_image_list := hot_image_list
 					-- Per poscondition of `setup_image_list'.
-				check l_hot_image_list_attached: l_hot_image_list /= Void end
+				check l_hot_image_list_attached: l_hot_image_list /= Void then end
 				l_hot_image_list.add_masked_bitmap (a_bitmap, a_mask_bitmap)
 
 				last_hot_bitmap_index := l_hot_image_list.last_position
@@ -553,7 +553,7 @@ feature -- Obsolete
 				end
 				l_default_image_list := default_image_list
 					-- Per poscondition of `setup_image_list'.
-				check l_default_image_list_attached: l_default_image_list /= Void end
+				check l_default_image_list_attached: l_default_image_list /= Void then end
 				l_default_image_list.add_bitmap (l_bitmap)
 
 				last_bitmap_index := l_default_image_list.last_position
@@ -627,14 +627,14 @@ invariant
 	hot_image_list_only_when_bitmap: use_hot_image_list implies has_bitmap
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

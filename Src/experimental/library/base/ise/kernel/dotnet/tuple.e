@@ -386,7 +386,6 @@ feature -- Status report
 			valid_index: valid_index (index)
 		local
 			l_code: like item_code
-			l_int: INTERNAL
 		do
 			if v = Void then
 					-- A Void entry is always valid.
@@ -401,9 +400,7 @@ feature -- Status report
 				if Result and l_code = reference_code then
 						-- Let's check that type of `v' conforms to specified type of
 						-- `index'-th arguments of current TUPLE.
-					create l_int
-					Result := l_int.type_conforms_to (l_int.dynamic_type (v),
-						l_int.generic_dynamic_type (Current, index))
+					Result := v.generating_type.conforms_to (generating_type.generic_parameter_type (index))
 				end
 			end
 		end
@@ -1284,7 +1281,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

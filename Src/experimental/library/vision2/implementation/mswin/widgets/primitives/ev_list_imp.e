@@ -160,7 +160,7 @@ feature -- Status setting
 		do
 			item_imp ?= an_item.implementation
 			check
-				item_imp_not_void: item_imp /= Void
+				item_imp_not_void: item_imp /= Void then
 			end
 			ensure_visible (internal_get_index (item_imp) - 1)
 		end
@@ -194,7 +194,7 @@ feature -- Status setting
 				local_selected_items.after
 			loop
 				list_item_imp ?= local_selected_items.item.implementation
-				check list_item_imp /= Void end
+				check list_item_imp /= Void then end
 					-- We now directly deselect the item through the implementation
 					-- rather than calling the interface.
 				internal_deselect_item (list_item_imp)
@@ -272,7 +272,7 @@ feature -- Status setting
 						l_selected_items_at_disable_sensitive.off
 					loop
 						item_imp ?= l_selected_items_at_disable_sensitive.item.implementation
-						check item_imp /= Void end
+						check item_imp /= Void then end
 						if has (item_imp.interface) then
 							internal_select_item (item_imp)
 						end
@@ -309,7 +309,7 @@ feature -- Status setting
 			l_background_color_imp: like background_color_imp
 		do
 			l_background_color_imp ?= color.implementation
-			check l_background_color_imp /= Void end
+			check l_background_color_imp /= Void then end
 			background_color_imp := l_background_color_imp
 			set_text_background_color (l_background_color_imp)
 			if is_displayed then
@@ -324,7 +324,7 @@ feature -- Status setting
 			l_foreground_color_imp: like foreground_color_imp
 		do
 			l_foreground_color_imp ?= color.implementation
-			check l_foreground_color_imp /= Void end
+			check l_foreground_color_imp /= Void then end
 			foreground_color_imp := l_foreground_color_imp
 			set_text_foreground_color (l_foreground_color_imp)
 			if is_displayed then
@@ -609,7 +609,7 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 		do
 				-- Destroy the image list.
 			l_image_list := image_list
-			check l_image_list /= Void end
+			check l_image_list /= Void then end
 			destroy_imagelist (l_image_list)
 			image_list := Void
 
@@ -817,14 +817,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_LIST_IMP

@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			loop
 				b ?= button_box.item
 				check
-					button_box_contains_only_buttons: b /= Void
+					button_box_contains_only_buttons: b /= Void then
 				end
 				b.select_actions.extend (actions @ i)
 				button_box.forth
@@ -382,7 +382,7 @@ feature -- Status report
 			l_result: detachable EV_BUTTON
 		do
 			l_result := buttons.item (a_text.as_string_32)
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			not_void: Result /= Void
@@ -538,14 +538,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

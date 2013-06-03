@@ -170,7 +170,7 @@ feature -- Measurement
 			a_menu_bar ?= parent_imp
 			if a_menu_bar = Void then
 				a_menu ?= parent_imp
-				check a_menu /= Void end
+				check a_menu /= Void then end
 				Result := screen_x - a_menu.screen_x
 			else
 				Result := screen_x - a_menu_bar.screen_x
@@ -186,7 +186,7 @@ feature -- Measurement
 			a_menu_bar ?= parent_imp
 			if a_menu_bar = Void then
 				a_menu ?= parent_imp
-				check a_menu /= Void end
+				check a_menu /= Void then end
 				Result := screen_y - a_menu.screen_y
 			else
 				Result := screen_y - a_menu_bar.screen_y
@@ -358,7 +358,7 @@ feature {EV_MENU_ITEM_IMP} -- Implementation
 				else
 					a_menu_bar ?= parent_imp
 					check
-						parent_was_menu_or_bar: a_menu_bar /= Void
+						parent_was_menu_or_bar: a_menu_bar /= Void then
 					end
 					Result := a_menu_bar.top_level_window_imp
 				end
@@ -982,14 +982,14 @@ feature {NONE} -- Constants
 			-- Space between the text and the pixmap in a menu bar item
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

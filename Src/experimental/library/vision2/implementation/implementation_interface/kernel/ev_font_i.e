@@ -245,13 +245,17 @@ feature {EV_FONT, EV_ANY_I} -- Implementation
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			set_values (
-				other.family,
-				other.weight,
-				other.shape,
-				other.height,
-				other.preferred_families
-			)
+			check
+				other /= Void
+			then
+				set_values (
+					other.family,
+					other.weight,
+					other.shape,
+					other.height,
+					other.preferred_families
+				)
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -305,7 +309,7 @@ invariant
 	--vertical_resolution_bigger_than_zero: vertical_resolution > 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -106,8 +106,10 @@ feature -- Basic operations
 						if args_tuple.valid_index (l_position) and then attached args_tuple.item (l_position) as l_object then
 							if attached {READABLE_STRING_GENERAL} l_object as test then
 								Result.append_string_general (test)
+							elseif attached {separate READABLE_STRING_GENERAL} l_object as test then
+								Result.append_string_general (create {STRING_32}.make_from_separate (test))
 							else
-								Result.append_string_general (l_object.out)
+								Result.append_string_general (out_from_separate_any (l_object))
 							end
 						else
 								-- Report an error here if needed later.
@@ -188,9 +190,17 @@ feature -- Check functions
 			result_correct: a_string.as_string_32.has_substring (escape_character.out + Result.out)
 		end
 
+feature {NONE} -- Implementation
+
+	out_from_separate_any (a_any: separate ANY): STRING
+			-- Out from separate any object
+		do
+			create Result.make_from_separate (a_any.out)
+		end
+
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

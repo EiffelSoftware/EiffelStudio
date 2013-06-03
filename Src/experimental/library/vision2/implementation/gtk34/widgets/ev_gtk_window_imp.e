@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			if not is_destroyed then
 				if a_window /= Void then
 					l_internal_blocking_window ?= a_window.implementation
-					check l_internal_blocking_window /= Void end
+					check l_internal_blocking_window /= Void then end
 					internal_blocking_window := l_internal_blocking_window
 					l_internal_blocking_window.add_transient_child (Current)
 				else
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			l_window_imp: detachable EV_WINDOW_IMP
 		do
 			l_window_imp ?= a_window.implementation
-			check l_window_imp /= Void end
+			check l_window_imp /= Void then end
 			is_modal := True
 			l_window_imp.increase_modal_window_count
 			show_relative_to_window (a_window)
@@ -352,7 +352,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 						l_accel := l_accel_list @ 1
 						if l_accel /= Void then
 							l_accel_imp ?= l_accel.implementation
-							check l_accel_imp /= Void end
+							check l_accel_imp /= Void then end
 								-- We retrieve an accelerator implementation object to generate an accelerator id for hash table lookup.
 							l_accel := l_window_imp.accel_list.item (l_accel_imp.hash_code_function (a_key.code, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
 							if l_accel /= Void then
@@ -497,7 +497,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1057,7 +1057,7 @@ feature {NONE} -- WEL Implementation
 			l_screen: EV_SCREEN
 		do
 			l_combo := combo
-			check l_combo /= Void end
+			check l_combo /= Void then end
 
 			l_list_height := list_height_hint
 			if l_list_height = -1 then
@@ -1158,14 +1158,14 @@ invariant
 	text_field_not_void: text_field /= Void implies is_editable
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

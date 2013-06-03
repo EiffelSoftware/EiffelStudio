@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 				--| This is far from good. Another way to see this bug in action is to use a 5.4 or earlier
 				--| of EiffelStudio, open a class in the editor and introduce a syntax error. Compile, and
 				--| the development window is then obscured by the window that was behind it. Julian.
-			check parent_window /= Void end
+			check parent_window /= Void then end
 			if
 				has_focus and then
 				not parent_window.is_destroyed and then
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			-- Destroy `Current'.
 		do
 				--| FIXME, this is the same hack as in `hide' which has a full explanation.
-			check parent_window /= Void end
+			check parent_window /= Void then end
 			if
 				has_focus and then
 				not parent_window.is_destroyed and then
@@ -167,31 +167,32 @@ feature {NONE} -- Implementation
 			err: WEL_ERROR
 		do
 				-- Make sure that parent is attached.
-			check a_parent /= Void end
-				-- Initialise the common controls
-			create common_controls_dll.make
+			check a_parent /= Void then
+					-- Initialise the common controls
+				create common_controls_dll.make
 
-				-- Register the dialog to set `wel_item' later.
-			register_dialog
+					-- Register the dialog to set `wel_item' later.
+				register_dialog
 
-				-- Launch the right dialog box modeless.
-			result_id := 0
-			tmp_result := cwin_create_dialog_indirect (
-				main_args.current_instance.item,
-				dlg_template.item,
-				a_parent.item,
-				cwel_dialog_procedure_address
-				)
+					-- Launch the right dialog box modeless.
+				result_id := 0
+				tmp_result := cwin_create_dialog_indirect (
+					main_args.current_instance.item,
+					dlg_template.item,
+					a_parent.item,
+					cwel_dialog_procedure_address
+					)
 
-			debug ("VISION2_WINDOWS")
-				if tmp_result = default_pointer then
-					create err
-					err.display_last_error
+				debug ("VISION2_WINDOWS")
+					if tmp_result = default_pointer then
+						create err
+						err.display_last_error
+					end
 				end
-			end
 
-				-- Display the window
-			show_internal
+					-- Display the window
+				show_internal
+			end
 		end
 
 feature {NONE} -- External
@@ -206,14 +207,14 @@ feature {NONE} -- External
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

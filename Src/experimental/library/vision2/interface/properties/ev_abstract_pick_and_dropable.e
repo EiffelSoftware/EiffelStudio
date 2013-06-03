@@ -129,7 +129,7 @@ feature -- Status setting
 			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
-			accept_cursor_assigned: attached accept_cursor as l_accept_cursor and then l_accept_cursor.is_equal (a_cursor)
+			accept_cursor_assigned: attached accept_cursor as l_accept_cursor and then l_accept_cursor ~ a_cursor
 		end
 
 	set_deny_cursor (a_cursor: like deny_cursor)
@@ -139,7 +139,7 @@ feature -- Status setting
 			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
-			deny_cursor_assigned: attached deny_cursor as l_deny_cursor and then l_deny_cursor.is_equal (a_cursor)
+			deny_cursor_assigned: attached deny_cursor as l_deny_cursor and then l_deny_cursor ~ a_cursor
 		end
 
 feature -- User input events
@@ -206,14 +206,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -155,12 +155,12 @@ feature {EV_ANY_I}-- Access
 					create Result
 					pix_imp ?= Result.implementation
 					check
-						pix_imp /= Void
+						pix_imp /= Void then
 					end
 					l_top_parent_imp ?= top_parent_imp
-					check l_top_parent_imp /= Void end
+					check l_top_parent_imp /= Void then end
 					image_list := l_top_parent_imp.image_list
-					check image_list /= Void end
+					check image_list /= Void then end
 					image_icon := image_list.get_icon (image_index, Ild_normal)
 					-- We now set the brivate bitmap id as we want to ensure when it is placed back in
 						-- the image list, the icon already contained is used.
@@ -252,7 +252,7 @@ feature {EV_ANY_I} -- Status setting
 			l_top_parent_imp: like top_parent_imp
 		do
 			l_top_parent_imp := top_parent_imp
-			check l_top_parent_imp /= Void end
+			check l_top_parent_imp /= Void then end
 			if flag then
 				l_top_parent_imp.expand_item (Current)
 			else
@@ -510,7 +510,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			root_imp: like top_parent_imp
 		do
 			root_imp := top_parent_imp
-			check root_imp /= Void end
+			check root_imp /= Void then end
 
 			if has_pixmap then
 				image_list := root_imp.image_list
@@ -731,7 +731,7 @@ feature {NONE} -- Implementation
 				create a_rect.make (0, 0, 0, 0)
 				a_rect.set_left (h_item.to_integer_32)
 				l_parent_tree := parent_tree_i
-				check l_parent_tree /= Void end
+				check l_parent_tree /= Void then end
 				if {WEL_API}.send_message_result_boolean (l_top_parent_imp.wel_item, {WEL_TVM_CONSTANTS}.tvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(1), a_rect.item) then
 					bounds_rect.set_rect (l_parent_tree.screen_x + a_rect.left, l_parent_tree.screen_y + a_rect.top, l_parent_tree.screen_x + a_rect.right, l_parent_tree.screen_y + a_rect.bottom)
 				else
@@ -748,14 +748,14 @@ invariant
 	internal_children_not_void_when_not_parented: is_initialized and top_parent_imp = Void implies internal_children /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

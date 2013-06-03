@@ -55,7 +55,7 @@ feature -- Status report
 			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			original_mask := item_imp.mask
 			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
@@ -75,7 +75,7 @@ feature -- Status setting
 			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			original_mask := item_imp.mask
 			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
@@ -100,7 +100,7 @@ feature -- Status setting
 			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
-			check item_imp /= Void end
+			check item_imp /= Void then end
 			original_mask := item_imp.mask
 			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 					-- Retrieve the tree node whose checkable state has changed.
 				tree_node ?= (all_ev_children @ wparam)
 					-- Determine if the node is being checked or unchecked (reversed as we are about to set it explicitly).
-				check tree_node /= Void end
+				check tree_node /= Void then end
 				if is_item_checked (tree_node.attached_interface) then
 					tree_node.set_mask (tree_node.mask | tvif_state)
 					tree_node.set_statemask (tvis_stateimagemask)
@@ -209,14 +209,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_CHECKABLE_TREE_IMP

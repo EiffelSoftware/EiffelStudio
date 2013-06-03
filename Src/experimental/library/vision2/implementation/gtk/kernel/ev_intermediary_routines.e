@@ -35,7 +35,7 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 			a_notebook_imp: detachable EV_NOTEBOOK_IMP
 		do
 			a_notebook_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_notebook_imp /= Void end
+			check a_notebook_imp /= Void then end
 			a_notebook_imp.page_switch (a_page.to_integer_32)
 		end
 
@@ -66,7 +66,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 			a_gauge_imp: detachable EV_GAUGE_IMP
 		do
 			a_gauge_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_gauge_imp /= Void end
+			check a_gauge_imp /= Void then end
 			a_gauge_imp.value_changed_handler
 		end
 
@@ -102,7 +102,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			a_text_component_imp: detachable EV_TEXT_COMPONENT_IMP
 		do
 			a_text_component_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_text_component_imp /= Void end
+			check a_text_component_imp /= Void then end
 			a_text_component_imp.on_change_actions
 		end
 
@@ -112,7 +112,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			l_text_field_imp: detachable EV_TEXT_FIELD_IMP
 		do
 			l_text_field_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check l_text_field_imp /= Void end
+			check l_text_field_imp /= Void then end
 
 			if attached l_text_field_imp.return_actions_internal as l_text_field_return_actions then
 				l_text_field_return_actions.call (Void)
@@ -163,7 +163,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_color_dialog_imp: detachable EV_COLOR_DIALOG_IMP
 		do
 			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_color_dialog_imp /= Void end
+			check a_color_dialog_imp /= Void then end
 			a_color_dialog_imp.on_ok
 		end
 
@@ -173,7 +173,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_color_dialog_imp: detachable EV_COLOR_DIALOG_IMP
 		do
 			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_color_dialog_imp /= Void end
+			check a_color_dialog_imp /= Void then end
 			a_color_dialog_imp.on_cancel
 		end
 
@@ -183,7 +183,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_directory_dialog_imp: detachable EV_DIRECTORY_DIALOG_IMP
 		do
 			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_directory_dialog_imp /= Void end
+			check a_directory_dialog_imp /= Void then end
 			a_directory_dialog_imp.on_ok
 		end
 
@@ -193,7 +193,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_directory_dialog_imp: detachable EV_DIRECTORY_DIALOG_IMP
 		do
 			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_directory_dialog_imp /= Void end
+			check a_directory_dialog_imp /= Void then end
 			a_directory_dialog_imp.on_cancel
 		end
 
@@ -203,7 +203,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_file_dialog_imp: detachable EV_FILE_DIALOG_IMP
 		do
 			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_file_dialog_imp /= Void end
+			check a_file_dialog_imp /= Void then end
 			a_file_dialog_imp.on_ok
 		end
 
@@ -213,7 +213,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_file_dialog_imp: detachable EV_FILE_DIALOG_IMP
 		do
 			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_file_dialog_imp /= Void end
+			check a_file_dialog_imp /= Void then end
 			a_file_dialog_imp.on_cancel
 		end
 
@@ -223,7 +223,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_font_dialog_imp: detachable EV_FONT_DIALOG_IMP
 		do
 			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_font_dialog_imp /= Void end
+			check a_font_dialog_imp /= Void then end
 			a_font_dialog_imp.on_ok
 		end
 
@@ -233,19 +233,19 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_font_dialog_imp: detachable EV_FONT_DIALOG_IMP
 		do
 			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_font_dialog_imp /= Void end
+			check a_font_dialog_imp /= Void then end
 			a_font_dialog_imp.on_cancel
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

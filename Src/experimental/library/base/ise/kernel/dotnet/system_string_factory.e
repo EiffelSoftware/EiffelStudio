@@ -26,7 +26,7 @@ feature -- Conversion
 			l_decoded: BOOLEAN
 		do
 				-- Perform a UTF-32 conversion to UTF-16.
-				-- The code below use `to_character_8' but don't be fool
+				-- The code below uses `to_character_8' but don't be fooled
 				-- it is actually a System.Char type which has a 2-byte length.
 			nb := a_str.count
 			create l_str.make (nb)

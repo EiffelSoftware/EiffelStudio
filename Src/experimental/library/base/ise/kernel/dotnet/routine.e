@@ -159,14 +159,12 @@ feature -- Status report
 		local
 			i, arg_type_code: INTEGER
 			arg: detachable ANY
-			int: INTERNAL
 		do
-			create int
 			if args = Void or open_map = Void then
 					-- Void operands are only allowed
 					-- if object has no open operands.
 				Result := (open_map = Void)
-			elseif attached open_map as l_open_map and then int.generic_count (args) >= l_open_map.count then
+			elseif attached open_map as l_open_map and then args.generating_type.generic_parameter_count >= l_open_map.count then
 				from
 					Result := True
 					i := 1
@@ -177,11 +175,11 @@ feature -- Status report
 					if arg_type_code = {TUPLE}.reference_code then
 						arg := args.item (i)
 						Result := arg = Void or else
-							int.type_conforms_to (int.dynamic_type (arg), open_operand_type (i))
+							arg.generating_type.conforms_to (open_operand_type (i))
 					else
 							-- We provided a closed argument which is expanded, we have to ensure
 							-- that open type has the exact same type.
-						Result := int.generic_dynamic_type (args, i) = open_operand_type (i)
+						Result := args.generating_type.generic_parameter_type (i).type_id = open_operand_type (i).type_id
 					end
 					i := i + 1
 				end
@@ -412,7 +410,7 @@ feature {ROUTINE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen open_types: detachable ARRAY [INTEGER]
+	frozen open_types: detachable ARRAY [detachable like open_operand_type]
 			-- Types of open operands
 
 	frozen remove_gc_reference
@@ -472,25 +470,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_operand_type (i: INTEGER): INTEGER
+	open_operand_type (i: INTEGER): TYPE [detachable separate ANY]
 			-- Type of `i'th open operand.
 		require
 			positive: i >= 1
 			within_bounds: i <= open_count
 		local
-			l_internal: INTERNAL
 			l_open_types: like open_types
 		do
 			l_open_types := open_types
 			if l_open_types = Void then
-				create l_open_types.make_filled (0, 1, open_count)
+				create l_open_types.make_filled (Void, 1, open_count)
 				open_types := l_open_types
 			end
-			Result := l_open_types.item (i)
-			if Result = 0 then
-				create l_internal
-				Result := l_internal.generic_dynamic_type_of_type (
-					l_internal.generic_dynamic_type (Current, 2), i)
+			if attached l_open_types.item (i) as l_type then
+				Result := l_type
+			else
+				Result := generating_type.generic_parameter_type (2).generic_parameter_type (i)
 				l_open_types.force (Result, i)
 			end
 		end
@@ -520,7 +516,7 @@ feature -- Obsolete
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

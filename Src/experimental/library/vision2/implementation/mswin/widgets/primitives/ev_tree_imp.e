@@ -297,7 +297,7 @@ feature -- Basic operations
 		do
 			tree_node_imp ?= tree_node.implementation
 			check
-				tree_node_imp /= Void
+				tree_node_imp /= Void then
 			end
 			{WEL_API}.send_message (wel_item, Tvm_ensurevisible, to_wparam (0), tree_node_imp.h_item)
 		end
@@ -648,7 +648,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			expand_called_manually := True
 			tree_item ?= an_item
-			check tree_item /= Void end
+			check tree_item /= Void then end
 			if not is_expanded (tree_item) then
 				{WEL_API}.send_message (wel_item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
 				tree_item.attached_interface.expand_actions.call (Void)
@@ -665,7 +665,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			expand_called_manually := True
 			tree_item ?= an_item
-			check tree_item /= Void end
+			check tree_item /= Void then end
 			if is_expanded (tree_item) then
 				{WEL_API}.send_message (wel_item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
 				tree_item.attached_interface.collapse_actions.call (Void)
@@ -683,11 +683,11 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			if not expand_called_manually then
 				l_new_item := info.new_item
-				check l_new_item /= Void end
+				check l_new_item /= Void then end
 				l_new_item := all_ev_children @ (l_new_item.h_item)
-				check l_new_item /= Void end
+				check l_new_item /= Void then end
 				l_item ?= l_new_item
-				check l_item /= Void end
+				check l_item /= Void then end
 				if info.action = Tve_collapse then
 					(l_item).attached_interface.
 						collapse_actions.call (Void)
@@ -755,7 +755,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			l_background_color_imp: like background_color_imp
 		do
 			l_background_color_imp ?= color.implementation
-			check l_background_color_imp /= Void end
+			check l_background_color_imp /= Void then end
 			background_color_imp := l_background_color_imp
 			wel_set_background_color (l_background_color_imp)
 			if is_displayed then
@@ -770,7 +770,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			l_foreground_color_imp: like foreground_color_imp
 		do
 			l_foreground_color_imp ?= color.implementation
-			check l_foreground_color_imp /= Void end
+			check l_foreground_color_imp /= Void then end
 			foreground_color_imp := l_foreground_color_imp
 			set_text_color (l_foreground_color_imp)
 			if is_displayed then
@@ -791,14 +791,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TREE_IMP

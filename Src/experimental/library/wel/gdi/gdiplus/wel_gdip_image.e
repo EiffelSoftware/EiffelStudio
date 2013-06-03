@@ -187,7 +187,7 @@ feature -- Command
 				l_parameters := a_parameters.item.item
 			end
 			l_encoder_info := a_format.find_encoder
-			check not_void: l_encoder_info /= Void end
+			check not_void: l_encoder_info /= Void then end
 			c_gdip_save_image_to_file (gdi_plus_handle, item, l_wel_string.item, l_encoder_info.cls_id.item, l_parameters, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
@@ -243,7 +243,7 @@ feature -- Command
 				l_parameters := a_parameters.item.item
 			end
 			l_encoder_info := a_format.find_encoder
-			check not_void: l_encoder_info /= Void end
+			check not_void: l_encoder_info /= Void then end
 			c_gdip_save_image_to_stream (gdi_plus_handle, item, a_stream.item, l_encoder_info.cls_id.item, l_parameters, $l_result)
 			check l_result = {WEL_GDIP_STATUS}.ok end
 		end
@@ -452,7 +452,7 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 				end
 				l_all_format.forth
 			end
-			check l_result /= Void end
+			check l_result /= Void then end
 			Result := l_result
 		ensure
 			not_void: Result /= Void
@@ -827,7 +827,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

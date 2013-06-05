@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="server" uuid="18703970-6222-4F1A-8A63-4E72E05E8A6B" library_target="server">
 	<target name="server">
 		<description>IRON_CONTROLLER</description>
@@ -8,7 +8,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
 			<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 		</option>
 		<setting name="executable_name" value="ironctl"/>
@@ -19,8 +19,8 @@
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf" readonly="false"/>
-		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf" readonly="false"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf" readonly="false"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf">

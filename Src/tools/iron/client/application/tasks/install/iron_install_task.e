@@ -89,9 +89,9 @@ feature -- Execute
 						print (" -> ")
 						print (tk_already_installed)
 						print_new_line
-						if args.verbose then
+						if args.verbose and attached a_iron.layout.package_installation_path (l_package) as l_installation_path then
 							print ("  [")
-							print (a_iron.layout.package_installation_path (l_package).name)
+							print (l_installation_path.name)
 							print ("]%N")
 						end
 					else
@@ -105,9 +105,9 @@ feature -- Execute
 							if a_iron.installation_api.is_installed (l_package) then
 								print (tk_successfully_installed)
 								print_new_line
-								if args.verbose then
+								if args.verbose and attached a_iron.installation_api.package_installation_path (l_package) as l_installation_path then
 									print ("  [")
-									print (a_iron.layout.package_installation_path (l_package).name)
+									print (l_installation_path.name)
 									print ("]%N")
 								end
 							else

@@ -97,9 +97,11 @@ feature -- Execute
 				loop
 					l_package := c.item
 					print (m_removing (l_package.human_identifier))
-					if args.verbose then
+					if args.verbose and then
+						attached a_iron.installation_api.package_installation_path (l_package) as l_installation_path
+					then
 						print (" from %"")
-						print (a_iron.layout.package_installation_path (l_package).name)
+						print (l_installation_path.name)
 						print ("%"")
 						print_new_line
 					end

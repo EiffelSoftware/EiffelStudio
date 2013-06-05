@@ -180,7 +180,7 @@ feature -- Acces: package
 				end
 				if l_package /= Void then
 					Result := layout.package_installation_path (l_package)
-					if (create {DIRECTORY}.make_with_path (Result)).exists then
+					if Result /= Void and then (create {DIRECTORY}.make_with_path (Result)).exists then
 						Result := Result.extended (r)
 					else
 						Result := Void
@@ -283,9 +283,10 @@ feature -- Package operations
 			cl: like new_client
 			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
 			f: RAW_FILE
-			p: PATH
+			p,t: PATH
 			hdate: HTTP_DATE
 			h: HTTP_HEADER
+			res: HTTP_CLIENT_RESPONSE
 		do
 			cl := new_client
 			if attached a_package.archive_uri as l_uri then
@@ -302,20 +303,24 @@ feature -- Package operations
 						h.put_header_key_value ({HTTP_HEADER_NAMES}.header_if_modified_since, hdate.rfc1123_string)
 						ctx.add_header_lines (h)
 					end
+					t := p.appended_with_extension ("tmp-download")
 					ensure_folder_exists (p.parent)
-					create f.make_with_path (p)
+					ensure_folder_exists (t.parent)
+					create f.make_with_path (t)
 					f.create_read_write
 					ctx.set_output_content_file (f)
-					if attached sess.get ("", ctx) as res then
-						if res.error_occurred then
-							f.close
+					res := sess.get ("", ctx)
+					if res.error_occurred then
+						f.close
+						f.delete
+					else
+						a_package.set_archive_uri (path_to_uri_string (p.absolute_path.canonical_path))
+						f.close
+						if res.status = {HTTP_STATUS_CODE}.not_modified then
 							f.delete
 						else
-							a_package.set_archive_uri (path_to_uri_string (p.absolute_path.canonical_path))
-							f.close
+							f.rename_path (p)
 						end
-					else
-						-- never occurs
 					end
 				end
 			end
@@ -324,48 +329,94 @@ feature -- Package operations
 	install_package (a_package: IRON_PACKAGE)
 			-- Install `a_package'.
 		local
-			p: PATH
+			p: detachable PATH
+			p_info,p_renaming,t: PATH
 			l_uri: detachable URI
 			ipu: IRON_UTILITIES
 			f: RAW_FILE
 			j: STRING
 			js: JSON_STRING
 			d: DIRECTORY
+			i: INTEGER
 		do
 			l_uri := a_package.archive_uri
 			if l_uri /= Void then
 				if a_package.has_archive_file_uri then
-					p := layout.package_installation_path (a_package)
---					print ("Installing " + p.utf_8_name + "%N")
+					p_renaming := layout.package_renaming_installation_path (a_package)
+					p_info := layout.package_installation_info_path (a_package)
 					create ipu
-					ensure_folder_exists (p.parent)
-
+					ensure_folder_exists (p_renaming.parent)
+					create f.make_with_path (p_renaming)
+					if f.exists then
+						-- Was renamed, then follow the new name
+						p := layout.package_installation_path (a_package)
+					end
+					if p = Void then
+							-- Expected folder for `a_package' local installation.
+						p := layout.package_expected_installation_path (a_package)
+						create d.make_with_path (p)
+						if d.exists then
+								-- There is conflict on package name
+							t := p.appended ("-" + a_package.id)
+							d.make_with_path (t)
+							if d.exists then
+									-- This is unlikely to occurs, but in this case,
+									-- try to find a free name
+								from
+									i := 0
+									t := p
+								until
+									not d.exists
+								loop
+									i := i + 1
+									t := p.appended ("-" + i.out)
+									d.make_with_path (t)
+								end
+							end
+							p := t
+							create f.make_with_path (p_renaming)
+							f.create_read_write
+							f.put_string (p.utf_8_name)
+							f.close
+						end
+					end
 					ipu.extract_package_archive (a_package, p, True, layout)
 					create d.make_with_path (p)
 					if d.exists then
 						if not d.is_empty then
+							create j.make (512)
+							j.append_character ('{')
+							if attached p.entry as p_entity then
+								j.append ("%"local_path%": ")
+								js := p_entity.name
+								j.append (js.representation)
+								j.append (",")
+							end
+
+							j.append ("%"repository%": {")
+							j.append ("%"uri%":")
+							js := a_package.repository.uri.string
+							j.append (js.representation)
+							j.append_character (',')
+							j.append ("%"version%":")
+							js := a_package.repository.version
+							j.append (js.representation)
+							j.append_character ('}')
+
 							if attached a_package.json_item as l_json then
-								create j.make (l_json.count)
-								j.append_character ('{')
-								j.append ("%"repository%": {")
-								j.append ("%"uri%":")
-								js := a_package.repository.uri.string
-								j.append (js.representation)
-								j.append_character (',')
-								j.append ("%"version%":")
-								js := a_package.repository.version
-								j.append (js.representation)
-								j.append_character ('}')
 								j.append_character (',')
 								j.append ("%"package%":")
 								j.append (l_json)
-								j.append_character ('}')
-
-								create f.make_with_path (p.appended_with_extension ("info"))
-								f.create_read_write
-								f.put_string (j)
-								f.close
 							end
+							j.append_character ('}')
+
+							ensure_folder_exists (p_info.parent)
+							create f.make_with_path (p_info)
+							f.create_read_write
+							f.put_string (j)
+							f.put_new_line
+							f.close
+
 							installed_packages.force (a_package)
 						else
 							d.recursive_delete
@@ -390,17 +441,25 @@ feature -- Package operations
 	uninstall_package (a_package: IRON_PACKAGE)
 			-- Uninstall `a_package'.
 		local
-			p: PATH
+			p: detachable PATH
 			d: DIRECTORY
 			f: RAW_FILE
 		do
 			p := layout.package_installation_path (a_package)
-			create d.make_with_path (p)
-			if d.exists then
-				d.recursive_delete
+			if p /= Void then
+				create d.make_with_path (p)
+				if d.exists then
+					d.recursive_delete
+				end
 			end
 
-			p := p.appended_with_extension ("info")
+			p := layout.package_installation_info_path (a_package)
+			create f.make_with_path (p)
+			if f.exists then
+				f.delete
+			end
+
+			p := layout.package_renaming_installation_path (a_package)
 			create f.make_with_path (p)
 			if f.exists then
 				f.delete

@@ -45,10 +45,10 @@ feature -- Install task
 		do Result := {STRING_32} "already installed !" end
 
 	tk_successfully_installed: STRING_32
-		do Result := {STRING_32} "successfully installed !" end
+		do Result := {STRING_32} "successfully installed." end
 
 	tk_successfully_removed: STRING_32
-		do Result := {STRING_32} "successfully removed !" end
+		do Result := {STRING_32} "successfully removed." end
 
 	tk_failed: STRING_32
 		do Result := {STRING_32} "failed !" end

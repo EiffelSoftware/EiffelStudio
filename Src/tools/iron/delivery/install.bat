@@ -3,7 +3,7 @@ setlocal
 
 set T_INSTALL_DIR=%~f1
 if "%T_INSTALL_DIR%" == "" set T_INSTALL_DIR=%ISE_EIFFEL%
-echo %T_INSTALL_DIR%
+echo Install iron into %T_INSTALL_DIR%
 
 set T_HERE=%cd%
 set TARGET_EIFGENS_EXE=%~dp0EIFGENs\client\F_code\iron.exe

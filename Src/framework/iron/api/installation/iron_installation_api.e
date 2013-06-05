@@ -60,8 +60,17 @@ feature -- Access
 		local
 			d: DIRECTORY
 		do
-			create d.make_with_path (layout.package_installation_path (a_package))
-			Result := d.exists and then not d.is_empty
+			if attached package_installation_path (a_package) as p then
+				create d.make_with_path (p)
+				Result := d.exists and then not d.is_empty
+			end
+		end
+
+	package_installation_path (a_package: IRON_PACKAGE): detachable PATH
+			-- Path to local installation folder related to `a_package'
+			-- return Void if invalid data exists.
+		do
+			Result := layout.package_installation_path (a_package)
 		end
 
 	package_associated_with_id (a_id: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
@@ -158,7 +167,7 @@ feature -- Access
 							l_package /= Void
 						loop
 							l_pn_item := pn.item
-							if 
+							if
 								s.starts_with (l_pn_item) and then
 								(s.count = l_pn_item.count or else s.item (l_pn_item.count + 1) = '/')
 							then
@@ -171,8 +180,8 @@ feature -- Access
 				end
 			end
 			if l_package /= Void then
-				Result := layout.package_installation_path (l_package)
-				if (create {DIRECTORY}.make_with_path (Result)).exists then
+				Result := package_installation_path (l_package)
+				if Result /= Void and then (create {DIRECTORY}.make_with_path (Result)).exists then
 					Result := Result.extended (r)
 				else
 					Result := Void

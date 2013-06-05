@@ -56,11 +56,14 @@ feature -- Execute
 		do
 			print (m_information_for (a_package.human_identifier, a_package.id, a_package.repository.url))
 			print_new_line
-			if a_iron.installation_api.is_installed (a_package) then
+			if
+				a_iron.installation_api.is_installed (a_package) and then
+				attached a_iron.installation_api.package_installation_path (a_package) as l_installation_path
+			then
 				print ("  ")
 				print (tk_installation)
 				print (": ")
-				print (a_iron.layout.package_installation_path (a_package).name)
+				print (l_installation_path.name)
 				print_new_line
 			end
 			if attached a_package.description as l_description then

@@ -60,8 +60,12 @@ feature -- Execute
 						loop
 							print (" - ")
 --							print (p.item.human_identifier)
-							t := a_iron.layout.package_installation_path (p.item).name
-							print (t.substring (s.count + 2, t.count))
+							if attached a_iron.installation_api.package_installation_path (p.item) as l_installation_path then
+								t := l_installation_path.name
+								print (t.substring (s.count + 2, t.count))
+							else
+								print ("not found")
+							end
 							print ("%N")
 						end
 					end

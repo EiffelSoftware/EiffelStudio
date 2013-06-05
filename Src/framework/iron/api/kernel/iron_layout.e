@@ -86,26 +86,64 @@ feature -- Query
 
 	package_archive_path (a_package: IRON_PACKAGE): PATH
 		do
-			Result := archives_path.extended_path (safe_package_path (a_package))
+			Result := archives_path.extended_path (safe_repository_path (a_package.repository)).extended_path (safe_package_path (a_package, True))
 		end
 
-	package_installation_path (a_package: IRON_PACKAGE): PATH
+	package_expected_installation_path (a_package: IRON_PACKAGE): PATH
 		do
-			Result := packages_path.extended_path (safe_package_path (a_package))
+			Result := packages_path.extended_path (safe_package_path (a_package, False))
+		end
+
+	package_installation_path (a_package: IRON_PACKAGE): detachable PATH
+		local
+			f: RAW_FILE
+			utf: UTF_CONVERTER
+			s: STRING_8
+		do
+			Result := package_expected_installation_path (a_package)
+			if attached package_renaming_installation_path (a_package) as p then
+				create f.make_with_path (p)
+				if f.exists and then f.is_access_readable then
+					f.open_read
+					f.read_line_thread_aware
+					s := f.last_string
+					f.close
+					create Result.make_from_string (utf.utf_8_string_8_to_escaped_string_32 (s))
+				end
+			end
+		end
+
+	package_installation_info_path (a_package: IRON_PACKAGE): PATH
+		do
+			Result := packages_path.extended_path (safe_package_path (a_package, True)).appended_with_extension ("info")
+		end
+
+	package_renaming_installation_path (a_package: IRON_PACKAGE): PATH
+		do
+			Result := packages_path.extended_path (safe_package_path (a_package, True)).appended_with_extension ("renaming")
 		end
 
 feature {NONE} -- Implementation
 
-	safe_package_path (a_package: IRON_PACKAGE): PATH
+	safe_package_path (a_package: IRON_PACKAGE; with_id: BOOLEAN): PATH
 		local
 			s: STRING_32
 		do
-			s := a_package.id
+			create s.make (10)
 			if attached a_package.name as l_name then
-				s.append_character ('-')
 				s.append (l_name)
 			end
-			Result := safe_repository_path (a_package.repository).extended (safe_name (s))
+			if with_id then
+				if not s.is_empty then
+					s.append_character ('_')
+					s.append_character ('_')
+				end
+				s.append_string_general (a_package.id)
+			elseif s.is_empty then
+				s.append_string_general (a_package.id.as_lower)
+			end
+			check s_not_empty: not s.is_empty end
+			create Result.make_from_string (safe_name (s))
 		end
 
 	safe_repository_path (repo: IRON_REPOSITORY): PATH
@@ -130,6 +168,8 @@ feature {NONE} -- Implementation
 					Result.append_character (c.item.to_character_8)
 				when '!', '@', '?' then
 					Result.append_character ('+')
+				when '-' then
+					Result.append_character ('-')
 				else
 					Result.append_character ('_')
 				end

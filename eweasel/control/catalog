@@ -2660,6 +2660,7 @@ test	attached-agent-procedure-conformance	conform007 tcf fail conformance attach
 test	attached-formal-creation	conform008 tcf pass conformance attached_types
 test	expanded-formal-conformance	conform009 tcf pass conformance expanded formal generic validity constraint
 test	formal-constraint-conformance	conform010 tcf pass conformance formal generic validity constraint
+test	frozen-variant-conformance conform011 tcf pass conformance catcall
 
 -- Test for Reflection
 test	basic-type-internal				reflection001 tcf pass reflection

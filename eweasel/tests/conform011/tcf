@@ -182,4 +182,171 @@ copy_sub	test.e $CLUSTER test.e
 compile_melted
 compile_result	ok
 
+-- Simple assignment of TEST2 [X] to TEST1 [X] with variation on the frozen/variant actual generic parameter.
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST2 [X]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST2 [frozen X]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST2 [variant X]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error  TEST VJAR
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST2 [X]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error  TEST VJAR
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST2 [frozen X]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST2 [variant X]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error  TEST VJAR
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST2 [X]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST2 [frozen X]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST2 [variant X]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+-- Simple assignment of TEST2 [Y] to TEST1 [X] with variation on the frozen/variant actual generic parameter
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST2 [Y]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error TEST VJAR
+
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST2 [frozen Y]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error TEST VJAR
+
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST2 [variant Y]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error  TEST VJAR
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST2 [Y]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error  TEST VJAR
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST2 [frozen Y]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error TEST VJAR
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST2 [variant Y]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error  TEST VJAR
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST2 [Y]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST2 [frozen Y]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST2 [variant Y]"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+-- Simple assignment of TEST3 to TEST1 [X] with variation on the frozen/variant actual generic parameter.
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST3"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST3"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error  TEST VJAR
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST3"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+-- Simple assignment of TEST3_FROZEN to TEST1 [X] with variation on the frozen/variant actual generic parameter.
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST3_FROZEN"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST3_FROZEN"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST3_FROZEN"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+-- Simple assignment of TEST3_VARIANT to TEST1 [X] with variation on the frozen/variant actual generic parameter.
+define TYPE_TARGET "TEST1 [X]"
+define TYPE_SOURCE "TEST3_VARIANT"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error TEST VJAR
+
+define TYPE_TARGET "TEST1 [frozen X]"
+define TYPE_SOURCE "TEST3_VARIANT"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error TEST VJAR
+
+define TYPE_TARGET "TEST1 [variant X]"
+define TYPE_SOURCE "TEST3_VARIANT"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
 test_end

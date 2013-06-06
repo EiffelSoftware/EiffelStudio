@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	item_for_iteration: G is
+	item_for_iteration: G
 			-- Item at internal cursor position
 		require
 			not_off: not off
@@ -28,7 +28,7 @@ feature -- Access
 			Result := cursor_item (internal_cursor)
 		end
 
-	new_cursor: DS_CURSOR [G] is
+	new_cursor: DS_CURSOR [G]
 			-- New external cursor for traversal
 		deferred
 		ensure
@@ -38,13 +38,13 @@ feature -- Access
 
 feature -- Status report
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no item at internal cursor position?
 		do
 			Result := cursor_off (internal_cursor)
 		end
 
-	same_position (a_cursor: like new_cursor): BOOLEAN is
+	same_position (a_cursor: like new_cursor): BOOLEAN
 			-- Is internal cursor at same position as `a_cursor'?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -52,7 +52,7 @@ feature -- Status report
 			Result := cursor_same_position (internal_cursor, a_cursor)
 		end
 
-	valid_cursor (a_cursor: DS_CURSOR [G]): BOOLEAN is
+	valid_cursor (a_cursor: DS_CURSOR [G]): BOOLEAN
 			-- Is `a_cursor' a valid cursor?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_to (a_cursor: like new_cursor) is
+	go_to (a_cursor: like new_cursor)
 			-- Move internal cursor to `a_cursor''s position.
 		require
 			cursor_not_void: a_cursor /= Void
@@ -75,14 +75,14 @@ feature -- Cursor movement
 
 feature {NONE} -- Cursor implementation
 
-	internal_cursor: like new_cursor is
+	internal_cursor: like new_cursor
 			-- Internal cursor
 		deferred
 		end
 
 feature {DS_CURSOR} -- Cursor implementation
 
-	cursor_item (a_cursor: like new_cursor): G is
+	cursor_item (a_cursor: like new_cursor): G
 			-- Item at `a_cursor' position
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -91,7 +91,7 @@ feature {DS_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+	cursor_off (a_cursor: like new_cursor): BOOLEAN
 			-- Is there no item at `a_cursor' position?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -99,7 +99,7 @@ feature {DS_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
+	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
 			-- Is `a_cursor' at same position as `other'?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -108,7 +108,7 @@ feature {DS_CURSOR} -- Cursor implementation
 		deferred
 		end
 
-	cursor_go_to (a_cursor, other: like new_cursor) is
+	cursor_go_to (a_cursor, other: like new_cursor)
 			-- Move `a_cursor' to `other''s position.
 		require
 			cursor_not_void: a_cursor /= Void
@@ -120,7 +120,7 @@ feature {DS_CURSOR} -- Cursor implementation
 			same_position: cursor_same_position (a_cursor, other)
 		end
 
-	add_traversing_cursor (a_cursor: like new_cursor) is
+	add_traversing_cursor (a_cursor: like new_cursor)
 			-- Add `a_cursor' to the list of traversing cursors
 			-- (i.e. cursors associated with current container
 			-- and which are not currently `off').
@@ -133,7 +133,7 @@ feature {DS_CURSOR} -- Cursor implementation
 			end
 		end
 
-	remove_traversing_cursor (a_cursor: like new_cursor) is
+	remove_traversing_cursor (a_cursor: like new_cursor)
 			-- Remove `a_cursor' from the list of traversing cursors
 			-- (i.e. cursors associated with current container
 			-- and which are not currently `off').
@@ -161,7 +161,7 @@ feature {DS_CURSOR} -- Cursor implementation
 
 feature {NONE} -- Implementation
 
-	initialized: BOOLEAN is
+	initialized: BOOLEAN
 			-- Some Eiffel compilers check invariants even when the
 			-- execution of the creation procedure is not completed.
 			-- (In this case, checking the assertions of the being

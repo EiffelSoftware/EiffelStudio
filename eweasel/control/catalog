@@ -624,6 +624,7 @@ test	wrong-catcall-reported-on-generic-expanded	catcall007 tcf pass catcall
 test	wrong-catcall-on-function-tuple	catcall008 tcf fail catcall
 test	catcall-on-tuple-insertion	catcall009 tcf fail catcall tuple
 test	simple-catcall-2			catcall010 tcf fail catcall
+test	catcall-on-tuple-insertion-2	catcall011 tcf fail catcall
 
 -- Incrementality tests
 

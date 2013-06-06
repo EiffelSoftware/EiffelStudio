@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="decimal" location="$ISE_LIBRARY\contrib\library\math\decimal\decimal\decimal-safe.ecf"/>
-		<library name="espec" location="$ISE_LIBRARY\contrib\library\testing\framework\espec_simple\library\espec-safe.ecf"/>
+		<library name="espec" location="$ISE_LIBRARY\contrib\library\testing\framework\espec\library\espec-safe.ecf"/>
 		<cluster name="root" location=".\">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

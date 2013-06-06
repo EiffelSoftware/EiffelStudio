@@ -1,6 +1,5 @@
 #!/bin/sh
 # 
-# 
 #	Script to extract an iron package archive
 # 	usage: prog {archive_path} {folder_directory} 
 #
@@ -12,8 +11,8 @@ T_HERE=`pwd`
 T_ARCHIVE_NAME=$1
 T_FOLDER_DIR=$2
 
-if [ ! -f "${T_ARCHIVE_NAME}" ]; then
-	echo ERROR: Can not find "${T_ARCHIVE_NAME}"!
+if [ ! -s ${T_ARCHIVE_NAME} ]; then
+	echo "ERROR: Can not find $T_ARCHIVE_NAME"
 	exit 1
 fi
 
@@ -25,6 +24,5 @@ if [ ! -d "${T_FOLDER_DIR}" ]; then
 	exit 1
 fi
 
-cd "${T_FOLDER_DIR}"
-tar xjfp "${T_ARCHIVE_NAME}" 
+bzip2 -cd ${T_ARCHIVE_NAME} | tar xvf - -C ${T_FOLDER_DIR}
 

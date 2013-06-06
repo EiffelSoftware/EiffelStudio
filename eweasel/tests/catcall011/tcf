@@ -1,0 +1,10 @@
+test_name catcall-on-tuple-insertion-2
+test_description A catcall should be reported when inserting a wrong type of element in a TUPLE at compile time.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST Catcall
+
+test_end

@@ -11,7 +11,7 @@ T_SOURCE_DIR=$1
 T_ARCHIVE_DIR=$2
 T_ARCHIVE_NAME=$3
 
-echo Archiving "${T_SOURCE_DIR}" into "${T_ARCHIVE_DIR}/${T_ARCHIVE_NAME}"
+echo Building IRON package archive from "${T_SOURCE_DIR}" into "${T_ARCHIVE_DIR}/${T_ARCHIVE_NAME}"
 
 if [ ! -d "${T_SOURCE_DIR}" ]; then
 	echo ERROR: Can not find "${T_SOURCE_DIR}"!

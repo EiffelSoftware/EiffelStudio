@@ -8,7 +8,7 @@ inherit
 
 feature
 
-	f (v: $FORMAL_TYPE) is
+	f (v: $FORMAL_TYPE)
 		do
 		end
 

@@ -1,8 +1,3 @@
-indexing
-	description: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
 class
 	TEST_SIMPLE [G, H-> HASHABLE]
 
@@ -11,7 +6,7 @@ inherit
 
 feature
 
-	f (a: ANY) is
+	f (a: ANY)
 		do
 		end
 

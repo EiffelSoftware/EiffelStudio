@@ -3,7 +3,7 @@ create
 	make
 feature
 
-	make is
+	make
 		local
 			b: BOOLEAN
 			l_spec: SPECIAL [EXP [STRING]]

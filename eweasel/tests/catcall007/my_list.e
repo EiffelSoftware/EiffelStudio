@@ -3,7 +3,7 @@ class
 
 feature
 
-	extend (v: G) is
+	extend (v: G)
 		do
 		end
 end

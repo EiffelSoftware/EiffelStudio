@@ -8,12 +8,12 @@ inherit
 
 feature
 
-	f is
+	f
 		do
 			print ("Calling TEST2.f%N")
 			attr.g
 		end
-	g is
+	g
 		do
 			print ("Calling TEST2.g%N")
 		end

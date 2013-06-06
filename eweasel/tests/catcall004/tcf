@@ -4,11 +4,13 @@ test_description  Detection of a catcall involving call of feature with generic 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 copy_raw test1.e $CLUSTER test1.e
+copy_raw my_list.e $CLUSTER my_list.e
+copy_raw my_arrayed_list.e $CLUSTER my_arrayed_list.e
 copy_raw a.e $CLUSTER a.e
 copy_raw b.e $CLUSTER b.e
 copy_raw c.e $CLUSTER c.e
 
 compile_melted
-compile_result ok
+compile_result validity_error TEST Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall ; TEST VGCC(3) ; TEST VJAR VJAR VJAR VJAR ; TEST VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) 
 
 test_end

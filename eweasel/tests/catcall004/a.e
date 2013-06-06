@@ -3,7 +3,7 @@ class
 
 feature
 
-	operate is
+	operate
 		do
 			print ("generating type is " + generating_type.out + "%N")
 		end

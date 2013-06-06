@@ -2,33 +2,22 @@ test_name simple-catcall-generic
 test_description Simple detection of a catcall involving call of feature with generic formal arguments which is only allowed on non-variant actual generic parameter.
 
 copy_sub Ace $TEST Ace
-define ENTITY_MARK		""
-define GENERIC_MARK		""
+define ANCESTOR_TYPE	"TEST1 [STRING]"
 copy_sub test.e $CLUSTER test.e
 copy_raw test1.e $CLUSTER test1.e
 
 compile_melted
 compile_result ok
 
-define ENTITY_MARK		""
-define GENERIC_MARK		"variant"
+define ANCESTOR_TYPE	"TEST1 [frozen STRING]"
+
+compile_melted
+compile_result ok
+
+define ANCESTOR_TYPE	"TEST1 [variant STRING]"
 copy_sub test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_warning TEST Catcall; NONE Catcall
-
-define ENTITY_MARK		"frozen"
-define GENERIC_MARK		"variant"
-copy_sub test.e $CLUSTER test.e
-
-compile_melted
-compile_result	validity_warning TEST Catcall; NONE Catcall
-
-define ENTITY_MARK		"frozen"
-define GENERIC_MARK		""
-copy_sub test.e $CLUSTER test.e
-
-compile_melted
-compile_result	ok
+compile_result	validity_error TEST Catcall
 
 test_end

@@ -5,34 +5,32 @@ create
 
 feature
 
-	make is
+	make
 		do
-			create {ARRAYED_LIST [G]} arrayed_list.make (10)
+			create {MY_ARRAYED_LIST [G]} arrayed_list.make (10)
 		end
 
 feature -- Access
 
 	item: G
-	list: LIST [G]
-	arrayed_list: LIST [G]
+	list: MY_LIST [G]
+	arrayed_list: MY_LIST [G]
 
 feature -- Settings
 
-	set_lists (a_list1, a_list2: LIST [G]) is
+	set_lists (a_list1, a_list2: MY_LIST [G])
 		do
-			create {ARRAYED_LIST [G]} list.make (1)
+			create {MY_ARRAYED_LIST [G]} list.make (1)
 			list.append (a_list1)
 			list.append (a_list2)
 		end
 
-	set_item (v: G) is
+	set_item (v: G)
 		do
 			item := v
 		end
 
-	operate is
-		local
-			g: G
+	operate
 		do
 			print ("Operating on a list of type " + list.generating_type.out + "%N")
 			list.extend (create {G})
@@ -43,8 +41,7 @@ feature -- Settings
 				list.after
 			loop
 				if list.item /= Void then
-					g ?= list.item
-					if g = Void then
+					if not attached {G} list.item then
 						print ("Catcall with ")
 					end
 					list.item.operate

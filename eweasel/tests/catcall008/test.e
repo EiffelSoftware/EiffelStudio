@@ -6,7 +6,7 @@ feature
 	make
 			-- Run application.
 		local
-			p: PREDICATE [ANY, TUPLE]
+			p: PREDICATE [variant ANY, TUPLE]
 			b: BOOLEAN
 		do
 			p := agent: BOOLEAN do print ("Passed%N") end

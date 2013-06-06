@@ -1,7 +1,7 @@
 class TEST 
 feature
 
-	make is
+	make
 		local
 			l: LIST [ANY]
 			l_act: ACTION_SEQUENCE [TUPLE]
@@ -17,7 +17,7 @@ feature
 			l_bool := a.is_equal (b)	-- This is a potential catcall
 			l_bool := t.is_equal (t)	-- This is safe (no descendant)
 
-			l_array.subcopy (l_array, 1, 2, 4)	-- This is a potential catcall
+			l_array.subcopy (l_array, 1, 2, 4)	-- This is safe
 			l_array2.subcopy (l_array, 1, 2, 4)	-- This is a potential catcall
 
 			l_safe_array.put ("STRING", 1)		-- This is safe
@@ -32,7 +32,7 @@ feature
 			l.do_all (agent f)			-- This is a conformance issue with new rules
 		end
 
-	f (a: ANY) is
+	f (a: ANY)
 		do
 		end
 

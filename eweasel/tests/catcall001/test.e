@@ -1,7 +1,7 @@
 class TEST 
 feature
 
-	make is
+	make
 		do
 			t.f ($VALUE)
 		end

@@ -1,6 +1,6 @@
 class TEST1 [G]
 feature
-	f (v: G) is
+	f (v: G)
 		do
 		end
 

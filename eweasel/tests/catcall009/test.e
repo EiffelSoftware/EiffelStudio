@@ -6,7 +6,7 @@ create
 feature
 	 make
 		local
-			t: TUPLE [x: ANY]
+			t: TUPLE [x: variant ANY]
 			y: STRING
 			x: ANY
 	 	do

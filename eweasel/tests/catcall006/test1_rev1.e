@@ -7,13 +7,13 @@ inherit
 
 feature
 
-	is_equal (v: like Current): BOOLEAN is
+	is_equal (v: like Current): BOOLEAN
 		do
 		end
 
 	attr: like Current
 
-	f is
+	f
 		do
 			print ("Calling TEST1.f%N")
 		end

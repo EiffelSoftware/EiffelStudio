@@ -1,12 +1,13 @@
 class TEST 
 feature
 
-	make is
+	make
 		do
+			create t
 			t.f ("STRING")
 		end
 
-	t: $ENTITY_MARK TEST1 [$GENERIC_MARK STRING]
+	t: $ANCESTOR_TYPE
 
 	t2: TEST1 [FILE_NAME]
 

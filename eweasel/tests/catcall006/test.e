@@ -3,7 +3,7 @@ create
 	make
 feature
 
-	make is
+	make
 		local
 			t1: TEST1
 			t2: TEST2

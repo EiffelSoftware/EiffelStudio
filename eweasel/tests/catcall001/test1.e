@@ -1,6 +1,6 @@
 class TEST1
 feature
-	f (v: STRING) is
+	f (v: STRING)
 		do
 		end
 

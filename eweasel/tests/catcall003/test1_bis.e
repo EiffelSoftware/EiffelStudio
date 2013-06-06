@@ -2,7 +2,7 @@ class
 	TEST1_BIS [G -> STRING, H -> ARRAY [K], K -> ARRAY [G]]
 
 feature
-	make is
+	make
 		local
 			s: STRING
 		do

@@ -3,7 +3,7 @@ class
 
 feature
 
-	f is
+	f
 		local
 			h: H
 		do

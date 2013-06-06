@@ -110,6 +110,8 @@ fullrd $INSTALL_DIR/studio/spec/unix
 
 #iron tool.
 move $INSTALL_DIR/tools/iron/spec/unix $INSTALL_DIR/tools/iron/spec/$ISE_PLATFORM
+chmod a+rx $INSTALL_DIR/tools/iron/spec/$ISE_PLATFORM/bin/iron_extract_archive
+chmod a+rx $INSTALL_DIR/tools/iron/spec/$ISE_PLATFORM/bin/iron_build_archive
 fullrd $INSTALL_DIR/tools/iron/spec/windows
 
 #Creates the tools directory

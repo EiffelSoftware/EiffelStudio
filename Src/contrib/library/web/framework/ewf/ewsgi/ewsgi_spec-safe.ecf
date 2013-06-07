@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="ewsgi_spec" uuid="AA193B9F-02FD-47B9-B60D-C42B9AB35E1C" library_target="ewsgi_spec">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="ewsgi_spec" uuid="AA193B9F-02FD-47B9-B60D-C42B9AB35E1C" library_target="ewsgi_spec">
 	<target name="ewsgi_spec">
 		<root all_classes="true"/>
 		<file_rule>

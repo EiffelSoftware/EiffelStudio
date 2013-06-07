@@ -25,9 +25,9 @@ feature {NONE} -- Initialization
 
 	make_with_response_and_output (res: WGI_RESPONSE; a_out: FILE; a_err: FILE)
 		do
-			make_with_response (res)
 			output := a_out
 			error := a_err
+			make_with_response (res)
 		end
 
 	output: FILE
@@ -104,7 +104,7 @@ feature -- Error reporting
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

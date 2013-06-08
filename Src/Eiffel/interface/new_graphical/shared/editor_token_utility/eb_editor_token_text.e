@@ -681,7 +681,16 @@ feature -- Measure
 				l_max_width := maximum_width
 				from
 					x := x_offset
-					y := y_offset
+						-- Required height does not include the `y_offset', otherwise it causes the bug#18606.
+						-- bug#18606 was actually exposed by rev#88278 where we enlarged the minimum row height.
+						-- Because in {EB_GRID_EDITOR_TOKEN_ITEM}.`vertical_starting_position',
+						-- computation of left space was enlarged by 2. This makes positive result possible
+						-- when divided by alignment value (2), while there was no left space to be divided previously.
+						-- The result value, usually 1 or 2, which contributes to {EB_EDITOR_TOKEN_TEXT}.`required_height'
+						-- and later being used to compute `vertical_starting_position' again. The y position to draw text
+						-- changes back and forth on every call, plus it redraws twice on every key stroke in the completion
+						-- window because of selecting. Thus the effect of shifting up and down.
+					y := 0
 					l_tokens.start
 					l_token_in_current_line := 0
 				until
@@ -1118,7 +1127,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

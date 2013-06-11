@@ -1,0 +1,10 @@
+test_name 	 targeted-nested-current-access
+test_description Passing a reference to a creation procedure making qualified calls is safe after using Current in a context where all attributes are initialized.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

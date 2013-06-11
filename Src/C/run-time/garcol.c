@@ -2338,7 +2338,7 @@ rt_private void mark_overflow_stack(MARKER marker, int move)
 
 /*
 doc:	<routine name="mark_array" return_type="void" export="private">
-doc:		<summary>Mark all references stored in `arr' from 0 to `arr_count - 1'.</summary>
+doc:		<summary>Mark all references stored in `arr' from 0 to `arr_count - 1'. It is assumed that old the entries are not in the scavenge zones.</summary>
 doc:		<param name="arr" type="EIF_REFERENCE *">The array to traverse.</param>
 doc:		<param name="arr_count" type="rt_uint_ptr">The number of elements to traverse.</param>
 doc:		<param name="marker" type="MARKER">The GC marker.</param>
@@ -2353,7 +2353,11 @@ rt_private void mark_array(EIF_REFERENCE *arr, rt_uint_ptr arr_count, MARKER mar
 		if (move) {
 			for (; arr_count > 0; arr_count--, arr++) {
 				if (*arr) {
+					CHECK("Not in scavenge `from' zone", (*arr < sc_from.sc_arena) && (*arr > sc_from.sc_top));
+					CHECK("Not in scavenge `to' zone", (*arr < sc_to.sc_arena) && (*arr > sc_to.sc_top));
 					*arr = mark_expanded(*arr, marker);
+					CHECK("Not in scavenge `from' zone", (*arr < sc_from.sc_arena) && (*arr > sc_from.sc_top));
+					CHECK("Not in scavenge `to' zone", (*arr < sc_to.sc_arena) && (*arr > sc_to.sc_top));
 				}
 			}
 		} else {

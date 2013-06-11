@@ -39,6 +39,7 @@ inherit
 	DEBUG_OUTPUT
 
 create
+	make_now_utc,
 	make_from_timestamp,
 	make_from_string,
 	make_from_date_time
@@ -74,6 +75,12 @@ feature {NONE} -- Initialization
 			-- Build from date `dt'
 		do
 			date_time := dt
+		end
+
+	make_now_utc
+			-- Build from current utc date time.
+		do
+			create date_time.make_now_utc
 		end
 
 feature -- Access

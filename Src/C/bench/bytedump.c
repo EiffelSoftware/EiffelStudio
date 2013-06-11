@@ -616,7 +616,6 @@ static  void    print_instructions (void)
 {
 	unsigned char   cval; /* !!! */
 	uint32            lval;
-	int             i;
 
 	advance (4);
 

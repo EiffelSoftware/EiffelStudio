@@ -1866,8 +1866,6 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
 {
 	EIF_GEN_DER *gdp;
 	EIF_TYPE_INDEX       *gp, dtype, i;
-	size_t n;
-	int         size;
 	int	needs_expanded = 0, needs_reference = 0;
 
 	if (dftype > MAX_DTYPE) {
@@ -1942,7 +1940,7 @@ rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype)
 	EIF_TYPE_INDEX *gp, l_dftype;
 	uint32 i;
 	size_t len = 0;
-	int	size, needs_expanded, needs_reference;
+	int	needs_expanded, needs_reference;
 
 	if (dftype > MAX_DTYPE) {
 		CHECK ("NONE type", RT_IS_NONE_TYPE(dftype));

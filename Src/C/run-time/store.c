@@ -1438,7 +1438,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 			if (flags & EO_TUPLE) {
 				object_tuple_write (object);
 			} else {
-				uint32 dgen, dgen_typ;
+				uint32 dgen;
 				EIF_TYPE_INDEX *dynamic_types;
 				uint32 *patterns;
 				uint16 nb_gen;

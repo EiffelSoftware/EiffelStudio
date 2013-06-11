@@ -2644,11 +2644,12 @@ test	nested-tuple-undetected-vevi		attach095 tcf fail attached_types void_safe v
 test	missing-vevi-error-with-agent		attach096 tcf fail attached_types void_safe validity agents
 test	void-safe-convert-to-generic		attach097 tcf fail attached_types void_safe validity convert
 test	targeted-expanded-type			attach098 tcf fail void_safe targeted validity
-test	targeted-object-call			attach099 tcf fail void_safe targeted validity
-test	targeted-equality-operand		attach100 tcf fail void_safe targeted validity
-test	targeted-assignment-source		attach101 tcf fail void_safe targeted validity
-test	targeted-actual-argument		attach102 tcf fail void_safe targeted validity
-test	vevi-not-detected			attach103 tcf fail void_safe validity attribute
+test	targeted-object-call			attach099 tcf pass void_safe targeted validity
+test	targeted-equality-operand		attach100 tcf pass void_safe targeted validity
+test	targeted-assignment-source		attach101 tcf pass void_safe targeted validity
+test	targeted-actual-argument		attach102 tcf pass void_safe targeted validity
+test	vevi-not-detected			attach103 tcf pass void_safe validity attribute
+test	targeted-nested-current-access		attach104 tcf pass void_safe targeted validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

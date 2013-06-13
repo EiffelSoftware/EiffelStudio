@@ -35,6 +35,12 @@ feature -- Access
 			Result := not is_used
 		end
 
+	has_unset_index (min_index, max_index: like count): BOOLEAN
+			-- <Precursor>
+		do
+			Result := not is_used
+		end
+
 	location: detachable LOCATION_AS
 			-- Location of a used expression.
 		do

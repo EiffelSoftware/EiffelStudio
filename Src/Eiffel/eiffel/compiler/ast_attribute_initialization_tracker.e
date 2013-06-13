@@ -34,10 +34,10 @@ feature -- Access
 			Result := keeper.is_set (position)
 		end
 
-	has_unset: BOOLEAN
-			-- Are there any unset attributes?
+	has_unset_index (min_index, max_index: like attribute_count): BOOLEAN
+			-- Are there any unset attributes in the range of indexes between `min_index' and `max_index' inclusively?
 		do
-			Result := keeper.has_unset
+			Result := keeper.has_unset_index (min_index, max_index)
 		end
 
 feature -- Measurement

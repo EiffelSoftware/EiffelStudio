@@ -11,30 +11,49 @@ inherit
 	WSF_RESPONSE_MESSAGE
 
 create
+	make_with_path,
+	make_with_content_type_and_path,
+	make_html_with_path,
 	make,
 	make_with_content_type,
 	make_html
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: READABLE_STRING_8)
+	make_with_path (a_path: PATH)
 		do
 			set_status_code ({HTTP_STATUS_CODE}.ok)
-			file_name := a_file_name
+			file_path := a_path
 			get_content_type
 			initialize
 		end
 
-	make_with_content_type (a_content_type: READABLE_STRING_8; a_filename: READABLE_STRING_8)
-			-- Initialize `Current'.
+	make_with_content_type_and_path (a_content_type: READABLE_STRING_8; a_path: PATH)
 		do
 			set_status_code ({HTTP_STATUS_CODE}.ok)
-			file_name := a_filename
+			file_path := a_path
 			content_type := a_content_type
 			initialize
 		end
 
-	make_html (a_filename: READABLE_STRING_8)
+	make_html_with_path (a_path: PATH)
+			-- Initialize `Current'.
+		do
+			make_with_content_type_and_path ({HTTP_MIME_TYPES}.text_html, a_path)
+		end
+
+	make (a_file_name: READABLE_STRING_GENERAL)
+		do
+			make_with_path (create {PATH}.make_from_string (a_file_name))
+		end
+
+	make_with_content_type (a_content_type: READABLE_STRING_8; a_file_name: READABLE_STRING_GENERAL)
+			-- Initialize `Current'.
+		do
+			make_with_content_type_and_path (a_content_type, create {PATH}.make_from_string (a_file_name))
+		end
+
+	make_html (a_filename: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
 			make_with_content_type ({HTTP_MIME_TYPES}.text_html, a_filename)
@@ -118,13 +137,21 @@ feature -- Access
 	content_type: READABLE_STRING_8
 			-- Content-Type of the response
 
+	file_path: path
+			-- File path
+
 	file_name: READABLE_STRING_8
+		obsolete
+			"Use `file_path.name' for unicode support [2013-may]"
+		do
+			Result := file_path.utf_8_name
+		end
 
 	file_exists: BOOLEAN
 			-- File exists?
 
 	file_size: INTEGER
-			-- Size of file named `file_name'
+			-- Size of file `file_path'
 
 	head, bottom: detachable READABLE_STRING_8
 			-- Eventual head and bottom part
@@ -184,7 +211,7 @@ feature {WSF_RESPONSE} -- Output
 					res.put_string (s)
 				end
 				if not answer_head_request_method then
-					send_file_content_to (file_name, res)
+					send_file_content_to (file_path, res)
 				end
 				s := bottom
 				if s /= Void then
@@ -200,40 +227,37 @@ feature {NONE} -- Implementation: file system helper
 		local
 			f: RAW_FILE
 		do
-			create f.make (file_name)
+			create f.make_with_path (file_path)
 			file_exists := f.exists
 		end
 
 	get_file_size
-			-- Get `file_size' from file named `file_name'
+			-- Get `file_size' from file named `file_path'
 		require
 			file_exists: file_exists
 		local
 			f: RAW_FILE
 		do
-			create f.make (file_name)
+			create f.make_with_path (file_path)
 			file_size := f.count
 		end
 
 	file_last_modified: detachable DATE_TIME
-			-- Get `file_size' from file named `file_name'
+			-- Get `file_size' from file named `file_path'
 		require
 			file_exists: file_exists
 		local
 			f: RAW_FILE
 		do
-			create f.make (file_name)
+			create f.make_with_path (file_path)
 			create Result.make_from_epoch (f.change_date)
 		end
 
-	file_extension (fn: STRING): STRING
+	file_extension (fn: PATH): STRING_32
 			-- Extension of file `fn'.
-		local
-			p: INTEGER
 		do
-			p := fn.last_index_of ('.', fn.count)
-			if p > 0 then
-				Result := fn.substring (p + 1, fn.count)
+			if attached fn.extension as ext then
+				Result := ext
 			else
 				create Result.make_empty
 			end
@@ -242,13 +266,13 @@ feature {NONE} -- Implementation: file system helper
 feature -- Content-type related
 
 	get_content_type
-			-- Content type associated with `file_name'
+			-- Content type associated with `file_path'
 		local
 			m_map: HTTP_FILE_EXTENSION_MIME_MAPPING
 			m: detachable READABLE_STRING_8
 		do
 			create m_map.make_default
-			m := m_map.mime_type (file_extension (file_name).as_lower)
+			m := m_map.mime_type (file_extension (file_path).as_lower)
 			if m = Void then
 				m := {HTTP_MIME_TYPES}.application_force_download
 			end
@@ -257,16 +281,16 @@ feature -- Content-type related
 
 feature {NONE} -- Implementation: output
 
-	send_file_content_to (fn: READABLE_STRING_8; res: WSF_RESPONSE)
+	send_file_content_to (fn: PATH; res: WSF_RESPONSE)
 			-- Send the content of file `fn'
 		require
 			string_not_empty: not fn.is_empty
-			is_readable: (create {RAW_FILE}.make (fn)).is_readable
+			is_readable: (create {RAW_FILE}.make_with_path (fn)).is_readable
 			file_exists: file_exists
 		local
 			f: RAW_FILE
 		do
-			create f.make (fn)
+			create f.make_with_path (fn)
 			check f.is_readable end
 
 			f.open_read

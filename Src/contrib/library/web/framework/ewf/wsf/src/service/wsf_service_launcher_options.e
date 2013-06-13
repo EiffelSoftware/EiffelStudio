@@ -15,7 +15,7 @@ class
 	WSF_SERVICE_LAUNCHER_OPTIONS
 
 inherit
-	ANY
+	TABLE_ITERABLE [detachable ANY, READABLE_STRING_GENERAL]
 		redefine
 			default_create
 		end
@@ -23,7 +23,8 @@ inherit
 create
 	default_create,
 	make,
-	make_from_array
+	make_from_array,
+	make_from_iterable
 
 convert
 	make_from_array ({ARRAY [TUPLE [name: READABLE_STRING_GENERAL; value: detachable ANY]]})
@@ -44,6 +45,19 @@ feature {NONE} -- Initialization
 	make_from_array (a_options: ARRAY [TUPLE [name: READABLE_STRING_GENERAL; value: detachable ANY]])
 		do
 			make
+			append_array_of_options (a_options)
+		end
+
+	make_from_iterable (a_options: TABLE_ITERABLE [detachable ANY, READABLE_STRING_GENERAL])
+		do
+			make
+			append_options (a_options)
+		end
+
+feature -- Merging
+
+	append_array_of_options (a_options: ARRAY [TUPLE [name: READABLE_STRING_GENERAL; value: detachable ANY]])
+		do
 			across
 				a_options as opt
 			loop
@@ -53,11 +67,28 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	append_options (a_options: TABLE_ITERABLE [detachable ANY, READABLE_STRING_GENERAL])
+		do
+			across
+				a_options as o
+			loop
+				set_option (o.key, o.item)
+			end
+		end
+
 feature -- Access
 
 	option (a_name: READABLE_STRING_GENERAL): detachable ANY
 		do
 			Result := options.item (a_name)
+		end
+
+feature -- Access
+
+	new_cursor: TABLE_ITERATION_CURSOR [detachable ANY, READABLE_STRING_GENERAL]
+			-- Fresh cursor associated with current structure
+		do
+			Result := options.new_cursor
 		end
 
 feature -- Element change
@@ -75,13 +106,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	options: HASH_TABLE [detachable ANY, READABLE_STRING_GENERAL]
+	options: STRING_TABLE [detachable ANY]
 			-- Custom options which might be support (or not) by the default service
 
 invariant
 	options_attached: options /= Void
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

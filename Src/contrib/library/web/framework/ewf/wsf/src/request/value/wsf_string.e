@@ -50,20 +50,6 @@ feature -- Access
 	url_encoded_value: READABLE_STRING_8
 			-- URL encoded string of `value'.
 
-	frozen string: like value
-		obsolete
-			"Use value [2012-May-31]"
-		do
-			Result := value
-		end
-
-	frozen url_encoded_string: like url_encoded_value
-		obsolete
-			"Use url_encoded_value [2012-May-31]"
-		do
-			Result := url_encoded_value
-		end
-
 feature -- Conversion
 
 	integer_value: INTEGER
@@ -137,7 +123,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -33,8 +33,7 @@ feature {NONE} -- Initialization
 			-- Create with no mapping
 			-- but one can use `map' to add new mapping
 		do
-			create mapping.make (n)
-			mapping.compare_objects
+			create mapping.make_caseless (n)
 		end
 
 	make_default
@@ -43,9 +42,8 @@ feature {NONE} -- Initialization
 		local
 			m: like mapping
 		do
-			create m.make (40)
+			create m.make_caseless (40)
 			mapping := m
-			m.compare_objects
 			m.force (text_css, "css")
 			m.force (text_html, "html")
 			m.force (text_xml, "xml")
@@ -74,13 +72,13 @@ feature {NONE} -- Initialization
 			m.force (text_plain, "txt")
 		end
 
-	make_from_file (fn: READABLE_STRING_8)
+	make_from_file (fn: READABLE_STRING_GENERAL)
 			-- Create with mime.types file
 			-- One can use `map' to add new mapping
 		local
 			f: RAW_FILE
 		do
-			create f.make (fn)
+			create f.make_with_name (fn)
 			if f.exists and then f.is_readable then
 				make_empty (50)
 				f.open_read
@@ -128,7 +126,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mime_type (ext: READABLE_STRING_8): detachable READABLE_STRING_8
+	mime_type (ext: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Mime type for extension `ext'
 		do
 			Result := mapping.item (ext.as_lower)
@@ -136,7 +134,7 @@ feature -- Access
 
 feature -- Element change
 
-	map (e: READABLE_STRING_8; t: READABLE_STRING_8)
+	map (e: READABLE_STRING_GENERAL; t: READABLE_STRING_8)
 			-- Add mapping extension `e' to mime type `t'
 		do
 			mapping.force (t, e.as_lower)
@@ -220,13 +218,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Extension MIME mapping
 
-	mapping: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	mapping: STRING_TABLE [READABLE_STRING_8]
 
 invariant
 	mapping_keys_are_lowercase: across mapping as c all c.key.same_string (c.key.as_lower) end
 
 note
-	copyright: "2011-2011, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

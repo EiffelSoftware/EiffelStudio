@@ -138,8 +138,6 @@ feature -- Input
 			nb_large_enough: nb > 0
 		local
 			s: like last_string
-			i, end_pos: INTEGER
-			l_count: INTEGER
 			n: INTEGER
 			l_remaining: INTEGER
 		do

@@ -24,6 +24,11 @@ inherit
 			initialize
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_and_launch,
@@ -37,15 +42,19 @@ feature {NONE} -- Initialization
 			l_env: EXECUTION_ENVIRONMENT
 		do
 			Precursor
-			create l_env
+			l_env := execution_environment
 
-			if attached l_env.get (Openshift_ip) as l_ip then
-				server_name := l_ip.to_string_8
+			if attached l_env.item (Openshift_ip) as l_ip then
+				if l_ip.is_valid_as_string_8 then
+					server_name := l_ip.to_string_8
+				else
+					die ("could not parse " + Openshift_ip)
+				end
 			else
 				die (Openshift_ip + " is not defined")
 			end
 
-			if attached l_env.get (Openshift_port) as l_port then
+			if attached l_env.item (Openshift_port) as l_port then
 				if l_port.is_integer then
 					port_number := l_port.to_integer
 				else
@@ -77,7 +86,7 @@ feature {NONE} -- Implementation
 
 
 ;note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

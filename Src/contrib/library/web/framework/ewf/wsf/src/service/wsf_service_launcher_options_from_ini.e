@@ -11,28 +11,40 @@ inherit
 	WSF_SERVICE_LAUNCHER_OPTIONS
 
 create
-	make_from_file
+	make_from_file,
+	make_from_file_and_defaults
 
 feature {NONE} -- Initialization
 
-	make_from_file (a_filename: READABLE_STRING_32)
+	make_from_file (a_filename: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
 			make
 			import (a_filename)
 		end
 
+	make_from_file_and_defaults (a_filename: READABLE_STRING_GENERAL; dft: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+			-- Initialize `Current'.
+		do
+			make
+
+			if dft /= Void then
+				append_options (dft)
+			end
+
+			import (a_filename)
+		end
+
 feature {NONE} -- Implementation
 
-	import (a_filename: READABLE_STRING_32)
+	import (a_filename: READABLE_STRING_GENERAL)
 			-- Import ini file content
 		local
 			f: PLAIN_TEXT_FILE
 			l,v: STRING_8
 			p: INTEGER
 		do
-			--FIXME: handle unicode filename here.
-			create f.make (a_filename)
+			create f.make_with_name (a_filename)
 			if f.exists and f.is_readable then
 				f.open_read
 				from
@@ -60,7 +72,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

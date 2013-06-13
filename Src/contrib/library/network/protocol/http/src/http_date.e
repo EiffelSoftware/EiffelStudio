@@ -158,60 +158,128 @@ feature -- Conversion to string
 			append_date_time_to_ansi_c_string (date_time, Result)
 		end
 
+feature -- Conversion into string		
+
+	append_to_yyyy_mmm_dd_string (s: STRING_GENERAL)
+		local
+			dt: DATE_TIME
+		do
+			dt := date_time
+			append_integer_to (dt.year, s)					-- yyyy
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_month_mmm_to (dt.month, s)				-- mmm
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_2_digits_integer_to (dt.day, s)			-- dd
+		end
+
+	append_to_rfc1123_string (s: STRING_GENERAL)
+		local
+			dt: DATE_TIME
+		do
+			dt := date_time
+			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
+			s.append_code (44) -- 44 ','					-- ','
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_2_digits_integer_to (dt.day, s)			-- dd
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_month_mmm_to (dt.month, s)				-- mmm
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_integer_to (dt.year, s)					-- YYYY
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_2_digits_time_to (dt.time, s)			-- hh:mi:ss
+			s.append (" GMT")								-- SPace + GMT
+		end
+
+	append_rfc850_string (s: STRING_GENERAL)
+		local
+			dt: DATE_TIME
+		do
+			dt := date_time
+			append_day_name_to (dt.date.day_of_the_week, s)	-- mmm
+			s.append_code (44) -- 44 ','					-- ','
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_2_digits_integer_to (dt.day, s)			-- dd
+			s.append_code (45) -- 45 '-'					-- '-'
+			append_month_mmm_to (dt.month, s)				-- mmm
+			s.append_code (45) -- 45 '-'					-- '-'
+			append_integer_to (dt.year \\ 100, s)			-- yy
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_2_digits_time_to (dt.time, s)			-- hh:mi:ss
+			s.append (" GMT")								-- SPace + GMT
+		end
+
+	append_to_ansi_c_string (s: STRING_GENERAL)
+			--| Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
+		local
+			dt: DATE_TIME
+		do
+			dt := date_time
+			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_month_mmm_to (dt.month, s)				-- mmm
+			s.append_code (32) -- 32 ' '					-- SPace
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_integer_to (dt.day, s)					-- d
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_2_digits_time_to (dt.time, s) 			-- hh:mi:ss
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_integer_to (dt.year, s)					-- yyyy
+		end
+
 feature -- Conversion into string
 
-	append_date_time_to_yyyy_mmm_dd_string (dt: DATE_TIME; s: STRING)
+	append_date_time_to_yyyy_mmm_dd_string (dt: DATE_TIME; s: STRING_GENERAL)
 		do
-			s.append_integer (dt.year)						-- yyyy
-			s.append_character (' ')						-- ' '
+			append_integer_to (dt.year, s)					-- yyyy
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_character (' ')						-- ' '
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_2_digits_integer_to (dt.day, s)			-- dd
 		end
 
-	append_date_time_to_rfc1123_string (dt: DATE_TIME; s: STRING)
+	append_date_time_to_rfc1123_string (dt: DATE_TIME; s: STRING_GENERAL)
 		do
 			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
-			s.append_character (',')						-- ','
-			s.append_character (' ')						-- SPace
+			s.append_code (44) -- 44 ','					-- ','
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_2_digits_integer_to (dt.day, s)			-- dd
-			s.append_character (' ')						-- SPace
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_character (' ')						-- SPace
-			s.append_integer (dt.year)						-- yyyy
-			s.append_character (' ')						-- SPace
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_integer_to (dt.year, s)					-- yyyy
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_2_digits_time_to (dt.time, s)			-- hh:mi:ss
 			s.append (" GMT")								-- SPace + GMT
 		end
 
-	append_date_time_to_rfc850_string (dt: DATE_TIME; s: STRING)
+	append_date_time_to_rfc850_string (dt: DATE_TIME; s: STRING_GENERAL)
 		do
 			append_day_name_to (dt.date.day_of_the_week, s)	-- mmm
-			s.append_character (',')						-- ,
-			s.append_character (' ')						-- SPace
+			s.append_code (44) -- 44 ','					-- ','
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_2_digits_integer_to (dt.day, s)			-- dd
-			s.append_character ('-')						-- '-'
+			s.append_code (45) -- 45 '-'					-- '-'
 			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_character ('-')						-- '-'
-			s.append_integer (dt.year \\ 100)				-- yy
-			s.append_character (' ')						-- SPace
+			s.append_code (45) -- 45 '-'					-- '-'
+			append_integer_to (dt.year \\ 100, s)			-- yy
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_2_digits_time_to (dt.time, s)			-- hh:mi:ss
 			s.append (" GMT")								-- SPace + GMT
 		end
 
-	append_date_time_to_ansi_c_string (dt: DATE_TIME; s: STRING)
+	append_date_time_to_ansi_c_string (dt: DATE_TIME; s: STRING_GENERAL)
 			--| Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
 		do
 			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
-			s.append_character (' ')						-- SP
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_character (' ')						-- SPace
-			s.append_character (' ')						-- SPace
-			s.append_integer (dt.day)						-- d
-			s.append_character (' ')						-- SPace
+			s.append_code (32) -- 32 ' '					-- SPace
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_integer_to (dt.day, s)					-- d
+			s.append_code (32) -- 32 ' '					-- SPace
 			append_2_digits_time_to (dt.time, s) 			-- hh:mi:ss
-			s.append_character (' ')						-- SPace
-			s.append_integer (dt.year)						-- yyyy
+			s.append_code (32) -- 32 ' '					-- SPace
+			append_integer_to (dt.year, s)					-- yyyy
 		end
 
 feature -- Status report
@@ -228,26 +296,26 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	append_2_digits_integer_to (i: INTEGER; s: STRING)
+	append_2_digits_integer_to (i: INTEGER; s: STRING_GENERAL)
 		require
 			is_not_negative: i >= 0
 		do
 			if i <= 9 then
-				s.append_character ('0')
+				s.append_code (48) -- 48 '0'
 			end
-			s.append_integer (i)
+			append_integer_to (i, s)
 		end
 
-	append_2_digits_time_to (t: TIME; s: STRING)
+	append_2_digits_time_to (t: TIME; s: STRING_GENERAL)
 		do
 			append_2_digits_integer_to (t.hour, s)		-- hh
-			s.append_character (':')					-- :
+			s.append_code (58) -- 58 ':'				-- :
 			append_2_digits_integer_to (t.minute, s)	-- mi
-			s.append_character (':')					-- :
+			s.append_code (58) -- 58 ':'				-- :
 			append_2_digits_integer_to (t.second, s)	-- ss
 		end
 
-	append_day_ddd_to (d: INTEGER; s: STRING)
+	append_day_ddd_to (d: INTEGER; s: STRING_GENERAL)
 		require
 			1 <= d and d <= 7
 		do
@@ -264,7 +332,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_day_name_to (d: INTEGER; s: STRING)
+	append_day_name_to (d: INTEGER; s: STRING_GENERAL)
 		require
 			1 <= d and d <= 7
 		do
@@ -281,7 +349,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_month_mmm_to (m: INTEGER; s: STRING)
+	append_month_mmm_to (m: INTEGER; s: STRING_GENERAL)
 		require
 			1 <= m and m <= 12
 		do
@@ -300,6 +368,17 @@ feature {NONE} -- Implementation
 			when 12 then s.append ("Dec")
 			else
 				-- Error				
+			end
+		end
+
+	append_integer_to (i: INTEGER; s: STRING_GENERAL)
+		do
+			if attached {STRING_32} s as s32 then
+				s32.append_integer (i)
+			elseif attached {STRING_8} s as s8 then
+				s8.append_integer (i)
+			else
+				s.append (i.out)
 			end
 		end
 

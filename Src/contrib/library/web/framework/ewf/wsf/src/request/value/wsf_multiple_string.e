@@ -62,7 +62,7 @@ feature -- Access
 	url_encoded_name: READABLE_STRING_8
 			-- URL encoded string of `name'.
 		do
-			Result := url_encoder.encoded_string (name)
+			Result := url_encoded_string (name)
 		end
 
 	values: LIST [WSF_STRING]

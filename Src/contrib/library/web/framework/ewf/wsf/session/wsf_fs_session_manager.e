@@ -21,12 +21,12 @@ feature {NONE} -- Initialization
 			make_with_folder ("_WSF_SESSIONS_")
 		end
 
-	make_with_folder (a_folder: like sessions_folder_name)
+	make_with_folder (a_folder: READABLE_STRING_GENERAL)
 		do
-			sessions_folder_name := a_folder
+			create sessions_folder_name.make_from_string (a_folder)
 		end
 
-	sessions_folder_name: STRING_8
+	sessions_folder_name: PATH
 
 feature -- Access
 
@@ -34,7 +34,7 @@ feature -- Access
 		local
 			f: RAW_FILE
 		do
-			create f.make (file_name (a_session_uuid))
+			create f.make_with_path (file_name (a_session_uuid))
 			Result := f.exists and then f.is_readable
 		end
 
@@ -42,7 +42,7 @@ feature -- Access
 		local
 			f: RAW_FILE
 		do
-			create f.make (file_name (a_session_uuid))
+			create f.make_with_path (file_name (a_session_uuid))
 			if f.exists and then f.is_readable then
 				f.open_read
 				if attached data_from_file (f) as d then
@@ -68,7 +68,7 @@ feature -- Persistence
 					delete_session (a_session)
 				else
 					ensure_session_folder_exists
-					create f.make (file_name (a_session.uuid))
+					create f.make_with_path (file_name (a_session.uuid))
 					if not f.exists or else f.is_writable then
 						f.create_read_write
 						a_session.data.set_expiration (a_session.expiration)
@@ -91,7 +91,7 @@ feature -- Persistence
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				create f.make (file_name (a_session.uuid))
+				create f.make_with_path (file_name (a_session.uuid))
 				if f.exists then
 					f.delete
 				end
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 		local
 			d: DIRECTORY
 		once
-			create d.make (sessions_folder_name)
+			create d.make_with_path (sessions_folder_name)
 			if not d.exists then
 				d.recursive_create_dir
 			end
@@ -143,18 +143,13 @@ feature {NONE} -- Implementation
 		local
 			d: DIRECTORY
 		do
-			create d.make (sessions_folder_name)
+			create d.make_with_path (sessions_folder_name)
 			Result := d.exists and then d.is_writable
 		end
 
-	file_name (a_uuid: like {WSF_SESSION}.uuid): READABLE_STRING_8
-		local
-			fn: FILE_NAME
+	file_name (a_uuid: like {WSF_SESSION}.uuid): PATH
 		do
-			create fn.make_from_string (sessions_folder_name)
-			fn.set_file_name (a_uuid.out)
-			fn.add_extension ("session")
-			Result := fn.string
+			Result := sessions_folder_name.extended (a_uuid.out).appended_with_extension ("session")
 		end
 
 note

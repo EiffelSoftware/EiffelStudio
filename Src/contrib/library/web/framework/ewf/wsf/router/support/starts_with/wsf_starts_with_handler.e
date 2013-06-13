@@ -20,7 +20,7 @@ feature -- Execution
 			a_start_path_attached: a_start_path /= Void
 			req_attached: req /= Void
 			res_attached: res /= Void
-			path_start_with_a_start_path: req.path_info.starts_with (a_start_path)
+			path_start_with_a_start_path: req.percent_encoded_path_info.starts_with (a_start_path)
 		deferred
 		end
 
@@ -33,7 +33,7 @@ feature {WSF_ROUTER} -- Mapping
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -11,22 +11,10 @@
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf"/>
 		<cluster name="src" location="src\" recursive="true">
 			<file_rule>
 				<exclude>/tests$</exclude>
-				<exclude>/spec$</exclude>
 			</file_rule>
-			<cluster name="src_before_70" location="$|spec\before_70\" recursive="true">
-				<condition>
-					<version type="compiler" max="7.0.8.7585"/>
-				</condition>
-			</cluster>
-			<cluster name="src_70" location="$|spec\70\" recursive="true">
-				<condition>
-					<version type="compiler" min="7.0.8.7586"/>
-				</condition>
-			</cluster>
 		</cluster>
 	</target>
 </system>

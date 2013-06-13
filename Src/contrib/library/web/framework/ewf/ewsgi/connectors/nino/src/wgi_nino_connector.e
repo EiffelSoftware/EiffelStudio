@@ -127,20 +127,28 @@ feature -- Server
 			server.setup (l_http_handler)
 		end
 
-	process_request (env: HASH_TABLE [STRING, STRING]; a_headers_text: STRING; a_socket: TCP_STREAM_SOCKET)
+	process_request (env: STRING_TABLE [READABLE_STRING_8]; a_headers_text: STRING; a_socket: TCP_STREAM_SOCKET)
 		local
 			req: WGI_REQUEST_FROM_TABLE
 			res: detachable WGI_NINO_RESPONSE_STREAM
+			retried: BOOLEAN
 		do
-			create req.make (env, create {WGI_NINO_INPUT_STREAM}.make (a_socket), Current)
-			create res.make (create {WGI_NINO_OUTPUT_STREAM}.make (a_socket), create {WGI_NINO_ERROR_STREAM}.make_stderr (a_socket.descriptor.out))
-			req.set_meta_string_variable ("RAW_HEADER_DATA", a_headers_text)
-			service.execute (req, res)
-			res.push
+			if not retried then
+				create req.make (env, create {WGI_NINO_INPUT_STREAM}.make (a_socket), Current)
+				create res.make (create {WGI_NINO_OUTPUT_STREAM}.make (a_socket), create {WGI_NINO_ERROR_STREAM}.make_stderr (a_socket.descriptor.out))
+				req.set_meta_string_variable ("RAW_HEADER_DATA", a_headers_text)
+				service.execute (req, res)
+				res.push
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -61,7 +61,7 @@ feature -- Status
 			-- <Precursor>
 		local
 			tpl: URI_TEMPLATE
-			p: READABLE_STRING_32
+			p: READABLE_STRING_8
 		do
 			p := path_from_request (req)
 			tpl := based_uri_template (template, a_router)
@@ -72,7 +72,7 @@ feature -- Status
 			-- <Precursor>
 		local
 			tpl: URI_TEMPLATE
-			p: READABLE_STRING_32
+			p: READABLE_STRING_8
 			new_src: detachable WSF_REQUEST_PATH_PARAMETERS_PROVIDER
 		do
 			p := path_from_request (req)

@@ -9,6 +9,13 @@ deferred class
 inherit
 	DEBUG_OUTPUT
 
+	SHARED_WSF_PERCENT_ENCODER
+		rename
+			percent_encoder as url_encoder
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	name: READABLE_STRING_32
@@ -91,23 +98,26 @@ feature -- Helper
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			create Result.make_from_string (url_encoder.encoded_string (name) + "=" + url_encoder.encoded_string (string_representation))
+			create Result.make_from_string (name + {STRING_32} "=" + string_representation)
 		end
 
 feature {NONE} -- Implementation
 
-	url_decoded_string (s: READABLE_STRING_8): READABLE_STRING_32
+	url_encoded_string (s: READABLE_STRING_GENERAL): STRING_8
 			-- Decoded url-encoded string `s'
 		do
-			Result := url_encoder.decoded_string (s)
+			create Result.make (s.count)
+			url_encoder.append_percent_encoded_string_to (s, Result)
 		end
 
-	url_encoder: URL_ENCODER
-		once
-			create {UTF8_URL_ENCODER} Result --| Chrome is UTF-8 encoding the non ascii in query
+	url_decoded_string (s: READABLE_STRING_GENERAL): STRING_32
+			-- Decoded url-encoded string `s'
+		do
+			create Result.make (s.count)
+			url_encoder.append_percent_decoded_string_to (s, Result)
 		end
 
 feature -- Visitor
@@ -117,7 +127,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

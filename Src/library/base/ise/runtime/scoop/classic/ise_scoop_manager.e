@@ -1248,7 +1248,7 @@ feature {NONE} -- Resource Initialization
 			l_orig_sync_count, l_temp_count, l_wait_return: INTEGER
 			l_wait_counter: NATURAL_32
 			l_call_ptr, l_null_ptr: POINTER
-			l_is_head: BOOLEAN
+			l_is_head, l_exit_loop: BOOLEAN
 			l_client_pid: like processor_id_type
 		do
 			-- SCOOP Processor has been launched
@@ -1273,8 +1273,7 @@ feature {NONE} -- Resource Initialization
 					migrate_to_root (l_request_chain_node_meta_data_queue)
 				end
 			until
-				l_processor_meta_data [processor_status_index] = processor_status_redundant
-					-- Loop until the processor is marked as surplus to requirements.
+				l_exit_loop
 			loop
 				if l_processor_meta_data [processor_status_index] >= processor_status_initializing then
 						-- SCOOP processor is initializing/initialized so we can check current index
@@ -1455,7 +1454,6 @@ feature {NONE} -- Resource Initialization
 								l_wait_return := 0
 							end
 							unlock_mutex (processor_synchronization_list [a_logical_processor_id].condition_variable_mutex)
-
 							if l_wait_return /= 0 then
 									-- Waiting timeout occurred.
 								if {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_processor_meta_data.item_address (processor_status_index), 0) = processor_status_idle then
@@ -1475,6 +1473,14 @@ feature {NONE} -- Resource Initialization
 							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
 						end
 						l_wait_counter := l_wait_counter + 1
+					end
+				elseif l_processor_meta_data [processor_status_index] = processor_status_redundant then
+					if {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_processor_meta_data.item_address (current_request_chain_node_id_index), 0) = l_processor_meta_data [current_request_node_id_execution_index] then
+						l_exit_loop := True
+					else
+							-- Processor has been marked as redundant but all chains have not yet been handled so we unmark the redundancy.
+						l_wait_counter := 1
+						l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_processor_meta_data.item_address (processor_status_index), processor_status_initialized)
 					end
 				elseif l_processor_meta_data [processor_status_index] = processor_status_uninitialized then
 						-- Processor is uninitialized so we yield control to OS for the time being.
@@ -1534,6 +1540,9 @@ feature {NONE} -- Resource Initialization
 								scoop_command_call_cleanup (l_call_ptr)
 							end
 						end
+					elseif l_processor_dirty then
+							-- If processor is dirty then we ignore any previously executed calls as the chain is closed.
+						l_executing_node_id_cursor := l_executing_node_id_cursor + 1
 					end
 				elseif
 					a_is_head and then a_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting

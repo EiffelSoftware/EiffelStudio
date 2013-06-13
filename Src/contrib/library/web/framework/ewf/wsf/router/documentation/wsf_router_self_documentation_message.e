@@ -137,7 +137,7 @@ feature {WSF_RESPONSE} -- Output
 
 			debug
 				l_description.append ("<h2>Meta Information</h2><ul>")
-				l_description.append ("<li>PATH_INFO=" + request.path_info + "</li>")
+				l_description.append ("<li>PATH_INFO=" + request.percent_encoded_path_info + "</li>")
 				l_description.append ("<li>QUERY_STRING=" + request.query_string + "</li>")
 				l_description.append ("<li>REQUEST_URI=" + request.request_uri + "</li>")
 				l_description.append ("<li>SCRIPT_NAME=" + request.script_name + "</li>")

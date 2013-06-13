@@ -10,6 +10,8 @@ class
 inherit
 	WSF_RESPONSE_MESSAGE
 
+	SHARED_UTF8_URL_ENCODER
+
 create
 	make,
 	make_with_content_type,
@@ -17,26 +19,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: READABLE_STRING_8)
+	make (a_file_name: READABLE_STRING_GENERAL)
 		do
 			set_status_code ({HTTP_STATUS_CODE}.ok)
-			file_name := a_file_name
-			base_name := basename (a_file_name)
+			create file_path.make_from_string (a_file_name)
+			base_name := basename (file_path)
 			get_content_type
 			initialize
 		end
 
-	make_with_content_type (a_content_type: READABLE_STRING_8; a_filename: READABLE_STRING_8)
+	make_with_content_type (a_content_type: READABLE_STRING_8; a_filename: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
 			set_status_code ({HTTP_STATUS_CODE}.ok)
-			file_name := a_filename
-			base_name := basename (a_filename)
+			create file_path.make_from_string (a_filename)
+			base_name := basename (file_path)
 			content_type := a_content_type
 			initialize
 		end
 
-	make_html (a_filename: READABLE_STRING_8)
+	make_html (a_filename: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
 			make_with_content_type ({HTTP_MIME_TYPES}.text_html, a_filename)
@@ -45,15 +47,14 @@ feature {NONE} -- Initialization
 	initialize
 		local
 			h: like header
-			d: HTTP_DATE
 		do
 			create h.make
 			header := h
 			h.put_content_type (content_type)
 			h.put_transfer_encoding_binary
-			h.put_content_length (filesize (file_name))
+			h.put_content_length (filesize (file_path))
 			h.put_content_disposition ("attachment", "filename=%""+ base_name +"%"")
-			if attached filedate (file_name) as dt then
+			if attached filedate (file_path) as dt then
 				h.put_last_modified (dt)
 			end
 		end
@@ -89,7 +90,14 @@ feature -- Access
 
 	status_code: INTEGER assign set_status_code
 
+	file_path: PATH
+
 	file_name: READABLE_STRING_8
+		obsolete
+			"Use `file_path.name' for unicode support [2013-may]"
+		do
+			Result := file_path.utf_8_name
+		end
 
 	base_name: READABLE_STRING_8
 
@@ -125,73 +133,57 @@ feature {WSF_RESPONSE} -- Output
 			res.set_status_code (status_code)
 			res.put_header_text (header.string)
 			if not answer_head_request_method then
-				send_file_content_to (file_name, res)
+				send_file_content_to (file_path, res)
 			end
 		end
 
 feature {NONE} -- Implementation: file system helper
 
-	filesize (fn: STRING): INTEGER
+	filesize (fn: PATH): INTEGER
 			-- Size of the file `fn'.
 		local
 			f: RAW_FILE
 		do
-			create f.make (fn)
+			create f.make_with_path (fn)
 			if f.exists then
 				Result := f.count
 			end
 		end
 
-	filedate (fn: STRING): detachable DATE_TIME
+	filedate (fn: PATH): detachable DATE_TIME
 			-- Size of the file `fn'.
 		local
 			f: RAW_FILE
 			d: HTTP_DATE
 		do
-			create f.make (fn)
+			create f.make_with_path (fn)
 			if f.exists then
 				create d.make_from_timestamp (f.date)
 				Result := d.date_time
 			end
 		end
 
-	file_extension (fn: STRING): STRING
+	file_extension (fn: PATH): STRING_32
 			-- Extension of file `fn'.
-		local
-			p: INTEGER
 		do
-			p := fn.last_index_of ('.', fn.count)
-			if p > 0 then
-				Result := fn.substring (p + 1, fn.count)
+			if attached fn.extension as ext then
+				Result := ext
 			else
 				create Result.make_empty
 			end
 		end
 
-	basename (fn: STRING): STRING
+	basename (fn: PATH): STRING
 			-- Basename of `fn'.
 		local
-			p: INTEGER
+			s: READABLE_STRING_32
 		do
-			p := fn.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, fn.count)
-			if p > 0 then
-				Result := fn.substring (p + 1, fn.count)
+			if attached fn.entry as p then
+				s := p.name
 			else
-				Result := fn
+				s := fn.name
 			end
-		end
-
-	dirname (fn: STRING): STRING
-			-- Dirname of `fn'.	
-		local
-			p: INTEGER
-		do
-			p := fn.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, fn.count)
-			if p > 0 then
-				Result := fn.substring (1, p - 1)
-			else
-				create Result.make_empty
-			end
+			Result := url_encoder.encoded_string (s)
 		end
 
 feature -- Content-type related
@@ -203,7 +195,7 @@ feature -- Content-type related
 			m: detachable READABLE_STRING_8
 		do
 			create m_map.make_default
-			m := m_map.mime_type (file_extension (file_name).as_lower)
+			m := m_map.mime_type (file_extension (file_path).as_lower)
 			if m = Void then
 				m := {HTTP_MIME_TYPES}.application_force_download
 			end
@@ -212,15 +204,15 @@ feature -- Content-type related
 
 feature -- Implementation: output
 
-	send_file_content_to (fn: READABLE_STRING_8; res: WSF_RESPONSE)
+	send_file_content_to (fn: PATH; res: WSF_RESPONSE)
 			-- Send the content of file `fn'
 		require
 			string_not_empty: not fn.is_empty
-			is_readable: (create {RAW_FILE}.make (fn)).is_readable
+			is_readable: (create {RAW_FILE}.make_with_path (fn)).is_readable
 		local
 			f: RAW_FILE
 		do
-			create f.make (fn)
+			create f.make_with_path (fn)
 			check f.exists and then f.is_readable end
 
 			f.open_read

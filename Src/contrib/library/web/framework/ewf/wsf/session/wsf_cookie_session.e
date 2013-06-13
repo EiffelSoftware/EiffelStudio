@@ -10,6 +10,11 @@ class
 inherit
 	WSF_SESSION
 
+	SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_new
@@ -128,15 +133,6 @@ feature {NONE} -- Storage
 			data.compare_objects
 		end
 
-	sessions_folder_name: READABLE_STRING_8
-		local
-			dn: DIRECTORY_NAME
-		once
-			create dn.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
-			dn.extend ("_sessions_")
-			Result := dn.string
-		end
-
 	load
 		do
 			if manager.session_exists (uuid) then
@@ -181,7 +177,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

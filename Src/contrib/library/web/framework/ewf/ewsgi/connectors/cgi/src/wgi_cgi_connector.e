@@ -52,19 +52,23 @@ feature -- Execution
 							res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
 						end
 						if res.message_writable then
-							res.put_string ("<pre>" + l_trace + "</pre>")
+							res.put_string ("<pre>")
+							res.put_string (l_trace)
+							res.put_string ("</pre>")
 						end
 						res.push
 					end
 				end
 			end
 		rescue
-			rescued := True
-			retry
+			if not rescued then
+				rescued := True
+				retry
+			end
 		end
 
 note
-	copyright: "2011-2012, Eiffel Software and others"
+	copyright: "2011-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

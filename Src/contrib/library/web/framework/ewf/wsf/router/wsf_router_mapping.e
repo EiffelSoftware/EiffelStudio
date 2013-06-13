@@ -77,12 +77,12 @@ feature -- Status
 
 feature -- Helper
 
-	path_from_request (req: WSF_REQUEST): READABLE_STRING_32
+	path_from_request (req: WSF_REQUEST): READABLE_STRING_8
 			-- Path used by `Current' to check that mapping matches request `req'
 		require
 			req_attached: req /= Void
 		do
-			Result := req.path_info
+			Result := req.percent_encoded_path_info
 		ensure
 			path_from_request_attached: Result /= Void
 		end

@@ -88,14 +88,14 @@ feature -- Access: Input
 
 feature -- Access: CGI meta variables
 
-	meta_variable (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
+	meta_variable (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Environment variable related to `a_name'
 		require
 			a_name_valid: a_name /= Void and then not a_name.is_empty
 		deferred
 		end
 
-	meta_string_variable (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
+	meta_string_variable (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Environment variable related to `a_name'
 		require
 			a_name_valid: a_name /= Void and then not a_name.is_empty
@@ -105,7 +105,7 @@ feature -- Access: CGI meta variables
 			end
 		end
 
-	meta_variables: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	meta_variables: STRING_TABLE [READABLE_STRING_8]
 			-- These variables are specific to requests made with HTTP.
 			-- Interpretation of these variables may depend on the value of
 			-- SERVER_PROTOCOL.
@@ -635,7 +635,7 @@ invariant
 	path_info_identical: path_info ~ meta_string_variable ({WGI_META_NAMES}.path_info)
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

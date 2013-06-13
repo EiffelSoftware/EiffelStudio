@@ -10,6 +10,10 @@ class
 
 inherit
 	WSF_URI_TEMPLATE_RESPONSE_HANDLER
+	SHARED_WSF_PERCENT_ENCODER
+		rename
+			percent_encoder as url_encoder
+		end
 
 feature -- Access
 
@@ -75,7 +79,8 @@ feature -- Access
 
 	url_encoded_string (s: READABLE_STRING_32): STRING_8
 		do
-			Result := (create {UTF8_URL_ENCODER}).encoded_string (s)
+			create Result.make (s.count)
+			url_encoder.append_percent_encoded_string_to (s, Result)
 		end
 
 	html_decoded_string (v: READABLE_STRING_32): READABLE_STRING_32

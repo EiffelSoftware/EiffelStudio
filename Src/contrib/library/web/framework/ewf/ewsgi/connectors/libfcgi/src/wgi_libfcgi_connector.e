@@ -55,7 +55,7 @@ feature -- Server
 
 feature -- Execution
 
-	process_fcgi_request (vars: HASH_TABLE [STRING, STRING]; a_input: like input; a_output: like output)
+	process_fcgi_request (vars: STRING_TABLE [READABLE_STRING_8]; a_input: like input; a_output: like output)
 		local
 			req: WGI_REQUEST_FROM_TABLE
 			res: detachable WGI_RESPONSE_STREAM
@@ -73,15 +73,19 @@ feature -- Execution
 							res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
 						end
 						if res.message_writable then
-							res.put_string ("<pre>" + l_trace + "</pre>")
+							res.put_string ("<pre>")
+							res.put_string (l_trace)
+							res.put_string ("</pre>")
 						end
 						res.push
 					end
 				end
 			end
 		rescue
-			rescued := True
-			retry
+			if not rescued then
+				rescued := True
+				retry
+			end
 		end
 
 feature -- Input/Output
@@ -100,7 +104,7 @@ invariant
 	fcgi_attached: fcgi /= Void
 
 note
-	copyright: "2011-2011, Eiffel Software and others"
+	copyright: "2011-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

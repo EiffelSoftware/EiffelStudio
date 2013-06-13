@@ -137,7 +137,7 @@ feature {OPENID_CONSUMER_VALIDATION} -- Implementation
 			sess: HTTP_CLIENT_SESSION
 			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
 			xrds_location: detachable READABLE_STRING_8
-			xml: XML_LITE_PARSER
+			xml: XML_STANDARD_PARSER
 			tree: XML_CALLBACKS_DOCUMENT
 			xelt: detachable XML_ELEMENT
 			s: READABLE_STRING_32

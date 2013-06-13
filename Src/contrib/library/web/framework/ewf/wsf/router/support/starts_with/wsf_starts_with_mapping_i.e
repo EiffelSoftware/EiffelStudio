@@ -83,7 +83,7 @@ feature {NONE} -- Execution
 			a_start_path_attached: a_start_path /= Void
 			req_attached: req /= Void
 			res_attached: res /= Void
-			path_start_with_a_start_path: req.path_info.starts_with (a_start_path)
+			path_start_with_a_start_path: req.percent_encoded_path_info.starts_with (a_start_path)
 		deferred
 		end
 

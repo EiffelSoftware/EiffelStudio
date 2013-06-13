@@ -61,16 +61,16 @@ feature -- EWSGI access
 
 feature -- Access: CGI meta parameters
 
-	meta_variables: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	meta_variables: STRING_TABLE [READABLE_STRING_8]
 			-- CGI Environment parameters
 
-	meta_variable (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
+	meta_variable (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- CGI meta variable related to `a_name'
 		do
 			Result := meta_variables.item (a_name)
 		end
 
-	meta_string_variable_or_default (a_name: READABLE_STRING_8; a_default: READABLE_STRING_8; use_default_when_empty: BOOLEAN): READABLE_STRING_8
+	meta_string_variable_or_default (a_name: READABLE_STRING_GENERAL; a_default: READABLE_STRING_8; use_default_when_empty: BOOLEAN): READABLE_STRING_8
 			-- Value for meta parameter `a_name'
 			-- If not found, return `a_default'
 		require
@@ -86,14 +86,14 @@ feature -- Access: CGI meta parameters
 			end
 		end
 
-	set_meta_string_variable (a_name: READABLE_STRING_8; a_value: READABLE_STRING_8)
+	set_meta_string_variable (a_name: READABLE_STRING_GENERAL; a_value: READABLE_STRING_8)
 		do
 			meta_variables.force (a_value, a_name)
 		ensure
 			param_set: attached meta_variable (a_name) as val and then val ~ a_value
 		end
 
-	unset_meta_variable (a_name: READABLE_STRING_8)
+	unset_meta_variable (a_name: READABLE_STRING_GENERAL)
 		do
 			meta_variables.remove (a_name)
 		ensure
@@ -268,7 +268,7 @@ feature {NONE} -- Element change: CGI meta parameter related to PATH_INFO
 			-- Fill with variable from `a_vars'
 		local
 			s: like meta_string_variable
-			table: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+			table: STRING_TABLE [READABLE_STRING_8]
 			l_query_string: like query_string
 			l_request_uri: detachable STRING_32
 			l_empty_string: like empty_string
@@ -276,15 +276,14 @@ feature {NONE} -- Element change: CGI meta parameter related to PATH_INFO
 			create {STRING_8} l_empty_string.make_empty
 			empty_string := l_empty_string
 
-			create table.make (a_vars.count)
-			table.compare_objects
+			create table.make_equal (a_vars.count)
 			meta_variables := table
 			from
 				a_vars.start
 			until
 				a_vars.after
 			loop
-				table.force (a_vars.item_for_iteration.to_string_8, a_vars.key_for_iteration.to_string_8)
+				table.force (a_vars.item_for_iteration.to_string_8, a_vars.key_for_iteration)
 				a_vars.forth
 			end
 
@@ -446,7 +445,7 @@ invariant
 	empty_string_unchanged: empty_string.is_empty
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

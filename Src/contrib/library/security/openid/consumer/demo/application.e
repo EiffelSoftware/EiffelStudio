@@ -12,12 +12,17 @@ inherit
 		undefine
 			requires_proxy
 		end
-	
+
 	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_SERVICE
 
 	WSF_SERVICE
 
 	WSF_NO_PROXY_POLICY
+
+	SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
 
 create
 	make_and_launch
@@ -42,14 +47,20 @@ feature {NONE} -- Initialization
 	on_launched (conn: WGI_CONNECTOR)
 		local
 			e: EXECUTION_ENVIRONMENT
+			cmd: STRING_32
 		do
 			if attached {WGI_NINO_CONNECTOR} conn as nino then
-				create e
-				if attached e.get ("COMSPEC") as l_comspec then
-					e.launch (l_comspec + " /C start " + "http://localhost:" + nino.port.out + "/")
-				else
-					e.launch ("http://localhost:" + nino.port.out + "/")
+				e := execution_environment
+				create cmd.make (32)
+				if attached e.item ("COMSPEC") as l_comspec then
+					cmd.append (l_comspec)
+					cmd.append ({STRING_32} " /C start ")
 				end
+				cmd.append ("http://localhost:")
+				cmd.append_integer (nino.port)
+				cmd.append_character ({CHARACTER_32} '/')
+
+				e.launch (cmd)
 			end
 		end
 

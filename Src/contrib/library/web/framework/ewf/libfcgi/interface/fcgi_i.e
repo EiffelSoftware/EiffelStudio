@@ -19,21 +19,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	updated_environ_variables: HASH_TABLE [STRING, STRING]
+	updated_environ_variables: STRING_TABLE [READABLE_STRING_8]
 		local
 			i: INTEGER
 			p, v, null: POINTER
 		do
 			p := fcgi_environ
-			create Result.make (50)
+			create Result.make_equal (50)
 			if p /= null then
 				from
 					i := 0
-					v := fcgi_i_th_environ (i,p)
+					v := fcgi_i_th_environ (i, p)
 				until
 					v = null
 				loop
-					if attached separated_variables (create {STRING}.make_from_c (v)) as t then
+					if attached separated_variables (create {STRING_8}.make_from_c (v)) as t then
 						Result.force (t.value, t.key)
 					end
 					i := i + 1
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation: Environment
 			"return ((char **)$p)[$i];"
 		end
 
-	separated_variables (a_var: STRING): detachable TUPLE [value: STRING; key: STRING]
+	separated_variables (a_var: READABLE_STRING_8): detachable TUPLE [value: READABLE_STRING_8; key: READABLE_STRING_8]
 			-- Given an environment variable `a_var' in form of "key=value",
 			-- return separated key and value.
 			-- Return Void if `a_var' is in incorrect format.
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation: Environment
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

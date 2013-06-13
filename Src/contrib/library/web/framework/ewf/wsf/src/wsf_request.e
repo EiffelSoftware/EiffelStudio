@@ -26,6 +26,18 @@ class
 inherit
 	DEBUG_OUTPUT
 
+	SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
+	SHARED_WSF_PERCENT_ENCODER
+		rename
+			percent_encoder as url_encoder
+		export
+			{NONE} all
+		end
+
 create {WSF_TO_WGI_SERVICE}
 	make_from_wgi
 
@@ -40,26 +52,25 @@ feature {NONE} -- Initialization
 		do
 			wgi_request := r
 
-			create string_equality_tester
 			if attached r.meta_variables as l_vars then
-				create tb.make_with_key_tester (l_vars.count, string_equality_tester)
+				create tb.make_equal (l_vars.count)
 				across
 					l_vars as c
 				loop
-					tb.force (new_string_value (c.key, c.item), c.key)
+					if attached {READABLE_STRING_8} c.key as s8 then
+						tb.force (new_string_value (s8, c.item), c.key)
+					else
+						tb.force (new_string_value (url_encoded_string (c.key), c.item), c.key)
+					end
 				end
 			else
-				create tb.make_with_key_tester (0, string_equality_tester)
+				create tb.make_equal (0)
 			end
 			meta_variables_table := tb
-			meta_variables := tb
 			create error_handler.make
-			create uploaded_files_table.make_with_key_tester (0, string_equality_tester)
+			create uploaded_files_table.make_equal (0)
 			set_raw_input_data_recorded (False)
-			create {IMMUTABLE_STRING_32} empty_string.make_empty
-
-			create execution_variables_table.make_with_key_tester (0, string_equality_tester)
-			execution_variables_table.compare_objects
+			create execution_variables_table.make_equal (0)
 
 			initialize
 			analyze
@@ -96,12 +107,13 @@ feature {NONE} -- Initialization
 			request_method := req.request_method
 
 			--| PATH_INFO
-			path_info := raw_url_encoder.decoded_string (req.path_info)
+			percent_encoded_path_info := req.path_info
+			path_info := url_decoded_string (req.path_info)
 
 			--| PATH_TRANSLATED
 			s8 := req.path_translated
 			if s8 /= Void then
-				path_translated := raw_url_encoder.decoded_string (s8)
+				path_translated := url_decoded_string (s8)
 			end
 
 				--| Here one can set its own environment entries if needed
@@ -111,6 +123,7 @@ feature {NONE} -- Initialization
 		end
 
 	wgi_request: WGI_REQUEST
+			-- Associated WGI request
 
 feature -- Destroy
 
@@ -125,6 +138,26 @@ feature -- Destroy
 			loop
 				delete_uploaded_file (c.item)
 			end
+
+			content_length_value := 0
+			content_type := Void
+			execution_variables_table.wipe_out
+			internal_cookies_table := Void
+			internal_form_data_parameters_table := Void
+			internal_query_parameters_table := Void
+			internal_server_url := Void
+			internal_url_base := Void
+			form_parameters_table.wipe_out
+			mime_handlers := Void
+			path_info := empty_string_32
+			path_parameters_source := Void
+			path_parameters_table := Void
+			path_translated := Void
+			raw_input_data := Void
+			raw_input_data_recorded := False
+			request_method := empty_string_8
+			set_uploaded_file_path (Void)
+--			wgi_request
 		end
 
 feature -- Status report
@@ -353,12 +386,12 @@ feature {WSF_REQUEST_EXPORTER} -- Override value
 
 feature {NONE} -- Access: global variable
 
-	items_table: HASH_TABLE_EX [WSF_VALUE, READABLE_STRING_GENERAL]
+	items_table: STRING_TABLE [WSF_VALUE]
 			-- Table containing all the various variables
 			-- Warning: this is computed each time, if you change the content of other containers
 			-- this won't update this Result's content, unless you query it again
 		do
-			create Result.make_with_key_tester (20, string_equality_tester)
+			create Result.make_equal (20)
 
 			if attached path_parameters as l_path_parameters then
 				across
@@ -558,7 +591,7 @@ feature -- Execution variables
 
 feature {NONE} -- Execution variables: implementation
 
-	execution_variables_table: HASH_TABLE_EX [detachable ANY, READABLE_STRING_GENERAL]
+	execution_variables_table: STRING_TABLE [detachable ANY]
 
 feature -- Access: CGI Meta variables
 
@@ -582,6 +615,9 @@ feature -- Access: CGI Meta variables
 
 	meta_variables: ITERABLE [WSF_STRING]
 			-- CGI meta variables values
+		do
+			Result := meta_variables_table
+		end
 
 	meta_string_variable_or_default (a_name: READABLE_STRING_GENERAL; a_default: READABLE_STRING_32; use_default_when_empty: BOOLEAN): READABLE_STRING_32
 			-- Value for meta parameter `a_name'
@@ -617,7 +653,7 @@ feature -- Access: CGI Meta variables
 
 feature {NONE} -- Access: CGI meta parameters
 
-	meta_variables_table: HASH_TABLE_EX [WSF_STRING, READABLE_STRING_GENERAL]
+	meta_variables_table: STRING_TABLE [WSF_STRING]
 			-- CGI Environment parameters		
 
 feature -- Access: CGI meta parameters - 1.1			
@@ -739,6 +775,11 @@ feature -- Access: CGI meta parameters - 1.1
 			Result := wgi_request.gateway_interface
 		end
 
+	percent_encoded_path_info: READABLE_STRING_8
+			-- Non decoded PATH_INFO value from CGI.
+			-- See `path_info' for the related percent decoded value.
+			--| This value should be used by component dealing only with ASCII path
+
 	path_info: READABLE_STRING_32
 			-- The PATH_INFO metavariable specifies a path to be interpreted
 			-- by the CGI script. It identifies the resource or sub-resource
@@ -767,6 +808,8 @@ feature -- Access: CGI meta parameters - 1.1
 			-- The PATH_INFO value is case-sensitive, and the server MUST
 			-- preserve the case of the PATH_INFO element of the URI when
 			-- making it available to scripts.
+			--
+			-- See `percent_encoded_path_info' to get the original non decoded path info.
 
 	path_translated: detachable READABLE_STRING_32
 			-- PATH_TRANSLATED is derived by taking any path-info component
@@ -1150,7 +1193,7 @@ feature -- Cookies
 
 feature {NONE} -- Cookies
 
-	cookies_table: HASH_TABLE_EX [WSF_VALUE, READABLE_STRING_GENERAL]
+	cookies_table: STRING_TABLE [WSF_VALUE]
 			-- Expanded cookies variable
 		local
 			i,j,p,n: INTEGER
@@ -1161,8 +1204,7 @@ feature {NONE} -- Cookies
 			if l_cookies = Void then
 				if attached {WSF_STRING} meta_variable ({WSF_META_NAMES}.http_cookie) as val then
 					s := val.value
-					create l_cookies.make_with_key_tester (5, string_equality_tester)
-					l_cookies.compare_objects
+					create l_cookies.make_equal (5)
 					from
 						n := s.count
 						p := 1
@@ -1190,8 +1232,7 @@ feature {NONE} -- Cookies
 						end
 					end
 				else
-					create l_cookies.make_with_key_tester (0, string_equality_tester)
-					l_cookies.compare_objects
+					create l_cookies.make_equal (0)
 				end
 				internal_cookies_table := l_cookies
 			end
@@ -1217,7 +1258,7 @@ feature -- Path parameters
 
 feature {NONE} -- Query parameters: implementation
 
-	path_parameters_table: detachable HASH_TABLE_EX [WSF_VALUE, READABLE_STRING_GENERAL]
+	path_parameters_table: detachable STRING_TABLE [WSF_VALUE]
 			-- Parameters computed from `path_parameters_source'
 			--| most often coming from the associated route from WSF_ROUTER
 
@@ -1240,8 +1281,7 @@ feature {WSF_REQUEST_PATH_PARAMETERS_SOURCE} -- Path parameters: Element change
 				if l_count = 0 then
 					l_table := Void
 				else
-					create l_table.make_with_key_tester (l_count, string_equality_tester)
-					l_table.compare_objects
+					create l_table.make_equal (l_count)
 					if attached src.path_parameters as tb then
 						across
 							tb as c
@@ -1278,7 +1318,7 @@ feature -- Query parameters
 
 feature {NONE} -- Query parameters: implementation
 
-	query_parameters_table: HASH_TABLE_EX [WSF_VALUE, READABLE_STRING_GENERAL]
+	query_parameters_table: STRING_TABLE [WSF_VALUE]
 			-- Parameters extracted from QUERY_STRING	
 		local
 			vars: like internal_query_parameters_table
@@ -1303,13 +1343,12 @@ feature {NONE} -- Query parameters: implementation
 					end
 				end
 				vars := urlencoded_parameters (s)
-				vars.compare_objects
 				internal_query_parameters_table := vars
 			end
 			Result := vars
 		end
 
-	urlencoded_parameters (a_content: detachable READABLE_STRING_8): HASH_TABLE_EX [WSF_VALUE, READABLE_STRING_GENERAL]
+	urlencoded_parameters (a_content: detachable READABLE_STRING_8): STRING_TABLE [WSF_VALUE]
 			-- Import `a_content'
 		local
 			n, p, i, j: INTEGER
@@ -1317,13 +1356,13 @@ feature {NONE} -- Query parameters: implementation
 			l_name, l_value: READABLE_STRING_8
 		do
 			if a_content = Void then
-				create Result.make_with_key_tester (0, string_equality_tester)
+				create Result.make_equal (0)
 			else
 				n := a_content.count
 				if n = 0 then
-					create Result.make_with_key_tester (0, string_equality_tester)
+					create Result.make_equal (0)
 				else
-					create Result.make_with_key_tester (3, string_equality_tester) --| 3 = arbitrary value
+					create Result.make_equal (3) --| 3 = arbitrary value
 					from
 						p := 1
 					until
@@ -1348,6 +1387,8 @@ feature {NONE} -- Query parameters: implementation
 					end
 				end
 			end
+		ensure
+			result_with_object_comparison: Result.object_comparison
 		end
 
 feature -- Form fields and related
@@ -1452,7 +1493,7 @@ feature {NONE} -- Implementation: MIME handler
 
 feature {NONE} -- Form fields and related
 
-	uploaded_files_table: HASH_TABLE_EX [WSF_UPLOADED_FILE, READABLE_STRING_GENERAL]
+	uploaded_files_table: STRING_TABLE [WSF_UPLOADED_FILE]
 
 	get_form_parameters
 			-- Variables sent by POST, ... request	
@@ -1464,14 +1505,12 @@ feature {NONE} -- Form fields and related
 			vars := internal_form_data_parameters_table
 			if vars = Void then
 				if not is_chunked_input and content_length_value = 0 then
-					create vars.make_with_key_tester (0, string_equality_tester)
-					vars.compare_objects
+					create vars.make_equal (0)
 				else
 					if raw_input_data_recorded then
 						create l_raw_data_cell.put (Void)
 					end
-					create vars.make_with_key_tester (5, string_equality_tester)
-					vars.compare_objects
+					create vars.make_equal (5)
 
 					l_type := content_type
 					if l_type /= Void and then attached mime_handler (l_type) as hdl then
@@ -1488,7 +1527,7 @@ feature {NONE} -- Form fields and related
 			internal_form_data_parameters_table /= Void
 		end
 
-	form_parameters_table: HASH_TABLE_EX [WSF_VALUE, READABLE_STRING_GENERAL]
+	form_parameters_table: STRING_TABLE [WSF_VALUE]
 			-- Variables sent by POST request	
 		local
 			vars: like internal_form_data_parameters_table
@@ -1497,14 +1536,14 @@ feature {NONE} -- Form fields and related
 			vars := internal_form_data_parameters_table
 			if vars = Void then
 				check form_parameters_already_retrieved: False end
-				create vars.make_with_key_tester (0, string_equality_tester)
+				create vars.make_equal (0)
 			end
 			Result := vars
 		end
 
 feature {NONE} -- Implementation: smart parameter identification		
 
-	add_value_to_table (a_name: READABLE_STRING_8; a_value: READABLE_STRING_8; a_table: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL])
+	add_value_to_table (a_name: READABLE_STRING_8; a_value: READABLE_STRING_8; a_table: STRING_TABLE [WSF_VALUE])
 			-- Add urlencoded parameter  `a_name'=`a_value' to `a_table'
 			-- following smart computation such as handling the "..[..]" as table
 		local
@@ -1548,7 +1587,7 @@ feature {NONE} -- Implementation: smart parameter identification
 						if p > 0 then
 							q := r.index_of ({CHARACTER_8} ']', p + 1)
 							if q > p then
-								k32 := url_encoder.decoded_string (k)
+								k32 := url_decoded_string (k)
 								if attached {WSF_TABLE} ptb.value (k32) as l_tb_value then
 									tb := l_tb_value
 								else
@@ -1610,7 +1649,7 @@ feature -- Uploaded File Handling
 				until
 					l_files.after or Result
 				loop
-					if attached l_files.item_for_iteration.tmp_name as l_tmp_name and then l_tmp_name.same_string_general (a_filename) then
+					if attached l_files.item_for_iteration.tmp_path as l_tmp_path and then a_filename.same_string (l_tmp_path.name) then
 						Result := True
 					end
 					l_files.forth
@@ -1686,7 +1725,7 @@ feature -- URL Utility
 							elseif spos > 0 then
 								i := spos
 							end
-							spos := l_rq_uri.substring_index (path_info, i)
+							spos := l_rq_uri.substring_index (percent_encoded_path_info, i)
 							if spos > 0 then
 								l_base_url := l_rq_uri.substring (1, spos - 1)
 							else
@@ -1736,18 +1775,18 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 			f: RAW_FILE
 		do
 			if uploaded_files_table.has_item (uf) then
-				if attached uf.tmp_name as fn then
-					create f.make (fn)
+				if attached uf.tmp_path as fn then
+					create f.make_with_path (fn)
 					if f.exists and then f.is_writable then
 						f.delete
 					else
-						error_handler.add_custom_error (0, "Can not delete uploaded file", "Can not delete file %""+ fn +"%"")
+						error_handler.add_custom_error (0, "Can not delete uploaded file", {STRING_32} "Can not delete file %""+ fn.name + {STRING_32} "%"")
 					end
 				else
-					error_handler.add_custom_error (0, "Can not delete uploaded file", "Can not delete uploaded file %""+ uf.name +"%" Tmp File not found")
+					error_handler.add_custom_error (0, "Can not delete uploaded file", {STRING_32} "Can not delete uploaded file %""+ uf.name + {STRING_32} "%" Tmp File not found")
 				end
 			else
-				error_handler.add_custom_error (0, "Not an uploaded file", "This file %""+ uf.name +"%" is not an uploaded file.")
+				error_handler.add_custom_error (0, "Not an uploaded file", {STRING_32} "This file %""+ uf.name + {STRING_32} "%" is not an uploaded file.")
 			end
 		end
 
@@ -1757,8 +1796,8 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 			bn: STRING
 			l_safe_name: STRING
 			f: RAW_FILE
-			dn: STRING
-			fn: FILE_NAME
+			dn: PATH
+			fn: PATH
 			d: DIRECTORY
 			n: INTEGER
 			rescued: BOOLEAN
@@ -1768,30 +1807,28 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 					dn := p
 				else
 					-- FIXME: should it be configured somewhere?
-					dn := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+					dn := execution_environment.current_working_path
 				end
-				create d.make (dn)
+				create d.make_with_path (dn)
 				if d.exists and then d.is_writable then
 					l_safe_name := a_up_file.safe_filename
 					from
-						create fn.make_from_string (dn)
-						bn := "EWF_tmp-" + l_safe_name
-						fn.set_file_name (bn)
-						create f.make (fn.string)
+						bn := "tmp-" + l_safe_name
+						fn := dn.extended (bn)
+						create f.make_with_path (fn)
 						n := 0
 					until
 						not f.exists
 						or else n > 1_000
 					loop
 						n := n + 1
-						fn.make_from_string (dn)
-						bn := "EWF_tmp-" + n.out + "-" + l_safe_name
-						fn.set_file_name (bn)
-						f.make (fn.string)
+						bn := "tmp-" + n.out + "-" + l_safe_name
+						fn := dn.extended (bn)
+						f.make_with_path (fn)
 					end
 
 					if not f.exists or else f.is_writable then
-						a_up_file.set_tmp_name (f.name)
+						a_up_file.set_tmp_path (f.path)
 						a_up_file.set_tmp_basename (bn)
 						f.open_write
 						f.put_string (a_content)
@@ -1800,7 +1837,7 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 						a_up_file.set_error (-1)
 					end
 				else
-					error_handler.add_custom_error (0, "Directory not writable", "Can not create file in directory %""+ dn +"%"")
+					error_handler.add_custom_error (0, "Directory not writable", {STRING_32} "Can not create file in directory %""+ dn.name + {STRING_32} "%"")
 				end
 				uploaded_files_table.force (a_up_file, a_up_file.name)
 			else
@@ -1813,13 +1850,13 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 
 feature {WSF_REQUEST_EXPORTER} -- Settings
 
-	uploaded_file_path: detachable READABLE_STRING_8
+	uploaded_file_path: detachable PATH
 			-- Optional folder path used to store uploaded files
 
 	set_uploaded_file_path (p: like uploaded_file_path)
 			-- Set `uploaded_file_path' to `p'.
 		require
-			path_exists: p /= Void implies (create {DIRECTORY}.make (p)).exists
+			path_exists: p /= Void implies (create {DIRECTORY}.make_with_path (p)).exists
 		do
 			uploaded_file_path := p
 		end
@@ -1874,8 +1911,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: utilities	
 
-	string_equality_tester: STRING_EQUALITY_TESTER
-
 	single_slash_starting_string (s: READABLE_STRING_32): STRING_32
 			-- Return the string `s' (or twin) with one and only one starting slash
 		local
@@ -1927,17 +1962,27 @@ feature {NONE} -- Implementation: utilities
 			create Result.make (a_name, a_value)
 		end
 
-	empty_string: READABLE_STRING_32
+	empty_string_32: IMMUTABLE_STRING_32
 			-- Reusable empty string
-
-	raw_url_encoder: URL_ENCODER
 		once
-			create {URL_ENCODER} Result
+			create Result.make_empty
 		end
 
-	url_encoder: URL_ENCODER
+	empty_string_8: IMMUTABLE_STRING_8
 		once
-			create {UTF8_URL_ENCODER} Result
+			create Result.make_empty
+		end
+
+	url_encoded_string (s: READABLE_STRING_GENERAL): STRING_8
+		do
+			create Result.make (s.count)
+			url_encoder.append_percent_encoded_string_to (s, Result)
+		end
+
+	url_decoded_string (s: READABLE_STRING_GENERAL): STRING_32
+		do
+			create Result.make (s.count)
+			url_encoder.append_percent_decoded_string_to (s, Result)
 		end
 
 	date_time_utilities: HTTP_DATE_TIME_UTILITIES
@@ -1947,7 +1992,8 @@ feature {NONE} -- Implementation: utilities
 		end
 
 invariant
-	empty_string_unchanged: empty_string.is_empty
+	empty_string_32_unchanged: empty_string_32.is_empty
+	empty_string_8_unchanged: empty_string_8.is_empty
 	wgi_request.content_type /= Void implies content_type /= Void
 
 note

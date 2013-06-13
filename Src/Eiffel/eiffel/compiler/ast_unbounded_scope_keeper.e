@@ -23,19 +23,25 @@ feature -- Access
 
 	has_unset: BOOLEAN
 			-- <Precursor>
+		do
+			Result := has_unset_index (scope.lower, scope.upper)
+		end
+
+	has_unset_index (min_index, max_index: like count): BOOLEAN
+			-- <Precursor>
 		local
-			index: like scope.upper
+			index: like count
 		do
 			from
-				index := scope.upper
+				index := min_index
 			until
-				index <= 0
+				index > max_index
 			loop
 				if not scope [index] then
 					Result := True
-					index := 1
+					index := max_index
 				end
-				index := index - 1
+				index := index + 1
 			end
 		end
 

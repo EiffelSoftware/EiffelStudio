@@ -21,6 +21,15 @@ feature -- Access
 		deferred
 		end
 
+	has_unset_index (min_index, max_index: like count): BOOLEAN
+			-- Are there any unset variables indexed between `min_index' and `max_index' inclusively?
+		require
+			valid_min_index: min_index > 0
+			valid_max_index: max_index <= count
+			valid_range: min_index - 1 <= max_index
+		deferred
+		end
+
 feature -- Status report: variables
 
 	count: like max_count

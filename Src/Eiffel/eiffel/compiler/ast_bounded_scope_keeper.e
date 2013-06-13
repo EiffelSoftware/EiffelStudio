@@ -30,6 +30,15 @@ feature -- Access
 			Result := (({NATURAL_64} 1) |<< count - 1) + {NATURAL_64} 0x8000000000000000 /= scope
 		end
 
+	has_unset_index (min_index, max_index: like count): BOOLEAN
+			-- <Precursor>
+		local
+			mask: like scope
+		do
+			mask := (({NATURAL_64} 1) |<< max_index - 1) - (({NATURAL_64} 1) |<< (min_index - 1) - 1)
+			Result := scope & mask /= mask
+		end
+
 feature -- Status report: variables
 
 	max_count: INTEGER = 63

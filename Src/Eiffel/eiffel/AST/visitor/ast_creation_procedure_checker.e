@@ -201,7 +201,9 @@ feature {NONE} -- Processing
 				not is_checking_all and then
 				uninitialized_keeper.is_used
 			then
-				if attribute_initialization.has_unset then
+				s := current_class.skeleton
+				i := s.count
+				if attribute_initialization.has_unset_index (1, i) then
 						-- Avoid recursion because all attributes will be checked anyway.
 					is_checking_all := True
 						-- Make sure attribute initialization checks do not affect each other.
@@ -209,8 +211,6 @@ feature {NONE} -- Processing
 					keeper.enter_realm
 					from
 						e := error_handler.error_level
-						s := current_class.skeleton
-						i := s.count
 					until
 						i <= 0
 					loop
@@ -471,7 +471,7 @@ feature {NONE} -- Dependency
 			if has_reference_argument then
 					-- Record dependency.
 				collect_unset_attributes
-				if attached unset_attributes as u then
+				if uninitialized_keeper.is_used and then attached unset_attributes as u then
 						-- There are some unset attributes.
 						-- Record them for potential error report.
 					create reported_attributes.make_empty (u.count)
@@ -574,7 +574,7 @@ feature {NONE} -- Current tracking
 			-- Record that "Current" is used at `location'.
 		do
 				-- All attributes have to be set before `Current' can be used.
-			if not uninitialized_keeper.is_used and then attribute_initialization.has_unset then
+			if not uninitialized_keeper.is_used and then attribute_initialization.has_unset_index (1, context.attributes.count) then
 					-- Objects may be uninitialized, but they are tracked.
 				uninitialized_keeper.use (location, context.current_feature)
 			end
@@ -617,6 +617,11 @@ feature {AST_EIFFEL} -- Visitor: compound
 		do
 			if c /= Void then
 				c.process (Current)
+					-- Check if use of Current should be reset if all attributes are now initialized.
+					-- This is required to avoid reporting uninitialized attributes in code like
+					--   if ... then ... use Current ... initialize attributes ... end
+					--   some.qualified.call
+				collect_unset_attributes
 			end
 		end
 

@@ -23,6 +23,8 @@ inherit
 			error_string
 		end
 
+	CONF_INTERFACE_CONSTANTS
+
 create
 	make_error,
 	make_warning
@@ -91,8 +93,23 @@ feature -- Output
 	build_explain (f: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error in `f'.
 		do
-			f.add ("Other class: ")
+			f.add (conf_interface_names.option_void_safety_name)
+			f.add (": ")
+			f.add (conf_interface_names.option_void_safety_value [class_c.lace_class.options.void_safety.index])
+			f.add_new_line
+			f.add ("Configuration: ")
+			f.add (class_c.lace_class.group.target.system.file_name)
+			f.add_new_line
+			f.add ("Provider class: ")
 			provider.append_name (f)
+			f.add_new_line
+			f.add ("Provider option: ")
+			f.add (conf_interface_names.option_void_safety_name)
+			f.add (": ")
+			f.add (conf_interface_names.option_void_safety_value [provider.options.void_safety.index])
+			f.add_new_line
+			f.add ("Provider configuration: ")
+			f.add (provider.group.target.system.file_name)
 			f.add_new_line
 		end
 
@@ -109,7 +126,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

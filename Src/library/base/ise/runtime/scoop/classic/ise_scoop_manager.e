@@ -86,9 +86,6 @@ feature {NONE} -- C callback function
 		do
 			l_client_processor_id := a_executing_request_chain_node_meta_data [request_chain_client_pid_index]
 
-				-- Signal the request chain as dirty so that any other processors in the request chain cease applying calls.
-			a_executing_request_chain_node_meta_data [request_chain_status_index] := request_chain_status_dirty
-
 				-- Retrieve currently executing request chain so that we can flag the client processor as dirty with regards to `a_processor_id'.
 			l_dirty_processor_client_list := (request_chain_meta_data_stack_list [a_exception_processor_id]) [max_request_chain_depth]
 			if l_dirty_processor_client_list = Void then
@@ -685,8 +682,8 @@ feature {NONE} -- Exceptions
 
 feature -- Command/Query Handling
 
-	is_processor_dirty (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_reset_flag: BOOLEAN): BOOLEAN
-			-- Is `a_supplier_processor_id' dirty with respect to `a_client_processor_id'.
+	is_supplier_processor_dirty_to_client (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_reset_flag: BOOLEAN): BOOLEAN
+			-- Is `a_supplier_processor_id' dirty with respect to `a_client_processor_id'?
 		local
 			l_dirty_processor_client_list: detachable like new_request_chain_meta_data_entry
 			i: INTEGER
@@ -709,12 +706,36 @@ feature -- Command/Query Handling
 								-- Update dirty flag count for the client processor.
 							i := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_dirty_flag_count_index))
 								-- Exit loop.
-							i := maximum_dirty_processor_client_count
 						end
+						i := maximum_dirty_processor_client_count
 					end
 					i := i + 1
 				end
 				relinquish_processor_resource (a_supplier_processor_id)
+			end
+		end
+
+	is_processor_dirty (a_processor_id: like processor_id_type): BOOLEAN
+			-- Is `a_processor_id' processor dirty (ie: raised an exception to a client processor)?
+		local
+			l_dirty_processor_client_list: detachable like new_request_chain_meta_data_entry
+			i: INTEGER
+		do
+			l_dirty_processor_client_list := (request_chain_meta_data_stack_list [a_processor_id]) [Max_request_chain_depth]
+			if l_dirty_processor_client_list /= Void then
+				request_processor_resource (a_processor_id)
+				from
+					i := 0
+				until
+					i >= maximum_dirty_processor_client_count
+				loop
+					if l_dirty_processor_client_list [i] /= null_processor_id then
+						Result := True
+						i := maximum_dirty_processor_client_count
+					end
+					i := i + 1
+				end
+				relinquish_processor_resource (a_processor_id)
 			end
 		end
 
@@ -754,7 +775,7 @@ feature -- Command/Query Handling
 				-- Check if `a_supplier_processor_id' is dirty with respect to `a_client_processor_id'.
 			if {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0 then
 					-- We need to check if `a_client_processor_id' is dirty with respect to `a_supplier_processor_id'.
-				if is_processor_dirty (a_client_processor_id, a_supplier_processor_id, True) then
+				if is_supplier_processor_dirty_to_client (a_client_processor_id, a_supplier_processor_id, True) then
 					raise_scoop_exception (scoop_dirty_processor_exception_message)
 				end
 			end
@@ -1010,7 +1031,7 @@ feature -- Command/Query Handling
 			end
 				-- If we are a synchronous call and we have a dirty flag set then we should check if `a_supplier_processor_id' is dirty with respect to `a_client_processor_id'.
 			if l_is_synchronous and then {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0  then
-				if is_processor_dirty (a_client_processor_id, a_supplier_processor_id, True) then
+				if is_supplier_processor_dirty_to_client (a_client_processor_id, a_supplier_processor_id, True) then
 						-- Fire exception in client
 					raise_scoop_exception (scoop_dirty_processor_exception_message)
 				end
@@ -1476,6 +1497,13 @@ feature {NONE} -- Resource Initialization
 					end
 				elseif l_processor_meta_data [processor_status_index] = processor_status_redundant then
 					if {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_processor_meta_data.item_address (current_request_chain_node_id_index), 0) = l_processor_meta_data [current_request_node_id_execution_index] then
+						--| FIXME IEK: We need to handle unreported dirty processor exceptions before releasing to GC.
+--						if {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_logical_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0 then
+--							--| Processor has a pending SCOOP dirty processor exception that has not been raised.
+--						end
+--						if is_processor_dirty (a_logical_processor_id) then
+--							--| Processor has raised an exception that has not been handled by the client processor.
+--						end
 						l_exit_loop := True
 					else
 							-- Processor has been marked as redundant but all chains have not yet been handled so we unmark the redundancy.
@@ -1831,7 +1859,6 @@ feature {NONE} -- Scoop Processor Meta Data
 	request_chain_status_application: INTEGER_8 = 1
 	request_chain_status_waiting: INTEGER_8 = 2
 	request_chain_status_closed: INTEGER_8 = 3
-	request_chain_status_dirty: INTEGER_8 = 4
 		-- Various state constants for a request chain.
 
 	request_chain_meta_data_default_size: INTEGER_32 = 11

@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			if col_text /= Void then
 				wel_column.set_text (col_text)
 			else
-				wel_column.remove_text
+				wel_column.set_text ("")
 			end
 			insert_column (wel_column, col_index)
 		end

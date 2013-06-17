@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="encoder_tests" uuid="C6F56AE3-8E9C-4568-85CA-CA5F1EF15DCE">
 	<target name="encoder_tests">
-		<root class="ANY" feature="default_create"/>
+		<root class="TEST_BASE64" feature="default_create"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/EIFGENs$</exclude>

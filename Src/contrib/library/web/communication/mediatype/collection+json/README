@@ -1,4 +1,6 @@
-Eiffel CJ is a library to work with  Collection+JSON - Hypermedia Type,  http://www.amundsen.com/media-types/collection/
+Eiffel Collection+json is a library to work with  Collection+JSON - Hypermedia Type,  http://www.amundsen.com/media-types/collection/
+
+Project page: https://github.com/eiffelwebframework/collection_json
 
 The current CJ implementation does not implement the [extensions][1] proposals,  
 The google group is here [discussion group][2]

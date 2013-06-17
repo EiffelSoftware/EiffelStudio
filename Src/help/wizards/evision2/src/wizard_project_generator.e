@@ -1,10 +1,10 @@
 note
-	description	: "Object to generate a project."
+	description: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date: "$Date$"
-	revision	: "$Revision$"
+	revision: "$Revision$"
 
 class
 	WIZARD_PROJECT_GENERATOR
@@ -38,6 +38,7 @@ feature -- Basic Operations
 
 			if wizard_information.has_menu_bar then
 				map_list.force (string_from_file_content ("template_menubar_add.e"), "${FL_MENUBAR_ADD}")
+				map_list.force (string_from_file_content ("template_menubar_create.e"), "${FL_MENUBAR_CREATE}")
 				a_string := string_from_file_content ("template_menubar_init.e")
 				if wizard_information.has_about_dialog then
 					a_string2 := string_from_file_content ("template_menu_help_about_add.e")
@@ -49,22 +50,27 @@ feature -- Basic Operations
 				map_list.force (a_string, "${FL_MENUBAR_INIT}")
 			else
 				map_list.force ({STRING_32} "", "${FL_MENUBAR_ADD}")
+				map_list.force ({STRING_32} "", "${FL_MENUBAR_CREATE}")
 				map_list.force ({STRING_32} "", "${FL_MENUBAR_INIT}")
 			end
 
 			if wizard_information.has_status_bar then
 				map_list.force (string_from_file_content ("template_statusbar_add.e"), "${FL_STATUSBAR_ADD}")
+				map_list.force (string_from_file_content ("template_statusbar_create.e"), "${FL_STATUSBAR_CREATE}")
 				map_list.force (string_from_file_content ("template_statusbar_init.e"), "${FL_STATUSBAR_INIT}")
 			else
 				map_list.force ({STRING_32} "", "${FL_STATUSBAR_ADD}")
+				map_list.force ({STRING_32} "", "${FL_STATUSBAR_CREATE}")
 				map_list.force ({STRING_32} "", "${FL_STATUSBAR_INIT}")
 			end
 
 			if wizard_information.has_tool_bar then
 				map_list.force (string_from_file_content ("template_toolbar_add.e"), "${FL_TOOLBAR_ADD}")
+				map_list.force (string_from_file_content ("template_toolbar_create.e"), "${FL_TOOLBAR_CREATE}")
 				map_list.force (string_from_file_content ("template_toolbar_init.e"), "${FL_TOOLBAR_INIT}")
 			else
 				map_list.force ({STRING_32} "", "${FL_TOOLBAR_ADD}")
+				map_list.force ({STRING_32} "", "${FL_TOOLBAR_CREATE}")
 				map_list.force ({STRING_32} "", "${FL_TOOLBAR_INIT}")
 			end
 
@@ -125,7 +131,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

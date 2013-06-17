@@ -11,22 +11,12 @@ feature {NONE} -- StatusBar Implementation
 			--       displayed in the status bar.
 
 	build_standard_status_bar
-			-- Create and populate the standard toolbar.
-		require
-			status_bar_not_yet_created: 
-				standard_status_bar = Void and then 
-				standard_status_label = Void
+			-- Populate the standard toolbar.
 		do
-				-- Create the status bar.
-			create standard_status_bar
+				-- Initialize the status bar.
 			standard_status_bar.set_border_width (2)
 			
 				-- Populate the status bar.
-			create standard_status_label.make_with_text ("Add your status text here...")
 			standard_status_label.align_text_left
 			standard_status_bar.extend (standard_status_label)
-		ensure
-			status_bar_created: 
-				standard_status_bar /= Void and then 
-				standard_status_label /= Void
 		end

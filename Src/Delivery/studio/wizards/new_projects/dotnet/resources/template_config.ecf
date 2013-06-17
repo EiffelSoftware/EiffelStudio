@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="${FL_PROJECT_NAME}" uuid="${FL_UUID}">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="${FL_PROJECT_NAME}" uuid="${FL_UUID}">
 	<target name="${FL_PROJECT_NAME}">
 		<root cluster="root_cluster" feature="${FL_CREATION_ROUTINE_NAME}" class="${FL_ROOT_CLASS_NAME}" ${FL_ALL_CLASSES}/>
 		<option warning="true">
@@ -10,9 +10,9 @@
 		<setting name="msil_generation_type" value="${FL_APPLICATION_TYPE}"/>
 		<setting name="dotnet_naming_convention" value="True"/>
 		${FL_CLR_VERSION}
-		<precompile name="base_pre" location="$ISE_PRECOMP/base.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP/base-safe.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK/mscorlib.dll"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

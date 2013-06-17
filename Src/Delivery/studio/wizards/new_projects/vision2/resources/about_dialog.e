@@ -10,6 +10,7 @@ class
 inherit
 	EV_DIALOG
 		redefine
+			create_interface_objects,
 			initialize
 		end
 
@@ -24,6 +25,13 @@ create
 	default_create
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			Precursor
+			create ok_button.make_with_text (Button_ok_item)
+		end
 
 	initialize
 			-- Populate the dialog box.
@@ -134,6 +142,6 @@ feature {NONE} -- Implementation / Constants
 		"YourCompany (R) ${FL_PROJECT_NAME}%N%
 		%Version 1.0%N%
 		%%N%
-		%Copyright (C) 2001 YourCompany"
+		%Copyright (C) 2013 YourCompany"
 
 end -- class ABOUT_DIALOG

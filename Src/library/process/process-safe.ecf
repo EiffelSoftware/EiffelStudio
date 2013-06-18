@@ -29,7 +29,9 @@
 			</condition>
 		</library>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
-		<assembly name="mscorlib_dll" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="mscorlib_dll" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
+			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
+		</assembly>
 		<assembly name="system_dll" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
 		<cluster name="classic_mswin" location="classic\windows\" recursive="true">
 			<condition>

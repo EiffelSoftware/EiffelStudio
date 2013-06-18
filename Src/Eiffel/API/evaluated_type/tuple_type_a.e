@@ -11,7 +11,7 @@ inherit
 	GEN_TYPE_A
 		redefine
 			good_generics, error_generics, check_constraints,
-			is_tuple, conform_to, process, valid_generic,
+			is_tuple, internal_conform_to, process, valid_generic,
 			il_type_name, generate_gen_type_instance, same_generic_derivation_as,
 			generic_derivation, generate_cid_prefix, make_type_prefix_byte_code
 		end
@@ -138,63 +138,6 @@ feature -- IL code generation
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN
-			-- Check generic parameters
-		local
-			i, nb: INTEGER
-			l_tuple: TUPLE_TYPE_A
-			l_tuple_generics: like generics
-		do
-			l_tuple ?= type
-			if l_tuple /= Void then
-				from
-					i := 1
-					l_tuple_generics := l_tuple.generics
-					nb := generics.count
-					Result := nb <= l_tuple_generics.count
-				until
-					i > nb or else not Result
-				loop
-					Result := l_tuple_generics.i_th (i).conform_to (a_context_class, generics.i_th (i))
-					i := i + 1
-				end
-			else
-				Result := Precursor {GEN_TYPE_A} (a_context_class, type)
-			end
-		end
-
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does Current conform to `other'?
-		local
-			tuple_type: TUPLE_TYPE_A
-			i, count, other_count: INTEGER
-			other_generics: like generics
-		do
-			tuple_type ?= other
-
-			if tuple_type /= Void then
-					-- Conformance TUPLE -> TUPLE
-				other_generics := tuple_type.generics
-				from
-					i := 1
-					count := generics.count
-					other_count := other_generics.count
-					Result := count >= other_count and then
-						(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (tuple_type)) and then
-						is_processor_attachable_to (tuple_type)
-				until
-					(i > other_count) or else (not Result)
-				loop
-					Result := generics.i_th (i).conform_to (a_context_class,
-						other_generics.i_th (i))
-					i := i + 1
-				end
-			else
-					-- Conformance TUPLE -> other classtypes
-				Result := Precursor {GEN_TYPE_A} (a_context_class, other)
-			end
-		end
-
 	good_generics: BOOLEAN
 
 		local
@@ -254,6 +197,64 @@ feature {COMPILER_EXPORTER} -- Primitives
 					--  * there is no expanded entity
 				gen_param.check_constraints (context_class, a_context_feature, False)
 				i := i + 1
+			end
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		local
+			tuple_type: TUPLE_TYPE_A
+			i, count, other_count: INTEGER
+			other_generics: like generics
+		do
+			tuple_type ?= other
+
+			if tuple_type /= Void then
+					-- Conformance TUPLE -> TUPLE
+				other_generics := tuple_type.generics
+				from
+					i := 1
+					count := generics.count
+					other_count := other_generics.count
+					Result := count >= other_count and then
+						(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (tuple_type)) and then
+						is_processor_attachable_to (tuple_type)
+				until
+					(i > other_count) or else (not Result)
+				loop
+					Result := generics.i_th (i).internal_conform_to (a_context_class, other_generics.i_th (i), True)
+					i := i + 1
+				end
+			else
+					-- Conformance TUPLE -> other classtypes
+				Result := Precursor {GEN_TYPE_A} (a_context_class, other, a_in_generic)
+			end
+		end
+
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- Check generic parameters
+		local
+			i, nb: INTEGER
+			l_tuple: TUPLE_TYPE_A
+			l_tuple_generics: like generics
+		do
+			l_tuple ?= type
+			if l_tuple /= Void then
+				from
+					i := 1
+					l_tuple_generics := l_tuple.generics
+					nb := generics.count
+					Result := nb <= l_tuple_generics.count
+				until
+					i > nb or else not Result
+				loop
+					Result := l_tuple_generics.i_th (i).internal_conform_to (a_context_class, generics.i_th (i), True)
+					i := i + 1
+				end
+			else
+				Result := Precursor {GEN_TYPE_A} (a_context_class, type, a_in_generic)
 			end
 		end
 

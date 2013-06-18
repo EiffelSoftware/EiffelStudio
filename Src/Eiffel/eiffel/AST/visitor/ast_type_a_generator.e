@@ -15,8 +15,7 @@ inherit
 			process_qualified_anchored_type_as,
 			process_formal_as, process_class_type_as,
 			process_generic_class_type_as, process_none_type_as,
-			process_named_tuple_type_as, process_type_dec_as,
-			process_type_interval_as
+			process_named_tuple_type_as, process_type_dec_as
 		end
 
 	COMPILER_EXPORTER
@@ -76,6 +75,11 @@ feature {NONE} -- Visitor implementation
 			t: UNEVALUATED_LIKE_TYPE
 		do
 			create t.make (l_as.anchor.name)
+			if l_as.has_frozen_mark then
+				t.set_frozen_mark
+			elseif l_as.has_variant_mark then
+				t.set_variant_mark
+			end
 			if l_as.has_attached_mark then
 				t.set_attached_mark
 			elseif l_as.has_detachable_mark then
@@ -93,6 +97,11 @@ feature {NONE} -- Visitor implementation
 		do
 			create l_cur
 			l_cur.set_actual_type (current_class.actual_type)
+			if l_as.has_frozen_mark then
+				l_cur.set_frozen_mark
+			elseif l_as.has_variant_mark then
+				l_cur.set_variant_mark
+			end
 			if l_as.has_attached_mark then
 				l_cur.set_attached_mark
 			elseif l_as.has_detachable_mark then
@@ -121,6 +130,11 @@ feature {NONE} -- Visitor implementation
 					i := i + 1
 				end
 				create t.make (q, n)
+				if l_as.has_frozen_mark then
+					t.set_frozen_mark
+				elseif l_as.has_variant_mark then
+					t.set_variant_mark
+				end
 				if l_as.has_attached_mark then
 					t.set_attached_mark
 				elseif l_as.has_detachable_mark then
@@ -150,6 +164,11 @@ feature {NONE} -- Visitor implementation
 			if system.is_scoop then
 					-- The formal generic is separate by default.
 				s := True
+			end
+			if l_as.has_frozen_mark then
+				f.set_frozen_mark
+			elseif l_as.has_variant_mark then
+				f.set_variant_mark
 			end
 			if l_as.has_attached_mark then
 				f.set_attached_mark
@@ -280,40 +299,11 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
-		local
-			l_lower, l_upper: INHERITANCE_TYPE_A
-		do
-			l_as.lower.process (Current)
-			if attached {INHERITANCE_TYPE_A} last_type as l_type then
-				l_lower := l_type
-			end
-			l_as.upper.process (Current)
-			if attached {INHERITANCE_TYPE_A} last_type as l_type then
-				l_upper := l_type
-			end
-
-			if l_lower /= Void and l_upper /= Void then
-				if l_upper.conform_to (current_class, l_lower) then
-					create {TYPE_INTERVAL_A} last_type.make (l_lower, l_upper)
-				else
-					check False then
-						-- Generate a new error here when interval is not valid.
-					end
-					last_type := Void
-				end
-			else
-					-- On of the bound of the interval was invalid, the error has already
-					-- been generated when checking the bounds.
-				last_type := Void
-			end
-		end
-
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		local
 			l_class_i: CLASS_I
 			l_class_c: CLASS_C
-			l_actual_generic: ARRAYED_LIST [TYPE_A]
+			l_actual_generic: detachable ARRAYED_LIST [TYPE_A]
 			l_generics: TYPE_LIST_AS
 			i, count: INTEGER
 			l_has_error: BOOLEAN
@@ -334,23 +324,14 @@ feature {NONE} -- Visitor implementation
 					loop
 						l_generics.i_th (i).process (Current)
 						l_has_error := last_type = Void
-						if attached {INHERITANCE_TYPE_A} last_type as l_gen_type then
-								-- `last_type' is used as actual generic paramter, so
-								-- we need to mark it.
-							l_gen_type.set_is_actual_generic_parameter (True)
-						end
 						l_actual_generic.extend (last_type)
 						i := i + 1
 					end
-					l_type := l_class_c.partial_actual_type (l_actual_generic, l_as.is_expanded,
-						l_as.has_separate_mark)
-				else
-					l_type := l_class_c.partial_actual_type (Void, l_as.is_expanded, l_as.has_separate_mark)
 				end
 				if l_has_error then
 					last_type := Void
 				else
-					check attached l_type end
+					l_type := l_class_c.partial_actual_type (l_actual_generic, l_as.is_expanded)
 					last_type := set_class_type_marks (l_as, l_type)
 				end
 			else
@@ -391,11 +372,6 @@ feature {NONE} -- Visitor implementation
 				loop
 					l_generics.i_th (g).process (Current)
 					l_has_error := last_type = Void
-					if attached {INHERITANCE_TYPE_A} last_type as l_gen_type then
-							-- `last_type' is used as actual generic paramter, so
-							-- we need to mark it.
-						l_gen_type.set_is_actual_generic_parameter (True)
-					end
 					l_id_list := l_generics.i_th (g).id_list
 					from
 						l_id_list.start
@@ -442,33 +418,54 @@ feature {NONE} -- Type marks
 		local
 			is_shared: BOOLEAN
 		do
-				-- Basic and NONE type descriptors may be shared.
+				-- Basic and NONE type descriptors may be shared, so we duplicate
+				-- if needed to avoid modifying once values.
 			is_shared := t.is_basic or else t.is_none
 			Result := t
-			if a.has_attached_mark then
+
+				-- Handle frozen/variant mark.
+			if a.has_frozen_mark then
+					-- Avoid modifying once values.
 				if is_shared then
-						-- Avoid modifying once values.
+					Result := Result.duplicate
+				end
+				Result.set_frozen_mark
+			elseif a.has_variant_mark then
+					-- Avoid modifying once values.
+				if is_shared then
+					Result := Result.duplicate
+				end
+				Result.set_variant_mark
+			end
+
+				-- Handle any attachment mark.
+			if a.has_attached_mark then
+					-- Avoid modifying once values.
+				if is_shared then
 					Result := Result.duplicate
 				end
 				Result.set_attached_mark
 				check Result.is_attached end
 			elseif a.has_detachable_mark then
+					-- Avoid modifying once values.
 				if is_shared then
-						-- Avoid modifying once values.
 					Result := Result.duplicate
 				end
 				Result.set_detachable_mark
 			elseif current_class.lace_class.is_attached_by_default then
+					-- Avoid modifying once values.
 				if is_shared then
-						-- Avoid modifying once values.
 					Result := Result.duplicate
 				end
 				Result.set_is_attached
 			end
+
+				-- Handle separate mark.
 			if a.has_separate_mark then
+					-- Avoid modifying once values.
 				if is_shared then
-						-- Avoid modifying once values.
 					Result := Result.duplicate
+
 				end
 				Result.set_separate_mark
 			end
@@ -509,3 +506,4 @@ note
 		]"
 
 end
+

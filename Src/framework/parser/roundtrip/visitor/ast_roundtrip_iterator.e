@@ -1099,15 +1099,6 @@ feature
 			safe_process (l_as.end_keyword (match_list))
 		end
 
-
-	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
-		do
-			safe_process (l_as.lcurly_symbol (match_list))
-			l_as.lower.process (Current)
-			l_as.upper.process (Current)
-			safe_process (l_as.rcurly_symbol (match_list))
-		end
-
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			safe_process (l_as.lcurly_symbol (match_list))

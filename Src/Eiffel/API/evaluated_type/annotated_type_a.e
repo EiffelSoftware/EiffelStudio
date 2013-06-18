@@ -8,8 +8,10 @@ note
 deferred class ANNOTATED_TYPE_A
 
 inherit
-	INHERITANCE_TYPE_A
+	TYPE_A
 		redefine
+			is_frozen, is_variant,
+			to_other_variant,
 			as_attached_type,
 			as_attachment_mark_free,
 			as_detachable_type,
@@ -23,6 +25,8 @@ inherit
 			to_other_immediate_attachment,
 			to_other_separateness
 		end
+
+	SHARED_COMPILER_PROFILE
 
 feature -- Status report
 
@@ -79,13 +83,38 @@ feature -- Status report
 			Result := has_separate_mark and then not is_expanded
 		end
 
+	has_frozen_mark: BOOLEAN
+			-- Is type explicitly marked as frozen?
+		do
+			Result := variant_bits & has_frozen_mark_mask /= 0
+		end
+
+	has_variant_mark: BOOLEAN
+			-- Is type explicitly marked as variant?
+		do
+			Result := variant_bits & has_variant_mark_mask /= 0
+		end
+
+	is_frozen: BOOLEAN
+			-- Is type frozen?
+		do
+			Result := has_frozen_mark or else is_implicitly_frozen
+		end
+
+	is_variant: BOOLEAN
+			-- Is type variant?
+		do
+				-- Either we have the variant mark or we are in traditional mode.
+			Result := has_variant_mark or else not is_experimental_mode
+		end
+
 feature -- Modification
 
 	set_attached_mark
 			-- Mark type declaration as having an explicit attached mark.
 		do
 			attachment_bits := has_attached_mark_mask | is_attached_mask
-		ensure then
+		ensure
 			has_attached_mark: has_attached_mark
 			is_attached: is_attached
 		end
@@ -94,9 +123,29 @@ feature -- Modification
 			-- Mark type declaration as having an explicit detachable mark.
 		do
 			attachment_bits := has_detachable_mark_mask
-		ensure then
+		ensure
 			has_detachable_mark: has_detachable_mark
 			not_is_attached: not is_expanded implies not is_attached
+		end
+
+	set_frozen_mark
+			-- Mark type declaration as having an explicit `frozen' mark.
+		do
+				-- Frozen variant is only understood in experimental mode
+				-- for the time being.
+			if is_experimental_mode then
+				variant_bits := has_frozen_mark_mask
+			end
+		ensure
+			has_frozen_mark: is_experimental_mode implies has_frozen_mark
+		end
+
+	set_variant_mark
+			-- Mark type declaration as having an explicit `variant' mark.
+		do
+			variant_bits := has_variant_mark_mask
+		ensure
+			has_variant_mark: has_variant_mark
 		end
 
 	set_is_attached
@@ -155,6 +204,11 @@ feature -- Modification
 			if other.has_separate_mark then
 				set_separate_mark
 			end
+			if other.has_variant_mark then
+				set_variant_mark
+			elseif other.has_frozen_mark then
+				set_frozen_mark
+			end
 		end
 
 feature -- Comparison
@@ -167,7 +221,9 @@ feature -- Comparison
 			Result :=
 				has_attached_mark = other.has_attached_mark and then
 				has_detachable_mark = other.has_detachable_mark and then
-				has_separate_mark = other.has_separate_mark
+				has_separate_mark = other.has_separate_mark and then
+				has_frozen_mark = other.has_frozen_mark and then
+				has_variant_mark = other.has_variant_mark
 		end
 
 feature -- Duplication
@@ -341,6 +397,24 @@ feature -- Duplication
 			Result.reset_separate_mark
 		end
 
+	to_other_variant (other: ANNOTATED_TYPE_A): like Current
+			-- <Precursor>
+		local
+			c: TYPE_A
+			o: ANNOTATED_TYPE_A
+		do
+			Result := Current
+				-- Only do something in experimental mode.
+			if other /= Result and then is_experimental_mode then
+				if not is_frozen and other.is_frozen then
+					Result := duplicate
+					Result.set_frozen_mark
+				else
+					Result := Current
+				end
+			end
+		end
+
 feature {NONE} -- Attachment properties
 
 	attachment_bits: NATURAL_8
@@ -358,6 +432,15 @@ feature {NONE} -- Attachment properties
 	is_implicitly_attached_mask: NATURAL_8 = 8
 			-- Mask in `attachment_bits' that tells whether the type is implicitly attached
 
+	variant_bits: NATURAL_8
+			-- Associated variant flags
+
+	has_frozen_mark_mask: NATURAL_8 = 1
+			-- Mask in `variant_bits' that tells whether the type has an explicit frozen mark
+
+	has_variant_mark_mask: NATURAL_8 = 2
+			-- Mask in `variant_bits' that tells whether the type has an explicit variant mark
+
 feature {NONE} -- Output
 
 	dump_marks (s: STRING)
@@ -365,11 +448,18 @@ feature {NONE} -- Output
 		require
 			s_attached: attached s
 		do
+			if has_frozen_mark then
+				s.append ("frozen ")
+			elseif has_variant_mark then
+				s.append ("variant ")
+			end
+
 			if has_attached_mark then
 				s.append_character ('!')
 			elseif has_detachable_mark then
 				s.append_character ('?')
 			end
+
 			if has_separate_mark then
 				s.append ({SHARED_TEXT_ITEMS}.ti_separate_keyword)
 				s.append_character (' ')
@@ -381,6 +471,14 @@ feature {NONE} -- Output
 		require
 			f_attached: attached f
 		do
+			if has_frozen_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_frozen_keyword, Void)
+				f.add_space
+			elseif has_variant_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_variant_keyword, Void)
+				f.add_space
+			end
+
 			if has_attached_mark then
 				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
 				f.add_space
@@ -388,6 +486,7 @@ feature {NONE} -- Output
 				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
 				f.add_space
 			end
+
 			if has_separate_mark then
 				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_separate_keyword, Void)
 				f.add_space

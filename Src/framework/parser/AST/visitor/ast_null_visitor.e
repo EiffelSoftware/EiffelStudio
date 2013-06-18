@@ -518,10 +518,6 @@ feature -- Implementation
 		do
 		end
 
-	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
-		do
-		end
-
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 		end

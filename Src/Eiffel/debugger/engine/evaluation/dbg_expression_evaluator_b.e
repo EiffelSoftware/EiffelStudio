@@ -1222,7 +1222,7 @@ feature {BYTE_NODE} -- Visitor
 						ta := a_node.expression.type
 					end
 					if ta /= Void then
-						l_res := cl /= Void and then cl.actual_type.general_conform_to (context.class_c, ta)
+						l_res := cl /= Void and then cl.actual_type.conform_to (context.class_c, ta)
 					else
 						--| Note: could use `a_node.info.type_to_create' ?
 						dbg_error_handler.notify_error_exception_internal_issue

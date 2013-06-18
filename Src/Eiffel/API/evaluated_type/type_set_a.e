@@ -1058,6 +1058,37 @@ feature -- Attachment and separateness properties
 			end
 		end
 
+	to_other_variant (other: ANNOTATED_TYPE_A): like Current
+			-- Current type to which separateness status of `other' is applied.
+		local
+			i: INTEGER
+			r: RENAMED_TYPE_A
+			t: TYPE_A
+			a: TYPE_A
+		do
+			Result := Current
+			from
+				i := count
+			until
+				i <= 0
+			loop
+				r := types.i_th (i)
+				t := r.type
+				a := t.to_other_variant (other)
+				if a /= t then
+						-- The type is different from what we have in the current one.
+					r := r.twin
+					r.set_type (a)
+					if Result = Current then
+							-- Avoid changing current type descriptor.
+						Result := twin
+					end
+					Result.types.put_i_th (r, i)
+				end
+				i := i - 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	formal_resolution_stack: ARRAYED_STACK [INTEGER]

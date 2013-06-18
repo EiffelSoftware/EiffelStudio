@@ -210,12 +210,6 @@ feature {TYPE_A} -- Visitor
 			process_cl_type_a (t)
 		end
 
-	process_type_interval_a (a_type: TYPE_INTERVAL_A)
-			-- Process `a_type'
-		do
-			a_type.lower.process (Current)
-		end
-
 	process_cl_type_a (t: CL_TYPE_A)
 			-- <Precursor>
 		do

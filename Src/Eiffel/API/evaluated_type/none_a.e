@@ -103,8 +103,10 @@ feature {COMPILER_EXPORTER}
 			Result := reference_c_type
 		end
 
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does Current conform to `other'?
+feature {TYPE_A} -- Helpers
+
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
 		do
 				-- Apply the same conformance rules as for a class type.
 			if

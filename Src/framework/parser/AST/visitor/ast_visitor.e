@@ -1224,13 +1224,6 @@ feature {AST_EIFFEL} -- Clickable visitor
 		deferred
 		end
 
-	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 			-- Process `l_as'.
 		require

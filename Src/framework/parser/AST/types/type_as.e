@@ -1,5 +1,4 @@
 note
-
 	description: "Abstract class for Eiffel types. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,6 +17,9 @@ feature -- Roundtrip
 
 	attachment_mark_index: INTEGER
 			-- Index of attachment symbol (if any)
+
+	variant_mark_index: INTEGER
+			-- Index of variant symbol (if any)
 
 	separate_mark_index: INTEGER
 			-- Index of separate symbol (if any)
@@ -94,6 +96,52 @@ feature -- Roundtrip
 			end
 		end
 
+	variant_mark (a_list: LEAF_AS_LIST): detachable LEAF_AS
+			-- Attachment mark (if any).
+			-- Use `variant_symbol' or `variant_keyword' for specific representation.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := variant_mark_index
+			if a_list.valid_index (i) and then attached {LEAF_AS} a_list.i_th (i) as m then
+				Result := m
+			end
+		ensure
+			result_attached: (attached Result) = (attached variant_symbol (a_list) or attached variant_keyword (a_list))
+			result_consistent: Result = variant_symbol (a_list) or Result = variant_keyword (a_list)
+		end
+
+		variant_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Attachment symbol (if any).
+			-- Use `variant_mark' if variant status in a form of keyword is respected.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := variant_mark_index
+			if a_list.valid_index (i) and then attached {SYMBOL_AS} a_list.i_th (i) as s then
+				Result := s
+			end
+		end
+
+	variant_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
+			-- Attachment keyword (if any).
+			-- Use `variant_mark' if variant status in a form of symbol is respected.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := variant_mark_index
+			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
+				Result := k
+			end
+		end
+
+
 	separate_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Separate keyword (if any).
 		require
@@ -138,6 +186,8 @@ feature -- Roundtrip/Token
 					Result := lcurly_symbol (a_list)
 				elseif attachment_mark_index /= 0 then
 					Result := attachment_mark (a_list)
+				elseif variant_mark_index /= 0 then
+					Result := variant_mark (a_list)
 				elseif separate_mark_index /= 0 then
 					Result := separate_keyword (a_list)
 				end
@@ -165,6 +215,12 @@ feature -- Status
 	has_separate_mark: BOOLEAN
 			-- Is separate mark specified?
 
+	has_frozen_mark: BOOLEAN
+			-- Is frozen mark specified?
+
+	has_variant_mark: BOOLEAN
+	-- Is variant mark specified?
+
 	has_anchor: BOOLEAN
 			-- Does this type involve an anchor?
 		do
@@ -181,7 +237,9 @@ feature -- Comparison
 			Result :=
 				other.has_attached_mark = has_attached_mark and then
 				other.has_detachable_mark = has_detachable_mark and then
-				other.has_separate_mark = has_separate_mark
+				other.has_separate_mark = has_separate_mark and then
+				other.has_frozen_mark = has_frozen_mark and then
+				other.has_variant_mark = has_variant_mark
 		end
 
 feature -- Modification
@@ -202,6 +260,24 @@ feature -- Modification
 			attachment_mark_set: (m = Void implies attachment_mark_index = 0) and then (m /= Void implies attachment_mark_index = m.index)
 			has_attached_mark_set: has_attached_mark = a
 			has_detachable_mark_set: has_detachable_mark = d
+		end
+
+	set_variant_mark (m: detachable LEAF_AS; f: like has_frozen_mark; v: like has_variant_mark)
+		require
+			correct_variant_status: not (f and v)
+			meaningfull_variant_mark: (m /= Void) implies (f or v)
+		do
+			if m = Void then
+				variant_mark_index := 0
+			else
+				variant_mark_index := m.index
+			end
+			has_frozen_mark := f
+			has_variant_mark := v
+		ensure
+			variant_mark_set: (m = Void implies variant_mark_index = 0) and then (m /= Void implies variant_mark_index = m.index)
+			has_frozen_mark_set: has_frozen_mark = f
+			has_variant_mark_set: has_variant_mark = v
 		end
 
 	set_separate_mark (m: detachable LEAF_AS)
@@ -225,14 +301,19 @@ feature -- Output
 		end
 
 	dump_marks (s: STRING)
-			-- Append attachment and separate marks (if any) to `s'.
+			-- Append attachment, variant and separate marks (if any) to `s'.
 		require
 			s_attached: attached s
 		do
+			if has_frozen_mark then
+				s.append_string ("frozen ")
+			elseif has_variant_mark then
+				s.append_string ("variant ")
+			end
 			if has_attached_mark then
-				s.append_character ('!')
+				s.append_string ("attached ")
 			elseif has_detachable_mark then
-				s.append_character ('?')
+				s.append_string ("detachable ")
 			end
 			if has_separate_mark then
 				s.append_string ("separate ")
@@ -240,7 +321,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

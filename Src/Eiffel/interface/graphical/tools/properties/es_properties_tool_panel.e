@@ -197,30 +197,32 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 						l_group := l_group.target.system.lowest_used_in_library
 					end
 					current_system := l_group.target.system
-					l_class_options := l_group.changeable_class_options (l_cs.class_i.config_class)
-					create l_inh_options
-					l_inh_options.merge (l_class_options)
-					l_inh_options.merge (l_group.options)
-					properties.reset
-					properties.add_section (conf_interface_names.section_general)
-					create l_name_prop.make (conf_interface_names.group_type_name)
-					l_name_prop.set_value (conf_interface_names.properties_class_name)
-					l_name_prop.enable_readonly
-					properties.add_property (l_name_prop)
-					create l_name_prop.make (conf_interface_names.class_option_class_name)
-					l_name_prop.set_value (l_cs.class_name)
-					l_name_prop.enable_readonly
-					properties.add_property (l_name_prop)
-					create l_name_prop.make (conf_interface_names.class_option_file_name)
-					l_name_prop.set_value (l_cs.file_name.as_string_32)
-					l_name_prop.enable_readonly
-					properties.add_property (l_name_prop)
-					add_misc_option_properties (l_class_options, l_inh_options, True, False)
-					add_dotnet_option_properties (l_class_options, l_inh_options, True, l_group.target.setting_msil_generation, False)
-					add_assertion_option_properties (l_class_options, l_inh_options, True, False)
-					add_warning_option_properties (l_class_options, l_inh_options, True, False)
-					add_debug_option_properties (l_class_options, l_inh_options, True, False)
-					properties.set_expanded_section_store (class_section_expanded_status)
+					if l_group.classes_set and then l_group.classes.has (l_cs.class_i.config_class.name) then
+						l_class_options := l_group.changeable_class_options (l_cs.class_i.config_class)
+						create l_inh_options
+						l_inh_options.merge (l_class_options)
+						l_inh_options.merge (l_group.options)
+						properties.reset
+						properties.add_section (conf_interface_names.section_general)
+						create l_name_prop.make (conf_interface_names.group_type_name)
+						l_name_prop.set_value (conf_interface_names.properties_class_name)
+						l_name_prop.enable_readonly
+						properties.add_property (l_name_prop)
+						create l_name_prop.make (conf_interface_names.class_option_class_name)
+						l_name_prop.set_value (l_cs.class_name)
+						l_name_prop.enable_readonly
+						properties.add_property (l_name_prop)
+						create l_name_prop.make (conf_interface_names.class_option_file_name)
+						l_name_prop.set_value (l_cs.file_name.as_string_32)
+						l_name_prop.enable_readonly
+						properties.add_property (l_name_prop)
+						add_misc_option_properties (l_class_options, l_inh_options, True, False)
+						add_dotnet_option_properties (l_class_options, l_inh_options, True, l_group.target.setting_msil_generation, False)
+						add_assertion_option_properties (l_class_options, l_inh_options, True, False)
+						add_warning_option_properties (l_class_options, l_inh_options, True, False)
+						add_debug_option_properties (l_class_options, l_inh_options, True, False)
+						properties.set_expanded_section_store (class_section_expanded_status)
+					end
 				else
 					check should_not_reach: False end
 				end
@@ -355,7 +357,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

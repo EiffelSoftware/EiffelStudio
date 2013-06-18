@@ -47,12 +47,6 @@ feature {TYPE_A}
 			last_type := a_type
 		end
 
-	process_type_interval_a (a_type: TYPE_INTERVAL_A)
-			-- Process `a_type'.
-		do
-			last_type := a_type
-		end
-
 	process_cl_type_a (a_type: CL_TYPE_A)
 			-- Process `a_type'.
 		do

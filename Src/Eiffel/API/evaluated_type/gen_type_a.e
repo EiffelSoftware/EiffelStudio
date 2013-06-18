@@ -608,6 +608,36 @@ feature -- IL code generation
 
 feature {TYPE_A} -- Helpers
 
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- Check generic parameters
+		local
+			i, count: INTEGER
+			gen_type: GEN_TYPE_A
+			gen_type_generics: like generics
+		do
+			if class_id = type.class_id then
+				gen_type ?= type
+				if gen_type /= Void then
+					from
+						i := 1
+						gen_type_generics := gen_type.generics
+						count := generics.count
+						Result := count = gen_type_generics.count
+					until
+						i > count or else not Result
+					loop
+						Result := gen_type_generics.i_th (i).
+							internal_conform_to (a_context_class, generics.i_th (i), True)
+						i := i + 1
+					end
+				end
+			else
+					-- `type' is a descendant type of Current: so we
+					-- have to check the current generic parameters
+				Result := type.generic_conform_to (a_context_class, Current, a_in_generic)
+			end
+		end
+
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 		local
 			l_class: like base_class
@@ -731,6 +761,7 @@ feature {TYPE_A} -- Helpers
 			i, count: INTEGER
 			l_generics, l_new_generics: like generics
 			l_attachment_bits: like attachment_bits
+			l_variant_bits: like variant_bits
 			s: like has_separate_mark
 			l_type: TYPE_A
 		do
@@ -738,12 +769,15 @@ feature {TYPE_A} -- Helpers
 					-- Duplicate current without the attachment and separateness information
 					-- since it does not matter for a generic derivation.
 				l_attachment_bits := attachment_bits
+				l_variant_bits := variant_bits
 				attachment_bits := 0
+				variant_bits := 0
 				s := has_separate_mark
 				has_separate_mark := False
 				Result := duplicate_for_instantiation
 				has_separate_mark := s
 				attachment_bits := l_attachment_bits
+				variant_bits := l_variant_bits
 
 				l_generics := generics
 				l_new_generics := Result.generics
@@ -1273,36 +1307,6 @@ feature -- Primitives
 			end
 		end
 
-	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN
-			-- Check generic parameters
-		local
-			i, count: INTEGER
-			gen_type: GEN_TYPE_A
-			gen_type_generics: like generics
-		do
-			if class_id = type.class_id then
-				gen_type ?= type
-				if gen_type /= Void then
-					from
-						i := 1
-						gen_type_generics := gen_type.generics
-						count := generics.count
-						Result := count = gen_type_generics.count
-					until
-						i > count or else not Result
-					loop
-						Result := gen_type_generics.i_th (i).
-							conform_to (a_context_class, generics.i_th (i))
-						i := i + 1
-					end
-				end
-			else
-					-- `type' is a descendant type of Current: so we
-					-- have to check the current generic parameters
-				Result := type.generic_conform_to (a_context_class, Current)
-			end
-		end
-
 	parent_type (parent: CL_TYPE_A): TYPE_A
 			-- Parent actual type in the current context
 		do
@@ -1590,7 +1594,7 @@ feature -- Primitives
 					--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
 					--| Knowing that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
 				l_formal_as := l_class.generics.i_th (i).formal
-				if l_generic_parameter.conformance_type.conform_to (a_type_context, l_constraint_item) and then
+				if l_generic_parameter.conformance_type.internal_conform_to (a_type_context, l_constraint_item, False) and then
 					(l_formal_as.is_expanded implies l_generic_parameter.is_expanded) and then
 					(l_formal_as.is_reference implies l_generic_parameter.is_reference)
 				then

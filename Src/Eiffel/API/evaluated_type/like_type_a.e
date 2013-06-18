@@ -57,7 +57,7 @@ inherit
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			internal_generic_derivation, internal_same_generic_derivation_as,
-			skeleton_adapted_in
+			skeleton_adapted_in, set_frozen_mark, is_frozen, is_variant
 		end
 
 feature -- Properties
@@ -213,6 +213,26 @@ feature -- Status report
 			end
 		end
 
+	is_frozen: BOOLEAN
+			-- <Precursor>
+		do
+			if Precursor then
+				Result := True
+			elseif not has_variant_mark and then attached conformance_type as t then
+				Result := t.is_frozen
+			end
+		end
+
+	is_variant: BOOLEAN
+			-- <Precursor>
+		do
+			if Precursor then
+				Result := True
+			elseif not has_frozen_mark and then attached conformance_type as t then
+				Result := t.is_variant
+			end
+		end
+
 	good_generics: BOOLEAN
 			-- <Original>
 		do
@@ -342,12 +362,6 @@ feature -- Primitives
 			Result := t
 		end
 
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does `actual_type' conform to `other'?
-		do
-			Result := actual_type.conform_to (a_context_class, other.conformance_type)
-		end
-
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
 			-- Does current convert to `a_target_type' in `a_context_class'?
 			-- Update `last_conversion_info' of AST_CONTEXT.
@@ -362,6 +376,15 @@ feature -- Primitives
 		end
 
 feature -- Modification
+
+	set_frozen_mark
+			-- <Precursor>
+		do
+			Precursor
+			if attached actual_type as l_type then
+				actual_type := l_type.to_other_variant (Current)
+			end
+		end
 
 	set_attached_mark
 			-- Mark type declaration as having an explicit attached mark.
@@ -550,6 +573,12 @@ feature -- Generic conformance
 		end
 
 feature {TYPE_A} -- Helpers
+
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		do
+			Result := actual_type.internal_conform_to (a_context_class, other.conformance_type, a_in_generic)
+		end
 
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is current type valid?

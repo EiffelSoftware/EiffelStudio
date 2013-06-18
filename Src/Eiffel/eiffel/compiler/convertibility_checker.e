@@ -643,7 +643,7 @@ feature {NONE} -- Implementation: checking
 					has_error := True
 				end
 			else
-				if not a_type.general_conform_to (a_class, a_feat.arguments.i_th (1)) then
+				if not a_type.conform_to (a_class, a_feat.arguments.i_th (1)) then
 					create l_vncp.make ("SOURCE does not conform to argument type.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)

@@ -102,6 +102,8 @@ inherit
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
+	SHARED_COMPILER_PROFILE
+
 feature {NONE} -- Initialization
 
 	make (l: like original_class)
@@ -1674,7 +1676,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 						when 1 then
 							l_arg_type ?= l_creation_proc.arguments.first
 							l_arg_type := l_arg_type.instantiation_in (a_type, class_id).actual_type
-							l_error := not array_of_string.general_conform_to (Current, l_arg_type)
+							l_error := not array_of_string.conform_to (Current, l_arg_type)
 						else
 							l_error := True
 						end
@@ -1723,16 +1725,23 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 		end
 
 	Array_of_string: GEN_TYPE_A
-			-- Type ARRAY [STRING]
+			-- Type ARRAY [STRING] which is the expected type for creation procedure
+			-- of the root class when it expects an argument.
 		local
 			array_generics: ARRAYED_LIST [TYPE_A]
 			string_type: CL_TYPE_A
 		once
 			create string_type.make (System.string_8_id)
+				-- Type is frozen as otherwise if a creation procedure had the following signature
+				-- make (a: ARRAY [STRING_8 .. STRING_8])
+				-- the compiler would reject the code.
+			string_type.set_frozen_mark
 			string_type.set_attached_mark
 			create array_generics.make (1)
 			array_generics.extend (string_type)
 			create Result.make (System.array_id, array_generics)
+				-- Type of this is frozen.
+			Result.set_frozen_mark
 			Result.set_attached_mark
 		ensure
 			array_of_string_not_void: Result /= Void
@@ -2182,15 +2191,12 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 
 feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual class type
 
-	partial_actual_type (gen: ARRAYED_LIST [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A
+	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; is_exp: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
 			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
 			-- rather than if statements.
-		require
-			is_exp_set: is_exp implies (not is_sep)
-			is_sep_set: is_sep implies (not is_exp)
 		do
 			if gen /= Void then
 				create {GEN_TYPE_A} Result.make (class_id, gen)
@@ -2199,8 +2205,6 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 			end
 			if is_exp then
 				Result.set_expanded_mark
-			elseif is_sep then
-				Result.set_separate_mark
 			end
 			if is_expanded then
 				Result.set_expanded_class_mark
@@ -3069,6 +3073,48 @@ feature -- Properties
 
 	direct_descendants_internal: like direct_descendants
 			-- One per object storage for direct descendants.
+
+	leaf_descendants: ARRAYED_LIST [CLASS_C]
+			-- List of all descendants of Current that are just leafs.
+			-- That is to say if you have C inherits B which inherits A.
+			-- Then the leaf descendants of A is C, the leaf descendants of B is C,
+			-- and C has no leaf descendants.
+		local
+			l_processed: SEARCH_TABLE [CLASS_C]
+		do
+			if attached direct_descendants_internal as l_descendants then
+				create l_processed.make (l_descendants.count)
+				compute_leaf_descendants (l_processed, l_descendants)
+				from
+					create Result.make (l_processed.count)
+					l_processed.start
+				until
+					l_processed.after
+				loop
+					Result.extend (l_processed.item_for_iteration)
+					l_processed.forth
+				end
+			else
+				create Result.make (0)
+			end
+		end
+
+	compute_leaf_descendants (a_result: SEARCH_TABLE [CLASS_C]; a_descendants: ARRAYED_LIST [CLASS_C])
+			-- Add to `a_result' all classes of `a_descendants' that do no have descendants.
+		do
+			from
+				a_descendants.start
+			until
+				a_descendants.after
+			loop
+				if attached a_descendants.item.direct_descendants_internal as l_descendants and then not l_descendants.is_empty then
+					compute_leaf_descendants (a_result, l_descendants)
+				elseif not a_result.has (a_descendants.item) then
+					a_result.put (a_descendants.item)
+				end
+				a_descendants.forth
+			end
+		end
 
 	clients: ARRAYED_LIST [CLASS_C]
 			-- Clients of the class

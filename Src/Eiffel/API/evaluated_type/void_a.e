@@ -8,10 +8,9 @@ note
 class VOID_A
 
 inherit
-	INHERITANCE_TYPE_A
+	TYPE_A
 		redefine
-			is_reference, is_void, same_as, c_type,
-			types, general_conform_to, upper
+			is_reference, is_void, same_as, c_type
 		end
 
 feature -- Visitor
@@ -20,19 +19,6 @@ feature -- Visitor
 			-- Process current element.
 		do
 			v.process_void_a (Current)
-		end
-
-feature -- Access
-
-	types: ARRAYED_LIST [ABSTRACT_TYPE_INTERVAL_A]
-			-- There is no Void type, it is just a place holder, so there is no type.
-		once
-			create Result.make (0)
-		end
-
-	upper: VOID_A
-		do
-			Result := Current
 		end
 
 feature -- Property
@@ -82,18 +68,6 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	general_conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
-			-- Does Current conform to `other'?
-		do
-			Result := other.conformance_type.is_void
-		end
-
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does Current conform to `other'?
-		do
-			Result := other.conformance_type.is_void
-		end
-
 	c_type: VOID_I
 			-- Void type
 		do
@@ -105,6 +79,14 @@ feature {COMPILER_EXPORTER}
 			-- Do nothing
 		ensure then
 			False
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		do
+			Result := other.conformance_type.is_void
 		end
 
 note

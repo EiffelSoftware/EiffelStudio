@@ -1596,15 +1596,17 @@ feature {NONE} -- Implementation
 											error_handler.insert_error (create {VUAR4}.make (context, l_feature, l_last_class, i, l_formal_arg_type, l_arg_type, l_parameters.i_th (i).start_location))
 										end
 
-											-- Check if `l_formal_arg_type' involves some generics whose actuals
-											-- are marked `variant'. Only do this when `is_inherited' is True, since
+											-- Actual type of feature argument
+										l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
+
+											-- check if `l_formal_arg_type' involves some generics whose actuals
+											-- are marked `variant'. only do this when `is_inherited' is false, since
 											-- all descendants are checked in `check_cat_call'.
 										if
 											not is_inherited and then is_qualified and then
 											not l_last_type.is_like_current and then
 											context.current_class.is_cat_call_detection and then
-											(not l_formal_arg_type.is_valid_for_class (l_last_constrained.base_class) or else
-											l_formal_arg_type.has_variant_formal (l_last_type.actual_type))
+											l_formal_arg_type.is_variant
 										then
 											if l_tcat = Void then
 												create l_tcat.make (l_feature_name)
@@ -1612,14 +1614,12 @@ feature {NONE} -- Implementation
 												l_tcat.set_called_feature (l_feature)
 												l_tcat.add_covariant_generic_violation
 												system.update_statistics (l_tcat)
-												error_handler.insert_warning (l_tcat)
+												error_handler.insert_error (l_tcat)
 											else
 												l_tcat.add_covariant_generic_violation
 											end
 										end
 
-											-- Actual type of feature argument
-										l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
 
 										l_warning_count := error_handler.warning_list.count
 										if not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) then
@@ -1994,6 +1994,7 @@ feature {NONE} -- Implementation
 			if error_level = l_error_level then
 					-- Update type stack
 				create l_tuple_type.make (system.tuple_id, last_expressions_type)
+				l_tuple_type.set_frozen_mark
 					-- Type of tuple is always attached
 				l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_tuple_type, context.current_class)
@@ -2221,6 +2222,8 @@ feature {NONE} -- Implementation
 						create l_generics.make (1)
 						l_generics.extend (l_type_a)
 						create l_array_type.make (system.array_id, l_generics)
+							-- Type of a manifest array is always frozen.
+						l_array_type.set_frozen_mark
 							-- Type of a manifest array is always attached.
 						l_array_type := l_array_type.as_attached_in (l_current_class)
 						instantiator.dispatch (l_array_type, l_current_class)
@@ -2257,7 +2260,7 @@ feature {NONE} -- Implementation
 
 	process_string_as (l_as: STRING_AS)
 		local
-			t: like last_type
+			l_simplified_string_type: ANNOTATED_TYPE_A
 			l_is_string_32: BOOLEAN
 			l_value: detachable STRING
 			class_id: INTEGER
@@ -2266,15 +2269,17 @@ feature {NONE} -- Implementation
 		do
 			if l_as.type = Void then
 					-- Default to STRING_8, if not specified in the code.
-				set_type (string_type, l_as)
+				set_type (manifest_string_type, l_as)
 			else
 				check_type (l_as.type)
 			end
-			if last_type /= Void then
+			if attached {ANNOTATED_TYPE_A} last_type as l_last_type then
 					-- Constants are always of an attached type.
-				t := last_type.as_attached_in (context.current_class)
-				set_type (t, l_as)
-				class_id := t.base_class.class_id
+				l_simplified_string_type := l_last_type.as_attached_in (context.current_class)
+					-- Manifest string are always frozen.
+				l_simplified_string_type.set_frozen_mark
+				set_type (l_simplified_string_type, l_as)
+				class_id := l_simplified_string_type.base_class.class_id
 				if attached system.string_8_class as c then
 					s8 := c.compiled_class
 				end
@@ -2295,7 +2300,7 @@ feature {NONE} -- Implementation
 						if attached s32 then
 							t32 := s32.actual_type
 						end
-						error_handler.insert_error (create {VWMQ}.make (t, <<t32>>, context, l_as))
+						error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<t32>>, context, l_as))
 						reset_types
 					end
 				elseif attached s32 and then s32.class_id = class_id then
@@ -2313,7 +2318,7 @@ feature {NONE} -- Implementation
 					if attached s32 then
 						t32 := s32.actual_type
 					end
-					error_handler.insert_error (create {VWMQ}.make (t, <<t8, t32>>, context, l_as))
+					error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<t8, t32>>, context, l_as))
 					reset_types
 				end
 				if attached l_value then
@@ -2430,8 +2435,13 @@ feature {NONE} -- Implementation
 		end
 
 	process_current_as (l_as: CURRENT_AS)
+		local
+			l_type: LIKE_CURRENT
 		do
-			set_type (context.current_class_type, l_as)
+				-- The type of Current in class X is X .. X.
+			l_type := context.current_class_type.duplicate
+			l_type.set_frozen_mark
+			set_type (l_type, l_as)
 			if is_byte_node_enabled then
 				create {CURRENT_B} last_byte_node
 			end
@@ -3892,6 +3902,8 @@ feature {NONE} -- Implementation
 				create l_generics.make (1)
 				l_generics.extend (l_type)
 				create l_type_type.make (system.type_class.compiled_class.class_id, l_generics)
+					-- The type is always frozen.
+				l_type_type.set_frozen_mark
 					-- The type is always attached.
 				l_type_type := l_type_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_type_type, context.current_class)
@@ -7500,11 +7512,6 @@ feature {NONE} -- Implementation
 			-- Nothing to be done
 		end
 
-	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
-		do
-			check_type (l_as)
-		end
-
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			check_type (l_as)
@@ -7995,10 +8002,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Predefined types
 
-	string_type: CL_TYPE_A
+	manifest_string_type: CL_TYPE_A
 			-- Actual string type
 		once
 			Result := system.string_8_class.compiled_class.actual_type
+				-- Manifest string have a frozen type.
+			Result.set_frozen_mark
 		end
 
 	strip_type: GEN_TYPE_A
@@ -8013,8 +8022,9 @@ feature {NONE} -- Predefined types
 			create generics.make (1)
 			create any_type.make (system.any_id)
 			generics.extend (any_type)
-
 			create Result.make (system.array_id, generics)
+				-- Type of a strip is a frozen array.
+			Result.set_frozen_mark
 		end
 
 feature {NONE} -- Implementation
@@ -9150,6 +9160,7 @@ feature {NONE} -- Agents
 			l_operand: OPERAND_AS
 			l_is_open, l_target_closed: BOOLEAN
 			l_result_type: TYPE_A
+			l_gen_type: GEN_TYPE_A
 			l_last_open_positions: ARRAYED_LIST [INTEGER]
 			l_routine_creation: ROUTINE_CREATION_B
 			l_tuple_node: TUPLE_CONST_B
@@ -9176,18 +9187,21 @@ feature {NONE} -- Agents
 				if l_type.actual_type.is_boolean then
 						-- generics are: base_type, open_types
 					create l_generics.make (2)
-					create {GEN_TYPE_A} l_result_type.make (System.predicate_class_id, l_generics)
+					create l_gen_type.make (System.predicate_class_id, l_generics)
 				else
 						-- generics are: base_type, open_types, result_type
 					create l_generics.make (3)
 					l_query_type := l_type
-					create {GEN_TYPE_A} l_result_type.make (System.function_class_id, l_generics)
+					create l_gen_type.make (System.function_class_id, l_generics)
 				end
 			else
 					-- generics are: base_type, open_types
 				create l_generics.make (2)
-				create {GEN_TYPE_A} l_result_type.make (System.procedure_class_id, l_generics)
+				create l_gen_type.make (System.procedure_class_id, l_generics)
 			end
+				-- Type of an agent is frozen.
+			l_gen_type.set_frozen_mark
+			l_result_type := l_gen_type
 
 			if a_has_args then
 				l_feat_args := a_feature.arguments
@@ -9323,6 +9337,7 @@ feature {NONE} -- Agents
 
 				-- Create open argument type tuple
 			create l_tuple_type.make (System.tuple_id, l_oargtypes)
+			l_tuple_type.set_frozen_mark
 				-- Type of an argument tuple is always attached.
 			l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
 
@@ -9387,6 +9402,7 @@ feature {NONE} -- Agents
 					-- Create TUPLE_CONST_B instance which holds all closed arguments.
 				l_expressions.start
 				create l_tuple_type.make (System.tuple_id, l_cargtypes)
+				l_tuple_type.set_frozen_mark
 				create l_tuple_node.make (l_expressions, l_tuple_type, l_tuple_type.create_info)
 
 					-- We need to instantiate the closed TUPLE type of the agent otherwise it
@@ -9438,6 +9454,8 @@ feature {NONE} -- Agents
 			create generics.make (1)
 			generics.extend (integer_type)
 			create Result.make (System.array_id, generics)
+				-- This array is used to create instances so it is frozen.
+			Result.set_frozen_mark
 		end
 
 	compute_feature_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: FEATURE_I; a_target: EXPR_B;
@@ -9561,13 +9579,14 @@ feature {NONE} -- Agents
 				l_generics.extend (context.current_class_type)
 				l_generics.extend (a_target_type)
 				create l_tuple_type.make (system.tuple_id, l_generics)
-
+				l_tuple_type.set_frozen_mark
 			else
 				create l_closed_args.make (1)
 				l_closed_args.extend (create {CURRENT_B})
 				create l_generics.make (1)
 				l_generics.extend (context.current_class_type)
 				create l_tuple_type.make (system.tuple_id, l_generics)
+				l_tuple_type.set_frozen_mark
 			end
 
 				-- We need to instantiate the closed TUPLE type of the agent otherwise it
@@ -10260,7 +10279,7 @@ feature {NONE} -- Implementation: catcall check
 				context.init_error (l_tcat)
 				l_tcat.set_called_feature (a_feature)
 				l_tcat.add_compiler_limitation (a_callee_type)
-				error_handler.insert_warning (l_tcat)
+				error_handler.insert_error (L_tcat)
 			else
 					-- Loop through all descendants
 				from
@@ -10299,25 +10318,22 @@ feature {NONE} -- Implementation: catcall check
 							end
 						end
 
-							-- Check if `l_formal_arg_type' involves some generics. If it does then we need to trigger
-							-- an error if target's actual generic are covariant.
-						if
-							not l_formal_arg_type.is_valid_for_class (l_descendant_type.base_class) or else
-							l_formal_arg_type.has_variant_formal (l_descendant_type.actual_type)
-						then
-							if l_tcat = Void then
-								create l_tcat.make (a_location)
-								context.init_error (l_tcat)
-								l_tcat.set_called_feature (a_feature)
-								error_handler.insert_warning (l_tcat)
-							end
-							l_tcat.add_covariant_generic_violation
-						end
-
 							-- Adapted type in case it is a formal generic parameter or a like.
 						l_formal_arg_type := adapted_type (l_formal_arg_type, l_descendant_type, l_descendant_type)
 							-- Actual type of feature argument
 						l_formal_arg_type := l_formal_arg_type.instantiation_in (l_descendant_type, l_desc_class_id).actual_type
+
+							-- Check if `l_formal_arg_type' involves some generics. If it does then we need to trigger
+							-- an error if target's actual generic are covariant.
+						if l_formal_arg_type.is_variant then
+							if l_tcat = Void then
+								create l_tcat.make (a_location)
+								context.init_error (l_tcat)
+								l_tcat.set_called_feature (a_feature)
+								error_handler.insert_error (l_tcat)
+							end
+							l_tcat.add_covariant_generic_violation
+						end
 
 							-- Check if actual parameter conforms to the possible type of the descendant feature if conformance
 							-- was involved in the original call, otherwise nothing to be done.
@@ -10333,7 +10349,7 @@ feature {NONE} -- Implementation: catcall check
 									create l_tcat.make (a_location)
 									context.init_error (l_tcat)
 									l_tcat.set_called_feature (a_feature)
-									error_handler.insert_warning (l_tcat)
+									error_handler.insert_error (l_tcat)
 								end
 								l_tcat.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.i_th (i), i)
 							end
@@ -10383,17 +10399,17 @@ feature {NONE} -- Implementation: catcall check
 			l_rout_id_set: ROUT_ID_SET
 			l_type_feat: TYPE_FEATURE_I
 			l_needs_formal_check, l_compiler_limitation, l_fail_if_constraint_not_met: BOOLEAN
-			l_covariant_features: HASH_TABLE [FEATURE_I, CLASS_C]
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_cl_type: CL_TYPE_A
+			l_classes: ARRAYED_LIST [CLASS_C]
 		do
-			if a_type.has_frozen_mark or a_type.is_like_current then
+			if a_type.is_frozen or a_type.is_like_current then
 					-- When it is monomorphic then nothing to be done.
 					-- When type is `like Current' then it was shown that doing a flat checking would catch
 					-- the potential catcalls so no need to check it.
 				create Result.make (0)
 			else
-					-- Proper instance of `a_type' with the anchors removed.
+					-- Proper instance of the lower bound of the intervals with the anchors removed.
 				l_parent_type := a_type.instantiated_in (context.current_class_type.conformance_type)
 					-- First take all classes for `l_parent_type'
 				create l_target_types.make (1)
@@ -10421,22 +10437,21 @@ feature {NONE} -- Implementation: catcall check
 					l_parent_type := l_target_types.item
 					l_parent_class := l_parent_type.base_class
 					if l_parent_class /= Void and then l_parent_class.feature_of_rout_id_set (a_feature.rout_id_set) /= Void then
-						l_covariant_features := a_feature.covariantly_redefined_features (l_parent_class)
-
-						if l_covariant_features /= Void then
-								-- Go through descendants which have covariant redefinition and
-								-- build the proper type.
+						l_classes := l_parent_class.leaf_descendants
+						if l_classes /= Void and then not l_classes.is_empty then
+								-- Go through leaf descendants and build the proper type.
 							from
-								l_covariant_features.start
+								l_classes.start
 								if Result = Void then
-									create Result.make (l_covariant_features.count)
+									create Result.make (l_classes.count)
 								end
 							until
-								l_covariant_features.after or l_compiler_limitation
+								l_classes.after or l_compiler_limitation
 							loop
 									-- If descendant is generic, instantiate it with same
 									-- generics as `l_parent_type.generics'
-								l_descendant_class := l_covariant_features.key_for_iteration
+								l_descendant_class := l_classes.item
+								l_classes.forth
 								l_descendant_type := l_descendant_class.actual_type
 								if l_descendant_type.generics /= Void then
 									from
@@ -10453,7 +10468,7 @@ feature {NONE} -- Implementation: catcall check
 										l_type_feat ?= l_parent_class.feature_of_rout_id_set (l_rout_id_set)
 										if l_type_feat /= Void then
 											l_constraint_type := l_parent_type.generics.i_th (l_type_feat.position)
-											if l_constraint_type.has_variant_mark then
+											if l_constraint_type.is_variant then
 												l_fail_if_constraint_not_met := True
 											end
 											l_generics.put_i_th (l_constraint_type, i)
@@ -10547,17 +10562,16 @@ feature {NONE} -- Implementation: catcall check
 										-- `MY_ARRAY' which inherits from `ARRAY [INTEGER]'.
 									Result.extend (l_descendant_type)
 								end
-								l_covariant_features.forth
 							end
 						end
 					end
 					l_target_types.forth
 				end
-				if l_compiler_limitation then
-					Result := Void
-				elseif Result = Void then
-					create Result.make (0)
-				end
+			end
+			if l_compiler_limitation then
+				Result := Void
+			elseif Result = Void then
+				create Result.make (0)
 			end
 		end
 

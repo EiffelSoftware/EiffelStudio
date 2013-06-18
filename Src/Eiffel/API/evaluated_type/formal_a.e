@@ -518,32 +518,47 @@ feature {FORMAL_A} -- Conformance
 				is_reference = other.is_reference and then
 				is_expanded = other.is_expanded
 			then
-					-- Test attachment status.
-					-- The rules are as follows, but we need to take care about implicit attachment status:
-    				-- 1. !G conforms to G, ?G and !G.
-					-- 2. G conforms to G and ?G.
-    				-- 3. ?G only conforms to ?G.
-				if not a_context_class.lace_class.is_void_safe_conformance then
-						-- Case 0. In non-void-safe mode attachment status is not taken into account.
-					Result := True
-				elseif is_implicitly_attached then
+					-- Test frozen/variant status.
+					-- 1. "frozen G" conforms to "G", "frozen G" and "variant G"
+					-- 2. "G" and "variant G" conforms to "G" or "variant G"
+				if has_frozen_mark then
 						-- Case 1.
-						-- An (implicitly) attached type conforms to a type of any attachment status.
 					Result := True
-				elseif other.has_detachable_mark then
-						-- Case 1-3.
-						-- A type of any attachment status conforms to a detachable type.
-					Result := True
-				elseif not has_detachable_mark then
+				else
 						-- Case 2.
-						-- A type without the detachable mark conforms to the one without the detachable mark.
-					Result := not other.is_attached
+					Result := not other.has_frozen_mark
 				end
 				if Result then
-						-- Test separateness status.
-						-- 1. "separate G" conforms to "separate G".
-						-- 2. "G" conforms to "G" and "separate G".
-					Result := has_separate_mark implies other.has_separate_mark
+						-- Test attachment status.
+						-- The rules are as follows, but we need to take care about implicit attachment status:
+						-- 1. !G conforms to G, ?G and !G.
+						-- 2. G conforms to G and ?G.
+						-- 3. ?G only conforms to ?G.
+					if not a_context_class.lace_class.is_void_safe_conformance then
+							-- Case 0. In non-void-safe mode attachment status is not taken into account.
+						Result := True
+					elseif is_implicitly_attached then
+							-- Case 1.
+							-- An (implicitly) attached type conforms to a type of any attachment status.
+						Result := True
+					elseif other.has_detachable_mark then
+							-- Case 1-3.
+							-- A type of any attachment status conforms to a detachable type.
+						Result := True
+					elseif not has_detachable_mark then
+							-- Case 2.
+							-- A type without the detachable mark conforms to the one without the detachable mark.
+						Result := not other.is_attached
+					else
+							-- We got ?G but the other is not ?G
+						Result := False
+					end
+					if Result then
+							-- Test separateness status.
+							-- 1. "separate G" conforms to "separate G".
+							-- 2. "G" conforms to "G" and "separate G".
+						Result := has_separate_mark implies other.has_separate_mark
+					end
 				end
 			end
 		end
@@ -555,65 +570,6 @@ feature -- Access
 
 	is_loose: BOOLEAN = True
 			-- Does type depend on formal generic parameters and/or anchors?
-
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does Current conform to `other'?
-		local
-			l_constraints: TYPE_SET_A
-			t: TYPE_A
-			i: INTEGER
-		do
-				-- Use `other.conformance_type' rather than `other' to get deanchored form.
-			t := other.conformance_type
-			Result := same_as (t)
-			if not Result and then attached {like Current} t as c then
-				Result := direct_conform_to_formal (a_context_class, c)
-			end
-			if not Result then
-					-- Check conformance of constrained generic type to `other'.
-					-- Get the actual type for the formal generic parameter
-				l_constraints := a_context_class.constraints_if_possible (position)
-				if other.is_formal and then attached {FORMAL_A} other as f then
-						-- Take only formal generics into account since there is no other way
-						-- this formal can conform to `other'.
-					from
-						i := 0
-					until
-						i >= l_constraints.count
-					loop
-						i := i + 1
-							-- There are no anchored types in constraints,
-							-- so there is no need to use `conformance_type'.
-						if attached {FORMAL_A} l_constraints.i_th (i).type.to_other_attachment (Current) as g then
-							if g.direct_conform_to_formal (a_context_class, f) then
-									-- Types conform.
-								Result := True
-								i := l_constraints.count
-							else
-									-- Follow constraints of `g'.
-								across
-									a_context_class.constraints_if_possible (g.position) as c
-								loop
-										-- Only formal generics that are not yet in the list
-										-- are of interest.
-									if
-										c.item.type.is_formal and then
-										across l_constraints as l all not l.item.type.same_as (c.item.type) end
-									then
-										l_constraints.extend (c.item)
-									end
-								end
-							end
-						end
-					end
-				else
-						-- Take only class types into account since there is no other way
-						-- this formal can conform to other and leaving formal generics in
-						-- the type set can lead to infinite recursion for no need.
-					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).to_other_separateness (Current).conform_to_type (a_context_class, other.to_type_set)
-				end
-			end
-		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
 			-- Does current convert to `a_target_type' in `a_context_class'?
@@ -670,6 +626,7 @@ feature -- Access
 					end
 				end
 			end
+			Result := Result.to_other_variant (Current)
 		end
 
 	adapted_in (class_type: CLASS_TYPE): TYPE_A
@@ -693,6 +650,7 @@ feature -- Access
 			-- of `class_type'.
 		do
 			Result := separate_adapted (class_type.generics.i_th (position).to_other_attachment (Current))
+			Result := Result.to_other_variant (Current)
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A
@@ -705,6 +663,7 @@ feature -- Access
 			l_feat := a_descendant.generic_features.item (l_feat.rout_id_set.first)
 			check l_feat_not_void: l_feat /= Void end
 			Result := separate_adapted (l_feat.type.actual_type.to_other_attachment (Current))
+			Result := Result.to_other_variant (Current)
 		end
 
 	create_info: CREATE_FORMAL_TYPE
@@ -725,6 +684,67 @@ feature -- Access
 			-- Initialize `an_info' with current type data.
 		do
 			an_info.make (Current)
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		local
+			l_constraints: TYPE_SET_A
+			t: TYPE_A
+			i: INTEGER
+		do
+				-- Use `other.conformance_type' rather than `other' to get deanchored form.
+			t := other.conformance_type
+			Result := same_as (t)
+			if not Result and then attached {like Current} t as c then
+				Result := direct_conform_to_formal (a_context_class, c)
+			end
+			if not Result then
+					-- Check conformance of constrained generic type to `other'.
+					-- Get the actual type for the formal generic parameter
+				l_constraints := a_context_class.constraints_if_possible (position)
+				if other.is_formal and then attached {FORMAL_A} other as f then
+						-- Take only formal generics into account since there is no other way
+						-- this formal can conform to `other'.
+					from
+						i := 0
+					until
+						i >= l_constraints.count
+					loop
+						i := i + 1
+							-- There are no anchored types in constraints,
+							-- so there is no need to use `conformance_type'.
+						if attached {FORMAL_A} l_constraints.i_th (i).type.to_other_attachment (Current) as g then
+							if g.direct_conform_to_formal (a_context_class, f) then
+									-- Types conform.
+								Result := True
+								i := l_constraints.count
+							else
+									-- Follow constraints of `g'.
+								across
+									a_context_class.constraints_if_possible (g.position) as c
+								loop
+										-- Only formal generics that are not yet in the list
+										-- are of interest.
+									if
+										c.item.type.is_formal and then
+										across l_constraints as l all not l.item.type.same_as (c.item.type) end
+									then
+										l_constraints.extend (c.item)
+									end
+								end
+							end
+						end
+					end
+				else
+						-- Take only class types into account since there is no other way
+						-- this formal can conform to other and leaving formal generics in
+						-- the type set can lead to infinite recursion for no need.
+					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).to_other_separateness (Current).to_other_variant (Current).conform_to_type (a_context_class, other.to_type_set)
+				end
+			end
 		end
 
 feature {NONE} -- Status adaptation

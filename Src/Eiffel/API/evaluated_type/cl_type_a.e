@@ -555,6 +555,65 @@ feature -- C code generation
 
 feature {TYPE_A} -- Helpers
 
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		local
+			other_class_type: CL_TYPE_A
+		do
+			other_class_type ?= other.conformance_type
+			if other_class_type /= Void then
+				if other_class_type.is_expanded then
+						-- It should be the exact same base class for expanded.
+					if is_expanded and then class_id = other_class_type.class_id then
+						Result := other_class_type.valid_generic (a_context_class, Current, a_in_generic)
+						if Result and then is_typed_pointer then
+								-- TYPED_POINTER should be exactly the same type.
+							Result := valid_generic (a_context_class, other_class_type, a_in_generic)
+						end
+					end
+				else
+					if a_in_generic then
+						if other.is_frozen then
+							Result := is_frozen and then base_class = other_class_type.base_class
+						elseif not other.is_variant then
+							Result := not is_variant and then base_class = other_class_type.base_class
+						else
+							check is_variant: other.is_variant end
+							Result := base_class.conform_to (other_class_type.base_class)
+						end
+					else
+						if other.is_frozen then
+							Result := is_frozen and then base_class = other_class_type.base_class
+						else
+							Result := base_class.conform_to (other_class_type.base_class)
+						end
+					end
+					Result := Result and then other_class_type.valid_generic (a_context_class, Current, a_in_generic)
+					if not Result and then system.il_generation and then system.system_object_class /= Void then
+							-- Any type in .NET conforms to System.Object
+						check
+							system.system_object_class.is_compiled
+						end
+						Result := other_class_type.class_id = system.system_object_id
+					end
+					if Result and then a_context_class.lace_class.is_void_safe_conformance then
+							-- We should still verify that the attachment marks are taken into account.
+						Result := is_attachable_to (other_class_type)
+					end
+					if Result then
+						Result := is_processor_attachable_to (other)
+					end
+				end
+			end
+		end
+
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- Do the generic parameter of `type' conform to those
+			-- of Current (none).
+		do
+			Result := True
+		end
+
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is Current still valid?
 			-- I.e. its `associated_class' is still in system.
@@ -574,19 +633,23 @@ feature {TYPE_A} -- Helpers
 	internal_generic_derivation (a_level: INTEGER): CL_TYPE_A
 		local
 			l_attachment: like attachment_bits
+			l_variant_bits: like variant_bits
 			s: like has_separate_mark
 		do
-			if attachment_bits = 0 and then not has_separate_mark then
+			if attachment_bits = 0 and variant_bits = 0 and not has_separate_mark then
 				Result := Current
 			else
 					-- Clear the attachment and separate mark.
 				l_attachment := attachment_bits
+				l_variant_bits := variant_bits
 				attachment_bits := 0
+				variant_bits := 0
 				s := has_separate_mark
 				has_separate_mark := False
 				Result := twin
 				has_separate_mark := s
 				attachment_bits := l_attachment
+				variant_bits := l_variant_bits
 			end
 		end
 
@@ -645,44 +708,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 			end
 		end
 
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does Current conform to `other'?
-		local
-			other_class_type: CL_TYPE_A
-		do
-			other_class_type ?= other.conformance_type
-			if other_class_type /= Void then
-				if other_class_type.is_expanded then
-						-- It should be the exact same base class for expanded.
-					if is_expanded and then class_id = other_class_type.class_id then
-						Result := other_class_type.valid_generic (a_context_class, Current)
-						if Result and then is_typed_pointer then
-								-- TYPED_POINTER should be exactly the same type.
-							Result := valid_generic (a_context_class, other_class_type)
-						end
-					end
-				else
-					Result :=
-						base_class.conform_to (other_class_type.base_class) and then
-						other_class_type.valid_generic (a_context_class, Current)
-					if not Result and then system.il_generation and then system.system_object_class /= Void then
-							-- Any type in .NET conforms to System.Object
-						check
-							system.system_object_class.is_compiled
-						end
-						Result := other_class_type.class_id = system.system_object_id
-					end
-					if Result and then a_context_class.lace_class.is_void_safe_conformance then
-							-- We should still verify that the attachment marks are taken into account.
-						Result := is_attachable_to (other_class_type)
-					end
-					if Result then
-						Result := is_processor_attachable_to (other)
-					end
-				end
-			end
-		end
-
 	is_conformant_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to other?
 			-- Most of the time, it is equivalent to `conform_to' except
@@ -711,7 +736,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 						l_other_class_type.set_reference_mark
 					end
 
-					Result := general_conform_to (a_context_class, other)
+					Result := conform_to (a_context_class, other)
 
 					if l_is_exp then
 						set_mark (current_mark)
@@ -723,14 +748,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 			end
 		end
 
-	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN
-			-- Do the generic parameter of `type' conform to those
-			-- of Current (none).
-		do
-			Result := True
-		end
-
-	generic_conform_to (a_context_class: CLASS_C; gen_type: GEN_TYPE_A): BOOLEAN
+	generic_conform_to (a_context_class: CLASS_C; gen_type: GEN_TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
 			-- Does Current conform to `gen_type' ?
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -760,7 +778,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 				elseif l_is_implicitly_attached and then not parent_actual_type.is_implicitly_attached then
 					parent_actual_type := parent_actual_type.as_implicitly_attached
 				end
-				Result := parent_actual_type.conform_to (a_context_class, gen_type)
+				Result := parent_actual_type.internal_conform_to (a_context_class, gen_type, a_in_generic)
 				i := i + 1
 			end
 		end

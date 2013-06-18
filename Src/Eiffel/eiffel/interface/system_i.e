@@ -6214,21 +6214,24 @@ feature -- Statistics
 			l_str: STRING
 			l_cat_call_summary: CAT_CALL_SUMMARY_WARNING
 		do
-			if statistics.total > 0 then
-				create l_str.make (1024)
-				l_str.append ("Catcall statistics: " + statistics.total.out)
-				l_str.append (" (export: " + statistics.export_violation.out)
-				l_str.append ("; conformance: " + statistics.conformance_violation.out)
-				l_str.append ("; covariant: " + statistics.covariant_violation.out + ")%N")
-				l_str.append ("%Tcompiler-limitation: " + statistics.compiler_limitation.out + "%N")
-				l_str.append ("%Tcovariant-generic: " + statistics.covariant_generic.out + "%N")
-				l_str.append ("%Tis_equal: " + statistics.is_equal_feat.out + "%N")
-				l_str.append ("%Tany-features: " + statistics.any_features.out + "%N")
-				l_str.append ("%Tlike-current-features: " + statistics.like_current_feature.out + "%N")
-				l_str.append ("%Tother: " + statistics.other.out)
-				l_str.append ("%N")
-				create l_cat_call_summary.make (l_str)
-				error_handler.insert_warning (l_cat_call_summary)
+				-- To be used for global statistics on the project.
+			debug ("catcall")
+				if statistics.total > 0 then
+					create l_str.make (1024)
+					l_str.append ("Catcall statistics: " + statistics.total.out)
+					l_str.append (" (export: " + statistics.export_violation.out)
+					l_str.append ("; conformance: " + statistics.conformance_violation.out)
+					l_str.append ("; covariant: " + statistics.covariant_violation.out + ")%N")
+					l_str.append ("%Tcompiler-limitation: " + statistics.compiler_limitation.out + "%N")
+					l_str.append ("%Tcovariant-generic: " + statistics.covariant_generic.out + "%N")
+					l_str.append ("%Tis_equal: " + statistics.is_equal_feat.out + "%N")
+					l_str.append ("%Tany-features: " + statistics.any_features.out + "%N")
+					l_str.append ("%Tlike-current-features: " + statistics.like_current_feature.out + "%N")
+					l_str.append ("%Tother: " + statistics.other.out)
+					l_str.append ("%N")
+					create l_cat_call_summary.make (l_str)
+					error_handler.insert_warning (l_cat_call_summary)
+				end
 			end
 		end
 

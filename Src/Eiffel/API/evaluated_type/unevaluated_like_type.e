@@ -12,7 +12,7 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			base_class,
-			conform_to,
+			internal_conform_to,
 			evaluated_type_in_descendant,
 			has_associated_class,
 			formal_instantiated_in,
@@ -116,6 +116,11 @@ feature -- Output
 
 feature {TYPE_A} -- Helpers
 
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		do
+		end
+
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- An unevaluated type is never valid.
 		do
@@ -136,11 +141,6 @@ feature {NONE} -- Implementation
 
 	shared_create_info, create_info: CREATE_INFO
 			-- Byte code information for entity type creation
-		do
-		end
-
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does Current conform to `other' in `a_context_class'?
 		do
 		end
 

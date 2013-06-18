@@ -468,6 +468,7 @@ feature {NONE} -- Implementation
 			l_as.expressions.process (Current)
 			if not has_error_internal then
 				create l_tuple_type.make (system.tuple_id, expr_types (l_as.expressions))
+				l_tuple_type.set_frozen_mark
 				last_type := l_tuple_type
 			end
 		end
@@ -832,6 +833,7 @@ feature {NONE} -- Implementation
 	process_type_expr_as (l_as: TYPE_EXPR_AS)
 		local
 			l_generics: ARRAYED_LIST [TYPE_A]
+			l_type: GEN_TYPE_A
 		do
 			if not expr_type_visiting then
 				l_as.type.process (Current)
@@ -839,7 +841,10 @@ feature {NONE} -- Implementation
 				l_as.type.process (Current)
 				create l_generics.make (1)
 				l_generics.extend (last_type)
-				create {GEN_TYPE_A} last_type.make (system.type_class.compiled_class.class_id, l_generics)
+				create l_type.make (system.type_class.compiled_class.class_id, l_generics)
+					-- Type of a manifest type is frozen.
+				l_type.set_frozen_mark
+				last_type := l_type
 			end
 		end
 
@@ -2505,6 +2510,8 @@ feature {NONE} -- Implementation: helpers
 			create any_type.make (system.any_id)
 			generics.extend (any_type)
 			create Result.make (system.array_id, generics)
+				-- Type of a strip is a frozen array.
+			Result.set_frozen_mark
 		end
 
 	string_type: CL_TYPE_A
@@ -2582,6 +2589,8 @@ feature {NONE} -- Implementation: helpers
 					create l_generics.make (2)
 					create l_result_type.make (System.procedure_class_id, l_generics)
 				end
+					-- The type of an agent is always frozen.
+				l_result_type.set_frozen_mark
 
 				if l_as.target = Void then
 						-- Target is the closed operand `Current'.
@@ -2715,6 +2724,8 @@ feature {NONE} -- Implementation: helpers
 
 					-- Create open argument type tuple
 				create l_tuple.make (System.tuple_id, l_oargtypes)
+				l_tuple.set_frozen_mark
+
 					-- Insert it as second generic parameter of ROUTINE.
 				l_generics.extend (l_tuple)
 

@@ -226,13 +226,13 @@ feature -- Status report
 	is_ignoring_separate_mark: BOOLEAN
 			-- Are separate marks ignored?
 
-	is_type_interval_supported: BOOLEAN
+	is_frozen_variant_mark_supported: BOOLEAN
 			-- Are type interval supported?
 		do
 -- Code commented for the time being while waiting for full implementation of type intervals.
---				-- For the time being we accept type intervals only if `provisional syntax'
---				-- has been selected.
---			Result := syntax_version = provisional_syntax
+				-- For the time being we accept type intervals only if `provisional syntax'
+				-- has been selected.
+			Result := syntax_version = provisional_syntax
 		end
 
 feature -- Parsing (Unknown encoding)
@@ -929,12 +929,18 @@ feature {NONE} -- Actions
 			end
 		end
 
-	check_single_type (a_type: detachable TYPE_AS)
-			-- Check if `a_type' is a valid type for an object test.
+	check_frozen_variant_supported (a_keyword: detachable KEYWORD_AS)
+			-- Check if a type using `frozen' or `variant' qualifier is supported by current parsing level.
+		local
+			l_msg: STRING
 		do
-			if a_type /= Void and then attached {TYPE_INTERVAL_AS} a_type then
-				report_one_error (create {SYNTAX_ERROR}.make (token_line (a_type), token_column (a_type), filename,
-					"Type used in object test should be a `Single_type'."))
+			if not is_frozen_variant_mark_supported then
+				l_msg := "Frozen/variant qualifier is not supported for type declaration."
+				if a_keyword /= Void then
+					report_one_error (create {SYNTAX_ERROR}.make (a_keyword.line, a_keyword.column, filename, l_msg))
+				else
+					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, l_msg))
+				end
 			end
 		end
 

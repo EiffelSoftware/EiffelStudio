@@ -1812,14 +1812,6 @@ feature -- Access
 			end
 		end
 
-	new_type_interval_as (l, u: detachable TYPE_AS): TYPE_INTERVAL_AS
-			-- New TYPE_INTERVAL_AS
-		do
-			if l /= Void and u /= Void then
-				create Result.initialize (l, u)
-			end
-		end
-
 	new_un_free_as (op: detachable ID_AS; e: detachable EXPR_AS): detachable UN_FREE_AS
 			-- New UN_FREE AST node
 		do

@@ -61,8 +61,17 @@ feature -- Generic conformance
 
 	annotation_flags: NATURAL_16
 			-- Flags for annotations of Current.
-			-- Currently only attachment marks are supported.
-		deferred
+			-- Currently only `!' and `frozen' are supported
+		do
+ 				-- Only if a type is not expanded do we need to generate the
+				-- attached annotation since by default expanded implies attached.
+			if is_attached and not is_expanded then
+				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+			end
+-- To uncomment when variant/frozen proposal for generics is supported at runtime
+--			if is_frozen then
+--				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+--			end
 		end
 
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
@@ -305,11 +314,6 @@ feature -- IL code generation
 
 feature -- Properties
 
-	types: ARRAYED_LIST [ABSTRACT_TYPE_INTERVAL_A]
-			-- List of intervals making up Current.
-		deferred
-		end
-
 	has_associated_class: BOOLEAN
 			-- Does Current have an associated class?
 		do
@@ -333,32 +337,24 @@ feature -- Properties
 			-- Void
 		end
 
- 	has_frozen_mark: BOOLEAN
-			-- Is type marked frozen?
+	is_frozen: BOOLEAN
+			-- Is type frozen?
 		do
-				-- For the time being, all entities are never frozen.
-			Result := False
+			Result := is_implicitly_frozen
 		end
 
- 	has_variant_mark: BOOLEAN
+	is_implicitly_frozen: BOOLEAN
+			-- Is type implicitly frozen?
+			--| Case of a frozen class or an expanded class.
+		do
+			Result := (attached base_class as l_base_class and then l_base_class.is_frozen) or else is_expanded
+		end
+
+	is_variant: BOOLEAN
 			-- Is type marked `variant'.
 		do
-				-- For the time being, actual generic parameter are considered variant.
-			Result := True
+			Result := False
 		end
-
-	has_variant_formal (a_context_type: TYPE_A): BOOLEAN
-			-- Does `Current' have some formal generics that are marked variant in `a_context_type'?
-		require
-			a_context_type_not_void: a_context_type /= Void
-			a_context_type_valid: a_context_type.is_valid
-			is_valid: is_valid
-			is_valid_context: has_formal_generic implies
-				(a_context_type.has_associated_class and then is_valid_for_class (a_context_type.base_class))
-		do
-				-- For the time being, actual generic parameter are considered variant.
-			Result := has_formal_generic
- 		end
 
 	is_valid_generic_derivation: BOOLEAN
 			-- Is current still a valid type to be used as a generic derivation?
@@ -926,6 +922,16 @@ feature -- Attachment properties
 			result_attached: Result /= Void
 		end
 
+	to_other_variant (other: ANNOTATED_TYPE_A): like Current
+			-- Current type to which frozen/variant status is applied.
+		require
+			other_attached: other /= Void
+		do
+			Result := Current
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Output
 
 	frozen append_to (a_text_formatter: TEXT_FORMATTER)
@@ -1136,7 +1142,7 @@ feature -- Access
 			end
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+	frozen conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to `other' in `a_context_class'?
 		require
 			is_valid: is_valid
@@ -1145,7 +1151,8 @@ feature -- Access
 			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			other_not_void: other /= Void
 			other_is_valid: other.is_valid
-		deferred
+		do
+			Result := internal_conform_to (a_context_class, other, False)
 		end
 
 	frozen conforms_to_array: BOOLEAN
@@ -1183,20 +1190,6 @@ feature -- Access
 			context.set_last_conversion_info (Void)
 		ensure
 			context_set: Result implies context.last_conversion_info /= Void
-		end
-
-	valid_generic (a_context_class: CLASS_C; type: TYPE_A): BOOLEAN
-			-- Do the generic parameter of `type' conform to those of
-			-- Current ?
-		require
-			a_context_class_not_void: a_context_class /= Void
-			a_context_class_valid: a_context_class.is_valid
-			a_context_valid_for_current: is_valid_for_class (a_context_class)
-			type_not_void: type /= Void
-			type_has_class: type.has_associated_class
-			has_associated_class: has_associated_class
-			conforming_type: type.base_class.conform_to (base_class)
-		do
 		end
 
 	actual_argument_type (a_arg_types: ARRAYED_LIST [TYPE_A]): TYPE_A
@@ -1443,6 +1436,34 @@ feature -- Access
 		end
 
 feature {TYPE_A} -- Helpers
+
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- Does Current conform to `other' in `a_context_class'?
+			-- If `a_in_generic', it is the conformance when `Current' is an actual generic parameter
+			-- of some other type.
+		require
+			is_valid: is_valid
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
+			other_not_void: other /= Void
+			other_is_valid: other.is_valid
+		deferred
+		end
+
+	valid_generic (a_context_class: CLASS_C; type: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- Do the generic parameter of `type' conform to those of
+			-- Current ?
+		require
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
+			type_not_void: type /= Void
+			type_has_class: type.has_associated_class
+			has_associated_class: has_associated_class
+			conforming_type: type.base_class.conform_to (base_class)
+		do
+		end
 
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is Current consistent and valid for `a_class'?

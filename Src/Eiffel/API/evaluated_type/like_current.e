@@ -12,7 +12,7 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			actual_type, deep_actual_type, context_free_type,
-			base_class, associated_class_type, conform_to, conformance_type, convert_to,
+			base_class, associated_class_type, internal_conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, formal_instantiated_in,
 			instantiated_in, duplicate, set_separate_mark,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference, is_ephemeral,
@@ -25,7 +25,8 @@ inherit
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
-			is_class_valid, skeleton_adapted_in, good_generics, has_like_current
+			is_class_valid, skeleton_adapted_in, good_generics, has_like_current,
+			set_frozen_mark
 		end
 
 feature -- Visitor
@@ -374,6 +375,24 @@ feature -- Generic conformance
 
 feature {TYPE_A} -- Helpers
 
+	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		do
+			if
+				attached {LIKE_CURRENT} other as a and then
+				(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (a)) and then
+				is_processor_attachable_to (a) and then not a.has_frozen_mark
+			then
+					-- Other is like Current that is compatible in terms of attachment status, separate status
+					-- and variance status.
+					--| Note that if other is frozen then we have to use the normal conformance rules.
+				Result := True
+			else
+					-- Other is not `like Current' we apply normal rules of conformance.
+				Result := conformance_type.internal_conform_to (a_context_class, other.conformance_type, a_in_generic)
+			end
+		end
+
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is current type valid?
 		do
@@ -417,6 +436,13 @@ feature {COMPILER_EXPORTER} -- Modification
 				conformance_type := a.to_other_immediate_attachment (Current)
 			end
 			actual_type := Current
+		end
+
+	set_frozen_mark
+			-- <Precursor>
+		do
+			Precursor
+			conformance_type := conformance_type.to_other_variant (Current)
 		end
 
 	set_attached_mark
@@ -512,6 +538,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- or
 				-- i16 := (0x00FF & i8).to_integer_16
 			Result := type.intrinsic_type
+			Result := Result.to_other_variant (Current)
 			if is_attached then
 					-- Adapt attachment marks as required.
 				Result := Result.to_other_attachment (Current)
@@ -576,6 +603,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				Result := l_like
 			end
 			Result := Result.to_other_attachment (Current)
+			Result := Result.to_other_variant (Current)
 				-- Promote separateness status if present.
 			if is_separate then
 				Result := Result.to_other_separateness (Current)
@@ -592,6 +620,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				if is_separate then
 					Result := Result.to_other_separateness (Current)
 				end
+				Result := Result.to_other_variant (Current)
 			else
 				Result := Current
 			end
@@ -601,16 +630,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Byte code information for entity type creation
 		once
 			create Result
-		end
-
-	conform_to (a_context_class: CLASS_C; other: INHERITANCE_TYPE_A): BOOLEAN
-			-- Does `Current' conform to `other'?
-		do
-			Result :=
-				(attached {LIKE_CURRENT} other as a and then
-					(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (a)) and then
-					is_processor_attachable_to (a)) or else
-				conformance_type.conform_to (a_context_class, other.conformance_type)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN

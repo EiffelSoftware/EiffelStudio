@@ -577,6 +577,7 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				create l_tuple_type.make (system.tuple_id, expr_types (l_as.expressions))
+				l_tuple_type.set_frozen_mark
 				last_type := l_tuple_type
 			end
 		end
@@ -1256,6 +1257,7 @@ feature {NONE} -- Implementation
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 			l_generics: ARRAYED_LIST [TYPE_A]
+			l_type: GEN_TYPE_A
 		do
 			if not expr_type_visiting then
 				l_text_formatter_decorator := text_formatter_decorator
@@ -1267,7 +1269,10 @@ feature {NONE} -- Implementation
 			end
 			create l_generics.make (1)
 			l_generics.extend (last_type)
-			create {GEN_TYPE_A} last_type.make (system.type_class.compiled_class.class_id, l_generics)
+			create l_type.make (system.type_class.compiled_class.class_id, l_generics)
+				-- Type of a manifest type is frozen.			
+			l_type.set_frozen_mark
+			last_type := l_type
 		end
 
 	process_routine_as (l_as: ROUTINE_AS)
@@ -3461,6 +3466,13 @@ feature {NONE} -- Implementation
 					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 				else
 					l_text_formatter_decorator := text_formatter_decorator
+					if l_as.has_frozen_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+						l_text_formatter_decorator.add_space
+					elseif l_as.has_variant_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+						l_text_formatter_decorator.add_space
+					end
 					if l_as.has_attached_mark then
 						l_text_formatter_decorator.process_keyword_text (ti_attached_keyword, Void)
 						l_text_formatter_decorator.add_space
@@ -3507,6 +3519,17 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator := text_formatter_decorator
 						-- Figure out if qualifier can be used without adding an additional "like" keyword.
 					is_implicit := attached {LIKE_CUR_AS} l_as.qualifier or else attached {LIKE_ID_AS} l_as.qualifier
+					if l_as.has_frozen_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+						l_text_formatter_decorator.add_space
+							-- The type is of the form "frozen like {T}.something"
+						is_implicit := False
+					elseif l_as.has_variant_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+						l_text_formatter_decorator.add_space
+							-- The type is of the form "variant like {T}.something"
+						is_implicit := False
+					end
 					if l_as.has_attached_mark then
 						l_text_formatter_decorator.process_keyword_text (ti_attached_keyword, Void)
 						l_text_formatter_decorator.add_space
@@ -3657,11 +3680,6 @@ feature {NONE} -- Implementation
 					set_current_class (l_tmp_current_class)
 				end
 			end
-		end
-
-	process_type_interval_as (l_as: TYPE_INTERVAL_AS)
-		do
-			process_type_as (l_as)
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)
@@ -4763,6 +4781,8 @@ feature {NONE} -- Implementation: helpers
 			create any_type.make (system.any_id)
 			generics.extend (any_type)
 			create Result.make (system.array_id, generics)
+				-- Type of a strip is a frozen array.
+			Result.set_frozen_mark
 		end
 
 	string_type: CL_TYPE_A
@@ -4840,6 +4860,8 @@ feature {NONE} -- Implementation: helpers
 					create l_generics.make (2)
 					create l_result_type.make (System.procedure_class_id, l_generics)
 				end
+					-- The type of an agent is frozen.				
+				l_result_type.set_frozen_mark
 
 				if l_as.target = Void then
 						-- Target is the closed operand `Current'.
@@ -4964,6 +4986,8 @@ feature {NONE} -- Implementation: helpers
 
 					-- Create open argument type tuple
 				create l_tuple.make (System.tuple_id, l_oargtypes)
+				l_tuple.set_frozen_mark
+
 					-- Insert it as second generic parameter of ROUTINE.
 				l_generics.extend (l_tuple)
 

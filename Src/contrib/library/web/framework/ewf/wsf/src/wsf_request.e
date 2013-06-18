@@ -234,7 +234,7 @@ feature -- Access: Input
 			n: INTEGER
 		do
 			if raw_input_data_recorded and then attached raw_input_data as d then
-				buf.copy (d)
+				buf.append (d)
 			else
 				l_input := input
 				if is_chunked_input then

@@ -14,16 +14,16 @@ rem Create delivery structure
 if not exist %EWEASEL%\spec (
 	mkdir %EWEASEL%\spec
 )
-if not exist %EWEASEL%\spec\windows (
-	mkdir %EWEASEL%\spec\windows
+if not exist %EWEASEL%\spec\%ISE_PLATFORM% (
+	mkdir %EWEASEL%\spec\%ISE_PLATFORM%
 )
-if not exist %EWEASEL%\spec\windows\bin (
-	mkdir %EWEASEL%\spec\windows\bin
+if not exist %EWEASEL%\spec\%ISE_PLATFORM%\bin (
+	mkdir %EWEASEL%\spec\%ISE_PLATFORM%\bin
 )
 
 rem Copy executables
-copy EIFGENs\eweasel_st\F_code\eweasel.exe %EWEASEL%\spec\windows\bin
-copy EIFGENs\eweasel_mt\F_code\eweasel-mt.exe %EWEASEL%\spec\windows\bin
+copy EIFGENs\eweasel_st\F_code\eweasel.exe %EWEASEL%\spec\%ISE_PLATFORM%\bin
+copy EIFGENs\eweasel_mt\F_code\eweasel-mt.exe %EWEASEL%\spec\%ISE_PLATFORM%\bin
 rd /q /s EIFGENs
 del eweasel.rc
 del eweasel-mt.rc

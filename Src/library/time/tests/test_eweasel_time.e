@@ -29,6 +29,28 @@ feature -- Test routines
 			s := d.formatted_out ("yyyy[0]mm")
 		end
 
+
+	test_duration001
+		local
+			t1, t2: TIME
+			s, os: INTEGER
+			td: TIME_DURATION
+		do
+			from
+				create t1.make (0, 0, 0)
+				create t2.make (0, 5, 0)
+			until
+				equal (t1, t2)
+			loop
+				os := s
+				Io.put_string (t2.out + "... ")
+				td := t2.relative_duration (t1)
+				s := td.seconds_count
+				test_true_boolean (s = os + (5 * 60))
+				t2.minute_add (5)
+			end
+		end
+
 	test_duration002
 		local
 			d1, d2: DATE
@@ -236,6 +258,13 @@ feature -- Test routines
 				test_true_boolean (d.days = days)
 				i := i + 1
 			end
+		end
+
+	test_time005
+		local
+			d: DATE
+		do
+			create d.make_by_days ({INTEGER}.min_value)
 		end
 
 feature {NONE} -- Implementation

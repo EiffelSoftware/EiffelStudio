@@ -3003,7 +3003,9 @@ rt_private void clean_zones(void)
 				 */
 			((union overhead *) ps_from.sc_arena)->ov_size |= B_BUSY;
 			eif_rt_xfree (ps_from.sc_arena + OVERHEAD);	/* One big bloc */
-			rt_g_data.gc_to--;
+			if (rt_g_data.gc_to > 0) {
+				rt_g_data.gc_to--;
+			}
 		} else {
 				/* The 'to' space holds at least one object (normal case). The
 				 * 'from' space is completely empty and will be the next 'to' space

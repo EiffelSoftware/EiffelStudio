@@ -16,6 +16,13 @@ inherit
 
 feature -- Test routines
 
+	test_0hh0mi0ss
+		local
+			t: TIME
+		do
+			create t.make_from_string ("180500", "[0]hh[0]mi[0]ss")
+		end
+
 	test_yyyy_mm_dd
 		do
 			test_formatted_out_date ("YYYY MM DD", new_date)

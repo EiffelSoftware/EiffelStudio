@@ -211,7 +211,7 @@ feature -- Interface
 						if code /= Void then
 							l_substrg2 := l_substrgs.substrg2
 							Result := Result and (pos2 /= s.count) and
-								l_substrg2.is_equal (code.value)
+								l_substrg2.same_string (code.value)
 						end
 					end
 					pos1 := pos2 + 1
@@ -332,9 +332,8 @@ feature -- Interface
 					end
 					Result.append (int.out)
 				when {DATE_TIME_CODE}.fractional_second_numeric_type_code then
-					double := time.fractional_second *
-						10 ^ (l_item.count_max)
-					int := double.truncated_to_integer
+					double := time.fractional_second * 10 ^ (l_item.count_max)
+					int := double.rounded
 					l_tmp := int.out
 					if l_tmp.count < l_item.count_max then
 						Result.append (create {STRING}.make_filled ('0', l_item.count_max - l_tmp.count))
@@ -656,7 +655,7 @@ feature {NONE} -- Implementation
 			-- Cached instance of date-time string parser
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

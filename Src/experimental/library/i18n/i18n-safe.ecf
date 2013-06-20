@@ -26,6 +26,10 @@
 			<condition>
 				<platform value="windows"/>
 			</condition>
+			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
+			<renaming old_name="THREAD_STATE" new_name="SYSTEM_THREAD_STATE"/>
+			<renaming old_name="TIMER" new_name="SYSTEM_TIMER"/>
+			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
 		</assembly>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll">
 			<condition>

@@ -94,12 +94,12 @@ feature -- Visit nodes
 			end
 			append_text_indent ("<system")
 			append_text (" xmlns=%"")
-			append_text_escaped (Namespace)
+			append_text_escaped (Namespace, False)
 --Alternative:	append_text (utf.string_32_to_utf_8_string_8 (Namespace)) -- FIXME: maybe add utf-8 BOM ...
 			append_text ("%"")
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
 			append_text (" xsi:schemaLocation=%"")
-			append_text_escaped (Schema)
+			append_text_escaped (Schema, False)
 			append_text ("%"")
 			append_text_attribute ("name", a_system.name)
 			append_text (" uuid=%"" + a_system.uuid.out + "%"")
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			end
 			if a_value /= Void and not a_value.is_empty then
 				append_text (">")
-				append_text_escaped (a_value)
+				append_text_escaped (a_value, True)
 				append_text ("</")
 				append_text (u.string_32_to_utf_8_string_8 (a_name))
 				append_text (">%N")
@@ -481,8 +481,9 @@ feature {NONE} -- Implementation
 			text.append (a_text)
 		end
 
-	append_text_escaped (v: READABLE_STRING_GENERAL)
-			-- Append `v' replacing special characters by character references.
+	append_text_escaped (v: READABLE_STRING_GENERAL; multiline: BOOLEAN)
+			-- Append `v' replacing special characters by character references,
+			-- if `multiline' is False, also escape any New Line.
 		require
 			attached_v: v /= Void
 		local
@@ -505,13 +506,17 @@ feature {NONE} -- Implementation
 				when '&' then text.append_string_general (amp_entity)
 				when '"' then text.append_string_general (quot_entity)
 				else
-					if ' ' <= c and then c <= '%/127/' then
-						text.append_character (c.to_character_8)
+					if multiline and then c = '%N' then
+						text.append_character ('%N')
 					else
-						text.append_character ('&')
-						text.append_character ('#')
-						text.append_natural_32 (c.code.as_natural_32)
-						text.append_character (';')
+						if ' ' <= c and then c <= '%/127/' then
+							text.append_character (c.to_character_8)
+						else
+							text.append_character ('&')
+							text.append_character ('#')
+							text.append_natural_32 (c.code.as_natural_32)
+							text.append_character (';')
+						end
 					end
 				end
 			end
@@ -529,7 +534,7 @@ feature {NONE} -- Implementation
 			text.append_string_general (n)
 			text.append_character ('=')
 			text.append_character ('"')
-			append_text_escaped (v)
+			append_text_escaped (v, False)
 			text.append_character ('"')
 		end
 
@@ -570,7 +575,7 @@ feature {NONE} -- Implementation
 					if not space_delimiter.is_empty then
 						append_text (space_delimiter)
 					end
-					append_text_escaped (get_name.item ([v.item]).as_lower)
+					append_text_escaped (get_name.item ([v.item]).as_lower, False)
 					space_delimiter := once " "
 					v.forth
 				end
@@ -1199,7 +1204,7 @@ feature {NONE} -- Implementation
 		do
 			if not a_note.element_name.is_empty then
 				append_text_indent ("<")
-				append_text_escaped (a_note.element_name)
+				append_text_escaped (a_note.element_name, False)
 				indent := indent + 1
 				l_attr := a_note.attributes
 				from

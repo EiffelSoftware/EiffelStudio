@@ -196,7 +196,6 @@ feature {NONE} -- Handle mouse clicks
 			text_displayed /= Void
 			x_valid: x_pos > 0
 			y_valid: y_pos > 0
-			cursors_set: cursors /= Void
 			has_cursor: text_displayed.has_cursor
 		local
 			old_l_number	: INTEGER

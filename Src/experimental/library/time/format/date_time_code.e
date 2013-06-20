@@ -9,6 +9,8 @@ class DATE_TIME_CODE inherit
 
 	CODE_VALIDITY_CHECKER
 
+	DEBUG_OUTPUT
+
 create
 
 	make
@@ -24,6 +26,33 @@ feature -- Creation
 			set_value (v)
 		ensure
 			value_set: value.is_equal (v)
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_empty
+			Result.append (type.out)
+			Result.append (" -> ")
+			Result.append (name)
+		end
+
+	is_separator_code: BOOLEAN
+		do
+			inspect type
+			when
+				colon_type_code,
+				slash_type_code,
+				minus_type_code,
+				comma_type_code,
+				space_type_code,
+				dot_type_code
+			then
+				Result := True
+			else
+			end
 		end
 
 feature -- Change
@@ -307,7 +336,7 @@ feature {FIND_SEPARATOR_FACILITY} -- Implementation
 		-- Type code constants
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

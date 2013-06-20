@@ -278,16 +278,16 @@ feature -- Conversion
 		require
 			finite: upper_defined and lower_defined
 		local
-			i: INTEGER
+			i, nb: INTEGER
 		do
-			create Result.make_empty
-			Result.rebase (lower)
 			from
 				i := lower
+				nb := upper
+				create Result.make_filled (0, i, nb)
 			until
-				i > upper
+				i > nb
 			loop
-				Result.force (i, i)
+				Result.put (i, i)
 				i := i + 1
 			end
 		ensure
@@ -471,7 +471,7 @@ invariant
 	not_infinite: upper_defined and lower_defined
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

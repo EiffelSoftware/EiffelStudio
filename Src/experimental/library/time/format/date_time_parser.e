@@ -222,6 +222,9 @@ feature -- Basic operations
 				l_item := code.item (i)
 				if l_item = Void then
 					pos1 := s.count + 1
+				elseif l_item.is_separator_code then
+					i := i + 1
+					pos1 := pos1 + l_item.count_max
 				else
 					if has_seps then
 						pos2 := find_separator (s, pos1)
@@ -229,7 +232,11 @@ feature -- Basic operations
 						pos2 := (pos1 + l_item.count_max - 1) * -1
 					end
 					l_substrg := extracted_substrings (s, pos1, pos2).substrg
-					pos2 := abs (pos2)
+
+					if pos2 <= 0 then
+						pos2 := -pos2 + 1
+					end
+
 					type := l_item.type
 					inspect
 						type
@@ -300,15 +307,11 @@ feature -- Basic operations
 					when {DATE_TIME_CODE}.second_numeric_type_code, {DATE_TIME_CODE}.second_numeric_on_2_digits_type_code then
 						second_val := l_substrg.to_integer
 					when {DATE_TIME_CODE}.fractional_second_numeric_type_code then
-						fine_second_val := l_substrg.to_double /
-							(10 ^ (l_substrg.count))
+						fine_second_val := l_substrg.to_double / (10 ^ (l_substrg.count))
 					end
-					if has_seps then
-						i := i + 2
-					else
-						i := i + 1
-					end
-					pos1 := pos2 + 1
+
+					pos1 := pos2
+					i := i + 1
 				end
 			end
 			if l_hour_val_need_computation then
@@ -368,7 +371,7 @@ invariant
 	valid_value_implies_parsing: is_value_valid implies parsed
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -429,6 +429,7 @@ feature {NONE} -- Action handlers
 			not_is_recycled: not is_recycled
 			is_support_accessible: support_login.is_support_accessible
 		do
+			on_remember_me_toggled
 			execute_with_busy_cursor (agent
 				local
 					l_error: ES_ERROR_PROMPT

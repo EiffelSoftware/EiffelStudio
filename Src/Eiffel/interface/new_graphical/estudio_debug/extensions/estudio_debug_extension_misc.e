@@ -35,7 +35,12 @@ feature -- Execution
 			a_menu.extend (create {EV_MENU_SEPARATOR})
 
 				--| Force Call on Void
-			create l_menu_item.make_with_text_and_action ("Force Call on Void target", agent local s: STRING do s.to_lower end)
+			create l_menu_item.make_with_text_and_action ("Raise Exception (debug)", agent local e: DEVELOPER_EXCEPTION
+					do
+						create e
+						e.set_description ("Exception raised by user interaction / EiffelStudio")
+						e.raise
+					end)
 			a_menu.extend (l_menu_item)
 		end
 
@@ -71,7 +76,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

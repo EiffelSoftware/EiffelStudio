@@ -1,6 +1,6 @@
 note
 	description: "[
-		Dialog that submit exception as bug report to http://supprt.eiffel.com
+		Dialog that submit exception as bug report to http://support.eiffel.com
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -337,10 +337,12 @@ feature {NONE} -- Implementation: access
 			is_initialized: is_initialized or is_initializing
 			is_user_remembered: is_user_remembered
 		do
-			if session_manager.is_service_available then
-				Result ?= session_data.value (username_session_id)
-			end
-			if Result = Void then
+			if
+				session_manager.is_service_available and then
+				attached {STRING_GENERAL} session_data.value (username_session_id) as s
+			then
+				Result := s
+			else
 				create {STRING_32} Result.make_empty
 			end
 		ensure
@@ -354,10 +356,12 @@ feature {NONE} -- Implementation: access
 			is_initialized: is_initialized or is_initializing
 			is_user_remembered: is_user_remembered
 		do
-			if session_manager.is_service_available then
-				Result ?= session_data.value (password_session_id)
-			end
-			if Result = Void then
+			if
+				session_manager.is_service_available and then
+				attached {STRING_GENERAL} session_data.value (password_session_id) as s
+			then
+				Result := s
+			else
 				create {STRING_32} Result.make_empty
 			end
 		ensure
@@ -507,8 +511,9 @@ feature {NONE} -- Action handlers
 						l_warning.set_button_action ({ES_DIALOG_BUTTONS}.ok_button, agent do execute_with_busy_cursor (agent submit_bug_report) end)
 						l_warning.show (dialog)
 					else
+						is_submit_successed := False
+							-- is_submit_successed will be set by `submit_bug_report'
 						execute_with_busy_cursor (agent submit_bug_report)
-						is_submit_successed := True
 					end
 				else
 					create l_error.make_standard (locale_formatter.translation (e_submit_error))
@@ -932,6 +937,7 @@ feature {NONE} -- Reporting
 				create l_thanks.make_standard (locale_formatter.translation (lb_submitted))
 				l_thanks.set_sub_title (locale_formatter.translation (tt_thank_you))
 				l_thanks.show (dialog)
+				is_submit_successed := True
 			else
 				if attached l_transistion and then l_transistion.is_shown then
 						-- Need to hide the transition window if there was a failure.
@@ -939,6 +945,10 @@ feature {NONE} -- Reporting
 				end
 				create l_error.make_standard (locale_formatter.translation (e_submit_error))
 				l_error.show (dialog)
+				is_submit_successed := False
+					-- Do not close the submit dialog when error occurs
+					-- this way the user can try again
+				is_close_vetoed := True
 			end
 		rescue
 			retried := True
@@ -1001,7 +1011,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

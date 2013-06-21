@@ -22,7 +22,7 @@ feature -- Query
 			-- Retrieve full URL for support site
 			--
 			-- `a_relative_url': Relative url to the support site
-			-- `a_secure': Indicates if a suecure connection should be used.
+			-- `a_secure': Indicates if a secure connection should be used.
 			-- `Result': An absolute URL to the requested page
 		require
 			not_a_relative_url_is_empty: a_relative_url /= Void implies not a_relative_url.is_empty
@@ -288,7 +288,7 @@ feature {NONE}
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

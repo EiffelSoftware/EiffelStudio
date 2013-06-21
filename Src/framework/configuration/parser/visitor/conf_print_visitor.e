@@ -917,7 +917,7 @@ feature {NONE} -- Implementation
 				l_debugs := an_options.debugs
 				if l_debugs /= Void and then not l_debugs.is_empty then
 					create l_sorted_list.make_from_array (l_debugs.current_keys)
-					create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
+					create l_sorter.make (create {STRING_COMPARATOR}.make)
 					l_sorter.sort (l_sorted_list)
 					from
 						l_sorted_list.start
@@ -966,7 +966,7 @@ feature {NONE} -- Implementation
 				l_warnings := an_options.warnings
 				if l_warnings /= Void and then not l_warnings.is_empty then
 					create l_sorted_list.make_from_array (l_warnings.current_keys)
-					create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
+					create l_sorter.make (create {STRING_COMPARATOR}.make)
 					l_sorter.sort (l_sorted_list)
 					from
 						l_sorted_list.start

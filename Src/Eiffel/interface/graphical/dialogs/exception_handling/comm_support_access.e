@@ -237,9 +237,6 @@ feature {NONE} -- Basic operations
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not a_url.is_empty implies not Result.is_empty
-			forward_slash_replaced: not Result.has_substring ("/")
-			plus_replaced: not Result.has_substring ("+")
-			ampersand_replaced: not Result.has_substring ("&")
 		end
 
 feature {NONE} -- Constants

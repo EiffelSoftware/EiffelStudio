@@ -46,7 +46,11 @@ feature {NONE} -- Initialization
 
 			l_project := eiffel_project
 			create l_uuid.make_from_string (testing_library_uuid)
-			if l_project.universe.library_of_uuid (l_uuid, False).is_empty and not library_prompt_cell.item then
+			if
+				attached l_project.universe.target and then
+				l_project.universe.library_of_uuid (l_uuid, False).is_empty and then
+				not library_prompt_cell.item
+			then
 					-- Testing library has not been added yet
 				library_prompt_cell.put (True)
 				l_debugger_manager := debugger_manager

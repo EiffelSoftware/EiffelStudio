@@ -340,9 +340,8 @@ feature {NONE} -- Events
 					type_parser.parse_from_string_32 ({STRING_32} "type " + l_types, Void)
 					error_handler.wipe_out
 					if attached type_parser.type_node as l_type_as then
-						if test_suite.is_service_available then
+						if test_suite.is_service_available and then etest_suite.eiffel_project.system_defined then
 							l_system := etest_suite.project_access.project.system.system
-
 							from
 								l_system.root_creators.start
 								l_error := e_unable_to_check_compiled_classes
@@ -352,7 +351,6 @@ feature {NONE} -- Events
 								l_error := validate_type (l_type_as, l_system.root_creators.item_for_iteration)
 								l_system.root_creators.forth
 							end
-
 							if l_error /= Void then
 								Result.valid := False
 								Result.error := locale_formatter.formatted_translation (l_error, [l_types])

@@ -1132,12 +1132,12 @@ feature {NONE} -- Implementation
 			l_target.add_cluster (l_cluster)
 
 				-- Add base library
-			l_library := l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base.ecf", l_target)
+			l_library := l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base-safe.ecf", l_target)
 			l_target.add_library (l_library)
 
 			if l_target.precompile = Void then
 					-- No precompile is set, add base as precompile
-				l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base.ecf", l_target)
+				l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base-safe.ecf", l_target)
 				l_target.set_precompile (l_precompile)
 			end
 		ensure
@@ -1154,8 +1154,11 @@ feature {NONE} -- Implementation
 			a_target_not_void: a_target /= Void
 		local
 			l_factory: CONF_FACTORY
-			l_library_name, l_ecf_path: STRING_32
+			l_library_name: STRING_32
+			l_ecf_path: detachable STRING_32
 			l_library: CONF_LIBRARY
+			l_loc: CONF_FILE_LOCATION
+			ut: FILE_UTILITIES
 		do
 			create l_factory
 				-- Check if extension denotes a configuration file
@@ -1168,24 +1171,39 @@ feature {NONE} -- Implementation
 			else
 					-- The library is specified as name only
 				l_library_name := a_library.name
-					-- Guess location
-				l_ecf_path := {STRING_32} "$ISE_LIBRARY/library/" + l_library_name + "/" + l_library_name + {EIFFEL_CONSTANTS}.dotted_config_extension
+
+					-- Guess location					
+				l_ecf_path := {STRING_32} "$ISE_LIBRARY/library/" + l_library_name + "/" + l_library_name + "-safe" + {EIFFEL_CONSTANTS}.dotted_config_extension
+				create l_loc.make (l_ecf_path, a_target)
+				if not ut.file_path_exists (l_loc.evaluated_path) then
+					l_ecf_path := {STRING_32} "$ISE_LIBRARY/library/" + l_library_name + "/" + l_library_name + {EIFFEL_CONSTANTS}.dotted_config_extension
+					create l_loc.make (l_ecf_path, a_target)
+					if not ut.file_path_exists (l_loc.evaluated_path) then
+						-- Todo: should we raise an error or just ignore?
+						l_ecf_path := Void
+					end
+				end
+
 					-- Todo: smarter guess, check if ECF exists in this location and try also $ISE_LIBRARY/framework/
 					-- Todo: check if location exist and raise an error if it does not
 					-- Todo: check if library can be used as precompile (e.g. Vision2)
 			end
 				-- Add library to ecf target
-			l_library := l_factory.new_library (l_library_name, l_ecf_path, a_target)
-			a_target.add_library (l_library)
+			if l_ecf_path /= Void then
+				l_library := l_factory.new_library (l_library_name, l_ecf_path, a_target)
+				a_target.add_library (l_library)
+			else
+				-- Todo: should we raise an error or just ignore?
+			end
 		end
 
-	is_gui_library (a_library: STRING): BOOLEAN
+	is_gui_library (a_library: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_library' a GUI library?
 			-- At the moment this only checks if 'Vision2' or 'WEL' is present.
 		require
 			a_library_not_void: a_library /= Void
 		do
-			Result := a_library.is_equal ("vision2") or a_library.is_equal ("wel")
+			Result := a_library.same_string ("vision2") or a_library.same_string ("wel")
 		end
 
 note

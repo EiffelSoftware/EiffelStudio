@@ -166,13 +166,11 @@ feature  -- Output
 			-- Print error message `s'.
 		require
 			s_not_void: s /= Void
-		local
-			l_file_name: like file_name
 		do
 			error_message.wipe_out;
-			l_file_name := file_name
-			if l_file_name /= Void then
-				error_message.append (l_file_name);
+			if attached file_path as l_file_path then
+					-- FIXME jfiat [2013/06/25] : unicode support
+				error_message.append (l_file_path.name.as_string_8) 
 			end
 			error_message.append (" (line ");
 			error_message.append_integer (token.line_number);
@@ -193,10 +191,20 @@ feature {NONE}
 
 	file_name : detachable STRING
 			-- Name of the file read by the lexical analyzer
+		obsolete
+			"use file_path"
 		require
 			lex_not_void: analyzer /= Void
 		do
 			Result := analyzer.file_name
+		end;
+
+	file_path: detachable PATH
+			-- Path of the file read by the lexical analyzer
+		require
+			lex_not_void: analyzer /= Void
+		do
+			Result := analyzer.source_file_path
 		end;
 
 	line_number : INTEGER

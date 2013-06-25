@@ -16,12 +16,15 @@ inherit
 			process_address_result_as,
 			process_id_as,
 			process_static_access_as,
+			process_access_id_as,
 			process_binary_as,
 			process_bin_eq_as,
 			process_bin_tilde_as,
 			process_bracket_as,
 			process_expr_call_as,
-			process_nested_as
+			process_nested_as,
+			process_address_as,
+			format_feature_name
 		end
 
 create
@@ -34,7 +37,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_text_formatter)
 			create expression_meta_stack.make (20)
-			create nested_expression.make_empty
+			create nested_expression_stack.make (5)
+			push_nested_expression
 		end
 
 feature {NONE} -- Processing
@@ -101,6 +105,23 @@ feature {NONE} -- Processing
 			end
 		end
 
+	process_access_id_as (a_as: ACCESS_ID_AS)
+		local
+			l_nested: BOOLEAN
+		do
+			l_nested := not nested_expression.is_empty
+			if not expr_type_visiting and then not l_nested then
+				push_expression
+				if is_function (a_as) then
+					text_formatter_decorator.set_meta_data (expression_meta_from_as (a_as))
+				end
+			end
+			Precursor {AST_DECORATED_OUTPUT_STRATEGY}(a_as)
+			if not expr_type_visiting and then not l_nested then
+				pop_expression
+			end
+		end
+
 	process_binary_as (a_as: BINARY_AS)
 		do
 			if not expr_type_visiting then
@@ -154,10 +175,12 @@ feature {NONE} -- Processing
 			if not expr_type_visiting then
 				push_expression
 				text_formatter_decorator.set_meta_data (expression_meta_from_as (a_as))
+				push_nested_expression
 			end
 			Precursor {AST_DECORATED_OUTPUT_STRATEGY}(a_as)
 			if not expr_type_visiting then
 				pop_expression
+				pop_nested_expression
 			end
 		end
 
@@ -192,7 +215,7 @@ feature {NONE} -- Processing
 				end
 				push_expression
 				if not l_nested_ex.is_empty then
-					text_formatter_decorator.set_meta_data (l_nested_ex)
+					text_formatter_decorator.set_meta_data (l_nested_ex.twin)
 				else
 					text_formatter_decorator.set_meta_data (Void)
 				end
@@ -207,7 +230,6 @@ feature {NONE} -- Processing
 
 				-- We only analyze the target.
 			if not expr_type_visiting then
-				create nested_expression.make_empty
 				pop_expression
 			end
 
@@ -221,12 +243,77 @@ feature {NONE} -- Processing
 			end
 		end
 
+	process_address_as (a_as: ADDRESS_AS)
+			-- <Precursor>
+		do
+			if not expr_type_visiting then
+				push_expression
+				text_formatter_decorator.set_meta_data (expression_meta_from_as (a_as))
+			end
+			Precursor {AST_DECORATED_OUTPUT_STRATEGY}(a_as)
+			if not expr_type_visiting then
+				pop_expression
+			end
+		end
+
 feature {NONE} -- Nested
 
+	nested_expression_stack: ARRAYED_STACK [STRING_32];
+			-- Stack to record expression meta info
+
 	nested_expression: STRING_32
-			-- Nested expression
+			-- Nested expression in current level
+		do
+			Result := nested_expression_stack.item
+		end
+
+	push_nested_expression
+			-- Push `meta_data' in to stack, and reset it.
+		do
+			nested_expression_stack.put (create {STRING_32}.make_empty)
+		end
+
+	pop_nested_expression
+			-- Pop stack, and restore `meta_data' with the top item.
+		do
+			nested_expression_stack.remove
+		end
 
 feature {NONE} -- Implementaiton
+
+	is_function (a_as: ACCESS_FEAT_AS): BOOLEAN
+			-- Is `a_as' a function?
+		require
+			a_as_not_void: a_as /= Void
+		local
+			l_last_type: like last_type
+			l_last_class: like last_class
+			l_ex_visiting: BOOLEAN
+		do
+			l_ex_visiting := expr_type_visiting
+			expr_type_visiting := True
+			l_last_type := last_type
+			l_last_class := last_class
+			last_type := Void
+			a_as.process (Current)
+			Result := last_type /= Void
+			last_type := l_last_type
+			last_class := l_last_class
+			expr_type_visiting := l_ex_visiting
+		end
+
+	format_feature_name (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
+			-- <Precursor>
+		do
+			if not expr_type_visiting then
+				push_expression
+				text_formatter_decorator.set_meta_data (text)
+			end
+			Precursor {AST_DECORATED_OUTPUT_STRATEGY}(text, a_feature, a_quote)
+			if not expr_type_visiting then
+				pop_expression
+			end
+		end
 
 	expression_meta_from_as (a_as: AST_EIFFEL): detachable READABLE_STRING_GENERAL
 			-- Get expression meta from AST

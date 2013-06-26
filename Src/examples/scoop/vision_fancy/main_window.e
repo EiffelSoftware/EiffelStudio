@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			l_menu_item.select_actions.extend (agent on_rectangle_selected)
 			create l_menu_item.make_with_text ("Oval")
 			l_menu.extend (l_menu_item)
-			l_menu_item.select_actions.extend (agent on_oval_selected)
+			l_menu_item.select_actions.extend (agent create_separate_oval)
 			l_menu.extend (create {EV_MENU_SEPARATOR})
 			create l_menu_item.make_with_text ("Exit")
 			l_menu.extend (l_menu_item)
@@ -143,6 +143,19 @@ feature {NONE} -- Actions
 			oval_window.show
 		end
 
+	create_separate_oval
+		local
+			l_w: separate OVAL_DEMO_WINDOW
+		do
+			create l_w.make
+			show_window (l_w)
+		end
+
+	show_window (a_w: separate EV_WINDOW)
+		do
+			a_w.show
+		end
+
 	oval_window: detachable OVAL_DEMO_WINDOW
 		note
 			option: stable
@@ -169,7 +182,7 @@ feature {NONE} -- Implementation: access
 			-- Drawing area for worker processor drawing rectangles.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

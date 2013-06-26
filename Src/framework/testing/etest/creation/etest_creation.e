@@ -241,7 +241,7 @@ feature {NONE} -- Basic operations
 								l_class_name,
 								attached {ETEST_MANUAL_CREATION} Current and then etest_suite.project_access.project.successful
 							)
-						else
+						elseif etest_suite.eiffel_project.system_defined then
 							etest_suite.project_access.project.system.system.rebuild_configuration
 						end
 							-- TODO: add new (uncompiled) tests to {ETEST_SUITE}
@@ -304,7 +304,7 @@ invariant
 	class_name_not_empty: not class_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

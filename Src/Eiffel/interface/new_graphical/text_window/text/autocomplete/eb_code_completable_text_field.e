@@ -38,6 +38,14 @@ inherit
 			copy
 		end
 
+	CURSOR_COMPLETABLE_POSITIONING
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	default_create,
 	make_with_text
@@ -308,144 +316,21 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			focus_out_actions.resume
 		end
 
-	calculate_completion_list_x_position: INTEGER
-			-- Determine the x position to display the completion list
+	cursor_screen_x: INTEGER
+			-- Cursor screen x position
 		local
-			screen: EV_SCREEN
-			right_space,
-			list_width: INTEGER
 			l_font: EV_FONT
 			l_text_before_cursor: STRING_32
 		do
-			create screen
-
-				-- Get current x position of cursor
 			l_font := font
-			l_text_before_cursor := text.substring (1, caret_position)
+			l_text_before_cursor := text.substring (1, caret_position - 1)
 			Result := screen_x + l_font.string_width (l_text_before_cursor)
-
-				-- Determine how much room there is free on the right of the screen from the cursor position
-			right_space := screen.virtual_right - Result - completion_border_size
-
-			list_width := calculate_completion_list_width
-
-			if right_space < list_width then
-					-- Shift x pos back so it fits on the screen
-				Result := Result - (list_width - right_space)
-			end
-			Result := Result.max (0)
 		end
 
-	calculate_completion_list_y_position: INTEGER
-			-- Determine the y position to display the completion list
-		local
-			screen: EV_SCREEN
-			preferred_height,
-			upper_space,
-			lower_space: INTEGER
-			show_below: BOOLEAN
+	cursor_screen_y: INTEGER
+			-- Cursor screen y position
 		do
-				-- Get y pos of cursor
-			create screen
-			show_below := True
 			Result := screen_y
-
-			if Result < ((screen.virtual_height / 3) * 2) then
-					-- Cursor in upper two thirds of screen
-				show_below := True
-			else
-					-- Cursor in lower third of screen
-				show_below := False
-			end
-
-			upper_space := Result - completion_border_size
-			lower_space := screen.virtual_bottom - Result - completion_border_size
-
-			if preferences.development_window_data.remember_completion_list_size then
-				preferred_height := preferences.development_window_data.completion_list_height
-
-				if show_below and then preferred_height > lower_space and then preferred_height <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then preferred_height <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
-
-				if show_below and then preferred_height > lower_space then
-						-- Not enough room to show below so we must resize
-					preferred_height := lower_space
-				elseif not show_below and then preferred_height >= upper_space then
-						-- Not enough room to show above so we must resize
-					preferred_height := upper_space
-				end
-			else
-				if show_below then
-					preferred_height := lower_space
-				else
-					preferred_height := upper_space
-				end
-			end
-
-			if show_below then
-				Result := Result + height
-			else
-				Result := Result - preferred_height
-			end
-		end
-
-	calculate_completion_list_height: INTEGER
-			-- Determine the height the completion should list should have
-		local
-			upper_space,
-			lower_space,
-			y_pos: INTEGER
-			screen: EV_SCREEN
-			show_below: BOOLEAN
-		do
-				-- Get y pos of cursor
-			create screen
-			show_below := True
-			y_pos := screen_y
-
-			if y_pos < ((screen.virtual_height / 3) * 2) then
-					-- Cursor in upper two thirds of screen
-				show_below := True
-			else
-					-- Cursor in lower third of screen
-				show_below := False
-			end
-
-			upper_space := y_pos - completion_border_size
-			lower_space := screen.virtual_bottom - y_pos - completion_border_size
-
-			if preferences.development_window_data.remember_completion_list_size then
-				Result := preferences.development_window_data.completion_list_height
-
-				if show_below and then Result > lower_space and then Result <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then Result <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
-
-				if show_below and then Result > lower_space then
-						-- Not enough room to show below so we must resize
-					Result := lower_space
-				elseif not show_below and then Result >= upper_space then
-						-- Not enough room to show above so we must resize
-					Result := upper_space
-				end
-			else
-				if show_below then
-					Result := lower_space
-				else
-					Result := upper_space
-				end
-			end
 		end
 
 	calculate_completion_list_width: INTEGER
@@ -458,6 +343,33 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 				Result := Precursor {EB_TAB_CODE_COMPLETABLE}
 			end
 			Result := Result.max (width)
+		end
+
+	use_preferred_height: BOOLEAN
+			-- User preferred height?
+		do
+			Result := preferences.development_window_data.remember_completion_list_size
+		end
+
+	preferred_height: INTEGER
+			-- Preferred height
+		do
+			Result := preferences.development_window_data.completion_list_height
+		end
+
+	working_area_height: INTEGER
+			-- Height of the working area. Normally current screen.
+		local
+			l_screen: EV_RECTANGLE
+		do
+			l_screen := (create {EV_SCREEN}).monitor_area_from_position (cursor_screen_x, cursor_screen_y)
+			Result := l_screen.height
+		end
+
+	line_height: INTEGER
+			-- Line height
+		do
+			Result := height
 		end
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
@@ -722,7 +634,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

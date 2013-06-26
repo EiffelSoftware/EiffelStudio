@@ -171,9 +171,10 @@ feature -- Placement
 			l_top_area: detachable like window_working_area
 			l_new_x: INTEGER
 			l_new_y: INTEGER
-			l_screen: EV_SCREEN
+			l_screen: EV_RECTANGLE
 		do
-			create l_screen
+			l_screen := (create {EV_SCREEN}).monitor_area_from_position (a_screen_x, a_screen_y)
+
 			l_top_window := widget_top_level_window (a_widget)
 			if l_top_window /= Void then
 				l_top_area := window_working_area (l_top_window)
@@ -200,8 +201,8 @@ feature -- Placement
 				l_new_y := a_screen_y
 			end
 
-			l_new_x := l_new_x.max (l_screen.virtual_x)
-			l_new_y := l_new_y.max (l_screen.virtual_y)
+			l_new_x := l_new_x.max (l_screen.x)
+			l_new_y := l_new_y.max (l_screen.y)
 
 			Result := [l_new_x, l_new_y]
 		ensure

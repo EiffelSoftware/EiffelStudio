@@ -75,6 +75,15 @@ inherit
 			show_help
 		end
 
+	CURSOR_COMPLETABLE_POSITIONING
+		export
+			{NONE} all
+		undefine
+			default_create
+		redefine
+			calculate_completion_list_x_position
+		end
+
 create
 	make
 
@@ -640,176 +649,79 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			end
 		end
 
-	calculate_completion_list_x_position: INTEGER
-			-- Determine the x position to display the completion list
+	cursor_screen_x: INTEGER
+			-- Cursor screen x position
 		local
-			screen: EV_SCREEN
 			tok: EDITOR_TOKEN
-			cursor: like cursor_type
-			right_space,
-			list_width: INTEGER
-			l_helpers: EVS_HELPERS
 		do
-			create screen
+			if attached text_displayed.cursor as cursor then
+				tok := cursor.token
+				tok.update_position
+				Result := tok.position + tok.get_substring_width (cursor.pos_in_token - 1) + widget.screen_x + left_margin_width - offset
+				if margin.line_numbers_enabled then
+					Result := Result + margin.width
+				end
+			end
+		end
 
-				-- Get current x position of cursor
-			cursor := text_displayed.cursor
-			tok := cursor.token
-			tok.update_position
-			Result := tok.position + tok.get_substring_width (cursor.pos_in_token) + widget.screen_x + left_margin_width - offset
+	cursor_screen_y: INTEGER
+			-- Cursor screen y position
+		do
+			if attached text_displayed.cursor as cursor then
+				Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)
+			end
+		end
 
-				-- Determine how much room there is free on the right of the screen from the cursor position
-			right_space := screen.virtual_right - Result - completion_border_size
+	working_area_height: INTEGER
+			-- <Precursor>
+		local
+			l_helpers: EVS_HELPERS
+			l_screen: EV_RECTANGLE
+		do
+			create l_helpers
+			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget) as l_window and then l_window.is_maximized then
+				Result := l_helpers.window_working_area (l_window).height
+			end
+			if Result = 0 then
+				l_screen := (create {EV_SCREEN}).monitor_area_from_position (cursor_screen_x, cursor_screen_y)
+				Result := l_screen.height
+			end
+		end
 
+	use_preferred_height: BOOLEAN
+			-- User preferred height?
+		do
+			Result := preferences.development_window_data.remember_completion_list_size
+		end
+
+	preferred_height: INTEGER
+			-- Preferred height
+		do
+			Result := preferences.development_window_data.completion_list_height
+		end
+
+	calculate_completion_list_x_position: INTEGER
+			-- <Precursor>
+		local
+			l_screen: EV_RECTANGLE
+			l_helpers: EVS_HELPERS
+			l_y, list_width, right_space: INTEGER
+		do
+			Result := Precursor {CURSOR_COMPLETABLE_POSITIONING}
+
+			l_screen := (create {EV_SCREEN}).monitor_area_from_position (cursor_screen_x, cursor_screen_y)
+			right_space := l_screen.right - Result
 			list_width := calculate_completion_list_width
 
-			if right_space < list_width then
-					-- Shift x pos back so it fits on the screen
-				Result := Result - (list_width - right_space)
-			end
-
-				-- Add margin width if necessary
-			if line_numbers_visible then
-				Result := Result + margin.width
-			end
-
-				-- Remove space for pixmap
-			Result := Result - 20
-
 			create l_helpers
 			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget) as l_window and then l_window.is_maximized then
-				Result := l_helpers.suggest_pop_up_widget_location_with_size (l_window, Result, 0, list_width, 10).x
-			end
-			Result := Result.max (screen.virtual_left)
-		end
-
-	calculate_completion_list_y_position: INTEGER
-			-- Determine the y position to display the completion list
-		local
-			cursor: like cursor_type
-			screen: EV_SCREEN
-			preferred_height,
-			upper_space,
-			lower_space: INTEGER
-			show_below: BOOLEAN
-			l_height: INTEGER
-			l_helpers: EVS_HELPERS
-		do
-				-- Get y pos of cursor
-			create l_helpers
-
-			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget) as l_window and then l_window.is_maximized then
-				l_height := l_helpers.window_working_area (l_window).height
-			end
-			if l_height = 0 then
-				create screen
-				l_height := screen.virtual_height
+				l_y := cursor_screen_y
+				Result := l_helpers.suggest_pop_up_widget_location_with_size (l_window, Result.max (l_screen.left), l_y, list_width, 10).x
+				Result := Result.max (l_screen.left)
 			end
 
-			cursor := text_displayed.cursor
-			show_below := True
-			Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)
-
-			if Result < ((l_height / 3) * 2) then
-					-- Cursor in upper two thirds of screen
-				show_below := True
-			else
-					-- Cursor in lower third of screen
-				show_below := False
-			end
-
-			upper_space := Result - completion_border_size
-			lower_space := l_height - Result - completion_border_size
-
-			if preferences.development_window_data.remember_completion_list_size then
-				preferred_height := preferences.development_window_data.completion_list_height
-
-				if show_below and then preferred_height > lower_space and then preferred_height <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then preferred_height <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
-
-				if show_below and then preferred_height > lower_space then
-						-- Not enough room to show below so we must resize
-					preferred_height := lower_space
-				elseif not show_below and then preferred_height >= upper_space then
-						-- Not enough room to show above so we must resize
-					preferred_height := upper_space
-				end
-			else
-				if show_below then
-					preferred_height := lower_space
-				else
-					preferred_height := upper_space
-				end
-			end
-
-			if show_below then
-				Result := Result + line_height + 5
-			else
-				Result := Result - preferred_height
-			end
-		end
-
-	calculate_completion_list_height: INTEGER
-			-- Determine the height the completion should list should have
-		local
-			upper_space,
-			lower_space,
-			y_pos: INTEGER
-			screen: EV_SCREEN
-			cursor: like cursor_type
-			show_below: BOOLEAN
-			tok: EDITOR_TOKEN
-		do
-				-- Get y pos of cursor
-			create screen
-			cursor := text_displayed.cursor
-			tok := cursor.token
-			tok.update_position
-			show_below := True
-			y_pos := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)
-
-			if y_pos < ((screen.virtual_height / 3) * 2) then
-					-- Cursor in upper two thirds of screen
-				show_below := True
-			else
-					-- Cursor in lower third of screen
-				show_below := False
-			end
-
-			upper_space := y_pos - completion_border_size
-			lower_space := screen.virtual_bottom - y_pos - completion_border_size
-
-			if preferences.development_window_data.remember_completion_list_size then
-				Result := preferences.development_window_data.completion_list_height
-
-				if show_below and then Result > lower_space and then Result <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then Result <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
-
-				if show_below and then Result > lower_space then
-						-- Not enough room to show below so we must resize
-					Result := lower_space
-				elseif not show_below and then Result >= upper_space then
-						-- Not enough room to show above so we must resize
-					Result := upper_space
-				end
-			else
-				if show_below then
-					Result := lower_space
-				else
-					Result := upper_space
-				end
+			if right_space > list_width then
+				Result := Result - 20
 			end
 		end
 
@@ -1915,7 +1827,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

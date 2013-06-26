@@ -98,7 +98,6 @@ feature
 				cecil_basket.extend ("sig.o"); cecil_basket.finish
 				cecil_basket.extend ("hector.o"); cecil_basket.finish
 				cecil_basket.extend ("cecil.o"); cecil_basket.finish
-				cecil_basket.extend ("bits.o"); cecil_basket.finish
 				cecil_basket.extend ("file.o"); cecil_basket.finish
 				cecil_basket.extend ("dir.o"); cecil_basket.finish
 				cecil_basket.extend ("misc.o"); cecil_basket.finish
@@ -255,7 +254,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -61,16 +61,16 @@ def run_one(params, nthreads, problem):
   return result
 
 def run_all(csv_writer, params, redirect_output=True):
-  for nthreads in threads:
-    for problem in get_all():
+  for problem in get_all():
+    for nthreads in threads:
       (time, mem_usage) = run_one(params, nthreads, problem)
       csv_writer.writerow([problem, nthreads, time, mem_usage])
 
 
-TOTAL_EXECUTIONS = 2
+TOTAL_EXECUTIONS = 3
 
 def svn_version():
-  p = Popen('svnversion', shell=True, stdout=PIPE, stderr=PIPE)
+  p = Popen('svnversion -n', shell=True, stdout=PIPE, stderr=PIPE)
   (stdout, stderr) = p.communicate()
   if stdout.find("Unversioned") >= 0:
     stdout = "unversioned"

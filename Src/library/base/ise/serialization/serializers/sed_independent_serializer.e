@@ -9,10 +9,13 @@ note
 class
 	SED_INDEPENDENT_SERIALIZER
 
+obsolete
+	"Use SED_RECOVERABLE_SERIALIZER instead."
+
 inherit
 	SED_BASIC_SERIALIZER
 		redefine
-			write_header, is_store_settings_enabled
+			write_header, is_store_settings_enabled, set_version
 		end
 
 create
@@ -24,6 +27,15 @@ feature {NONE} -- Status Report
 			-- <Precursor>
 		do
 			Result := False
+		end
+
+feature {NONE} -- Implementation: Setting
+
+	set_version (v: like version)
+			-- <Precursor>
+		do
+				-- Artificially set to 5.6 as we are dropping support for this format in the future.
+			version := {SED_VERSIONS}.version_5_6
 		end
 
 feature {NONE} -- Implementation

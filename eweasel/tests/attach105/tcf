@@ -1,0 +1,12 @@
+test_name 	 initialization-in-postcondition
+test_description Result of a detachable type should not be treated as initialized in a postcondition.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error A VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2); TEST VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2)
+
+test_end

@@ -126,7 +126,7 @@ feature {NONE} -- Visitor implementation
 					-- Make an array of names in the chain.
 				create n.make_filled (0, l_as.chain.count)
 				across l_as.chain as l_chain loop
-					n [i] := l_chain.item.name_id
+					n [i] := l_chain.item.name.name_id
 					i := i + 1
 				end
 				create t.make (q, n)

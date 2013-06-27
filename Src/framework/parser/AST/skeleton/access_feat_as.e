@@ -16,13 +16,16 @@ inherit
 			is_equivalent
 		end
 
-	ID_SET_ACCESSOR
+	FEATURE_ID_AS
 		rename
-			make as make_id_set,
 			id_set as routine_ids,
+			make as make_feature_id,
+			name as feature_name,
 			set_id_set as set_routine_ids
-		undefine
-			is_equal, copy
+		redefine
+			is_equivalent,
+			last_token,
+			process
 		end
 
 create
@@ -35,8 +38,8 @@ feature {NONE} -- Initialization
 		require
 			f_not_void: f /= Void
 		do
-			feature_name := f
 			set_parameters (p)
+			make_feature_id (f)
 		ensure
 			feature_name_set: feature_name = f
 			internal_parameters_set: internal_parameters = p
@@ -51,9 +54,6 @@ feature -- Visitor
 		end
 
 feature -- Attributes
-
-	feature_name: ID_AS
-			-- Name of the feature called
 
 	parameters: detachable EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
@@ -107,9 +107,6 @@ feature -- Attributes
 			Result := (flags & is_tuple_access_flag) = is_tuple_access_flag
 		end
 
-	class_id: INTEGER
-			-- The class id of the qualified call.
-
 	argument_position: INTEGER
 			-- If the current entity is an argument this gives the position in the argument list.
 		require
@@ -138,18 +135,7 @@ feature -- Roundtrip
 	internal_parameters: detachable PARAMETER_LIST_AS
 			-- Internal list of parameters, in which "(" and ")" are stored
 
-	index: INTEGER
-			-- <Precursor>
-		do
-			Result := feature_name.index
-		end
-
 feature -- Roundtrip/Token
-
-	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-		do
-			Result := feature_name.first_token (a_list)
-		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
@@ -157,13 +143,13 @@ feature -- Roundtrip/Token
 				if attached parameters as l_params then
 					Result := l_params.last_token (a_list)
 				else
-					Result := feature_name.last_token (a_list)
+					Result := Precursor (a_list)
 				end
 			else
 				if attached internal_parameters as l_params then
 					Result := l_params.last_token (a_list)
 				else
-					Result := feature_name.last_token (a_list)
+					Result := Precursor (a_list)
 				end
 			end
 		end
@@ -181,8 +167,8 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (feature_name, other.feature_name) and
-				equivalent (parameters, other.parameters) and
+			Result := Precursor (other) and then
+				equivalent (parameters, other.parameters) and then
 				is_delayed = other.is_delayed
 		end
 
@@ -203,16 +189,6 @@ feature -- Setting
 			internal_parameters := p
 		ensure
 			internal_parameters_set: internal_parameters = p
-		end
-
-	set_class_id (a_class_id: like class_id)
-			-- Set `class_id' to `a_class_id'.
-		require
-			a_class_id_ok: a_class_id > 0 or a_class_id = -1
-		do
-			class_id := a_class_id
-		ensure
-			class_id_set: class_id = a_class_id
 		end
 
 	set_argument_position (an_argument_position: like argument_position)

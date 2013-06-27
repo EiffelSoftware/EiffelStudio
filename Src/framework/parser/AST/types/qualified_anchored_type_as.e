@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			qualifier_set: qualifier = t
 			chain_attached: attached chain
 			chain_of_one_element: chain.count = 1
-			name_set: chain.last = f
+			name_set: chain.last.name = f
 			separator_set: attached d implies attached chain.separator_list as s and then s.last = d.index
 		end
 
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			qualifier_set: qualifier = t
 			chain_attached: attached chain
 			chain_of_one_element: chain.count = 1
-			name_set: chain.last = f
+			name_set: chain.last.name = f
 			separator_set: attached d implies attached chain.separator_list as s and then s.last = d.index
 		end
 
@@ -75,9 +75,9 @@ feature -- Modification
 			if attached d as s then
 				chain.extend_separator (s)
 			end
-			chain.extend (i)
+			chain.extend (create {FEATURE_ID_AS}.make (i))
 		ensure
-			extended: chain.last = i
+			extended: chain.last.name = i
 			separator_list_extended: attached d implies attached chain.separator_list as s and then s.last = d.index
 		end
 
@@ -102,8 +102,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := like_keyword_index
-			if i /= 0 and then a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if i /= 0 and then a_list.valid_index (i) and then attached {like like_keyword} a_list.i_th (i) as r then
+				Result := r
 			end
 		end
 
@@ -119,7 +119,7 @@ feature -- Attributes
 			-- First part of the chain, including explicit or anchored type
 			-- E.g., "like a" for "like a.b.c.d" and "{A}" for "like {A}.b.c.d"
 
-	chain: EIFFEL_LIST [ID_AS]
+	chain: EIFFEL_LIST [FEATURE_ID_AS]
 			-- Last part of the anchored type, including all feature names in the chain
 			-- E.g.: "b, c, d" for "like a.b.c.d" and "like {A}.b.c.d"
 
@@ -174,10 +174,10 @@ feature -- Output
 				Result.append_character ('}')
 			end
 			chain.do_all (
-				agent (i: ID_AS; s: STRING)
+				agent (i: FEATURE_ID_AS; s: STRING)
 					do
 						s.append_character ('.')
-						s.append_string (i.name)
+						s.append_string (i.name.name)
 					end
 				(?, Result)
 			)
@@ -189,7 +189,7 @@ invariant
 	chain_not_empty: not chain.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1080,6 +1080,12 @@ feature
 			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
+	process_feature_id_as (l_as: FEATURE_ID_AS)
+			-- <Precursor>
+		do
+			safe_process (l_as.name)
+		end
+
 	process_formal_as (l_as: FORMAL_AS)
 		do
 			safe_process (l_as.lcurly_symbol (match_list))

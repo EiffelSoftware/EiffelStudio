@@ -36,6 +36,11 @@ inherit
 	SHARED_DEGREES
 	SHARED_INSTANTIATOR
 
+	SHARED_TMP_SERVER
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	has_error_reporting: BOOLEAN
@@ -771,6 +776,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 			e: like error_handler.error_level
 			a: LIKE_CURRENT
+			ast: detachable QUALIFIED_ANCHORED_TYPE_AS
 		do
 			if attached error_handler as h then
 				e := h.error_level
@@ -783,6 +789,9 @@ feature {NONE} -- Implementation
 			end
 			if attached q then
 				t.set_qualifier (q)
+				if attached {QUALIFIED_ANCHORED_TYPE_AS} associated_type_ast as ast_node then
+					ast := ast_node
+				end
 				n := t.chain.count
 				create routine_id.make_filled (0, n)
 				from
@@ -839,6 +848,12 @@ feature {NONE} -- Implementation
 								instantiator.dispatch (q.conformance_type, current_class)
 									-- Record routine ID that is used to update the type in descendants.
 								routine_id [i] := f.rout_id_set.first
+								if attached ast and then tmp_ast_server.is_loaded (current_class.class_id) then
+										-- Update AST with the type information for refactoring.
+									ast.chain [i + 1].set_id_set (f.rout_id_set)
+									ast.chain [i + 1].set_class_id (c.class_id)
+									tmp_ast_server.touch (current_class.class_id)
+								end
 								if attached suppliers as s then
 										-- There is a dependance between `current_feature' and `f'.
 										-- Record it for the propagation of the recompilations

@@ -19,6 +19,7 @@ inherit
 			process_create_as,
 			process_like_id_as,
 			process_qualified_anchored_type_as,
+			process_feature_id_as,
 			process_feat_name_id_as, process_infix_prefix_as,
 			process_feature_as, process_body_as,
 			process_access_feat_as,
@@ -259,6 +260,22 @@ feature {NONE} -- Visitor implementation
 			safe_process (l_as.chain)
 		end
 
+	process_feature_id_as (l_as: FEATURE_ID_AS)
+			-- Process `l_as'.
+		do
+			if recursive_descendants.has (l_as.class_id) then
+					-- check if it is the right feature (correct has old routine_id and old name)
+				if
+					attached l_as.id_set as routine_ids and then
+					routine_ids.has (feature_i.rout_id_set.first) and then
+					old_feature_name.is_case_insensitive_equal (l_as.name.name)
+				then
+					l_as.name.replace_text (new_feature_name, match_list)
+					has_modified := True
+				end
+			end
+		end
+
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 			-- Process feature name.
 		do
@@ -291,8 +308,6 @@ feature {NONE} -- Visitor implementation
 
 	process_body_as (l_as: BODY_AS)
 			-- Process body part.
-		local
-			c_as: CONSTANT_AS
 		do
 			safe_process (l_as.internal_arguments)
 			safe_process (l_as.type)
@@ -307,9 +322,8 @@ feature {NONE} -- Visitor implementation
 				has_modified := True
 			end
 
-			c_as ?= l_as.content
-			if c_as /= Void then
-				l_as.content.process (Current)
+			if attached {CONSTANT_AS} l_as.content as c_as then
+				c_as.process (Current)
 				safe_process (l_as.indexing_clause)
 			else
 				safe_process (l_as.indexing_clause)
@@ -321,17 +335,7 @@ feature {NONE} -- Visitor implementation
 			-- Process `l_as'.
 		do
 			safe_process (l_as.parameters)
-			if recursive_descendants.has (l_as.class_id) then
-					-- check if it is the right feature (correct has old routine_id and old name)
-				if
-					l_as.routine_ids /= Void and then
-					l_as.routine_ids.has (feature_i.rout_id_set.first) and then
-					old_feature_name.is_case_insensitive_equal (l_as.feature_name.name)
-				then
-					l_as.feature_name.replace_text (new_feature_name, match_list)
-					has_modified := True
-				end
-			end
+			process_feature_id_as (l_as)
 		end
 
 	process_access_id_as (l_as: ACCESS_ID_AS)

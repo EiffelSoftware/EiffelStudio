@@ -15,15 +15,16 @@ class
 	SED_RECOVERABLE_DESERIALIZER
 
 inherit
-	SED_INDEPENDENT_DESERIALIZER
+	SED_BASIC_DESERIALIZER
 		redefine
 			make,
 			read_header,
-			read_attributes,
+			read_persistent_field_count,
+			new_attribute_offset,
+			is_transient_retrieval_required,
 			clear_internal_data,
 			decode_normal_object,
-			decode_objects,
-			is_store_settings_enabled
+			decode_objects
 		end
 
 	MISMATCH_CORRECTOR
@@ -38,34 +39,6 @@ feature {NONE} -- Initialization
 			Precursor (a_deserializer)
 			create mismatches.make (0)
 			create mismatched_object.make (0)
-		end
-
-feature {NONE} -- Implementation: access
-
-	class_type_translator: detachable FUNCTION [ANY, TUPLE [STRING], STRING]
-			-- Provide a mapping between a class type from the storable to a class type
-			-- in the retrieving system.
-
-	attribute_name_translator: detachable FUNCTION [ANY, TUPLE [STRING, INTEGER], STRING]
-			-- Provide a mapping for an attribute name for a give type ID.
-
-	is_conforming_mismatch_allowed: BOOLEAN
-			-- Do we not trigger a mismatch when an attribute type in the stored system is
-			-- different from the retrieving system but conforming?
-
-	is_attribute_removal_allowed: BOOLEAN
-			-- Do we not trigger a mismatch when an attribute has been removed?
-
-	is_stopping_on_data_retrieval_error: BOOLEAN
-			-- When retrieving objects, should we stop at the first occurrence of a mismatch?
-
-	is_checking_data_consistency: BOOLEAN
-			-- After retrieving objects, should we check that all objects are consistent?
-
-	is_store_settings_enabled: BOOLEAN
-			-- <Precursor>
-		do
-			Result := True
 		end
 
 feature -- Settings
@@ -142,13 +115,58 @@ feature -- Settings
 			is_checking_data_consistency_set: is_checking_data_consistency = v
 		end
 
-feature {NONE} -- Status report
+feature {NONE} -- Implementation: access
+
+	attributes_mapping: detachable SPECIAL [detachable SPECIAL [INTEGER]]
+			-- Mapping for each dynamic type id between old attribute location
+			-- and new attribute location.
+
+	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER
+			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id
+			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
+		do
+			if
+				attached attributes_mapping as l_map and then l_map.valid_index (a_new_type_id) and then
+				attached l_map.item (a_new_type_id) as l_entry and then l_entry.valid_index (a_old_offset)
+			then
+				Result := l_entry.item (a_old_offset)
+			end
+		end
+
+	class_type_translator: detachable FUNCTION [ANY, TUPLE [STRING], STRING]
+			-- Provide a mapping between a class type from the storable to a class type
+			-- in the retrieving system.
+
+	attribute_name_translator: detachable FUNCTION [ANY, TUPLE [STRING, INTEGER], STRING]
+			-- Provide a mapping for an attribute name for a give type ID.
 
 	mismatches: HASH_TABLE [SED_TYPE_MISMATCH, INTEGER]
 			-- Set of mismatches recorded during retrieval indexed by dynamic types.
 
 	mismatched_object: ARRAYED_LIST [TUPLE [object: ANY; info: MISMATCH_INFORMATION]]
 			-- List of all mismatched objects found during retrieval.
+
+feature {NONE} -- Status report
+
+	is_conforming_mismatch_allowed: BOOLEAN
+			-- Do we not trigger a mismatch when an attribute type in the stored system is
+			-- different from the retrieving system but conforming?
+
+	is_attribute_removal_allowed: BOOLEAN
+			-- Do we not trigger a mismatch when an attribute has been removed?
+
+	is_stopping_on_data_retrieval_error: BOOLEAN
+			-- When retrieving objects, should we stop at the first occurrence of a mismatch?
+
+	is_checking_data_consistency: BOOLEAN
+			-- After retrieving objects, should we check that all objects are consistent?
+
+	is_transient_retrieval_required: BOOLEAN
+			-- <Precursor>
+		do
+				-- We do not need transient attribute to be retrieved, only persistent one.			
+			Result := False
+		end
 
 feature {NONE} -- Implementation
 
@@ -287,6 +305,24 @@ feature {NONE} -- Implementation
 			read_object_table (a_count)
 		end
 
+	read_persistent_field_count (a_reflected_object: REFLECTED_OBJECT): INTEGER
+			-- <Precursor>
+		local
+			l_dtype: INTEGER
+		do
+			l_dtype := a_reflected_object.dynamic_type
+			if
+				attached attributes_mapping as l_map and then l_map.valid_index (l_dtype) and then
+				attached l_map.item (l_dtype) as l_entry
+			then
+					-- We substract -1 because the SPECIAL have a dummy entry at position 0 since
+					-- positions in INTERNAL always start at one.
+				Result := l_entry.count - 1
+			else
+				raise_fatal_error (error_factory.new_internal_error ("Cannot retrieve stored count"))
+			end
+		end
+
 	read_attributes (a_dtype: INTEGER)
 			-- Read attribute description for `a_dtype' where `a_dtype' is a dynamic type
 			-- from the current system.
@@ -408,6 +444,34 @@ feature {NONE} -- Implementation
 				end
 				a.put (l_mapping, a_dtype)
 			end
+		end
+
+	attributes_map (a_dtype: INTEGER): HASH_TABLE [TUPLE [position, dtype: INTEGER], STRING]
+			-- Attribute map for dynamic type `a_dtype' which records
+			-- position and dynamic type for a given attribute name.
+		require
+			a_dtype_non_negative: a_dtype >= 0
+		local
+			l_reflector: like reflector
+			i, nb: INTEGER
+		do
+			l_reflector := reflector
+
+			from
+				i := 1
+				nb := l_reflector.field_count_of_type (a_dtype)
+				create Result.make (nb)
+				nb := nb + 1
+			until
+				i = nb
+			loop
+				Result.put (
+					[i, l_reflector.field_static_type_of_type (i, a_dtype)],
+					l_reflector.field_name_of_type (i, a_dtype))
+				i := i + 1
+			end
+		ensure
+			attributes_map_not_void: Result /= Void
 		end
 
 	associated_mismatch (a_dtype: INTEGER): SED_TYPE_MISMATCH
@@ -733,7 +797,8 @@ feature {NONE} -- Cleaning
 	clear_internal_data
 			-- <Precursor>
 		do
-			Precursor {SED_INDEPENDENT_DESERIALIZER}
+			Precursor {SED_BASIC_DESERIALIZER}
+			attributes_mapping := Void
 			mismatches.wipe_out
 			mismatched_object.wipe_out
 		end

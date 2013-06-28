@@ -61,18 +61,9 @@ feature -- Start Job / Reinitialization
 		require
 			string_not_empty: not a_string.is_empty
 		local
-			l_string: STRING
+			u: UTF_CONVERTER
 		do
-			if current_encoding /= Void then
-				utf32.convert_to (current_encoding, a_string)
-				l_string := utf32.last_converted_stream
-				if not current_encoding.last_conversion_successful then
-					l_string := a_string.as_string_8
-				end
-			else
-				l_string := a_string.as_string_8
-			end
-			execute (l_string)
+			execute (u.utf_32_string_to_utf_8_string_8 (a_string))
 		end
 
 	reset
@@ -232,14 +223,14 @@ invariant
 	eif_buffer_not_void: eif_buffer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

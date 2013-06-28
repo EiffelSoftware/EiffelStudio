@@ -113,7 +113,7 @@ feature -- Basic operation
 							f.put_string (a_email.message)
 							f.close
 							create args.make (1)
-							args.force (f.name)
+							args.force (f.path.name)
 						end
 					end
 					p := l_factory.process_launcher (executable_path.name, args, Void)

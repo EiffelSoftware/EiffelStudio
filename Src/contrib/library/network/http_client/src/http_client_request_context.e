@@ -69,7 +69,7 @@ feature -- Access
 			-- Upload data
 			--| Note: make sure to precise the Content-Type header
 
-	upload_filename: detachable READABLE_STRING_8
+	upload_filename: detachable IMMUTABLE_STRING_32
 			-- Upload data read from `upload_filename'
 			--| Note: make sure to precise the Content-Type header
 
@@ -154,11 +154,15 @@ feature -- Element change
 			upload_data := a_data
 		end
 
-	set_upload_filename (a_fn: like upload_filename)
+	set_upload_filename (a_fn: detachable READABLE_STRING_GENERAL)
 		require
 			has_no_upload_filename: a_fn /= Void implies not has_upload_filename
 		do
-			upload_filename := a_fn
+			if a_fn = Void then
+				upload_filename := Void
+			else
+				create upload_filename.make_from_string_general (a_fn)
+			end
 		end
 
 	set_write_agent (agt: like write_agent)

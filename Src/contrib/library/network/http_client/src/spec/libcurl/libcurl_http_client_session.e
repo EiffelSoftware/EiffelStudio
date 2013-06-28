@@ -85,7 +85,7 @@ feature -- Basic operation
 				f.close
 				check ctx /= Void then
 					ctx.set_upload_data (Void)
-					ctx.set_upload_filename (f.name)
+					ctx.set_upload_filename (f.path.name)
 				end
 			end
 			Result := custom ("PUT", a_path, ctx)
@@ -151,7 +151,7 @@ feature {LIBCURL_HTTP_CLIENT_REQUEST} -- Curl implementation
 
 
 ;note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

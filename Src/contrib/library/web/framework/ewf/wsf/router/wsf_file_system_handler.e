@@ -91,8 +91,12 @@ feature -- Access
 	index_disabled: BOOLEAN
 			-- Index disabled?
 
+	index_ignores_function: detachable FUNCTION [ANY, TUPLE [PATH], BOOLEAN]
+			-- Function to evaluate if a path is ignored or not during autoindex.
+			-- If `index_ignores' is Void and `index_ignores_function' is Void, use default ignore rules.
+
 	directory_index: detachable ARRAY [READABLE_STRING_8]
-			-- File serve if a directory index is requested
+			-- File serve if a directory index is requested.
 
 	not_found_handler: detachable PROCEDURE [ANY, TUPLE [uri: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE]]
 
@@ -135,6 +139,44 @@ feature -- Element change
 			-- Set `access_denied_handler' to `h'	
 		do
 			access_denied_handler := h
+		end
+
+	set_default_index_ignores
+			-- Use default auto index ignores behavior.
+		do
+			index_ignores_function := Void
+		end
+
+	set_index_ignores_function (fct: attached like index_ignores_function)
+			-- Use `fct' to compute auto index ignores behavior.
+		do
+			index_ignores_function := fct
+		end
+
+feature -- Status report
+
+	ignoring_index_entry (p: PATH): BOOLEAN
+			-- Ignoring path `p' for auto index?
+		local
+			e: detachable PATH
+			n: READABLE_STRING_32
+		do
+			if attached index_ignores_function as fct then
+				Result := fct.item ([p])
+			else
+				-- default
+				e := p.entry
+				if e = Void then
+					e := p
+				end
+				if e.is_parent_symbol then
+				else
+					n := e.name
+					Result := n.starts_with ({STRING_32} ".")
+						or n.ends_with ({STRING_32} "~")
+						or n.ends_with ({STRING_32} ".swp")
+				end
+			end
 		end
 
 feature -- Execution
@@ -189,6 +231,11 @@ feature -- Execution
 			uri, s: STRING_8
 			d: DIRECTORY
 			l_files: LIST [PATH]
+			p: PATH
+			n: READABLE_STRING_32
+			httpdate: HTTP_DATE
+			pf: RAW_FILE
+			l_is_dir: BOOLEAN
 		do
 			create d.make_with_path (dn)
 			d.open_read
@@ -202,11 +249,16 @@ feature -- Execution
 				s := "[
 					<html>
 						<head>
-							<title>Index for folder: $URI</title>
+							<title>Index of $URI</title>
+							<style>
+								td { padding-left: 10px;}
+							</style>
 						</head>
 						<body>
-							<h1>Index for $URI</h1>
-							<ul>
+							<h1>Index of $URI</h1>
+							<table>
+							<tr><th/><th>Name</th><th>Last modified</th><th>Size</th></tr>
+							<tr><th colspan="4"><hr></th></tr>
 					]"
 				s.replace_substring_all ("$URI", uri)
 
@@ -216,15 +268,54 @@ feature -- Execution
 				until
 					l_files.after
 				loop
-					s.append ("<li><a href=%"" + uri)
-					url_encoder.append_percent_encoded_string_to (l_files.item.name, s)
-					s.append ("%">")
-					s.append (html_encoder.encoded_string (l_files.item.name))
-					s.append ("</a></li>%N")
+					p := l_files.item
+					if ignoring_index_entry (p) then
+
+					else
+						n := p.name
+						create pf.make_with_path (p)
+						if pf.is_directory then
+							l_is_dir := True
+						else
+							l_is_dir := False
+						end
+
+						s.append ("<tr><td>")
+						if l_is_dir then
+							s.append ("[dir]")
+						else
+							s.append ("&nbsp;")
+						end
+						s.append ("</td>")
+						s.append ("<td><a href=%"" + uri)
+						url_encoder.append_percent_encoded_string_to (n, s)
+						s.append ("%">")
+						if p.is_parent_symbol then
+							s.append ("[Parent Directory] ..")
+						else
+							s.append (html_encoder.encoded_string (n))
+						end
+						if l_is_dir then
+							s.append ("/")
+						end
+
+						s.append ("</td>")
+						s.append ("<td>")
+						create httpdate.make_from_date_time (file_date (pf))
+						httpdate.append_to_rfc1123_string (s)
+						s.append ("</td>")
+						s.append ("<td>")
+						if not l_is_dir then
+							s.append_integer (file_size (pf))
+						end
+						s.append ("</td>")
+						s.append ("</tr>")
+					end
 					l_files.forth
 				end
 				s.append ("[
-							</ul>
+							<tr><th colspan="4"><hr></th></tr>				
+							</table>
 						</body>
 					</html>
 					]"
@@ -479,6 +570,11 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- implementation: date time
+
+	file_size (f: FILE): INTEGER
+		do
+			Result := f.count
+		end
 
 	file_date (f: FILE): DATE_TIME
 		do

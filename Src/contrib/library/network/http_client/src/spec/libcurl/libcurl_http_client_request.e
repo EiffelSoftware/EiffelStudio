@@ -61,7 +61,7 @@ feature -- Execution
 			retried: BOOLEAN
 			l_form_data: detachable HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			l_upload_data: detachable READABLE_STRING_8
-			l_upload_filename: detachable READABLE_STRING_8
+			l_upload_filename: detachable READABLE_STRING_GENERAL
 			l_headers: like headers
 		do
 			if not retried then
@@ -172,7 +172,7 @@ feature -- Execution
 														or request_method.is_case_insensitive_equal ("PUT")
 						end
 
-						create l_upload_file.make (l_upload_filename)
+						create l_upload_file.make_with_name (l_upload_filename)
 						if l_upload_file.exists and then l_upload_file.is_readable then
 							curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_upload, 1)
 
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

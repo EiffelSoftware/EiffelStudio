@@ -10,8 +10,8 @@
 	</description>
 	
 	<target name="init" once="true">
-		<set name="ec_version_string" value="6.6" />
-		<set name="ec_dev_version_string" value="6.7" />
+		<set name="ec_version_string" value="7.3" />
+		<set name="ec_dev_version_string" value="7.4" />
 	</target>
 
 	<target name="check_setup" depend="init,header,check_tools,check_environment_variables,check_resources,check_dependencies">
@@ -275,10 +275,12 @@ Setup check complete and your configuration seems ok.
 		<echo message="  -> ec ${ec_dev_version_string}, ok" if="$conf_ec_version=0" />
 
 		<echo message="===============================================================================" unless="$conf_ec_version=0" />
-		<echo message="ERROR: ec wrong version." unless="$conf_ec_version=0" />
+		<echo message="WARNING: ec wrong version." unless="$conf_ec_version=0" />
 		<echo message="Please make sure that 'ec -version' shows '${ec_version_string}' or '${ec_dev_version_string}' ." unless="$conf_ec_version=0" />
 		<echo message="===============================================================================" unless="$conf_ec_version=0" />
-		<set name="setup_error" value="" unless="$conf_ec_version=0" />
+		<!--
+			 <set name="setup_error" value="" unless="$conf_ec_version=0" />
+		-->
 	</target>
 	
 	<target name="check_resources_windows" if="$is_windows">

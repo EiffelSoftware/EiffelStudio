@@ -2348,6 +2348,7 @@ feature {NONE} -- Implementation
 			l_external: EXTERNAL_I
 			l_feature_as: FEATURE_AS
 			l_feature_checker: AST_FEATURE_CHECKER_GENERATOR
+			old_local_scopes: like context.local_scopes
 		do
 			if is_byte_node_enabled then
 				l_external ?= current_feature
@@ -2356,12 +2357,16 @@ feature {NONE} -- Implementation
 				if l_external = Void then
 					l_feature_as := l_as.body
 					if l_feature_as /= Void and then l_feature_as.body.content /= Void then
+							-- Save old local scopes.
+						old_local_scopes := context.local_scopes
 							-- Only interprets the `built_in' implementation if this is not an attribute.
 						create l_feature_checker
 						l_feature_checker.init (context)
 						l_feature_checker.check_body (current_feature, l_feature_as.body, True, False, False, False)
 						last_byte_node := l_feature_checker.last_byte_node
 						l_as.set_body (l_feature_as)
+							-- Restore local scopes.
+						context.set_local_scopes (old_local_scopes)
  					else
  							-- No implementation is provided, let's assume empty body.
 						create {STD_BYTE_CODE} last_byte_node
@@ -3240,6 +3245,10 @@ feature {NONE} -- Implementation
 						-- the scope information is cleaned when they are processed.
 					context.enter_realm
 				end
+					-- Avoid relying on the body when checking postcondition.
+				if l_as.postcondition /= Void then
+					context.enter_realm
+				end
 					-- Check body
 				l_as.routine_body.process (Current)
 				if l_needs_byte_node and then error_level = l_error_level then
@@ -3271,6 +3280,8 @@ feature {NONE} -- Implementation
 				end
 					-- Check postconditions
 				if l_as.postcondition /= Void then
+						-- Revert to the state just after a precondition.
+					context.leave_optional_realm
 						-- Set access id level analysis to `is_checking_postcondition': locals
 						-- are not taken into account
 					set_is_checking_postcondition (True)

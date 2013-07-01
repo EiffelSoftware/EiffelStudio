@@ -400,6 +400,19 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 	local_scope: AST_LOCAL_SCOPE_TRACKER
 			-- Tracker of scopes of non-void locals
 
+	local_scopes: TUPLE [local_initialization: like local_initialization; local_scope: like local_scope]
+			-- Scopes that can be saved before calling `init_local_scopes' and restored by calling `set_local_scopes'.
+		do
+			Result := [local_initialization, local_scope]
+		end
+
+	set_local_scopes (v: like local_scopes)
+			-- Set scopes to the previously saved value `v'.
+		do
+			local_initialization := v.local_initialization
+			local_scope := v.local_scope
+		end
+
 	is_sibling_dominating: BOOLEAN
 			-- Does variable information of a sibling dominate the previous one (if any)?
 		do
@@ -951,7 +964,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

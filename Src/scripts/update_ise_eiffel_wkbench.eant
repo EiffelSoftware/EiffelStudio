@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
-<project name="UpdateIseEiffel_wkbench" default="menu">
+<project name="UpdateIseEiffel_workbench" default="menu">
 	<description>
-		description: "update or create the ${ISE_EIFFEL}_wkbench folder (cf: http://dev.eiffel.com/Running_EiffelStudio_in_Workbench_mode)"
+		description: "update or create the ${ISE_EIFFEL}_workbench folder (cf: http://dev.eiffel.com/Running_EiffelStudio_in_Workbench_mode)"
 		author: "Jocelyn Fiat and others"
 	</description>
 
@@ -13,7 +13,7 @@
 		<set name="debug_mode" value="false" unless="${debug_mode}=true" />
 		<echo message=" -> debug_mode=${debug_mode}" />
 		<echo message=" -> runtimeversion=${runtimeversion}" />
-		<geant target="update_wkbench" />
+		<geant target="update_workbench" />
 	</target>
 
 	<target name="d">
@@ -35,8 +35,8 @@
 		<geant target="create_config_local_script"  unless="${config_local_available}=true"/>
 		<geant file="${config_local_path}" target="init" reuse_variables="true" fork="false" />
 
-		<available resource="${ISE_EIFFEL}_wkbench" variable="ise_wkbench_available"/>
-		<geant target="create_wkbench" unless="${ise_wkbench_available}=true" />
+		<available resource="${ISE_EIFFEL}_workbench" variable="ise_workbench_available"/>
+		<geant target="create_workbench" unless="${ise_workbench_available}=true" />
 
 		<!-- we support both location for Delivery, under Src, or under Trunk -->
 		<set name="delivery_dir" value="${EIFFEL_SRC}${path_separator}Delivery" unless="${delivery_dir}"/>
@@ -68,19 +68,19 @@
 
 	<!-- Targets -->
 
-	<target name="create_wkbench" >
-		<echo message="Creating [${ISE_EIFFEL}_wkbench]" />
-		<mkdir directory="${ISE_EIFFEL}_wkbench" />
+	<target name="create_workbench" >
+		<echo message="Creating [${ISE_EIFFEL}_workbench]" />
+		<mkdir directory="${ISE_EIFFEL}_workbench" />
 	</target>
 
-	<target name="update_wkbench" depend="init">
-		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}dotnet" if="${is_windows}"/>
+	<target name="update_workbench" depend="init">
+		<mkdir directory="${ISE_EIFFEL}_workbench${path_separator}dotnet" if="${is_windows}"/>
 
-		<echo message="Update [${ISE_EIFFEL}_wkbench] FULL" if="$_FULL" />
-		<echo message="Update [${ISE_EIFFEL}_wkbench] LITE" unless="$_FULL" />
+		<echo message="Update [${ISE_EIFFEL}_workbench] FULL" if="$_FULL" />
+		<echo message="Update [${ISE_EIFFEL}_workbench] LITE" unless="$_FULL" />
 
 		<echo message="debug_mode=${debug_mode}" />
-		<set name="wb_platform_dir" value="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+		<set name="wb_platform_dir" value="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 		<set name="ise_platform_dir" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 
 		<available resource="${delivery_dir}" variable="tmp0_available" />
@@ -103,7 +103,7 @@
 		<echo message="! Unavailable: W_code folder= ${wcode_dir}" unless="${tmp0_available}=true" />
 
 		<!-- libraries -->
-		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}library" />
+		<mkdir directory="${ISE_EIFFEL}_workbench${path_separator}library" />
 		<available resource="${EIFFEL_SRC}${path_separator}library" variable="tmp0_available" />
 		<set name="EIFFEL_SRC_LIBRARY" value="${EIFFEL_SRC}${path_separator}library" />
 		<geant target="copy_from_library" if="${tmp0_available}=true" />
@@ -116,14 +116,14 @@
 	</target>
 
 	<target name="update_executable_properties" depend="init" unless="${is_windows}" >
-		<echo message="Update Executable Properties on [${ISE_EIFFEL}_wkbench].." />
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/studio/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/esbuilder/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" if="$_FULL"/>
+		<echo message="Update Executable Properties on [${ISE_EIFFEL}_workbench].." />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_workbench/studio/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_workbench/esbuilder/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" if="$_FULL"/>
 		<!--
-		<exe_c executable="chmod 755 ${ISE_EIFFEL}_wkbench/make_install" accept_errors="true" exit_code_variable="return_code" />
+		<exe_c executable="chmod 755 ${ISE_EIFFEL}_workbench/make_install" accept_errors="true" exit_code_variable="return_code" />
 		-->
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/library/vision2/implementation/gtk/Clib/vision2-gtk-config" accept_errors="true" exit_code_variable="return_code"  if="$_FULL" />
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/library/gobo/spec/${ISE_PLATFORM}/bin/*" accept_errors="true" exit_code_variable="return_code"  if="$_FULL" />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_workbench/library/vision2/implementation/gtk/Clib/vision2-gtk-config" accept_errors="true" exit_code_variable="return_code"  if="$_FULL" />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_workbench/library/gobo/spec/${ISE_PLATFORM}/bin/*" accept_errors="true" exit_code_variable="return_code"  if="$_FULL" />
 	</target>
 
 	<target name="copy_from_ise_eiffel" depend="init">
@@ -163,48 +163,48 @@
 		<echo message="Copy from [Delivery=${delivery_dir}]" />
 		<echo message=" -> studio" />
 		<copy dir="${delivery_dir}${path_separator}studio" 
-			  to_directory="${ISE_EIFFEL}_wkbench${path_separator}studio"
+			  to_directory="${ISE_EIFFEL}_workbench${path_separator}studio"
 			  force="true" 
 			><fileset include="@(**/*)" /></copy>
 		<group if="$_FULL">
 			<echo message=" -> esbuilder" />
 			<copy dir="${delivery_dir}${path_separator}esbuilder" 
-				to_directory="${ISE_EIFFEL}_wkbench${path_separator}esbuilder"
+				to_directory="${ISE_EIFFEL}_workbench${path_separator}esbuilder"
 				  force="true" 
 				><fileset include="@(**/*)" /></copy>
 		</group>
 		<echo message=" -> precomp" />
 		<copy dir="${delivery_dir}${path_separator}precomp" 
-			to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp"
+			to_directory="${ISE_EIFFEL}_workbench${path_separator}precomp"
 			  force="true" 
 			><fileset include="@(**/*)" /></copy>
 		<echo message=" -> wizards" />
 		<copy dir="${delivery_dir}${path_separator}wizards" 
-			to_directory="${ISE_EIFFEL}_wkbench${path_separator}wizards"
+			to_directory="${ISE_EIFFEL}_workbench${path_separator}wizards"
 			  force="true" 
 			><fileset include="@(**/*)" /></copy>
 
 		<echo message="Prepare [precomp] ..." />
-		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" 
-			dir="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}platform" 
+		<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" 
+			dir="${ISE_EIFFEL}_workbench${path_separator}precomp${path_separator}spec${path_separator}platform" 
 			force="true" >
 			<fileset include="@(**/*)" />
 		</copy>
-		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}-dotnet" 
-			dir="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}dotnet"
+		<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}-dotnet" 
+			dir="${ISE_EIFFEL}_workbench${path_separator}precomp${path_separator}spec${path_separator}dotnet"
 			force="true" if="${is_windows}" >
 			<fileset include="@(**/*)" />
 		</copy>
 
 		<echo message="Prepare [studio|config] ..." />
-		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
-			dir="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}unix" 
+		<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
+			dir="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}unix" 
 			force="true" unless="${is_windows}" >
 			<fileset include="@(**/*)" />
 		</copy>
 		<group if="$is_windows">
-			<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
-				dir="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}windows" 
+			<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
+				dir="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}windows" 
 				force="true" unless="${ISE_PLATFORM}=windows" >
 				<fileset include="@(**/*)" />
 			</copy>
@@ -248,7 +248,7 @@
 		<echo message=" -> ${a_libname}"/>
 		<set name="libtmp" value="${path_separator}${a_libname}" />
 		<copy 	dir="${EIFFEL_SRC_LIBRARY}${libtmp}" 
-				to_directory="${ISE_EIFFEL}_wkbench${libtmp}" 
+				to_directory="${ISE_EIFFEL}_workbench${libtmp}" 
 				force="true" unless="${return_code}=0" >
 			<fileset include="@(**/*)" />
 		</copy>

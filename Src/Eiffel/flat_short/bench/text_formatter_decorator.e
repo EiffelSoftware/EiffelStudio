@@ -136,10 +136,11 @@ feature -- Initialization
 			setup_output_strategy
 		end
 
-	init_variant_context
-			-- Initialize context as processing in variant.
+	init_variant_context (s: CLASS_C)
+			-- Initialize context to process an invariant of a class `s'.
 		do
-			source_feature := Void
+			set_source_class (s)
+			source_feature := s.invariant_feature
 			setup_output_strategy
 			set_in_assertion
 		end

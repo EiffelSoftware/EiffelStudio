@@ -1942,6 +1942,7 @@ test	config-multiple-system-elements		config033 tcf fail config
 test	config-custom-tags-of-the-same-name			config034 tcf fail config
 test	config-variables-with-same-name			config035 tcf pass config
 test	config-library-with-uppercase	config036 tcf pass config
+test	config-cycled-library-dependency	config037 tcf pass config
 
 -- Lace
 

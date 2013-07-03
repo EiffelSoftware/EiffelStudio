@@ -69,7 +69,7 @@ feature -- Execute
 					lst as p
 				loop
 					print ("* Download ["+ p.item.human_identifier +"] ==%N")
-					a_iron.catalog_api.download_package (p.item)
+					a_iron.catalog_api.download_package (p.item, True)
 				end
 			end
 			if not lst.is_empty then
@@ -77,7 +77,7 @@ feature -- Execute
 					lst as p
 				loop
 					print ("* Install ["+ p.item.human_identifier +"] ==%N")
-					a_iron.catalog_api.install_package (p.item)
+					a_iron.catalog_api.install_package (p.item, True)
 				end
 			end
 

@@ -43,6 +43,6 @@
 		<cluster name="kernel" location=".\kernel\" recursive="true"/>
 		<cluster name="service" location=".\service\" recursive="true"/>
 		<cluster name="storage" location=".\storage\" recursive="true"/>
-		<cluster name="support" location="$EIFFEL_SRC\framework\iron\support\" recursive="true"/>
+		<cluster name="support" location="..\..\..\framework\iron\support\" recursive="true"/>
 	</target>
 </system>

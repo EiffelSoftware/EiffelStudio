@@ -17,7 +17,7 @@ rem rem ISE_LIBRARY/library
 rem set TMP_SRC_LIBRARY=%ISE_EIFFEL%\library
 set TMP_SRC_LIBRARY=%~dp0%\_libs
 if exist %TMP_SRC_LIBRARY% svn update _libs
-if not exist %TMP_SRC_LIBRARY% svn checkout https://svn.eiffel.com/eiffelstudio/trunk/Src/library _libs
+if not exist %TMP_SRC_LIBRARY% svn checkout https://svn.eiffel.com/eiffelstudio/branches/Eiffel_73/Src/library _libs
 
 
 set IRON_CMD=iron.exe share
@@ -157,7 +157,7 @@ rem
 
 set TMP_SRC_CONTRIB=%~dp0%\_contribs
 if exist %TMP_SRC_CONTRIB% svn update _contribs
-if not exist %TMP_SRC_CONTRIB% svn checkout https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library _contribs
+if not exist %TMP_SRC_CONTRIB% svn checkout https://svn.eiffel.com/eiffelstudio/branches/Eiffel_73/Src/contrib/library _contribs
 
 %IRON_CMD% %IRON_CREATE_OPTS% --package-name "gobo" --package-description "Gobosoft.org" --package-archive-source "%TMP_SRC_CONTRIB%\gobo"
 %IRON_CMD% %IRON_UPDATE_OPTS% --package-name "gobo" --index "/%TMP_IRON_ISE_DOMAIN%/contrib/library/gobo"

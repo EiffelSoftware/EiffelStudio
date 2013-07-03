@@ -31,7 +31,7 @@ feature -- Basic operations
 			-- Execute the filter
 		do
 			if attached uploaded_file_path as p then
-				req.set_uploaded_file_path (p.utf_8_name) -- FIXME
+				req.set_uploaded_file_path (p)
 			end
 			execute_next (req, res)
 		end

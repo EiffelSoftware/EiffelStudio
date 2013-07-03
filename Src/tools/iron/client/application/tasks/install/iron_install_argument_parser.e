@@ -54,6 +54,12 @@ feature -- Access
 			Result := has_option (all_switch)
 		end
 
+	ignoring_cache: BOOLEAN
+			-- <Precursor>
+		do
+			Result := has_option (no_cache_switch)
+		end
+
 	resources: LIST [IMMUTABLE_STRING_32]
 		once
 			create {ARRAYED_LIST [IMMUTABLE_STRING_32]} Result.make (values.count)
@@ -115,6 +121,7 @@ feature {NONE} -- Switches
 			create Result.make (2)
 			Result.extend (create {ARGUMENT_SWITCH}.make (file_switch, "Package file", True, True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (all_switch, "Install all available packages", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_cache_switch, "Ignore cache and always download iron package.", True, False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
@@ -122,6 +129,7 @@ feature {NONE} -- Switches
 
 	file_switch: STRING = "f|file"
 	all_switch: STRING = "a|all"
+	no_cache_switch: STRING = "no_cache"
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

@@ -195,8 +195,9 @@ feature -- Router and Filter
 
 				--| Admin access
 			create h_admin.make (iron)
-			map_uri_with_request_methods ("/access/", new_auth_uri_handler (h_admin), router.methods_get) -- Admin::home
-			map_uri_template_with_request_methods ("/access/{version}/", new_auth_uri_template_handler (h_admin), router.methods_get) -- Admin::home
+			map_uri_with_request_methods ("/access/", h_admin, router.methods_get) -- Admin::home			
+			map_uri_with_request_methods ("/access/account/", new_auth_uri_handler (h_admin), router.methods_get) -- Admin::home
+			map_uri_template_with_request_methods ("/access/{version}/", h_admin, router.methods_get) -- Admin::home
 
 			create h_create.make (iron)
 			create h_archive_package.make (iron)
@@ -272,14 +273,14 @@ feature -- Change
 
 feature -- Factory
 
-	new_auth_uri_handler (h: WSF_URI_HANDLER): WSF_URI_HANDLER
+	new_auth_uri_handler (h: WSF_URI_HANDLER): IRON_REPO_AUTH_URI_FILTER_HANDLER
 		do
-			create {IRON_REPO_AUTH_URI_FILTER_HANDLER} Result.make_with_next (iron, h)
+			create Result.make_with_next (iron, h)
 		end
 
-	new_auth_uri_template_handler (h: WSF_URI_TEMPLATE_HANDLER): WSF_URI_TEMPLATE_HANDLER
+	new_auth_uri_template_handler (h: WSF_URI_TEMPLATE_HANDLER): IRON_REPO_AUTH_URI_TEMPLATE_FILTER_HANDLER
 		do
-			create {IRON_REPO_AUTH_URI_TEMPLATE_FILTER_HANDLER} Result.make_with_next (iron, h)
+			create Result.make_with_next (iron, h)
 		end
 
 feature -- Handler

@@ -101,14 +101,14 @@ feature -- Access: package
 
 feature -- Operations
 
-	download_package (a_package: IRON_PACKAGE)
+	download_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 		do
-			catalog.download_package (a_package)
+			catalog.download_package (a_package, ignoring_cache)
 		end
 
-	install_package (a_package: IRON_PACKAGE)
+	install_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 		do
-			catalog.install_package (a_package)
+			catalog.install_package (a_package, ignoring_cache)
 		end
 
 	uninstall_package (a_package: IRON_PACKAGE)

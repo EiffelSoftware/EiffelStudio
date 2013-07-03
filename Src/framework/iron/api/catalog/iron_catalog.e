@@ -104,11 +104,11 @@ feature -- Operation
 
 feature -- Package operations
 
-	download_package (a_package: IRON_PACKAGE)
+	download_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 		deferred
 		end
 
-	install_package (a_package: IRON_PACKAGE)
+	install_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 			-- Install `a_package'.
 		deferred
 		end

@@ -106,16 +106,21 @@ feature {NONE} -- Search by name
 				-- Save search routines that use an old name before using the new one.
 			saved_feature_in_class := feature_in_class
 			saved_find_in_renamed_type_a := find_in_renamed_type_a
+			name_id := n
 			if attached t.renaming as renaming then
-					-- Take renaming in formal generic constraints into account.
+					-- Get an old name if a feature (if possible).
 				name_id := renaming.renamed (n)
+			end
+				-- Skip processing if there is no feature corresponding to `n'.
+			if name_id > 0 then
 				if name_id /= n then
+						-- Take renaming in formal generic constraints into account.
 					feature_in_class := agent feature_in_class_by_name (name_id, ?)
 					find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (name_id, ?)
 				end
+					-- Search using the old name.
+				t.type.process (Current)
 			end
-				-- Search using the new name.
-			t.type.process (Current)
 				-- Restore search routines that use an old name.
 			find_in_renamed_type_a := saved_find_in_renamed_type_a
 			feature_in_class := saved_feature_in_class

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="client" uuid="AE13AA0B-2F14-4EC7-BA55-9AD4889B2715">
 	<target name="iron_client">
+		<description>IRON client</description>
 		<root class="IRON_CLIENT" feature="make"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
@@ -23,9 +24,9 @@
 				<assertions precondition="true" postcondition="true"/>
 			</option>
 		</library>
-		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api-safe.ecf" readonly="false"/>
-		<library name="iron_catalog_api" location="$EIFFEL_SRC\framework\iron\api\iron_catalog_api-safe.ecf" readonly="false"/>
-		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api-safe.ecf" readonly="false"/>
+		<library name="iron_api" location="..\..\..\framework\iron\api\iron_api-safe.ecf" readonly="false"/>
+		<library name="iron_catalog_api" location="..\..\..\framework\iron\api\iron_catalog_api-safe.ecf" readonly="false"/>
+		<library name="iron_installation_api" location="..\..\..\framework\iron\api\iron_installation_api-safe.ecf" readonly="false"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
 		<library name="message_digest" location="$ISE_LIBRARY\unstable\library\text\encryption\message_digest\message_digest-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>

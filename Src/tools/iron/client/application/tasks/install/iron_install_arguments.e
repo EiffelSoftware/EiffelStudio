@@ -17,6 +17,11 @@ feature -- Access
 		deferred
 		end
 
+	ignoring_cache: BOOLEAN
+			-- Ignore cache and always redownload the archive?
+		deferred
+		end
+
 	resources: LIST [IMMUTABLE_STRING_32]
 		deferred
 		end

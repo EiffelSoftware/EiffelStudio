@@ -52,17 +52,19 @@ feature -- Execute
 							if l_packages.count = 1 then
 								l_package := l_packages.first
 							else
+								print ("  -> ")
+								print (m_several_packages_for_name (c.item))
+								print_new_line
+
 								if args.is_batch then
-									print ("  -> ")
-									print (m_several_packages_for_name (c.item))
-									print_new_line
+									-- skip
 								else
-									across
-										lst as p
-									loop
-										-- Selection ..
-										-- FIXME: to implement
-									end
+									-- FIXME: to implement
+--									across
+--										lst as p
+--									loop
+--										-- Selection ..
+--									end
 								end
 							end
 						end
@@ -100,7 +102,7 @@ feature -- Execute
 							print (tk_simulated)
 							print_new_line
 						else
-							a_iron.catalog_api.install_package (l_package)
+							a_iron.catalog_api.install_package (l_package, args.ignoring_cache)
 							print (" -> ")
 							if a_iron.installation_api.is_installed (l_package) then
 								print (tk_successfully_installed)

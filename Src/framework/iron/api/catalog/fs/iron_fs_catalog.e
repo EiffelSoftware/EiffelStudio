@@ -278,7 +278,7 @@ feature -- Package operations
 			Result := (create {IRON_UTILITIES}).path_to_uri_string (p)
 		end
 
-	download_package (a_package: IRON_PACKAGE)
+	download_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 		local
 			cl: like new_client
 			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
@@ -298,10 +298,14 @@ feature -- Package operations
 					p := layout.package_archive_path (a_package)
 					create f.make_with_path (p)
 					if f.exists then
-						create h.make_with_count (1)
-						create hdate.make_from_timestamp (f.date)
-						h.put_header_key_value ({HTTP_HEADER_NAMES}.header_if_modified_since, hdate.rfc1123_string)
-						ctx.add_header_lines (h)
+						if ignoring_cache then
+							f.delete
+						else
+							create h.make_with_count (1)
+							create hdate.make_from_timestamp (f.date)
+							h.put_header_key_value ({HTTP_HEADER_NAMES}.header_if_modified_since, hdate.rfc1123_string)
+							ctx.add_header_lines (h)
+						end
 					end
 					t := p.appended_with_extension ("tmp-download")
 					ensure_folder_exists (p.parent)
@@ -320,13 +324,17 @@ feature -- Package operations
 							f.delete
 						else
 							f.rename_path (p)
+							if f.exists and then f.is_empty then
+									-- No empty package !!!
+								f.delete
+							end
 						end
 					end
 				end
 			end
 		end
 
-	install_package (a_package: IRON_PACKAGE)
+	install_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 			-- Install `a_package'.
 		local
 			p: detachable PATH
@@ -424,11 +432,11 @@ feature -- Package operations
 					end
 				else
 						-- missing local archive
-					download_package (a_package)
+					download_package (a_package, ignoring_cache)
 
 					if a_package.has_archive_file_uri then
 							-- try again
-						install_package (a_package)
+						install_package (a_package, ignoring_cache)
 					else
 						-- nothing was download
 					end

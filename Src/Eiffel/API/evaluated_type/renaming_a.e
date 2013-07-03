@@ -173,8 +173,7 @@ feature -- Access
 
 	renamed (a_name_id: INTEGER): INTEGER
 			-- Renames `a_name_id' into it's old name or leaves it unchanged if it is not renamed.
-			--| This feature can return -1 if it finds out that this `a_name_id' has been
-			--| renamed into another name.
+			-- Return -1 if `a_name_id' has been renamed into another name.
 		do
 				-- We're looking for f (a_name_id)
 			search (a_name_id)
@@ -419,7 +418,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

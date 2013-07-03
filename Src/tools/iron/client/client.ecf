@@ -39,7 +39,7 @@
 		<root class="ES_IRON_CLIENT" feature="make"/>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="iron"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
+		<library name="environment" location="..\..\..\framework\environment\environment-safe.ecf"/>
 		<cluster name="es_application" location=".\es_application\" recursive="true"/>
 	</target>
 </system>

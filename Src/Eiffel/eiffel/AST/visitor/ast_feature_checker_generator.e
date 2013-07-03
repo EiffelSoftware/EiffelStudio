@@ -4507,10 +4507,10 @@ feature {NONE} -- Implementation
 						scope_matcher.add_scopes (l_as.left)
 					end
 					l_as.right.process (Current)
+					if scope_matcher /= Void then
+						context.set_scope (s)
+					end
 					if last_type /= Void then
-						if scope_matcher /= Void then
-							context.set_scope (s)
-						end
 						l_right_type := last_type.actual_type
 						if l_right_type.is_formal and then attached {FORMAL_A} l_right_type as l_formal then
 							if l_formal.is_multi_constrained (l_context_current_class) then

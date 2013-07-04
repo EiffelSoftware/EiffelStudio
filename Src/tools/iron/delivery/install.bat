@@ -6,14 +6,14 @@ if "%T_INSTALL_DIR%" == "" set T_INSTALL_DIR=%ISE_EIFFEL%
 echo Install iron into %T_INSTALL_DIR%
 
 set T_HERE=%cd%
-set TARGET_EIFGENS_EXE=%~dp0EIFGENs\client\F_code\iron.exe
+set TARGET_EIFGENS_EXE=%~dp0EIFGENs\es_iron\F_code\iron.exe
 
 if "%ISE_PLATFORM%" == "" goto failure
 
 echo Compile iron executable
 echo Clean previous EIFGENS
-rd /q/s %~dp0EIFGENs\client
-if not exist "%TARGET_EIFGENS_EXE%" "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ecb.exe" -config "%~dp0..\client\client.ecf" -target client -finalize -c_compile -project_path .
+rd /q/s %~dp0EIFGENs\es_iron
+if not exist "%TARGET_EIFGENS_EXE%" "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ecb.exe" -config "%~dp0..\client\client.ecf" -target es_iron -finalize -c_compile -project_path .
 
 if not exist "%TARGET_EIFGENS_EXE%" goto failure
 echo Install the iron executable in the %T_INSTALL_DIR%\tools\.. installation

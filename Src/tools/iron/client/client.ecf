@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="client" uuid="AE13AA0B-2F14-4EC7-BA55-9AD4889B2715">
-	<target name="iron_client">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="client" uuid="AE13AA0B-2F14-4EC7-BA55-9AD4889B2715">
+	<target name="iron">
 		<description>IRON client</description>
 		<root class="IRON_CLIENT" feature="make"/>
 		<file_rule>
@@ -8,7 +8,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
 			<assertions precondition="true" postcondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -33,9 +33,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf" readonly="false"/>
 		<cluster name="application" location=".\application\" recursive="true"/>
-		<cluster name="kernel" location=".\kernel\" recursive="true"/>
 	</target>
-	<target name="client" extends="iron_client">
+	<target name="es_iron" extends="iron">
+		<description>customized IRON client to be integrated with EiffelStudio</description>
 		<root class="ES_IRON_CLIENT" feature="make"/>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="iron"/>

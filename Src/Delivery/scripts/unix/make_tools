@@ -5,8 +5,8 @@ remtrace Should be called by make_delivery
 #remtrace Recompile iron
 cd $EIFFEL_SRC/tools/iron/client
 clean_project
-finalize client.ecf client
-tgz_ccode client iron.tar.bz2
+finalize client.ecf es_iron
+tgz_ccode es_iron iron.tar.bz2
 if [ ! -f iron.tar.bz2 ]; then
 	echo Could not finalize a new iron
 	CANCEL

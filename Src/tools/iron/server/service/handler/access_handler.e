@@ -85,7 +85,7 @@ feature -- Execution
 					m.set_location (l_redir.value)
 				end
 
-				m.set_title ("Administration")
+				m.set_title ("Information")
 				m.set_body (s)
 				res.send (m)
 			else

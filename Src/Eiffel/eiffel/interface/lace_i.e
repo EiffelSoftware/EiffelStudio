@@ -633,7 +633,10 @@ feature {NONE} -- Implementation
 			l_state: CONF_STATE
 			vd00: VD00
 			vd80: VD80
+			vd89: VD89
 			l_errors: LIST [CONF_ERROR]
+			l_cycle_checker: CONF_CYCLE_CHECKER
+			l_cycles: like {CONF_CYCLE_CHECKER}.library_cycles
 		do
 			create l_factory
 			l_state := universe.conf_state_from_target (a_target)
@@ -653,17 +656,28 @@ feature {NONE} -- Implementation
 					l_errors.forth
 				end
 				error_handler.raise_error
-			elseif not is_force_new_target and l_parse_vis.last_warnings /= Void then
-				from
-					l_errors := l_parse_vis.last_warnings
-					l_errors.start
-				until
-					l_errors.after
-				loop
-					create vd80
-					vd80.set_warning (l_errors.item)
-					error_handler.insert_warning (vd80)
-					l_errors.forth
+			else
+					-- Check cycles
+				create l_cycle_checker.make_with_targets (l_parse_vis.processed_targets)
+				l_cycles := l_cycle_checker.library_cycles
+				if not l_cycles.is_empty then
+					create vd89
+					vd89.set_cycles (l_cycles)
+					error_handler.insert_warning (vd89)
+				end
+
+				if not is_force_new_target and l_parse_vis.last_warnings /= Void then
+					from
+						l_errors := l_parse_vis.last_warnings
+						l_errors.start
+					until
+						l_errors.after
+					loop
+						create vd80
+						vd80.set_warning (l_errors.item)
+						error_handler.insert_warning (vd80)
+						l_errors.forth
+					end
 				end
 			end
 			is_force_new_target := False

@@ -42,10 +42,12 @@ feature {NONE} -- Initialization
 			factory := a_factory
 			make (a_state)
 			create libraries.make (20)
+			create processed_targets.make (20)
 			application_target := an_application_target
 
 				-- add the application target to the libraries list
 			libraries.force ([application_target, application_target], application_target.system.uuid)
+			processed_targets.force (application_target)
 		end
 
 feature -- Visit nodes
@@ -67,7 +69,7 @@ feature -- Visit nodes
 
 				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
 
-					-- set `all_libraries' from `libraries' but discarding the 
+					-- set `all_libraries' from `libraries' but discarding the
 					-- parent information which is only used internally to report nice errors.
 				create l_libs.make (libraries.count)
 				across libraries as l_library loop
@@ -164,6 +166,7 @@ feature -- Visit nodes
 								l_target.set_environ_variables (application_target.environ_variables)
 
 								libraries.force ([a_library.target, l_target], l_uuid)
+								processed_targets.force (l_target)
 
 								level := level + 1
 								a_library.set_library_target (l_target)
@@ -191,11 +194,17 @@ feature -- Visit nodes
 				loop
 					l_libs.item_for_iteration.system.set_application_target (application_target)
 					libraries.force ([application_target, l_libs.item_for_iteration], l_libs.key_for_iteration)
+					processed_targets.force (l_libs.item_for_iteration)
 					l_libs.forth
 				end
 			end
 			process_library (a_precompile)
 		end
+
+feature -- Access
+
+	processed_targets: SEARCH_TABLE [CONF_TARGET]
+			-- Process targets
 
 feature {NONE} -- Implementation
 
@@ -217,7 +226,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,6 +24,8 @@ inherit
 
 	CONF_NOTABLE
 
+	HASHABLE
+
 create {CONF_PARSE_FACTORY}
 	make
 
@@ -1451,6 +1453,14 @@ feature -- Equality
 			end
 		end
 
+feature -- Hashable
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := name.hash_code
+		end
+
 feature -- Visit
 
 	process (a_visitor: CONF_VISITOR)
@@ -1586,7 +1596,7 @@ invariant
 	internal_setting_concurrency_attached: attached immediate_setting_concurrency
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

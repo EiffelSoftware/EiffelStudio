@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="base_extension-tests" uuid="69E8356C-EC46-4149-A57F-DFECE5016C18" library_target="base_extension-tests">
+	<description>Unit-tests for the Diff library.</description>
+	<target name="base_extension-tests">
+		<root class="TEST_BASE_EXTENSION" feature="make"/>
+		<file_rule>
+			<exclude>/EIFGENs</exclude>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional" namespace="EiffelSoftware.Library">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="base_extension_unstable" location="$ISE_LIBRARY\unstable\library\base_extension\base_extension-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<tests name="tests" location=".\" recursive="true">
+			<option namespace="Tests">
+			</option>
+		</tests>
+	</target>
+</system>

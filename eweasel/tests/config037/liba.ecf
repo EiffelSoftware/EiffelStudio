@@ -13,6 +13,7 @@
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/test.e$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

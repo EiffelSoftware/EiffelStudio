@@ -7,6 +7,6 @@ copy_sub 	libb.ecf $CLUSTER libb.ecf
 copy_sub 	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error NONE VD89
+compile_result	validity_warning NONE VD89
 
 test_end

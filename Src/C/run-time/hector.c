@@ -264,8 +264,44 @@ rt_public EIF_OBJECT eif_adopt(EIF_OBJECT object)
 }
 
 /*
+doc:	<routine name="rt_unsafe_wean" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from `stack'. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more. No checking for double-wean is performed.</summary>
+doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>
+doc:		<param name="stack" type="struct stack *">Stack where `object' was located</param>
+doc:		<param name="free_stack" type="struct stack *">Stack where free location will be stored</param>
+doc:		<return>Unprotected object.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_private EIF_REFERENCE rt_unsafe_wean(EIF_OBJECT object, struct stack *stack, struct stack *free_stack)
+{
+	RT_GET_CONTEXT
+	EIF_REFERENCE ret;
+
+	EIFMTX_LOCK;
+		/* We need to ensure that `object' is indeed coming from an object protected via eif_protect.
+		 * If this is not the case then we can have some memory corruption later one. */
+	REQUIRE("object in stack", st_address_in_stack (stack, object));
+	REQUIRE("Object not in free stack", !st_has(free_stack, object));
+	if (-1 == epush(free_stack, object)) {	/* Record free entry in the stack */
+		EIFMTX_UNLOCK;
+		plsc();									/* Run GC cycle */
+		EIFMTX_LOCK;
+		if (-1 == epush(free_stack, object)) {	/* Again, we can't */
+			EIFMTX_UNLOCK;
+			eraise("hector weaning", EN_MEM);	/* No more memory */
+		}
+	}
+	ret = eif_access(object);
+	eif_access(object) = (EIF_REFERENCE) 0;		/* Reset hector's entry */
+	EIFMTX_UNLOCK;
+	return ret;				/* return unprotected address */
+}
+
+/*
 doc:	<routine name="rt_wean" return_type="EIF_REFERENCE" export="private">
-doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from `stack'. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more.</summary>
+doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from `stack'. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more. If called twice on the same `object', it does nothing if assertions are not enabled so that programs don't crash.</summary>
 doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>
 doc:		<param name="stack" type="struct stack *">Stack where `object' was located</param>
 doc:		<param name="free_stack" type="struct stack *">Stack where free location will be stored</param>
@@ -313,6 +349,20 @@ rt_private EIF_REFERENCE rt_wean(EIF_OBJECT object, struct stack *stack, struct 
 }
 
 /*
+doc:	<routine name="eif_unsafe_wean" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from hector table. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more.</summary>
+doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>
+doc:		<return>Unprotected object.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE eif_unsafe_wean(EIF_OBJECT object)
+{
+	return rt_unsafe_wean (object, &eif_hec_saved, &eif_free_hec_stack);
+}
+
+/*
 doc:	<routine name="eif_wean" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from hector table. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more.</summary>
 doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>
@@ -337,7 +387,9 @@ doc:	</routine>
 */
 rt_public EIF_REFERENCE eif_free_weak_reference(EIF_OBJECT object)
 {
-	return rt_wean (object, &eif_weak_references, &eif_free_weak_references);
+		/* Because the routine is called from the WEAK_REFERENCE class, we assume
+		 * that it will always be properly called. */
+	return rt_unsafe_wean (object, &eif_weak_references, &eif_free_weak_references);
 }
 
 /*

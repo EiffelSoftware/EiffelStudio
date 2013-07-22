@@ -264,8 +264,6 @@ feature
 				-- No Invariant, Exit_condition
 			b := across
 				a as c
-			from
-				i := 5
 			all
 				c.item = 3
 			variant
@@ -274,8 +272,6 @@ feature
 				-- No Invariant, Variant
 			b := across
 				a as c
-			from
-				i := 5
 			until
 				i = 3
 			all
@@ -284,8 +280,6 @@ feature
 				-- No Exit_condition, Variant
 			b := across
 				a as c
-			from
-				i := 5
 			invariant
 				c /= Void
 			all
@@ -343,8 +337,6 @@ feature
 				-- No Invariant, Exit_condition
 			b := across
 				a as c
-			from
-				i := 5
 			some
 				c.item = 3
 			variant
@@ -353,8 +345,6 @@ feature
 				-- No Invariant, Variant
 			b := across
 				a as c
-			from
-				i := 5
 			until
 				i = 3
 			some
@@ -363,8 +353,6 @@ feature
 				-- No Exit_condition, Variant
 			b := across
 				a as c
-			from
-				i := 5
 			invariant
 				c /= Void
 			some

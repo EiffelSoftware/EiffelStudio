@@ -180,11 +180,11 @@ rt_public void eif_free_call (call_data * a)
 	for (i = a -> count; i > 0;) {
 		v = &(a -> argument [--i]);
 		if ((v -> type & SK_HEAD) == SK_REF) {
-			eif_wean ((EIF_OBJECT) v -> it_r);
+			eif_unsafe_wean ((EIF_OBJECT) v -> it_r);
 		}
 	}
 		/* Unprotect target of a call. */
-	eif_wean (a -> target);
+	eif_unsafe_wean (a -> target);
 		/* Free memory, allocated for `a'. */
 	eif_rt_xfree (a);
 }

@@ -16,6 +16,11 @@
 				<platform value="windows"/>
 			</condition>
 		</external_cflag>
+		<external_object location="-lzmq">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
 		<external_object location="libzmq-v110-mt-3_2_3.lib">
 			<condition>
 				<platform value="windows"/>

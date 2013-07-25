@@ -943,14 +943,15 @@ feature
 				-- clause in a loop.
 			l_until := l_as.until_keyword (match_list)
 			l_variant_part := l_as.variant_part
-			if l_variant_part /= Void and l_until /= Void then
+			if l_until = Void then
+					-- Must be across loop
+				l_variant_processing_after := True
+			elseif l_variant_part /= Void then
 				if l_variant_part.start_position > l_until.start_position then
 					l_variant_processing_after := True
 				else
 					l_variant_part.process (Current)
 				end
-			else
-				safe_process (l_as.variant_part)
 			end
 			safe_process (l_until)
 			safe_process (l_as.stop)

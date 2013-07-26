@@ -740,7 +740,7 @@ rt_public void eif_thr_create_with_attr (EIF_OBJECT thr_root_obj,
 										 EIF_PROCEDURE init_func,
 										 EIF_THR_ATTR_TYPE *attr)
 {
-	eif_thr_create_with_attr_new (thr_root_obj, init_func, -1, EIF_FALSE, attr);
+	eif_thr_create_with_attr_new (thr_root_obj, init_func, RTS_PID(eif_access(thr_root_obj)), EIF_FALSE, attr);
 }
 
 rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj, 

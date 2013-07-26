@@ -1,12 +1,32 @@
 note
-	description: "Types of sockets."
-	author: ""
+	description: "Various constants used for ZMQ."
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=Socket Types", "src=http://api.zeromq.org/3-3:zmq-socket", "protocol=uri"
 
 class
-	ZMQ_SOCKET_TYPES
+	ZMQ_CONSTANTS
+
+feature -- Context constants
+
+	zmq_io_threads: INTEGER
+			-- The ZMQ_IO_THREADS argument specifies the size of the ØMQ thread pool to
+			-- handle I/O operations. If your application is using only the inproc transport
+			-- for messaging you may set this to zero, otherwise set it to at least one.
+			-- This option only applies before creating any sockets on the context.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"return ZMQ_IO_THREADS;"
+		end
+
+	zmq_max_sockets: INTEGER
+			-- The ZMQ_MAX_SOCKETS argument sets the maximum number of sockets allowed on the context.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"return ZMQ_MAX_SOCKETS;"
+		end
 
 feature -- Socket types : Request-Replay Pattern
 

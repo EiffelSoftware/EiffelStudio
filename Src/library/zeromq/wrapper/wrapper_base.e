@@ -1,8 +1,6 @@
 note
-	description: "Summary description for {WRAPPER_BASE}."
-	author: ""
+	description: "Abstract ancestor to all opaque ZMQ structures/objects."
 	date: "$Date$"
-	revision: "$Revision$"
 	revision: "$Revision$"
 
 deferred class
@@ -15,30 +13,17 @@ feature -- Initialization
 
 	make (a_item: POINTER)
 			-- Create.
+		require
+			a_item_not_null: a_item /= default_pointer
 		do
 			item := a_item
+		ensure
+			item_set: item = a_item
 		end
 
-feature -- Destruction
+feature {WRAPPER_BASE} -- Access
 
-	dispose
-			-- Delete C object.
-		do
-			delete (item)
-		end
-
-feature {WRAPPER_BASE} -- C object
-
-		-- Pointer to the c object.
 	item: POINTER
+			-- Pointer to underlying C object.
 
-feature {NONE} -- C methods
-
-	delete (a_object: POINTER) 
-			-- Delete c object
-		deferred
-		end
-
-end -- WRAPPER_BASE
-
-
+end

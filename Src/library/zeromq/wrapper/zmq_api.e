@@ -7,16 +7,74 @@ note
 class
 	ZMQ_API
 
-feature -- External calls
+feature -- Error handling
 
-	zmq_init (an_io_threads: INTEGER_32): POINTER
-			-- old legacy API
-			-- ZMQ_EXPORT void *zmq_init (int io_threads);
+	errno: INTEGER
+			-- Value of `errno' as set by ZMQ.
+		external
+			"C inline use <errno.h>"
+		alias
+			"return zmq_errno();"
+		end
+
+	strerror (a_error: INTEGER): POINTER
+			-- C string describing error `a_error'.
 		external
 			"C inline use <zmq.h>"
 		alias
-			"return zmq_init ((int)$an_io_threads);"
+			"return (EIF_POINTER) zmq_strerror ($a_error);"
 		end
+
+feature -- General
+
+	zmq_version (a_major, a_minor, a_patch: TYPED_POINTER [INTEGER])
+		external
+			"C inline use <zmq.h>"
+		alias
+			"[
+				int maj, min, patch;
+				zmq_version (&maj, &min, &patch);
+				*(EIF_INTEGER *) $a_major = maj;
+				*(EIF_INTEGER *) $a_minor = min;
+				*(EIF_INTEGER *) $a_patch = patch;
+			]"
+		end
+
+feature -- Context API
+
+	zmq_ctx_new: POINTER
+			-- ZMQ_EXPORT void *zmq_ctx_new (void);
+		external
+			"C inline use <zmq.h>"
+		alias
+			"return zmq_ctx_new();"
+		end
+
+	zmq_ctx_set (a_context: POINTER; a_option: INTEGER; a_value: INTEGER): INTEGER
+			-- ZMQ_EXPORT int zmq_ctx_set (void *context, int option_name, int option_value);
+		external
+			"C inline use <zmq.h>"
+		alias
+			"return zmq_ctx_set((void *) $a_context, (int) $a_option, (int) $a_value);"
+		end
+
+	zmq_ctx_get (a_context: POINTER; a_option: INTEGER): INTEGER
+			-- ZMQ_EXPORT int zmq_ctx_get (void *context, int option_name);
+		external
+			"C inline use <zmq.h>"
+		alias
+			"return zmq_ctx_get((void *) $a_context, (int) $a_option);"
+		end
+
+	zmq_ctx_destroy (a_context: POINTER): INTEGER_32
+			-- ZMQ_EXPORT int zmq_ctx_destroy (void *context);
+		external
+			"C inline use <zmq.h>"
+		alias
+			"return zmq_ctx_destroy ((void *)$a_context);"
+		end
+
+feature -- Socket API
 
 	zmq_setsockopt (a_s: POINTER; an_option: INTEGER_32; an_optval: POINTER; an_optvallen: NATURAL_32): INTEGER_32
 			--ZMQ_EXPORT int zmq_setsockopt (void *s, int option, const void *optval,size_t optvallen);
@@ -122,14 +180,6 @@ feature -- External calls
 			"C inline use <zmq.h>"
 		alias
 			"return zmq_msg_init_data ((zmq_msg_t *)$a_msg, (void *)$a_data, (size_t)$a_size, (zmq_free_fn *)$a_ffn, (void *)$a_hint);"
-		end
-
-	zmq_term (a_context: POINTER): INTEGER_32
-			-- ZMQ_EXPORT int zmq_term (void *context);
-		external
-			"C inline use <zmq.h>"
-		alias
-			"return zmq_term ((void *)$a_context);"
 		end
 
 	zmq_connect (a_s: POINTER; an_addr: POINTER): INTEGER_32

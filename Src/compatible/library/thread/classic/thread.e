@@ -48,7 +48,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	frozen thr_main
+	frozen thr_main (a_logical_id: INTEGER)
 			-- Call thread routine.
 		do
 			thread_id := get_current_id

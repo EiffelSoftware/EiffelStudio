@@ -166,12 +166,10 @@ feature {NONE} -- Copyright list
 		require
 			a_item_attached: a_item /= Void
 		local
-			l_str: STRING
 			l_file: RAW_FILE
 			l_cpr_text: STRING
 		do
-			l_str ?= a_item.data
-			if l_str /= Void then
+			if attached {READABLE_STRING_GENERAL} a_item.data as l_str then
 				create l_file.make_open_read (l_str)
 				if l_file.exists then
 					l_file.read_stream (l_file.count)
@@ -225,12 +223,9 @@ feature {NONE} -- Implementation
 
 	on_save
 			-- Called by `select_actions' of `save_button'.
-		local
-			l_file_name: STRING
 		do
 			if last_selected_item /= Void then
-				l_file_name ?= last_selected_item.data
-				if l_file_name /= Void then
+				if attached {READABLE_STRING_GENERAL} last_selected_item.data as l_file_name then
 					save_file_with_name_and_text (l_file_name, copyright_text.text)
 					text_changed := false
 					toggle_save
@@ -328,7 +323,7 @@ feature {NONE} -- Save
 			on_focus
 		end
 
-	save_file_with_name_and_text (a_name, a_text: STRING)
+	save_file_with_name_and_text (a_name: READABLE_STRING_GENERAL; a_text: STRING)
 			-- Save file to `a_name' with text `a_text'
 		require
 			a_name_attached: a_name /= Void
@@ -590,7 +585,7 @@ feature {NONE} -- Attaching copyrights
 	total_processed, failed_count, parse_failed_count,succeed: INTEGER;
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -614,11 +609,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MAIN_WINDOW

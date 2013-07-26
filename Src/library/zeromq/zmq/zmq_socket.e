@@ -28,12 +28,15 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Disposing
 
-	delete (an_object: POINTER)
-		local
-			res: INTEGER
+	dispose
+			-- Precursor
 		do
-			res := {ZMQ_API}.zmq_close (an_object)
-				-- TODO: handle return value
+			if item /= default_pointer then
+				if {ZMQ_API}.zmq_close (item) /= 0 then
+					check {ZMQ_API}.errno = {ZMQ_ERROR_CODES}.enotsock end
+				end
+				item := default_pointer
+			end
 		end
 
 feature -- Access
@@ -43,7 +46,7 @@ feature -- Access
 
 feature -- Binding
 
-	bind (an_address: STRING)
+	bind (an_address: READABLE_STRING_GENERAL)
 			-- Bind Current socket to a particular transport.
 		require
 			an_address /= Void
@@ -58,7 +61,7 @@ feature -- Binding
 			end
 		end
 
-	connect (an_address: STRING)
+	connect (an_address: READABLE_STRING_GENERAL)
 			-- Connect Current socket to the peer identified by `an_address'.
 			-- Actual semantics of the  command depend on the underlying transport mechanism,
 			-- however, in cases where peers connect in an asymetric manner, zmq_bind should
@@ -88,10 +91,16 @@ feature -- Receiving messages
 		local
 			l_buffer: C_STRING
 			l_bytes: INTEGER
+			l_err: INTEGER
 		do
 			create l_buffer.make_empty (256)
 			l_bytes := {ZMQ_API}.zmq_recv (item, l_buffer.item, 256, 0)
 			if l_bytes < 0 then
+				l_err := {ZMQ_API}.errno
+				inspect l_err
+				else
+					io.put_integer (l_err)
+				end
 				exceptions.raise ("ZMQ_SOCKET.read_string error not handled")
 			else
 				last_string.set_count (l_bytes)

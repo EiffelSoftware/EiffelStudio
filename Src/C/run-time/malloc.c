@@ -1092,8 +1092,8 @@ rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
 		result = rt_type_set [l_array_index];
 		if (!result) {
 			result = emalloc_as_old(eif_typeof_type_of (ftype));
-			CHECK("Not in scavenge `from' zone", (result < sc_from.sc_arena) && (result > sc_from.sc_top));
-			CHECK("Not in scavenge `to' zone", (result < sc_to.sc_arena) && (result > sc_to.sc_top));
+			CHECK("Not in scavenge `from' zone", (result < sc_from.sc_arena) || (result > sc_from.sc_top));
+			CHECK("Not in scavenge `to' zone", (result < sc_to.sc_arena) || (result > sc_to.sc_top));
 			rt_type_set [l_array_index] = result;
 		}
 	} else {
@@ -1107,8 +1107,8 @@ rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
 		}
 		memset(rt_type_set + old_count, 0, sizeof(EIF_REFERENCE) * (new_count - old_count));
 		result = emalloc_as_old(eif_typeof_type_of (ftype));
-		CHECK("Not in scavenge `from' zone", (result < sc_from.sc_arena) && (result > sc_from.sc_top));
-		CHECK("Not in scavenge `to' zone", (result < sc_to.sc_arena) && (result > sc_to.sc_top));
+		CHECK("Not in scavenge `from' zone", (result < sc_from.sc_arena) || (result > sc_from.sc_top));
+		CHECK("Not in scavenge `to' zone", (result < sc_to.sc_arena) || (result > sc_to.sc_top));
 		rt_type_set [l_array_index] = result;
 		rt_type_set_count = new_count;
 	}

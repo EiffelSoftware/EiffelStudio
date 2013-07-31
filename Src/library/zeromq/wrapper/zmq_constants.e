@@ -33,11 +33,7 @@ feature -- Context constants
 feature -- Socket types : Request-Replay Pattern
 
 	zmq_req: INTEGER_32
-			-- A socket type to send requests and  receive  replies.  Requests
-			-- are load-balanced  among  all  the peers. This socket type allows
-			-- only an alternated sequence of send's and recv's.
-
-			-- Compatible peer sockets: ZMQ_REP, ZMQ_XREP.
+			-- A socket type to send requests and receive replies.
 		external
 			"C inline use <zmq.h>"
 		alias
@@ -45,12 +41,7 @@ feature -- Socket types : Request-Replay Pattern
 		end
 
 	zmq_rep: INTEGER_32
-			-- A socket type to receive requests and send replies. This socket
-			-- type allows only an alternated sequence of recv's and send's.
-			-- Each send is routed to the peer  that  issued  the  last
-			-- received request.
-
-			-- Compatible peer sockets: ZMQ_REQ, ZMQ_XREQ.
+			-- A socket type to receive requests and send replies.
 		external
 			"C inline use <zmq.h>"
 		alias
@@ -59,16 +50,6 @@ feature -- Socket types : Request-Replay Pattern
 
 	zmq_router: INTEGER_32
 			-- A socket of type ZMQ_ROUTER is an advanced socket type used for extending request/reply sockets.
-			-- When receiving messages a ZMQ_ROUTER socket shall prepend a message part containing the identity of
-			-- the originating peer to the message before passing it to the application.
-			-- Messages received are fair-queued from among all connected peers.
-			-- When sending messages a ZMQ_ROUTER socket shall remove the first part of the message and use
-			-- it to determine the identity of the peer the message shall be routed to.
-			-- If the peer does not exist anymore the message shall be silently discarded by default,
-			-- unless ZMQ_ROUTER_BEHAVIOR socket option is set to 1.
-
-			-- Deprecated alias: ZMQ_XREP.
-			-- Compatible peer sockets 	ZMQ_DEALER, ZMQ_REQ, ZMQ_ROUTER.
 		external
 			"C inline use <zmq.h>"
 		alias
@@ -77,34 +58,16 @@ feature -- Socket types : Request-Replay Pattern
 
 	zmq_dealer: INTEGER_32
 			-- A socket of type ZMQ_DEALER is an advanced pattern used for extending request/reply sockets.
-			-- Each message sent is round-robined among all connected peers, and each message received is fair-queued from all connected peers.
-
-			-- Deprecated alias: ZMQ_XREQ.
-			-- Compatible peer sockets 	ZMQ_ROUTER, ZMQ_REP, ZMQ_DEALER
 		external
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_DEALER"
 		end
 
-feature -- Socket Types: Exclusive pair pattern
-
-	zmq_pair: INTEGER_32
-			--
-		external
-			"C inline use <zmq.h>"
-		alias
-			"ZMQ_PAIR"
-		end
-
 feature -- Socket types: Publish-subscribe pattern
 
 	zmq_pub: INTEGER_32
-			-- A socket type to  distribute  data. Recv fuction is not
-			-- implemented for this socket type.  Messages  are  distributed  in
-			-- fanout fashion to all the peers.
-
-			-- Compatible peer sockets: ZMQ_SUB.
+			-- A socket type to distribute data.
 		external
 			"C inline use <zmq.h>"
 		alias
@@ -112,21 +75,60 @@ feature -- Socket types: Publish-subscribe pattern
 		end
 
 	zmq_sub: INTEGER_32
-			-- A socket type to  subscribe  for  data. Send function is not
-			-- implemented for this socket type. Initially, socket is
-			-- subscribed for  no  messages.  Use ZMQ_SUBSCRIBE option to
-			-- specify which messages to subscribe for.
-
-			-- Compatible peer sockets: ZMQ_PUB.
+			-- A socket type to subscribe for data.
 		external
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_SUB"
 		end
 
+	zmq_xpub: INTEGER_32
+			-- A socket type to distribute data.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_XPUB"
+		end
+
+	zmq_xsub: INTEGER_32
+			-- A socket type to subscribe for data.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_XSUB"
+		end
+
+feature -- Socket types: Pipeline
+
+	zmq_push: INTEGER_32
+			-- A socket of type ZMQ_PUSH is used by a pipeline node to send messages to downstream pipeline nodes.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_PUSH"
+		end
+
+	zmq_pull: INTEGER_32
+			-- A socket of type ZMQ_PULL is used by a pipeline node to receive messages from upstream pipeline nodes.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_PULL"
+		end
+
+feature -- Socket Types: Exclusive pair pattern
+
+	zmq_pair: INTEGER_32
+			-- A socket of type ZMQ_PAIR can only be connected to a single peer at any one time.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_PAIR"
+		end
+
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -682,10 +682,12 @@ feature {NONE} -- Notebook item's behavior
 								header_text_label.set_text (".")
 
 								header_feature_label.set_text (ecse.routine_name_for_display)
-								create l_fstone.make (ecse.routine)
-								header_feature_label.set_pebble (l_fstone)
-								header_feature_label.set_accept_cursor (l_fstone.stone_cursor)
-								header_feature_label.set_deny_cursor (l_fstone.x_stone_cursor)
+								if attached ecse.routine as r then
+									create l_fstone.make (r)
+									header_feature_label.set_pebble (l_fstone)
+									header_feature_label.set_accept_cursor (l_fstone.stone_cursor)
+									header_feature_label.set_deny_cursor (l_fstone.x_stone_cursor)
+								end
 							end
 						else
 							header_class_label.remove_text

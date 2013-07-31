@@ -749,33 +749,27 @@ feature {NONE} -- Implementation of data retrieval
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_cluster, l_class, l_feature: STRING
+			l_cluster, l_class, l_feature: detachable STRING_32
 			l_root: CONF_ROOT
 		do
-			if a_root /= Void then
-				l_class := a_root.root_name
-				if l_class /= Void and then not l_class.is_empty then
-					l_class.to_upper
-					l_cluster := a_root.cluster_mark
-					if l_cluster /= Void then
-						l_cluster.to_lower
-						l_cluster := mask_special_characters_config (l_cluster)
-					end
-					l_feature := a_root.creation_procedure_name
-					if l_feature /= Void and then l_feature.is_empty then
-						l_feature := Void
-					end
-					if l_feature /= Void then
-						l_feature.to_lower
-					end
-					if l_class.is_equal ("NONE") then
-						l_root := factory.new_root (Void, Void, Void, True)
-					else
-						l_root := factory.new_root (l_cluster, l_class, l_feature, False)
-					end
-
-					current_target.set_root (l_root)
+			if a_root /= Void and then attached a_root.root_name as l_root_class and then not l_root_class.is_empty then
+				l_class := l_root_class.to_string_32
+				l_class.to_upper
+				if attached a_root.cluster_mark as l_cluster_mark then
+					l_cluster_mark.to_lower
+					l_cluster := mask_special_characters_config (l_cluster_mark)
 				end
+				if attached a_root.creation_procedure_name as l_root_procedure and then not l_root_procedure.is_empty then
+					l_root_procedure.to_lower
+					l_feature := l_root_procedure.to_string_32
+				end
+				if l_class.is_case_insensitive_equal_general ("NONE") then
+					l_root := factory.new_root (Void, Void, Void, True)
+				else
+					l_root := factory.new_root (l_cluster, l_class, l_feature, False)
+				end
+
+				current_target.set_root (l_root)
 			end
 		end
 
@@ -923,7 +917,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,7 @@ note
 	description: "Summary description for {ZMQ_API}."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	author: ""
+	EIS: "name=API", "src=http://api.zeromq.org/3-3:_start", "protocol=uri"
 	date: "$Date$"
 	revision: "$Revision$"
 

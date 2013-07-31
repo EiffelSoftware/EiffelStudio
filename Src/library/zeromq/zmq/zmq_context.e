@@ -15,7 +15,7 @@ note
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	EIS: "name=Socket Types", "src=http://api.zeromq.org/3-3:zmq-socket", "protocol=uri"
+	EIS: "name=Sockets", "src=http://api.zeromq.org/3-3:zmq-socket", "protocol=uri"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -126,6 +126,51 @@ feature -- Socket Types: Exclusive pair pattern
 			"ZMQ_PAIR"
 		end
 
+feature -- Poll constants
+
+	zmq_pollin: INTEGER_32
+			-- For ØMQ sockets, at least one message may be received from the socket without
+			-- blocking. For standard sockets this is equivalent to the POLLIN flag of
+			-- the poll() system call and generally means that at least one byte of
+			-- data may be read from fd without blocking.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_POLLIN"
+		end
+
+	zmq_pollout: INTEGER_32
+			-- For ØMQ sockets, at least one message may be sent to the socket without
+			-- blocking. For standard sockets this is equivalent to the POLLOUT flag of
+			-- the poll() system call and generally means that at least one byte of
+			-- data may be written to fd without blocking.
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_POLLOUT"
+		end
+
+	zmq_pollerr: INTEGER_32
+			-- For standard sockets, this flag is passed through zmq_poll() to the
+			-- underlying poll() system call and generally means that some sort of
+			-- error condition is present on the socket specified by fd. For ØMQ sockets
+			-- this flag has no effect if set in events, and shall never be returned
+			-- in revents by zmq_poll().
+		external
+			"C inline use <zmq.h>"
+		alias
+			"ZMQ_POLLERR"
+		end
+
+feature -- Socket options
+
+	zmq_noblock: INTEGER_32
+		external
+			"C inline use <zmq.h>"
+		alias
+			"return ZMQ_NOBLOCK;"
+		end
+
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

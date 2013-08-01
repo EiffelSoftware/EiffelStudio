@@ -27,6 +27,10 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<cluster name="zmq" location=".\" recursive="true"/>
+		<cluster name="zmq" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/spec$</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

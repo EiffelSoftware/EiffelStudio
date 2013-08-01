@@ -1,5 +1,5 @@
 ﻿note
-	description: "Summary description for {ZMQ_MESSAGE}."
+	description: "ØMQ message."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	author: ""
@@ -8,9 +8,6 @@
 
 class
 	ZMQ_MESSAGE
-	-- ØMQ message
-
-	-- Note: current design is a sketch. Most probably we want to make it a generic class allowing data to be of specific types instead of being ANY.
 
 inherit
 	MEMORY_STRUCTURE
@@ -21,11 +18,6 @@ inherit
 		redefine
 			make_by_pointer,
 			managed_pointer
-		end
-
-	ZMQ_API
-		undefine
-			default_create
 		end
 
 create
@@ -39,7 +31,7 @@ feature {NONE} -- Creation
 			res: INTEGER_32
 		do
 			make
-			res := zmq_msg_init (item)
+			res := {ZMQ}.msg_init (item)
 		end
 
 	with_size (a_size: NATURAL_32)
@@ -52,7 +44,7 @@ feature {NONE} -- Creation
 			res: INTEGER_32
 		do
 			make
-			res := zmq_msg_init_size (item, a_size)
+			res := {ZMQ}.msg_init_size (item, a_size)
 		end
 
 		--	with (some_data: ANY) is
@@ -76,7 +68,7 @@ feature {NONE} -- Creation
 		--		make
 		--		-- Keep a reference to some_data; we do not want it to be freed or garbage-collected.
 		--		any_data := some_data
-		--		res:=zmq_msg_init_data(item, some_data.default_pointer, some_data..to_natural_32, default_pointer, default_pointer)
+		--		res:={ZMQ}.msg_init_data(item, some_data.default_pointer, some_data..to_natural_32, default_pointer, default_pointer)
 		--	ensure
 		--		implementation: data=some_data.to_pointer and size=some_data.object_size.to_natural_32
 		--	end
@@ -97,7 +89,7 @@ feature {NONE} -- Creation
 			make
 				-- Keep a reference to `a_string'
 			any_data := a_string
-			res := zmq_msg_init_data (item, c_str.item, c_str.count.as_natural_32, default_pointer, default_pointer)
+			res := {ZMQ}.msg_init_data (item, c_str.item, c_str.count.as_natural_32, default_pointer, default_pointer)
 		ensure
 				--implementation: data=c_str.item and size=c_str.count.as_natural_32
 		end
@@ -117,7 +109,7 @@ feature {ANY} -- Disposing
 			rc: INTEGER_32
 		do
 			any_data := Void
-			rc := zmq_msg_close (item)
+			rc := {ZMQ}.msg_close (item)
 			check
 				rc = 0
 			end
@@ -127,7 +119,7 @@ feature {ANY} -- Disposing
 		local
 			rc: INTEGER_32
 		do
-			rc := zmq_msg_close (item)
+			rc := {ZMQ}.msg_close (item)
 			check
 				rc = 0
 			end
@@ -140,13 +132,13 @@ feature {ANY} -- Command
 		local
 			rc: INTEGER_32
 		do
-			rc := zmq_msg_init (item)
+			rc := {ZMQ}.msg_init (item)
 			check
 				rc /= 0
 			end
 				-- Note: It is debatable whenever the following style is reccomendedable:
 				-- if rc /= 0 then
-				--		exceptions.raise (create {STRING}.make_from_c(zmq_strerror (errno)))
+				--		exceptions.raise (create {STRING}.make_from_c({ZMQ}.strerror (errno)))
 				-- end
 		end
 
@@ -157,12 +149,12 @@ feature {ANY} -- Size
 
 			-- TODO: shall be like size_t
 		do
-			Result := zmq_msg_size (item)
+			Result := {ZMQ}.msg_size (item)
 		end
 
 	data: POINTER
 		do
-			Result := zmq_msg_data (item)
+			Result := {ZMQ}.msg_data (item)
 		end
 
 	managed_pointer: MANAGED_POINTER

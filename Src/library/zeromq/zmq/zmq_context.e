@@ -37,7 +37,7 @@ feature {NONE} -- Creation
 			-- Context creation for non in-process communication.
 		do
 			is_configurable := True
-			make_base ({ZMQ_API}.zmq_ctx_new)
+			make_base ({ZMQ}.ctx_new)
 		ensure
 			is_configurable: is_configurable
 		end
@@ -60,7 +60,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := {ZMQ_API}.zmq_ctx_get (item, {ZMQ_CONSTANTS}.zmq_io_threads)
+			Result := {ZMQ}.ctx_get (item, {ZMQ_CONSTANTS}.io_threads)
 			check always_success: Result /= -1 end
 		ensure
 			number_of_io_threads_non_negative: Result >= 0
@@ -71,7 +71,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := {ZMQ_API}.zmq_ctx_get (item, {ZMQ_CONSTANTS}.zmq_max_sockets)
+			Result := {ZMQ}.ctx_get (item, {ZMQ_CONSTANTS}.max_sockets)
 			check always_success: Result /= -1 end
 		ensure
 			maximum_number_of_sockets_positive: Result > 0
@@ -88,7 +88,7 @@ feature -- Element change
 		local
 			res: INTEGER
 		do
-			res := {ZMQ_API}.zmq_ctx_set (item, {ZMQ_CONSTANTS}.zmq_io_threads, v)
+			res := {ZMQ}.ctx_set (item, {ZMQ_CONSTANTS}.io_threads, v)
 			check always_success: res /= -1 end
 		ensure
 			number_of_io_threads_set: number_of_io_threads = v
@@ -103,7 +103,7 @@ feature -- Element change
 		local
 			res: INTEGER
 		do
-			res := {ZMQ_API}.zmq_ctx_set (item, {ZMQ_CONSTANTS}.zmq_max_sockets, v)
+			res := {ZMQ}.ctx_set (item, {ZMQ_CONSTANTS}.max_sockets, v)
 			check always_success: res /= -1 end
 		ensure
 			maximum_number_of_sockets_set: maximum_number_of_sockets = v
@@ -133,7 +133,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_req))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.req))
 			disable_configurable
 		end
 
@@ -159,7 +159,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_rep))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.rep))
 			disable_configurable
 		end
 
@@ -186,7 +186,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_dealer))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.dealer))
 			disable_configurable
 		end
 
@@ -224,7 +224,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_router))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.router))
 			disable_configurable
 		end
 
@@ -250,7 +250,7 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_pub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pub))
 			disable_configurable
 		end
 
@@ -271,7 +271,7 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_sub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.sub))
 			disable_configurable
 		end
 
@@ -293,7 +293,7 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_xpub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.xpub))
 			disable_configurable
 		end
 
@@ -313,7 +313,7 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_xsub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.xsub))
 			disable_configurable
 		end
 
@@ -341,7 +341,7 @@ feature -- Sockets: Pipeline pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_push))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.push))
 			disable_configurable
 		end
 
@@ -360,7 +360,7 @@ feature -- Sockets: Pipeline pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_pull))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pull))
 			disable_configurable
 		end
 
@@ -389,7 +389,7 @@ feature -- Sockets: Exclusive pair pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ_API}.zmq_socket (item, {ZMQ_CONSTANTS}.zmq_pair))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pair))
 			disable_configurable
 		end
 
@@ -405,10 +405,10 @@ feature {NONE} -- Implementation
 			until
 				l_done
 			loop
-				l_done := {ZMQ_API}.zmq_ctx_destroy (item) = 0
+				l_done := {ZMQ}.ctx_destroy (item) = 0
 				if not l_done then
 						 -- Only retry if we were interrupted.
-					l_done := {ZMQ_API}.errno /= {ZMQ_ERROR_CODES}.eintr
+					l_done := {ZMQ}.errno /= {ZMQ_ERROR_CODES}.eintr
 				end
 			end
 			item := default_pointer

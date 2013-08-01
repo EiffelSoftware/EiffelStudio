@@ -11,7 +11,7 @@ class
 
 feature -- Context constants
 
-	zmq_io_threads: INTEGER
+	io_threads: INTEGER
 			-- The ZMQ_IO_THREADS argument specifies the size of the ØMQ thread pool to
 			-- handle I/O operations. If your application is using only the inproc transport
 			-- for messaging you may set this to zero, otherwise set it to at least one.
@@ -22,7 +22,7 @@ feature -- Context constants
 			"return ZMQ_IO_THREADS;"
 		end
 
-	zmq_max_sockets: INTEGER
+	max_sockets: INTEGER
 			-- The ZMQ_MAX_SOCKETS argument sets the maximum number of sockets allowed on the context.
 		external
 			"C inline use <zmq.h>"
@@ -32,7 +32,7 @@ feature -- Context constants
 
 feature -- Socket types : Request-Replay Pattern
 
-	zmq_req: INTEGER_32
+	req: INTEGER_32
 			-- A socket type to send requests and receive replies.
 		external
 			"C inline use <zmq.h>"
@@ -40,7 +40,7 @@ feature -- Socket types : Request-Replay Pattern
 			"ZMQ_REQ"
 		end
 
-	zmq_rep: INTEGER_32
+	rep: INTEGER_32
 			-- A socket type to receive requests and send replies.
 		external
 			"C inline use <zmq.h>"
@@ -48,7 +48,7 @@ feature -- Socket types : Request-Replay Pattern
 			"ZMQ_REP"
 		end
 
-	zmq_router: INTEGER_32
+	router: INTEGER_32
 			-- A socket of type ZMQ_ROUTER is an advanced socket type used for extending request/reply sockets.
 		external
 			"C inline use <zmq.h>"
@@ -56,7 +56,7 @@ feature -- Socket types : Request-Replay Pattern
 			"ZMQ_ROUTER"
 		end
 
-	zmq_dealer: INTEGER_32
+	dealer: INTEGER_32
 			-- A socket of type ZMQ_DEALER is an advanced pattern used for extending request/reply sockets.
 		external
 			"C inline use <zmq.h>"
@@ -66,7 +66,7 @@ feature -- Socket types : Request-Replay Pattern
 
 feature -- Socket types: Publish-subscribe pattern
 
-	zmq_pub: INTEGER_32
+	pub: INTEGER_32
 			-- A socket type to distribute data.
 		external
 			"C inline use <zmq.h>"
@@ -74,7 +74,7 @@ feature -- Socket types: Publish-subscribe pattern
 			"ZMQ_PUB"
 		end
 
-	zmq_sub: INTEGER_32
+	sub: INTEGER_32
 			-- A socket type to subscribe for data.
 		external
 			"C inline use <zmq.h>"
@@ -82,7 +82,7 @@ feature -- Socket types: Publish-subscribe pattern
 			"ZMQ_SUB"
 		end
 
-	zmq_xpub: INTEGER_32
+	xpub: INTEGER_32
 			-- A socket type to distribute data.
 		external
 			"C inline use <zmq.h>"
@@ -90,7 +90,7 @@ feature -- Socket types: Publish-subscribe pattern
 			"ZMQ_XPUB"
 		end
 
-	zmq_xsub: INTEGER_32
+	xsub: INTEGER_32
 			-- A socket type to subscribe for data.
 		external
 			"C inline use <zmq.h>"
@@ -100,7 +100,7 @@ feature -- Socket types: Publish-subscribe pattern
 
 feature -- Socket types: Pipeline
 
-	zmq_push: INTEGER_32
+	push: INTEGER_32
 			-- A socket of type ZMQ_PUSH is used by a pipeline node to send messages to downstream pipeline nodes.
 		external
 			"C inline use <zmq.h>"
@@ -108,7 +108,7 @@ feature -- Socket types: Pipeline
 			"ZMQ_PUSH"
 		end
 
-	zmq_pull: INTEGER_32
+	pull: INTEGER_32
 			-- A socket of type ZMQ_PULL is used by a pipeline node to receive messages from upstream pipeline nodes.
 		external
 			"C inline use <zmq.h>"
@@ -118,7 +118,7 @@ feature -- Socket types: Pipeline
 
 feature -- Socket Types: Exclusive pair pattern
 
-	zmq_pair: INTEGER_32
+	pair: INTEGER_32
 			-- A socket of type ZMQ_PAIR can only be connected to a single peer at any one time.
 		external
 			"C inline use <zmq.h>"
@@ -128,7 +128,7 @@ feature -- Socket Types: Exclusive pair pattern
 
 feature -- Poll constants
 
-	zmq_pollin: INTEGER_32
+	pollin: INTEGER_32
 			-- For ØMQ sockets, at least one message may be received from the socket without
 			-- blocking. For standard sockets this is equivalent to the POLLIN flag of
 			-- the poll() system call and generally means that at least one byte of
@@ -139,7 +139,7 @@ feature -- Poll constants
 			"ZMQ_POLLIN"
 		end
 
-	zmq_pollout: INTEGER_32
+	pollout: INTEGER_32
 			-- For ØMQ sockets, at least one message may be sent to the socket without
 			-- blocking. For standard sockets this is equivalent to the POLLOUT flag of
 			-- the poll() system call and generally means that at least one byte of
@@ -150,7 +150,7 @@ feature -- Poll constants
 			"ZMQ_POLLOUT"
 		end
 
-	zmq_pollerr: INTEGER_32
+	pollerr: INTEGER_32
 			-- For standard sockets, this flag is passed through zmq_poll() to the
 			-- underlying poll() system call and generally means that some sort of
 			-- error condition is present on the socket specified by fd. For ØMQ sockets
@@ -164,7 +164,7 @@ feature -- Poll constants
 
 feature -- Socket options
 
-	zmq_noblock: INTEGER_32
+	noblock: INTEGER_32
 		external
 			"C inline use <zmq.h>"
 		alias

@@ -25,6 +25,7 @@ feature {NONE}
 			-- Make sure `x' is targeted.
 		do
 			x.do_nothing
+			create a
 		end
 
 feature {NONE} -- Initialization

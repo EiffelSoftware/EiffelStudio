@@ -59,6 +59,7 @@ feature -- Binding
 			-- Bind Current socket to a particular transport.
 		require
 			an_address /= Void
+			an_address_ascii: an_address.is_valid_as_string_8
 		local
 			res: INTEGER_32
 			c_str: C_STRING
@@ -82,6 +83,7 @@ feature -- Binding
 			-- Note that single socket can be connected (and bound) to arbitrary number of peers using different transport mechanisms.
 		require
 			an_address /= Void
+			an_address_ascii: an_address.is_valid_as_string_8
 		local
 			rc: INTEGER_32
 			c_str: C_STRING

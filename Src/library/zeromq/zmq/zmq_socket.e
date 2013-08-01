@@ -12,7 +12,7 @@ class
 inherit
 	WRAPPER_BASE
 		export
-			{ZMQ_POLLER} item
+			{ZMQ_POLLER, ZMQ_BROKER} item
 		redefine
 			make
 		end

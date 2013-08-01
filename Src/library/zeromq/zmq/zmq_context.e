@@ -163,7 +163,7 @@ feature -- Socket: Request-Replay Pattern
 			disable_configurable
 		end
 
-	new_dealer: ZMQ_SOCKET
+	new_dealer_socket: ZMQ_SOCKET
 			-- A socket of type ZMQ_DEALER is an advanced pattern used for extending request/reply
 			-- sockets. Each message sent is round-robined among all connected peers, and each
 			-- message received is fair-queued from all connected peers.

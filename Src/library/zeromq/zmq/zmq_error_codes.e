@@ -19,6 +19,14 @@ feature -- Access
 			"return EAGAIN;"
 		end
 
+	efault: INTEGER
+			-- Value of EFAULT constant.
+		external
+			"C inline use <errno.h>"
+		alias
+			"return EFAULT;"
+		end
+
 	eintr: INTEGER
 			-- Value of EINTR constant.
 		external
@@ -33,6 +41,14 @@ feature -- Access
 			"C inline use <errno.h>"
 		alias
 			"return ENOTSOCK;"
+		end
+
+	eterm: INTEGER
+			-- Value of ETERM constant.
+		external
+			"C inline use <errno.h>"
+		alias
+			"return ETERM;"
 		end
 
 note

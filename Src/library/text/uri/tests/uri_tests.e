@@ -133,6 +133,9 @@ feature -- Tests
 		local
 			uri: URI
 		do
+			create uri.make_from_string ("http://foo.com?q=bar")
+			assert ("query", same_string (uri.query, "q=bar"))
+
 			create uri.make_from_string ("http://foo.com/when/")
 			uri.add_query_parameter ("un", "été")
 			assert ("query", same_string (uri.query, "un=%%C3%%A9t%%C3%%A9"))

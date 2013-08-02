@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 		note
 			EIS: "name=Syntax Components", "protocol=URI", "src=http://tools.ietf.org/html/rfc3986#section-3"
 		local
-			p,q: INTEGER
+			p,q,qq: INTEGER
 			s, t: STRING_8
 		do
 			is_valid := True
@@ -73,6 +73,10 @@ feature {NONE} -- Initialization
 						p := q
 					end
 					q := a_string.index_of ('/', p + 1)
+					qq := a_string.index_of ('?', p + 1)
+					if qq > 0 and (q = 0 or qq < q) then
+						q := qq
+					end
 					if q > 0 then
 						t := a_string.substring (p + 1, q - 1)
 					else

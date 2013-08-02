@@ -65,6 +65,18 @@ feature -- Change Element
             object.force (l_value, key)
         end
 
+	remove (k: JSON_STRING)
+			-- Remove item indexed by `k' if any.
+		do
+			object.remove (k)
+		end
+
+	wipe_out
+			-- Reset all items to default values; reset status.	
+		do
+			object.wipe_out
+		end
+
 feature -- Access
 
     has_key (key: JSON_STRING): BOOLEAN
@@ -95,7 +107,8 @@ feature -- Access
         local
             t: HASH_TABLE [JSON_VALUE, JSON_STRING]
         do
-            Result := "{"
+            create Result.make (2)
+            Result.append_character ('{')
             from
                 t := map_representation
                 t.start
@@ -103,7 +116,7 @@ feature -- Access
                 t.after
             loop
                 Result.append (t.key_for_iteration.representation)
-                Result.append (":")
+                Result.append_character (':')
                 Result.append (t.item_for_iteration.representation)
                 t.forth
                 if not t.after then

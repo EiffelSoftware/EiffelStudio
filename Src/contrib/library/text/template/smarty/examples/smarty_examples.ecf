@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="smarty_examples" uuid="C45572E9-F9E9-4B56-BB26-EFF927F7BF24">
+	<target name="smarty_examples">
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+			<exclude>/.tpl$</exclude>
+		</file_rule>
+		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="smarty" location="../smarty-safe.ecf"/>
+	</target>
+	<target name="template_basics" extends="smarty_examples">
+		<root class="BASIC_TEMPLATE" feature="default_create"/>
+		<cluster name="examples" location=".\" recursive="true"/>
+	</target>
+	<target name="html_simple_template" extends="smarty_examples">
+		<root class="HTML_SIMPLE_TEMPLATE" feature="default_create"/>
+		<cluster name="examples" location=".\" recursive="true"/>
+	</target>
+	<target name="html_table_template" extends="smarty_examples">
+		<root class="HTML_TABLE_TEMPLATE" feature="default_create"/>
+		<cluster name="examples" location=".\" recursive="true"/>
+	</target>
+
+
+</system>

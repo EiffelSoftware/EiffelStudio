@@ -18,6 +18,8 @@ class
 inherit
     JSON_VALUE
 
+	ITERABLE [JSON_VALUE]
+
     DEBUG_OUTPUT
 
 create
@@ -68,6 +70,14 @@ feature -- Visitor pattern
         do
             a_visitor.visit_json_array (Current)
         end
+
+feature -- Access
+
+	new_cursor: ITERATION_CURSOR [JSON_VALUE]
+			-- Fresh cursor associated with current structure
+		do
+			Result := values.new_cursor
+		end
 
 feature -- Mesurement
 

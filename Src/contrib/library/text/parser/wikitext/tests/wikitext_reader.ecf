@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="wikitext_reader" uuid="EB8AF918-9D4A-4FA0-985D-77B690383F22">
+	<target name="wikitext_reader">
+		<root class="WIKITEXT_READER" feature="make"/>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+			<assertions precondition="true" postcondition="true" invariant="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="wikitext" location="..\wikitext-safe.ecf" readonly="false"/>
+		<cluster name="wikitext_reader" location=".\src\" recursive="true"/>
+	</target>
+</system>

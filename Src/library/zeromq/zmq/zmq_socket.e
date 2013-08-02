@@ -11,10 +11,10 @@ class
 
 inherit
 	WRAPPER_BASE
+		rename
+			make as base_make
 		export
 			{ZMQ_POLLER, ZMQ_BROKER} item
-		redefine
-			make
 		end
 
 	STRING_HANDLER
@@ -26,12 +26,18 @@ create {ZMQ_CONTEXT}
 
 feature {NONE} -- Initialization
 
-	make (a_item: POINTER)
+	make (a_item: POINTER; a_socket_type: INTEGER)
+			-- Initialize Current with initialized socket `a_item' of type `a_socket_type'.
+		require
+			a_item_not_null: a_item /= default_pointer
 		do
-			Precursor (a_item)
+			base_make (a_item)
 			hash_code := a_item.hash_code
 			create last_string.make (256)
 			is_closed := True
+		ensure
+			item_set: item = a_item
+			socket_type_set: socket_type = a_socket_type
 		end
 
 feature -- Access
@@ -40,7 +46,10 @@ feature -- Access
 			-- Last received string via `read_string'.
 
 	hash_code: INTEGER
-			-- Hash code associated with current socket
+			-- Hash code associated with current socket.
+
+	socket_type: INTEGER
+			-- Type of current socket (See ZMQ_CONSTANTS for list.)
 
 feature -- Status report
 

@@ -133,7 +133,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.req))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.req), {ZMQ_CONSTANTS}.req)
 			disable_configurable
 		end
 
@@ -159,7 +159,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.rep))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.rep), {ZMQ_CONSTANTS}.rep)
 			disable_configurable
 		end
 
@@ -186,7 +186,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.dealer))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.dealer), {ZMQ_CONSTANTS}.dealer)
 			disable_configurable
 		end
 
@@ -224,7 +224,7 @@ feature -- Socket: Request-Replay Pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.router))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.router), {ZMQ_CONSTANTS}.router)
 			disable_configurable
 		end
 
@@ -250,11 +250,11 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pub), {ZMQ_CONSTANTS}.pub)
 			disable_configurable
 		end
 
-	new_sub_socket: ZMQ_SOCKET
+	new_sub_socket (a_filter: STRING): ZMQ_SOCKET
 			-- A socket of type ZMQ_SUB is used by a subscriber to subscribe to data
 			-- distributed by a publisher. Initially a ZMQ_SUB socket is not subscribed
 			-- to any messages, use the ZMQ_SUBSCRIBE option of zmq_setsockopt(3) to
@@ -271,8 +271,9 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.sub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.sub), {ZMQ_CONSTANTS}.sub)
 			disable_configurable
+			{ZMQ}.setsockopt (Result.item, {ZMQ_CONSTANTS}.subscribe, l_c_filter, l_c_filter.bytes_count)
 		end
 
 
@@ -293,7 +294,7 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.xpub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.xpub), {ZMQ_CONSTANTS}.xpub)
 			disable_configurable
 		end
 
@@ -313,7 +314,7 @@ feature -- Socket: Publish-subscribe pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.xsub))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.xsub), {ZMQ_CONSTANTS}.xsub)
 			disable_configurable
 		end
 
@@ -341,7 +342,7 @@ feature -- Sockets: Pipeline pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.push))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.push), {ZMQ_CONSTANTS}.push)
 			disable_configurable
 		end
 
@@ -360,7 +361,7 @@ feature -- Sockets: Pipeline pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pull))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pull),{ZMQ_CONSTANTS}.pull)
 			disable_configurable
 		end
 
@@ -389,7 +390,7 @@ feature -- Sockets: Exclusive pair pattern
 		require
 			exists: exists
 		do
-			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pair))
+			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.pair), {ZMQ_CONSTANTS}.pair)
 			disable_configurable
 		end
 

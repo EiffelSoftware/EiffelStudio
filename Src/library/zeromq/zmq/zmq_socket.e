@@ -14,7 +14,7 @@ inherit
 		rename
 			make as base_make
 		export
-			{ZMQ_POLLER, ZMQ_BROKER} item
+			{ZMQ_CONTEXT, ZMQ_POLLER, ZMQ_BROKER} item
 		end
 
 	STRING_HANDLER

@@ -283,6 +283,9 @@ feature -- Socket: Publish-subscribe pattern
 				create l_c_filter.make ("")
 			end
 			l_err := {ZMQ}.setsockopt (Result.item, {ZMQ_CONSTANTS}.subscribe, l_c_filter.item, l_c_filter.bytes_count.as_natural_32)
+			check
+				no_error: l_err = 0
+			end
 		end
 
 	new_xpub_socket: ZMQ_SOCKET

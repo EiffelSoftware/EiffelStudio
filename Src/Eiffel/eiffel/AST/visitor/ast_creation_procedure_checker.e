@@ -181,11 +181,13 @@ feature {NONE} -- Processing
 					-- Report error if necessary.
 				error_handler.insert_error (create {VEVI}.make_attributes
 					(u, current_class.class_id, creation_procedure, uninitialized_keeper.location, uninitialized_keeper.written_feature))
+					-- Mark all attributes as set to avoid reporting duplicate errors.
+					-- This cannot be done outside of the condition because `collect_unset_attributes' returns `Void'
+					-- not only when there are no unset attributes but also when "Current" is not used (bug#18643).
+				attribute_initialization.set_all
+					-- After all attributes are set "Current" is considered initialized to do less checks.
+				uninitialized_keeper.unuse
 			end
-				-- Mark all attributes as set to avoid reporting duplicate errors.
-			attribute_initialization.set_all
-				-- It's safe to assume that now Current is initialized.
-			uninitialized_keeper.unuse
 		end
 
 	collect_unset_attributes

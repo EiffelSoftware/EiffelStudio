@@ -254,7 +254,7 @@ feature -- Socket: Publish-subscribe pattern
 			disable_configurable
 		end
 
-	new_sub_socket (a_filter: STRING): ZMQ_SOCKET
+	new_sub_socket (a_filter: detachable STRING): ZMQ_SOCKET
 			-- A socket of type ZMQ_SUB is used by a subscriber to subscribe to data
 			-- distributed by a publisher. Initially a ZMQ_SUB socket is not subscribed
 			-- to any messages, use the ZMQ_SUBSCRIBE option of zmq_setsockopt(3) to
@@ -270,12 +270,19 @@ feature -- Socket: Publish-subscribe pattern
 			-- Action in mute state:       Drop
 		require
 			exists: exists
+			valid_filter: a_filter.is_valid_as_string_8
+		local
+			l_c_filter: C_STRING
 		do
 			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.sub), {ZMQ_CONSTANTS}.sub)
 			disable_configurable
-			{ZMQ}.setsockopt (Result.item, {ZMQ_CONSTANTS}.subscribe, l_c_filter, l_c_filter.bytes_count)
+			if a_filter /= Void then
+				create l_c_filter.make (a_filter)
+			else
+				create l_c_filter.make ("")
+			end
+			{ZMQ}.setsockopt (Result.item, {ZMQ_CONSTANTS}.subscribe, l_c_filter.item, l_c_filter.bytes_count)
 		end
-
 
 	new_xpub_socket: ZMQ_SOCKET
 			-- Same as new_pub_socket except that you can receive subscriptions from

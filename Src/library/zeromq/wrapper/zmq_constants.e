@@ -287,7 +287,7 @@ feature -- Socket options
 			-- used only by request/reply pattern. Namely, it can be used in tandem with ROUTER socket to
 			-- route messages to the peer with specific identity.
 			--
-			-- Identity should be at least one byte and at most 255 bytes long. Identities starting with 
+			-- Identity should be at least one byte and at most 255 bytes long. Identities starting with
 			-- binary zero are reserved for use by ØMQ infrastructure.
 			--
 			-- If two peers use the same identity when connecting to a third peer, the results shall be
@@ -519,21 +519,21 @@ feature -- Socket options
 			"return ZMQ_SNDTIMEO;"
 		end
 
-	ipv6: INTEGER_32
-			-- Enable IPv6 on socket
-			-- Set the IPv6 option for the socket. A value of 1 means IPv6 is enabled on the socket, while 0
-			-- means the socket will use only IPv4. When IPv6 is enabled the socket will connect to, or accept
-			-- connections from, both IPv4 and IPv6 hosts.
-			--
-			-- Option value type	int
-			-- Option value unit	boolean
-			-- Default value	0 (false)
-			-- Applicable socket types	all, when using TCP transports.
-		external
-			"C inline use <zmq.h>"
-		alias
-			"return ZMQ_IPV6;"
-		end
+--	ipv6: INTEGER_32
+--			-- Enable IPv6 on socket
+--			-- Set the IPv6 option for the socket. A value of 1 means IPv6 is enabled on the socket, while 0
+--			-- means the socket will use only IPv4. When IPv6 is enabled the socket will connect to, or accept
+--			-- connections from, both IPv4 and IPv6 hosts.
+--			--
+--			-- Option value type	int
+--			-- Option value unit	boolean
+--			-- Default value	0 (false)
+--			-- Applicable socket types	all, when using TCP transports.
+--		external
+--			"C inline use <zmq.h>"
+--		alias
+--			"return ZMQ_IPV6;"
+--		end
 
 	ipv4only: INTEGER_32
 			-- Use IPv4-only on socket
@@ -550,23 +550,23 @@ feature -- Socket options
 			"return ZMQ_IPV4ONLY;"
 		end
 
-	immediate: INTEGER_32
-			-- Queue messages only to completed connections
-			-- By default queues will fill on outgoing connections even if the connection has not completed.
-			-- This can lead to "lost" messages on sockets with round-robin routing (REQ, PUSH, DEALER). If
-			-- this option is set to 1, messages shall be queued only to completed connections. This will
-			-- cause the socket to block if there are no other connections, but will prevent queues from
-			-- filling on pipes awaiting connection.
-			--
-			-- Option value type	int
-			-- Option value unit	boolean
-			-- Default value	0 (false)
-			-- Applicable socket types	all, only for connection-oriented transports.
-		external
-			"C inline use <zmq.h>"
-		alias
-			"return ZMQ_IMMEDIATE;"
-		end
+--	immediate: INTEGER_32
+--			-- Queue messages only to completed connections
+--			-- By default queues will fill on outgoing connections even if the connection has not completed.
+--			-- This can lead to "lost" messages on sockets with round-robin routing (REQ, PUSH, DEALER). If
+--			-- this option is set to 1, messages shall be queued only to completed connections. This will
+--			-- cause the socket to block if there are no other connections, but will prevent queues from
+--			-- filling on pipes awaiting connection.
+--			--
+--			-- Option value type	int
+--			-- Option value unit	boolean
+--			-- Default value	0 (false)
+--			-- Applicable socket types	all, only for connection-oriented transports.
+--		external
+--			"C inline use <zmq.h>"
+--		alias
+--			"return ZMQ_IMMEDIATE;"
+--		end
 
 	router_mandatory: INTEGER_32
 			-- Accept only routable messages on ROUTER sockets
@@ -582,24 +582,24 @@ feature -- Socket options
 			"return ZMQ_ROUTER_MANDATORY;"
 		end
 
-	router_raw: INTEGER_32
-			-- Switch ROUTER socket to raw mode
-			-- Sets the raw mode on the ROUTER, when set to 1. When the ROUTER socket is in raw mode, and
-			-- when using the tcp:// transport, it will read and write TCP data without ØMQ framing. This
-			-- lets ØMQ applications talk to non-ØMQ applications. When using raw mode, you cannot set
-			-- explicit identities, and the ZMQ_MSGMORE flag is ignored when sending data messages.
-			-- In raw mode you can close a specific connection by sending it a zero-length message
-			-- (following the identity frame).
-			--
-			-- Option value type	int
-			-- Option value unit	0, 1
-			-- Default value	0
-			-- Applicable socket types	ZMQ_ROUTER
-		external
-			"C inline use <zmq.h>"
-		alias
-			"return ZMQ_ROUTER_RAW;"
-		end
+--	router_raw: INTEGER_32
+--			-- Switch ROUTER socket to raw mode
+--			-- Sets the raw mode on the ROUTER, when set to 1. When the ROUTER socket is in raw mode, and
+--			-- when using the tcp:// transport, it will read and write TCP data without ØMQ framing. This
+--			-- lets ØMQ applications talk to non-ØMQ applications. When using raw mode, you cannot set
+--			-- explicit identities, and the ZMQ_MSGMORE flag is ignored when sending data messages.
+--			-- In raw mode you can close a specific connection by sending it a zero-length message
+--			-- (following the identity frame).
+--			--
+--			-- Option value type	int
+--			-- Option value unit	0, 1
+--			-- Default value	0
+--			-- Applicable socket types	ZMQ_ROUTER
+--		external
+--			"C inline use <zmq.h>"
+--		alias
+--			"return ZMQ_ROUTER_RAW;"
+--		end
 
 	xpub_verbose: INTEGER_32
 			-- Provide all subscription messages on XPUB sockets

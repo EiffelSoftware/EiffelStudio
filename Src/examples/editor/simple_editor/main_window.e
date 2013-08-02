@@ -60,9 +60,6 @@ feature {NONE} -- Initialization
 	initialize
 			-- Build the interface for this window.
 		do
-			check
-				False
-			end
 			Precursor {EV_TITLED_WINDOW}
 
 				-- Create and add the menu bar.

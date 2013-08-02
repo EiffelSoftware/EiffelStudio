@@ -270,9 +270,10 @@ feature -- Socket: Publish-subscribe pattern
 			-- Action in mute state:       Drop
 		require
 			exists: exists
-			valid_filter: a_filter.is_valid_as_string_8
+			valid_filter: attached a_filter implies a_filter.is_valid_as_string_8
 		local
 			l_c_filter: C_STRING
+			l_err: INTEGER
 		do
 			create Result.make ({ZMQ}.socket (item, {ZMQ_CONSTANTS}.sub), {ZMQ_CONSTANTS}.sub)
 			disable_configurable
@@ -281,7 +282,7 @@ feature -- Socket: Publish-subscribe pattern
 			else
 				create l_c_filter.make ("")
 			end
-			{ZMQ}.setsockopt (Result.item, {ZMQ_CONSTANTS}.subscribe, l_c_filter.item, l_c_filter.bytes_count)
+			l_err := {ZMQ}.setsockopt (Result.item, {ZMQ_CONSTANTS}.subscribe, l_c_filter.item, l_c_filter.bytes_count.as_natural_32)
 		end
 
 	new_xpub_socket: ZMQ_SOCKET

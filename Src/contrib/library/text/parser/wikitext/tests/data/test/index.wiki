@@ -1,0 +1,212 @@
+#title=Community
+#tags=book
+#uuid=75c75712-7c3e-2757-51b7-77b404471e2e
+
+
+Bonjour ..
+
+* '''trois_5'''''VVVVV''''' oh ''' end
+
+{{warning| ''' un deux trois
+ quatre '''}}
+
+'' test '''bold''' and done '' ok
+
+= First section =
+; aaa
+: 111
+; bbb : 222
+:: indent 2
+
+# fig 1
+## aaa
+### 111
+### 222
+### 333
+## bbb
+
+== First.A ==
+this is a test for A
+== First.B ==
+this is a test for B
+== First.C ==
+this is a test for C
+= Second Section =
+= Third Section =
+== Third.A ==
+== Third.B ==
+== Third.C ==
+=== C.1 ===
+ Test block
+ Test block again
+ Test block again bis
+
+: indent 1
+: indent 1 again
+:: indent 2 
+::: indent 3 
+==== C.1.a ====
+==== C.1.b ====
+===== C.1.b.1 =====
+===== C.1.b.2 =====
+=== C.2 ===
+=== C.3 ===
+# fig 1
+## 1
+### =1
+### =2
+##* =*
+### =3
+## 2
+#### toto
+######## tutu
+######## tutu 2
+#### toto 2
+## 3
+# fig 2
+# fig 3
+## fig a
+##* test 1
+##* test 2
+##** test 2.1
+##** test 2.2
+# AAA
+## weird
+## fig b
+# fig 4
+## fig a
+### aaa
+### bbb
+### ccc
+#### iii
+### ddd
+## fig b
+# fig 5
+# fig 6
+
+
+= Part ''foo'' [[page_a#first|Page A]] =
+= Part ''bar'' [[page_b|'''Page''' B]] =
+= Part ''bar'' [[page_b| [[foobar|The foobar]] ]] =
+= Part B =
+
+test2
+*10 '''''''''' end
+*15 ''''''''''''''' end
+
+
+* ''' trois ''deux''' trois '' test 3+2+2+3
+
+
+* ''deux_0 end
+* ''deux_1' end
+* ''deux_2'' end
+
+* '''''cinq_0 end
+* '''''cinq_1' end
+* '''''cinq_2'' end
+* '' '''cinq_3''' end
+* '''''cinq_3''' end
+* '''''cinq_4'''' end
+* '''''cinq_5''''' end
+* '''trois_5''' ''VVVVV'' ''' oh ''' end
+* '''trois_5'''''VVVVV''''' oh ''' end
+
+* [[page|name]]
+* [[page|[[page2|name2]]]]
+
+* [http://eiffel.com Eiffel dot Com]
+* [[page|[http://eiffel.com Eiffel dot Com] ohhh]]
+
+Wahoo
+
+----
+{{note| this is a note }}
+----
+{{note| this is a {{bold|note}} }}
+----
+----aaaaaa''ahh''hhhh
+----
+{{warning| ''' un deux trois
+ quatre '''}}
+
+
+<!--
+'' test '''bold''' and done '' ok
+-->
+
+----
+Comment this <!-- ''word'' -->
+<center> center 
+	this text
+	</center>
+<pre>
+  Pre format this one , no [[Wiki]] or ''markup'' support
+</pre>
+----
+<pre>this is pre
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</pre>
+----
+<blockquote>blockquote
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</blockquote>
+----
+<strike> this is striked
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</strike>
+----
+<u> this is underline
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</u>
+----
+<sup> this is sup
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</sup>
+----
+<sub> this is sub
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</sub>
+----
+<tt> this is typewriter
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</tt>
+----
+<code> this is code
+ line 1 [[Wiki]]
+  line 2 ''markup''
+   line 3
+</code>
+
+
+* Ciao
+* bye bye
+
+
+Test nowiki <nowiki>''z'' 0<nowiki>a 1</nowiki>b 2</nowiki>c
+
+* wahoo <nowiki>
+* test ''markup'' [[Wiki]]
+</nowiki>
+
+<nowiki>test no-wiki '''test'''</nowiki>
+<nowiki>test multiline no-wiki
+'''last line'''
+end
+</nowiki>
+
+

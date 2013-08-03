@@ -2032,7 +2032,7 @@ feature {NONE} -- Scoop Processor Meta Data
 
 feature {NONE} -- Externals
 
-	frozen available_cpus: NATURAL_8
+	frozen available_cpus: NATURAL_32
 			--| FIXME: Not Currently used: Implemented for future pooling optimizations
 		external
 			"C inline use %"eif_scoop.h%""

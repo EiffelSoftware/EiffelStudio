@@ -43,7 +43,7 @@ feature -- Access
 				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
-	item (args: detachable separate OPEN_ARGS): RESULT_TYPE
+	item alias "[]" (args: detachable separate OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)

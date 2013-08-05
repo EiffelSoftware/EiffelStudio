@@ -27,7 +27,7 @@ feature -- Variable names
 
 	iron_path_env: STRING = "IRON_PATH"
 			-- Location of the iron libraries installation, if `ise_iron_path_env' is not defined.
-			
+
 	ise_precomp_env: STRING = "ISE_PRECOMP"
 			-- Precompile location.
 
@@ -65,10 +65,10 @@ feature -- File extensions
 
 feature -- Version
 
-	major_version: NATURAL_16 = 7
+	major_version: NATURAL_16 = 13
 			-- Major release version.
 
-	minor_version: NATURAL_16 = 3
+	minor_version: NATURAL_16 = 11
 			-- Minor release version.
 
 ;note

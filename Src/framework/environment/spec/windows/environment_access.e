@@ -27,7 +27,7 @@ feature -- Access
 			Result := item (a_var)
 			if Result = Void then
 				l_lowered_var := a_var.as_lower
-				l_eiffel := {STRING_32} "\Software\ISE\Eiffel" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out
+				l_eiffel := {STRING_32} "\Software\ISE\Eiffel_" + {EIFFEL_CONSTANTS}.major_version.out + "." + {EIFFEL_CONSTANTS}.minor_version.out
 				create l_reg
 				if a_app /= Void then
 						-- Lookup application-specific setting.
@@ -50,7 +50,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

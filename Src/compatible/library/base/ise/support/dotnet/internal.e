@@ -1100,19 +1100,6 @@ feature -- Measurement
 			Result := get_members (type_id).count - 1
 		end
 
-	bit_size (i: INTEGER; object: ANY): INTEGER
-			-- Size (in bit) of the `i'-th bit field of `object'
-		require
-			object_not_void: object /= Void
-			index_large_enough: i >= 1
-			index_small_enough: i <= field_count (object)
-			is_bit: field_type (i, object) = Bit_type
-		do
-			Result := 4
-		ensure
-			positive_result: Result > 0
-		end
-
 	physical_size (object: ANY): INTEGER
 			-- Space occupied by `object' in bytes
 			--| In .NET, it is an approximation since .NET has not facility that returns the size

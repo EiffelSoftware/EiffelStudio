@@ -175,12 +175,6 @@ feature -- Internal support
 			"built_in static"
 		end
 
-	frozen field_bit_size (i: INTEGER; obj: ANY): INTEGER
-			-- Size of BIT instance represented by `obj'.
-		external
-			"built_in static"
-		end
-
 	frozen field_count_of_type (a_type_id: INTEGER): INTEGER
 			-- Number of logical fields in dynamic type `a_type_id'.
 		external

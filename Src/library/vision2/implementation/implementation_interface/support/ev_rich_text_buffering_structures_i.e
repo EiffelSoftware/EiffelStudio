@@ -767,7 +767,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_string: STRING_32 = "TN"
+	new_line_string: STRING_32 = "%N"
 	tab_string: STRING_32 = "%T"
 	tab_tag_string: STRING_32 = "tab"
 	line_string: STRING_32 = "line"
@@ -832,7 +832,7 @@ feature {NONE} -- Implementation
 					add_font_to_all_fonts
 				elseif current_character = '\' then
 					process_keyword (rtf_text, main_iterator)
-				elseif current_character = ' '  then
+				elseif current_character = ' ' and then rtf_text.item (main_iterator + 1) /= '\' then
 					move_main_iterator (1)
 					update_main_iterator
 					process_fontname (rtf_text)

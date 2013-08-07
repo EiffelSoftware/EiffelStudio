@@ -221,7 +221,7 @@ feature {EV_ANY_I} -- Status Setting
 			until
 				counter > a_text.count
 			loop
-				if a_text.code (counter) = ('%N').natural_32_code then
+				if counter < a_text.count - 1 and then a_text.item (counter) = '%N' then
 					if not l_rich_text.internal_paragraph_format_contiguous (counter, counter + 2) then
 							-- Note that we checked "counter + 2" as we find the %N that signifies a new line, and then
 							-- we must add one to convert to caret positions, and one to check that we are checking the first character

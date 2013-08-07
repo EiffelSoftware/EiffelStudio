@@ -65,7 +65,8 @@ inherit
 			scroll_to_end,
 			selected_text,
 			make,
-			initialize_text_widget
+			initialize_text_widget,
+			internal_caret_position
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -276,6 +277,26 @@ feature -- Initialization
 			-- Extended windows style used to create `Current'.
 		do
 			Result := Ws_ex_clientedge
+		end
+
+feature -- Access
+
+	internal_caret_position: INTEGER
+			-- <Precursor>
+		local
+			l_wel_point: WEL_POINT
+			sel_start, sel_end: INTEGER_32
+			l_success: BOOLEAN
+		do
+			{WEL_API}.send_message (wel_item, Em_getsel, $sel_start, $sel_end)
+			Result := sel_end
+			if sel_start /= sel_end then
+				create l_wel_point.make (0, 0)
+				l_success := {WEL_API}.get_caret_pos (l_wel_point.item)
+				if l_success then
+					Result := {WEL_API}.send_message_result_integer (wel_item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.Em_charfrompos, default_pointer, l_wel_point.item)
+				end
+			end
 		end
 
 feature -- Status report

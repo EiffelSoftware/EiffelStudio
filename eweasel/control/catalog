@@ -2780,6 +2780,7 @@ test	scoop-sequential-processor-creation		scoop028 tcf pass scoop execution mult
 test	scoop-recursive-processor-creation		scoop029 tcf pass scoop execution multithreaded
 test	scoop-agent-validity				scoop030 tcf pass scoop validity expanded agents conformance multithreaded
 test	scoop-agent-call				scoop031 tcf pass scoop agents execution multithreaded
+test	scoop-corrupted-string			scoop032 tcf pass scoop execution multithreaded
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

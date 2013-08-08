@@ -1,0 +1,16 @@
+test_name	scoop-corrupted-string
+test_description Show a bug that string is corrupted when making from separate.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	root_class.e	$CLUSTER root_class.e
+copy_raw	process_worker.e	$CLUSTER process_worker.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

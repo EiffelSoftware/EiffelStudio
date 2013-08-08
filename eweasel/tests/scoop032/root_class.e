@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	compilation_dir: detachable STRING = "C:\work\projects\tests"
+	compilation_dir: STRING = "C:\work\projects\tests"
 			-- Location where the projects are compiled.
 
 note

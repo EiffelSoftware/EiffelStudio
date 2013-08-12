@@ -2353,11 +2353,11 @@ rt_private void mark_array(EIF_REFERENCE *arr, rt_uint_ptr arr_count, MARKER mar
 		if (move) {
 			for (; arr_count > 0; arr_count--, arr++) {
 				if (*arr) {
-					CHECK("Not in scavenge `from' zone", (*arr < sc_from.sc_arena) && (*arr > sc_from.sc_top));
-					CHECK("Not in scavenge `to' zone", (*arr < sc_to.sc_arena) && (*arr > sc_to.sc_top));
+					CHECK("Not in scavenge `from' zone", (*arr < sc_from.sc_arena) || (*arr > sc_from.sc_top));
+					CHECK("Not in scavenge `to' zone", (*arr < sc_to.sc_arena) || (*arr > sc_to.sc_top));
 					*arr = mark_expanded(*arr, marker);
-					CHECK("Not in scavenge `from' zone", (*arr < sc_from.sc_arena) && (*arr > sc_from.sc_top));
-					CHECK("Not in scavenge `to' zone", (*arr < sc_to.sc_arena) && (*arr > sc_to.sc_top));
+					CHECK("Not in scavenge `from' zone", (*arr < sc_from.sc_arena) || (*arr > sc_from.sc_top));
+					CHECK("Not in scavenge `to' zone", (*arr < sc_to.sc_arena) || (*arr > sc_to.sc_top));
 				}
 			}
 		} else {

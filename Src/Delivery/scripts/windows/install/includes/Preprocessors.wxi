@@ -32,7 +32,7 @@
       <?ifdef x64?>
         <?define ProductGuid = "E7D2D0D8-1CC7-4D1C-BA62-2EA9A222E9A4" ?>
 		<?define RegistriesGuid = "876430F7-B520-4656-8692-02D866614FEC" ?>
-		<?define ShortcutsGuid = "F6643010-8008-44F2-81C0-58C27 ID3EAA53" ?>
+		<?define ShortcutsGuid = "828E1FF9-9D72-4828-9810-EB510C4E58D9" ?>
       <?else?>
         <?define ProductGuid = "1A06F93B-C608-4575-B8AC-6BA446BEB3A9" ?>
 		<?define RegistriesGuid = "20F60079-D5CF-47BD-AC75-6BC337ED3509" ?>

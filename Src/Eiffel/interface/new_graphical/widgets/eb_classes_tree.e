@@ -743,15 +743,19 @@ feature {NONE} -- Implementation
 			l_group, l_next_group: CONF_GROUP
 			l_cluster: CONF_CLUSTER
 			l_sys: CONF_SYSTEM
+			l_search_table: SEARCH_TABLE [CONF_GROUP]
 		do
 			l_sys := universe.target.system
 			from
 				create Result.make
+					-- Table to avoid loop.
+				create l_search_table.make (5)
 				l_group := a_group
 			until
-				l_group = Void -- root attained
+				l_group = Void or else l_search_table.has (l_group) -- root attained
 			loop
 				Result.put_front (l_group)
+				l_search_table.force (l_group)
 				if l_group.is_cluster then
 					l_cluster ?= l_group
 					check cluster: l_cluster /= Void end
@@ -761,6 +765,10 @@ feature {NONE} -- Implementation
 				end
 				if l_next_group = Void then
 					l_next_group := l_group.target.system.lowest_used_in_library
+						-- Is already root system. We don't even try another route.
+					if l_group.target.system = l_sys then
+						l_next_group := Void
+					end
 				end
 				l_group := l_next_group
 			end

@@ -418,31 +418,26 @@ feature {ES_EIS_EXTRACTOR} -- Fingerprints
 			a_entry_not_void: a_entry /= Void
 		local
 			l_type: NATURAL_32
-			l_target: CONF_TARGET
-			l_group: CONF_GROUP
-			l_folder: EB_FOLDER
-			l_class: CONF_CLASS
-			l_feature: E_FEATURE
+			l_result: detachable EIS_FINGERPRINT
 		do
 			l_type := id_solution.most_possible_type_of_id (a_entry.target_id)
-			if l_type = id_solution.target_type then
-				l_target := id_solution.target_of_id (a_entry.target_id)
-				create {EIS_TIMESTAMP_FINGERPRINT} Result.make_with_timestamp (file_modified_date_path (l_target.system.file_path))
-			elseif l_type = id_solution.group_type then
-				l_group := id_solution.group_of_id (a_entry.target_id)
-				create {EIS_TIMESTAMP_FINGERPRINT} Result.make_with_timestamp (file_modified_date_path (l_group.target.system.file_path))
-			elseif l_type = id_solution.folder_type then
+			if l_type = id_solution.target_type and then attached id_solution.target_of_id (a_entry.target_id) as l_target then
+				create {EIS_TIMESTAMP_FINGERPRINT} l_result.make_with_timestamp (file_modified_date_path (l_target.system.file_path))
+			elseif l_type = id_solution.group_type and then attached id_solution.group_of_id (a_entry.target_id) as l_group then
+				create {EIS_TIMESTAMP_FINGERPRINT} l_result.make_with_timestamp (file_modified_date_path (l_group.target.system.file_path))
+			elseif l_type = id_solution.folder_type and then attached id_solution.folder_of_id (a_entry.target_id) as l_folder then
 					-- Should never get a folder type here.
-				l_folder := id_solution.folder_of_id (a_entry.target_id)
-				create {EIS_TIMESTAMP_FINGERPRINT} Result.make_with_timestamp (file_modified_date_path (l_folder.cluster.target.system.file_path))
-			elseif l_type = id_solution.class_type then
-				l_class := id_solution.class_of_id (a_entry.target_id)
-				create {EIS_TIMESTAMP_FINGERPRINT} Result.make_with_timestamp (file_modified_date_path (l_class.full_file_name))
-			elseif l_type = id_solution.feature_type then
-				l_feature := id_solution.feature_of_id (a_entry.target_id)
-				create {EIS_TIMESTAMP_FINGERPRINT} Result.make_with_timestamp (file_modified_date_path (l_feature.written_class.lace_class.config_class.full_file_name))
-			else
+				create {EIS_TIMESTAMP_FINGERPRINT} l_result.make_with_timestamp (file_modified_date_path (l_folder.cluster.target.system.file_path))
+			elseif l_type = id_solution.class_type and then attached id_solution.class_of_id (a_entry.target_id) as l_class then
+				create {EIS_TIMESTAMP_FINGERPRINT} l_result.make_with_timestamp (file_modified_date_path (l_class.full_file_name))
+			elseif l_type = id_solution.feature_type and then attached id_solution.class_of_id (a_entry.target_id) as l_class then
+					-- Use the class section instead of the feature. As when the class is not compiled, the feature does not exist.
+				create {EIS_TIMESTAMP_FINGERPRINT} l_result.make_with_timestamp (file_modified_date_path (l_class.full_file_name))
+			end
+			if l_result = Void then
 				create {EIS_MD5_FINGERPRINT} Result.make_empty
+			else
+				Result := l_result
 			end
 		ensure
 			Result_set: Result /= Void
@@ -453,10 +448,14 @@ feature {ES_EIS_EXTRACTOR} -- Fingerprints
 		require
 			a_entry_not_void: a_entry /= Void
 		local
-			l_f: RAW_FILE
+			l_f: detachable RAW_FILE
+			l_fname: STRING_32
 		do
-			create l_f.make_with_name (uri_expender.expanded_uri_from_entry (a_entry))
-			if l_f.exists then
+			l_fname := uri_expender.expanded_uri_from_entry (a_entry)
+			if not l_fname.is_empty then
+				create l_f.make_with_name (l_fname)
+			end
+			if l_f /= Void and then l_f.exists then
 				create {EIS_TIMESTAMP_FINGERPRINT} Result.make_with_timestamp (l_f.date)
 			else
 					-- We need to access remote resource if possible.

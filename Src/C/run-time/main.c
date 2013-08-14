@@ -839,7 +839,7 @@ rt_private void eif_init_root (void)
 				if (n == strlen(egc_rlist[i])) {
 					j = 0;
 					l_same = 1;
-					while (j < n) {
+					while (j < n && l_same) {
 						l_same = (rt_eif_root[j] == (EIF_NATIVE_CHAR) egc_rlist[i][j]);
 						j++;
 					}

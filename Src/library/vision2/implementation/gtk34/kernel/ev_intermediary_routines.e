@@ -146,86 +146,16 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Dialog intermediary agent routines			
+feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 
-	color_dialog_on_ok_intermediary (a_c_object: POINTER)
-			-- Color dialog ok
+	gtk_dialog_response_intermediary (a_c_object: POINTER; a_response_id: INTEGER)
+			-- Dialog "response" signal intermediary.
 		local
-			a_color_dialog_imp: detachable EV_COLOR_DIALOG_IMP
+			l_sd: EV_STANDARD_DIALOG_IMP
 		do
-			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_color_dialog_imp /= Void then end
-			a_color_dialog_imp.on_ok
-		end
-
-	color_dialog_on_cancel_intermediary (a_c_object: POINTER)
-			-- Color dialog cancel
-		local
-			a_color_dialog_imp: detachable EV_COLOR_DIALOG_IMP
-		do
-			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_color_dialog_imp /= Void then end
-			a_color_dialog_imp.on_cancel
-		end
-
-	directory_dialog_on_ok_intermediary (a_c_object: POINTER)
-			-- Directory dialog ok
-		local
-			a_directory_dialog_imp: detachable EV_DIRECTORY_DIALOG_IMP
-		do
-			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_directory_dialog_imp /= Void then end
-			a_directory_dialog_imp.on_ok
-		end
-
-	directory_dialog_on_cancel_intermediary (a_c_object: POINTER)
-			-- Directory dialog cancel
-		local
-			a_directory_dialog_imp: detachable EV_DIRECTORY_DIALOG_IMP
-		do
-			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_directory_dialog_imp /= Void then end
-			a_directory_dialog_imp.on_cancel
-		end
-
-	file_dialog_on_ok_intermediary (a_c_object: POINTER)
-			-- File dialog ok
-		local
-			a_file_dialog_imp: detachable EV_FILE_DIALOG_IMP
-		do
-			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_file_dialog_imp /= Void then end
-			a_file_dialog_imp.on_ok
-		end
-
-	file_dialog_on_cancel_intermediary (a_c_object: POINTER)
-			-- File dialog cancel
-		local
-			a_file_dialog_imp: detachable EV_FILE_DIALOG_IMP
-		do
-			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_file_dialog_imp /= Void then end
-			a_file_dialog_imp.on_cancel
-		end
-
-	font_dialog_on_ok_intermediary (a_c_object: POINTER)
-			-- Font dialog ok
-		local
-			a_font_dialog_imp: detachable EV_FONT_DIALOG_IMP
-		do
-			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_font_dialog_imp /= Void then end
-			a_font_dialog_imp.on_ok
-		end
-
-	font_dialog_on_cancel_intermediary (a_c_object: POINTER)
-			-- Font dialog cancel
-		local
-			a_font_dialog_imp: detachable EV_FONT_DIALOG_IMP
-		do
-			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_font_dialog_imp /= Void then end
-			a_font_dialog_imp.on_cancel
+			l_sd ?= c_get_eif_reference_from_object_id (a_c_object)
+			check l_sd /= Void then end
+			l_sd.on_response (a_response_id)
 		end
 
 note

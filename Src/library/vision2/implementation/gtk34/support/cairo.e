@@ -17,11 +17,96 @@ feature
     CAIRO_FORMAT_RGB16_565: INTEGER_8 = 4
     CAIRO_FORMAT_RGB30: INTEGER_8     = 5
 
+    CAIRO_ANTIALIAS_DEFAULT: INTEGER_8 = 0
+    CAIRO_ANTIALIAS_NONE: INTEGER_8 = 1
+    CAIRO_ANTIALIAS_GRAY: INTEGER_8 = 2
+    CAIRO_ANTIALIAS_SUBPIXEL: INTEGER_8 = 3
+    CAIRO_ANTIALIAS_FAST: INTEGER_8 = 4
+    CAIRO_ANTIALIAS_GOOD: INTEGER_8 = 5
+    CAIRO_ANTIALIAS_BEST: INTEGER_8 = 6
+
 	CAIRO_OPERATOR_SOURCE: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_SOURCE"
+		end
+
+	CAIRO_OPERATOR_OVER: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_OVER"
+		end
+
+	CAIRO_OPERATOR_IN: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_IN"
+		end
+
+	CAIRO_OPERATOR_OUT: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_OUT"
+		end
+
+	CAIRO_OPERATOR_XOR: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_XOR"
+		end
+
+	CAIRO_OPERATOR_ADD: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_ADD"
+		end
+
+	CAIRO_OPERATOR_DEST: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_DEST"
+		end
+
+	CAIRO_OPERATOR_DEST_OVER: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_DEST_OVER"
+		end
+
+	CAIRO_OPERATOR_DEST_IN: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_DEST_IN"
+		end
+
+	CAIRO_OPERATOR_DEST_OUT: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_DEST_OUT"
+		end
+
+	CAIRO_OPERATOR_DEST_ATOP: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_DEST_ATOP"
+		end
+
+	CAIRO_OPERATOR_DIFFERENCE: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_DIFFERENCE"
 		end
 
 	cairo_clip_extents (cr: POINTER; x1: TYPED_POINTER [REAL_64]; y1: TYPED_POINTER [REAL_64]; x2: TYPED_POINTER [REAL_64]; y2: TYPED_POINTER [REAL_64])
@@ -279,6 +364,21 @@ feature
 			"C signature (cairo_t*, cairo_operator_t) use <cairo.h>"
 		end
 
+	cairo_set_antialias (cr: POINTER; op: INTEGER_8)
+		external
+			"C signature (cairo_t*, cairo_antialias_t) use <cairo.h>"
+		end
+
+	cairo_font_options_set_antialias (cr: POINTER; op: INTEGER_8)
+		external
+			"C signature (cairo_font_options_t*, cairo_antialias_t) use <cairo.h>"
+		end
+
+	cairo_font_options_get_antialias (cr: POINTER): INTEGER_8
+		external
+			"C signature (cairo_font_options_t*): cairo_antialias_t use <cairo.h>"
+		end
+
 	cairo_fill (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
@@ -395,7 +495,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

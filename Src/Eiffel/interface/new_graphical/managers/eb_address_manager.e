@@ -270,7 +270,7 @@ feature {NONE} -- Initialization
 			l_view_points_combo.disable_sensitive
 			register_action (l_view_points_combo.select_actions, agent parent_widget.on_viewpoint_changed)
 			l_view_points_combo.disable_edit
-			l_view_points_combo.set_minimum_width (120)
+			l_view_points_combo.set_minimum_width (l_view_points_combo.minimum_width.max (120))
 
 			l_view_points_widget.extend (l_view_points_combo)
 			l_view_points_widget.disable_item_expand (l_view_points_combo)

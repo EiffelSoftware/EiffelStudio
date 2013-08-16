@@ -152,10 +152,10 @@ feature -- Agent functions.
 				do
 					gtk_alloc := {GTK2}.gtk_value_pointer (p)
 					Result := dimension_tuple (
-						{GTK}.gtk_allocation_struct_x (gtk_alloc),
-						{GTK}.gtk_allocation_struct_y (gtk_alloc),
-						{GTK}.gtk_allocation_struct_width (gtk_alloc),
-						{GTK}.gtk_allocation_struct_height (gtk_alloc)
+						{GTK}.gdk_rectangle_struct_x (gtk_alloc),
+						{GTK}.gdk_rectangle_struct_y (gtk_alloc),
+						{GTK}.gdk_rectangle_struct_width (gtk_alloc),
+						{GTK}.gdk_rectangle_struct_height (gtk_alloc)
 					)
 				end
 		end
@@ -163,12 +163,13 @@ feature -- Agent functions.
 	draw_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
 			-- Translation agent used for draw events
 		once
---			Result :=
---			agent (n: INTEGER; p: POINTER): TUPLE
---				do
---					Result := gtk_value_pointer_to_tuple (n, p)
---				end
 			Result := agent gtk_value_pointer_to_tuple (?, ?)
+		end
+
+	response_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+			-- Translation agent used for dialog response events
+		once
+			Result := agent gtk_value_int_to_tuple (?, ?)
 		end
 
 feature {EV_ANY_IMP} -- Agent implementation routines
@@ -275,7 +276,7 @@ feature {NONE} -- Tuple optimizations.
 		end
 
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [pointer: POINTER]
-			-- Tuple containing integer value from first of `args'.
+			-- Tuple containing pointer value from first of `args'.
 		do
 			Result := pointer_tuple
 			Result.pointer := {GTK2}.gtk_value_pointer (args)

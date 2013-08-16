@@ -366,12 +366,20 @@ feature -- Measurement
 			-- Number of logical pixels per inch along horizontal axis
 		do
 			Result := {GTK2}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
+			if Result = -1 then
+					-- If no resolution has been set then default to 96.
+				Result := 96
+			end
 		end
 
 	vertical_resolution: INTEGER
 			-- Number of logical pixels per inch along vertical axis
 		do
 			Result := {GTK2}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
+			if Result = -1 then
+					-- If no resolution has been set then default to 96.
+				Result := 96
+			end
 		end
 
 	height: INTEGER

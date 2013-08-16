@@ -76,13 +76,14 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
-			create_implementation_objects
-
+			set_c_object ({GTK}.gtk_event_box_new)
 				-- Initialize colors from gtk style.
 			set_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_selected_enum))
 			set_non_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_active_enum))
 			set_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_selected_enum))
 			set_non_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_active_enum))
+
+			create_implementation_objects
 
 			Precursor {EV_CELL_IMP}
 

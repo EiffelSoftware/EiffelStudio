@@ -29,6 +29,8 @@ inherit
 	EV_GTK_DEPENDENT_APPLICATION_IMP
 		rename
 			sleep as nano_sleep
+		redefine
+			window_manager_name
 		end
 
 	EV_GTK_EVENT_STRINGS
@@ -45,6 +47,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set up the callback marshal and initialize GTK+.
+		local
+			l_cs: EV_GTK_C_STRING
 		do
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
@@ -55,13 +59,14 @@ feature {NONE} -- Initialization
 
 			if is_html5_backend_enabled then
 				put ("broadway", "GDK_BACKEND")
+				put ("8080", "BROADWAY_DISPLAY")
+				put ("", "UBUNTU_MENUPROXY")
+
 			end
 				--Disable overlay scrollbar as this causes problems for web backend.
 			put ("0", "LIBOVERLAY_SCROLLBAR")
 
 			create character_string_buffer.make (4)
-
-
 
 			gtk_is_launchable := gtk_init_check
 
@@ -81,7 +86,7 @@ feature {NONE} -- Initialization
 				initialize_threading
 					-- Store the value of the debug mode.
 				saved_debug_state := debug_state
-				enable_ev_gtk_log (2)
+				enable_ev_gtk_log (0)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{GTK}.gdk_set_show_events (False)
 
@@ -161,7 +166,7 @@ feature {NONE} -- Initialization
 			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
 		end
 
-feature
+feature -- Implementation
 
 	 call_post_launch_actions
 			-- <Precursor>
@@ -171,6 +176,16 @@ feature
 				{GTK2}.gtk_im_context_focus_in (default_input_context)
 			end
 			Precursor
+		end
+
+	window_manager_name: STRING_8
+			-- <Precursor>
+		do
+			if is_html5_backend_enabled then
+				Result := "broadway"
+			else
+				Result := Precursor
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -399,7 +414,14 @@ feature {EV_ANY_I} -- Implementation
 									{GTK}.gdk_event_scroll_struct_y_root (gdk_event).truncated_to_integer + screen_virtual_y
 									)
 							end
-							l_widget_imp ?= eif_object_from_gtk_object (event_widget)
+							if retrieve_display_data.window /= default_pointer then
+								l_widget_imp ?= gtk_widget_from_gdk_window (stored_display_data.window)
+							else
+								l_widget_imp := Void
+							end
+							if l_widget_imp = Void then
+								l_widget_imp ?= eif_object_from_gtk_object (event_widget)
+							end
 							if l_widget_imp /= Void then
 								if {GTK2}.gdk_event_scroll_struct_scroll_direction (gdk_event) = {GTK2}.gdk_scroll_up_enum then
 									l_button_number := 4

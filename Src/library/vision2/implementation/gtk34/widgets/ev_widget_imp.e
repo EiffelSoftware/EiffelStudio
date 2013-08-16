@@ -263,12 +263,10 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		local
-			l_height: INTEGER
 			l_viewport_parent: detachable EV_VIEWPORT_IMP
 			l_fixed_parent: detachable EV_FIXED_IMP
 		do
-			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $l_height)
-			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, l_height)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, height_request)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			l_viewport_parent ?= parent_imp
@@ -285,12 +283,10 @@ feature -- Element change
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height'.
 		local
-			l_width: INTEGER
 			l_viewport_parent: detachable EV_VIEWPORT_IMP
 			l_fixed_parent: detachable EV_FIXED_IMP
 		do
-			{GTK2}.g_object_get_integer (c_object, width_request_string.item, $l_width)
-			{GTK2}.gtk_widget_set_minimum_size (c_object, l_width, a_minimum_height)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, width_request, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			l_viewport_parent ?= parent_imp
@@ -525,7 +521,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

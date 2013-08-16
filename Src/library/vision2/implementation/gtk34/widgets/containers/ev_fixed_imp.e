@@ -75,6 +75,8 @@ feature -- Status setting
 
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
+
+
 			{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
 			{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
 			{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
@@ -92,7 +94,7 @@ feature -- Status setting
 				set_minimum_height (a_y + a_height)
 			end
 
-			{GTK}.gtk_container_check_resize (l_parent_box)
+			--{GTK}.gtk_container_check_resize (l_parent_box)
 		end
 
 	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
@@ -115,7 +117,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	internal_x_y_offset: INTEGER = 16384
+	internal_x_y_offset: INTEGER = 0--16384
 		-- <Precursor>
 
 	horizontal_adjustment: POINTER

@@ -42,7 +42,7 @@ feature -- Change
 		do
 			interval := i
 			if timeout_connection_id > 0 then
-				gtk_timeout_remove (timeout_connection_id)
+				g_source_remove (timeout_connection_id)
 			end
 			if interval > 0 then
 				timeout_connection_id := marshal_timeout_connect (i, agent actions.call(Void))
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 
 	tty_dbg_events_handler_imp: TTY_DEBUGGER_EVENTS_HANDLER_IMP;
 
-	timeout_connection_id: INTEGER
+	timeout_connection_id: NATURAL_32
 
 	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER_32; args: POINTER)
 		do
@@ -68,9 +68,9 @@ feature {NONE} -- Implementation
 			"gtk_init_check (&eif_argc, &eif_argv)"
 		end
 
-	gtk_timeout_remove (a_timeout_handler_id: INTEGER)
+	frozen g_source_remove (a_source_id: NATURAL_32)
 		external
-			"C (guint) | <gtk/gtk.h>"
+			"C signature (guint) use <ev_gtk.h>"
 		end
 
 	frozen marshal_init (
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			"c_ev_gtk_callback_marshal_set_is_enabled"
 		end
 
-	frozen marshal_timeout_connect (a_delay: INTEGER_32; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER_32
+	frozen marshal_timeout_connect (a_delay: INTEGER_32; an_agent: PROCEDURE [ANY, TUPLE]): NATURAL_32
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""

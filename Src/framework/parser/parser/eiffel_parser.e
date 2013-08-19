@@ -5232,11 +5232,11 @@ end
 
 				if attached yyvs12.item (yyvsp12) as l_keyword then
 						-- Originally, it was 8, I changed it to 7, delete the following line when fully tested. (Jason)
-					l_keyword.set_position (line, column, position, 7)
+					l_keyword.set_position (line, column, position, 7, character_column, character_position, 7)
 					fclause_pos := l_keyword
 				else
 						-- Originally, it was 8, I changed it to 7 (Jason)
-					fclause_pos := ast_factory.new_feature_keyword_as (line, column, position, 7, Current)
+					fclause_pos := ast_factory.new_feature_keyword_as (line, column, position, 7, character_column, character_position, 7, Current)
 				end
 				
 			

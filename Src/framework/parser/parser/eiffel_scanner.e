@@ -51,7 +51,10 @@ yy_set_line_column
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
- ast_factory.create_break_as (Current)  
+ 
+				update_character_locations
+				ast_factory.create_break_as (Current)  
+		
 when 2 then
 	yy_end := yy_end - 2
 yy_set_line_column
@@ -61,9 +64,8 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_break_as_start_position := position
-				last_break_as_start_line := line
-				last_break_as_start_column := column
+				update_character_locations
+				save_break_as_data
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				set_start_condition (PRAGMA)
 		
@@ -75,6 +77,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				last_line_pragma := ast_factory.new_line_pragma (Current)
 			
@@ -86,6 +89,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			
 when 5 then
@@ -96,6 +100,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			
 when 6 then
@@ -107,11 +112,7 @@ debug ("GELEX")
 end
 
 			less (0)
-			ast_factory.create_break_as_with_data (roundtrip_token_buffer,
-																last_break_as_start_line,
-																last_break_as_start_column,
-																last_break_as_start_position,
-																roundtrip_token_buffer.count)
+			create_break_as_with_saved_data
 			set_start_condition (INITIAL)
 		
 when 7 then
@@ -122,6 +123,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_SEMICOLON, Current)
 				last_token := TE_SEMICOLON
 			
@@ -133,6 +135,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
 				last_token := TE_COLON
 			
@@ -144,6 +147,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COMMA, Current)
 				last_token := TE_COMMA
 			
@@ -155,6 +159,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DOTDOT, Current)
 				last_token := TE_DOTDOT
 			
@@ -166,6 +171,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_QUESTION, Current)
 				last_token := TE_QUESTION
 			
@@ -177,6 +183,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_TILDE, Current)
 				last_token := TE_TILDE
 			
@@ -188,6 +195,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DOT, Current)
 				last_token := TE_DOT
 			
@@ -199,6 +207,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ADDRESS, Current)
 				last_token := TE_ADDRESS
 			
@@ -210,6 +219,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ASSIGNMENT, Current)
 				last_token := TE_ASSIGNMENT
 			
@@ -221,6 +231,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ACCEPT, Current)
 				last_token := TE_ACCEPT
 				if has_syntax_warning and then syntax_version /= obsolete_syntax then
@@ -237,6 +248,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_EQ, Current)
 				last_token := TE_EQ
 			
@@ -248,6 +260,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LT, Current)
 				last_token := TE_LT
 			
@@ -259,6 +272,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_GT, Current)
 				last_token := TE_GT
 			
@@ -270,6 +284,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LE, Current)
 				last_token := TE_LE
 			
@@ -281,6 +296,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_GE, Current)
 				last_token := TE_GE
 			
@@ -292,6 +308,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_NOT_TILDE, Current)
 				last_token := TE_NOT_TILDE
 			
@@ -303,6 +320,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_NE, Current)
 				last_token := TE_NE
 			
@@ -314,6 +332,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LPARAN, Current)
 				last_token := TE_LPARAN
 			
@@ -325,6 +344,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RPARAN, Current)
 				last_token := TE_RPARAN
 			
@@ -336,6 +356,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LCURLY, Current)
 				last_token := TE_LCURLY
 			
@@ -347,6 +368,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RCURLY, Current)
 				last_token := TE_RCURLY
 			
@@ -358,6 +380,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_square_symbol_as (TE_LSQURE, Current)
 				last_token := TE_LSQURE
 			
@@ -369,6 +392,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_square_symbol_as (TE_RSQURE, Current)
 				last_token := TE_RSQURE
 			
@@ -380,6 +404,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_PLUS, Current)
 				last_token := TE_PLUS
 			
@@ -391,6 +416,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_MINUS, Current)
 				last_token := TE_MINUS
 			
@@ -402,6 +428,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_STAR, Current)
 				last_token := TE_STAR
 			
@@ -413,6 +440,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_SLASH, Current)
 				last_token := TE_SLASH
 			
@@ -424,6 +452,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_POWER, Current)
 				last_token := TE_POWER
 			
@@ -435,6 +464,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_CONSTRAIN, Current)
 				last_token := TE_CONSTRAIN
 			
@@ -446,6 +476,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_BANG, Current)
 				last_token := TE_BANG
 			
@@ -457,6 +488,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LARRAY, Current)
 				last_token := TE_LARRAY
 			
@@ -468,6 +500,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RARRAY, Current)
 				last_token := TE_RARRAY
 			
@@ -479,6 +512,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DIV, Current)
 				last_token := TE_DIV
 			
@@ -490,6 +524,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_MOD, Current)
 				last_token := TE_MOD
 			
@@ -501,6 +536,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_token := TE_FREE
 				process_id_as
 			
@@ -512,6 +548,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_token := TE_FREE
 				process_id_as
 			
@@ -523,6 +560,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ACROSS, Current)
 					last_token := TE_ACROSS
@@ -544,6 +582,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AGENT, Current)
 				last_token := TE_AGENT
 			
@@ -555,6 +594,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ALIAS, Current)
 				last_token := TE_ALIAS
 			
@@ -566,6 +606,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ALL, Current)
 				last_token := TE_ALL
 			
@@ -577,6 +618,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AND, Current)
 				last_token := TE_AND
 			
@@ -588,6 +630,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AS, Current)
 				last_token := TE_AS
 			
@@ -599,6 +642,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ASSIGN, Current)
 				last_token := TE_ASSIGN
 			
@@ -610,6 +654,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTACHED, Current)
 					last_token := TE_ATTACHED
@@ -631,6 +676,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ATTRIBUTE, Current)
 					last_token := TE_ATTRIBUTE
@@ -652,6 +698,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CHECK, Current)
 				last_token := TE_CHECK
 			
@@ -663,6 +710,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CLASS, Current)
 				last_token := TE_CLASS
 			
@@ -674,6 +722,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CONVERT, Current)
 				last_token := TE_CONVERT
 			
@@ -685,6 +734,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CREATE, Current)
 				last_token := TE_CREATE
 			
@@ -696,6 +746,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
 				last_token := TE_CREATION
 			
@@ -707,6 +758,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_current_as_value := ast_factory.new_current_as (Current)
 				last_token := TE_CURRENT
 			
@@ -718,6 +770,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_DEBUG, Current)
 				last_token := TE_DEBUG
 			
@@ -729,6 +782,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_deferred_as_value := ast_factory.new_deferred_as (Current)
 				last_token := TE_DEFERRED
 			
@@ -740,6 +794,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_DETACHABLE, Current)
 					last_token := TE_DETACHABLE
@@ -761,6 +816,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)
 				last_token := TE_DO
 			
@@ -772,6 +828,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ELSE, Current)
 				last_token := TE_ELSE
 			
@@ -783,6 +840,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ELSEIF, Current)
 				last_token := TE_ELSEIF
 			
@@ -794,6 +852,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_end_keyword_as (Current)
 				last_token := TE_END
 			
@@ -805,6 +864,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ENSURE, Current)
 				last_token := TE_ENSURE
 			
@@ -816,6 +876,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXPANDED, Current)
 				last_token := TE_EXPANDED
 			
@@ -827,6 +888,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXPORT, Current)
 				last_token := TE_EXPORT
 			
@@ -838,6 +900,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXTERNAL, Current)
 				last_token := TE_EXTERNAL
 			
@@ -849,6 +912,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_bool_as_value := ast_factory.new_boolean_as (False, Current)
 				last_token := TE_FALSE
 			
@@ -860,6 +924,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_FEATURE, Current)
 				last_token := TE_FEATURE
 			
@@ -871,6 +936,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_FROM, Current)
 				last_token := TE_FROM
 			
@@ -882,6 +948,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
 				last_token := TE_FROZEN
 			
@@ -893,6 +960,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_IF, Current)
 				last_token := TE_IF
 			
@@ -904,6 +972,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_IMPLIES, Current)
 				last_token := TE_IMPLIES
 			
@@ -915,6 +984,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
 					process_id_as
 					last_token := TE_ID
@@ -937,6 +1007,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
 				last_token := TE_INFIX
 			
@@ -948,6 +1019,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INHERIT, Current)
 				last_token := TE_INHERIT
 			
@@ -959,6 +1031,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INSPECT, Current)
 				last_token := TE_INSPECT
 			
@@ -970,6 +1043,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INVARIANT, Current)
 				last_token := TE_INVARIANT
 			
@@ -981,6 +1055,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
 					process_id_as
 					last_token := TE_ID
@@ -1003,6 +1078,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LIKE, Current)
 				last_token := TE_LIKE
 			
@@ -1014,6 +1090,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LOCAL, Current)
 				last_token := TE_LOCAL
 			
@@ -1025,6 +1102,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LOOP, Current)
 				last_token := TE_LOOP
 			
@@ -1036,6 +1114,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_NOT, Current)
 				last_token := TE_NOT
 			
@@ -1047,6 +1126,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_NOTE, Current)
 					last_token := TE_NOTE
@@ -1068,6 +1148,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OBSOLETE, Current)
 				last_token := TE_OBSOLETE
 			
@@ -1079,6 +1160,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OLD, Current)
 				last_token := TE_OLD
 			
@@ -1091,8 +1173,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- `{' is for the typed manifest string.
-				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text,  line, column, position, 4)
+				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text, line, column, position, 4, character_column, character_position, 4)
 				last_token := TE_ONCE_STRING
 			
 when 89 then
@@ -1104,10 +1187,11 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- `{' is for the typed manifest string.
-				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
+				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4), line, column, position, 4, character_column, character_position, 4)
 					-- Assume all trailing characters are in the same line (which would be false if '\n' appears).
-				ast_factory.create_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
+				ast_factory.create_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4, character_column + 4, character_position + 4, unicode_text_count - 4)
 				last_token := TE_ONCE_STRING
 			
 when 90 then
@@ -1118,6 +1202,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ONCE, Current)
 				last_token := TE_ONCE
 			
@@ -1129,6 +1214,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
@@ -1145,6 +1231,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
 				last_token := TE_OR
 			
@@ -1156,6 +1243,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
 				last_token := TE_PARTIAL_CLASS
 			
@@ -1167,6 +1255,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
 				last_token := TE_PRECURSOR
 			
@@ -1178,6 +1267,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
 				last_token := TE_PREFIX
 			
@@ -1189,6 +1279,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REDEFINE, Current)
 				last_token := TE_REDEFINE
 			
@@ -1200,6 +1291,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REFERENCE, Current)
 				last_token := TE_REFERENCE
 			
@@ -1211,6 +1303,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_RENAME, Current)
 				last_token := TE_RENAME
 			
@@ -1222,6 +1315,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REQUIRE, Current)
 				last_token := TE_REQUIRE
 			
@@ -1233,6 +1327,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_RESCUE, Current)
 				last_token := TE_RESCUE
 			
@@ -1244,6 +1339,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_result_as_value := ast_factory.new_result_as (Current)
 				last_token := TE_RESULT
 			
@@ -1255,6 +1351,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_retry_as_value := ast_factory.new_retry_as (Current)
 				last_token := TE_RETRY
 			
@@ -1266,6 +1363,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_SELECT, Current)
 				last_token := TE_SELECT
 			
@@ -1277,6 +1375,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_SEPARATE, Current)
 				last_token := TE_SEPARATE
 			
@@ -1288,6 +1387,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				if syntax_version /= obsolete_syntax then
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_SOME, Current)
 					last_token := TE_SOME
@@ -1309,6 +1409,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_STRIP, Current)
 				last_token := TE_STRIP
 			
@@ -1320,6 +1421,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_THEN, Current)
 				last_token := TE_THEN
 			
@@ -1331,6 +1433,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_bool_as_value := ast_factory.new_boolean_as (True, Current)
 				last_token := TE_TRUE
 			
@@ -1342,6 +1445,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_token := TE_TUPLE
 				process_id_as
 			
@@ -1353,6 +1457,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_UNDEFINE, Current)
 				last_token := TE_UNDEFINE
 			
@@ -1364,6 +1469,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_unique_as_value := ast_factory.new_unique_as (Current)
 				last_token := TE_UNIQUE
 			
@@ -1375,6 +1481,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_UNTIL, Current)
 				last_token := TE_UNTIL
 			
@@ -1386,6 +1493,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_VARIANT, Current)
 				last_token := TE_VARIANT
 			
@@ -1397,6 +1505,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_void_as_value := ast_factory.new_void_as (Current)
 				last_token := TE_VOID
 			
@@ -1408,6 +1517,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_WHEN, Current)
 				last_token := TE_WHEN
 			
@@ -1419,6 +1529,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_XOR, Current)
 				last_token := TE_XOR
 			
@@ -1430,6 +1541,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				last_token := TE_ID
 				process_id_as
 			
@@ -1446,7 +1558,7 @@ end
 					--     `when' `1.' `.2' `then'
 					-- instead of:
 					--     `when' `1' `..' `2' `then'
-
+				update_character_locations
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
@@ -1465,7 +1577,7 @@ end
 					--     `when' `1.' `.2' `then'
 					-- instead of:
 					--     `when' `1' `..' `2' `then'
-
+				update_character_locations
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
@@ -1478,6 +1590,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 		-- Recognizes hexadecimal integer numbers.
+				update_character_locations
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
@@ -1490,6 +1603,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 		-- Recognizes octal integer numbers.
+				update_character_locations
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
@@ -1502,6 +1616,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 		-- Recognizes binary integer numbers.
+				update_character_locations
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
@@ -1514,6 +1629,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 		-- Recognizes erronous binary and octal numbers.
+				update_character_locations
 				report_invalid_integer_error (token_buffer)
 			
 when 124 then
@@ -1524,6 +1640,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
@@ -1537,8 +1654,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 126 then
@@ -1549,8 +1667,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 127 then
@@ -1561,9 +1680,10 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- This is not correct Eiffel!
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 128 then
@@ -1574,8 +1694,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%A', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%A', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 129 then
@@ -1586,8 +1707,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%B', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%B', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 130 then
@@ -1598,8 +1720,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%C', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%C', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 131 then
@@ -1610,8 +1733,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%D', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%D', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 132 then
@@ -1622,8 +1746,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%F', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%F', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 133 then
@@ -1634,8 +1759,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%H', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%H', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 134 then
@@ -1646,8 +1772,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%L', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%L', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 135 then
@@ -1658,8 +1785,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%N', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%N', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 136 then
@@ -1670,8 +1798,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%Q', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%Q', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 137 then
@@ -1682,8 +1811,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%R', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%R', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 138 then
@@ -1694,8 +1824,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%S', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%S', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 139 then
@@ -1706,8 +1837,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%T', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%T', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 140 then
@@ -1718,8 +1850,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%U', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%U', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 141 then
@@ -1730,8 +1863,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%V', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%V', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 142 then
@@ -1742,8 +1876,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%%', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%%', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 143 then
@@ -1754,8 +1889,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 144 then
@@ -1766,8 +1902,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%"', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%"', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 145 then
@@ -1778,8 +1915,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%(', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%(', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 146 then
@@ -1790,8 +1928,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%)', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%)', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 147 then
@@ -1802,8 +1941,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%<', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%<', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 148 then
@@ -1814,8 +1954,9 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_detachable_char_as_value := ast_factory.new_character_as ('%>', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%>', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 149 then
@@ -1826,6 +1967,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
@@ -1841,6 +1983,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
@@ -1856,6 +1999,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
@@ -1871,6 +2015,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
@@ -1886,6 +2031,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				report_invalid_integer_error (token_buffer)
 			
 when 154 then
@@ -1896,6 +2042,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- Unrecognized character.
 					-- (catch-all rules (no backing up))
 				report_character_missing_quote_error (text)
@@ -1908,6 +2055,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- Unrecognized character.
 					-- (catch-all rules (no backing up))
 				report_character_missing_quote_error (text)
@@ -1920,6 +2068,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_LT)
 			
 when 157 then
@@ -1930,6 +2079,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_GT)
 			
 when 158 then
@@ -1940,6 +2090,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_LE)
 			
 when 159 then
@@ -1950,6 +2101,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_GE)
 			
 when 160 then
@@ -1960,6 +2112,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_PLUS)
 			
 when 161 then
@@ -1970,6 +2123,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_MINUS)
 			
 when 162 then
@@ -1980,6 +2134,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_STAR)
 			
 when 163 then
@@ -1990,6 +2145,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_SLASH)
 			
 when 164 then
@@ -2000,6 +2156,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_POWER)
 			
 when 165 then
@@ -2010,6 +2167,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_DIV)
 			
 when 166 then
@@ -2020,6 +2178,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_MOD)
 			
 when 167 then
@@ -2030,6 +2189,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_BRACKET)
 			
 when 168 then
@@ -2040,6 +2200,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_AND)
 			
 when 169 then
@@ -2050,6 +2211,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_AND_THEN)
 			
 when 170 then
@@ -2060,6 +2222,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_IMPLIES)
 			
 when 171 then
@@ -2070,6 +2233,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_NOT)
 			
 when 172 then
@@ -2080,6 +2244,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_OR)
 			
 when 173 then
@@ -2090,6 +2255,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_OR_ELSE)
 			
 when 174 then
@@ -2100,6 +2266,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_XOR)
 			
 when 175 then
@@ -2110,6 +2277,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_FREE)
 			
 when 176 then
@@ -2120,6 +2288,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_STR_FREE)
 			
 when 177 then
@@ -2130,6 +2299,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				process_simple_string_as (TE_EMPTY_STRING)
 			
 when 178 then
@@ -2140,6 +2310,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- Regular string.
 				process_simple_string_as (TE_STRING)
 			
@@ -2151,6 +2322,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- Verbatim string.
 				token_buffer.wipe_out
 				verbatim_marker.wipe_out
@@ -2161,7 +2333,7 @@ end
 				end
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
-				start_location.set_position (line, column, position, text_count)
+				start_location.set_position (line, column, position, text_count, character_column, character_position, unicode_text_count)
 				set_start_condition (VERBATIM_STR3)
 			
 when 180 then
@@ -2173,6 +2345,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				set_start_condition (VERBATIM_STR1)
 			
@@ -2184,6 +2357,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final bracket-double-quote.
 				append_text_to_string (token_buffer)
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
@@ -2202,6 +2376,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				if is_verbatim_string_closer then
 					set_start_condition (INITIAL)
@@ -2229,13 +2404,19 @@ end
 						last_detachable_string_as_value := ast_factory.new_verbatim_string_as ("",
 							verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']',
 							start_location.line, start_location.column, start_location.position,
-							position + text_count - start_location.position, verbatim_common_columns, roundtrip_token_buffer)
+							position + text_count - start_location.position, 
+							start_location.character_column, start_location.character_position,
+							character_position + unicode_text_count - start_location.character_position, 
+							verbatim_common_columns, roundtrip_token_buffer)
 						last_token := TE_EMPTY_VERBATIM_STRING
 					else
 						last_detachable_string_as_value := ast_factory.new_verbatim_string_as (cloned_string (token_buffer),
 							verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']',
 							start_location.line, start_location.column, start_location.position,
-							position + text_count - start_location.position, verbatim_common_columns, roundtrip_token_buffer)
+							position + text_count - start_location.position, 
+							start_location.character_column, start_location.character_position,
+							character_position + unicode_text_count - start_location.character_position, 
+							verbatim_common_columns, roundtrip_token_buffer)
 						last_token := TE_VERBATIM_STRING
 						if token_buffer.count > maximum_string_length then
 							report_too_long_string (token_buffer)
@@ -2254,6 +2435,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				set_start_condition (VERBATIM_STR2)
@@ -2267,6 +2449,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				if token_buffer.count > 1 and then token_buffer.item (token_buffer.count - 1) = '%R' then
@@ -2282,6 +2465,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final bracket-double-quote.
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
@@ -2297,6 +2481,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				if token_buffer.count > 1 and then token_buffer.item (token_buffer.count - 1) = '%R' then
@@ -2313,6 +2498,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final bracket-double-quote.
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
@@ -2327,13 +2513,14 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- String with special characters.
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				token_buffer.wipe_out
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end
-				start_location.set_position (line, column, position, text_count)
+				start_location.set_position (line, column, position, text_count, character_column, character_position, unicode_text_count)
 				set_start_condition (SPECIAL_STR)
 			
 when 189 then
@@ -2344,6 +2531,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 			
@@ -2355,6 +2543,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'A')
 				token_buffer.append_character ('%A')
 			
@@ -2366,6 +2555,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'B')
 				token_buffer.append_character ('%B')
 			
@@ -2377,6 +2567,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'C')
 				token_buffer.append_character ('%C')
 			
@@ -2388,6 +2579,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'D')
 				token_buffer.append_character ('%D')
 			
@@ -2399,6 +2591,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'F')
 				token_buffer.append_character ('%F')
 			
@@ -2410,6 +2603,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'H')
 				token_buffer.append_character ('%H')
 			
@@ -2421,6 +2615,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'L')
 				token_buffer.append_character ('%L')
 			
@@ -2432,6 +2627,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'N')
 				token_buffer.append_character ('%N')
 			
@@ -2443,6 +2639,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'Q')
 				token_buffer.append_character ('%Q')
 			
@@ -2454,6 +2651,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'R')
 				token_buffer.append_character ('%R')
 			
@@ -2465,6 +2663,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'S')
 				token_buffer.append_character ('%S')
 			
@@ -2476,6 +2675,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'T')
 				token_buffer.append_character ('%T')
 			
@@ -2487,6 +2687,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'U')
 				token_buffer.append_character ('%U')
 			
@@ -2498,6 +2699,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'V')
 				token_buffer.append_character ('%V')
 			
@@ -2509,6 +2711,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%%')
 				token_buffer.append_character ('%%')
 			
@@ -2520,6 +2723,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%'')
 				token_buffer.append_character ('%'')
 			
@@ -2531,6 +2735,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%"')
 				token_buffer.append_character ('%"')
 			
@@ -2542,6 +2747,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '(')
 				token_buffer.append_character ('%(')
 			
@@ -2553,6 +2759,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', ')')
 				token_buffer.append_character ('%)')
 			
@@ -2564,6 +2771,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '<')
 				token_buffer.append_character ('%<')
 			
@@ -2575,6 +2783,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '>')
 				token_buffer.append_character ('%>')
 			
@@ -2586,6 +2795,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				process_string_character_code (text_substring (3, text_count - 1).to_natural_32)
 			
@@ -2597,6 +2807,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
 			ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
@@ -2609,6 +2820,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				if text_count > 1 then
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -2619,13 +2831,21 @@ end
 					last_detachable_string_as_value := ast_factory.new_string_as (
 						cloned_string (token_buffer), start_location.line, start_location.column,
 						start_location.position,
-						position + text_count - start_location.position, roundtrip_token_buffer)
+						position + text_count - start_location.position,
+						start_location.character_column,
+						start_location.character_position,
+						character_position + unicode_text_count - start_location.character_position,
+						roundtrip_token_buffer)
 					last_token := TE_EMPTY_STRING
 				else
 					last_detachable_string_as_value := ast_factory.new_string_as (
 						cloned_string (token_buffer), start_location.line, start_location.column,
 						start_location.position,
-						position + text_count - start_location.position, roundtrip_token_buffer)
+						position + text_count - start_location.position, 
+						start_location.character_column,
+						start_location.character_position,
+						character_position + unicode_text_count - start_location.character_position,
+						roundtrip_token_buffer)
 					last_token := TE_STRING
 					if token_buffer.count > maximum_string_length then
 						report_too_long_string (token_buffer)
@@ -2640,6 +2860,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- Bad special character.
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				set_start_condition (INITIAL)
@@ -2654,6 +2875,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final double-quote.
 				set_start_condition (INITIAL)
 				report_string_missing_quote_error (token_buffer)
@@ -2666,6 +2888,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 				report_unknown_token_error (text_item (1))
 			
 when 217 then
@@ -2701,6 +2924,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final double-quote.
 				set_start_condition (INITIAL)
 				report_string_missing_quote_error (token_buffer)
@@ -2711,6 +2935,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final bracket-double-quote.
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
@@ -2721,6 +2946,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final bracket-double-quote.
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
@@ -2731,6 +2957,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
+				update_character_locations
 					-- No final bracket-double-quote.
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
@@ -2741,11 +2968,8 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-			ast_factory.create_break_as_with_data (roundtrip_token_buffer,
-																last_break_as_start_line,
-																last_break_as_start_column,
-																last_break_as_start_position,
-																roundtrip_token_buffer.count)
+			update_character_locations
+			create_break_as_with_saved_data
 			set_start_condition (INITIAL)
 			
 			else

@@ -68,15 +68,15 @@ feature -- Assembler
 			new_feature_as := a_ast
 			l_frozen_keyword := f_name.frozen_keyword
 			if target_feature.is_infix then
-				create l_op.initialize (extract_symbol_from_infix (target_feature.feature_name), 0, 0, 0, 0)
+				create l_op.initialize (extract_symbol_from_infix (target_feature.feature_name), 0, 0, 0, 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, Void)
 			elseif target_feature.is_prefix then
-				create l_op.initialize (extract_symbol_from_prefix (target_feature.feature_name), 0, 0, 0, 0)
+				create l_op.initialize (extract_symbol_from_prefix (target_feature.feature_name), 0, 0, 0, 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, Void)
 			elseif target_feature.alias_name /= Void then
-				create l_op.initialize (extract_alias_name (target_feature.alias_name), 0, 0, 0, 0)
+				create l_op.initialize (extract_alias_name (target_feature.alias_name), 0, 0, 0, 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				create l_id.initialize (target_feature.feature_name)
 				l_id.set_index (f_name.internal_name.index)
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -159,7 +159,7 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_filled_none_id_as (l, c, p, s: INTEGER): detachable NONE_ID_AS
+	new_filled_none_id_as (l, c, p, s, cc, cp, cs: INTEGER): detachable NONE_ID_AS
 			-- New empty ID AST node.
 		do
 		end
@@ -251,7 +251,7 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
+	new_feature_keyword_as (l, c, p, s, cc, cp, cs:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node for keyword "feature".
 		do
 		end
@@ -291,7 +291,7 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): detachable KEYWORD_AS
+	new_once_string_keyword_as (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		do
 		end
@@ -311,7 +311,7 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	create_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER)
+	create_break_as_with_data (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER)
 			-- New COMMENT_AS node
 		do
 		end
@@ -513,7 +513,7 @@ feature -- Access
 		do
 		end
 
-	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): detachable CHAR_AS
+	new_character_as (c: CHARACTER_32; l, co, p, n, cc, cp, cs: INTEGER; a_text: STRING): detachable CHAR_AS
 			-- New CHARACTER AST node
 		do
 		end
@@ -834,22 +834,22 @@ feature -- Access
 		do
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 		end
@@ -879,7 +879,7 @@ feature -- Access
 		do
 		end
 
-	new_location_as (l, c, p, s: INTEGER): detachable LOCATION_AS
+	new_location_as (l, c, p, s, cc, cp, cs: INTEGER): detachable LOCATION_AS
 			-- New LOCATION_AS
 		do
 		end
@@ -965,7 +965,7 @@ feature -- Access
 		do
 		end
 
-	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable REAL_AS
+	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
 		end
@@ -1014,7 +1014,7 @@ feature -- Access
 		do
 		end
 
-	new_string_as (s: detachable STRING; l, c, p, n: INTEGER; buf: STRING): detachable STRING_AS
+	new_string_as (s: detachable STRING; l, c, p, n, cc, cp, cn: INTEGER; buf: STRING): detachable STRING_AS
 			-- New STRING AST node
 		do
 		end
@@ -1079,7 +1079,7 @@ feature -- Access
 		do
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc, cp, cn, common_columns: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		do
 		end
@@ -1145,7 +1145,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

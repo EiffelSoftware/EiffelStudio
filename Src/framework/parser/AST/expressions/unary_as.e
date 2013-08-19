@@ -86,13 +86,16 @@ feature -- Location
 			-- Location of operator
 		local
 			l_location: LOCATION_AS
-			l_count: INTEGER
+			l_count, l_character_count: INTEGER
 		do
 			l_location := start_location
 				-- We add `+1' because often there is a space between the operator and the expression.
 			l_count := operator_name.count + 1
+			l_character_count := operator_name_32.count + 1
 			create Result.make (l_location.line, (l_location.column - l_count).max (0),
-				(l_location.position - l_count).max (0), l_count)
+				(l_location.position - l_count).max (0), l_count,
+				(l_location.character_column - l_character_count).max (0),
+				(l_location.character_position - l_character_count).max (0), l_character_count)
 		ensure
 			operator_location_not_void: Result /= Void
 		end
@@ -104,7 +107,8 @@ feature -- Location
 		do
 			l_location := operator_location
 			create Result.initialize (operator_name)
-			Result.set_position (l_location.line, l_location.column, l_location.position, l_location.location_count)
+			Result.set_position (l_location.line, l_location.column, l_location.position, l_location.location_count,
+				l_location.character_column, l_location.character_position, l_location.character_count)
 		ensure
 			operator_ast_not_void: Result /= Void
 		end
@@ -191,7 +195,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

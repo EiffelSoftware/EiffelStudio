@@ -21,18 +21,18 @@ create {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature{NONE} -- Initialization
 
-	make (a_code: INTEGER; a_text: STRING; l, c, p, n: INTEGER)
+	make (a_code: INTEGER; a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER)
 			-- Create an keyword object with `a_code' indicating which keyword it is.
 			-- See `EIFFEL_TOKENS' for more information about `a_code'
 			-- `a_text' is the literal text of this keyword in source code.
-			-- `l', `c', `p', `n' are positions. See `make_with_location' for more information.
+			-- `l', `c', `p', `s', `cc', `cp', `cs' are positions. See `make_with_location' for more information.
 		require
 			a_code_valid: keyword_valid (a_code)
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
 			code := a_code
-			make_with_location (l, c, p, n)
+			make_with_location (l, c, p, n, cc, cp, cn)
 		end
 
 feature -- Status report
@@ -466,7 +466,7 @@ feature -- Implemenation
 		-- Keyword code	
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

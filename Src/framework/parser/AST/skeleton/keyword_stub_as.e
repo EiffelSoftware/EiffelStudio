@@ -28,11 +28,11 @@ create {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (a_code: INTEGER_32; a_text: STRING_8; l, c, p, n: INTEGER_32)
+	make (a_code: INTEGER_32; a_text: STRING_8; l, c, p, n, cc, cp, cn: INTEGER_32)
 			-- <Precursor>
 		do
 			code := a_code
-			leaf_stub_make (a_text, l, c, p, n)
+			leaf_stub_make (a_text, l, c, p, n, cc, cp, cn)
 		end
 
 feature -- Visitor
@@ -44,7 +44,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

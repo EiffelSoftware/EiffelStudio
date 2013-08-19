@@ -110,104 +110,104 @@ feature -- Match list maintaining
 
 feature -- Leaf Nodes
 
-	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): detachable CHAR_AS
+	new_character_as (c: CHARACTER_32; l, co, p, n, cc, cp, cs: INTEGER; a_text: STRING): detachable CHAR_AS
 			-- New CHARACTER AST node
 		do
-			Result := Precursor (c, l, co, p, n, a_text)
-			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, a_text.count))
+			Result := Precursor (c, l, co, p, n, cc, cp, cs, a_text)
+			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, a_text.count, cc, cp, cs))
 		end
 
-	new_string_as (s: detachable STRING; l, c, p, n: INTEGER; buf: STRING): detachable STRING_AS
+	new_string_as (s: detachable STRING; l, c, p, n, cc, cp, cn: INTEGER; buf: STRING): detachable STRING_AS
 			-- New STRING AST node
 		do
-			Result := Precursor (s, l, c, p, n, buf)
+			Result := Precursor (s, l, c, p, n, cc, cp, cn, buf)
 			if Result /= Void then
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc, cp, cn, common_col: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		do
-			Result := Precursor (s, marker, is_indentable, l, c, p, n, cc, buf)
+			Result := Precursor (s, marker, is_indentable, l, c, p, n, cc, cp, cn, common_col, buf)
 			if Result /= Void then
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
-			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)
+			Result := Precursor (t, s, v, buf, s_as, l, c, p, n, cc, cp, cn)
 			if Result /= Void then
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
-			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)
+			Result := Precursor (t, s, v, buf, s_as, l, c, p, n, cc, cp, cn)
 			if Result /= Void then
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
-			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)
+			Result := Precursor (t, s, v, buf, s_as, l, c, p, n, cc, cp, cn)
 			if Result /= Void then
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
-			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)
+			Result := Precursor (t, s, v, buf, s_as, l, c, p, n, cc, cp, cn)
 			if Result /= Void then
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end
 
-	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable REAL_AS
+	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
-			Result := Precursor (t, v, buf, s_as, l, c, p, n)
+			Result := Precursor (t, v, buf, s_as, l, c, p, n, cc, cp, cn)
 			if Result /= Void then
-				extend_match_list_with_stub (create {LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+				extend_match_list_with_stub (create {LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end
 
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create {LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create {LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_void, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_void, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable UNIQUE_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_unique, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_unique, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable RETRY_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_retry, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_retry, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable RESULT_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_result, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_result, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): detachable BOOL_AS
@@ -215,30 +215,30 @@ feature -- Leaf Nodes
 			Result := Precursor (b, a_scn)
 			if b then
 				extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make (
-					{EIFFEL_TOKENS}.te_true, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+					{EIFFEL_TOKENS}.te_true, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 			else
 				extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make (
-					{EIFFEL_TOKENS}.te_false, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+					{EIFFEL_TOKENS}.te_false, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 			end
 		end
 
 	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable CURRENT_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_current, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_current, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable DEFERRED_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_deferred, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_deferred, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		do
 			Result := Precursor (a_code, a_scn)
-			extend_match_list_with_stub (create {KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create {KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
@@ -246,21 +246,21 @@ feature -- Leaf Nodes
 			Result := Precursor (a_code, a_scn)
 				-- It is ok to create a KEYWORD_STUB_AS because it inherits from LEAF_STUB_AS and thus
  				-- when the keyword is actually used as an identifier it should be just fine.
- 			extend_match_list_with_stub (create {KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+ 			extend_match_list_with_stub (create {KEYWORD_STUB_AS}.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
-	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): detachable KEYWORD_AS
+	new_once_string_keyword_as (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		do
-			Result := Precursor (a_text, l, c, p, n)
-			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_once_string, a_text.string, l, c, p, n))
+			Result := Precursor (a_text, l, c, p, n, cc, cp, cn)
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make ({EIFFEL_TOKENS}.te_once_string, a_text.string, l, c, p, n, cc, cp, cn))
 		end
 
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
 			-- New KEYWORD AST node		
 		do
 			Result := Precursor (a_code, a_scn)
-			extend_match_list_with_stub (create{SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+			extend_match_list_with_stub (create{SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	create_break_as (a_scn: EIFFEL_SCANNER_SKELETON)
@@ -269,18 +269,18 @@ feature -- Leaf Nodes
 			b_as: BREAK_AS
 		do
 			increase_match_list_count
-			create b_as.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create b_as.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			b_as.set_index (match_list_count)
 			extend_match_list (b_as)
 		end
 
-	create_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER)
+	create_break_as_with_data (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER)
 			-- New COMMENT_AS node
 		local
 			b_as: BREAK_AS
 		do
 			increase_match_list_count
-			create b_as.make (a_text.string, l, c, p, n)
+			create b_as.make (a_text.string, l, c, p, n, cc, cp, cn)
 			b_as.set_index (match_list_count)
 			extend_match_list (b_as)
 		end

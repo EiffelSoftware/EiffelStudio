@@ -210,16 +210,19 @@ feature -- Access
 			end
 		end
 
-	new_filled_none_id_as (l, c, p, s: INTEGER): detachable NONE_ID_AS
+	new_filled_none_id_as (l, c, p, s, cc, cp, cs: INTEGER): detachable NONE_ID_AS
 			-- New empty ID AST node.
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			s_non_negative: s >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cs_non_negative: cs >= 0
 		do
 			create Result.make
-			Result.set_position (l, c, p, s)
+			Result.set_position (l, c, p, s, cc, cp, cs)
 		end
 
 	new_constraint_triple (k_as: detachable SYMBOL_AS; t_as: detachable CONSTRAINT_LIST_AS; l_as: detachable CREATION_CONSTRAIN_TRIPLE): detachable CONSTRAINT_TRIPLE
@@ -294,7 +297,8 @@ feature -- Access
 			-- New TYPED_CHAR AST node.
 		do
 			if t_as /= Void and then a_char /= Void then
-				create Result.initialize (t_as, a_char.value, a_char.line, a_char.column, a_char.position, a_char.location_count)
+				create Result.initialize (t_as, a_char.value, a_char.line, a_char.column, a_char.position, a_char.location_count,
+					a_char.character_column, a_char.character_position, a_char.character_count)
 			end
 		end
 
@@ -302,7 +306,8 @@ feature -- Access
 			-- New line pragma
 			--| Keep entire line, actual processing will be done later if we need it.
 		do
-			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 feature -- Access for Errors
@@ -360,6 +365,7 @@ feature -- Value AST creation
 			a_psr_not_void: a_psr /= Void
 		local
 			l_integer: detachable INTEGER_AS
+			u: UTF_CONVERTER
 		do
 				-- Would be nice to not have to create a INTEGER_AS to get the character value.
 			backup_match_list_count
@@ -369,15 +375,17 @@ feature -- Value AST creation
 			resume_match_list_count
 			if l_integer /= Void then
 				if l_integer.natural_64_value <= {NATURAL_32}.Max_value then
-					Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, roundtrip_buffer.count, roundtrip_buffer)
+					Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, roundtrip_buffer.count,
+					a_psr.character_column, a_psr.character_position, u.utf_8_to_string_32_count (roundtrip_buffer.area, 0, roundtrip_buffer.count - 1),
+					roundtrip_buffer)
 				else
 					a_psr.report_character_code_too_large_error (buffer)
 							-- Dummy code (for error recovery) follows:
-					Result := new_character_as ('a', 0, 0, 0, 0, roundtrip_buffer)
+					Result := new_character_as ('a', 0, 0, 0, 0, 0, 0, 0, roundtrip_buffer)
 				end
 			else
 					-- Dummy code since integer value could not be computed.
-				Result := new_character_as ('a', 0, 0, 0, 0, roundtrip_buffer)
+				Result := new_character_as ('a', 0, 0, 0, 0, 0, 0, 0, roundtrip_buffer)
 			end
 		end
 
@@ -400,14 +408,18 @@ feature -- Value AST creation
 					token_value.prune_all ('_')
 				end
 				if token_value.is_number_sequence then
-					Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+					Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
+						a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 				elseif token_value.count >= 3 and then token_value.item (1) = '0' then
 					if token_value.item (2).lower = 'x' then
-						Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+						Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
+							a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 					elseif token_value.item (2).lower = 'c' then
-						Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+						Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
+							a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 					elseif token_value.item (2).lower = 'b' then
-						Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+						Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
+							a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 					end
 				end
 				if Result = Void or else not Result.is_initialized then
@@ -419,7 +431,7 @@ feature -- Value AST creation
 						a_psr.report_integer_too_large_error (a_type, buffer)
 					end
 						-- Dummy code (for error recovery) follows:
-					Result := new_integer_as (a_type, False, "0", Void, s_as, 0, 0, 0, 0)
+					Result := new_integer_as (a_type, False, "0", Void, s_as, 0, 0, 0, 0, 0, 0, 0)
 				end
 			end
 		end
@@ -440,7 +452,8 @@ feature -- Value AST creation
 				else
 					l_buffer := buffer
 				end
-				Result := new_real_as (a_type, buffer, l_buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				Result := new_real_as (a_type, buffer, l_buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
+					a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 			end
 		end
 
@@ -479,7 +492,8 @@ feature -- Roundtrip: leaf_as
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_keyword_id_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
@@ -500,16 +514,19 @@ feature -- Roundtrip: leaf_as
 			Result := [new_keyword_as (a_code, a_scn), new_filled_id_as (a_scn), a_scn.line, a_scn.column, a_scn.filename]
 		end
 
-	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
+	new_feature_keyword_as (l, c, p, s, cc, cp, cs:INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node for keyword "feature".
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			s_non_negative: s >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cs_non_negative: cs >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (l, c, p, s, cc, cp, cs)
 		end
 
 	new_creation_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
@@ -560,13 +577,16 @@ feature -- Roundtrip: leaf_as
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_prefix, a_scn)
 		end
 
-	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): detachable KEYWORD_AS
+	new_once_string_keyword_as (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cn_non_negative: cn >= 0
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
@@ -577,7 +597,8 @@ feature -- Roundtrip: leaf_as
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
@@ -594,13 +615,16 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	create_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER)
+	create_break_as_with_data (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER)
 			-- New COMMENT_AS node
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cn_non_negative: cn >= 0
 			a_text_not_void: a_text /= Void
 		do
 		end
@@ -894,7 +918,8 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_built_in_as (l: detachable EXTERNAL_LANG_AS; a: detachable STRING_AS; e_as, a_as: detachable KEYWORD_AS): detachable BUILT_IN_AS
@@ -913,15 +938,18 @@ feature -- Access
 			end
 		end
 
-	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): detachable CHAR_AS
+	new_character_as (c: CHARACTER_32; l, co, p, n, cc, cp, cn: INTEGER; a_text: STRING): detachable CHAR_AS
 			-- New CHARACTER AST node
 		require
 			l_non_negative: l >= 0
 			co_non_negative: co >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cn_non_negative: cn >= 0
 		do
-			create Result.initialize (c, l, co, p, n)
+			create Result.initialize (c, l, co, p, n, cc, cp, cn)
 		end
 
 	new_check_as (c: detachable EIFFEL_LIST [TAGGED_AS]; c_as, e: detachable KEYWORD_AS): detachable CHECK_AS
@@ -1018,7 +1046,8 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_custom_attribute_as (c: detachable CREATION_EXPR_AS; t: detachable TUPLE_AS; k_as: detachable KEYWORD_AS): detachable CUSTOM_ATTRIBUTE_AS
@@ -1042,7 +1071,8 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_do_as (c: detachable EIFFEL_LIST [INSTRUCTION_AS]; k_as: detachable KEYWORD_AS): detachable DO_AS
@@ -1408,7 +1438,8 @@ feature -- Access
 			l_str.wipe_out
 			a_scn.append_text_to_string (l_str)
 			create Result.initialize (l_str)
-			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
+			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): detachable ID_AS
@@ -1479,39 +1510,39 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_octal_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_binary_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
@@ -1555,7 +1586,7 @@ feature -- Access
 			end
 		end
 
-	new_location_as (l, c, p, s: INTEGER): detachable LOCATION_AS
+	new_location_as (l, c, p, s, cc, cp, cs: INTEGER): detachable LOCATION_AS
 			-- New LOCATION_AS
 		require
 			l_non_negative: l >= 0
@@ -1563,7 +1594,7 @@ feature -- Access
 			p_non_negative: p >= 0
 			s_non_negative: s >= 0
 		do
-			create Result.make (l, c, p, s)
+			create Result.make (l, c, p, s, cc, cp, cs)
 		end
 
 	new_loop_as (t: detachable ITERATION_AS; f: detachable EIFFEL_LIST [INSTRUCTION_AS]; i: detachable EIFFEL_LIST [TAGGED_AS];
@@ -1690,12 +1721,12 @@ feature -- Access
 			end
 		end
 
-	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable REAL_AS
+	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
 			if v /= Void then
 				create Result.make (t, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
@@ -1724,7 +1755,8 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable RETRY_AS
@@ -1732,7 +1764,8 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_reverse_as (t: detachable ACCESS_AS; s: detachable EXPR_AS; a_as: detachable SYMBOL_AS): detachable REVERSE_AS
@@ -1767,7 +1800,7 @@ feature -- Access
 			end
 		end
 
-	new_string_as (s: detachable STRING; l, c, p, n: INTEGER; buf: STRING): detachable STRING_AS
+	new_string_as (s: detachable STRING; l, c, p, n, cc, cp, cn: INTEGER; buf: STRING): detachable STRING_AS
 			-- New STRING AST node
 		require
 			l_non_negative: l >= 0
@@ -1776,7 +1809,7 @@ feature -- Access
 			n_non_negative: n >= 0
 		do
 			if s /= Void then
-				create Result.initialize (s, l, c, p, n)
+				create Result.initialize (s, l, c, p, n, cc, cp, cn)
 			end
 		end
 
@@ -1865,7 +1898,8 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_variant_as (t: detachable ID_AS; e: detachable EXPR_AS; k_as: detachable KEYWORD_AS; s_as: detachable SYMBOL_AS): detachable VARIANT_AS
@@ -1874,7 +1908,7 @@ feature -- Access
 			create Result.make (t, e, k_as, s_as)
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc, cp, cn, common_columns: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		require
 			s_not_void: s /= Void
@@ -1883,8 +1917,11 @@ feature -- Access
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cn_non_negative: cn >= 0
 		do
-			create Result.initialize (s, marker, is_indentable, l, c, p, n, cc)
+			create Result.initialize (s, marker, is_indentable, l, c, p, n, cc, cp, cn, common_columns)
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS
@@ -1892,7 +1929,8 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
 	new_class_list_as (n: INTEGER): detachable CLASS_LIST_AS

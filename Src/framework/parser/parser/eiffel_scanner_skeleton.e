@@ -14,7 +14,7 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton
 		redefine
-			reset, fatal_error
+			yy_initialize, yy_load_input_buffer, reset, fatal_error
 		end
 
 	EIFFEL_TOKENS
@@ -35,6 +35,12 @@ inherit
 		export {NONE} all end
 
 	SHARED_ENCODING_CONVERTER
+		export {NONE} all end
+
+	SYSTEM_ENCODINGS
+		export {NONE} all end
+
+	BOM_CONSTANTS
 		export {NONE} all end
 
 	INTERNAL_COMPILER_STRING_EXPORTER
@@ -77,11 +83,36 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			Precursor
-			start_location.set_position (0, 0, 0, 0)
+			start_location.set_position (0, 0, 0, 0, 0, 0, 0)
 			token_buffer.wipe_out
 			roundtrip_token_buffer.wipe_out
 			verbatim_marker.wipe_out
 			syntax_version := obsolete_syntax
+			character_position := position
+			character_column := column
+			next_character_position := position
+			next_character_column := column
+		end
+
+	yy_initialize
+			-- <Precursor>
+		do
+			Precursor
+			character_position := position
+			character_column := column
+			next_character_position := position
+			next_character_column := column
+		end
+
+	yy_load_input_buffer
+			-- <Precursor>
+		do
+			Precursor
+			character_position := 1
+			character_column := 1
+			next_character_column := 1
+			next_character_position := 1
+			unicode_text_count := 0
 		end
 
 feature -- Roundtrip
@@ -109,6 +140,32 @@ feature -- Roundtrip
 
 	last_break_as_start_position: INTEGER
 			-- Start position of last BREAK_AS node
+
+	last_break_as_character_start_column: INTEGER
+			-- Start column of last BREAK_AS node
+
+	last_break_as_character_start_position: INTEGER
+			-- Start position of last BREAK_AS node
+
+	character_column: INTEGER
+			-- Unicode character column number of last token read when
+			-- '%option line' has been specified
+
+	character_position: INTEGER
+			-- Unicode character position of last token read (i.e. number of
+			-- characters from the start of the input source)
+			-- when '%option position' has been specified
+
+	unicode_text_count: INTEGER
+			-- Number of unicode characters in last token read
+
+	next_character_column: INTEGER
+			-- Unicode character column number of last token read
+			-- for next call to `update_character_locations'
+
+	next_character_position: INTEGER
+			-- Unicode character position of last token read
+			-- for next call to `update_character_locations'
 
 feature -- Access
 
@@ -166,6 +223,14 @@ feature -- Access
 
 	provisional_syntax: NATURAL_8 = 0x3
 			-- ECMA syntax + possible future extensions
+
+feature -- Access: Encoding
+
+	detected_encoding: detachable ENCODING
+			-- Encoding detected by last parsing
+
+	detected_bom: detachable STRING
+			-- Bom of the encoding detected by last parsing
 
 feature {NONE} -- Status
 
@@ -517,7 +582,7 @@ feature {NONE} -- Implementation
 				-- `l_str' being a new object, it is just fine to pass it as is.
 				-- `roundtrip_token_buffer' is not a new object but redefinitions of `new_string_as'
 				-- take care of duplicating it when necessary.
-			last_detachable_string_as_value := ast_factory.new_string_as (l_str, line, column, position, n, roundtrip_token_buffer)
+			last_detachable_string_as_value := ast_factory.new_string_as (l_str, line, column, position, n, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 			last_token := a_token
 
 				-- Check if manifest string is not too long (excluding the double quotes).
@@ -666,6 +731,106 @@ feature {NONE} -- Implementation
 				Result := encoding_converter.read_character_from_utf8 (1, Void, a_str)
 			end
 		end
+
+	create_break_as_with_saved_data
+			-- Create break as with saved data
+		local
+			u: UTF_CONVERTER
+			l_buf: like roundtrip_token_buffer
+		do
+			l_buf := roundtrip_token_buffer
+			ast_factory.create_break_as_with_data (l_buf,
+				last_break_as_start_line,
+				last_break_as_start_column,
+				last_break_as_start_position,
+				roundtrip_token_buffer.count,
+				last_break_as_character_start_column,
+				last_break_as_character_start_position,
+				u.utf_8_to_string_32_count (l_buf.area, 0, l_buf.count - 1))
+		end
+
+	save_break_as_data
+			-- Save break as data
+		do
+			last_break_as_start_position := position
+			last_break_as_start_line := line
+			last_break_as_start_column := column
+			last_break_as_character_start_column := character_column
+			last_break_as_character_start_position := character_position
+		end
+
+	update_character_locations
+			-- Update character locations for later use.
+		do
+			if yyline_used then
+				update_character_position_from_buffer (yy_content_area, yy_start, yy_end - 1)
+			end
+		end
+
+	update_character_position_from_buffer (s: SPECIAL [CHARACTER]; start_pos, end_pos: INTEGER)
+			-- Count of characters corresponding to UTF-8 sequence `s'.
+			-- Compute column number in character.
+		require
+			start_position_big_enough: start_pos >= 0
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos < s.count
+		local
+			i: INTEGER
+			n: INTEGER
+			c: INTEGER
+			cc: like character_column
+			cp: like character_position
+		do
+			from
+				i := start_pos
+				n := end_pos
+				cc := next_character_column
+				cp := next_character_position
+				character_column := cc
+				character_position := cp
+			until
+				i > n
+			loop
+				c := s [i].code
+				if c <= 0x7F then
+						-- 0xxxxxxx
+					i := i + 1
+					cp := cp + 1
+					if c = 0xA then -- New line
+						cc := 1
+					else
+						cc := cc + 1
+					end
+				elseif c <= 0xDF then
+						-- 110xxxxx 10xxxxxx
+					i := i + 2
+					if i <= n then
+						cp := cp + 1
+						cc := cc + 1
+					end
+				elseif c <= 0xEF then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					i := i + 3
+					if i <= n then
+						cp := cp + 1
+						cc := cc + 1
+					end
+				elseif c <= 0xF7 then
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					i := i + 4
+					if i <= n then
+						cp := cp + 1
+						cc := cc + 1
+					end
+				end
+			end
+			next_character_column := cc
+			next_character_position := cp
+			unicode_text_count := next_character_position - character_position
+		end
+
+	last_counted_character_column: INTEGER
+			-- Last counted character column
 
 feature {NONE} -- Constants
 

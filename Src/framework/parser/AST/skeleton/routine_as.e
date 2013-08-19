@@ -375,7 +375,9 @@ feature -- default rescue
 			   not (routine_body.is_deferred or routine_body.is_external) then
 				create def_resc_id.initialize_from_id (def_resc_name_id)
 				def_resc_id.set_position (end_keyword.line, end_keyword.column,
-					end_keyword.position, end_keyword.location_count)
+					end_keyword.position, end_keyword.location_count,
+					end_keyword.character_column, end_keyword.character_position,
+					end_keyword.character_count)
 				create def_resc_call.initialize (def_resc_id, Void)
 				create def_resc_instr.initialize (def_resc_call)
 				create rescue_clause.make (1)

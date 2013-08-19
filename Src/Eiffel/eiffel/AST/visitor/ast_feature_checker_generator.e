@@ -962,7 +962,8 @@ feature {NONE} -- Roundtrip
 
 				create l_feature_name.initialize_from_id (l_feature.feature_name_id)
 				l_loc := l_as.start_location
-				l_feature_name.set_position (l_loc.line, l_loc.column, l_loc.position, 0)
+				l_feature_name.set_position (l_loc.line, l_loc.column, l_loc.position, 0,
+					l_loc.character_column, l_loc.character_position, 0)
 				l_as.set_feature_name (l_feature_name)
 
 				context.put_inline_agent (l_feature, l_as)
@@ -2944,6 +2945,7 @@ feature {NONE} -- Implementation
 			l_current_class: CLASS_C
 			l_rout_id_set: ROUT_ID_SET
 			l_orig_result_type: TYPE_A
+			l_precursor_keyword: KEYWORD_AS
 		do
 			if not is_inherited then
 				if current_feature.is_invariant or else current_feature.is_inline_agent then
@@ -3055,8 +3057,10 @@ feature {NONE} -- Implementation
 				l_feature_i := l_feature_i.instantiated (context.current_class_type)
 
 				create l_precursor_id.initialize_from_id ({PREDEFINED_NAMES}.precursor_name_id)
-				l_precursor_id.set_position (l_as.precursor_keyword.line, l_as.precursor_keyword.column,
-					l_as.precursor_keyword.position, l_as.precursor_keyword.location_count)
+				l_precursor_keyword := l_as.precursor_keyword
+				l_precursor_id.set_position (l_precursor_keyword.line, l_precursor_keyword.column,
+					l_precursor_keyword.position, l_precursor_keyword.location_count,
+					l_precursor_keyword.character_column, l_precursor_keyword.character_position, l_precursor_keyword.character_count)
 				process_call (context.current_class_type, l_parent_type, l_precursor_id, l_feature_i,
 					l_as.parameters, False, False, False, True)
 
@@ -3622,7 +3626,8 @@ feature {NONE} -- Implementation
 						create l_feat_name.initialize_from_id (l_feat.feature_name_id)
 						l_location := l_as.expr.end_location
 						l_feat_name.set_position (l_location.line, l_location.column,
-							l_location.position + l_location.location_count, 0)
+							l_location.position + l_location.location_count, 0,
+							l_location.character_column, l_location.character_position + l_location.character_count, 0)
 						process_call (last_type, Void, l_feat_name, l_feat, Void, False, False, True, False)
 					else
 							-- We should not get there, but just in case we generate an internal
@@ -5093,7 +5098,8 @@ feature {NONE} -- Implementation
 							-- Process arguments
 						create id_feature_name.initialize_from_id (bracket_feature.feature_name_id)
 						location := l_as.left_bracket_location
-						id_feature_name.set_position (location.line, location.column, location.position, location.location_count)
+						id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
+							location.character_column, location.character_position, location.character_count)
 							-- Restore assigner call flag
 						is_assigner_call := was_assigner_call
 						last_calls_target_type := constrained_target_type
@@ -6044,8 +6050,8 @@ feature {NONE} -- Implementation
 						create {ACCESS_INV_AS} l_call.make (
 							create {ID_AS}.initialize_from_id (l_original_default_create_name_id), Void, Void)
 							-- For better error reporting as we insert a dummy call for type checking.
-						l_call.feature_name.set_position (a_location.line, a_location.column,
-							a_location.position, a_location.location_count)
+						l_call.feature_name.set_position (a_location.line, a_location.column, a_location.position, a_location.location_count,
+							a_location.character_column, a_location.character_position, a_location.character_count)
 							-- The line below is to ensure that a call to `default_create' will be
 							-- generated (see eweasel test#exec280) but only for non .NET classes
 							-- (see eweasel test#dotnet007).

@@ -20,10 +20,10 @@ create
 
 feature -- Initialization
 
-	make (a_code: INTEGER; l, c, p, s: INTEGER)
+	make (a_code: INTEGER; l, c, p, s, cc, cp, cs: INTEGER)
 			-- Create a symbol object with `a_code' indicating which symbol it is.
 			-- See `EIFFEL_TOKENS' for more information about `a_code'
-			-- `l', `c', `p', `s' are positions. See `make_with_location' for more information.
+			-- `l', `c', `p', `s', `cc', `cp', `cs' are positions. See `make_with_location' for more information.
 			-- This initialization feature is used in non-roundtrip mode.
 		require
 			a_code_valid: symbol_valid (a_code)
@@ -31,9 +31,12 @@ feature -- Initialization
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			s_non_negative: s >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cs_non_negative: cs >= 0
 		do
 			code := a_code
-			make_with_location (l, c, p, s)
+			make_with_location (l, c, p, s, cc, cp, cs)
 		end
 
 feature -- Access
@@ -277,7 +280,7 @@ feature -- Symbol code
 		-- Symbol code		
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

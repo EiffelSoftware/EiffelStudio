@@ -13,22 +13,32 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l, c, p, n: INTEGER)
-			-- Initialize current with line `l', column `c' and count `n'.
+	make (l, c, p, n, cc, cp, cn: INTEGER)
+			-- Initialize current with line `l', column `c' and count `n';
+			-- character column `cc', character position `cp' and character count `cn'.
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cn_non_negative: cn >= 0
 		do
-			set_position (l, c, p, n)
+			set_position (l, c, p, n, cc, cp, cn)
 		ensure
 			line_set: l <= max_line implies line = l
 			no_line_set: l > max_line implies line = no_line
 			column_set: c <= max_column implies column = c
 			no_column_set: c > max_column implies column = no_column
 			position_set: position = p
-			location_count_set: location_count = n
+			location_count_set: n <= max_count implies location_count = n
+			no_location_count_set: n > max_count implies location_count = 0
+			character_column_set: cc <= max_character_column implies character_column = cc
+			no_character_column_set: cc > max_character_column implies character_column = no_column
+			character_position_set: character_position = cp
+			character_location_count_set: cn <= max_character_count implies character_count = cn
+			no_character_location_count_set: cn > max_character_count implies character_count = 0
 		end
 
 	make_from_other (other: LOCATION_AS)
@@ -39,9 +49,16 @@ feature {NONE} -- Initialization
 			internal_location := other.internal_location
 			internal_count := other.internal_count
 			position := other.position
+			internal_character_column := other.internal_character_column
+			internal_character_count := other.internal_character_count
+			character_position := other.character_position
 		ensure
 			internal_location_set: internal_location = other.internal_location
 			internal_count_set: internal_count = other.internal_count
+			position_set: position = other.position
+			internal_character_column_set: internal_character_column = other.internal_character_column
+			internal_character_count_set: internal_character_count = other.internal_character_count
+			character_position_set: character_position = other.character_position
 		end
 
 	make_null
@@ -87,15 +104,42 @@ feature -- Access
 			Result := internal_count.to_integer_32
 		end
 
+feature -- Access
+
+	character_column: INTEGER_32
+			-- Column number in characters
+		do
+			Result := internal_character_column.to_integer_32
+		end
+
+	character_position: INTEGER_32
+			-- Character position in file
+
+	final_character_position: INTEGER_32
+			-- Ending character position in file
+		do
+			Result := character_position + character_count - 1
+		end
+
+	character_count: INTEGER_32
+			-- Length of current in characters
+		do
+			Result := internal_character_count.to_integer_32
+		end
+
 feature -- Setting
 
-	set_position (l, c, p, s: INTEGER)
-			-- Initialize current with line `l', column `c', position `p' and count `s'.
+	set_position (l, c, p, s, cc, cp, cs: INTEGER)
+			-- Initialize current with line `l', column `c', position `p' and count `s';
+			-- character column `cc', character position `cp' and character count `cs'.
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			s_non_negative: s >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cs_non_negative: cs >= 0
 		do
 			if l > max_line then
 				internal_location := 0
@@ -112,6 +156,18 @@ feature -- Setting
 				internal_count := s.to_natural_16
 			end
 			position := p
+
+			if cc > max_character_column then
+				internal_character_column := 0
+			else
+				internal_character_column := cc.to_natural_16
+			end
+			if cs > max_character_count then
+				internal_character_count := 0
+			else
+				internal_character_count := cs.to_natural_16
+			end
+			character_position := cp
 		ensure
 			line_set: l <= max_line implies line = l
 			no_line_set: l > max_line implies line = no_line
@@ -120,6 +176,11 @@ feature -- Setting
 			position_set: position = p
 			location_count_set: s <= max_count implies location_count = s
 			no_location_count_set: s > max_count implies location_count = 0
+			character_column_set: cc <= max_character_column implies character_column = cc
+			no_character_column_set: cc > max_character_column implies character_column = no_column
+			character_position_set: character_position = cp
+			character_location_count_set: cs <= max_character_count implies character_count = cs
+			no_character_location_count_set: cs > max_character_count implies character_count = 0
 		end
 
 feature -- Access: Constants
@@ -135,6 +196,12 @@ feature -- Access: Constants
 
 	max_count: INTEGER = 0x0000FFFF
 			-- Maximum value for `location_count'
+
+	max_character_column: INTEGER = 0x0000FFFF
+			-- Maximum value for `character_column'
+
+	max_character_count: INTEGER = 0x0000FFFF
+			-- Maximum value for `character_location_count'
 
 	line_mask: NATURAL_32 = 0x007FFFFF
 			-- Mask to get line information
@@ -160,11 +227,17 @@ feature {LOCATION_AS} -- Internal position
 			-- First 9 bits for the column
 			-- Last 23 bits for the line
 
-	internal_count: NATURAL_16;
+	internal_count: NATURAL_16
 			-- Space efficient encoding of `location_count'.
 
+	internal_character_column: NATURAL_16
+			-- Space efficient encoding of `character_column'.
+
+	internal_character_count: NATURAL_16;
+			-- Space efficient encoding of `character_count'.
+
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

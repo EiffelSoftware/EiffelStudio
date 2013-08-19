@@ -20,7 +20,7 @@ create {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature{NONE} -- Implementation
 
-	make (a_text: STRING; l, c, p, n: INTEGER)
+	make (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER)
 			--
 		require
 			a_text_not_void: a_text /= Void
@@ -28,9 +28,12 @@ feature{NONE} -- Implementation
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			c_non_negative: cc >= 0
+			p_non_negative: cp >= 0
+			n_non_negative: cn >= 0
 		do
 			internal_text := a_text
-			set_position (l, c, p, n)
+			set_position (l, c, p, n, cc, cp, cn)
 		ensure
 			internal_text_set: internal_text = a_text
 		end
@@ -68,7 +71,7 @@ feature{NONE} -- Implementation
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

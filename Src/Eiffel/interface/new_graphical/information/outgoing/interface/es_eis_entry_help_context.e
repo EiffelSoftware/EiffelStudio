@@ -25,38 +25,63 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_from_other
 
 feature {NONE} -- Initialzation
 
-	make (a_entry: EIS_ENTRY)
+	make (a_entry: EIS_ENTRY; a_shown_in_es: BOOLEAN)
 			-- Initialization
 		require
 			a_entry_not_void: a_entry /= Void
 		do
 			entry := a_entry
-			if attached a_entry.source as l_source then
+			if attached a_entry.source as l_source and then not l_source.is_empty then
 				help_context_id := l_source
 			else
 				help_context_id := "No source available"
 			end
-			create {HELP_SECTION_EIS_ENTRY}help_context_section.make (a_entry)
+			create help_context_section.make (a_entry, a_shown_in_es)
 		ensure
 			entry_set: entry = a_entry
 			context_section_set: help_context_section /= Void
 		end
 
-feature -- Querry
+	make_from_other (other: like Current)
+			-- Initialization
+		require
+			a_entry_not_void: other /= Void
+		do
+			make (other.entry, other.help_context_section.is_shown_in_es)
+		ensure
+			context_section_set: help_context_section /= Void
+		end
+
+feature -- Query
 
 	is_interface_usable: BOOLEAN = True
 			-- Dtermines if the interface was usable
+
+	is_http_link: BOOLEAN
+			-- Is http link?
+		do
+			Result := help_context_id.same_caseless_characters ("http:", 1, 5, 1)
+		end
+
+feature -- Element Change
+
+	set_is_shown_in_es (a_shown_in_es: BOOLEAN)
+			-- Set is shown in es?
+		do
+			help_context_section.set_is_shown_in_es (a_shown_in_es)
+		end
 
 feature -- Access
 
 	help_context_id: STRING_32
 			-- <precursor>
 
-	help_context_section: detachable HELP_CONTEXT_SECTION_I
+	help_context_section: HELP_SECTION_EIS_ENTRY
 			-- <precursor>
 
 	help_context_description: detachable STRING_32
@@ -72,7 +97,7 @@ feature -- Access
 			Result := help_provider_from_protocol (entry.protocol)
 		end
 
-feature {NONE} -- Access
+feature {ES_EIS_ENTRY_HELP_CONTEXT} -- Access
 
 	entry: EIS_ENTRY;
 			-- The entry
@@ -81,9 +106,10 @@ invariant
 	entry_attached: entry /= Void
 	help_context_id_attached: help_context_id /= Void
 	not_help_context_id_is_empty: not help_context_id.is_empty
+	help_context_section_set: help_context_section /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,6 +15,8 @@ inherit
 			context_variables
 		end
 
+	EB_SHARED_WINDOW_MANAGER
+
 create
 	make
 
@@ -46,7 +48,18 @@ feature -- Basic operation
 			then
 				last_entry := lt_entry
 				format_uris (lt_src)
-				launch_uri (lt_src)
+				if not lt_section.is_shown_in_es then
+					launch_uri (lt_src)
+				else
+					if attached window_manager.last_focused_development_window as l_window then
+						if
+							attached {ES_WEB_BROWSER_TOOL_COMMANDER_I} l_window.shell_tools.tool ({ES_WEB_BROWSER_TOOL}) as l_browser and then
+							l_browser.is_interface_usable
+						then
+							l_browser.visit (lt_src)
+						end
+					end
+				end
 			end
 		end
 

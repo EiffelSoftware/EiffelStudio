@@ -71,6 +71,19 @@ feature -- Basic operations
 			end
 		end
 
+	class_entries (a_classi: CLASS_I): SEARCH_TABLE [EIS_ENTRY]
+			-- EIS entries corresponding to `a_classi'
+		local
+			l_panel: like panel
+		do
+			l_panel := panel
+			if l_panel.is_interface_usable then
+				Result := l_panel.class_entries (a_classi)
+			else
+				create Result.make (0)
+			end
+		end
+
 feature -- Status Report
 
 	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
@@ -94,7 +107,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Info"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

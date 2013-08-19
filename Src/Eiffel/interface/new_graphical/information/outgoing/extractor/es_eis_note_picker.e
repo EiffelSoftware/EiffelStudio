@@ -81,6 +81,8 @@ feature {NONE} -- Implementation
 							parameters: STRING_TABLE [STRING_32];
 							override: BOOLEAN]
 			l_key, l_value: STRING_32
+			l_source_pos, l_source_len: INTEGER
+			l_count, l_removed_chars: INTEGER
 		do
 			if a_index.tag /= Void and then a_index.tag.name_8.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
@@ -99,12 +101,21 @@ feature {NONE} -- Implementation
 						-- Parse UTF-8 string
 					if attached {STRING_AS} l_atomic as lt_str_as and then attached lt_str_as.value as lt_string then
 						create l_attribute_pair.make_from_string (lt_string)
+						l_count := l_attribute_pair.count
 						string_general_left_adjust (l_attribute_pair)
+						l_removed_chars := l_count -  l_attribute_pair.count
 						string_general_right_adjust (l_attribute_pair)
+
+						l_count := l_attribute_pair.count
 						l_attribute_pair.prune_all_leading ('"')
+						l_removed_chars := l_removed_chars + l_count -  l_attribute_pair.count
 						l_attribute_pair.prune_all_trailing ('"')
+
+						l_count := l_attribute_pair.count
 						string_general_left_adjust (l_attribute_pair)
+						l_removed_chars := l_removed_chars + l_count -  l_attribute_pair.count
 						string_general_right_adjust (l_attribute_pair)
+
 						if attribute_regex_matcher.matches (l_attribute_pair) then
 							if
 								attached attribute_regex_matcher.captured_substring (1) as lt_key and then
@@ -112,11 +123,22 @@ feature {NONE} -- Implementation
 							then
 								l_key := encoding_converter.utf8_to_utf32 (lt_key)
 								l_value := encoding_converter.utf8_to_utf32 (lt_value)
+								l_removed_chars := l_removed_chars + l_key.count
 								l_key.left_adjust
 								l_key.right_adjust
+
+								l_count := l_value.count
 								l_value.left_adjust
+								l_removed_chars := l_removed_chars + l_count - l_value.count
 								l_value.right_adjust
 								fill_from_key_value (l_key, l_value, l_entry_tuple)
+								if l_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.source_string) then
+									l_removed_chars := l_removed_chars + 1 -- '"'
+									l_removed_chars := l_removed_chars + 1 -- '='
+										-- Character positions.
+									l_source_pos := lt_str_as.character_start_position + l_removed_chars
+									l_source_len := lt_str_as.character_end_position - l_source_pos -- -1 + 1 '"'
+								end
 							end
 						else
 								-- Don't recognize the attribute
@@ -135,6 +157,7 @@ feature {NONE} -- Implementation
 				end
 				create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.parameters)
 				Result.set_override (l_entry_tuple.override)
+				Result.set_source_pos ([l_source_pos, l_source_len])
 			end
 		end
 

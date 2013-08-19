@@ -79,7 +79,7 @@ feature -- HELP_CONTEXT_I, Access
 			-- <Precursor>
 		do
 			if eis_grid.has_selected_row and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
-				Result := create {HELP_SECTION_EIS_ENTRY}.make (l_entry)
+				Result := create {HELP_SECTION_EIS_ENTRY}.make (l_entry, False)
 			end
 		end
 

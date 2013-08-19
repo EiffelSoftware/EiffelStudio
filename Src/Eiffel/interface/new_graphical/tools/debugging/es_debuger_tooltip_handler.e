@@ -9,17 +9,19 @@ class
 inherit
 	ANY
 
+	ES_TOOLTIP_HANDLER
+		redefine
+			show_tooltip_possible,
+			show_tooltip,
+			hide_tooltip
+		end
+
 	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
 
 	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -34,93 +36,34 @@ inherit
 			{NONE} all
 		end
 
-feature -- Events
-
-	propagate_pointer_move (x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
-			-- Propagte pointer move event.
-		local
-			l_timer: like show_tooltip_timer
-			l_delay: like show_tooltip_interval
-		do
-			if
-				preferences.debug_tool_data.show_debug_tooltip and then
-				attached debugger_manager as l_debug_manager and then
-				l_debug_manager.safe_application_is_stopped
-			then
-				if attached expression_at (screen_x, screen_y) as l_e then
-					l_delay := show_tooltip_interval
-					if l_delay > 0 then
-						l_timer := show_tooltip_timer
-						if l_timer = Void then
-							create l_timer
-						end
-							-- The pointer context might have been changed.
-							-- Reschedule displaying tooltip when the tooltip has not been shown
-							-- in previous scheduler.
-						l_timer.set_interval (0)
-						l_timer.actions.wipe_out
-						l_timer.actions.extend_kamikaze (agent show_debug_tooltip (l_e))
-						l_timer.set_interval (l_delay)
-					else
-						show_debug_tooltip (l_e)
-					end
-				else
-					stop_debug_tooltip_timer
-					if attached debug_tooltip as l_tooltip and then l_tooltip.is_shown then
-						l_tooltip.hide
-						last_expression := Void
-					end
-				end
-			else
-				stop_debug_tooltip_timer
-				if attached debug_tooltip as l_tooltip and then l_tooltip.is_shown then
-					l_tooltip.hide
-					last_expression := Void
-				end
-			end
-		end
-
-	propagate_move (x, y, width, height, a_old_x, a_old_y: INTEGER)
-			-- Propagate move
-			-- Arguments are positions from the parent window
-		do
-			if attached debug_tooltip as l_tooltip and then l_tooltip.is_shown then
-				l_tooltip.popup_window.set_position (l_tooltip.popup_window.screen_x + x - a_old_x, l_tooltip.popup_window.screen_y + y - a_old_y)
-			end
-		end
-
 feature -- Action
 
 	hide_tooltip
 			-- Hide the tooltip
 		do
-			if attached debug_tooltip as l_tooltip and then l_tooltip.is_shown then
-				l_tooltip.hide
-				last_expression := Void
-			end
+			Precursor {ES_TOOLTIP_HANDLER}
+			last_expression := Void
 		end
 
-feature -- Status Change
+feature -- Query
 
-	set_expression_callback (a_c: like expression_callback; a_pos_c: like show_position_callback)
-			-- Set `expression_callback' with `a_c'.
+	show_tooltip_possible (a_token: detachable EDITOR_TOKEN): BOOLEAN
+			-- Is it possible to show tooltip?
 		do
-			expression_callback := a_c
-			show_position_callback := a_pos_c
-		ensure
-			expression_callback_set: expression_callback = a_c
-			show_position_callback_set: show_position_callback = a_pos_c
+			Result :=
+				preferences.debug_tool_data.show_debug_tooltip and then
+				attached debugger_manager as l_debug_manager and then
+				l_debug_manager.safe_application_is_stopped and then
+				attached a_token as l_token and then
+				attached {READABLE_STRING_GENERAL} l_token.data as l_e and then not l_e.is_empty
 		end
 
 feature {NONE} -- Implementation
 
-	show_debug_tooltip (a_expr: READABLE_STRING_GENERAL)
+	show_tooltip (a_token: EDITOR_TOKEN)
 			-- Show debug tooltip
-		require
-			a_expr_attached: a_expr /= Void
-			a_expr_not_void: not a_expr.is_empty
 		local
-			l_tooltip_window: like debug_tooltip
+			l_tooltip_window: like tooltip
 			l_object_grid: like object_grid
 			l_dbg_expr: DBG_EXPRESSION
 			l_dbg_eval: DBG_EXPRESSION_EVALUATION
@@ -134,15 +77,9 @@ feature {NONE} -- Implementation
 			create l_screen
 			l_pointer := l_screen.pointer_position
 				-- Ensure expression has not been changed under the mouse pointer.
-			if attached expression_at (l_pointer.x, l_pointer.y) as l_expr and then l_expr.same_string (a_expr) then
-				if last_expression /= a_expr or else not attached debug_tooltip as l_tooltip or else not l_tooltip.is_shown then
-					l_tooltip_window := debug_tooltip
-					if l_tooltip_window = Void then
-						create l_tooltip_window.make
-						l_tooltip_window.set_hide_timeout (3_000)
-						debug_tooltip := l_tooltip_window
-					end
-
+			if attached {READABLE_STRING_GENERAL} a_token.data as l_expr then
+				if last_expression /= l_expr or else not attached tooltip as l_tooltip or else not l_tooltip.is_shown then
+					l_tooltip_window := tooltip
 					l_object_grid := object_grid
 					if l_object_grid = Void then
 						l_object_grid := create_object_grid
@@ -158,11 +95,12 @@ feature {NONE} -- Implementation
 								end
 							end
 						)
+						setup_pointer_actions (l_object_grid)
 						object_grid := l_object_grid
 					end
 					l_object_grid.wipe_out
 
-					create l_e.make_from_string_general (a_expr)
+					create l_e.make_from_string_general (l_expr)
 					l_e.replace_substring_all ("%N", " ")
 					l_e.replace_substring_all ("%R", " ")
 					create l_dbg_expr.make_with_context (l_e)
@@ -185,7 +123,7 @@ feature {NONE} -- Implementation
 					end
 
 					l_tooltip_window.show_on_side (l_rec, 0, 0)
-					last_expression := a_expr
+					last_expression := l_expr
 				end
 			end
 		end
@@ -273,15 +211,6 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	stop_debug_tooltip_timer
-			-- Destroy the debug tooltip timer
-		do
-			if attached show_tooltip_timer as l_timer then
-				l_timer.set_interval (0)
-				l_timer.actions.wipe_out
-			end
-		end
-
 	on_grid_size_changed (a_row: detachable EV_GRID_ROW)
 			-- Call when the size of grid is changed
 		local
@@ -319,45 +248,14 @@ feature {NONE} -- Implementation
 					l_height := l_height + l_grid.header.height
 				end
 				l_grid.set_minimum_size (l_width, l_height)
-				if attached debug_tooltip as l_tooltip then
+				if attached tooltip as l_tooltip then
 					l_tooltip.popup_window.set_size (1, 1)
 				end
 			end
 		end
 
-	expression_at (a_x, a_y: INTEGER): detachable READABLE_STRING_GENERAL
-			-- Expression at position
-			-- `a_x', `a_y' are screen positions.
-		do
-			if attached expression_callback as l_c then
-				Result := l_c.item ([a_x, a_y])
-			end
-		ensure
-			Result_not_empty: attached Result as l_res implies not l_res.is_empty
-		end
-
-	expression_callback: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable READABLE_STRING_GENERAL]
-			-- Callback to query expression
-			-- Arguments are screen positions
-
-	show_position_callback: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable TUPLE [x, y: INTEGER]]
-			-- Call back to query a preferred show position
-			-- Arguments and return values are screen positions
-
-	debug_tooltip: detachable ES_SMART_TOOLTIP_WINDOW
-			-- Debug tooktip
-
 	object_grid: detachable ES_OBJECTS_GRID
 			-- Object grid
-
-	show_tooltip_timer: detachable EV_TIMEOUT
-			-- Timer to show debug tooltip
-
-	show_tooltip_interval: INTEGER
-			-- Wait a bit to show the tooltip
-		do
-			Result := preferences.debug_tool_data.show_debug_tooltip_delay
-		end
 
 	max_column_width: INTEGER = 200
 			-- Max width of a column in the debugger tooltip grid.

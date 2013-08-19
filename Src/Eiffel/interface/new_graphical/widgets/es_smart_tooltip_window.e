@@ -88,6 +88,16 @@ feature {NONE} -- Access
 			create Result.make ("")
 		end
 
+feature -- Access
+
+	popup_widget: EV_WIDGET
+			-- Widget displayed when the popup button is pressed
+		do
+			Result := internal_popup_widget
+		ensure
+			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
+		end
+
 feature -- Element change
 
 	set_popup_widget (a_widget: like popup_widget)
@@ -190,15 +200,6 @@ feature {NONE} -- User interface elements
 
 	widget_container: EV_VERTICAL_BOX
 			-- The container to extend a popup widget with.
-
-	popup_widget: EV_WIDGET
-			-- Widget displayed when the popup button is pressed
-		do
-			Result := internal_popup_widget
-		ensure
-			result_attached: Result /= Void
-			not_result_is_destroyed: not Result.is_destroyed
-		end
 
 	hide_timeout: INTEGER
 			-- Timeout to hide the tooltip

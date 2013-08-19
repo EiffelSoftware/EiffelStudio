@@ -22,15 +22,15 @@ create
 
 feature -- Initialization
 
-	make (a_text: STRING; l, c, p, s: INTEGER)
+	make (a_text: STRING; l, c, p, s, cc, cp, cs: INTEGER)
 			-- Create an comment object with `a_text' as literal text of this comment in source code.
-			-- `l', `c', `p', `s' are positions. See `make_with_location' for more information.
+			-- `l', `c', `p', `s', `cc', `cp', `cs' are positions. See `make_with_location' for more information.
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
 			set_internal_text (a_text.string)
-			make_with_location (l, c, p, s)
+			make_with_location (l, c, p, s, cc, cp, cs)
 		end
 
 feature -- Access
@@ -161,7 +161,7 @@ invariant
 	internal_text_not_void: internal_text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

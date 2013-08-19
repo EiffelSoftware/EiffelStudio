@@ -435,7 +435,8 @@ feature {NONE} -- List processing
 								-- Note that we do not set the `name_id' for `l_id_as' since it will require
 								-- updating the NAMES_HEAP and we do not want to do that. It is assumed in roundtrip
 								-- mode that the text is never obtained from the node itself but from the `text' queries.
-							l_id_as.set_position (l_leaf.line, l_leaf.column, l_leaf.position, l_leaf.location_count)
+							l_id_as.set_position (l_leaf.line, l_leaf.column, l_leaf.position, l_leaf.location_count,
+								l_leaf.character_column, l_leaf.character_position, l_leaf.character_count)
 							l_id_as.set_index (l_index)
 							safe_process (l_id_as)
 						end

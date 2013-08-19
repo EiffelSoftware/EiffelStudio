@@ -29,7 +29,7 @@ create {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	initialize (s: STRING; l, c, p, n: INTEGER)
+	initialize (s: STRING; l, c, p, n, cc, cp, cn: INTEGER)
 			-- Create a new STRING AST node.
 		require
 			s_not_void: s /= Void
@@ -37,9 +37,12 @@ feature {NONE} -- Initialization
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cn_non_negative: cn >= 0
 		do
 			value := s
-			set_position (l, c, p, n)
+			set_position (l, c, p, n, cc, cp, cn)
 		ensure
 			value_set: value = s
 		end
@@ -196,7 +199,7 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

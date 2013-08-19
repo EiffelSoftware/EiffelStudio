@@ -26,11 +26,11 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (b: BOOLEAN; l, c, p, s: INTEGER)
+	initialize (b: BOOLEAN; l, c, p, s, cc, cp, cs: INTEGER)
 			-- Create a new BOOLEAN AST node.
 		do
 			value := b
-			set_position (l, c, p, s)
+			set_position (l, c, p, s, cc, cp, cs)
 		ensure
 			value_set: value = b
 		end
@@ -64,7 +64,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

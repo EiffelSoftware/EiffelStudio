@@ -33,6 +33,8 @@ feature -- Scann
 			a_file_not_void: a_file /= Void
 		do
 			input_buffer := encoding_converter.input_buffer_from_file (a_file, Void)
+			detected_encoding := encoding_converter.detected_encoding
+			detected_bom := encoding_converter.last_bom
 			yy_load_input_buffer
 			filename := a_file.name
 			scan
@@ -58,9 +60,9 @@ feature -- Scann
 				inspect
 					last_token
 				when TE_INTEGER then
-					l_as := ast_factory.new_integer_as (Void, False, Void, text, Void, line, column, position, text_count)
+					l_as := ast_factory.new_integer_as (Void, False, Void, text, Void, line, column, position, text_count, character_column, character_position, unicode_text_count)
 				when TE_REAL then
-					l_as := ast_factory.new_real_as (Void, Void, text, Void, line, column, position, text_count)
+					l_as := ast_factory.new_real_as (Void, Void, text, Void, line, column, position, text_count, character_column, character_position, unicode_text_count)
 				when TE_CHAR then
 					l_as := last_detachable_char_as_value
 				when
@@ -92,6 +94,8 @@ feature -- Scann
 			a_string_not_void: a_string /= Void
 		do
 			input_buffer := encoding_converter.input_buffer_from_string (a_string, Void)
+			detected_encoding := encoding_converter.detected_encoding
+			detected_bom := encoding_converter.last_bom
 			yy_load_input_buffer
 			scan
 		ensure
@@ -104,6 +108,8 @@ feature -- Scann
 			a_string_not_void: a_string /= Void
 		do
 			create input_buffer.make (a_string)
+			detected_encoding := utf8
+			detected_bom := Void
 			yy_load_input_buffer
 			scan
 		ensure
@@ -132,7 +138,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

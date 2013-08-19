@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER)
+	initialize (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n, cc, cp, cn: INTEGER)
 			-- Create a new CHARACTER AST node.
 		require
 			t_as_not_void: t_as /= Void
@@ -30,9 +30,12 @@ feature {NONE} -- Initialization
 			co_non_negative: co >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
+			cc_non_negative: cc >= 0
+			cp_non_negative: cp >= 0
+			cn_non_negative: cn >= 0
 		do
 			value := c
-			set_position (l, co, p, n)
+			set_position (l, co, p, n, cc, cp, cn)
 			type := t_as
 		ensure
 			value_set: value = c
@@ -84,7 +87,7 @@ invariant
 	type_attached: type /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

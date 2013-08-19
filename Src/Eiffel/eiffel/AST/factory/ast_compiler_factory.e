@@ -245,39 +245,39 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_octal_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_binary_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 			end
 		end
 

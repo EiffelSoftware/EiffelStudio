@@ -125,10 +125,10 @@ feature -- List operation
 
 feature -- Leaf nodes
 
-	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): detachable CHAR_AS
+	new_character_as (c: CHARACTER_32; l, co, p, n, cc, cp, cs: INTEGER; a_text: STRING): detachable CHAR_AS
 			-- New CHARACTER AST node
 		do
-			create Result.initialize (c, l, co, p, n)
+			create Result.initialize (c, l, co, p, n, cc, cp, cs)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
@@ -137,83 +137,83 @@ feature -- Leaf nodes
 			-- New TYPED_CHAR AST node.
 		do
 			if t_as /= Void and a_char /= Void then
-				create Result.initialize (t_as, a_char.value, a_char.line, a_char.column, a_char.position, a_char.location_count)
+				create Result.initialize (t_as, a_char.value, a_char.line, a_char.column, a_char.position, a_char.location_count, a_char.character_column, a_char.character_position, a_char.character_count)
 				Result.set_index (a_char.index)
 			end
 		end
 
-	new_string_as (s: detachable STRING; l, c, p, n: INTEGER; buf: STRING): detachable STRING_AS
+	new_string_as (s: detachable STRING; l, c, p, n, cc, cp, cn: INTEGER; buf: STRING): detachable STRING_AS
 			-- New STRING AST node
 		do
 			if s /= Void then
-				create Result.initialize (s, l, c, p, n)
+				create Result.initialize (s, l, c, p, n, cc, cp, cn)
 				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc, cp, cn, common_columns: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		do
-			create Result.initialize (s, marker, is_indentable, l, c, p, n, cc)
+			create Result.initialize (s, marker, is_indentable, l, c, p, n, cc, cp, cn, common_columns)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 				Result.set_sign_symbol (s_as)
 				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 				Result.set_sign_symbol (s_as)
 				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_octal_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 				Result.set_sign_symbol (s_as)
 				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_binary_string (t, s, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 				Result.set_sign_symbol (s_as)
 				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
 
-	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable REAL_AS
+	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
 			if v /= Void then
 				create Result.make (t, v)
-				Result.set_position (l, c, p, n)
+				Result.set_position (l, c, p, n, cc, cp, cn)
 				Result.set_sign_symbol (s_as)
 				increase_match_list_count
 				Result.set_index (match_list_count)
@@ -239,55 +239,63 @@ feature -- Leaf nodes
 			create l_str.make (l_cnt)
 			a_scn.append_text_to_string (l_str)
 			create Result.initialize (l_str)
-			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
+			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			Result.set_index (a_index)
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable UNIQUE_AS
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable RETRY_AS
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable RESULT_AS
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): detachable BOOL_AS
 		do
-			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable CURRENT_AS
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable DEFERRED_AS
 		do
-			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
@@ -295,7 +303,7 @@ feature -- Leaf nodes
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		do
-			create Result.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
@@ -314,10 +322,11 @@ feature -- Leaf nodes
 			l_str.wipe_out
 			a_scn.append_text_to_string (l_str)
 			create l_id_as.initialize (l_str)
-			l_id_as.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
+			l_id_as.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt,
+				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 
 				-- Create the KEYWORD_AS
-			create l_keyword_as.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create l_keyword_as.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 
 				-- Since the keyword is sharing the same piece of text as the ID_AS, we share the index.
 			increase_match_list_count
@@ -327,10 +336,10 @@ feature -- Leaf nodes
 			Result := [l_keyword_as, l_id_as, a_scn.line, a_scn.column, a_scn.filename]
 		end
 
-	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): detachable KEYWORD_AS
+	new_once_string_keyword_as (a_text: STRING; l, c, p, n, cc, cp, cs: INTEGER): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		do
-			create Result.make ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n)
+			create Result.make ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n, cc, cp, cs)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
@@ -338,7 +347,7 @@ feature -- Leaf nodes
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
 			-- New KEYWORD AST node		
 		do
-			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
@@ -349,7 +358,7 @@ feature -- Leaf nodes
 			increase_match_list_count
 		end
 
-	create_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER)
+	create_break_as_with_data (a_text: STRING; l, c, p, n, cc, cp, cs: INTEGER)
 			-- New COMMENT_AS node
 		do
 			increase_match_list_count
@@ -370,14 +379,14 @@ feature -- Access
 				token_value.prune_all ('_')
 			end
 			if token_value.is_number_sequence then
-				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count, a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 			elseif token_value.count >= 3 and then token_value.item (1) = '0' then
 				if token_value.item (2).lower = 'x' then
-					Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+					Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count, a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 				elseif token_value.item (2).lower = 'c' then
-					Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+					Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count, a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 				elseif token_value.item (2).lower = 'b' then
-					Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+					Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count, a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 				end
 			end
 		end
@@ -392,7 +401,8 @@ feature -- Access
 			else
 				l_buffer := buffer
 			end
-			Result := new_real_as (a_type, buffer, a_psr.text, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+			Result := new_real_as (a_type, buffer, a_psr.text, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
+				a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 		end
 
 	new_bin_and_then_as (l, r: detachable EXPR_AS; k_as, s_as: detachable KEYWORD_AS): detachable BIN_AND_THEN_AS
@@ -412,7 +422,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

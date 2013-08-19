@@ -103,7 +103,11 @@ feature -- Location
 			l_column := l_left.column + l_left.location_count
 			l_pos := l_left.position + l_left.location_count
 
-			create Result.make (l_line, l_column, l_pos, l_count)
+			create Result.make (l_line, l_column, l_pos, l_count,
+				l_left.character_column + l_left.character_count,
+				l_left.character_position + l_left.character_count,
+				l_right.character_position - (l_left.character_position + l_left.character_count)
+			)
 		ensure
 			operator_location_not_void: Result /= Void
 		end
@@ -115,7 +119,8 @@ feature -- Location
 		do
 			l_location := operator_location
 			Result := op_name.twin
-			Result.set_position (l_location.line, l_location.column, l_location.position, l_location.location_count)
+			Result.set_position (l_location.line, l_location.column, l_location.position, l_location.location_count,
+				l_location.character_column, l_location.character_position, l_location.character_count)
 		ensure
 			operator_ast_not_void: Result /= Void
 		end
@@ -200,7 +205,7 @@ invariant
 	right_not_void: right /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

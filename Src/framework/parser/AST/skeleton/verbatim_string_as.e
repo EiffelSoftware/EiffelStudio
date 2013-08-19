@@ -21,7 +21,7 @@ create {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	initialize (s, marker: STRING; indentable: BOOLEAN; l, c, p, n, cc: INTEGER)
+	initialize (s, marker: STRING; indentable: BOOLEAN; l, c, p, n, cc, cp, cn, common_col: INTEGER)
 			-- Create a new Verbatim string AST node.
 		require
 			s_not_void: s /= Void
@@ -30,17 +30,20 @@ feature {NONE} -- Initialization
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
-			cc_non_negative: cc >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
+			n_non_negative: n >= 0
+			cc_non_negative: common_col >= 0
 		do
-			string_initialize (s, l, c, p, n)
+			string_initialize (s, l, c, p, n, cc, cp, cn)
 			verbatim_marker := marker
 			is_indentable := indentable
-			common_columns := cc
+			common_columns := common_col
 		ensure
 			value_set: value = s
 			verbatim_marker_set: verbatim_marker = marker
 			is_indentable_set: is_indentable = indentable
-			common_columns_set: common_columns = cc
+			common_columns_set: common_columns = common_col
 		end
 
 feature -- Visitor
@@ -74,7 +77,7 @@ invariant
 	valid_common_columns: not is_indentable implies common_columns = 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

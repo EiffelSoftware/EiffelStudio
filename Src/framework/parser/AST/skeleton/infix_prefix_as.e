@@ -38,7 +38,8 @@ feature {NONE} -- Initialization
 			create internal_name.initialize (get_internal_alias_name)
 			internal_name.set_index (op.index)
 			if l /= Void then
-				internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count)
+				internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count,
+					l.character_column, l.character_position, op.character_position - l.character_position + l.character_count)
 			end
 			infix_prefix_keyword := l
 		ensure
@@ -136,7 +137,7 @@ invariant
 	alias_name_not_void: alias_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

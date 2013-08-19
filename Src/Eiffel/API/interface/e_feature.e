@@ -614,7 +614,7 @@ feature -- Access
 				end
 				if has_error then
 					create index_list.make (1)
-					index_list.extend (create {STRING_AS}.initialize ("Cannot load feature.", 0, 0, 0, 0))
+					index_list.extend (create {STRING_AS}.initialize ("Cannot load feature.", 0, 0, 0, 0, 0, 0, 0))
 					create indexes.make (1)
 					indexes.extend (create {INDEX_AS}.initialize (create {ID_AS}.initialize ("error"), index_list, Void))
 				end
@@ -1297,7 +1297,7 @@ invariant
 	written_class_not_void: is_valid implies written_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

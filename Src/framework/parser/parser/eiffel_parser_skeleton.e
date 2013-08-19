@@ -35,12 +35,6 @@ inherit
 	INTERNAL_COMPILER_STRING_EXPORTER
 		export {NONE} all end
 
-	SYSTEM_ENCODINGS
-		export {NONE} all end
-
-	BOM_CONSTANTS
-		export {NONE} all end
-
 feature {NONE} -- Initialization
 
 	make
@@ -517,14 +511,6 @@ feature -- Access
 	feature_clause_end_position: INTEGER
 			-- End of a feature clause
 
-feature -- Access: Encoding
-
-	detected_encoding: detachable ENCODING
-			-- Encoding detected by last parsing
-
-	detected_bom: detachable STRING
-			-- Bom of the encoding detected by last parsing
-
 feature -- Removal
 
 	reset_nodes
@@ -598,7 +584,8 @@ feature -- Modification
 				-- if the given `location' is Void.
 			if location /= Void then
 				create id.initialize (name)
-				id.set_position (location.line, location.column, location.position, location.location_count)
+				id.set_position (location.line, location.column, location.position, location.location_count,
+					location.character_column, location.character_position, location.character_count)
 				suppliers.insert_supplier_id (id)
 			end
 		end
@@ -958,7 +945,7 @@ feature {NONE} -- ID factory
 	new_none_id: detachable NONE_ID_AS
 			-- New ID AST node for "NONE"
 		do
-			Result := ast_factory.new_filled_none_id_as (line, column, position, 4)
+			Result := ast_factory.new_filled_none_id_as (line, column, position, 4, character_column, character_position, 4)
 		end
 
 feature {NONE} -- Type factory

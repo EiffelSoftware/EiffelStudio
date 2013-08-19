@@ -207,6 +207,14 @@ feature -- Status Setting
 			l_line.set_highlighted (False)
 		end
 
+	set_is_unix_style (a_unix_style: BOOLEAN)
+			-- Set `is_unix_style' with `a_style'.
+		do
+			is_unix_style := a_unix_style
+		ensure
+			is_unix_style_set: is_unix_style = a_unix_style
+		end
+
 feature -- Query
 
 	after: BOOLEAN
@@ -325,6 +333,9 @@ feature -- Status report
 
 	text_being_processed: BOOLEAN
 			-- is the text currently processed?
+
+	is_unix_style: BOOLEAN
+			-- Is the text unix style?
 
 feature -- Search
 
@@ -594,14 +605,14 @@ invariant
 	current_line_valid: attached current_line as l_line implies l_line.is_valid
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

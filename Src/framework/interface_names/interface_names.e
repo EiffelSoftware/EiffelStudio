@@ -79,6 +79,7 @@ feature -- Button texts
 	b_Feature_name: STRING_32					do Result := locale.translation("Feature Name")	end
 	b_Finish: STRING_32							do Result := locale.translation("Finish")	end
 	b_Function_time: STRING_32					do Result := locale.translation("Function Time")	end
+	b_go: STRING_32								do Result := locale.translation ("Go") end
 	b_go_to: STRING_32							do Result := locale.translation ("Go to") end
 	b_Keep_assertions: STRING_32					do Result := locale.translation("Keep Assertions")	end
 	b_eval_keep_assertion_checking: STRING_32	do Result := locale.translation("Keep Assertion Checking")	end
@@ -607,8 +608,9 @@ feature -- Accelerator, focus label and menu name
 	f_move_item_up: STRING_32			do Result := locale.translation ("Move item up") end
 	f_move_item_down: STRING_32			do Result := locale.translation ("Move item down") end
 	m_Ok: STRING_32						do Result := locale.translation("&OK")	end
-	m_Open: STRING_32					do Result := locale.translation("&Open...%TCtrl+O")	end
+	m_Open: STRING_32					do Result := locale.translation("Open")	end
 	m_open_layout: STRING_32 			do Result := locale.translation ("Open Layout") end
+	m_open_in_brower: STRING_32			do Result := locale.translation("Open in browser")	end
 	m_Open_new: STRING_32				do Result := locale.translation("Op&en...")	end
 	m_Open_project: STRING_32			do Result := locale.translation("&Open Project...")	end
 	f_Open_watch_tool_menu: STRING_32 	do Result := locale.translation ("Open Watch tool menu") end
@@ -1510,6 +1512,7 @@ feature -- Label texts
 	l_Possible_overflow: STRING_32		do Result := locale.translation("Possible stack overflow")	end
 	l_precompile: STRING_32				do Result := locale.translation("Precompile")	end
 	l_preferences_delayed_resources: STRING_32 do Result := locale.translation ("The changes you have made to the following resources%Nwill be taken into account after you restart.") end
+	l_press_ctrl_enter_to_open: STRING_32	do Result := locale.translation ("Press Control + Enter to open.") end
 	l_Print_message: STRING_32			do Result := locale.translation("Print a message:")	end
 	l_Print_message_help: STRING_32
 		do

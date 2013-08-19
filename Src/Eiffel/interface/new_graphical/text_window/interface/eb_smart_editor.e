@@ -36,6 +36,8 @@ inherit
 			on_mouse_wheel,
 			on_mouse_button_up,
 			on_char,
+			on_text_saved,
+			on_text_fully_loaded,
 			make,
 			create_token_handler
 		end
@@ -395,6 +397,7 @@ feature {NONE} -- Text loading
 				text_displayed.clear_syntax_error
 			end
 			set_title_saved (True)
+			setup_eis_links
 		end
 
 	on_text_reset
@@ -409,6 +412,16 @@ feature {NONE} -- Text loading
 		do
 			Precursor (directly_edited)
 			set_title_saved (False)
+		end
+
+	on_text_fully_loaded
+			-- <Precursor>
+		do
+			Precursor
+				-- Must done when text is fully loaded.
+				-- So the parser to retrieve EIS info takes text from the editor
+				-- Instead of the text from original file.
+			setup_eis_links
 		end
 
 	is_text_loaded_called: BOOLEAN
@@ -646,29 +659,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			if not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
 				highlight_matched_braces (True)
-			end
-		end
-
-	cursor_screen_x: INTEGER
-			-- Cursor screen x position
-		local
-			tok: EDITOR_TOKEN
-		do
-			if attached text_displayed.cursor as cursor then
-				tok := cursor.token
-				tok.update_position
-				Result := tok.position + tok.get_substring_width (cursor.pos_in_token - 1) + widget.screen_x + left_margin_width - offset
-				if margin.line_numbers_enabled then
-					Result := Result + margin.width
-				end
-			end
-		end
-
-	cursor_screen_y: INTEGER
-			-- Cursor screen y position
-		do
-			if attached text_displayed.cursor as cursor then
-				Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)
 			end
 		end
 
@@ -1220,6 +1210,37 @@ feature -- Text Loading
 				Precursor {EB_CLICKABLE_EDITOR} (s)
 			end
 			load_without_save := False
+		end
+
+	setup_eis_links
+			-- Setup eis links in current editor
+		local
+			l_list: SEARCH_TABLE [EIS_ENTRY]
+			l_context: ES_EIS_ENTRY_HELP_CONTEXT
+		do
+			if attached dev_window as l_window and then attached {ES_INFORMATION_TOOL_COMMANDER_I} l_window.shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander and then l_info_tool_commander.is_interface_usable then
+				if attached {CLASSI_STONE} stone as l_stone and then attached l_stone.class_i as l_classi then
+					l_list := l_info_tool_commander.class_entries (l_classi)
+--					create l_cursor.make_from_integer (1, text_displayed)
+					across
+						l_list as l_c
+					loop
+						if not l_c.item.is_auto and then attached l_c.item.source as l_source and then attached l_c.item.source_pos as l_pos then
+							create l_context.make (l_c.item, False)
+							set_link_between (l_pos.pos, l_pos.pos + l_pos.len - 1, True, create {EIS_LINK_STONE}.make (l_context))
+						end
+					end
+				end
+			end
+		end
+
+feature -- Update
+
+	on_text_saved
+			-- On text saved
+		do
+			Precursor {EB_CLICKABLE_EDITOR}
+			setup_eis_links
 		end
 
 feature {NONE} -- Memory management

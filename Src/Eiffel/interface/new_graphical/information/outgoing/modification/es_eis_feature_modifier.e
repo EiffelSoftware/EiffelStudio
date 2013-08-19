@@ -10,6 +10,9 @@ class
 
 inherit
 	ES_FEATURE_TEXT_AST_MODIFIER
+		redefine
+			commit
+		end
 
 	ES_EIS_CODE_MODIFIER
 
@@ -159,6 +162,19 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
+	commit
+			-- <Precursor>
+		do
+			Precursor {ES_FEATURE_TEXT_AST_MODIFIER}
+			if attached active_editors_for_class (context_class) as l_list then
+				across
+					l_list as l_c
+				loop
+					l_c.item.setup_eis_links
+				end
+			end
+		end
+
 feature -- Access
 
 	last_created_entry: detachable EIS_ENTRY
@@ -188,7 +204,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

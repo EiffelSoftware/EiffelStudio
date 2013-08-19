@@ -168,6 +168,15 @@ feature {ES_INFORMATION_TOOL_COMMANDER_I, ES_EIS_TOOL_WIDGET} -- Basic operation
 			set_stone (Void)
 		end
 
+	class_entries (a_classi: CLASS_I): SEARCH_TABLE [EIS_ENTRY]
+			-- EIS entries corresponding to `a_classi'
+		local
+			l_extractor: ES_EIS_CLASS_EXTRACTOR
+		do
+			create l_extractor.make (a_classi, True)
+			Result := l_extractor.eis_entries
+		end
+
 feature {NONE} -- Basic operations
 
 	perform_auto_background_visiting

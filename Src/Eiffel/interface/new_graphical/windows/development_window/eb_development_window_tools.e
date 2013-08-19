@@ -208,6 +208,16 @@ feature -- Access
 			result_consistent: Result = customized_tools
 		end
 
+	web_browser_tool: ES_WEB_BROWSER_TOOL_PANEL
+			-- Web browser tool
+		require
+			not_is_recycled: not is_recycled
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_WEB_BROWSER_TOOL}).panel
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Commands
 
 	launch_stone (a_stone: STONE)
@@ -498,7 +508,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

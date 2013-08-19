@@ -168,6 +168,14 @@ feature {ES_EIS_NOTE_PICKER} -- Element change
 			override_set: override = a_v
 		end
 
+	set_source_pos (a_pos: like source_pos)
+			-- Set `source_pos' with `a_pos'.
+		do
+			source_pos := a_pos
+		ensure
+			source_pos_set: source_pos = a_pos
+		end
+
 feature -- Access
 
 	name: detachable STRING_32
@@ -191,6 +199,9 @@ feature -- Access
 
 	override: BOOLEAN
 			-- Overriding entry over auto entry?
+
+	source_pos: TUPLE [pos, len: INTEGER]
+			-- Source character position in orignal file.
 
 	entry_id: STRING
 			-- Identifier of the entry

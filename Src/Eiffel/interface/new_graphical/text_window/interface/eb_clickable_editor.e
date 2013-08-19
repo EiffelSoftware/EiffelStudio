@@ -30,7 +30,12 @@ inherit
 			internal_detach_entities,
 			margin,
 			cursor_type,
-			line_type
+			line_type,
+			on_mouse_token_enter,
+			on_mouse_token_leave,
+			on_mouse_enter_blank_area,
+			on_mouse_leave,
+			on_cursor_moved
 		end
 
 	EB_FORMATTED_TEXT
@@ -64,6 +69,7 @@ feature {NONE}-- Initialization
 					-- Register the dev_window as an observer of `Current'
 				text_displayed.add_selection_observer (dev_window.agents)
 			end
+			text_observer_manager.add_cursor_observer (Current)
 			create after_reading_text_actions.make
 			after_reading_text_actions.compare_objects
 
@@ -74,7 +80,6 @@ feature {NONE}-- Initialization
 			editor_drawing_area.drop_actions.set_veto_pebble_function (agent (a: ANY): BOOLEAN do Result := False end)
 			editor_drawing_area.pick_actions.force_extend (agent suspend_cursor_blinking)
 			editor_drawing_area.pick_ended_actions.force_extend (agent resume_cursor_blinking)
-			editor_drawing_area.pointer_motion_actions.extend (agent on_pointer_move)
 
 				-- Not necessarily use `a_dev_window' to get context menu.
 				-- `a_dev_window' could be void for some uses.
@@ -107,6 +112,29 @@ feature -- Access
 	margin: EB_CLICKABLE_MARGIN
 			-- Margin widget for breakpoints, line numbers, etc. This is different to the left margin
 			-- used in the editor for spacing purposes.		
+
+	cursor_screen_x: INTEGER
+			-- Cursor screen x position
+		local
+			tok: EDITOR_TOKEN
+		do
+			if attached text_displayed.cursor as cursor then
+				tok := cursor.token
+				tok.update_position
+				Result := tok.position + tok.get_substring_width (cursor.pos_in_token - 1) + widget.screen_x + left_margin_width - offset
+				if margin.line_numbers_enabled then
+					Result := Result + margin.width
+				end
+			end
+		end
+
+	cursor_screen_y: INTEGER
+			-- Cursor screen y position
+		do
+			if attached text_displayed.cursor as cursor then
+				Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)
+			end
+		end
 
 feature -- Content Change
 
@@ -519,35 +547,66 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			if not l_shortcuts.is_empty and then l_shortcuts.first /= Void then
 				l_shortcuts.first.apply
 				check_cursor_position
+			elseif ev_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				if attached text_displayed.cursor as l_cursor and then attached l_cursor.token as l_token then
+					if eis_link_tooltip_handler.show_tooltip_possible (l_token) then
+						eis_link_tooltip_handler.visit_eis_resource (l_token)
+					end
+				end
 			else
 				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (ev_key)
 			end
 		end
 
-	on_pointer_move (x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
-			-- On pointer move.
+feature {NONE} -- Tooltip
+
+	on_mouse_token_enter (a_token: EDITOR_TOKEN; a_line: INTEGER)
+			-- Called when mouse pointer enter `a_token'.
 		do
 			if debug_tooltip_enabled then
-				debug_tooltip_handler.propagate_pointer_move (x, y, x_tilt, y_tilt, pressure, screen_x, screen_y)
+				debug_tooltip_handler.on_enter_editor_token (a_token)
+			end
+			eis_link_tooltip_handler.on_enter_editor_token (a_token)
+		end
+
+	on_mouse_token_leave (a_token: EDITOR_TOKEN; a_line: INTEGER)
+			-- Called when mouse pointer leave `a_token'.
+		do
+			-- We dont't hide tooltips here,
+			-- because we allow mouse pointer to move onto the tooltips.
+		end
+
+	on_mouse_enter_blank_area
+			-- Called when mouse pointer enter area with no token
+		do
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
+			debug_tooltip_handler.hide_tooltip
+			eis_link_tooltip_handler.hide_tooltip
+		end
+
+	on_mouse_leave
+			-- Process events related to mouse pointer leave.
+		do
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
+			debug_tooltip_handler.hide_tooltip_pointer_off
+			eis_link_tooltip_handler.hide_tooltip_pointer_off
+		end
+
+	on_cursor_moved
+			-- <Precursor>
+		do
+			if attached text_displayed.cursor as l_cursor and then attached l_cursor.token as l_token then
+				if eis_link_tooltip_handler.show_tooltip_possible (l_token) then
+					eis_link_tooltip_handler.show_hint_tooltip (l_token, cursor_screen_x, cursor_screen_y)
+				else
+					eis_link_tooltip_handler.hide_tooltip_pointer_off
+				end
 			end
 		end
 
 feature {NONE} -- Debug tooktip
 
-	expression_at (a_x, a_y: INTEGER): detachable READABLE_STRING_GENERAL
-			-- Expression at position
-			-- `a_x' and `a_y' are screen positions
-		do
-			if attached token_at (a_x - editor_drawing_area.screen_x - left_margin_width, a_y - editor_drawing_area.screen_y - editor_viewport.y_offset) as l_token then
-				if attached {READABLE_STRING_GENERAL} l_token.data as l_e and then not l_e.is_empty then
-					Result := l_e
-				end
-			end
-		ensure
-			Result_not_empty: attached Result as l_res implies not l_res.is_empty
-		end
-
-	preferred_tooltip_show_position (a_x, a_y: INTEGER): TUPLE [INTEGER, INTEGER]
+	preferred_tooltip_show_position (a_x, a_y: INTEGER): TUPLE [x: INTEGER; y: INTEGER]
 			-- Preferred tooltip show position
 			-- `a_x' and `a_y' are mouse pointer screen positions
 			-- Result values are screen positions.
@@ -566,7 +625,7 @@ feature {NONE} -- Debug tooktip
 				Result := l_h
 			else
 				create Result
-				Result.set_expression_callback (agent expression_at, agent preferred_tooltip_show_position)
+				Result.set_show_position_callback (agent preferred_tooltip_show_position)
 				if attached dev_window as l_window then
 					register_action (horizontal_scrollbar.change_actions,
 						agent (a_v: INTEGER; a_h: like debug_tooltip_handler) do a_h.hide_tooltip end (?, Result))
@@ -579,6 +638,30 @@ feature {NONE} -- Debug tooktip
 
 	debug_tooltip_handler_internal: detachable ES_DEBUGER_TOOLTIP_HANDLER
 			-- Debug tooltip handler
+
+
+feature {NONE} -- EIS tooltip
+
+	eis_link_tooltip_handler: ES_EIS_TOOLTIP_HANDLER
+			-- EIS link tooltip handler
+		do
+			if attached eis_link_tooltip_handler_internal as l_h then
+				Result := l_h
+			else
+				create Result
+				Result.set_show_position_callback (agent preferred_tooltip_show_position)
+				if attached dev_window as l_window then
+					register_action (horizontal_scrollbar.change_actions,
+						agent (a_v: INTEGER; a_h: like eis_link_tooltip_handler) do a_h.hide_tooltip end (?, Result))
+					register_action (vertical_scrollbar.change_actions,
+						agent (a_v: INTEGER; a_h: like eis_link_tooltip_handler) do a_h.hide_tooltip end (?, Result))
+				end
+				eis_link_tooltip_handler_internal := Result
+			end
+		end
+
+	eis_link_tooltip_handler_internal: like eis_link_tooltip_handler
+			-- EIS link tooltip handler
 
 feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 

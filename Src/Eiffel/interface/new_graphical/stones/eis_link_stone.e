@@ -1,77 +1,83 @@
 note
-	description: "Help section for EIS entries."
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
+	description: "Stone for a hyper link"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	HELP_SECTION_EIS_ENTRY
+	EIS_LINK_STONE
 
 inherit
-	HELP_CONTEXT_SECTION_I
-
-	ES_EIS_SHARED
-		export
-			{NONE} all
-		end
-
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
+	STONE
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_entry: like entry; a_shown_in_es: BOOLEAN)
+	make (a_link: like link)
 			-- Initialization
 		do
-			entry := a_entry
-			is_shown_in_es := a_shown_in_es
+			link := a_link
 		ensure
-			entry_set: a_entry = entry
-			is_shown_in_es_set: is_shown_in_es = a_shown_in_es
-		end
-
-feature -- Element Change
-
-	set_is_shown_in_es (a_shown_in_es: like is_shown_in_es)
-			-- Set `is_shown_in_es' with `a_shown_in_es'.
-		do
-			is_shown_in_es := a_shown_in_es
-		ensure
-			is_shown_in_es_set: is_shown_in_es = a_shown_in_es
+			link_set: link = a_link
 		end
 
 feature -- Access
 
-	section: STRING_32
-			-- String representation of the section
+	link: ES_EIS_ENTRY_HELP_CONTEXT;
+			-- Link
+
+feature -- Properties
+
+	stone_cursor: EV_POINTER_STYLE
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone.
+			-- Default is Void, meaning no cursor is associated with `Current'.
 		do
-			if attached entry.name as l_name and then not l_name.is_empty then
-				Result := l_name
-			elseif attached interface_names.l_unnamed as l_name and then not l_name.is_empty then
-				Result := l_name
-			else
-				check empty_translation: False end
-			end
 		end
 
-	entry: EIS_ENTRY;
-			-- The EIS entry
+	x_stone_cursor: EV_POINTER_STYLE
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+			-- Default is Void, meaning no cursor is associated with `Current'.
+		do
+		end
 
-	is_shown_in_es: BOOLEAN
-			-- Is shown in es?
+feature  -- Access
+
+	stone_signature: STRING_32
+			-- Short string to describe Current
+			-- (basically the name of the stoned object).
+		do
+		end
+
+	header: STRING_GENERAL
+			-- String to describe Current
+			-- (as it may be described in the title of a development window).
+		do
+		end
+
+	history_name: STRING_32
+			-- Name used in the history list,
+			-- (By default, it is the stone_signature
+			-- and a string to describe the type of stone (Class, feature,...)).
+		do
+		end
+
+feature -- Query
+
+	is_http_link: BOOLEAN
+			-- Is http link?
+		do
+			Result := link.is_http_link
+		end
 
 invariant
-	entry_not_void: entry /= Void
+	link_set: attached link
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -100,5 +106,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end
+

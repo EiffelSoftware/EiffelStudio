@@ -1,52 +1,28 @@
 note
-	description: "Information tool commander interface"
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
+	description: "Web browser tool commander interface"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	ES_INFORMATION_TOOL_COMMANDER_I
+	ES_WEB_BROWSER_TOOL_COMMANDER_I
 
 inherit
 	USABLE_I
 
-feature -- Basic operations
+feature -- Interface
 
-	refresh_list
-			-- Refresh the entry list.
+	visit (a_link: READABLE_STRING_GENERAL)
+			-- Visit `a_link'.
 		require
 			is_interface_usable: is_interface_usable
+			a_link_set: a_link /= Void
+			a_link_not_empty: not a_link.is_empty
 		deferred
-		end
-
-	request_eis_visit
-			-- Request EIS background visiting to collect information into EIS storage.
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		end
-
-	add_information_to (a_stone: ANY)
-			-- Add information to `a_stone'.
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		end
-
-	class_entries (a_classi: CLASS_I): SEARCH_TABLE [EIS_ENTRY]
-			-- EIS entries corresponding to `a_classi'
-		require
-			is_interface_usable: is_interface_usable
-			a_classi_not_void: a_classi /= Void
-		deferred
-		ensure
-			Result_set: Result /= Void
 		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -75,5 +51,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

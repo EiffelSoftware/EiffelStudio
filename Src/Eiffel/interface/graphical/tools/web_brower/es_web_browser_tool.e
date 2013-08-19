@@ -8,12 +8,17 @@ note
 	revision: "$revision$"
 
 frozen class
-	ES_CONSOLE_TOOL
+	ES_WEB_BROWSER_TOOL
 
 inherit
-	ES_TOOL [ES_CONSOLE_TOOL_PANEL]
+	ES_TOOL [ES_WEB_BROWSER_TOOL_PANEL]
 		redefine
 			shortcut_preference_name
+		end
+
+	ES_WEB_BROWSER_TOOL_COMMANDER_I
+		undefine
+			out
 		end
 
 create {NONE}
@@ -24,13 +29,13 @@ feature -- Access
 	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
-			Result := stock_pixmaps.tool_external_output_icon_buffer
+			Result := stock_pixmaps.tool_output_icon_buffer
 		end
 
 	icon_pixmap: EV_PIXMAP
 			-- <Precursor>
 		do
-			Result := stock_pixmaps.tool_external_output_icon
+			Result := stock_pixmaps.tool_output_icon
 		end
 
 	title: attached STRING_32
@@ -42,12 +47,20 @@ feature -- Access
 	shortcut_preference_name: attached STRING
 			-- <Precursor>
 		do
-			Result := "show_external_output_tool"
+			Result := "show_browser_tool"
+		end
+
+feature -- Action
+
+	visit (a_link: READABLE_STRING_GENERAL)
+			-- Visit `a_link'.
+		do
+			panel.visit (a_link)
 		end
 
 feature {NONE} -- Factory
 
-	new_tool: attached ES_CONSOLE_TOOL_PANEL
+	new_tool: attached ES_WEB_BROWSER_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)
@@ -55,7 +68,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_tool_title: STRING = "Console"
+	t_tool_title: STRING = "Browser"
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

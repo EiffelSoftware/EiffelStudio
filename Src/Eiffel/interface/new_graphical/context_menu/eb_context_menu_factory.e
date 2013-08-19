@@ -40,11 +40,15 @@ feature -- Status report
 		local
 			l_shift_pressed: BOOLEAN
 		do
-			l_shift_pressed := (create {EV_ENVIRONMENT}).application.shift_pressed
-			if is_pnd_mode then
-				Result := l_shift_pressed
+			if attached {EIS_LINK_STONE} a_pebble as l_p then
+				Result := True
 			else
-				Result := not l_shift_pressed
+				l_shift_pressed := (create {EV_ENVIRONMENT}).application.shift_pressed
+				if is_pnd_mode then
+					Result := l_shift_pressed
+				else
+					Result := not l_shift_pressed
+				end
 			end
 		end
 
@@ -89,6 +93,7 @@ feature -- Editor menu
 				current_editor := a_editor
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				setup_hyper_link_item (a_menu, a_pebble)
 				extend_separator (a_menu)
 				if a_pebble /= Void then
 					if not (attached {STONE} a_pebble as l_stone and then l_stone.same_as (a_editor.stone)) then
@@ -1964,6 +1969,44 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	setup_hyper_link_item (a_menu: EV_MENU; a_pebble: ANY)
+			-- Replace name of the first menu item of `a_menu'
+			-- with right language.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_menu_item: EV_MENU_ITEM
+			l_browser_context: ES_EIS_ENTRY_HELP_CONTEXT
+		do
+			if attached {EIS_LINK_STONE} a_pebble as l_pebble then
+				if attached {ES_EIS_ENTRY_HELP_CONTEXT} l_pebble.link as l_context then
+					a_menu.go_i_th (1)
+					if l_context.is_http_link then
+							-- Choices to open the link
+						create l_menu_item.make_with_text (names.m_open)
+						l_context.set_is_shown_in_es (True)
+						l_menu_item.select_actions.extend (agent show_help (l_context))
+						a_menu.put_left (l_menu_item)
+						a_menu.go_i_th (1)
+						create l_menu_item.make_with_text (names.m_open_in_brower)
+						create l_browser_context.make_from_other (l_context)
+						l_browser_context.set_is_shown_in_es (False)
+						l_menu_item.select_actions.extend (agent show_help (l_browser_context))
+						a_menu.put_right (l_menu_item)
+						a_menu.forth
+					else
+							-- Only show web in EiffelStudio
+						create l_menu_item.make_with_text (names.m_open)
+						l_context.set_is_shown_in_es (False)
+						l_menu_item.select_actions.extend (agent show_help (l_context))
+						a_menu.put_left (l_menu_item)
+						a_menu.go_i_th (1)
+					end
+					a_menu.put_right (create {EV_MENU_SEPARATOR})
+				end
+			end
+		end
+
 	build_name (a_pebble: ANY)
 			-- Build name of `a_pebble'.
 		local
@@ -2052,6 +2095,18 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
+	show_help (a_context: HELP_CONTEXT_I)
+		local
+			l_providers: SERVICE_CONSUMER [HELP_PROVIDERS_S]
+			l_service: HELP_PROVIDERS_S
+		do
+			create l_providers
+			if l_providers.is_service_available then
+				l_service := l_providers.service
+				l_service.show_help (a_context)
+			end
+		end
+
 feature {NONE} -- Status report
 
 	is_pnd_mode: BOOLEAN
@@ -2076,7 +2131,7 @@ invariant
 	dev_window_not_void: dev_window /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

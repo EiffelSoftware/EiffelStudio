@@ -305,6 +305,30 @@ feature -- Value
 			Result := cursor_line_highlight_color_preference.value
 		end
 
+	link_color: EV_COLOR
+			-- Color for links
+		do
+			Result := link_color_preference.value
+		end
+
+	link_background_color: EV_COLOR
+			-- Background color for links
+		do
+			Result := link_background_color_preference.value
+		end
+
+	mouse_over_link_color: EV_COLOR
+			-- Color for links when mouse is over.
+		do
+			Result := mouse_over_link_color_preference.value
+		end
+
+	mouse_over_link_background_color: EV_COLOR
+			-- Color for links when mouse is over.
+		do
+			Result := mouse_over_link_background_color_preference.value
+		end
+
 	quadruple_click_enabled: BOOLEAN
 			-- is quadruple click (select all) enabled ?
 		do
@@ -426,9 +450,23 @@ feature {ANY} -- Preferences
 	operator_background_color_preference: COLOR_PREFERENCE
 			-- Background color used to display operator
 
-    highlight_color_preference : COLOR_PREFERENCE
+	highlight_color_preference : COLOR_PREFERENCE
+			-- Highlight color
 
 	cursor_line_highlight_color_preference : COLOR_PREFERENCE
+			-- Cursor line highlight color
+
+	link_color_preference: COLOR_PREFERENCE
+			-- Link color
+
+	link_background_color_preference: COLOR_PREFERENCE
+			-- Background color for links
+
+	mouse_over_link_color_preference: COLOR_PREFERENCE
+			-- Mouse over link color
+
+	mouse_over_link_background_color_preference: COLOR_PREFERENCE
+			-- Mouse over background color for links
 
 	smart_indentation_preference: BOOLEAN_PREFERENCE
 			-- Is smart indentation enabled?	
@@ -535,8 +573,22 @@ feature {NONE} -- Preference Strings
 			-- Background color used to display operator
 
 	highlight_color_string: STRING = "editor.general.colors.highlight_color"
+			-- Highlight color
 
 	cursor_line_highlight_color_string: STRING = "editor.general.colors.cursor_line_highlight_color"
+			-- Cursor line highlight color
+
+	link_color_string: STRING = "editor.general.colors.link_color"
+			-- Link color
+
+	link_background_color_string: STRING = "editor.general.colors.link_background_color"
+			-- Background color for links
+
+	mouse_over_link_color_string: STRING = "editor.general.colors.mouse_over_link_color"
+			-- Mouse over link color
+
+	mouse_over_link_background_color_string: STRING = "editor.general.colors.mouse_over_link_background_color"
+			-- Mouse over background color for links
 
 	smart_indentation_string: STRING = "editor.general.smart_indentation"
 			-- Is smart indentation enabled?
@@ -586,6 +638,10 @@ feature {NONE} -- Implementation
 			colors.put (operator_background_color_preference.value, operator_background_color_id)
 			colors.put (highlight_color_preference.value, highlight_color_id)
 			colors.put (cursor_line_highlight_color_preference.value, cursor_line_highlight_color_id)
+			colors.put (link_color_preference.value, link_color_id)
+			colors.put (link_background_color_preference.value, link_background_color_id)
+			colors.put (mouse_over_link_color_preference.value, mouse_over_link_color_id)
+			colors.put (mouse_over_link_background_color_preference.value, mouse_over_link_background_color_id)
 		end
 
 	init_fonts
@@ -657,6 +713,10 @@ feature {NONE} -- Implementation
 			number_background_color_preference := l_manager.new_color_preference_value (l_manager, number_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			highlight_color_preference := l_manager.new_color_preference_value (l_manager, highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (50, 250, 30))
 			cursor_line_highlight_color_preference := l_manager.new_color_preference_value (l_manager, cursor_line_highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 128, 128))
+			link_color_preference := l_manager.new_color_preference_value (l_manager, link_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 255))
+			link_background_color_preference := l_manager.new_color_preference_value (l_manager, link_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			mouse_over_link_color_preference := l_manager.new_color_preference_value (l_manager, mouse_over_link_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 153, 0))
+			mouse_over_link_background_color_preference := l_manager.new_color_preference_value (l_manager, mouse_over_link_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			quadruple_click_enabled_preference := l_manager.new_boolean_preference_value (l_manager, quadruple_click_enabled_string, True)
 			use_buffered_line_preference := l_manager.new_boolean_preference_value (l_manager, use_buffered_line_string, True)
 
@@ -706,20 +766,24 @@ feature {NONE} -- Implementation
 			keyword_font_preference.change_actions.extend (agent update_font)
 			font_zoom_factor_preference.change_actions.extend (agent update_font)
 			header_font_preference.change_actions.extend (agent update)
+			link_color_preference.change_actions.extend (agent update)
+			link_background_color_preference.change_actions.extend (agent update)
+			mouse_over_link_color_preference.change_actions.extend (agent update)
+			mouse_over_link_background_color_preference.change_actions.extend (agent update)
 		end
 
 	preferences: PREFERENCES;
 			-- Preferences
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

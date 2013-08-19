@@ -51,6 +51,8 @@ feature {NONE} -- Initialization
 			editor_drawing_area.pointer_button_release_actions.extend (agent on_mouse_button_up)
 			editor_drawing_area.pointer_motion_actions.extend (agent on_mouse_move)
 
+			editor_drawing_area.pointer_enter_actions.extend (agent on_mouse_enter)
+			editor_drawing_area.pointer_leave_actions.extend (agent on_mouse_leave)
 		end
 
 feature {NONE} -- Process Vision2 events
@@ -89,9 +91,40 @@ feature {NONE} -- Process Vision2 events
 
 	on_mouse_move (abs_x_pos, abs_y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER)
 			-- Process events related to mouse pointer moves.
+		local
+			l_line: INTEGER
 		do
 			if (not text_displayed.is_empty) and then click_count < 4 and then mouse_left_button_down then
 				scroll_and_select (abs_x_pos - left_margin_width, abs_y_pos, a_screen_x, a_screen_y)
+			end
+			if mouse_entered then
+				if attached token_at_screen (a_screen_x, a_screen_y) as l_token then
+					if l_token /= last_token_entered then
+						l_line := line_at_screen_position (a_screen_x, a_screen_y)
+						if attached last_token_entered as l_last then
+							on_mouse_token_leave (l_last, last_line_entered)
+							l_last.on_mouse_leave
+							invalidate_line (last_line_entered, True)
+						end
+						on_mouse_token_enter (l_token, l_line)
+						l_token.on_mouse_enter
+						if l_token /= last_token_entered then
+							invalidate_line (l_line, True)
+						end
+						last_line_entered := l_line
+						last_token_entered := l_token
+					end
+				else
+					on_mouse_enter_blank_area
+						-- Mouse moves out of any token
+					if attached last_token_entered as l_last then
+						on_mouse_token_leave (l_last, last_line_entered)
+						l_last.on_mouse_leave
+						invalidate_line (last_line_entered, True)
+						last_line_entered := 0
+						last_token_entered := Void
+					end
+				end
 			end
 		end
 
@@ -107,6 +140,44 @@ feature {NONE} -- Process Vision2 events
 				mouse_right_button_down := False
 			end
 			queue_mouse_up (button)
+		end
+
+	on_mouse_enter
+			-- Process events related to mouse pointer enter.
+		do
+			mouse_entered := True
+		ensure
+			mouse_entered: mouse_entered
+		end
+
+	on_mouse_leave
+			-- Process events related to mouse pointer leave.
+		do
+			mouse_entered := False
+			if attached last_token_entered as l_last then
+				on_mouse_token_leave (l_last, last_line_entered)
+				l_last.on_mouse_leave
+				invalidate_line (last_line_entered, True)
+				last_line_entered := 0
+				last_token_entered := Void
+			end
+		ensure
+			mouse_left: not mouse_entered
+		end
+
+	on_mouse_token_enter (a_token: EDITOR_TOKEN; a_line: INTEGER)
+			-- Called when mouse pointer enter `a_token'.
+		do
+		end
+
+	on_mouse_token_leave (a_token: EDITOR_TOKEN; a_line: INTEGER)
+			-- Called when mouse pointer leave `a_token'.
+		do
+		end
+
+	on_mouse_enter_blank_area
+			-- Called when mouse pointer enter area with no token
+		do
 		end
 
 feature {NONE} -- Scroll Management
@@ -675,6 +746,15 @@ feature {NONE} -- Private Characteristics of the window
 
 	empty_word_selection: BOOLEAN
 			-- Did word by word selection begin with empty selection (end of line)?
+
+	mouse_entered: BOOLEAN
+			-- Mouse entered?
+
+	last_token_entered: detachable EDITOR_TOKEN
+			-- Last token entered
+
+	last_line_entered: INTEGER
+			-- Last line entered
 
 	scroll_only: BOOLEAN
 			-- Block selection modification?

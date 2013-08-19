@@ -75,10 +75,22 @@ feature -- Color ids
 	cursor_line_highlight_color_id: INTEGER = 22
 			-- Background color used to highlight line with cursor in it
 
+	link_color_id: INTEGER = 23
+			-- Link color id
+
+	link_background_color_id: INTEGER = 24
+			-- Background color for links
+
+	mouse_over_link_color_id: INTEGER = 25
+			-- Link color when mouse is over
+
+	mouse_over_link_background_color_id: INTEGER = 26
+			-- Link color when mouse is over
+
 	max_color_id: INTEGER
 			-- Maximal id of color.
 		do
-			Result := cursor_line_highlight_color_id
+			Result := mouse_over_link_background_color_id
 		end
 
 feature -- Font ids
@@ -98,4 +110,14 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

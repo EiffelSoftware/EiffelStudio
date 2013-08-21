@@ -41,8 +41,10 @@ feature
 	
 	once_tuple: TUPLE [INTEGER, ANY, ANY, INTEGER] is
 			-- Once tuple.
+		local
+			a: ANY
 		once
-			create Result.make
+			Result := [0, a, a, 0]
 			Result.put(1, 1)
 			Result.put(12,4)
 		end

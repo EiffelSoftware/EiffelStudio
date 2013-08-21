@@ -8,8 +8,10 @@ class
 
 feature
 	f: TUPLE [t1: G] is
+		local
+			x: G
 		do
-			create Result
+			Result := [x]
 		end 
 
 	g is

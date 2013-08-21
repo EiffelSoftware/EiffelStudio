@@ -1,4 +1,4 @@
-class TEST1 [G -> TUPLE create default_create end]
+class TEST1 [G -> TUPLE]
 
 create
 	make
@@ -7,7 +7,6 @@ feature {NONE} -- Initialize
 
 	make
 		do
-			create item
 			create list.make
 		end
 

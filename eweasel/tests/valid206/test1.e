@@ -1,4 +1,4 @@
-class TEST1 [G -> TUPLE [a: INTEGER] create default_create end]
+class TEST1 [G -> TUPLE [a: INTEGER]]
 
 feature
 	try

@@ -17,14 +17,10 @@ feature {NONE} -- Initialization
 
 			io.put_string (t1.generating_type)
 			io.put_new_line
-			io.put_string (t1.item.generating_type)
-			io.put_new_line
 			io.put_string (t1.list.generating_type)
 			io.put_new_line
 
 			io.put_string (t2.generating_type)
-			io.put_new_line
-			io.put_string (t2.item.generating_type)
 			io.put_new_line
 			io.put_string (t2.list.generating_type)
 			io.put_new_line

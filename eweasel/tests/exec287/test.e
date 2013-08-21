@@ -6,11 +6,14 @@ feature
 
 	test: TUPLE [ b: BOOLEAN; i: ANY ]
  
-	make is
+	make
+		local
+			a: ANY
+			l: LIST [STRING_32]
 		do
-			create test
-			create last_original
-			create last_translated
+			test := [False, a]
+			last_original := [0, l]
+			last_translated := [0, l]
 
 			test.b := False -- Works
 			test.i := ({ANY}).attempt (7) -- Works

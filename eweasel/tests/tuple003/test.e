@@ -18,8 +18,9 @@ feature
 	test_simple_content is
 		local 
 			t: TUPLE [a: BOOLEAN; b: INTEGER; c: STRING]
+			s: STRING
 		do 
-			create t
+			t := [False, 0, s]
 			t.c := "s"
 			if ("s").is_equal (t.c) then
 				print ("OK%N")

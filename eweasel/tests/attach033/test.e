@@ -30,9 +30,9 @@ feature {NONE} -- Creation
 			check_dtype (l_int.dynamic_type_from_string ("  !  TEST"), l_int.generic_dynamic_type (t_test, 1))
 
 			check_dtype (l_int.dynamic_type_from_string ("!TUPLE"), l_int.generic_dynamic_type (t_tuple, 1))
-			check_dtype (l_int.dynamic_type_from_string ("?TUPLE"), l_int.dynamic_type (create {TUPLE}))
-			check_dtype (l_int.dynamic_type_from_string ("  ?TUPLE"), l_int.dynamic_type (create {TUPLE}))
-			check_dtype (l_int.dynamic_type_from_string ("  ?  TUPLE"), l_int.dynamic_type (create {TUPLE}))
+			check_dtype (l_int.dynamic_type_from_string ("?TUPLE"), ({TUPLE}).type_id)
+			check_dtype (l_int.dynamic_type_from_string ("  ?TUPLE"), ({TUPLE}).type_id)
+			check_dtype (l_int.dynamic_type_from_string ("  ?  TUPLE"), ({TUPLE}).type_id)
 			check_dtype (l_int.dynamic_type_from_string ("  !TUPLE"), l_int.generic_dynamic_type (t_tuple, 1))
 			check_dtype (l_int.dynamic_type_from_string ("  !  TUPLE"), l_int.generic_dynamic_type (t_tuple, 1))
 
@@ -82,9 +82,9 @@ feature {NONE} -- Creation
 			check_dtype (l_int.dynamic_type_from_string ("  attached   TEST"), l_int.generic_dynamic_type (t_test, 1))
 
 			check_dtype (l_int.dynamic_type_from_string ("attached TUPLE"), l_int.generic_dynamic_type (t_tuple, 1))
-			check_dtype (l_int.dynamic_type_from_string ("detachable TUPLE"), l_int.dynamic_type (create {TUPLE}))
-			check_dtype (l_int.dynamic_type_from_string ("  detachable TUPLE"), l_int.dynamic_type (create {TUPLE}))
-			check_dtype (l_int.dynamic_type_from_string ("  detachable   TUPLE"), l_int.dynamic_type (create {TUPLE}))
+			check_dtype (l_int.dynamic_type_from_string ("detachable TUPLE"), ({TUPLE}).type_id)
+			check_dtype (l_int.dynamic_type_from_string ("  detachable TUPLE"), ({TUPLE}).type_id)
+			check_dtype (l_int.dynamic_type_from_string ("  detachable   TUPLE"), ({TUPLE}).type_id)
 			check_dtype (l_int.dynamic_type_from_string ("  attached TUPLE"), l_int.generic_dynamic_type (t_tuple, 1))
 			check_dtype (l_int.dynamic_type_from_string ("  attached   TUPLE"), l_int.generic_dynamic_type (t_tuple, 1))
 

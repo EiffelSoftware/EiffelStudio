@@ -7,7 +7,7 @@ feature
 		local
 			l_tuple: TUPLE [INTEGER]
 		do
-			create l_tuple
+			l_tuple := [0]
 			l_tuple.put (5.0, 1)
 		end
 

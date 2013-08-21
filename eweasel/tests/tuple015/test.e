@@ -9,9 +9,12 @@ feature
 		local
 			l_det_s: TUPLE [detachable STRING]
 			l_att_s: TUPLE [attached STRING]
+			sd: detachable STRING
+			sa: attached STRING
 		do
-			create l_det_s
-			create l_att_s
+			sa := ""
+			l_det_s := [sd]
+			l_att_s := [sa]
 
 			if not l_det_s.valid_type_for_index (Void, 1) then
 				io.put_string ("Not OK%N")

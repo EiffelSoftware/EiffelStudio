@@ -457,14 +457,13 @@ feature -- Iteration
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
 				nb := capacity - 1
 				l_area := area
 			until
 				i > nb
 			loop
-				t.put (l_area.item (i), 1)
+				t := [l_area.item (i)]
 				action.call (t)
 				i := i + 1
 			end
@@ -483,14 +482,13 @@ feature -- Iteration
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
 				nb := capacity - 1
 				l_area := area
 			until
 				i > nb
 			loop
-				t.put (l_area.item (i), 1)
+				t := [l_area.item (i)]
 				if test.item (t) then
 					action.call (t)
 				end
@@ -508,14 +506,13 @@ feature -- Iteration
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
 				nb := capacity - 1
 				l_area := area
 			until
 				i > nb or Result
 			loop
-				t.put (l_area.item (i), 1)
+				t := [l_area.item (i)]
 				Result := test.item (t)
 				i := i + 1
 			end
@@ -531,7 +528,6 @@ feature -- Iteration
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
 				nb := capacity - 1
 				l_area := area
@@ -539,7 +535,7 @@ feature -- Iteration
 			until
 				i > nb or not Result
 			loop
-				t.put (l_area.item (i), 1)
+				t := [l_area.item (i)]
 				Result := test.item (t)
 				i := i + 1
 			end

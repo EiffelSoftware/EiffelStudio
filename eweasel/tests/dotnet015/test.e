@@ -52,15 +52,15 @@ feature {NONE} -- Initialization
 			io.put_new_line
 
 				-- Following line should be accepted by compiler
-			create {TUPLE [NONE]} tutu
+			tutu := [Void]
 
 				-- Following assignment attempt should succeed at runtime
 			tutu := Void
-			tutu ?= create {TUPLE [NONE]}
+			tutu ?= [Void]
 			io.put_boolean (tutu /= Void)
 			io.put_new_line
 
-			titi ?= create {TUPLE [NONE]}
+			titi ?= [Void]
 			io.put_boolean (titi /= Void)
 			io.put_new_line
 		end
@@ -83,23 +83,23 @@ feature {NONE} -- Initialization
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string ("TUPLE")
-			j := l_int.dynamic_type (create {TUPLE})
+			j := ({TUPLE}).type_id
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string ("TUPLE []")
-			j := l_int.dynamic_type (create {TUPLE []})
+			j := ({TUPLE []}).type_id
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string ("TUPLE [INTEGER, INTEGER_8, INTEGER_16, INTEGER_64, NATURAL_8, NATURAL_16, NATURAL_32, NATURAL_64, REAL, DOUBLE, CHARACTER, POINTER, BOOLEAN, STRING]")
-			j := l_int.dynamic_type (create {TUPLE [INTEGER, INTEGER_8, INTEGER_16, INTEGER_64, NATURAL_8, NATURAL_16, NATURAL_32, NATURAL_64, REAL, DOUBLE, CHARACTER, POINTER, BOOLEAN, STRING]})
+			j := ({TUPLE [INTEGER, INTEGER_8, INTEGER_16, INTEGER_64, NATURAL_8, NATURAL_16, NATURAL_32, NATURAL_64, REAL, DOUBLE, CHARACTER, POINTER, BOOLEAN, STRING]}).type_id
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string ("TUPLE [INTEGER]")
-			j := l_int.dynamic_type (create {TUPLE [INTEGER]})
+			j := ({TUPLE [INTEGER]}).type_id
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string ("TUPLE [INTEGER, TUPLE [CHARACTER]]")
-			j := l_int.dynamic_type (create {TUPLE [INTEGER, TUPLE [CHARACTER]]})
+			j := ({TUPLE [INTEGER, TUPLE [CHARACTER]]}).type_id
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string (" HASH_TABLE [  CELL [  INTEGER   ],   INTEGER  ]  %T ")
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string ("TUPLE [INTEGER, HASH_TABLE [TUPLE [INTEGER, STRING], STRING]]")
-			j := l_int.dynamic_type (create {TUPLE [INTEGER, HASH_TABLE [TUPLE [INTEGER, STRING], STRING]]})
+			j := ({TUPLE [INTEGER, HASH_TABLE [TUPLE [INTEGER, STRING], STRING]]}).type_id
 			check_validity (i, j)
 
 			i := l_int.dynamic_type_from_string ("Unknown_type")

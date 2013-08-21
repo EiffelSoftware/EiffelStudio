@@ -8,7 +8,7 @@ feature
 			l_tuple: TUPLE [INTEGER]
 			l_any: ANY
 		do
-			create l_tuple
+			l_tuple := [0]
 			l_tuple.put_integer (1, 1)
 
 			l_tuple := [1, Void]

@@ -11,8 +11,7 @@ create
 feature
 	make is
 		local
-			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER,
-INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
+			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
 			k: INTEGER
 		do
 			from
@@ -20,7 +19,7 @@ INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
 			until
 				k > 10000
 			loop
-				create t
+				t := [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 				k := k + 1
 			end
 		end

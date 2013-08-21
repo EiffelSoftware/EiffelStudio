@@ -10,7 +10,7 @@ feature {NONE} -- Creation
 			l_str: STRING
 			i: INTEGER
 		do
-			create keys
+			keys := [create {TEST1}, create {TEST1}]
 			keys.name := create {TEST2}
 			keys.last := create {TEST2}
 			print_values (keys.name, generate_garbage, keys.last)

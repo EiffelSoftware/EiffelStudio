@@ -782,6 +782,12 @@ feature {NONE} -- Implementation: parse
 			warning_message := s
 		end
 
+	report_missing_attribute_value (p: detachable READABLE_STRING_32; n: READABLE_STRING_32)
+			-- Report missing value for attribute `p:n'
+		do
+			report_error ({STRING_32} "Attributes without any value are forbidden")
+		end
+
 	report_unexpected_content (a_content: STRING)
 			-- Report unexpected content `a_content'
 		do
@@ -1170,7 +1176,7 @@ feature {NONE} -- Query
 			elseif c = '%'' then
 				l_in_single_quote := True
 				c := next_character
-			elseif c.is_space then
+			elseif c.is_space or c = '/' or c = '>' then
 				report_error ({STRING_32} "unexpected space after = in attribute declaration")
 			else
 				--| We could be more strict, but let's allow attrib=value .. in addition to attrib="value"
@@ -1182,7 +1188,10 @@ feature {NONE} -- Query
 				until
 					done or parsing_stopped
 				loop
-					if not l_in_double_quote and not l_in_single_quote and c.is_space then
+					if
+						not l_in_double_quote and not l_in_single_quote and
+						(c.is_space or c = {CHARACTER_32} '/' or c = {CHARACTER_32} '>')
+					then
 						done := True
 					else
 						inspect c
@@ -1247,7 +1256,7 @@ feature {NONE} -- Query
 				elseif l_was_space then
 					-- no value FIXME: strict?
 					-- we do not allow attribute without value
-					report_error ({STRING_32} "Attributes without any value are forbidden")
+					report_missing_attribute_value (p, n)
 					Result := [p, n, {STRING_32} ""]
 				else -- not l_was_space
 					report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in attribute name")
@@ -1263,12 +1272,7 @@ feature {NONE} -- Query
 					end
 					rewind_character
 					v := next_attribute_value
-					if v = Void then
-						report_error ({STRING_32} "attribute '" + n.to_string_32 + {STRING_32} "' without value")
-						create {STRING_32} v.make_empty
-					else
-						unset_checkpoint_position
-					end
+					unset_checkpoint_position
 					Result := [p, n, v]
 					c := current_character
 					if c.is_space or c = '>' or c = '/' or c = '?' then
@@ -1608,7 +1612,7 @@ feature {NONE} -- Factory: cache
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

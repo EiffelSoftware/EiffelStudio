@@ -19,8 +19,8 @@ export VERSION=`$EC | sed "s/^[A-Za-z ]*\([0-9][0-9\.]*\).*/\1/"`
 echo \$VERSION: $VERSION
 
 # Common variables
-MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`
-MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9].\([0-9]\).*/\1/"`
+MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]*\).*/\1/"`
+MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9]*.\([0-9]*\).*/\1/"`
 RELEASE=$MAJOR_NUMBER.$MINOR_NUMBER
 RELEASE_SUFFIX=-$RELEASE
 VERSION_SUFFIX=-$VERSION

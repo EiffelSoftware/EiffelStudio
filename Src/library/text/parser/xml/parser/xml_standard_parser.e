@@ -782,6 +782,12 @@ feature {NONE} -- Implementation: parse
 			warning_message := s
 		end
 
+	report_unsupported_bom_value (a_bom: READABLE_STRING_GENERAL)
+			-- Report unsupported BOM value for `a_bom'
+		do
+			report_error ({STRING_32} "Unsupported BOM value %"" + a_bom.to_string_32 + {STRING_32} "%".")
+		end
+
 	report_missing_attribute_value (p: detachable READABLE_STRING_32; n: READABLE_STRING_32)
 			-- Report missing value for attribute `p:n'
 		do
@@ -862,7 +868,7 @@ feature {NONE} -- Encoding
 			if a_bom.same_string (u.utf_8_bom_to_string_8) then
 				set_encoding ("UTF-8")
 			else
-				report_error ({STRING_32} "Unsupported BOM value %"" + a_bom.to_string_32 + {STRING_32} "%".")
+				report_unsupported_bom_value (a_bom)
 			end
 		end
 
@@ -1253,7 +1259,7 @@ feature {NONE} -- Query
 				if c = '=' then
 					-- now looking for value
 					unset_checkpoint_position
-				elseif l_was_space then
+				elseif l_was_space or c = '>' or c = '/' then
 					-- no value FIXME: strict?
 					-- we do not allow attribute without value
 					report_missing_attribute_value (p, n)

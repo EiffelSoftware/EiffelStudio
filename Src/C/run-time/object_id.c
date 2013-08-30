@@ -272,8 +272,7 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st,
 		stack_number++)
 		end = end->sk_next;
 
-	Result = (EIF_INTEGER)
-		stack_number*STACK_SIZE+1-(st->st_cur->sk_arena-(char **)address);
+	Result = (EIF_INTEGER) (stack_number*STACK_SIZE+1-(st->st_cur->sk_arena-(char **)address));
 
 	if (Result>*max_value_ptr)
 		*max_value_ptr = Result;
@@ -316,11 +315,10 @@ rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct st
 			 address--) {
 			if (*address == object)
 					/* Object is in the stack */
-				return 
-					stack_number*STACK_SIZE+1-(current_chunk->sk_arena-(char **)address);
+				return (EIF_INTEGER) (stack_number*STACK_SIZE+1-(current_chunk->sk_arena-(char **)address));
 			else if (reuse_free && (*address == (char *) 0) && (!free_location)) {
 				free_location = address;
-				free_id = stack_number*STACK_SIZE+1-(current_chunk->sk_arena-(char **)address);
+				free_id = (EIF_INTEGER) (stack_number*STACK_SIZE+1-(current_chunk->sk_arena-(char **)address));
 				}
 			}
 		}
@@ -337,7 +335,7 @@ rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct st
 
 rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value)
 {
-	register unsigned int stack_number, i = 0;
+	register size_t stack_number, i = 0;
 	register struct stchunk *end;
 
 	register char *address;
@@ -379,7 +377,7 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 {
 	/* Free the entry in the table */
 
-	register unsigned int stack_number, i = 0;
+	register size_t stack_number, i = 0;
 	register struct stchunk *end;
 	
 	if (id==0)							/* No object associated with 0 */

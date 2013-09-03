@@ -178,7 +178,6 @@ feature {NONE} -- Implementation
 		local
 			l_label: EV_LABEL
 			l_hbox: EV_HORIZONTAL_BOX
-			l_font: EV_FONT
 		do
 			create Result
 			extend_padding (Result, True)
@@ -243,7 +242,6 @@ feature {NONE} -- Implementation
 	hint_text_font: EV_FONT
 			-- Text color of the hint
 		local
-			l_stock: EV_STOCK_COLORS
 			l_label: EV_LABEL
 		once
 			create l_label

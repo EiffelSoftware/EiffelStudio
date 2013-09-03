@@ -399,9 +399,6 @@ feature -- Duplication
 
 	to_other_variant (other: ANNOTATED_TYPE_A): like Current
 			-- <Precursor>
-		local
-			c: TYPE_A
-			o: ANNOTATED_TYPE_A
 		do
 			Result := Current
 				-- Only do something in experimental mode.
@@ -528,5 +525,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -16,7 +16,7 @@ iff not defined NO_COMPILE then
 	fullrf %1\unstable\library\persistency\database\sqlite3\Clib\make.log
 endiff
 
-remtrace Retrieve contrib libraries
+remtrace Retrieve contrib libraries and examples
 cdd %1
 md contrib
 cd contrib
@@ -27,4 +27,6 @@ exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/README.txt README.tx
 remtrace library
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/library library
 
+remtrace examples
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/examples examples
 

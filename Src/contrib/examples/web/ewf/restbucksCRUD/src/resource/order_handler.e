@@ -27,6 +27,26 @@ inherit
 
 	WSF_SELF_DOCUMENTED_HANDLER
 
+create
+	make_with_router
+
+feature {NONE} -- Initialization
+
+	make_with_router (a_router: WSF_ROUTER)
+			-- Initialize `router'.
+		require
+			a_router_attached: a_router /= Void
+		do
+			router := a_router
+		ensure
+			router_aliased: router = a_router
+		end
+
+feature -- Router
+
+	router: WSF_ROUTER
+			-- Associated router that could be used for advanced strategy
+
 feature -- Execute
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -65,16 +85,16 @@ feature -- HTTP Methods
 		local
 			id:  STRING
 		do
-			if attached req.orig_path_info as orig_path then
-				id := get_order_id_from_path (orig_path)
+			if attached req.path_info as l_path_info then
+				id := get_order_id_from_path (l_path_info)
 				if attached retrieve_order (id) as l_order then
 					if is_conditional_get (req, l_order) then
-						handle_resource_not_modified_response ("The resource" + orig_path + "does not change", req, res)
+						handle_resource_not_modified_response ("The resource" + l_path_info + "does not change", req, res)
 					else
 						compute_response_get (req, res, l_order)
 					end
 				else
-					handle_resource_not_found_response ("The following resource" + orig_path + " is not found ", req, res)
+					handle_resource_not_found_response ("The following resource" + l_path_info + " is not found ", req, res)
 				end
 			end
 		end
@@ -131,8 +151,8 @@ feature -- HTTP Methods
 			l_order : detachable ORDER
 			id :  STRING
 		do
-			if attached req.orig_path_info as orig_path then
-				id := get_order_id_from_path (orig_path)
+			if attached req.path_info as l_path_info then
+				id := get_order_id_from_path (l_path_info)
 				l_put := retrieve_data (req)
 				l_order := extract_order_request(l_put)
 				if  l_order /= Void and then db_access.orders.has_key (id) then
@@ -209,18 +229,18 @@ feature -- HTTP Methods
 		local
 			id: STRING
 		do
-			if  attached req.orig_path_info as orig_path then
-				id := get_order_id_from_path (orig_path)
+			if  attached req.path_info as l_path_info then
+				id := get_order_id_from_path (l_path_info)
 				if db_access.orders.has_key (id) then
 					if is_valid_to_delete (id) then
 						delete_order( id)
 						compute_response_delete (req, res)
 					else
 						--| FIXME: Here we need to define the Allow methods
-						handle_method_not_allowed_response (orig_path + "%N There is conflict while trying to delete the order, the order could not be deleted in the current state", req, res)
+						handle_method_not_allowed_response (l_path_info + "%N There is conflict while trying to delete the order, the order could not be deleted in the current state", req, res)
 					end
 				else
-					handle_resource_not_found_response (orig_path + " not found in this server", req, res)
+					handle_resource_not_found_response (l_path_info + " not found in this server", req, res)
 				end
 			end
 		end
@@ -374,6 +394,6 @@ feature {NONE} -- Implementation Repository Layer
 		end
 
 note
-	copyright: "2011-2012, Javier Velilla and others"
+	copyright: "2011-2013, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

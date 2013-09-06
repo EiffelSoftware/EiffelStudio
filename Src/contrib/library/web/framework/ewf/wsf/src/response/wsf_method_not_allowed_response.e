@@ -148,8 +148,10 @@ feature {WSF_RESPONSE} -- Output
 						</style>
 						</head>
 						<body>
-						<div id="header">]" + l_html_error_code_text + "[!!</div>
+						<div id="header">
 					]")
+				s.append (l_html_error_code_text)
+				s.append ("!!</div>")
 				s.append ("<div id=%"logo%">")
 				s.append ("<div class=%"outter%"> ")
 				s.append ("<div class=%"inner1%"></div>")

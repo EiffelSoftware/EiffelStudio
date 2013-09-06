@@ -1,18 +1,18 @@
 note
 	description: "[
 			Server request context of the httpd request
-			
+
 			It includes CGI interface and a few extra values that are usually valuable
-			    meta_variable (a_name: READABLE_STRING_GENERAL): detachable WSF_STRING
-			    meta_string_variable (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
-			    
+				 meta_variable (a_name: READABLE_STRING_GENERAL): detachable WSF_STRING
+				 meta_string_variable (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+
 			In addition it provides
-				
+
 				query_parameter (a_name: READABLE_STRING_GENERAL): detachable WSF_VALUE
 				form_parameter (a_name: READABLE_STRING_GENERAL): detachable WSF_VALUE
 				cookie (a_name: READABLE_STRING_GENERAL): detachable WSF_VALUE
 				...
-				
+
 			And also has
 				execution_variable (a_name: READABLE_STRING_GENERAL): detachable ANY
 					--| to keep value attached to the request
@@ -140,7 +140,6 @@ feature -- Destroy
 			end
 
 			content_length_value := 0
-			content_type := Void
 			execution_variables_table.wipe_out
 			internal_cookies_table := Void
 			internal_form_data_parameters_table := Void
@@ -157,7 +156,6 @@ feature -- Destroy
 			raw_input_data_recorded := False
 			request_method := empty_string_8
 			set_uploaded_file_path (Void)
---			wgi_request
 		end
 
 feature -- Status report
@@ -208,7 +206,7 @@ feature -- Error handling
 
 	error_handler: ERROR_HANDLER
 			-- Error handler
-			-- By default initialized to new handler	
+			-- By default initialized to new handler
 
 feature -- Access: Input
 
@@ -219,7 +217,7 @@ feature -- Access: Input
 		end
 
 	is_chunked_input: BOOLEAN
-			-- Is request using chunked transfer-encoding?	
+			-- Is request using chunked transfer-encoding?
 			-- If True, the Content-Length has no meaning
 		do
 			Result := wgi_request.is_chunked_input
@@ -311,16 +309,42 @@ feature -- Helper
 			Result := request_method.is_case_insensitive_equal (m.as_string_8)
 		end
 
+	is_put_request_method: BOOLEAN
+			-- Is Current a PUT request method?
+		do
+			Result := request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_put)
+		end
+
 	is_post_request_method: BOOLEAN
 			-- Is Current a POST request method?
 		do
 			Result := request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_post)
 		end
 
+	is_delete_request_method: BOOLEAN
+			-- Is Current a DELETE request method?
+		do
+			Result := request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_delete)
+		end
+
 	is_get_request_method: BOOLEAN
 			-- Is Current a GET request method?
 		do
 			Result := request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_get)
+		end
+
+	is_get_head_request_method: BOOLEAN
+			-- Is Current a GET or a HEAD request method?
+		do
+			Result := request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_get) or
+				request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_head)
+		end
+
+	is_put_post_request_method: BOOLEAN
+			-- Is Current a PUT or a POST request method?
+		do
+			Result := request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_put) or
+				request_method.is_case_insensitive_equal ({HTTP_REQUEST_METHODS}.method_post)
 		end
 
 	is_content_type_accepted (a_content_type: READABLE_STRING_GENERAL): BOOLEAN
@@ -350,6 +374,8 @@ feature -- Helper
 					end
 				end
 				Result := l_accept.has_substring (a_content_type)
+			else
+				Result := True
 			end
 		end
 
@@ -375,7 +401,7 @@ feature -- Eiffel WGI access
 			Result := wgi_request.wgi_connector
 		end
 
-feature {WSF_REQUEST_EXPORTER} -- Override value		
+feature {WSF_REQUEST_EXPORTER} -- Override value
 
 	set_request_method (a_request_method: like request_method)
 			-- Set `request_method' to `a_request_method'
@@ -414,7 +440,7 @@ feature {NONE} -- Access: global variable
 			end
 		end
 
-feature -- Access: global variables	
+feature -- Access: global variables
 
 	items: ITERABLE [WSF_VALUE]
 		do
@@ -654,9 +680,9 @@ feature -- Access: CGI Meta variables
 feature {NONE} -- Access: CGI meta parameters
 
 	meta_variables_table: STRING_TABLE [WSF_STRING]
-			-- CGI Environment parameters		
+			-- CGI Environment parameters
 
-feature -- Access: CGI meta parameters - 1.1			
+feature -- Access: CGI meta parameters - 1.1
 
 	auth_type: detachable READABLE_STRING_8
 			-- This variable is specific to requests made via the "http"
@@ -1128,7 +1154,7 @@ feature -- HTTP_*
 
 	http_access_control_request_headers: detachable READABLE_STRING_8
 			-- Indicates which headers will be used in the actual request
-                        -- as part of the preflight request
+			-- as part of the preflight request
 		do
 			Result := wgi_request.http_access_control_request_headers
 		end
@@ -1137,6 +1163,42 @@ feature -- HTTP_*
 			-- Existence check on resource
 		do
 			Result := wgi_request.http_if_match
+		end
+
+	http_if_modified_since: detachable READABLE_STRING_8
+			-- Modification check on resource
+		do
+			Result := wgi_request.http_if_modified_since
+		end
+
+	http_if_none_match: detachable READABLE_STRING_8
+			-- Existence check on resource
+		do
+			Result := wgi_request.http_if_none_match
+		end
+
+	http_if_range: detachable READABLE_STRING_8
+			-- Range check on resource
+		do
+			Result := wgi_request.http_if_range
+		end
+
+	http_if_unmodified_since: detachable READABLE_STRING_8
+			-- Modification check on resource
+		do
+			Result := wgi_request.http_if_unmodified_since
+		end
+
+	http_last_modified: detachable READABLE_STRING_8
+			-- Modification time of resource
+		do
+			Result := wgi_request.http_last_modified
+		end
+
+	http_range: detachable READABLE_STRING_8
+			-- Requested byte-range of resource
+		do
+			Result := wgi_request.http_range
 		end
 
 feature -- Extra CGI environment variables
@@ -1319,7 +1381,7 @@ feature -- Query parameters
 feature {NONE} -- Query parameters: implementation
 
 	query_parameters_table: STRING_TABLE [WSF_VALUE]
-			-- Parameters extracted from QUERY_STRING	
+			-- Parameters extracted from QUERY_STRING
 		local
 			vars: like internal_query_parameters_table
 			p,e: INTEGER
@@ -1496,7 +1558,7 @@ feature {NONE} -- Form fields and related
 	uploaded_files_table: STRING_TABLE [WSF_UPLOADED_FILE]
 
 	get_form_parameters
-			-- Variables sent by POST, ... request	
+			-- Variables sent by POST, ... request
 		local
 			vars: like internal_form_data_parameters_table
 			l_raw_data_cell: detachable CELL [detachable STRING_8]
@@ -1528,7 +1590,7 @@ feature {NONE} -- Form fields and related
 		end
 
 	form_parameters_table: STRING_TABLE [WSF_VALUE]
-			-- Variables sent by POST request	
+			-- Variables sent by POST request
 		local
 			vars: like internal_form_data_parameters_table
 		do
@@ -1541,7 +1603,7 @@ feature {NONE} -- Form fields and related
 			Result := vars
 		end
 
-feature {NONE} -- Implementation: smart parameter identification		
+feature {NONE} -- Implementation: smart parameter identification
 
 	add_value_to_table (a_name: READABLE_STRING_8; a_value: READABLE_STRING_8; a_table: STRING_TABLE [WSF_VALUE])
 			-- Add urlencoded parameter  `a_name'=`a_value' to `a_table'
@@ -1749,7 +1811,7 @@ feature {NONE} -- Implementation: URL Utility
 			-- Server url
 
 	internal_url_base: detachable STRING
-			-- URL base of potential script	
+			-- URL base of potential script
 
 feature -- Element change
 
@@ -1909,7 +1971,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation: utilities	
+feature {NONE} -- Implementation: utilities
 
 	single_slash_starting_string (s: READABLE_STRING_32): STRING_32
 			-- Return the string `s' (or twin) with one and only one starting slash
@@ -1939,7 +2001,7 @@ feature {NONE} -- Implementation: utilities
 					check i >= 2 and i <= n end
 					Result := s.substring (i - 1, s.count)
 				else
-					--| starts with one '/' and only one		
+					--| starts with one '/' and only one
 					Result := s
 				end
 			elseif n = 1 then

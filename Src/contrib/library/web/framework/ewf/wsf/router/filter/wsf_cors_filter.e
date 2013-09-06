@@ -20,7 +20,7 @@ feature -- Basic operations
 		do
 			create l_header.make
 			l_header.put_access_control_allow_all_origin
-			res.put_header_text (l_header.string)
+			res.put_header_lines (l_header)
 			execute_next (req, res)
 		end
 

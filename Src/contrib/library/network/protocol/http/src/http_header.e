@@ -350,7 +350,9 @@ feature -- Header change: general
 		end
 
 	add_header_key_value (k,v: READABLE_STRING_8)
-			-- Add header `k:v', or replace existing header of same header name/key
+			-- Add header `k:v'.
+			-- If it already exists, there will be multiple header with same name
+			-- which can also be valid
 		local
 			s: STRING_8
 		do
@@ -507,6 +509,18 @@ feature -- Content related header
 			--|                  / x-token
 		do
 			put_header_key_value ({HTTP_HEADER_NAMES}.header_content_transfer_encoding, a_mechanism)
+		end
+
+	put_content_language (a_lang: READABLE_STRING_8)
+			-- Put "Content-Language" header of value `a_lang'.
+		do
+			put_header_key_value ({HTTP_HEADER_NAMES}.header_content_language, a_lang)
+		end
+
+	put_content_encoding (a_enc: READABLE_STRING_8)
+			-- Put "Content-Encoding" header of value `a_enc'.
+		do
+			put_header_key_value ({HTTP_HEADER_NAMES}.header_content_encoding, a_enc)
 		end
 
 	put_transfer_encoding (a_enc: READABLE_STRING_8)

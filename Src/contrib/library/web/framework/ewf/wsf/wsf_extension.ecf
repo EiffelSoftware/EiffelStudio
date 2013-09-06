@@ -10,6 +10,7 @@
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<library name="encoder" location="../text/encoder/encoder.ecf"/>
 		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
 		<library name="ewsgi" location="..\ewsgi\ewsgi.ecf"/>
 		<library name="wsf" location="wsf.ecf"/>

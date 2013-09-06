@@ -1,11 +1,12 @@
 note
 	description: "Summary description for {WSF_FORM_RAW_TEXT}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	WSF_FORM_RAW_TEXT
+
+obsolete "Use WSF_WIDGET_TEXT 2013-Sept-06"
 
 inherit
 	WSF_WIDGET_TEXT

@@ -15,7 +15,7 @@ note
 
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class	WSF_SYSTEM_OPTIONS_ACCESS_POLICY
 
 feature -- Access
@@ -23,7 +23,7 @@ feature -- Access
 	is_system_options_forbidden (req: WSF_REQUEST): BOOLEAN
 			-- Should we return 403 Forbidden in response to OPTIONS * requests?
 		require
-			req_attached: req /= Void		
+			req_attached: req /= Void
 		do
 			-- by default, unconditionally no.
 		end
@@ -37,4 +37,14 @@ feature -- Access
 			Result := "OPTIONS * is not permitted"
 		end
 
+note
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

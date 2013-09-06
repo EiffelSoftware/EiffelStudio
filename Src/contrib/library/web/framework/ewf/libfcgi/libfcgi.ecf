@@ -27,7 +27,12 @@
 		</external_library>
 		<external_library location="/usr/lib/libfcgi.so">
 			<condition>
-				<platform excluded_value="windows"/>
+				<platform value="unix"/>
+			</condition>
+		</external_library>
+		<external_library location="/opt/local/lib/libfcgi.dylib">
+			<condition>
+				<platform value="macintosh"/>
 			</condition>
 		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -36,6 +41,7 @@
 			<file_rule>
 				<exclude>/linux$</exclude>
 				<exclude>/fake$</exclude>
+				<exclude>/mac$</exclude>
 				<condition>
 					<platform value="windows"/>
 				</condition>
@@ -43,8 +49,17 @@
 			<file_rule>
 				<exclude>/windows$</exclude>
 				<exclude>/fake$</exclude>
+				<exclude>/mac$</exclude>
 				<condition>
-					<platform excluded_value="windows"/>
+					<platform value="unix"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/fake$</exclude>
+				<exclude>/windows$</exclude>
+				<exclude>/linux$</exclude>
+				<condition>
+					<platform value="macintosh"/>
 				</condition>
 			</file_rule>
 		</cluster>

@@ -253,6 +253,42 @@ feature -- Access: HTTP_* CGI meta parameters - 1.1
 		do
 			Result := meta_string_variable ({WGI_META_NAMES}.http_if_match)
 		end
+	
+	http_if_modified_since: detachable READABLE_STRING_8
+			-- Modification check on resource
+		do
+			Result := meta_string_variable ({WGI_META_NAMES}.http_if_modified_since)
+		end
+
+	http_if_none_match: detachable READABLE_STRING_8
+			-- Existence check on resource
+		do
+			Result := meta_string_variable ({WGI_META_NAMES}.http_if_none_match)
+		end
+
+	http_if_range: detachable READABLE_STRING_8
+			-- Range check on resource
+		do
+			Result := meta_string_variable ({WGI_META_NAMES}.http_if_range)
+		end
+
+	http_if_unmodified_since: detachable READABLE_STRING_8
+			-- Modification check on resource
+		do
+			Result := meta_string_variable ({WGI_META_NAMES}.http_if_unmodified_since)
+		end
+
+	http_last_modified: detachable READABLE_STRING_8
+			-- Modification time of resource
+		do
+			Result := meta_string_variable ({WGI_META_NAMES}.http_last_modified)
+		end
+
+	http_range: detachable READABLE_STRING_8
+			-- Requested byte-range of resource
+		do
+			Result := meta_string_variable ({WGI_META_NAMES}.http_range)
+		end
 
 feature -- Access: Extension to CGI meta parameters - 1.1
 

@@ -54,6 +54,18 @@ feature -- Access
 
 	http_if_match: STRING = "HTTP_IF_MATCH"
 	
+	http_if_modified_since: STRING = "HTTP_IF_MODIFIED_SINCE"
+
+	http_if_none_match: STRING = "HTTP_IF_NONE_MATCH"
+
+	http_if_range: STRING = "HTTP_IF_RANGE"
+	
+	http_if_unmodified_since: STRING = "HTTP_IF_UNMODIFIED_SINCE"
+
+	http_last_modified: STRING = "HTTP_LAST_MODIFIED"
+
+	http_range: STRING = "HTTP_RANGE"
+	
 	gateway_interface: STRING = "GATEWAY_INTERFACE"
 
 	auth_type: STRING = "AUTH_TYPE"

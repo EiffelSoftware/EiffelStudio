@@ -98,14 +98,14 @@ feature {WSF_RESPONSE} -- Output
 					h.put_content_type_text_plain
 				end
 			end
-			res.put_header_text (h.string)
+			res.put_header_lines (h)
 			if b /= Void then
 				res.put_string (b)
 			end
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

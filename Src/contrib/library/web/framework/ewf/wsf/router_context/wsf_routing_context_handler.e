@@ -15,8 +15,7 @@ inherit
 		end
 
 create
-	make,
-	make_with_router
+	make
 
 feature -- Execution
 
@@ -26,7 +25,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -30,14 +30,14 @@ feature -- Execution
 				handle_unavailable (res)
 			elseif requires_proxy (req) then
 				handle_use_proxy (req, res)
-			elseif 
-				maximum_uri_length > 0 and then 
-				req.request_uri.count.to_natural_32 > maximum_uri_length 
+			elseif
+				maximum_uri_length > 0 and then
+				req.request_uri.count.to_natural_32 > maximum_uri_length
 			then
 				handle_request_uri_too_long (res)
-			elseif 
-					req.is_request_method ({HTTP_REQUEST_METHODS}.method_options) and then
-					req.request_uri.same_string ("*") 
+			elseif
+				req.is_request_method ({HTTP_REQUEST_METHODS}.method_options) and then
+				req.request_uri.same_string ("*")
 			then
 				handle_server_options (req, res)
 			else
@@ -275,7 +275,7 @@ invariant
 	unavailability_duration_xor_unavailable_until: unavailability_duration > 0 implies unavailable_until = Void
 
 ;note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

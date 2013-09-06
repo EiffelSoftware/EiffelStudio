@@ -177,9 +177,22 @@ feature -- Change
 			items.put_front (i)
 		end
 
-	extend_text (t: READABLE_STRING_8)
+	extend_html_text (t: READABLE_STRING_8)
+			-- Extend a widget encapsulating html code `t'
 		do
 			extend (create {WSF_WIDGET_TEXT}.make_with_text (t))
+		end
+
+	extend_text (t: READABLE_STRING_8)
+		obsolete "Use extend_html_text (..) 2013-Sept-06"
+		do
+			extend_html_text (t)
+		end
+
+	extend_raw_text (t: READABLE_STRING_GENERAL)
+			-- Extend a widget encapsulating html encoded text `t'
+		do
+			extend (create {WSF_WIDGET_RAW_TEXT}.make_with_text (t))
 		end
 
 feature {NONE} -- Implementation: Items

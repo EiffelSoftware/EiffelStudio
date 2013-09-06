@@ -12,14 +12,9 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_router (a_router: like router)
-		do
-			router := a_router
-		end
-
 	make (n: INTEGER)
 		do
-			make_with_router (create {like router}.make (n))
+			create router.make (n)
 		end
 
 feature -- Access

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 	make_with_text (s: READABLE_STRING_8)
 		do
-			make_with_item (create {WSF_FORM_RAW_TEXT}.make (s))
+			make_with_item (create {WSF_WIDGET_TEXT}.make_with_text (s))
 		end
 
 	make_with_item (i: WSF_WIDGET)

@@ -19069,7 +19069,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval47 := yyvs77.item (yyvsp77); has_type := False 
+yyval47 := yyvs77.item (yyvsp77); has_type := True 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp47 := yyvsp47 + 1

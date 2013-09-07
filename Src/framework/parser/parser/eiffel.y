@@ -160,7 +160,7 @@ create
 %type <detachable REVERSE_AS>			Reverse_assignment
 %type <detachable ROUT_BODY_AS>		Routine_body
 %type <detachable ROUTINE_AS>			Routine
-%type <detachable ROUTINE_CREATION_AS>	Agent_call
+%type <detachable ROUTINE_CREATION_AS>	Agent
 %type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <detachable TAGGED_AS>			Assertion_clause
 %type <detachable TUPLE_AS>			Manifest_tuple
@@ -2824,7 +2824,7 @@ Creation_clause:
 			}
 	;
 
-Agent_call: 
+Agent:
 		TE_AGENT Optional_formal_arguments {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
 		{
 			$$ := ast_factory.new_inline_agent_creation_as (
@@ -3126,8 +3126,8 @@ Factor: TE_VOID
 			{ $$ := $1; has_type := True }
 	|	Manifest_array
 			{ $$ := $1; has_type := True }
-	|	Agent_call
-			{ $$ := $1; has_type := False }
+	|	Agent
+			{ $$ := $1; has_type := True }
 	|	TE_OLD Expression
 			{ $$ := ast_factory.new_un_old_as ($2, $1); has_type := True }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN

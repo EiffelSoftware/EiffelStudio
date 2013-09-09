@@ -18,6 +18,8 @@ class
 inherit
 	MESSAGE_DIGEST
 
+	HELPER
+
 create
 	make
 
@@ -26,8 +28,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize
 		do
-			create schedule.make_filled (0, 16)
-			create buffer.make_filled (0, 64)
+			create schedule.make_filled (0, block_size // 4)
+			create buffer.make_filled (0, block_size)
 			reset
 		end
 
@@ -49,7 +51,7 @@ feature -- Access
 			l_h4 := h4
 
 			finish
-			create Result.make_filled (0, 16)
+			create Result.make_filled (0, digest_count)
 			from_natural_32_le (h1, Result, 0)
 			from_natural_32_le (h2, Result, 4)
 			from_natural_32_le (h3, Result, 8)
@@ -64,7 +66,10 @@ feature -- Access
 			h4 := l_h4
 		end
 
-	digest_count: INTEGER = 64
+	digest_count: INTEGER = 16
+			-- <Precursor>
+
+	block_size: INTEGER = 64
 			-- <Precursor>
 
 feature -- Element Change
@@ -81,36 +86,6 @@ feature -- Element Change
 		end
 
 feature {NONE} -- Implemetation
-
-	rotate_left_32 (in: NATURAL_32 count: INTEGER_32): NATURAL_32
-			-- Left rotate operation
-		require
-			count_too_small: count >= 0
-			count_too_big: count <= 32
-		do
-			result := (in |<< count) | (in |>> (32 - count))
-		ensure
-			rotate_definition: Result = (in |<< count) | (in |>> (32 - count))
-		end
-
-	update_from_byte (a_byte: NATURAL_8)
-			-- <Precursor>
-		local
-			l_buffer: like buffer
-		do
-			l_buffer := buffer
-			l_buffer [buffer_offset] := a_byte
-			buffer_offset := buffer_offset + 1
-			byte_count := byte_count + 1
-
-				-- Process the block when the block is ready.
-			if buffer_offset > l_buffer.upper then
-				process_block
-				buffer_offset := 0
-			end
-		ensure then
-			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (digest_count)
-		end
 
 	process_block
 			-- Process current block in buffer.
@@ -165,6 +140,25 @@ feature {NONE} -- Implemetation
 			h4 := h4 + d
 		end
 
+	update_from_byte (a_byte: NATURAL_8)
+			-- <Precursor>
+		local
+			l_buffer: like buffer
+		do
+			l_buffer := buffer
+			l_buffer [buffer_offset] := a_byte
+			buffer_offset := buffer_offset + 1
+			byte_count := byte_count + 1
+
+				-- Process the block when the block is ready.
+			if buffer_offset > l_buffer.upper then
+				process_block
+				buffer_offset := 0
+			end
+		ensure then
+			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (block_size)
+		end
+
 	schedule_buffer
 			-- Put raw bytes into `schedule'.
 		require
@@ -189,88 +183,6 @@ feature {NONE} -- Implemetation
 			end
 		end
 
-	as_natural_32_le (source: SPECIAL [NATURAL_8] offset: INTEGER_32): NATURAL_32
-			-- NATURAL_32 from bytes.
-		require
-			valid_start: source.valid_index (offset)
-			valid_end: source.valid_index (offset + 3)
-		do
-			Result := source [offset].to_natural_32
-			Result := Result | (source [offset + 1].to_natural_32 |<< 8)
-			Result := Result | (source [offset + 2].to_natural_32 |<< 16)
-			Result := Result | (source [offset + 3].to_natural_32 |<< 24)
-		ensure
-			byte_0: source [offset] = Result.to_natural_8
-			byte_1: source [offset + 1] = (Result |>> 8).to_natural_8
-			byte_2: source [offset + 2] = (Result |>> 16).to_natural_8
-			byte_3: source [offset + 3] = (Result |>> 24).to_natural_8
-		end
-
-	from_natural_32_le (source: NATURAL_32 target: SPECIAL [NATURAL_8] offset: INTEGER_32)
-			-- Put `source' into `target'.
-		require
-			valid_start: target.valid_index (offset)
-			valid_end: target.valid_index (offset + 3)
-		do
-			target [offset] := source.to_natural_8
-			target [offset + 1] := (source |>> 8).to_natural_8
-			target [offset + 2] := (source |>> 16).to_natural_8
-			target [offset + 3] := (source |>> 24).to_natural_8
-		ensure
-			byte_0: target [offset] = source.to_natural_8
-			byte_1: target [offset + 1] = (source |>> 8).to_natural_8
-			byte_2: target [offset + 2] = (source |>> 16).to_natural_8
-			byte_3: target [offset + 3] = (source |>> 24).to_natural_8
-		end
-
-	finish
-			-- Finish updating, get ready to process the last block.
-		local
-			length: NATURAL_64
-		do
-			length := bit_count
-			pad
-			process_length (length)
-		end
-
-	pad
-			-- Pad with zero until 64bit is left in current block.
-		local
-			pad_bytes: INTEGER_32
-		do
-			update_from_byte (0b1000_0000)
-			from
-				pad_bytes := (56 - (byte_count \\ 64)).to_integer_32
-				if pad_bytes < 0 then
-					pad_bytes := pad_bytes + 64
-				end
-			until
-				pad_bytes = 0
-			loop
-				update_from_byte (0)
-				pad_bytes := pad_bytes - 1
-			end
-		end
-
-	process_length (length: NATURAL_64)
-			-- Update length into the buffer.
-		do
-			update_from_byte ((length).to_natural_8)
-			update_from_byte ((length |>> 8).to_natural_8)
-			update_from_byte ((length |>> 16).to_natural_8)
-			update_from_byte ((length |>> 24).to_natural_8)
-			update_from_byte ((length |>> 32).to_natural_8)
-			update_from_byte ((length |>> 40).to_natural_8)
-			update_from_byte ((length |>> 48).to_natural_8)
-			update_from_byte ((length |>> 56).to_natural_8)
-		end
-
-	bit_count: NATURAL_64
-			-- Bit count
-		do
-			result := byte_count |<< 3
-		end
-
 	buffer: SPECIAL [NATURAL_8]
 			-- Buffer
 
@@ -279,9 +191,6 @@ feature {NONE} -- Implemetation
 
 	schedule: SPECIAL [NATURAL_32]
 			-- Schedule buffer
-
-	byte_count: NATURAL_64
-			-- Byte count
 
 feature {NONE} -- Access
 

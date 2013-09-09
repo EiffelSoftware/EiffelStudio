@@ -2414,8 +2414,8 @@ Creation_constraint: -- Empty
 
 -- Instructions
 
-
-Conditional: TE_IF Expression TE_THEN Compound TE_END
+Conditional:
+		TE_IF Expression TE_THEN Compound TE_END
 			{ $$ := ast_factory.new_if_as ($2, $4, Void, Void, $5, $1, $3, Void) }
 	|	TE_IF Expression TE_THEN Compound TE_ELSE Compound TE_END
 			{ $$ := ast_factory.new_if_as ($2, $4, Void, $6, $7, $1, $3, $5) }
@@ -2557,7 +2557,6 @@ Loop_instruction:
 				else
 					$$ := ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
 				end
-				has_type := False
 			}
 	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant_opt TE_END
 			{
@@ -2566,7 +2565,6 @@ Loop_instruction:
 				else
 					$$ := ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
 				end
-				has_type := False
 			}
 	| Iteration TE_FROM Compound Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
 			{
@@ -2583,7 +2581,6 @@ Loop_instruction:
 						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6)
 					end
 				end
-				has_type := False
 			}
 	| Iteration Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
 			{
@@ -2600,7 +2597,6 @@ Loop_instruction:
 						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4)
 					end
 				end
-				has_type := False
 			}
 	;
 
@@ -2620,7 +2616,6 @@ Loop_expression:
 						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, $4, True, $5, $6, $7)
 					end
 				end
-				has_type := True
 			}
 	| Iteration Invariant Exit_condition_opt TE_SOME Expression Variant_opt TE_END
 			{
@@ -2637,7 +2632,6 @@ Loop_expression:
 						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, extract_keyword ($4), False, $5, $6, $7)
 					end
 				end
-				has_type := True
 			}
 	;
 
@@ -2995,33 +2989,31 @@ Typed: TE_LCURLY Type TE_RCURLY
 
 Expression:
 		Nosigned_integer
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Nosigned_real
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Factor
 			{ $$ := $1 }
 	|	Expression TE_TILDE Expression
-			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2) }
 	|	Expression TE_NOT_TILDE Expression
-			{ $$ := ast_factory.new_bin_not_tilde_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_not_tilde_as ($1, $3, $2) }
 	|	Expression TE_EQ Expression
-			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2) }
 	|	Expression TE_NE Expression
-			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2) }
 	|	Qualified_binary_expression
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 		-- The following rules adds many shift reduce/conflicts (309 vs 151 without them).
 	|	TE_ATTACHED Expression %prec TE_NOT
 			{
 				check_object_test_expression ($2)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, Void, Void)
-				has_type := True
 			}
 	|	TE_ATTACHED Expression TE_AS Identifier_as_lower
 			{
 				check_object_test_expression ($2)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, $3, $4)
-				has_type := True
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression %prec TE_NOT
 			{
@@ -3031,7 +3023,6 @@ Expression:
 				end
 				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, Void, Void)
-				has_type := True
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression TE_AS Identifier_as_lower
 			{
@@ -3041,7 +3032,6 @@ Expression:
 				end
 				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, $6, $7)
-				has_type := True
 				if attached $7 as l_name and attached $3 as l_type then
 					insert_object_test_locals ([l_name, l_type])
 				end
@@ -3050,7 +3040,6 @@ Expression:
 			{
 				check_object_test_expression ($6)
 				$$ := ast_factory.new_old_syntax_object_test_as ($1, $2, $4, $6)
-				has_type := True
 				if attached $2 as l_name and attached $4 as l_type then
 					insert_object_test_locals ([l_name, l_type])
 				end
@@ -3103,37 +3092,29 @@ Qualified_binary_expression:
 	;
 
 Factor: TE_VOID
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Manifest_array
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Agent
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	TE_OLD Expression
-			{ $$ := ast_factory.new_un_old_as ($2, $1); has_type := True }
+			{ $$ := ast_factory.new_un_old_as ($2, $1) }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
-			{
-				$$ := ast_factory.new_un_strip_as ($3, $1, $2, $4); has_type := True
-			}
+			{ $$ := ast_factory.new_un_strip_as ($3, $1, $2, $4) }
 	|	TE_ADDRESS Feature_name
-			{ $$ := ast_factory.new_address_as ($2, $1); has_type := True }
+			{ $$ := ast_factory.new_address_as ($2, $1) }
 	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
-			{
-				$$ := ast_factory.new_expr_address_as ($3, $1, $2, $4); has_type := True
-			}
+			{ $$ := ast_factory.new_expr_address_as ($3, $1, $2, $4) }
 	|	TE_ADDRESS TE_CURRENT
-			{
-				$$ := ast_factory.new_address_current_as ($2, $1); has_type := True
-			}
+			{ $$ := ast_factory.new_address_current_as ($2, $1) }
 	|	TE_ADDRESS TE_RESULT
-			{
-				$$ := ast_factory.new_address_result_as ($2, $1); has_type := True
-			}
+			{ $$ := ast_factory.new_address_result_as ($2, $1) }
 	|	Bracket_target
 			{ $$ := $1 }
 	|	Call
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Qualified_factor
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	;
 
 Qualified_factor:
@@ -3274,21 +3255,21 @@ Feature_access: Feature_name_for_call Parameters
 
 Bracket_target:
 		Expression_constant
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Typed_expression
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Manifest_tuple
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	TE_CURRENT
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	TE_RESULT
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Creation_expression
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Loop_expression
 			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN
-			{ $$ := ast_factory.new_paran_as ($2, $1, $3); has_type := True }
+			{ $$ := ast_factory.new_paran_as ($2, $1, $3) }
 	;
 
 Parameters: -- Empty

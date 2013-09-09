@@ -109,7 +109,6 @@ create
 %type <detachable ACCESS_INV_AS>		Creation_call
 %type <detachable ARRAY_AS>			Manifest_array
 %type <detachable ASSIGN_AS>			Assignment
-%type <detachable ASSIGNER_CALL_AS>	Assigner_call
 %type <detachable ATOMIC_AS>			Index_value Manifest_constant Expression_constant Manifest_value
 %type <detachable BINARY_AS>			Qualified_binary_expression
 %type <detachable BODY_AS>				Declaration_body
@@ -129,7 +128,7 @@ create
 %type <detachable ELSIF_AS>			Elseif_part
 %type <detachable ENSURE_AS>			Postcondition
 %type <detachable EXPORT_ITEM_AS>		New_export_item
-%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_expression Qualified_factor Typed_expression
+%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression
 %type <detachable EXTERNAL_AS>			External
 %type <detachable EXTERNAL_LANG_AS>	External_language
 %type <detachable FEATURE_AS>			Feature_declaration
@@ -211,7 +210,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 373
+%expect 355
 
 %%
 
@@ -1431,19 +1430,16 @@ Optional_semicolons: -- Empty
 
 Instruction_impl: Creation
 			{ $$ := $1 }
-	|	Expression
-			{
-					-- Call production should be used instead,
-					-- but this complicates the grammar.
-				if has_type then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
-						filename, "Expression cannot be used as an instruction"))
-				elseif $1 /= Void then
-					$$ := new_call_instruction_from_expression ($1)
-				end
-			}
-	|	Assigner_call
-			{ $$ := $1 }
+	|	Call
+			{ $$ := ast_factory.new_instr_call_as ($1) }
+	|	Qualified_call TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as (ast_factory.new_expr_call_as ($1), $3, $2) }
+	|	A_static_call TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as ($1, $3, $2) }
+	|	Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as (ast_factory.new_bracket_as ($1, $4, $2, $6), $8, $7) }
+	|	Call TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as (ast_factory.new_bracket_as (ast_factory.new_expr_call_as ($1), $4, $2, $6), $8, $7) }
 	|	Assignment
 			{ $$ := $1 }
 	|	Reverse_assignment
@@ -2733,21 +2729,6 @@ Rescue: -- Empty
 			}
 	;
 
-Qualified_expression:
-		Qualified_binary_expression
-			{ $$ := $1 }
-	|	Qualified_factor
-			{ $$ := $1 }
-	|	Qualified_call
-			{ $$ := ast_factory.new_expr_call_as ($1) }
-	|	A_static_call
-			{ $$ := $1 }
-	;
-
-Assigner_call: Qualified_expression TE_ASSIGNMENT Expression
-			{ $$ := ast_factory.new_assigner_call_as ($1, $3, $2) }
-	;
-
 Assignment: Identifier_as_lower TE_ASSIGNMENT Expression
 			{ $$ := ast_factory.new_assign_as (ast_factory.new_access_id_as ($1, Void), $3, $2) }
 	|	TE_RESULT TE_ASSIGNMENT Expression
@@ -2980,7 +2961,6 @@ Creation_call: -- Empty
 
 -- Instruction call
 
-
 Call: A_feature
 			{ $$ := $1 }
 	|	A_precursor
@@ -3150,6 +3130,8 @@ Factor: TE_VOID
 			}
 	|	Bracket_target
 			{ $$ := $1 }
+	|	Call
+			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
 	|	Qualified_factor
 			{ $$ := $1; has_type := True }
 	;
@@ -3157,6 +3139,8 @@ Factor: TE_VOID
 Qualified_factor:
 		Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
 			{ $$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
+	|	Call TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
+			{ $$ := ast_factory.new_bracket_as (ast_factory.new_expr_call_as ($1), $4, $2, $6) }
 	|	TE_MINUS Factor
 			{ $$ := ast_factory.new_un_minus_as ($2, $1) }
 	|	TE_PLUS Factor
@@ -3198,6 +3182,8 @@ Qualified_call:
 			{ $$ := ast_factory.new_nested_expr_as ($2, $5, $4, $1, $3) }
 	|	Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_bracket_as ($1, $4, $2, $6), $8, $7, Void, Void) }
+	|	Call TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_DOT Remote_call
+			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_bracket_as (ast_factory.new_expr_call_as ($1), $4, $2, $6), $8, $7, Void, Void) }
 	|	A_precursor TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	|	A_static_call TE_DOT Remote_call
@@ -3297,8 +3283,6 @@ Bracket_target:
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
 	|	TE_RESULT
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
-	|	Call
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
 	|	Creation_expression
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
 	|	Loop_expression

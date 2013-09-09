@@ -1004,32 +1004,6 @@ feature {NONE} -- Type factory
 			end
 		end
 
-feature {NONE} -- Instruction factory
-
-	new_call_instruction_from_expression (e: detachable EXPR_AS): detachable INSTR_CALL_AS
-			-- Check if expression `e' represents a call
-			-- and create a call instruction from it if this is the case.
-			-- Report syntax error otherwise.
-		local
-			l_has_error: BOOLEAN
-		do
-			if attached {EXPR_CALL_AS} e as l_expr_call then
-					-- This is a call. Let's check if it is a normal feature call.
-				if attached {CALL_AS} l_expr_call.call as l_call then
-					if attached {LEAF_AS} l_call or attached {CREATION_EXPR_AS} l_call then
-							-- This is not a normal feature call.
-						l_has_error := True
-					else
-						Result := ast_factory.new_instr_call_as (l_call)
-					end
-				end
-			end
-			if l_has_error then
-					-- Report error.
-				report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction"))
-			end
-		end
-
 feature {AST_FACTORY} -- Error handling
 
 	report_basic_generic_type_error

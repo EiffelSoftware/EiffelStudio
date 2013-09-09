@@ -671,9 +671,6 @@ feature {NONE} -- Implementation
 	non_conforming_inheritance_flag: BOOLEAN
 			-- Flag for declaring when non conforming inheritance has been added.
 
-	has_type: BOOLEAN
-			-- Is expression undoubtly typed?
-
 	fclause_pos: detachable KEYWORD_AS
 			-- To memorize the beginning of a feature clause
 

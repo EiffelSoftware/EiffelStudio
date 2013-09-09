@@ -464,8 +464,12 @@ feature {NONE} -- Implementation
 						if j > 0 then
 							l_name := s.substring (1, j - 1)
 							l_value := s.substring (j + 1, s.count)
-							res.force (l_value, l_name)
+						else
+								-- variable without value
+							l_name := s
+							create {IMMUTABLE_STRING_8} l_value.make_empty
 						end
+						res.force (l_value, l_name)
 					end
 				end
 			end

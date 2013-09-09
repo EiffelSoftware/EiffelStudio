@@ -1443,8 +1443,12 @@ feature {NONE} -- Query parameters: implementation
 							if j > 0 then
 								l_name := s.substring (1, j - 1)
 								l_value := s.substring (j + 1, s.count)
-								add_value_to_table (l_name, l_value, Result)
+							else
+									-- I.e variable without value
+								l_name := s
+								l_value := empty_string_8
 							end
+							add_value_to_table (l_name, l_value, Result)
 						end
 					end
 				end
@@ -2059,7 +2063,7 @@ invariant
 	wgi_request.content_type /= Void implies content_type /= Void
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

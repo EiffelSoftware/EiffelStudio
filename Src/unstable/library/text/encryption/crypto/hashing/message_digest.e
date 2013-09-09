@@ -41,6 +41,11 @@ feature -- Access
 		deferred
 		end
 
+	block_size: INTEGER
+			-- Block size in bytes
+		deferred
+		end
+
 feature -- Element Change
 
 	reset
@@ -49,7 +54,7 @@ feature -- Element Change
 		end
 
 	update_from_byte (a_byte: NATURAL_8)
-			-- Append a byte.
+			-- Append byte.
 		deferred
 		end
 
@@ -109,6 +114,59 @@ feature -- Element Change
 					update_from_byte (a_io_medium.last_natural_8)
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	byte_count: NATURAL_64
+			-- Byte count
+
+	bit_count: NATURAL_64
+			-- Bit count
+		do
+			result := byte_count |<< 3
+		end
+
+	message_pad
+			-- Pad with zero until 64bit is left in current block.
+		local
+			pad_bytes: INTEGER_32
+		do
+			update_from_byte (0b1000_0000)
+			from
+				pad_bytes := (56 - (byte_count \\ 64)).to_integer_32
+				if pad_bytes < 0 then
+					pad_bytes := pad_bytes + 64
+				end
+			until
+				pad_bytes = 0
+			loop
+				update_from_byte (0)
+				pad_bytes := pad_bytes - 1
+			end
+		end
+
+	finish
+			-- Finish updating, get ready to process the last block.
+		local
+			length: NATURAL_64
+		do
+			length := bit_count
+			message_pad
+			process_length (length)
+		end
+
+	process_length (length: NATURAL_64)
+			-- Update length into the buffer.
+		do
+			update_from_byte ((length).to_natural_8)
+			update_from_byte ((length |>> 8).to_natural_8)
+			update_from_byte ((length |>> 16).to_natural_8)
+			update_from_byte ((length |>> 24).to_natural_8)
+			update_from_byte ((length |>> 32).to_natural_8)
+			update_from_byte ((length |>> 40).to_natural_8)
+			update_from_byte ((length |>> 48).to_natural_8)
+			update_from_byte ((length |>> 56).to_natural_8)
 		end
 
 note

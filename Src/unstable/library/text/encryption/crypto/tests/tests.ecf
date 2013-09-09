@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="message_digest-tests" uuid="2FA09D1B-B59B-44CC-99D0-B7C0DFF2DACA" library_target="message_digest-tests">
-	<description>Unit-tests for the message_digest library.</description>
-	<target name="message_digest-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="crypto-tests" uuid="2FA09D1B-B59B-44CC-99D0-B7C0DFF2DACA" library_target="crypto-tests">
+	<description>Unit-tests for the crypto library.</description>
+	<target name="crypto-tests">
 		<root class="TEST_MESSAGE_DIGEST" feature="make"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
@@ -14,7 +14,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="message_digest" location="..\message_digest.ecf" readonly="false"/>
+		<library name="crypto" location="..\crypto.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<tests name="tests" location=".\" recursive="true"/>
 	</target>

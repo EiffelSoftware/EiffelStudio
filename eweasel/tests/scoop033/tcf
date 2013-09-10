@@ -1,0 +1,18 @@
+test_name	scoop-lock-passing-same-target
+test_description Bug when lock passing is detected on the same processor as the target.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	application.e	$CLUSTER application.e
+copy_raw	generator.e	$CLUSTER generator.e
+copy_raw	generator_boxer.e	$CLUSTER generator_boxer.e
+copy_raw	processor.e	$CLUSTER processor.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

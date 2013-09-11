@@ -85,6 +85,25 @@ feature -- Element Change
 			h4 := 0x10325476
 		end
 
+	update_from_byte (a_byte: NATURAL_8)
+			-- <Precursor>
+		local
+			l_buffer: like buffer
+		do
+			l_buffer := buffer
+			l_buffer [buffer_offset] := a_byte
+			buffer_offset := buffer_offset + 1
+			byte_count := byte_count + 1
+
+				-- Process the block when the block is ready.
+			if buffer_offset > l_buffer.upper then
+				process_block
+				buffer_offset := 0
+			end
+		ensure then
+			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (block_size)
+		end
+
 feature {NONE} -- Implemetation
 
 	process_block
@@ -138,25 +157,6 @@ feature {NONE} -- Implemetation
 			h2 := h2 + b
 			h3 := h3 + c
 			h4 := h4 + d
-		end
-
-	update_from_byte (a_byte: NATURAL_8)
-			-- <Precursor>
-		local
-			l_buffer: like buffer
-		do
-			l_buffer := buffer
-			l_buffer [buffer_offset] := a_byte
-			buffer_offset := buffer_offset + 1
-			byte_count := byte_count + 1
-
-				-- Process the block when the block is ready.
-			if buffer_offset > l_buffer.upper then
-				process_block
-				buffer_offset := 0
-			end
-		ensure then
-			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (block_size)
 		end
 
 	schedule_buffer

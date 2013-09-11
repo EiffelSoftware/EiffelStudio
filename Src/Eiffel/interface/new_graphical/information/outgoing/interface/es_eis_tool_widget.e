@@ -376,10 +376,10 @@ feature -- Callbacks
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			l_window := panel.develop_window
-			if l_window /= Void then
-				target_stone (l_window.stone)
+			if l_window /= Void and then attached l_window.stone as l_stone then
+				target_stone (l_stone)
 				if not last_stone_targeted then
-					prompts.show_warning_prompt (Warning_messages.w_Could_not_locate (l_window.stone.stone_signature), l_window.window, Void)
+					prompts.show_warning_prompt (Warning_messages.w_Could_not_locate (l_stone.stone_signature), l_window.window, Void)
 				end
 			end
 		end

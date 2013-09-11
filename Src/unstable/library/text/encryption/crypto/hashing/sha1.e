@@ -93,8 +93,6 @@ feature -- Element Change
 			h5 := 0xc3d2e1f0
 		end
 
-feature {NONE} -- Implementation
-
 	update_from_byte (a_byte: NATURAL_8)
 			-- <Precursor>
 		local
@@ -113,6 +111,8 @@ feature {NONE} -- Implementation
 		ensure then
 			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (block_size)
 		end
+
+feature {NONE} -- Implementation
 
 	schedule_buffer
 			-- Put raw bytes into `schedule'.

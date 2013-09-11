@@ -13,7 +13,7 @@ deferred class
 feature -- Access
 
 	digest_as_string: STRING_8
-			-- String representation of digest.
+			-- Hexadecimal string representation of Current digest.
 		local
 			l_digest: like digest
 			index, l_upper: INTEGER

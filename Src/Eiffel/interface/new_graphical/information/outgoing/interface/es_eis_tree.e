@@ -358,35 +358,45 @@ feature {NONE} -- EIS observer
 
 	on_tag_added (a_tag: STRING_32)
 			-- <precursor>
-		local
-			l_node: ES_EIS_TREE_TAG_ITEM
 		do
-			if not managed_tags.has (a_tag) then
-				managed_tags.extend (a_tag)
+			eis_tool_widget.panel.execute_until_shown (
+				agent (t: STRING_32)
+				local
+					l_node: ES_EIS_TREE_TAG_ITEM
+				do
+					if not managed_tags.has (t) then
+						managed_tags.extend (t)
 
-				create l_node.make (a_tag)
-				l_node.pointer_button_press_actions.extend (agent on_button_press_action)
-					-- Here we plus one to shift the mapping between `managed_tags'
-					-- and items under `tag_header'.
-					-- This is because the first item is ocuppied by "Item without tag".
-				tag_header.go_i_th (managed_tags.index + 1)
-				tag_header.put_left (l_node)
-			end
+						create l_node.make (t)
+						l_node.pointer_button_press_actions.extend (agent on_button_press_action)
+							-- Here we plus one to shift the mapping between `managed_tags'
+							-- and items under `tag_header'.
+							-- This is because the first item is ocuppied by "Item without tag".
+						tag_header.go_i_th (managed_tags.index + 1)
+						tag_header.put_left (l_node)
+					end
+				end (a_tag)
+			)
 		end
 
 	on_tag_removed (a_tag: STRING_32)
 			-- <precursor>
 		do
-			managed_tags.start
-			managed_tags.search (a_tag)
-			if not managed_tags.exhausted then
-				managed_tags.remove
-					-- Here we plus one to shift the mapping between `managed_tags'
-					-- and items under `tag_header'.
-					-- This is because the first item is ocuppied by "Item without tag".
-				tag_header.go_i_th (managed_tags.index + 1)
-				tag_header.remove
-			end
+			eis_tool_widget.panel.execute_until_shown (
+				agent (t: STRING_32)
+				do
+					managed_tags.start
+					managed_tags.search (t)
+					if not managed_tags.exhausted then
+						managed_tags.remove
+							-- Here we plus one to shift the mapping between `managed_tags'
+							-- and items under `tag_header'.
+							-- This is because the first item is ocuppied by "Item without tag".
+						tag_header.go_i_th (managed_tags.index + 1)
+						tag_header.remove
+					end
+				end (a_tag)
+			)
 		end
 
 	on_entry_registered (a_entry: EIS_ENTRY; a_component_id: STRING)

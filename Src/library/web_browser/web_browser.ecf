@@ -18,6 +18,11 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include/webkit">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
 		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include">
 			<condition>
 				<platform excluded_value="windows"/>

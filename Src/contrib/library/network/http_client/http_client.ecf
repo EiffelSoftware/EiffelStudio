@@ -11,17 +11,8 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf">
-			<condition>
-				<version type="compiler" min="7.1.8.8674"/>
-			</condition>
-		</library>
-		<library name="curl_local" location="../../../../compatible/library/cURL/cURL.ecf">
-			<condition>
-				<version type="compiler" max="7.1.8.8673"/>
-			</condition>
-		</library>
-		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder.ecf"/>
+		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf"/>
+		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 </system>

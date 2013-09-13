@@ -162,6 +162,7 @@ feature -- Execution
 						check
 							post_or_put_request_method:	request_method.is_case_insensitive_equal ("POST")
 														or request_method.is_case_insensitive_equal ("PUT")
+														or request_method.is_case_insensitive_equal ("PATCH")
 						end
 
 						curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, l_upload_data)
@@ -170,6 +171,7 @@ feature -- Execution
 						check
 							post_or_put_request_method:	request_method.is_case_insensitive_equal ("POST")
 														or request_method.is_case_insensitive_equal ("PUT")
+														or request_method.is_case_insensitive_equal ("PATCH")
 						end
 
 						create l_upload_file.make_with_name (l_upload_filename)

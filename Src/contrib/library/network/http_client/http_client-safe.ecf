@@ -10,16 +10,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL-safe.ecf">
-			<condition>
-				<version type="compiler" min="7.1.8.8674"/>
-			</condition>
-		</library>
-		<library name="curl_local" location="../../../../experimental/library/cURL/cURL-safe.ecf">
-			<condition>
-				<version type="compiler" max="7.1.8.8673"/>
-			</condition>
-		</library>
+		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL-safe.ecf"/>
 		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>

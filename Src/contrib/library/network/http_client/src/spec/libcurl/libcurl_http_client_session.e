@@ -31,7 +31,7 @@ feature -- Status report
 			Result := curl.is_dynamic_library_exists
 		end
 
-feature -- Basic operation
+feature -- Custom
 
 	custom (a_method: READABLE_STRING_8; a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): HTTP_CLIENT_RESPONSE
 		local
@@ -40,6 +40,18 @@ feature -- Basic operation
 			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
 			Result := req.execute
 		end
+
+	custom_with_upload_data (a_method: READABLE_STRING_8; a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: READABLE_STRING_8): HTTP_CLIENT_RESPONSE
+		do
+			Result := impl_custom (a_method, a_path, a_ctx, data, Void)
+		end
+
+	custom_with_upload_file (a_method: READABLE_STRING_8; a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; fn: READABLE_STRING_8): HTTP_CLIENT_RESPONSE
+		do
+			Result := impl_custom (a_method, a_path, a_ctx, Void, fn)
+		end
+
+feature -- Helper
 
 	get (a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): HTTP_CLIENT_RESPONSE
 		do
@@ -53,63 +65,32 @@ feature -- Basic operation
 
 	post (a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
 		do
-			Result := impl_post (a_path, a_ctx, data, Void)
+			Result := impl_custom ("POST", a_path, a_ctx, data, Void)
 		end
 
 	post_file (a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; fn: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
 		do
-			Result := impl_post (a_path, a_ctx, Void, fn)
+			Result := impl_custom ("POST", a_path, a_ctx, Void, fn)
+		end
+
+	patch (a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
+		do
+			Result := impl_custom ("PATCH", a_path, a_ctx, data, Void)
+		end
+
+	patch_file (a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; fn: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
+		do
+			Result := impl_custom ("PATCH", a_path, a_ctx, Void, fn)
 		end
 
 	put (a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
-		local
-			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
-			f: detachable RAW_FILE
-			l_data: detachable READABLE_STRING_8
 		do
-			--| Quick and dirty hack using real file, for PUT uploaded data
-			--| FIXME [2012-05-23]: better use libcurl for that purpose
-			ctx := a_ctx
-			if data /= Void then
-				if ctx = Void then
-					create ctx.make
-				end
-				ctx.set_upload_data (data)
-			end
-			if ctx /= Void then
-				l_data := ctx.upload_data
-			end
-			if l_data /= Void then
-				create f.make_open_write (create {FILE_NAME}.make_temporary_name)
-				f.put_string (l_data)
-				f.close
-				check ctx /= Void then
-					ctx.set_upload_data (Void)
-					ctx.set_upload_filename (f.path.name)
-				end
-			end
-			Result := custom ("PUT", a_path, ctx)
-			if f /= Void then
-				f.delete
-			end
-			if l_data /= Void and a_ctx /= Void then
-				a_ctx.set_upload_filename (Void)
-				a_ctx.set_upload_data (l_data)
-			end
+			Result := impl_custom ("PUT", a_path, a_ctx, data, Void)
 		end
 
 	put_file (a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; fn: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
-		local
-			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
 		do
-			ctx := a_ctx
-			if fn /= Void then
-				if ctx = Void then
-					create ctx.make
-				end
-				ctx.set_upload_filename (fn)
-			end
-			Result := custom ("PUT", a_path, ctx)
+			Result := impl_custom ("PUT", a_path, a_ctx, Void, fn)
 		end
 
 	delete (a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): HTTP_CLIENT_RESPONSE
@@ -119,10 +100,12 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	impl_post (a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: detachable READABLE_STRING_8; fn: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
+	impl_custom (a_method: READABLE_STRING_8; a_path: READABLE_STRING_8; a_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: detachable READABLE_STRING_8; fn: detachable READABLE_STRING_8): HTTP_CLIENT_RESPONSE
 		local
 			req: HTTP_CLIENT_REQUEST
 			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
+			f: detachable RAW_FILE
+			l_data: detachable READABLE_STRING_8
 		do
 			ctx := a_ctx
 			if data /= Void then
@@ -137,8 +120,35 @@ feature {NONE} -- Implementation
 				end
 				ctx.set_upload_filename (fn)
 			end
-			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, "POST", Current, ctx)
+			if ctx /= Void then
+				l_data := ctx.upload_data
+				if l_data /= Void and a_method.is_case_insensitive_equal_general ("PUT") then
+					--| Quick and dirty hack using real file, for PUT uploaded data
+					--| FIXME [2012-05-23]: better use libcurl for that purpose
+
+					if ctx.has_upload_filename then
+						check put_conflict_file_and_data: False end
+					end
+					create f.make_open_write (create {FILE_NAME}.make_temporary_name)
+					f.put_string (l_data)
+					f.close
+					check ctx /= Void then
+						ctx.set_upload_data (Void)
+						ctx.set_upload_filename (f.path.name)
+					end
+				end
+			end
+
+			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
 			Result := req.execute
+
+			if f /= Void then
+				f.delete
+			end
+			if l_data /= Void and a_ctx /= Void then
+				a_ctx.set_upload_filename (Void)
+				a_ctx.set_upload_data (l_data)
+			end
 		end
 
 feature {LIBCURL_HTTP_CLIENT_REQUEST} -- Curl implementation

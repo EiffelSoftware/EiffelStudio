@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			t: STRING_8
 			i,n: INTEGER
 			p: INTEGER
+			cl: CELL [INTEGER]
 		do
 				-- Ignore starting space (should not be any)
 			from
@@ -79,18 +80,13 @@ feature {NONE} -- Initialization
 				if p > 0 then
 					t := s.substring (i, p - 1)
 					from
+						create cl.put (p)
+						i := p + 1
 					until
 						i >= n
 					loop
-						i := p + 1
-						p := s.index_of (';', i)
-						if p = 0 then
-							add_parameter_from_string (s, i, n)
-							i := n
-						else
-							add_parameter_from_string (s, i, p - 1)
-							i := p + 1
-						end
+						add_parameter_from_string (s, i, cl)
+						i := cl.item
 					end
 				else
 					t := s.substring (i, n)
@@ -271,45 +267,80 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	add_parameter_from_string (s: READABLE_STRING_8; start_index, end_index: INTEGER)
+	add_parameter_from_string (s: READABLE_STRING_8; start_index: INTEGER; out_end_index: CELL [INTEGER])
 			-- Add parameter from string   "  attribute=value  "
+			-- and put in `out_end_index' the index after found parameter.
 		local
+			n: INTEGER
 			pn,pv: STRING_8
 			i: INTEGER
-			p: INTEGER
+			p, q: INTEGER
 			err: BOOLEAN
 		do
-			-- Skip spaces
+			n := s.count
+				-- Skip spaces
 			from
 				i := start_index
 			until
-				i > end_index or not s[i].is_space
+				i > n or not s[i].is_space
 			loop
 				i := i + 1
 			end
-			if i < end_index then
+			if s[i] = ';' then
+					-- empty parameter
+				out_end_index.replace (i + 1)
+			elseif i < n then
 				p := s.index_of ('=', i)
-				if p > 0 and p < end_index then
+				if p > 0 then
 					pn := s.substring (i, p - 1)
-					pv := s.substring (p + 1, end_index)
-					pv.right_adjust
-					if pv.count > 0 and pv [1] = '%"' then
-						if pv [pv.count] = '%"' then
-							pv := pv.substring (2, pv.count - 1)
+					if p >= n then
+						pv := ""
+						out_end_index.replace (n + 1)
+					else
+						if s[p+1] = '%"' then
+							q := s.index_of ('%"', p + 2)
+							if q > 0 then
+								pv := s.substring (p + 2, q - 1)
+								from
+									i := q + 1
+								until
+									i > n or not s[i].is_space
+								loop
+									i := i + 1
+								end
+								if s[i] = ';' then
+									i := i + 1
+								end
+								out_end_index.replace (i)
+							else
+								err := True
+								pv := ""
+								-- missing closing double quote.								
+							end
 						else
-							err := True
-							-- missing closing double quote.
+							q := s.index_of (';', p + 1)
+							if q = 0 then
+								q := n + 1
+							end
+							pv := s.substring (p + 1, q - 1)
+							out_end_index.replace (q + 1)
 						end
-					end
-					if not err then
-						add_parameter (pn, pv)
+						pv.right_adjust
+						if not err then
+							add_parameter (pn, pv)
+						end
 					end
 				else
 					-- expecting: attribute "=" value
 					err := True
 				end
 			end
+			if err then
+				out_end_index.replace (n + 1)
+			end
 			has_error := has_error or err
+		ensure
+			entry_processed: out_end_index.item > start_index
 		end
 
 feature {NONE} -- Internal

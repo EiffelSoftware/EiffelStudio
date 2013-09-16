@@ -12,9 +12,16 @@ inherit
 
 feature -- Content type
 
-	test_http_content_type
+
+	test_http_content_types_with_params
 		local
-			ct: HTTP_CONTENT_TYPE
+		do
+			test_content_type_with_params ("text/plain; param1=%"something;foo=bar%"; param2=%"another-thing%"",
+					"text", "plain", <<["param1", "something;foo=bar"], ["param2", "another-thing"]>>
+				)
+		end
+
+	test_http_content_type
 		do
 			test_content_type ("application/atom+xml", "application", "atom+xml") -- Atom feeds
 			test_content_type ("application/ecmascript", "application", "ecmascript") -- ECMAScript/JavaScript; Defined in RFC 4329 (equivalent to application/javascript but with stricter processing rules)

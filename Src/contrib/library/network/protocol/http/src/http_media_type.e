@@ -97,9 +97,16 @@ feature {NONE} -- Initialization
 					-- Extract type and subtype
 				p := t.index_of ('/', 1)
 				if p = 0 then
-					has_error := True
+					t.right_adjust
 					type := t
-					subtype := ""
+					if t.same_string ("*") then
+							-- Flexible parser allowing "*" even if this is not really a valid media-type
+							-- let's interpret it as "*/*"
+						subtype := "*"
+					else
+						has_error := True
+						subtype := "*"
+					end
 				else
 					subtype := t.substring (p + 1, t.count)
 					type := t

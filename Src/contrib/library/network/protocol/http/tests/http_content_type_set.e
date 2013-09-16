@@ -19,6 +19,10 @@ feature -- Content type
 			test_content_type_with_params ("text/plain; param1=%"something;foo=bar%"; param2=%"another-thing%"",
 					"text", "plain", <<["param1", "something;foo=bar"], ["param2", "another-thing"]>>
 				)
+			test_content_type ("*", "*", "*")
+			test_content_type_with_params ("* ; q=0.8", "*", "*", <<["q", "0.8"]>>)
+			test_content_type ("*/*", "*", "*")
+			test_content_type ("text/*", "text", "*")
 		end
 
 	test_http_content_type

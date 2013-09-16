@@ -2,7 +2,7 @@ note
 	description: "[
 			This class is to represent a media type
 			
-			the Internet Media Type [9] of the attached entity if the type
+			the Internet Media Type of the attached entity if the type
 			was provided via a "Content-type" field in the wgi_request header,
 			or if the server can determine it in the absence of a supplied
 			"Content-type" field. The syntax is the same as for the HTTP
@@ -29,6 +29,8 @@ note
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Wikipedia/Media Type", "protocol=URI", "src=http://en.wikipedia.org/wiki/Internet_media_type"
+	EIS: "name=RFC2046", "protocol=URI", "src=http://tools.ietf.org/html/rfc2046"
 
 class
 	HTTP_MEDIA_TYPE
@@ -76,14 +78,19 @@ feature {NONE} -- Initialization
 				p := s.index_of (';', i)
 				if p > 0 then
 					t := s.substring (i, p - 1)
-					i := p + 1
-					p := s.index_of (';', i)
-					if p = 0 then
-						add_parameter_from_string (s, i, n)
-						i := n
-					else
-						add_parameter_from_string (s, i, p - 1)
+					from
+					until
+						i >= n
+					loop
 						i := p + 1
+						p := s.index_of (';', i)
+						if p = 0 then
+							add_parameter_from_string (s, i, n)
+							i := n
+						else
+							add_parameter_from_string (s, i, p - 1)
+							i := p + 1
+						end
 					end
 				else
 					t := s.substring (i, n)
@@ -334,7 +341,7 @@ invariant
 	type_and_subtype_not_empty: not has_error implies not type.is_empty and not subtype.is_empty
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -4,6 +4,7 @@ note
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=RFC3875", "protocol=URI", "src=http://tools.ietf.org/html/rfc3875"
 
 class
 	HTTP_CONTENT_TYPE
@@ -34,7 +35,7 @@ feature -- Constant
 	charset_parameter_name: STRING_8 = "charset"
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

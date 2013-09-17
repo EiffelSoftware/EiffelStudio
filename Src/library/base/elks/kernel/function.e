@@ -31,6 +31,7 @@ feature -- Access
 			-- Result of last call, if any
 
 	call (args: detachable separate OPEN_ARGS)
+			-- <Precursor>
 		do
 			last_result := item (args)
 		end
@@ -54,7 +55,7 @@ feature -- Access
 	apply
 			-- Call function with `operands' as last set.
 		do
-			call (operands)
+			last_result := item (operands)
 		end
 
 feature -- Comparison

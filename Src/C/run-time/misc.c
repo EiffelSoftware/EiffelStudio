@@ -409,7 +409,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k)
 	rt_uint_ptr elem_size;			/* Size of each item within area */
 	EIF_INTEGER old_count;
 	EIF_TYPE_INDEX exp_dftype;		/* Full dynamic type of the first expanded object */
-	rt_uint_ptr n;					/* Counter for initialization of expanded */
+	EIF_INTEGER n;					/* Counter for initialization of expanded */
 
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
 	REQUIRE ("Must not be TUPLE", !(HEADER (area)->ov_flags & EO_TUPLE));

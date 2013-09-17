@@ -68,6 +68,15 @@ feature -- Query
 			Result := help_context_id.same_caseless_characters ("http:", 1, 5, 1)
 		end
 
+	is_web_browser_tool_usable: BOOLEAN
+			-- Is web browser tool usable?
+		local
+			l_browser: EV_WEB_BROWSER
+		once
+			create l_browser
+			Result := l_browser.is_browser_usable
+		end
+
 feature -- Element Change
 
 	set_is_shown_in_es (a_shown_in_es: BOOLEAN)

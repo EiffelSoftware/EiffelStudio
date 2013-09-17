@@ -142,14 +142,14 @@ feature {NONE} -- Implementation
 
 			create l_label.make_with_text (interface_names.b_open)
 			create l_browser_context.make_from_other (a_context)
-			l_browser_context.set_is_shown_in_es (a_context.is_http_link)
+			l_browser_context.set_is_shown_in_es (a_context.is_http_link and then a_context.is_web_browser_tool_usable)
 			l_label.select_actions.extend (agent show_help (l_browser_context))
 			l_hbox.extend (l_label)
 			setup_pointer_actions (l_label)
 
 			extend_padding (l_hbox, False)
 
-			if a_context.is_http_link then
+			if a_context.is_http_link and then a_context.is_web_browser_tool_usable then
 				create l_sep
 				l_hbox.extend (l_sep)
 				setup_pointer_actions (l_sep)

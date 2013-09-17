@@ -1533,7 +1533,7 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		/* We add +2 to `eif_next_gen_id' because index 0 and 1 are reserved for detachable NONE and
 		 * attached NONE. See `eif_type_malloc'. */
 	CHECK("valid bounds", eif_next_gen_id + 2 <= rt_type_set_count);
-	mark_array (rt_type_set, (rt_type_set_count > eif_next_gen_id ? eif_next_gen_id + 2 : rt_type_set_count), MARK_SWITCH, moving);
+	mark_array (rt_type_set, (rt_type_set_count > eif_next_gen_id ? eif_next_gen_id + (rt_uint_ptr) 2 : rt_type_set_count), MARK_SWITCH, moving);
 
 		/* Detect live and dead processors without taking once manifest strings into account,
 		 * because they do not add any information about liveness status of the processors. */
@@ -3094,7 +3094,7 @@ rt_private int split_to_block (int is_to_keep)
 			 */
 		old_size = base->ov_size;			/* Save size of 1st block */
 		base->ov_size = ps_to.sc_flags;		/* Malloc flags for whole space */
-		result = (eif_rt_split_block(base, size - OVERHEAD) != -1);
+		result = (eif_rt_split_block(base, size - OVERHEAD) != (rt_uint_ptr) -1);
 		base->ov_size = old_size;			/* Restore 1st block integrity */
 
 			/* Perform memory update only if we can split block, if not possible. */
@@ -3194,9 +3194,6 @@ rt_private int sweep_from_space(void)
 #endif
 
 	for (;;) {
-			/* Fetch next header. */
-		flags = zone->ov_size;
-		next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
 
 			/* Loop until we reach an Eiffel block which is not marked. */
 		while (((char *) zone < end) && is_object_alive(zone)) {
@@ -3205,6 +3202,9 @@ rt_private int sweep_from_space(void)
 				zone->ov_size & B_SIZE, zone + 1);
 			flush;
 #endif
+				/* Fetch next header. */
+			flags = zone->ov_size;
+			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
 
 			/* Make sure object is unmarked (could be a frozen Eiffel object).
 			 * The C objects do not use the EO_MARK bit so there is no need
@@ -3213,9 +3213,6 @@ rt_private int sweep_from_space(void)
 
 			zone->ov_flags &= ~EO_MARK;	/* Unconditionally unmark object */
 			zone = next;				/* Advance to next object */
-				/* Go to next header. */
-			flags = zone->ov_size;
-			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
 		}
 
 		/* Either we reached an Eiffel block, a free block or the end of the
@@ -3225,8 +3222,12 @@ rt_private int sweep_from_space(void)
 		 * mandatory--RAM.
 		 */
 
-		if ((EIF_REFERENCE) zone >= end)		/* Seems we reached the end of space */
+		if ((EIF_REFERENCE) zone >= end) {		/* Seems we reached the end of space */
 			return -1;					/* 'from' holds at least one C block */
+		} else {
+			flags = zone->ov_size;
+			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
+		}
 
 #ifdef DEBUG
 		dprintf(8)(

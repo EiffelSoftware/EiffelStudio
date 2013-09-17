@@ -11,13 +11,19 @@ class
 
 feature -- Query
 
+	is_usable: BOOLEAN
+			-- Is usable?
+		do
+			Result := item /= default_pointer
+		end
+
 	item: POINTER
 			-- WebkitGTK C object
 
 	can_copy_clipboard: BOOLEAN
 			-- Can copy clipboard ?
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -30,7 +36,7 @@ feature -- Query
 	can_cut_clipboard: BOOLEAN
 			-- Can cut clipboard ?
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -45,7 +51,7 @@ feature -- Query
 			--
 			-- Returns :TRUE if able to move back, FALSE otherwise
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -61,7 +67,7 @@ feature -- Query
 			-- steps: the number of steps
 			-- Returns: TRUE if able to move back or forward the given number of steps, FALSE otherwise
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -76,7 +82,7 @@ feature -- Query
 			--
 			-- Returns: TRUE if able to move forward, FALSE otherwise
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -89,7 +95,7 @@ feature -- Query
 	can_paste_clipboard: BOOLEAN
 			-- Can paste clipboard?
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -105,7 +111,7 @@ feature -- Query
 			-- mime_type: a MIME type
 			-- Returns: a gboolean indicating if the MIME type can be displayed
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 			not_void: a_mime_type /= Void and then not a_mime_type.is_empty
 		local
 			l_api: POINTER
@@ -143,7 +149,7 @@ feature -- Query
 			--
 			-- Returns: a string containing the current custom encoding for web_view, or NULL if there's none set.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 			l_gtk_c_string: EV_GTK_C_STRING
@@ -165,7 +171,7 @@ feature -- Query
 			--
 			-- Returns: a gboolean indicating the editable state
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -180,7 +186,7 @@ feature -- Query
 			--
 			-- Returns: the default encoding
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 			l_gtk_c_string: EV_GTK_C_STRING
@@ -210,7 +216,7 @@ feature -- Query
 			-- Returns: FALSE if only text should be scaled (the default), TRUE if the full content of the
 			-- view should be scaled.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -263,7 +269,7 @@ feature -- Query
 			--
 			-- Returns :
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -284,7 +290,7 @@ feature -- Query
 			--
 			-- Returns: the title of web_view
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 			l_gtk_c_string: EV_GTK_C_STRING
@@ -304,7 +310,7 @@ feature -- Query
 			--
 			-- Returns: FALSE when the WebKitWebView draws a solid background (the default), otherwise TRUE.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -319,7 +325,7 @@ feature -- Query
 			--
 			-- Returns: the URI of web_view
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 			l_gtk_c_string: EV_GTK_C_STRING
@@ -341,7 +347,7 @@ feature -- Query
 			--
 			-- Returns: the zoom level of web_view
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -356,7 +362,7 @@ feature -- Query
 			--
 			-- Returns: TRUE if there is selected text, FALSE if not
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -393,7 +399,7 @@ feature -- Command
 			--
 			-- a_uri: an URI string 						
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 			not_void: a_uri /= Void and then not a_uri.is_empty
 		local
 			l_api: POINTER
@@ -409,7 +415,7 @@ feature -- Command
 	copy_clipboard
 			-- Copies the current selection inside the web_view to the clipboard.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -422,7 +428,7 @@ feature -- Command
 	cut_clipboard
 			-- Cuts the current selection inside the web_view to the clipboard.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -435,7 +441,7 @@ feature -- Command
 	delete_selection
 			-- Deletes the current selection inside the web_view.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -448,7 +454,7 @@ feature -- Command
 	execute_script (a_script: READABLE_STRING_GENERAL)
 			-- Execute script
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 			not_void: a_script /= Void and then not a_script.is_empty
 		local
 			l_api: POINTER
@@ -464,7 +470,7 @@ feature -- Command
 	go_back: BOOLEAN
 			-- Loads the previous history item.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -480,7 +486,7 @@ feature -- Command
 			--
 			-- a_steps: the number of steps
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -493,7 +499,7 @@ feature -- Command
 	go_forward: BOOLEAN
 			-- Loads the next history item.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -543,7 +549,7 @@ feature -- Command
 	load_string (a_content, a_mime_type, a_encoding, a_base_uri: READABLE_STRING_GENERAL)
 			-- Load string
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 			not_void: a_content /= Void and then not a_content.is_empty
 			not_void: a_mime_type /= Void and then not a_mime_type.is_empty -- FIXME: maybe can be void? No document, need test
 			not_void: a_encoding /= Void and then not a_encoding.is_empty -- FIXME: maybe can be void? No document, need test
@@ -570,7 +576,7 @@ feature -- Command
 			-- a_limit: the maximum number of strings to look for or 0 for all
 			-- Returns: the number of strings highlighted
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 			not_void: a_string /= Void and then not a_string.is_empty
 		local
 			l_api: POINTER
@@ -596,7 +602,7 @@ feature -- Command
 	paste_clipboard
 			-- Pastes the current contents of the clipboard to the web_view.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -609,7 +615,7 @@ feature -- Command
 	reload
 			-- Reload
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -622,7 +628,7 @@ feature -- Command
 	reload_bypass_cache
 			-- Reloads the web_view without using any cached data.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -641,7 +647,7 @@ feature -- Command
 			-- a_wrap: whether to continue looking at the beginning after reaching the end
 			-- Returns: TRUE on success or FALSE on failure
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 			not_void: a_text /= Void and then not a_text.is_empty
 		local
 			l_api: POINTER
@@ -657,7 +663,7 @@ feature -- Command
 	select_all
 			-- Attempts to select everything inside the web_view.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -672,7 +678,7 @@ feature -- Command
 			--
 			-- a_encoding: the new encoding, or NULL to restore the default encoding
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 			valid: a_encoding /= Void implies not a_encoding.is_empty
 		local
 			l_api: POINTER
@@ -701,7 +707,7 @@ feature -- Command
 			--
 			-- flag: a gboolean indicating the editable state
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -717,7 +723,7 @@ feature -- Command
 			-- a_full_content_zoom: FALSE if only text should be scaled (the default), TRUE if the full content of the view should
 			-- be scaled.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -732,7 +738,7 @@ feature -- Command
 			--
 			-- a_highlight: whether to highlight text matches
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -747,7 +753,7 @@ feature -- Command
 			--
 			-- a_flag: to tell the view to maintain a back or forward list
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -767,7 +773,7 @@ feature -- Command
 			-- Sets whether the WebKitWebView has a transparent background.
 			-- Pass FALSE to have the WebKitWebView draw a solid background (the default), otherwise TRUE.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -784,7 +790,7 @@ feature -- Command
 			--
 			-- a_zoom_level: the new zoom level
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -797,7 +803,7 @@ feature -- Command
 	stop_loading
 			-- Stop loading
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -810,7 +816,7 @@ feature -- Command
 	unmark_text_matches
 			-- Removes highlighting previously set by webkit_web_view_mark_text_matches.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -825,7 +831,7 @@ feature -- Command
 			-- Increases the zoom level of web_view. The current zoom level is incremented by the
 			-- value of the "zoom-step" property of the WebKitWebSettings associated with web_view.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -839,7 +845,7 @@ feature -- Command
 			-- Decreases the zoom level of web_view. The current zoom level is decremented by the
 			-- value of the "zoom-step" property of the WebKitWebSettings associated with web_view.
 		require
-			not_default: item /= default_pointer
+			is_usable: is_usable
 		local
 			l_api: POINTER
 		do
@@ -1466,7 +1472,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

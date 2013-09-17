@@ -131,6 +131,7 @@ feature {NONE} -- Initialization
 			end
 
 			render_information_signs
+			is_built := True
 		end
 
 	add_target (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_target: CONF_TARGET)
@@ -249,6 +250,17 @@ feature -- Operation
 			end
 			eis_tool_widget.panel.execute_until_shown (l_agent)
 		end
+
+	build
+			-- Build
+		do
+			build_tree
+		end
+		
+feature -- Query
+
+	is_built: BOOLEAN
+			-- Is current tree built?
 
 feature -- Access
 

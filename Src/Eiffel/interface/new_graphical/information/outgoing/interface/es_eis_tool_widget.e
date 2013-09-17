@@ -521,6 +521,9 @@ feature -- Element Change
 			-- Target `a_stone' in the tool
 		do
 			last_stone_targeted := True
+			if not tree.is_built then
+				tree.build
+			end
 			if attached {CLASSI_STONE} a_stone as l_conv_class then
 				tree.show_class (l_conv_class.class_i)
 				tree.item_selected

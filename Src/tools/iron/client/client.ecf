@@ -28,7 +28,6 @@
 		<library name="iron_catalog_api" location="..\..\..\framework\iron\api\iron_catalog_api-safe.ecf" readonly="false"/>
 		<library name="iron_installation_api" location="..\..\..\framework\iron\api\iron_installation_api-safe.ecf" readonly="false"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
-		<library name="message_digest" location="$ISE_LIBRARY\unstable\library\text\encryption\message_digest\message_digest-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf" readonly="false"/>

@@ -862,10 +862,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_can_cut_clipboard (a_api: POINTER; a_web_kit_web_view: POINTER): BOOLEAN
@@ -873,10 +870,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_can_go_back (a_api: POINTER; a_web_kit_web_view: POINTER): BOOLEAN
@@ -884,10 +878,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_can_go_back_or_forward (a_api: POINTER; a_web_kit_web_view: POINTER; a_steps: INTEGER): BOOLEAN
@@ -907,10 +898,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_can_paste_clipboard (a_api: POINTER; a_web_kit_web_view: POINTER): BOOLEAN
@@ -918,10 +906,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_can_show_mime_type (a_api: POINTER; a_web_kit_web_view: POINTER; a_mime_type: POINTER): BOOLEAN
@@ -931,8 +916,8 @@ feature {NONE} -- Query externals
 		alias
 			"[
 				return (FUNCTION_CAST (gboolean, (WebKitWebView *, const gchar *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view,
-															(const gchar *) $a_mime_type);
+											((WebKitWebView *) $a_web_kit_web_view,
+											(const gchar *) $a_mime_type);
 			]"
 		end
 
@@ -941,10 +926,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (const gchar *, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gchar *, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_editable (a_api: POINTER; a_web_kit_web_view: POINTER): BOOLEAN
@@ -954,10 +936,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_encoding (a_api: POINTER; a_web_kit_web_view: POINTER): POINTER
@@ -965,10 +944,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (const gchar *, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gchar *, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_full_content_zoom (a_api: POINTER; a_web_kit_web_view: POINTER): BOOLEAN
@@ -976,10 +952,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_progress (a_api: POINTER; a_web_kit_web_view: POINTER): DOUBLE
@@ -987,10 +960,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gdouble, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gdouble, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_title (a_api: POINTER; a_web_kit_web_view: POINTER): POINTER
@@ -998,10 +968,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (const gchar *, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gchar *, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_transparent (a_api: POINTER; a_web_kit_web_view: POINTER): BOOLEAN
@@ -1009,10 +976,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_uri (a_api: POINTER; a_web_kit_web_view: POINTER): POINTER
@@ -1020,10 +984,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (const gchar *, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gchar *, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_get_zoom_level (a_api: POINTER; a_web_kit_web_view: POINTER): DOUBLE
@@ -1033,10 +994,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gfloat, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gfloat, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_has_selection (a_api: POINTER; a_web_kit_web_view: POINTER): BOOLEAN
@@ -1044,10 +1002,7 @@ feature {NONE} -- Query externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			]"
+			"return (FUNCTION_CAST (gboolean, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 feature {NONE} -- Command externals
@@ -1057,9 +1012,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-				return (FUNCTION_CAST (GtkWidget *, ()) $a_api) ();
-			]"
+			"return (FUNCTION_CAST (GtkWidget *, ()) $a_api) ();"
 		end
 
 	c_webkit_web_view_load_uri (a_api: POINTER; a_web_kit_web_view: POINTER; a_uri: POINTER)
@@ -1068,11 +1021,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(const gchar *) $a_uri);
-			}
 			]"
 		end
 
@@ -1081,12 +1032,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_cut_clipboard (a_api: POINTER; a_web_kit_web_view: POINTER)
@@ -1094,12 +1040,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_delete_selection (a_api: POINTER; a_web_kit_web_view: POINTER)
@@ -1107,12 +1048,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_execute_script (a_api: POINTER; a_web_kit_web_view: POINTER; a_script: POINTER)
@@ -1121,11 +1057,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(const gchar *) $a_script);
-			}
 			]"
 		end
 
@@ -1134,12 +1068,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_go_back_or_forward (a_api: POINTER; a_web_kit_web_view: POINTER; a_steps: INTEGER)
@@ -1149,11 +1078,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST (void, (WebKitWebView *, gint)) $a_api)
 															((WebKitWebView *) $a_web_kit_web_view,
 															(gint) $a_steps);
-			}
 			]"
 		end
 
@@ -1162,12 +1089,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_load_html_string (a_api: POINTER; a_web_kit_web_view: POINTER; a_content: POINTER; a_base_uri: POINTER)
@@ -1176,12 +1098,10 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *, const gchar *)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(const gchar *) $a_content,
 													(const gchar *) $a_base_uri);
-			}
 			]"
 		end
 
@@ -1191,14 +1111,12 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *, const gchar *, const gchar *, const gchar *)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(const gchar *) $a_content,
 													(const gchar *) $a_mime_type,
 													(const gchar *) $a_encoding,
 													(const gchar *) $a_base_uri);
-			}
 			]"
 		end
 
@@ -1209,7 +1127,7 @@ feature {NONE} -- Command externals
 		alias
 			"[
 				return
-				(FUNCTION_CAST (guint, (WebKitWebView *, const gchar *, gboolean, guint)) $a_api)
+					(FUNCTION_CAST (guint, (WebKitWebView *, const gchar *, gboolean, guint)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(const gchar *) $a_content,
 													(gboolean) $a_case_sensitive,
@@ -1222,12 +1140,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_reload (a_api: POINTER; a_web_kit_web_view: POINTER)
@@ -1235,12 +1148,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_reload_bypass_cache (a_api: POINTER; a_web_kit_web_view: POINTER)
@@ -1248,12 +1156,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_search_text (a_api: POINTER; a_web_kit_web_view: POINTER; a_text: POINTER; a_case_sensitive, a_forward, a_wrap: BOOLEAN): BOOLEAN
@@ -1262,14 +1165,13 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-				return
-				(FUNCTION_CAST (gboolean, (WebKitWebView *, const gchar *, gboolean, gboolean, gboolean)) $a_api)
+				return EIF_TEST
+					((FUNCTION_CAST (gboolean, (WebKitWebView *, const gchar *, gboolean, gboolean, gboolean)) $a_api)
 															((WebKitWebView *) $a_web_kit_web_view,
 															(const gchar *) $a_text,
 															(gboolean) $a_case_sensitive,
 															(gboolean) $a_forward,
-															(gboolean) $a_wrap);
-
+															(gboolean) $a_wrap));
 			]"
 		end
 
@@ -1278,12 +1180,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_set_custom_encoding (a_api: POINTER; a_web_kit_web_view: POINTER; a_encoding: POINTER)
@@ -1292,11 +1189,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(const gchar *) $a_encoding);
-			}
 			]"
 		end
 
@@ -1306,11 +1201,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
+				(FUNCTION_CAST (void, (WebKitWebView *, gboolean)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(gboolean) $a_flag);
-			}
 			]"
 		end
 
@@ -1320,11 +1213,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
+				(FUNCTION_CAST (void, (WebKitWebView *, gboolean)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(gboolean) $a_full_content_zoom);
-			}
 			]"
 		end
 
@@ -1334,11 +1225,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
+				(FUNCTION_CAST (void, (WebKitWebView *, gboolean)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(gboolean) $a_highlight);
-			}
 			]"
 		end
 
@@ -1348,11 +1237,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
+				(FUNCTION_CAST (void, (WebKitWebView *, gboolean)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(gboolean) $a_flag);
-			}
 			]"
 		end
 
@@ -1362,11 +1249,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *, const gchar *)) $a_api)
+				(FUNCTION_CAST (void, (WebKitWebView *, gboolean)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(gboolean) $a_flag);
-			}
 			]"
 		end
 
@@ -1378,11 +1263,9 @@ feature {NONE} -- Command externals
 			"C inline use <webkit/webkit.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST (void, (WebKitWebView *, gfloat)) $a_api)
 													((WebKitWebView *) $a_web_kit_web_view,
 													(gfloat) $a_zoom_level);
-			}
 			]"
 		end
 
@@ -1391,12 +1274,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_unmark_text_matches (a_api: POINTER; a_web_kit_web_view: POINTER)
@@ -1404,12 +1282,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_zoom_in (a_api: POINTER; a_web_kit_web_view: POINTER)
@@ -1418,12 +1291,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 	c_webkit_web_view_zoom_out (a_api: POINTER; a_web_kit_web_view: POINTER)
@@ -1432,12 +1300,7 @@ feature {NONE} -- Command externals
 		external
 			"C inline use <webkit/webkit.h>"
 		alias
-			"[
-			{
-				(FUNCTION_CAST (void, (WebKitWebView *)) $a_api)
-															((WebKitWebView *) $a_web_kit_web_view);
-			}
-			]"
+			"(FUNCTION_CAST (void, (WebKitWebView *)) $a_api) ((WebKitWebView *) $a_web_kit_web_view);"
 		end
 
 feature {NONE} -- Implementation
@@ -1475,14 +1338,11 @@ note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
+			 Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_WEBKIT_WEB_VIEW

@@ -1231,6 +1231,9 @@ feature {NONE} -- Transformation
 					ht_deleted_key := l_default_key
 						-- We don't change `object_comparison' from the value it was retrieved from.
 				end
+
+					-- Reset `control' to an acceptable value.
+				control := 0
 			end
 		end
 

@@ -932,6 +932,8 @@ feature {NONE} -- Transformation
 					-- Could not retrieve old version of HASH_TABLE. We throw an exception.
 				Precursor {MISMATCH_CORRECTOR}
 			end
+
+			control := 0
 		end
 
 	hash_table_version_57: BOOLEAN

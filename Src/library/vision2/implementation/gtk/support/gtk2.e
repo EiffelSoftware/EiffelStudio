@@ -1884,27 +1884,6 @@ feature -- Externals
 			"g_value_take_string ((GValue*) $a_value, (gchar*) $a_string)"
 		end
 
-	frozen g_value_array_new (a_preallocated: INTEGER_32): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_array_new ((guint) $a_preallocated)"
-		end
-
-	frozen g_value_array_free (a_value_array: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_array_free ((GValueArray*) $a_value_array)"
-		end
-
-	frozen g_value_array_insert (a_value_array: POINTER; a_index: INTEGER_32; a_value: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_array_insert ((GValueArray*) $a_value_array, (guint) $a_index, (GValue*) $a_value)"
-		end
-
 	frozen gtk_tree_view_new: POINTER
 		external
 			"C signature (): GtkWidget* use <ev_gtk.h>"
@@ -2160,11 +2139,6 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"((GValue*)$args_array + (int)($an_index - 1))"
-		end
-
-	frozen g_value_array_get_nth (a_value_array: POINTER; n_th: INTEGER_32): POINTER
-		external
-			"C signature (GValueArray*, guint): GValue* use <ev_gtk.h>"
 		end
 
 	frozen gtk_color_selection_dialog_struct_color_selection (a_color_selection_dialog: POINTER): POINTER

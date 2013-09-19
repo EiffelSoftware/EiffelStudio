@@ -84,7 +84,7 @@ feature {NONE} -- set current_folder
 
 	directory_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER): STRING
 		do
-			Result := t.generating_type + "_TEST_WITH_PLURAL_FORM_"+plural_form.out+"_WITH_DATALENGTH_"+datalength.out+"_WITH_SEED_"+seed.out
+			Result := t.generating_type + "_PF"+plural_form.out+"_LEN"+datalength.out+"_S"+seed.out
 		end
 
 	set_current_folder (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER)

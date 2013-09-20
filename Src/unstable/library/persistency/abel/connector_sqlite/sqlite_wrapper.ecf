@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" 
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" 
+			name="sqlite_wrapper" 
+			uuid="BD841C07-CA4D-475E-8645-27138A2540F4"
+			library_target="sqlite_wrapper">
+	<target name="sqlite_wrapper">
+		<root all_classes="true"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="persistence_utils" location="..\persistence_utils\persistence_utils.ecf" />
+		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite-safe.ecf"/>
+		<library name="generic_database_wrapper" location="..\generic_database_wrapper\generic_database_wrapper.ecf"/>
+		<library name="eiffelstore2" location="..\abel\eiffelstore2.ecf"/>
+		<cluster name="sqlite_wrapper" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

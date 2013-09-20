@@ -1,0 +1,60 @@
+%% The following is an Eiffel style for the latex package listings.
+%% It provides syntax highlighting for Eiffel source code in latex documents.
+%% Note that the listings package already has an Eiffel style defined.
+%% However, the style in this file is more inline with the style guidelines from
+%% OOSC2
+
+%% Usage:
+%% Rename this file to lstlang0.sty and put it in your latex project directory.
+%% 
+%% \usepackage{listings}
+%% ...
+%% \begin{lstlisting}[language=OOSC2Eiffel]
+%% sqrt (x: REAL): REAL is
+%%   require
+%%     x >= 0
+%%   do
+%%     -- Implementation
+%%   ensure
+%%     abs(Result*Result - x) <= epsilon
+%%  end
+%%  \end{lstlisting}
+%%
+%% Note: Be sure to add your own class names to `morendkeywords'.
+
+\lst@definelanguage{OOSC2Eiffel}
+  {
+    morekeywords={across,agent,alias,all,and,as,attached,check,class,interface,
+      creation,create,debug,deferred,detachable,do,else,elseif,end,
+      ensure,expanded,export,external,false,feature,from,frozen,if,
+      implies,indexing,infix,inherit,inspect,invariant,confined,
+      like,local,loop,not,obsolete,old,once,or,prefix,
+      redefine,rename,require,rescue,retry,select,
+      separate,strip,then,true,undefine,unique,until,variant,use,modify,
+      when, xor, Result, Current, Void, True, False, is},
+    morendkeywords={DOUBLE, INTEGER, POINTER, NONE, REAL,
+     STRING,BIT,BOOLEAN,CHARACTER,STRING,SIMPLE_LIST
+     LINKED_LIST,
+     INTEGER, BOOLEAN, CURSOR,
+     ANY, PROCEDURE, TUPLE, ROUTINE, FUNCTION, BANK_ACCOUNT,
+     FIXED_LIST
+     },
+    sensitive=false,
+    showstringspaces=false,
+    morecomment=[l]--,
+    morestring=[d]",
+    columns=fullflexible,
+    breaklines=true,
+    tabsize=2,
+    numbers=left, 
+    stepnumber=3, 
+    numbersep=6pt,
+    numberstyle=\tiny,
+    identifierstyle=\itshape,
+    commentstyle=\upshape,
+    stringstyle=\bfseries,
+    keywordstyle=\color[HTML]{000000}\bfseries,
+    %ndkeywordstyle=\color[HTML]{3333FF}\itshape,
+    ndkeywordstyle=\color[HTML]{000000}\itshape
+  }[keywords,comments,strings]
+

@@ -8,7 +8,6 @@ deferred class
 	PS_ERROR
 
 inherit
-
 	DEVELOPER_EXCEPTION
 		redefine
 			tag
@@ -26,14 +25,9 @@ feature
 				create Result.make_from_string ("An error occurred. No description is available.")
 
 			end
-
-
 		end
 
---	description: STRING
-			-- A detailed description of the current exception.
---		deferred
---		end
+feature
 
 	accept (a_visitor: PS_ERROR_VISITOR)
 			-- `accept' function of the visitor pattern

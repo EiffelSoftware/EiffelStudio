@@ -1,11 +1,11 @@
 note
-	description: "Represents an access right violation in the backend."
-	author: "Roman Schmocker"
+	description: "Summary description for {PS_INVALID_OPERATION_ERROR}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PS_ACCESS_RIGHT_VIOLATION
+	PS_INVALID_OPERATION_ERROR
 
 inherit
 
@@ -16,13 +16,15 @@ inherit
 
 feature
 
-	description: STRING = "Access right violation"
+	description: STRING
 			-- A human-readable string containing an error description
+		do
+			Result:= "Operation invalid"
+		end
 
 	accept (a_visitor: PS_ERROR_VISITOR)
 			-- `accept' function of the visitor pattern
 		do
-			a_visitor.visit_access_right_violation (Current)
+			a_visitor.visit_invalid_operation_error (Current)
 		end
-
 end

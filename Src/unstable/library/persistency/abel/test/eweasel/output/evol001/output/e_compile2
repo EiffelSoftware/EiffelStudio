@@ -1,0 +1,57 @@
+Eiffel Compilation Manager
+Version 6.6.8.3355 GPL Edition - macosx-x86
+
+[  0% - 1] Degree 6 group root_cluster
+[  0% - 1] Degree 6 group precompile
+[  0% - 1] Degree 6 group base
+[  0% - 1] Degree 6 group elks
+[  0% - 1] Degree 6 group elks/kernel
+[  0% - 1] Degree 6 group elks/kernel/exceptions
+[  0% - 1] Degree 6 group elks/refactoring
+[  0% - 1] Degree 6 group elks/structures
+[  0% - 1] Degree 6 group elks/structures/access
+[  0% - 1] Degree 6 group elks/structures/cursor_tree
+[  0% - 1] Degree 6 group elks/structures/cursors
+[  0% - 1] Degree 6 group elks/structures/dispenser
+[  0% - 1] Degree 6 group elks/structures/iteration
+[  0% - 1] Degree 6 group elks/structures/list
+[  0% - 1] Degree 6 group elks/structures/set
+[  0% - 1] Degree 6 group elks/structures/set/strategies
+[  0% - 1] Degree 6 group elks/structures/sort
+[  0% - 1] Degree 6 group elks/structures/storage
+[  0% - 1] Degree 6 group elks/structures/table
+[  0% - 1] Degree 6 group elks/structures/traversing
+[  0% - 1] Degree 6 group elks/structures/tree
+[  0% - 1] Degree 6 group elks/support
+[  0% - 1] Degree 6 group ise
+[  0% - 1] Degree 6 group ise/event
+[  0% - 1] Degree 6 group ise/kernel
+[  0% - 1] Degree 6 group ise/kernel/exceptions
+[  0% - 1] Degree 6 group ise/serialization
+[  0% - 1] Degree 6 group ise/serialization/errors
+[  0% - 1] Degree 6 group ise/serialization/model
+[  0% - 1] Degree 6 group ise/serialization/reader_writer
+[  0% - 1] Degree 6 group ise/serialization/serializers
+[  0% - 1] Degree 6 group ise/serialization/traversing
+[  0% - 1] Degree 6 group ise/serialization/traversing/classic
+[  0% - 1] Degree 6 group ise/serialization/utilities
+[  0% - 1] Degree 6 group ise/support
+[  0% - 1] Degree 6 group ise/support/classic
+[  0% - 1] Degree 6 group ise/support/test
+[  0% - 1] Degree 6 group ise_runtime
+[  0% - 1] Degree 6 group ise_runtime/debug
+[  0% - 1] Degree 6 group ise_runtime/debug/classic
+[  0% - 1] Degree 6 group base
+[  0% - 1] Degree 6 group eiffelstore2
+[  0% - 1] Degree 6 group eiffelstore2
+[  0% - 1] Degree 6 group base
+[  0% - 1] Degree 5 class FLAT_CLASS
+[  0% - 1] Degree 4 class FLAT_CLASS
+[  0% - 2] Degree 3 class FLAT_CLASS
+[ 50% - 1] Degree 3 class TEST
+[  0% - 2] Degree 2 class FLAT_CLASS
+[ 50% - 1] Degree 2 class TEST
+[  0% - 2] Degree 1 class FLAT_CLASS
+[ 50% - 1] Degree 1 class TEST
+Melting System Changes
+System Recompiled.

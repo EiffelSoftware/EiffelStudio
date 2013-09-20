@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Remove former test directory
+cd $EWEASEL
+\rm -rf output/*
+
+# Build precompiled library
+cd $ISE_EIFFEL/library
+svn up base time thread store 
+
+#Performing non-void safe precompilations
+cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base.ecf -precompile -c_compile $2
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-mt.ecf -precompile -c_compile $2
+
+#Performing void-safe precompilation
+cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base-safe.ecf -precompile -c_compile $2
+
+# Launch EiffelWeasel tests
+cd $EWEASEL
+
+if [ -n "$1" ]; then
+	if [ "$1" != "no" ]; then
+		eweasel -order -max_threads 2 -keep failed -define INCLUDE $EWEASEL/control -define EWEASEL $EWEASEL -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $EWEASEL/control/catalog -output $EWEASEL/output > $1
+	else
+		echo Eweasel not launched per user request
+	fi
+else
+	echo Missing output file name
+fi

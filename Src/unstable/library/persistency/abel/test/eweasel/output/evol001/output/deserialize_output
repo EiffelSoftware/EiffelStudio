@@ -1,0 +1,55 @@
+
+precomp_base: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+ISE_EXCEPTION_MANAGER
+                    developer_raise @11    Mismatch: FLAT_CLASS:
+<0000000001D01944>                         Serialization failed.         Fail
+-------------------------------------------------------------------------------
+ISE_EXCEPTION_MANAGER
+                    developer_raise        
+<0000000001D01944>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+ISE_EXCEPTION_MANAGER
+                    raise @11              
+<0000000001D01944>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+SERIALIZATION_FAILURE
+                    raise @2               
+<0000000001D0195C>  (From EXCEPTION)       Routine failure.              Fail
+-------------------------------------------------------------------------------
+EXCEPTIONS          raise_retrieval_exception @4
+<0000000001D01860>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+FLAT_CLASS          internal_correct_mismatch @6
+<0000000001D013BC>  (From ANY)             Routine failure.              Fail
+-------------------------------------------------------------------------------
+RAW_FILE            c_retrieved                                         
+<0000000001D00F78>  (From FILE)            Routine failure.              Fail
+-------------------------------------------------------------------------------
+RAW_FILE            retrieved @4                                        
+<0000000001D00F78>  (From FILE)            Routine failure.              Fail
+-------------------------------------------------------------------------------
+STORABLE            retrieve_by_name @6                                 
+<0000000001D00F60>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+C_BINARY_SERIALIZATION_STRATEGY
+                    retrieve @2            
+<0000000001D0048C>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+PERSISTENCE_MANAGER retrieve @1                                         
+<0000000001D0042C>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+TEST                deserialize @1                                      
+<0000000001D003FC>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+TEST                make @5                                             
+<0000000001D003FC>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+TEST                root's creation                                     
+<0000000001D003FC>                         Routine failure.              Exit
+-------------------------------------------------------------------------------
+Execution failed

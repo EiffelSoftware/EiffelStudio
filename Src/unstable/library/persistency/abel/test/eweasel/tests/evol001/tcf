@@ -1,0 +1,31 @@
+
+test_name simple-evolution
+test_description First test for deserializing an evolved class
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	flat_class_v1.e $CLUSTER flat_class.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE serialize_output serialize
+execute_result ok
+
+compare serialize_output output
+
+
+
+copy_raw 	flat_class_v2.e $CLUSTER flat_class.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE deserialize_output deserialize
+execute_result ok
+
+compare deserialize_output output
+
+
+
+test_end

@@ -15,6 +15,7 @@ feature
 			an_error.accept (Current)
 		end
 
+
 	visit_no_error (no_error: PS_NO_ERROR)
 			-- When no error occured, doing nothing is a reasonable default.
 		do
@@ -35,8 +36,23 @@ feature
 		deferred
 		end
 
-	visit_access_right_violation (access_right_violation: PS_ACCESS_RIGHT_VIOLATION)
+	visit_access_right_violation (access_right_violation: PS_ACCESS_RIGHT_VIOLATION_ERROR)
 			-- Visit an access right violation error
+		deferred
+		end
+
+	visit_integrity_constraint_violation (integrity_constraint_violation: PS_INTEGRITY_CONSTRAINT_VIOLATION_ERROR)
+			-- Visit an integrity constraint violation error
+		deferred
+		end
+
+	visit_message_not_understood (message_not_understood: PS_MESSAGE_NOT_UNDERSTOOD_ERROR)
+			-- Visit a message not understood error
+		deferred
+		end
+
+	visit_invalid_operation_error (invalid_operation: PS_INVALID_OPERATION_ERROR)
+			-- Visit an invalid operation error
 		deferred
 		end
 
@@ -45,12 +61,17 @@ feature
 		deferred
 		end
 
+	visit_backend_runtime_error (backend_runtime_error: PS_BACKEND_RUNTIME_ERROR)
+			-- Visit a backend runtime error
+		deferred
+		end
+
 	visit_internal_error (internal_error: PS_INTERNAL_ERROR)
 			-- Visit an internal error
 		deferred
 		end
 
-	visit_version_mismatch (version_error: PS_VERSION_MISMATCH)
+	visit_version_mismatch (version_error: PS_VERSION_MISMATCH_ERROR)
 			-- Visit a version mismatch error
 		deferred
 		end

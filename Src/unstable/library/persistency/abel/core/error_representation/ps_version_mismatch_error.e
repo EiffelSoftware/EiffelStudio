@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_VERSION_MISMATCH
+	PS_VERSION_MISMATCH_ERROR
 
 inherit
 

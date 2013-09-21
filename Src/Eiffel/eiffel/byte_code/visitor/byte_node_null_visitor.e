@@ -247,6 +247,11 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
+	process_elsif_expression_b (a_node: ELSIF_EXPRESSION_B)
+			-- <Precursor>
+		do
+		end
+
 	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		do
@@ -284,6 +289,11 @@ feature {BYTE_NODE} -- Visitors
 
 	process_if_b (a_node: IF_B)
 			-- Process `a_node'.
+		do
+		end
+
+	process_if_expression_b (a_node: IF_EXPRESSION_B)
+			-- <Precursor>
 		do
 		end
 

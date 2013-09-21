@@ -804,6 +804,26 @@ feature {NONE} -- Visitors
 			ba.write_forward
 		end
 
+	process_elsif_expression_b (a_node: ELSIF_EXPRESSION_B)
+			-- <Precursor>
+		do
+				-- Generate hook for the condition test.
+			generate_melted_debugger_hook
+
+				-- Generate byte code for condition.
+			a_node.condition.process (Current)
+
+				-- Test if False.
+			ba.append (Bc_jmp_f)
+			ba.mark_forward
+
+				-- Generate alternative expression byte code.
+			a_node.expression.process (Current)
+			ba.append (Bc_jmp)
+			ba.mark_forward2
+			ba.write_forward
+		end
+
 	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		do
@@ -1164,6 +1184,58 @@ feature {NONE} -- Visitors
 			loop
 				ba.write_forward2
 				i := i + 1
+			end
+		end
+
+	process_if_expression_b (a_node: IF_EXPRESSION_B)
+			-- <Precursor>
+		local
+			nb_jumps: INTEGER
+		do
+				-- Generate hook for the condition test.
+			generate_melted_debugger_hook
+
+				-- Generate byte code for condition.
+			a_node.condition.process (Current)
+
+				-- Generate a test.
+			ba.append (Bc_jmp_f)
+
+				-- Deferred writing of the jump value.
+			ba.mark_forward
+
+				-- Generate expression for Then_part.
+			a_node.then_expression.process (Current)
+
+			ba.append (Bc_jmp)
+			ba.mark_forward2
+			nb_jumps := 1
+
+				-- Write relative jump value.
+			ba.write_forward
+
+			if attached a_node.elsif_list as l then
+					-- Generate byte code for alternatives.
+				across
+					l as c
+				loop
+					c.item.process (Current)
+				end
+				nb_jumps := nb_jumps + l.count
+			end
+
+				-- Generate expression for Else_part.
+			a_node.else_expression.process (Current)
+
+			from
+					-- Generate jump values for unconditional jumps
+					-- after the `nb_jumps' expressions encountered in the
+					-- entire conditional expression.
+			until
+				nb_jumps <= 0
+			loop
+				ba.write_forward2
+				nb_jumps := nb_jumps - 1
 			end
 		end
 

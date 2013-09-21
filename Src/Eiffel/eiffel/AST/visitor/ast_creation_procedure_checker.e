@@ -1,9 +1,5 @@
 ﻿note
 	description: "Validator of creation procedures that ensures they set all the attributes as required."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date: 2012-02-01 23:20:47 +0400$"
-	revision: "$Revision$"
 
 class
 	AST_CREATION_PROCEDURE_CHECKER
@@ -28,8 +24,10 @@ inherit
 			process_debug_as,
 			process_eiffel_list,
 			process_elseif_as,
+			process_elseif_expression_as,
 			process_guard_as,
 			process_if_as,
+			process_if_expression_as,
 			process_inline_agent_creation_as,
 			process_inspect_as,
 			process_like_cur_as,
@@ -648,6 +646,14 @@ feature {AST_EIFFEL} -- Visitor: compound
 			keeper.save_sibling
 		end
 
+	process_elseif_expression_as (a: ELSIF_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			a.condition.process (Current)
+			a.expression.process (Current)
+			keeper.save_sibling
+		end
+
 	process_guard_as (a: GUARD_AS)
 		do
 			if attached a.check_list as l then
@@ -678,6 +684,19 @@ feature {AST_EIFFEL} -- Visitor: compound
 			keeper.save_sibling
 			safe_process (a.elsif_list)
 			process_compound (a.else_part)
+			keeper.save_sibling
+			keeper.leave_realm
+		end
+
+	process_if_expression_as (a: IF_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			a.condition.process (Current)
+			keeper.enter_realm
+			a.then_expression.process (Current)
+			keeper.save_sibling
+			safe_process (a.elsif_list)
+			a.else_expression.process (Current)
 			keeper.save_sibling
 			keeper.leave_realm
 		end
@@ -942,6 +961,8 @@ feature {NONE} -- Access
 			-- Bodies that are being processed
 
 note
+	date: "$Date: 2012-02-01 23:20:47 +0400$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

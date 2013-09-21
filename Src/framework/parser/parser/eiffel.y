@@ -126,6 +126,7 @@ create
 %type <detachable CREATION_EXPR_AS>	Creation_expression
 %type <detachable DEBUG_AS>			Debug
 %type <detachable ELSIF_AS>			Elseif_part
+%type <detachable ELSIF_EXPRESSION_AS>		Elseif_part_expression
 %type <detachable ENSURE_AS>			Postcondition
 %type <detachable EXPORT_ITEM_AS>		New_export_item
 %type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression
@@ -139,6 +140,7 @@ create
 %type <detachable GUARD_AS>			Guard
 %type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator Feature_name_for_call
 %type <detachable IF_AS>				Conditional
+%type <detachable IF_EXPRESSION_AS>			Conditional_expression
 %type <detachable INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
 %type <detachable INSPECT_AS>			Multi_branch
 %type <detachable INSTRUCTION_AS>		Instruction Instruction_impl
@@ -176,6 +178,7 @@ create
 %type <detachable CONVERT_FEAT_LIST_AS>			Convert_list Convert_clause
 %type <detachable EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
 %type <detachable EIFFEL_LIST [ELSIF_AS]>			Elseif_list Elseif_part_list
+%type <detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]>			Elseif_list_expression Elseif_part_list_expression
 %type <detachable EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
 %type <detachable EXPORT_CLAUSE_AS> 				New_exports New_exports_opt
 %type <detachable EIFFEL_LIST [EXPR_AS]>			Expression_list
@@ -210,7 +213,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 355
+%expect 359
 
 %%
 
@@ -3115,6 +3118,8 @@ Factor: TE_VOID
 			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Qualified_factor
 			{ $$ := $1 }
+	|	Conditional_expression
+			{ $$ := $1 }
 	;
 
 Qualified_factor:
@@ -3389,6 +3394,39 @@ Identifier_as_lower: TE_ID
 					-- Keyword used as identifier
 				$$ := extract_id ($1)
 			}
+	;
+
+-- Conditional expression
+
+Conditional_expression:
+		TE_IF Expression TE_THEN Expression TE_ELSE Expression TE_END
+			{ $$ := ast_factory.new_if_expression_as ($2, $4, Void, $6, $7, $1, $3, $5) }
+	|	TE_IF Expression TE_THEN Expression Elseif_list_expression TE_ELSE Expression TE_END
+			{ $$ := ast_factory.new_if_expression_as ($2, $4, $5, $7, $8, $1, $3, $6) }
+	;
+
+Elseif_list_expression: Add_counter Elseif_part_list_expression Remove_counter
+		{ $$ := $2 }
+	;
+
+Elseif_part_list_expression: Elseif_part_expression
+			{
+				$$ := ast_factory.new_eiffel_list_elseif_expression_as (counter_value + 1)
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	|	Elseif_part_expression Increment_counter Elseif_part_list_expression
+			{
+				$$ := $3
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	;
+
+Elseif_part_expression: TE_ELSEIF Expression TE_THEN Expression
+			{ $$ := ast_factory.new_elseif_expression_as ($2, $4, $1, $3) }
 	;
 
 -- Constant value without any type qualifier.

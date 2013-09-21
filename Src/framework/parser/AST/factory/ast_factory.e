@@ -1131,6 +1131,16 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
+	new_eiffel_list_elseif_expression_as (n: INTEGER): detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]
+			-- New empty list of {ELSIF_EXPRESSION_AS} with capacity `n'.
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make_filled (n)
+		ensure
+			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+		end
+
 	new_eiffel_list_export_item_as (n: INTEGER): detachable EIFFEL_LIST [EXPORT_ITEM_AS]
 			-- New empty list of EXPORT_ITEM_AS
 		require
@@ -1315,6 +1325,14 @@ feature -- Access
 			end
 		end
 
+	new_elseif_expression_as (c: detachable EXPR_AS; e: EXPR_AS; l_as, t_as: detachable KEYWORD_AS): detachable ELSIF_EXPRESSION_AS
+			-- New ELSIF_EXPRESSION AST node with condition `c', value `e', "elseif" keyword `l_as' and "then" keyword `t_as'.
+		do
+			if attached c and attached e then
+				create Result.initialize (c, e, l_as, t_as)
+			end
+		end
+
 	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
 			-- New ENSURE AST node
 		do
@@ -1473,6 +1491,17 @@ feature -- Access
 		do
 			if cnd /= Void and end_location /= Void then
 				create Result.initialize (cnd, cmp, ei, e, end_location, i_as, t_as, e_as)
+			end
+		end
+
+	new_if_expression_as (c: detachable EXPR_AS; t: detachable EXPR_AS;
+			ei: detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]; e: detachable EXPR_AS;
+			end_location, i_as, t_as, e_as: detachable KEYWORD_AS): detachable IF_EXPRESSION_AS
+			-- New IF_EXPRESSION AST node with condition `c', Then_part `t', Elseif_part ei, Else_part `e',
+			-- "end" keyword `end_location', "if", "then" and "else" keywords `i_as', `t_as', `e_as'.
+		do
+			if attached c and then attached t and then attached e and then attached end_location then
+				create Result.initialize (c, t, ei, e, end_location, i_as, t_as, e_as)
 			end
 		end
 

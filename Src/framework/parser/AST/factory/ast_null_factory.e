@@ -33,7 +33,7 @@ inherit
 			new_exit_condition_pair, new_export_item_as, new_expr_address_as, new_expr_call_as, new_external_as,
 			new_external_lang_as, new_feature_as, new_feature_clause_as, new_feature_list_as,
 			new_feature_name_alias_as, new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
-			new_guard_as, new_identifier_list, new_if_as, new_index_as, new_infix_as,
+			new_guard_as, new_identifier_list, new_if_as, new_if_expression_as, new_index_as, new_infix_as,
 			new_inline_agent_creation_as, new_inspect_as,
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_integer_octal_as,
 			new_integer_binary_as, new_interval_as, new_invariant_as, new_iteration_as,
@@ -810,6 +810,13 @@ feature -- Access
 			ei: detachable EIFFEL_LIST [ELSIF_AS]; e: detachable EIFFEL_LIST [INSTRUCTION_AS];
 			end_location, i_as, t_as, e_as: detachable KEYWORD_AS): detachable IF_AS
 			-- New IF AST node
+		do
+		end
+
+	new_if_expression_as (c: detachable EXPR_AS; t: detachable EXPR_AS;
+			ei: detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]; e: detachable EXPR_AS;
+			end_location, i_as, t_as, e_as: detachable KEYWORD_AS): detachable IF_EXPRESSION_AS
+			-- <Precursor>
 		do
 		end
 

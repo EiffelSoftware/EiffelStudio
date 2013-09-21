@@ -1567,6 +1567,12 @@ feature {NONE} -- Visitors
 			-- Generation done in IF_B
 		end
 
+	process_elsif_expression_b (a_node: ELSIF_EXPRESSION_B)
+			-- <Precursor>
+		do
+			-- Generation done by `process_if_b'.
+		end
+
 	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		do
@@ -2044,7 +2050,7 @@ feature {NONE} -- Visitors
 		end
 
 	process_if_b (a_node: IF_B)
-			-- Process `a_node'.
+			-- <Precursor>
 		local
 			l_elsif_clause: ELSIF_B
 			l_cmp: BYTE_LIST [BYTE_NODE]
@@ -2126,6 +2132,64 @@ feature {NONE} -- Visitors
 			il_generator.put_silent_debug_info (a_node.end_location)
 		end
 
+	process_if_expression_b (a_node: IF_EXPRESSION_B)
+			-- Process `a_node'.
+		local
+			l_elsif_clause: ELSIF_EXPRESSION_B
+			l_else_label, l_end_label, l_elsif_label: IL_LABEL
+		do
+				-- Generated IL code for condition.
+			generate_il_line_info (a_node, True)
+			a_node.condition.process (Current)
+				-- Generated a test
+			l_else_label := il_generator.create_label
+			il_generator.branch_on_false (l_else_label)
+
+				-- Generated IL code for first expression.
+			a_node.then_expression.process (Current)
+
+			l_end_label := il_generator.create_label
+			il_generator.branch_to (l_end_label)
+
+				-- Else label
+			il_generator.mark_label (l_else_label)
+
+			if attached a_node.elsif_list as l_elsif_list then
+					-- Generates IL code for alternatives.
+				across
+					l_elsif_list as c
+				loop
+					l_elsif_clause := c.item
+						-- Generate byte code for condition.
+					generate_il_line_info (l_elsif_clause, True)
+					l_elsif_clause.condition.process (Current)
+
+						-- Test if False
+					l_elsif_label := il_generator.create_label
+					il_generator.branch_on_false (l_elsif_label)
+
+						-- Generate alternative expression IL code.
+					l_elsif_clause.expression.process (Current)
+
+					il_generator.branch_to (l_end_label)
+
+					il_generator.mark_label (l_elsif_label)
+				end
+			end
+
+				-- Generates byte code for default expression.
+			a_node.else_expression.process (Current)
+
+				-- End of `if' statement.
+			il_generator.mark_label (l_end_label)
+
+			check
+				end_location_not_void: a_node.end_location /= Void
+			end
+
+			il_generator.put_silent_debug_info (a_node.end_location)
+		end
+
 	process_inspect_b (a_node: INSPECT_B)
 			-- Process `a_node'.
 		local
@@ -2172,11 +2236,10 @@ feature {NONE} -- Visitors
 					if l_intervals.last.upper.is_equal (max_value) then
 						max_value := l_intervals.last.upper
 					end
-						-- Group intervals
+						-- Group intervals.
 					l_spans := build_spans (a_node, l_intervals, min_value, max_value)
-						-- Create array of labels for all cases and put `l_else_label' to position 0
-					create labels.make (-1, a_node.case_list.count)
-					labels.put (l_end_label, -1)
+						-- Create array of labels for all cases and put `l_else_label' at position 0.
+					create labels.make_filled (l_end_label, -1, a_node.case_list.count)
 					labels.put (l_else_label, 0)
 					generate_spans (a_node, l_spans, 1, l_spans.count, min_value, max_value, True, True, labels)
 				end

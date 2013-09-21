@@ -457,6 +457,15 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
+	process_elsif_expression_b (a_node: ELSIF_EXPRESSION_B)
+			-- Process `a_node'.
+		require
+			is_valid: is_valid
+			a_node_attached: attached a_node
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
 	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		require
@@ -524,6 +533,15 @@ feature {BYTE_NODE} -- Visitors
 		require
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
+	process_if_expression_b (a_node: IF_EXPRESSION_B)
+			-- Process `a_node'.
+		require
+			is_valid: is_valid
+			a_node_attached: attached a_node
 			a_node_valid: is_node_valid (a_node)
 		deferred
 		end

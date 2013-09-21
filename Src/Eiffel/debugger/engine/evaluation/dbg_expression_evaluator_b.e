@@ -823,6 +823,12 @@ feature {BYTE_NODE} -- Visitor
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
+	process_elsif_expression_b (a_node: ELSIF_EXPRESSION_B)
+			-- <Precursor>
+		do
+			dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_not_supported (a_node))
+		end
+
 	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		do
@@ -1010,6 +1016,12 @@ feature {BYTE_NODE} -- Visitor
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
+		end
+
+	process_if_expression_b (a_node: IF_EXPRESSION_B)
+			-- <Precursor>
+		do
+			dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_not_supported (a_node))
 		end
 
 	process_hidden_if_b (a_node: HIDDEN_IF_B)

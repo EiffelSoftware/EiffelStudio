@@ -214,6 +214,14 @@ feature -- Implementation
 		do
 		end
 
+	process_elseif_expression_as (l_as: ELSIF_EXPRESSION_AS)
+		do
+		end
+
+	process_if_expression_as (l_as: IF_EXPRESSION_AS)
+		do
+		end
+
 	process_operand_as (l_as: OPERAND_AS)
 		do
 		end

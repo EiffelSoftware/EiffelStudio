@@ -122,6 +122,8 @@ inherit
 			process_unary_as,
 			process_un_free_as,
 			process_un_strip_as,
+			process_if_expression_as,
+			process_elseif_expression_as,
 			process_loop_expr_as,
 			process_object_test_as,
 			process_array_as,
@@ -1513,6 +1515,28 @@ feature {CLASS_AS} -- Expressions
 			safe_process (l_as.lparan_symbol (match_list))
 			process_and_print_identifier_list (l_as.id_list)
 			safe_process (l_as.rparan_symbol (match_list))
+		end
+
+	process_if_expression_as (l_as: IF_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			safe_process_and_print (l_as.if_keyword (match_list), " ", "")
+			safe_process_and_print (l_as.condition, " ", "")
+			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
+			safe_process_and_print (l_as.then_expression, " ", "")
+			safe_process (l_as.elsif_list)
+			safe_process_and_print (l_as.else_keyword (match_list), " ", "")
+			safe_process_and_print (l_as.else_expression, " ", "")
+			safe_process_and_print (l_as.end_keyword, " ", "")
+		end
+
+	process_elseif_expression_as (l_as: ELSIF_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			safe_process_and_print (l_as.elseif_keyword (match_list), " ", "")
+			safe_process_and_print (l_as.condition, " ", "")
+			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
+			safe_process_and_print (l_as.expression, " ", "")
 		end
 
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)

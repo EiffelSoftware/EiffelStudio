@@ -593,6 +593,14 @@ feature {NONE} -- Implementation
 			safe_process (l_as.else_part)
 		end
 
+	process_if_expression_as (l_as: IF_EXPRESSION_AS)
+		do
+			l_as.condition.process (Current)
+			l_as.then_expression.process (Current)
+			safe_process (l_as.elsif_list)
+			l_as.else_expression.process (Current)
+		end
+
 	process_inspect_as (l_as: INSPECT_AS)
 		do
 			l_as.switch.process (Current)
@@ -780,6 +788,12 @@ feature {NONE} -- Implementation
 		do
 			l_as.expr.process (Current)
 			safe_process (l_as.compound)
+		end
+
+	process_elseif_expression_as (l_as: ELSIF_EXPRESSION_AS)
+		do
+			l_as.condition.process (Current)
+			l_as.expression.process (Current)
 		end
 
 	process_create_as (l_as: CREATE_AS)

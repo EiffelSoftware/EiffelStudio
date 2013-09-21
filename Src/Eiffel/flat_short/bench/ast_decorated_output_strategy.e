@@ -2932,6 +2932,72 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
+	process_if_expression_as (l_as: IF_EXPRESSION_AS)
+			-- <Precursor>
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
+			indent: PROCEDURE [ANY, TUPLE]
+			exdent: PROCEDURE [ANY, TUPLE]
+		do
+			if
+				true
+				-- Use multiline format all the time to facilitate debugging
+				-- Otherwise it would be possible to use single line format
+				-- depending on the complexity of the nested expressions.
+				-- attached l_as.elsif_list
+			then
+				indent := agent
+					do
+						text_formatter_decorator.indent
+						text_formatter_decorator.put_new_line
+					end
+				exdent := agent
+					do
+						text_formatter_decorator.put_new_line
+						text_formatter_decorator.exdent
+					end
+			else
+				indent := agent text_formatter_decorator.put_space
+				exdent := indent
+			end
+			if not expr_type_visiting then
+				l_text_formatter_decorator := text_formatter_decorator
+				l_text_formatter_decorator.set_separator (Void)
+				l_text_formatter_decorator.set_new_line_between_tokens
+				put_breakable
+				l_text_formatter_decorator.process_keyword_text (ti_if_keyword, Void)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.new_expression
+				l_as.condition.process (Current)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
+				l_text_formatter_decorator.put_new_line
+				indent.call (Void)
+				l_text_formatter_decorator.new_expression
+				put_breakable
+			end
+			l_as.then_expression.process (Current)
+			if not expr_type_visiting then
+				exdent.call (Void)
+				if l_as.elsif_list /= Void then
+					l_text_formatter_decorator.set_separator (ti_empty)
+					l_text_formatter_decorator.set_no_new_line_between_tokens
+					l_as.elsif_list.process (Current)
+					l_text_formatter_decorator.set_separator (Void)
+				end
+				l_text_formatter_decorator.process_keyword_text (ti_else_keyword, Void)
+				indent.call (Void)
+				l_text_formatter_decorator.new_expression
+				put_breakable
+			end
+			l_as.then_expression.process (Current)
+			if not expr_type_visiting then
+				exdent.call (Void)
+				l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			end
+		end
+
 	process_inspect_as (l_as: INSPECT_AS)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
@@ -3844,6 +3910,29 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.exdent
 			end
+		end
+
+	process_elseif_expression_as (l_as: ELSIF_EXPRESSION_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
+		do
+			l_text_formatter_decorator := text_formatter_decorator
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			put_breakable
+			l_text_formatter_decorator.process_keyword_text (ti_elseif_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.new_expression
+			l_as.condition.process (Current)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.set_without_tabs
+			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.indent
+			l_as.expression.process (Current)
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.exdent
 		end
 
 	process_create_as (l_as: CREATE_AS)

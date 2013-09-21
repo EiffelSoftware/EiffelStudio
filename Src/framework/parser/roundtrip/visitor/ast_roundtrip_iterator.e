@@ -913,6 +913,18 @@ feature
 			safe_process (l_as.end_keyword)
 		end
 
+	process_if_expression_as (l_as: IF_EXPRESSION_AS)
+		do
+			safe_process (l_as.if_keyword (match_list))
+			l_as.condition.process (Current)
+			safe_process (l_as.then_keyword (match_list))
+			l_as.then_expression.process (Current)
+			safe_process (l_as.elsif_list)
+			safe_process (l_as.else_keyword (match_list))
+			l_as.else_expression.process (Current)
+			safe_process (l_as.end_keyword)
+		end
+
 	process_inspect_as (l_as: INSPECT_AS)
 		do
 			safe_process (l_as.inspect_keyword (match_list))
@@ -1190,6 +1202,14 @@ feature
 			safe_process (l_as.expr)
 			safe_process (l_as.then_keyword (match_list))
 			safe_process (l_as.compound)
+		end
+
+	process_elseif_expression_as (l_as: ELSIF_EXPRESSION_AS)
+		do
+			safe_process (l_as.elseif_keyword (match_list))
+			l_as.condition.process (Current)
+			safe_process (l_as.then_keyword (match_list))
+			l_as.expression.process (Current)
 		end
 
 	process_create_as (l_as: CREATE_AS)

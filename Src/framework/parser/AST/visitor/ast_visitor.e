@@ -1050,6 +1050,22 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_elseif_expression_as (l_as: ELSIF_EXPRESSION_AS)
+			-- Process `l_as'.
+		require
+			is_valid_visitor: is_valid
+			attached_as: attached l_as
+		deferred
+		end
+
+	process_if_expression_as (l_as: IF_EXPRESSION_AS)
+			-- Process `l_as'.
+		require
+			is_valid_visitor: is_valid
+			attached_as: attached l_as
+		deferred
+		end
+
 	process_operand_as (l_as: OPERAND_AS)
 			-- Process `l_as'.
 		require

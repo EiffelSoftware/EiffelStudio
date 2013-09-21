@@ -166,7 +166,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTLN(x) allocates a new object of dftype 'x'
  *  RTLNS(x,y,z) allocates a new routine object of dftype 'x', dtype 'y' and size 'z'
  *  RTLNT(x) allocates a new tuple object of dftype 'x'
- *  RTLNTS(x) allocates a new tuple object of dftype 'x', with 'n' elements and is_atomic 'a'
+ *  RTLNTS(x,n,a) allocates a new tuple object of dftype 'x', with 'n' elements and is_atomic 'a'
  *  RTLNTY(x) allocates a new TYPE [like x] instance of dftype 'x'
  *  RTLNSMART(x) allocates a new object of dftype 'x'
  *  RTLNR(x,y,a,o,c) allocates a new routine object of type 'x' and

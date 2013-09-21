@@ -433,8 +433,7 @@ feature -- Settings
 			l_arg_str := once "arg"
 			if arguments /= Void then
 				count := arguments.count
-				create Result.make (1, count + 1)
-				Result.put (l_current_str, 1)
+				create Result.make_filled (l_current_str, 1, count + 1)
 				j := 2
 				from
 					i := 1
@@ -453,8 +452,7 @@ feature -- Settings
 					j := j + 1
 				end
 			else
-				create Result.make (1, 1)
-				Result.put (l_current_str, 1)
+				create Result.make_filled (l_current_str, 1, 1)
 			end
 		end
 
@@ -468,8 +466,7 @@ feature -- Settings
 			if arguments /= Void then
 				l_is_workbench := context.workbench_mode
 				count := arguments.count
-				create Result.make (1, count + 1)
-				Result.put (once "EIF_REFERENCE", 1)
+				create Result.make_filled (once "EIF_REFERENCE", 1, count + 1)
 				j := 2
 				from
 					i := 1
@@ -486,8 +483,7 @@ feature -- Settings
 					j := j + 1
 				end
 			else
-				create Result.make (1, 1)
-				Result.put (once "EIF_REFERENCE", 1)
+				create Result.make_filled (once "EIF_REFERENCE", 1, 1)
 			end
 		ensure
 			argument_types_not_void: Result /= Void
@@ -503,7 +499,6 @@ feature -- Settings
 			-- Generate value for old variables
 		local
 			inh_assert: INHERITED_ASSERTION
-			item: UN_OLD_BL
 			buf: GENERATION_BUFFER
 		do
 			inh_assert := Context.inherited_assertion
@@ -524,8 +519,9 @@ feature -- Settings
 					until
 						old_expressions.after
 					loop
-						item ?= old_expressions.item
-						item.initialize; -- Cannot fail
+						check attached {UN_OLD_BL} old_expressions.item as item then
+							item.initialize
+						end
 						old_expressions.forth
 					end
 				end
@@ -838,7 +834,6 @@ end
 			i, nb: INTEGER
 			l_argument_types: like arguments
 			l_type: TYPE_A
-			l_any_type: CL_TYPE_A
 			l_any_class_id, l_name_id: INTEGER
 			l_arg: ARGUMENT_BL
 			l_optimize_like_current: BOOLEAN
@@ -866,10 +861,9 @@ end
 							-- We instantiate `l_type' in current context to see if it is
 							-- really a reference
 						if context.real_type (l_type).c_type.is_reference then
-							l_any_type ?= l_type
 								-- Only generate a catcall detection if the expected argument is different
 								-- than ANY since ANY is the ancestor to all types.
-							if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
+							if not attached {CL_TYPE_A} l_type as l_any_type or else l_any_type.class_id /= l_any_class_id then
 								if l_arg = Void then
 									create l_arg
 									l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)

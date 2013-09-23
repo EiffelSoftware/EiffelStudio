@@ -1,0 +1,2 @@
+Error: types of expressions in two or more Then_part(s) or Else_part are different.
+What to do: use expressions of the same type.

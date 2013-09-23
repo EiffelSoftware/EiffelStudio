@@ -6699,7 +6699,10 @@ feature {NONE} -- Implementation
 			l_list: BYTE_LIST [ELSIF_EXPRESSION_B]
 			s: INTEGER
 			scope_matcher: AST_SCOPE_MATCHER
+			l_expression_type: detachable TYPE_A
+			l_error_level: like error_level
 		do
+			l_error_level := error_level
 			l_needs_byte_node := is_byte_node_enabled
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -6726,7 +6729,8 @@ feature {NONE} -- Implementation
 			s := context.scope
 			scope_matcher.add_scopes (l_as.condition)
 			l_as.then_expression.process (Current)
-			if l_needs_byte_node and then attached {EXPR_B} last_byte_node as t then
+			if attached last_type as e and then l_needs_byte_node and then attached {EXPR_B} last_byte_node as t then
+				l_expression_type := e
 				l_then_expression := t
 			end
 			context.set_scope (s)
@@ -6738,13 +6742,16 @@ feature {NONE} -- Implementation
 			context.update_realm
 
 				-- Type check on alternaltives compounds
-			if attached l_as.elsif_list as l then
+			if attached l_expression_type and then attached l_as.elsif_list as l then
 				create l_list.make (l.count)
 				process_eiffel_list_with_matcher (l, Void, l_list)
 			end
 				-- Type check on default expression.
 			l_as.else_expression.process (Current)
-			if l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
+			if attached last_type as t and then l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
+				if attached l_expression_type and then not l_expression_type .is_safe_equivalent (t) then
+					error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.else_expression.start_location, context))
+				end
 				l_else_expression := e
 			end
 				-- Even though Else part might be empty,
@@ -6758,6 +6765,10 @@ feature {NONE} -- Implementation
 				create l_if.make (l_condition, l_then_expression, l_list, l_else_expression, l_as.end_keyword)
 				l_if.set_line_number (l_as.condition.start_location.line)
 				last_byte_node := l_if
+			end
+
+			if error_level /= l_error_level then
+				reset_types
 			end
 		end
 
@@ -7746,10 +7757,13 @@ feature {NONE} -- Implementation
 			l_elsif: ELSIF_EXPRESSION_B
 			s: INTEGER
 			scope_matcher: AST_SCOPE_MATCHER
+			l_expression_type: TYPE_A
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
 			l_needs_byte_node := is_byte_node_enabled
+
+			l_expression_type := last_type
 
 				-- Type check test first
 			l_as.condition.process (Current)
@@ -7772,6 +7786,9 @@ feature {NONE} -- Implementation
 			scope_matcher.add_scopes (l_as.condition)
 			l_as.expression.process (Current)
 			if attached l_condition and then attached {EXPR_B} last_byte_node as e then
+				if attached l_expression_type and then attached last_type as t and then not l_expression_type .is_safe_equivalent (t) then
+					error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.expression.start_location, context))
+				end
 				l_expression := e
 			end
 			context.set_scope (s)
@@ -7787,6 +7804,9 @@ feature {NONE} -- Implementation
 				l_elsif.set_line_number (l_as.condition.start_location.line)
 				last_byte_node := l_elsif
 			end
+
+				-- Restore `last_type' to the type specified in Then_part.
+			last_type := l_expression_type
 		end
 
 	process_create_as (l_as: CREATE_AS)

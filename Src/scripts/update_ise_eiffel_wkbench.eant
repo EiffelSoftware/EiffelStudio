@@ -106,10 +106,13 @@
 		<mkdir directory="${ISE_EIFFEL}_workbench${path_separator}library" />
 		<available resource="${EIFFEL_SRC}${path_separator}library" variable="tmp0_available" />
 		<set name="EIFFEL_SRC_LIBRARY" value="${EIFFEL_SRC}${path_separator}library" />
+		<set name="ISE_EIFFEL_WB_LIBRARY" value="${ISE_EIFFEL}_workbench${path_separator}library" />
 		<geant target="copy_from_library" if="${tmp0_available}=true" />
 		<set name="EIFFEL_SRC_LIBRARY" value="${EIFFEL_SRC}${path_separator}compatible${path_separator}library" />
+		<set name="ISE_EIFFEL_WB_LIBRARY" value="${ISE_EIFFEL}_workbench${path_separator}compatible${path_separator}library" />
 		<geant target="copy_from_library" if="${tmp0_available}=true" />
 		<unset name="EIFFEL_SRC_LIBRARY" />
+		<unset name="ISE_EIFFEL_WB_LIBRARY" />
 		<echo message="! Unavailable: EIFFEL_SRC/library folder= ${EIFFEL_SRC}${path_separator}library" unless="${tmp0_available}=true" />
 
 		<geant target="update_executable_properties" />
@@ -211,7 +214,7 @@
 		</group>
 	</target>
 	<target name="copy_from_library" depend="init">
-		<echo message="Copy from [Library=${EIFFEL_SRC_LIBRARY}]" />
+		<echo message="Copy from [Library=${EIFFEL_SRC_LIBRARY}] to ${ISE_EIFFEL_WB_LIBRARY}" />
 		<set name="tmpincludeall" value="true" />
 		<set name="tmpincludeall" value="false" />
 
@@ -248,7 +251,7 @@
 		<echo message=" -> ${a_libname}"/>
 		<set name="libtmp" value="${path_separator}${a_libname}" />
 		<copy 	dir="${EIFFEL_SRC_LIBRARY}${libtmp}" 
-				to_directory="${ISE_EIFFEL}_workbench${libtmp}" 
+			to_directory="${ISE_EIFFEL_WB_LIBRARY}${path_separator}${libtmp}" 
 				force="true" unless="${return_code}=0" >
 			<fileset include="@(**/*)" />
 		</copy>

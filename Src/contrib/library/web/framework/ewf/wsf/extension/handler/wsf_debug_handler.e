@@ -66,8 +66,6 @@ feature -- Access
 			p: WSF_PAGE_RESPONSE
 			v: STRING_8
 		do
-			if (create {RT_DEBUGGER}).rt_workbench_wait_for_debugger (1050) then
-			end
 			create s.make (2048)
 			s.append ("**DEBUG**%N")
 			req.set_raw_input_data_recorded (True)
@@ -162,7 +160,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

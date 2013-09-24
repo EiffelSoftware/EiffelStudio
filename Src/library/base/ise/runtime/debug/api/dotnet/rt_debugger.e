@@ -39,6 +39,16 @@ feature {NONE} -- Status report
 		do
 		end
 
+feature -- Debugger: interaction with run-time
+
+    frozen rt_workbench_wait_for_debugger (a_port_number: INTEGER): BOOLEAN
+            -- Initialize workbench debugging using socket connection
+			-- used to launch the application, and then attach the debugger.
+			-- if `a_port_number' <= 0 then check for ISE_DBG_PORTNUM environment variable.
+		do
+			--| This is not implemented for dotnet platform.
+		end		
+
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

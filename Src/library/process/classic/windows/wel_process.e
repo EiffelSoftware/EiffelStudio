@@ -90,10 +90,10 @@ feature -- Process operations
 		end
 
 	check_process_state
-		-- Try to get the last state that the child process has returned.
-		-- after calling this feature, check `last_operation_successful'
-		-- to see whether it succeeded. If so, the last process state is stored
-		-- in `last_process_result'.
+			-- Try to get the last state that the child process has returned.
+			-- after calling this feature, check `last_operation_successful'
+			-- to see whether it succeeded. If so, the last process state is stored
+			-- in `last_process_result'.
 		require
 			process_launched: launched
 		local

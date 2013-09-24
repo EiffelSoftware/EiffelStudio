@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			utf: UTF_CONVERTER
 		do
 			create f.make_with_path (p)
-			if f.exists and then f.is_access_readable then
+			if f.exists and then not f.is_directory and then f.is_access_readable then
 				f.open_read
 				from
 				until
@@ -171,4 +171,5 @@ feature {NONE} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+		
 end

@@ -100,13 +100,11 @@ feature {NONE} -- Initialization
 					t.right_adjust
 					type := t
 					if t.same_string ("*") then
-							-- Flexible parser allowing "*" even if this is not really a valid media-type
-							-- let's interpret it as "*/*"
-						subtype := "*"
+						--| Accept *; should be */*
 					else
 						has_error := True
-						subtype := "*"
 					end
+					subtype := "*"
 				else
 					subtype := t.substring (p + 1, t.count)
 					type := t

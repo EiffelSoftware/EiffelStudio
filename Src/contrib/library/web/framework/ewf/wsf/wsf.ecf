@@ -15,11 +15,16 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="error" location="../../../../utility/general/error/error.ecf"/>
 		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
-		<library name="uri_template" location="../../../../text/parser/uri_template/uri_template.ecf"/>
+		<library name="uri_template"
+			 location="../../../../text/parser/uri_template/uri_template.ecf"/>
 		<library name="encoder"
 			 location="../text/encoder/encoder.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf" readonly="true"/>
 		<cluster name="src" location=".\src" recursive="true"/>
-		<cluster name="router" location=".\router" recursive="true"/>
+		<cluster name="router" location=".\router" recursive="true">
+			<file_rule>
+				<exclude>/policy_driven$</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

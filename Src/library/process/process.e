@@ -100,7 +100,7 @@ feature -- IO redirection
 			input_file_name_set: input_file_name ~ ""
 		end
 
-	redirect_output_to_file (a_file_name: like output_file_name)
+	redirect_output_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redirect output stream of process to a file
 			-- with name `a_file_name'.
 		require
@@ -108,15 +108,15 @@ feature -- IO redirection
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 			output_and_error_file_not_same: attached error_file_name as l_fn implies
-				not l_fn.same_string (a_file_name)
+				not l_fn.same_string_general (a_file_name)
 		do
 			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_file
-			output_file_name := a_file_name
+			create output_file_name.make_from_string_general (a_file_name)
 			output_handler := Void
 		ensure
 			output_redirected_to_file:
 				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file
-			output_file_name_set: output_file_name = a_file_name
+			output_file_name_set: attached output_file_name as fn and then fn.same_string_general (a_file_name)
 			output_handler_void: output_handler = Void
 		end
 
@@ -154,21 +154,21 @@ feature -- IO redirection
 			output_handler_set: output_handler = Void
 		end
 
-	redirect_error_to_file (a_file_name: like error_file_name)
+	redirect_error_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redirect the error stream of process to a file.
 		require
 			process_not_running: not is_running
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 			output_and_error_file_not_same: attached output_file_name as l_fn implies
-				not l_fn.same_string (a_file_name)
+				not l_fn.same_string_general (a_file_name)
 		do
 			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_file
-			error_file_name := a_file_name
+			create error_file_name.make_from_string_general (a_file_name)
 			error_handler := Void
 		ensure
 			error_redirected_to_file: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file
-			error_file_set: error_file_name = a_file_name
+			error_file_set: attached error_file_name as fn and then fn.same_string_general (a_file_name)
 			error_handler_void: error_handler = Void
 		end
 

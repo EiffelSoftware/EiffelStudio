@@ -1,6 +1,10 @@
 note
-	description: "Summary description for {WSF_SELF_DOCUMENTED_HANDLER}."
-	author: ""
+	description: "[
+					Interface defining a self documented handler
+
+					inherit from this class and define mapping_documentation to generate 
+					auto self documentation on demand.
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

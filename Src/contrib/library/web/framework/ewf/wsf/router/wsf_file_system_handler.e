@@ -325,7 +325,7 @@ feature -- Execution
 				h.put_content_type_text_html
 				res.set_status_code ({HTTP_STATUS_CODE}.ok)
 				h.put_content_length (s.count)
-				res.put_header_text (h.string)
+				res.put_header_lines (h)
 				if not req.request_method.same_string ({HTTP_REQUEST_METHODS}.method_head) then
 					res.put_string (s)
 				end
@@ -391,7 +391,7 @@ feature -- Execution
 				h.put_last_modified (a_utc_date)
 			end
 			res.set_status_code ({HTTP_STATUS_CODE}.not_modified)
-			res.put_header_text (h.string)
+			res.put_header_lines (h)
 			res.flush
 		end
 
@@ -409,7 +409,7 @@ feature -- Execution
 				s.append ("Resource %"" + uri + "%" not found%N")
 				res.set_status_code ({HTTP_STATUS_CODE}.not_found)
 				h.put_content_length (s.count)
-				res.put_header_text (h.string)
+				res.put_header_lines (h)
 				res.put_string (s)
 				res.flush
 			end
@@ -429,7 +429,7 @@ feature -- Execution
 				s.append ("Resource %"" + uri + "%": Access denied%N")
 				res.set_status_code ({HTTP_STATUS_CODE}.forbidden)
 				h.put_content_length (s.count)
-				res.put_header_text (h.string)
+				res.put_header_lines (h)
 				res.put_string (s)
 				res.flush
 			end
@@ -449,7 +449,7 @@ feature -- Execution
 				s.append ("Directory index: Access denied%N")
 				res.set_status_code ({HTTP_STATUS_CODE}.forbidden)
 				h.put_content_length (s.count)
-				res.put_header_text (h.string)
+				res.put_header_lines (h)
 				res.put_string (s)
 				res.flush
 			end
@@ -628,7 +628,7 @@ feature {NONE} -- implementation: date time
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

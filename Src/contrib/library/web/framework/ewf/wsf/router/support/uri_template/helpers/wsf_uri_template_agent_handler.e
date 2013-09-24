@@ -13,6 +13,9 @@ inherit
 create
 	make
 
+convert
+	make ({PROCEDURE [ANY, TUPLE [WSF_REQUEST, WSF_RESPONSE]]})
+
 feature {NONE} -- Initialization
 
 	make (a_action: like action)
@@ -32,7 +35,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

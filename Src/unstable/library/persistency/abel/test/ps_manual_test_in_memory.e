@@ -68,4 +68,15 @@ feature
 			object_graph_tests.test_retrieval_settings
 		end
 
+	test_tuple_queries
+		do
+			tuple_query_tests.test_simple_query
+			tuple_query_tests.test_query_with_criteria
+			tuple_query_tests.test_query_projection
+			tuple_query_tests.test_query_criteria_not_in_projection
+			tuple_query_tests.test_query_references
+			tuple_query_tests.test_query_objects_in_projection
+			tuple_query_tests.test_query_reference_cycle
+		end
+
 end

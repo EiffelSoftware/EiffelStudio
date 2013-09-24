@@ -29,6 +29,7 @@ feature
 			create criteria_tests.make (repository)
 			create transaction_tests.make (repository)
 			create object_graph_tests.make (repository)
+			create tuple_query_tests.make (repository)
 		end
 
 feature {NONE} -- Initialization
@@ -54,6 +55,9 @@ feature {PS_REPOSITORY_TESTS} -- Access
 
 	object_graph_tests: PS_OBJECT_GRAPH_SETTINGS_TEST
 			-- Provider for object graph settings tests
+
+	tuple_query_tests: PS_TUPLE_QUERY_TESTS
+			-- Provider for tuple query tests
 
 feature {PS_REPOSITORY_TESTS} -- Utilities
 

@@ -25,6 +25,16 @@ feature {NONE} -- Initialization
 			create error_added_actions
 		end
 
+feature -- Access
+
+	primary_error_code: INTEGER
+			-- Code of first error in `errors'
+		require
+			at_least_one_error: has_error
+		do
+			Result := errors.first.code
+		end
+			
 feature -- Status
 
 	has_error: BOOLEAN

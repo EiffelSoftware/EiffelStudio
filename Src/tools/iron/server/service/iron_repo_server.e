@@ -43,7 +43,9 @@ inherit
 	SHARED_EXECUTION_ENVIRONMENT
 
 create
-	make_and_launch, make_and_launch_cgi, make_and_launch_libfcgi
+	make_and_launch,
+	make_and_launch_cgi,
+	make_and_launch_libfcgi
 
 feature {NONE} -- Initialization
 
@@ -112,42 +114,39 @@ feature -- Router and Filter
 			cfg: IRON_CONFIGURATION_FILTER
 		do
 			l_filter := Void
-
 			create cfg
 			cfg.uploaded_file_path := iron.basedir.extended ("tmp")
 			cfg.set_next (l_filter)
 			l_filter := cfg
 
-			-- Header
+				-- Header
 			create fh.make (1)
 			fh.set_next (l_filter)
 			fh.custom_header.put_header ("X-IronServer: " + version)
 			l_filter := fh
 
-			-- Maintenance
+				-- Maintenance
 			create {WSF_MAINTENANCE_FILTER} f
 			f.set_next (l_filter)
 			l_filter := f
-
 			debug ("iron")
-				-- Debug
+					-- Debug
 				create {WSF_DEBUG_FILTER} f
 				f.set_next (l_filter)
 				l_filter := f
 			end
-
 			if not (is_libfcgi or is_cgi) then
-				-- Logging for nino
+					-- Logging for nino
 				create {WSF_LOGGING_FILTER} f
 				f.set_next (l_filter)
 				l_filter := f
 			end
 
---			if attached iron.basedir as p_basedir then
---				create {WSF_FILE_SYSTEM_FILTER} f.make_with_path (p_basedir.extended ("html"))
---				f.set_next (l_filter)
---				l_filter := f
---			end
+				--			if attached iron.basedir as p_basedir then
+				--				create {WSF_FILE_SYSTEM_FILTER} f.make_with_path (p_basedir.extended ("html"))
+				--				f.set_next (l_filter)
+				--				l_filter := f
+				--			end
 
 			filter := l_filter
 		end
@@ -170,7 +169,9 @@ feature -- Router and Filter
 	setup_router
 			-- Setup `router'
 		local
-			h_admin: ACCESS_HANDLER
+			h_access: ACCESS_HANDLER
+			h_account: ACCOUNT_HANDLER
+			h_user: USER_HANDLER
 			h_search: SEARCH_PACKAGE_HANDLER
 			h_create: CREATE_PACKAGE_HANDLER
 			h_edit: EDIT_PACKAGE_HANDLER
@@ -178,26 +179,40 @@ feature -- Router and Filter
 			h_package_map: PACKAGE_MAP_HANDLER
 			h_archive_package: ARCHIVE_PACKAGE_HANDLER
 			h_package_fetcher: FETCH_PACKAGE_HANDLER
---			h_fs: WSF_FILE_SYSTEM_HANDLER
+			--			h_fs: WSF_FILE_SYSTEM_HANDLER
 		do
 				--|  Servername: http://iron.eiffel.com/
 
-				--| Optional			
-			map_uri_template_agent ("/debug/{name}", agent handle_debug)
+				--| Optional
+			debug ("iron")
+				map_uri_template ("/debug/{name}", create {WSF_SELF_DOCUMENTED_URI_TEMPLATE_AGENT_HANDLER}.make_hidden (agent handle_debug))
+			end
 			if attached iron.basedir as p_basedir then
-				router.handle ("/access/db/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("repo").utf_8_name))
+				debug ("iron")
+					router.handle ("/access/db/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("repo").utf_8_name))
+				end
 				router.handle ("/access/html/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("html").utf_8_name))
 			end
 			map_uri_with_request_methods ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (iron)), router.methods_get) --  Shutdown server
 
 				--| Documentation
-			router.handle ("/access/api/", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router))
+			router.handle ("/access/api/", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (router))
 
-				--| Admin access
-			create h_admin.make (iron)
-			map_uri_with_request_methods ("/access/", h_admin, router.methods_get) -- Admin::home			
-			map_uri_with_request_methods ("/access/account/", new_auth_uri_handler (h_admin), router.methods_get) -- Admin::home
-			map_uri_template_with_request_methods ("/access/{version}/", h_admin, router.methods_get) -- Admin::home
+				--| User
+			create h_user.make (iron)
+			map_uri_with_request_methods ("/access/user", new_auth_uri_handler (h_user), router.methods_get) -- User::home
+			map_uri_with_request_methods ("/access/user/", new_auth_uri_handler (h_user), router.methods_get) -- User::home
+			map_uri_template_with_request_methods ("/access/user/{uid}", new_auth_uri_template_handler (h_user), router.methods_get) -- User::home
+
+				--| Account
+			create h_account.make (iron)
+			map_uri_with_request_methods ("/access/account/", h_account, router.methods_get + router.methods_post) -- Account::home
+			map_uri_template_with_request_methods ("/access/account/{uid}/", h_account, router.methods_get  + router.methods_post) -- Activate ...
+
+				--| Access
+			create h_access.make (iron)
+			map_uri_with_request_methods ("/access/", h_access, router.methods_get) -- Admin::home
+			map_uri_template_with_request_methods ("/access/{version}/", h_access, router.methods_get) -- Admin::home
 
 			create h_create.make (iron)
 			create h_archive_package.make (iron)
@@ -225,13 +240,34 @@ feature -- Router and Filter
 
 			router.handle ("/access", create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent redirect_to_home))
 
-				--| Package access			
+				--| Misc access
+			map_uri_template ("/debug/{name}", create {WSF_SELF_DOCUMENTED_URI_TEMPLATE_AGENT_HANDLER}.make_hidden (agent handle_debug))
+			router.handle ("/favicon.ico", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make_hidden (agent handle_favicon))
+			router.handle ("/", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make (agent handle_home("/", ?, ?), agent  (ia_m: WSF_ROUTER_MAPPING; ia_request_methods: detachable WSF_REQUEST_METHODS): WSF_ROUTER_MAPPING_DOCUMENTATION
+				do
+					create Result.make (ia_m)
+					Result.add_description ("Home page")
+				end))
+
+				--| Package access
 			create h_package_fetcher.make (iron)
 			map_uri_template_with_request_methods ("/{version}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
+			map_uri_template_with_request_methods ("/{version}", h_package_fetcher, router.methods_get) --  Get package info
 
-				--| Misc access
-			router.handle ("/favicon.ico", create {WSF_URI_AGENT_HANDLER}.make (agent handle_favicon))
-			router.handle ("/", create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent handle_home))
+				--| Misc/default
+			router.handle ("/", create {WSF_SELF_DOCUMENTED_STARTS_WITH_AGENT_HANDLER}.make_with_descriptions (agent handle_home, <<"Redirect to home page">>))
+			debug ("iron")
+				router.pre_execution_actions.extend (agent  (ia_map: WSF_ROUTER_MAPPING)
+					do
+						io.error.put_string (">> ")
+						io.error.put_string (ia_map.associated_resource)
+						io.error.put_string (" ")
+						io.error.put_string (ia_map.handler.generator)
+						io.error.put_string (" ")
+						io.error.put_string (ia_map.debug_output)
+						io.error.put_new_line
+					end)
+			end
 		end
 
 feature -- Access
@@ -318,9 +354,19 @@ feature -- Handler
 	handle_home (a_path: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: IRON_REPO_HTML_RESPONSE
+			s: STRING
 		do
 			create r.make (req, iron)
-			r.set_body ("<a href=%"" + req.script_url ("/access/") + "%">Your account</a>")
+			create s.make_empty
+			s.append ("<ul>")
+			s.append ("<li><a href=%"" + req.script_url ("/access") + "%">Home</a></li>")
+			across
+				iron.database.versions as c_version
+			loop
+				s.append ("<li><a href=%"" + req.script_url (iron.package_list_web_page (c_version.item)) + "%">Version " + c_version.item.value + "</a></li>")
+			end
+			s.append ("</ul>")
+			r.set_body (s)
 			res.send (r)
 		end
 
@@ -355,4 +401,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+		
 end

@@ -8,14 +8,17 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+			<debug name="iron" enabled="true"/>
 			<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="ironctl"/>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf" readonly="false"/>
@@ -29,6 +32,7 @@
 			</option>
 		</library>
 		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf" readonly="false"/>
+		<library name="notification_email" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email-safe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
@@ -38,11 +42,13 @@
 				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 			</option>
 		</library>
+		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html-safe.ecf" readonly="false"/>
 		<cluster name="controller" location=".\controller\" recursive="true"/>
 		<cluster name="kernel" location=".\kernel\" recursive="true"/>
 		<cluster name="service" location=".\service\" recursive="true"/>
 		<cluster name="storage" location=".\storage\" recursive="true"/>
+		<cluster name="observer" location=".\observer\" recursive="true"/>
 		<cluster name="support" location="..\..\..\framework\iron\support\" recursive="true"/>
 	</target>
 </system>

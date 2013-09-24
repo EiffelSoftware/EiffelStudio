@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {ACCESS_HANDLER}."
+	description: "Summary description for {USER_HANDLER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ACCESS_HANDLER
+	USER_HANDLER
 
 inherit
 	WSF_URI_HANDLER
@@ -22,46 +22,74 @@ inherit
 			set_iron as make
 		end
 
+	SHARED_HTML_ENCODER
+
 create
 	make
 
-feature -- Execution
+feature -- Execution	
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
 			if req.is_get_request_method then
-				handle_access_package (req, res)
+				handle_account (req, res)
 			else
 				res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
 			end
 		end
 
-	handle_access_package (req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_account (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			m: like new_response_message
 			s: STRING
+			u: like current_user
+			l_user: detachable IRON_REPO_USER
 		do
 			if req.is_content_type_accepted ("text/html") then
 				m := new_response_message (req)
-				if has_iron_version (req) then
-					create s.make_empty
-					s.append ("<ul>")
-					s.append ("<li><a href=%"" + req.script_url (iron.package_list_web_page (iron_version (req))) + "%">Package list</a></li>")
-					s.append ("<li><a href=%"" + req.script_url (iron.package_create_web_page (iron_version (req))) + "%">New package</a></li>")
-					s.append ("</ul>")
-				elseif attached iron.database.versions as l_versions then
-					create s.make_empty
-					s.append ("<h2>Versions</h2>")
-					s.append ("<ul>")
-					across
-						l_versions as c
-					loop
-						s.append ("<li><a href=%"" + req.script_url (iron.page (c.item, "/")) + "%">Version "+ c.item.value +"</a></li>")
+				create s.make_empty
+				u := current_user (req)
 
-					end
-					s.append ("</ul>")
+				if attached {WSF_STRING} req.path_parameter ("uid") as s_uid then
+					l_user := iron.database.user (s_uid.value)
 				else
-					s := "..."
+					l_user := u
+				end
+
+				if l_user /= Void then
+					s.append ("<h2>")
+					s.append ("Account ")
+					s.append (m.html_encoded_string (l_user.name))
+					s.append ("</h2>")
+
+					if
+						u /= Void and then
+						(u.is_administrator or u.same_user (l_user))
+					then
+						if attached l_user.email as l_user_email then
+							s.append ("<div>email: ")
+							s.append (l_user_email)
+							s.append ("</div>")
+						end
+						if attached l_user.roles as l_roles then
+							s.append ("<div>")
+							s.append ("<span>Roles:")
+							across
+								l_roles as c
+							loop
+								s.append (" ")
+								s.append (m.html_encoded_string (c.item.name))
+							end
+							s.append ("</span>")
+							s.append ("</div>")
+						end
+
+						if attached {READABLE_STRING_GENERAL} l_user.data_item ("profile.note") as l_note then
+							s.append ("<div>note: ")
+							s.append (html_encoder.general_encoded_string (l_note))
+							s.append ("</div>")
+						end
+					end
 				end
 
 				if attached {WSF_STRING} req.item ("redirection") as l_redir then
@@ -81,7 +109,7 @@ feature -- Documentation
 	mapping_documentation (m: WSF_ROUTER_MAPPING; a_request_methods: detachable WSF_REQUEST_METHODS): WSF_ROUTER_MAPPING_DOCUMENTATION
 		do
 			create Result.make (m)
-			Result.add_description ("GET: Access the repositories information.")
+			Result.add_description ("Account page (authentication required).")
 		end
 
 note

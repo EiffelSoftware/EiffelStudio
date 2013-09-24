@@ -8,6 +8,7 @@ class
 	IRON_REPO_HTML_RESPONSE
 
 inherit
+
 	IRON_REPO_CONSTANTS
 
 	WSF_HTML_PAGE_RESPONSE
@@ -18,10 +19,7 @@ inherit
 		end
 
 create
-	make,
-	make_with_body,
-	make_not_permitted,
-	make_not_found
+	make, make_with_body, make_not_permitted, make_not_found
 
 feature {NONE} -- Initialization
 
@@ -30,10 +28,9 @@ feature {NONE} -- Initialization
 			iron := a_iron
 			request := req
 			set_status_code ({HTTP_STATUS_CODE}.ok)
-
 			make_response
-
 			add_style (req.absolute_script_url (iron.html_page (iron_version, "style.css")), Void)
+			add_javascript_url (req.absolute_script_url (iron.html_page (iron_version, "iron.js")))
 		end
 
 	make_with_body (b: READABLE_STRING_8; req: WSF_REQUEST; a_iron: like iron)
@@ -83,10 +80,12 @@ feature -- Change
 			end
 		end
 
-feature -- Messages	
+feature -- Messages
 
 	message_type_normal: INTEGER = 0
+
 	message_type_warning: INTEGER = 1
+
 	message_type_error: INTEGER = 2
 
 	add_normal_message (m: READABLE_STRING_8)
@@ -139,7 +138,7 @@ feature {NONE} -- HTML Generation
 	append_html_body_code (s: STRING_8)
 		local
 			old_body, b: like body
-			h,f: STRING
+			h, f: STRING
 			l_version: detachable IRON_REPO_VERSION
 			l_form: WSF_FORM
 			l_combo: WSF_FORM_SELECT
@@ -174,7 +173,6 @@ feature {NONE} -- HTML Generation
 				l_combo.add_html_attribute ("onchange", "this.form.submit()")
 				l_form.append_to_html (create {WSF_REQUEST_THEME}.make_with_request (request), h)
 			end
-
 			h.append ("</div>")
 			h.append ("<ul id=%"menu%" class=%"menu%">")
 			if attached menu_items as lst then
@@ -200,12 +198,10 @@ feature {NONE} -- HTML Generation
 			if attached title as l_title then
 				h.append ("<h2 class=%"bigtitle%">" + html_encoded_string (l_title) + "</h2>")
 			end
-			f := "</div><div id=%"footer%"> -- IRON package repository (<a href=%""+ request.script_url ("/access/api/") +"%">API</a>) -- "
+			f := "</div><div id=%"footer%"> -- IRON package repository (<a href=%"" + request.script_url ("/access/api/") + "%">API</a>) -- "
 			f.append ("<br/>version " + version)
 			f.append ("</div></div>")
-
 			old_body := body
-
 			if old_body /= Void then
 				create b.make (h.count + old_body.count + f.count)
 				b.append (h)
@@ -216,7 +212,6 @@ feature {NONE} -- HTML Generation
 				b.append (h)
 				b.append (f)
 			end
-
 			set_body (b)
 			Precursor (s)
 			set_body (old_body)
@@ -253,4 +248,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

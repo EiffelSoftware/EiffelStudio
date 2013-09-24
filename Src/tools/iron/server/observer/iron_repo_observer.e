@@ -1,55 +1,27 @@
 note
-	description: "Summary description for {IRON_API}."
+	description: "Summary description for {IRON_REPO_OBSERVER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	IRON_API
+	IRON_REPO_OBSERVER
 
-inherit
-	SHARED_EXECUTION_ENVIRONMENT
+feature -- User
 
-feature {NONE} -- Initialization
-
-	make_with_layout (a_layout: like layout; a_urls: like urls)
-		do
-			urls := a_urls
-			layout := a_layout
-			initialize
+	on_user_event (a_user: IRON_REPO_USER; a_title: READABLE_STRING_32; a_message: READABLE_STRING_32)
+		deferred
 		end
 
-	initialize
-		do
+	on_user_updated (u: IRON_REPO_USER; flag_is_new: BOOLEAN)
+		deferred
 		end
 
-feature -- Access
+feature -- Package
 
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-
-feature {NONE} -- Implementation
-
-	file_content (p: PATH): detachable STRING
-		local
-			f: RAW_FILE
-		do
-			create f.make_with_path (p)
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				create Result.make (1_024)
-				from
-				until
-					f.exhausted
-				loop
-					f.read_stream (1_024)
-					Result.append (f.last_string)
-				end
-				f.close
-			end
+	on_package_updated (p: IRON_REPO_PACKAGE; flag_is_new: BOOLEAN)
+		deferred
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

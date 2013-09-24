@@ -26,11 +26,15 @@ feature -- Status report
 
 feature -- Credential
 
-	is_valid_credential (u: like {IRON_REPO_USER}.name; p: detachable READABLE_STRING_GENERAL): BOOLEAN
+	is_valid_credential (u: READABLE_STRING_GENERAL; p: detachable READABLE_STRING_GENERAL): BOOLEAN
 		deferred
 		end
 
-	user (u: like {IRON_REPO_USER}.name): detachable IRON_REPO_USER
+	user (u: READABLE_STRING_GENERAL): detachable IRON_REPO_USER
+		deferred
+		end
+
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable IRON_REPO_USER
 		deferred
 		end
 
@@ -157,4 +161,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

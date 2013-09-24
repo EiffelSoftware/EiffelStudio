@@ -37,13 +37,13 @@ feature {NONE} -- Initialization
 						if arg.starts_with ("-") then
 							-- options
 						elseif op = Void then
-							if arg.is_case_insensitive_equal ("server") then
+							if arg.is_case_insensitive_equal_general ("server") then
 								i := n -- exit loop
 								create {IRON_REPO_CONTROLLER_SERVER_TASK} op
-							elseif arg.is_case_insensitive_equal ("system") then
-								create {IRON_REPO_CONTROLLER_SYSTEM_TASK} op.make (argument_array.subarray (i + 1, n))
-							elseif arg.is_case_insensitive_equal ("user") then
-								create {IRON_REPO_CONTROLLER_USER_TASK} op.make (argument_array.subarray (i + 1, n))
+							elseif arg.is_case_insensitive_equal_general ("system") then
+								create {IRON_REPO_CONTROLLER_SYSTEM_TASK} op.make (sub_argument_array (i + 1, n))
+							elseif arg.is_case_insensitive_equal_general ("user") then
+								create {IRON_REPO_CONTROLLER_USER_TASK} op.make (sub_argument_array (i + 1, n))
 							end
 						end
 					end
@@ -68,20 +68,36 @@ feature {NONE} -- Initialization
 
 feature -- Database
 
+	sub_argument_array (i_offset, j_offset: INTEGER): like argument_array
+			-- Sub array of [i_offset, j_offset] `argument_array'
+			-- with convention `i_offset' starts at 0.
+		do
+			if i_offset <= j_offset then
+				Result := argument_array
+				Result := Result.subarray (Result.lower + i_offset, Result.lower + j_offset)
+			else
+				create Result.make_empty
+			end
+		end
+
 	server_from_command (cmd: IMMUTABLE_STRING_32): detachable READABLE_STRING_8
 		local
 			p: PATH
 			s: STRING_32
+			ext: detachable READABLE_STRING_32
 		do
 			create p.make_from_string (cmd)
 			if attached p.entry as l_entry then
 				s := l_entry.name
-				if attached l_entry.extension as ext then
+				ext := l_entry.extension
+				if ext /= Void then
 					s.remove_tail (ext.count + 1)
+				else
+					ext := ""
 				end
-				if s.ends_with ("--cgi") then
+				if s.ends_with ("--cgi") or ext.is_case_insensitive_equal_general ("cgi") then
 					Result := "cgi"
-				elseif s.ends_with ("--libfcgi") then
+				elseif s.ends_with ("--libfcgi") or ext.is_case_insensitive_equal_general ("fcgi") then
 					Result := "libfcgi"
 				end
 			end
@@ -90,6 +106,9 @@ feature -- Database
 	initialize_iron
 		local
 			p: PATH
+			db: IRON_REPO_DATABASE
+			mailer: NOTIFICATION_MAILER
+			ext_mailer: NOTIFICATION_EXTERNAL_MAILER
 		do
 			if attached execution_environment.item ({IRON_REPO_CONSTANTS}.IRON_REPO_variable_name) as s then
 				create p.make_from_string (s)
@@ -97,12 +116,26 @@ feature -- Database
 				create p.make_from_string ("iron")
 			end
 			p := p.absolute_path.canonical_path
-			create iron.make (create {IRON_REPO_FS_DATABASE}.make_with_path (p.extended ("repo")), p)
+			create {IRON_REPO_FS_DATABASE} db.make_with_path (p.extended ("repo"))
+			if {PLATFORM}.is_windows then
+				create ext_mailer.make (p.extended ("bin").extended ("sendmail.bat").name, Void)
+				mailer := ext_mailer
+			else
+				create {NOTIFICATION_SENDMAIL_MAILER} mailer
+			end
+			create iron.make (db, p)
+				-- FIXME: do not hardcode email address.
+			iron.register_observer (create {IRON_REPO_MAILER_OBSERVER}.make_with_mailer (mailer, "jfiat@eiffel.com"))
 		end
 
 	iron: IRON_REPO
 
-;note
+invariant
+
+	iron_attached: iron /= Void
+
+note
+
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -133,4 +166,5 @@ feature -- Database
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

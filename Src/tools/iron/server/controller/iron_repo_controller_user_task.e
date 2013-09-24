@@ -71,6 +71,7 @@ feature -- Execution
 			u.set_password (p)
 			u.set_email (e)
 			iron.database.update_user (u)
+			iron.notify_user_updated (u, True)
 		end
 
 

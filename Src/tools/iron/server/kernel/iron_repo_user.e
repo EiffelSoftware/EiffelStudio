@@ -32,6 +32,19 @@ feature -- Access
 	roles: detachable LIST [IRON_REPO_USER_ROLE]
 			-- Associated user roles.
 
+	data: detachable STRING_TABLE [detachable ANY]
+			-- Related data
+
+	removed_data: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- Removed data
+
+	data_item (k: READABLE_STRING_GENERAL): detachable ANY
+		do
+			if attached data as l_data then
+				Result := l_data.item (k)
+			end
+		end
+
 feature -- Status report
 
 	same_user (other: IRON_REPO_USER): BOOLEAN
@@ -88,6 +101,33 @@ feature -- Change
 			end
 		end
 
+	set_data_item (k: READABLE_STRING_GENERAL; d: like data_item)
+		local
+			l_data: like data
+		do
+			l_data := data
+			if l_data = Void then
+				create l_data.make (1)
+				data := l_data
+			end
+			l_data.force (d, k)
+		end
+
+	remove_data_item (k: READABLE_STRING_GENERAL)
+		local
+			l_removed_data: like removed_data
+		do
+			if attached data as l_data then
+				l_data.remove (k)
+				l_removed_data := removed_data
+				if l_removed_data = Void then
+					create l_removed_data.make (1)
+					removed_data := l_removed_data
+				end
+				l_removed_data.force (k)
+			end
+		end
+
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -119,4 +159,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

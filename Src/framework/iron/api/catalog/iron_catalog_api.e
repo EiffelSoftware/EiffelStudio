@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	initialize
 		do
 			Precursor
-			create {IRON_FS_CATALOG} catalog.make (layout)
+			create {IRON_FS_CATALOG} catalog.make (layout, urls)
 		end
 
 	catalog: IRON_CATALOG
@@ -148,4 +148,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+		
 end

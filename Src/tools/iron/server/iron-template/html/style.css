@@ -1,0 +1,105 @@
+body {margin: 5px 0 5px 0;
+background-color: #ddddff;}
+div#page {margin: auto;
+width: 800px;
+height: auto;
+border-left: solid 1px #ccf;
+border-right: solid 1px #ccf;
+background-color: #fff;}
+div#main {padding: 5px 5px 5px 15px;}
+#menu {}
+a {text-decoration: none;
+font-weight: bold;
+color: #009;}
+a:hover {text-decoration: underline;}
+div#header {-webkit-border-radius: 20px;
+
+-webkit-border-top-left-radius: 0;
+
+-webkit-border-bottom-right-radius: 0;
+
+-moz-border-radius: 20px;
+
+-moz-border-radius-topleft: 0;
+
+-moz-border-radius-bottomright: 0;
+
+border-radius: 20px;
+
+border-top-left-radius: 0;
+
+border-bottom-right-radius: 0;
+;
+margin-bottom: 20px;
+ padding: 20px;
+ font-size: 140%;
+ border: solid 1px #00f;
+ color: #fff;
+ background-color: #009;
+ text-align: center;
+;
+position: relative;
+margin-top: 30px;
+top: -20px;}
+div#footer {-webkit-border-radius: 20px;
+
+-webkit-border-top-left-radius: 0;
+
+-webkit-border-top-right-radius: 0;
+
+-moz-border-radius: 20px;
+
+-moz-border-radius-topleft: 0;
+
+-moz-border-radius-topright: 0;
+
+border-radius: 20px;
+
+border-top-left-radius: 0;
+
+border-top-right-radius: 0;
+;
+border-top: dotted 1px #00f;
+ background-color: #cfcfdf;
+ text-align: center;
+ min-height: 40px;
+ padding: 5px;
+;
+position: relative;
+bottom: -20px;}
+ul {padding-left: 30px;}
+ul li.package {list-style: none;
+border-top: solid 1px #dedede;
+border-left: solid 1px #dedede;
+padding: 4px 5px 5px 4px;
+margin-bottom: 5px;}
+ul li.package:hover {padding: 3px 3px 3px 3px;
+border: solid 2px #00f;}
+ul li.package div.description {padding-left: 25px;}
+ul li.package div.archive {padding-left: 25px;}
+.error {background-color: red;}
+.warning {background-color: orange;}
+.dialog.message {border: solid 1px #aa6;
+ margin: 5px auto 5px auto;
+ padding: 10px;
+ width: 80%;
+ background-color: #ffc;
+;}
+span.packageid {float: right;
+ font-style: italic;
+ color: #ccc;
+;}
+div.description {padding: 20px 20px 20px 20px;}
+ul.menu {list-style-type: none;}
+ul.menu li {display: inline;
+ border: solid 1px #900;
+ padding: 2px 5px 2px 5px;
+;}
+ul.menu li:hover {background-color: #FF9;}
+.package-index li {border: solid 1px #ddd;
+padding: 2px 2px 2px 15px;}
+.package-index li .packageid {display: none;}
+.package-index li.package-folder-inline {border-left: solid 10px #ddf;
+padding: 2px 2px 2px 5px;
+background-color: #fafaff;}
+.package-index li.package-folder-inline:after {content: " ...";}

@@ -17,9 +17,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make (a_layout: IRON_LAYOUT; a_urls: like urls)
 		do
 			layout := a_layout
+			urls := a_urls
 
 			ensure_folder_exists (a_layout.repositories_path)
 			ensure_folder_exists (a_layout.archives_path)
@@ -27,7 +28,7 @@ feature {NONE} -- Initialization
 
 			load_repositories
 
-			create installation_api.make_with_layout (a_layout)
+			create installation_api.make_with_layout (a_layout, a_urls)
 		end
 
 	installation_api: IRON_INSTALLATION_API
@@ -65,6 +66,8 @@ feature {NONE} -- Initialization
 feature -- Access		
 
 	layout: IRON_LAYOUT
+
+	urls: IRON_URL_BUILDER
 
 feature -- Access: repository
 
@@ -210,7 +213,7 @@ feature -- Operation
 			cl := new_client
 			if attached cl.new_session (repo.uri.string) as sess then
 				sess.add_header ("Accept", "application/json")
-				if attached sess.get ("/access/" + repo.version + "/package/", Void) as res then
+				if attached sess.get (urls.path_package_list (repo), Void) as res then
 					if res.error_occurred then
 						if not is_silent then
 							print ("ERROR: connection%N")
@@ -541,4 +544,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

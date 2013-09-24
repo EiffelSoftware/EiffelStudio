@@ -9,20 +9,18 @@ deferred class
 inherit
 	WSF_FILTER_HANDLER [G]
 
-feature {NONE} -- Initialization
-
-	make (i: like iron)
-		do
-			iron := i
+	IRON_REPO_HANDLER
+		rename
+			set_iron as make
 		end
+
+feature {NONE} -- Initialization
 
 	make_with_next (i: like iron; n: like next)
 		do
 			make (i)
 			set_next (n)
 		end
-
-	iron: IRON_REPO
 
 feature -- Basic operations
 
@@ -51,21 +49,50 @@ feature -- Basic operations
 		deferred
 		end
 
+feature -- Documentation
+
+	mapping_documentation (m: WSF_ROUTER_MAPPING; a_request_methods: detachable WSF_REQUEST_METHODS): WSF_ROUTER_MAPPING_DOCUMENTATION
+			-- <Precursor>
+		do
+			create Result.make (m)
+			Result.set_is_hidden (True)
+			Result.add_description ("Authorization filtering...")
+		end
+
 feature {NONE} -- Implementation
 
 	handle_unauthorized (a_description: STRING; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Handle forbidden.
 		local
+			m: like new_response_message
 			h: HTTP_HEADER
+			s: STRING
 		do
-			create h.make
-			h.put_content_type_text_plain
-			h.put_content_length (a_description.count)
-			h.put_current_date
-			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
-			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
-			res.put_header_text (h.string)
-			res.put_string (a_description)
+			if req.is_content_type_accepted ("text/html") then
+				m := new_response_message (req)
+				h := m.header
+				h.put_current_date
+				h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
+				create s.make_empty
+				s.append ("<div>Error: %"" + a_description + "%"</div>%N")
+				s.append ("<ul>")
+				s.append ("<li><a class=%"button%" href=%"" + iron.account_page (Void) + "?register" + "%">Create a new account?</a></li>")
+				s.append ("<li><a class=%"button%" href=%"" + iron.account_page (Void) + "?reset_password" + "%">Reset your password?</a></li>")
+				s.append ("</ul>")
+				m.set_body (s)
+				m.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
+				res.send (m)
+			else
+				create h.make
+				h.put_current_date
+				h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
+
+				h.put_content_type_text_plain
+				h.put_content_length (a_description.count)
+				res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
+				res.put_header_text (h.string)
+				res.put_string (a_description)
+			end
 		end
 
 note
@@ -99,4 +126,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

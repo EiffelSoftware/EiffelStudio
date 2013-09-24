@@ -426,10 +426,10 @@ feature -- Factory
 			Result.set_iron_version (iron_version (req))
 			if attached current_user (req) as u then
 				Result.add_menu ("Home", iron.page (Void, ""))
-				Result.add_menu ("Account (" + u.name + ")", iron.page (Void, ""))
+				Result.add_menu ("Account (" + u.name + ")", iron.page (Void, "/user"))
 			else
 				Result.add_menu ("Home", iron.page (Void, ""))
-				Result.add_menu ("Account", iron.page (Void, "/account"))
+				Result.add_menu ("Account", iron.page (Void, "/user"))
 			end
 			if has_iron_version (req) then
 				Result.add_menu ("List of packages", iron.package_list_web_page (iron_version (req)))

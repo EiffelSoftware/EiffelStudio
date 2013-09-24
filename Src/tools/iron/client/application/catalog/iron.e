@@ -15,13 +15,17 @@ feature {NONE} -- Initialization
 	make (a_layout: IRON_LAYOUT)
 		do
 			layout := a_layout
-			create installation_api.make_with_layout (a_layout)
-			create catalog_api.make_with_layout (a_layout)
+			create urls
+			create installation_api.make_with_layout (a_layout, urls)
+			create catalog_api.make_with_layout (a_layout, urls)
 		end
 
 feature -- Access
 
 	layout: IRON_LAYOUT
+
+	urls: IRON_URL_BUILDER
+			-- IRON url builder.
 
 	installation_api: IRON_INSTALLATION_API
 
@@ -58,4 +62,5 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

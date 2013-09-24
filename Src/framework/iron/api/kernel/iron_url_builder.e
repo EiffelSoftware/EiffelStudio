@@ -1,35 +1,45 @@
 note
-	description: "Summary description for {WSF_CUSTOM_HEADER_FILTER}."
+	description: "[
+				URLs builder to access IRON api
+				
+				note: if the remote API changes, update this class.
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WSF_CUSTOM_HEADER_FILTER
+	IRON_URL_BUILDER
 
-inherit
-	WSF_FILTER
+feature -- URL path
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (n: INTEGER)
+	path_package_list (a_repo: IRON_REPOSITORY): READABLE_STRING_8
 		do
-			create custom_header.make_with_count (n)
+			Result := "/access/" + a_repo.version + "/package/"
 		end
 
-feature -- Access
-
-	custom_header: HTTP_HEADER
-
-feature -- Basic operations
-
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute the filter
+	path_create_package (a_repo: IRON_REPOSITORY): READABLE_STRING_8
 		do
-			res.put_header_lines (custom_header)
-			execute_next (req, res)
+			Result := "/access/" + a_repo.version + "/package/"
+		end
+
+	path_update_package (a_repo: IRON_REPOSITORY; a_package: IRON_PACKAGE): READABLE_STRING_8
+		do
+			Result := "/access/" + a_repo.version + "/package/" + a_package.id
+		end
+
+	path_package_delete (a_repo: IRON_REPOSITORY; a_package: IRON_PACKAGE): READABLE_STRING_8
+		do
+			Result := path_update_package (a_repo, a_package)
+		end
+
+	path_upload_package_archive (a_repo: IRON_REPOSITORY; a_package: IRON_PACKAGE): READABLE_STRING_8
+		do
+			Result := path_update_package (a_repo, a_package) + "/archive"
+		end
+
+	path_add_package_index (a_repo: IRON_REPOSITORY; a_package: IRON_PACKAGE): READABLE_STRING_8
+		do
+			Result := path_update_package (a_repo, a_package) + "/map"
 		end
 
 note
@@ -63,4 +73,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -54,11 +54,29 @@ feature -- Status report
 
 feature -- User
 
+	encrypted_password (p: detachable READABLE_STRING_GENERAL): READABLE_STRING_8
+		local
+			sha256: SHA256
+			utf: UTF_CONVERTER
+		do
+			create sha256.make
+			if p = Void then
+				sha256.update_from_string ("")
+			else
+				sha256.update_from_string (utf.utf_32_string_to_utf_8_string_8 (p))
+			end
+			Result := sha256.digest_as_string
+		end
+
 	is_valid_credential (u: like {IRON_REPO_USER}.name; p: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do
 			if attached iron_info (user_path (u)) as inf then
-				if p /= Void and attached inf.item ("password") as pwd then
-					Result := p.same_string (pwd)
+				if p /= Void then
+					if attached inf.item ("encrypted_password") as enc_pwd then
+						Result := enc_pwd.same_string (encrypted_password (p))
+					elseif attached inf.item ("password") as pwd then
+						Result := encrypted_password (pwd).same_string (encrypted_password (p))
+					end
 				end
 			end
 		end
@@ -68,7 +86,10 @@ feature -- User
 			if attached iron_info (user_path (u)) as inf then
 				if attached inf.item ("name") as l_username and then u.is_case_insensitive_equal (u) then
 					create Result.make (u)
-					if attached inf.item ("roles") as s_roles then
+					if attached inf.item ("activation_code") as s and then not s.is_empty then
+						-- need activation
+						-- thus no roles
+					elseif attached inf.item ("roles") as s_roles then
 						if attached s_roles.split (',') as l_roles then
 							across
 								l_roles as c
@@ -77,6 +98,47 @@ feature -- User
 							end
 						end
 					end
+					if attached inf.item ("email") as s_email then
+						Result.set_email (s_email)
+					end
+					across
+						inf as c
+					loop
+						if
+							c.key.same_string ("name")
+							or c.key.same_string ("roles")
+							or c.key.same_string ("email")
+						then
+							-- Already stored in attribute
+						else
+							Result.set_data_item (c.key, c.item)
+						end
+					end
+				end
+			end
+		end
+
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable IRON_REPO_USER
+		local
+			d: DIRECTORY
+		do
+			create d.make_with_path (users_path)
+			if d.exists then
+				across
+					d.entries as c
+				until
+					Result /= Void
+				loop
+					Result := user (c.item.name)
+					if
+						Result /= Void and then
+						attached Result.email as l_email and then
+						a_email.is_case_insensitive_equal (l_email)
+					then
+						-- Found it.
+					else
+						Result := Void
+					end
 				end
 			end
 		end
@@ -84,19 +146,75 @@ feature -- User
 	update_user (u: IRON_REPO_USER)
 		local
 			inf: IRON_REPO_INFO
+			s: STRING
+			utf: UTF_CONVERTER
+			flag_is_new: BOOLEAN
+			l_encpwd: detachable READABLE_STRING_8
+			l_user: like user
 		do
-			if attached user (u.name) as l_user then
+			l_user := user (u.name)
+			if l_user /= Void then
 					-- update
 				create inf.make_with_path (user_path (u.name))
-				if attached u.password as p then
-					inf.put (p, "password")
-				end
 			else
-					-- create
 				create inf.make_empty
 				inf.put (u.name, "name")
-				inf.put (u.password, "password")
+
+				flag_is_new := True
 			end
+
+			if attached u.roles as l_user_roles and then not l_user_roles.is_empty then
+				create s.make_empty
+				across
+					l_user_roles as c
+				loop
+					if not s.is_empty then
+						s.append_character (',')
+					end
+					s.append (utf.utf_32_string_to_utf_8_string_8 (c.item.name))
+				end
+				inf.put (s, "roles")
+			end
+			if attached u.email then
+				inf.put (u.email, "email")
+			end
+
+			if attached u.data as l_u_data then
+				across
+					l_u_data as c
+				loop
+					if attached {READABLE_STRING_GENERAL} c.item as l_text then
+						inf.put (l_text, c.key)
+					end
+				end
+			end
+			if attached u.removed_data as l_u_data then
+				across
+					l_u_data as c
+				loop
+					inf.remove (c.item)
+				end
+			end
+
+			if l_user /= Void then
+				if attached u.password as p then
+					l_encpwd := encrypted_password (p)
+				elseif attached inf.item ("password") as pwd then
+					l_encpwd := encrypted_password (pwd)
+				end
+			else
+				l_encpwd := encrypted_password (u.password)
+			end
+			if l_encpwd /= Void then
+				u.set_data_item ("encrypted_password", l_encpwd)
+				inf.put (l_encpwd, "encrypted_password")
+				inf.remove ("password")
+			else
+				u.remove_data_item ("encrypted_password")
+			end
+				-- Remove non encrypted password!
+			u.set_password (Void)
+
 			inf.save_to (user_path (u.name))
 		end
 
@@ -137,9 +255,12 @@ feature -- Package
 			uuidg: UUID_GENERATOR
 			l_uuid: UUID
 			hdate: HTTP_DATE
+			flag_is_new: BOOLEAN
 		do
 			if a_package.has_id then
 				l_package := package (v, a_package.id)
+			else
+				flag_is_new := True
 			end
 			if l_package = Void then
 				create uuidg
@@ -239,13 +360,13 @@ feature -- Package
 			end
 		end
 
-	delete_package (v: IRON_REPO_VERSION; p: IRON_REPO_PACKAGE)
+	delete_package (v: IRON_REPO_VERSION; a_package: IRON_REPO_PACKAGE)
 		local
 			l_path: PATH
 			d1,d2: DIRECTORY
 			dt: DATE_TIME
 		do
-			create d1.make_with_path (package_path (v, p.id))
+			create d1.make_with_path (package_path (v, a_package.id))
 			create dt.make_now_utc
 
 			l_path := packages_trash_path (v)
@@ -254,10 +375,10 @@ feature -- Package
 				d2.recursive_create_dir
 			end
 
-			create d2.make_with_path (l_path.extended (p.id).appended ("-" + dt.definite_duration (create {DATE_TIME}.make_from_epoch (0)).seconds_count.out))
+			create d2.make_with_path (l_path.extended (a_package.id).appended ("-" + dt.definite_duration (create {DATE_TIME}.make_from_epoch (0)).seconds_count.out))
 			if not d2.exists then
 				d1.rename_path (d2.path)
-				p.reset_id
+				a_package.reset_id
 			end
 		end
 
@@ -481,19 +602,29 @@ feature -- Package
 			u: FILE_UTILITIES
 		do
 			p := packages_tree_path (v)
-			across
-				a_path.split ('/') as c
-			until
-				d /= Void or err
-			loop
-				if not c.item.is_empty then
-					p := p.extended (c.item)
-					if u.directory_path_exists (p) then
-						-- skip
-					elseif u.file_path_exists (p) then
-						create d.make_with_path (p)
-					else
-						err := True
+			if a_path.is_empty then
+				if u.directory_path_exists (p) then
+					-- skip
+				elseif u.file_path_exists (p) then
+					create d.make_with_path (p)
+				else
+					err := True
+				end
+			else
+				across
+					a_path.split ('/') as c
+				until
+					d /= Void or err
+				loop
+					if not c.item.is_empty then
+						p := p.extended (c.item)
+						if u.directory_path_exists (p) then
+							-- skip
+						elseif u.file_path_exists (p) then
+							create d.make_with_path (p)
+						else
+							err := True
+						end
 					end
 				end
 			end
@@ -614,4 +745,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

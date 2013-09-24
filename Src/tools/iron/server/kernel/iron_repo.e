@@ -30,6 +30,61 @@ feature -- Access
 	basedir: PATH
 			-- Base directory for iron system
 
+feature {NONE} -- Observers
+
+	observers: detachable ARRAYED_LIST [IRON_REPO_OBSERVER]
+
+feature -- Observers	
+
+	notify_user_updated (u: IRON_REPO_USER; flag_is_new: BOOLEAN)
+		do
+			if attached observers as lst then
+				across
+					lst as c
+				loop
+					c.item.on_user_updated (u, flag_is_new)
+				end
+			end
+		end
+
+	notify_package_updated (p: IRON_REPO_PACKAGE; flag_is_new: BOOLEAN)
+		do
+			if attached observers as lst then
+				across
+					lst as c
+				loop
+					c.item.on_package_updated (p, flag_is_new)
+				end
+			end
+		end
+
+feature -- Observers
+
+	register_observer (o: IRON_REPO_OBSERVER)
+		local
+			obs: like observers
+		do
+			obs := observers
+			if obs = Void then
+				create obs.make (1)
+				observers := obs
+			end
+			obs.force (o)
+		end
+
+	unregister_observer (o: IRON_REPO_OBSERVER)
+		local
+			obs: like observers
+		do
+			obs := observers
+			if obs /= Void then
+				obs.prune_all (o)
+				if obs.is_empty then
+					observers := Void
+				end
+			end
+		end
+
 feature -- Access: url
 
 	html_page (v: detachable IRON_REPO_VERSION; s: READABLE_STRING_8): READABLE_STRING_8
@@ -47,6 +102,19 @@ feature -- Access: url
 				Result := "/access/" + v.value + p
 			else
 				Result := "/access" + p
+			end
+		end
+
+	user_page (u: IRON_REPO_USER): READABLE_STRING_8
+		do
+			Result := "/access/user/" + url_encoder.general_encoded_string (u.name)
+		end
+
+	account_page (u: detachable IRON_REPO_USER): STRING_8
+		do
+			Result := "/access/account/"
+			if u /= Void then
+				Result.append (url_encoder.general_encoded_string (u.name) + "/")
 			end
 		end
 
@@ -147,4 +215,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

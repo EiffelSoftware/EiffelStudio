@@ -82,7 +82,7 @@ feature -- Execute
 								sess := new_client_session (repo, u, p)
 								create ctx.make_with_credentials_required
 								ctx.add_header ("Accept", "application/json")
-								resp := sess.delete ("/access/" + repo.version + "/package/" + l_package.id, ctx)
+								resp := sess.delete (a_iron.urls.path_package_delete (repo, l_package), ctx)
 								if resp.error_occurred then
 									print ("[Error] operation failed!")
 									print_new_line
@@ -165,14 +165,14 @@ feature -- Execute
 							end
 							if l_package /= Void then
 								print ({STRING_32} "Update package %"" + l_package.human_identifier + {STRING_32} "%" %N")
-								resp := sess.post ("/access/" + repo.version + "/package/" + l_package.id, ctx, Void)
+								resp := sess.post (a_iron.urls.path_update_package (repo, l_package), ctx, Void)
 							else
 								if l_name /= Void then
 									print ({STRING_32} "Create new package %"" + l_name + "%"%N")
 								else
 									print ({STRING_32} "Create new package %N")
 								end
-								resp := sess.post ("/access/" + repo.version + "/package/", ctx, Void)
+								resp := sess.post (a_iron.urls.path_create_package (repo), ctx, Void)
 							end
 							if resp.error_occurred then
 								print ("[Error] operation failed!")
@@ -219,7 +219,7 @@ feature -- Execute
 										print_new_line
 										ctx.add_form_parameter ("map[]", c.item.to_string_8)
 									end
-									resp := sess.post ("/access/" + repo.version + "/package/" + l_package.id + "/map", ctx, Void)
+									resp := sess.post (a_iron.urls.path_add_package_index (repo, l_package), ctx, Void)
 									if resp.error_occurred then
 										print ("[Error] path association failed!")
 										print_new_line
@@ -241,7 +241,7 @@ feature -- Execute
 									ctx.add_header ("Content-Type", "application/zip")
 									sess.set_timeout (-1)
 									print ({STRING_32} "Uploading package archive ...%N")
-									resp := sess.post ("/access/" + repo.version + "/package/" + l_package.id + "/archive", ctx, Void)
+									resp := sess.post (a_iron.urls.path_upload_package_archive (repo, l_package), ctx, Void)
 									if resp.error_occurred then
 										print ("[Error] archive uploading failed!")
 										print_new_line
@@ -370,4 +370,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

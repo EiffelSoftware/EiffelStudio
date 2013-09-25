@@ -19,13 +19,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make (a_layout: IRON_LAYOUT; a_urls: like iron_urls)
 			-- Initialize Current with `a_layout'.
 		do
 			iron_layout := a_layout
+			iron_urls := a_urls
 		end
 
 	iron_layout: IRON_LAYOUT
+
+	iron_urls: IRON_URL_BUILDER
 
 feature -- Access
 
@@ -43,7 +46,7 @@ feature -- Access
 				update_location_to_uri (l_uri)
 				l_iron_api := iron_api
 				if l_iron_api = Void then
-					create l_iron_api.make_with_layout (iron_layout)
+					create l_iron_api.make_with_layout (iron_layout, iron_urls)
 					iron_api := l_iron_api
 				end
 				if attached l_iron_api.local_path_associated_with_uri (l_uri) as p then
@@ -103,4 +106,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -4,34 +4,86 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	PS_ERROR
 
 inherit
 	DEVELOPER_EXCEPTION
 		redefine
-			tag
+			tag, default_create
 		end
 
-feature
+feature -- Access
 
 	tag: IMMUTABLE_STRING_32
-			-- A short description of the current exception.
-			-- TODO: Redefine in a meaningful way.
-		do
-			if attached description as desc then
-				Result := desc.as_string_32
-			else
-				create Result.make_from_string ("An error occurred. No description is available.")
-
-			end
+			-- A short message describing what the current error is
+		once
+			create Result.make_from_string_8 ("Uncategorized error")
 		end
 
-feature
+	backend_error_code: INTEGER
+			-- The error code returned by the backend.
+			-- Always set to 0 if there is no error.
+			-- If the backend doesn't support error codes, the value is -1.
+		attribute
+		ensure
+			no_error_means_zero: (attached {PS_NO_ERROR} Current) = (Result = 0)
+		end
+
+	backend_error_message: detachable READABLE_STRING_GENERAL
+			-- The original error message returned by the backend, if any.
+
+	backend_error: detachable ANY
+			-- The original error object returned by the backend, if any.
+
+	backend_sqlstate: detachable READABLE_STRING_GENERAL
+			-- The original SQLState string, in case the backend supports it.
+		attribute
+		ensure
+			correct_length: attached Result implies Result.count = 5
+		end
+
+feature {PS_EIFFELSTORE_EXPORT} -- Element change
+
+	set_backend_error_code (a_code: like backend_error_code)
+			-- Set the backend error code.
+		do
+			backend_error_code := a_code
+		end
+
+	set_backend_error_message (a_message: like backend_error_message)
+			-- Set the backend error message.
+		do
+			backend_error_message := a_message
+		end
+
+	set_backend_error (error: like backend_error)
+			-- Set the original backend error object
+		do
+			backend_error := error
+		end
+
+	set_backend_sqlstate (sqlstate: like backend_sqlstate)
+			-- Set the backend SQLState
+		do
+			backend_sqlstate:= sqlstate
+		end
+
+feature {PS_ERROR_VISITOR} -- Visitor pattern
 
 	accept (a_visitor: PS_ERROR_VISITOR)
 			-- `accept' function of the visitor pattern
-		deferred
+		do
+			a_visitor.visit_general_error (Current)
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+			-- Create a new instance of this error
+		do
+			backend_error_code := -1
+			set_description ("Some uncategorized error has occured in the backend or within ABEL.")
 		end
 
 end

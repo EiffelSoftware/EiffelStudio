@@ -10,6 +10,7 @@ class
 inherit
 
 	PS_SQL_CONNECTION
+	PS_EIFFELSTORE_EXPORT
 
 inherit {NONE}
 
@@ -108,10 +109,11 @@ feature {NONE} -- Implementation
 		do
 			error_number := internal_connection.last_server_error_number
 			if transaction_errors.has (error_number) then
-				create {PS_TRANSACTION_CONFLICT} Result
+				create {PS_TRANSACTION_ABORTED_ERROR} Result
 			else
 				fixme ("TODO: Extend this for all types of errors")
-				create {PS_GENERAL_ERROR} Result.make (internal_connection.last_error_message)
+				create Result
+				Result.set_backend_error_message (internal_connection.last_error_message)
 			end
 		end
 

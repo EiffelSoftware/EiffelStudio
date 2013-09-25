@@ -19,8 +19,10 @@ class
 	PS_EXECUTOR
 
 inherit
-
 	PS_EIFFELSTORE_EXPORT
+
+inherit {NONE}
+	REFACTORING_HELPER
 
 create
 	make
@@ -142,7 +144,7 @@ feature -- Transaction-based data retrieval and querying
 			result_is_persistent: not a_query.result_cursor.after implies is_persistent_within_transaction (a_query.result_cursor.item, transaction)
 			can_handle_retrieved_item: not a_query.result_cursor.after implies can_handle (a_query.result_cursor.item)
 			aborted_implies_after: transaction.has_error implies a_query.result_cursor.after
-			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_CONFLICT} transaction.error
+			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
 
@@ -173,7 +175,7 @@ feature -- Transaction-based data retrieval and querying
 		ensure
 			success_implies_persistent: not transaction.has_error implies is_persistent_within_transaction (an_object, transaction)
 			failure_implies_not_persistent: transaction.has_error implies not is_persistent_within_transaction (an_object, transaction)
-			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_CONFLICT} transaction.error
+			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
 	execute_update_within_transaction (an_object: ANY; transaction: PS_TRANSACTION)
@@ -187,7 +189,7 @@ feature -- Transaction-based data retrieval and querying
 		do
 			handle_error_on_action (agent repository.update(an_object, transaction), transaction)
 		ensure
-			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_CONFLICT} transaction.error
+			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
 	execute_delete_within_transaction (an_object: ANY; transaction: PS_TRANSACTION)
@@ -203,7 +205,7 @@ feature -- Transaction-based data retrieval and querying
 		ensure
 			success_implies_not_persistent: not transaction.has_error implies not is_persistent_within_transaction (an_object, transaction)
 			failure_implies_still_persistent: transaction.has_error implies is_persistent_within_transaction (an_object, transaction)
-			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_CONFLICT} transaction.error
+			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
 	execute_deletion_query_within_transaction (a_query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
@@ -221,7 +223,7 @@ feature -- Transaction-based data retrieval and querying
 			query_executed: a_query.is_executed
 			transaction_set: a_query.transaction = transaction
 			result_is_empty: a_query.result_cursor.after
-			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_CONFLICT} transaction.error
+			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
 feature -- Transaction factory function
@@ -251,7 +253,7 @@ feature {NONE} -- Implementation
 	execute_within_implicit_transaction (action: PROCEDURE [ANY, TUPLE [PS_TRANSACTION]]; readonly: BOOLEAN)
 			-- This function will execute `action' with implicit transaction handling
 			-- It will retry `action' `Current.default_retries' times if there's a transaction conflict,
-			-- and then raise a `PS_UNRESOLVABLE_TRANSACTION_CONFLICT' error.
+			-- and then raise a `PS_TRANSACTION_ABORTED_ERROR' error.
 		local
 			retries: INTEGER
 			transaction: PS_TRANSACTION
@@ -277,7 +279,8 @@ feature {NONE} -- Implementation
 				retries := retries + 1
 			end
 			if not success then
-				create {PS_UNRESOLVABLE_TRANSACTION_CONFLICT} last_error
+				fixme ("Should we create a more specific error for such a case?")
+				create {PS_TRANSACTION_ABORTED_ERROR} last_error
 				last_error.raise
 			end
 		end
@@ -295,12 +298,12 @@ feature {NONE} -- Implementation
 				action.call ([]) -- This may cause an exception which will be handled by the rescue clause
 			end
 		ensure
-			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_CONFLICT} transaction.error
+			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		rescue
 			last_error := transaction.error
 			if not retried then
 				retried := True
-				if transaction.has_error and then attached {PS_TRANSACTION_CONFLICT} transaction.error then
+				if transaction.has_error and then attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error then
 					retry -- The retry will "catch" transaction conflicts
 				else
 					-- Any other error will propagate upwards
@@ -321,7 +324,7 @@ feature {NONE} -- Implementation
 			query_executed: query.is_executed
 			transaction_set: query.transaction = transaction
 			aborted_implies_after: transaction.has_error implies query.result_cursor.after
-			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_CONFLICT} transaction.error
+			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
 feature {NONE} -- Initialization

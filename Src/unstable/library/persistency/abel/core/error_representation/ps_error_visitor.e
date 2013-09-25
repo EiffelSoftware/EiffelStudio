@@ -21,12 +21,17 @@ feature
 		do
 		end
 
-	visit_transaction_error (transaction_error: PS_TRANSACTION_CONFLICT)
+	visit_authorization_error (auth_error: PS_AUTHORIZATION_ERROR)
+			-- Visit an authorization error
+		deferred
+		end
+
+	visit_transaction_error (transaction_error: PS_TRANSACTION_ABORTED_ERROR)
 			-- Visit a transaction error
 		deferred
 		end
 
-	visit_general_error (general_error: PS_GENERAL_ERROR)
+	visit_general_error (general_error: PS_ERROR)
 			-- Visit a general error
 		deferred
 		end
@@ -56,7 +61,7 @@ feature
 		deferred
 		end
 
-	visit_connection_problem (connection_error: PS_CONNECTION_ERROR)
+	visit_connection_problem (connection_error: PS_CONNECTION_SETUP_ERROR)
 			-- Visit a connection problem error
 		deferred
 		end

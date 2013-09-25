@@ -10,6 +10,7 @@ class
 inherit
 
 	PS_SQL_CONNECTION
+	PS_EIFFELSTORE_EXPORT
 
 inherit {NONE}
 
@@ -140,9 +141,11 @@ feature {NONE} -- Error handling
 			if attached internal_connection.last_exception as exception then
 				error_number := exception.result_code
 				fixme ("TODO: Extend this for all types of errors")
-				create {PS_GENERAL_ERROR} Result.make (exception.meaning)
+				create Result
+				Result.set_backend_error_message (exception.meaning)
 			else
-				create {PS_GENERAL_ERROR} Result.make ("Unknown error")
+				create Result
+				Result.set_backend_error_message ("Unknown error")
 			end
 		end
 

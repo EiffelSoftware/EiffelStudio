@@ -213,7 +213,6 @@ move $INSTALL_DIR/esbuilder/spec/unix $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM
 cd $EXPORT_DIR/esbuilder
 untgz_ccode esbuilder
 cp esbuilder $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM/bin/
-bzip2 esbuilder
 
 remtrace Vision2_demo
 cd $EXPORT_DIR/vision2_demo
@@ -253,6 +252,10 @@ move ecb.bz2 $EXPORT_DIR/ecs/ecb_gpl.bz2
 if [ -z "$MULTIPLE_EDITIONS" ]; then
 	bunzip2 -c $EXPORT_DIR/ecs/ec_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	bunzip2 -c $EXPORT_DIR/ecs/ecb_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 else
 	remtrace Enterprise edition
 	cp ec_ent.tar.bz2 ec.tar.bz2

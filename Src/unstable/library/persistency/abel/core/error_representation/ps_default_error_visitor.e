@@ -1,80 +1,85 @@
 note
-	description: "Part of the visitor pattern for errors. This class allows the users of the library to implement their own error handling mechanism, making use of polymorphism (instead of some big if-else statements)"
+	description: "Provides a default action for errors. Clients can inherit and overwrite behaviour for specific error categories."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
+	PS_DEFAULT_ERROR_VISITOR
+
+inherit
 	PS_ERROR_VISITOR
-
-feature
-
-	visit (an_error: PS_ERROR)
-			-- Visit `an_error'
-		do
-			an_error.accept (Current)
-		end
 
 feature {PS_ERROR} -- Specific visitor functions
 
-	visit_no_error (no_error: PS_NO_ERROR)
-			-- When no error occured, doing nothing is a reasonable default.
-		do
-		end
-
 	visit_error (error: PS_ERROR)
 			-- Visit an uncategorized error
-		deferred
+		do
+			print (error.tag)
+			print ("%N%N")
+			if attached error.description as desc then
+				print (desc + "%N")
+			end
+			error.raise
 		end
 
 	visit_connection_setup_error (connection_setup_error: PS_CONNECTION_SETUP_ERROR)
 			-- Visit a connection setup error
-		deferred
+		do
+			visit_error (connection_setup_error)
 		end
 
 	visit_authorization_error (authorization_error: PS_AUTHORIZATION_ERROR)
 			-- Visit an authorization error
-		deferred
+		do
+			visit_error (authorization_error)
 		end
 
 	visit_invalid_operation_error (invalid_operation_error: PS_INVALID_OPERATION_ERROR)
 			-- Visit an invalid operation error
-		deferred
+		do
+			visit_error (invalid_operation_error)
 		end
 
 	visit_message_not_understood_error (message_not_understood_error: PS_MESSAGE_NOT_UNDERSTOOD_ERROR)
 			-- Visit a message not understood error
-		deferred
+		do
+			visit_invalid_operation_error(message_not_understood_error)
 		end
 
 	visit_access_right_violation_error (access_right_violation_error: PS_ACCESS_RIGHT_VIOLATION_ERROR)
 			-- Visit an access right violation error
-		deferred
+		do
+			visit_invalid_operation_error(access_right_violation_error)
 		end
 
 	visit_integrity_constraint_violation_error (integrity_constraint_violation_error: PS_INTEGRITY_CONSTRAINT_VIOLATION_ERROR)
 			-- Visit an integrity constraint violation error
-		deferred
+		do
+			visit_invalid_operation_error(integrity_constraint_violation_error)
 		end
 
 	visit_transaction_aborted_error (transaction_aborted_error: PS_TRANSACTION_ABORTED_ERROR)
 			-- Visit a transaction aborted error
-		deferred
+		do
+			visit_error (transaction_aborted_error)
 		end
 
 	visit_version_mismatch_error (version_mismatch_error: PS_VERSION_MISMATCH_ERROR)
 			-- Visit a version mismatch error
-		deferred
+		do
+			visit_error (version_mismatch_error)
 		end
 
 	visit_backend_runtime_error (backend_runtime_error: PS_BACKEND_RUNTIME_ERROR)
 			-- Visit a backend runtime error
-		deferred
+		do
+			visit_error (backend_runtime_error)
 		end
 
 	visit_internal_error (internal_error: PS_INTERNAL_ERROR)
 			-- Visit an internal error
-		deferred
+		do
+			visit_error (internal_error)
 		end
-
 end

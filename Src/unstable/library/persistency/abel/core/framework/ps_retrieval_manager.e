@@ -36,11 +36,21 @@ feature {PS_EIFFELSTORE_EXPORT} -- Query execution
 
 	setup_tuple_query (query: PS_TUPLE_QUERY[ANY]; transaction: PS_TRANSACTION)
 			-- Set up the query and retrieve the first result
+		local
+			collector: PS_CRITERION_ATTRIBUTE_COLLECTOR
+			thrash:INTEGER
 		do
-			initialize_query (query,
-				--create {ARRAYED_LIST[STRING]}.make_from_array (query.projection)
-				create {LINKED_LIST [STRING]}.make
-				, transaction)
+			create collector.make
+			thrash := collector.visit (query.criteria)
+			collector.attributes.compare_objects
+			across query.projection as proj
+			loop
+				if not collector.attributes.has (proj.item) then
+					collector.attributes.extend (proj.item)
+				end
+			end
+			initialize_query (query, collector.attributes, transaction)
+			--initialize_query (query, create {LINKED_LIST [STRING]}.make, transaction)
 			retrieve_tuples_until_criteria_match (query, transaction)
 		end
 
@@ -72,7 +82,7 @@ feature {NONE} -- Implementation - Retrieval
 				until
 					found or results.after
 				loop
-					new_object := build_object (type, results.item, transaction, bookkeeping)
+					new_object := build_object (type, results.item, transaction, bookkeeping, true)
 					if query.criteria.is_satisfied_by (new_object) then
 						query.result_cursor.set_entry (new_object)
 						found := True
@@ -119,7 +129,7 @@ feature {NONE} -- Implementation - Retrieval
 						found or results.after
 					loop
 						fixme ("don't cheat...")
-						new_object := build_object (type, results.item, transaction, bookkeeping)
+						new_object := build_object (type, results.item, transaction, bookkeeping, false)
 						if query.criteria.is_satisfied_by (new_object) then
 							-- extract the required information
 
@@ -150,7 +160,7 @@ feature {NONE} -- Implementation - Retrieval
 
 feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 
-	build_object (type: PS_TYPE_METADATA; obj: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]): ANY
+	build_object (type: PS_TYPE_METADATA; obj: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN): ANY
 			-- Build the object `obj'.
 		require
 			obj.class_metadata.name.is_equal (type.base_class.name)
@@ -168,9 +178,11 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			else
 				create reflection
 				Result := reflection.new_instance_of (type.type.type_id)
-				bookkeeping.extend (Result, obj.primary_key + obj.class_metadata.name.hash_code)
-				id_manager.identify (Result, transaction)
-				backend.key_mapper.add_entry (id_manager.identifier_wrapper (Result, transaction), obj.primary_key, transaction)
+				if identify then
+					bookkeeping.extend (Result, obj.primary_key + obj.class_metadata.name.hash_code)
+					id_manager.identify (Result, transaction)
+					backend.key_mapper.add_entry (id_manager.identifier_wrapper (Result, transaction), obj.primary_key, transaction)
+				end
 				across
 					obj.attributes as attr_cursor
 				loop
@@ -262,7 +274,7 @@ feature {NONE} -- Implementation - Build support functions.
 					fixme ("Retrieve based on dynamic type, stored in value.second")
 					object_result := backend.retrieve_from_single_key (type, value.first.to_integer, transaction)
 					if not object_result.is_empty then
-						Result := build_object (type, object_result.first, transaction, bookkeeping)
+						Result := build_object (type, object_result.first, transaction, bookkeeping, true)
 					end
 				end
 			end

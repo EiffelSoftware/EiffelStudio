@@ -36,11 +36,6 @@ feature
 		deferred
 		end
 
-	visit_unresolvable_transaction_conflict (unres_error: PS_UNRESOLVABLE_TRANSACTION_CONFLICT)
-			-- Visit an unresolvable transaction conflict error
-		deferred
-		end
-
 	visit_access_right_violation (access_right_violation: PS_ACCESS_RIGHT_VIOLATION_ERROR)
 			-- Visit an access right violation error
 		deferred

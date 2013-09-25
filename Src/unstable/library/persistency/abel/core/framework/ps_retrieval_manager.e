@@ -34,6 +34,20 @@ feature {PS_EIFFELSTORE_EXPORT} -- Query execution
 			retrieve_until_criteria_match (query, query.transaction)
 		end
 
+	setup_tuple_query (query: PS_TUPLE_QUERY[ANY]; transaction: PS_TRANSACTION)
+			-- Set up the query and retrieve the first result
+		do
+			initialize_query (query, create {ARRAYED_LIST[STRING]}.make_from_array (query.projection), transaction)
+			retrieve_tuples_until_criteria_match (query, transaction)
+		end
+
+	next_tuple_entry (query: PS_TUPLE_QUERY [ANY])
+			-- Retrieve the next entry of query `query'.
+		do
+			attach (query_to_cursor_map [query.backend_identifier]).forth
+			retrieve_tuples_until_criteria_match (query, query.transaction)
+		end
+
 feature {NONE} -- Implementation - Retrieval
 
 	retrieve_until_criteria_match (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
@@ -78,6 +92,51 @@ feature {NONE} -- Implementation - Retrieval
 				end
 			end
 		end
+
+	retrieve_tuples_until_criteria_match (query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
+			-- Retrieve objects until the criteria in `query.criteria' are satisfied.
+
+			local
+				new_object: ANY
+				found: BOOLEAN
+				type: PS_TYPE_METADATA
+				bookkeeping: HASH_TABLE [ANY, INTEGER]
+				tuple: TUPLE
+			do
+					-- Get the type of objects that the query operates on.
+				type := metadata_manager.create_metadata_from_type (query.generic_type)
+				bookkeeping := attach (bookkeeping_manager [query.backend_identifier])
+					-- Check if we have a query on normal objects or on collections
+				if attached {ITERATION_CURSOR [PS_RETRIEVED_OBJECT]} query_to_cursor_map [query.backend_identifier] as results then
+						-- Normal objects: Retrieve until criteria match
+					from
+						found := False
+					until
+						found or results.after
+					loop
+						fixme ("don't cheat...")
+						new_object := build_object (type, results.item, transaction, bookkeeping)
+						if query.criteria.is_satisfied_by (new_object) then
+							-- extract the required information
+
+							check attached {TUPLE} type.reflection.new_instance_of (metadata_manager.generate_tuple_type (type.type, query.projection)) as t then
+								tuple := t
+							end
+
+							fixme ("fill tuple with information")
+
+							query.result_cursor.set_entry (tuple)
+							found := True
+						else
+							results.forth
+						end
+					end
+					if results.after then
+						query.result_cursor.set_entry (Void)
+					end
+				end
+			end
+
 
 feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 
@@ -190,6 +249,7 @@ feature {NONE} -- Implementation - Build support functions.
 			else
 					-- Build a new object
 				if not value.first.is_empty then
+					fixme ("Retrieve based on dynamic type, stored in value.second")
 					object_result := backend.retrieve_from_single_key (type, value.first.to_integer, transaction)
 					if not object_result.is_empty then
 						Result := build_object (type, object_result.first, transaction, bookkeeping)

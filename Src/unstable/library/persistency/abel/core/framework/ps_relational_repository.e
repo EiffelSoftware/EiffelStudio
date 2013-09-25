@@ -51,11 +51,15 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 		local
 			exception: PS_INTERNAL_ERROR
 		do
-			fixme ("TODO")
-			create exception
-			exception.set_message ("Feature not yet implemented.")
-			transaction.set_error (exception)
-			exception.raise
+--			fixme ("TODO")
+--			create exception
+--			exception.set_message ("Feature not yet implemented.")
+--			transaction.set_error (exception)
+--			exception.raise
+			id_manager.register_transaction (transaction)
+			retriever.setup_tuple_query (tuple_query, transaction)
+		rescue
+			default_transactional_rescue (transaction)
 		end
 
 	next_tuple_entry (tuple_query: PS_TUPLE_QUERY [ANY])
@@ -63,7 +67,15 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 		local
 			exception: PS_INTERNAL_ERROR
 		do
-			fixme ("TODO")
+--			fixme ("TODO")
+--			create exception
+--			exception.set_message ("Feature not yet implemented.")
+--			transaction.set_error (exception)
+--			exception.raise
+			id_manager.register_transaction (tuple_query.transaction)
+			retriever.next_tuple_entry (tuple_query)
+		rescue
+			default_transactional_rescue (tuple_query.transaction)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Modification

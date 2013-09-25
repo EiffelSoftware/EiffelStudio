@@ -7,22 +7,22 @@ note
 class
 	PS_UNRESOLVABLE_TRANSACTION_CONFLICT
 
-inherit
+--inherit
 
-	PS_ERROR
-	redefine
-		description
-	end
+--	PS_ERROR
+--	redefine
+--		description, accept
+--	end
 
-feature
+--feature
 
-	description: STRING = "Unresolvable transaction conflict"
-			-- A human-readable string containing an error description
+--	description: STRING = "Unresolvable transaction conflict"
+--			-- A human-readable string containing an error description
 
-	accept (a_visitor: PS_ERROR_VISITOR)
-			-- `accept' function of the visitor pattern
-		do
-			a_visitor.visit_unresolvable_transaction_conflict (Current)
-		end
+--	accept (a_visitor: PS_ERROR_VISITOR)
+--			-- `accept' function of the visitor pattern
+--		do
+--			a_visitor.visit_unresolvable_transaction_conflict (Current)
+--		end
 
 end

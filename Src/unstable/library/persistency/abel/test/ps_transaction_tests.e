@@ -51,7 +51,7 @@ feature {PS_REPOSITORY_TESTS}
 				executor.execute_update_within_transaction (q1.result_cursor.item, t1)
 				t1.commit
 
-				assert ("The transaction should be aborted", t1.has_error and then attached{PS_TRANSACTION_CONFLICT} t1.error)
+				assert ("The transaction should be aborted", t1.has_error and then attached{PS_TRANSACTION_ABORTED_ERROR} t1.error)
 			end
 			repository.clean_db_for_testing
 		end

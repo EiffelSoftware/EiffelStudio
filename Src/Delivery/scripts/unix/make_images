@@ -36,10 +36,6 @@ fi
 
 cd $EXPORT_DIR
 
-if [ ! -d cdrom ]; then
-	mkdir cdrom
-fi
-
 # Copy runtime files
 cp -r runtimes/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 
@@ -52,11 +48,6 @@ chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
 remtrace Building GPL CD image
-mv Eiffel_13.11 cdrom
-./make_cd_image Eiffel_13.11_gpl Eiffel_13.11_gpl.iso cdrom
-bzip2 Eiffel_13.11_gpl.iso
-mv Eiffel_13.11_gpl.iso.bz2 Eiffel_13.11_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
-mv cdrom/Eiffel_13.11 Eiffel_13.11
 pax -w -f Eiffel_13.11_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_13.11
 bzip2 Eiffel_13.11_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 
@@ -77,11 +68,6 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
 
 	remtrace Building Enterprise CD image
-	mv Eiffel_13.11 cdrom
-	./make_cd_image Eiffel_13.11_enterprise Eiffel_13.11_ent.iso cdrom
-	bzip2 Eiffel_13.11_ent.iso
-	mv Eiffel_13.11_ent.iso.bz2 Eiffel_13.11_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
-	mv cdrom/Eiffel_13.11 Eiffel_13.11
 	pax -w -f Eiffel_13.11_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_13.11 
 	bzip2 Eiffel_13.11_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 fi

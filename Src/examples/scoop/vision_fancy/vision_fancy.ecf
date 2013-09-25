@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="vision2_fancy" uuid="7246F316-9C74-409C-90FD-8EC2336B5031">
 	<target name="vision2_fancy">
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true" full_class_checking="true" cat_call_detection="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
 			<assertions/>
 		</option>
 		<setting name="console_application" value="true"/>

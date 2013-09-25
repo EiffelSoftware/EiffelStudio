@@ -146,7 +146,6 @@ feature
 			executor.execute_insert (test_data.reference_to_single_other)
 			create query.make
 			create res.make
---			across query.projection as c from print(query.projection.count) loop print (c.item) end
 			assert ("Wrong default projection", query.projection.count = 1 and then	query.projection[1].is_equal ("ref_class_id"))
 
 			executor.execute_tuple_query (query)
@@ -232,8 +231,6 @@ feature
 
 				assert ("ref_class_id is wrong", tup.integer_item (1) = test_data.reference_cycle.ref_class_id)
 				assert ("attribute refer is Void", attached {REFERENCE_CLASS_1} tup[2])
---				print (tup) print (tup[2]) print (test_data.reference_cycle.refer)
---				check attached {REFERENCE_CLASS_1}tup[2] as ref then print(ref.references.first )end
 				assert ("Data is wrong", deep_equal (tup[2], test_data.reference_cycle.refer))
 			end
 

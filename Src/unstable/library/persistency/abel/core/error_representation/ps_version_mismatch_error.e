@@ -26,7 +26,7 @@ feature {PS_ERROR_VISITOR} -- Visitor pattern
 	accept (a_visitor: PS_ERROR_VISITOR)
 			-- `accept' function of the visitor pattern
 		do
-			a_visitor.visit_version_mismatch (Current)
+			a_visitor.visit_version_mismatch_error (Current)
 		end
 
 feature {NONE} -- Initialization

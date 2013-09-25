@@ -42,7 +42,7 @@ feature -- Cursor movement
 				end
 			end
 		ensure then
-			item_is_identified: not after implies query.transaction.repository.is_identified (item, query.transaction)
+			item_is_identified: attached{TUPLE}item or (not after implies query.transaction.repository.is_identified (item, query.transaction))
 			item_can_be_handled: query.transaction.repository.can_handle (item)
 		end
 

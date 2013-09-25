@@ -37,7 +37,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Query execution
 	setup_tuple_query (query: PS_TUPLE_QUERY[ANY]; transaction: PS_TRANSACTION)
 			-- Set up the query and retrieve the first result
 		do
-			initialize_query (query, create {ARRAYED_LIST[STRING]}.make_from_array (query.projection), transaction)
+			initialize_query (query,
+				--create {ARRAYED_LIST[STRING]}.make_from_array (query.projection)
+				create {LINKED_LIST [STRING]}.make
+				, transaction)
 			retrieve_tuples_until_criteria_match (query, transaction)
 		end
 
@@ -102,6 +105,7 @@ feature {NONE} -- Implementation - Retrieval
 				type: PS_TYPE_METADATA
 				bookkeeping: HASH_TABLE [ANY, INTEGER]
 				tuple: TUPLE
+				index, i: INTEGER
 			do
 					-- Get the type of objects that the query operates on.
 				type := metadata_manager.create_metadata_from_type (query.generic_type)
@@ -123,7 +127,13 @@ feature {NONE} -- Implementation - Retrieval
 								tuple := t
 							end
 
-							fixme ("fill tuple with information")
+							across query.projection as attr_cursor
+							from i := 1
+							loop
+								index := type.field_index (attr_cursor.item)
+								tuple.put (type.reflection.field (index, new_object), i)
+								i:= i+1
+							end
 
 							query.result_cursor.set_entry (tuple)
 							found := True

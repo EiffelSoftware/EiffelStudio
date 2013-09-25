@@ -9,7 +9,7 @@ note
 		Example: across my_query as cur
 				 loop 
 					-- do something with cur.item 
-				 end  
+				 end
 	]"
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -77,6 +77,7 @@ feature -- Projections
 				end
 				i := i + 1
 			end
+			Result:= Result.subarray (1, j-1)
 			Result.compare_objects
 		end
 

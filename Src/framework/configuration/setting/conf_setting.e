@@ -79,7 +79,7 @@ feature -- Initialization: Iron
 				if is_eiffel_layout_defined then
 						-- Using ISE Eiffel Environment
 					create lay.make_with_path (eiffel_layout.iron_path)
-					create l_iron_mapping.make (lay)
+					create l_iron_mapping.make (lay, create {IRON_URL_BUILDER})
 					conf_location_mapper.register (l_iron_mapping)
 					iron_initialized := True
 				end
@@ -117,4 +117,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

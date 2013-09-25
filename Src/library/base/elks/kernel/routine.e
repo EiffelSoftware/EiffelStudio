@@ -20,7 +20,8 @@ inherit
 		end
 
 	REFLECTOR
-		export {NONE} all
+		export
+			{NONE} all
 		redefine
 			copy,
 			is_equal
@@ -128,11 +129,9 @@ feature -- Status report
 		local
 			i, arg_type_code: INTEGER
 			arg: like {TUPLE}.item
-			int: REFLECTOR
 			open_type_codes: STRING
 			l_type: INTEGER
 		do
-			create int
 			if args = Void then
 					-- Void operands are only allowed
 					-- if object has no open operands.
@@ -152,12 +151,12 @@ feature -- Status report
 						l_type := open_operand_type (i)
 							-- If expected type is attached, then we need to verify that the actual
 							-- is indeed attached.
-						if int.is_attached_type (l_type) then
+						if is_attached_type (l_type) then
 							Result := arg /= Void and then
-								int.field_conforms_to (type_id_of (arg), l_type)
+								field_conforms_to (type_id_of (arg), l_type)
 						else
 							Result := arg = Void or else
-								int.field_conforms_to (type_id_of (arg), l_type)
+								field_conforms_to (type_id_of (arg), l_type)
 						end
 					end
 					i := i + 1

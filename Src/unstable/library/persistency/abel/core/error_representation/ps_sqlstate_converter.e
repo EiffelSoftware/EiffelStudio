@@ -40,16 +40,17 @@ feature
 			elseif category.is_equal ("01") then -- Warning
 				Result := no_error
 			elseif category.is_equal ("02") then -- No data
-				-- TODO: check if this is really an error
-				Result := message_not_understood_error
+				--`No Data' is another warning category
+				Result := no_error
 			elseif category.is_equal ("03") then -- SQL statement not yet complete
 				Result := invalid_operation_error
 			elseif category.is_equal ("07") then -- Dynamic SQL error
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("08") then -- Connection errors
-				-- TODO: investigate if further distinction necessary
+				-- TODO: check subcodes. this error class includes a wrong password...
 				Result := connection_setup_error
 			elseif category.is_equal ("09") then -- triggered action exception
+				-- TODO: to discuss
 				Result := backend_runtime_error
 			elseif category.is_equal ("0A") then -- Feature not supported
 				Result := message_not_understood_error
@@ -61,16 +62,18 @@ feature
 				Result := invalid_operation_error
 			elseif category.is_equal ("0F") then -- locator exception
 				Result := invalid_operation_error
+			elseif category.is_equal ("0G") then -- reference to null table value
+				Result := invalid_operation_error
 			elseif category.is_equal ("0K") then -- Resignal when handler not active
 				Result := invalid_operation_error
 			elseif category.is_equal ("0L") then -- invalid grantor
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("0M") then -- invalid SQL-invoked procedure reference
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("0N") then -- SQL/XML mapping error
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("0P") then -- invalid role specification
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("0S") then -- invalid transform group name specification
 				Result := invalid_operation_error
 			elseif category.is_equal ("0T") then -- target table disagrees with cursor specification
@@ -80,34 +83,38 @@ feature
 			elseif category.is_equal ("0V") then -- Attempt to assign to ordering column
 				Result := invalid_operation_error
 			elseif category.is_equal ("0W") then -- prohibited statement encountered during trigger execution
-				Result := invalid_operation_error
+				-- TODO: to discuss
+				Result := backend_runtime_error
 			elseif category.is_equal ("0Z") then -- diagnostics exception
-				Result := invalid_operation_error
+				Result := backend_runtime_error
+
 			elseif category.is_equal ("10") then -- XQuery error
-				Result := message_not_understood_error
+				Result := invalid_operation_error
+
 			elseif category.is_equal ("20") then --Case Not Found for Case Statement
 				Result := message_not_understood_error
 			elseif category.is_equal ("21") then -- Cardinality violation
 				Result := invalid_operation_error
-
 			elseif category.is_equal ("22") then -- Data exception
 				-- TODO: check subcodes
 				check not_implemented: False end
 				Result:= error
-
-
 			elseif category.is_equal ("23") then -- Integrity constraint violation
 				Result := integrity_constraint_violation_error
 			elseif category.is_equal ("24") then -- Invalid cursor state
 				Result := invalid_operation_error
 			elseif category.is_equal ("25") then -- Invalid transaction state
 				Result := transaction_aborted_error
+				-- TODO: check subcodes
+				check not_implemented: False end
 			elseif category.is_equal ("26") then -- Invalid SQL statement name
-				Result := message_not_understood_error
-			elseif category.is_equal ("27") then -- triggered data change violation
 				Result := invalid_operation_error
+			elseif category.is_equal ("27") then -- triggered data change violation
+				-- TODO: to discuss
+				Result := backend_runtime_error
 			elseif category.is_equal ("28") then -- invalid authorization specification
-				Result := message_not_understood_error
+				-- TODO: to discuss, or check subcodes
+				Result := authorization_error
 			elseif category.is_equal ("2B") then -- dependent privilege descriptors still exist
 				Result := invalid_operation_error
 			elseif category.is_equal ("2C") then -- invalid character set name
@@ -115,35 +122,39 @@ feature
 			elseif category.is_equal ("2D") then -- Invalid transaction termination
 				Result := invalid_operation_error
 			elseif category.is_equal ("2E") then -- Invalid connection name
-				Result := message_not_understood_error
+				-- TODO: related to CONNECT statement. Check what this is used for.
+				Result := connection_setup_error
 			elseif category.is_equal ("2F") then -- SQL routine exception
+				-- TODO: to discuss
 				Result := invalid_operation_error
 			elseif category.is_equal ("2H") then -- Invalid collation name
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("30") then -- Invalid SQL statement identifier
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("33") then -- Invalid SQL descriptor name
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("34") then -- Invalid cursor name
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("35") then -- Invalid condition number
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("36") then -- Cursor Sensitivity Exception
 				Result := invalid_operation_error
 			elseif category.is_equal ("37") then -- Syntax Error (obsolete)
 				Result := message_not_understood_error
 			elseif category.is_equal ("38") then -- External routine exception
+				-- TODO: to discuss
 				Result := invalid_operation_error
 			elseif category.is_equal ("39") then -- External routine invocation exception
+				-- TODO: to discuss
 				Result := invalid_operation_error
 			elseif category.is_equal ("3B") then -- Savepoint exception
 				Result := invalid_operation_error
 			elseif category.is_equal ("3C") then -- Ambiguous Cursor Name
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("3D") then -- Invalid catalog name
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("3F") then -- Invalid schema name
-				Result := message_not_understood_error
+				Result := invalid_operation_error
 			elseif category.is_equal ("40") then -- Transaction Rollback
 				Result := transaction_aborted_error
 
@@ -154,7 +165,9 @@ feature
 				Result := error
 
 			elseif category.is_equal ("44") then -- WITH CHECK OPTION violation
-				Result := invalid_operation_error
+				Result := integrity_constraint_violation_error
+			elseif category.is_equal ("45") then -- Unhandled user-defined exception
+				Result := backend_runtime_error
 			elseif category.is_equal ("46") then -- Java errors
 				Result := invalid_operation_error
 

@@ -215,4 +215,12 @@ feature
 			print ("%N")
 		end
 
+	test_converter
+		local
+			conv:PS_SQLSTATE_CONVERTER
+		do
+			create conv
+			assert ("not correct", attached {PS_CONNECTION_SETUP_ERROR} conv.convert_error ("08xxx"))
+		end
+
 end

@@ -236,7 +236,7 @@ feature {NONE} -- Factory functions
 			create Result
 		end
 
-	backend_runtime_error: PS_BACKEND_RUNTIME_ERROR
+	backend_runtime_error: PS_BACKEND_ERROR
 		do
 			create Result
 		end
@@ -256,7 +256,7 @@ feature {NONE} -- Factory functions
 			create Result
 		end
 
-	invalid_operation_error: PS_INVALID_OPERATION_ERROR
+	invalid_operation_error: PS_OPERATION_ERROR
 		do
 			create Result
 		end

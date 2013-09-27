@@ -1,11 +1,11 @@
 note
-	description: "Represents a violation of an integrity constraint in the database backend."
+	description: "Represents an error in the database backend where an external routine has failed."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PS_INTEGRITY_CONSTRAINT_VIOLATION_ERROR
+	PS_EXTERNAL_ROUTINE_ERROR
 
 inherit
 	PS_OPERATION_ERROR
@@ -18,7 +18,7 @@ feature -- Access
 	tag: IMMUTABLE_STRING_32
 			-- A short message describing what the current error is
 		once
-			create Result.make_from_string_8 ("Integrity constraint violation")
+			create Result.make_from_string_8 ("External routine error")
 		end
 
 feature {PS_ERROR_VISITOR} -- Visitor pattern
@@ -26,7 +26,7 @@ feature {PS_ERROR_VISITOR} -- Visitor pattern
 	accept (a_visitor: PS_ERROR_VISITOR)
 			-- `accept' function of the visitor pattern
 		do
-			a_visitor.visit_integrity_constraint_violation_error (Current)
+			a_visitor.visit_external_routine_error (Current)
 		end
 
 feature {NONE} -- Initialization
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- Create a new instance of this error
 		do
 			backend_error_code := -1
-			set_description ("The requested operation violates a data integrity constraint.")
+			set_description ("An external routine or SQL function within the database has failed.")
 		end
 
 end

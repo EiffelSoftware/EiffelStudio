@@ -8,7 +8,7 @@ class
 	PS_VERSION_MISMATCH_ERROR
 
 inherit
-	PS_ERROR
+	PS_OPERATION_ERROR
 		redefine
 			tag, accept, default_create
 		end

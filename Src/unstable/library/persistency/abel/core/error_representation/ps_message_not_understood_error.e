@@ -8,7 +8,7 @@ class
 	PS_MESSAGE_NOT_UNDERSTOOD_ERROR
 
 inherit
-	PS_INVALID_OPERATION_ERROR
+	PS_OPERATION_ERROR
 		redefine
 			tag, accept, default_create
 		end

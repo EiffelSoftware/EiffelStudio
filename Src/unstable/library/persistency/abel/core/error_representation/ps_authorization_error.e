@@ -1,5 +1,10 @@
 note
-	description: "Represents any kind of authorization error, e.g. wrong login information or an invalid authorization certificate."
+	description:
+	"[
+		Represents any kind of authorization error, e.g. wrong login information or an invalid authorization certificate.
+		Note: You are not guaranteed to get a PS_AUTHORIZATION_ERROR for wrong login information, as some backends don't
+		distinguish between a wrong login and a more general connection establishment failure.
+	]"
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +13,7 @@ class
 	PS_AUTHORIZATION_ERROR
 
 inherit
-	PS_ERROR
+	PS_CONNECTION_SETUP_ERROR
 		redefine
 			tag, accept, default_create
 		end

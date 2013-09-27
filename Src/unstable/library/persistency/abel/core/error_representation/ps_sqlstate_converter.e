@@ -6,6 +6,8 @@ note
 
 class
 	PS_SQLSTATE_CONVERTER
+inherit
+	PS_EIFFELSTORE_EXPORT
 
 feature
 
@@ -59,7 +61,7 @@ feature
 				end
 
 			elseif category.is_equal ("09") then -- triggered action exception
-				-- TODO: to discuss
+				-- TODO: to discuss, probably integrity constraint might be a better option
 				Result := backend_runtime_error
 			elseif category.is_equal ("0A") then -- Feature not supported
 				Result := message_not_understood_error
@@ -205,6 +207,10 @@ feature
 				Result := error
 			end
 
+			Result.set_backend_sqlstate (sqlstate)
+
+		ensure
+			sqlstate_set: equal (Result.backend_sqlstate, sqlstate)
 		end
 
 

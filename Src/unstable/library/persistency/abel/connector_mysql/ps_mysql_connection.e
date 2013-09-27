@@ -15,6 +15,7 @@ inherit
 inherit {NONE}
 
 	REFACTORING_HELPER
+	PS_SQLSTATE_CONVERTER
 
 create {PS_MYSQL_DATABASE}
 	make
@@ -107,21 +108,25 @@ feature {NONE} -- Implementation
 		local
 			error_number: INTEGER
 		do
-			error_number := internal_connection.last_server_error_number
-			if transaction_errors.has (error_number) then
-				create {PS_TRANSACTION_ABORTED_ERROR} Result
-			else
-				fixme ("TODO: Extend this for all types of errors")
-				create Result
-				Result.set_backend_error_message (internal_connection.last_error_message)
-			end
-		end
+			-- First try to define the error using SQLState
+			Result := convert_error (internal_connection.last_sqlstate)
 
-	transaction_errors: ARRAY [INTEGER]
-			-- All MySQL error codes that indicate a conflict between transactions
-		once
-			Result := <<1205 -- Lock timeout
-				>>
+
+			-- Overwrite default SQLState for some errors
+			error_number := internal_connection.last_server_error_number
+
+			if error_number = 1205 then -- Lock timeout
+				Result := transaction_aborted_error
+				Result.set_backend_sqlstate (internal_connection.last_sqlstate)
+			elseif error_number = 1064 then -- Syntax error
+				Result := message_not_understood_error
+				Result.set_backend_sqlstate (internal_connection.last_sqlstate)
+			else
+				fixme ("TODO: Check if more errors need manual handling")
+			end
+
+			Result.set_backend_error_message (internal_connection.last_error_message)
+			Result.set_backend_error_code (error_number)
 		end
 
 end

@@ -46,9 +46,18 @@ feature
 				Result := invalid_operation_error
 			elseif category.is_equal ("07") then -- Dynamic SQL error
 				Result := invalid_operation_error
+
 			elseif category.is_equal ("08") then -- Connection errors
-				-- TODO: check subcodes. this error class includes a wrong password...
-				Result := connection_setup_error
+				if subcode.is_equal ("004") then -- server rejected establishment of connection
+					-- to discuss: the error may happen due to a wrong password, or too many clients already connected
+					Result:= error
+					check not_implemented: false end
+				elseif subcode.is_equal ("006") or subcode.is_equal ("007") then -- connection lost at runtime
+					Result:= backend_runtime_error
+				else
+					Result:=connection_setup_error
+				end
+
 			elseif category.is_equal ("09") then -- triggered action exception
 				-- TODO: to discuss
 				Result := backend_runtime_error
@@ -87,33 +96,35 @@ feature
 				Result := backend_runtime_error
 			elseif category.is_equal ("0Z") then -- diagnostics exception
 				Result := backend_runtime_error
-
 			elseif category.is_equal ("10") then -- XQuery error
 				Result := invalid_operation_error
-
 			elseif category.is_equal ("20") then --Case Not Found for Case Statement
 				Result := message_not_understood_error
 			elseif category.is_equal ("21") then -- Cardinality violation
 				Result := invalid_operation_error
 			elseif category.is_equal ("22") then -- Data exception
-				-- TODO: check subcodes
-				check not_implemented: False end
-				Result:= error
+				-- TODO: to discuss: the whole category might also fit integrity constraint violation
+				Result:= invalid_operation_error
 			elseif category.is_equal ("23") then -- Integrity constraint violation
 				Result := integrity_constraint_violation_error
 			elseif category.is_equal ("24") then -- Invalid cursor state
 				Result := invalid_operation_error
+
 			elseif category.is_equal ("25") then -- Invalid transaction state
-				Result := transaction_aborted_error
-				-- TODO: check subcodes
-				check not_implemented: False end
+				if subcode.starts_with ("0") then -- several errors describing illegal actions within a running transaction
+					Result := invalid_operation_error
+				elseif subcode.is_equal ("S03") then -- commit faild, trasaction rolled back
+					Result := transaction_aborted_error
+				else -- subcodes S01 and S02
+					Result := backend_runtime_error -- commit failed, transaction state unknown or active (this is serious...)
+				end
+
 			elseif category.is_equal ("26") then -- Invalid SQL statement name
 				Result := invalid_operation_error
 			elseif category.is_equal ("27") then -- triggered data change violation
 				-- TODO: to discuss
 				Result := backend_runtime_error
 			elseif category.is_equal ("28") then -- invalid authorization specification
-				-- TODO: to discuss, or check subcodes
 				Result := authorization_error
 			elseif category.is_equal ("2B") then -- dependent privilege descriptors still exist
 				Result := invalid_operation_error
@@ -122,7 +133,6 @@ feature
 			elseif category.is_equal ("2D") then -- Invalid transaction termination
 				Result := invalid_operation_error
 			elseif category.is_equal ("2E") then -- Invalid connection name
-				-- TODO: related to CONNECT statement. Check what this is used for.
 				Result := connection_setup_error
 			elseif category.is_equal ("2F") then -- SQL routine exception
 				-- TODO: to discuss
@@ -161,8 +171,7 @@ feature
 			elseif category.is_equal ("42") then -- Syntax Error or Access Rule Violation
 				-- TODO: check subcodes
 				-- SQL standard doesn't specify sucboces... might become problematic
-				check not_implemented: False end
-				Result := error
+				Result := invalid_operation_error
 
 			elseif category.is_equal ("44") then -- WITH CHECK OPTION violation
 				Result := integrity_constraint_violation_error

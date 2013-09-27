@@ -285,6 +285,12 @@ feature -- Access (Errors)
 			Result := c_mysql_errno (client.item).to_integer_32
 		end
 
+	last_sqlstate: attached STRING
+			-- Last SQLState error code
+		do
+			create Result.make_from_c (c_mysql_sqlstate(client.item))
+		end
+
 	has_client_error: BOOLEAN
 			-- Indicates if a client error occured during the last operation
 		do

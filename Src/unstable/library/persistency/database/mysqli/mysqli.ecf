@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="mysqli" uuid="7D057A3A-1347-4D72-8112-E97763A1C5B5" readonly="false" library_target="mysqli">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="mysqli" uuid="7D057A3A-1347-4D72-8112-E97763A1C5B5" library_target="mysqli">
 	<target name="mysqli">
 		<root all_classes="true"/>
 		<option is_attached_by_default="false" void_safety="all" syntax="transitional">

@@ -111,7 +111,6 @@ feature {NONE} -- Implementation
 			-- First try to define the error using SQLState
 			Result := convert_error (internal_connection.last_sqlstate)
 
-
 			-- Overwrite default SQLState for some errors
 			error_number := internal_connection.last_server_error_number
 

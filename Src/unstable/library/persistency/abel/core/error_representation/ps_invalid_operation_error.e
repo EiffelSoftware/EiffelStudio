@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_INVALID_OPERATION_ERROR
+	PS_OPERATION_ERROR
 
 inherit
 	PS_ERROR
@@ -26,7 +26,7 @@ feature {PS_ERROR_VISITOR} -- Visitor pattern
 	accept (a_visitor: PS_ERROR_VISITOR)
 			-- `accept' function of the visitor pattern
 		do
-			a_visitor.visit_invalid_operation_error (Current)
+			a_visitor.visit_operation_error (Current)
 		end
 
 feature {NONE} -- Initialization

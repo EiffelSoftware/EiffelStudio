@@ -10,9 +10,10 @@ class
 inherit
 	PS_ERROR_VISITOR
 
-feature {PS_ERROR} -- Specific visitor functions
 
-	visit_error (error: PS_ERROR)
+feature {PS_ERROR} -- Visitor functions: Top-level categories
+
+	visit_uncategorized_error (error: PS_ERROR)
 			-- Visit an uncategorized error
 		do
 			print (error.tag)
@@ -26,60 +27,66 @@ feature {PS_ERROR} -- Specific visitor functions
 	visit_connection_setup_error (connection_setup_error: PS_CONNECTION_SETUP_ERROR)
 			-- Visit a connection setup error
 		do
-			visit_error (connection_setup_error)
+			visit_uncategorized_error (connection_setup_error)
 		end
 
-	visit_authorization_error (authorization_error: PS_AUTHORIZATION_ERROR)
-			-- Visit an authorization error
-		do
-			visit_error (authorization_error)
-		end
-
-	visit_invalid_operation_error (invalid_operation_error: PS_INVALID_OPERATION_ERROR)
+	visit_operation_error (operation_error: PS_OPERATION_ERROR)
 			-- Visit an invalid operation error
 		do
-			visit_error (invalid_operation_error)
+			visit_uncategorized_error (operation_error)
 		end
 
-	visit_message_not_understood_error (message_not_understood_error: PS_MESSAGE_NOT_UNDERSTOOD_ERROR)
-			-- Visit a message not understood error
-		do
-			visit_invalid_operation_error(message_not_understood_error)
-		end
-
-	visit_access_right_violation_error (access_right_violation_error: PS_ACCESS_RIGHT_VIOLATION_ERROR)
-			-- Visit an access right violation error
-		do
-			visit_invalid_operation_error(access_right_violation_error)
-		end
-
-	visit_integrity_constraint_violation_error (integrity_constraint_violation_error: PS_INTEGRITY_CONSTRAINT_VIOLATION_ERROR)
-			-- Visit an integrity constraint violation error
-		do
-			visit_invalid_operation_error(integrity_constraint_violation_error)
-		end
-
-	visit_transaction_aborted_error (transaction_aborted_error: PS_TRANSACTION_ABORTED_ERROR)
-			-- Visit a transaction aborted error
-		do
-			visit_error (transaction_aborted_error)
-		end
-
-	visit_version_mismatch_error (version_mismatch_error: PS_VERSION_MISMATCH_ERROR)
-			-- Visit a version mismatch error
-		do
-			visit_error (version_mismatch_error)
-		end
-
-	visit_backend_runtime_error (backend_runtime_error: PS_BACKEND_RUNTIME_ERROR)
+	visit_backend_error (backend_error: PS_BACKEND_ERROR)
 			-- Visit a backend runtime error
 		do
-			visit_error (backend_runtime_error)
+			visit_uncategorized_error (backend_error)
 		end
 
 	visit_internal_error (internal_error: PS_INTERNAL_ERROR)
 			-- Visit an internal error
 		do
-			visit_error (internal_error)
+			visit_uncategorized_error (internal_error)
 		end
+
+feature {PS_ERROR} -- Visitor functions: Connection Setup Error subcategories
+
+	visit_authorization_error (authorization_error: PS_AUTHORIZATION_ERROR)
+			-- Visit an authorization error
+		do
+			visit_connection_setup_error (authorization_error)
+		end
+
+feature {PS_ERROR} -- Visitor functions: Operation Error subcategories
+
+
+	visit_external_routine_error (external_routine_error: PS_EXTERNAL_ROUTINE_ERROR)
+			-- Visit an external routine failure
+		do
+			visit_operation_error(external_routine_error)
+		end
+
+	visit_message_not_understood_error (message_not_understood_error: PS_MESSAGE_NOT_UNDERSTOOD_ERROR)
+			-- Visit a message not understood error
+		do
+			visit_operation_error(message_not_understood_error)
+		end
+
+	visit_integrity_constraint_violation_error (integrity_constraint_violation_error: PS_INTEGRITY_CONSTRAINT_VIOLATION_ERROR)
+			-- Visit an integrity constraint violation error
+		do
+			visit_operation_error(integrity_constraint_violation_error)
+		end
+
+	visit_transaction_aborted_error (transaction_aborted_error: PS_TRANSACTION_ABORTED_ERROR)
+			-- Visit a transaction aborted error
+		do
+			visit_operation_error (transaction_aborted_error)
+		end
+
+	visit_version_mismatch_error (version_mismatch_error: PS_VERSION_MISMATCH_ERROR)
+			-- Visit a version mismatch error
+		do
+			visit_operation_error (version_mismatch_error)
+		end
+
 end

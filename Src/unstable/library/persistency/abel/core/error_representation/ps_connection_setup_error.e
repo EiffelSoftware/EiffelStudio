@@ -1,5 +1,5 @@
 note
-	description: "Represents an error when establishing a connection."
+	description: "Represents an error when establishing a connection. This may include login errors."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"

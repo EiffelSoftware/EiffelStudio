@@ -74,7 +74,7 @@ feature {PS_ERROR_VISITOR} -- Visitor pattern
 	accept (a_visitor: PS_ERROR_VISITOR)
 			-- `accept' function of the visitor pattern
 		do
-			a_visitor.visit_error (Current)
+			a_visitor.visit_uncategorized_error (Current)
 		end
 
 feature {NONE} -- Initialization

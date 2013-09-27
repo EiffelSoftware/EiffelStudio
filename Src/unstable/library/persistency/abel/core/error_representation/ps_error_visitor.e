@@ -15,15 +15,20 @@ feature
 			an_error.accept (Current)
 		end
 
-feature {PS_ERROR} -- Specific visitor functions
+feature {PS_ERROR} -- Visitor functions: Top-level categories
 
 	visit_no_error (no_error: PS_NO_ERROR)
 			-- When no error occured, doing nothing is a reasonable default.
 		do
 		end
 
-	visit_error (error: PS_ERROR)
+	visit_uncategorized_error (error: PS_ERROR)
 			-- Visit an uncategorized error
+		deferred
+		end
+
+	visit_operation_error (operation_error: PS_OPERATION_ERROR)
+			-- Visit an invalid operation error
 		deferred
 		end
 
@@ -32,23 +37,32 @@ feature {PS_ERROR} -- Specific visitor functions
 		deferred
 		end
 
+	visit_backend_error (backend_error: PS_BACKEND_ERROR)
+			-- Visit a backend runtime error
+		deferred
+		end
+
+	visit_internal_error (internal_error: PS_INTERNAL_ERROR)
+			-- Visit an internal error
+		deferred
+		end
+
+feature {PS_ERROR} -- Visitor functions: Connection Setup Error subcategories
+
 	visit_authorization_error (authorization_error: PS_AUTHORIZATION_ERROR)
 			-- Visit an authorization error
 		deferred
 		end
 
-	visit_invalid_operation_error (invalid_operation_error: PS_INVALID_OPERATION_ERROR)
-			-- Visit an invalid operation error
+feature {PS_ERROR} -- Visitor functions: Operation Error subcategories
+
+	visit_external_routine_error (external_routine_error: PS_EXTERNAL_ROUTINE_ERROR)
+			-- Visit an external routine failure
 		deferred
 		end
 
 	visit_message_not_understood_error (message_not_understood_error: PS_MESSAGE_NOT_UNDERSTOOD_ERROR)
 			-- Visit a message not understood error
-		deferred
-		end
-
-	visit_access_right_violation_error (access_right_violation_error: PS_ACCESS_RIGHT_VIOLATION_ERROR)
-			-- Visit an access right violation error
 		deferred
 		end
 
@@ -64,16 +78,6 @@ feature {PS_ERROR} -- Specific visitor functions
 
 	visit_version_mismatch_error (version_mismatch_error: PS_VERSION_MISMATCH_ERROR)
 			-- Visit a version mismatch error
-		deferred
-		end
-
-	visit_backend_runtime_error (backend_runtime_error: PS_BACKEND_RUNTIME_ERROR)
-			-- Visit a backend runtime error
-		deferred
-		end
-
-	visit_internal_error (internal_error: PS_INTERNAL_ERROR)
-			-- Visit an internal error
 		deferred
 		end
 

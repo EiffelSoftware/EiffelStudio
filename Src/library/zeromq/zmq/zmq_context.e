@@ -1,14 +1,14 @@
-note
+ï»¿note
 	description: "[
-		An ØMQ Context where ØMQ sockets live within.
+		An Ã˜MQ Context where Ã˜MQ sockets live within.
 
-		Each ØMQ socket  lives  within  a  specific  context.  Creating  and
+		Each Ã˜MQ socket lives within a specific context. Creating and
 		destroying context is a counterpart of library
 		initialisation/deinitialisation as used elsewhere. Ability to create
-		multiple  contexts saves  the  day  when an application happens to
-		link (indirectly and involuntarily) with several instances of ØMQ.
+		multiple contexts saves the day when an application happens to
+		link (indirectly and involuntarily) with several instances of Ã˜MQ.
 
-		Implementation notes: the fact that ØMQ can work in a threaded
+		Implementation notes: the fact that Ã˜MQ can work in a threaded
 		enviroment is currently hidden by this Liberty wrappers
 
 		TODO: add support for pollability (ZMQ_POLL)

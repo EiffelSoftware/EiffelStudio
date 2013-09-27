@@ -45,142 +45,146 @@ feature
 				--`No Data' is another warning category
 				Result := no_error
 			elseif category.is_equal ("03") then -- SQL statement not yet complete
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("07") then -- Dynamic SQL error
-				Result := invalid_operation_error
+				Result := operation_error
 
 			elseif category.is_equal ("08") then -- Connection errors
 				if subcode.is_equal ("004") then -- server rejected establishment of connection
-					-- to discuss: the error may happen due to a wrong password, or too many clients already connected
-					Result:= error
-					check not_implemented: false end
+					-- Note: the error may happen due to a wrong password,
+					-- or too many clients already connected.
+					-- Thus an authorization error might fit as well in some cases.
+					Result:= connection_setup_error
 				elseif subcode.is_equal ("006") or subcode.is_equal ("007") then -- connection lost at runtime
-					Result:= backend_runtime_error
+					Result:= backend_error
 				else
 					Result:=connection_setup_error
 				end
 
 			elseif category.is_equal ("09") then -- triggered action exception
-				-- TODO: to discuss, probably integrity constraint might be a better option
-				Result := backend_runtime_error
+				-- Note: This is debatable, but in most cases SQL triggers check
+				-- some integrity constraints and throw an exception if the check fails
+				Result := integrity_constraint_violation_error
+
 			elseif category.is_equal ("0A") then -- Feature not supported
 				Result := message_not_understood_error
 			elseif category.is_equal ("0B") then -- Invalid Transaction Initiation
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0D") then -- Invalid target type specification
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0E") then -- Invalid schema name list specification
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0F") then -- locator exception
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0G") then -- reference to null table value
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0K") then -- Resignal when handler not active
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0L") then -- invalid grantor
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0M") then -- invalid SQL-invoked procedure reference
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0N") then -- SQL/XML mapping error
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0P") then -- invalid role specification
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0S") then -- invalid transform group name specification
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0T") then -- target table disagrees with cursor specification
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0U") then -- Attempt to assign to non-updatable column
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0V") then -- Attempt to assign to ordering column
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("0W") then -- prohibited statement encountered during trigger execution
-				-- TODO: to discuss
-				Result := backend_runtime_error
+				Result := external_routine_error
 			elseif category.is_equal ("0Z") then -- diagnostics exception
-				Result := backend_runtime_error
+				Result := backend_error
 			elseif category.is_equal ("10") then -- XQuery error
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("20") then --Case Not Found for Case Statement
 				Result := message_not_understood_error
 			elseif category.is_equal ("21") then -- Cardinality violation
-				Result := invalid_operation_error
+				Result := operation_error
+
 			elseif category.is_equal ("22") then -- Data exception
-				-- TODO: to discuss: the whole category might also fit integrity constraint violation
-				Result:= invalid_operation_error
+				-- Note: This is debatable. Parts of this category might also fit "Message not understood"
+				-- or "Integrity constraint violation". It mostly deals with wrong data formats, overflow values,
+				-- non-fitting strings for fixed-length columns, division by zero etc...
+				Result:= operation_error
+
 			elseif category.is_equal ("23") then -- Integrity constraint violation
 				Result := integrity_constraint_violation_error
 			elseif category.is_equal ("24") then -- Invalid cursor state
-				Result := invalid_operation_error
+				Result := operation_error
 
 			elseif category.is_equal ("25") then -- Invalid transaction state
 				if subcode.starts_with ("0") then -- several errors describing illegal actions within a running transaction
-					Result := invalid_operation_error
+					Result := operation_error
 				elseif subcode.is_equal ("S03") then -- commit faild, trasaction rolled back
 					Result := transaction_aborted_error
 				else -- subcodes S01 and S02
-					Result := backend_runtime_error -- commit failed, transaction state unknown or active (this is serious...)
+					Result := backend_error -- commit failed, transaction state unknown or active (this is serious...)
 				end
 
 			elseif category.is_equal ("26") then -- Invalid SQL statement name
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("27") then -- triggered data change violation
-				-- TODO: to discuss
-				Result := backend_runtime_error
+				Result := external_routine_error
 			elseif category.is_equal ("28") then -- invalid authorization specification
 				Result := authorization_error
 			elseif category.is_equal ("2B") then -- dependent privilege descriptors still exist
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("2C") then -- invalid character set name
 				Result := message_not_understood_error
 			elseif category.is_equal ("2D") then -- Invalid transaction termination
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("2E") then -- Invalid connection name
 				Result := connection_setup_error
 			elseif category.is_equal ("2F") then -- SQL routine exception
-				-- TODO: to discuss
-				Result := invalid_operation_error
+				Result := external_routine_error
 			elseif category.is_equal ("2H") then -- Invalid collation name
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("30") then -- Invalid SQL statement identifier
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("33") then -- Invalid SQL descriptor name
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("34") then -- Invalid cursor name
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("35") then -- Invalid condition number
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("36") then -- Cursor Sensitivity Exception
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("37") then -- Syntax Error (obsolete)
 				Result := message_not_understood_error
 			elseif category.is_equal ("38") then -- External routine exception
-				-- TODO: to discuss
-				Result := invalid_operation_error
+				Result := external_routine_error
 			elseif category.is_equal ("39") then -- External routine invocation exception
-				-- TODO: to discuss
-				Result := invalid_operation_error
+				Result := external_routine_error
 			elseif category.is_equal ("3B") then -- Savepoint exception
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("3C") then -- Ambiguous Cursor Name
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("3D") then -- Invalid catalog name
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("3F") then -- Invalid schema name
-				Result := invalid_operation_error
+				Result := operation_error
 			elseif category.is_equal ("40") then -- Transaction Rollback
 				Result := transaction_aborted_error
 
 			elseif category.is_equal ("42") then -- Syntax Error or Access Rule Violation
-				-- TODO: check subcodes
-				-- SQL standard doesn't specify sucboces... might become problematic
-				Result := invalid_operation_error
+				-- Note: This is a broad category and most errors actually happen here.
+				-- The SQL standard doesn't specify sucbcodes however...
+				-- Thus it is advisable to further distinguish this error category
+				-- in backend-specific code parts.
+				Result := operation_error
 
 			elseif category.is_equal ("44") then -- WITH CHECK OPTION violation
 				Result := integrity_constraint_violation_error
 			elseif category.is_equal ("45") then -- Unhandled user-defined exception
-				Result := backend_runtime_error
+				Result := backend_error
 			elseif category.is_equal ("46") then -- Java errors
-				Result := invalid_operation_error
+				Result := operation_error
 
 			-- SQLState codes starting with 5 are implementation-specific...	
 
@@ -202,7 +206,7 @@ feature
 --				Result := invalid_operation_error
 
 			elseif category.is_equal ("HZ") then -- Remote Database Access
-				Result := backend_runtime_error
+				Result := backend_error
 			else
 				Result := error
 			end
@@ -231,12 +235,7 @@ feature {NONE} -- Factory functions
 			create Result
 		end
 
-	access_right_violation_error: PS_ACCESS_RIGHT_VIOLATION_ERROR
-		do
-			create Result
-		end
-
-	backend_runtime_error: PS_BACKEND_ERROR
+	backend_error: PS_BACKEND_ERROR
 		do
 			create Result
 		end
@@ -256,7 +255,12 @@ feature {NONE} -- Factory functions
 			create Result
 		end
 
-	invalid_operation_error: PS_OPERATION_ERROR
+	operation_error: PS_OPERATION_ERROR
+		do
+			create Result
+		end
+
+	external_routine_error: PS_EXTERNAL_ROUTINE_ERROR
 		do
 			create Result
 		end

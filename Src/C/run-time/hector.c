@@ -229,7 +229,7 @@ rt_public EIF_REFERENCE eif_freeze(EIF_OBJECT object)
 	/* Now the lengthy part, with a generation collection cycle... */
 	root = eif_tenure_object (root);
 	zone = HEADER(root);				/* Get new zone (object has moved) */
-	CHECK("Not in generation zone", zone->ov_size & B_BUSY) 
+	CHECK("Not in generation zone", zone->ov_size & B_BUSY);
 	zone->ov_size |= B_C;			/* Make it a C block now */
 	return root;					/* Freezing succeeded, new location */
 }

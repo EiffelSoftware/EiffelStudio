@@ -3101,7 +3101,7 @@ rt_private int split_to_block (int is_to_keep)
 		if (!result) {
 				/* Could not split the block, it means that nothing remains otherwise we would
 				 * be in big trouble. */
-			CHECK("No more space available", ps_to.sc_end == ps_to.sc_top)
+			CHECK("No more space available", ps_to.sc_end == ps_to.sc_top);
 			CHECK("Valid sc_previous_top", ps_to.sc_previous_top < ps_to.sc_end);
 			base = (union overhead *) ps_to.sc_previous_top;
 				/* Make it last block. Otherwise it would corrupt the coalesce process. */

@@ -3119,14 +3119,14 @@ rt_private void interpret(int flag, int where)
 	case BC_CEIL:
 		last = otop();
 		CHECK("last not null", last);
-		CHECK("double_type", last->type == SK_REAL64)
+		CHECK("double_type", last->type == SK_REAL64);
 		last->it_double = ceil(last->it_double);
 		break;
 
 	case BC_FLOOR:
 		last = otop();
 		CHECK("last not null", last);
-		CHECK("double_type", last->type == SK_REAL64)
+		CHECK("double_type", last->type == SK_REAL64);
 		last->it_double = floor(last->it_double);
 		break;
 

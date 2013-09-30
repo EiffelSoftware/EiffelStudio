@@ -103,6 +103,10 @@ feature -- Creation
 			capacity_set: Result.capacity = count
 		end
 
+	new_tuple_from_tuple (type_id: INTEGER; source: separate TUPLE): detachable TUPLE
+		do
+		end
+
 	type_of_type (type_id: INTEGER): TYPE [detachable ANY]
 			-- Associated TYPE instance for an object of type id `type_id'
 		require

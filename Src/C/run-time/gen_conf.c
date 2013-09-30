@@ -1848,7 +1848,7 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 			} else {
 				*result = '\0';
 				eif_create_typename (dftype, result);
-				CHECK ("Not computed", !(gdp->name))
+				CHECK ("Not computed", !(gdp->name));
 				gdp->name = result;
 			}
 		}

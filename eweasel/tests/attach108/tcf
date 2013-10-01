@@ -1,0 +1,10 @@
+test_name 	 object-test-local-in-implication
+test_description Object test local should be available in implication after conjunction.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

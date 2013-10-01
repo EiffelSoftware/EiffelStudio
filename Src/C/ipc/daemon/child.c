@@ -1280,7 +1280,11 @@ rt_public STREAM *new_stream_on_debuggee (unsigned int port_number, unsigned int
 #ifdef EIF_WINDOWS
 	Sleep(500);
 #else
-	sleep(0.5);
+#ifdef HAS_USLEEP
+		usleep(500000);
+#else
+		sleep(1);
+#endif
 #endif
 	if ((!sp) || (-1 == comfort_child (sp))) {
 #ifdef USE_ADD_LOG

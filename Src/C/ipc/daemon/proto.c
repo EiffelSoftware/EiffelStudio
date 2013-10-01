@@ -49,6 +49,7 @@
 #include <sys/types.h>
 
 #ifndef EIF_WINDOWS
+#include <unistd.h>
 #include <sys/wait.h>
 #endif
 
@@ -760,7 +761,11 @@ rt_private void kill_app (EIF_PSTREAM sp)
 #ifdef EIF_WINDOWS
 		Sleep(100);
 #else
-		sleep(0.1);
+#ifdef HAS_USLEEP
+		usleep(100000);
+#else
+		sleep(1);
+#endif
 #endif
 
 

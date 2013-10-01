@@ -1520,7 +1520,7 @@ feature {CLASS_AS} -- Expressions
 	process_if_expression_as (l_as: IF_EXPRESSION_AS)
 			-- <Precursor>
 		do
-			safe_process_and_print (l_as.if_keyword (match_list), " ", "")
+			safe_process_and_print (l_as.if_keyword (match_list), "", "")
 			safe_process_and_print (l_as.condition, " ", "")
 			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
 			safe_process_and_print (l_as.then_expression, " ", "")

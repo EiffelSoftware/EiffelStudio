@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_separator (ti_comma)
 					l_text_formatter_decorator.set_space_between_tokens
 				end
-				l_as.parameters.process (Current)
+				l_as.internal_parameters.process (Current)
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				end
@@ -997,7 +997,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if l_as.parameters /= Void and not expr_type_visiting then
+			if l_as.parameter_count > 0 and not expr_type_visiting then
 				l_last_type := last_type
 				l_last_class := last_class
 				reset_last_class_and_type
@@ -1006,7 +1006,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 				l_text_formatter_decorator.set_separator (ti_comma)
 				l_text_formatter_decorator.set_space_between_tokens
-				l_as.parameters.process (Current)
+				l_as.internal_parameters.process (Current)
 				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				l_text_formatter_decorator.commit
 				last_type := l_last_type
@@ -1148,7 +1148,7 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 					l_text_formatter_decorator.set_separator (ti_comma)
 					l_text_formatter_decorator.set_space_between_tokens
-					l_as.parameters.process (Current)
+					l_as.internal_parameters.process (Current)
 					l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				end
 			end
@@ -2972,7 +2972,6 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
-				l_text_formatter_decorator.put_new_line
 				indent.call (Void)
 				l_text_formatter_decorator.new_expression
 				put_breakable
@@ -4167,7 +4166,10 @@ feature {NONE} -- Implementation
 
 	process_parameter_list_as (l_as: PARAMETER_LIST_AS)
 		do
+				-- Add indentation in case some arguments are multi-line.
+			text_formatter_decorator.indent
 			l_as.parameters.process (Current)
+			text_formatter_decorator.exdent
 		end
 
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)

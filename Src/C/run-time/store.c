@@ -1454,7 +1454,10 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 				nb_gen = info->nb_param;
 
 				for (;;) {
-					CHECK("Not invalid", *dynamic_types != SK_INVALID);
+						/* FIXME: Change code generation so that last entries in `dynamic_types' array
+						 * is INVALID_DTYPE and thus one can write:
+						 * CHECK("Not invalid", *dynamic_types != INVALID_DTYPE);
+						 */
 					if ((*dynamic_types++) == dtype)
 						break;
 				}

@@ -229,7 +229,7 @@ feature {NONE} -- Rescue
 			rollback_transaction (transaction, False)
 		end
 
-feature {NONE} -- Implementation
+feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
 

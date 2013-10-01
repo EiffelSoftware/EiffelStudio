@@ -11,6 +11,8 @@ inherit
 
 	PS_EIFFELSTORE_EXPORT
 
+	PS_NEW_BACKEND
+
 inherit {NONE}
 
 	REFACTORING_HELPER
@@ -46,21 +48,21 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 
-	retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
-			-- Retrieves all objects of class `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
-			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
-			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
-			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
-			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
-		require
-			most_general_type: across type.supertypes as supertype all not (supertype.item.is_equal (type) and type.is_subtype_of (supertype.item)) end
-			all_attributes_exist: to_implement_assertion ("The requirement is too strong - e.g. ESCHER requires attributes that are theoretically not part of the object itself. across attributes as attr all type.attributes.has (attr.item) end")
-		deferred
-			-- To have lazy loading support, you need to have a special ITERATION_CURSOR and a function next in this class to load the next item of this customized cursor
-		ensure
-			attributes_loaded: not Result.after implies are_attributes_loaded (type, attributes, Result.item)
-			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
-		end
+--	retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+--			-- Retrieves all objects of class `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
+--			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
+--			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
+--			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
+--			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
+--		require
+--			most_general_type: across type.supertypes as supertype all not (supertype.item.is_equal (type) and type.is_subtype_of (supertype.item)) end
+--			all_attributes_exist: to_implement_assertion ("The requirement is too strong - e.g. ESCHER requires attributes that are theoretically not part of the object itself. across attributes as attr all type.attributes.has (attr.item) end")
+--		deferred
+--			-- To have lazy loading support, you need to have a special ITERATION_CURSOR and a function next in this class to load the next item of this customized cursor
+--		ensure
+--			attributes_loaded: not Result.after implies are_attributes_loaded (type, attributes, Result.item)
+--			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
+--		end
 
 	retrieve_from_single_key (type: PS_TYPE_METADATA; primary_key: INTEGER; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
 			-- Retrieve the object of type `type' and key `primary_key'. Wrapper of the `retrieve_from_keys' in case you only need one object.
@@ -77,14 +79,28 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
 		end
 
-	retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
-			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
-		require
-			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
-		deferred
-		ensure
-			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
-			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+--	retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+--			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
+--		require
+--			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
+--		deferred
+--		ensure
+--			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
+--			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+--		end
+
+feature {PS_EIFFELSTORE_EXPORT} -- internal_write: compatibility with new backend interface
+
+	internal_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+		local
+			planner: PS_WRITE_PLANNER
+			executor: PS_WRITE_EXECUTOR
+		do
+			create planner.make
+			create executor.make (Current, transaction.repository.id_manager)
+			planner.set_object_graph (object_graph)
+			planner.generate_plan
+			executor.perform_operations (planner.operation_plan, transaction)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object write operations

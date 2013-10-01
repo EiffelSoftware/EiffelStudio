@@ -2139,7 +2139,6 @@ feature {NONE} -- Visitors
 			l_else_label, l_end_label, l_elsif_label: IL_LABEL
 		do
 				-- Generated IL code for condition.
-			generate_il_line_info (a_node, True)
 			a_node.condition.process (Current)
 				-- Generated a test
 			l_else_label := il_generator.create_label
@@ -2544,8 +2543,6 @@ feature {NONE} -- Visitors
 			l_test_label := il_generator.create_label
 			l_end_label := il_generator.create_label
 
-			generate_il_line_info (a_node, True)
-
 			il_generator.mark_label (l_test_label)
 
 				-- Generate byte code for loop result variable check.
@@ -2567,7 +2564,6 @@ feature {NONE} -- Visitors
 			end
 
 				-- Evaluate loop expression and assign its value to the loop result variable.
-			il_generator.put_line_info (a_node.expression_code.line_number)
 			l_context.enter_hidden_code
 			a_node.expression_code.process (Current)
 			l_context.exit_hidden_code

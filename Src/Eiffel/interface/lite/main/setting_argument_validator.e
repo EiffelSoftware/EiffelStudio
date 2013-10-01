@@ -19,13 +19,13 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: READABLE_STRING_8)
+	validate_value (a_value: READABLE_STRING_GENERAL)
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		local
 			l_valid: BOOLEAN
 			l_pos: INTEGER
-			l_name: STRING
+			l_name: READABLE_STRING_GENERAL
 		do
 			l_pos := a_value.index_of ('=', 1)
 			if l_pos > 0 and l_pos < a_value.count then
@@ -58,7 +58,7 @@ feature {NONE} -- Configuration validity
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

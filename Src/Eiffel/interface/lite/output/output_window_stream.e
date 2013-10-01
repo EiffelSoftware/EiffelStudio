@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	put_string (s: STRING_GENERAL)
+	put_string (s: READABLE_STRING_GENERAL)
 		do
 			file_stream.put_string (s.as_string_8)
 		end
@@ -54,7 +54,7 @@ invariant
 	file_stream_is_open_write: file_stream.is_open_write
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

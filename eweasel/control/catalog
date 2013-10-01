@@ -2295,6 +2295,8 @@ test	validity-vuex2-in-multibranch	vuex201  tcf pass validity vuex
 
 test	bracket-expression-on-current	vwbr101  tcf pass validity vwbr anchored_type
 
+test	validity-vwce-basic		vwce001  tcf pass validity vwce conditional expression
+
 test	validity-vwmq-string-conversion	vwmq001  tcf pass vaildity vwmq
 
 -- Systematic Lace validity tests

@@ -38,6 +38,22 @@ feature {PS_EIFFELSTORE_EXPORT}
 --			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
 		end
 
+	retrieve_from_single_key (type: PS_TYPE_METADATA; primary_key: INTEGER; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+			-- Retrieve the object of type `type' and key `primary_key'. Wrapper of the `retrieve_from_keys' in case you only need one object.
+		require
+--			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
+		local
+			keys: LINKED_LIST [INTEGER]
+		do
+			create keys.make
+			keys.extend (primary_key)
+			Result := Current.retrieve_from_keys (type, keys, transaction)
+		ensure
+--			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
+--			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+		end
+
+
 	frozen retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
 			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
 		require
@@ -50,6 +66,49 @@ feature {PS_EIFFELSTORE_EXPORT}
 --			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
 --			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
 		end
+
+
+	default_collection_backend: PS_COLLECTION_BACKEND
+		deferred
+		end
+
+
+feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
+
+	commit (a_transaction: PS_TRANSACTION)
+			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'.
+		deferred
+		end
+
+	rollback (a_transaction: PS_TRANSACTION)
+			-- Aborts `a_transaction' and undoes all changes in the database.
+		deferred
+		end
+
+	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
+			-- The currently active transaction isolation level.
+		deferred
+		end
+
+	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
+			-- Set the transaction isolation level `a_level' for all future transactions.
+		deferred
+		end
+
+feature {PS_EIFFELSTORE_EXPORT} -- Mapping
+
+	key_mapper: PS_KEY_POID_TABLE
+			-- Maps POIDs to primary keys as used by this backend.
+		deferred
+		end
+
+feature {PS_EIFFELSTORE_EXPORT} -- Testing
+
+	wipe_out
+			-- Wipe out everything and initialize new.
+		deferred
+		end
+
 
 feature {PS_NEW_BACKEND}
 

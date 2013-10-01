@@ -85,9 +85,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, transaction))
-			planner.set_object_graph (disassembler.object_graph)
-			planner.generate_plan
-			executor.perform_operations (planner.operation_plan, transaction)
+			backend.write (disassembler.object_graph, transaction)
+--			planner.set_object_graph (disassembler.object_graph)
+--			planner.generate_plan
+--			executor.perform_operations (planner.operation_plan, transaction)
 		rescue
 			default_transactional_rescue (transaction)
 		end
@@ -97,9 +98,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).update, agent id_manager.is_identified(?, transaction))
-			planner.set_object_graph (disassembler.object_graph)
-			planner.generate_plan
-			executor.perform_operations (planner.operation_plan, transaction)
+			backend.write (disassembler.object_graph, transaction)
+--			planner.set_object_graph (disassembler.object_graph)
+--			planner.generate_plan
+--			executor.perform_operations (planner.operation_plan, transaction)
 		rescue
 			default_transactional_rescue (transaction)
 		end
@@ -109,9 +111,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).delete, agent id_manager.is_identified(?, transaction))
+			backend.write (disassembler.object_graph, transaction)
 			planner.set_object_graph (disassembler.object_graph)
 			planner.generate_plan
-			executor.perform_operations (planner.operation_plan, transaction)
+--			executor.perform_operations (planner.operation_plan, transaction)
 			across
 				planner.operation_plan as op
 			loop
@@ -168,17 +171,25 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 			-- Can `Current' handle the object `object'?
 		local
 			new_transaction: PS_TRANSACTION
+			executor: PS_WRITE_EXECUTOR
 		do
-			create new_transaction.make_readonly (Current)
-			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, new_transaction))
-			planner.set_object_graph (disassembler.object_graph)
-			planner.generate_plan
-			Result := executor.can_backend_handle_operations (planner.operation_plan)
+			fixme ("TODO: implement a similar query in new backend interface")
+			if attached {PS_BACKEND} backend as b then
+				create executor.make (b, id_manager)
+				create new_transaction.make_readonly (Current)
+				disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, new_transaction))
+				planner.set_object_graph (disassembler.object_graph)
+				planner.generate_plan
+				Result := executor.can_backend_handle_operations (planner.operation_plan)
+			else
+				Result := True
+			end
+
 		end
 
 feature {NONE} -- Initialization
 
-	make (a_backend: PS_BACKEND)
+	make (a_backend: PS_NEW_BACKEND)
 			-- Initialize `Current'.
 		do
 			backend := a_backend
@@ -188,7 +199,7 @@ feature {NONE} -- Initialization
 			create id_manager.make
 			create planner.make
 			create disassembler.make (id_manager.metadata_manager, default_object_graph)
-			create executor.make (backend, id_manager)
+--			create executor.make (backend, id_manager)
 			create retriever.make (backend, id_manager)
 			create collection_handlers.make
 		end
@@ -211,10 +222,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 	planner: PS_WRITE_PLANNER
 			-- A write planner to generate an operation plan from an object graph.
 
-	executor: PS_WRITE_EXECUTOR
+--	executor: PS_WRITE_EXECUTOR
 			-- An executor to execute operations in an operation plan
 
-	backend: PS_BACKEND
+	backend: PS_NEW_BACKEND
 			-- A BACKEND implementation
 
 	retriever: PS_RETRIEVAL_MANAGER

@@ -266,7 +266,7 @@ feature {NONE} -- Implementation - Build support functions.
 				end
 			elseif has_handler (type) then
 					-- Build a collection
-				collection_result := backend.retrieve_object_oriented_collection (type, value.first.to_integer, transaction)
+				collection_result := backend.default_collection_backend.retrieve (type, value.first.to_integer, transaction)
 				Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping)
 			else
 					-- Build a new object
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation: Query initialization
 			query.register_as_executed (transaction)
 			type := metadata_manager.create_metadata_from_type (query.generic_type)
 			if has_handler (type) then
-				results := backend.retrieve_all_collections (type, transaction)
+				results := backend.default_collection_backend.retrieve_all (type, transaction)
 			else
 				results := backend.retrieve (type, query.criteria, attributes, transaction)
 			end
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation - Core data structures
 
 feature {NONE} -- Initialization
 
-	make (a_backend: PS_BACKEND; an_id_manager: PS_OBJECT_IDENTIFICATION_MANAGER)
+	make (a_backend: PS_NEW_BACKEND; an_id_manager: PS_OBJECT_IDENTIFICATION_MANAGER)
 			-- Initialize `Current'.
 		do
 			backend := a_backend
@@ -456,7 +456,7 @@ feature {NONE} -- Initialization
 			create metadata_manager.make
 		end
 
-	backend: PS_BACKEND
+	backend: PS_NEW_BACKEND
 			-- The storage backend.
 
 feature {PS_REPOSITORY} -- Initialization - Collection handlers

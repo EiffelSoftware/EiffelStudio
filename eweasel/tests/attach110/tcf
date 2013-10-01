@@ -1,0 +1,38 @@
+test_name 	 initialization-in-conditional
+test_description Initialization rules should be respected by conditional expression and instruction.
+
+copy_sub	Ace $TEST Ace
+
+define	F	"--"
+define	G	""
+define	H	""
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI VEVI VEVI VEVI
+
+define	F	""
+define	G	"--"
+define	H	""
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_error TEST VEVI VEVI VEVI VEVI
+
+define	F	""
+define	G	""
+define	H	"--"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_error TEST VEVI VEVI VEVI VEVI
+
+define	F	""
+define	G	""
+define	H	""
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
+
+test_end

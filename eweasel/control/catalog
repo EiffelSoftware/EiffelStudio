@@ -2658,6 +2658,7 @@ test	initialization-in-postcondition		attach105 tcf pass attached_types void_saf
 test	object-test-local-use-error		attach106 tcf pass object_test scope validity
 test	uninitialized-without-current		attach107 tcf pass void_safe attribute validity
 test	object-test-local-in-implication	attach108 tcf pass void_safe object_test local scope validity
+test	object-test-local-in-conditional        attach109 tcf pass void_safe object_test local scope conditional expression
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

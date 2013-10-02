@@ -131,8 +131,9 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			test_direct_collection_update_known_object
 			test_direct_collection_new_object
 			test_collection_basic_type_store
-				--test_data_structures_store
-				--test_update_on_reference
+			test_shared_special
+			test_data_structures_store
+			test_update_on_reference
 		end
 
 	test_referenced_collection_store
@@ -249,6 +250,41 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			testdata_copy.array_1 [1].update
 			assert ("There was more than just one update", retrieved.is_deep_equal (testdata_copy))
 			repository.clean_db_for_testing
+		end
+
+	test_shared_special
+			-- test if an update on a shared special instance works
+		local
+			a,b: SHARED_SPECIAL
+			special: SPECIAL[INTEGER]
+			query: PS_OBJECT_QUERY[SHARED_SPECIAL]
+			query2: PS_OBJECT_QUERY[SPECIAL[INTEGER]]
+		do
+			repository.clean_db_for_testing
+			create special.make_filled (0, 2)
+			create a.make(special)
+			create b.make(special)
+
+			executor.execute_insert (a)
+			executor.execute_insert (b)
+
+			special[0] := 1
+			executor.execute_update (special)
+
+			create query.make
+			executor.execute_query (query)
+			assert ("no result", not query.result_cursor.after)
+			across query as c loop
+				assert ("not void", attached c.item.special)
+				assert ("equal", c.item.is_deep_equal (a) and c.item.is_deep_equal (b))
+			end
+
+--			create query2.make
+--			executor.execute_query (query2)
+--			assert ("returned_special", not query2.result_cursor.after and then query2.result_cursor.item.is_deep_equal (special))
+--			query2.result_cursor.forth
+--			assert ("too many special objects", query2.result_cursor.after)
+
 		end
 
 feature {NONE} -- Update agents

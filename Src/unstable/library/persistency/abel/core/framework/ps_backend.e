@@ -12,12 +12,16 @@ inherit
 	PS_EIFFELSTORE_EXPORT
 
 	PS_NEW_BACKEND
+		rename
+			is_object_write_successful as is_successful_write
+		end
 
 	PS_COLLECTION_BACKEND
 		rename
 			retrieve as retrieve_object_oriented_collection,
 			retrieve_all as retrieve_all_collections,
 			insert as insert_object_oriented_collection,
+			update as update_object_oriented_collection,
 			delete as delete_object_oriented_collection
 		end
 
@@ -191,6 +195,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 --			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 --		end
 
+	update_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+			-- Update `a_collection' in the database.
+		do
+			delete_object_oriented_collection (a_collection, a_transaction)
+			insert_object_oriented_collection (a_collection, a_transaction)
+		end
+
 --	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
 --			-- Delete `a_collection' from the database.
 --		require
@@ -295,28 +306,28 @@ feature {NONE} -- Correctness checks
 			end
 		end
 
-	is_successful_write (an_object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): BOOLEAN
-			-- Checks if a write to an object returns the correct result.
-		local
-			retrieved_object: PS_RETRIEVED_OBJECT
-			retrieved_obj_list: LIST [PS_RETRIEVED_OBJECT]
-			keys: LINKED_LIST [INTEGER]
-			current_item: PS_OBJECT_GRAPH_PART
-		do
-			Result := True
-			create keys.make
-			keys.extend (key_mapper.primary_key_of (an_object.object_wrapper, transaction).first)
-			retrieved_obj_list := retrieve_from_keys (an_object.object_wrapper.metadata, keys, transaction)
-			across
-				an_object.object_wrapper.metadata.attributes as attr
-			loop
-				if an_object.attributes.has (attr.item) then
-					retrieved_object := retrieved_obj_list.first
-					current_item := an_object.attribute_value (attr.item)
-					Result := Result and current_item.as_attribute (key_mapper.quick_translate (current_item.object_identifier, transaction)).value.is_equal (retrieved_object.attribute_value (attr.item).value)
-					Result := Result and current_item.as_attribute (key_mapper.quick_translate (current_item.object_identifier, transaction)).type.is_equal (retrieved_object.attribute_value (attr.item).attribute_class_name)
-				end
-			end
-		end
+--	is_successful_write (an_object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): BOOLEAN
+--			-- Checks if a write to an object returns the correct result.
+--		local
+--			retrieved_object: PS_RETRIEVED_OBJECT
+--			retrieved_obj_list: LIST [PS_RETRIEVED_OBJECT]
+--			keys: LINKED_LIST [INTEGER]
+--			current_item: PS_OBJECT_GRAPH_PART
+--		do
+--			Result := True
+--			create keys.make
+--			keys.extend (key_mapper.primary_key_of (an_object.object_wrapper, transaction).first)
+--			retrieved_obj_list := retrieve_from_keys (an_object.object_wrapper.metadata, keys, transaction)
+--			across
+--				an_object.object_wrapper.metadata.attributes as attr
+--			loop
+--				if an_object.attributes.has (attr.item) then
+--					retrieved_object := retrieved_obj_list.first
+--					current_item := an_object.attribute_value (attr.item)
+--					Result := Result and current_item.as_attribute (key_mapper.quick_translate (current_item.object_identifier, transaction)).value.is_equal (retrieved_object.attribute_value (attr.item).value)
+--					Result := Result and current_item.as_attribute (key_mapper.quick_translate (current_item.object_identifier, transaction)).type.is_equal (retrieved_object.attribute_value (attr.item).attribute_class_name)
+--				end
+--			end
+--		end
 
 end

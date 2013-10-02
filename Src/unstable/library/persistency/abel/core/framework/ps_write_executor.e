@@ -91,6 +91,8 @@ feature {NONE} -- Implementation
 			identify_all (object_collection, object_collection.values.new_cursor, transaction)
 			if object_collection.write_operation = object_collection.write_operation.insert then
 				backend.insert_object_oriented_collection (object_collection, transaction)
+			elseif object_collection.write_operation = object_collection.write_operation.update then
+				backend.update_object_oriented_collection (object_collection, transaction)
 			elseif object_collection.write_operation = object_collection.write_operation.delete then
 				backend.delete_object_oriented_collection (object_collection, transaction)
 			else

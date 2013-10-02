@@ -120,15 +120,15 @@ feature {NONE} -- Implementation
 		local
 			del_dependency: like Current
 		do
-			if operation = operation.update then
-				write_operation := operation.insert
-				deletion_dependency_for_updates := clone_empty_with_operation (write_operation.delete)
-			else
+--			if operation = operation.update then
+--				write_operation := operation.insert
+--				deletion_dependency_for_updates := clone_empty_with_operation (write_operation.delete)
+--			else
 				write_operation := operation
-			end
+--			end
 		ensure
-			operation = operation.update implies attached deletion_dependency_for_updates and write_operation = write_operation.insert
-			operation /= operation.update implies not attached deletion_dependency_for_updates and write_operation = operation
+--			operation = operation.update implies attached deletion_dependency_for_updates and write_operation = write_operation.insert
+--			operation /= operation.update implies not attached deletion_dependency_for_updates and write_operation = operation
 		end
 
 	add_additional_information

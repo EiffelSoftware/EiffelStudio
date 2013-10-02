@@ -34,6 +34,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 		do
 			Result := attach (obj_to_key_hash [obj.object_identifier])
 			fixme ("first check transaction-local set, then global one")
+		ensure
+			same_type: obj.metadata.is_equal (Result.second)
 		end
 
 	quick_translate (a_poid: INTEGER; transaction: PS_TRANSACTION): INTEGER

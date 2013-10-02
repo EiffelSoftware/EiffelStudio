@@ -37,7 +37,7 @@ feature {PS_EIFFELSTORE_EXPORT}
 	insert (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
 			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
 		require
-			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
+--			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
 			objectoriented_mode: not a_collection.is_relationally_mapped
 			not_yet_known: not key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 --			objectoriented_collection_operation_supported: supports_object_collection
@@ -47,10 +47,16 @@ feature {PS_EIFFELSTORE_EXPORT}
 			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 		end
 
+	update (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+			-- Update `a_collection' in the database.
+		deferred
+		end
+
+
 	delete (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		require
-			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
+--			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
 			objectoriented_mode: not a_collection.is_relationally_mapped
 			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 --			objectoriented_collection_operation_supported: supports_object_collection

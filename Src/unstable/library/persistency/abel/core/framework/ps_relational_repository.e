@@ -222,17 +222,27 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 	identify_all (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
 			-- Add an identifier wrapper to all objects in the graph
 		do
-			across object_graph as cursor
-			from cursor.ignore_no_operation
+--			across object_graph as cursor
+--			from cursor.ignore_no_operation
+--			loop
+--				if attached {PS_COMPLEX_PART} cursor.item as part and then not part.is_identified then
+--					check part.write_operation /= part.write_operation.no_operation end
+--					if not id_manager.is_identified (part.represented_object, transaction) then
+--						id_manager.identify (part.represented_object, transaction)
+--					end
+--					part.set_object_wrapper (id_manager.identifier_wrapper (part.represented_object, transaction))
+--				end
+--			end
+			across object_graph.new_smart_cursor as cursor
 			loop
-				if attached {PS_COMPLEX_PART} cursor.item as part and then not part.is_identified then
-					check part.write_operation /= part.write_operation.no_operation end
-					if not id_manager.is_identified (part.represented_object, transaction) then
-						id_manager.identify (part.represented_object, transaction)
+				if not cursor.item.is_identified then
+					if not id_manager.is_identified (cursor.item.represented_object, transaction) then
+						id_manager.identify (cursor.item.represented_object, transaction)
 					end
-					part.set_object_wrapper (id_manager.identifier_wrapper (part.represented_object, transaction))
+					cursor.item.set_object_wrapper (id_manager.identifier_wrapper (cursor.item.represented_object, transaction))
 				end
 			end
+
 		end
 
 	disassembler: PS_OBJECT_GRAPH_BUILDER

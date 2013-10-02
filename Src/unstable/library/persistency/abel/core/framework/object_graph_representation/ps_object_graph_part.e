@@ -144,6 +144,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access: Cursor
 			create Result.make (Current)
 		end
 
+	new_smart_cursor: PS_SMART_OBJECT_GRAPH_CURSOR
+			-- Create a new cursor returning only objects of type COMPLEX_PART and write_operation other than `no_operation'
+		do
+			create Result.make (Current)
+		end
+
 feature {PS_OBJECT_GRAPH_PART, PS_OBJECT_GRAPH_BUILDER} -- Initialization
 
 	initialize (a_level: INTEGER; a_mode: PS_WRITE_OPERATION; disassembler: PS_OBJECT_GRAPH_BUILDER)

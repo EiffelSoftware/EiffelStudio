@@ -34,8 +34,12 @@ feature -- Cursor status and movement
 			-- Move to next position.
 		do
 			move
+			if not after and then (is_no_operation_ignored and item.write_operation = item.write_operation.no_operation) then
+				forth
+			end
 		ensure then
 			consistent: is_consistent
+			correctly_ignored: after or else (is_no_operation_ignored implies item.write_operation /= item.write_operation.no_operation)
 		end
 
 	previous: PS_OBJECT_GRAPH_PART
@@ -52,6 +56,20 @@ feature -- Cursor status and movement
 			-- Is the cursor currently pointing at the root object?
 		do
 			Result := object_graph_stack.is_empty and not after
+		end
+
+	is_no_operation_ignored: BOOLEAN
+			-- Are object graph parts that have no operation ignored?
+
+	ignore_no_operation
+			-- Skip parts that have a `no_operation' set.
+		do
+			is_no_operation_ignored := True
+			if not after and then item.write_operation = item.write_operation.no_operation then
+				forth
+			end
+		ensure
+			correctly_ignored: after or else (is_no_operation_ignored implies item.write_operation /= item.write_operation.no_operation)
 		end
 
 feature -- Visited item handler function
@@ -165,6 +183,7 @@ feature {NONE} -- Initialization
 			create cursor_stack.make
 			cycle_handler := agent default_handler
 			create visited_items.make
+			is_no_operation_ignored := false
 		end
 
 invariant

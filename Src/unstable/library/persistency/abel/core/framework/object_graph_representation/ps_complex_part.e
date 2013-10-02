@@ -21,6 +21,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 
 	object_wrapper: PS_OBJECT_IDENTIFIER_WRAPPER
 			-- The repository-wide unique object identifier of the object represented by `Current'.
+		require
+			identified: is_identified
 		do
 			Result := attach (internal_object_id)
 		end
@@ -38,6 +40,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
 	is_complex_attribute: BOOLEAN = True
 			-- Is `Current' an instance of PS_COMPLEX_ATTRIBUTE_PART?
+
+	is_identified: BOOLEAN
+			-- Does `Current' have a unique id and an object wrapper?
+		do
+			Result := attached internal_object_id
+		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 

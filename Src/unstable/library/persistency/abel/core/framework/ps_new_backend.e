@@ -44,7 +44,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 		do
 			Result := across an_object_graph as cursor
 				all
-					an_object_graph.write_operation /= an_object_graph.write_operation.no_operation
+					an_object_graph.write_operation = an_object_graph.write_operation.no_operation
 				or else (
 					attached {PS_SINGLE_OBJECT_PART} cursor.item as it
 					and then is_object_type_supported (it.metadata)
@@ -61,9 +61,19 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 feature {PS_EIFFELSTORE_EXPORT}
 
 	frozen write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+			-- Write all objects in `object_graph' to the database.
+		require
+			write_enabled: is_write_supported
+			can_handle_objects: rigorous_contracts implies can_write_object_graph (object_graph)
+			all_objects_identified: rigorous_contracts implies
+				(across object_graph as cursor all (attached {PS_COMPLEX_PART} cursor.item as part)
+					implies (part.is_identified or part.write_operation = part.write_operation.no_operation)
+					 end)
 		do
 			-- execute plugins before write
 			-- (maybe) identify objects
+
+
 			internal_write (object_graph, transaction)
 			-- execute plugins after write
 		end
@@ -143,7 +153,22 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Mapping -- TODO:restrict export, use simpler function instead
+feature {PS_EIFFELSTORE_EXPORT} -- Mapping
+
+	is_mapped (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): BOOLEAN
+			-- Is `object' mapped to some database entry?
+		do
+			Result:= key_mapper.has_primary_key_of (object, transaction)
+		end
+
+	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
+			-- Add a mapping from `object' to the database entry with primary key `key'
+		do
+			key_mapper.add_entry (object, key, transaction)
+		end
+
+feature {NONE} -- Mapping, Implementation
+
 
 	key_mapper: PS_KEY_POID_TABLE
 			-- Maps POIDs to primary keys as used by this backend.
@@ -158,10 +183,22 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 		end
 
 
+	rigorous_contracts: BOOLEAN = True
+			-- Defines if some very expensive contracts should be enabled as well.
+
 feature {PS_NEW_BACKEND}
 
 
 	internal_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+		require
+--			update_and_delete_mapped: rigorous_contracts implies
+--				(across object_graph as cursor
+--				all
+--					(cursor.item.write_operation = cursor.item.write_operation.update or
+--					 cursor.item.write_operation = cursor.item.write_operation.delete)
+--				implies
+--					attached {PS_COMPLEX_PART} cursor.item as part and then is_mapped (part.object_wrapper, transaction)
+--				end )
 		deferred
 		end
 

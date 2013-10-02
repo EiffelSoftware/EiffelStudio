@@ -34,7 +34,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 				Result := True
 			loop
 				if attached {PS_SINGLE_OBJECT_PART} op_cursor.item as obj then
-					Result := Result and backend.can_handle_type (obj.metadata)
+					Result := Result and backend.is_object_type_supported (obj.metadata)
 				elseif attached {PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]} op_cursor.item as coll then
 					Result := Result and backend.can_handle_object_oriented_collection (coll.metadata)
 				elseif attached {PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]} op_cursor.item as coll then

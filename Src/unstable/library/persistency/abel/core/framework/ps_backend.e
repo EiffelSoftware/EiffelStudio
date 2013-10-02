@@ -39,7 +39,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
-	can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
+	is_read_supported: BOOLEAN = True
+			-- Can the current backend write objects
+
+	is_write_supported: BOOLEAN = True
+			-- Can the current backend read objects
+
+	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
 		deferred
 		end
@@ -118,7 +124,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 		require
 			mode_is_insert: an_object.write_operation = an_object.write_operation.insert
 			not_yet_known: not key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)
-			backend_can_handle_object: can_handle_type (an_object.object_wrapper.metadata)
+			backend_can_handle_object: is_object_type_supported (an_object.object_wrapper.metadata)
 			dependencies_known: dependencies_have_primary_key (an_object, a_transaction)
 		deferred
 		ensure
@@ -131,7 +137,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 		require
 			mode_is_update: an_object.write_operation = an_object.write_operation.update
 			object_known: key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)
-			backend_can_handle_object: can_handle_type (an_object.object_wrapper.metadata)
+			backend_can_handle_object: is_object_type_supported (an_object.object_wrapper.metadata)
 		deferred
 		ensure
 			object_still_known: key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)
@@ -143,7 +149,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 		require
 			mode_is_delete: an_object.write_operation = an_object.write_operation.delete
 			object_known: key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)
-			backend_can_handle_object: can_handle_type (an_object.object_wrapper.metadata)
+			backend_can_handle_object: is_object_type_supported (an_object.object_wrapper.metadata)
 		deferred
 		ensure
 			not_known_anymore: not key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)

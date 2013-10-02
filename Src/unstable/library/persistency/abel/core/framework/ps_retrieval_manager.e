@@ -181,7 +181,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 				if identify then
 					bookkeeping.extend (Result, obj.primary_key + obj.class_metadata.name.hash_code)
 					id_manager.identify (Result, transaction)
-					backend.key_mapper.add_entry (id_manager.identifier_wrapper (Result, transaction), obj.primary_key, transaction)
+					backend.add_mapping (id_manager.identifier_wrapper (Result, transaction), obj.primary_key, transaction)
 				end
 				across
 					obj.attributes as attr_cursor

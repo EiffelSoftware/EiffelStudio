@@ -85,6 +85,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, transaction))
+			identify_all (disassembler.object_graph, transaction)
 			backend.write (disassembler.object_graph, transaction)
 --			planner.set_object_graph (disassembler.object_graph)
 --			planner.generate_plan
@@ -98,6 +99,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).update, agent id_manager.is_identified(?, transaction))
+			identify_all (disassembler.object_graph, transaction)
 			backend.write (disassembler.object_graph, transaction)
 --			planner.set_object_graph (disassembler.object_graph)
 --			planner.generate_plan
@@ -111,6 +113,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).delete, agent id_manager.is_identified(?, transaction))
+			identify_all (disassembler.object_graph, transaction)
 			backend.write (disassembler.object_graph, transaction)
 			planner.set_object_graph (disassembler.object_graph)
 			planner.generate_plan
@@ -215,6 +218,22 @@ feature -- Initialization
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Implementation
+
+	identify_all (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+			-- Add an identifier wrapper to all objects in the graph
+		do
+			across object_graph as cursor
+			from cursor.ignore_no_operation
+			loop
+				if attached {PS_COMPLEX_PART} cursor.item as part and then not part.is_identified then
+					check part.write_operation /= part.write_operation.no_operation end
+					if not id_manager.is_identified (part.represented_object, transaction) then
+						id_manager.identify (part.represented_object, transaction)
+					end
+					part.set_object_wrapper (id_manager.identifier_wrapper (part.represented_object, transaction))
+				end
+			end
+		end
 
 	disassembler: PS_OBJECT_GRAPH_BUILDER
 			-- An object graph builder to create explicit object graphs.

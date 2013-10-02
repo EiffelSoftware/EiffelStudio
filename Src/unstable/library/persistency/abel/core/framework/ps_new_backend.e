@@ -10,6 +10,54 @@ deferred class
 inherit
 	PS_EIFFELSTORE_EXPORT
 
+inherit {NONE}
+	REFACTORING_HELPER
+
+feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
+
+	is_read_supported: BOOLEAN
+			-- Can the current backend write objects?
+		deferred
+		end
+
+	is_write_supported: BOOLEAN
+			-- Can the current backend read objects?
+		deferred
+		end
+
+	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
+			-- Can the current backend handle objects of type `type'?
+		deferred
+		end
+
+	is_generic_collection_supported: BOOLEAN
+			-- Can the current backend support collections in general,
+			-- i.e. is there a default strategy?
+		do
+			Result := attached default_collection_backend
+		ensure
+			has_handler: Result implies attached default_collection_backend
+		end
+
+	can_write_object_graph (an_object_graph: PS_OBJECT_GRAPH_ROOT): BOOLEAN
+			-- Can the current backend write every object in the object graph?
+		do
+			Result := across an_object_graph as cursor
+				all
+					an_object_graph.write_operation /= an_object_graph.write_operation.no_operation
+				or else (
+					attached {PS_SINGLE_OBJECT_PART} cursor.item as it
+					and then is_object_type_supported (it.metadata)
+				) or (
+					attached {PS_OBJECT_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as col
+					and then to_implement_assertion ("TODO: check if default collection backend can handle collection")
+				) or (
+					attached {PS_RELATIONAL_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as col
+					and then to_implement_assertion ("TODO: check if there's a handler")
+				)
+				end
+		end
+
 feature {PS_EIFFELSTORE_EXPORT}
 
 	frozen write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
@@ -68,7 +116,7 @@ feature {PS_EIFFELSTORE_EXPORT}
 		end
 
 
-	default_collection_backend: PS_COLLECTION_BACKEND
+	default_collection_backend: detachable PS_COLLECTION_BACKEND
 		deferred
 		end
 
@@ -95,7 +143,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Mapping
+feature {PS_EIFFELSTORE_EXPORT} -- Mapping -- TODO:restrict export, use simpler function instead
 
 	key_mapper: PS_KEY_POID_TABLE
 			-- Maps POIDs to primary keys as used by this backend.

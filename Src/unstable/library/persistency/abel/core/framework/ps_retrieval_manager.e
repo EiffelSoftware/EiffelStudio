@@ -265,9 +265,14 @@ feature {NONE} -- Implementation - Build support functions.
 					Result := 0
 				end
 			elseif has_handler (type) then
-					-- Build a collection
-				collection_result := backend.default_collection_backend.retrieve (type, value.first.to_integer, transaction)
-				Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping)
+				if backend.is_generic_collection_supported then
+						-- Build a collection
+					collection_result := attach (backend.default_collection_backend).retrieve (type, value.first.to_integer, transaction)
+					Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping)
+				else
+					fixme ("TODO: error")
+					check not_implemented: false end
+				end
 			else
 					-- Build a new object
 				if not value.first.is_empty then
@@ -410,7 +415,12 @@ feature {NONE} -- Implementation: Query initialization
 			query.register_as_executed (transaction)
 			type := metadata_manager.create_metadata_from_type (query.generic_type)
 			if has_handler (type) then
-				results := backend.default_collection_backend.retrieve_all (type, transaction)
+				if backend.is_generic_collection_supported then
+					results := attach(backend.default_collection_backend).retrieve_all (type, transaction)
+				else
+					fixme ("TODO: error")
+					check not_implemented:false then results := attributes.new_cursor end
+				end
 			else
 				results := backend.retrieve (type, query.criteria, attributes, transaction)
 			end

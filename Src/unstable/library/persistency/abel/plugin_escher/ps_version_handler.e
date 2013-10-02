@@ -60,10 +60,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
-	can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
+	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
 		do
-			Result := real_backend.can_handle_type (type)
+			Result := real_backend.is_object_type_supported (type)
 		end
 
 	can_handle_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA): BOOLEAN

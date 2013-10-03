@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	FUNCTION [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
+	FUNCTION [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]

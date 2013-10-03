@@ -28,7 +28,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	compilation_dir: STRING = "C:\work\projects\tests"
+	compilation_dir: STRING_8 = "C:\work\projects\tests"
+			-- Location where the projects are compiled.
+
+	compilation_dir_32: STRING_32 = "C:\work\projects\tests"
 			-- Location where the projects are compiled.
 
 note

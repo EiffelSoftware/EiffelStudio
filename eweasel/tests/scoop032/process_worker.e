@@ -21,20 +21,32 @@ feature -- Action
 
 	run
 		do
-			if attached compilation_dir (input_handler) as l_compile_dir then
+			extract_strings (input_handler)
+			if attached compilation_dir as l_compile_dir then
 				if not l_compile_dir.same_string ("C:\work\projects\tests") then
 					print ("Caught corrupted string: " + l_compile_dir + "%N")
 				end
 			end
+			if attached compilation_dir_32 as l_compile_dir_32 then
+				if not l_compile_dir_32.same_string_general ("C:\work\projects\tests") then
+					print ("Caught corrupted string_32: " + l_compile_dir_32 + "%N")
+				end
+			end
 		end
+
+	compilation_dir: detachable STRING_8
+	compilation_dir_32: detachable STRING_32
 
 feature {NONE} -- Implemenetation
 
-	compilation_dir (a_input_handler: separate ROOT_CLASS): detachable STRING
+	extract_strings (a_input_handler: separate ROOT_CLASS)
 			-- Logs dir
 		do
 			if attached a_input_handler.compilation_dir as l_dir then
-				create Result.make_from_separate (l_dir)
+				create compilation_dir.make_from_separate (l_dir)
+			end
+			if attached a_input_handler.compilation_dir_32 as l_dir_32 then
+				create compilation_dir_32.make_from_separate (l_dir_32)
 			end
 		end
 

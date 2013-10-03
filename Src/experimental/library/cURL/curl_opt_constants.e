@@ -237,6 +237,14 @@ feature -- Network
 			"return CURLOPT_TCP_NODELAY;"
 		end
 
+	curlopt_nosignal: INTEGER
+			-- Declared as CURLOPT_NOSIGNAL
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_NOSIGNAL;"
+		end
+
 feature -- Names and Passwords (Authentication)
 
 	curlopt_userpwd: INTEGER

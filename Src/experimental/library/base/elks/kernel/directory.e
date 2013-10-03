@@ -309,9 +309,9 @@ feature -- Conversion
 		end
 
 	linear_representation: ARRAYED_LIST [STRING_8]
-			-- The entries, in sequential format. Entries that can be
-			-- expressed in Unicode are excluded and one has to use
-			-- `linear_representation' to get them.
+			-- The entries, in sequential format. 
+			-- Use `entries' or `linear_representation_32' to get a readable version
+			-- of the Unicode entries.
 		obsolete
 			"Use `entries' instead if your application is using Unicode file names."
 		local

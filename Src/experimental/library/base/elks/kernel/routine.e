@@ -19,6 +19,14 @@ inherit
 			is_equal
 		end
 
+	REFLECTOR
+		export
+			{NONE} all
+		redefine
+			copy,
+			is_equal
+		end
+
 feature -- Initialization
 
 	adapt (other: like Current)
@@ -88,7 +96,8 @@ feature -- Access
 		end
 
 	empty_operands: attached OPEN_ARGS
-			-- Empty tuple matching open operands
+			-- Empty tuple matching open operands.
+		obsolete "This function will be removed as non-void-safe. [22.07.2013]"
 		do
 			create Result
 		ensure
@@ -120,11 +129,9 @@ feature -- Status report
 		local
 			i, arg_type_code: INTEGER
 			arg: like {TUPLE}.item
-			int: REFLECTOR
 			open_type_codes: STRING
 			l_type: INTEGER
 		do
-			create int
 			if args = Void then
 					-- Void operands are only allowed
 					-- if object has no open operands.
@@ -144,12 +151,12 @@ feature -- Status report
 						l_type := open_operand_type (i)
 							-- If expected type is attached, then we need to verify that the actual
 							-- is indeed attached.
-						if int.is_attached_type (l_type) then
+						if is_attached_type (l_type) then
 							Result := arg /= Void and then
-								int.field_conforms_to (type_id_of (arg), l_type)
+								field_conforms_to (type_id_of (arg), l_type)
 						else
 							Result := arg = Void or else
-								int.field_conforms_to (type_id_of (arg), l_type)
+								field_conforms_to (type_id_of (arg), l_type)
 						end
 					end
 					i := i + 1
@@ -240,6 +247,27 @@ feature -- Basic operations
 		require
 			valid_operands: valid_operands (operands)
 		deferred
+		end
+
+feature -- Extended operations
+
+	flexible_call (a: detachable separate TUPLE)
+			-- Call routine with arguments `a'.
+			-- Compared to `call' the type of `a' may be different from `{OPEN_ARGS}'.
+		require
+			valid_operands: valid_operands (a)
+		local
+			default_arguments: detachable OPEN_ARGS
+		do
+			if not attached a then
+				call (default_arguments)
+			else
+				check
+					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+				then
+					call (x)
+				end
+			end
 		end
 
 feature -- Obsolete

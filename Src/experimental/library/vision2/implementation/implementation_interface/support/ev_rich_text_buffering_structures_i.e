@@ -221,7 +221,7 @@ feature {EV_ANY_I} -- Status Setting
 			until
 				counter > a_text.count
 			loop
-				if a_text.code (counter) = ('%N').natural_32_code then
+				if counter < a_text.count - 1 and then a_text.item (counter) = '%N' then
 					if not l_rich_text.internal_paragraph_format_contiguous (counter, counter + 2) then
 							-- Note that we checked "counter + 2" as we find the %N that signifies a new line, and then
 							-- we must add one to convert to caret positions, and one to check that we are checking the first character
@@ -259,8 +259,8 @@ feature {EV_ANY_I} -- Status Setting
 			last_load_successful := True
 			if rtf_text.item (1) = rtf_open_brace_character then
 				create format_stack.make (8)
-				create all_fonts.make_filled (Void, 0, 50)
-				create all_colors.make_filled (Void, 0, 50)
+				create all_fonts.make (50)
+				create all_colors.make (50)
 					-- If there are no color table in the RTF, we default to the
 					-- foreground color of `rich_text'.
 				all_colors.force (l_rich_text.foreground_color, 0)
@@ -482,49 +482,48 @@ feature {NONE} -- Implementation
 			l_rich_text := rich_text
 			check l_rich_text /= Void then end
 
-			check all_formats /= Void then end
-			check all_colors /= Void then end
+			if attached all_formats as l_formats then
+				character_format := l_formats.item (l_current_format.character_format_out)
+				if character_format = Void then
+						-- Only create a new character format if an equivalent one does not already
+						-- exist in `all_formats'.
+					create character_format
 
-			if not all_formats.has (l_current_format.character_format_out) then
-					-- Only create a new character format if an equivalent one does not already
-					-- exist in `all_formats'.
-				create character_format
-
-				if first_color_is_auto and l_current_format.text_color = 0 then
-					character_format.set_color (l_rich_text.foreground_color)
-				elseif attached all_colors.item (l_current_format.text_color) as l_color then
-					character_format.set_color (l_color)
-				end
-
-				if first_color_is_auto and l_current_format.highlight_color = 0 then
-					character_format.set_background_color (l_rich_text.background_color)
-				elseif l_current_format.highlight_set and then attached all_colors.item (l_current_format.highlight_color) as l_color then
-					character_format.set_background_color (l_color)
-				end
-
-				check all_fonts /= Void then end
-				if attached all_fonts.item (l_current_format.character_format) as l_font then
-					a_font := l_font.twin
-					if l_current_format.is_bold then
-						a_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+					if first_color_is_auto and l_current_format.text_color = 0 then
+						character_format.set_color (l_rich_text.foreground_color)
+					elseif attached all_colors as l_colors and then attached l_colors.item (l_current_format.text_color) as l_color then
+						character_format.set_color (l_color)
 					end
-					if l_current_format.is_italic then
-						a_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
-					end
-					create effects
-					if l_current_format.is_striked_out then
-						effects.enable_striked_out
-					end
-					if l_current_format.is_underlined then
-						effects.enable_underlined
-					end
-					effects.set_vertical_offset (half_points_to_pixels (l_current_format.vertical_offset))
-					character_format.set_effects (effects)
 
-						-- RTF uses half points to specify font heights so divide by 2.
-					a_font.set_height_in_points (l_current_format.font_height // 2)
-					character_format.set_font (a_font)
-					all_formats.put (character_format, l_current_format.character_format_out)
+					if first_color_is_auto and l_current_format.highlight_color = 0 then
+						character_format.set_background_color (l_rich_text.background_color)
+					elseif l_current_format.highlight_set and then attached all_colors as l_colors and then attached l_colors.item (l_current_format.highlight_color) as l_color then
+						character_format.set_background_color (l_color)
+					end
+
+					if attached all_fonts as l_fonts and then attached l_fonts.item (l_current_format.character_format) as l_font then
+						a_font := l_font.twin
+						if l_current_format.is_bold then
+							a_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+						end
+						if l_current_format.is_italic then
+							a_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
+						end
+						create effects
+						if l_current_format.is_striked_out then
+							effects.enable_striked_out
+						end
+						if l_current_format.is_underlined then
+							effects.enable_underlined
+						end
+						effects.set_vertical_offset (half_points_to_pixels (l_current_format.vertical_offset))
+						character_format.set_effects (effects)
+
+							-- RTF uses half points to specify font heights so divide by 2.
+						a_font.set_height_in_points (l_current_format.font_height // 2)
+						character_format.set_font (a_font)
+						l_formats.put (character_format, l_current_format.character_format_out)
+					end
 				end
 			end
 			if attached all_paragraph_formats and then (all_paragraph_formats.is_empty or else not all_paragraph_formats.has (l_current_format.paragraph_format_out)) then
@@ -542,7 +541,6 @@ feature {NONE} -- Implementation
 				all_paragraph_indexes.extend (number_of_characters_opened + 1)
 			end
 
-			character_format := all_formats.item (l_current_format.character_format_out)
 			if character_format /= Void then
 				l_rich_text.buffered_append (a_text, character_format)
 			else
@@ -769,7 +767,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_string: STRING_32 = "TN"
+	new_line_string: STRING_32 = "%N"
 	tab_string: STRING_32 = "%T"
 	tab_tag_string: STRING_32 = "tab"
 	line_string: STRING_32 = "line"
@@ -834,7 +832,7 @@ feature {NONE} -- Implementation
 					add_font_to_all_fonts
 				elseif current_character = '\' then
 					process_keyword (rtf_text, main_iterator)
-				elseif current_character = ' '  then
+				elseif current_character = ' ' and then rtf_text.item (main_iterator + 1) /= '\' then
 					move_main_iterator (1)
 					update_main_iterator
 					process_fontname (rtf_text)
@@ -872,8 +870,8 @@ feature {NONE} -- Implementation
 			if attached last_fontname as l_last_fontname and then not l_last_fontname.is_empty then
 				a_font.preferred_families.extend (l_last_fontname)
 			end
-			if all_fonts /= Void then
-				all_fonts.force (a_font, last_fontindex)
+			if attached all_fonts as l_fonts then
+				l_fonts.force (a_font, last_fontindex)
 			end
 		end
 
@@ -886,8 +884,9 @@ feature {NONE} -- Implementation
 			depth: INTEGER
 			current_character: CHARACTER_32
 			a_color: EV_COLOR
+			l_colors: like all_colors
 		do
-			check all_colors /= Void then end
+			l_colors := all_colors
 			depth := 1
 			from
 				move_main_iterator (1)
@@ -911,9 +910,9 @@ feature {NONE} -- Implementation
 						create a_color
 						first_color_is_auto := True
 							-- We have found the auto color so record the fact that there is an auto color.
-					else
+					elseif l_colors /= Void then
 						create a_color.make_with_8_bit_rgb (last_colorred, last_colorgreen, last_colorblue)
-						all_colors.force (a_color, last_colorindex)
+						l_colors.force (a_color, last_colorindex)
 					end
 					last_colorindex := last_colorindex + 1
 				end
@@ -922,9 +921,9 @@ feature {NONE} -- Implementation
 		end
 
 	first_color_is_auto: BOOLEAN
-		-- Color at index `0' in the color table corresponds to the auto color.
-		-- Any color references to this color must use either the foreground or
-		-- background color of the control, instead of its actual value.
+			-- Color at index `0' in the color table corresponds to the auto color.
+			-- Any color references to this color must use either the foreground or
+			-- background color of the control, instead of its actual value.
 
 	last_fontname: detachable STRING_32
 	last_colorindex: INTEGER
@@ -934,16 +933,16 @@ feature {NONE} -- Implementation
 	last_colorred: INTEGER
 	last_colorgreen: INTEGER
 	last_colorblue: INTEGER
-		-- Current values read in by parsing RTF.
+			-- Current values read in by parsing RTF.
 
-	all_fonts: detachable ARRAY [detachable EV_FONT] note option: stable attribute end
-		-- All fonts retrieved during parsing, accessible through their index in the font table.
+	all_fonts: detachable HASH_TABLE [EV_FONT, INTEGER] note option: stable attribute end
+			-- All fonts retrieved during parsing, accessible through their index in the font table.
 
-	all_colors: detachable ARRAY [detachable EV_COLOR] note option: stable attribute end
-		-- All colors retrieved during parsing, accessible through their index in the color table.
+	all_colors: detachable HASH_TABLE [EV_COLOR, INTEGER] note option: stable attribute end
+			-- All colors retrieved during parsing, accessible through their index in the color table.
 
 	all_formats: detachable HASH_TABLE [EV_CHARACTER_FORMAT, STRING] note option: stable attribute end
-		-- All unique formats retreived during parsing.
+			-- All unique formats retreived during parsing.
 
 	all_paragraph_formats: detachable HASH_TABLE [EV_PARAGRAPH_FORMAT, STRING] note option: stable attribute end
 

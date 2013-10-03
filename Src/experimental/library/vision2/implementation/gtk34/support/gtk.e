@@ -1416,9 +1416,9 @@ feature
 			"C (GtkCheckMenuItem*, gboolean) | <ev_gtk.h>"
 		end
 
-	frozen gtk_color_selection_dialog_new (a_title: POINTER): POINTER
+	frozen gtk_color_chooser_dialog_new (a_title, a_parent: POINTER): POINTER
 		external
-			"C (gchar*): GtkWidget* | <ev_gtk.h>"
+			"C (gchar*, GtkWindow*): GtkWidget* | <ev_gtk.h>"
 		end
 
 	frozen gtk_container_add (a_container: POINTER; a_widget: POINTER)
@@ -1534,19 +1534,24 @@ feature
 			"GTK_IS_EVENT_BOX"
 		end
 
-	frozen gtk_font_selection_dialog_get_font_name (a_fsd: POINTER): POINTER
+	frozen gtk_font_chooser_get_font_desc (a_fc: POINTER): POINTER
 		external
-			"C (GtkFontSelectionDialog*): gchar* | <ev_gtk.h>"
+			"C (GtkFontChooser*): PangoFontDescription* | <ev_gtk.h>"
 		end
 
-	frozen gtk_font_selection_dialog_new (a_title: POINTER): POINTER
+	frozen gtk_font_chooser_dialog_new (a_title, a_parent: POINTER): POINTER
 		external
-			"C (gchar*): GtkWidget* | <ev_gtk.h>"
+			"C (gchar*, GtkWindow*): GtkWidget* | <ev_gtk.h>"
 		end
 
-	frozen gtk_font_selection_dialog_set_font_name (a_fsd: POINTER; a_fontname: POINTER): BOOLEAN
+	frozen gtk_font_chooser_set_font_desc (a_fc: POINTER; a_fontdesc: POINTER)
 		external
-			"C (GtkFontSelectionDialog*, gchar*): gboolean | <ev_gtk.h>"
+			"C (GtkFontChooser*, PangoFontDescription*) | <ev_gtk.h>"
+		end
+
+	frozen gtk_font_chooser_get_font (a_fc: POINTER): POINTER
+		external
+			"C (GtkFontChooser*): gchar* | <ev_gtk.h>"
 		end
 
 	frozen gtk_frame_new (a_label: POINTER): POINTER
@@ -2884,7 +2889,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

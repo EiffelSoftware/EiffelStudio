@@ -600,7 +600,7 @@ feature -- Externals
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"g_main_context_iteration(NULL, False)"
+			"g_main_context_iteration(NULL, 0)"
 		end
 
 	frozen dispatch_events
@@ -1507,6 +1507,13 @@ feature -- Externals
 			"gtk_dialog_add_button ((GtkDialog*) $a_dialog, (gchar*) $a_text, (gint) $a_response_id)"
 		end
 
+	frozen gtk_dialog_get_widget_for_response (a_dialog: POINTER; a_response_id: INTEGER_32): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_dialog_get_widget_for_response ((GtkDialog*) $a_dialog, (gint) $a_response_id)"
+		end
+
 	frozen gtk_dialog_set_default_response (a_dialog: POINTER; a_response_id: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"
@@ -1528,6 +1535,34 @@ feature -- Externals
 			"GTK_STOCK_OPEN"
 		end
 
+	frozen gtk_response_ok_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GTK_RESPONSE_OK"
+		end
+
+	frozen gtk_response_yes_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GTK_RESPONSE_YES"
+		end
+
+	frozen gtk_response_no_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GTK_RESPONSE_NO"
+		end
+
+	frozen gtk_response_delete_event_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GTK_RESPONSE_DELETE_EVENT"
+		end
+
 	frozen gtk_response_accept_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
@@ -1540,6 +1575,13 @@ feature -- Externals
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_RESPONSE_CANCEL"
+		end
+
+	frozen gtk_response_apply_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GTK_RESPONSE_APPLY"
 		end
 
 	frozen gtk_stock_save_enum: POINTER
@@ -1596,6 +1638,13 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"gtk_file_chooser_set_local_only ((GtkFileChooser*) $a_dialog, (gboolean) $a_local_only)"
+		end
+
+	frozen gtk_file_chooser_set_create_folders (a_dialog: POINTER; a_create: BOOLEAN)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_file_chooser_set_create_folders ((GtkFileChooser*) $a_dialog, (gboolean) $a_create)"
 		end
 
 	frozen gtk_file_chooser_set_select_multiple (a_dialog: POINTER; a_multiple: BOOLEAN)
@@ -2242,27 +2291,6 @@ feature -- Externals
 			"g_value_take_string ((GValue*) $a_value, (gchar*) $a_string)"
 		end
 
-	frozen g_value_array_new (a_preallocated: INTEGER_32): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_array_new ((guint) $a_preallocated)"
-		end
-
-	frozen g_value_array_free (a_value_array: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_array_free ((GValueArray*) $a_value_array)"
-		end
-
-	frozen g_value_array_insert (a_value_array: POINTER; a_index: INTEGER_32; a_value: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_array_insert ((GValueArray*) $a_value_array, (guint) $a_index, (GValue*) $a_value)"
-		end
-
 	frozen gtk_tree_view_new: POINTER
 		external
 			"C signature (): GtkWidget* use <ev_gtk.h>"
@@ -2520,24 +2548,24 @@ feature -- Externals
 			"((GValue*)$args_array + (int)($an_index - 1))"
 		end
 
-	frozen g_value_array_get_nth (a_value_array: POINTER; n_th: INTEGER_32): POINTER
-		external
-			"C signature (GValueArray*, guint): GValue* use <ev_gtk.h>"
-		end
-
 	frozen gtk_color_selection_dialog_get_color_selection (a_color_selection_dialog: POINTER): POINTER
 		external
 			"C signature (GtkColorSelectionDialog*): GtkWidget* use <ev_gtk.h>"
 		end
 
-	frozen gtk_color_selection_get_current_rgba (a_color_selection, a_color: POINTER)
+	frozen gtk_color_chooser_get_rgba (a_color_selection, a_color: POINTER)
 		external
-			"C signature (GtkColorSelection*, GdkRGBA*) use <ev_gtk.h>"
+			"C signature (GtkColorChooser*, GdkRGBA*) use <ev_gtk.h>"
 		end
 
-	frozen gtk_color_selection_set_current_rgba (a_color_selection, a_color: POINTER)
+	frozen gtk_color_chooser_set_rgba (a_color_selection, a_color: POINTER)
 		external
-			"C signature (GtkColorSelection*, GdkRGBA*) use <ev_gtk.h>"
+			"C signature (GtkColorChooser*, GdkRGBA*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_color_chooser_set_use_alpha (a_color_selection: POINTER; use_alpha: BOOLEAN)
+		external
+			"C signature (GtkColorChooser*, gboolean) use <ev_gtk.h>"
 		end
 
 	frozen gdk_pixbuf_scale_simple (a_gdkpixbuf: POINTER; a_width, a_height, a_interp_mode: INTEGER_32): POINTER

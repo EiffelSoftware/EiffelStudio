@@ -17,6 +17,15 @@ inherit
 			is_equal, out
 		end
 
+	PART_COMPARABLE
+		rename
+			default as any_default,
+			is_less as is_strictly_conforming_to alias "<",
+			is_less_equal as is_conforming_to alias "<="
+		redefine
+			is_conforming_to, is_equal, out
+		end
+
 	DEBUG_OUTPUT
 		rename
 			default as any_default
@@ -116,6 +125,18 @@ feature -- Comparison
 			-- equal to current object?
 		do
 			Result := type_id = other.type_id
+		end
+
+	is_strictly_conforming_to alias "<" (other: like Current): BOOLEAN
+			-- Does type represented by `Current' conform to type represented by `other' and differ from it?
+		do
+			Result := type_id /= other.type_id and then is_conforming_to (other)
+		end
+
+	is_conforming_to alias "<=" (other: like Current): BOOLEAN
+			-- Does type represented by `Current' conform to type represented by `other'?
+		do
+			Result := {ISE_RUNTIME}.type_conforms_to (type_id, other.type_id)
 		end
 
 feature -- Conversion

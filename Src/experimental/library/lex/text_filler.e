@@ -20,15 +20,18 @@ feature -- Access
 			create Result.make_empty
 		end
 
-	file_name : detachable STRING
+	source_file_path: detachable PATH
+			-- The source file path if `source_is_file'.		
+
+	file_name: detachable STRING
 			-- Name of input file
-		local
-			l_file: like file
+		obsolete
+			"Use source_file_path"
 		do
-			if source_is_file then
-				l_file := file
-				check l_file_attached: l_file /= Void end
+			if attached file as l_file then
 				Result := l_file.name
+			elseif attached source_file_path as p then
+				Result := p.name.as_string_8
 			end
 		end;
 
@@ -99,16 +102,16 @@ feature -- Status setting
 				buffer.append (previous_buffer);
 				line_nb_array.conservative_resize_with_default (0, 1, buffer_size);
 				column_nb_array.conservative_resize_with_default (0, 1, buffer_size);
-				if source_is_file then
-					fill_from_file (b, previous_buffer_size, buffer_size)
-				else
-					fill_from_string (b, previous_buffer_size, buffer_size)
+				if attached file as f then
+					fill_from_file (f, b, previous_buffer_size, buffer_size)
+				elseif attached string as s then
+					fill_from_string (s, b, previous_buffer_size, buffer_size)
 				end
 			else
-				if source_is_file then
-					fill_from_file (b, buffer_size, buf)
-				else
-					fill_from_string (b, buffer_size, buf)
+				if attached file as f then
+					fill_from_file (f, b, buffer_size, buf)
+				elseif attached string as s then
+					fill_from_string (s, b, buffer_size, buf)
 				end;
 				buffer_size := buf;
 				buffer.resize (buffer_size);
@@ -151,7 +154,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_file (f_name: STRING)
+	set_file (f_name: READABLE_STRING_GENERAL)
 			-- Use `f_name' as input file.
 		require
 			file_name_not_void: f_name /= Void
@@ -159,14 +162,19 @@ feature -- Status setting
 			l_file: like file
 		do
 			close_file;
-			create l_file.make_open_read (f_name);
+			create l_file.make_with_name (f_name);
+			l_file.open_read
 			file := l_file
 			reset;
 			char_buffered_number := 0;
-			source_is_file := True;
+			source_file_path := l_file.path
 			source_size := l_file.count;
 			initialize;
 			reset_data
+		ensure
+			source_is_file: source_is_file
+			has_file: attached file
+			has_source_file_path: source_file_path /= Void
 		end;
 
 	set_string (s: STRING)
@@ -178,10 +186,13 @@ feature -- Status setting
 			string := s;
 			reset;
 			char_buffered_number := 0;
-			source_is_file := False;
+			source_file_path := Void
 			source_size := s.capacity;
 			initialize;
 			reset_data
+		ensure
+			source_is_string: source_is_file = False
+			has_string: attached string
 		end;
 
 	fill_buffer (b: INTEGER)
@@ -198,10 +209,10 @@ feature -- Status setting
 			b_not_too_large: b <= buffer_size;
 			b_positive: b >= 0
 		do
-			if source_is_file then
-				fill_from_file (b, buffer_size, buffer_size)
-			else
-				fill_from_string (b, buffer_size, buffer_size)
+			if attached file as f then
+				fill_from_file (f, b, buffer_size, buffer_size)
+			elseif attached string as s then
+				fill_from_string (s, b, buffer_size, buffer_size)
 			end
 		end;
 
@@ -247,8 +258,11 @@ feature {NONE} -- Implementation
 	mask: detachable FIXED_INTEGER_SET;
 			-- Set of readable columns
 
-	source_is_file: BOOLEAN;
+	source_is_file: BOOLEAN
 			-- Is the source a file? (If not it is a string)
+		do
+			Result := source_file_path /= Void
+		end
 
 	line_number: INTEGER;
 	column_number: INTEGER
@@ -275,7 +289,7 @@ feature {NONE} -- Implementation
 			position_in_string := 0
 		end
 
-	fill_from_file (position, old_size, new_size: INTEGER)
+	fill_from_file (l_file: attached like file; position, old_size, new_size: INTEGER)
 			-- Copy the characters from `position'+1-th to `old_size'-th
 			-- in beginning of `buffer', and fill other part of `buffer'
 			-- with characters from `file'.
@@ -287,8 +301,6 @@ feature {NONE} -- Implementation
 			position_positive: position >= 0;
 			valid_old_size: old_size >= 0 and old_size <= buffer_size;
 			valid_new_size: new_size >= 0 and new_size <= buffer_size;
-			file_not_void: file /= Void
-			source_is_file: source_is_file
 		local
 			c: CHARACTER;
 			i, nb: INTEGER;
@@ -297,12 +309,7 @@ feature {NONE} -- Implementation
 			cmask: like mask;
 			file_nb: INTEGER;
 			file_last_string: detachable STRING
-			l_file: like file
 		do
-			l_file := file
-				-- Precondition checks if `file' is attached, just adding check for Void-Safety.
-			check l_file_attached: l_file /= Void end
-
 			lines := line_nb_array;
 			columns := column_nb_array;
 			if position /= 0 and position < old_size then
@@ -318,7 +325,6 @@ feature {NONE} -- Implementation
 				file_nb := new_size - nb;
 				l_file.read_stream (file_nb);
 				file_last_string := l_file.last_string;
-				check file_last_string_attached: file_last_string /= Void end
 				if file_last_string.count < file_nb then
 					file_nb := file_last_string.count;
 					buffer.put ('%/255/', i + file_nb);
@@ -387,7 +393,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_from_string (position, old_size, new_size: INTEGER)
+	fill_from_string (l_string: attached like string; position, old_size, new_size: INTEGER)
 			-- Copy the characters from `position'+1-th to `old_size'-th
 			-- in beginning of `buffer', and fill other part of `buffer'
 			-- with characters from `string'.
@@ -400,7 +406,6 @@ feature {NONE} -- Implementation
 			valid_old_size: old_size >= 0 and old_size <= buffer_size;
 			valid_new_size: new_size >= 0 and new_size <= buffer_size;
 			string_not_void: string /= Void
-			not_source_is_file: not source_is_file
 		local
 			c: CHARACTER;
 			i, nb: INTEGER;
@@ -408,11 +413,7 @@ feature {NONE} -- Implementation
 			lines, columns: LEX_ARRAY [INTEGER];
 			cmask: like mask;
 			str_nb: INTEGER
-			l_string: like string
 		do
-			l_string := string
-			check l_string_attached: l_string /= Void end
-
 			lines := line_nb_array;
 			columns := column_nb_array;
 			if position /= 0 and position < old_size then
@@ -504,14 +505,14 @@ feature {NONE} -- Implementation
 -- Do not forget to create the buffers before using this class.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

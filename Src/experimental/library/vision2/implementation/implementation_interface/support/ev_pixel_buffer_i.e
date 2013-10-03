@@ -69,7 +69,6 @@ feature -- Command
 		deferred
 		ensure
 			result_not_void: Result /= Void
-			result_not_current: Result /= Current
 			result_width_set: Result.width = a_width
 			result_height_set: Result.height = a_height
 		end

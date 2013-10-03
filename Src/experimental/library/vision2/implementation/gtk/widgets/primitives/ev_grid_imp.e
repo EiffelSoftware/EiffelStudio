@@ -74,6 +74,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
+			set_c_object ({GTK}.gtk_event_box_new)
 				-- Initialize colors from gtk style.
 			set_focused_selection_color (color_from_state (base_style, {GTK}.gtk_state_selected_enum))
 			set_non_focused_selection_color (color_from_state (base_style, {GTK}.gtk_state_active_enum))

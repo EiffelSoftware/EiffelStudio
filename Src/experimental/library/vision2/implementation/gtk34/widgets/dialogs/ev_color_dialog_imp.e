@@ -36,37 +36,18 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to button signals.
 		local
 			a_cs: EV_GTK_C_STRING
---			l_ok, l_cancel, l_help: POINTER
 		do
 				-- Create the gtk object.
 			a_cs := "Color selection dialog"
 			set_c_object (
-				{GTK}.gtk_color_selection_dialog_new (
-					a_cs.item
+				{GTK}.gtk_color_chooser_dialog_new (
+					a_cs.item, default_pointer
 				)
 			)
---			l_help := --| FIXME IEK Implement property retrieval
---			{GTK}.gtk_widget_hide (
---				l_help
---			)
+			{GTK2}.gtk_color_chooser_set_use_alpha (c_object, False)
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
---			l_ok := --| FIXME Implement property retrieval
---			real_signal_connect (
---				l_ok,
---				"clicked",
---				agent (App_implementation.gtk_marshal).color_dialog_on_ok_intermediary (c_object),
---				Void
---			)
---			l_cancel := --| FIXME Implement property retrieval
---			real_signal_connect (
---				l_cancel,
---				"clicked",
---				agent (App_implementation.gtk_marshal).color_dialog_on_cancel_intermediary (c_object),
---				Void
---			)
 			enable_closeable
-			forbid_resize
 			set_is_initialized (True)
 		end
 
@@ -77,20 +58,20 @@ feature -- Access
 		local
 			l_rgba_struct: POINTER
 		do
-			if not user_clicked_ok and then attached internal_set_color as l_internal_set_color then
-				Result := l_internal_set_color.twin
-			else
+			if user_clicked_ok then
 				l_rgba_struct := {GTK}.c_gdk_rgba_struct_allocate
-				{GTK2}.gtk_color_selection_get_current_rgba (
-					{GTK2}.gtk_color_selection_dialog_get_color_selection (c_object),
-					l_rgba_struct
-				)
+				{GTK2}.gtk_color_chooser_get_rgba (c_object, l_rgba_struct)
 				create Result.make_with_rgb (
 					{GTK}.gdk_rgba_struct_red (l_rgba_struct).truncated_to_real,
 					{GTK}.gdk_rgba_struct_green (l_rgba_struct).truncated_to_real,
 					{GTK}.gdk_rgba_struct_blue (l_rgba_struct).truncated_to_real
 				)
 				l_rgba_struct.memory_free
+			elseif attached internal_set_color as l_internal_set_color then
+				Result := l_internal_set_color.twin
+			else
+					-- Return default color.
+				create Result
 			end
 		end
 
@@ -106,10 +87,7 @@ feature -- Element change
 			{GTK}.set_gdk_rgba_struct_red (l_rgba_struct, a_color.red_16_bit)
 			{GTK}.set_gdk_rgba_struct_green (l_rgba_struct, a_color.green_16_bit)
 			{GTK}.set_gdk_rgba_struct_blue (l_rgba_struct, a_color.blue_16_bit)
-			{GTK2}.gtk_color_selection_set_current_rgba (
-				{GTK2}.gtk_color_selection_dialog_get_color_selection (c_object),
-				l_rgba_struct
-			)
+			{GTK2}.gtk_color_chooser_set_rgba (c_object, l_rgba_struct)
 			l_rgba_struct.memory_free
 		end
 
@@ -123,7 +101,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLOR_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

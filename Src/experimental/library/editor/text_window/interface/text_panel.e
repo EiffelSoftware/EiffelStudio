@@ -468,7 +468,10 @@ feature -- Query
 			-- Are the spaces, the tabulations and the end_of_line characters visible?			
 
 	is_unix_file: BOOLEAN
-			-- Is current file a Unix file? (i.e. is "%N" line separator?)	
+			-- Is current file a Unix file? (i.e. is "%N" line separator?)
+		do
+			Result := text_displayed.is_unix_style
+		end
 
 	is_in_editor_panel (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Is point at absolute coordinates (`a_screen_x', `a_screeny') in the editor?
@@ -762,10 +765,7 @@ feature -- Basic Operations
 				-- Reset the editor state
 			reset
 			l_text := evaluate_encoding_and_convert_to_utf8 (a_text)
-			is_unix_file :=	l_text.substring_index ("%R%N", 1) = 0
-			if not is_unix_file then
-				l_text.replace_substring_all ("%R%N", "%N")
-			end
+			text_displayed.set_is_unix_style (l_text.substring_index ("%R%N", 1) = 0)
 
 			file_loading_setup
 
@@ -1949,7 +1949,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

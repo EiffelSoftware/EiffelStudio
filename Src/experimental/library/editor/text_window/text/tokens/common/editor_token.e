@@ -116,6 +116,18 @@ feature -- Status report
 			Result := token_status_flags & is_clickable_flag /= 0
 		end
 
+	is_link: BOOLEAN
+			-- Is `Current' a link?
+		do
+			Result := token_status_flags & is_link_flag /= 0
+		end
+
+	is_mouse_over: BOOLEAN
+			-- Is mouse over current?
+		do
+			Result := token_status_flags & is_mouse_over_flag /= 0
+		end
+
 	set_token_status_flag (a_flag: NATURAL_8; a_flag_value: BOOLEAN)
 		do
 			if a_flag_value then
@@ -133,6 +145,8 @@ feature -- Status report
 	is_highlighted_flag: NATURAL_8 = 0x4
 	is_fake_flag: NATURAL_8 = 0x8
 	is_clickable_flag: NATURAL_8 = 0x10
+	is_link_flag: NATURAL_8 = 0x20
+	is_mouse_over_flag: NATURAL_8 = 0x40
 
 feature -- Status report
 
@@ -181,6 +195,22 @@ feature -- Status Setting
 			set_token_status_flag (is_fake_flag, b)
 		ensure
 			value_set: is_fake = b
+		end
+
+	set_is_link (b: BOOLEAN)
+			-- Set `is_link' to `b'.
+		do
+			set_token_status_flag (is_link_flag, b)
+		ensure
+			value_set: is_link = b
+		end
+
+	set_is_mouse_over (b: BOOLEAN)
+			-- Set `is_mouse_over' to `b'.
+		do
+			set_token_status_flag (is_mouse_over_flag, b)
+		ensure
+			value_set: is_mouse_over = b
 		end
 
 	set_data (a_data: like data)
@@ -371,6 +401,12 @@ feature -- Color
 		do
 			if attached userset_text_color as l_color then
 				Result := l_color
+			elseif is_link then
+				if not is_mouse_over then
+					Result := editor_preferences.color_of_id (link_color_id)
+				else
+					Result := editor_preferences.color_of_id (mouse_over_link_color_id)
+				end
 			else
 				Result := editor_preferences.color_of_id (text_color_id)
 			end
@@ -380,6 +416,12 @@ feature -- Color
 		do
 			if attached userset_background_color as l_color then
 				Result := l_color
+			elseif is_link then
+				if not is_mouse_over then
+					Result := editor_preferences.color_of_id (link_background_color_id)
+				else
+					Result := editor_preferences.color_of_id (mouse_over_link_background_color_id)
+				end
 			else
 				Result := editor_preferences.color_of_id (background_color_id)
 			end
@@ -549,6 +591,18 @@ feature {TEXT_PANEL, VIEWER_LINE}
 			userset_data := a_data
 		ensure
 			userset_data_set: userset_data = a_data
+		end
+
+	on_mouse_enter
+			-- Call when mouse is entered.
+		do
+			set_is_mouse_over (True)
+		end
+
+	on_mouse_leave
+			-- Call when mouse is entered.
+		do
+			set_is_mouse_over (False)
 		end
 
 feature {NONE} -- Userset Implementation, text panel wide attributes

@@ -36,33 +36,18 @@ feature {NONE} -- Initialization
 	make
 			-- Setup action sequences.
 		local
-			a_ok_button, a_cancel_button: POINTER
 			a_cs: EV_GTK_C_STRING
+			l_but: POINTER
 		do
 			a_cs := "Select directory"
 			set_c_object
 				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, NULL, {GTK2}.gtk_file_chooser_action_select_folder_enum))
 
+			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_ok_enum, {GTK2}.gtk_response_ok_enum)
+			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_cancel_enum, {GTK2}.gtk_response_cancel_enum)
+
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
-
-			a_cancel_button := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_cancel_enum, {GTK2}.gtk_response_cancel_enum)
-			a_ok_button := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_ok_enum, {GTK2}.gtk_response_accept_enum)
-
-			{GTK2}.gtk_dialog_set_default_response (c_object, {GTK2}.gtk_response_accept_enum)
-
-			real_signal_connect (
-				a_ok_button,
-				"clicked",
-				agent (App_implementation.gtk_marshal).directory_dialog_on_ok_intermediary (c_object),
-				Void
-			)
-			real_signal_connect (
-				a_cancel_button,
-				"clicked",
-				agent (App_implementation.gtk_marshal).directory_dialog_on_cancel_intermediary (c_object),
-				Void
-			)
 			enable_closeable
 			set_start_path (App_implementation.current_working_path)
 			set_is_initialized (True)
@@ -76,7 +61,7 @@ feature -- Access
 			a_filename: POINTER
 		do
 			if
-				attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept)
+				user_clicked_ok
 			then
 				a_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
 				if a_filename /= NULL then
@@ -110,7 +95,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

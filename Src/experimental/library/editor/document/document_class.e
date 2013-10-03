@@ -38,10 +38,11 @@ feature -- Initialization
 	        l_error: BOOLEAN
 	        l_scanner: like scanner
 	        l_syntax_definition: like syntax_definition
+	        l_fu: FILE_UTILITIES
 	  	do
 	  		l_syntax_definition := syntax_definition
 	  		if l_syntax_definition /= Void then
-		  		if (create {PLAIN_TEXT_FILE}.make (l_syntax_definition)).exists then
+		  		if l_fu.file_exists (l_syntax_definition) then
     	  		    l_error := parse_syntax_file (l_syntax_definition)
     	  		    l_scanner := scanner
     			else
@@ -153,14 +154,14 @@ invariant
 	has_at_least_one_filetype: not filetypes.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

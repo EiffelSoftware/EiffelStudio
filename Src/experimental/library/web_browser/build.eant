@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project name="build_web_browser" default="help">
+
+	<description>
+		description: "Web browser library compilation"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile">
+		<echo message="- Compile [Web Browser]" />
+		<geant target="compile" file="build.eant" dir="Clib" 
+			reuse_variables="true" />
+	</target>
+	
+	<target name="clean">
+		<echo message="- Clean [Web Browser]" />
+		<delete directory="spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" />
+	</target>
+
+	<target name="clobber" depend="clean" />
+	
+</project>

@@ -45,26 +45,38 @@ feature {NONE} -- Implementation
 		require
 			valid_kind: kind = bubble_type or kind = shell_type or kind = quick_type
 		local
-			l_list: LIST [STRING]
+			l_list: like new_list
 			l_array: ARRAY [STRING]
-			l_sorter: SORTER [STRING]
+			l_sorter: like new_comparable_sorter
 		do
 			l_sorter := new_comparable_sorter (kind)
+			if l_sorter /= Void then
+				l_list := new_list (arrayed_list_type)
+				if l_list /= Void then
+					l_sorter.sort (l_list)
+					assert ("list_sorted", l_sorter.sorted (l_list))
+				else
+					assert ("kind of list exists", False)
+				end
 
-			l_list := new_list (arrayed_list_type)
-			l_sorter.sort (l_list)
-			assert ("list_sorted", l_sorter.sorted (l_list))
 
-			l_list := new_list (linked_list_type)
-			l_sorter.sort (l_list)
-			assert ("list_sorted", l_sorter.sorted (l_list))
+				l_list := new_list (linked_list_type)
+				if l_list /= Void then
+					l_sorter.sort (l_list)
+					assert ("list_sorted", l_sorter.sorted (l_list))
+				else
+					assert ("kind of list exists", False)
+				end
 
-			l_array := new_array
-			l_sorter.sort (l_array)
-			assert ("array_sorted", l_sorter.sorted (l_array))
+				l_array := new_array
+				l_sorter.sort (l_array)
+				assert ("array_sorted", l_sorter.sorted (l_array))
+			else
+				assert ("valid sorter kind", False)
+			end
 		end
 
-	new_list (kind: INTEGER): LIST [STRING]
+	new_list (kind: INTEGER): detachable LIST [STRING]
 		require
 			valid_kind: kind = arrayed_list_type or kind = linked_list_type
 		do
@@ -77,15 +89,17 @@ feature {NONE} -- Implementation
 			else
 
 			end
-			Result.extend ("titi")
-			Result.extend ("tutu")
-			Result.extend ("z")
-			Result.extend ("a")
-			Result.extend ("m")
-			Result.extend ("d")
-			Result.extend ("manu")
-			Result.extend ("foo")
-			Result.extend ("bafr")
+			if Result /= Void then
+				Result.extend ("titi")
+				Result.extend ("tutu")
+				Result.extend ("z")
+				Result.extend ("a")
+				Result.extend ("m")
+				Result.extend ("d")
+				Result.extend ("manu")
+				Result.extend ("foo")
+				Result.extend ("bafr")
+			end
 		end
 
 	new_array: ARRAY [STRING]
@@ -102,7 +116,7 @@ feature {NONE} -- Implementation
 			Result.put ("bafr", 5)
 		end
 
-	new_comparable_sorter (kind: INTEGER): SORTER [STRING]
+	new_comparable_sorter (kind: INTEGER): detachable SORTER [STRING]
 		require
 			valid_kind: kind = bubble_type or kind = shell_type or kind = quick_type
 		do
@@ -114,7 +128,6 @@ feature {NONE} -- Implementation
 			when quick_type then
 				create {QUICK_SORTER [STRING]} Result.make (create {COMPARABLE_COMPARATOR [STRING]})
 			else
-
 			end
 		end
 
@@ -125,6 +138,16 @@ feature {NONE} -- Implementation
 	shell_type: INTEGER = 2
 	quick_type: INTEGER = 3
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 
 

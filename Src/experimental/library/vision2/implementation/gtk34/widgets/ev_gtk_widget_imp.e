@@ -134,17 +134,29 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	minimum_width, real_minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
+		do
+			if not is_destroyed then
+				Result := width_request
+				if Result = -1 then
+					Result := preferred_width
+				end
+			end
+		end
+
+	width_request: INTEGER
+			-- Requested width of `Current' from gtk.
+		do
+			{GTK2}.g_object_get_integer (c_object, width_request_string.item, $Result)
+		end
+
+	preferred_width: INTEGER
+			-- Preferred width of `Current' from gtk.
 		local
 			gr, l_null: POINTER
 		do
-			if not is_destroyed then
-				{GTK2}.g_object_get_integer (c_object, width_request_string.item, $Result)
-				if Result = -1 then
-					gr := reusable_requisition_struct.item
-					{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
-					Result := {GTK}.gtk_requisition_struct_width (gr)
-				end
-			end
+			gr := reusable_requisition_struct.item
+			{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
+			Result := {GTK}.gtk_requisition_struct_width (gr)
 		end
 
 	reusable_requisition_struct: MANAGED_POINTER
@@ -155,17 +167,29 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	minimum_height, real_minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
+		do
+			if not is_destroyed then
+				Result := height_request
+				if Result = -1 then
+					Result := preferred_height
+				end
+			end
+		end
+
+	height_request: INTEGER
+			-- Requested height of `Current' from gtk.
+		do
+			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $Result)
+		end
+
+	preferred_height: INTEGER
+			-- Preferred height of `Current' from gtk.
 		local
 			gr, l_null: POINTER
 		do
-			if not is_destroyed then
-				{GTK2}.g_object_get_integer (c_object, height_request_string.item, $Result)
-				if Result = -1 then
-					gr := reusable_requisition_struct.item
-					{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
-					Result := {GTK}.gtk_requisition_struct_height (gr)
-				end
-			end
+			gr := reusable_requisition_struct.item
+			{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
+			Result := {GTK}.gtk_requisition_struct_height (gr)
 		end
 
 	event_widget: POINTER

@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			until
 				i = nb
 			loop
-				l_area.put (other.item (i + 1), i)
+				l_area.put (other.area.item (i), i)
 				i := i + 1
 			end
 			count := nb

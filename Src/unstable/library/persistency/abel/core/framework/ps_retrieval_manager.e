@@ -417,7 +417,7 @@ feature {NONE} -- Implementation: Query initialization
 			type := metadata_manager.create_metadata_from_type (query.generic_type)
 
 			if some_attributes.is_empty then
-				attributes := type.attributes
+				attributes := type.attributes.twin
 			else
 				attributes := some_attributes
 			end

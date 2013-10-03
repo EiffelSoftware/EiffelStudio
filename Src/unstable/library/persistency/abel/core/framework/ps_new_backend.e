@@ -67,9 +67,21 @@ feature {PS_EIFFELSTORE_EXPORT}
 			can_handle_objects: rigorous_contracts implies can_write_object_graph (object_graph)
 			all_objects_identified: rigorous_contracts implies across object_graph.new_smart_cursor as c all c.item.is_identified end
 		do
-			-- execute plugins before write
+			-- Execute plugins before write
+			across object_graph.new_smart_cursor as cursor
+			loop
+				if attached {PS_SINGLE_OBJECT_PART} cursor.item as object then
+					from plug_in_list.finish
+					until plug_in_list.before
+					loop
+						plug_in_list.item_for_iteration.before_write (object, transaction)
+					end
+				end
+			end
+			-- Store to database
 			internal_write (object_graph, transaction)
-			-- execute plugins after write
+
+			-- TODO: maybe execute plugins after write
 		end
 
 	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
@@ -80,14 +92,24 @@ feature {PS_EIFFELSTORE_EXPORT}
 			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
 		require
 --			most_general_type: across type.supertypes as supertype all not (supertype.item.is_equal (type) and type.is_subtype_of (supertype.item)) end
-			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
---			attributes_not_empty: not attributes.index_set.is_empty
+--			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
 		do
 			-- execute plugins before retrieve
-			Result := internal_retrieve (type, criteria, attributes, transaction)
+			across plug_in_list as cursor
+			loop
+				cursor.item.before_retrieve (type, criteria, attributes, transaction)
+			end
+
+			-- Set up cursor and retrieve first item
+			create {PS_CURSOR_WRAPPER[PS_RETRIEVED_OBJECT]}Result.make (Current, internal_retrieve (type, criteria, attributes, transaction), transaction)
+
 			-- execute plugins after retrieve
+			if not Result.after then
+				apply_plugins (Result.item, transaction)
+			end
 		ensure
-			attributes_loaded: not Result.after implies across attributes as attr all Result.item.has_attribute(attr.item) end
+			--loaded_attributes_exist: not Result.after implies across Result.item.attributes as attr all attributes.has(attr.item) end
+			all_attributes_loaded: not Result.after implies across attributes as attr all Result.item.has_attribute(attr.item) end
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
 		end
 
@@ -179,6 +201,23 @@ feature {NONE} -- Mapping, Implementation
 		deferred
 		end
 
+feature {PS_EIFFELSTORE_EXPORT} -- Plugins
+
+	plug_in_list: LINKED_LIST[PS_PLUGIN]
+			-- A collection of plugins providing additional functionality.
+			-- The list is traversed front-to-back during retrieval operations,
+			-- and back-to-front during write operations
+		once ("OBJECT")
+			fixme ("Move to creation procedure of all subclasses...")
+			create Result.make
+		end
+
+	add_plug_in (plug_in: PS_PLUGIN)
+			-- Add `plugin' to the end of the current plugin list.
+		do
+			plug_in_list.extend (plug_in)
+		end
+
 feature {PS_EIFFELSTORE_EXPORT} -- Testing
 
 	wipe_out
@@ -239,6 +278,15 @@ feature {PS_NEW_BACKEND}
 		ensure
 --			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
 --			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+		end
+
+feature {ITERATION_CURSOR}
+
+	apply_plugins (item: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
+		do
+			across plug_in_list as cursor loop
+				cursor.item.after_retrieve (item, transaction)
+			end
 		end
 
 feature {NONE} -- Contracts

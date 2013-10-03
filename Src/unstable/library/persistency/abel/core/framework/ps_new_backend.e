@@ -71,10 +71,15 @@ feature {PS_EIFFELSTORE_EXPORT}
 			across object_graph.new_smart_cursor as cursor
 			loop
 				if attached {PS_SINGLE_OBJECT_PART} cursor.item as object then
-					from plug_in_list.finish
-					until plug_in_list.before
+					from
+						plug_in_list.finish
+					until
+						plug_in_list.before
 					loop
 						plug_in_list.item_for_iteration.before_write (object, transaction)
+						plug_in_list.back
+					variant
+						plug_in_list.index
 					end
 				end
 			end
@@ -108,8 +113,7 @@ feature {PS_EIFFELSTORE_EXPORT}
 				apply_plugins (Result.item, transaction)
 			end
 		ensure
-			--loaded_attributes_exist: not Result.after implies across Result.item.attributes as attr all attributes.has(attr.item) end
-			all_attributes_loaded: not Result.after implies across attributes as attr all Result.item.has_attribute(attr.item) end
+			loaded_attributes_exist: not Result.after implies across Result.item.attributes as attr all type.attributes.has(attr.item) end
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
 		end
 
@@ -266,6 +270,7 @@ feature {PS_NEW_BACKEND}
 		deferred
 			-- To have lazy loading support, you need to have a special ITERATION_CURSOR and a function next in this class to load the next item of this customized cursor
 		ensure
+			all_attributes_loaded: not Result.after implies across attributes as attr all Result.item.has_attribute(attr.item) end
 --			attributes_loaded: not Result.after implies are_attributes_loaded (type, attributes, Result.item)
 --			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
 		end

@@ -63,7 +63,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := values.has (attribute_name)
 		end
 
-feature {PS_BACKEND} -- Element change
+feature {PS_EIFFELSTORE_EXPORT} -- Element change
 
 	add_attribute (attribute_name: STRING; value: STRING; class_name_of_value: STRING)
 			-- Add the attribute `attribute_name' with value tuple <`value', `class_name_of_value'>.

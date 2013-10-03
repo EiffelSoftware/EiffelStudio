@@ -1231,6 +1231,9 @@ feature {NONE} -- Transformation
 					ht_deleted_key := l_default_key
 						-- We don't change `object_comparison' from the value it was retrieved from.
 				end
+
+					-- Reset `control' to an acceptable value.
+				control := 0
 			end
 		end
 
@@ -1249,7 +1252,7 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
 	indexes_map: SPECIAL [INTEGER]
 			-- Indexes of items in `content', and `keys'.
-			-- If item is not present, then it has `ht_mpossible_position'.
+			-- If item is not present, then it has `ht_impossible_position'.
 			-- If item is deleted, then it has `ht_deleted_position'.
 
 	deleted_marks: SPECIAL [BOOLEAN]

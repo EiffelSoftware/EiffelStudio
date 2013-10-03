@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create object_indexes.make (1)
 			traversable := breadth_first_traversable
 			serializer := a_serializer
-			version := {SED_VERSIONS}.version_7_3
+			set_version ({SED_VERSIONS}.version_7_3)
 		ensure
 			serializer_set: serializer = a_serializer
 		end
@@ -186,6 +186,15 @@ feature {NONE} -- Implementation: Access
 	version: NATURAL_32
 			-- Internal version of the format (See SED_VERSIONS for possible values).
 
+feature {NONE} -- Implementation: Setting
+
+	set_version (v: like version)
+			-- Set `version' with `v'.
+			--| No contracts because it can be redefined in descendants to not do anything.
+		do
+			version := v
+		end
+
 feature {NONE} -- Status report
 
 	is_store_settings_enabled: BOOLEAN
@@ -220,7 +229,7 @@ feature {NONE} -- Implementation
 				--| Note:
 				--| Because versioning was added after the initial release of SED, in order
 				--| to not break existing storables, SED_INDEPENDENT_DESERIALIZER does not support
-				--| the reading of a version by redefining `is_version_stored' accordingly.
+				--| the reading of a version by redefining `is_store_settings_enabled' accordingly.
 			if is_store_settings_enabled then
 				serializer.write_compressed_natural_32 (version)
 					-- Store whether or not we have some reference with copy semantics.
@@ -898,46 +907,51 @@ feature {NONE} -- Implementation
 			l_ser: like serializer
 			l_has_copy_semantics: BOOLEAN
 		do
-				-- Check if there are any references with copy semantics
-			from
-				nb := a_spec.count
-				l_reflected_object := reflected_object
-				l_reflected_object.set_object (a_spec)
-			until
-				i = nb
-			loop
-				if l_reflected_object.is_special_copy_semantics_item (i) then
-					i := nb - 1
-					l_has_copy_semantics := True
-				end
-				i := i + 1
-			end
-
 			l_ser := serializer
+			nb := a_spec.count
 			l_ser.write_compressed_integer_32 (nb)
-			l_ser.write_boolean (l_has_copy_semantics)
-			if l_has_copy_semantics then
+			
+			if version >= {SED_VERSIONS}.version_7_3 then
+					-- Check if there are any references with copy semantics
 				from
-					i := 0
+					l_reflected_object := reflected_object
+					l_reflected_object.set_object (a_spec)
 				until
 					i = nb
 				loop
 					if l_reflected_object.is_special_copy_semantics_item (i) then
-							-- Mark that it is a reference with copy semantics.
-						l_ser.write_boolean (True)
-							-- Provide the dynamic type for that reference.
-						l_exp := l_reflected_object.special_copy_semantics_item (i)
-							-- We encode the object as if it was an expanded one.
-							-- To ensure retrieval in case of a mismatch, we store the dynamic type too.
-						l_ser.write_compressed_integer_32 (l_exp.dynamic_type)
-						encode_normal_object (l_exp)
-					else
-						l_ser.write_boolean (False)
-						encode_reference (a_spec.item (i))
+						l_has_copy_semantics := True
+							-- Jump out of loop
+						i := nb - 1
 					end
 					i := i + 1
 				end
-			else
+
+				l_ser.write_boolean (l_has_copy_semantics)
+				if l_has_copy_semantics then
+					from
+						i := 0
+					until
+						i = nb
+					loop
+						if l_reflected_object.is_special_copy_semantics_item (i) then
+								-- Mark that it is a reference with copy semantics.
+							l_ser.write_boolean (True)
+								-- Provide the dynamic type for that reference.
+							l_exp := l_reflected_object.special_copy_semantics_item (i)
+								-- We encode the object as if it was an expanded one.
+								-- To ensure retrieval in case of a mismatch, we store the dynamic type too.
+							l_ser.write_compressed_integer_32 (l_exp.dynamic_type)
+							encode_normal_object (l_exp)
+						else
+							l_ser.write_boolean (False)
+							encode_reference (a_spec.item (i))
+						end
+						i := i + 1
+					end
+				end
+			end
+			if not l_has_copy_semantics then
 					-- More compact way to write a special of reference
 					-- that contains no references with copy semantics.
 				from

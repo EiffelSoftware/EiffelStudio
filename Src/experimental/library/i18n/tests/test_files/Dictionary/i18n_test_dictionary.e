@@ -93,7 +93,7 @@ feature {NONE} -- set current_folder
 
 	directory_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER): STRING
 		do
-			Result := t.generating_type + "_TEST_WITH_PLURAL_FORM_"+plural_form.out+"_WITH_DATALENGTH_"+datalength.out+"_WITH_SEED_"+seed.out
+			Result := t.generating_type + "_PF"+plural_form.out+"_LEN"+datalength.out+"_S"+seed.out
 		end
 
 	set_current_folder (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER)
@@ -458,7 +458,7 @@ feature {NONE} -- access
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

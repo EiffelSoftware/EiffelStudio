@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			disable_dashed_line_style
 			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
+			disable_anti_aliasing
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -161,8 +162,8 @@ feature -- Element change
 				l_internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				internal_set_color (True, a_color.red, a_color.green, a_color.blue)
 			end
+			internal_set_color (True, a_color.red, a_color.green, a_color.blue)
 		end
 
 	set_line_width (a_width: INTEGER)
@@ -174,31 +175,43 @@ feature -- Element change
 			line_width := a_width
 		end
 
+	disable_anti_aliasing
+			-- Turn off anti-aliasing for cairo context.
+		do
+			if drawable /= default_pointer then
+				{CAIRO}.cairo_set_antialias (drawable, {CAIRO}.cairo_antialias_none)
+			end
+		end
+
 	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_mode'.
 		do
 			if drawable /= default_pointer then
-				inspect
-					a_mode
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
-					{CAIRO}.cairo_set_operator (drawable, {CAIRO}.cairo_operator_source)
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
-					-- CAIRO_OPERATOR_XOR
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
-
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
-					-- CAIRO_OPERATOR_AND
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
-
-				else
-					check
-						drawing_mode_existent: False
-					end
-				end
+				internal_set_drawing_mode (drawable, a_mode)
 			end
-
 				-- Store set drawing mode.
 			drawing_mode := a_mode
+		end
+
+	internal_set_drawing_mode (a_drawable: POINTER; a_drawing_mode: INTEGER)
+		do
+			inspect
+				a_drawing_mode
+			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
+				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_over)
+			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
+				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_xor)
+			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
+				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_difference)
+			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
+				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_add)
+			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
+
+			else
+				check
+					drawing_mode_exists: False
+				end
+			end
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE)
@@ -487,24 +500,17 @@ feature -- Drawing operations
 	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
 		local
---			a_pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
---			l_pixels: POINTER
---			l_rowstride: NATURAL
---			l_back_buffer: POINTER
+			l_drawable: POINTER
 		do
---			a_pixbuf_imp ?= a_pixel_buffer.implementation
---			check a_pixbuf_imp /= Void end
---			if supports_pixbuf_alpha then
---				{GTK2}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
---			else
---					-- We need to retrieve the source pixmap, composite and then reblit to the same area.
---				l_back_buffer := pixbuf_from_drawable_at_position (a_x, a_y, 0, 0, area.width, area.height)
---				{GTK2}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
---				l_pixels := {GTK}.gdk_pixbuf_get_pixels (l_back_buffer)
---				l_rowstride := {GTK}.gdk_pixbuf_get_rowstride (l_back_buffer)
---				{GTK}.gdk_draw_rgb_32_image (drawable, gc, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
---				{GTK2}.g_object_unref (l_back_buffer)
---			end
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer and then attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_pixel_buffer_imp then
+				{CAIRO}.cairo_save (l_drawable)
+				{GTK}.gdk_cairo_set_source_pixbuf (l_drawable, l_pixel_buffer_imp.gdk_pixbuf, area.x, area.y)
+				{CAIRO}.cairo_rectangle (l_drawable, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height)
+				{CAIRO}.cairo_fill (l_drawable)
+				{CAIRO}.cairo_restore (l_drawable)
+				release_drawable (l_drawable)
+			end
 		end
 
 	supports_pixbuf_alpha: BOOLEAN
@@ -542,15 +548,15 @@ feature -- Drawing operations
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		local
---			pix_imp: detachable EV_PIXMAP_IMP
---			a_pix: POINTER
+			pix_imp: detachable EV_PIXMAP_IMP
+			a_pix: POINTER
 		do
 			create Result
---			pix_imp ?= Result.implementation
---			check pix_imp /= Void end
---			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
---			pix_imp.set_pixmap_from_pixbuf (a_pix)
---			{GTK2}.g_object_unref (a_pix)
+			pix_imp ?= Result.implementation
+			check pix_imp /= Void end
+			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
+			pix_imp.set_pixmap_from_pixbuf (a_pix)
+			{GTK2}.g_object_unref (a_pix)
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
@@ -896,7 +902,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

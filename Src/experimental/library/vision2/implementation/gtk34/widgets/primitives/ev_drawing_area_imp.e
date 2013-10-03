@@ -200,13 +200,15 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_red, l_green, l_blue: REAL_64
 		do
-			{CAIRO}.cairo_set_line_width (a_drawable, line_width.to_double)
+			{CAIRO}.cairo_set_antialias (a_drawable, {CAIRO}.cairo_antialias_none)
+			{CAIRO}.cairo_set_line_width (a_drawable, line_width)
 			if attached internal_foreground_color as l_internal_foreground_color then
 				l_red := l_internal_foreground_color.red
 				l_green := l_internal_foreground_color.green
 				l_blue := l_internal_foreground_color.blue
 			end
 			{CAIRO}.cairo_set_source_rgb (a_drawable, l_red, l_green, l_blue)
+			internal_set_drawing_mode (a_drawable, drawing_mode)
 		end
 
 	internal_set_focus

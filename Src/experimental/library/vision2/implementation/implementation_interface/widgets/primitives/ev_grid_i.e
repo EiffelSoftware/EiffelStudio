@@ -4456,8 +4456,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 											-- and propagate to the next available item if not at the first (unless shift is pressed) or last (unless shift not pressed).
 						end
 					end
-
-			create drawer_internal.make_with_grid (Current)
 			set_state_flag (interface_is_initialized_flag, False)
 		end
 

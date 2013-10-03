@@ -668,7 +668,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			not_void: Result /= Void
 		end
 
-	drag_offset: INTEGER = 1
+	drag_offset: INTEGER = 3
 			-- How many pixels user's pointer moved before calling drag actions
 
 feature {NONE} -- Implementation

@@ -17,6 +17,7 @@ inherit
 	EV_GTK_WINDOW_IMP
 		redefine
 			interface,
+			make,
 			default_wm_decorations,
 			blocking_condition,
 			show_modal_to_window
@@ -24,10 +25,14 @@ inherit
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
 
---	EV_DIALOG_CONSTANTS
---		export
---			{NONE} all
---		end
+feature {NONE} -- Initialization
+
+	make
+			--<Precursor>
+		do
+			real_signal_connect (c_object, "response", agent (App_implementation.gtk_marshal).gtk_dialog_response_intermediary (c_object, ?), agent (app_implementation.gtk_marshal).gtk_value_int_to_tuple)
+			Precursor
+		end
 
 feature -- Access
 
@@ -51,17 +56,12 @@ feature -- Status setting
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.
 		do
-			user_clicked_ok := False
 			selected_button := Void
-
 			Precursor (a_window)
-
-			if attached selected_button as l_selected_button then
-				if l_selected_button.is_equal (internal_accept) then
-					ok_actions.call (Void)
-				elseif ev_cancel.is_equal (l_selected_button) then
-					cancel_actions.call (Void)
-				end
+			if user_clicked_ok then
+				ok_actions.call (Void)
+			else
+				cancel_actions.call (Void)
 			end
 		end
 
@@ -79,15 +79,7 @@ feature {EV_GTK_WIDGET_IMP} -- Implementation
 	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 			-- `a_key' has either been pressed or released
 		do
-			if a_key /= Void then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
-					on_cancel
-				else
-					if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-						on_ok
-					end
-				end
-			end
+			-- Default Dialog Key handling handled by "response" signal.
 		end
 
 feature {NONE} -- Implementation
@@ -122,7 +114,10 @@ feature {NONE} -- Implementation
 		end
 
 	user_clicked_ok: BOOLEAN
-		-- Has the user explicitly cancelled the dialog.
+			-- Has the user clicked the default action button of the dialog.
+		do
+			Result := selected_button = internal_accept
+		end
 
 	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
@@ -136,10 +131,18 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
+	on_response (a_response_id: INTEGER)
+		do
+			if a_response_id = {GTK2}.gtk_response_ok_enum then
+				on_ok
+			else
+				on_cancel
+			end
+		end
+
 	on_ok
 			-- Close window and call action sequence.
 		do
-			user_clicked_ok := True
 			selected_button := internal_accept
 			hide
 		end

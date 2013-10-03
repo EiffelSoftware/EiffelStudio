@@ -31,19 +31,12 @@ feature -- Access
 			-- Result of last call, if any
 
 	call (args: detachable separate OPEN_ARGS)
-		local
-			l_closed_count: INTEGER
-			c: like closed_operands
+			-- <Precursor>
 		do
-			c := closed_operands
-			if c/= Void then
-				l_closed_count :=  c.count
-			end
-			last_result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
+			last_result := item (args)
 		end
 
-	item (args: detachable separate OPEN_ARGS): RESULT_TYPE
+	item alias "[]" (args: detachable separate OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -61,16 +54,8 @@ feature -- Access
 
 	apply
 			-- Call function with `operands' as last set.
-		local
-			l_closed_count: INTEGER
-			c: like closed_operands
 		do
-			c := closed_operands
-			if c/= Void then
-				l_closed_count :=  c.count
-			end
-			last_result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $operands, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
+			last_result := item (operands)
 		end
 
 feature -- Comparison
@@ -113,6 +98,27 @@ feature -- Removal
 			l_result: detachable RESULT_TYPE
 		do
 			last_result := l_result
+		end
+
+feature -- Extended operations
+
+	flexible_item (a: detachable separate TUPLE): RESULT_TYPE
+			-- Result of calling function with `a' as arguments.
+			-- Compared to `item' the type of `a' may be different from `{OPEN_ARGS}'.
+		require
+			valid_operands: valid_operands (a)
+		local
+			default_arguments: detachable OPEN_ARGS
+		do
+			if not attached a then
+				Result := item (default_arguments)
+			else
+				check
+					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+				then
+					Result := item (x)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

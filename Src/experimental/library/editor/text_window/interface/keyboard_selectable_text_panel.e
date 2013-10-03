@@ -141,6 +141,12 @@ feature -- Query
 			end
 		end
 
+	token_at_screen (x, y: INTEGER): detachable EDITOR_TOKEN
+			-- Token at screen position (x, y)
+		do
+			Result := token_at (x - editor_drawing_area.screen_x - left_margin_width, y - editor_drawing_area.screen_y - editor_viewport.y_offset)
+		end
+
 feature -- Cursor Management
 
 	check_cursor_position
@@ -365,6 +371,106 @@ feature -- Status Setting
 			auto_scroll := a_auto_scroll
 		ensure
 			auto_scroll_set: auto_scroll = a_auto_scroll
+		end
+
+	set_link_between (a_start_char_pos, a_end_char_pos: INTEGER; a_link: BOOLEAN; a_pebble: ANY)
+			-- Enable link between positions.
+		require
+			start_char_valid: a_start_char_pos <= text_displayed.text_length and then a_start_char_pos > 0
+			end_char_valid: a_end_char_pos <= text_displayed.text_length and then a_end_char_pos >= a_start_char_pos
+		local
+			l_cursor: like text_displayed.cursor
+			l_token: detachable EDITOR_TOKEN
+			l_start_token: EDITOR_TOKEN
+			l_end_token: EDITOR_TOKEN
+			l_start_pos_in_token: INTEGER
+			l_end_pos_in_token: INTEGER
+			l_token_1, l_token_2, l_token_3: EDITOR_TOKEN_TEXT
+			l_image: STRING_32
+			l_new_tokens: ARRAYED_LIST [EDITOR_TOKEN]
+			l_start_line, l_end_line: INTEGER
+			l_current_line: EDITOR_LINE
+		do
+			create l_cursor.make_from_integer (a_end_char_pos, text_displayed)
+			l_end_pos_in_token := l_cursor.pos_in_token
+			l_end_token := l_cursor.token
+			l_end_line := l_cursor.y_in_lines
+
+			l_cursor.set_from_integer (a_start_char_pos, text_displayed)
+			l_start_pos_in_token := l_cursor.pos_in_token
+			l_start_token := l_cursor.token
+			l_start_line := l_cursor.y_in_lines
+			l_current_line := l_cursor.line
+			create l_new_tokens.make (3)
+			from
+				l_token := l_start_token
+				if attached {EDITOR_TOKEN_TEXT} l_token as l_text_token then
+					if l_start_token = l_end_token then
+						l_image := l_text_token.wide_image
+						l_token_1 := l_text_token.twin
+						l_token_1.set_image (l_image.substring (1, l_start_pos_in_token - 1))
+						l_new_tokens.extend (l_token_1)
+
+						l_token_2 := l_text_token.twin
+						l_token_2.set_image (l_image.substring (l_start_pos_in_token, l_end_pos_in_token))
+						l_token_2.set_is_link (True)
+						l_token_2.set_pebble (a_pebble)
+						l_new_tokens.extend (l_token_2)
+
+						l_token_3 := l_text_token.twin
+						l_token_3.set_image (l_image.substring (l_end_pos_in_token + 1, l_image.count))
+						l_new_tokens.extend (l_token_3)
+						replace_token_by_tokens (l_start_token, l_new_tokens)
+					else
+						l_image := l_text_token.wide_image
+						l_token_1 := l_text_token.twin
+						l_token_1.set_image (l_image.substring (1, l_start_pos_in_token - 1))
+						l_new_tokens.extend (l_token_1)
+
+						l_token_2 := l_text_token.twin
+						l_token_2.set_image (l_image.substring (l_start_pos_in_token, l_image.count))
+						l_token_2.set_is_link (True)
+						l_token_2.set_pebble (a_pebble)
+						l_new_tokens.extend (l_token_2)
+						replace_token_by_tokens (l_start_token, l_new_tokens)
+						l_token := l_token.next
+					end
+				end
+			until
+				l_token = Void or else l_token = l_end_token
+			loop
+				l_token.set_is_link (True)
+				l_token.set_pebble (a_pebble)
+				if l_token.is_new_line then
+					l_token := Void
+					if attached l_current_line then
+						if attached l_current_line.next as l_line then
+							l_token := l_line.first_token
+							l_current_line.update_token_information
+							l_current_line := l_line
+						end
+					end
+				else
+					l_token := l_token.next
+				end
+			end
+			l_current_line.update_token_information
+
+			if l_start_token /= l_end_token and then attached {EDITOR_TOKEN_TEXT} l_end_token as l_text_token then
+				l_new_tokens.wipe_out
+				l_image := l_text_token.wide_image
+				l_token_1 := l_text_token.twin
+				l_token_1.set_image (l_image.substring (1, l_end_pos_in_token))
+				l_token_1.set_is_link (True)
+				l_token_1.set_pebble (a_pebble)
+				l_new_tokens.extend (l_token_1)
+
+				l_token_2 := l_text_token.twin
+				l_token_2.set_image (l_image.substring (l_start_pos_in_token, l_image.count))
+				l_new_tokens.extend (l_token_2)
+				replace_token_by_tokens (l_start_token, l_new_tokens)
+			end
+			invalidate_block (l_start_line, l_end_line, True)
 		end
 
 feature -- Observation
@@ -1291,6 +1397,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	line_at_screen_position (x, y: INTEGER): INTEGER
+			-- The line number of at (x, y) screen position.
+		do
+			Result := line_at_position (x - editor_drawing_area.screen_x - left_margin_width, y - editor_drawing_area.screen_y - editor_viewport.y_offset)
+		end
+
 	token_in_line (x: INTEGER; a_line: like line_type): TUPLE [token: detachable EDITOR_TOKEN; distance: INTEGER]
 			-- Token in `a_line' at `x' position, and distance from the beginning of the token to `x'.
 		require
@@ -1315,6 +1427,38 @@ feature {NONE} -- Implementation
 				end
 			end
 			Result := [pointed_token, current_width]
+		end
+
+	replace_token_by_tokens (a_token: EDITOR_TOKEN; a_tokens: ARRAYED_LIST [EDITOR_TOKEN])
+			-- Replace `a_token' with `a_tokens'.
+		local
+			l_before_token, l_after_token, l_token, l_next_token: detachable EDITOR_TOKEN
+		do
+			if not a_tokens.is_empty then
+				l_before_token := a_token.previous
+				l_after_token := a_token.next
+				from
+					if l_before_token /= Void then
+						l_before_token.set_next_token (a_tokens.first)
+					end
+					a_tokens.first.set_previous_token (l_before_token)
+					a_tokens.start
+				until
+					a_tokens.after
+				loop
+					l_token := a_tokens.item
+					if a_tokens.index = a_tokens.count then
+						l_next_token := l_after_token
+					else
+						l_next_token := a_tokens.i_th (a_tokens.index + 1)
+					end
+					l_token.set_next_token (l_next_token)
+					if l_next_token /= Void then
+						l_next_token.set_previous_token (l_token)
+					end
+					a_tokens.forth
+				end
+			end
 		end
 
 feature -- Clipboard

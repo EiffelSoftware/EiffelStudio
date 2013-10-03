@@ -10,6 +10,9 @@ note
 class
 	SED_INDEPENDENT_DESERIALIZER
 
+obsolete
+	"Use SED_RECOVERABLE_DESERIALIZER instead."
+
 inherit
 	SED_BASIC_DESERIALIZER
 		redefine

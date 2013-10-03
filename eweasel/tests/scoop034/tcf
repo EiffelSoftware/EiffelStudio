@@ -1,0 +1,18 @@
+test_name	scoop-corrupted-polymorphic-call
+test_description Show a bug where a polymorphic call in a generic class that have both a reference and expanded derivation is wrong.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	root_class.e	$CLUSTER root_class.e
+copy_raw	process_worker.e	$CLUSTER process_worker.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_raw	test2.e	$CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

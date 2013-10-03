@@ -2781,12 +2781,14 @@ test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop terminatio
 test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop execution multithreaded
 test	scoop-expanded-separate				scoop025 tcf pass scoop expanded execution multithreaded
 test	scoop-unnested-logging				scoop026 tcf pass scoop execution multithreaded
-test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop execution multithreaded
+test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop lock_passing execution multithreaded
 test	scoop-sequential-processor-creation		scoop028 tcf pass scoop execution multithreaded
 test	scoop-recursive-processor-creation		scoop029 tcf pass scoop execution multithreaded
 test	scoop-agent-validity				scoop030 tcf pass scoop validity expanded agents conformance multithreaded
 test	scoop-agent-call				scoop031 tcf pass scoop agents execution multithreaded
 test	scoop-corrupted-string			scoop032 tcf pass scoop execution multithreaded
+test	scoop-lock-passing-same-target	scoop033 tcf pass scoop lock_passing execution multithreaded
+test	scoop-corrupted-polymorphic-call scoop034 tcf pass scoop execution multithreaded
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

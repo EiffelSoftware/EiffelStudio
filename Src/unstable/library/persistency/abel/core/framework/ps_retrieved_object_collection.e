@@ -22,8 +22,16 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 	primary_key: INTEGER
 			-- The retrieved collection's primary key, as used in the database.
 
+	metadata: PS_TYPE_METADATA
+			-- The type of the current collection.
+
 	class_metadata: PS_CLASS_METADATA
 			-- Some metadata information about the generating class of the collection.
+		obsolete
+			"use metadata.base_class"
+		do
+			Result := metadata.base_class
+		end
 
 	information_descriptions: LIST [STRING]
 			-- Get all descriptions which have an information value.
@@ -67,17 +75,17 @@ feature {NONE}
 	additional_information_hash: HASH_TABLE [STRING, STRING]
 			-- The internal store for additional information.
 
-	make (key: INTEGER; meta: PS_CLASS_METADATA)
+	make (key: INTEGER; meta: PS_TYPE_METADATA)
 			-- Initialize `Current'
 		do
 			primary_key := key
-			class_metadata := meta
+			metadata := meta
 			create additional_information_hash.make (10)
 			create {LINKED_LIST [STRING]} information_descriptions.make
 			create collection_items.make
 		ensure
 			primary_key_set: primary_key = key
-			metadata_set: class_metadata.is_equal (meta)
+			metadata_set: metadata.is_equal (meta)
 			additional_info_empty: additional_information_hash.is_empty
 			collection_items_empty: collection_items.is_empty
 		end

@@ -71,7 +71,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 				row_cursor.after
 			loop
 					-- create new object
-				create current_obj.make (row_cursor.item.at (SQL_Strings.Value_table_id_column).to_integer, type.base_class)
+				create current_obj.make (row_cursor.item.at (SQL_Strings.Value_table_id_column).to_integer, type)
 					-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
 				from
 				until
@@ -191,7 +191,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			check
 				not_implemented: False
 			end
-			create Result.make (collection_primary_key, collection_type.base_class)
+			create Result.make (collection_primary_key, collection_type)
 		end
 
 	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)

@@ -13,7 +13,7 @@ inherit
 
 	PS_NEW_BACKEND
 		rename
-			is_object_write_successful as is_successful_write
+--			is_object_write_successful as is_successful_write
 		end
 
 	PS_COLLECTION_BACKEND
@@ -133,7 +133,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 		deferred
 		ensure
 			object_known: key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)
-			object_written: is_successful_write (an_object, a_transaction)
+--			object_written: is_successful_write (an_object, a_transaction)
 		end
 
 	update (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
@@ -145,7 +145,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 		deferred
 		ensure
 			object_still_known: key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)
-			object_written: is_successful_write (an_object, a_transaction)
+--			object_written: is_successful_write (an_object, a_transaction)
 		end
 
 	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)

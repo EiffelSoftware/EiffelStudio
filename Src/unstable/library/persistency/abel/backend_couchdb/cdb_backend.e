@@ -88,7 +88,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			err_in_get: BOOLEAN
 		do
 			create Result.make
-			create current_obj.make (0, type.base_class)
+			create current_obj.make (0, type)
 			err_in_get := false
 			across
 				primary_keys as id
@@ -103,9 +103,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 					elseif not err_in_get then
 						if attr.item.first.is_equal ("_id") then
 							if attr.item.second.is_integer then
-								create current_obj.make (attr.item.second.to_integer, type.base_class)
+								create current_obj.make (attr.item.second.to_integer, type)
 							else
-								create current_obj.make (0, type.base_class)
+								create current_obj.make (0, type)
 							end
 						elseif not attr.item.first.starts_with ("_") then
 							current_obj.add_attribute (attr.item.first, attr.item.second, type.attribute_type (attr.item.first).base_class.name)
@@ -297,7 +297,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			check
 				not_implemented: False
 			end
-			create Result.make (collection_primary_key, collection_type.base_class)
+			create Result.make (collection_primary_key, collection_type)
 		end
 
 	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)

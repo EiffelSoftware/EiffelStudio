@@ -8,10 +8,15 @@ class
 	PS_ESCHER_TEST
 
 inherit
-
+	
 	EQA_TEST_SET
 		redefine
 			on_prepare
+		end
+
+	PS_EIFFELSTORE_EXPORT
+		undefine
+			default_create
 		end
 
 feature
@@ -132,7 +137,8 @@ feature {NONE}
 
 	test_data: PS_TEST_DATA
 
-	escher_integration: PS_VERSION_HANDLER
+--	escher_integration: PS_VERSION_HANDLER
+	escher_integration: PS_VERSIONING_PLUGIN
 
 	schema_evolution_manager: SCHEMA_EVOLUTION_PROJECT_MANAGER
 
@@ -144,9 +150,14 @@ feature {NONE}
 		do
 			create real_backend.make
 			create schema_evolution_manager.make
-			-- create escher_integration.make (real_backend)
-			create escher_integration.make (real_backend, schema_evolution_manager.schema_evolution_handler)
-			create repo.make (escher_integration)
+
+--			create escher_integration.make (real_backend, schema_evolution_manager.schema_evolution_handler)
+--			create repo.make (escher_integration)
+
+			create escher_integration.make (schema_evolution_manager.schema_evolution_handler)
+			real_backend.add_plug_in (escher_integration)
+			create repo.make (real_backend)
+
 			create executor.make (repo)
 			create test_data.make
 		end

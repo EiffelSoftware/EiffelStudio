@@ -136,7 +136,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 		local
 			info: HASH_TABLE [STRING, STRING]
 		do
-			create Result.make (collection_primary_key, collection_type.base_class)
+			create Result.make (collection_primary_key, collection_type)
 			across
 				get_ordered_collection (collection_primary_key) as cursor
 			loop
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation - Loading and storing objects
 				keys as obj_primary
 			loop
 				if has_object (type.base_class.name, obj_primary.item) then
-					create current_obj.make (obj_primary.item, type.base_class)
+					create current_obj.make (obj_primary.item, type)
 					across
 						attributes as cursor
 					loop

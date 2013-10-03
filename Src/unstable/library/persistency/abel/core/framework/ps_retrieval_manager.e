@@ -404,16 +404,24 @@ feature {NONE} -- Implementation: Collection handlers
 
 feature {NONE} -- Implementation: Query initialization
 
-	initialize_query (query: PS_QUERY [ANY]; attributes: LIST [STRING]; transaction: PS_TRANSACTION)
+	initialize_query (query: PS_QUERY [ANY]; some_attributes: LIST [STRING]; transaction: PS_TRANSACTION)
 			-- Initialize query - Set an identifier, initialize with bookkeeping manager and execute against backend.
 		local
 			results: ITERATION_CURSOR [ANY]
 			bookkeeping_table: HASH_TABLE [ANY, INTEGER]
 			type: PS_TYPE_METADATA
+			attributes: LIST [STRING]
 		do
 			query.set_identifier (new_query_identifier)
 			query.register_as_executed (transaction)
 			type := metadata_manager.create_metadata_from_type (query.generic_type)
+
+			if some_attributes.is_empty then
+				attributes := type.attributes
+			else
+				attributes := some_attributes
+			end
+
 			if has_handler (type) then
 				if backend.is_generic_collection_supported then
 					results := attach(backend.default_collection_backend).retrieve_all (type, transaction)

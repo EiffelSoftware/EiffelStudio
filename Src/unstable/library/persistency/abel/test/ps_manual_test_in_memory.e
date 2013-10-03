@@ -43,20 +43,20 @@ feature
 			crud_tests.all_collection_tests
 		end
 
-	test_transaction_lost
-		do
-			transaction_tests.test_no_lost_update
-		end
+--	test_transaction_lost
+--		do
+--			transaction_tests.test_no_lost_update
+--		end
 
-	test_transaction_dirty
-		do
-			transaction_tests.test_no_dirty_reads
-		end
+--	test_transaction_dirty
+--		do
+--			transaction_tests.test_no_dirty_reads
+--		end
 
-	test_transaction_repeatable_read
-		do
-			transaction_tests.test_repeatable_read
-		end
+--	test_transaction_repeatable_read
+--		do
+--			transaction_tests.test_repeatable_read
+--		end
 
 	test_object_graph_write_settings
 		do

@@ -157,13 +157,12 @@ Test linear-subset-operations (set008): failed
 
 Test linked-set-operations (set009): failed
 	Description: Various operations of LINKED_SET.
-	Execution error in file C:\work\eweasel\eweasel\tests\set009\tcf at line 9
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
+	Execution error in file C:\work\eweasel\eweasel\tests\set009\tcf at line 11
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
 	Actual result:
-		Syntax error in class TEST at line 69
-		Final status:  paused 
+		Final status:  silent_failure 
 	Expected result:
 		Final status:  completed 
 
@@ -1692,29 +1691,7 @@ Test bogus-vsrp3-with-require-else-false (valid269): failed
 		Validity error code VSRP(3)
 		Final status:  paused 
 
-Test spurious-vuot-in-assertion (valid270): failed
-	Description: A reference to a nonexistent feature of an object test local in an assertion causes the compiler to report a VEEN error but it also reports a spurious VUOT(1) error on the object test local
-	Execution error in file C:\work\eweasel\eweasel\tests\valid270\tcf at line 10
-	Original text:    compile_result validity_error TEST2 VEEN VEEN VEEN VEEN
-	Substituted text: compile_result validity_error TEST2 VEEN VEEN VEEN VEEN
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST2 code VEEN
-		Validity error in class TEST2 code VEEN
-		Validity error in class TEST2 code VEEN
-		Validity error in class TEST2 code VEEN
-		Validity error in class TEST2 code VUOT(1)
-		Validity error in class TEST2 code VUOT(1)
-		Validity error in class TEST2 code VUOT(1)
-		Validity error in class TEST2 code VUOT(1)
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST2 code VEEN
-		Validity error in class TEST2 code VEEN
-		Validity error in class TEST2 code VEEN
-		Validity error in class TEST2 code VEEN
-		Final status:  paused 
-
+Test spurious-vuot-in-assertion (valid270): passed
 Test spurious-vweq-warning (valid271): passed
 Test non-conforming-missing-vmss3 (valid272): failed
 	Description: Compiler should report a VMSS(3) error (select clause not needed) on a class that inherits from a parent class via both conforming and non-conforming inheritance and renames a feature and selects the feature in the conforming inheritance clause
@@ -1923,58 +1900,170 @@ Test svalid-inherit-like-argument (svalid032): failed
 Test simple-catcall (catcall001): passed
 Test simple-catcall-generic (catcall002): failed
 	Description: Simple detection of a catcall involving call of feature with generic formal arguments which is only allowed on non-variant actual generic parameter.
-	Execution error in file C:\work\eweasel\eweasel\tests\catcall002\tcf at line 11
+	Execution error in file C:\work\eweasel\eweasel\tests\catcall002\tcf at line 10
 	Original text:    compile_result ok
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Validity error code Catcall
 		Validity error in class TEST code Catcall
-		Final status:  completed 
+		Final status:  paused 
 	Expected result:
 		Final status:  completed 
 
 Test catcall-check-failure-recursive-generic (catcall003): failed
 	Description: Simple detection of a catcall where target of the call involves a recursive constraint generic crashes the catcall checker.
 	Execution error in file C:\work\eweasel\eweasel\tests\catcall003\tcf at line 13
-	Original text:    compile_result validity_warning TEST_ARRAY Catcall; TEST Catcall Catcall Catcall Catcall Catcall; NONE Catcall
-	Substituted text: compile_result validity_warning TEST_ARRAY Catcall; TEST Catcall Catcall Catcall Catcall Catcall; NONE Catcall
+	Original text:    compile_result validity_error TEST_ARRAY Catcall; TEST1 Catcall ; TEST Catcall Catcall Catcall Catcall Catcall
+	Substituted text: compile_result validity_error TEST_ARRAY Catcall; TEST1 Catcall ; TEST Catcall Catcall Catcall Catcall Catcall
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Syntax error in class TEST at line 12
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST1 code Catcall
+		Validity error in class TEST_ARRAY code Catcall
 		Final status:  paused 
 	Expected result:
-		Validity error code Catcall
 		Validity error in class TEST code Catcall
 		Validity error in class TEST code Catcall
 		Validity error in class TEST code Catcall
 		Validity error in class TEST code Catcall
 		Validity error in class TEST code Catcall
+		Validity error in class TEST1 code Catcall
 		Validity error in class TEST_ARRAY code Catcall
-		Final status:  completed 
+		Final status:  paused 
 
 Test catcall-generic (catcall004): failed
 	Description: Detection of a catcall involving call of feature with generic formal arguments.
-	Execution error in file C:\work\eweasel\eweasel\tests\catcall004\tcf at line 12
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
+	Execution error in file C:\work\eweasel\eweasel\tests\catcall004\tcf at line 14
+	Original text:    compile_result validity_error TEST Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall ; TEST VGCC(3) ; TEST VJAR VJAR VJAR VJAR ; TEST VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2)
+	Substituted text: compile_result validity_error TEST Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall ; TEST VGCC(3) ; TEST VJAR VJAR VJAR VJAR ; TEST VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2)
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Syntax error in class TEST at line 11
+		Validity error in class A code Catcall
+		Validity error in class A code Catcall
+		Validity error in class MY_ARRAYED_LIST code Catcall
+		Validity error in class MY_ARRAYED_LIST code Catcall
+		Validity error in class MY_LIST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code VJAR
+		Validity error in class TEST code VJAR
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST1 code Catcall
+		Validity error in class TEST1 code Catcall
+		Validity error in class TEST1 code Catcall
+		Validity error in class TEST1 code Catcall
+		Validity error in class TEST1 code Catcall
+		Validity error in class TEST1 code Catcall
 		Final status:  paused 
 	Expected result:
-		Final status:  completed 
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code VGCC(3)
+		Validity error in class TEST code VJAR
+		Validity error in class TEST code VJAR
+		Validity error in class TEST code VJAR
+		Validity error in class TEST code VJAR
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUAR(2)
+		Final status:  paused 
 
 Test catcall-generic-numeric (catcall005): failed
 	Description: Showing limitation of potential catcall detection algorithm with generic using NUMERIC.
-	Execution error in file C:\work\eweasel\eweasel\tests\catcall005\tcf at line 12
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
+	Execution error in file C:\work\eweasel\eweasel\tests\catcall005\tcf at line 9
+	Original text:    compile_result validity_error TEST Catcall; X Catcall
+	Substituted text: compile_result validity_error TEST Catcall; X Catcall
+	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  silent_failure 
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Validity error in class X code Catcall
+		Final status:  paused 
 	Expected result:
-		Final status:  completed 
+		Validity error in class TEST code Catcall
+		Validity error in class X code Catcall
+		Final status:  paused 
 
 Test catcall-at-runtime-detection (catcall006): failed
 	Description: Showing limitation of catcall detection at runtime when you have a routine involving `like Current' we still need to check for catcalls if there is an attribute assignment.
@@ -1999,6 +2088,32 @@ Test catcall-on-tuple-insertion (catcall009): failed
 		Final status:  silent_failure 
 	Expected result:
 		Final status:  completed 
+
+Test simple-catcall-2 (catcall010): failed
+	Description: A catcall should be reported when performing a call with the wrong argument type in descendants.
+	Execution error in file C:\work\eweasel\eweasel\tests\catcall010\tcf at line 13
+	Original text:    compile_result validity_error TEST Catcall
+	Substituted text: compile_result validity_error TEST Catcall
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code Catcall
+		Validity error in class TEST code Catcall
+		Final status:  paused 
+	Expected result:
+		Validity error in class TEST code Catcall
+		Final status:  paused 
+
+Test catcall-on-tuple-insertion-2 (catcall011): failed
+	Description: A catcall should be reported when inserting a wrong type of element in a TUPLE at compile time.
+	Execution error in file C:\work\eweasel\eweasel\tests\catcall011\tcf at line 8
+	Original text:    compile_result validity_error TEST Catcall
+	Substituted text: compile_result validity_error TEST Catcall
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Validity error in class TEST code Catcall
+		Final status:  paused 
 
 Test vlec-sneak (incr001): passed
 Test chg-inspect-const-type (incr002): passed
@@ -2390,7 +2505,7 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	Version 7.3.0.0 GPL Edition - dotnet
+	Version 13.11.9.2960 GPL Edition - dotnet
 	
 	There is already a project compiled in "C:\work\eweasel\test_dotnet\incr226"
 	It needs to be deleted before a precompilation.
@@ -3766,6 +3881,7 @@ Test weak-reference (runtime017): failed
 	Actual result: failure C_compilation_not_completed
 	Expected result: no_failure C_compilation_completed
 
+Test memory_leak_with_dynamic_dispatch (runtime018): passed
 Test cond-timedwait-failure (thread001): passed
 Test nested-thread-exit-failure (thread002): passed
 Test memory-leak-in-eif-thr-wait (thread003): passed
@@ -4357,17 +4473,7 @@ Test expanded-reverse-attachment (exec222): passed
 Test extended-agent-test (exec223): passed
 Test named-tuple-test (exec224): passed
 Test expanded-generic-use (exec225): passed
-Test generic-named-tuple (exec226): failed
-	Description: Access on a named tuple, when the tuple has a generic type as generic parameter
-	Execution error in file C:\work\eweasel\eweasel\tests\exec226\tcf at line 15
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
+Test generic-named-tuple (exec226): passed
 Test expanded-assignment-attempt (exec227): passed
 Test routine-valid-operands (exec228): failed
 	Description: Performing an assignment attempt on an expanded causes wrong code generation on .NET.
@@ -4842,6 +4948,18 @@ Test equality-operator-semantics (exec353): failed
 		Final status:  completed 
 
 Test agent-target-expanded (exec354): passed
+Test conditional-expression-smoke-test (exec355): failed
+	Description: Minimal set of tests for conditional expression.
+	Execution error in file C:\work\eweasel\eweasel\tests\exec355\tcf at line 8
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Syntax error in class TEST at line 11
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
 Test once-per-object-exec (once001): passed
 Test once-per-object-exec-with-exception (once002): passed
 Test once-per-object-redefinition (once003): passed
@@ -5488,6 +5606,7 @@ Test config-variables-with-same-name (config035): failed
 		Final status:  paused 
 
 Test config-library-with-uppercase (config036): passed
+Test config-cycled-library-dependency (config037): passed
 Test lace-no-cluster-props (lace003): passed
 Test lace-no-creation-proc (lace007): passed
 Test lace-empty-include-exclude (lace011): passed
@@ -6177,6 +6296,20 @@ Test validity-vaol1-basic (vaol101): passed
 Test validity-vaol2-basic (vaol201): passed
 Test validity-vuex2-in-multibranch (vuex201): passed
 Test bracket-expression-on-current (vwbr101): passed
+Test validity-vwce-basic (vwce001): failed
+	Description: Expressions in conditional expressions should be of the same type.
+	Execution error in file C:\work\eweasel\eweasel\tests\vwce001\tcf at line 8
+	Original text:    compile_result validity_error TEST VWCE VWCE
+	Substituted text: compile_result validity_error TEST VWCE VWCE
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Syntax error in class TEST at line 15
+		Final status:  paused 
+	Expected result:
+		Validity error in class TEST code VWCE
+		Validity error in class TEST code VWCE
+		Final status:  paused 
+
 Test validity-vwmq-string-conversion (vwmq001): passed
 Test lace-vd01-basic (vd01001): passed
 Test lace-vd04-basic (vd04001): passed
@@ -6623,14 +6756,16 @@ Test agent-basic-type-mismatch (agent012): failed
 Test agent-descendant-final-crash (agent013): failed
 	Description: Finalizing a system where you call an agent which is actually a descendant of PROCEDURE where `call' has been redefined would cause a crash at runtime.
 	Execution error in file C:\work\eweasel\eweasel\tests\agent013\tcf at line 9
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
+	Original text:    compile_result validity_warning TEST_PROC Obsolete Obsolete
+	Substituted text: compile_result validity_warning TEST_PROC Obsolete Obsolete
 	Reason: actual compilation result does not match expected result
 	Actual result:
 		Validity error in class TEST_PROC code VJAW
 		Validity error in class TEST_PROC code VJAW
 		Final status:  paused 
 	Expected result:
+		Validity error in class TEST_PROC code Obsolete
+		Validity error in class TEST_PROC code Obsolete
 		Final status:  completed 
 
 Test agent-third-formal-finalization (agent014): passed
@@ -6782,14 +6917,14 @@ Test attached-special-creation (attach069): passed
 Test stable-attribute-in-rescue (attach070): passed
 Test self-init-attribute-non-void-safe (attach071): failed
 	Description: The initializer for a self-initializing attribute is not called when system is compiled in non-void safe mode
-	Execution error in file C:\work\eweasel\eweasel\tests\attach071\tcf at line 12
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
+	Execution error in file C:\work\eweasel\eweasel\tests\attach071\tcf at line 11
+	Original text:    execute_result failed
+	Substituted text: execute_result failed
 	Reason: actual execution result does not match expected result
 	Actual result:
 		Final status:  silent_failure 
 	Expected result:
-		Final status:  completed 
+		Final status:  system_failed 
 
 Test default-create-missing-check (attach072): passed
 Test bogus-vevi-expanded-formal-generic (attach073): passed
@@ -6808,29 +6943,16 @@ Test empty-attribute-body-bogus-vevi (attach079): passed
 Test bogus-object-test (attach080): passed
 Test nonconforming-inheritance-bogus-vevi (attach081): failed
 	Description: An attribute with a body that is inherited via non-conforming inheritance causes the compiler to report a spurious VEVI error.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach081\tcf at line 11
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
+	Execution error in file C:\work\eweasel\eweasel\tests\attach081\tcf at line 14
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
 	Actual result:
-		Validity error in class TEST2 code VEVI
-		Final status:  paused 
+		Final status:  silent_failure 
 	Expected result:
 		Final status:  completed 
 
-Test repeated-inheritance-bogus-vevi (attach082): failed
-	Description: A routine that is repeatedly inherited and redefined into an attribute with a body causes the compiler to report a spurious VEVI error.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach082\tcf at line 12
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST3 code VEVI
-		Validity error in class TEST3 code VEVI
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test repeated-inheritance-bogus-vevi (attach082): passed
 Test self-initializing-attribute-gc (attach083): failed
 	Description: Self-initializing attribute should be stored correctly even if it evaluation triggers GC.
 	Execution error in file C:\work\eweasel\eweasel\tests\attach083\tcf at line 10
@@ -6991,18 +7113,7 @@ Test stable-attribute-assigner (attach091): passed
 Test mutual-self-init-attribute (attach092): passed
 Test indirect-self-init-attribute (attach093): passed
 Test initialization-error-suppression (attach094): passed
-Test nested-tuple-undetected-vevi (attach095): failed
-	Description: A type TUPLE [c: TUPLE [x: EXPANDED_TYPE]] allows a call to c.x when `c' is not guaranteed to be non-Void, but it should be a VEVI error.  This leads to a call on Void target in a void-safe system
-	Execution error in file C:\work\eweasel\eweasel\tests\attach095\tcf at line 11
-	Original text:    compile_result validity_error TEST1 VEVI
-	Substituted text: compile_result validity_error TEST1 VEVI
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Validity error in class TEST1 code VEVI
-		Final status:  paused 
-
+Test nested-tuple-undetected-vevi (attach095): passed
 Test missing-vevi-error-with-agent (attach096): passed
 Test void-safe-convert-to-generic (attach097): failed
 	Description: A conversion to a formal generic type should be accepted in both non-void safe and void-safe modes
@@ -7033,86 +7144,52 @@ Test targeted-expanded-type (attach098): failed
 		Validity error in class A code VEVI
 		Final status:  paused 
 
-Test targeted-object-call (attach099): failed
-	Description: An expression which is a target of an object call is targeted.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach099\tcf at line 13
-	Original text:    compile_result validity_error TEST VEVI VEVI
-	Substituted text: compile_result validity_error TEST VEVI VEVI
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VEVI
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Final status:  paused 
-
-Test targeted-equality-operand (attach100): failed
-	Description: An operand of an equality using ~ or /~  is targeted.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach100\tcf at line 13
-	Original text:    compile_result validity_error TEST VEVI VEVI
-	Substituted text: compile_result validity_error TEST VEVI VEVI
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VEVI
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Final status:  paused 
-
-Test targeted-assignment-source (attach101): failed
-	Description: A source of an assignment whose target is targeted is targeted.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach101\tcf at line 8
+Test targeted-object-call (attach099): passed
+Test targeted-equality-operand (attach100): passed
+Test targeted-assignment-source (attach101): passed
+Test targeted-actual-argument (attach102): passed
+Test vevi-not-detected (attach103): passed
+Test targeted-nested-current-access (attach104): passed
+Test initialization-in-postcondition (attach105): passed
+Test object-test-local-use-error (attach106): passed
+Test uninitialized-without-current (attach107): passed
+Test object-test-local-in-implication (attach108): failed
+	Description: Object test local should be available in implication after conjunction.
+	Execution error in file C:\work\eweasel\eweasel\tests\attach108\tcf at line 8
 	Original text:    compile_result ok
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEEN
 		Final status:  paused 
 	Expected result:
 		Final status:  completed 
 
-Test targeted-actual-argument (attach102): failed
-	Description: An actual argument corresponding to a targeted formal argument is targeted.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach102\tcf at line 14
-	Original text:    compile_result validity_error TEST VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI
-	Substituted text: compile_result validity_error TEST VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI VEVI
+Test object-test-local-in-conditional (attach109): failed
+	Description: Object test local in conditional expression follows the same rules as in conditional instruction.
+	Execution error in file C:\work\eweasel\eweasel\tests\attach109\tcf at line 8
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
+		Syntax error in class TEST at line 13
 		Final status:  paused 
 	Expected result:
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Final status:  paused 
-
-Test vevi-not-detected (attach103): failed
-	Description: An attached attribute with a postcondition but without a body and that is not created in the creation procedure should raise a VEVI error but does not.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach103\tcf at line 8
-	Original text:    compile_result validity_error	TEST VEVI
-	Substituted text: compile_result validity_error	TEST VEVI
-	Reason: actual compilation result does not match expected result
-	Actual result:
 		Final status:  completed 
+
+Test initialization-in-conditional (attach110): failed
+	Description: Initialization rules should be respected by conditional expression and instruction.
+	Execution error in file C:\work\eweasel\eweasel\tests\attach110\tcf at line 12
+	Original text:    compile_result validity_error TEST VEVI VEVI VEVI VEVI
+	Substituted text: compile_result validity_error TEST VEVI VEVI VEVI VEVI
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Syntax error in class TEST at line 44
+		Final status:  paused 
 	Expected result:
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
+		Validity error in class TEST code VEVI
 		Validity error in class TEST code VEVI
 		Final status:  paused 
 
@@ -7150,6 +7227,18 @@ Test attached-agent-procedure-conformance (conform007): passed
 Test attached-formal-creation (conform008): passed
 Test expanded-formal-conformance (conform009): passed
 Test formal-constraint-conformance (conform010): passed
+Test frozen-variant-conformance (conform011): failed
+	Description: Checking proper conformance of type system involving frozen and variant.
+	Execution error in file C:\work\eweasel\eweasel\tests\conform011\tcf at line 42
+	Original text:    compile_result validity_error TEST VJAR
+	Substituted text: compile_result validity_error TEST VJAR
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Validity error in class TEST code VJAR
+		Final status:  paused 
+
 Test basic-type-internal (reflection001): failed
 	Description: If you use {INTERNAL} to get the type of INTEGER using various method it should always return the same value.
 	Execution error in file C:\work\eweasel\eweasel\tests\reflection001\tcf at line 11
@@ -7180,16 +7269,16 @@ Test field-type-inconsistency (reflection005): failed
 Test storable-version-data (reflection006): passed
 Test copy-semantics-reflection (reflection007): failed
 	Description: Verify that we are able to inspect a set of objects using expanded or copy/semantics without causing any duplication. In addition of traversing, we also update the object content and verify that it has been properly updated.
-	Execution error in file C:\work\eweasel\eweasel\tests\reflection007\tcf at line 16
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
+	Execution error in file C:\work\eweasel\eweasel\tests\reflection007\tcf at line 19
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
 	Actual result:
-		Validity error in class TEST code VGCC(2)
-		Final status:  paused 
+		Final status:  silent_failure 
 	Expected result:
 		Final status:  completed 
 
+Test type-gc-crash (reflection008): passed
 Test qat-evaluation-order (anchor001): passed
 Test qat-redeclaration-check (anchor002): passed
 Test inherited-qat-failure (anchor003): passed
@@ -7937,6 +8026,42 @@ Test scoop-agent-call (scoop031): failed
 	Expected result:
 		Final status:  completed 
 
+Test scoop-corrupted-string (scoop032): failed
+	Description: Show a bug that string is corrupted when making from separate.
+	Execution error in file C:\work\eweasel\eweasel\tests\scoop032\tcf at line 9
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error code VD77
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test scoop-lock-passing-same-target (scoop033): failed
+	Description: Bug when lock passing is detected on the same processor as the target.
+	Execution error in file C:\work\eweasel\eweasel\tests\scoop033\tcf at line 11
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error code VD77
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test scoop-corrupted-polymorphic-call (scoop034): failed
+	Description: Show a bug where a polymorphic call in a generic class that have both a reference and expanded derivation is wrong.
+	Execution error in file C:\work\eweasel\eweasel\tests\scoop034\tcf at line 11
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error code VD77
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
 Test pretty-smoke-test (pretty001): passed
 Test pretty-explicit-creation-space (pretty002): passed
 Test pretty-argument-list-separators (pretty003): passed
@@ -8318,7 +8443,7 @@ Test consumable-attribute-usage-in-eiffel (dotnet103): failed
 	Substituted text: compile_result validity_error TEST VTCT
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  completed 
+		Final status:  aborted had_exception (Segmentation violation) 
 	Expected result:
 		Validity error in class TEST code VTCT
 		Final status:  paused 
@@ -8367,8 +8492,8 @@ Test dotnet-static-access-on-deferred (dotnet115): failed
 
 Test missing-dotnet-type (dotnet116): passed
 
-Passed:  2151 / 2725  (79%)
-Failed:  542 / 2725  (21%)
-Manual:  26 / 2725  (1%)
-Skipped:  6 / 2725  (1%)
+Passed:  2167 / 2743  (79%)
+Failed:  544 / 2743  (21%)
+Manual:  26 / 2743  (1%)
+Skipped:  6 / 2743  (1%)
 

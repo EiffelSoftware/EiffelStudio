@@ -186,16 +186,21 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 				across
 					obj.attributes as attr_cursor
 				loop
-						-- Set all the attributes
-						-- See if it is a basic attribute
-					if not try_basic_attribute (Result, obj.attribute_value (attr_cursor.item).value, type.field_index (attr_cursor.item)) then
-							-- If not it is either a referenced object or a collection. In either case, use the `Current.build' function.
-						field_type := type.attribute_type (attr_cursor.item)
-						field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping)
-						if attached field_val then
-								--print (reflection.field_name (type.field_index (attr_cursor.item), Result).out + "%N")
-								--print (type.type.out + field_type.type.out + "%N")
-							reflection.set_reference_field (type.field_index (attr_cursor.item), Result, field_val)
+					-- Sometimes there are attributes in the retrieved data which are not present in the actual object,
+					-- e.g. values inserted by plugins. Be tolerant with that.
+
+					if type.has_attribute (attr_cursor.item) then
+							-- Set all the attributes
+							-- See if it is a basic attribute
+						if not try_basic_attribute (Result, obj.attribute_value (attr_cursor.item).value, type.field_index (attr_cursor.item)) then
+								-- If not it is either a referenced object or a collection. In either case, use the `Current.build' function.
+							field_type := type.attribute_type (attr_cursor.item)
+							field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping)
+							if attached field_val then
+									--print (reflection.field_name (type.field_index (attr_cursor.item), Result).out + "%N")
+									--print (type.type.out + field_type.type.out + "%N")
+								reflection.set_reference_field (type.field_index (attr_cursor.item), Result, field_val)
+							end
 						end
 					end
 				end

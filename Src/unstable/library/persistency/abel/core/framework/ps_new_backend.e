@@ -98,6 +98,9 @@ feature {PS_EIFFELSTORE_EXPORT}
 		require
 --			most_general_type: across type.supertypes as supertype all not (supertype.item.is_equal (type) and type.is_subtype_of (supertype.item)) end
 --			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
+		local
+			real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
+			wrapper: PS_CURSOR_WRAPPER
 		do
 			-- execute plugins before retrieve
 			across plug_in_list as cursor
@@ -105,8 +108,12 @@ feature {PS_EIFFELSTORE_EXPORT}
 				cursor.item.before_retrieve (type, criteria, attributes, transaction)
 			end
 
-			-- Set up cursor and retrieve first item
-			create {PS_CURSOR_WRAPPER[PS_RETRIEVED_OBJECT]}Result.make (Current, internal_retrieve (type, criteria, attributes, transaction), transaction)
+			-- Retrieve result from backend
+			real_cursor := internal_retrieve (type, criteria, attributes, transaction)
+
+			-- Wrap the cursor
+			create wrapper.make (Current, real_cursor, type, criteria, attributes, transaction)
+			Result := wrapper
 
 			-- execute plugins after retrieve
 			if not Result.after then
@@ -288,7 +295,7 @@ feature {PS_NEW_BACKEND}
 --			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
 		end
 
-feature {ITERATION_CURSOR}
+feature {PS_CURSOR_WRAPPER}
 
 	apply_plugins (item: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
 		do
@@ -297,7 +304,7 @@ feature {ITERATION_CURSOR}
 			end
 		end
 
-feature {NONE} -- Contracts
+feature {PS_CURSOR_WRAPPER} -- Contracts
 
 
 	check_retrieved_object (object: PS_RETRIEVED_OBJECT; type:PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST[STRING]; transaction:PS_TRANSACTION): BOOLEAN

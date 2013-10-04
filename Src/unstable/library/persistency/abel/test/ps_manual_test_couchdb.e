@@ -21,49 +21,49 @@ feature {NONE}
 
 feature
 
-	test_criteria_cdb
+	cdb_criteria
 		do
 			criteria_tests.test_criteria_agents
 			criteria_tests.test_criteria_predefined
 			criteria_tests.test_criteria_agents_and_predefined
 		end
 
-	test_crud_flat_cdb
+	cdb_crud_flat
 		do
 			crud_tests.all_flat_object_tests
 		end
 
-	test_references_cdb
+	cdb_references
 		do
 			crud_tests.all_references_tests
 		end
 
-	test_collections_cdb
+	cdb_collections
 		do
 			crud_tests.all_collection_tests
 		end
 
-	test_transaction_lost
+	cdb_transaction_lost
 		do
 			transaction_tests.test_no_lost_update
 		end
 
-	test_transaction_dirty
+	cdb_transaction_dirty
 		do
 			transaction_tests.test_no_dirty_reads
 		end
 
-	test_transaction_repeatable_read
+	cdb_transaction_repeatable_read
 		do
 			transaction_tests.test_repeatable_read
 		end
 
-	test_object_graph_write_settings
+	cdb_object_graph_write_settings
 		do
 			object_graph_tests.test_write_settings
 		end
 
-	test_object_graph_read_settings
+	cdb_object_graph_read_settings
 		do
 			object_graph_tests.test_retrieval_settings
 		end

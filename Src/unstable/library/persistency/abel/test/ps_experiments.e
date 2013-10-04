@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	internal_test
+	experiment_internal
 			-- An experiment about the runtime attached/detachable type situation
 		local
 			reflection: INTERNAL
@@ -46,7 +46,7 @@ feature
 			end
 		end
 
-	internal_special_experiment
+	experiment_internal_special
 		local
 			person_special: SPECIAL [PERSON]
 			ref_special: SPECIAL [REFERENCE_CLASS_1]
@@ -71,7 +71,7 @@ feature
 			print (detached_ref_special.out)
 		end
 
-	test_generic_objects_type
+	experiment_generic_objects_type
 		local
 			list: LIST [ANY]
 		do
@@ -81,7 +81,7 @@ feature
 			print (attached {LIST [PERSON]} list)
 		end
 
-	test_sqlite_failure_for_multiple_open_connections
+	experiment_sqlite_failure_for_multiple_open_connections
 		local
 			conn1, conn2: detachable SQLITE_DATABASE
 			file: STRING
@@ -102,7 +102,7 @@ feature
 			retry
 		end
 
-	test_constant_initialized
+	experiment_constant_initialized
 		local
 			reflection: INTERNAL
 			test_obj: ANY
@@ -123,7 +123,7 @@ feature
 			end
 		end
 
-	test_reflective_tuple_creation
+	experiment_reflective_tuple_creation
 			-- Investigate the relationship between reflection and tuples
 		local
 			reflection:INTERNAL
@@ -190,7 +190,7 @@ feature
 			println
 		end
 
-	test_tuple_generation_metadata_factory
+	experiment_tuple_generation_metadata_factory
 		local
 			factory: PS_METADATA_FACTORY
 			type: PS_TYPE_METADATA
@@ -210,12 +210,7 @@ feature
 
 		end
 
-	println
-		do
-			print ("%N")
-		end
-
-	test_converter
+	experiment_converter
 		local
 			conv:PS_SQLSTATE_CONVERTER
 		do
@@ -223,4 +218,11 @@ feature
 			assert ("not correct", attached {PS_CONNECTION_SETUP_ERROR} conv.convert_error ("08xxx"))
 		end
 
+feature {NONE} -- Utilities
+
+	println
+		do
+			print ("%N")
+		end
+		
 end

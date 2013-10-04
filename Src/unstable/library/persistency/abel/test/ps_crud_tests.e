@@ -287,6 +287,101 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 
 		end
 
+
+feature {PS_REPOSITORY_TESTS} -- Polymorphism
+
+	all_polymorphism_tests
+		do
+			test_no_polymorphism
+			test_basic_polymorphism
+			test_expanded_object
+			test_generic_object
+			test_referenced_list
+			test_subtype_of_string
+		end
+
+	test_no_polymorphism
+			-- A normal test with ANY_BOX not involving polymorphism
+		local
+			link: ANY_BOX
+			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+		do
+			create link.set_item (create {ANY}.default_create)
+			create test.make (repository)
+			test.test_insert (link)
+			repository.clean_db_for_testing
+		end
+
+
+	test_basic_polymorphism
+			-- A test with an ANY_BOX, and a PERSON attached at runtime
+		local
+			link: ANY_BOX
+			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+		do
+			create link.set_item (test_data.people.first)
+			create test.make (repository)
+			test.test_insert (link) -- BUG: at the moment ANY_BOX.item is Void during retrieval
+			repository.clean_db_for_testing
+		end
+
+	test_expanded_object
+			-- A test with ANY_BOX and an INTEGER attached at runtime
+		local
+			link: ANY_BOX
+			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+		do
+			create link.set_item (3)
+			create test.make (repository)
+			test.test_insert (link) -- BUG: at the moment ANY_BOX.item is Void during retrieval
+			repository.clean_db_for_testing
+		end
+
+	test_generic_object
+			-- Test a store with a generic object
+		local
+			list: LINKED_LIST[ANY]
+			test: PS_GENERIC_CRUD_TEST[LINKED_LIST[ANY]]
+		do
+			create list.make
+			list.fill (test_data.people)
+			create test.make (repository)
+			test.test_insert (list) -- BUG: the elements don't get loaded.
+			repository.clean_db_for_testing
+		end
+
+	test_referenced_list
+			-- Test when an attribute has declared type LINKED_LIST[ANY] but dynamic type LINKED_LIST[PERSON]
+		local
+			box: ANY_LIST_BOX
+			list: LINKED_LIST[PERSON]
+			test: PS_GENERIC_CRUD_TEST[ANY_LIST_BOX]
+		do
+			create list.make
+			list.fill (test_data.people)
+			create box.set_items (list)
+			create test.make (repository)
+			test.test_insert (box) -- BUG: the list within box gets initialized as LINKED_LIST[ANY], and the list is empty.
+			repository.clean_db_for_testing
+		end
+
+	test_subtype_of_string
+			-- Check if the correct runtime type gets generated
+		local
+			first, last: FILE_NAME
+			person: PERSON
+			test: PS_GENERIC_CRUD_TEST[PERSON]
+		do
+			create first.make_from_string ("some")
+			create last.make_from_string ("string")
+			create person.make (first, last, 0)
+			create test.make (repository)
+
+			test.test_insert (person) -- BUG: instead of creating FILE_NAME objects, a STRING object is created.
+			test.test_crud_operations (person, agent (p:PERSON) do p.add_item end)
+			repository.clean_db_for_testing
+		end
+
 feature {NONE} -- Update agents
 
 	update_reference (obj: REFERENCE_CLASS_1)

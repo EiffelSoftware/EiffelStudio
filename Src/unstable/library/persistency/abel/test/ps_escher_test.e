@@ -8,7 +8,7 @@ class
 	PS_ESCHER_TEST
 
 inherit
-	
+
 	EQA_TEST_SET
 		redefine
 			on_prepare
@@ -21,7 +21,7 @@ inherit
 
 feature
 
-	schema_evolution_test_add_attribute
+	escher_add_attribute
 			-- Test if added attribute is handled correctly
 		local
 			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
@@ -36,7 +36,7 @@ feature
 			end
 		end
 
-	schema_evolution_test_change_attribute_type
+	escher_change_attribute_type
 			-- Test if attribute type change is handled correctly
 		local
 			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
@@ -51,7 +51,7 @@ feature
 			end
 		end
 
-	schema_evolution_test_change_attribute_name
+	escher_change_attribute_name
 			-- Test if attribute name change is handled correctly
 		local
 			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
@@ -66,7 +66,7 @@ feature
 			end
 		end
 
-	schema_evolution_test_remove_attribute
+	escher_remove_attribute
 			-- Test if removed attribute is handled correctly
 		local
 			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
@@ -81,7 +81,7 @@ feature
 			end
 		end
 
-	schema_evolution_test_multiple_changes
+	escher_multiple_changes
 			-- Test whether multiple changes are handled correctly
 			-- Uses 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER
 		local
@@ -102,7 +102,7 @@ feature
 			end
 		end
 
-	test_normal_operation
+	escher_normal_operation
 			-- Test if no version mismatch gets handled correctly
 		local
 			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS]
@@ -113,7 +113,7 @@ feature
 			executor.execute_query (query)
 		end
 
---	test_version_mismatch
+--	escher_version_mismatch
 --			-- Test the ESCHER version checking by simulating a version mismatch.
 --		local
 --			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS]

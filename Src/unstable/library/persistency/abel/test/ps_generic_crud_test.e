@@ -101,6 +101,8 @@ feature {NONE}
 				query as cursor
 			loop
 				ref_list.extend (cursor.item)
+				--print (cursor.item)
+				--if attached {ANY_LIST_BOX} cursor.item as box then print (box.items) print (box.items.first) print ("end") end
 			end
 				-- See if one result is equal
 			one_equal := across ref_list as cursor some equality_test.item ([cursor.item, object]) end

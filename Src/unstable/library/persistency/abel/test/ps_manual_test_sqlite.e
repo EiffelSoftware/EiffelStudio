@@ -16,19 +16,19 @@ inherit
 
 feature -- Tests
 
-	test_criteria_sqlite
+	sqlite_criteria
 		do
 			criteria_tests.test_criteria_agents
 			criteria_tests.test_criteria_predefined
 			criteria_tests.test_criteria_agents_and_predefined
 		end
 
-	test_crud_flat_sqlite
+	sqlite_crud_flat
 		do
 			crud_tests.all_flat_object_tests
 		end
 
-	test_references_sqlite
+	sqlite_references
 		do
 			crud_tests.all_references_tests
 		end

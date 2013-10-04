@@ -113,8 +113,9 @@ feature {PS_EIFFELSTORE_EXPORT}
 				apply_plugins (Result.item, transaction)
 			end
 		ensure
-			loaded_attributes_exist: not Result.after implies across Result.item.attributes as attr all type.attributes.has(attr.item) end
+--			loaded_attributes_exist: not Result.after implies across Result.item.attributes as attr all type.attributes.has(attr.item) end
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
+			correct: not Result.after implies check_retrieved_object (Result.item, type, criteria, attributes, transaction)
 		end
 
 	retrieve_from_single_key (type: PS_TYPE_METADATA; primary_key: INTEGER; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
@@ -271,6 +272,8 @@ feature {PS_NEW_BACKEND}
 			-- To have lazy loading support, you need to have a special ITERATION_CURSOR and a function next in this class to load the next item of this customized cursor
 		ensure
 			all_attributes_loaded: not Result.after implies across attributes as attr all Result.item.has_attribute(attr.item) end
+			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
+
 --			attributes_loaded: not Result.after implies are_attributes_loaded (type, attributes, Result.item)
 --			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
 		end
@@ -295,6 +298,43 @@ feature {ITERATION_CURSOR}
 		end
 
 feature {NONE} -- Contracts
+
+
+	check_retrieved_object (object: PS_RETRIEVED_OBJECT; type:PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST[STRING]; transaction:PS_TRANSACTION): BOOLEAN
+			-- Check if the retrieved object meets some conditions
+		local
+			reflection: INTERNAL
+			attr_type: INTEGER
+		do
+			create reflection
+
+			-- Check if the type is correct
+			Result := object.metadata.is_equal (type)
+
+			if Result then
+				-- Check if all requested attributes are present
+				Result := Result and attributes.for_all (agent object.has_attribute)
+
+				-- For attributes actually present in an object, check if the runtime type makes sense.
+				across attributes as cursor
+				loop
+					if type.attributes.has (cursor.item) then
+						attr_type := reflection.dynamic_type_from_string (object.attribute_value (cursor.item).attribute_class_name)
+
+						-- For expanded types, or when an object was attached, the runtime type must conform to the declared type
+						Result := Result and (attr_type > 0 implies
+							reflection.type_conforms_to (attr_type, type.attribute_type (cursor.item).type.type_id))
+
+						-- If a reference was Void during write, the runtime type was stored as NONE and the value is 0
+						Result := Result and (attr_type = reflection.none_type implies
+							not type.attribute_type (cursor.item).type.is_attached -- Type can be detachable
+							and object.attribute_value (cursor.item).value.is_equal ("0")) -- Value is 0
+					end
+				end
+			end
+		end
+
+
 
 	check_object_writes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
 			-- Check if all objects were successfully written

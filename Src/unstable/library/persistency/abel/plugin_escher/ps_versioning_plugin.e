@@ -212,6 +212,7 @@ feature
 						-- This values could be needed to calculate functions returned by the schema evolution handler
 						stored_obj_attr_values := get_attribute_values(stored_object)
 						clean_stored_obj(stored_object)
+						stored_object.add_attribute ("version", current_version.out, "INTEGER_32")
 						if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
 							-- Create a fresh instance of the current class
 							current_class_instance := reflection.new_instance_of (object.metadata.type.type_id)
@@ -244,7 +245,7 @@ feature
 							exception.raise ("No schema evolution handler available for class '" + current_class_name + "'.")
 						end
 					else
-						object.remove_attribute ("version")
+--						object.remove_attribute ("version")
 					end
 --				end -- loop
 --				Result := result_list.new_cursor

@@ -929,6 +929,7 @@ feature -- Command/Query Handling
 			l_is_synchronous, l_exit_loop, l_temporary_chain_opened: BOOLEAN
 			l_call_ptr, l_null_ptr: POINTER
 			l_processor_dirty: BOOLEAN
+			l_initial_client_processor_id: like processor_id_type
 		do
 				-- Retrieve the node queue list for the client processor.
 			l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
@@ -976,6 +977,8 @@ feature -- Command/Query Handling
 
 				if a_creation_request_chain_meta_data /= Void then
 						-- We are lock passing to a creation routine so we start the loop.
+					l_initial_client_processor_id := l_client_request_chain_meta_data [request_chain_client_pid_index]
+					l_client_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
 					start_processor_application_loop (a_supplier_processor_id)
 					wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, a_creation_request_chain_meta_data)
 				end
@@ -1047,6 +1050,10 @@ feature -- Command/Query Handling
 					end
 					l_exit_loop := True
 				end
+			end
+			if a_creation_request_chain_meta_data /= Void then
+					-- Reset original chain client.
+				l_client_request_chain_meta_data [request_chain_client_pid_index] := l_initial_client_processor_id
 			end
 			if l_temporary_chain_opened then
 					-- Close temporary chain if opened.
@@ -1808,31 +1815,33 @@ feature {NONE} -- Scoop Processor Meta Data
 		local
 			i: NATURAL_32
 		do
-			if a_client_processor_id /= a_supplier_processor_id then
-				from
-				until
-					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_supplier_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_signalled, processor_semaphore_status_running) = processor_semaphore_status_running
-				loop
-					if i < processor_spin_lock_limit then
-						processor_spin_loop (1)
-					else
-						processor_cpu_yield
-					end
-					i := i + 1
-				end
-				from
-					i := 0
-				until
-					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_running, processor_semaphore_status_signalled) = processor_semaphore_status_signalled
-				loop
-					if i < processor_spin_lock_limit then
-						processor_spin_loop (1)
-					else
-						processor_cpu_yield
-					end
-					i := i + 1
-				end
-			end
+			processor_wake_up (a_supplier_processor_id, a_client_processor_id)
+			processor_wait (a_client_processor_id, a_supplier_processor_id)
+--			if a_client_processor_id /= a_supplier_processor_id then
+--				from
+--				until
+--					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_supplier_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_signalled, processor_semaphore_status_running) = processor_semaphore_status_running
+--				loop
+--					if i < processor_spin_lock_limit then
+--						processor_spin_loop (1)
+--					else
+--						processor_cpu_yield
+--					end
+--					i := i + 1
+--				end
+--				from
+--					i := 0
+--				until
+--					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_running, processor_semaphore_status_signalled) = processor_semaphore_status_signalled
+--				loop
+--					if i < processor_spin_lock_limit then
+--						processor_spin_loop (1)
+--					else
+--						processor_cpu_yield
+--					end
+--					i := i + 1
+--				end
+--			end
 		end
 
 	new_processor_meta_data_entry: SPECIAL [INTEGER_32]
@@ -2091,19 +2100,34 @@ feature {NONE} -- Externals
 			"eif_sleep"
 		end
 
+--	frozen processor_yield (a_processor_id: like processor_id_type; a_iteration_number: NATURAL_32)
+--			-- Yield processor `a_processor_id' to competing threads for an OS specific set time.
+--		do
+--			if a_iteration_number < processor_spin_lock_limit then
+--					-- Spin lock
+--				processor_spin_loop (1)
+--			else
+--				processor_cpu_yield
+--					-- Check for any potential deadlock.
+--				if a_iteration_number \\ Max_yield_counter = 0 then
+--					check_for_deadlock
+--				end
+--			end
+--		end
+
 	frozen processor_yield (a_processor_id: like processor_id_type; a_iteration_number: NATURAL_32)
 			-- Yield processor `a_processor_id' to competing threads for an OS specific set time.
-		do
-			if a_iteration_number < processor_spin_lock_limit then
-					-- Spin lock
-				processor_spin_loop (1)
-			else
-				processor_cpu_yield
-					-- Check for any potential deadlock.
-				if a_iteration_number \\ Max_yield_counter = 0 then
-					check_for_deadlock
-				end
-			end
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"{
+				if ($a_iteration_number < 200) {
+					RTS_PROCESSOR_SPIN_LOOP(1);
+				}
+				else {
+					RTS_PROCESSOR_CPU_YIELD;
+				}
+			}"
 		end
 
 	check_for_deadlock
@@ -2324,11 +2348,22 @@ feature {NONE} -- Synchronization externals
 			"eif_thr_sem_destroy"
 		end
 
+--	new_mutex: POINTER
+--		external
+--			"C use %"eif_threads.h%""
+--		alias
+--			"eif_thr_mutex_create"
+--		end
+
 	new_mutex: POINTER
 		external
-			"C use %"eif_threads.h%""
+			"C inline use %"eif_threads.h%""
 		alias
-			"eif_thr_mutex_create"
+			"[
+				EIF_CS_TYPE *section = (EIF_CS_TYPE *) eif_malloc(sizeof(EIF_CS_TYPE));
+				InitializeCriticalSectionAndSpinCount(section, (DWORD) 4000);
+				return section;
+			]"
 		end
 
 	lock_mutex (a_mutex_pointer: POINTER)
@@ -2336,13 +2371,6 @@ feature {NONE} -- Synchronization externals
 			"C blocking use %"eif_threads.h%""
 		alias
 			"eif_pthread_mutex_lock"
-		end
-
-	try_lock_mutex (a_mutex_pointer: POINTER): BOOLEAN
-		external
-			"C blocking use %"eif_threads.h%""
-		alias
-			"eif_pthread_mutex_trylock"
 		end
 
 	unlock_mutex (a_mutex_pointer: POINTER)
@@ -2366,6 +2394,18 @@ feature {NONE} -- Synchronization externals
 			"eif_thr_cond_create"
 		end
 
+--	new_condition_variable: POINTER
+--		external
+--			"C inline use %"eif_threads.h%""
+--		alias
+--			"[
+--				CONDITION_VARIABLE *condvar;
+--				condvar = calloc (sizeof(CONDITION_VARIABLE),1);
+--				InitializeConditionVariable(condvar);
+--				return condvar;
+--			]"
+--		end
+
 	condition_variable_signal (a_cond_ptr: POINTER)
 		external
 			"C macro use %"eif_threads.h%""
@@ -2373,12 +2413,12 @@ feature {NONE} -- Synchronization externals
 			"eif_pthread_cond_signal"
 		end
 
-	condition_variable_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER)
-		external
-			"C blocking use %"eif_threads.h%""
-		alias
-			"eif_pthread_cond_wait"
-		end
+--	condition_variable_signal (a_cond_ptr: POINTER)
+--		external
+--			"C macro use %"eif_threads.h%""
+--		alias
+--			"WakeConditionVariable"
+--		end
 
 	condition_variable_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER
 		external
@@ -2387,12 +2427,26 @@ feature {NONE} -- Synchronization externals
 			"eif_pthread_cond_wait_with_timeout"
 		end
 
+--	condition_variable_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER
+--		external
+--			"C blocking use %"eif_threads.h%""
+--		alias
+--			"!SleepConditionVariableCS"
+--		end
+
 	destroy_condition_variable (a_mutex_ptr: POINTER)
 		external
 			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_cond_destroy"
 		end
+
+--	destroy_condition_variable (a_mutex_ptr: POINTER)
+--		external
+--			"C use %"eif_threads.h%""
+--		alias
+--			"free"
+--		end
 
 feature {NONE} -- Debugger Helpers
 

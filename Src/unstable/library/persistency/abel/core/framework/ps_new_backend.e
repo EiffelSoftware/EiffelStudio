@@ -489,10 +489,16 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 			if Result then
 				across object.attributes as cursor
 				loop
+--					print (cursor.item + " " + retrieved_object.has_attribute (cursor.item).out + "%N")
 					-- Check if the attribute is actually present
 					same_attribute := retrieved_object.has_attribute (cursor.item)
 						-- Check if the types and values are the same
 						and then is_equal_tuple (object.attribute_value (cursor.item), retrieved_object.attribute_value (cursor.item), transaction)
+
+					-- Backends are allowed to drop Void references
+					if not attached {PS_NULL_REFERENCE_PART} object.attribute_value (cursor.item) then
+						Result := Result and same_attribute
+					end
 				end
 			end
 		end
@@ -540,14 +546,18 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 	is_equal_tuple (object_part: PS_OBJECT_GRAPH_PART; tuple: TUPLE[value:STRING; type:STRING]; transaction:PS_TRANSACTION): BOOLEAN
 		do
 			-- Check if the types are the same
-			Result := object_part.metadata.base_class.name.is_equal (tuple.type)
+--			Result := object_part.metadata.base_class.name.is_equal (tuple.type) -- not used anymore - include generics!
+			Result := object_part.metadata.type.name.is_equal (tuple.type)
+--			print (object_part.metadata.type.name + "%N" + tuple.type + "%N%N")
 
 			-- Check if the values are the same
 			if attached {PS_COMPLEX_PART} object_part as part and then is_mapped (part.object_wrapper, transaction) then
 				Result := Result and mapping (part.object_wrapper, transaction).out.is_equal (tuple.value)
+--				print (object_part.metadata.type.name + "%N" + object_part.as_attribute (0).value.out + "%N" + tuple.value+ "%N"+ "%N")
 			else
 				-- the 0 should be ignored...
 				Result := Result and object_part.as_attribute (0).value.is_equal (tuple.value)
+--				print (object_part.metadata.type.name + "%N" + object_part.as_attribute (0).value.out + "%N" + tuple.value+ "%N"+ "%N")
 			end
 
 		end

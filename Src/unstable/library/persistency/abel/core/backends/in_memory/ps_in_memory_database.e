@@ -78,7 +78,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
 		do
 				-- Retrieve all keys in primary_keys and with all attributes
-			Result := load_objects (type, type.attributes, primary_keys)
+			Result := load_objects (type, create{LINKED_LIST[STRING]}.make, primary_keys)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
@@ -270,7 +270,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Miscellaneous
 feature {NONE} -- Implementation - Loading and storing objects
 
 	load_objects (type: PS_TYPE_METADATA; attributes: LIST [STRING]; keys: LIST [INTEGER]): LINKED_LIST [PS_RETRIEVED_OBJECT]
-			-- Loads all objects of class `type' whose primary key is listed in `keys'. Only loads the attributes listed in `attributes'.
+			-- Loads all objects of class `type' whose primary key is listed in `keys'.
+			-- Only loads the attributes listed in `attributes',or all attributes if the list is empty.
 		local
 			current_obj: PS_RETRIEVED_OBJECT
 			attr_val: PS_PAIR [STRING, STRING]
@@ -281,6 +282,11 @@ feature {NONE} -- Implementation - Loading and storing objects
 			loop
 				if has_object (type.base_class.name, obj_primary.item) then
 					create current_obj.make (obj_primary.item, type)
+
+					if attributes.is_empty then
+						attributes.fill (get_object_as_strings(type.base_class.name, obj_primary.item).current_keys)
+					end
+
 					across
 						attributes as cursor
 					loop

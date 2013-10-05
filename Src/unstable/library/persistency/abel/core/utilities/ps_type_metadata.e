@@ -37,6 +37,8 @@ feature -- Access
 
 	base_class: PS_CLASS_METADATA
 			-- The class of which `Current' type is an instance of.
+		obsolete
+			"Don't use classnames any more for generic types. Instead treat e.g. LINKED_LIST[STRING] and LINKED_LIST[ANY] as completely different classes"
 		once ("OBJECT")
 			create Result.make (Current, factory)
 		end

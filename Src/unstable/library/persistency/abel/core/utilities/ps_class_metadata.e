@@ -132,7 +132,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create reflection
-			name := reflection.class_name_of_type (type_metadata.type.type_id)
+--			name := reflection.class_name_of_type (type_metadata.type.type_id)
+			name := type_metadata.type.name.to_string_8
 			manager := a_manager
 			internal_type := type_metadata
 			proper_ancestors := calculate_proper_ancestors (type_metadata)

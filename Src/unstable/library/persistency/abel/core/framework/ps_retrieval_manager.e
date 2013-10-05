@@ -169,6 +169,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			field_value: ANY
 			field_val: detachable ANY
 			field_type: PS_TYPE_METADATA
+			field_type_name: STRING
 			keys: LINKED_LIST [INTEGER]
 			referenced_obj: LIST [PS_RETRIEVED_OBJECT]
 			collection_result: PS_RETRIEVED_OBJECT_COLLECTION
@@ -194,12 +195,23 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 							-- See if it is a basic attribute
 						if not try_basic_attribute (Result, obj.attribute_value (attr_cursor.item).value, type.field_index (attr_cursor.item)) then
 								-- If not it is either a referenced object or a collection. In either case, use the `Current.build' function.
-							field_type := type.attribute_type (attr_cursor.item)
-							field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping)
-							if attached field_val then
-									--print (reflection.field_name (type.field_index (attr_cursor.item), Result).out + "%N")
-									--print (type.type.out + field_type.type.out + "%N")
-								reflection.set_reference_field (type.field_index (attr_cursor.item), Result, field_val)
+
+
+							--field_type := type.attribute_type (attr_cursor.item)
+							-- Important: Use type as stored in the database!
+							field_type_name := obj.attribute_value (attr_cursor.item).attribute_class_name
+							if not field_type_name.is_equal ("NONE") then
+								field_type := metadata_manager.create_metadata_from_type (
+									type.reflection.type_of_type (
+										type.reflection.dynamic_type_from_string (field_type_name)))
+
+
+								field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping)
+								if attached field_val then
+										--print (reflection.field_name (type.field_index (attr_cursor.item), Result).out + "%N")
+										--print (type.type.out + field_type.type.out + "%N")
+									reflection.set_reference_field (type.field_index (attr_cursor.item), Result, field_val)
+								end
 							end
 						end
 					end
@@ -263,6 +275,8 @@ feature {NONE} -- Implementation - Build support functions.
 					Result := value.first.to_natural_8.to_character_8
 				elseif type.type.name.is_equal ("CHARACTER_32") then
 					Result := value.first.to_natural_32.to_character_32
+				elseif type.type.name.is_equal ("NONE") then
+					Result := Void
 				else
 					check
 						unknown_basic_type: False

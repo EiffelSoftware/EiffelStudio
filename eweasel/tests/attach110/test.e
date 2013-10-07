@@ -87,18 +87,18 @@ feature {NONE} -- Initialization
 	ff: TEST
 		do
 			$(F)a := Current
-			Result := Current
+			create Result.make
 		end
 
 	gg: TEST
 		do
-			Result := Current
+			create Result.make
 			$(G)a := Current
 		end
 
 	hh: TEST
 		do
-			Result := Current
+			create Result.make
 			$(H)create a.make
 		end
 

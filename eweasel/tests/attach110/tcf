@@ -25,7 +25,7 @@ define	H	"--"
 copy_sub	test.e $CLUSTER test.e
 
 resume_compile
-compile_result	validity_error TEST VEVI VEVI VEVI VEVI
+compile_result	validity_error TEST VEVI VEVI
 
 define	F	""
 define	G	""

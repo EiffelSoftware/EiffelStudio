@@ -7,7 +7,9 @@ inherit ANY
 
 create
 	default_create,
-	make_self,
+	make_self1,
+	make_self2,
+	make_self3,
 	make_other
 
 feature {NONE} -- Initialization
@@ -18,10 +20,24 @@ feature {NONE} -- Initialization
 			a := "foo"
 		end
 
-	make_self
-			-- Assign Current before initializing all the attributes.
+	make_self1
+			-- Access Current before initializing all the attributes.
 		do
-			access_current
+			access_current1
+			default_create
+		end
+
+	make_self2
+			-- Access Current before initializing all the attributes.
+		do
+			access_current2
+			default_create
+		end
+
+	make_self3
+			-- Access Current before initializing all the attributes.
+		do
+			access_current3
 			default_create
 		end
 
@@ -34,13 +50,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	access_current
+	access_current1
 			-- Access `Current' without making it explicitly targeted.
 		local
 			x: ANY
 		do
 			x := Current -- VEVI
+		end
+
+	access_current2
+			-- Access `Current' without making it explicitly targeted.
+		do
 			if Current = Void then end -- VEVI
+		end
+
+	access_current3
+			-- Access `Current' without making it explicitly targeted.
+		do
 			if attached Current then end -- VEVI
 		end
 

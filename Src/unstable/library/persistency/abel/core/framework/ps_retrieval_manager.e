@@ -242,6 +242,7 @@ feature {NONE} -- Implementation - Build support functions.
 		local
 			object_result: LIST [PS_RETRIEVED_OBJECT]
 			collection_result: PS_RETRIEVED_OBJECT_COLLECTION
+			managed: MANAGED_POINTER
 		do
 			if type.is_basic_type then
 					-- Create a basic type
@@ -266,9 +267,15 @@ feature {NONE} -- Implementation - Build support functions.
 				elseif type.type.name.is_equal ("NATURAL_64") then
 					Result := value.first.to_natural_64
 				elseif type.type.name.is_equal ("REAL_32") then
-					Result := value.first.to_real
+--					Result := value.first.to_real
+					create managed.make ({PLATFORM}.real_32_bytes)
+					managed.put_integer_32_be (value.first.to_integer_32, 0)
+					Result := managed.read_real_32_be (0)
 				elseif type.type.name.is_equal ("REAL_64") then
-					Result := value.first.to_double
+--					Result := value.first.to_double
+					create managed.make ({PLATFORM}.real_64_bytes)
+					managed.put_integer_64_be ( value.first.to_integer_64, 0)
+					Result := managed.read_real_64_be (0)
 				elseif type.type.name.is_equal ("BOOLEAN") then
 					Result := value.first.to_boolean
 				elseif type.type.name.is_equal ("CHARACTER_8") then
@@ -354,6 +361,7 @@ feature {NONE} -- Implementation - Build support functions.
 		local
 			type: INTEGER
 			reflection: INTERNAL
+			managed: MANAGED_POINTER
 		do
 			create reflection
 			type := reflection.field_type (index, obj)
@@ -375,11 +383,19 @@ feature {NONE} -- Implementation - Build support functions.
 				reflection.set_natural_32_field (index, obj, value.to_natural_32)
 			elseif type = reflection.natural_64_type and value.is_natural_64 then
 				reflection.set_natural_64_field (index, obj, value.to_natural_64)
+
 					-- Reals
-			elseif type = reflection.real_32_type and value.is_real then
-				reflection.set_real_32_field (index, obj, value.to_real)
-			elseif type = reflection.double_type and value.is_double then
-				reflection.set_double_field (index, obj, value.to_double)
+			elseif type = reflection.real_32_type and value.is_integer_32 then
+
+				create managed.make ({PLATFORM}.real_32_bytes)
+				managed.put_integer_32_be (value.to_integer_32, 0)
+				reflection.set_real_32_field (index, obj, managed.read_real_32_be (0))
+
+			elseif type = reflection.double_type and value.is_integer_64 then
+				create managed.make ({PLATFORM}.real_64_bytes)
+				managed.put_integer_64_be ( value.to_integer_64, 0)
+				reflection.set_double_field (index, obj, managed.read_real_64_be (0))
+
 					-- Characters
 			elseif type = reflection.character_8_type and value.is_natural_8 then
 				reflection.set_character_8_field (index, obj, value.to_natural_8.to_character_8)

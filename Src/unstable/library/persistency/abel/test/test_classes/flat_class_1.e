@@ -18,7 +18,7 @@ inherit
 
 	ANY
 		redefine
-			out
+			out, is_equal
 		end
 
 create
@@ -157,6 +157,11 @@ feature -- Status Report
 			Result := Result and (real_64_max / other.real_64_max - 1).abs < epsilon
 				--	print ((real_32_max / other.real_32_max -1 ).out)
 				--check result end
+		end
+
+	is_equal (other: attached FLAT_CLASS_1): BOOLEAN
+		do
+			Result := is_almost_equal (other, 0.0001)
 		end
 
 feature -- Update function

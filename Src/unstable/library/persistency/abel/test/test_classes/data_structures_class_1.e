@@ -44,29 +44,29 @@ feature -- Initialization
 				linked_list_1.forth
 				i := i + 1
 			end
-			create hash_table_1.make (10)
-			from
-				i := 1
-			until
-				i > 10
-			loop
-				create s.make_from_string ("key")
-				s.append_natural_32 (i)
-				hash_table_1.put (create {FLAT_CLASS_1}.make, s)
-				i := i + 1
-			end
-			create tuple_1.default_create
-			tuple_1.put (create {FLAT_CLASS_1}.make, 1)
-			tuple_1.put (2, 2)
-			tuple_1.put ("third", 3)
+--			create hash_table_1.make (10)
+--			from
+--				i := 1
+--			until
+--				i > 10
+--			loop
+--				create s.make_from_string ("key")
+--				s.append_natural_32 (i)
+--				hash_table_1.put (create {FLAT_CLASS_1}.make, s)
+--				i := i + 1
+--			end
+--			create tuple_1.default_create
+--			tuple_1.put (create {FLAT_CLASS_1}.make, 1)
+--			tuple_1.put (2, 2)
+--			tuple_1.put ("third", 3)
 		ensure
 			array_1_size_correct: array_1.count = 10
 			array_2_size_correct: array_2.count = 25
 			array_3.count = 10
 			arrayed_list_1_size_correct: arrayed_list_1.count = 10
 			linked_list_1_size_correct: linked_list_1.count = 10
-			hash_table_1_size_correct: hash_table_1.count = 10
-			tuple_1_size_correct: tuple_1.count = 3
+--			hash_table_1_size_correct: hash_table_1.count = 10
+--			tuple_1_size_correct: tuple_1.count = 3
 		end
 
 feature -- Access
@@ -81,9 +81,9 @@ feature -- Access
 
 	linked_list_1: LINKED_LIST [FLAT_CLASS_1]
 
-	hash_table_1: HASH_TABLE [FLAT_CLASS_1, STRING]
+--	hash_table_1: HASH_TABLE [FLAT_CLASS_1, STRING]
 
-	tuple_1: TUPLE [FLAT_CLASS_1, INTEGER, STRING]
+--	tuple_1: TUPLE [FLAT_CLASS_1, INTEGER, STRING]
 
 feature -- Status Report
 
@@ -94,8 +94,8 @@ feature -- Status Report
 			Result.append ("array_1:%N " + array_1.out)
 			Result.append ("array_2:%N " + array_2.out)
 			Result.append ("arrayed_list_1:%N " + arrayed_list_1.out)
-			Result.append ("hash_table_1:%N " + hash_table_1.out)
-			Result.append ("tuple_1:%N " + tuple_1.out)
+--			Result.append ("hash_table_1:%N " + hash_table_1.out)
+--			Result.append ("tuple_1:%N " + tuple_1.out)
 		end
 
 end

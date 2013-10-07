@@ -38,9 +38,14 @@ feature
 			crud_tests.all_references_tests
 		end
 
-	memory_collections
+	memory_collections_easy
 		do
-			crud_tests.all_collection_tests
+			crud_tests.all_easy_collection_tests
+		end
+
+	memory_collections_tricky
+		do
+			crud_tests.all_tricky_collection_tests
 		end
 
 	memory_polymorphism

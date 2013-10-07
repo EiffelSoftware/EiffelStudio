@@ -105,7 +105,8 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 			test: PS_GENERIC_CRUD_TEST [FLAT_CLASS_1]
 		do
 			create test.make (repository)
-			test.test_insert_special_equality (test_data.flat_class, agent {FLAT_CLASS_1}.is_almost_equal(?, 0.00001))
+--			test.test_insert_special_equality (test_data.flat_class, agent {FLAT_CLASS_1}.is_almost_equal(?, 0.00001))
+			test.test_insert (test_data.flat_class)
 			repository.clean_db_for_testing
 		end
 
@@ -115,13 +116,14 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 			test: PS_GENERIC_CRUD_TEST [FLAT_CLASS_1]
 		do
 			create test.make (repository)
-			test.test_crud_operations_special_equality (test_data.flat_class, agent {FLAT_CLASS_1}.update, agent {FLAT_CLASS_1}.is_almost_equal(?, 0.00001))
+--			test.test_crud_operations_special_equality (test_data.flat_class, agent {FLAT_CLASS_1}.update, agent {FLAT_CLASS_1}.is_almost_equal(?, 0.00001))
+			test.test_crud_operations (test_data.flat_class, agent {FLAT_CLASS_1}.update)
 			repository.clean_db_for_testing
 		end
 
 feature {PS_REPOSITORY_TESTS} -- Collections
 
-	all_collection_tests
+	all_easy_collection_tests
 			-- All collection tests
 		do
 			test_referenced_collection_store
@@ -132,8 +134,15 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			test_direct_collection_new_object
 			test_collection_basic_type_store
 			test_shared_special
-			test_data_structures_store
-			test_update_on_reference
+--			takes too long, but should work.
+--			test_data_structures_store
+--			test_update_on_reference
+		end
+
+	all_tricky_collection_tests
+		do
+			test_tuple
+			test_hash_table
 		end
 
 	test_referenced_collection_store
@@ -228,27 +237,41 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			query: PS_OBJECT_QUERY [DATA_STRUCTURES_CLASS_1]
 			retrieved: DATA_STRUCTURES_CLASS_1
 			testdata_copy: DATA_STRUCTURES_CLASS_1
+
+			test: PS_GENERIC_CRUD_TEST[DATA_STRUCTURES_CLASS_1]
 		do
 			repository.clean_db_for_testing
-			create query.make
-			executor.execute_insert (test_data.data_structures_1)
-			executor.execute_query (query)
-			assert ("The query doesn't return a result", not query.result_cursor.after)
-			retrieved := query.result_cursor.item
-			assert ("The results are not equal", retrieved.is_deep_equal (test_data.data_structures_1))
-				-- perform update
-			retrieved.array_1 [1].update
-			executor.execute_update (retrieved.array_1 [1])
-				-- check if update worked
-			create query.make
-			executor.execute_query (query)
-			assert ("The query doesn't return a result", not query.result_cursor.after)
-			retrieved := query.result_cursor.item
-			assert ("The results are equal", not retrieved.is_deep_equal (test_data.data_structures_1))
-				-- check that only the updated part really is different
-			testdata_copy := test_data.data_structures_1.deep_twin
-			testdata_copy.array_1 [1].update
-			assert ("There was more than just one update", retrieved.is_deep_equal (testdata_copy))
+			repository.default_object_graph.set_update_depth (repository.default_object_graph.object_graph_depth_infinite)
+
+			create test.make (repository)
+			test.test_crud_operations (
+				test_data.data_structures_1,
+				agent (retrieved_obj: DATA_STRUCTURES_CLASS_1)
+					do
+						retrieved_obj.array_1[1].update
+					end
+			)
+			repository.default_object_graph.set_update_depth (1)
+
+--			create query.make
+--			executor.execute_insert (test_data.data_structures_1)
+--			executor.execute_query (query)
+--			assert ("The query doesn't return a result", not query.result_cursor.after)
+--			retrieved := query.result_cursor.item
+--			assert ("The results are not equal", retrieved.is_deep_equal (test_data.data_structures_1))
+--				-- perform update
+--			retrieved.array_1 [1].update
+--			executor.execute_update (retrieved.array_1 [1])
+--				-- check if update worked
+--			create query.make
+--			executor.execute_query (query)
+--			assert ("The query doesn't return a result", not query.result_cursor.after)
+--			retrieved := query.result_cursor.item
+--			assert ("The results are equal", not retrieved.is_deep_equal (test_data.data_structures_1))
+--				-- check that only the updated part really is different
+--			testdata_copy := test_data.data_structures_1.deep_twin
+--			testdata_copy.array_1 [1].update
+--			assert ("There was more than just one update", retrieved.is_deep_equal (testdata_copy))
 			repository.clean_db_for_testing
 		end
 
@@ -286,6 +309,45 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 --			assert ("too many special objects", query2.result_cursor.after)
 
 		end
+
+		test_tuple
+				-- Test a tuple store
+			local
+				box: ANY_BOX
+				test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			do
+				repository.clean_db_for_testing
+				create box.set_item ([create {FLAT_CLASS_1}.make, 42, "abc"])
+				create test.make (repository)
+				test.test_crud_operations (box,
+					agent (b: ANY_BOX)
+					do
+						check attached {TUPLE} b.item as t and then attached {FLAT_CLASS_1} t[1] as fc then
+							fc.update
+						end
+					end )
+			end
+
+		test_hash_table
+				-- Test a tuple store
+			local
+				box: ANY_BOX
+				hash: HASH_TABLE[FLAT_CLASS_1, STRING]
+				test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			do
+				repository.clean_db_for_testing
+				create hash.make (10)
+				hash.extend (test_data.flat_class.twin, "something")
+				create box.set_item (hash)
+				create test.make (repository)
+				test.test_crud_operations (box,
+					agent (b: ANY_BOX)
+					do
+						check attached {HASH_TABLE[FLAT_CLASS_1, STRING]} b.item as h and then attached {FLAT_CLASS_1} h["something"] as fc then
+							fc.update
+						end
+					end )
+			end
 
 
 feature {PS_REPOSITORY_TESTS} -- Polymorphism

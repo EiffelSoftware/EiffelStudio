@@ -30,9 +30,14 @@ feature
 			crud_tests.all_references_tests
 		end
 
-	mysql_collections
+	mysql_collections_easy
 		do
-			crud_tests.all_collection_tests
+			crud_tests.all_easy_collection_tests
+		end
+
+	mysql_collections_tricky
+		do
+			crud_tests.all_tricky_collection_tests
 		end
 
 	mysql_polymorphism

@@ -2348,23 +2348,23 @@ feature {NONE} -- Synchronization externals
 			"eif_thr_sem_destroy"
 		end
 
---	new_mutex: POINTER
---		external
---			"C use %"eif_threads.h%""
---		alias
---			"eif_thr_mutex_create"
---		end
-
 	new_mutex: POINTER
 		external
-			"C inline use %"eif_threads.h%""
+			"C use %"eif_threads.h%""
 		alias
-			"[
-				EIF_CS_TYPE *section = (EIF_CS_TYPE *) eif_malloc(sizeof(EIF_CS_TYPE));
-				InitializeCriticalSectionAndSpinCount(section, (DWORD) 4000);
-				return section;
-			]"
+			"eif_thr_mutex_create"
 		end
+
+--	new_mutex: POINTER
+--		external
+--			"C inline use %"eif_threads.h%""
+--		alias
+--			"[
+--				EIF_CS_TYPE *section = (EIF_CS_TYPE *) eif_malloc(sizeof(EIF_CS_TYPE));
+--				InitializeCriticalSectionAndSpinCount(section, (DWORD) 4000);
+--				return section;
+--			]"
+--		end
 
 	lock_mutex (a_mutex_pointer: POINTER)
 		external

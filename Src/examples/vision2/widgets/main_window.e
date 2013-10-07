@@ -14,7 +14,7 @@ inherit
 			initialize,
 			is_in_default_state
 		end
-		
+
 	INTERNAL
 		undefine
 			default_create,
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 				-- Set up output area.
 			create output
 			vertical_box.extend (output)
-			
+
 				-- Set up scrollable area
 			create scrollable_area
 			horizontal_box.extend (scrollable_area)
 			horizontal_box.disable_item_expand (scrollable_area)
 			scrollable_area.set_minimum_size (Scrollable_area_width, 250)
-			
+
 				-- Set up menus
 			create file_menu.make_with_text ("File")
 			create help_menu.make_with_text ("Help")
@@ -77,14 +77,14 @@ feature {NONE} -- Initialization
 				-- Show `Current'.
 			show
 		end
-		
+
 		show_about_dialog
 				-- Create and display the about dialog.
 			do
 				create about_dialog.make
 				about_dialog.show_modal_to_window (Current)
 			end
-			
+
 	initialize_widget_tree
 			-- Add widgets to `widget_tree'.
 		local
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			widget_tree.extend (tree_item)
 			create tree_item1.make_with_text ("Containers")
 			tree_item.extend (tree_item1)
-			
+
 			create containers.make_from_array (<<create {EV_CELL},
 												create {EV_FIXED},
 												create {EV_FRAME},
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 
 			create tree_item1.make_with_text ("Primitives")
 			tree_item.extend (tree_item1)
-			
+
 			create primitives.make_from_array (<<create {EV_BUTTON},
 												create {EV_CHECK_BUTTON},
 												create {EV_COMBO_BOX},
@@ -166,14 +166,14 @@ feature {NONE} -- Initialization
 				counter := counter + 1
 			end
 		end
-		
+
 	test_widget (widget: EV_WIDGET)
 			-- Initialize tests for `widget'.
 		do
 				-- Remove previous testable widget
 			widget_area.wipe_out
 			widget_area.extend (widget)
-			
+
 
 				-- Reset `scrollable_area' and other required
 				-- containers.
@@ -186,10 +186,10 @@ feature {NONE} -- Initialization
 			scrollable_area.extend (test_holder)
 			output.remove_text
 			create widget_control.make (test_holder, widget, output)
-			
+
 				-- We must now check the types that `widget' conforms to,
 				-- in order to set up the required controls.
-				
+
 			container ?= widget
 			if container /= Void then
 				create container_control.make (test_holder, container, output)
@@ -206,32 +206,32 @@ feature {NONE} -- Initialization
 			if textable /= Void then
 				create textable_control.make (test_holder, textable, output)
 			end
-			
+
 			text_alignable ?= widget
 			if text_alignable /= Void then
 				create text_alignable_control.make (test_holder, text_alignable, output)
 			end
-			
+
 			text_component ?= widget
 			if text_component /= Void then
 				create text_component_control.make (test_holder, text_component, output)
 			end
-			
+
 			button ?= widget
 			if button /= Void then
 				button.select_actions.extend (agent output.append_text ("Button selected%N"))
 			end
-			
+
 			drawable ?= widget
 			if drawable /= Void then
 				create drawable_control.make (test_holder, drawable, output)
 			end
-			
+
 			pixmapable ?= widget
 			if pixmapable /= Void then
 				create pixmapable_control.make (test_holder, pixmapable, output)
 			end
-			
+
 			selectable ?= widget
 			deselectable ?= widget
 			if deselectable /= Void then
@@ -239,20 +239,20 @@ feature {NONE} -- Initialization
 			elseif selectable /= Void then
 				create selectable_control.make (test_holder, selectable, output)
 			end
-			
+
 			gauge ?= widget
 			if gauge /= Void then
 				create gauge_control.make (test_holder, gauge, output)
 			end
-			
+
 			item_list ?= widget
 			if item_list /= Void then
 				create item_list_control.make (test_holder, item_list, output)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- Currently do not care about this check, so we
@@ -265,13 +265,13 @@ feature -- Access
 
 	widget_tree: EV_TREE
 		-- A tree holding all testable widgets.
-	
+
 	widget_area: EV_FRAME
 		-- A cell to hold the currently selected and testable widget.
-		
+
 	test_detail_selection: EV_NOTEBOOK
 		-- This holds different details of the test for each widget.
-	
+
 	output: EV_TEXT
 		-- All event output occurs here.
 
@@ -279,31 +279,31 @@ feature -- Access
 		-- The following widgets are used to build the interface
 		-- for the user.
 	test_holder: EV_VERTICAL_BOX
-	
+
 	frame: EV_FRAME
-	
+
 	scrollable_area: EV_SCROLLABLE_AREA
-		
+
 	horizontal_box: EV_HORIZONTAL_BOX
-		
+
 	vertical_box, vertical_box1: EV_VERTICAL_BOX
-	
+
 	text_field: EV_TEXT_FIELD
-	
+
 	button, button1: EV_BUTTON
-	
+
 	file_menu, help_menu: EV_MENU
-	
+
 	exit_menu_item, about_menu_item: EV_MENU_ITEM
-	
+
 	a_menu_bar: EV_MENU_BAR
-	
+
 	about_dialog: ABOUT_DIALOG
-					
+
 feature {NONE} -- Implementation
 
 
-	-- The following widgets need to be included, 
+	-- The following widgets need to be included,
 	-- we cannot create them dynamically if we do not reference them.
  include1: EV_CHECK_BUTTON
  include2: EV_COMBO_BOX
@@ -329,35 +329,35 @@ feature {NONE} -- Implementation
 		-- The different properties and types that
 		-- we need to use.
 	textable: EV_TEXTABLE
-	
+
 	text_component: EV_TEXT_COMPONENT
-	
+
 	sensitive: EV_SENSITIVE
-	
+
 	colorizable: EV_COLORIZABLE
-	
+
 	text_component_text_field: EV_TEXT_FIELD
-	
-	selectable: EV_SELECTABLE	
-	
+
+	selectable: EV_SELECTABLE
+
 	deselectable: EV_DESELECTABLE
-	
+
 	drawable: EV_DRAWABLE
-	
+
 	pixmapable: EV_PIXMAPABLE
-	
+
 	gauge: EV_GAUGE
-	
+
 	container: EV_CONTAINER
-	
+
 	textable_text_field: EV_TEXT_FIELD
-	
+
 	text_alignable: EV_TEXT_ALIGNABLE
-	
+
 	item_list: EV_ITEM_LIST [EV_ITEM]
-	
+
 	bspinr, bsping, bspinb, fspinr, fsping, fspinb: EV_SPIN_BUTTON
-	
+
 		-- The different controls available for
 		-- use in the test.
 	textable_control: TEXTABLE_CONTROL
@@ -375,8 +375,8 @@ feature {NONE} -- Implementation
 	text_alignable_control: TEXT_ALIGNABLE_CONTROL
 
 		-- Default width of the scrollable area.
-	Scrollable_area_width: INTEGER = 220;
-	
+	Scrollable_area_width: INTEGER = 230;
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

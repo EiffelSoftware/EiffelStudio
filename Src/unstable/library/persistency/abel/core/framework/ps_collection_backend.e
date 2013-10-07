@@ -39,7 +39,7 @@ feature {PS_EIFFELSTORE_EXPORT}
 		require
 --			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
 			objectoriented_mode: not a_collection.is_relationally_mapped
-			not_yet_known: not key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
+--			not_yet_known: not key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 --			objectoriented_collection_operation_supported: supports_object_collection
 			backend_can_handle_collection: can_handle_object_oriented_collection (a_collection.object_wrapper.metadata)
 		deferred

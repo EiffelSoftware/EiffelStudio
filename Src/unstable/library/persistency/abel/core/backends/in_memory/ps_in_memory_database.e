@@ -10,6 +10,9 @@ class
 inherit
 
 	PS_BACKEND
+		redefine
+			update_object_oriented_collection
+		end
 
 	PS_EIFFELSTORE_EXPORT
 
@@ -177,6 +180,17 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 				item_primary := key_mapper.quick_translate (coll_item.item.object_identifier, a_transaction)
 				add_to_collection (primary, coll_item.item.as_attribute (item_primary), a_collection.index_of (coll_item.item))
 			end
+		end
+
+	update_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+			-- Update `a_collection' in the database.
+		local
+			primary: INTEGER
+		do
+			primary := key_mapper.primary_key_of ( a_collection.object_wrapper, a_transaction).first
+			attach (collections[primary]).wipe_out
+			collection_info.force (a_collection.additional_information, primary)
+			insert_object_oriented_collection (a_collection, a_transaction)
 		end
 
 	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)

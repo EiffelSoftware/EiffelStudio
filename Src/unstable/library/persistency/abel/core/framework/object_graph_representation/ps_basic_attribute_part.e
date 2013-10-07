@@ -25,12 +25,27 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 
 	basic_attribute_value: STRING
 			-- The value of the basic attribute as a string.
+		local
+			managed: MANAGED_POINTER
 		do
 			fixme ("We need to escape STRING and STRING_32 here, to prevent SQL injection. Addtionally, a check to see if we really only get basic types would be helpful for security")
 			if attached {CHARACTER_8} represented_object as char then
 				Result := char.natural_32_code.out
 			elseif attached {CHARACTER_32} represented_object as char then
 				Result := char.natural_32_code.out
+			elseif attached {REAL_32} represented_object as real then
+				create managed.make ({PLATFORM}.real_32_bytes)
+				managed.put_real_32_be (real, 0)
+				Result := managed.read_integer_32_be(0).out
+
+--				Reversed:
+--				managed.put_integer_32_be (Result.to_integer, 0)
+--				real := managed.read_real_32_be (0)
+
+			elseif attached {REAL_64} represented_object as real then
+				create managed.make ({PLATFORM}.real_64_bytes)
+				managed.put_real_64_be (real, 0)
+				Result := managed.read_integer_64_be(0).out
 			else
 				Result := represented_object.out
 			end

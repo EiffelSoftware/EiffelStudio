@@ -39,7 +39,7 @@ feature -- Cursor movement
 				backend.apply_plugins (i, transaction)
 			end
 		ensure then
-			item_correctly_retrieved: not after implies backend.check_retrieved_object(item, type, criterion, attributes, transaction)
+			item_correctly_retrieved: not after implies backend.check_retrieved_object(item, type, attributes, transaction)
 		end
 
 feature {NONE} -- Impementation

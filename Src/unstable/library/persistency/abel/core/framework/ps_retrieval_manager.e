@@ -240,7 +240,7 @@ feature {NONE} -- Implementation - Build support functions.
 	build (type: PS_TYPE_METADATA; value: PS_PAIR [STRING, STRING]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]): detachable ANY
 			-- Build an object based on the type.
 		local
-			object_result: LIST [PS_RETRIEVED_OBJECT]
+			object_result: detachable PS_RETRIEVED_OBJECT
 			collection_result: PS_RETRIEVED_OBJECT_COLLECTION
 			managed: MANAGED_POINTER
 		do
@@ -302,10 +302,9 @@ feature {NONE} -- Implementation - Build support functions.
 			else
 					-- Build a new object
 				if not value.first.is_empty then
-					fixme ("Retrieve based on dynamic type, stored in value.second")
-					object_result := backend.retrieve_from_single_key (type, value.first.to_integer, transaction)
-					if not object_result.is_empty then
-						Result := build_object (type, object_result.first, transaction, bookkeeping, true)
+					object_result := backend.retrieve_by_primary (type, value.first.to_integer, type.attributes.deep_twin, transaction)
+					if attached object_result then
+						Result := build_object (type, object_result, transaction, bookkeeping, true)
 					end
 				end
 			end

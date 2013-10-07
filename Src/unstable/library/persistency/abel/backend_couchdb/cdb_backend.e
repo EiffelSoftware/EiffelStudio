@@ -64,7 +64,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			until
 				curr_id > highest_id
 			loop
-				temp_list := retrieve_from_single_key (type, curr_id, transaction)
+				temp_list := internal_retrieve_from_key (type, curr_id, transaction)
 				if not temp_list.is_empty then
 					curr_obj := temp_list.first
 					if criteria.can_handle_object (curr_obj) then

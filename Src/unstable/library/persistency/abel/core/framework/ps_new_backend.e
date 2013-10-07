@@ -58,14 +58,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 				end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT}
+feature {PS_EIFFELSTORE_EXPORT} -- Object graph write function
 
 	frozen write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
 			-- Write all objects in `object_graph' to the database.
 		require
 			write_enabled: is_write_supported
-			can_handle_objects: rigorous_contracts implies can_write_object_graph (object_graph)
-			all_objects_identified: rigorous_contracts implies across object_graph.new_smart_cursor as c all c.item.is_identified end
+			can_handle_objects: enable_expensive_contracts implies can_write_object_graph (object_graph)
+			all_objects_identified: enable_expensive_contracts implies across object_graph.new_smart_cursor as c all c.item.is_identified end
 		do
 			-- Execute plugins before write
 			across object_graph.new_smart_cursor as cursor
@@ -89,15 +89,21 @@ feature {PS_EIFFELSTORE_EXPORT}
 			-- TODO: maybe execute plugins after write
 		end
 
+feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
+
+
 	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
-			-- Retrieves all objects of class `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
-			-- It will only retrieve the attributes listed there.
-			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
-			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
-			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
+			-- Retrieves all objects from the database where the following conditions hold:
+			--		1) The object is a (direct) instance of `type'
+			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
+			--		3) The `criteria' are satisfied for this object (this point is optional however).
+			-- All attributes defined in `attributes' are guaranteed to be present. Additional attributes may be included.
+			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch,
+			-- the attribute value during retrieval will be an empty string and its class name `NONE'.
 		require
---			most_general_type: across type.supertypes as supertype all not (supertype.item.is_equal (type) and type.is_subtype_of (supertype.item)) end
---			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
+			supported: is_read_supported and then is_object_type_supported (type)
+			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
+			no_agent_criteria: to_implement_assertion ("Adapt upper layers for this precondition")--not criteria.has_agent_criterion
 		local
 			real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
 			wrapper: PS_CURSOR_WRAPPER
@@ -120,39 +126,50 @@ feature {PS_EIFFELSTORE_EXPORT}
 				apply_plugins (Result.item, transaction)
 			end
 		ensure
---			loaded_attributes_exist: not Result.after implies across Result.item.attributes as attr all type.attributes.has(attr.item) end
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
-			correct: not Result.after implies check_retrieved_object (Result.item, type, criteria, attributes, transaction)
+			correct: not Result.after implies check_retrieved_object (Result.item, type, attributes, transaction)
 		end
 
-	retrieve_from_single_key (type: PS_TYPE_METADATA; primary_key: INTEGER; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
-			-- Retrieve the object of type `type' and key `primary_key'. Wrapper of the `retrieve_from_keys' in case you only need one object.
+	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: LIST[STRING] transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+			-- Retrieve the object where the following conditions hold:
+			--		1) The object is a (direct) instance of `type'
+			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
+			--		3) The object has the unique primary key `primary_key'.
+			-- All attributes defined in `attributes' are guaranteed to be present. Additional attributes may be included.
+			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch,
+			-- the attribute value during retrieval will be an empty string and its class name `NONE'.
+			-- Note: A primary key only has to be unique among the set of objects with type `type'.
 		require
---			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
+			supported: is_read_supported and then is_object_type_supported (type)
+			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
 		local
 			keys: LINKED_LIST [INTEGER]
+			res: LIST[PS_RETRIEVED_OBJECT]
 		do
-			create keys.make
-			keys.extend (primary_key)
-			Result := Current.retrieve_from_keys (type, keys, transaction)
+			-- TODO: plugins
+			res := internal_retrieve_from_key (type, primary_key, transaction)
+			if not res.is_empty then
+				Result := res.first
+			end
 		ensure
---			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
---			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+			metadata_set: attached Result implies Result.metadata.is_equal (type)
+			correct: attached Result implies check_retrieved_object (Result, type, attributes, transaction)
+			primary_key_correct: attached Result implies Result.primary_key = primary_key
 		end
 
 
-	frozen retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
-			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
-		require
---			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
-		do
-			-- execute plugins before retrieve
-			Result := internal_retrieve_from_keys (type, primary_keys, transaction)
-			-- execute plugins after retrieve
-		ensure
---			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
---			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
-		end
+--	frozen retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+--			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
+--		require
+----			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
+--		do
+--			-- execute plugins before retrieve
+--			Result := internal_retrieve_from_keys (type, primary_keys, transaction)
+--			-- execute plugins after retrieve
+--		ensure
+----			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
+----			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+--		end
 
 
 	default_collection_backend: --detachable
@@ -237,7 +254,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 		deferred
 		end
 
-	rigorous_contracts: BOOLEAN = True
+	enable_expensive_contracts: BOOLEAN = True
 			-- Defines if some very expensive contracts should be enabled as well.
 
 feature {PS_NEW_BACKEND}
@@ -245,12 +262,12 @@ feature {PS_NEW_BACKEND}
 
 	internal_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
 		require
-			update_and_delete_mapped: rigorous_contracts implies
+			update_and_delete_mapped: enable_expensive_contracts implies
 				across object_graph.new_smart_cursor as cursor
 				all
 					cursor.item.write_operation /= cursor.item.write_operation.insert implies is_mapped (cursor.item.object_wrapper, transaction)
 				end
-			insert_not_mapped_for_objects: rigorous_contracts implies
+			insert_not_mapped_for_objects: enable_expensive_contracts implies
 				across object_graph.new_smart_cursor as cursor
 				all
 					cursor.item.write_operation = cursor.item.write_operation.insert and attached {PS_SINGLE_OBJECT_PART} cursor.item
@@ -259,10 +276,10 @@ feature {PS_NEW_BACKEND}
 		deferred
 		ensure
 			--correct_write: rigorous_contracts implies check_write (object_graph, transaction)
-			objects_written: rigorous_contracts implies check_object_writes (object_graph, transaction)
-			objects_deleted: rigorous_contracts implies check_object_deletes (object_graph, transaction)
-			collections_written: rigorous_contracts implies check_collection_writes (object_graph, transaction)
-			collections_deleted: rigorous_contracts implies check_collection_deletes (object_graph, transaction)
+			objects_written: enable_expensive_contracts implies check_object_writes (object_graph, transaction)
+			objects_deleted: enable_expensive_contracts implies check_object_deletes (object_graph, transaction)
+			collections_written: enable_expensive_contracts implies check_collection_writes (object_graph, transaction)
+			collections_deleted: enable_expensive_contracts implies check_collection_deletes (object_graph, transaction)
 		end
 
 
@@ -283,6 +300,16 @@ feature {PS_NEW_BACKEND}
 
 --			attributes_loaded: not Result.after implies are_attributes_loaded (type, attributes, Result.item)
 --			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
+		end
+
+	internal_retrieve_from_key (type: PS_TYPE_METADATA; key: INTEGER; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+		local
+			list: LINKED_LIST[INTEGER]
+		do
+			create list.make
+			list.extend (key)
+			Result := internal_retrieve_from_keys (type, list, transaction)
+
 		end
 
 	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
@@ -307,7 +334,7 @@ feature {PS_CURSOR_WRAPPER}
 feature {PS_CURSOR_WRAPPER} -- Contracts
 
 
-	check_retrieved_object (object: PS_RETRIEVED_OBJECT; type:PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST[STRING]; transaction:PS_TRANSACTION): BOOLEAN
+	check_retrieved_object (object: PS_RETRIEVED_OBJECT; type:PS_TYPE_METADATA;  attributes: LIST[STRING]; transaction:PS_TRANSACTION): BOOLEAN
 			-- Check if the retrieved object meets some conditions
 		local
 			reflection: INTERNAL
@@ -329,13 +356,18 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 						attr_type := reflection.dynamic_type_from_string (object.attribute_value (cursor.item).attribute_class_name)
 
 						-- For expanded types, or when an object was attached, the runtime type must conform to the declared type
-						Result := Result and (attr_type > 0 implies
+						Result := Result and (attr_type >= 0 implies
 							reflection.type_conforms_to (attr_type, type.attribute_type (cursor.item).type.type_id))
 
 						-- If a reference was Void during write, the runtime type was stored as NONE and the value is 0
 						Result := Result and (attr_type = reflection.none_type implies
 							not type.attribute_type (cursor.item).type.is_attached -- Type can be detachable
-							and object.attribute_value (cursor.item).value.is_equal ("0")) -- Value is 0
+							and object.attribute_value (cursor.item).value.is_empty) -- Value is an empty string
+
+						-- something strange happened...
+--						if attr_type <= 0 and attr_type /= reflection.none_type then
+--							Result := False
+--						end
 					end
 				end
 			end
@@ -356,11 +388,12 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 					implies (is_mapped (object.object_wrapper, transaction) and then
 						is_equal_object (
 							object,
-							retrieve_from_single_key(
+							retrieve_by_primary(
 								object.metadata,
 								mapping(object.object_wrapper, transaction),
+								object.metadata.attributes.deep_twin,
 								transaction
-								).first,
+								),
 							transaction))
 				end
 		end
@@ -421,83 +454,33 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 			fixme ("TODO")
 		end
 
---	check_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
---			-- Checks if all operations within an object graph have been successfully completed.
---		local
---			key: INTEGER
---		do
---			across object_graph.new_smart_cursor as cursor
---			from
---				Result := true
---			loop
---				if attached {PS_SINGLE_OBJECT_PART} cursor.item as object then
---					if object.write_operation /= object.write_operation.delete then
---						Result := Result and is_object_write_successful (object, transaction)
---					else
---						Result := Result and not is_mapped (object.object_wrapper, transaction)
---					end
---				else -- it is a collection...
---					if cursor.item.write_operation = cursor.item.write_operation.insert then
---						if attached {PS_OBJECT_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as obj_coll then
-
---							Result := Result and is_collection_write_successful (obj_coll, transaction)
---						end
-
---					else
---						-- collection delete operation... probably as part of an update, but might be
---						-- standalone. I that case check if operation was successful
---					end
---				end
---			end
---		end
-
---	is_collection_write_successful (a_collection: PS_OBJECT_COLLECTION_PART[ITERABLE [detachable ANY]]; transaction:PS_TRANSACTION):BOOLEAN
---			-- Checks if a write of a collection was successful.
---		do
---			fixme ("TODO")
---			Result := true
---		end
-
---	is_object_write_successful (an_object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): BOOLEAN
---			-- Checks if a write to an object returns the correct result.
---		local
---			retrieved_object: PS_RETRIEVED_OBJECT
---			retrieved_obj_list: LIST [PS_RETRIEVED_OBJECT]
---			keys: LINKED_LIST [INTEGER]
---			current_item: PS_OBJECT_GRAPH_PART
---		do
---			Result := True
---			create keys.make
---			keys.extend (key_mapper.primary_key_of (an_object.object_wrapper, transaction).first)
---			retrieved_obj_list := retrieve_from_keys (an_object.object_wrapper.metadata, keys, transaction)
---			Result := is_equal_object (an_object, retrieved_obj_list.first, transaction)
---		end
-
-
-	is_equal_object (object: PS_SINGLE_OBJECT_PART; retrieved_object: PS_RETRIEVED_OBJECT; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_object (object: PS_SINGLE_OBJECT_PART; retrieved_object: detachable PS_RETRIEVED_OBJECT; transaction:PS_TRANSACTION): BOOLEAN
 			-- Check if the two objects are the same.
 		local
 			same_attribute: BOOLEAN
 			attribute_value: STRING
 		do
-			-- Check that primary keys and types are the same
-			Result := is_mapped (object.object_wrapper, transaction) and then (
-				mapping (object.object_wrapper, transaction) = retrieved_object.primary_key and
-				object.metadata.is_equal (retrieved_object.metadata) )
+			if attached retrieved_object then
 
-			-- Proceed by checking the attributes
-			if Result then
-				across object.attributes as cursor
-				loop
---					print (cursor.item + " " + retrieved_object.has_attribute (cursor.item).out + "%N")
-					-- Check if the attribute is actually present
-					same_attribute := retrieved_object.has_attribute (cursor.item)
-						-- Check if the types and values are the same
-						and then is_equal_tuple (object.attribute_value (cursor.item), retrieved_object.attribute_value (cursor.item), transaction)
+				-- Check that primary keys and types are the same
+				Result := is_mapped (object.object_wrapper, transaction) and then (
+					mapping (object.object_wrapper, transaction) = retrieved_object.primary_key and
+					object.metadata.is_equal (retrieved_object.metadata) )
 
-					-- Backends are allowed to drop Void references
-					if not attached {PS_NULL_REFERENCE_PART} object.attribute_value (cursor.item) then
-						Result := Result and same_attribute
+				-- Proceed by checking the attributes
+				if Result then
+					across object.attributes as cursor
+					loop
+--						print (cursor.item + " " + retrieved_object.has_attribute (cursor.item).out + "%N")
+						-- Check if the attribute is actually present
+						same_attribute := retrieved_object.has_attribute (cursor.item)
+							-- Check if the types and values are the same
+							and then is_equal_tuple (object.attribute_value (cursor.item), retrieved_object.attribute_value (cursor.item), transaction)
+
+						-- Backends are allowed to drop Void references
+						if not attached {PS_NULL_REFERENCE_PART} object.attribute_value (cursor.item) then
+							Result := Result and same_attribute
+						end
 					end
 				end
 			end

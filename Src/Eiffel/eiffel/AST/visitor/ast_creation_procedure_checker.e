@@ -352,7 +352,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 							-- Check whether this is an attachment or a call.
 						if f.is_attribute and then is_attachment then
 								-- Mark attribute as set.
-							attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+							set_attribute (f)
 						elseif not bodies.has (f.body_index) then
 								-- This feature has not been processed yet.
 							if f.is_routine then
@@ -365,7 +365,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 									error_handler.insert_error (create {VEVI}.make_attribute
 										(f, current_class.class_id, creation_procedure, a.feature_name, context.current_feature))
 										-- Mark that the attribute is initialized to avoid repeated errors.
-									attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+									set_attribute (f)
 								end
 							end
 						end
@@ -584,6 +584,20 @@ feature {NONE} -- Current tracking
 			end
 		end
 
+feature {NONE} -- Attribbute initialization
+
+	set_attribute (a: FEATURE_I)
+			-- Mark attribute `a' as initialized.
+		do
+				-- Update attribute initialization status.
+			attribute_initialization.set_attribute (context.attributes.item (a.feature_id))
+				-- Check if Current is still uninitialized.
+			if uninitialized_keeper.is_used and then not attribute_initialization.has_unset_index (1, context.attributes.count) then
+					-- Update initialization status of Current.
+				uninitialized_keeper.unuse
+			end
+		end
+
 feature {AST_EIFFEL} -- Visitor: reattachment
 
 	process_assign_as (a: ASSIGN_AS)
@@ -772,7 +786,7 @@ feature {AST_EIFFEL} -- Visitor: compound
 				keeper.leave_optional_realm
 				if attached f then
 						-- Mark attribute as initialized.
-					attribute_initialization.set_attribute (context.attributes.item (f.feature_id))
+					set_attribute (f)
 				end
 			end
 		end

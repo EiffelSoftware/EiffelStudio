@@ -13,6 +13,23 @@ inherit
 
 feature
 
+	experiment_dynamic_any_type
+			-- What is the dynamic type of ANY and detachable ANY?
+		local
+			reflection: INTERNAL
+		do
+			create reflection
+			print (reflection.dynamic_type_from_string ("attached ANY"))
+			println
+			print (reflection.dynamic_type_from_string ("detachable ANY"))
+			println
+
+			assert ("detachable ANY is 0, aka Pointer type",
+				reflection.dynamic_type_from_string ("detachable ANY") = reflection.dynamic_type_from_string ("ANY")
+				and reflection.pointer_type  = reflection.dynamic_type_from_string ("ANY"))
+
+		end
+
 	experiment_internal
 			-- An experiment about the runtime attached/detachable type situation
 		local
@@ -224,5 +241,5 @@ feature {NONE} -- Utilities
 		do
 			print ("%N")
 		end
-		
+
 end

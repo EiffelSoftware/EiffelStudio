@@ -299,6 +299,13 @@ feature {NONE} -- Implementation - Loading and storing objects
 
 					if attributes.is_empty then
 						attributes.fill (get_object_as_strings(type.base_class.name, obj_primary.item).current_keys)
+						across type.attributes as cursor
+						from attributes.compare_objects
+						loop
+							if not attributes.has (cursor.item) then
+								attributes.extend (cursor.item)
+							end
+						end
 					end
 
 					across

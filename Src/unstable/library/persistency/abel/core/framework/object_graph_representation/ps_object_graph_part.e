@@ -92,7 +92,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Utilities
 			-- The value and type of `Current' as an attribute to other objects.
 		do
 			if not is_representing_object then
-				Result := ["0", "NONE"]
+				Result := ["", "NONE"]
 			elseif is_basic_attribute then
 				Result := [basic_attribute_value, metadata.base_class.name]
 			else

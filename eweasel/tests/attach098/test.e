@@ -12,7 +12,9 @@ feature {NONE}
 			y: A
 		do
 			x := y
-			create x.make_self
+			create x.make_self1
+			create x.make_self2
+			create x.make_self3
 			create x.make_other (Current)
 		end
 

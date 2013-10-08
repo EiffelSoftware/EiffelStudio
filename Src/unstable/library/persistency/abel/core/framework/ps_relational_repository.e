@@ -177,7 +177,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 			executor: PS_WRITE_EXECUTOR
 		do
 			fixme ("TODO: implement a similar query in new backend interface")
-			if attached {PS_BACKEND} backend as b then
+			if attached {PS_BACKEND_COMPATIBILITY} backend as b then
 				create executor.make (b, id_manager)
 				create new_transaction.make_readonly (Current)
 				disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, new_transaction))
@@ -192,7 +192,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 
 feature {NONE} -- Initialization
 
-	make (a_backend: PS_NEW_BACKEND)
+	make (a_backend: PS_BACKEND)
 			-- Initialize `Current'.
 		do
 			backend := a_backend
@@ -254,7 +254,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 --	executor: PS_WRITE_EXECUTOR
 			-- An executor to execute operations in an operation plan
 
-	backend: PS_NEW_BACKEND
+	backend: PS_BACKEND
 			-- A BACKEND implementation
 
 	retriever: PS_RETRIEVAL_MANAGER

@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PS_NEW_BACKEND
+	PS_BACKEND
 
 inherit
 	PS_EIFFELSTORE_EXPORT
@@ -268,7 +268,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 	enable_expensive_contracts: BOOLEAN = True
 			-- Defines if some very expensive contracts should be enabled as well.
 
-feature {PS_NEW_BACKEND}
+feature {PS_BACKEND}
 
 
 	internal_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)

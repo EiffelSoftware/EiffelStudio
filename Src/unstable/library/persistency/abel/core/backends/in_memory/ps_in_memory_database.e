@@ -9,7 +9,7 @@ class
 
 inherit
 
-	PS_BACKEND
+	PS_BACKEND_COMPATIBILITY
 		redefine
 			update_object_oriented_collection
 		end

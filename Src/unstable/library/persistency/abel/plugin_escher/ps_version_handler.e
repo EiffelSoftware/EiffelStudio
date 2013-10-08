@@ -9,7 +9,7 @@ class
 
 inherit
 
-	PS_BACKEND
+	PS_BACKEND_COMPATIBILITY
 		redefine
 			key_mapper
 		end
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (real: PS_BACKEND; schema_evolution_handlers: HASH_TABLE[SCHEMA_EVOLUTION_HANDLER,STRING])
+	make (real: PS_BACKEND_COMPATIBILITY; schema_evolution_handlers: HASH_TABLE[SCHEMA_EVOLUTION_HANDLER,STRING])
 			-- Initialization for `Current'.
 		local
 			factory: PS_METADATA_FACTORY
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			schema_evolution_handlers_table := schema_evolution_handlers
 		end
 
-	real_backend: PS_BACKEND
+	real_backend: PS_BACKEND_COMPATIBILITY
 			-- The actual backend used for storage
 
 	integer_metadata: PS_TYPE_METADATA
@@ -59,12 +59,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Status report
-
-	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
-			-- Can the current backend handle objects of type `type'?
-		do
-			Result := real_backend.is_object_type_supported (type)
-		end
 
 	can_handle_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle the relational collection between the two classes `owner_type' and `collection_type'?

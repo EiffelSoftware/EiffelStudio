@@ -5,13 +5,13 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PS_BACKEND
+	PS_BACKEND_COMPATIBILITY
 
 inherit
 
 	PS_EIFFELSTORE_EXPORT
 
-	PS_NEW_BACKEND
+	PS_BACKEND
 		rename
 --			is_object_write_successful as is_successful_write
 			retrieve_collection as retrieve_object_oriented_collection,

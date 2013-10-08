@@ -126,6 +126,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 	all_easy_collection_tests
 			-- All collection tests
 		do
+			repository.clean_db_for_testing
 			test_referenced_collection_store
 			test_referenced_collection_update_known_object
 			test_referenced_collection_new_object

@@ -16,39 +16,43 @@ inherit {NONE}
 feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 
 	is_read_supported: BOOLEAN
-			-- Can the current backend write objects?
-		deferred
+			-- Can the current backend read objects?
+		do
+			Result := True
 		end
 
 	is_write_supported: BOOLEAN
-			-- Can the current backend read objects?
-		deferred
+			-- Can the current backend write objects?
+		do
+			Result := True
 		end
 
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
-		deferred
+		local
+			reflection: INTERNAL
+		do
+			create reflection
+			Result := not reflection.is_special_type (type.type.type_id)
 		end
 
 	is_generic_collection_supported: BOOLEAN
 			-- Can the current backend support collections in general,
 			-- i.e. is there a default strategy?
-		do
-			Result := true
+		deferred
 		end
 
 	can_write_object_graph (an_object_graph: PS_OBJECT_GRAPH_ROOT): BOOLEAN
 			-- Can the current backend write every object in the object graph?
 		do
-			Result := across an_object_graph as cursor
-				all
-					an_object_graph.write_operation = an_object_graph.write_operation.no_operation
-				or else (
+			Result := is_write_supported and then
+				across an_object_graph.new_smart_cursor as cursor
+				all (
 					attached {PS_SINGLE_OBJECT_PART} cursor.item as it
 					and then is_object_type_supported (it.metadata)
 				) or (
 					attached {PS_OBJECT_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as col
-					and then to_implement_assertion ("TODO: check if default collection backend can handle collection")
+					and then is_generic_collection_supported
 				) or (
 					attached {PS_RELATIONAL_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as col
 					and then to_implement_assertion ("TODO: check if there's a handler")
@@ -59,11 +63,22 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 feature {PS_EIFFELSTORE_EXPORT} -- Object graph write function
 
 	frozen write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
-			-- Write all objects in `object_graph' to the database.
+			-- Write all objects in `object_graph' to the database.		
 		require
 			write_enabled: is_write_supported
 			can_handle_objects: enable_expensive_contracts implies can_write_object_graph (object_graph)
 			all_objects_identified: enable_expensive_contracts implies across object_graph.new_smart_cursor as c all c.item.is_identified end
+			update_and_delete_mapped: enable_expensive_contracts implies
+				across object_graph.new_smart_cursor as cursor
+				all
+					cursor.item.write_operation /= cursor.item.write_operation.insert implies is_mapped (cursor.item.object_wrapper, transaction)
+				end
+			insert_not_mapped_for_objects: enable_expensive_contracts implies
+				across object_graph.new_smart_cursor as cursor
+				all
+					cursor.item.write_operation = cursor.item.write_operation.insert and attached {PS_SINGLE_OBJECT_PART} cursor.item
+					implies not is_mapped (cursor.item.object_wrapper, transaction)
+				end
 		do
 			-- Execute plugins before write
 			across object_graph.new_smart_cursor as cursor
@@ -169,17 +184,20 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		require
---			objectoriented_collection_operation_supported: supports_object_collection
---			backend_can_handle_collection: can_handle_object_oriented_collection (collection_type)
+			collections_supported: is_generic_collection_supported
 		deferred
+		ensure
+			correct: not Result.after implies check_retrieved_collection (Result.item, collection_type, transaction)
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		require
---			object_oriented_collection_operation_supported: supports_object_collection
---			backend_can_handle_collection: can_handle_object_oriented_collection (collection_type)
+			collections_supported: is_generic_collection_supported
 		deferred
+		ensure
+			correct: attached Result implies check_retrieved_collection (Result, collection_type, transaction)
+			primary_key_set: attached Result implies Result.primary_key = collection_primary_key
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
@@ -208,29 +226,18 @@ feature {PS_EIFFELSTORE_EXPORT} -- Mapping
 
 	is_mapped (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): BOOLEAN
 			-- Is `object' mapped to some database entry?
-		do
-			Result:= key_mapper.has_primary_key_of (object, transaction)
+		deferred
 		end
 
 	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
 			-- Add a mapping from `object' to the database entry with primary key `key'
-		do
-			key_mapper.add_entry (object, key, transaction)
+		deferred
 		end
 
 	mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): INTEGER
 			-- Get the mapping for `object'
 		require
 			mapped: is_mapped (object, transaction)
-		do
-			Result := key_mapper.primary_key_of (object, transaction).first
-		end
-
-feature {NONE} -- Mapping, Implementation
-
-
-	key_mapper: PS_KEY_POID_TABLE
-			-- Maps POIDs to primary keys as used by this backend.
 		deferred
 		end
 
@@ -265,18 +272,29 @@ feature {PS_NEW_BACKEND}
 
 
 	internal_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
-		require
-			update_and_delete_mapped: enable_expensive_contracts implies
-				across object_graph.new_smart_cursor as cursor
-				all
-					cursor.item.write_operation /= cursor.item.write_operation.insert implies is_mapped (cursor.item.object_wrapper, transaction)
-				end
-			insert_not_mapped_for_objects: enable_expensive_contracts implies
-				across object_graph.new_smart_cursor as cursor
-				all
-					cursor.item.write_operation = cursor.item.write_operation.insert and attached {PS_SINGLE_OBJECT_PART} cursor.item
-					implies not is_mapped (cursor.item.object_wrapper, transaction)
-				end
+			-- Semantics of different operations for `SIMPLE_OBJECT_GRAPH' objects:
+			-- Insert:
+			--		- Generate a mapping (primary key)
+			--		- Write primary key, type and all attributes in `{PS_SIMPLE_OBJECT_GRAPH}.attributes' (including their runtime type) to persistent storage
+			-- Update:
+			--		- Update only the attributes in `{PS_SIMPLE_OBJECT_GRAPH}.attributes' (including their runtime type)
+			-- Delete:
+			--		- Delete the object and all its attributes
+			-- Semantics of different operations for `PS_OBJECT_COlLECTION_PART'
+			-- Insert:
+			--		- Generate a mapping (primary key)
+			--		- Write all items in `{PS_OBJECT_COlLECTION_PART}.values' (including their runtime type) to persistent storage
+			--		- Write all infos in `{PS_OBJECT_COlLECTION_PART}.additional_information' to persistent storage
+			-- Update:
+			--		- First delete any existing database entries for `{PS_OBJECT_COlLECTION_PART}.values'
+			--		- Then add all entries from the object to update
+			--		- Replace all information in `{PS_OBJECT_COlLECTION_PART}.additional_information' as well
+			-- Delete:
+			--		- Delete the whole object
+			-- Semantics of different operations for `PS_RELATIONAL_COLLECTIION_PART'
+			--		- Forward request to the handler.
+			--
+			-- General: Make sure that any referenced objects (attributes or items) are already mapped.		
 		deferred
 		ensure
 			objects_written: enable_expensive_contracts implies check_object_writes (object_graph, transaction)
@@ -287,47 +305,23 @@ feature {PS_NEW_BACKEND}
 
 
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
-			-- Retrieves all objects of class `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
-			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
-			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
-			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
-			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
+			-- See function `retrieve'.
+			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		require
---			most_general_type: across type.supertypes as supertype all not (supertype.item.is_equal (type) and type.is_subtype_of (supertype.item)) end
---			all_attributes_exist: to_implement_assertion ("The requirement is too strong - e.g. ESCHER requires attributes that are theoretically not part of the object itself. across attributes as attr all type.attributes.has (attr.item) end")
+			supported: is_read_supported and then is_object_type_supported (type)
+			no_agent_criteria: to_implement_assertion ("Adapt upper layers for this precondition")--not criteria.has_agent_criterion
 		deferred
 			-- To have lazy loading support, you need to have a special ITERATION_CURSOR and a function next in this class to load the next item of this customized cursor
 		ensure
-			all_attributes_loaded: not Result.after implies across attributes as attr all Result.item.has_attribute(attr.item) end
-			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
-
---			attributes_loaded: not Result.after implies are_attributes_loaded (type, attributes, Result.item)
---			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
 		end
 
 	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: LIST [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
---		local
---			list: LINKED_LIST[INTEGER]
---			res: LIST[PS_RETRIEVED_OBJECT]
---		do
---			create list.make
---			list.extend (key)
---			res := internal_retrieve_from_keys (type, list, transaction)
---			if not res.is_empty then
---				Result := res.first
---			end
+			-- See function `retrieve_by_primary'.
+			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
+		require
+			supported: is_read_supported and then is_object_type_supported (type)
 		deferred
 		end
-
---	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
---			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
---		require
-----			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
---		deferred
---		ensure
-----			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
-----			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
---		end
 
 feature {PS_CURSOR_WRAPPER}
 
@@ -380,6 +374,41 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 			end
 		end
 
+
+	check_retrieved_collection (collection: PS_RETRIEVED_OBJECT_COLLECTION; type:PS_TYPE_METADATA; transaction:PS_TRANSACTION): BOOLEAN
+			-- Check if the retrieved collection meets some conditions
+		local
+			collection_item_type: INTEGER
+			runtime_type: INTEGER
+			reflection: INTERNAL
+		do
+			-- Check if the type is correct
+			Result := collection.metadata.is_equal(type)
+
+			if Result then
+				-- For all values, check if the runtime type makes sense
+				across collection.collection_items as cursor
+				from
+					create reflection
+					collection_item_type := type.actual_generic_parameter (1).type.type_id
+				loop
+					runtime_type := reflection.dynamic_type_from_string (cursor.item.second)
+
+					if runtime_type >= 0 then
+						-- Check if runtime type conforms to collection type
+						Result := Result and reflection.type_conforms_to (runtime_type, collection_item_type)
+					else
+						-- Item was Void during insert
+						Result := Result
+							and runtime_type = reflection.none_type -- Runtime type set to "NONE"
+							and not reflection.is_attached_type (collection_item_type) -- Collection type allowed to be detachable
+							and cursor.item.first.is_empty -- Value is an empty string
+					end
+
+
+				end
+			end
+		end
 
 
 	check_object_writes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN

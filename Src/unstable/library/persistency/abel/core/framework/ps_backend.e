@@ -14,7 +14,8 @@ inherit
 	PS_NEW_BACKEND
 		rename
 --			is_object_write_successful as is_successful_write
-			retrieve_collection as retrieve_object_oriented_collection
+			retrieve_collection as retrieve_object_oriented_collection,
+			is_generic_collection_supported as supports_object_collection
 		end
 
 --	PS_COLLECTION_BACKEND
@@ -32,6 +33,7 @@ inherit {NONE}
 
 feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
 
+
 	supports_object_collection: BOOLEAN
 			-- Can the current backend handle object collections?
 		deferred
@@ -44,16 +46,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
-	is_read_supported: BOOLEAN = True
-			-- Can the current backend write objects
-
-	is_write_supported: BOOLEAN = True
-			-- Can the current backend read objects
-
-	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
-			-- Can the current backend handle objects of type `type'?
-		deferred
-		end
 
 	can_handle_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle the relational collection between the two classes `owner_type' and `collection_type'?
@@ -291,6 +283,25 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Mapping
+
+
+	is_mapped (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): BOOLEAN
+			-- Is `object' mapped to some database entry?
+		do
+			Result:= key_mapper.has_primary_key_of (object, transaction)
+		end
+
+	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
+			-- Add a mapping from `object' to the database entry with primary key `key'
+		do
+			key_mapper.add_entry (object, key, transaction)
+		end
+
+	mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): INTEGER
+			-- Get the mapping for `object'
+		do
+			Result := key_mapper.primary_key_of (object, transaction).first
+		end
 
 	key_mapper: PS_KEY_POID_TABLE
 			-- Maps POIDs to primary keys as used by this backend.

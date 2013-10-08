@@ -1393,7 +1393,7 @@ feature {NONE} -- Implementation
 							no_last_class: l_last_class = Void
 							no_last_id: l_last_id = 0
 						end
-							-- NOTE: The look-up for overlaoded functions for .NET is not done because it's not used so often.
+							-- NOTE: The look-up for overloaded functions for .NET is not done because it's not used so often.
 						l_result_tuple := l_last_type_set.feature_i_state_by_name_id (l_feature_name.name_id)
 							-- If there we did not found a feature it could still be a tuple item.
 						if l_result_tuple.features_found_count > 1  then

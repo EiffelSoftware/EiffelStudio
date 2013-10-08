@@ -14,16 +14,17 @@ inherit
 	PS_NEW_BACKEND
 		rename
 --			is_object_write_successful as is_successful_write
+			retrieve_collection as retrieve_object_oriented_collection
 		end
 
-	PS_COLLECTION_BACKEND
-		rename
-			retrieve as retrieve_object_oriented_collection,
-			retrieve_all as retrieve_all_collections,
-			insert as insert_object_oriented_collection,
-			update as update_object_oriented_collection,
-			delete as delete_object_oriented_collection
-		end
+--	PS_COLLECTION_BACKEND
+--		rename
+--			retrieve as retrieve_object_oriented_collection,
+--			retrieve_all as retrieve_all_collections,
+--			insert as insert_object_oriented_collection,
+--			update as update_object_oriented_collection,
+--			delete as delete_object_oriented_collection
+--		end
 
 inherit {NONE}
 
@@ -59,10 +60,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 		deferred
 		end
 
---	can_handle_object_oriented_collection (collection_type: PS_TYPE_METADATA): BOOLEAN
---			-- Can the current backend handle an object-oriented collection of type `collection_type'?
---		deferred
---		end
+	can_handle_object_oriented_collection (collection_type: PS_TYPE_METADATA): BOOLEAN
+			-- Can the current backend handle an object-oriented collection of type `collection_type'?
+		deferred
+		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 
@@ -106,6 +107,32 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 --			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
 --			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
 --		end
+
+
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: LIST [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+		local
+			list: LINKED_LIST[INTEGER]
+			res: LIST[PS_RETRIEVED_OBJECT]
+		do
+			create list.make
+			list.extend (key)
+			res := internal_retrieve_from_keys (type, list, transaction)
+			if not res.is_empty then
+				Result := res.first
+			end
+
+		end
+
+	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
+		require
+--			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
+		deferred
+		ensure
+--			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
+--			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+		end
+
 
 feature {PS_EIFFELSTORE_EXPORT} -- internal_write: compatibility with new backend interface
 
@@ -161,10 +188,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 
-	default_collection_backend: PS_COLLECTION_BACKEND
-		do
-			Result:= Current
-		end
 
 --	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
 --			-- Retrieves all collections of type `collection_type'.
@@ -182,18 +205,18 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 --		deferred
 --		end
 
---	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
---			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
---		require
+	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
+		require
 --			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
---			objectoriented_mode: not a_collection.is_relationally_mapped
+			objectoriented_mode: not a_collection.is_relationally_mapped
 --			not_yet_known: not key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
---			objectoriented_collection_operation_supported: supports_object_collection
---			backend_can_handle_collection: can_handle_object_oriented_collection (a_collection.object_wrapper.metadata)
---		deferred
---		ensure
---			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
---		end
+			objectoriented_collection_operation_supported: supports_object_collection
+			backend_can_handle_collection: can_handle_object_oriented_collection (a_collection.object_wrapper.metadata)
+		deferred
+		ensure
+			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
+		end
 
 	update_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
 			-- Update `a_collection' in the database.
@@ -202,18 +225,18 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			insert_object_oriented_collection (a_collection, a_transaction)
 		end
 
---	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
---			-- Delete `a_collection' from the database.
---		require
---			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
---			objectoriented_mode: not a_collection.is_relationally_mapped
---			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
---			objectoriented_collection_operation_supported: supports_object_collection
---			backend_can_handle_collection: can_handle_object_oriented_collection (a_collection.object_wrapper.metadata)
---		deferred
---		ensure
---			not_known_anymore: not key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
---		end
+	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+			-- Delete `a_collection' from the database.
+		require
+			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
+			objectoriented_mode: not a_collection.is_relationally_mapped
+			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
+			objectoriented_collection_operation_supported: supports_object_collection
+			backend_can_handle_collection: can_handle_object_oriented_collection (a_collection.object_wrapper.metadata)
+		deferred
+		ensure
+			not_known_anymore: not key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
+		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 

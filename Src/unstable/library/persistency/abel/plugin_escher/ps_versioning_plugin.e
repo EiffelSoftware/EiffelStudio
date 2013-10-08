@@ -81,7 +81,7 @@ feature
 			end
 		end
 
-	before_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION)
+	before_retrieve (type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION)
 			-- Add the version attribute, if necessary
 		local
 			reflection: INTERNAL

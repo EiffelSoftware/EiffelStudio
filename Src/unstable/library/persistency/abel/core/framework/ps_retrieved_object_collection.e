@@ -14,7 +14,7 @@ inherit
 
 	PS_RETRIEVED_COLLECTION
 
-create {PS_BACKEND}
+create {PS_BACKEND_COMPATIBILITY}
 	make
 
 feature {PS_EIFFELSTORE_EXPORT} -- Access
@@ -56,7 +56,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := additional_information_hash.has (description)
 		end
 
-feature {PS_BACKEND} -- Element change
+feature {PS_BACKEND_COMPATIBILITY} -- Element change
 
 	add_information (description: STRING; value: STRING)
 			-- Add the information `value' with its description `description' to the retrieved collection.

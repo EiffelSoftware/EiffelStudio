@@ -11,7 +11,7 @@ inherit
 
 	PS_RETRIEVED_COLLECTION
 
-create {PS_BACKEND}
+create {PS_BACKEND_COMPATIBILITY}
 	make
 
 feature -- Access

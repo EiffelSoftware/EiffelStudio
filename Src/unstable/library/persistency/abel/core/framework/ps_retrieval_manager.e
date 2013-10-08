@@ -241,7 +241,7 @@ feature {NONE} -- Implementation - Build support functions.
 			-- Build an object based on the type.
 		local
 			object_result: detachable PS_RETRIEVED_OBJECT
-			collection_result: PS_RETRIEVED_OBJECT_COLLECTION
+			collection_result: detachable PS_RETRIEVED_OBJECT_COLLECTION
 			managed: MANAGED_POINTER
 		do
 			if type.is_basic_type then
@@ -293,8 +293,10 @@ feature {NONE} -- Implementation - Build support functions.
 			elseif has_handler (type) then
 				if backend.is_generic_collection_supported then
 						-- Build a collection
-					collection_result := attach (backend.default_collection_backend).retrieve (type, value.first.to_integer, transaction)
-					Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping)
+					collection_result := backend.retrieve_collection (type, value.first.to_integer, transaction)
+					if attached collection_result then
+						Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping)
+					end
 				else
 					fixme ("TODO: error")
 					check not_implemented: false end
@@ -458,7 +460,7 @@ feature {NONE} -- Implementation: Query initialization
 
 			if has_handler (type) then
 				if backend.is_generic_collection_supported then
-					results := attach(backend.default_collection_backend).retrieve_all (type, transaction)
+					results := backend.retrieve_all_collections (type, transaction)
 				else
 					fixme ("TODO: error")
 					check not_implemented:false then results := attributes.new_cursor end

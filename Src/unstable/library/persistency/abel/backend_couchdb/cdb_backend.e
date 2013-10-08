@@ -51,22 +51,22 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
 			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
 		local
-			temp_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
+--			temp_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
 			result_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
 			highest_id, curr_id: INTEGER
-			curr_obj: PS_RETRIEVED_OBJECT
+			curr_obj: detachable PS_RETRIEVED_OBJECT
 		do
 			create result_list.make
-			create temp_list.make
+--			create temp_list.make
 			highest_id := key_set [type.base_class.name]
 			from
 				curr_id := 1
 			until
 				curr_id > highest_id
 			loop
-				temp_list := internal_retrieve_from_key (type, curr_id, transaction)
-				if not temp_list.is_empty then
-					curr_obj := temp_list.first
+				curr_obj := internal_retrieve_by_primary (type, curr_id, attributes, transaction)
+				if attached curr_obj then
+--					curr_obj := temp_list.first
 					if criteria.can_handle_object (curr_obj) then
 						if criteria.is_satisfied_by (curr_obj) then
 							result_list.extend (curr_obj)

@@ -34,9 +34,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 			-- Can the current backend support collections in general,
 			-- i.e. is there a default strategy?
 		do
-			Result := attached default_collection_backend
-		ensure
-			has_handler: Result implies attached default_collection_backend
+			Result := true
 		end
 
 	can_write_object_graph (an_object_graph: PS_OBJECT_GRAPH_ROOT): BOOLEAN
@@ -146,10 +144,18 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			keys: LINKED_LIST [INTEGER]
 			res: LIST[PS_RETRIEVED_OBJECT]
 		do
-			-- TODO: plugins
-			res := internal_retrieve_from_key (type, primary_key, transaction)
-			if not res.is_empty then
-				Result := res.first
+			-- execute plugins before retrieve
+			across plug_in_list as cursor
+			loop
+				cursor.item.before_retrieve (type, Void, attributes, transaction)
+			end
+
+			-- Retrieve the result from the actual backend
+			Result := internal_retrieve_by_primary (type, primary_key, attributes, transaction)
+
+			-- Apply plugins after retrieve, if necessary
+			if attached Result then
+				apply_plugins (Result, transaction)
 			end
 		ensure
 			metadata_set: attached Result implies Result.metadata.is_equal (type)
@@ -157,26 +163,24 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			primary_key_correct: attached Result implies Result.primary_key = primary_key
 		end
 
-
---	frozen retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
---			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
---		require
-----			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
---		do
---			-- execute plugins before retrieve
---			Result := internal_retrieve_from_keys (type, primary_keys, transaction)
---			-- execute plugins after retrieve
---		ensure
-----			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
-----			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
---		end
+feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 
 
-	default_collection_backend: --detachable
-			PS_COLLECTION_BACKEND
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
+			-- Retrieves all collections of type `collection_type'.
+		require
+--			objectoriented_collection_operation_supported: supports_object_collection
+--			backend_can_handle_collection: can_handle_object_oriented_collection (collection_type)
 		deferred
 		end
 
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
+			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
+		require
+--			object_oriented_collection_operation_supported: supports_object_collection
+--			backend_can_handle_collection: can_handle_object_oriented_collection (collection_type)
+		deferred
+		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 
@@ -275,7 +279,6 @@ feature {PS_NEW_BACKEND}
 				end
 		deferred
 		ensure
-			--correct_write: rigorous_contracts implies check_write (object_graph, transaction)
 			objects_written: enable_expensive_contracts implies check_object_writes (object_graph, transaction)
 			objects_deleted: enable_expensive_contracts implies check_object_deletes (object_graph, transaction)
 			collections_written: enable_expensive_contracts implies check_collection_writes (object_graph, transaction)
@@ -302,25 +305,29 @@ feature {PS_NEW_BACKEND}
 --			class_metadata_set: not Result.after implies Result.item.class_metadata.is_equal (type.base_class)
 		end
 
-	internal_retrieve_from_key (type: PS_TYPE_METADATA; key: INTEGER; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
-		local
-			list: LINKED_LIST[INTEGER]
-		do
-			create list.make
-			list.extend (key)
-			Result := internal_retrieve_from_keys (type, list, transaction)
-
-		end
-
-	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
-			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
-		require
---			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: LIST [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+--		local
+--			list: LINKED_LIST[INTEGER]
+--			res: LIST[PS_RETRIEVED_OBJECT]
+--		do
+--			create list.make
+--			list.extend (key)
+--			res := internal_retrieve_from_keys (type, list, transaction)
+--			if not res.is_empty then
+--				Result := res.first
+--			end
 		deferred
-		ensure
---			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
---			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
 		end
+
+--	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+--			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
+--		require
+----			keys_exist: to_implement_assertion ("Some way to ensure that no arbitrary primary keys are getting queried")
+--		deferred
+--		ensure
+----			objects_loaded: to_implement_assertion ("This doesn't work: (primary_keys.count = Result.count), as some objects might have been deleted.")
+----			all_metadata_set: across Result as res all res.item.class_metadata.name = type.base_class.name end
+--		end
 
 feature {PS_CURSOR_WRAPPER}
 
@@ -388,7 +395,7 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 					implies (is_mapped (object.object_wrapper, transaction) and then
 						is_equal_object (
 							object,
-							retrieve_by_primary(
+							internal_retrieve_by_primary(
 								object.metadata,
 								mapping(object.object_wrapper, transaction),
 								object.metadata.attributes.deep_twin,
@@ -421,7 +428,7 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 					implies (is_mapped (collection.object_wrapper, transaction) and then
 						is_equal_collection (
 							collection,
-							default_collection_backend.retrieve(
+							retrieve_collection(
 								collection.metadata,
 								mapping(collection.object_wrapper, transaction),
 								transaction
@@ -486,35 +493,38 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 			end
 		end
 
-	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]; retrieved_collection: PS_RETRIEVED_OBJECT_COLLECTION; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]; retrieved_collection: detachable PS_RETRIEVED_OBJECT_COLLECTION; transaction:PS_TRANSACTION): BOOLEAN
 		local
 			collection_item, retrieved_collection_item: TUPLE [value: STRING; type: STRING]
 			same_item: BOOLEAN
 			index: INTEGER
 		do
-			-- Check that primary key and types are the same
-			Result := is_mapped (collection.object_wrapper, transaction) and then (
-				mapping (collection.object_wrapper, transaction) = retrieved_collection.primary_key and
-				collection.metadata.is_equal (retrieved_collection.metadata) )
+			if attached retrieved_collection then
 
-			-- Proceed by having a look at the collection items
-			if Result then
-				Result := Result and collection.values.count = retrieved_collection.collection_items.count
+				-- Check that primary key and types are the same
+				Result := is_mapped (collection.object_wrapper, transaction) and then (
+					mapping (collection.object_wrapper, transaction) = retrieved_collection.primary_key and
+					collection.metadata.is_equal (retrieved_collection.metadata) )
 
-				from index := 1
-				until not Result or index = collection.values.count
-				loop
-					Result := Result and
-						is_equal_tuple (collection.values.at (index), retrieved_collection.collection_items.at (index), transaction)
-					index := index +1
+				-- Proceed by having a look at the collection items
+				if Result then
+					Result := Result and collection.values.count = retrieved_collection.collection_items.count
+
+					from index := 1
+					until not Result or index = collection.values.count
+					loop
+						Result := Result and
+							is_equal_tuple (collection.values.at (index), retrieved_collection.collection_items.at (index), transaction)
+						index := index +1
+					end
 				end
-			end
 
-			-- Now check if the additional information fields are stored as well
-			if Result then
-				across collection.additional_information.current_keys as cursor
-				loop
-					Result := Result and attach(collection.additional_information[cursor.item]).is_equal (retrieved_collection.get_information (cursor.item))
+				-- Now check if the additional information fields are stored as well
+				if Result then
+					across collection.additional_information.current_keys as cursor
+					loop
+						Result := Result and attach(collection.additional_information[cursor.item]).is_equal (retrieved_collection.get_information (cursor.item))
+					end
 				end
 			end
 		end

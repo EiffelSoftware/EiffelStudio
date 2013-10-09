@@ -386,6 +386,9 @@ feature -- Expression evaluation messages
 			f_not_void: f /= Void
 		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready for `$3'."), [a.generator, s, f]) end
 
+	msg_error_condition_expression_must_have_boolean_condition: STRING_32
+		do Result := locale.translation ("Condition expression must have a boolean condition.") end
+
 	msg_error_should_not_occur_during_evaluation (a: ANY): STRING_32
 		require
 			a_not_void: a /= Void
@@ -449,7 +452,7 @@ feature -- Expression evaluation messages
 			a_not_void: a /= Void
 		do Result := locale.formatted_string (locale.translation ("$1:  Not yet available."), [a.generator]) end
 
-	msg_error_report_to_support (s: STRING): STRING_32
+	msg_error_report_to_support (s: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1 => ERROR : please report to support."), [s])
 		end
@@ -634,7 +637,7 @@ feature -- Expression evaluation messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

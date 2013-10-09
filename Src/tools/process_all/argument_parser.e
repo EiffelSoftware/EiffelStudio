@@ -70,6 +70,7 @@ feature {NONE} -- Access
 						"for instance key %"template%": using any of #action, #target, #uuid, #system, #ecf , #absolute_ecf variables %N...", False))
 
 			Result.extend (create {ARGUMENT_SWITCH}.make (test_switch, "Run tests found in systems.", True, False))
+			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (nproc_switch, "Maximum number of processors to use. If not specified, all available CPUs will be used.", True, False, "n", "Number of processors", False, 1, {NATURAL_16}.max_value))
 		end
 
 feature -- Status Report
@@ -233,6 +234,27 @@ feature -- Access
 			-- Finalize the project?
 		once
 			Result := has_option (list_failures_switch)
+		end
+
+	has_max_processors: BOOLEAN
+			-- Indicates if user specified a number of processors
+		once
+			Result := has_option (nproc_switch)
+		end
+
+	max_processors: NATURAL_8
+			-- Maximum number of processors to utilize
+		require
+			is_successful: is_successful
+			has_max_processors: has_max_processors
+		once
+			if attached {ARGUMENT_NATURAL_OPTION} option_of_name (nproc_switch) as l_value then
+				Result := l_value.natural_8_value
+			else
+				check False end
+			end
+		ensure
+			result_positive: Result > 0
 		end
 
 feature -- Access: -interface
@@ -419,6 +441,7 @@ feature {NONE} -- Switch names
 	interface_switch: STRING = "interface"
 	list_failures_switch: STRING = "list_failures"
 	test_switch: STRING = "tests"
+	nproc_switch: STRING = "nproc"
 	;
 
 note

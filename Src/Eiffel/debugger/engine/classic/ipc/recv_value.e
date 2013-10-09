@@ -23,7 +23,7 @@ inherit
 
 	SK_CONST
 
-feature	{} -- Initialization of the C/Eiffel interface
+feature	{NONE} -- Initialization of the C/Eiffel interface
 
 	init_recv_c
 			-- Pass routine addresses to C.

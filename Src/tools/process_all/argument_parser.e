@@ -418,7 +418,7 @@ feature {NONE} -- Switch names
 	options_switch: STRING = "options"
 	interface_switch: STRING = "interface"
 	list_failures_switch: STRING = "list_failures"
-	test_switch: STRING = "test"
+	test_switch: STRING = "tests"
 	;
 
 note

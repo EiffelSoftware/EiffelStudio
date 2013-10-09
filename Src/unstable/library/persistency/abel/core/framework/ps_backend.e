@@ -229,10 +229,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Mapping
 		deferred
 		end
 
---	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
---			-- Add a mapping from `object' to the database entry with primary key `key'
---		deferred
---		end
+	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
+			-- Add a mapping from `object' to the database entry with primary key `key'
+		deferred
+		end
 
 	mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): INTEGER
 			-- Get the mapping for `object'

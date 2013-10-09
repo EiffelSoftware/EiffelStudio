@@ -182,7 +182,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 				if identify then
 					bookkeeping.extend (Result, obj.primary_key + obj.class_metadata.name.hash_code)
 					id_manager.identify (Result, transaction)
-					backend.add_mapping (id_manager.identifier_wrapper (Result, transaction), obj.primary_key, transaction)
+					internal_add_mapping (id_manager.identifier_wrapper (Result, transaction), obj.primary_key, transaction)
 				end
 				across
 					obj.attributes as attr_cursor
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation - Core data structures
 
 feature {NONE} -- Initialization
 
-	make (a_backend: PS_BACKEND; an_id_manager: PS_OBJECT_IDENTIFICATION_MANAGER)
+	make (a_backend: PS_READ_ONLY_BACKEND; an_id_manager: PS_OBJECT_IDENTIFICATION_MANAGER; repo: PS_REPOSITORY)
 			-- Initialize `Current'.
 		do
 			backend := a_backend
@@ -508,7 +508,21 @@ feature {NONE} -- Initialization
 			create bookkeeping_manager.make (100)
 			create collection_handlers.make
 			create metadata_manager.make
+			repository := repo
 		end
+
+	internal_add_mapping (obj: PS_OBJECT_IDENTIFIER_WRAPPER; primary: INTEGER; transaction: PS_TRANSACTION)
+		do
+			if attached {PS_BACKEND} backend as old_backend then
+				old_backend.add_mapping (obj, primary, transaction)
+			else
+				check attached {PS_SIMPLE_IN_MEMORY_REPOSITORY} repository as repo then
+					repo.mapper.add_entry (obj, primary, transaction)
+				end
+			end
+		end
+
+	repository: PS_REPOSITORY
 
 	backend: PS_READ_ONLY_BACKEND
 			-- The storage backend.

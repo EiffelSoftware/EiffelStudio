@@ -17,8 +17,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	genereta_all_object_primaries (numbers: LIST[TUPLE[type: PS_TYPE_METADATA; primary_count: INTEGER]]):
-				LIST[TUPLE[type: PS_TYPE_METADATA; primaries:INDEXABLE_ITERATION_CURSOR[INTEGER]]]
+	genereta_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		deferred
 		end
@@ -37,7 +36,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			internal_write (objects)
 		end
 
-	delete (objects: LIST[INTEGER])
+	delete (objects: LIST[TUPLE[PS_TYPE_METADATA, INTEGER]])
 		deferred
 		end
 
@@ -47,6 +46,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 	delete_collections (collections: LIST[INTEGER])
+		deferred
+		end
+
+	wipe_out
+			-- Wipe out everything and initialize new.
 		deferred
 		end
 

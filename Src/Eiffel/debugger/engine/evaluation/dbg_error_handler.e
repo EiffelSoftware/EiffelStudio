@@ -236,7 +236,16 @@ feature -- Error notification: evaluation error
 	notify_error_evaluation_report_to_support (a: detachable ANY)
 		do
 			if a /= Void then
-				notify_error_evaluation (Debugger_names.msg_error_report_to_support (a.generating_type))
+				notify_error_evaluation_report_message_to_support (a.generating_type)
+			else
+				notify_error_evaluation_report_message_to_support (Void)
+			end
+		end
+
+	notify_error_evaluation_report_message_to_support (msg: detachable READABLE_STRING_GENERAL)
+		do
+			if msg /= Void then
+				notify_error_evaluation (Debugger_names.msg_error_report_to_support (msg))
 			else
 				notify_error_evaluation (Debugger_names.msg_error_report_to_support (""))
 			end

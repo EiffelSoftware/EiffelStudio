@@ -1020,8 +1020,94 @@ feature {BYTE_NODE} -- Visitor
 
 	process_if_expression_b (a_node: IF_EXPRESSION_B)
 			-- <Precursor>
+		local
+			l_tmp_target_backup: like tmp_target
+			l_condition_value: DBG_EVALUATED_VALUE
+			l_cond: BOOLEAN
+			l_result_value: detachable DBG_EVALUATED_VALUE
 		do
-			dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_not_supported (a_node))
+			l_tmp_target_backup := tmp_target
+
+			l_condition_value := standalone_evaluation_expr_b (a_node.condition)
+
+			if not error_occurred then
+				if
+					l_condition_value.value.is_type_boolean and then
+					attached l_condition_value.value.as_dump_value_basic as bval
+				then
+					l_cond := bval.value_boolean
+				else
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_condition_expression_must_have_boolean_condition)
+				end
+				if not error_occurred then
+					if l_cond then
+						l_result_value := standalone_evaluation_expr_b (a_node.then_expression)
+					else
+						if attached a_node.elsif_list as l_elsif_list then
+							across
+								l_elsif_list as c
+							until
+								l_result_value /= Void or error_occurred
+							loop
+								l_result_value := standalone_evaluation_elseif_expression_b (c.item)
+							end
+						end
+						if
+							not error_occurred and then
+							l_result_value = Void and then
+							attached a_node.else_expression as l_else_expression
+								-- | else_expression is attached, but this does not hurt here to use object test
+						then
+							l_result_value := standalone_evaluation_expr_b (l_else_expression)
+						end
+					end
+					if not error_occurred then
+						if l_result_value /= Void then
+							tmp_result := l_result_value
+						end
+					end
+				end
+			end
+			tmp_target := l_tmp_target_backup
+		end
+
+	standalone_evaluation_elseif_expression_b (a_node: ELSIF_EXPRESSION_B): detachable DBG_EVALUATED_VALUE
+		require
+			a_node /= Void
+		local
+			l_tmp_result_value_backup: like tmp_result
+			l_tmp_target_backup: like tmp_target
+
+			l_condition_value: DBG_EVALUATED_VALUE
+			l_cond: BOOLEAN
+			l_result_value: DBG_EVALUATED_VALUE
+		do
+				-- Backup
+			l_tmp_result_value_backup := tmp_result
+			l_tmp_target_backup := tmp_target
+
+				-- ELSIF_EXPRESSION...
+			l_condition_value := standalone_evaluation_expr_b (a_node.condition)
+			if not error_occurred then
+				if
+					l_condition_value.value.is_type_boolean and then
+					attached l_condition_value.value.as_dump_value_basic as bval
+				then
+					l_cond := bval.value_boolean
+					if l_cond then
+						l_result_value := standalone_evaluation_expr_b (a_node.expression)
+						if not error_occurred then
+							Result := l_result_value
+						end
+					end
+				else
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_should_not_occur_during_evaluation (l_condition_value))
+				end
+			end
+
+				-- Restore
+			tmp_result := l_tmp_result_value_backup
+			tmp_target := l_tmp_target_backup
 		end
 
 	process_hidden_if_b (a_node: HIDDEN_IF_B)

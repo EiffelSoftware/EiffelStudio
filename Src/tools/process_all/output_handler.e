@@ -32,13 +32,7 @@ feature -- Access
 
 	finish_report (a_worker_id: INTEGER)
 			-- Finish report
-		do
-			if attached non_reported_workers as l_workers then
-				l_workers.prune_all (a_worker_id)
-				if l_workers.is_empty then
-					report_summary
-				end
-			end
+		deferred
 		end
 
 feature -- Query

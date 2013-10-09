@@ -403,7 +403,9 @@ feature -- Basic operations
 					end
 
 						-- Set text, always using a merge.
-					l_new_text := merge_text (l_text.wide_text)
+					l_new_text := l_text.wide_text
+					l_new_text.prune_all ('%R')
+					l_new_text := merge_text (l_new_text)
 					if attached l_new_text then
 							-- Set text to `modified_data' for use in `prepare'
 						if l_recent_editor ~ l_editor then
@@ -755,7 +757,7 @@ invariant
 	modified_data_attached: attached modified_data
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

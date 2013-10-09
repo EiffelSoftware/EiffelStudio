@@ -17,19 +17,19 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Instanciate Current
+			-- Instantiate Current
 		do
 		end
 
 	make_failed
-			-- Instanciate Current as failed
+			-- Instantiate Current as failed
 		do
 			make
 			failed := True
 		end
 
 	make_with_value (v: like value)
-			-- Instanciate Current with value `v'
+			-- Instantiate Current with value `v'
 		require
 			v_attached: v /= Void
 		do
@@ -200,7 +200,7 @@ feature -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -130,6 +130,28 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 			primary_key_set: attached Result implies Result.primary_key = collection_primary_key
 		end
 
+feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
+
+	commit (a_transaction: PS_TRANSACTION)
+			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'.
+		deferred
+		end
+
+	rollback (a_transaction: PS_TRANSACTION)
+			-- Aborts `a_transaction' and undoes all changes in the database.
+		deferred
+		end
+
+	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
+			-- The currently active transaction isolation level.
+		deferred
+		end
+
+	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
+			-- Set the transaction isolation level `a_level' for all future transactions.
+		deferred
+		end
+
 feature {PS_EIFFELSTORE_EXPORT} -- Plugins
 
 	plug_in_list: LINKED_LIST[PS_PLUGIN]

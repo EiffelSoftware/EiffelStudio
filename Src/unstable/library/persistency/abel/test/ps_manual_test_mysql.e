@@ -13,6 +13,17 @@ inherit
 
 feature
 
+	mysql_tuple_queries
+		do
+			tuple_query_tests.test_simple_query
+			tuple_query_tests.test_query_with_criteria
+			tuple_query_tests.test_query_projection
+			tuple_query_tests.test_query_criteria_not_in_projection
+			tuple_query_tests.test_query_references
+			tuple_query_tests.test_query_objects_in_projection
+			tuple_query_tests.test_query_reference_cycle
+		end
+
 	mysql_criteria
 		do
 			criteria_tests.test_criteria_agents

@@ -16,7 +16,7 @@ inherit
 
 	PS_EIFFELSTORE_EXPORT
 
-create {PS_BACKEND_COMPATIBILITY}
+create {PS_BACKEND}
 	make
 
 feature {PS_EIFFELSTORE_EXPORT} -- Access

@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 				-- get arguments
 			create arguments.make
 			create failed_targets.make
-			max_processes := available_cpus.to_integer_32
 			create waiting_processes.make (10)
 			arguments.execute (agent start)
 		end
@@ -107,6 +106,12 @@ feature {NONE} -- Implementation
 			end
 			set_interface_texts_from_argument (arguments)
 			loc := arguments.location
+
+			if arguments.has_max_processors then
+				max_processes := arguments.max_processors.to_integer_16
+			else
+				max_processes := available_cpus.to_integer_16
+			end
 
 			set_base_location (loc)
 			localized_print ({STRING_32} "Base location: %"" + loc.name + "%"")

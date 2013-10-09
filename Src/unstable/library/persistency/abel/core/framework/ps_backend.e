@@ -404,8 +404,6 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 							and not reflection.is_attached_type (collection_item_type) -- Collection type allowed to be detachable
 							and cursor.item.first.is_empty -- Value is an empty string
 					end
-
-
 				end
 			end
 		end
@@ -517,6 +515,7 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 						if not attached {PS_NULL_REFERENCE_PART} object.attribute_value (cursor.item) then
 							Result := Result and same_attribute
 						end
+--						print (cursor.item + Result.out + "%N")
 					end
 				end
 			end
@@ -575,7 +574,7 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 			-- Check if the values are the same
 			if attached {PS_COMPLEX_PART} object_part as part and then is_mapped (part.object_wrapper, transaction) then
 				Result := Result and mapping (part.object_wrapper, transaction).out.is_equal (tuple.value)
---				print (object_part.metadata.type.name + "%N" + object_part.as_attribute (0).value.out + "%N" + tuple.value+ "%N"+ "%N")
+--				print (object_part.metadata.type.name + "%N" + object_part.as_attribute (mapping (part.object_wrapper, transaction)).value.out + "%N" + tuple.value+ "%N"+ "%N")
 			else
 				-- the 0 should be ignored...
 				Result := Result and object_part.as_attribute (0).value.is_equal (tuple.value)

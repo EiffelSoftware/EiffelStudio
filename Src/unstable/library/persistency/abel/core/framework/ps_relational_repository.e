@@ -233,16 +233,16 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 --					part.set_object_wrapper (id_manager.identifier_wrapper (part.represented_object, transaction))
 --				end
 --			end
-			across object_graph.new_smart_cursor as cursor
+--			across id_manager.global_set.current_items as cursor loop print (cursor.item.at (2)) print (", ") end print ("%N")
+			across object_graph as cursor
 			loop
-				if not cursor.item.is_identified then
-					if not id_manager.is_identified (cursor.item.represented_object, transaction) then
-						id_manager.identify (cursor.item.represented_object, transaction)
+				if attached {PS_COMPLEX_PART} cursor.item as item and then not item.is_identified then
+					if not id_manager.is_identified (item.represented_object, transaction) then
+						id_manager.identify (item.represented_object, transaction)
 					end
-					cursor.item.set_object_wrapper (id_manager.identifier_wrapper (cursor.item.represented_object, transaction))
+					item.set_object_wrapper (id_manager.identifier_wrapper (item.represented_object, transaction))
 				end
 			end
-
 		end
 
 	disassembler: PS_OBJECT_GRAPH_BUILDER

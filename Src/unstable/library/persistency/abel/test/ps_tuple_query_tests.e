@@ -25,7 +25,7 @@ feature
 			query:PS_TUPLE_QUERY[PERSON]
 			res: LINKED_LIST[TUPLE[STRING, STRING, INTEGER]]
 		do
-			across test_data.people as p loop executor.execute_insert(p) end
+			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make
 			create res.make
 			assert ("Query projection array is less than 3", query.projection.count >=3)
@@ -67,7 +67,7 @@ feature
 		local
 			query:PS_TUPLE_QUERY[PERSON]
 		do
-			across test_data.people as p loop executor.execute_insert(p) end
+			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 
 			executor.execute_tuple_query (query)
@@ -94,7 +94,7 @@ feature
 		local
 			query:PS_TUPLE_QUERY[PERSON]
 		do
-			across test_data.people as p loop executor.execute_insert(p) end
+			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 			query.set_projection (<<"last_name">>)
 
@@ -117,7 +117,7 @@ feature
 		local
 			query:PS_TUPLE_QUERY[PERSON]
 		do
-			across test_data.people as p loop executor.execute_insert(p) end
+			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 			query.set_projection (<<"first_name">>)
 

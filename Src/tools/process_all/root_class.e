@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 				-- get arguments
 			create arguments.make
 			create failed_targets.make
-			create waiting_processes.make (10)
+			create waiting_tasks.make (10)
 			arguments.execute (agent start)
 		end
 
@@ -65,8 +65,8 @@ feature {NONE} -- Implementation
 	max_processes: INTEGER
 			-- Max processes to run.
 
-	waiting_processes: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
-			-- Waiting processes
+	waiting_tasks: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			-- Waiting tasks
 
 	path_regexp_ignored (p: READABLE_STRING_32): BOOLEAN
 			-- Is path ignored in relation with `regexp_ignores'?
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 					if attached non_reported_workers as l_workers implies l_workers.count < max_processes then
 						schedule_process (l_is_clean, a_target, a_dir)
 					else
-						waiting_processes.extend (agent schedule_process (l_is_clean, a_target, a_dir))
+						waiting_tasks.extend (agent schedule_process (l_is_clean, a_target, a_dir))
 					end
 				end
 			end
@@ -319,10 +319,10 @@ feature {NONE} -- Implementation
 		do
 			Precursor {OUTPUT_HANDLER}(a_worker_id)
 			if attached non_reported_workers as l_workers implies l_workers.count < max_processes then
-				if not waiting_processes.is_empty then
-					l_item := waiting_processes.first
-					waiting_processes.start
-					waiting_processes.remove
+				if not waiting_tasks.is_empty then
+					l_item := waiting_tasks.first
+					waiting_tasks.start
+					waiting_tasks.remove
 					l_item.apply
 				end
 			end

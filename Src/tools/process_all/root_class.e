@@ -317,7 +317,12 @@ feature {NONE} -- Implementation
 		local
 			l_item: PROCEDURE [ANY, TUPLE]
 		do
-			Precursor {OUTPUT_HANDLER}(a_worker_id)
+			if attached non_reported_workers as l_workers then
+				l_workers.prune_all (a_worker_id)
+				if l_workers.is_empty and then waiting_tasks.is_empty then
+					report_summary
+				end
+			end
 			if attached non_reported_workers as l_workers implies l_workers.count < max_processes then
 				if not waiting_tasks.is_empty then
 					l_item := waiting_tasks.first

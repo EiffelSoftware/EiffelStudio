@@ -510,7 +510,7 @@ feature {NONE} -- Initialization
 			create metadata_manager.make
 		end
 
-	backend: PS_BACKEND
+	backend: PS_READ_ONLY_BACKEND
 			-- The storage backend.
 
 feature {PS_REPOSITORY} -- Initialization - Collection handlers

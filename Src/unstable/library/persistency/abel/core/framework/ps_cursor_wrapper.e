@@ -10,7 +10,7 @@ class
 inherit
 	ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
 
-create {PS_BACKEND}
+create {PS_READ_ONLY_BACKEND}
 	make
 
 feature -- Access
@@ -44,7 +44,7 @@ feature -- Cursor movement
 
 feature {NONE} -- Impementation
 
-	backend: PS_BACKEND
+	backend: PS_READ_ONLY_BACKEND
 
 	real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
 
@@ -59,7 +59,7 @@ feature {NONE} -- Impementation
 feature {NONE} -- Initialization
 
 	make (
-			a_backend: PS_BACKEND;
+			a_backend: PS_READ_ONLY_BACKEND;
 			a_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT];
 			a_type: like type;
 			a_criterion: like criterion

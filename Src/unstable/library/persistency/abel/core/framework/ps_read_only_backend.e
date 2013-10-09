@@ -171,11 +171,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Plugins
 
 feature {PS_EIFFELSTORE_EXPORT} -- Mapping
 
-	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
-			-- Add a mapping from `object' to the database entry with primary key `key'
-		deferred
-			-- TODO: move the mapping task somewhere else, as it is no longer the responsibility of a backend.
-		end
+--	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
+--			-- Add a mapping from `object' to the database entry with primary key `key'
+--		deferred
+--			-- TODO: move the mapping task somewhere else, as it is no longer the responsibility of a backend.
+--		end
 
 
 feature {PS_CURSOR_WRAPPER}

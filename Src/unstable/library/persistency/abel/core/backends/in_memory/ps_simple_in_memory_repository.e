@@ -1,25 +1,24 @@
 note
-	description: "[
-	A repository that while holding objects in memory, decomposes them and stores them in a relational-like fashion.
-	Use REPOSITORY_FACTORY to get an instance of this class associated with the specific database of interest.
-	]"
-	author: "Roman Schmocker"
+	description: "Summary description for {PS_SIMPLE_IN_MEMORY_REPOSITORY}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PS_RELATIONAL_REPOSITORY
+	PS_SIMPLE_IN_MEMORY_REPOSITORY
 
 inherit
-
 	PS_REPOSITORY
+		redefine
+			default_create
+		end
 
 inherit {NONE}
-
 	REFACTORING_HELPER
+		undefine default_create end
 
 create
-	make
+	default_create
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object query
 
@@ -51,11 +50,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 		local
 			exception: PS_INTERNAL_ERROR
 		do
---			fixme ("TODO")
---			create exception
---			exception.set_message ("Feature not yet implemented.")
---			transaction.set_error (exception)
---			exception.raise
 			id_manager.register_transaction (transaction)
 			retriever.setup_tuple_query (tuple_query, transaction)
 		rescue
@@ -67,11 +61,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 		local
 			exception: PS_INTERNAL_ERROR
 		do
---			fixme ("TODO")
---			create exception
---			exception.set_message ("Feature not yet implemented.")
---			transaction.set_error (exception)
---			exception.raise
 			id_manager.register_transaction (tuple_query.transaction)
 			retriever.next_tuple_entry (tuple_query)
 		rescue
@@ -85,11 +74,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, transaction))
-			identify_all (disassembler.object_graph, transaction)
-			backend.write (disassembler.object_graph, transaction)
---			planner.set_object_graph (disassembler.object_graph)
---			planner.generate_plan
---			executor.perform_operations (planner.operation_plan, transaction)
+
+			do_write (disassembler.object_graph, transaction)
+
+
 		rescue
 			default_transactional_rescue (transaction)
 		end
@@ -99,11 +87,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).update, agent id_manager.is_identified(?, transaction))
-			identify_all (disassembler.object_graph, transaction)
-			backend.write (disassembler.object_graph, transaction)
---			planner.set_object_graph (disassembler.object_graph)
---			planner.generate_plan
---			executor.perform_operations (planner.operation_plan, transaction)
+
+			do_write (disassembler.object_graph, transaction)
 		rescue
 			default_transactional_rescue (transaction)
 		end
@@ -113,11 +98,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 		do
 			id_manager.register_transaction (transaction)
 			disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).delete, agent id_manager.is_identified(?, transaction))
-			identify_all (disassembler.object_graph, transaction)
-			backend.write (disassembler.object_graph, transaction)
+
+			do_write (disassembler.object_graph, transaction)
+
 			planner.set_object_graph (disassembler.object_graph)
 			planner.generate_plan
---			executor.perform_operations (planner.operation_plan, transaction)
 			across
 				planner.operation_plan as op
 			loop
@@ -192,7 +177,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 
 feature {NONE} -- Initialization
 
-	make (a_backend: PS_BACKEND)
+	make (a_backend: PS_READ_WRITE_BACKEND)
 			-- Initialize `Current'.
 		do
 			backend := a_backend
@@ -205,6 +190,7 @@ feature {NONE} -- Initialization
 --			create executor.make (backend, id_manager)
 			create retriever.make (backend, id_manager, Current)
 			create collection_handlers.make
+			create mapper.make
 		end
 
 feature -- Initialization
@@ -254,7 +240,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 --	executor: PS_WRITE_EXECUTOR
 			-- An executor to execute operations in an operation plan
 
-	backend: PS_BACKEND
+	backend: PS_READ_WRITE_BACKEND
 			-- A BACKEND implementation
 
 	retriever: PS_RETRIEVAL_MANAGER
@@ -262,4 +248,90 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 	collection_handlers: LINKED_LIST[PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]]
 			-- The collection handlers registered with `Current'
+
+
+	do_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+		local
+			table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
+			primaries: HASH_TABLE[INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+			objects_to_write: LINKED_LIST[TUPLE[PS_RETRIEVED_OBJECT, PS_WRITE_OPERATION]]
+			objects_to_delete: LINKED_LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]]
+		do
+
+			identify_all (object_graph, transaction)
+			create table.make (10)
+
+			across object_graph.new_smart_cursor as cursor
+			loop
+				if cursor.item.write_operation = cursor.item.write_operation.insert then
+					table.force (table[cursor.item.metadata] + 1, cursor.item.metadata)
+				end
+			end
+
+			primaries := backend.genereta_all_object_primaries (table)
+
+			across object_graph.new_smart_cursor as cursor
+			loop
+				if cursor.item.write_operation = cursor.item.write_operation.insert then
+					check attached primaries[cursor.item.metadata] as primary_cursor then
+						mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item.item, transaction)
+					end
+				end
+			end
+
+
+			across object_graph.new_smart_cursor as cursor
+			from
+				create objects_to_write.make
+				create objects_to_delete.make
+			loop
+				if attached {PS_SINGLE_OBJECT_PART} cursor.item as obj then
+					if cursor.item.write_operation /= cursor.item.write_operation.delete then
+						objects_to_write.extend ([to_retrieved(obj, transaction), cursor.item.write_operation])
+					else
+						objects_to_delete.extend ([cursor.item.metadata, mapper.quick_translate (cursor.item.object_identifier, transaction)])
+						mapper.remove_primary_key (mapper.quick_translate (cursor.item.object_identifier, transaction), cursor.item.metadata, transaction)
+					end
+				else
+					check not_implemented: False end
+				end
+			end
+		end
+
+
+	to_retrieved (object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT
+		local
+			attr: PS_PAIR[STRING, STRING]
+			id: INTEGER
+		do
+			across object.attributes as cursor
+			from
+				create Result.make (mapper.quick_translate (object.object_identifier, transaction), object.metadata)
+			loop
+				if attached {PS_COMPLEX_PART} object.attribute_value (cursor.item) then
+					id := mapper.quick_translate (object.attribute_value (cursor.item).object_identifier, transaction)
+				end
+				attr := object.attribute_value (cursor.item).as_attribute (id)
+				Result.add_attribute (cursor.item, attr.first, attr.second)
+			end
+
+
+		end
+
+
+	mapper: PS_KEY_POID_TABLE
+
+
+	default_create
+			-- Initialization for `Current'.
+		local
+			simple_in_memory_backend: PS_EVEN_SIMPLER_IN_MEMORY_BACKEND
+			special_handler: PS_SPECIAL_COLLECTION_HANDLER
+		do
+			create simple_in_memory_backend.wipe_out
+			make (simple_in_memory_backend)
+			create special_handler.make
+			add_collection_handler (special_handler)
+		end
+
 end

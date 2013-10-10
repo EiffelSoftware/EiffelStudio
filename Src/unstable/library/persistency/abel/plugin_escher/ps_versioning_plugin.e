@@ -38,6 +38,47 @@ feature {NONE} -- Initialization
 
 feature
 
+	before_write_new (object: PS_RETRIEVED_OBJECT; op: PS_WRITE_OPERATION; transaction: PS_TRANSACTION)
+		local
+			stored_version: INTEGER
+			reflection: INTERNAL
+		do
+			if op = op.insert and object.metadata.type.is_conforming_to({detachable VERSIONED_CLASS}) then
+				create reflection
+				check attached {VERSIONED_CLASS} reflection.new_instance_of (object.metadata.type.type_id) as versioned_object then
+					stored_version := versioned_object.version
+				end
+				-- Testing-related code start
+				if simulate_version_mismatch then
+					fixme ("Remove testing-related code")
+					stored_version := stored_version - 1
+					if simulate_added_attribute then
+						-- 'stored_version' has to be set to 1 such that 'v1_to_v2' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+						stored_version := 1
+					end
+					if simulate_attribute_type_changed then
+						-- 'stored_version' has to be set to 2 such that 'v2_to_v3' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+						stored_version := 2
+					end
+					if simulate_attribute_name_changed then
+						-- 'stored_version' has to be set to 3 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+						stored_version := 3
+					end
+					if simulate_removed_attribute then
+						-- 'stored_version' has to be set to 5 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
+						stored_version := 5
+					end
+					if simulate_multiple_changes then
+						-- 'stored_version' has to be set to 4 such that that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+						stored_version := 4
+					end
+				end
+				-- Testing-related code end
+
+				object.add_attribute ("version", stored_version.out,integer_metadata.base_class.name)
+			end
+		end
+
 	before_write (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_TRANSACTION)
 			-- Adds the version attribute.
 		local
@@ -83,31 +124,8 @@ feature
 
 	before_retrieve (type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION)
 			-- Add the version attribute, if necessary
-		local
-			reflection: INTERNAL
-			current_class_instance: ANY
-			current_version, stored_version, no_of_attr, i: INTEGER
-			result_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
-			stored_object: PS_RETRIEVED_OBJECT
-			stored_obj_attr_values: HASH_TABLE [TUPLE [STRING, STRING], STRING]
-			set: BOOLEAN
-			current_class_name, attr_name, attr_type_as_string: STRING
-			exception: EXCEPTIONS
-
-			test_var: TUPLE[STRING,STRING]
-				-- Used for testing purposes
 		do
-			create reflection
-			current_class_instance := reflection.new_instance_of (type.type.type_id)
-
-			if attached {VERSIONED_CLASS} current_class_instance  then
-
-				-- The attributes list is always fully initialized now.
-				check attributes.is_empty implies type.attributes.is_empty end
---				if attributes.is_empty then
---					attributes.append (type.attributes)
---				end
-
+			if type.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
 				attributes.extend ("version")
 			end
 		end

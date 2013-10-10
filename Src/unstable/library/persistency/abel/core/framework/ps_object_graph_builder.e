@@ -160,6 +160,7 @@ feature {PS_OBJECT_GRAPH_PART} -- Disassembly: Factory methods
 			else
 					-- We found a Void reference - Ignore it.
 				create {PS_IGNORE_PART} Result.default_make (object_graph)
+--				create {PS_NULL_REFERENCE_PART} Result.default_make (object_graph)
 			end
 		end
 

@@ -273,7 +273,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 				end
 			end
 
-			primaries := backend.generate_all_object_primaries (table)
+			primaries := backend.generate_all_object_primaries (table, transaction)
 
 			across object_graph.new_smart_cursor as cursor
 			loop
@@ -311,10 +311,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 					check relations_not_implemented: False end
 				end
 			end
-			backend.write (objects_to_write)
-			backend.delete (objects_to_delete)
-			backend.write_collections (collections_to_write)
-			backend.delete_collections (collections_to_delete)
+			backend.write (objects_to_write, transaction)
+			backend.delete (objects_to_delete, transaction)
+			backend.write_collections (collections_to_write, transaction)
+			backend.delete_collections (collections_to_delete, transaction)
 
 		end
 
@@ -334,6 +334,17 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 				attr := object.attribute_value (cursor.item).as_attribute (id)
 				Result.add_attribute (cursor.item, attr.first, attr.second)
 			end
+
+			if object.write_operation = object.write_operation.insert then
+				across object.metadata.attributes as cursor
+				loop
+					if not Result.has_attribute(cursor.item) then
+						Result.add_attribute (cursor.item, "", "NONE")
+					end
+				end
+			end
+
+
 		end
 
 

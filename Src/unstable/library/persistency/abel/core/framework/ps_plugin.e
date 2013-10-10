@@ -16,6 +16,11 @@ feature
 		deferred
 		end
 
+
+	before_write_new (object: PS_RETRIEVED_OBJECT; operation: PS_WRITE_OPERATION; transaction: PS_TRANSACTION)
+		deferred
+		end
+		
 			-- is this actually necessary?
 --	after_write (object: PS_SINGLE_OBJECT_PART; transaction:PS_TRANSACTION)
 --		deferred

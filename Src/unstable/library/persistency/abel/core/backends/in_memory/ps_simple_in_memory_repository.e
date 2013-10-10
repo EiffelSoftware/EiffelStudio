@@ -254,8 +254,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 		local
 			table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
 			primaries: HASH_TABLE[INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+
 			objects_to_write: LINKED_LIST[TUPLE[PS_RETRIEVED_OBJECT, PS_WRITE_OPERATION]]
 			objects_to_delete: LINKED_LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]]
+
+			collections_to_write: LINKED_LIST[TUPLE[PS_RETRIEVED_OBJECT_COLLECTION, PS_WRITE_OPERATION]]
+			collections_to_delete: LINKED_LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]]
 		do
 
 			identify_all (object_graph, transaction)
@@ -263,12 +267,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 			across object_graph.new_smart_cursor as cursor
 			loop
+				-- TODO: differentiate between object and collection primaries
 				if cursor.item.write_operation = cursor.item.write_operation.insert then
 					table.force (table[cursor.item.metadata] + 1, cursor.item.metadata)
 				end
 			end
 
-			primaries := backend.genereta_all_object_primaries (table)
+			primaries := backend.generate_all_object_primaries (table)
 
 			across object_graph.new_smart_cursor as cursor
 			loop
@@ -285,6 +290,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			from
 				create objects_to_write.make
 				create objects_to_delete.make
+				create collections_to_write.make
+				create collections_to_delete.make
 			loop
 				if attached {PS_SINGLE_OBJECT_PART} cursor.item as obj then
 					if cursor.item.write_operation /= cursor.item.write_operation.delete then
@@ -293,12 +300,21 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 						objects_to_delete.extend ([cursor.item.metadata, mapper.quick_translate (cursor.item.object_identifier, transaction)])
 						mapper.remove_primary_key (mapper.quick_translate (cursor.item.object_identifier, transaction), cursor.item.metadata, transaction)
 					end
+				elseif attached {PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]} cursor.item as coll then
+					if coll.write_operation /= coll.write_operation.delete then
+						collections_to_write.extend ([to_retrieved_collection(coll, transaction), coll.write_operation])
+					else
+						collections_to_delete.extend ([coll.metadata, mapper.quick_translate (coll.object_identifier, transaction)])
+						mapper.remove_primary_key (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata, transaction)
+					end
 				else
-					check not_implemented: False end
+					check relations_not_implemented: False end
 				end
 			end
 			backend.write (objects_to_write)
 			backend.delete (objects_to_delete)
+			backend.write_collections (collections_to_write)
+			backend.delete_collections (collections_to_delete)
 
 		end
 
@@ -312,14 +328,37 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			from
 				create Result.make (mapper.quick_translate (object.object_identifier, transaction), object.metadata)
 			loop
-				if attached {PS_COMPLEX_PART} object.attribute_value (cursor.item) then
-					id := mapper.quick_translate (object.attribute_value (cursor.item).object_identifier, transaction)
+				if attached {PS_COMPLEX_PART} object.attribute_value (cursor.item) as complex_attribute then
+					id := mapper.quick_translate (complex_attribute.object_identifier, transaction)
 				end
 				attr := object.attribute_value (cursor.item).as_attribute (id)
 				Result.add_attribute (cursor.item, attr.first, attr.second)
 			end
+		end
 
 
+	to_retrieved_collection (coll: PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT_COLLECTION
+		local
+			item: PS_PAIR[STRING, STRING]
+			id: INTEGER
+		do
+			across
+				coll.values as cursor
+			from
+				create Result.make (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
+			loop
+				if attached {PS_COMPLEX_PART} cursor.item as complex_item then
+					id := mapper.quick_translate (complex_item.object_identifier, transaction)
+				end
+				item := cursor.item.as_attribute (id)
+				Result.collection_items.extend (item)
+			end
+
+			across
+				coll.additional_information as cursor
+			loop
+				Result.add_information (cursor.key, cursor.item)
+			end
 		end
 
 

@@ -58,8 +58,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 				fixme ("TODO: all other basic types")
 				if type_id.actual_generic_parameter (1).type.out.is_equal ("BOOLEAN") then
 					create {SPECIAL [BOOLEAN]} Result.make_empty (count)
-				else
+				elseif type_id.actual_generic_parameter (1).type.out.is_equal ("CHARACTER_8") then
+					create {SPECIAL [CHARACTER_8]} Result.make_empty (count)
+				elseif type_id.actual_generic_parameter (1).type.out.is_equal ("INTEGER_32")  then
 					create {SPECIAL [INTEGER]} Result.make_empty (count)
+				else
+					check not_implemented: False end
+					create Result.make_empty (0)
 				end
 			end
 			across

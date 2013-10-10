@@ -193,7 +193,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 					if type.has_attribute (attr_cursor.item) then
 							-- Set all the attributes
 							-- See if it is a basic attribute
-						if not try_basic_attribute (Result, obj.attribute_value (attr_cursor.item).value, type.field_index (attr_cursor.item)) then
+						if not try_basic_attribute (Result, obj.attribute_value (attr_cursor.item), type.field_index (attr_cursor.item)) then
 								-- If not it is either a referenced object or a collection. In either case, use the `Current.build' function.
 
 
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation - Build support functions.
 			end
 		end
 
-	try_basic_attribute (obj: ANY; value: STRING; index: INTEGER): BOOLEAN
+	try_basic_attribute (obj: ANY; attr: TUPLE[value: STRING; runtime_type: STRING]; index: INTEGER): BOOLEAN
 			-- See if field at `index' is of basic type, and if so, initialize it.
 		local
 			type: INTEGER
@@ -339,16 +339,17 @@ feature {NONE} -- Implementation - Build support functions.
 			create reflection
 			type := reflection.field_type (index, obj)
 			if type /= reflection.reference_type and type /= reflection.pointer_type then -- check if it is a basic type (except strings)
-				set_expanded_attribute (obj, value, index)
+				set_expanded_attribute (obj, attr.value, index)
 				Result := True
 			else
 					-- check if it's a string
-				type_name := reflection.class_name_of_type (reflection.field_static_type_of_type (index, reflection.dynamic_type (obj)))
+--				type_name := reflection.class_name_of_type (reflection.field_static_type_of_type (index, reflection.dynamic_type (obj)))
+				type_name:= attr.runtime_type
 				if type_name.is_case_insensitive_equal ("STRING_32") then
-					reflection.set_reference_field (index, obj, value.to_string_32)
+					reflection.set_reference_field (index, obj, attr.value.to_string_32)
 					Result := True
 				elseif type_name.is_case_insensitive_equal ("STRING_8") then
-					reflection.set_reference_field (index, obj, value.twin)
+					reflection.set_reference_field (index, obj, attr.value.twin)
 					Result := True
 				else
 						-- Not of a basic type - return false

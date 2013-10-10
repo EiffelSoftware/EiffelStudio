@@ -18,7 +18,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 			-- Can the current backend support collections in general,
 			-- i.e. is there a default strategy?
 		do
-			Result := false
+			Result := True
 		end
 
 feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
@@ -27,14 +27,15 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
-			Result := (create {LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]}.make).new_cursor
-			check not_implemented: False end
+			prepare_collection(collection_type)
+			Result := attach(collection_database[collection_type.type.type_id]).new_cursor
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		do
-			check not_implemented: False end
+			prepare_collection(collection_type)
+			Result := attach(collection_database.item (collection_type.type.type_id)).item(collection_primary_key)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
@@ -85,16 +86,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 			-- Wipe out everything and initialize new.
 		do
 			create database.make (50)
+			create collection_database.make (1)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	genereta_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
-			-- Generates `count' primary keys for each `type'.
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		do
-
-
 			across
 				order as cursor
 			from
@@ -107,11 +106,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 	max_primary: INTEGER
 
-	generate_collection_primaries (count: INTEGER): INDEXABLE_ITERATION_CURSOR[INTEGER]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		do
-			check not_implemented: False end
-			Result := (create {LINKED_LIST[INTEGER]}.make).new_cursor
+			Result := generate_all_object_primaries (order)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
@@ -126,18 +124,26 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST[TUPLE[PS_RETRIEVED_OBJECT_COLLECTION, PS_WRITE_OPERATION]])
+	write_collections (collections: LIST[TUPLE[coll: PS_RETRIEVED_OBJECT_COLLECTION; op:PS_WRITE_OPERATION]])
 		do
-			check not_implemented: False end
+			across collections as cursor
+			loop
+				prepare_collection (cursor.item.coll.metadata)
+				attach (collection_database[cursor.item.coll.metadata.type.type_id]).force(cursor.item.coll, cursor.item.coll.primary_key)
+			end
 		end
 
-	delete_collections (collections: LIST[INTEGER])
+	delete_collections (collections: LIST[TUPLE[type: PS_TYPE_METADATA; key: INTEGER]])
 		do
-			check not_implemented: False end
+			across collections as cursor
+			loop
+				prepare_collection (cursor.item.type)
+				attach (collection_database[cursor.item.type.type.type_id]).remove(cursor.item.key)
+			end
 		end
 
 
-feature {PS_EIFFELSTORE_EXPORT} -- Implementation
+feature {NONE} -- Implementation
 
 	internal_write (objects: LIST[TUPLE[obj: PS_RETRIEVED_OBJECT; op: PS_WRITE_OPERATION]])
 		local
@@ -166,11 +172,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			end
 		end
 
-	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER_32; transaction: PS_TRANSACTION)
-		do
-
-		end
-
+	collection_database: HASH_TABLE[HASH_TABLE[PS_RETRIEVED_OBJECT_COLLECTION, INTEGER], INTEGER]
 
 	database: HASH_TABLE[HASH_TABLE[PS_RETRIEVED_OBJECT, INTEGER], INTEGER]
 		-- First key: Type ID
@@ -184,5 +186,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			end
 		end
 
+
+	prepare_collection (type: PS_TYPE_METADATA)
+		do
+			if not collection_database.has (type.type.type_id) then
+				collection_database.extend (create {HASH_TABLE[PS_RETRIEVED_OBJECT_COLLECTION, INTEGER]}.make(100), type.type.type_id)
+			end
+		end
 
 end

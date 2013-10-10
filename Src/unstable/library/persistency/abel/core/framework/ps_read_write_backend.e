@@ -17,12 +17,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	genereta_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		deferred
 		end
 
-	generate_collection_primaries (count: INTEGER): INDEXABLE_ITERATION_CURSOR[INTEGER]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		deferred
 		end
@@ -45,7 +45,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		deferred
 		end
 
-	delete_collections (collections: LIST[INTEGER])
+	delete_collections (collections: LIST[TUPLE[type: PS_TYPE_METADATA; key: INTEGER]])
 		deferred
 		end
 

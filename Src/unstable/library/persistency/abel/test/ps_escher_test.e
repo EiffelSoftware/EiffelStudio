@@ -147,19 +147,21 @@ feature {NONE}
 		local
 			real_backend: PS_IN_MEMORY_DATABASE
 			repo: PS_RELATIONAL_REPOSITORY
+			repo2: PS_SIMPLE_IN_MEMORY_REPOSITORY
 		do
-			create real_backend.make
-			create schema_evolution_manager.make
-
---			create escher_integration.make (real_backend, schema_evolution_manager.schema_evolution_handler)
---			create repo.make (escher_integration)
-
-			create escher_integration.make (schema_evolution_manager.schema_evolution_handler)
-			real_backend.add_plug_in (escher_integration)
-			create repo.make (real_backend)
-
-			create executor.make (repo)
 			create test_data.make
+			create schema_evolution_manager.make
+			create escher_integration.make (schema_evolution_manager.schema_evolution_handler)
+
+--			create real_backend.make
+--			real_backend.add_plug_in (escher_integration)
+--			create {PS_RELATIONAL_REPOSITORY}repo.make (real_backend)
+--			create executor.make (repo)
+
+			create repo2
+			repo2.backend.add_plug_in (escher_integration)
+			create executor.make (repo2)
+
 		end
 
 end

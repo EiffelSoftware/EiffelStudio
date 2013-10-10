@@ -91,7 +91,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		do
 			across
@@ -106,15 +106,15 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 	max_primary: INTEGER
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		do
-			Result := generate_all_object_primaries (order)
+			Result := generate_all_object_primaries (order, transaction)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
-	delete (objects: LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]])
+	delete (objects: LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]]; transaction: PS_TRANSACTION)
 		do
 			across objects as cursor
 			loop
@@ -124,7 +124,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST[TUPLE[coll: PS_RETRIEVED_OBJECT_COLLECTION; op:PS_WRITE_OPERATION]])
+	write_collections (collections: LIST[TUPLE[coll: PS_RETRIEVED_OBJECT_COLLECTION; op:PS_WRITE_OPERATION]]; transaction: PS_TRANSACTION)
 		do
 			across collections as cursor
 			loop
@@ -133,7 +133,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			end
 		end
 
-	delete_collections (collections: LIST[TUPLE[type: PS_TYPE_METADATA; key: INTEGER]])
+	delete_collections (collections: LIST[TUPLE[type: PS_TYPE_METADATA; key: INTEGER]]; transaction: PS_TRANSACTION)
 		do
 			across collections as cursor
 			loop
@@ -145,7 +145,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 feature {NONE} -- Implementation
 
-	internal_write (objects: LIST[TUPLE[obj: PS_RETRIEVED_OBJECT; op: PS_WRITE_OPERATION]])
+	internal_write (objects: LIST[TUPLE[obj: PS_RETRIEVED_OBJECT; op: PS_WRITE_OPERATION]]; transaction: PS_TRANSACTION)
 		local
 			old_obj: PS_RETRIEVED_OBJECT
 		do
@@ -154,12 +154,12 @@ feature {NONE} -- Implementation
 			loop
 				if cursor.item.op = cursor.item.op.insert then
 					prepare(cursor.item.obj.metadata)
-					across cursor.item.obj.metadata.attributes as attr
-					loop
-						if not cursor.item.obj.has_attribute(attr.item) then
-							cursor.item.obj.add_attribute (attr.item, "", "NONE")
-						end
-					end
+--					across cursor.item.obj.metadata.attributes as attr
+--					loop
+--						if not cursor.item.obj.has_attribute(attr.item) then
+--							cursor.item.obj.add_attribute (attr.item, "", "NONE")
+--						end
+--					end
 					attach (database[cursor.item.obj.metadata.type.type_id]).extend(cursor.item.obj, cursor.item.obj.primary_key)
 				else
 					old_obj := attach (attach (database[cursor.item.obj.metadata.type.type_id])[cursor.item.obj.primary_key])

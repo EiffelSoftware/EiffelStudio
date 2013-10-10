@@ -274,7 +274,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			loop
 				if cursor.item.write_operation = cursor.item.write_operation.insert then
 					check attached primaries[cursor.item.metadata] as primary_cursor then
-						mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item.item, transaction)
+						mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item, transaction)
+						primary_cursor.forth
 					end
 				end
 			end
@@ -296,6 +297,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 					check not_implemented: False end
 				end
 			end
+			backend.write (objects_to_write)
+			backend.delete (objects_to_delete)
+
 		end
 
 

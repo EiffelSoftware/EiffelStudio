@@ -61,28 +61,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 		do
 		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Mapping
-
---	is_mapped (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): BOOLEAN
---			-- Is `object' mapped to some database entry?
---		do
---			Result := mapping_set.has(object.object_identifier)
---		end
-
---	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
---			-- Add a mapping from `object' to the database entry with primary key `key'
---		do
---			mapping_set.force (key, object.object_identifier)
---		end
-
---	mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): INTEGER
---			-- Get the mapping for `object'
---		do
---			Result := mapping_set[object.object_identifier]
---		end
-
---	mapping_set: HASH_TABLE[INTEGER, INTEGER]
-
 feature{PS_READ_ONLY_BACKEND}
 
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]

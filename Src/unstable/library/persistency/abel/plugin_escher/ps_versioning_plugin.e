@@ -43,7 +43,8 @@ feature
 			stored_version: INTEGER
 			reflection: INTERNAL
 		do
-			if object.operation = object.operation.insert and object.metadata.type.is_conforming_to({detachable VERSIONED_CLASS}) then
+			-- TODO: check if it's sufficient to only add the version attribute to new objects!
+			if object.is_new and object.metadata.type.is_conforming_to({detachable VERSIONED_CLASS}) then
 				create reflection
 				check attached {VERSIONED_CLASS} reflection.new_instance_of (object.metadata.type.type_id) as versioned_object then
 					stored_version := versioned_object.version

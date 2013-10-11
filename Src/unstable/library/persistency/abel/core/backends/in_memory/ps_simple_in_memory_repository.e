@@ -300,7 +300,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 						objects_to_write.extend (to_retrieved(obj, transaction))
 					else
 						create entity.make ( mapper.quick_translate (cursor.item.object_identifier, transaction), cursor.item.metadata)
-						entity.set_operation (cursor.item.write_operation)
+--						entity.set_operation (cursor.item.write_operation)
 						objects_to_delete.extend (entity)
 						mapper.remove_primary_key (mapper.quick_translate (cursor.item.object_identifier, transaction), cursor.item.metadata, transaction)
 					end
@@ -309,7 +309,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 						collections_to_write.extend (to_retrieved_collection(coll, transaction))
 					else
 						create entity.make (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
-						entity.set_operation (coll.write_operation)
+--						entity.set_operation (coll.write_operation)
 						collections_to_delete.extend (entity)
 						mapper.remove_primary_key (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata, transaction)
 					end
@@ -325,33 +325,42 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 		end
 
 
-	to_retrieved (object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT
+	fill_retrieved (object: PS_SINGLE_OBJECT_PART; retrieved: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
 		local
 			attr: PS_PAIR[STRING, STRING]
 			id: INTEGER
 		do
-			across object.attributes as cursor
-			from
-				create Result.make (mapper.quick_translate (object.object_identifier, transaction), object.metadata)
-				Result.set_operation (object.write_operation)
+--			retrieved.set_operation (object.write_operation)
+			across
+				object.attributes as cursor
 			loop
 				if attached {PS_COMPLEX_PART} object.attribute_value (cursor.item) as complex_attribute then
 					id := mapper.quick_translate (complex_attribute.object_identifier, transaction)
 				end
 				attr := object.attribute_value (cursor.item).as_attribute (id)
-				Result.add_attribute (cursor.item, attr.first, attr.second)
+				retrieved.add_attribute (cursor.item, attr.first, attr.second)
 			end
 
 			if object.write_operation = object.write_operation.insert then
 				across object.metadata.attributes as cursor
 				loop
-					if not Result.has_attribute(cursor.item) then
-						Result.add_attribute (cursor.item, "", "NONE")
+					if not retrieved.has_attribute(cursor.item) then
+						retrieved.add_attribute (cursor.item, "", "NONE")
 					end
 				end
 			end
+		end
 
 
+	to_retrieved (object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT
+
+		do
+			if object.write_operation = object.write_operation.insert then
+				create Result.make_fresh (mapper.quick_translate (object.object_identifier, transaction), object.metadata)
+			else
+				create Result.make (mapper.quick_translate (object.object_identifier, transaction), object.metadata)
+			end
+			fill_retrieved (object, Result, transaction)
 		end
 
 
@@ -363,8 +372,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			across
 				coll.values as cursor
 			from
-				create Result.make (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
-				Result.set_operation (coll.write_operation)
+				if coll.write_operation = coll.write_operation.insert then
+					create Result.make_fresh (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
+				else
+					create Result.make (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
+				end
+--				Result.set_operation (coll.write_operation)
 			loop
 				if attached {PS_COMPLEX_PART} cursor.item as complex_item then
 					id := mapper.quick_translate (complex_item.object_identifier, transaction)

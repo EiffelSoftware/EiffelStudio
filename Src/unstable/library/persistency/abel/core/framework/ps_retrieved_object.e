@@ -22,7 +22,7 @@ inherit
 	PS_EIFFELSTORE_EXPORT
 
 create {PS_EIFFELSTORE_EXPORT}
-	make
+	make, make_fresh
 
 feature {PS_EIFFELSTORE_EXPORT} -- Access
 

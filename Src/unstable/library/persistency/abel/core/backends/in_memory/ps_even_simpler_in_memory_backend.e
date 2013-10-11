@@ -166,6 +166,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			loop
 				prepare_collection (cursor.item.metadata)
 				attach (collection_database[cursor.item.metadata.type.type_id]).force(cursor.item, cursor.item.primary_key)
+				cursor.item.declare_as_old
 			end
 		end
 
@@ -188,7 +189,8 @@ feature {NONE} -- Implementation
 
 			across objects as cursor
 			loop
-				if cursor.item.operation = cursor.item.operation.insert then
+--				if cursor.item.operation = cursor.item.operation.insert then
+				if cursor.item.is_new then
 					prepare(cursor.item.metadata)
 --					across cursor.item.obj.metadata.attributes as attr
 --					loop
@@ -197,6 +199,7 @@ feature {NONE} -- Implementation
 --						end
 --					end
 					attach (database[cursor.item.metadata.type.type_id]).extend(cursor.item, cursor.item.primary_key)
+					cursor.item.declare_as_old
 				else
 					old_obj := attach (attach (database[cursor.item.metadata.type.type_id])[cursor.item.primary_key])
 					across cursor.item.attributes as attr

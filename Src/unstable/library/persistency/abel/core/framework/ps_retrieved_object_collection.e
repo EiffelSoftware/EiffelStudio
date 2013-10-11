@@ -20,7 +20,7 @@ inherit
 	PS_RETRIEVED_COLLECTION
 
 create {PS_EIFFELSTORE_EXPORT}
-	make
+	make, make_fresh
 
 feature {PS_EIFFELSTORE_EXPORT} -- Access
 

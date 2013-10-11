@@ -6,9 +6,9 @@ note
 
 deferred class
 	PS_READ_WRITE_BACKEND
-
 inherit
 	PS_READ_ONLY_BACKEND
+
 
 feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 
@@ -34,7 +34,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			-- In case of an update, only write the attributes present in {PS_RETRIEVED_OBJECT}.attributes.
 		require
 			attributes_complete: across objects as cursor all
-				cursor.item.operation = cursor.item.operation.insert implies
+				cursor.item.is_new implies
 				(across cursor.item.metadata.attributes as attr_c all cursor.item.has_attribute(attr_c.item) end) end
 		do
 			-- Apply plugins first
@@ -54,7 +54,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		deferred
 		end
-
 
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 		deferred

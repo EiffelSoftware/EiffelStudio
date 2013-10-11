@@ -80,8 +80,18 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := Precursor (other) and attributes.count = other.attributes.count and then
-				across attributes as cursor all other.has_attribute (cursor.item) and then is_equal_tuple (other.attribute_value (cursor.item), attribute_value(cursor.item)) end
+			Result := attributes.count = other.attributes.count and  is_subset_of (other)
+		end
+
+	is_subset_of (other: detachable like Current): BOOLEAN
+			-- Does `Current' have the same primary key and metadata and a subset of the attributes in `other'?
+		do
+			if attached other then
+				Result := primary_key.is_equal (other.primary_key) and metadata.is_equal (other.metadata) and then
+					across attributes as cursor all other.has_attribute (cursor.item) and then is_equal_tuple (other.attribute_value (cursor.item), attribute_value(cursor.item)) end
+			else
+				Result := False
+			end
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Element change

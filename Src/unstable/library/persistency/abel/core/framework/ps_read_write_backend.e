@@ -76,14 +76,23 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		deferred
+		ensure
+			deleted: enable_expensive_contracts implies
+				across objects as cursor all Void = internal_retrieve_by_primary (cursor.item.metadata, cursor.item.primary_key, cursor.item.metadata.attributes, transaction) end
 		end
 
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 		deferred
+		ensure
+			correct: enable_expensive_contracts implies
+				across collections as cursor all equal (cursor.item, retrieve_collection (cursor.item.metadata, cursor.item.primary_key, transaction)) end
 		end
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		deferred
+		ensure
+			deleted: enable_expensive_contracts implies
+				across collections as cursor all Void = retrieve_collection (cursor.item.metadata, cursor.item.primary_key, transaction) end
 		end
 
 	wipe_out
@@ -96,6 +105,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 	internal_write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
 		deferred
+		ensure
+			correct: enable_expensive_contracts implies
+				across objects as cursor all cursor.item.is_subset_of (internal_retrieve_by_primary (cursor.item.metadata, cursor.item.primary_key, cursor.item.attributes, transaction)) end
 		end
 
 feature {NONE} -- Contracts

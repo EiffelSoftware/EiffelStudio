@@ -253,7 +253,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 	do_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
 		local
 			table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
-			primaries: HASH_TABLE[INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+			primaries: HASH_TABLE[DISPENSER[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
 
 			entity: PS_BACKEND_ENTITY
 
@@ -281,8 +281,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			loop
 				if cursor.item.write_operation = cursor.item.write_operation.insert then
 					check attached primaries[cursor.item.metadata] as primary_cursor then
-						mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item, transaction)
-						primary_cursor.forth
+						mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item.primary_key, transaction)
+						primary_cursor.remove
 					end
 				end
 			end

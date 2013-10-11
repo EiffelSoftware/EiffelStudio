@@ -17,20 +17,21 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
-			-- Generates `count' primary keys for each `type'.
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [DISPENSER[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
+			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
 		deferred
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
-			-- Generate `count' primary keys for collections.
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [DISPENSER[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
+			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
 		deferred
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	frozen write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
-			--
+			-- Write all objects in `objecs'.
+			-- In case of an update, only write the attributes present in {PS_RETRIEVED_OBJECT}.attributes.
 		require
 			attributes_complete: across objects as cursor all
 				cursor.item.operation = cursor.item.operation.insert implies

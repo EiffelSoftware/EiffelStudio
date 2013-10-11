@@ -91,25 +91,61 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+	max_primary: INTEGER
+
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [DISPENSER[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
+		local
+			list: LINKED_STACK[PS_RETRIEVED_OBJECT]
+			index: INTEGER
 		do
 			across
 				order as cursor
 			from
 				create Result.make (order.count)
 			loop
-				Result.extend ((create {INTEGER_INTERVAL}.make (max_primary, max_primary + cursor.item)).new_cursor, cursor.key)
+--				Result.extend ((create {INTEGER_INTERVAL}.make (max_primary, max_primary + cursor.item)).new_cursor, cursor.key)
+				from
+					index := 1
+					create list.make
+				until
+					index = cursor.item + 1
+				loop
+					list.extend (create {PS_RETRIEVED_OBJECT}.make (max_primary + index, cursor.key))
+					index := index + 1
+				variant
+					cursor.item - index + 1
+				end
+				Result.extend (list, cursor.key)
 				max_primary := max_primary + cursor.item
 			end
 		end
 
-	max_primary: INTEGER
-
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [DISPENSER[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
+		local
+			list: LINKED_STACK[PS_RETRIEVED_OBJECT_COLLECTION]
+			index: INTEGER
 		do
-			Result := generate_all_object_primaries (order, transaction)
+			across
+				order as cursor
+			from
+				create Result.make (order.count)
+			loop
+				from
+					index := 1
+					create list.make
+				until
+					index = cursor.item + 1
+				loop
+					list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make (max_primary + index, cursor.key))
+					index := index + 1
+				variant
+					cursor.item - index + 1
+				end
+				Result.extend (list, cursor.key)
+				max_primary := max_primary + cursor.item
+			end
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations

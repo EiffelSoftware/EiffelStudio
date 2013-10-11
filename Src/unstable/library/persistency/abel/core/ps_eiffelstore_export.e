@@ -17,4 +17,9 @@ feature {NONE} -- Utilities
 			end
 		end
 
+
+feature {PS_EIFFELSTORE_EXPORT} -- Contracts
+
+	enable_expensive_contracts: BOOLEAN = True
+			-- Defines if some very expensive contracts should be enabled as well.
 end

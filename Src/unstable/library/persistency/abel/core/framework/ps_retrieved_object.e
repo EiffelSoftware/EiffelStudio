@@ -16,10 +16,8 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
-			make
+			make, is_equal
 		end
-
-	PS_EIFFELSTORE_EXPORT
 
 create {PS_EIFFELSTORE_EXPORT}
 	make, make_fresh
@@ -68,6 +66,24 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := values.has (attribute_name)
 		end
 
+	is_empty: BOOLEAN
+			-- Is the current object empty (save for a primary key)?
+		do
+			Result := attributes.is_empty
+		ensure
+			correct: Result = attributes.is_empty
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := Precursor (other) and attributes.count = other.attributes.count and then
+				across attributes as cursor all other.has_attribute (cursor.item) and then is_equal_tuple (other.attribute_value (cursor.item), attribute_value(cursor.item)) end
+		end
+
 feature {PS_EIFFELSTORE_EXPORT} -- Element change
 
 	add_attribute (attribute_name: STRING; value: STRING; class_name_of_value: STRING)
@@ -114,6 +130,13 @@ feature {NONE} -- Initialization
 			attributes.compare_objects
 		ensure then
 			attributes_empty: attributes.is_empty
+		end
+
+feature {NONE} -- Implementation
+
+	is_equal_tuple (a, b: TUPLE[first: STRING; second:STRING]): BOOLEAN
+		do
+			Result := a.first.is_equal (b.first) and a.second.is_equal (b.second)
 		end
 
 invariant

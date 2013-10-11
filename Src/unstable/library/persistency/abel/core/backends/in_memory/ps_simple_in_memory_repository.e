@@ -253,7 +253,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 	do_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
 		local
 			table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
-			primaries: HASH_TABLE[DISPENSER[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
+			primaries: HASH_TABLE[LIST[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
 
 			entity: PS_BACKEND_ENTITY
 
@@ -274,8 +274,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 					table.force (table[cursor.item.metadata] + 1, cursor.item.metadata)
 				end
 			end
+			if not table.is_empty then
+				primaries := backend.generate_all_object_primaries (table, transaction)
+			else
+				create primaries.make (0)
+			end
 
-			primaries := backend.generate_all_object_primaries (table, transaction)
+			across primaries as p loop p.item.start end
 
 			across object_graph.new_smart_cursor as cursor
 			loop

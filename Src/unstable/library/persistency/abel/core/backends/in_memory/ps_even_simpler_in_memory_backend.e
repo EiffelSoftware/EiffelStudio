@@ -93,10 +93,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 	max_primary: INTEGER
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [DISPENSER[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		local
-			list: LINKED_STACK[PS_RETRIEVED_OBJECT]
+			list: LINKED_LIST[PS_RETRIEVED_OBJECT]
 			index: INTEGER
 		do
 			across
@@ -111,7 +111,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 				until
 					index = cursor.item + 1
 				loop
-					list.extend (create {PS_RETRIEVED_OBJECT}.make (max_primary + index, cursor.key))
+					list.extend (create {PS_RETRIEVED_OBJECT}.make_fresh (max_primary + index, cursor.key))
 					index := index + 1
 				variant
 					cursor.item - index + 1
@@ -121,10 +121,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			end
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [DISPENSER[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		local
-			list: LINKED_STACK[PS_RETRIEVED_OBJECT_COLLECTION]
+			list: LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]
 			index: INTEGER
 		do
 			across

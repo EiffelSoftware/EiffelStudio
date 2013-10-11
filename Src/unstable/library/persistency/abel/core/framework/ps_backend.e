@@ -265,8 +265,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 		deferred
 		end
 
-	enable_expensive_contracts: BOOLEAN = True
-			-- Defines if some very expensive contracts should be enabled as well.
+--	enable_expensive_contracts: BOOLEAN = True
+--			-- Defines if some very expensive contracts should be enabled as well.
 
 feature {PS_BACKEND}
 

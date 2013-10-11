@@ -14,10 +14,13 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
-			make
+			make, is_equal
 		end
 
 	PS_RETRIEVED_COLLECTION
+		undefine
+			is_equal
+		end
 
 create {PS_EIFFELSTORE_EXPORT}
 	make, make_fresh
@@ -59,6 +62,41 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			description_not_empty: not description.is_empty
 		do
 			Result := additional_information_hash.has (description)
+		end
+
+	is_empty: BOOLEAN
+			-- Is the current collection empty (save for a primary key)?
+		do
+			Result := collection_items.is_empty and information_descriptions.is_empty
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := primary_key.is_equal (other.primary_key) and metadata.is_equal (other.metadata)
+			from
+				collection_items.start
+				other.collection_items.start
+				Result := Result and collection_items.count = other.collection_items.count
+				Result := Result and information_descriptions.count = other.information_descriptions.count and then
+					across information_descriptions as cursor
+					all
+						other.has_information (cursor.item) and then
+						other.get_information (cursor.item).is_equal (get_information(cursor.item))
+					end
+			until
+				collection_items.after or not Result
+			loop
+				Result := Result and collection_items.item.first.is_equal (other.collection_items.item.first)
+								 and collection_items.item.second.is_equal (other.collection_items.item.second)
+				collection_items.forth
+				other.collection_items.forth
+			variant
+				collection_items.count - collection_items.index + 1
+			end
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Element change

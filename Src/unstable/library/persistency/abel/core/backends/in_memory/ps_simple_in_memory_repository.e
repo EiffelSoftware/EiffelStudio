@@ -255,11 +255,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
 			primaries: HASH_TABLE[INDEXABLE_ITERATION_CURSOR[INTEGER], PS_TYPE_METADATA]
 
-			objects_to_write: LINKED_LIST[TUPLE[PS_RETRIEVED_OBJECT, PS_WRITE_OPERATION]]
-			objects_to_delete: LINKED_LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]]
+			entity: PS_BACKEND_ENTITY
 
-			collections_to_write: LINKED_LIST[TUPLE[PS_RETRIEVED_OBJECT_COLLECTION, PS_WRITE_OPERATION]]
-			collections_to_delete: LINKED_LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]]
+			objects_to_write: LINKED_LIST[PS_RETRIEVED_OBJECT]
+			objects_to_delete: LINKED_LIST[PS_BACKEND_ENTITY]
+
+			collections_to_write: LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]
+			collections_to_delete: LINKED_LIST[PS_BACKEND_ENTITY]
 		do
 
 			identify_all (object_graph, transaction)
@@ -295,16 +297,20 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			loop
 				if attached {PS_SINGLE_OBJECT_PART} cursor.item as obj then
 					if cursor.item.write_operation /= cursor.item.write_operation.delete then
-						objects_to_write.extend ([to_retrieved(obj, transaction), cursor.item.write_operation])
+						objects_to_write.extend (to_retrieved(obj, transaction))
 					else
-						objects_to_delete.extend ([cursor.item.metadata, mapper.quick_translate (cursor.item.object_identifier, transaction)])
+						create entity.make ( mapper.quick_translate (cursor.item.object_identifier, transaction), cursor.item.metadata)
+						entity.set_operation (cursor.item.write_operation)
+						objects_to_delete.extend (entity)
 						mapper.remove_primary_key (mapper.quick_translate (cursor.item.object_identifier, transaction), cursor.item.metadata, transaction)
 					end
 				elseif attached {PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]} cursor.item as coll then
 					if coll.write_operation /= coll.write_operation.delete then
-						collections_to_write.extend ([to_retrieved_collection(coll, transaction), coll.write_operation])
+						collections_to_write.extend (to_retrieved_collection(coll, transaction))
 					else
-						collections_to_delete.extend ([coll.metadata, mapper.quick_translate (coll.object_identifier, transaction)])
+						create entity.make (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
+						entity.set_operation (coll.write_operation)
+						collections_to_delete.extend (entity)
 						mapper.remove_primary_key (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata, transaction)
 					end
 				else
@@ -327,6 +333,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			across object.attributes as cursor
 			from
 				create Result.make (mapper.quick_translate (object.object_identifier, transaction), object.metadata)
+				Result.set_operation (object.write_operation)
 			loop
 				if attached {PS_COMPLEX_PART} object.attribute_value (cursor.item) as complex_attribute then
 					id := mapper.quick_translate (complex_attribute.object_identifier, transaction)
@@ -357,6 +364,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 				coll.values as cursor
 			from
 				create Result.make (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
+				Result.set_operation (coll.write_operation)
 			loop
 				if attached {PS_COMPLEX_PART} cursor.item as complex_item then
 					id := mapper.quick_translate (complex_item.object_identifier, transaction)

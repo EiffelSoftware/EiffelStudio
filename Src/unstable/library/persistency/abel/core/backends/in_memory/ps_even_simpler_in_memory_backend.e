@@ -114,59 +114,59 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
-	delete (objects: LIST[TUPLE[type: PS_TYPE_METADATA; primary: INTEGER]]; transaction: PS_TRANSACTION)
+	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		do
 			across objects as cursor
 			loop
-				prepare (cursor.item.type)
-				attach (database[cursor.item.type.type.type_id]).remove (cursor.item.primary)
+				prepare (cursor.item.metadata)
+				attach (database[cursor.item.metadata.type.type_id]).remove (cursor.item.primary_key)
 			end
 		end
 
 
-	write_collections (collections: LIST[TUPLE[coll: PS_RETRIEVED_OBJECT_COLLECTION; op:PS_WRITE_OPERATION]]; transaction: PS_TRANSACTION)
+	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 		do
 			across collections as cursor
 			loop
-				prepare_collection (cursor.item.coll.metadata)
-				attach (collection_database[cursor.item.coll.metadata.type.type_id]).force(cursor.item.coll, cursor.item.coll.primary_key)
+				prepare_collection (cursor.item.metadata)
+				attach (collection_database[cursor.item.metadata.type.type_id]).force(cursor.item, cursor.item.primary_key)
 			end
 		end
 
-	delete_collections (collections: LIST[TUPLE[type: PS_TYPE_METADATA; key: INTEGER]]; transaction: PS_TRANSACTION)
+	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		do
 			across collections as cursor
 			loop
-				prepare_collection (cursor.item.type)
-				attach (collection_database[cursor.item.type.type.type_id]).remove(cursor.item.key)
+				prepare_collection (cursor.item.metadata)
+				attach (collection_database[cursor.item.metadata.type.type_id]).remove(cursor.item.primary_key)
 			end
 		end
 
 
 feature {NONE} -- Implementation
 
-	internal_write (objects: LIST[TUPLE[obj: PS_RETRIEVED_OBJECT; op: PS_WRITE_OPERATION]]; transaction: PS_TRANSACTION)
+	internal_write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
 		local
 			old_obj: PS_RETRIEVED_OBJECT
 		do
 
 			across objects as cursor
 			loop
-				if cursor.item.op = cursor.item.op.insert then
-					prepare(cursor.item.obj.metadata)
+				if cursor.item.operation = cursor.item.operation.insert then
+					prepare(cursor.item.metadata)
 --					across cursor.item.obj.metadata.attributes as attr
 --					loop
 --						if not cursor.item.obj.has_attribute(attr.item) then
 --							cursor.item.obj.add_attribute (attr.item, "", "NONE")
 --						end
 --					end
-					attach (database[cursor.item.obj.metadata.type.type_id]).extend(cursor.item.obj, cursor.item.obj.primary_key)
+					attach (database[cursor.item.metadata.type.type_id]).extend(cursor.item, cursor.item.primary_key)
 				else
-					old_obj := attach (attach (database[cursor.item.obj.metadata.type.type_id])[cursor.item.obj.primary_key])
-					across cursor.item.obj.attributes as attr
+					old_obj := attach (attach (database[cursor.item.metadata.type.type_id])[cursor.item.primary_key])
+					across cursor.item.attributes as attr
 					loop
 						old_obj.remove_attribute (attr.item)
-						old_obj.add_attribute (attr.item, cursor.item.obj.attribute_value(attr.item).value, cursor.item.obj.attribute_value(attr.item).attribute_class_name)
+						old_obj.add_attribute (attr.item, cursor.item.attribute_value(attr.item).value, cursor.item.attribute_value(attr.item).attribute_class_name)
 					end
 				end
 			end

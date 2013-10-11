@@ -29,38 +29,37 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
-	frozen write (objects: LIST[TUPLE[obj: PS_RETRIEVED_OBJECT; op: PS_WRITE_OPERATION]]; transaction: PS_TRANSACTION)
+	frozen write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
 			--
 		require
 			attributes_complete: across objects as cursor all
-				cursor.item.op = cursor.item.op.insert implies
-				(across cursor.item.obj.metadata.attributes as attr_c all cursor.item.obj.has_attribute(attr_c.item) end) end
+				cursor.item.operation = cursor.item.operation.insert implies
+				(across cursor.item.metadata.attributes as attr_c all cursor.item.has_attribute(attr_c.item) end) end
 		do
 			-- Apply plugins first
-
 			across
 				plug_in_list.new_cursor.reversed as plugin_cursor
 			loop
 				across
 					objects as object_cursor
 				loop
-					plugin_cursor.item.before_write_new (object_cursor.item.obj, object_cursor.item.op, transaction)
+					plugin_cursor.item.before_write_new (object_cursor.item, transaction)
 				end
 			end
 
 			internal_write (objects, transaction)
 		end
 
-	delete (objects: LIST[TUPLE[PS_TYPE_METADATA, INTEGER]]; transaction: PS_TRANSACTION)
+	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		deferred
 		end
 
 
-	write_collections (collections: LIST[TUPLE[PS_RETRIEVED_OBJECT_COLLECTION, PS_WRITE_OPERATION]]; transaction: PS_TRANSACTION)
+	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 		deferred
 		end
 
-	delete_collections (collections: LIST[TUPLE[type: PS_TYPE_METADATA; key: INTEGER]]; transaction: PS_TRANSACTION)
+	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		deferred
 		end
 
@@ -72,7 +71,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
-	internal_write (objects: LIST[TUPLE[PS_RETRIEVED_OBJECT, PS_WRITE_OPERATION]]; transaction: PS_TRANSACTION)
+	internal_write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
 		deferred
 		end
 

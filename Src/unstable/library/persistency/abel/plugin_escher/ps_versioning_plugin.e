@@ -38,12 +38,12 @@ feature {NONE} -- Initialization
 
 feature
 
-	before_write_new (object: PS_RETRIEVED_OBJECT; op: PS_WRITE_OPERATION; transaction: PS_TRANSACTION)
+	before_write_new (object: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
 		local
 			stored_version: INTEGER
 			reflection: INTERNAL
 		do
-			if op = op.insert and object.metadata.type.is_conforming_to({detachable VERSIONED_CLASS}) then
+			if object.operation = object.operation.insert and object.metadata.type.is_conforming_to({detachable VERSIONED_CLASS}) then
 				create reflection
 				check attached {VERSIONED_CLASS} reflection.new_instance_of (object.metadata.type.type_id) as versioned_object then
 					stored_version := versioned_object.version

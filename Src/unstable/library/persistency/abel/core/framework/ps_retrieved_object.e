@@ -14,6 +14,11 @@ class
 
 inherit
 
+	PS_BACKEND_ENTITY
+		redefine
+			make
+		end
+
 	PS_EIFFELSTORE_EXPORT
 
 create {PS_EIFFELSTORE_EXPORT}
@@ -21,11 +26,11 @@ create {PS_EIFFELSTORE_EXPORT}
 
 feature {PS_EIFFELSTORE_EXPORT} -- Access
 
-	primary_key: INTEGER
-			-- The retrieved object's primary key, as used in the database.
+--	primary_key: INTEGER
+--			-- The retrieved object's primary key, as used in the database.
 
-	metadata: PS_TYPE_METADATA
-			-- The type of the current object
+--	metadata: PS_TYPE_METADATA
+--			-- The type of the current object
 
 	class_metadata: PS_CLASS_METADATA
 			-- Metadata information about the object.
@@ -101,15 +106,14 @@ feature {NONE} -- Initialization
 	make (key: INTEGER; class_data: PS_TYPE_METADATA)
 			-- Initialization for `Current'.
 		do
-			primary_key := key
-			metadata := class_data
+			precursor(key, class_data)
+--			primary_key := key
+--			metadata := class_data
 			create values.make (10)
 			create attributes.make
 			attributes.compare_objects
-		ensure
+		ensure then
 			attributes_empty: attributes.is_empty
-			key_set: primary_key = key
-			metadata_set: metadata.is_equal (class_data)
 		end
 
 invariant

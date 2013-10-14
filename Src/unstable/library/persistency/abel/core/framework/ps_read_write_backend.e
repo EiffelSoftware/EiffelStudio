@@ -22,10 +22,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 		require
 			not_empty: not order.is_empty
 			positive_numbers: across order as cursor all cursor.item > 0 end
+			types_supported: across order as cursor all is_object_type_supported (cursor.key) end
 			active_transaction: transaction.is_active
 			not_readonly: not transaction.is_readonly
-			-- TODO: activate once the (only) client is sanitized
-			--types_supported: across order as cursor all is_object_type_supported (cursor.key) end
 		deferred
 		ensure
 			same_count: order.count = Result.count
@@ -60,9 +59,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	frozen write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
 			-- Write all objects in `objecs' to the database.
-			-- Only write the attributes present in {PS_RETRIEVED_OBJECT}.attributes.
 		require
---			not_empty: not objects.is_empty
+			not_empty: not objects.is_empty
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
 			no_additional_attributes: across objects as cursor all across cursor.item.attributes as attr all cursor.item.metadata.attributes.has(attr.item) end end
 			new_attributes_complete: across objects as cursor all cursor.item.is_new implies cursor.item.is_complete end
@@ -87,7 +85,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		require
---			not_empty: not objects.is_empty
+			not_empty: not objects.is_empty
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
 			active_transaction: transaction.is_active
 			not_readonly: not transaction.is_readonly
@@ -99,7 +97,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 		require
---			not_empty: not objects.is_empty
+			not_empty: not collections.is_empty
 			collection_supported: is_generic_collection_supported
 			active_transaction: transaction.is_active
 			not_readonly: not transaction.is_readonly
@@ -111,7 +109,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		require
---			not_empty: not objects.is_empty
+			not_empty: not collections.is_empty
 			collection_supported: is_generic_collection_supported
 			active_transaction: transaction.is_active
 			not_readonly: not transaction.is_readonly
@@ -130,6 +128,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 feature {PS_READ_WRITE_BACKEND} -- Implementation
 
 	internal_write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
+			-- Write all `objects' to the database.
+			-- Only write the attributes present in {PS_RETRIEVED_OBJECT}.attributes.
 		deferred
 		ensure
 			correct: enable_expensive_contracts implies objects.for_all (agent check_write (?, transaction))

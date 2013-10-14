@@ -253,7 +253,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 	do_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
 		local
 			table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
+			collection_table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
 			primaries: HASH_TABLE[LIST[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
+			collection_primaries: HASH_TABLE[LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
 
 			entity: PS_BACKEND_ENTITY
 
@@ -266,28 +268,50 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 			identify_all (object_graph, transaction)
 			create table.make (10)
+			create collection_table.make (10)
 
 			across object_graph.new_smart_cursor as cursor
 			loop
 				-- TODO: differentiate between object and collection primaries
 				if cursor.item.write_operation = cursor.item.write_operation.insert then
-					table.force (table[cursor.item.metadata] + 1, cursor.item.metadata)
+
+					if cursor.item.is_collection then
+						collection_table.force (collection_table[cursor.item.metadata] + 1, cursor.item.metadata)
+					else
+						table.force (table[cursor.item.metadata] + 1, cursor.item.metadata)
+					end
 				end
 			end
+
 			if not table.is_empty then
 				primaries := backend.generate_all_object_primaries (table, transaction)
 			else
 				create primaries.make (0)
 			end
 
+			if not collection_table.is_empty then
+				collection_primaries := backend.generate_collection_primaries (collection_table, transaction)
+			else
+				create collection_primaries.make (0)
+			end
+
 			across primaries as p loop p.item.start end
+			across collection_primaries as p loop p.item.start end
 
 			across object_graph.new_smart_cursor as cursor
 			loop
 				if cursor.item.write_operation = cursor.item.write_operation.insert then
-					check attached primaries[cursor.item.metadata] as primary_cursor then
-						mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item.primary_key, transaction)
-						primary_cursor.remove
+
+					if cursor.item.is_collection then
+						check attached collection_primaries[cursor.item.metadata] as primary_cursor then
+							mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item.primary_key, transaction)
+							primary_cursor.remove
+						end
+					else
+						check attached primaries[cursor.item.metadata] as primary_cursor then
+							mapper.add_entry (cursor.item.object_wrapper, primary_cursor.item.primary_key, transaction)
+							primary_cursor.remove
+						end
 					end
 				end
 			end
@@ -322,10 +346,18 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 					check relations_not_implemented: False end
 				end
 			end
-			backend.write (objects_to_write, transaction)
-			backend.delete (objects_to_delete, transaction)
-			backend.write_collections (collections_to_write, transaction)
-			backend.delete_collections (collections_to_delete, transaction)
+			if not objects_to_write.is_empty then
+				backend.write (objects_to_write, transaction)
+			end
+			if not objects_to_delete.is_empty then
+				backend.delete (objects_to_delete, transaction)
+			end
+			if not collections_to_write.is_empty then
+				backend.write_collections (collections_to_write, transaction)
+			end
+			if not collections_to_delete.is_empty then
+				backend.delete_collections (collections_to_delete, transaction)
+			end
 
 		end
 

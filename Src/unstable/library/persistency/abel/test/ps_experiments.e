@@ -13,6 +13,46 @@ inherit
 
 feature
 
+
+	experiment_agent_failure
+		local
+			list: LINKED_LIST[detachable ANY]
+			i: INTEGER
+		do
+			create list.make
+			from
+				i:= 1
+			until
+				i = 20
+			loop
+
+				list.extend (Void)
+				list.extend (create {ANY})
+				i := i + 1
+			end
+			experiment_agent_failure_with_arg (list)
+
+		end
+
+	experiment_agent_failure_with_arg (list: LINKED_LIST[detachable ANY])
+		do
+			check list.for_all (agent experiment_agent_failure_test_agent (?, True, create {ANY})) end
+		ensure
+			list.for_all (agent experiment_agent_failure_test_agent (?, True, create {ANY}))
+		end
+
+	experiment_agent_failure_test_agent (any: ANY; bool: BOOLEAN; third_arg: ANY): BOOLEAN
+		do
+			if bool then
+				Result := attached any
+				any.do_nothing
+			end
+		end
+
+	generate_void(any: detachable ANY): detachable ANY
+		do
+		end
+
 	experiment_dynamic_any_type
 			-- What is the dynamic type of ANY and detachable ANY?
 		local

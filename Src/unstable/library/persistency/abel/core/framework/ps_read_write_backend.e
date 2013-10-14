@@ -22,8 +22,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 		require
 			not_empty: not order.is_empty
 			positive_numbers: across order as cursor all cursor.item > 0 end
+			active_transaction: transaction.is_active
+			not_readonly: not transaction.is_readonly
 			-- TODO: activate once the (only) client is sanitized
-			--objects_supported: across order as cursor all is_object_type_supported (cursor.key) end
+			--types_supported: across order as cursor all is_object_type_supported (cursor.key) end
 		deferred
 		ensure
 			same_count: order.count = Result.count
@@ -32,6 +34,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			type_correct: across Result as cursor all cursor.item.for_all (agent {PS_RETRIEVED_OBJECT}.has_type (cursor.key)) end
 			empty_objects: across Result as cursor all cursor.item.for_all (agent {PS_RETRIEVED_OBJECT}.is_empty) end
 			new_objects: across Result as cursor all cursor.item.for_all (agent {PS_RETRIEVED_OBJECT}.is_new) end
+			transaction_unchanged: transaction.is_active
 		end
 
 	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
@@ -39,7 +42,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 		require
 			not_empty: not order.is_empty
 			positive_numbers: across order as cursor all cursor.item > 0 end
-			can_handle_collections: is_generic_collection_supported
+			collection_supported: is_generic_collection_supported
+			active_transaction: transaction.is_active
+			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
 			same_count: order.count = Result.count
@@ -48,6 +53,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			type_correct: across Result as cursor all cursor.item.for_all (agent {PS_RETRIEVED_OBJECT_COLLECTION}.has_type (cursor.key)) end
 			empty_objects: across Result as cursor all cursor.item.for_all (agent {PS_RETRIEVED_OBJECT_COLLECTION}.is_empty) end
 			new_objects: across Result as cursor all cursor.item.for_all (agent {PS_RETRIEVED_OBJECT_COLLECTION}.is_new) end
+			transaction_unchanged: transaction.is_active
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
@@ -56,9 +62,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			-- Write all objects in `objecs' to the database.
 			-- Only write the attributes present in {PS_RETRIEVED_OBJECT}.attributes.
 		require
-			attributes_complete: across objects as cursor all
-				cursor.item.is_new implies
-				(across cursor.item.metadata.attributes as attr_c all cursor.item.has_attribute(attr_c.item) end) end
+--			not_empty: not objects.is_empty
+			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
+			no_additional_attributes: across objects as cursor all across cursor.item.attributes as attr all cursor.item.metadata.attributes.has(attr.item) end end
+			new_attributes_complete: across objects as cursor all cursor.item.is_new implies cursor.item.is_complete end
+			active_transaction: transaction.is_active
+			not_readonly: not transaction.is_readonly
 		do
 			-- Apply plugins first
 			across
@@ -72,27 +81,44 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			end
 
 			internal_write (objects, transaction)
+		ensure
+			transaction_unchanged: transaction.is_active
 		end
 
 	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+		require
+--			not_empty: not objects.is_empty
+			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
+			active_transaction: transaction.is_active
+			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
-			deleted: enable_expensive_contracts implies
-				across objects as cursor all Void = internal_retrieve_by_primary (cursor.item.metadata, cursor.item.primary_key, cursor.item.metadata.attributes, transaction) end
+			deleted: enable_expensive_contracts implies objects.for_all (agent check_delete (?, transaction))
+			transaction_unchanged: transaction.is_active
 		end
 
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
+		require
+--			not_empty: not objects.is_empty
+			collection_supported: is_generic_collection_supported
+			active_transaction: transaction.is_active
+			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
-			correct: enable_expensive_contracts implies
-				across collections as cursor all equal (cursor.item, retrieve_collection (cursor.item.metadata, cursor.item.primary_key, transaction)) end
+			correct: enable_expensive_contracts implies collections.for_all (agent check_collection_write (?, transaction))
+			transaction_unchanged: transaction.is_active
 		end
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+		require
+--			not_empty: not objects.is_empty
+			collection_supported: is_generic_collection_supported
+			active_transaction: transaction.is_active
+			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
-			deleted: enable_expensive_contracts implies
-				across collections as cursor all Void = retrieve_collection (cursor.item.metadata, cursor.item.primary_key, transaction) end
+			deleted: enable_expensive_contracts implies collections.for_all (agent check_collection_delete (?, transaction))
+			transaction_unchanged: transaction.is_active
 		end
 
 	wipe_out
@@ -101,16 +127,40 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-feature {PS_EIFFELSTORE_EXPORT} -- Implementation
+feature {PS_READ_WRITE_BACKEND} -- Implementation
 
 	internal_write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
 		deferred
 		ensure
-			correct: enable_expensive_contracts implies
-				across objects as cursor all cursor.item.is_subset_of (internal_retrieve_by_primary (cursor.item.metadata, cursor.item.primary_key, cursor.item.attributes, transaction)) end
+			correct: enable_expensive_contracts implies objects.for_all (agent check_write (?, transaction))
+			transaction_unchanged: transaction.is_active
 		end
 
-feature {NONE} -- Contracts
+feature {NONE} -- Agents for contracts
 
+
+	check_write (object: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION): BOOLEAN
+			-- Check if a write was successful
+		do
+			Result := object.is_subset_of (internal_retrieve_by_primary (object.metadata, object.primary_key, object.attributes, transaction))
+		end
+
+	check_delete (object: PS_BACKEND_ENTITY; transaction: PS_TRANSACTION): BOOLEAN
+			-- Check if a delete was successful
+		do
+			Result := internal_retrieve_by_primary (object.metadata, object.primary_key, object.metadata.attributes, transaction) = Void
+		end
+
+	check_collection_write (collection: PS_RETRIEVED_OBJECT_COLLECTION; transaction: PS_TRANSACTION): BOOLEAN
+			-- Check if a delete was successful
+		do
+			Result := equal (collection, retrieve_collection (collection.metadata, collection.primary_key, transaction))
+		end
+
+	check_collection_delete (collection: PS_BACKEND_ENTITY; transaction: PS_TRANSACTION): BOOLEAN
+			-- Check if a delete was successful
+		do
+			Result := retrieve_collection (collection.metadata, collection.primary_key, transaction) = Void
+		end
 
 end

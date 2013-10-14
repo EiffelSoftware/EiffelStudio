@@ -304,7 +304,7 @@ feature {NONE} -- Implementation - Build support functions.
 			else
 					-- Build a new object
 				if not value.first.is_empty then
-					object_result := backend.retrieve_by_primary (type, value.first.to_integer, type.attributes.deep_twin, transaction)
+					object_result := backend.retrieve_by_primary (type, value.first.to_integer, type.attributes, transaction)
 					if attached object_result then
 						Result := build_object (type, object_result, transaction, bookkeeping, true)
 					end

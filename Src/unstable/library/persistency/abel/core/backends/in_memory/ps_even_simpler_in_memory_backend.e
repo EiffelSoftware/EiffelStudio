@@ -64,7 +64,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 
 feature{PS_READ_ONLY_BACKEND}
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		do
@@ -72,7 +72,7 @@ feature{PS_READ_ONLY_BACKEND}
 			Result := attach(database[type.type.type_id]).new_cursor
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: LIST [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		do

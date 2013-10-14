@@ -425,7 +425,7 @@ feature {PS_BACKEND}
 							internal_retrieve_by_primary(
 								object.metadata,
 								mapping(object.object_wrapper, transaction),
-								object.metadata.attributes.deep_twin,
+								object.metadata.attributes,
 								transaction
 								),
 							transaction))

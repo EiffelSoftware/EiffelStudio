@@ -101,7 +101,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 --		end
 
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: LIST [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
 		local
 			list: LINKED_LIST[INTEGER]
 			res: LIST[PS_RETRIEVED_OBJECT]

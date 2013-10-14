@@ -19,10 +19,12 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
 		local
-			reflection: INTERNAL
+--			reflection: INTERNAL
 		do
-			create reflection
-			Result := not reflection.is_special_type (type.type.type_id)
+--			create reflection
+--			Result := not reflection.is_special_type (type.type.type_id)
+			Result := not type.type.is_conforming_to ({detachable SPECIAL[detachable ANY]})
+				and not type.type.is_conforming_to ({detachable TUPLE})
 		end
 
 	is_generic_collection_supported: BOOLEAN
@@ -34,7 +36,7 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 
 
-	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
 			-- Retrieves all objects from the database where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -49,19 +51,27 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 		local
 			real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
 			wrapper: PS_CURSOR_WRAPPER
+			args: TUPLE[type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
 		do
 			-- execute plugins before retrieve
-			across plug_in_list as cursor
+			across
+				plug_in_list as cursor
+			from
+				args := [type, criteria, attributes]
 			loop
-				cursor.item.before_retrieve (type, criteria, attributes, transaction)
+				args := cursor.item.before_retrieve (args, transaction)
 			end
 
-			-- Retrieve result from backend
-			real_cursor := internal_retrieve (type, criteria, attributes, transaction)
+			-- Due to the postcondition in PS_PLUGIN, this is safe:
+			check attached args.criteria as final_criteria then
 
-			-- Wrap the cursor
-			create wrapper.make (Current, real_cursor, type, criteria, attributes, transaction)
-			Result := wrapper
+				-- Retrieve result from backend
+				real_cursor := internal_retrieve (args.type, final_criteria, args.attr, transaction)
+
+				-- Wrap the cursor
+				create wrapper.make (Current, real_cursor, args.type, final_criteria, args.attr, transaction)
+				Result := wrapper
+			end
 
 			-- execute plugins after retrieve
 			if not Result.after then
@@ -72,7 +82,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			correct: not Result.after implies check_retrieved_object (Result.item, type, attributes, transaction)
 		end
 
-	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: LIST[STRING] transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
 			-- Retrieve the object where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -87,15 +97,19 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 		local
 			keys: LINKED_LIST [INTEGER]
 			res: LIST[PS_RETRIEVED_OBJECT]
+			args: TUPLE[type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
 		do
 			-- execute plugins before retrieve
-			across plug_in_list as cursor
+			across
+				plug_in_list as cursor
+			from
+				args := [type, Void , attributes]
 			loop
-				cursor.item.before_retrieve (type, Void, attributes, transaction)
+				args := cursor.item.before_retrieve (args, transaction)
 			end
 
 			-- Retrieve the result from the actual backend
-			Result := internal_retrieve_by_primary (type, primary_key, attributes, transaction)
+			Result := internal_retrieve_by_primary (args.type, primary_key, args.attr, transaction)
 
 			-- Apply plugins after retrieve, if necessary
 			if attached Result then
@@ -189,7 +203,7 @@ feature {PS_CURSOR_WRAPPER}
 
 feature {PS_CURSOR_WRAPPER} -- Contracts
 
-	check_retrieved_object (object: PS_RETRIEVED_OBJECT; type:PS_TYPE_METADATA;  attributes: LIST[STRING]; transaction:PS_TRANSACTION): BOOLEAN
+	check_retrieved_object (object: PS_RETRIEVED_OBJECT; type:PS_TYPE_METADATA;  attributes: PS_IMMUTABLE_STRUCTURE[STRING]; transaction:PS_TRANSACTION): BOOLEAN
 			-- Check if the retrieved object meets some conditions
 		local
 			reflection: INTERNAL
@@ -259,7 +273,7 @@ feature {PS_CURSOR_WRAPPER} -- Contracts
 
 feature {PS_READ_ONLY_BACKEND} -- Implementation
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		require
@@ -270,7 +284,7 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		ensure
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: LIST [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		require

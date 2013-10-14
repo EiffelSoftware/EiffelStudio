@@ -43,7 +43,7 @@ feature -- Cursor movement
 			end
 		ensure then
 			item_is_identified: attached{TUPLE}item or (not after implies query.transaction.repository.is_identified (item, query.transaction))
-			item_can_be_handled: query.transaction.repository.can_handle (item)
+			item_can_be_handled: attached{PS_TUPLE_QUERY[ANY]} query or query.transaction.repository.can_handle (item)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
@@ -97,5 +97,6 @@ feature {NONE} -- Implementation
 invariant
 	attached_item_or_after: attached detachable_item or after
 	attached_query_or_after: attached detachable_query or after
-	item_can_be_handled: not after implies query.transaction.repository.can_handle (item)
+	item_can_be_handled: not after and not attached {PS_TUPLE_QUERY[ANY]} detachable_query
+		 implies query.transaction.repository.can_handle (item)
 end

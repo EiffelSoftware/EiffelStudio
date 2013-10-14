@@ -138,7 +138,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 				until
 					index = cursor.item + 1
 				loop
-					list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make (max_primary + index, cursor.key))
+					list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make_fresh (max_primary + index, cursor.key))
 					index := index + 1
 				variant
 					cursor.item - index + 1

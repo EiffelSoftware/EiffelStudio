@@ -74,6 +74,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			correct: Result = attributes.is_empty
 		end
 
+	is_complete: BOOLEAN
+			-- Does `Current' have all attributes to build the object?
+		do
+			Result := metadata.attributes.for_all (agent has_attribute)
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN

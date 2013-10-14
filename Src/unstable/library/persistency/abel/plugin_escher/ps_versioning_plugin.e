@@ -123,11 +123,18 @@ feature
 			end
 		end
 
-	before_retrieve (type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION)
+	before_retrieve (args: TUPLE[type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_TRANSACTION): like args
 			-- Add the version attribute, if necessary
+		local
+			attributes: LINKED_LIST[STRING]
 		do
-			if type.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
+			if args.type.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
+				create attributes.make
+				args.attributes.do_all (agent attributes.extend)
 				attributes.extend ("version")
+				Result := [args.type, args.criteria, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (attributes)]
+			else
+				Result := args
 			end
 		end
 

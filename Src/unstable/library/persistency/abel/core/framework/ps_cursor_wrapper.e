@@ -52,7 +52,7 @@ feature {NONE} -- Impementation
 
 	criterion: PS_CRITERION
 
-	attributes: LIST [STRING]
+	attributes: PS_IMMUTABLE_STRUCTURE [STRING]
 
 	transaction: PS_TRANSACTION
 

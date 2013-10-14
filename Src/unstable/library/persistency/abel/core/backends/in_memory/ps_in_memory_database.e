@@ -47,12 +47,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
 			-- Retrieves all objects of class `class_name' that match the criteria in `criteria' within transaction `transaction'.
 			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
 		local
 			keys: ARRAYED_LIST [INTEGER]
-			attr: LIST [STRING]
+			attr: PS_IMMUTABLE_STRUCTURE [STRING]
 		do
 				-- Evaluate which objects to load
 				-- (here: ignore criteria and just return everything from that class)
@@ -277,13 +277,16 @@ feature {PS_EIFFELSTORE_EXPORT} -- Miscellaneous
 
 feature {NONE} -- Implementation - Loading and storing objects
 
-	load_objects (type: PS_TYPE_METADATA; attributes: LIST [STRING]; keys: LIST [INTEGER]): LINKED_LIST [PS_RETRIEVED_OBJECT]
+	load_objects (type: PS_TYPE_METADATA; arg_attributes: PS_IMMUTABLE_STRUCTURE [STRING]; keys: LIST [INTEGER]): LINKED_LIST [PS_RETRIEVED_OBJECT]
 			-- Loads all objects of class `type' whose primary key is listed in `keys'.
 			-- Only loads the attributes listed in `attributes',or all attributes if the list is empty.
 		local
 			current_obj: PS_RETRIEVED_OBJECT
 			attr_val: PS_PAIR [STRING, STRING]
+			attributes: LINKED_LIST[STRING]
 		do
+			create attributes.make
+			arg_attributes.do_all (agent attributes.extend)
 			create Result.make
 			across
 				keys as obj_primary

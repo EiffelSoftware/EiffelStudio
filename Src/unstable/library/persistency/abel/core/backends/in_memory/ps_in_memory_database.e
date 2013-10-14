@@ -71,12 +71,26 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			Result := load_objects (type, attr, keys).new_cursor
 		end
 
-	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
-			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+		local
+			list: LINKED_LIST[INTEGER]
+			res: LIST[PS_RETRIEVED_OBJECT]
 		do
-				-- Retrieve all keys in primary_keys and with all attributes
-			Result := load_objects (type, create{LINKED_LIST[STRING]}.make, primary_keys)
+			create list.make
+			list.extend (key)
+--			res := internal_retrieve_from_keys (type, list, transaction)
+			res := load_objects (type, attributes, list)
+			if not res.is_empty then
+				Result := res.first
+			end
 		end
+
+--	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+--			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
+--		do
+--				-- Retrieve all keys in primary_keys and with all attributes
+--			Result := load_objects (type, create{LINKED_LIST[STRING]}.make, primary_keys)
+--		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 

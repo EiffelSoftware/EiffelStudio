@@ -72,6 +72,19 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			Result := result_list.new_cursor
 		end
 
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+		local
+			list: LINKED_LIST[INTEGER]
+			res: LIST[PS_RETRIEVED_OBJECT]
+		do
+			create list.make
+			list.extend (key)
+			res := internal_retrieve_from_keys (type, list, transaction)
+			if not res.is_empty then
+				Result := res.first
+			end
+		end
+
 	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
 			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
 		local

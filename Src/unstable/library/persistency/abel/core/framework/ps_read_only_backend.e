@@ -18,11 +18,7 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
-		local
---			reflection: INTERNAL
 		do
---			create reflection
---			Result := not reflection.is_special_type (type.type.type_id)
 			Result := not type.type.is_conforming_to ({detachable SPECIAL[detachable ANY]})
 				and not type.type.is_conforming_to ({detachable TUPLE})
 		end
@@ -182,15 +178,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Plugins
 		do
 			plug_in_list.extend (plug_in)
 		end
-
-feature {PS_EIFFELSTORE_EXPORT} -- Mapping
-
---	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
---			-- Add a mapping from `object' to the database entry with primary key `key'
---		deferred
---			-- TODO: move the mapping task somewhere else, as it is no longer the responsibility of a backend.
---		end
-
 
 feature {PS_CURSOR_WRAPPER}
 

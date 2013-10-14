@@ -47,7 +47,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 			Result := "SELECT attributeid FROM ps_attribute WHERE name = '" + attribute_name + "' AND class = " + class_key.out
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data querying - Backend implementation
+feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend implementation
 
 	Query_values_from_class (attributes: STRING): STRING
 		do

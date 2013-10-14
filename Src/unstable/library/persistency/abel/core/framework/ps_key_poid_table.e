@@ -87,12 +87,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction management
 			-- Make the changes done within transaction `transaction' permanent.
 		do
 			fixme ("TODO")
+			fixme ("Call at appropriate location")
 		end
 
 	rollback (transaction: PS_TRANSACTION)
 			-- Undo all changes done within transaction `transaction'.
 		do
 			fixme ("TODO")
+			fixme ("Call at appropriate location")
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Cleanup and Memory management

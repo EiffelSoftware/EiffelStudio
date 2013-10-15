@@ -97,7 +97,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Data modification - Key manager
 		deferred
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
+feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND} -- Data modification - Backend
 
 	Insert_value_use_autoincrement (attribute_id, runtimetype: INTEGER; value: STRING): STRING
 		deferred

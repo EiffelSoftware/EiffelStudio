@@ -44,6 +44,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			supported: is_object_type_supported (type)
 			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
 			no_agent_criteria: to_implement_assertion ("Adapt upper layers for this precondition")--not criteria.has_agent_criterion
+			transaction_active: transaction.is_active
 		local
 			real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
 			wrapper: PS_CURSOR_WRAPPER
@@ -77,6 +78,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
 			attributes_present: not Result.after implies attributes.for_all (agent (Result.item).has_attribute)
 			consistent: not Result.after implies Result.item.is_consistent
+			transaction_unchanged: transaction.is_active
 		end
 
 	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
@@ -91,6 +93,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 		require
 			supported: is_object_type_supported (type)
 			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
+			transaction_active: transaction.is_active
 		local
 			keys: LINKED_LIST [INTEGER]
 			res: LIST[PS_RETRIEVED_OBJECT]
@@ -117,6 +120,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			primary_key_correct: attached Result implies Result.primary_key = primary_key
 			attributes_present: attached Result implies attributes.for_all (agent Result.has_attribute)
 			consistent: attached Result implies Result.is_consistent
+			transaction_unchanged: transaction.is_active
 		end
 
 

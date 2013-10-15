@@ -88,7 +88,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 		do
 				-- Cheating a little ;-)
 			fixme ("implement this properly...")
-			all_items := retrieve (type, create {PS_EMPTY_CRITERION}, attributes, transaction)
+			all_items := internal_retrieve (type, create {PS_EMPTY_CRITERION}, attributes, transaction)
 			from
 			until
 				all_items.after

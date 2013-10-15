@@ -146,8 +146,11 @@ feature {NONE}
 			-- Set up an in-memory database with an ESCHER integration layer
 		local
 			real_backend: PS_IN_MEMORY_DATABASE
-			repo: PS_REPOSITORY_COMPATIBILITY
-			repo2: PS_SIMPLE_IN_MEMORY_REPOSITORY
+			factory: PS_REPOSITORY_FACTORY
+			repo: PS_DEFAULT_REPOSITORY
+			--repo: PS_REPOSITORY_COMPATIBILITY
+			--repo2: PS_SIMPLE_IN_MEMORY_REPOSITORY
+
 		do
 			create test_data.make
 			create schema_evolution_manager.make
@@ -158,9 +161,10 @@ feature {NONE}
 --			create {PS_RELATIONAL_REPOSITORY}repo.make (real_backend)
 --			create executor.make (repo)
 
-			create repo2
-			repo2.backend.add_plug_in (escher_integration)
-			create executor.make (repo2)
+			create factory
+			repo := factory.create_in_memory_repository
+			repo.backend.add_plug_in (escher_integration)
+			create executor.make (repo)
 
 		end
 

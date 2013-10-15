@@ -61,12 +61,31 @@ feature -- Factory methods
 --			create Result.make (backend)
 --		end
 
-	create_in_memory_repository: PS_REPOSITORY_COMPATIBILITY
+	create_obsolete_in_memory_repository: PS_REPOSITORY_COMPATIBILITY
 		-- Create an in-memory repository that can be queried in a relational style.
 		local
-			repository: PS_IN_MEMORY_REPOSITORY
+			repository: PS_REPOSITORY_COMPATIBILITY
+			in_memory_database: PS_IN_MEMORY_DATABASE
+			special_handler: PS_SPECIAL_COLLECTION_HANDLER
 		do
-			create repository.make_empty
+			create in_memory_database.make
+			create repository.make (in_memory_database)
+			create special_handler.make
+			repository.add_collection_handler (special_handler)
+			Result := repository
+		end
+
+	create_in_memory_repository: PS_DEFAULT_REPOSITORY
+		-- Create a simple in memory repository
+		local
+			repository: PS_DEFAULT_REPOSITORY
+			backend: PS_EVEN_SIMPLER_IN_MEMORY_BACKEND
+			special_handler: PS_SPECIAL_COLLECTION_HANDLER
+		do
+			create backend.wipe_out
+			create repository.make (backend)
+			create special_handler.make
+			repository.add_collection_handler (special_handler)
 			Result := repository
 		end
 

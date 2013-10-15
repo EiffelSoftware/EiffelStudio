@@ -13,10 +13,14 @@ inherit
 
 feature {NONE}
 
-	make_repository: PS_IN_MEMORY_REPOSITORY
+	make_repository: PS_REPOSITORY
 			-- Create the repository for this test
+		local
+			factory: PS_REPOSITORY_FACTORY
 		do
-			create Result.make_empty
+			create factory
+			Result := factory.create_obsolete_in_memory_repository
+			--create Result.make_empty
 		end
 
 feature

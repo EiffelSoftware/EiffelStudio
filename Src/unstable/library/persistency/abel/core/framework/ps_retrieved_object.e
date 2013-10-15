@@ -80,6 +80,36 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := metadata.attributes.for_all (agent has_attribute)
 		end
 
+	is_consistent: BOOLEAN
+			-- Does the static type match the retrieved runtime type for all attributes in `Current'?
+		local
+			reflection: INTERNAL
+			attr_type: INTEGER
+		do
+			across
+				values as cursor
+			from
+				create reflection
+				Result := True
+			loop
+				-- Ignore additional attributes (e.g. from plugins)
+				if metadata.attributes.has (cursor.key) then
+
+					attr_type := reflection.dynamic_type_from_string (cursor.item.second)
+
+					-- For expanded types, or when an object was attached, the runtime type must conform to the declared type
+					Result := Result and (attr_type >= 0 implies
+						reflection.type_conforms_to (attr_type, metadata.attribute_type (cursor.key).type.type_id))
+
+					-- If a reference was Void during write, the runtime type was stored as NONE and the value is 0
+					Result := Result and (attr_type = reflection.none_type implies
+						not metadata.attribute_type (cursor.key).type.is_attached -- Type can be detachable
+						and cursor.item.first.is_empty) -- Value is an empty string
+				end
+			end
+		end
+
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN

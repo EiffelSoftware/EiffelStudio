@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Perform type checking as well as generation of BYTE_NODE tree."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1240,6 +1240,8 @@ feature {NONE} -- Implementation
 			l_is_in_creation_expression, l_is_target_of_creation_instruction: BOOLEAN
 			l_feature_name: ID_AS
 			l_parameters: EIFFEL_LIST [EXPR_AS]
+			l_wrapped_actuals: EIFFEL_LIST [EXPR_AS]
+			l_actual: EXPR_AS
 			l_needs_byte_node: BOOLEAN
 			l_conv_info: CONVERSION_INFO
 			l_expr: EXPR_B
@@ -1507,6 +1509,43 @@ feature {NONE} -- Implementation
 								l_actual_count := l_formal_count
 								l_parameters.start
 							end
+							if l_actual_count /= l_formal_count and then not is_agent and then not l_is_in_assignment then
+									-- The list of actual arguments may be adapted to the list of formal arguments.
+								if l_actual_count > l_formal_count and then l_formal_count > 0 then
+										-- Additional actual arguments may be converted to a TUPLE.
+									create l_wrapped_actuals.make (l_actual_count - l_formal_count + 1)
+									from
+										l_parameters.go_i_th (l_formal_count)
+									until
+										l_parameters.after
+									loop
+										l_wrapped_actuals.extend (l_parameters.item)
+										l_parameters.forth
+									end
+										-- Avoid changing original list of arguments.
+									l_parameters.start
+									l_parameters := l_parameters.duplicate (l_formal_count)
+										-- Replace last arguments with a tuple.
+									l_parameters.put_i_th (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void), l_formal_count)
+										-- Adjust number of actual arguments.
+									l_actual_count := l_formal_count
+								elseif
+									l_actual_count + 1 = l_formal_count and then
+									l_feature.arguments.i_th (l_formal_count).formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
+								then
+										-- Avoid changing original list of arguments.
+									if attached l_parameters then
+										l_parameters := l_parameters.twin
+									else
+										create l_parameters.make (1)
+									end
+										-- Add an empty tuple.
+									create l_wrapped_actuals.make (0)
+									l_parameters.extend (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void))
+										-- Adjust number of actual arguments.
+									l_actual_count := l_formal_count
+								end
+							end
 							if l_actual_count /= l_formal_count then
 								if not l_is_in_assignment and not l_is_target_of_creation_instruction then
 									create l_vuar1
@@ -1544,6 +1583,27 @@ feature {NONE} -- Implementation
 										current_target_type :=
 											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 										l_parameters.i_th (i).process (Current)
+										if last_type /= Void and l_arg_types /= Void then
+												-- Check if last argument needs to be wrapped in a TUPLE.
+											if i = l_formal_count + 1 then
+												l_arg_type := last_type
+													-- Actual type of feature argument.
+												l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
+												if
+													not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) and then
+													not is_inherited and then
+													not l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type) and then
+													not (l_arg_type.is_expanded and then l_formal_arg_type.is_external and then
+														l_arg_type.is_conformant_to (l_context_current_class, l_formal_arg_type))
+												then
+														-- Use a TUPLE of last argument instead.
+													reset_for_unqualified_call_checking
+													create l_wrapped_actuals.make (1)
+													l_wrapped_actuals.extend (l_parameters.i_th (i))
+													(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
+												end
+											end
+										end
 										if last_type /= Void and l_arg_types /= Void then
 											l_arg_types.extend (last_type)
 											if l_needs_byte_node then

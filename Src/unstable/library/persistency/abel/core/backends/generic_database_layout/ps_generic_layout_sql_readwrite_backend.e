@@ -70,8 +70,25 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 
 	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+		local
+			connection: PS_SQL_CONNECTION
+			stmt: STRING
 		do
-			check not_implemented: False end
+			across
+				objects as cursor
+			from
+				connection := get_connection (transaction)
+				stmt := "DELETE FROM ps_value WHERE objectid IN ("
+			loop
+				stmt.append (cursor.item.primary_key.out + ",")
+
+			end
+			-- also removes the last comma...
+			stmt.put (')', stmt.count)
+
+			connection.execute_sql (stmt)
+		rescue
+			rollback (transaction)
 		end
 
 

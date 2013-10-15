@@ -80,7 +80,7 @@ feature
 
 feature {NONE} -- Initialization
 
-	make_repository: PS_RELATIONAL_REPOSITORY
+	make_repository: PS_REPOSITORY_COMPATIBILITY
 			-- Create the repository for this test
 		local
 			database: PS_MYSQL_DATABASE

@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_RELATIONAL_REPOSITORY
+	PS_REPOSITORY_COMPATIBILITY
 
 inherit
 
@@ -192,7 +192,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 
 feature {NONE} -- Initialization
 
-	make (a_backend: PS_BACKEND)
+	make (a_backend: PS_BACKEND_COMPATIBILITY)
 			-- Initialize `Current'.
 		do
 			backend := a_backend
@@ -245,6 +245,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			end
 		end
 
+	mapper: PS_KEY_POID_TABLE
+		do
+			Result := backend.key_mapper
+		end
+
 	disassembler: PS_OBJECT_GRAPH_BUILDER
 			-- An object graph builder to create explicit object graphs.
 
@@ -254,7 +259,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 --	executor: PS_WRITE_EXECUTOR
 			-- An executor to execute operations in an operation plan
 
-	backend: PS_BACKEND
+	backend: PS_BACKEND_COMPATIBILITY
 			-- A BACKEND implementation
 
 	retriever: PS_RETRIEVAL_MANAGER

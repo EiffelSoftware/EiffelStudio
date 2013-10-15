@@ -12,7 +12,7 @@ class
 
 inherit
 
-	PS_RELATIONAL_REPOSITORY
+	PS_REPOSITORY_COMPATIBILITY
 
 create
 	make_empty
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			special_handler: PS_SPECIAL_COLLECTION_HANDLER
 		do
 			create in_memory_database.make
-			create simple_in_memory_backend.wipe_out
+--			create simple_in_memory_backend.wipe_out
 			make (in_memory_database)
 --			make (simple_in_memory_backend)
 			create special_handler.make

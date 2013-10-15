@@ -233,4 +233,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
 
+	mapper: PS_KEY_POID_TABLE
+		deferred
+		end
+
 end

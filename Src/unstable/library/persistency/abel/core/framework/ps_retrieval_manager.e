@@ -514,13 +514,7 @@ feature {NONE} -- Initialization
 
 	internal_add_mapping (obj: PS_OBJECT_IDENTIFIER_WRAPPER; primary: INTEGER; transaction: PS_TRANSACTION)
 		do
-			if attached {PS_BACKEND} backend as old_backend then
-				old_backend.add_mapping (obj, primary, transaction)
-			else
-				check attached {PS_SIMPLE_IN_MEMORY_REPOSITORY} repository as repo then
-					repo.mapper.add_entry (obj, primary, transaction)
-				end
-			end
+			repository.mapper.add_entry (obj, primary, transaction)
 		end
 
 	repository: PS_REPOSITORY

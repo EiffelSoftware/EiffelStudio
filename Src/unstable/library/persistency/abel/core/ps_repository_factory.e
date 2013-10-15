@@ -61,7 +61,7 @@ feature -- Factory methods
 --			create Result.make (backend)
 --		end
 
-	create_in_memory_repository: PS_RELATIONAL_REPOSITORY
+	create_in_memory_repository: PS_REPOSITORY_COMPATIBILITY
 		-- Create an in-memory repository that can be queried in a relational style.
 		local
 			repository: PS_IN_MEMORY_REPOSITORY

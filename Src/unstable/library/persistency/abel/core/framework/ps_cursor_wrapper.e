@@ -8,7 +8,10 @@ class
 	PS_CURSOR_WRAPPER
 
 inherit
+
 	ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+
+	PS_EIFFELSTORE_EXPORT
 
 create {PS_READ_ONLY_BACKEND}
 	make
@@ -39,7 +42,11 @@ feature -- Cursor movement
 				backend.apply_plugins (i, transaction)
 			end
 		ensure then
-			item_correctly_retrieved: not after implies backend.check_retrieved_object(item, type, attributes, transaction)
+			metadata_set: not after implies item.metadata.is_equal (type)
+			attributes_present: not after implies attributes.for_all (agent item.has_attribute)
+			consistent: not after implies item.is_consistent
+
+--			item_correctly_retrieved: not after implies backend.check_retrieved_object(item, type, attributes)
 		end
 
 feature {NONE} -- Impementation

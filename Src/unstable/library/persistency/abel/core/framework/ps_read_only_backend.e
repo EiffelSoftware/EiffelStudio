@@ -75,7 +75,8 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			end
 		ensure
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
-			correct: not Result.after implies check_retrieved_object (Result.item, type, attributes, transaction)
+			attributes_present: not Result.after implies attributes.for_all (agent (Result.item).has_attribute)
+			consistent: not Result.after implies Result.item.is_consistent
 		end
 
 	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
@@ -113,8 +114,9 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 			end
 		ensure
 			metadata_set: attached Result implies Result.metadata.is_equal (type)
-			correct: attached Result implies check_retrieved_object (Result, type, attributes, transaction)
 			primary_key_correct: attached Result implies Result.primary_key = primary_key
+			attributes_present: attached Result implies attributes.for_all (agent Result.has_attribute)
+			consistent: attached Result implies Result.is_consistent
 		end
 
 
@@ -127,7 +129,8 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 			collections_supported: is_generic_collection_supported
 		deferred
 		ensure
-			correct: not Result.after implies check_retrieved_collection (Result.item, collection_type, transaction)
+			metadata_set: not Result.after implies Result.item.metadata.is_equal (collection_type)
+			consistent: not Result.after implies Result.item.is_consistent
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
@@ -136,8 +139,9 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 			collections_supported: is_generic_collection_supported
 		deferred
 		ensure
-			correct: attached Result implies check_retrieved_collection (Result, collection_type, transaction)
-			primary_key_set: attached Result implies Result.primary_key = collection_primary_key
+			metadata_set: attached Result implies Result.metadata.is_equal (collection_type)
+			primary_key_correct: attached Result implies Result.primary_key = collection_primary_key
+			consistent: attached Result implies Result.is_consistent
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
@@ -188,76 +192,6 @@ feature {PS_CURSOR_WRAPPER}
 			end
 		end
 
-feature {PS_CURSOR_WRAPPER} -- Contracts
-
-	check_retrieved_object (object: PS_RETRIEVED_OBJECT; type:PS_TYPE_METADATA;  attributes: PS_IMMUTABLE_STRUCTURE[STRING]; transaction:PS_TRANSACTION): BOOLEAN
-			-- Check if the retrieved object meets some conditions
-		local
-			reflection: INTERNAL
-			attr_type: INTEGER
-		do
-			create reflection
-
-			-- Check if the type is correct
-			Result := object.metadata.is_equal (type)
-
-			if Result then
-				-- Check if all requested attributes are present
-				Result := Result and attributes.for_all (agent object.has_attribute)
-
-				-- For attributes actually present in an object, check if the runtime type makes sense.
-				across attributes as cursor
-				loop
-					if type.attributes.has (cursor.item) then
-						attr_type := reflection.dynamic_type_from_string (object.attribute_value (cursor.item).attribute_class_name)
-
-						-- For expanded types, or when an object was attached, the runtime type must conform to the declared type
-						Result := Result and (attr_type >= 0 implies
-							reflection.type_conforms_to (attr_type, type.attribute_type (cursor.item).type.type_id))
-
-						-- If a reference was Void during write, the runtime type was stored as NONE and the value is 0
-						Result := Result and (attr_type = reflection.none_type implies
-							not type.attribute_type (cursor.item).type.is_attached -- Type can be detachable
-							and object.attribute_value (cursor.item).value.is_empty) -- Value is an empty string
-					end
-				end
-			end
-		end
-
-
-	check_retrieved_collection (collection: PS_RETRIEVED_OBJECT_COLLECTION; type:PS_TYPE_METADATA; transaction:PS_TRANSACTION): BOOLEAN
-			-- Check if the retrieved collection meets some conditions
-		local
-			collection_item_type: INTEGER
-			runtime_type: INTEGER
-			reflection: INTERNAL
-		do
-			-- Check if the type is correct
-			Result := collection.metadata.is_equal(type)
-
-			if Result then
-				-- For all values, check if the runtime type makes sense
-				across collection.collection_items as cursor
-				from
-					create reflection
-					collection_item_type := type.actual_generic_parameter (1).type.type_id
-				loop
-					runtime_type := reflection.dynamic_type_from_string (cursor.item.second)
-
-					if runtime_type >= 0 then
-						-- Check if runtime type conforms to collection type
-						Result := Result and reflection.type_conforms_to (runtime_type, collection_item_type)
-					else
-						-- Item was Void during insert
-						Result := Result
-							and runtime_type = reflection.none_type -- Runtime type set to "NONE"
-							and not reflection.is_attached_type (collection_item_type) -- Collection type allowed to be detachable
-							and cursor.item.first.is_empty -- Value is an empty string
-					end
-				end
-			end
-		end
-
 feature {PS_READ_ONLY_BACKEND} -- Implementation
 
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
@@ -267,8 +201,6 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 			supported: is_object_type_supported (type)
 			no_agent_criteria: to_implement_assertion ("Adapt upper layers for this precondition")--not criteria.has_agent_criterion
 		deferred
-			-- To have lazy loading support, you need to have a special ITERATION_CURSOR and a function next in this class to load the next item of this customized cursor
-		ensure
 		end
 
 	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT

@@ -74,7 +74,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 				across
 					objects as object_cursor
 				loop
-					plugin_cursor.item.before_write_new (object_cursor.item, transaction)
+					plugin_cursor.item.before_write (object_cursor.item, transaction)
 				end
 			end
 

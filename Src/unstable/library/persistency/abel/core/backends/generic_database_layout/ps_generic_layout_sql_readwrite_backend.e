@@ -134,22 +134,18 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 			-- Write all `objects' to the database.
 			-- Only write the attributes present in {PS_RETRIEVED_OBJECT}.attributes.
 		local
-			stmt: STRING
 			connection: PS_SQL_CONNECTION
 			commands: LINKED_LIST[STRING]
 		do
 			across
 				objects as cursor
 			from
---				stmt := "insert into ps_value values"
---				stmt := "replace into ps_value values"
 				create commands.make
 			loop
 				across
 					cursor.item.attributes as attribute_cursor
 				from
 					-- Insert a default empty attribute to acknowledge the existence of the object.
-					--stmt := stmt +
 					commands.extend (to_string (
 						-- Primary key
 						cursor.item.primary_key,
@@ -160,9 +156,7 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						-- Some dummy value
 						""))
 
-					--stmt := stmt + ","
 				loop
-					--stmt := stmt + " " +
 					commands.extend (to_string (
 						-- Primary key
 						cursor.item.primary_key,
@@ -173,17 +167,9 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						-- Value
 						cursor.item.attribute_value(attribute_cursor.item).value
 						))
-					--stmt := stmt + ","
 				end
 			end
 
-			-- Remove the last comma.
---			stmt.remove_tail (1)
-
---			stmt := stmt + " on duplicate key update runtimetype = VALUES(runtimetype), value = VALUES(value);"
-
---			print (stmt + "%N")
---			connection.execute_sql (stmt)
 			connection := get_connection (transaction)
 			connection.execute_sql (SQL_Strings.assemble_multi_replace(commands))
 		rescue
@@ -191,23 +177,6 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
---	plumb_together (replace_commands: LIST[STRING]): STRING
---			-- Generates a compatible replace command from string tuples of the form "(1,2,3,'value')"
---		do
---			across
---				replace_commands as cursor
---			from
---				Result := "INSERT INTO ps_value VALUES"
---			loop
---				Result.append (" " + cursor.item + ",")
---			end
-
---			-- Remove last comma
---			Result.remove_tail (1)
---			Result.append (" on duplicate key update runtimetype = VALUES(runtimetype), value = VALUES(value);")
---		end
-
 
 	to_string (object_id, attribute_id, runtime_type_id: INTEGER; value:STRING): STRING
 			-- Generates a comma-separated list in braces from the arguments.

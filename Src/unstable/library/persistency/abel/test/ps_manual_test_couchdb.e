@@ -47,7 +47,7 @@ feature
 		do
 			crud_tests.all_tricky_collection_tests
 		end
-		
+
 	cdb_transaction_lost
 		do
 			transaction_tests.test_no_lost_update
@@ -63,14 +63,9 @@ feature
 			transaction_tests.test_repeatable_read
 		end
 
-	cdb_object_graph_write_settings
+	cdb_object_graph_settings
 		do
-			object_graph_tests.test_write_settings
-		end
-
-	cdb_object_graph_read_settings
-		do
-			object_graph_tests.test_retrieval_settings
+			object_graph_tests.test_all_settings
 		end
 
 end

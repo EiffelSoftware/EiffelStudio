@@ -82,7 +82,7 @@ feature {NONE} -- Implementation - Retrieval
 				until
 					found or results.after
 				loop
-					new_object := build_object (type, results.item, transaction, bookkeeping, true)
+					new_object := build_object (type, results.item, transaction, bookkeeping, true, repository.default_object_graph.query_depth)
 					if query.criteria.is_satisfied_by (new_object) then
 						query.result_cursor.set_entry (new_object)
 						found := True
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation - Retrieval
 					if direct_collection.after then
 						query.result_cursor.set_entry (Void)
 					else
-						new_object := build_object_collection (type, direct_collection.item, get_handler (type), transaction, bookkeeping)
+						new_object := build_object_collection (type, direct_collection.item, get_handler (type), transaction, bookkeeping, repository.default_object_graph.query_depth)
 						query.result_cursor.set_entry (new_object)
 					end
 				end
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation - Retrieval
 						found or results.after
 					loop
 						fixme ("don't cheat...")
-						new_object := build_object (type, results.item, transaction, bookkeeping, false)
+						new_object := build_object (type, results.item, transaction, bookkeeping, false, repository.default_object_graph.query_depth)
 						if query.criteria.is_satisfied_by (new_object) then
 							-- extract the required information
 
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation - Retrieval
 
 feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 
-	build_object (type: PS_TYPE_METADATA; obj: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN): ANY
+	build_object (type: PS_TYPE_METADATA; obj: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN; depth: INTEGER): ANY
 			-- Build the object `obj'.
 		require
 			obj.metadata.base_class.name.is_equal (type.base_class.name)
@@ -196,21 +196,23 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 						if not try_basic_attribute (Result, obj.attribute_value (attr_cursor.item), type.field_index (attr_cursor.item)) then
 								-- If not it is either a referenced object or a collection. In either case, use the `Current.build' function.
 
+							if depth > 1 or depth = repository.default_object_graph.object_graph_depth_infinite then
 
-							--field_type := type.attribute_type (attr_cursor.item)
-							-- Important: Use type as stored in the database!
-							field_type_name := obj.attribute_value (attr_cursor.item).attribute_class_name
-							if not field_type_name.is_equal ("NONE") then
-								field_type := metadata_manager.create_metadata_from_type (
-									type.reflection.type_of_type (
-										type.reflection.dynamic_type_from_string (field_type_name)))
+								--field_type := type.attribute_type (attr_cursor.item)
+								-- Important: Use type as stored in the database!
+								field_type_name := obj.attribute_value (attr_cursor.item).attribute_class_name
+								if not field_type_name.is_equal ("NONE") then
+									field_type := metadata_manager.create_metadata_from_type (
+										type.reflection.type_of_type (
+											type.reflection.dynamic_type_from_string (field_type_name)))
 
 
-								field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping)
-								if attached field_val then
-										--print (reflection.field_name (type.field_index (attr_cursor.item), Result).out + "%N")
-										--print (type.type.out + field_type.type.out + "%N")
-									reflection.set_reference_field (type.field_index (attr_cursor.item), Result, field_val)
+									field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping, repository.default_object_graph.object_graph_depth_infinite.max (depth -1))
+									if attached field_val then
+											--print (reflection.field_name (type.field_index (attr_cursor.item), Result).out + "%N")
+											--print (type.type.out + field_type.type.out + "%N")
+										reflection.set_reference_field (type.field_index (attr_cursor.item), Result, field_val)
+									end
 								end
 							end
 						end
@@ -221,28 +223,29 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			type_correct: Result.generating_type.type_id = type.type.type_id
 		end
 
-	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]): ANY
+	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `relational_collection'.
 		do
-			Result := handler.build_relational_collection (type, build_collection_items (type, relational_collection, transaction, bookkeeping))
+			Result := handler.build_relational_collection (type, build_collection_items (type, relational_collection, transaction, bookkeeping, depth))
 			id_manager.identify (Result, transaction)
 		end
 
-	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_RETRIEVED_OBJECT_COLLECTION; handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]): ANY
+	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_RETRIEVED_OBJECT_COLLECTION; handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `object_collection'.
 		do
-			Result := handler.build_collection (type, build_collection_items (type, object_collection, transaction, bookkeeping), object_collection)
+			Result := handler.build_collection (type, build_collection_items (type, object_collection, transaction, bookkeeping, depth), object_collection)
 			id_manager.identify (Result, transaction)
 		end
 
 feature {NONE} -- Implementation - Build support functions.
 
-	build (type: PS_TYPE_METADATA; value: PS_PAIR [STRING, STRING]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]): detachable ANY
+	build (type: PS_TYPE_METADATA; value: PS_PAIR [STRING, STRING]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): detachable ANY
 			-- Build an object based on the type.
 		local
 			object_result: detachable PS_RETRIEVED_OBJECT
 			collection_result: detachable PS_RETRIEVED_OBJECT_COLLECTION
 			managed: MANAGED_POINTER
+			new_depth: INTEGER
 		do
 			if type.is_basic_type then
 					-- Create a basic type
@@ -295,7 +298,12 @@ feature {NONE} -- Implementation - Build support functions.
 						-- Build a collection
 					collection_result := backend.retrieve_collection (type, value.first.to_integer, transaction)
 					if attached collection_result then
-						Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping)
+--						if depth /= repository.default_object_graph.object_graph_depth_infinite then
+--							new_depth := depth - 1
+--						else
+							new_depth:= depth
+--						end
+						Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping, new_depth)
 					end
 				else
 					fixme ("TODO: error")
@@ -306,27 +314,37 @@ feature {NONE} -- Implementation - Build support functions.
 				if not value.first.is_empty then
 					object_result := backend.retrieve_by_primary (type, value.first.to_integer, type.attributes, transaction)
 					if attached object_result then
-						Result := build_object (type, object_result, transaction, bookkeeping, true)
+--						if depth /= repository.default_object_graph.object_graph_depth_infinite then
+--							new_depth := depth - 1
+--						else
+							new_depth:= depth
+--						end
+						Result := build_object (type, object_result, transaction, bookkeeping, true, new_depth)
 					end
 				end
 			end
 		end
 
-	build_collection_items (type: PS_TYPE_METADATA; collection: PS_RETRIEVED_COLLECTION; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]): LINKED_LIST [detachable ANY]
+	build_collection_items (type: PS_TYPE_METADATA; collection: PS_RETRIEVED_COLLECTION; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): LINKED_LIST [detachable ANY]
 			-- Build a list with all collection items correctly loaded.
 		local
 			collection_items: LINKED_LIST [detachable ANY]
 			retrieved_item: LIST [PS_RETRIEVED_OBJECT]
 			item: detachable ANY
+			new_depth: INTEGER
 		do
 				-- Build every object of the list and store it in collection_items
 			create Result.make
-			across
-				collection.collection_items as items
-			loop
-				item := build (type.actual_generic_parameter (1), items.item, transaction, bookkeeping)
-				Result.extend (item)
+			if depth > 1 or depth = repository.default_object_graph.Object_graph_depth_infinite then
+				across
+					collection.collection_items as items
+				loop
+					new_depth := repository.default_object_graph.Object_graph_depth_infinite.max (depth - 1)
+					item := build (type.actual_generic_parameter (1), items.item, transaction, bookkeeping, new_depth)
+					Result.extend (item)
+				end
 			end
+
 		end
 
 	try_basic_attribute (obj: ANY; attr: TUPLE[value: STRING; runtime_type: STRING]; index: INTEGER): BOOLEAN

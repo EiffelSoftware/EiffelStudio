@@ -77,6 +77,11 @@ feature
 			crud_tests.all_polymorphism_tests
 		end
 
+	mysql_object_graph_settings
+		do
+			object_graph_tests.test_all_settings
+		end
+
 	mysql_transaction_lost
 		do
 			transaction_tests.test_no_lost_update

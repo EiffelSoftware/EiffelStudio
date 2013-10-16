@@ -74,14 +74,9 @@ feature
 --			transaction_tests.test_repeatable_read
 --		end
 
-	memory_object_graph_write_settings
+	memory_object_graph_settings
 		do
-			object_graph_tests.test_write_settings
-		end
-
-	memory_object_graph_read_settings
-		do
-			object_graph_tests.test_retrieval_settings
+			object_graph_tests.test_all_settings
 		end
 
 	memory_tuple_queries

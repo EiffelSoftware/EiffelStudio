@@ -19,7 +19,7 @@ create
 
 feature {PS_REPOSITORY_TESTS}
 
-	test_write_settings
+	test_all_settings
 		do
 			test_default_settings
 			test_cascading_update
@@ -28,13 +28,6 @@ feature {PS_REPOSITORY_TESTS}
 			test_exact_delete
 			test_immediate_insert
 			test_exact_insert_depth
-				-- Disabled at the moment as they don't work. This allows regression testing on the others...
-		--	test_immediate_retrieve
-		--	test_exact_retrieve_depth
-		end
-
-	test_retrieval_settings
-		do
 			test_immediate_retrieve
 			test_exact_retrieve_depth
 		end
@@ -212,13 +205,39 @@ feature {PS_REPOSITORY_TESTS}
 			executor.execute_insert (test_data.reference_chain)
 			executor.execute_query (query)
 			assert ("The reference of the retrieved object should be Void", query.result_cursor.item.tail.next.next.last)
+			repository.default_object_graph.set_query_depth (1)
 			executor.execute_query (tail_query)
 			across
 				tail_query as res
 			loop
+				assert ("The tail links are not void", res.item.last)
 				tail_count := tail_count + 1
 			end
-			assert ("The number of tails is wrong", arbitrary_depth - 1 = tail_count)
+			-- This test is wrong: ABEL will still load all CHAIN_TAIL objects it can find for a tail query.
+			--assert ("The number of tails is wrong", arbitrary_depth - 1 = tail_count)
+
+			repository.default_object_graph.set_query_depth (1)
+			query.reset
+			executor.execute_query (query)
+			assert ("There should be no tail", not attached query.result_cursor.item.tail)
+
+
+			repository.default_object_graph.set_query_depth (2)
+			query.reset
+			executor.execute_query (query)
+			assert ("There should be only one tail", query.result_cursor.item.tail.last)
+
+			repository.default_object_graph.set_query_depth (3)
+			query.reset
+			executor.execute_query (query)
+			assert ("There should be only two tails", query.result_cursor.item.tail.next.last)
+
+			repository.default_object_graph.set_query_depth (4)
+			query.reset
+			executor.execute_query (query)
+			assert ("There should be only three tails", query.result_cursor.item.tail.next.next.last)
+
+
 			repository.clean_db_for_testing
 			repository.default_object_graph.reset_to_default
 		end

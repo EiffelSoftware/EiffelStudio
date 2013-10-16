@@ -96,7 +96,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph write function
 					until
 						plug_in_list.before
 					loop
-						plug_in_list.item_for_iteration.before_write (object, transaction)
+						plug_in_list.item_for_iteration.before_write_compatibility (object, transaction)
 						plug_in_list.back
 					variant
 						plug_in_list.index

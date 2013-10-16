@@ -24,20 +24,6 @@ create {PS_EIFFELSTORE_EXPORT}
 
 feature {PS_EIFFELSTORE_EXPORT} -- Access
 
---	primary_key: INTEGER
---			-- The retrieved object's primary key, as used in the database.
-
---	metadata: PS_TYPE_METADATA
---			-- The type of the current object
-
-	class_metadata: PS_CLASS_METADATA
-			-- Metadata information about the object.
-		obsolete
-			"use metadata.base_class"
-		do
-			Result := metadata.base_class
-		end
-
 	attributes: LINKED_LIST [STRING]
 			-- The attributes of the object that have been loaded.
 

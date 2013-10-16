@@ -163,7 +163,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 	build_object (type: PS_TYPE_METADATA; obj: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN): ANY
 			-- Build the object `obj'.
 		require
-			obj.class_metadata.name.is_equal (type.base_class.name)
+			obj.metadata.base_class.name.is_equal (type.base_class.name)
 		local
 			reflection: INTERNAL
 			field_value: ANY
@@ -174,13 +174,13 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			referenced_obj: LIST [PS_RETRIEVED_OBJECT]
 			collection_result: PS_RETRIEVED_OBJECT_COLLECTION
 		do
-			if bookkeeping.has (obj.primary_key + obj.class_metadata.name.hash_code) then
-				Result := attach (bookkeeping [obj.primary_key + obj.class_metadata.name.hash_code])
+			if bookkeeping.has (obj.primary_key + obj.metadata.base_class.name.hash_code) then
+				Result := attach (bookkeeping [obj.primary_key + obj.metadata.base_class.name.hash_code])
 			else
 				create reflection
 				Result := reflection.new_instance_of (type.type.type_id)
 				if identify then
-					bookkeeping.extend (Result, obj.primary_key + obj.class_metadata.name.hash_code)
+					bookkeeping.extend (Result, obj.primary_key + obj.metadata.base_class.name.hash_code)
 					id_manager.identify (Result, transaction)
 					internal_add_mapping (id_manager.identifier_wrapper (Result, transaction), obj.primary_key, transaction)
 				end

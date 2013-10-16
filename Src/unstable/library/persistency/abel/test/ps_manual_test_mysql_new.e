@@ -13,6 +13,29 @@ inherit
 
 feature
 
+	experiment_stored_procedure
+		local
+			internal_connection: MYSQLI_CLIENT
+		do
+				-- Create a new `internal_connection'
+			create internal_connection.make
+			internal_connection.set_username (username)
+			internal_connection.set_password (password)
+			internal_connection.set_database (db_name)
+			internal_connection.set_host (db_host)
+			internal_connection.set_port (db_port)
+			internal_connection.connect
+
+			internal_connection.execute_query ("call generateprimaries(5);")
+			across internal_connection.last_results.first as cursor
+			loop
+				print (cursor.item)
+			end
+			print (internal_connection.last_results.last.out + internal_connection.last_results.count.out)
+
+
+		end
+
 	mysql_tuple_queries
 		do
 			tuple_query_tests.test_simple_query

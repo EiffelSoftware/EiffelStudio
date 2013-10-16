@@ -13,7 +13,6 @@ inherit
 
 feature
 
-
 	experiment_agent_failure
 		local
 			list: LINKED_LIST[detachable ANY]

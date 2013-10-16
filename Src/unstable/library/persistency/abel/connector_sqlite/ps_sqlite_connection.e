@@ -54,11 +54,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Database operations
 					all_statements.forth
 				end
 			end
-				-- Void safety...
-			create result_list.make
 				-- Execute all statements
 			across
 				all_statements as current_statement
+			from
+				create result_list.make
+				create last_results.make
 			loop
 				create result_list.make
 				create stmt.make (current_statement.item, internal_connection)
@@ -81,6 +82,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Database operations
 					result_list.extend (create {PS_SQLITE_ROW}.make (res.item))
 					res.forth
 				end
+				last_results.extend (result_list.new_cursor)
 			end
 				-- Return the cursor of the result list
 			last_result := result_list.new_cursor
@@ -113,6 +115,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Database results
 	last_result: ITERATION_CURSOR [PS_SQL_ROW]
 			-- The result of the last database operation
 
+	last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+			-- The results from the last multi-statement database operations
+
 	last_error: PS_ERROR
 			-- The last occured error
 
@@ -124,6 +129,7 @@ feature {PS_SQLITE_DATABASE} -- Initialization
 			internal_connection := connection
 			create {PS_NO_ERROR} last_error
 			last_result := (create {LINKED_LIST [PS_SQL_ROW]}.make).new_cursor
+			create last_results.make
 				-- The default isolation level is Serializable, and it can't be changed to something else
 			create transaction_isolation_level
 			transaction_isolation_level := transaction_isolation_level.serializable

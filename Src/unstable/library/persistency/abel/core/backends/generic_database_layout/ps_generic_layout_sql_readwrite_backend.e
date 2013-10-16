@@ -10,12 +10,8 @@ class
 inherit
 
 	PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND
-		redefine
-			make
-		end
 
 	PS_READ_WRITE_BACKEND
-
 
 create
 	make
@@ -27,59 +23,19 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 		local
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
---			none_class_key: INTEGER
---			existence_attribute_key: INTEGER
+			none_class_key: INTEGER
+			existence_attribute_key: INTEGER
 			current_list: LINKED_LIST[PS_RETRIEVED_OBJECT]
-			all_primaries: INTEGER
 		do
 			connection := get_connection (transaction)
 
---			across
---				order as cursor
---			from
---				create Result.make (order.count)
---				-- Retrieve some required information
---				none_class_key := db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class)
---				existence_attribute_key := db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.none_class))
---			loop
---				across
---					1 |..| cursor.item as current_count
---				from
---					create current_list.make
---					Result.extend (current_list, cursor.key)
---				loop
---					-- Generate a new primary key in the database by inserting the "existence" attribute with the objects object_identifier as a temporary value
---					connection.execute_sql (SQL_Strings.Insert_value_use_autoincrement (existence_attribute_key, none_class_key, "''"))
---					connection.execute_sql ("SELECT last_insert_id()")
---					new_primary_key := connection.last_result.item.item (1).to_integer
-
---					check unique_identifier: across current_list as c all c.item.primary_key /= new_primary_key end end
-
---					current_list.extend (create {PS_RETRIEVED_OBJECT}.make_fresh (new_primary_key, cursor.key))
---				end
---			end
-
-			-- Cleanup
---			connection.execute_sql ("DELETE FROM ps_value WHERE attributeid = " + existence_attribute_key.out)
-
-
-			-- Count the total number of objects to generate
-			across
-				order as cursor
-			from
-				all_primaries := 0
-			loop
-				all_primaries := all_primaries + cursor.item
-			end
-
-			-- Invoke the stored procedure to generate the primary keys
-			connection.execute_sql ("call generateprimaries(" + all_primaries.out + ")")
-
-			-- Distribute the generated numbers among the objects
 			across
 				order as cursor
 			from
 				create Result.make (order.count)
+				-- Retrieve some required information
+				none_class_key := db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class)
+				existence_attribute_key := db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.none_class))
 			loop
 				across
 					1 |..| cursor.item as current_count
@@ -87,14 +43,19 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 					create current_list.make
 					Result.extend (current_list, cursor.key)
 				loop
-					-- Get a primary key
-					new_primary_key := connection.last_results.first.item.item (1).to_integer
-					connection.last_results.first.forth
+					-- Generate a new primary key in the database by inserting the "existence" attribute with the objects object_identifier as a temporary value
+					connection.execute_sql (SQL_Strings.Insert_value_use_autoincrement (existence_attribute_key, none_class_key, "''"))
+					connection.execute_sql (SQL_Strings.Query_last_object_autoincrement)
+					new_primary_key := connection.last_result.item.item (1).to_integer
 
-					-- Create a new object
+					check unique_identifier: across current_list as c all c.item.primary_key /= new_primary_key end end
+
 					current_list.extend (create {PS_RETRIEVED_OBJECT}.make_fresh (new_primary_key, cursor.key))
 				end
 			end
+
+			-- Cleanup
+			connection.execute_sql ("DELETE FROM ps_value WHERE attributeid = " + existence_attribute_key.out)
 
 		rescue
 			rollback (transaction)
@@ -175,18 +136,21 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 		local
 			stmt: STRING
 			connection: PS_SQL_CONNECTION
+			commands: LINKED_LIST[STRING]
 		do
 			across
 				objects as cursor
 			from
-				stmt := "insert into ps_value values"
-				connection := get_connection (transaction)
+--				stmt := "insert into ps_value values"
+--				stmt := "replace into ps_value values"
+				create commands.make
 			loop
 				across
 					cursor.item.attributes as attribute_cursor
 				from
 					-- Insert a default empty attribute to acknowledge the existence of the object.
-					stmt := stmt + to_string (
+					--stmt := stmt +
+					commands.extend (to_string (
 						-- Primary key
 						cursor.item.primary_key,
 						-- Attribute key of default attribute ps_existence
@@ -194,11 +158,12 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						-- Runtime type of ps_existence (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
 						-- Some dummy value
-						"")
+						""))
 
-					stmt := stmt + ","
+					--stmt := stmt + ","
 				loop
-					stmt := stmt + " " + to_string (
+					--stmt := stmt + " " +
+					commands.extend (to_string (
 						-- Primary key
 						cursor.item.primary_key,
 						-- Attribute key
@@ -207,23 +172,42 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_class (cursor.item.attribute_value(attribute_cursor.item).attribute_class_name),
 						-- Value
 						cursor.item.attribute_value(attribute_cursor.item).value
-						)
-					stmt := stmt + ","
+						))
+					--stmt := stmt + ","
 				end
 			end
 
 			-- Remove the last comma.
-			stmt.remove_tail (1)
+--			stmt.remove_tail (1)
 
-			stmt := stmt + " on duplicate key update runtimetype = VALUES(runtimetype), value = VALUES(value);"
+--			stmt := stmt + " on duplicate key update runtimetype = VALUES(runtimetype), value = VALUES(value);"
 
 --			print (stmt + "%N")
-			connection.execute_sql (stmt)
+--			connection.execute_sql (stmt)
+			connection := get_connection (transaction)
+			connection.execute_sql (SQL_Strings.assemble_multi_replace(commands))
 		rescue
 			rollback (transaction)
 		end
 
 feature {NONE} -- Implementation
+
+--	plumb_together (replace_commands: LIST[STRING]): STRING
+--			-- Generates a compatible replace command from string tuples of the form "(1,2,3,'value')"
+--		do
+--			across
+--				replace_commands as cursor
+--			from
+--				Result := "INSERT INTO ps_value VALUES"
+--			loop
+--				Result.append (" " + cursor.item + ",")
+--			end
+
+--			-- Remove last comma
+--			Result.remove_tail (1)
+--			Result.append (" on duplicate key update runtimetype = VALUES(runtimetype), value = VALUES(value);")
+--		end
+
 
 	to_string (object_id, attribute_id, runtime_type_id: INTEGER; value:STRING): STRING
 			-- Generates a comma-separated list in braces from the arguments.
@@ -231,46 +215,4 @@ feature {NONE} -- Implementation
 			Result := "(" + object_id.out + ", " + attribute_id.out + ", " + runtime_type_id.out + ", '" + value + "')"
 		end
 
-feature {NONE} -- Initialization
-
-	make (a_database: PS_SQL_DATABASE; strings: PS_GENERIC_LAYOUT_SQL_STRINGS)
-			-- Initialization for `Current'.
-		local
-			none_type: INTEGER
-			none_attribute: INTEGER
-		do
-			Precursor (a_database, strings)
-
-			none_type := db_metadata_manager.create_get_primary_key_of_class ("NONE")
-			none_attribute := db_metadata_manager.create_get_primary_key_of_attribute ("ps_existence", none_type)
-
-
-			management_connection.execute_sql (
-			"[
-					DROP PROCEDURE IF EXISTS GeneratePrimaries;
-
-					CREATE PROCEDURE GeneratePrimaries (IN primary_count INTEGER)
-						BEGIN
-
-							create temporary table primaries (prim INTEGER) ENGINE=MEMORY;
-							WHILE primary_count > 0 DO
-								INSERT INTO ps_value (attributeid, runtimetype) VALUES (
-			]"
-				+ none_attribute.out + "," + none_type.out + ");" +
-			"[
-
-								INSERT INTO primaries (prim) VALUES (LAST_INSERT_ID());
-								SET primary_count = primary_count - 1;
-							END WHILE;
-
-							SELECT * FROM primaries;
-
-							DROP TEMPORARY TABLE IF EXISTS primaries;
-
-
-					    END ;
-			]"
-			)
-
-		end
 end

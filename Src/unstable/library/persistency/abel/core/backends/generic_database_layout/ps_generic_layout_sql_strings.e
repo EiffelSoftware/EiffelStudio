@@ -47,6 +47,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 			Result := "SELECT attributeid FROM ps_attribute WHERE name = '" + attribute_name + "' AND class = " + class_key.out
 		end
 
+
 feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend implementation
 
 	Query_values_from_class (attributes: STRING): STRING
@@ -87,6 +88,10 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend impl
 			Result := "SELECT attributeid FROM ps_value WHERE objectid = " + primary_key.out
 		end
 
+	Query_last_object_autoincrement: STRING
+		deferred
+		end
+
 feature {PS_METADATA_TABLES_MANAGER} -- Data modification - Key manager
 
 	Insert_class_use_autoincrement (class_name: STRING): STRING
@@ -116,6 +121,10 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 	Update_value (object_primary, attribute_id: INTEGER; new_runtime_type: INTEGER; new_value: STRING): STRING
 		do
 			Result := "UPDATE ps_value SET runtimetype = " + new_runtime_type.out + ", value = '" + new_value + "' WHERE objectid = " + object_primary.out + " AND attributeid = " + attribute_id.out
+		end
+
+	Assemble_multi_replace (tuples: LIST[STRING]): STRING
+		deferred
 		end
 
 	Insert_value (object_primary, attribute_id, runtime_type: INTEGER; value: STRING): STRING

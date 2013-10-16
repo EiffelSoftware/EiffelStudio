@@ -64,6 +64,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 					row_cursor.forth
 				end
 					-- fill in Void attributes
+				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
 				across
 					type.attributes as attr
 				loop
@@ -84,20 +85,47 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		local
-			all_items: ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+			connection: PS_SQL_CONNECTION
+			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
+			sql_string: STRING
+			attribute_name, attribute_value, class_name_of_value: STRING
 		do
-				-- Cheating a little ;-)
-			fixme ("implement this properly...")
-			all_items := internal_retrieve (type, create {PS_EMPTY_CRITERION}, attributes, transaction)
-			from
-			until
-				all_items.after
-			loop
-				if key = all_items.item.primary_key then
-					Result := all_items.item
+			connection := get_connection (transaction)
+			sql_string := "SELECT * FROM ps_value WHERE objectid = " + key.out + " " + SQL_Strings.for_update_appendix
+			connection.execute_sql (sql_string)
+			row_cursor := connection.last_result
+
+			if not row_cursor.after then
+				from
+					create Result.make (row_cursor.item.at (SQL_Strings.Value_table_id_column).to_integer, type)
+				until
+					row_cursor.after
+				loop
+					-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
+
+					attribute_name := db_metadata_manager.attribute_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_attributeid_column).to_integer)
+					attribute_value := row_cursor.item.at (SQL_Strings.Value_table_value_column)
+					class_name_of_value := db_metadata_manager.class_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_runtimetype_column).to_integer)
+					if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
+						Result.add_attribute (attribute_name, attribute_value, class_name_of_value)
+					end
+					row_cursor.forth
 				end
-				all_items.forth
+
+					-- fill in Void attributes
+				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
+				across
+					type.attributes as attr
+				loop
+					if not Result.has_attribute (attr.item) then
+						Result.add_attribute (attr.item, "", "NONE")
+					end
+				end
+
 			end
+
+		rescue
+			rollback (transaction)
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations

@@ -58,7 +58,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	frozen write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
-			-- Write all objects in `objecs' to the database.
+			-- Write every item in `objecs' to the database.
 		require
 			not_empty: not objects.is_empty
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
@@ -84,6 +84,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+			-- Delete every item in `objects' from the database
 		require
 			not_empty: not objects.is_empty
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
@@ -96,6 +97,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
+			-- Write every item in `collections' to the database
 		require
 			not_empty: not collections.is_empty
 			collection_supported: is_generic_collection_supported
@@ -108,6 +110,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+			-- Delete every item in `collections' from the database
 		require
 			not_empty: not collections.is_empty
 			collection_supported: is_generic_collection_supported

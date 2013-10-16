@@ -42,21 +42,22 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 					create current_list.make
 					Result.extend (current_list, cursor.key)
 				loop
-					max_primary := max_primary + 1
 					-- Generate a new primary key in the database by inserting the "existence" attribute with the objects object_identifier as a temporary value
 					connection.execute_sql (SQL_Strings.Insert_value_use_autoincrement (existence_attribute_key, none_class_key, "''"))
 					connection.execute_sql ("SELECT last_insert_id()")
 					new_primary_key := connection.last_result.item.item (1).to_integer
---					print (new_primary_key.out + "%N")
-					check unique_: across current_list as c all c.item.primary_key /= new_primary_key end end
+
+					check unique_identifier: across current_list as c all c.item.primary_key /= new_primary_key end end
+
 					current_list.extend (create {PS_RETRIEVED_OBJECT}.make_fresh (new_primary_key, cursor.key))
 				end
 			end
+
+			-- Cleanup
+			connection.execute_sql ("DELETE FROM ps_value WHERE attributeid = " + existence_attribute_key.out)
 		rescue
 			rollback (transaction)
 		end
-
-	max_primary: INTEGER
 
 	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
 			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
@@ -70,6 +71,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 
 	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+			-- Delete every item in `objects' from the database
 		local
 			connection: PS_SQL_CONNECTION
 			stmt: STRING
@@ -81,9 +83,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 				stmt := "DELETE FROM ps_value WHERE objectid IN ("
 			loop
 				stmt.append (cursor.item.primary_key.out + ",")
-
 			end
-			-- also removes the last comma...
+			-- conveniently this also removes the last comma
 			stmt.put (')', stmt.count)
 
 			connection.execute_sql (stmt)
@@ -93,11 +94,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
+			-- Write every item in `collections' to the database
 		do
 			check not_implemented: False end
 		end
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+			-- Delete every item in `collections' from the database
 		do
 			check not_implemented: False end
 		end
@@ -149,7 +152,7 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)),
 						-- Runtime type of ps_existence (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
-						-- A value
+						-- Some dummy value
 						"")
 
 					stmt := stmt + ","
@@ -179,22 +182,12 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 			rollback (transaction)
 		end
 
-feature
+feature {NONE} -- Implementation
 
 	to_string (object_id, attribute_id, runtime_type_id: INTEGER; value:STRING): STRING
+			-- Generates a comma-separated list in braces from the arguments.
 		do
 			Result := "(" + object_id.out + ", " + attribute_id.out + ", " + runtime_type_id.out + ", '" + value + "')"
 		end
-
-
---feature {NONE} -- Initialization
-
---	make (a_database: PS_SQL_DATABASE; strings: PS_GENERIC_LAYOUT_SQL_STRINGS)
---			-- Initialization for `Current'.
---		local
---			initialization_connection: PS_SQL_CONNECTION
---		do
---			precursor (a_database, strings)
---		end
 
 end

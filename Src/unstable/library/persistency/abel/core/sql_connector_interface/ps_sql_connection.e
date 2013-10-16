@@ -57,6 +57,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Database results
 		deferred
 		end
 
+	last_results: LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+			-- The results from the last multi-statement database operations
+		deferred
+		end
+
 	last_error: PS_ERROR
 			-- The last occurred error
 		deferred

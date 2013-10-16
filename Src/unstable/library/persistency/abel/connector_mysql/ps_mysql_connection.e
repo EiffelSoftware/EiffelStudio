@@ -44,6 +44,7 @@ feature {PS_EIFFELSTORE_EXPORT}
 				last_error := get_error
 				last_error.raise
 			end
+			last_results := compute_last_results
 		end
 
 	commit
@@ -83,6 +84,9 @@ feature {PS_EIFFELSTORE_EXPORT}
 			Result := result_list.new_cursor
 		end
 
+	last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+			-- The results of the last database operations
+
 	last_error: PS_ERROR
 			-- The last occured error
 
@@ -99,9 +103,31 @@ feature {NONE} -- Initialization
 			internal_connection := a_connection
 			create {PS_NO_ERROR} last_error
 			transaction_isolation_level := isolation_level
+			create last_results.make
 		end
 
 feature {NONE} -- Implementation
+
+	compute_last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+			-- Get the last results as a linked list.
+		local
+			result_list: LINKED_LIST [PS_SQL_ROW]
+		do
+			across
+				internal_connection.last_results as cursor
+			from
+				create Result.make
+			loop
+				across
+					cursor.item as res
+				from
+					create result_list.make
+				loop
+					result_list.extend (create {PS_MYSQL_ROW}.make (res.item))
+				end
+				Result.extend (result_list.new_cursor)
+			end
+		end
 
 	get_error: PS_ERROR
 			-- Translate the MySQL specific error code to an ABEL error object.

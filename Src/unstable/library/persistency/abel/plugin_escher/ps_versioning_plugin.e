@@ -9,6 +9,9 @@ class
 
 inherit
 	PS_PLUGIN
+		redefine
+			before_write_compatibility
+		end
 	PS_EIFFELSTORE_EXPORT
 
 inherit{NONE}
@@ -38,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	before_write_new (object: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
+	before_write (object: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
 		local
 			stored_version: INTEGER
 			reflection: INTERNAL
@@ -80,7 +83,7 @@ feature
 			end
 		end
 
-	before_write (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_TRANSACTION)
+	before_write_compatibility (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_TRANSACTION)
 			-- Adds the version attribute.
 		local
 			stored_version: INTEGER

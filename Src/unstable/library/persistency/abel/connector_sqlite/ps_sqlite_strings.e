@@ -53,6 +53,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 			]"
 		end
 
+
 feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 
 	Show_tables: STRING = "SELECT name FROM sqlite_master WHERE type = 'table'"
@@ -76,8 +77,21 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			Result := "INSERT INTO ps_value (objectid, attributeid, runtimetype, value) VALUES ( (SELECT CASE WHEN MAX(objectid) IS NULL THEN 1 ELSE (MAX(objectid) + 1) END FROM ps_value) ," + attribute_id.out + ", " + runtimetype.out + ", '" + value + "')"
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_BACKEND}
+	Assemble_multi_replace (tuples: LIST[STRING]): STRING
+		do
+			across
+				tuples as cursor
+			from
+				create Result.make_empty
+			loop
+				Result.append ("REPLACE INTO ps_value VALUES " + cursor.item + ";")
+			end
+		end
+
+feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
 
 	For_update_appendix: STRING = ""
+
+	Query_last_object_autoincrement: STRING = "SELECT objectid FROM ps_value WHERE rowid = last_insert_rowid()"
 
 end

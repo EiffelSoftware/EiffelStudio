@@ -35,10 +35,13 @@ feature -- Tests
 
 feature {NONE} -- Initialization
 
-	make_repository: PS_REPOSITORY_COMPATIBILITY
+	make_repository:
+				--PS_REPOSITORY_COMPATIBILITY
+				PS_DEFAULT_REPOSITORY
 			-- Create the repository for this test
 		local
-			backend: PS_GENERIC_LAYOUT_SQL_BACKEND
+--			backend: PS_GENERIC_LAYOUT_SQL_BACKEND
+			backend: PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND
 		do
 			create database.make (sqlite_file)
 			create backend.make (database, create {PS_SQLITE_STRINGS})

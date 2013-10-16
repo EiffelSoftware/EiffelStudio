@@ -79,8 +79,26 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			Result := "INSERT INTO ps_value (attributeid, runtimetype, value) VALUES (" + attribute_id.out + ", " + runtimetype.out + ", '" + value + "')"
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_BACKEND}
+	Assemble_multi_replace (tuples: LIST[STRING]): STRING
+		do
+			across
+				tuples as cursor
+			from
+				Result := "INSERT INTO ps_value VALUES"
+			loop
+				Result.append (" " + cursor.item + ",")
+			end
+
+			-- Remove last comma
+			Result.remove_tail (1)
+			Result.append (" on duplicate key update runtimetype = VALUES(runtimetype), value = VALUES(value);")
+		end
+
+feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
 
 	For_update_appendix: STRING = " FOR UPDATE "
+
+
+	Query_last_object_autoincrement: STRING = "SELECT LAST_INSERT_ID()"
 
 end

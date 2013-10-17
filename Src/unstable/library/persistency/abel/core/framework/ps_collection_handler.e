@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PS_COLLECTION_HANDLER [COLLECTION_TYPE -> ITERABLE [detachable ANY]]
+	PS_COLLECTION_HANDLER [COLLECTION_TYPE ]--> ITERABLE [detachable ANY]]
 
 inherit
 
@@ -48,19 +48,34 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 				-- Create relational or object collection based on `is_relationally_mapped'
 			if owner.is_representing_object and then is_relationally_mapped (metadata, owner.metadata) then
 				check attached {PS_SINGLE_OBJECT_PART} owner as good_owner then
-					create {PS_RELATIONAL_COLLECTION_PART [COLLECTION_TYPE]} Result.make (collection, metadata, good_owner, persistent, is_mapped_as_1_to_N (metadata, owner.metadata), Current, owner.root)
+					create {PS_RELATIONAL_COLLECTION_PART} Result.make (collection, metadata, good_owner, persistent, is_mapped_as_1_to_N (metadata, owner.metadata), Current, owner.root)
 				end
 			else
-				create {PS_OBJECT_COLLECTION_PART [COLLECTION_TYPE]} Result.make (collection, metadata, persistent, Current, owner.root)
+				create {PS_OBJECT_COLLECTION_PART} Result.make (collection, metadata, persistent, Current, owner.root)
 			end
 		ensure
 			collection_set: Result.represented_object = collection
 			metadata_set: Result.metadata = metadata
 			persitent_set: Result.is_persistent = persistent
-			owner_set: attached {PS_RELATIONAL_COLLECTION_PART [COLLECTION_TYPE]} Result as res implies res.reference_owner = owner
+			owner_set: attached {PS_RELATIONAL_COLLECTION_PART} Result as res implies res.reference_owner = owner
 		end
 
-	add_information (object_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]])
+	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[ANY, TUPLE[detachable ANY], PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
+		do
+			create Result.make
+			check attached {ITERABLE[detachable ANY]} collection.represented_object as real_collection then
+
+				across
+					real_collection as cursor
+				loop
+					Result.extend (object_graph_factory.item ([cursor.item]))
+				end
+
+			end
+		end
+
+
+	add_information (object_collection: PS_OBJECT_COLLECTION_PART)
 			-- Add some additional information to `object_collection'.
 		deferred
 		end

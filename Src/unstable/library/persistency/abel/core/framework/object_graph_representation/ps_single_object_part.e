@@ -59,7 +59,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 		do
 			if attached {PS_IGNORE_PART} value then
 					-- ignore
-			elseif attached {PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]} value then
+			elseif attached {PS_RELATIONAL_COLLECTION_PART} value then
 					-- Add dependency to root
 				root.add_dependency (value)
 			else

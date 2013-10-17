@@ -221,7 +221,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 					objects_to_delete.extend (entity)
 					mapper.remove_primary_key (mapper.quick_translate (cursor.item.object_identifier, transaction), cursor.item.metadata, transaction)
 					id_manager.delete_identification (obj.represented_object, transaction)
-				elseif attached {PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]} cursor.item as coll then
+				elseif attached {PS_OBJECT_COLLECTION_PART} cursor.item as coll then
 					create entity.make (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata)
 					collections_to_delete.extend (entity)
 					mapper.remove_primary_key (mapper.quick_translate (coll.object_identifier, transaction), coll.metadata, transaction)
@@ -312,7 +312,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 				check cursor.item.write_operation /= cursor.item.write_operation.delete end
 				if attached {PS_SINGLE_OBJECT_PART} cursor.item as obj then
 					objects_to_write.extend (to_retrieved(obj, transaction))
-				elseif attached {PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]} cursor.item as coll then
+				elseif attached {PS_OBJECT_COLLECTION_PART} cursor.item as coll then
 					collections_to_write.extend (to_retrieved_collection(coll, transaction))
 				else
 					check relations_not_implemented: False end
@@ -368,7 +368,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 		end
 
 
-	to_retrieved_collection (coll: PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT_COLLECTION
+	to_retrieved_collection (coll: PS_OBJECT_COLLECTION_PART; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT_COLLECTION
 		local
 			item: PS_PAIR[STRING, STRING]
 			id: INTEGER

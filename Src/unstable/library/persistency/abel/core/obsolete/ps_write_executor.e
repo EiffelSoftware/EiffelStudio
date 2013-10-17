@@ -35,9 +35,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			loop
 				if attached {PS_SINGLE_OBJECT_PART} op_cursor.item as obj then
 					Result := Result and backend.is_object_type_supported (obj.metadata)
-				elseif attached {PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]} op_cursor.item as coll then
+				elseif attached {PS_OBJECT_COLLECTION_PART} op_cursor.item as coll then
 					Result := Result and backend.can_handle_object_oriented_collection (coll.metadata)
-				elseif attached {PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]} op_cursor.item as coll then
+				elseif attached {PS_RELATIONAL_COLLECTION_PART} op_cursor.item as coll then
 					Result := Result and backend.can_handle_relational_collection (coll.reference_owner.metadata, coll.metadata.actual_generic_parameter (1))
 				end
 			end
@@ -53,9 +53,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 			loop
 				if attached {PS_SINGLE_OBJECT_PART} op_cursor.item as obj then
 					handle_object (obj, transaction)
-				elseif attached {PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]} op_cursor.item as coll then
+				elseif attached {PS_OBJECT_COLLECTION_PART} op_cursor.item as coll then
 					handle_object_collection (coll, transaction)
-				elseif attached {PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]} op_cursor.item as coll then
+				elseif attached {PS_RELATIONAL_COLLECTION_PART} op_cursor.item as coll then
 					handle_relational_collection (coll, transaction)
 				end
 			end
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_object_collection (object_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION)
+	handle_object_collection (object_collection: PS_OBJECT_COLLECTION_PART; transaction: PS_TRANSACTION)
 			-- Perform a write operation on `object_collection'.
 		do
 			identify_all (object_collection, object_collection.values.new_cursor, transaction)
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_relational_collection (relational_collection: PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION)
+	handle_relational_collection (relational_collection: PS_RELATIONAL_COLLECTION_PART; transaction: PS_TRANSACTION)
 			-- Perform a write operation on `relational_collection'.
 		do
 			identify_all (relational_collection, relational_collection.values.new_cursor, transaction)

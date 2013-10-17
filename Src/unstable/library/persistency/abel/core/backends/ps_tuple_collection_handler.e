@@ -31,8 +31,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 
 	create_collection_part (collection: ANY; metadata: PS_TYPE_METADATA; persistent: BOOLEAN; owner: PS_OBJECT_GRAPH_PART): PS_OBJECT_GRAPH_PART
 			-- Create a new OBJECT_GRAPH_PART for `collection'.
-		local
-			wrapped_tuple: PS_TUPLE_CURSOR
 		do
 				-- Create relational or object collection based on `is_relationally_mapped'
 			check attached {TUPLE} collection as tuple then

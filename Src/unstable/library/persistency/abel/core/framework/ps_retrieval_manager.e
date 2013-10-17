@@ -245,12 +245,12 @@ feature {NONE} -- Implementation - Build support functions.
 			object_result: detachable PS_RETRIEVED_OBJECT
 			collection_result: detachable PS_RETRIEVED_OBJECT_COLLECTION
 			managed: MANAGED_POINTER
-			new_depth: INTEGER
+			trash: INTEGER
 		do
 			if type.is_basic_type then
 					-- Create a basic type
 				if type.type.name.is_equal ("STRING_8") then
-					Result := value.first
+					Result := value.first.twin
 				elseif type.type.name.is_equal ("STRING_32") then
 					Result := value.first.as_string_32
 				elseif type.type.name.is_equal ("INTEGER_8") then
@@ -298,12 +298,7 @@ feature {NONE} -- Implementation - Build support functions.
 						-- Build a collection
 					collection_result := backend.retrieve_collection (type, value.first.to_integer, transaction)
 					if attached collection_result then
---						if depth /= repository.default_object_graph.object_graph_depth_infinite then
---							new_depth := depth - 1
---						else
-							new_depth:= depth
---						end
-						Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping, new_depth)
+						Result := build_object_collection (type, collection_result, get_handler (type), transaction, bookkeeping, depth)
 					end
 				else
 					fixme ("TODO: error")
@@ -314,15 +309,21 @@ feature {NONE} -- Implementation - Build support functions.
 				if not value.first.is_empty then
 					object_result := backend.retrieve_by_primary (type, value.first.to_integer, type.attributes, transaction)
 					if attached object_result then
---						if depth /= repository.default_object_graph.object_graph_depth_infinite then
---							new_depth := depth - 1
---						else
-							new_depth:= depth
---						end
-						Result := build_object (type, object_result, transaction, bookkeeping, true, new_depth)
+						Result := build_object (type, object_result, transaction, bookkeeping, true, depth)
 					end
 				end
 			end
+
+			-- HASH_TABLE fix:
+			-- The internal_hash_code of STRING doesn't get stored , but we can recreate it easily
+			if attached {HASH_TABLE[detachable ANY, READABLE_STRING_GENERAL]} Result as table then
+				across
+					table as cursor
+				loop
+					trash := cursor.key.hash_code
+				end
+			end
+
 		end
 
 	build_collection_items (type: PS_TYPE_METADATA; collection: PS_RETRIEVED_COLLECTION; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): LINKED_LIST [detachable ANY]

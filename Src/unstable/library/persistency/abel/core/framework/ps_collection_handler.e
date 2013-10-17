@@ -61,17 +61,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 		end
 
 	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[ANY, TUPLE[detachable ANY], PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
-		do
-			create Result.make
-			check attached {ITERABLE[detachable ANY]} collection.represented_object as real_collection then
-
-				across
-					real_collection as cursor
-				loop
-					Result.extend (object_graph_factory.item ([cursor.item]))
-				end
-
-			end
+			-- Iterate over the collection and call `object_graph_factory' on each item
+		deferred
 		end
 
 
@@ -82,14 +73,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 
-	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_RETRIEVED_OBJECT_COLLECTION): COLLECTION_TYPE
+	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_RETRIEVED_OBJECT_COLLECTION): ANY
 			-- Build a collection object of type `collection_type' with items `objects', using `additional_information' that contains information generated during the last insert.
 		require
 			can_handle_type: can_handle_type (collection_type)
 		deferred
 		end
 
-	build_relational_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]): COLLECTION_TYPE
+	build_relational_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]): ANY
 			-- Build a collection object of type `collection_type' with items `objects'.
 		require
 			can_handle_type: can_handle_type (collection_type)

@@ -81,11 +81,14 @@ feature -- Factory methods
 			repository: PS_DEFAULT_REPOSITORY
 			backend: PS_EVEN_SIMPLER_IN_MEMORY_BACKEND
 			special_handler: PS_SPECIAL_COLLECTION_HANDLER
+			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
 		do
 			create backend.wipe_out
 			create repository.make (backend)
 			create special_handler.make
+			create tuple_handler
 			repository.add_collection_handler (special_handler)
+			repository.add_collection_handler (tuple_handler)
 			Result := repository
 		end
 

@@ -34,6 +34,21 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 
+	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[ANY, TUPLE[detachable ANY], PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
+			-- Iterate over the collection and call `object_graph_factory' on each item
+		do
+			create Result.make
+			check attached {ITERABLE[detachable ANY]} collection.represented_object as real_collection then
+
+				across
+					real_collection as cursor
+				loop
+					Result.extend (object_graph_factory.item ([cursor.item]))
+				end
+
+			end
+		end
+
 	add_information (object_collection: PS_OBJECT_COLLECTION_PART)
 			-- Add some additional information to `object_collection'
 		do

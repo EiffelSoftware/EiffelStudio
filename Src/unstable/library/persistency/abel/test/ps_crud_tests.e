@@ -320,6 +320,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				repository.clean_db_for_testing
 				create box.set_item ([create {FLAT_CLASS_1}.make, 42, "abc"])
 				create test.make (repository)
+				repository.default_object_graph.set_update_depth (repository.default_object_graph.object_graph_depth_infinite)
 				test.test_crud_operations (box,
 					agent (b: ANY_BOX)
 					do
@@ -327,6 +328,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 							fc.update
 						end
 					end )
+				repository.default_object_graph.reset_to_default
 			end
 
 		test_hash_table
@@ -341,6 +343,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				hash.extend (test_data.flat_class.twin, "something")
 				create box.set_item (hash)
 				create test.make (repository)
+				repository.default_object_graph.set_update_depth (repository.default_object_graph.object_graph_depth_infinite)
 				test.test_crud_operations (box,
 					agent (b: ANY_BOX)
 					do
@@ -348,6 +351,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 							fc.update
 						end
 					end )
+				repository.default_object_graph.reset_to_default
 			end
 
 

@@ -34,7 +34,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 
-	add_information (object_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]])
+	add_information (object_collection: PS_OBJECT_COLLECTION_PART)
 			-- Add some additional information to `object_collection'
 		do
 			check attached {SPECIAL [detachable ANY]} object_collection.represented_object as actual_collection then

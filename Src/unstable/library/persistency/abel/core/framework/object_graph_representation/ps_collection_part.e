@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PS_COLLECTION_PART [COLLECTION_TYPE -> ITERABLE [detachable ANY]]
+	PS_COLLECTION_PART
 
 inherit
 
@@ -16,13 +16,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 	values: LINKED_LIST [PS_OBJECT_GRAPH_PART]
 			-- The objects in the collection.
 
-	actual_collection: COLLECTION_TYPE
-			-- The collection that `Current' represents.
-		do
-			check attached {COLLECTION_TYPE} represented_object as res then
-				Result := res
-			end
-		end
+--	actual_collection: COLLECTION_TYPE
+--			-- The collection that `Current' represents.
+--		do
+--			check attached {COLLECTION_TYPE} represented_object as res then
+--				Result := res
+--			end
+--		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
@@ -47,7 +47,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 		require
 			no_mixed_type_collections: not values.is_empty implies values [1].is_basic_attribute = a_graph_part.is_basic_attribute
 			no_basic_type_in_relational_mode: is_relationally_mapped implies not a_graph_part.is_basic_attribute
-			no_multidimensional_collections_in_relational_mode: is_relationally_mapped implies not attached {PS_COLLECTION_PART [ITERABLE [ANY]]} a_graph_part
+			no_multidimensional_collections_in_relational_mode: is_relationally_mapped implies not attached {PS_COLLECTION_PART} a_graph_part
 		deferred
 		end
 
@@ -71,21 +71,21 @@ feature {PS_COMPLEX_PART} -- Initialization
 			operation := disassembler.active_operation
 			handle_operation (operation)
 				-- First generate all item parts
+
+			generated_items := handler.create_items (Current, agent disassembler.next_object_graph_part (?, Current, operation))
 			from
-				cursor := actual_collection.new_cursor
-				create generated_items.make
+				generated_items.start
 			until
-				cursor.after
+				generated_items.after
 			loop
-				next := disassembler.next_object_graph_part (cursor.item, Current, operation)
-					-- Change an IGNORE_PART to a NULL_REFRENCE_PART in object collections
-				if attached {PS_IGNORE_PART} next and not is_relationally_mapped then
-					create {PS_NULL_REFERENCE_PART} next.default_make (next.root)
+--					-- Change an IGNORE_PART to a NULL_REFRENCE_PART in object collections
+				if attached {PS_IGNORE_PART} generated_items.item and not is_relationally_mapped then
+					generated_items.replace (create {PS_NULL_REFERENCE_PART}.default_make (generated_items.item.root))
 				end
-				add_value (next)
-				generated_items.extend (next)
-				cursor.forth
+				add_value (generated_items.item)
+				generated_items.forth
 			end
+
 				-- Now initialize all of them
 			across
 				generated_items as val
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	handler: PS_COLLECTION_HANDLER [COLLECTION_TYPE]
+	handler: PS_COLLECTION_HANDLER [detachable ANY]
 			-- The handler which created `Current'.
 
 	deletion_dependency_for_updates: detachable like Current

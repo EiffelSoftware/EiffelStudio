@@ -307,7 +307,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			create Result.make (collection_primary_key, collection_type)
 		end
 
-	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
 		do
 			check
@@ -315,7 +315,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			end
 		end
 
-	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		do
 			check
@@ -334,7 +334,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 			create Result.make (owner_key, owner_type.base_class, owner_attribute_name)
 		end
 
-	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Add all entries in `a_collection' to the database.
 		do
 			check
@@ -342,7 +342,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 			end
 		end
 
-	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		do
 			check

@@ -5,11 +5,11 @@ note
 	revision: "$Revision$"
 
 class
-	PS_RELATIONAL_COLLECTION_PART [COLLECTION_TYPE -> ITERABLE [detachable ANY]]
+	PS_RELATIONAL_COLLECTION_PART
 
 inherit
 
-	PS_COLLECTION_PART [COLLECTION_TYPE]
+	PS_COLLECTION_PART
 
 create
 	make
@@ -87,7 +87,7 @@ feature {PS_COLLECTION_PART} -- Duplication
 
 feature {NONE} -- Initialization
 
-	make (obj: ANY; meta: PS_TYPE_METADATA; owner: PS_SINGLE_OBJECT_PART; persistent: BOOLEAN; mapped_as_1_to_n: BOOLEAN; a_handler: PS_COLLECTION_HANDLER [COLLECTION_TYPE]; a_root: PS_OBJECT_GRAPH_ROOT)
+	make (obj: ANY; meta: PS_TYPE_METADATA; owner: PS_SINGLE_OBJECT_PART; persistent: BOOLEAN; mapped_as_1_to_n: BOOLEAN; a_handler: PS_COLLECTION_HANDLER [detachable ANY]; a_root: PS_OBJECT_GRAPH_ROOT)
 			-- Initialize `Current', but don't initialize collection items.
 		local
 			attr_name: STRING

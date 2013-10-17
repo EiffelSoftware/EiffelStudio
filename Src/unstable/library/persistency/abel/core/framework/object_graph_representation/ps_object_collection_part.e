@@ -5,11 +5,11 @@ note
 	revision: "$Revision$"
 
 class
-	PS_OBJECT_COLLECTION_PART [COLLECTION_TYPE -> ITERABLE [detachable ANY]]
+	PS_OBJECT_COLLECTION_PART
 
 inherit
 
-	PS_COLLECTION_PART [COLLECTION_TYPE]
+	PS_COLLECTION_PART
 
 create
 	make
@@ -86,7 +86,7 @@ feature {PS_COLLECTION_PART} -- Duplication
 
 feature {NONE} -- Initialization
 
-	make (obj: ANY; meta: PS_TYPE_METADATA; persistent: BOOLEAN; a_handler: PS_COLLECTION_HANDLER [COLLECTION_TYPE]; a_root: PS_OBJECT_GRAPH_ROOT)
+	make (obj: ANY; meta: PS_TYPE_METADATA; persistent: BOOLEAN; a_handler: PS_COLLECTION_HANDLER [detachable ANY]; a_root: PS_OBJECT_GRAPH_ROOT)
 			-- initialize `Current'.
 		do
 			represented_object := obj

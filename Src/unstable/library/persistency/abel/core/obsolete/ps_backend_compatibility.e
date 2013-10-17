@@ -33,10 +33,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 					attached {PS_SINGLE_OBJECT_PART} cursor.item as it
 					and then is_object_type_supported (it.metadata)
 				) or (
-					attached {PS_OBJECT_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as col
+					attached {PS_OBJECT_COLLECTION_PART} cursor.item as col
 					and then supports_object_collection
 				) or (
-					attached {PS_RELATIONAL_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as col
+					attached {PS_RELATIONAL_COLLECTION_PART} cursor.item as col
 					and then to_implement_assertion ("TODO: check if there's a handler")
 				)
 				end
@@ -189,7 +189,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 
-	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
 		require
 --			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
@@ -202,14 +202,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 		end
 
-	update_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	update_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Update `a_collection' in the database.
 		do
 			delete_object_oriented_collection (a_collection, a_transaction)
 			insert_object_oriented_collection (a_collection, a_transaction)
 		end
 
-	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		require
 			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
@@ -232,7 +232,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 		deferred
 		end
 
-	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Add all entries in `a_collection' to the database.
 		require
 			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
@@ -242,7 +242,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 		deferred
 		end
 
-	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART [ITERABLE [detachable ANY]]; a_transaction: PS_TRANSACTION)
+	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		require
 			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
@@ -352,7 +352,7 @@ feature {NONE} -- Correctness checks
 			Result :=
 				across object_graph.new_smart_cursor as cursor
 				all
-					(attached {PS_OBJECT_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as collection
+					(attached {PS_OBJECT_COLLECTION_PART} cursor.item as collection
 						and then collection.write_operation /= collection.write_operation.delete)
 					implies (is_mapped (collection.object_wrapper, transaction) and then
 						is_equal_collection (
@@ -372,7 +372,7 @@ feature {NONE} -- Correctness checks
 			Result :=
 				across object_graph.new_smart_cursor as cursor
 				all
-					(attached {PS_OBJECT_COLLECTION_PART[ITERABLE [detachable ANY]]} cursor.item as collection
+					(attached {PS_OBJECT_COLLECTION_PART} cursor.item as collection
 						and then collection.write_operation = collection.write_operation.delete)
 					implies not is_mapped (collection.object_wrapper, transaction)
 				end
@@ -423,7 +423,7 @@ feature {NONE} -- Correctness checks
 			end
 		end
 
-	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART[ITERABLE[detachable ANY]]; retrieved_collection: detachable PS_RETRIEVED_OBJECT_COLLECTION; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART; retrieved_collection: detachable PS_RETRIEVED_OBJECT_COLLECTION; transaction:PS_TRANSACTION): BOOLEAN
 		local
 			collection_item, retrieved_collection_item: TUPLE [value: STRING; type: STRING]
 			same_item: BOOLEAN
@@ -461,7 +461,7 @@ feature {NONE} -- Correctness checks
 
 
 
-	is_equal_relation (relation: PS_RELATIONAL_COLLECTION_PART[ITERABLE[detachable ANY]]; retrieved_relation: PS_RETRIEVED_RELATIONAL_COLLECTION)
+	is_equal_relation (relation: PS_RELATIONAL_COLLECTION_PART; retrieved_relation: PS_RETRIEVED_RELATIONAL_COLLECTION)
 		do
 			fixme ("TODO")
 		end

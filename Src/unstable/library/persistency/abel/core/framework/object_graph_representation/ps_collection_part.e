@@ -45,7 +45,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 	add_value (a_graph_part: PS_OBJECT_GRAPH_PART)
 			-- Add a value to the collection.
 		require
-			no_mixed_type_collections: not values.is_empty implies values [1].is_basic_attribute = a_graph_part.is_basic_attribute
+--			no_mixed_type_collections: not values.is_empty implies values [1].is_basic_attribute = a_graph_part.is_basic_attribute
 			no_basic_type_in_relational_mode: is_relationally_mapped implies not a_graph_part.is_basic_attribute
 			no_multidimensional_collections_in_relational_mode: is_relationally_mapped implies not attached {PS_COLLECTION_PART} a_graph_part
 		deferred

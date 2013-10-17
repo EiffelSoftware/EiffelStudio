@@ -223,14 +223,14 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			type_correct: Result.generating_type.type_id = type.type.type_id
 		end
 
-	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
+	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `relational_collection'.
 		do
 			Result := handler.build_relational_collection (type, build_collection_items (type, relational_collection, transaction, bookkeeping, depth))
 			id_manager.identify (Result, transaction)
 		end
 
-	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_RETRIEVED_OBJECT_COLLECTION; handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
+	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_RETRIEVED_OBJECT_COLLECTION; handler: PS_COLLECTION_HANDLER [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `object_collection'.
 		do
 			Result := handler.build_collection (type, build_collection_items (type, object_collection, transaction, bookkeeping, depth), object_collection)
@@ -332,7 +332,10 @@ feature {NONE} -- Implementation - Build support functions.
 			retrieved_item: LIST [PS_RETRIEVED_OBJECT]
 			item: detachable ANY
 			new_depth: INTEGER
+			new_type: PS_TYPE_METADATA
+			reflection: INTERNAL
 		do
+			create reflection
 				-- Build every object of the list and store it in collection_items
 			create Result.make
 			if depth > 1 or depth = repository.default_object_graph.Object_graph_depth_infinite then
@@ -340,8 +343,10 @@ feature {NONE} -- Implementation - Build support functions.
 					collection.collection_items as items
 				loop
 					new_depth := repository.default_object_graph.Object_graph_depth_infinite.max (depth - 1)
-					item := build (type.actual_generic_parameter (1), items.item, transaction, bookkeeping, new_depth)
-					Result.extend (item)
+
+					new_type := metadata_manager.create_metadata_from_type (reflection.type_of_type(reflection.dynamic_type_from_string(items.item.second)))
+--					item := build (type.actual_generic_parameter (1), items.item, transaction, bookkeeping, new_depth)
+					item := build (new_type, items.item, transaction, bookkeeping, new_depth)					Result.extend (item)
 				end
 			end
 
@@ -431,7 +436,7 @@ feature {NONE} -- Implementation - Build support functions.
 
 feature {NONE} -- Implementation: Collection handlers
 
-	collection_handlers: LINKED_LIST [PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]]
+	collection_handlers: LINKED_LIST [PS_COLLECTION_HANDLER [detachable ANY]]
 			-- All registered collection handlers.
 
 	has_handler (type: PS_TYPE_METADATA): BOOLEAN
@@ -440,12 +445,12 @@ feature {NONE} -- Implementation: Collection handlers
 			Result := across collection_handlers as handler some handler.item.can_handle_type (type) end
 		end
 
-	get_handler (type: PS_TYPE_METADATA): PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]
+	get_handler (type: PS_TYPE_METADATA): PS_COLLECTION_HANDLER [detachable ANY]
 			-- Get the handler for collections of type `type'.
 		require
 			has_handler (type)
 		local
-			res: detachable PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]
+			res: detachable PS_COLLECTION_HANDLER [detachable ANY]
 		do
 			across
 				collection_handlers as handler
@@ -542,7 +547,7 @@ feature {NONE} -- Initialization
 
 feature {PS_REPOSITORY} -- Initialization - Collection handlers
 
-	add_handler (a_handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]])
+	add_handler (a_handler: PS_COLLECTION_HANDLER [detachable ANY])
 			-- Add a collection handler to `Current'.
 		do
 			collection_handlers.extend (a_handler)

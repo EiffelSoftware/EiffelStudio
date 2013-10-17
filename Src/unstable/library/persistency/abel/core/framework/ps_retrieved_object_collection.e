@@ -63,24 +63,26 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			runtime_type: INTEGER
 			reflection: INTERNAL
 		do
-			across
-				collection_items as cursor
-			from
-				create reflection
-				Result := True
-				collection_item_type := metadata.actual_generic_parameter (1).type.type_id
-			loop
-				runtime_type := reflection.dynamic_type_from_string (cursor.item.second)
+			Result := True
+			if not metadata.type.is_conforming_to ({detachable TUPLE}) then
+				across
+					collection_items as cursor
+				from
+					create reflection
+					collection_item_type := metadata.actual_generic_parameter (1).type.type_id
+				loop
+					runtime_type := reflection.dynamic_type_from_string (cursor.item.second)
 
-				if runtime_type >= 0 then
-					-- Check if runtime type conforms to collection type
-					Result := Result and reflection.type_conforms_to (runtime_type, collection_item_type)
-				else
-					-- Item was Void during insert
-					Result := Result
-						and runtime_type = reflection.none_type -- Runtime type set to "NONE"
-						and not reflection.is_attached_type (collection_item_type) -- Collection type allowed to be detachable
-						and cursor.item.first.is_empty -- Value is an empty string
+					if runtime_type >= 0 then
+						-- Check if runtime type conforms to collection type
+						Result := Result and reflection.type_conforms_to (runtime_type, collection_item_type)
+					else
+						-- Item was Void during insert
+						Result := Result
+							and runtime_type = reflection.none_type -- Runtime type set to "NONE"
+							and not reflection.is_attached_type (collection_item_type) -- Collection type allowed to be detachable
+							and cursor.item.first.is_empty -- Value is an empty string
+					end
 				end
 			end
 		end

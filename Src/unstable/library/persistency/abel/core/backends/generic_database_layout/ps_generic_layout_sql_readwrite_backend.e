@@ -87,7 +87,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 					-- Generate a new primary key in the database by inserting the "existence" attribute with the objects object_identifier as a temporary value
 					connection.execute_sql (SQL_Strings.insert_new_collection (none_class_key))
 
-					connection.execute_sql (SQL_Strings.query_last_object_autoincrement)
+					connection.execute_sql (SQL_Strings.query_last_collection_autoincrement)
 					new_primary_key := connection.last_result.item.item (1).to_integer
 
 					current_list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make_fresh (new_primary_key, cursor.key))

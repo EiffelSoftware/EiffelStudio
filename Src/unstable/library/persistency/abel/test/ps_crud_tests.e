@@ -125,6 +125,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 	all_basic_type_tests
 		do
+		    test_embedded_expanded
 			test_string
 		end
 
@@ -132,8 +133,22 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 		local
 			test: PS_GENERIC_CRUD_TEST[STRING]
 		do
+			repository.clean_db_for_testing
 			create test.make (repository)
 			test.test_insert ("a_string")
+		end
+
+	test_embedded_expanded
+		local
+			test: PS_GENERIC_CRUD_TEST[EXPANDED_PERSON_CONTAINER]
+			container: EXPANDED_PERSON_CONTAINER
+		do
+
+			repository.clean_db_for_testing
+			create test.make (repository)
+			create container.set_item ("a_string")
+			test.test_insert (container)
+
 		end
 
 feature {PS_REPOSITORY_TESTS} -- Collections

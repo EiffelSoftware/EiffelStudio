@@ -16,7 +16,7 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
-			make, is_equal
+			make, is_equal, out
 		end
 
 create {PS_EIFFELSTORE_EXPORT}
@@ -144,6 +144,26 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 			attributes.prune (attribute_name)
 		ensure
 			attribute_removed: not has_attribute (attribute_name)
+		end
+
+feature -- Debugging output
+
+	out: STRING
+			-- Printable version of `Current'
+		do
+			Result := "PS_RETRIEVED_OBJECT:%N"
+			Result.append ("%Tprimary key: " + primary_key.out + "%N")
+			Result.append ("%Ttype: " + metadata.type.name + "%N")
+			Result.append ("%Tattributes:%N")
+			across
+				values as cursor
+			loop
+				Result.append ("%T%T")
+				Result.append (cursor.key + ": ")
+				Result.append (cursor.item.second + " = ")
+				Result.append (cursor.item.first)
+				Result.append ("%N")
+			end
 		end
 
 feature {NONE} -- Initialization

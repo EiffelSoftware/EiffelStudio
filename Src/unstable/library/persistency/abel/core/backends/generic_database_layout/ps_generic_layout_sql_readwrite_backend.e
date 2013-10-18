@@ -63,9 +63,39 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
 			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
+		local
+			connection: PS_SQL_CONNECTION
+			new_primary_key: INTEGER
+			none_class_key: INTEGER
+			current_list: LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]
 		do
-			check not_implemented: False end
-			create Result.make (10)
+			connection := get_connection (transaction)
+
+			across
+				order as cursor
+			from
+				create Result.make (order.count)
+				-- Retrieve some required information
+				none_class_key := db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class)
+			loop
+				across
+					1 |..| cursor.item as current_count
+				from
+					create current_list.make
+					Result.extend (current_list, cursor.key)
+				loop
+					-- Generate a new primary key in the database by inserting the "existence" attribute with the objects object_identifier as a temporary value
+					connection.execute_sql (SQL_Strings.insert_new_collection (none_class_key))
+
+					connection.execute_sql (SQL_Strings.query_last_object_autoincrement)
+					new_primary_key := connection.last_result.item.item (1).to_integer
+
+					current_list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make_fresh (new_primary_key, cursor.key))
+				end
+			end
+
+		rescue
+			rollback (transaction)
 		end
 
 
@@ -97,8 +127,52 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 			-- Write every item in `collections' to the database
+		local
+			connection: PS_SQL_CONNECTION
+			commands: LINKED_LIST[STRING]
+			collection_type_key: INTEGER
 		do
-			check not_implemented: False end
+			across
+				collections as cursor
+			from
+				create commands.make
+			loop
+				across
+					cursor.item.collection_items as collection_item
+				from
+					collection_type_key := db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)
+
+					-- Insert a default item at position -1 to acknowledge the existence of the collection.
+					commands.extend (to_list_with_braces ([
+						-- Primary key
+						cursor.item.primary_key,
+						-- Type of the collection
+						collection_type_key,
+						-- Position of the item
+						-1,
+						-- Runtime type of the default item (NONE)
+						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
+						-- Some dummy value
+						"''"]))
+
+				loop
+					commands.extend (to_list_with_braces ([
+						-- Primary key
+						cursor.item.primary_key,
+						-- Type of the collection
+						collection_type_key,
+						-- Position of the item
+						collection_item.target_index,
+						-- Runtime type
+						db_metadata_manager.create_get_primary_key_of_class (collection_item.item.second),
+						-- Value
+						collection_item.item.first
+						]))
+				end
+
+			end
+			connection := get_connection (transaction)
+			connection.execute_sql (SQL_Strings.assemble_multi_replace_collection(commands))
 		end
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
@@ -121,6 +195,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 				print ("found active transaction")
 			end
 			management_connection.execute_sql (SQL_Strings.Drop_value_table)
+			management_connection.execute_sql (SQL_Strings.Drop_collection_table)
 			management_connection.execute_sql (SQL_Strings.Drop_attribute_table)
 			management_connection.execute_sql (SQL_Strings.Drop_class_table)
 			database.release_connection (management_connection)
@@ -182,6 +257,30 @@ feature {NONE} -- Implementation
 			-- Generates a comma-separated list in braces from the arguments.
 		do
 			Result := "(" + object_id.out + ", " + attribute_id.out + ", " + runtime_type_id.out + ", '" + value + "')"
+		end
+
+	to_list_with_braces(args: TUPLE): STRING
+		do
+			Result := "(" + to_list (args) + ")"
+		end
+
+	to_list (args: TUPLE): STRING
+		do
+			across
+				1 |..| args.count as index
+			from
+				Result := ""
+			loop
+				if attached args.item (index.item) as object then
+					Result.append (object.out)
+				else
+					Result.append ("NULL")
+				end
+
+				if index.item < args.count then
+					Result.append (", ")
+				end
+			end
 		end
 
 end

@@ -224,6 +224,9 @@ feature {NONE} -- Initialization
 			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal(SQL_Strings.Value_table)) then
 				management_connection.execute_sql (SQL_Strings.Create_value_table)
 			end
+			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal(SQL_Strings.Collection_table)) then
+				management_connection.execute_sql (SQL_Strings.create_collections_table)
+			end
 				-- Get the needed information from ps_class and ps_attribute table
 			management_connection.execute_sql (SQL_Strings.Query_class_table)
 			across

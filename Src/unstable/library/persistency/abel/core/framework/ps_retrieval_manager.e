@@ -241,6 +241,8 @@ feature {NONE} -- Implementation - Build support functions.
 
 	build (type: PS_TYPE_METADATA; value: PS_PAIR [STRING, STRING]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): detachable ANY
 			-- Build an object based on the type.
+		require
+			type.type.name.is_equal (value.second)
 		local
 			object_result: detachable PS_RETRIEVED_OBJECT
 			collection_result: detachable PS_RETRIEVED_OBJECT_COLLECTION

@@ -24,7 +24,7 @@ feature
 			traversal: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
 		do
 			create traversal
-			create container.set (5)
+			create container.set_item (5)
 			create internal
 			create reflection.make (container)
 

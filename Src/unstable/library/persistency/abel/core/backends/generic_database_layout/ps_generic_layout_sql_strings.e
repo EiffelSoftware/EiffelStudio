@@ -22,34 +22,11 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 		end
 
 	Create_collections_table: STRING
-		do
-			Result := "[
-					CREATE TABLE ps_collection (
-					collectionid INTEGER NOT NULL AUTO_INCREMENT, 
-					collectiontype INTEGER,
-					position INTEGER,
-					runtimetype INTEGER,
-					value VARCHAR(128),
-
-					PRIMARY KEY (collectionid, position),
-					FOREIGN KEY (collectiontype) REFERENCES ps_class (classid) ON DELETE CASCADE,
-					FOREIGN KEY (runtimetype) REFERENCES ps_class (classid) ON DELETE CASCADE
-					)
-				]"
+		deferred
 		end
 
 	Create_collection_info_table: STRING
-		do
-			Result := "[
-					CREATE TABLE ps_collection_info (
-					collectionid INTEGER NOT NULL,
-					info_key VARCHAR(128) NOT NULL,
-					info VARCHAR(128),
-
-					PRIMARY KEY (collectionid, info_key),
-					FOREIGN KEY (collectionid) REFERENCES ps_collection (collectionid) ON DELETE CASCADE
-					)
-				]"
+		deferred
 		end
 
 feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
@@ -124,8 +101,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend impl
 		end
 
 	Query_last_collection_autoincrement: STRING
-		do
-			Result := "SELECT LAST_INSERT_ID()"
+		deferred
 		end
 
 feature {PS_METADATA_TABLES_MANAGER} -- Data modification - Key manager
@@ -145,9 +121,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 		end
 
 	Insert_new_collection (none_key: INTEGER): STRING
-		do
-			Result := "INSERT INTO ps_collection (collectiontype, position, runtimetype, value) VALUES ("
-				+ none_key.out + ", -1, " + none_key.out + ", '')"
+		deferred
 		end
 
 	Remove_old_object_identifier (existence_attribute_of_class: INTEGER; object_identifier: STRING): STRING
@@ -170,35 +144,11 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 		end
 
 	Assemble_multi_replace_collection (tuples: LIST[STRING]): STRING
-		do
-			across
-				tuples as cursor
-			from
-				Result := "INSERT INTO ps_collection VALUES"
-			loop
-				Result.append (" " + cursor.item + ",")
-			end
-
-			-- Remove last comma
-			Result.remove_tail (1)
-			Result.append (" on duplicate key update collectiontype = VALUES(collectiontype), runtimetype = VALUES(runtimetype), value = VALUES(value)")
-
+		deferred
 		end
 
 	Assemble_multi_replace_collection_info (tuples: LIST[STRING]): STRING
-		do
-			across
-				tuples as cursor
-			from
-				Result := "INSERT INTO ps_collection_info VALUES"
-			loop
-				Result.append (" " + cursor.item + ",")
-			end
-
-			-- Remove last comma
-			Result.remove_tail (1)
-
-			Result.append (" on duplicate key update info = VALUES(info)")
+		deferred
 		end
 
 	Insert_value (object_primary, attribute_id, runtime_type: INTEGER; value: STRING): STRING

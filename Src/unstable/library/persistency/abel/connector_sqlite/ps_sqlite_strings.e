@@ -53,6 +53,37 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 			]"
 		end
 
+	Create_collections_table: STRING
+		do
+			Result := "[
+					CREATE TABLE ps_collection (
+					collectionid INTEGER NOT NULL, 
+					collectiontype INTEGER,
+					position INTEGER,
+					runtimetype INTEGER,
+					value VARCHAR(128),
+
+					PRIMARY KEY (collectionid ASC, position),
+					FOREIGN KEY (collectiontype) REFERENCES ps_class (classid) ON DELETE CASCADE,
+					FOREIGN KEY (runtimetype) REFERENCES ps_class (classid) ON DELETE CASCADE
+					)
+				]"
+		end
+
+	Create_collection_info_table: STRING
+		do
+			Result := "[
+					CREATE TABLE ps_collection_info (
+					collectionid INTEGER NOT NULL,
+					info_key VARCHAR(128) NOT NULL,
+					info VARCHAR(128),
+
+					PRIMARY KEY (collectionid, info_key),
+					FOREIGN KEY (collectionid) REFERENCES ps_collection (collectionid) ON DELETE CASCADE
+					)
+				]"
+		end
+
 
 feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 
@@ -77,6 +108,12 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			Result := "INSERT INTO ps_value (objectid, attributeid, runtimetype, value) VALUES ( (SELECT CASE WHEN MAX(objectid) IS NULL THEN 1 ELSE (MAX(objectid) + 1) END FROM ps_value) ," + attribute_id.out + ", " + runtimetype.out + ", '" + value + "')"
 		end
 
+	Insert_new_collection (none_key: INTEGER): STRING
+		do
+			Result := "INSERT INTO ps_collection (collectionid, collectiontype, position, runtimetype, value) VALUES ( (SELECT CASE WHEN MAX(collectionid) IS NULL THEN 1 ELSE (MAX(collectionid) + 1) END FROM ps_collection),"
+				+ none_key.out + ", -1, " + none_key.out + ", '')"
+		end
+
 	Assemble_multi_replace (tuples: LIST[STRING]): STRING
 		do
 			across
@@ -88,10 +125,34 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			end
 		end
 
+	Assemble_multi_replace_collection (tuples: LIST[STRING]): STRING
+		do
+			across
+				tuples as cursor
+			from
+				create Result.make_empty
+			loop
+				Result.append ("REPLACE INTO ps_collection VALUES" + cursor.item + ";")
+			end
+		end
+
+	Assemble_multi_replace_collection_info (tuples: LIST[STRING]): STRING
+		do
+			across
+				tuples as cursor
+			from
+				create Result.make_empty
+			loop
+				Result.append ("REPLACE INTO ps_collection_info VALUES" + cursor.item + ";")
+			end
+		end
+
 feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
 
 	For_update_appendix: STRING = ""
 
 	Query_last_object_autoincrement: STRING = "SELECT objectid FROM ps_value WHERE rowid = last_insert_rowid()"
+
+	Query_last_collection_autoincrement: STRING = "SELECT collectionid FROM ps_collection WHERE rowid = last_insert_rowid()"
 
 end

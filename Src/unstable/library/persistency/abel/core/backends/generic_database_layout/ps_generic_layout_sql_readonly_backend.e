@@ -64,14 +64,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 					row_cursor.forth
 				end
 					-- fill in Void attributes
-				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
-				across
-					type.attributes as attr
-				loop
-					if not current_obj.has_attribute (attr.item) then
-						current_obj.add_attribute (attr.item, "", "NONE")
-					end
-				end
+--				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
+--				across
+--					type.attributes as attr
+--				loop
+--					if not current_obj.has_attribute (attr.item) then
+--						current_obj.add_attribute (attr.item, "", "NONE")
+--					end
+--				end
 				result_list.extend (current_obj)
 					-- do NOT go forth - we are already pointing to the next item, otherwise the inner loop would not have stopped.
 			end
@@ -113,14 +113,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 				end
 
 					-- fill in Void attributes
-				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
-				across
-					type.attributes as attr
-				loop
-					if not Result.has_attribute (attr.item) then
-						Result.add_attribute (attr.item, "", "NONE")
-					end
-				end
+--				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
+--				across
+--					type.attributes as attr
+--				loop
+--					if not Result.has_attribute (attr.item) then
+--						Result.add_attribute (attr.item, "", "NONE")
+--					end
+--				end
 
 			end
 

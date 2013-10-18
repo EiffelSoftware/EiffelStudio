@@ -33,6 +33,38 @@ feature -- Tests
 			crud_tests.all_references_tests
 		end
 
+	sqlite_tuple_queries
+		do
+			tuple_query_tests.test_simple_query
+			tuple_query_tests.test_query_with_criteria
+			tuple_query_tests.test_query_projection
+			tuple_query_tests.test_query_criteria_not_in_projection
+			tuple_query_tests.test_query_references
+			tuple_query_tests.test_query_objects_in_projection
+			tuple_query_tests.test_query_reference_cycle
+		end
+
+	sqlite_collections_easy
+		do
+			crud_tests.all_easy_collection_tests
+		end
+
+	sqlite_collections_tricky
+		do
+			crud_tests.all_tricky_collection_tests
+		end
+
+	sqlite_polymorphism
+		do
+			crud_tests.all_polymorphism_tests
+		end
+
+	sqlite_object_graph_settings
+		do
+			object_graph_tests.test_all_settings
+		end
+
+
 feature {NONE} -- Initialization
 
 	make_repository:
@@ -42,11 +74,18 @@ feature {NONE} -- Initialization
 		local
 --			backend: PS_GENERIC_LAYOUT_SQL_BACKEND
 			backend: PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND
+			special_handler: PS_SPECIAL_COLLECTION_HANDLER
+			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
 		do
 			create database.make (sqlite_file)
 			create backend.make (database, create {PS_SQLITE_STRINGS})
 			backend.wipe_out
 			create Result.make (backend)
+
+			create special_handler.make
+			create tuple_handler
+			Result.add_collection_handler (special_handler)
+			Result.add_collection_handler (tuple_handler)
 		end
 
 	sqlite_file: STRING = "/home/roman/sqlite_database.db"

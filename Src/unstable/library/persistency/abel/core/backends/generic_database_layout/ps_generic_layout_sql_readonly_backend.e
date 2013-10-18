@@ -15,7 +15,7 @@ create
 
 feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 
-	is_generic_collection_supported: BOOLEAN = False
+	is_generic_collection_supported: BOOLEAN = True
 			-- Can the current backend support collections in general,
 			-- i.e. is there a default strategy?
 
@@ -139,13 +139,55 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			Result := (create {LINKED_LIST [PS_RETRIEVED_OBJECT_COLLECTION]}.make).new_cursor
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT_COLLECTION
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
+		local
+			position: INTEGER
+			connection: PS_SQL_CONNECTION
+			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
+			sql_string: STRING
+			value: STRING
+			runtime_type: STRING
 		do
-			check
-				not_implemented: False
+			connection := get_connection (transaction)
+			sql_string := "SELECT position, runtimetype, value FROM ps_collection WHERE collectionid= "
+				+ collection_primary_key.out + " ORDER BY position " + SQL_Strings.for_update_appendix
+			connection.execute_sql (sql_string)
+
+			row_cursor := connection.last_result
+
+			if not row_cursor.after then
+				from
+					create Result.make (collection_primary_key, collection_type)
+				until
+					row_cursor.after
+				loop
+					-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
+
+					position:= row_cursor.item.at ("position").to_integer
+					value := row_cursor.item.at (SQL_Strings.Value_table_value_column)
+					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)
+
+					if position > 0 then
+						Result.add_item (value, runtime_type)
+					end
+					row_cursor.forth
+				end
 			end
-			create Result.make (collection_primary_key, collection_type)
+
+--			check attached Result then
+--				across
+--					Result.collection_items as item
+--				from
+--					print (Result.primary_key.out + " " + Result.metadata.type.name + "%N")
+--				loop
+--					print ("%T" + item.item.first + " " + item.item.second + "%N")
+--				end
+--			end
+--			connection.commit
+--			check
+--				not_implemented: False
+--			end
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling

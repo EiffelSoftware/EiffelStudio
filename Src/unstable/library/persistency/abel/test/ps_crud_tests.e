@@ -121,6 +121,21 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 			repository.clean_db_for_testing
 		end
 
+feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
+
+	all_basic_type_tests
+		do
+			test_string
+		end
+
+	test_string
+		local
+			test: PS_GENERIC_CRUD_TEST[STRING]
+		do
+			create test.make (repository)
+			test.test_insert ("a_string")
+		end
+
 feature {PS_REPOSITORY_TESTS} -- Collections
 
 	all_easy_collection_tests

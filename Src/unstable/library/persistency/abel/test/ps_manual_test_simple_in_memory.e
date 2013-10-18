@@ -44,6 +44,11 @@ feature
 			crud_tests.all_references_tests
 		end
 
+	memory_basic_types
+		do
+			crud_tests.all_basic_type_tests
+		end
+
 	memory_collections_easy
 		do
 			crud_tests.all_easy_collection_tests

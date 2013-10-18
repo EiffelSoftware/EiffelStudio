@@ -22,7 +22,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			-- All objects that are stored inside this collection.
 			-- The first item in the PS_PAIR is the actual value of the item (foreign key or basic value), and the second item is the class name of the generating class of the first item.
 
-feature {PS_BACKEND_COMPATIBILITY} -- Element change
+feature {PS_READ_ONLY_BACKEND} -- Element change
 
 	add_item (item_value, class_name_of_item_value: STRING)
 			-- Add the value `item_value' and its `class_name_of_item_value' to the end of the `collection_items' list.

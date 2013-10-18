@@ -21,6 +21,23 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 		deferred
 		end
 
+	Create_collections_table: STRING
+		do
+			Result := "[
+					CREATE TABLE ps_collection (
+					collectionid INTEGER NOT NULL AUTO_INCREMENT, 
+					collectiontype INTEGER,
+					position INTEGER,
+					runtimetype INTEGER,
+					value VARCHAR(128),
+
+					PRIMARY KEY (collectionid, position),
+					FOREIGN KEY (collectiontype) REFERENCES ps_class (classid) ON DELETE CASCADE,
+					FOREIGN KEY (runtimetype) REFERENCES ps_class (classid) ON DELETE CASCADE
+					)
+				]"
+		end
+
 feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 
 	Show_tables: STRING
@@ -92,6 +109,11 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend impl
 		deferred
 		end
 
+	Query_last_collection_autoincrement: STRING
+		do
+			Result := "SELECT LAST_INSERT_ID()"
+		end
+
 feature {PS_METADATA_TABLES_MANAGER} -- Data modification - Key manager
 
 	Insert_class_use_autoincrement (class_name: STRING): STRING
@@ -106,6 +128,12 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 
 	Insert_value_use_autoincrement (attribute_id, runtimetype: INTEGER; value: STRING): STRING
 		deferred
+		end
+
+	Insert_new_collection (none_key: INTEGER): STRING
+		do
+			Result := "INSERT INTO ps_collection (collectiontype, position, runtimetype, value) VALUES ("
+				+ none_key.out + ", -1, " + none_key.out + ", '')"
 		end
 
 	Remove_old_object_identifier (existence_attribute_of_class: INTEGER; object_identifier: STRING): STRING
@@ -125,6 +153,22 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 
 	Assemble_multi_replace (tuples: LIST[STRING]): STRING
 		deferred
+		end
+
+	Assemble_multi_replace_collection (tuples: LIST[STRING]): STRING
+		do
+			across
+				tuples as cursor
+			from
+				Result := "INSERT INTO ps_collection VALUES"
+			loop
+				Result.append (" " + cursor.item + ",")
+			end
+
+			-- Remove last comma
+			Result.remove_tail (1)
+			Result.append (" on duplicate key update collectiontype = VALUES(collectiontype), runtimetype = VALUES(runtimetype), value = VALUES(value);")
+
 		end
 
 	Insert_value (object_primary, attribute_id, runtime_type: INTEGER; value: STRING): STRING
@@ -158,6 +202,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Table and column names
 
 	Value_table_value_column: STRING = "value"
 
+	Collection_table: STRING = "ps_collection"
+
 feature {PS_EIFFELSTORE_EXPORT} -- Special attributes and classes
 
 	None_class: STRING = "NONE"
@@ -173,5 +219,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Management and testing
 	Drop_attribute_table: STRING = "DROP TABLE ps_attribute"
 
 	Drop_class_table: STRING = "DROP TABLE ps_class"
+
+	Drop_collection_table: STRING = "DROP TABLE ps_collection"
 
 end

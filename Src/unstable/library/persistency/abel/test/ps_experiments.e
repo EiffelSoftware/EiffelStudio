@@ -13,25 +13,81 @@ inherit
 
 feature
 
-	experiment_agent_failure
-		local
-			list: LINKED_LIST[detachable ANY]
-			i: INTEGER
-		do
-			create list.make
-			from
-				i:= 1
-			until
-				i = 20
-			loop
 
-				list.extend (Void)
-				list.extend (create {ANY})
-				i := i + 1
+	experiment_expanded_types
+		local
+			reflection: REFLECTED_REFERENCE_OBJECT
+			reflection2: REFLECTED_REFERENCE_OBJECT
+			container: EXPANDED_PERSON_CONTAINER
+			person: EXPANDED_PERSON
+			internal: INTERNAL
+			traversal: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
+		do
+			create traversal
+			create container.set (5)
+			create internal
+			create reflection.make (container)
+
+			across
+				1 |..| reflection.field_count as i
+			loop
+				print (reflection.field_name (i.item))
+				println
+
+				print (internal.type_name_of_type (reflection.field_static_type (i.item)))
+
+				if reflection.field_type (i.item) = reflection.reference_type then
+					print (" -> reference ")
+					if reflection.is_copy_semantics_field (i.item) then
+						print ("(with copy semantics)")
+					end
+				end
+
+				if reflection.is_field_statically_expanded (i.item) then
+					print (" -> expanded ")
+					print (reflection.field_type (i.item))
+					println
+
+					reflection2 := reflection.expanded_field (i.item)
+
+					across
+						1 |..| reflection2.field_count as i2
+					loop
+						print ("%T")
+						print (reflection2.field (i2.item))
+						println
+					end
+
+--					reflection2.set_integer_32_field (3, 2)
+--					print (container.person.items_owned)
+
+				else
+					println
+					print (reflection.field (i.item))
+				end
+				println
+				println
+
 			end
-			experiment_agent_failure_with_arg (list)
+
+			traversal.set_root_object (container)
+			traversal.set_object_action (agent (a:ANY) do print (a) end)
+			traversal.traverse
+
+
 
 		end
+
+--	experiment_trasient
+--		local
+--			p1, p2: PERSON
+--		do
+--			create p1.make ("Albo", "Bitossi", 3)
+--			create p2.make ("Albo", "Bitossi", 3)
+--			assert ("equal", p1.is_deep_equal(p2))
+--			p1.set (24)
+--			assert ("not equal", not p1.is_deep_equal(p2))
+--		end
 
 	experiment_agent_failure_with_arg (list: LINKED_LIST[detachable ANY])
 		do

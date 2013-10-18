@@ -132,11 +132,73 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 
 	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
+		local
+			result_list: LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]
+--			current_item: PS_RETRIEVED_OBJECT_COLLECTION
+
+			primary_key: INTEGER
+			position: INTEGER
+			runtime_type: STRING
+			value: STRING
+
+			connection: PS_SQL_CONNECTION
+			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
+			sql_string: STRING
+			key, info: STRING
 		do
-			check
-				not_implemented: False
+			-- Get the collection items
+			connection := get_connection (transaction)
+			sql_string := "SELECT collectionid, position, runtimetype, value FROM ps_collection WHERE collectiontype = "
+				+ db_metadata_manager.primary_key_of_class (collection_type.base_class.name).out
+				+ " ORDER BY collectionid, position " + SQL_Strings.for_update_appendix
+			connection.execute_sql (sql_string)
+
+
+			row_cursor := connection.last_result
+
+			-- Get all the content
+			from
+				create result_list.make
+			until
+				row_cursor.after
+			loop
+				primary_key := row_cursor.item.at ("collectionid").to_integer
+				position:= row_cursor.item.at ("position").to_integer
+
+				if position <= 0 then
+					-- new item
+					result_list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make (primary_key, collection_type))
+				else
+					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)
+					value := row_cursor.item.at ("value")
+					result_list.last.add_item (value, runtime_type)
+				end
+				row_cursor.forth
 			end
-			Result := (create {LINKED_LIST [PS_RETRIEVED_OBJECT_COLLECTION]}.make).new_cursor
+
+			-- Get the additional information
+			across
+				result_list as cursor
+			loop
+				fixme ("TODO: make this more efficient")
+
+				sql_string := "SELECT info_key, info FROM ps_collection_info WHERE collectionid= "
+					+ cursor.item.primary_key.out + SQL_Strings.for_update_appendix
+				connection.execute_sql (sql_string)
+
+				from
+					row_cursor := connection.last_result
+				until
+					row_cursor.after
+				loop
+					key := row_cursor.item.at ("info_key")
+					info := row_cursor.item.at ("info")
+
+					cursor.item.add_information (key, info)
+					row_cursor.forth
+				end
+			end
+			Result := result_list.new_cursor
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
@@ -164,8 +226,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 				until
 					row_cursor.after
 				loop
-					-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
-
 					position:= row_cursor.item.at ("position").to_integer
 					value := row_cursor.item.at (SQL_Strings.Value_table_value_column)
 					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)

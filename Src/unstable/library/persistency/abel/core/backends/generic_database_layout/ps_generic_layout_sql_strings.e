@@ -42,7 +42,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 		do
 			Result := "[
 					CREATE TABLE ps_collection_info (
-					collectionid INTEGER NOT NULL, 
+					collectionid INTEGER NOT NULL,
 					info_key VARCHAR(128) NOT NULL,
 					info VARCHAR(128),
 
@@ -181,7 +181,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 
 			-- Remove last comma
 			Result.remove_tail (1)
-			Result.append (" on duplicate key update collectiontype = VALUES(collectiontype), runtimetype = VALUES(runtimetype), value = VALUES(value);")
+			Result.append (" on duplicate key update collectiontype = VALUES(collectiontype), runtimetype = VALUES(runtimetype), value = VALUES(value)")
 
 		end
 
@@ -198,7 +198,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 			-- Remove last comma
 			Result.remove_tail (1)
 
-			Result.append (" on duplicate key update info = VALUES(info);")
+			Result.append (" on duplicate key update info = VALUES(info)")
 		end
 
 	Insert_value (object_primary, attribute_id, runtime_type: INTEGER; value: STRING): STRING
@@ -255,5 +255,36 @@ feature {PS_EIFFELSTORE_EXPORT} -- Management and testing
 	Drop_collection_table: STRING = "DROP TABLE ps_collection"
 
 	Drop_collection_info_table: STRING = "DROP TABLE ps_collection_info"
+
+feature {PS_EIFFELSTORE_EXPORT} -- Utilities
+
+	to_list_with_braces(args: TUPLE): STRING
+		do
+			Result := "(" + to_list (args) + ")"
+		end
+
+	to_list (args: TUPLE): STRING
+		do
+			across
+				1 |..| args.count as index
+			from
+				Result := ""
+			loop
+				if attached args.item (index.item) as object then
+					if attached {READABLE_STRING_GENERAL} object then
+						Result.append ("'" + object.out + "'")
+					else
+						Result.append (object.out)
+					end
+				else
+					Result.append ("NULL")
+				end
+
+				if index.item < args.count then
+					Result.append (", ")
+				end
+			end
+		end
+
 
 end

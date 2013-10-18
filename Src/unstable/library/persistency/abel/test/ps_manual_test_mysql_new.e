@@ -111,13 +111,19 @@ feature {NONE} -- Initialization
 		local
 			database: PS_MYSQL_DATABASE
 			backend: PS_MYSQL_BACKEND
+			special_handler: PS_SPECIAL_COLLECTION_HANDLER
+			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
 --			backend: PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND
 		do
 			create database.make (username, password, db_name, db_host, db_port)
 			create backend.make (database, create {PS_MYSQL_STRINGS})
 			backend.wipe_out
 			create Result.make (backend)
-			Result.add_collection_handler (create {PS_SPECIAL_COLLECTION_HANDLER}.make)
+
+			create special_handler.make
+			create tuple_handler
+			Result.add_collection_handler (special_handler)
+			Result.add_collection_handler (tuple_handler)
 		end
 
 	username: STRING = "eiffelstoretest"

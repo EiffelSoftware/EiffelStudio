@@ -128,10 +128,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 			-- Write every item in `collections' to the database
 		local
-			connection: PS_SQL_CONNECTION
 			commands: LINKED_LIST[STRING]
 			info_commands: LINKED_LIST[STRING]
 			collection_type_key: INTEGER
+
+			connection: PS_SQL_CONNECTION
+			stmt: STRING
 		do
 			across
 				collections as cursor
@@ -146,7 +148,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 					collection_type_key := db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)
 
 					-- Insert a default item at position -1 to acknowledge the existence of the collection.
-					commands.extend (to_list_with_braces ([
+					commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key
 						cursor.item.primary_key,
 						-- Type of the collection
@@ -159,7 +161,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 						""]))
 
 				loop
-					commands.extend (to_list_with_braces ([
+					commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key
 						cursor.item.primary_key,
 						-- Type of the collection
@@ -176,7 +178,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 				across
 					cursor.item.information_descriptions as info_cursor
 				loop
-					info_commands.extend (to_list_with_braces ([
+					info_commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key
 						cursor.item.primary_key,
 						-- Information key
@@ -187,18 +189,46 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 				end
 
 			end
-			connection := get_connection (transaction)
-			connection.execute_sql (SQL_Strings.assemble_multi_replace_collection(commands))
+
+			stmt := SQL_Strings.assemble_multi_replace_collection(commands)
+
 			if not info_commands.is_empty then
-				connection.execute_sql (SQL_Strings.assemble_multi_replace_collection_info (info_commands))
+				stmt.append (";" + SQL_Strings.assemble_multi_replace_collection_info (info_commands))
 			end
-			
+
+			connection := get_connection (transaction)
+			connection.execute_sql (stmt)
+--			if not info_commands.is_empty then
+--				connection.execute_sql (SQL_Strings.assemble_multi_replace_collection_info (info_commands))
+--			end
+		rescue
+			rollback (transaction)
 		end
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 			-- Delete every item in `collections' from the database
+		local
+			connection: PS_SQL_CONNECTION
+			stmt: STRING
 		do
-			check not_implemented: False end
+
+			-- Delete all items in the collection.
+			-- The additional information gets deleted automatically via an integrity constraint.
+			across
+				collections as cursor
+			from
+				connection := get_connection (transaction)
+				stmt := "DELETE FROM ps_collection WHERE collectionid IN ("
+			loop
+				stmt.append (cursor.item.primary_key.out + ",")
+			end
+			-- conveniently this also removes the last comma
+			stmt.put (')', stmt.count)
+
+			connection := get_connection (transaction)
+			connection.execute_sql (stmt)
+		rescue
+			rollback (transaction)
 		end
 
 	wipe_out
@@ -242,7 +272,7 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 					cursor.item.attributes as attribute_cursor
 				from
 					-- Insert a default empty attribute to acknowledge the existence of the object.
-					commands.extend (to_string (
+					commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key
 						cursor.item.primary_key,
 						-- Attribute key of default attribute ps_existence
@@ -250,10 +280,10 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						-- Runtime type of ps_existence (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
 						-- Some dummy value
-						""))
+						""]))
 
 				loop
-					commands.extend (to_string (
+					commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key
 						cursor.item.primary_key,
 						-- Attribute key
@@ -262,7 +292,7 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_class (cursor.item.attribute_value(attribute_cursor.item).attribute_class_name),
 						-- Value
 						cursor.item.attribute_value(attribute_cursor.item).value
-						))
+						]))
 				end
 			end
 
@@ -270,42 +300,6 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 			connection.execute_sql (SQL_Strings.assemble_multi_replace(commands))
 		rescue
 			rollback (transaction)
-		end
-
-feature {NONE} -- Implementation
-
-	to_string (object_id, attribute_id, runtime_type_id: INTEGER; value:STRING): STRING
-			-- Generates a comma-separated list in braces from the arguments.
-		do
-			Result := "(" + object_id.out + ", " + attribute_id.out + ", " + runtime_type_id.out + ", '" + value + "')"
-		end
-
-	to_list_with_braces(args: TUPLE): STRING
-		do
-			Result := "(" + to_list (args) + ")"
-		end
-
-	to_list (args: TUPLE): STRING
-		do
-			across
-				1 |..| args.count as index
-			from
-				Result := ""
-			loop
-				if attached args.item (index.item) as object then
-					if attached {READABLE_STRING_GENERAL} object then
-						Result.append ("'" + object.out + "'")
-					else
-						Result.append (object.out)
-					end
-				else
-					Result.append ("NULL")
-				end
-
-				if index.item < args.count then
-					Result.append (", ")
-				end
-			end
 		end
 
 end

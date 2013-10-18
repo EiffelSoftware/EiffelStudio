@@ -148,7 +148,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			sql_string: STRING
 			value: STRING
 			runtime_type: STRING
+			key, info: STRING
 		do
+			-- Get the collection items
 			connection := get_connection (transaction)
 			sql_string := "SELECT position, runtimetype, value FROM ps_collection WHERE collectionid= "
 				+ collection_primary_key.out + " ORDER BY position " + SQL_Strings.for_update_appendix
@@ -184,6 +186,26 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 --					print ("%T" + item.item.first + " " + item.item.second + "%N")
 --				end
 --			end
+
+			-- Get the additional information
+
+			sql_string := "SELECT info_key, info FROM ps_collection_info WHERE collectionid= "
+				+ collection_primary_key.out + SQL_Strings.for_update_appendix
+			connection.execute_sql (sql_string)
+
+			from
+				row_cursor := connection.last_result
+			until
+				row_cursor.after or not attached Result
+			loop
+				key := row_cursor.item.at ("info_key")
+				info := row_cursor.item.at ("info")
+
+				Result.add_information (key, info)
+				row_cursor.forth
+			end
+
+
 --			connection.commit
 --			check
 --				not_implemented: False

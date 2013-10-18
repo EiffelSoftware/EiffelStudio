@@ -130,13 +130,16 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		local
 			connection: PS_SQL_CONNECTION
 			commands: LINKED_LIST[STRING]
+			info_commands: LINKED_LIST[STRING]
 			collection_type_key: INTEGER
 		do
 			across
 				collections as cursor
 			from
 				create commands.make
+				create info_commands.make
 			loop
+				-- Insert all items
 				across
 					cursor.item.collection_items as collection_item
 				from
@@ -153,7 +156,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 						-- Runtime type of the default item (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
 						-- Some dummy value
-						"''"]))
+						""]))
 
 				loop
 					commands.extend (to_list_with_braces ([
@@ -170,9 +173,26 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 						]))
 				end
 
+				across
+					cursor.item.information_descriptions as info_cursor
+				loop
+					info_commands.extend (to_list_with_braces ([
+						-- Primary key
+						cursor.item.primary_key,
+						-- Information key
+						info_cursor.item,
+						-- Actual info
+						cursor.item.get_information (info_cursor.item)
+					]))
+				end
+
 			end
 			connection := get_connection (transaction)
 			connection.execute_sql (SQL_Strings.assemble_multi_replace_collection(commands))
+			if not info_commands.is_empty then
+				connection.execute_sql (SQL_Strings.assemble_multi_replace_collection_info (info_commands))
+			end
+			
 		end
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
@@ -195,6 +215,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 				print ("found active transaction")
 			end
 			management_connection.execute_sql (SQL_Strings.Drop_value_table)
+			management_connection.execute_sql (SQL_Strings.Drop_collection_info_table)
 			management_connection.execute_sql (SQL_Strings.Drop_collection_table)
 			management_connection.execute_sql (SQL_Strings.Drop_attribute_table)
 			management_connection.execute_sql (SQL_Strings.Drop_class_table)
@@ -272,7 +293,11 @@ feature {NONE} -- Implementation
 				Result := ""
 			loop
 				if attached args.item (index.item) as object then
-					Result.append (object.out)
+					if attached {READABLE_STRING_GENERAL} object then
+						Result.append ("'" + object.out + "'")
+					else
+						Result.append (object.out)
+					end
 				else
 					Result.append ("NULL")
 				end

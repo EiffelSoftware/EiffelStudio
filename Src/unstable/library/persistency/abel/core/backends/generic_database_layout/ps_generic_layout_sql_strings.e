@@ -38,6 +38,20 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 				]"
 		end
 
+	Create_collection_info_table: STRING
+		do
+			Result := "[
+					CREATE TABLE ps_collection_info (
+					collectionid INTEGER NOT NULL, 
+					info_key VARCHAR(128) NOT NULL,
+					info VARCHAR(128),
+
+					PRIMARY KEY (collectionid, info_key),
+					FOREIGN KEY (collectionid) REFERENCES ps_collection (collectionid) ON DELETE CASCADE
+					)
+				]"
+		end
+
 feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 
 	Show_tables: STRING
@@ -171,6 +185,22 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 
 		end
 
+	Assemble_multi_replace_collection_info (tuples: LIST[STRING]): STRING
+		do
+			across
+				tuples as cursor
+			from
+				Result := "INSERT INTO ps_collection_info VALUES"
+			loop
+				Result.append (" " + cursor.item + ",")
+			end
+
+			-- Remove last comma
+			Result.remove_tail (1)
+
+			Result.append (" on duplicate key update info = VALUES(info);")
+		end
+
 	Insert_value (object_primary, attribute_id, runtime_type: INTEGER; value: STRING): STRING
 		do
 			Result := "INSERT INTO ps_value (objectid, attributeid, runtimetype, value) VALUES ( " + object_primary.out + ", " + attribute_id.out + ", " + runtime_type.out + ", '" + value + "')"
@@ -204,6 +234,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Table and column names
 
 	Collection_table: STRING = "ps_collection"
 
+	Collection_info_table: STRING = "ps_collection_info"
+
 feature {PS_EIFFELSTORE_EXPORT} -- Special attributes and classes
 
 	None_class: STRING = "NONE"
@@ -221,5 +253,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Management and testing
 	Drop_class_table: STRING = "DROP TABLE ps_class"
 
 	Drop_collection_table: STRING = "DROP TABLE ps_collection"
+
+	Drop_collection_info_table: STRING = "DROP TABLE ps_collection_info"
 
 end

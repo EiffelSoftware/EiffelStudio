@@ -18,9 +18,9 @@ create
 
 feature
 
-	item1: G
+	item1: detachable G
 
-	item2: H
+	item2: detachable H
 
 	set_item (an_item_1: G; an_item_2: H)
 		do
@@ -32,8 +32,8 @@ feature {NONE} -- Initialization
 
 	default_create
 		do
-			item1 := ({G}).default
-			item2 := ({H}).default
+			item1 := ({G}).default_detachable_value
+			item2 := ({H}).default_detachable_value
 		end
 
 end

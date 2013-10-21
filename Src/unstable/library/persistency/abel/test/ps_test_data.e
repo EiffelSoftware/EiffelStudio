@@ -71,8 +71,8 @@ feature {NONE} -- Initialization
 			any_special: SPECIAL[ANY]
 			person_special: SPECIAL[EXPANDED_PERSON]
 
-			tmp: EXPANDED_GENERIC_BOX[INTEGER, attached STRING]
-			any_special_object: EXPANDED_GENERIC_BOX[INTEGER, EXPANDED_GENERIC_BOX[INTEGER, attached STRING]]
+			tmp: EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]
+			any_special_object: EXPANDED_GENERIC_BOX[INTEGER, EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]]
 		do
 			create any_special.make_empty (5)
 

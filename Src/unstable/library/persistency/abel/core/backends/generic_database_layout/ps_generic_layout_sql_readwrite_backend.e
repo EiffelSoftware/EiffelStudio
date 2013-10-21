@@ -279,6 +279,8 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)),
 						-- Runtime type of ps_existence (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
+						-- Do we need a longtext value?
+--						0, -- False
 						-- Some dummy value
 						""]))
 
@@ -290,6 +292,8 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_attribute (attribute_cursor.item, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)),
 						-- Runtime type
 						db_metadata_manager.create_get_primary_key_of_class (cursor.item.attribute_value(attribute_cursor.item).attribute_class_name),
+						-- Do we need a longtext value?
+--						0, -- False
 						-- Value
 						cursor.item.attribute_value(attribute_cursor.item).value
 						]))

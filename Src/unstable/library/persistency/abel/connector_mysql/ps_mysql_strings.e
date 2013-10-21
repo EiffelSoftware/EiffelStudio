@@ -16,18 +16,35 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 	Create_value_table: STRING
 		do
 			Result := "[
-									CREATE TABLE ps_value (
-									objectid INTEGER NOT NULL AUTO_INCREMENT, 
-									attributeid INTEGER,
-									runtimetype INTEGER,
-									value VARCHAR(128),
-				
-									PRIMARY KEY (objectid, attributeid),
-									FOREIGN KEY (attributeid) REFERENCES ps_attribute (attributeid) ON DELETE CASCADE,
-									FOREIGN KEY (runtimetype) REFERENCES ps_class (classid) ON DELETE CASCADE
-									)
+							CREATE TABLE ps_value (
+							objectid INTEGER NOT NULL AUTO_INCREMENT, 
+							attributeid INTEGER,
+							runtimetype INTEGER,
+							value LONGTEXT,
+		
+							PRIMARY KEY (objectid, attributeid),
+							FOREIGN KEY (attributeid) REFERENCES ps_attribute (attributeid) ON DELETE CASCADE,
+							FOREIGN KEY (runtimetype) REFERENCES ps_class (classid) ON DELETE CASCADE
+							)
 			]"
 		end
+
+--	Create_value_table: STRING
+--		do
+--			Result := "[
+--							CREATE TABLE ps_value (
+--							objectid INTEGER NOT NULL AUTO_INCREMENT,
+--							attributeid INTEGER,
+--							runtimetype INTEGER,
+--							islong: BOOLEAN
+--							value VARCHAR(128),
+--		
+--							PRIMARY KEY (objectid, attributeid),
+--							FOREIGN KEY (attributeid) REFERENCES ps_attribute (attributeid) ON DELETE CASCADE,
+--							FOREIGN KEY (runtimetype) REFERENCES ps_class (classid) ON DELETE CASCADE
+--							)
+--			]"
+--		end
 
 	Create_class_table: STRING
 		do
@@ -81,6 +98,17 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 					PRIMARY KEY (collectionid, info_key),
 					FOREIGN KEY (collectionid) REFERENCES ps_collection (collectionid) ON DELETE CASCADE
 					)
+				]"
+		end
+
+	Create_longtext_table: STRING
+		do
+			Result := "[
+				CREATE TABLE ps_longtext (
+					textid INTEGER NOT NULL AUTO_INCREMENT,
+					textvalue LONGTEXT,
+					PRIMARY KEY (textid)
+				)
 				]"
 		end
 

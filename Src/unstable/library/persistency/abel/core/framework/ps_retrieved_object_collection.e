@@ -64,7 +64,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			reflection: INTERNAL
 		do
 			Result := True
-			if not metadata.type.is_conforming_to ({detachable TUPLE}) then
+			if not attached {TYPE[detachable TUPLE]} metadata.type then
 				across
 					collection_items as cursor
 				from

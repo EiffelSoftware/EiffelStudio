@@ -187,8 +187,8 @@ feature {NONE} -- Internal: Status report
 		do
 			Result := attached {NUMERIC} object or attached {BOOLEAN} object or attached {CHARACTER_8} object or attached {CHARACTER_32} object
 				--or attached {READABLE_STRING_GENERAL} object
-				or object.generating_type.is_equal ({detachable STRING_8}) or object.generating_type.is_equal ({detachable STRING_32})
-				or object.generating_type.is_conforming_to ({detachable IMMUTABLE_STRING_GENERAL})
+				or object.generating_type.type_id = ({detachable STRING_8}).type_id or object.generating_type.type_id = ({detachable STRING_32}).type_id
+				or attached {IMMUTABLE_STRING_GENERAL} object
 		end
 
 feature {NONE} -- Internal: Access

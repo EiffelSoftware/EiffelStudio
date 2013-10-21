@@ -57,7 +57,10 @@ feature -- Status report
 		do
 			Result := type.is_expanded
 				--or reflection.type_conforms_to (type.type_id, reflection.dynamic_type_from_string ("READABLE_STRING_GENERAL"))
-				or type.is_equal ({detachable STRING_8}) or type.is_equal ({detachable STRING_32}) or type.is_conforming_to ({detachable IMMUTABLE_STRING_GENERAL})
+				or type.type_id = ({detachable STRING_8}).type_id or type.type_id = ({detachable STRING_32}).type_id
+				-- The attached syntax is used here because the {TYPE}.is_conforming_to will always generate a catcall.
+				or attached {TYPE[detachable IMMUTABLE_STRING_GENERAL]} type
+				--or type.is_conforming_to ({detachable IMMUTABLE_STRING_GENERAL})
 		end
 
 	is_generic_derivation: BOOLEAN

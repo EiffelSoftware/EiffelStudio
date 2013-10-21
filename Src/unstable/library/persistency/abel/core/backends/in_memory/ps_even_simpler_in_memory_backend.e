@@ -150,7 +150,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
-	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		do
 			across objects as cursor
 			loop
@@ -160,7 +160,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
+	write_collections (collections: LIST [PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
 		do
 			across collections as cursor
 			loop
@@ -170,7 +170,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			end
 		end
 
-	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+	delete_collections (collections: LIST [PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
 		do
 			across collections as cursor
 			loop

@@ -125,8 +125,21 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 	all_basic_type_tests
 		do
-		    test_embedded_expanded
+			test_integer
 			test_string
+			test_immediate_expanded
+			test_referenced_expanded
+		    test_embedded_expanded
+		    test_evil_object
+		end
+
+	test_integer
+		local
+			test: PS_GENERIC_CRUD_TEST[INTEGER]
+		do
+			repository.clean_db_for_testing
+			create test.make (repository)
+			test.test_insert (42)
 		end
 
 	test_string
@@ -148,7 +161,42 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 			create test.make (repository)
 			create container.set_item ("a_string")
 			test.test_insert (container)
+		end
 
+	test_referenced_expanded
+		local
+			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			person: EXPANDED_PERSON
+			anybox: ANY_BOX
+		do
+			repository.clean_db_for_testing
+			create test.make (repository)
+			create anybox.set_item (person)
+			test.test_insert (anybox)
+			test.test_crud_operations (anybox, agent (a:ANY_BOX) do check attached {EXPANDED_PERSON} a.item as p then p.add_item end end)
+		end
+
+	test_immediate_expanded
+		local
+			test: PS_GENERIC_CRUD_TEST[EXPANDED_PERSON]
+			person: EXPANDED_PERSON
+			anybox: ANY_BOX
+		do
+			repository.clean_db_for_testing
+			create test.make (repository)
+			test.test_insert (person)
+			test.test_crud_operations (person, agent {EXPANDED_PERSON}.add_item)
+		end
+
+	test_evil_object
+		local
+			test: PS_GENERIC_CRUD_TEST [GENERIC_BOX[
+				GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY],
+				EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]]]
+		do
+			repository.clean_db_for_testing
+			create test.make (repository)
+			test.test_insert (test_data.evil_object)
 		end
 
 feature {PS_REPOSITORY_TESTS} -- Collections
@@ -283,26 +331,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 					end
 			)
 			repository.default_object_graph.set_update_depth (1)
-
---			create query.make
---			executor.execute_insert (test_data.data_structures_1)
---			executor.execute_query (query)
---			assert ("The query doesn't return a result", not query.result_cursor.after)
---			retrieved := query.result_cursor.item
---			assert ("The results are not equal", retrieved.is_deep_equal (test_data.data_structures_1))
---				-- perform update
---			retrieved.array_1 [1].update
---			executor.execute_update (retrieved.array_1 [1])
---				-- check if update worked
---			create query.make
---			executor.execute_query (query)
---			assert ("The query doesn't return a result", not query.result_cursor.after)
---			retrieved := query.result_cursor.item
---			assert ("The results are equal", not retrieved.is_deep_equal (test_data.data_structures_1))
---				-- check that only the updated part really is different
---			testdata_copy := test_data.data_structures_1.deep_twin
---			testdata_copy.array_1 [1].update
---			assert ("There was more than just one update", retrieved.is_deep_equal (testdata_copy))
 			repository.clean_db_for_testing
 		end
 
@@ -332,13 +360,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				assert ("not void", attached c.item.special)
 				assert ("equal", c.item.is_deep_equal (a) and c.item.is_deep_equal (b))
 			end
-
---			create query2.make
---			executor.execute_query (query2)
---			assert ("returned_special", not query2.result_cursor.after and then query2.result_cursor.item.is_deep_equal (special))
---			query2.result_cursor.forth
---			assert ("too many special objects", query2.result_cursor.after)
-
 		end
 
 		test_tuple
@@ -418,7 +439,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 		do
 			create link.set_item (test_data.people.first)
 			create test.make (repository)
-			test.test_insert (link) -- BUG: at the moment ANY_BOX.item is Void during retrieval
+			test.test_insert (link)
 			repository.clean_db_for_testing
 		end
 
@@ -430,7 +451,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 		do
 			create link.set_item (3)
 			create test.make (repository)
-			test.test_insert (link) -- BUG: at the moment ANY_BOX.item is Void during retrieval
+			test.test_insert (link)
 			repository.clean_db_for_testing
 		end
 

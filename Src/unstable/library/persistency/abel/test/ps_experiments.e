@@ -22,11 +22,13 @@ feature
 			person: EXPANDED_PERSON
 			internal: INTERNAL
 			traversal: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
+			box: GENERIC_BOX[PERSON, EXPANDED_PERSON]
 		do
 			create traversal
 			create container.set_item (5)
 			create internal
 			create reflection.make (container)
+			create box.set_item (create {PERSON}.make ("some", "name", 22), create {EXPANDED_PERSON})
 
 			across
 				1 |..| reflection.field_count as i
@@ -73,6 +75,12 @@ feature
 			traversal.set_root_object (container)
 			traversal.set_object_action (agent (a:ANY) do print (a) end)
 			traversal.traverse
+
+			reflection.set_object (box)
+			print (reflection.field_type (1))
+			println
+			print(reflection.field_type (2))
+			println
 
 
 

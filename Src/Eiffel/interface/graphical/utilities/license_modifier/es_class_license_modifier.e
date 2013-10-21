@@ -314,7 +314,6 @@ feature {NONE} -- Basic operations: Modifications
 			l_old_index: detachable INDEX_AS
 			l_tag_name: STRING_GENERAL
 			l_atoms: EIFFEL_LIST [ATOMIC_AS]
-			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			l_wrapper := eiffel_parser_wrapper
 			l_wrapper.parse_with_option_32 (round_trip_indexing_parser, a_license, context_class.options, True, Void)
@@ -327,14 +326,13 @@ feature {NONE} -- Basic operations: Modifications
 						l_index := l_indexing.item_for_iteration
 						l_tag_name := l_index.tag.name
 						l_old_index := a_ast.index_as_of_tag_name (l_tag_name)
-						create l_mapper.make (ec_encoding_converter.utf32_to_utf8 (text))
 						if l_old_index /= Void then
 							l_atoms := l_old_index.index_list
-							replace_code (l_mapper.next_utf32_pos_from_utf8_pos (l_atoms.complete_start_position (a_match_list)),
-										l_mapper.next_utf32_pos_from_utf8_pos (l_atoms.complete_end_position (a_match_list)),
+							replace_code (l_atoms.complete_character_start_position (a_match_list),
+										l_atoms.complete_character_end_position (a_match_list),
 										l_index.index_list.text (l_match_list))
 						else
-							insert_code (a_ast.complete_end_position (a_match_list) + 1, "%N%T" + l_index.text (l_match_list))
+							insert_code (a_ast.complete_character_end_position (a_match_list) + 1, "%N%T" + l_index.text (l_match_list))
 						end
 						l_indexing.forth
 					end

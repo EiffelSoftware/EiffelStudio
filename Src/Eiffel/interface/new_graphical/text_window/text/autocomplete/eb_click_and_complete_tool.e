@@ -156,11 +156,7 @@ feature -- Analysis preparation
 			end
 			if is_eol (token) then
 				token.set_pos_in_text (pos_in_file)
-				if file_standard_is_windows then
-					pos_in_file := pos_in_file + 2
-				else
-					pos_in_file := pos_in_file + 1
-				end
+				pos_in_file := token.length + pos_in_file
 			end
 		end
 
@@ -252,14 +248,6 @@ feature -- Basic Operations
 		end
 
 feature -- Status
-
-	file_standard_is_windows: BOOLEAN
-
-	set_file_standard_is_windows (value: BOOLEAN)
-			-- assign `value' to `file_standard_is_windows'.
-		do
-			file_standard_is_windows := value
-		end
 
 	feature_containing_cursor (a_cursor: TEXT_CURSOR): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			-- Feature containing current cursor if exits.
@@ -437,10 +425,7 @@ feature -- Click list update
 										token := token.next
 									elseif line.next /= Void then
 										line := line.next
-										pos_in_file := pos_in_file + 1
-										if file_standard_is_windows then
-											pos_in_file := pos_in_file + 1
-										end
+										pos_in_file := token.length + pos_in_file
 										token.set_pos_in_text (pos_in_file)
 										token := line.first_token
 									end
@@ -455,10 +440,7 @@ feature -- Click list update
 										token := token.next
 									elseif line.next /= Void then
 										line := line.next
-										pos_in_file := pos_in_file + 1
-										if file_standard_is_windows then
-											pos_in_file := pos_in_file + 1
-										end
+										pos_in_file := token.length + pos_in_file
 										token.set_pos_in_text (pos_in_file)
 										token := line.first_token
 									else
@@ -484,10 +466,7 @@ feature -- Click list update
 					token := token.next
 				elseif line.next /= Void then
 					line := line.next
-					pos_in_file := pos_in_file + 1
-					if file_standard_is_windows then
-						pos_in_file := pos_in_file + 1
-					end
+					pos_in_file := token.length + pos_in_file
 					token := line.first_token
 				else
 					token := Void
@@ -639,7 +618,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

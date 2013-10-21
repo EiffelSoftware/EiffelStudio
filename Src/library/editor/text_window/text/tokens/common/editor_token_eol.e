@@ -20,15 +20,27 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_style
 
 feature -- Initialisation
 
 	make
-			-- Create the token (image is an empty string)
+			-- Create the token in unix style
 		do
-			wide_image := ""
-			length := 1
+			wide_image := unix_style_new_line
+			length := wide_image.count
+		end
+
+	make_with_style (a_windows_style: BOOLEAN)
+			-- Create the token in `a_windows_style'.
+		do
+			if a_windows_style then
+				wide_image := windows_style_new_line
+			else
+				wide_image := unix_style_new_line
+			end
+			length := wide_image.count
 		end
 
 feature -- Status report
@@ -168,6 +180,12 @@ feature {NONE} -- Implementation
  			end
 		end
 
+	windows_style_new_line: STRING_32 = "%R%N"
+			-- Windows style new line
+
+	unix_style_new_line: STRING_32 = "%N"
+			-- Unix style new line
+
 feature -- Color
 
 	text_color_id: INTEGER
@@ -189,14 +207,14 @@ feature -- Color
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

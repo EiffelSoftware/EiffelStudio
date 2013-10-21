@@ -58,18 +58,6 @@ feature -- Access
 	end_index : INTEGER
 			-- End position of the found text
 
-	start_index_in_unix_text : INTEGER
-			-- Start position of the found text, "%R"s are ignored
-		do
-			Result := start_index - percent_r_count
-		end
-
-	end_index_in_unix_text : INTEGER
-			-- End position of the found text, "%R"s are ignored
-		do
-			Result := end_index - percent_r_count + text.occurrences ('%R')
-		end
-
 	start_index_in_context_text : INTEGER
 			-- Start position of `text' in `context_text'
 		do
@@ -85,12 +73,6 @@ feature -- Access
 			-- Line number of current match in `source_text'
 		do
 			Result := line_number_internal
-		end
-
-	percent_r_count : INTEGER
-			--  Number of '%R' before text in `source_text'
-		do
-			Result := percent_r_count_internal
 		end
 
 	captured_submatches: ARRAYED_LIST [like text]
@@ -152,12 +134,6 @@ feature -- Element Change
 			line_number_internal := i
 		end
 
-	set_percent_r_count (i: INTEGER)
-			-- Set `percent_r_count' with i.
-		do
-			percent_r_count_internal := i
-		end
-
 	set_submatches (strings: like captured_submatches)
 			-- Set `submatches' with strings.
 		require
@@ -184,14 +160,11 @@ feature {NONE} -- Implementation
 	line_number_internal: INTEGER
 			-- Line number `text' at in `source_text'
 
-	percent_r_count_internal: INTEGER
-			-- Count of "%R" in front of `text' in `source_text'.
-
 invariant
 	captured_submatches_internal_not_void: captured_submatches_internal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -204,22 +177,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

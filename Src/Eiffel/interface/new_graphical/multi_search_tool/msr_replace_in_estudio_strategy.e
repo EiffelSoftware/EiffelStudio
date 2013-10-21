@@ -115,27 +115,27 @@ feature -- Basic operation
 							l_text_is_smart_text: l_text /= Void
 						end
 						l_string := actual_replacement (l_item)
-						if l_item.end_index_in_unix_text + 1 = l_item.start_index_in_unix_text then
-							l_text.cursor.go_to_position (l_item.end_index_in_unix_text + 1)
+						if l_item.end_index + 1 = l_item.start_index then
+							l_text.cursor.go_to_position (l_item.end_index + 1)
 							editor.deselect_all
 							if not actual_replacement (l_item).is_empty then
 								search_tool.set_changed_by_replace (True)
 								l_text.insert_string (l_string)
 								search_tool.set_changed_by_replace (True)
 								if not l_string.is_empty then
-									editor.select_region (l_item.start_index_in_unix_text,
-														l_item.start_index_in_unix_text + l_string.count)
+									editor.select_region (l_item.start_index,
+														l_item.start_index + l_string.count)
 								end
 							end
 						else
-							editor.select_region (l_item.start_index_in_unix_text,
-													l_item.end_index_in_unix_text + 1)
+							editor.select_region (l_item.start_index,
+													l_item.end_index + 1)
 							if editor.has_selection then
 								search_tool.set_changed_by_replace (True)
 								if not l_string.is_empty then
 									editor.replace_selection (l_string)
-									editor.select_region (l_item.start_index_in_unix_text,
-														l_item.start_index_in_unix_text + l_string.count)
+									editor.select_region (l_item.start_index,
+														l_item.start_index + l_string.count)
 								else
 									l_text.delete_selection
 								end
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			-- Search tool
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

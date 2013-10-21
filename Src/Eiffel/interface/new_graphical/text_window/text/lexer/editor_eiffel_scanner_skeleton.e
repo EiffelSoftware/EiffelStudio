@@ -153,9 +153,9 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_eol: EDITOR_TOKEN_EOL
+	new_eol (a_windows_style: BOOLEAN): EDITOR_TOKEN_EOL
 		do
-			create Result.make
+			create Result.make_with_style (a_windows_style)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -253,7 +253,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

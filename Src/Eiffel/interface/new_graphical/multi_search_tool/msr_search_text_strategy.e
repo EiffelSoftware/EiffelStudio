@@ -193,30 +193,27 @@ feature -- Basic operations
 	launch
 			-- Launch searching.
 		local
-				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
-			-- l_compile_string, l_to_be_searched: UC_UTF8_STRING
-			l_compile_string, l_to_be_searched: STRING
-			l_keyword: STRING
+			l_compile_string, l_to_be_searched: UC_UTF8_STRING
+			l_searched_string: STRING_8
+			l_keyword: STRING_32
 		do
 			create item_matched_internal.make (0)
 			if not is_class_name_set then
 				build_class_name
 			end
 			pcre_regex.set_caseless (not case_sensitive)
-				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
-			-- l_keyword := utf32_to_utf8 (keyword)
-			l_keyword := keyword.as_string_8
+
+			l_keyword := keyword
 			if not is_regular_expression_used then
 				l_keyword := string_formatter.mute_escape_characters (l_keyword)
 			end
 			if is_whole_word_matched then
 				l_keyword := string_formatter.build_match_whole_word (l_keyword)
 			end
-				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
-			-- create l_to_be_searched.make_from_utf8 (utf32_to_utf8 (text_to_be_searched))
-			-- create l_compile_string.make_from_utf8 (l_keyword)
-			l_compile_string := l_keyword
-			l_to_be_searched := text_to_be_searched
+
+			l_searched_string := utf32_to_utf8 (text_to_be_searched)
+			create l_to_be_searched.make_from_utf8 (l_searched_string)
+			create l_compile_string.make_from_utf8 (utf32_to_utf8 (l_keyword))
 			pcre_regex.compile (l_compile_string)
 			if pcre_regex.is_compiled then
 				pcre_regex.match (l_to_be_searched)
@@ -256,18 +253,23 @@ feature {NONE} -- Implementation
 
 	add_new_item
 			-- Add new item from the pcre_regex's captures.
+		require
+			pcre_regex_has_matched: pcre_regex.has_matched
 		local
 			last_item, new_item : MSR_TEXT_ITEM
 			present_start,present_end: INTEGER
 			i: INTEGER
 			line_number: INTEGER
 			start_count_line_position: INTEGER
+			l_utf32_start, l_utf32_end: INTEGER
 		do
+			l_utf32_start := pcre_regex.captured_start_position (0)
+			l_utf32_end := pcre_regex.captured_end_position (0)
 			create new_item.make (class_name_internal,
 								 text_in_file_path,
 								 text_to_be_searched_internal,
-								 pcre_regex.captured_start_position (0),
-								 pcre_regex.captured_end_position (0))
+								 l_utf32_start,
+								 l_utf32_end)
 			new_item.set_text (pcre_regex.captured_substring (0).as_string_32)
 			new_item.set_pcre_regex (pcre_regex)
 			if data /= Void then
@@ -284,36 +286,27 @@ feature {NONE} -- Implementation
 																new_item.source_text,
 																start_count_line_position,
 																new_item.start_index)
-				new_item.set_percent_r_count (last_item.percent_r_count +
-											 string_formatter.occurrences_in_bound ('%R',
-											 									new_item.source_text,
-											 									start_count_line_position,
-											 									new_item.start_index))
 			else
 				start_count_line_position := 1
 				line_number := string_formatter.occurrences_in_bound('%N',
 																	new_item.source_text,
 																	start_count_line_position,
 																	new_item.start_index) + 1
-				new_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R',
-																					new_item.source_text,
-																					start_count_line_position,
-																					new_item.start_index))
 			end
 			new_item.set_line_number (line_number)
-			if pcre_regex.captured_start_position (0) - surrounding_text_range_internal > 0 then
-				present_start := pcre_regex.captured_start_position (0) - surrounding_text_range_internal
+			if l_utf32_start - surrounding_text_range_internal > 0 then
+				present_start := l_utf32_start - surrounding_text_range_internal
 				new_item.set_start_index_in_context_text (surrounding_text_range_internal + 1)
 			else
 				present_start := 1
-				new_item.set_start_index_in_context_text (pcre_regex.captured_start_position (0))
+				new_item.set_start_index_in_context_text (l_utf32_start)
 			end
-			if pcre_regex.captured_end_position (0) + surrounding_text_range_internal < text_to_be_searched.count then
-				present_end := pcre_regex.captured_end_position (0) + surrounding_text_range_internal
+			if l_utf32_end + surrounding_text_range_internal < text_to_be_searched.count then
+				present_end := l_utf32_end + surrounding_text_range_internal
 			else
 				present_end := text_to_be_searched.count
 			end
-			new_item.set_context_text (text_to_be_searched.substring (present_start,present_end))
+			new_item.set_context_text (text_to_be_searched.substring (present_start, present_end))
 			from
 				i := 1
 			until
@@ -347,7 +340,7 @@ invariant
 	is_launched implies (class_name_internal /= Void)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

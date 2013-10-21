@@ -40,7 +40,6 @@ UTF8_tail	[\x80-\xBF]
 
 ----------/** Separators **/----------------------------------------------------
 
-[\r]+				-- Ignore carriage return
 [ ]+				{
 					curr_token := new_space (text_count)
 					update_token_list
@@ -53,13 +52,19 @@ UTF8_tail	[\x80-\xBF]
 					end
 					update_token_list
 					}
-\n+					{
-					from i_ := 1 until i_ > text_count loop
-						curr_token := new_eol
-						update_token_list
-						i_ := i_ + 1
-					end
+\r\n				{
+					curr_token := new_eol (True)
+					update_token_list
 					in_comments := False
+					}
+\n					{
+					curr_token := new_eol (False)
+					update_token_list
+					in_comments := False
+					}
+\r					{
+					curr_token := new_text (text)
+					update_token_list
 					}
 
 
@@ -380,7 +385,6 @@ UTF8_tail	[\x80-\xBF]
 			}
 
 <VERBATIM_STR1>{
-	[\r]+					-- Ignore carriage return
 	[ \t\r]*\]([^%\n"]|{NON_ASCII})*\" 	{
 							-- Verbatim string closer, possibly.
 						curr_token := new_string (text)						
@@ -409,13 +413,20 @@ UTF8_tail	[\x80-\xBF]
 						update_token_list						
 					}
 					
-	\n+				{
-						from i_ := 1 until i_ > text_count loop
-							curr_token := new_eol
-							update_token_list
-							i_ := i_ + 1
-						end						
-					}
+	\r\n				{
+						curr_token := new_eol (True)
+						update_token_list
+						in_comments := False
+						}
+	\n					{
+						curr_token := new_eol (False)
+						update_token_list
+						in_comments := False
+						}
+	\r					{
+						curr_token := new_text (text)
+						update_token_list
+						}
 					
 	([^\n\ \t]|{NON_ASCII})*			{
 						curr_token := new_string (text)

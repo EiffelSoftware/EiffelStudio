@@ -360,11 +360,10 @@ feature -- Pick and drop
 
 feature -- Completion-clickable initialization / update
 
-	setup_click_tool (stone: STONE; file_std_is_win: BOOLEAN)
+	setup_click_tool (stone: STONE)
 			-- prepare `click_tool' before file is read.
 		do
 			if click_tool_enabled then
-				click_tool.set_file_standard_is_windows (file_std_is_win)
 				reinitialize_click_and_complete_tool (stone, False)
 				if current_class_is_clickable then
 					click_tool.build_features_arrays
@@ -887,7 +886,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

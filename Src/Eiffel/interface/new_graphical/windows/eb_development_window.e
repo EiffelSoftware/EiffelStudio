@@ -1772,25 +1772,21 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			-- If `a_selected' is True, select region of `a_ast'.
 		local
 			begin_index, end_index: INTEGER
-			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
 			match_list: LEAF_AS_LIST
-			l_mapper: UNICODE_POSITION_MAPPER
 		do
 				-- Do nothing is the class has been deleted.
 			if attached displayed_class.text_8 as l_text then
 				if displayed_class.is_compiled then
 					match_list := system.match_list_server.item (displayed_class.compiled_class.class_id)
 				end
-				create l_mapper.make (l_text)
 				if match_list /= Void then
-					begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.complete_start_position (match_list))
-					end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.complete_end_position (match_list))
+					begin_index := a_ast.complete_character_start_position (match_list)
+					end_index := a_ast.complete_character_end_position (match_list)
 				else
-					begin_index := l_mapper.utf32_pos_from_utf8_pos (a_ast.start_position)
-					end_index := l_mapper.next_utf32_pos_from_utf8_pos (a_ast.end_position)
+					begin_index := a_ast.character_start_position
+					end_index := a_ast.character_end_position
 				end
-				offset := relative_location_offset ([begin_index, end_index], displayed_class)
-				scroll_to_selection ([begin_index - offset.start_offset, end_index - offset.end_offset + 1], a_selected)
+				scroll_to_selection ([begin_index, end_index + 1], a_selected)
 			end
 		end
 
@@ -1805,38 +1801,6 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			else
 				editors_manager.current_editor.scroll_to_when_ready (a_selection.pos_start)
 			end
-		end
-
-	relative_location_offset (a_location: TUPLE [a_start_pos: INTEGER; a_end_pos: INTEGER]; a_displayed_class: CLASS_I): TUPLE [related_start_pos: INTEGER; related_end_pos: INTEGER]
-			-- Relative editor location offset (the number of all '%R' removed) of `a_location' in context of `a_displayed_class'
-		require
-			a_location_attached: a_location /= Void
-			a_displayed_class_attached: a_displayed_class /= Void
-		local
-			class_text: STRING_32
-			tmp_text: STRING_32
-			begin_offset: INTEGER
-			end_offset: INTEGER
-			a_start_pos, a_end_pos: INTEGER
-		do
-			a_start_pos := a_location.a_start_pos
-			a_end_pos := a_location.a_end_pos
-
-			class_text := a_displayed_class.text_32
-			if class_text /= Void then
-				tmp_text := class_text.substring (1, a_start_pos)
-				begin_offset := tmp_text.occurrences('%R')
-
-				if a_start_pos >= a_end_pos then
-					tmp_text := class_text.substring (a_start_pos + 1, a_end_pos)
-					end_offset := tmp_text.occurrences ('%R')
-				end
-				Result := [begin_offset, begin_offset + end_offset]
-			else
-				Result := [0, 0]
-			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implementation

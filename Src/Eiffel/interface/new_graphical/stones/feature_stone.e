@@ -236,19 +236,15 @@ feature -- dragging
 
 	update
 			-- Update current feature stone.
-		local
-			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			if internal_start_position = -1 and then e_feature /= Void then
 					-- Position has not been initialized
 				if
 					not e_feature.is_il_external and then
-					attached {FEATURE_AS} e_feature.ast as l_body_as and then
-					attached e_feature.written_class.original_class.text_8 as l_text
+					attached {FEATURE_AS} e_feature.ast as l_body_as
 				then
-					create l_mapper.make (l_text)
-					internal_start_position := l_mapper.utf32_pos_from_utf8_pos (l_body_as.start_position)
-					internal_end_position := l_mapper.next_utf32_pos_from_utf8_pos (l_body_as.end_position)
+					internal_start_position := l_body_as.character_start_position
+					internal_end_position := l_body_as.character_end_position
 					internal_start_line_number := l_body_as.start_location.line
 				else
 					internal_start_position := 1

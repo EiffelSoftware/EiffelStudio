@@ -92,16 +92,14 @@ feature -- Query
 			l_data: like modified_data
 			l_first_leaf: LEAF_AS
 			l_last_leaf: LEAF_AS
-			l_mapper: UNICODE_POSITION_MAPPER
 			l_start, l_end: INTEGER
 		do
 			l_data := modified_data
 			l_first_leaf := a_ast.first_token (l_data.ast_match_list)
 			l_last_leaf := a_ast.last_token (l_data.ast_match_list)
 			if attached l_first_leaf and then attached l_last_leaf then
-				create l_mapper.make (ec_encoding_converter.utf32_to_utf8 (original_text))
-				l_start := l_mapper.next_utf32_pos_from_utf8_pos (l_first_leaf.start_position)
-				l_end := l_mapper.next_utf32_pos_from_utf8_pos (l_last_leaf.end_position)
+				l_start := l_first_leaf.character_start_position
+				l_end := l_last_leaf.character_end_position
 				Result := [l_start, l_end]
 			else
 					-- Invalid parser!
@@ -218,7 +216,7 @@ invariant
 	modified_data_attached: attached modified_data
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

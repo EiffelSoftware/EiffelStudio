@@ -474,6 +474,21 @@ feature -- Attributes
 	generics_end_position: INTEGER
 			-- Position at end of formal generics.
 
+	feature_clause_insert_character_position: INTEGER
+			-- Character position at end of features
+
+	conforming_inherit_clause_insert_character_position: INTEGER
+			-- Character position at end of inherit clause.
+
+	non_conforming_inherit_clause_insert_character_position: INTEGER
+			-- Character position at end of non-conforming inherit clause.
+
+	generics_start_character_position: INTEGER
+			-- Character position at start of formal generics.
+
+	generics_end_character_position: INTEGER
+			-- Character position at end of formal generics.
+
 	invariant_insertion_position: INTEGER
 			-- Position where new invariant can be inserted (at the end of an invariant
 			-- clause if any, otherwise before the indexing or end keyword).
@@ -554,23 +569,36 @@ feature -- Roundtrip/Token
 
 feature {EIFFEL_PARSER_SKELETON} -- Element change
 
-	set_text_positions (ge, cip, ncip, fp: INTEGER)
+	set_text_positions (ge, cip, ncip, fp, gec, cicp, ncicp, fcp: INTEGER)
 			-- Set positions in class text.
 		require
 			ge_positive_or_not_present: ge >= 0
 			cip_positive: cip >= 0 and cip >= ge
 			ncip_positive: ncip >= 0 and ncip >= cip
 			fp_positive: fp > 0 and fp >= cip
+			gec_positive_or_not_present: gec >= 0
+			cicp_positive: cicp >= 0 and cicp >= gec
+			ncicp_positive: ncicp >= 0 and ncicp >= cicp
+			fcp_positive: fcp > 0 and fcp >= cicp
 		do
 			generics_end_position := ge
 			conforming_inherit_clause_insert_position := cip
 			non_conforming_inherit_clause_insert_position := ncip
 			feature_clause_insert_position := fp
+
+			generics_end_character_position := gec
+			conforming_inherit_clause_insert_character_position := cicp
+			non_conforming_inherit_clause_insert_character_position := ncicp
+			feature_clause_insert_character_position := fcp
 		ensure
 			generics_end_position: generics_end_position = ge
 			conforming_inherit_clause_insert_position_set: conforming_inherit_clause_insert_position = cip
 			non_conforming_inherit_clause_insert_position_set: non_conforming_inherit_clause_insert_position = ncip
 			feature_clause_insert_position_set: feature_clause_insert_position = fp
+			generics_end_character_position: generics_end_character_position = gec
+			conforming_inherit_clause_insert_character_position_set: conforming_inherit_clause_insert_character_position = cicp
+			non_conforming_inherit_clause_insert_character_position_set: non_conforming_inherit_clause_insert_character_position = ncicp
+			feature_clause_insert_character_position_set: feature_clause_insert_character_position = fcp
 		end
 
 feature -- Access

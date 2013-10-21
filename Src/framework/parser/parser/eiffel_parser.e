@@ -3484,7 +3484,11 @@ end
 						formal_generics_end_position,
 						conforming_inheritance_end_position,
 						non_conforming_inheritance_end_position,
-						features_end_position
+						features_end_position,
+						formal_generics_character_end_position,
+						conforming_inheritance_character_end_position,
+						non_conforming_inheritance_character_end_position,
+						features_character_end_position
 					)
 					if attached yyvs20.item (yyvsp20 - 1) as l_external then
 						l_root_node.set_alias_keyword (l_external.first)
@@ -3557,7 +3561,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-conforming_inheritance_end_position := position; conforming_inheritance_flag := True
+set_conforming_inheritance_end_positions; conforming_inheritance_flag := True
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -3591,7 +3595,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-non_conforming_inheritance_end_position := position
+set_non_conforming_inheritance_end_positions
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -3625,7 +3629,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-features_end_position := position 
+set_features_end_positions 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -3659,7 +3663,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-feature_clause_end_position := position 
+set_feature_clause_end_positions 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -12900,7 +12904,7 @@ debug ("GEYACC")
 end
 
 				-- $$ := Void
-				formal_generics_end_position := 0
+				set_formal_generics_end_positions (True)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
@@ -12935,7 +12939,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				formal_generics_end_position := position
+				set_formal_generics_end_positions (True)
 				yyval104 := ast_factory.new_eiffel_list_formal_dec_as (0)
 				if attached yyval104 as l_formals then
 					l_formals.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
@@ -12978,7 +12982,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				formal_generics_end_position := position
+				set_formal_generics_end_positions (False)
 				yyval104 := yyvs104.item (yyvsp104)
 				if attached yyval104 as l_formals then
 					l_formals.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)

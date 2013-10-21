@@ -29,6 +29,10 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 		deferred
 		end
 
+	Create_longtext_table: STRING
+		deferred
+		end
+
 feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 
 	Show_tables: STRING

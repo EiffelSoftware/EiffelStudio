@@ -20,7 +20,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 									objectid INTEGER, 
 									attributeid INTEGER,
 									runtimetype INTEGER,
-									value VARCHAR(128),
+									value TEXT,
 				
 									PRIMARY KEY (objectid ASC, attributeid),
 									FOREIGN KEY (attributeid) REFERENCES ps_attribute (attributeid) ON DELETE CASCADE,
@@ -81,6 +81,17 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 					PRIMARY KEY (collectionid, info_key),
 					FOREIGN KEY (collectionid) REFERENCES ps_collection (collectionid) ON DELETE CASCADE
 					)
+				]"
+		end
+
+	Create_longtext_table: STRING
+		do
+			Result := "[
+				CREATE TABLE ps_longtext (
+					textid INTEGER NOT NULL AUTOINCREMENT,
+					textvalue LONGTEXT,
+					PRIMARY KEY (textid)
+				)
 				]"
 		end
 

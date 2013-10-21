@@ -89,8 +89,7 @@ feature -- Data manipulation
 		require
 			can_handle_object: can_handle (an_object)
 		do
-			if not is_persistent_within_transaction (an_object, new_transaction)
-			then
+			if not is_persistent_within_transaction (an_object, new_transaction) then
 				execute_within_implicit_transaction (agent execute_insert_within_transaction(an_object, ?), False)
 			end
 		ensure

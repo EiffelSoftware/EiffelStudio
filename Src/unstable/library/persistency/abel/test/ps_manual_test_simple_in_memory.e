@@ -22,7 +22,6 @@ feature {NONE}
 		do
 			create factory
 			Result := factory.create_in_memory_repository
-			--create Result.make_empty
 		end
 
 feature

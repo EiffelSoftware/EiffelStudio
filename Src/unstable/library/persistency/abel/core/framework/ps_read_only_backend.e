@@ -19,8 +19,10 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
 		do
-			Result := not type.type.is_conforming_to ({detachable SPECIAL[detachable ANY]})
-				and not type.type.is_conforming_to ({detachable TUPLE})
+			-- The attached syntax is used here because the {TYPE}.is_conforming_to will always generate a catcall.
+			Result := not attached {TYPE[detachable SPECIAL[detachable ANY]]} type.type and not attached {TYPE[detachable TUPLE]} type.type
+--			Result := not type.type.is_conforming_to ({detachable SPECIAL[detachable ANY]})
+--				and not type.type.is_conforming_to ({detachable TUPLE})
 		end
 
 	is_generic_collection_supported: BOOLEAN

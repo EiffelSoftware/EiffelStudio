@@ -107,6 +107,14 @@ feature {NONE}
 				-- See if one result is equal
 			one_equal := across ref_list as cursor some equality_test.item ([cursor.item, object]) end
 				--	across ref_list as cursor from print (object) loop print (cursor.item) end
+--				if attached {ANY_BOX} object as box and attached {ANY_BOX} ref_list.first as box2 then
+--					print (box.item.tagged_out)
+--					print (box2.item.tagged_out)
+--					if attached {STRING_32} box.item as s1 and attached {STRING_32} box2.item as s2 then
+--						print (s1.count)
+--						print (s2.count)
+--					end
+--				end
 			assert ("The results are not the same", one_equal)
 		end
 

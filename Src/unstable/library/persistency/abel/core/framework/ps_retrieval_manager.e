@@ -248,13 +248,15 @@ feature {NONE} -- Implementation - Build support functions.
 			collection_result: detachable PS_RETRIEVED_OBJECT_COLLECTION
 			managed: MANAGED_POINTER
 			trash: INTEGER
+			conv: UTF_CONVERTER
 		do
 			if type.is_basic_type then
 					-- Create a basic type
 				if type.type.name.is_equal ("STRING_8") then
 					Result := value.first.twin
 				elseif type.type.name.is_equal ("STRING_32") then
-					Result := value.first.as_string_32
+					Result := conv.utf_8_string_8_to_string_32 (value.first)
+--					Result := value.first.as_string_32
 				elseif type.type.name.is_equal ("INTEGER_8") then
 					Result := value.first.to_integer_8
 				elseif type.type.name.is_equal ("INTEGER_16") then
@@ -361,6 +363,9 @@ feature {NONE} -- Implementation - Build support functions.
 			type: INTEGER
 			reflection: INTERNAL
 			type_name: STRING
+
+			conv: UTF_CONVERTER
+			str32: STRING_32
 		do
 			create reflection
 			type := reflection.field_type (index, obj)
@@ -372,7 +377,10 @@ feature {NONE} -- Implementation - Build support functions.
 --				type_name := reflection.class_name_of_type (reflection.field_static_type_of_type (index, reflection.dynamic_type (obj)))
 				type_name:= attr.runtime_type
 				if type_name.is_case_insensitive_equal ("STRING_32") then
-					reflection.set_reference_field (index, obj, attr.value.to_string_32)
+--					print (attr.value)
+					str32 := conv.utf_8_string_8_to_string_32 (attr.value)
+					str32.adapt_size
+					reflection.set_reference_field (index, obj, str32)
 					Result := True
 				elseif type_name.is_case_insensitive_equal ("STRING_8") then
 					reflection.set_reference_field (index, obj, attr.value.twin)

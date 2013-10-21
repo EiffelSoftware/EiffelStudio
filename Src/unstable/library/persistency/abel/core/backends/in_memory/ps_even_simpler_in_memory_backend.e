@@ -189,17 +189,11 @@ feature {NONE} -- Implementation
 
 			across objects as cursor
 			loop
---				if cursor.item.operation = cursor.item.operation.insert then
 				if cursor.item.is_new then
 					prepare(cursor.item.metadata)
---					across cursor.item.obj.metadata.attributes as attr
---					loop
---						if not cursor.item.obj.has_attribute(attr.item) then
---							cursor.item.obj.add_attribute (attr.item, "", "NONE")
---						end
---					end
 					attach (database[cursor.item.metadata.type.type_id]).extend(cursor.item, cursor.item.primary_key)
 					cursor.item.declare_as_old
+--					print(cursor.item)
 				else
 					old_obj := attach (attach (database[cursor.item.metadata.type.type_id])[cursor.item.primary_key])
 					across cursor.item.attributes as attr

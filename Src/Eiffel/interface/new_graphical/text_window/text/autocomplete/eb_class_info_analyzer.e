@@ -215,101 +215,95 @@ feature {NONE} -- Click ast exploration
 			parents: EIFFEL_LIST [PARENT_AS]
 			class_name: STRING
 			has_parents: BOOLEAN
-			l_mapper: UNICODE_POSITION_MAPPER
 		do
 			if is_ok_for_completion then
 				initialize_context
-				if attached content.text_loaded as l_text then
-					create l_mapper.make (l_text)
-					parents := current_class_as.parents
-					has_parents := parents /= Void
-					if has_parents then
-						create inherit_clauses.make (1, parents.count + 1)
-						from
-							parents.start
-							i := 1
-						until
-							parents.after
-						loop
-							inherit_clauses.put (l_mapper.next_utf32_pos_from_utf8_pos (parents.item.start_position), i)
-							parents.forth
-							i := i + 1
-						end
-						inherit_clauses.put (l_mapper.fast_utf32_pos_from_utf8_pos (current_class_as.conforming_inherit_clause_insert_position), i)
-						inherit_clauses.sort
-					end
-					ast_list := current_class_as.click_list
-					if ast_list /= Void then
-						c := ast_list.count
-						create prov_list.make
-						create l_mapper.make (l_text)
-						from
-							pos := 1
-						until
-							pos > c
-						loop
-							a_click_ast := ast_list.i_th (pos)
-							clickable := a_click_ast.node
-							if clickable.is_class or else clickable.is_precursor then
-								a_class := clickable_info.associated_eiffel_class (current_class_i, clickable)
-								if a_class /= Void then
-									create clickable_position.make (l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.start_position),
-																	l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.end_position))
-									if clickable.is_class then
-										clickable_position.set_class (clickable.class_name.name_8)
-									else
-										l_precursor ?= clickable
-										check l_precursor_not_void: l_precursor /= Void end
-										clickable_position.set_class (l_precursor.parent_base_class.class_name.name_8)
-									end
-									prov_list.extend (clickable_position)
-								end
-							elseif clickable.is_feature then
-								f_name ?= clickable
-								class_name := Void
-								if f_name /= Void and has_parents then
-									pos_in_txt := l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.start_position)
-									if pos_in_txt < inherit_clauses @ i then
-										from
-											j := 1
-										until
-											j = i or else pos_in_txt < inherit_clauses @ j
-										loop
-											j := j + 1
-										end
-										if j /= 1 and then pos_in_txt < inherit_clauses @ j then
-											a_class := clickable_info.
-												associated_eiffel_class (current_class_i, parents.i_th (j - 1).type)
-											if a_class /= Void then
-												class_name := a_class.name
-											else
-												class_name := Void
-											end
-										end
-									end
-								end
-								if class_name = Void then
-									class_name := current_class_i.name
-								end
-								create clickable_position.make (l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.start_position),
-																l_mapper.next_utf32_pos_from_utf8_pos (a_click_ast.end_position))
-								clickable_position.set_feature (class_name, clickable.feature_name.name_32)
-								prov_list.extend (clickable_position)
-							end
-							pos := pos + 1
-						end
-					end
-					create clickable_position_list.make (1, prov_list.count)
+				parents := current_class_as.parents
+				has_parents := parents /= Void
+				if has_parents then
+					create inherit_clauses.make (1, parents.count + 1)
 					from
-						prov_list.start
+						parents.start
+						i := 1
+					until
+						parents.after
+					loop
+						inherit_clauses.put (parents.item.character_start_position, i)
+						parents.forth
+						i := i + 1
+					end
+					inherit_clauses.put (current_class_as.conforming_inherit_clause_insert_character_position, i)
+					inherit_clauses.sort
+				end
+				ast_list := current_class_as.click_list
+				if ast_list /= Void then
+					c := ast_list.count
+					create prov_list.make
+					from
 						pos := 1
 					until
-						prov_list.after
+						pos > c
 					loop
-						clickable_position_list.put (prov_list.item, pos)
+						a_click_ast := ast_list.i_th (pos)
+						clickable := a_click_ast.node
+						if clickable.is_class or else clickable.is_precursor then
+							a_class := clickable_info.associated_eiffel_class (current_class_i, clickable)
+							if a_class /= Void then
+								create clickable_position.make (a_click_ast.character_start_position, a_click_ast.character_end_position)
+								if clickable.is_class then
+									clickable_position.set_class (clickable.class_name.name_8)
+								else
+									l_precursor ?= clickable
+									check l_precursor_not_void: l_precursor /= Void end
+									clickable_position.set_class (l_precursor.parent_base_class.class_name.name_8)
+								end
+								prov_list.extend (clickable_position)
+							end
+						elseif clickable.is_feature then
+							f_name ?= clickable
+							class_name := Void
+							if f_name /= Void and has_parents then
+								pos_in_txt := a_click_ast.character_start_position
+								if pos_in_txt < inherit_clauses @ i then
+									from
+										j := 1
+									until
+										j = i or else pos_in_txt < inherit_clauses @ j
+									loop
+										j := j + 1
+									end
+									if j /= 1 and then pos_in_txt < inherit_clauses @ j then
+										a_class := clickable_info.
+											associated_eiffel_class (current_class_i, parents.i_th (j - 1).type)
+										if a_class /= Void then
+											class_name := a_class.name
+										else
+											class_name := Void
+										end
+									end
+								end
+							end
+							if class_name = Void then
+								class_name := current_class_i.name
+							end
+							create clickable_position.make (a_click_ast.character_start_position,
+															a_click_ast.character_end_position)
+							clickable_position.set_feature (class_name, clickable.feature_name.name_32)
+							prov_list.extend (clickable_position)
+						end
 						pos := pos + 1
-						prov_list.forth
 					end
+				end
+				create clickable_position_list.make (1, prov_list.count)
+				from
+					prov_list.start
+					pos := 1
+				until
+					prov_list.after
+				loop
+					clickable_position_list.put (prov_list.item, pos)
+					pos := pos + 1
+					prov_list.forth
 				end
 			end
 		end

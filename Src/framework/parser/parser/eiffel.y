@@ -295,7 +295,7 @@ Class_declaration:
 		Formal_generics							-- $5
 		External_name							-- $6
 		Obsolete								-- $7
-		{conforming_inheritance_flag := False; non_conforming_inheritance_flag := False } Inheritance {conforming_inheritance_end_position := position; conforming_inheritance_flag := True} Inheritance {non_conforming_inheritance_end_position := position} -- $8 $9 $10 $11 $12
+		{conforming_inheritance_flag := False; non_conforming_inheritance_flag := False } Inheritance {set_conforming_inheritance_end_positions; conforming_inheritance_flag := True} Inheritance {set_non_conforming_inheritance_end_positions} -- $8 $9 $10 $11 $12
 		Creators								-- $13
 		Convert_clause							-- $14
 		Features End_features_pos				-- $15 $16
@@ -322,7 +322,11 @@ Class_declaration:
 						formal_generics_end_position,
 						conforming_inheritance_end_position,
 						non_conforming_inheritance_end_position,
-						features_end_position
+						features_end_position,
+						formal_generics_character_end_position,
+						conforming_inheritance_character_end_position,
+						non_conforming_inheritance_character_end_position,
+						features_character_end_position
 					)
 					if attached $6 as l_external then
 						l_root_node.set_alias_keyword (l_external.first)
@@ -336,8 +340,8 @@ Class_declaration:
 			}
 	;
 
-End_features_pos: { features_end_position := position } ;
-End_feature_clause_pos: { feature_clause_end_position := position };
+End_features_pos: { set_features_end_positions } ;
+End_feature_clause_pos: { set_feature_clause_end_positions };
 -- Indexing
 
 
@@ -2213,11 +2217,11 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 Formal_generics:
 			{
 				-- $$ := Void
-				formal_generics_end_position := 0
+				set_formal_generics_end_positions (True)
 			}
 	|	TE_LSQURE TE_RSQURE
 			{
-				formal_generics_end_position := position
+				set_formal_generics_end_positions (True)
 				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
 				if attached $$ as l_formals then
 					l_formals.set_squre_symbols ($1, $2)
@@ -2225,7 +2229,7 @@ Formal_generics:
 			}
 	|	TE_LSQURE Add_counter Disable_supplier_recording Formal_generic_list Enable_supplier_recording Remove_counter TE_RSQURE
 			{
-				formal_generics_end_position := position
+				set_formal_generics_end_positions (False)
 				$$ := $4
 				if attached $$ as l_formals then
 					l_formals.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)

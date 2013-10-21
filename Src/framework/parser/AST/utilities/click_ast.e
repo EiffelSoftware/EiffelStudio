@@ -9,13 +9,13 @@ note
 
 class
 	CLICK_AST
-	
+
 inherit
 	ANY
 		redefine
 			is_equal
 		end
-		
+
 create
 	initialize
 
@@ -31,10 +31,14 @@ feature {NONE} -- Initialization
 			node := real_node
 			start_position := n.start_position
 			end_position := n.end_position
+			character_start_position := n.character_start_position
+			character_end_position := n.character_end_position
 		ensure
 			node_set: node = real_node
 			start_position_set: start_position = n.start_position
 			end_position_set: end_position = n.end_position
+			character_start_position_set: character_start_position = n.character_start_position
+			character_end_position_set: character_end_position = n.character_end_position
 		end
 
 feature -- Access
@@ -45,6 +49,12 @@ feature -- Access
 	end_position: INTEGER
 			-- End position of clickable.
 
+	character_start_position: INTEGER
+			-- Character start position of clickable.
+
+	character_end_position: INTEGER
+			-- Character end position of clickable.			
+
 	node: CLICKABLE_AST
 			-- Node AST that has a position.
 
@@ -54,7 +64,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := start_position = other.start_position and 
+			Result := start_position = other.start_position and
 				end_position = other.end_position and
 				node.is_equivalent (other.node)
 		end
@@ -63,7 +73,7 @@ invariant
 	node_not_void: node /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -76,22 +86,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CLICK_AST

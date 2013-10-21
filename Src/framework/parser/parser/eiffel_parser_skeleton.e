@@ -511,6 +511,73 @@ feature -- Access
 	feature_clause_end_position: INTEGER
 			-- End of a feature clause
 
+	formal_generics_character_end_position: INTEGER
+			-- Character end of formal generics, if present
+
+	conforming_inheritance_character_end_position: INTEGER
+			-- Character end of conforming inheritance clause
+
+	non_conforming_inheritance_character_end_position: INTEGER
+			-- Character end of non-conforming inheritance clause
+
+	features_character_end_position: INTEGER
+			-- Character end of feature clauses
+
+	invariant_character_end_position: INTEGER
+			-- Character end of invariant
+
+	feature_clause_character_end_position: INTEGER
+			-- Character end of a feature clause
+
+feature -- Status Change
+
+	set_formal_generics_end_positions (a_reset: BOOLEAN)
+			-- Set formal generics end positions.
+		do
+			if a_reset then
+				formal_generics_end_position := 0
+				formal_generics_character_end_position := 0
+			else
+				formal_generics_end_position := position
+				formal_generics_character_end_position := character_position
+			end
+		end
+
+	set_conforming_inheritance_end_positions
+			-- Set conforming inheritance end positions
+		do
+			conforming_inheritance_end_position := position
+			conforming_inheritance_character_end_position := character_position
+		end
+
+	set_non_conforming_inheritance_end_positions
+			-- Set non conforming inheritance end positions
+		do
+			non_conforming_inheritance_end_position := position
+			non_conforming_inheritance_character_end_position := character_position
+		end
+
+	set_features_end_positions
+			-- Set features end positions
+		do
+			features_end_position := position
+			features_character_end_position := character_position
+		end
+
+	set_invariant_end_positions
+			-- Set invariant end positions
+		do
+			invariant_end_position := position
+			invariant_character_end_position := character_position
+		end
+
+	set_feature_clause_end_positions
+			-- Set feature clause end positions
+		do
+			feature_clause_end_position := position
+			feature_clause_character_end_position := character_position
+		end
+
 feature -- Removal
 
 	reset_nodes

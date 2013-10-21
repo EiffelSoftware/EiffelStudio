@@ -219,8 +219,8 @@ feature -- Status report
 				if
 					l_text_item /= Void and then
 					(is_current_editor_searched implies old_editor = editor) and
-					(a_editor.text_displayed.selection_start.pos_in_text = l_text_item.start_index_in_unix_text) and
-					(a_editor.text_displayed.selection_end.pos_in_text = l_text_item.end_index_in_unix_text + 1)
+					(a_editor.text_displayed.selection_start.pos_in_text = l_text_item.start_index) and
+					(a_editor.text_displayed.selection_end.pos_in_text = l_text_item.end_index + 1)
 				then
 					Result := True
 				end
@@ -351,8 +351,8 @@ feature -- Action
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_item ?= multi_search_performer.item
 				if l_item /= Void then
-					l_start := l_item.start_index_in_unix_text
-					l_end := l_item.end_index_in_unix_text + 1
+					l_start := l_item.start_index
+					l_end := l_item.end_index + 1
 				end
 			end
 			if new_search_set or else
@@ -1966,8 +1966,8 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			if l_editor /= Void and then multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_text_item ?= multi_search_performer.item
 				if l_text_item /= Void then
-					l_start := l_text_item.start_index_in_unix_text
-					l_end := l_text_item.end_index_in_unix_text + 1
+					l_start := l_text_item.start_index
+					l_end := l_text_item.end_index + 1
 					if l_end > l_start then
 						if l_editor.text_is_fully_loaded then
 							l_editor.select_region (l_start, l_end)

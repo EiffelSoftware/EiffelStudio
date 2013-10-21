@@ -497,8 +497,8 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			if attached {MSR_ITEM}l_row.data as l_item then
 				if attached {CLASS_I}l_item.data as l_class then
 					if attached {MSR_TEXT_ITEM}l_row.data as l_text_item then
-						l_start := l_text_item.start_index_in_unix_text
-						l_end := l_text_item.end_index_in_unix_text + 1
+						l_start := l_text_item.start_index
+						l_end := l_text_item.end_index + 1
 						l_class_c := l_class.compiled_representation
 						if l_class_c /= Void then
 							create l_compiled_line_stone.make_with_line (l_class_c, 1, True)
@@ -676,8 +676,8 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 				end
 				if l_editor /= Void then
 					if (not l_tool.is_item_source_changed (l_text_item)) then
-						l_start := l_text_item.start_index_in_unix_text
-						l_end := l_text_item.end_index_in_unix_text + 1
+						l_start := l_text_item.start_index
+						l_end := l_text_item.end_index + 1
 						if l_end > l_start then
 							if l_editor.text_is_fully_loaded then
 								l_editor.select_region (l_start, l_end)

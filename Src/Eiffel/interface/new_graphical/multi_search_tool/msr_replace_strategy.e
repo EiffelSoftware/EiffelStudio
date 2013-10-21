@@ -380,21 +380,12 @@ feature {NONE} -- Implementation
 																	l_text_item.source_text,
 																	start_count_line_position,
 																	l_text_item.start_index)
-				l_text_item.set_percent_r_count (last_item.percent_r_count +
-												string_formatter.occurrences_in_bound ('%R',
-																					l_text_item.source_text,
-																					start_count_line_position,
-																					l_text_item.start_index))
 			else
 				start_count_line_position := 1
 				line_number := string_formatter.occurrences_in_bound('%N',
 																	l_text_item.source_text,
 																	start_count_line_position,
 																	l_text_item.start_index) + 1
-				l_text_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R',
-																						l_text_item.source_text,
-																						start_count_line_position,
-																						l_text_item.start_index))
 			end
 			l_text_item.set_line_number (line_number)
 
@@ -556,7 +547,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -383,7 +383,7 @@ feature {NONE} -- Text loading
 					-- If `load_file_error' has been set before, we simply do not setup the click tool.
 			if not load_file_error then
 				text_displayed.enable_click_tool
-				text_displayed.setup_click_tool (dev_window.stone, not is_unix_file)
+				text_displayed.setup_click_tool (dev_window.stone)
 				process_click_tool_error
 			end
 		end

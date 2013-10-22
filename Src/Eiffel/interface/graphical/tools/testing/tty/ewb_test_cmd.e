@@ -77,11 +77,11 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	print_string (a_string: READABLE_STRING_8)
+	print_string (a_string: READABLE_STRING_GENERAL)
 		require
 			a_string_attached: a_string /= Void
 		do
-			command_line_io.localized_print (a_string.string)
+			command_line_io.localized_print (a_string)
 		end
 
 	print_statistics (a_test_suite: TEST_SUITE_S)
@@ -100,7 +100,7 @@ feature {NONE} -- Basic operations
 			print_string ("%N%N")
 		end
 
-	print_multiple_string (a_string: READABLE_STRING_8; a_count: INTEGER)
+	print_multiple_string (a_string: READABLE_STRING_GENERAL; a_count: INTEGER)
 		require
 			a_count_not_negative: a_count >= 0
 		local
@@ -160,7 +160,7 @@ feature {NONE} -- Internationalization
 	e_test_suite_not_usable: STRING = "The test suite service is currently unavailable."
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -82,20 +82,20 @@ feature
 			object_graph_tests.test_all_settings
 		end
 
-	mysql_transaction_lost
-		do
-			transaction_tests.test_no_lost_update
-		end
+--	mysql_transaction_lost
+--		do
+--			transaction_tests.test_no_lost_update
+--		end
 
-	mysql_transaction_dirty
-		do
-			transaction_tests.test_no_dirty_reads
-		end
+--	mysql_transaction_dirty
+--		do
+--			transaction_tests.test_no_dirty_reads
+--		end
 
-	mysql_transaction_repeatable_read
-		do
-			transaction_tests.test_repeatable_read
-		end
+--	mysql_transaction_repeatable_read
+--		do
+--			transaction_tests.test_repeatable_read
+--		end
 
 	mysql_transaction_cleanup
 		do

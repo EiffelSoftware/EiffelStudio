@@ -55,44 +55,44 @@ feature
 			-- An ESCHER test object
 
 
-	evil_object: GENERIC_BOX[
-		GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY],
-		EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]]
+--	evil_object: detachable GENERIC_BOX[
+--		GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY],
+--		EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]]
 
 
 feature {NONE} -- Initialization
 
 
-	create_evil_object
-		local
-			first_part: GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY]
-			second_part: EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]
+--	create_evil_object
+--		local
+--			first_part: GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY]
+--			second_part: EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]
 
-			any_special: SPECIAL[ANY]
-			person_special: SPECIAL[EXPANDED_PERSON]
+--			any_special: SPECIAL[ANY]
+--			person_special: SPECIAL[EXPANDED_PERSON]
 
-			tmp: EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]
-			any_special_object: EXPANDED_GENERIC_BOX[INTEGER, EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]]
-		do
-			create any_special.make_empty (5)
+--			tmp: EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]
+--			any_special_object: EXPANDED_GENERIC_BOX[INTEGER, EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]]
+--		do
+--			create any_special.make_empty (5)
 
-			create tmp.set_item (42, "a_string")
-			create any_special_object.set_item (1, tmp)
+--			create tmp.set_item (42, "a_string")
+--			create any_special_object.set_item (1, tmp)
 
-			any_special.extend (any_special_object)
-			any_special.extend (create {CHAIN_TAIL}.make (21))
-			any_special.extend ("hello world")
-			any_special.extend (123.45)
+--			any_special.extend (any_special_object)
+--			any_special.extend (create {CHAIN_TAIL}.make (21))
+--			any_special.extend ("hello world")
+--			any_special.extend (123.45)
 
-			create person_special.make_filled (create {EXPANDED_PERSON}, 3)
-			person_special[1] := create {EXPANDED_PERSON}.make ("another", "name", 100)
+--			create person_special.make_filled (create {EXPANDED_PERSON}, 3)
+--			person_special[1] := create {EXPANDED_PERSON}.make ("another", "name", 100)
 
-			create second_part.set_item (any_special, person_special)
+--			create second_part.set_item (any_special, person_special)
 
-			create first_part.set_item (reference_cycle, create {ANY_BOX}.set_item (any_special))
+--			create first_part.set_item (reference_cycle, create {ANY_BOX}.set_item (any_special))
 
-			create evil_object.set_item (first_part, second_part)
-		end
+--			create evil_object.set_item (first_part, second_part)
+--		end
 
 	make
 			-- Initialization for `Current'.
@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 			create escher_test.make ("first", 2143)
 			create escher_test_2.make ("first", 23, "24", "25")
 
-			create_evil_object
+			--create_evil_object
 		end
 
 	fill_people

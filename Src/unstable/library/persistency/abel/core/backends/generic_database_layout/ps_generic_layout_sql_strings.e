@@ -60,7 +60,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Data querying - Key manager
 		end
 
 
-feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend implementation
+feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR} -- Data querying - Backend implementation
 
 	Query_values_from_class (attributes: STRING): STRING
 		do

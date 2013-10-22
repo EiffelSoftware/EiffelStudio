@@ -13,6 +13,22 @@ inherit
 create
 	make
 
+feature -- Lazy loading
+
+	lazy_loading_batch_size: INTEGER
+			-- The amount of objects to retrieve in a single batch.
+			-- Set to -1 to retrieve all objects.
+
+	set_lazy_loading_batch_size (size: INTEGER)
+			-- Set the batch size.
+		require
+			valid: size > 0 or size = -1
+		do
+			lazy_loading_batch_size := size
+		ensure
+			correct: size = lazy_loading_batch_size
+		end
+
 feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 
 	is_generic_collection_supported: BOOLEAN = True
@@ -21,61 +37,16 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 
+
+
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
 			-- Retrieves all objects of type `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
 			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
 			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
 			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
 			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
-		local
-			connection: PS_SQL_CONNECTION
-			current_obj: PS_RETRIEVED_OBJECT
-			result_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
-			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
-			sql_string: STRING
-			attribute_name, attribute_value, class_name_of_value: STRING
 		do
-			connection := get_connection (transaction)
-			create result_list.make
-			sql_string := SQL_Strings.query_values_from_class (SQL_Strings.convert_to_sql (db_metadata_manager.attribute_keys_of_class (db_metadata_manager.create_get_primary_key_of_class (type.base_class.name))))
-			if not transaction.is_readonly then
-				sql_string.append (SQL_Strings.For_update_appendix)
-			end
-			connection.execute_sql (sql_string)
-			from
-				row_cursor := connection.last_result
-			until
-				row_cursor.after
-			loop
-					-- create new object
-				create current_obj.make (row_cursor.item.at (SQL_Strings.Value_table_id_column).to_integer, type)
-					-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
-				from
-				until
-					row_cursor.after or else row_cursor.item.at (SQL_Strings.Value_table_id_column).to_integer /= current_obj.primary_key
-				loop
-						--print (current_obj.class_metadata.name + ": " + db_metadata_manager.attribute_name_of_key (row_cursor.item.get_value ("attributeid").to_integer) + "%N")
-					attribute_name := db_metadata_manager.attribute_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_attributeid_column).to_integer)
-					attribute_value := row_cursor.item.at (SQL_Strings.Value_table_value_column)
-					class_name_of_value := db_metadata_manager.class_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_runtimetype_column).to_integer)
-					if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
-						current_obj.add_attribute (attribute_name, attribute_value, class_name_of_value)
-					end
-					row_cursor.forth
-				end
-					-- fill in Void attributes
---				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
---				across
---					type.attributes as attr
---				loop
---					if not current_obj.has_attribute (attr.item) then
---						current_obj.add_attribute (attr.item, "", "NONE")
---					end
---				end
-				result_list.extend (current_obj)
-					-- do NOT go forth - we are already pointing to the next item, otherwise the inner loop would not have stopped.
-			end
-			Result := result_list.new_cursor
+			Result := create {PS_LAZY_CURSOR}.make (type, criteria, attributes, transaction, Current)
 		rescue
 			rollback (transaction)
 		end
@@ -111,19 +82,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 					end
 					row_cursor.forth
 				end
-
-					-- fill in Void attributes
---				fixme ("TODO: Remove the following loop as soon as the old backend version gets ditched - it isn't necessary any more")
---				across
---					type.attributes as attr
---				loop
---					if not Result.has_attribute (attr.item) then
---						Result.add_attribute (attr.item, "", "NONE")
---					end
---				end
-
 			end
-
 		rescue
 			rollback (transaction)
 		end
@@ -314,7 +273,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 			database.set_transaction_isolation_level (a_level)
 		end
 
-feature {NONE} -- Implementation - Connection and Transaction handling
+feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 
 	get_connection (transaction: PS_TRANSACTION): PS_SQL_CONNECTION
 			-- Get the connection associated with `transaction'.
@@ -371,6 +330,17 @@ feature {NONE} -- Implementation - Connection and Transaction handling
 			-- It uses auto-commit, and is always active.
 			-- The connection can only read and write tables ps_attribute and ps_class.
 
+feature {PS_LAZY_CURSOR} -- Implementation: Various fields
+
+	database: PS_SQL_DATABASE
+			-- The actual database.
+
+	db_metadata_manager: PS_METADATA_TABLES_MANAGER
+			-- The manager for the metadata tables.
+
+	SQL_Strings: PS_GENERIC_LAYOUT_SQL_STRINGS
+			-- All predefined SQL statements.
+
 feature {NONE} -- Initialization
 
 	make (a_database: PS_SQL_DATABASE; strings: PS_GENERIC_LAYOUT_SQL_STRINGS)
@@ -384,15 +354,11 @@ feature {NONE} -- Initialization
 			management_connection.set_autocommit (True)
 			create db_metadata_manager.make (management_connection, SQL_Strings)
 			create active_connections.make
+
+			lazy_loading_batch_size := 5
 		end
 
-	database: PS_SQL_DATABASE
-			-- The actual database.
-
-	db_metadata_manager: PS_METADATA_TABLES_MANAGER
-			-- The manager for the metadata tables.
-
-	SQL_Strings: PS_GENERIC_LAYOUT_SQL_STRINGS
-			-- All predefined SQL statements.
+invariant
+	valid_batchsize: lazy_loading_batch_size > 0 or lazy_loading_batch_size = -1
 
 end

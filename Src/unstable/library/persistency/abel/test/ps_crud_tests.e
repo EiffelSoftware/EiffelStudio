@@ -131,7 +131,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 			test_immediate_expanded
 			test_referenced_expanded
 		    test_embedded_expanded
-		    test_evil_object
+--		    test_evil_object
 		end
 
 	test_integer
@@ -189,16 +189,16 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 			test.test_crud_operations (person, agent {EXPANDED_PERSON}.add_item)
 		end
 
-	test_evil_object
-		local
-			test: PS_GENERIC_CRUD_TEST [GENERIC_BOX[
-				GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY],
-				EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]]]
-		do
-			repository.clean_db_for_testing
-			create test.make (repository)
-			test.test_insert (test_data.evil_object)
-		end
+--	test_evil_object
+--		local
+--			test: PS_GENERIC_CRUD_TEST [GENERIC_BOX[
+--				GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY],
+--				EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]]]
+--		do
+--			repository.clean_db_for_testing
+--			create test.make (repository)
+--			test.test_insert (test_data.evil_object)
+--		end
 
 feature {PS_REPOSITORY_TESTS} -- Collections
 

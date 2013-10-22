@@ -95,29 +95,6 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 	}
 }            
 
-/*
-doc:	<attribute name="compiler_need_flush" return_type="int" export="public">
-doc:		<summary>When activated all outputs will be flushed immediately. This is needed to run `eweasel' on Windows otherwise read/write would block until buffer is filled.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:	</attribute>
-*/
-rt_public int compiler_need_flush = 0;
-
-/*
-doc:	<routine name="flush_buffer" return_type="void" export="private">
-doc:		<summary>Flush all data held in `fp' if `compiler_need_flush'.</summary>
-doc:		<param name="fp" type="FILE *">File to flush.</param>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:	</routine>
-*/
-
-rt_private void flush_buffer (FILE *fp)
-{
-	if (compiler_need_flush) {
-		eif_file_flush(fp);
-	}
-}
-
 rt_public EIF_BOOLEAN console_eof(FILE *fp)
 {
 #ifdef EIF_WINDOWS
@@ -136,7 +113,6 @@ rt_public void console_pi(FILE *f, EIF_INTEGER number)
 	eif_show_console ();
 #endif
 	eif_file_pi (f, number);
-	flush_buffer(f);
 }
 
 rt_public void console_pr(FILE *f, EIF_REAL_32 number)
@@ -145,7 +121,6 @@ rt_public void console_pr(FILE *f, EIF_REAL_32 number)
 	eif_show_console ();
 #endif
 	eif_file_pr (f, number);	
-	flush_buffer(f);
 }
 
 rt_public void console_ps(FILE *f, char *str, EIF_INTEGER len)
@@ -154,7 +129,6 @@ rt_public void console_ps(FILE *f, char *str, EIF_INTEGER len)
 	eif_show_console ();
 #endif
 	eif_file_ps (f, str, len);
-	flush_buffer(f);
 }
 
 rt_public void console_pc(FILE *f, EIF_CHARACTER_8 c)
@@ -171,7 +145,6 @@ rt_public void console_pd(FILE *f, EIF_REAL_64 val)
 	eif_show_console ();
 #endif
 	eif_file_pd (f, val);
-	flush_buffer(f);
 }
 
 rt_public void console_tnwl(FILE *f)
@@ -189,7 +162,6 @@ rt_public void console_next_line(FILE *f)
 	eif_show_console ();
 #endif
 	eif_file_tnil (f);
-	flush_buffer(f);
 }
 
 rt_public EIF_INTEGER console_readint(FILE *f)

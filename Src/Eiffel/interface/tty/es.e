@@ -138,11 +138,6 @@ feature -- Initialization
 				create new_resources.initialize
 
 				if not new_resources.error_occurred then
-					if configure_resources.get_boolean ("compiler_need_flush", False) then
-							-- Flushing was requested. Needed for `eweasel' on Windows
-							-- so that there is no blocking.
-						enable_automatic_output_flushing
-					end
 					analyze_options
 					if option_error then
 						print_option_error
@@ -1380,17 +1375,6 @@ feature -- Update
 			else
 				option_error := True
 			end
-		end
-
-feature {NONE} -- Externals
-
-	 enable_automatic_output_flushing
-			-- Set `compiler_need_flush' to `1' so that all output are not
-			-- buffered.
-		external
-			"C inline use <eif_console.h>"
-		alias
-			"compiler_need_flush = 1;"
 		end
 
 feature {NONE} -- Onces

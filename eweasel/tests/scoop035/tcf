@@ -1,0 +1,17 @@
+test_name	scoop-null-reference-call
+test_description Show a bug where a valid call on a void reference produces a seg fault..
+
+copy_sub	Ace	$TEST Ace
+copy_raw	root_class.e	$CLUSTER root_class.e
+copy_raw	application_configuration.e	$CLUSTER application_configuration.e
+copy_raw	shared_application_configuration.e	$CLUSTER shared_application_configuration.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

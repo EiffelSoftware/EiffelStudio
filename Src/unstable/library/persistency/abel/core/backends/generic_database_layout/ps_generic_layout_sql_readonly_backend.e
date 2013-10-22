@@ -15,6 +15,8 @@ create
 
 feature -- Lazy loading
 
+	Default_batch_size: INTEGER = 5
+
 	lazy_loading_batch_size: INTEGER
 			-- The amount of objects to retrieve in a single batch.
 			-- Set to -1 to retrieve all objects.
@@ -355,7 +357,7 @@ feature {NONE} -- Initialization
 			create db_metadata_manager.make (management_connection, SQL_Strings)
 			create active_connections.make
 
-			lazy_loading_batch_size := 5
+			lazy_loading_batch_size := Default_batch_size
 		end
 
 invariant

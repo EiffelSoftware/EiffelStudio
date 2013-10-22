@@ -45,6 +45,11 @@ feature
 			tuple_query_tests.test_query_reference_cycle
 		end
 
+	mysql_criteria_predefined
+		do
+			criteria_tests.test_criteria_predefined
+		end
+
 	mysql_criteria
 		do
 			criteria_tests.test_criteria_agents
@@ -82,20 +87,20 @@ feature
 			object_graph_tests.test_all_settings
 		end
 
---	mysql_transaction_lost
---		do
---			transaction_tests.test_no_lost_update
---		end
+	mysql_transaction_lost
+		do
+			transaction_tests.test_no_lost_update
+		end
 
---	mysql_transaction_dirty
---		do
---			transaction_tests.test_no_dirty_reads
---		end
+	mysql_transaction_dirty
+		do
+			transaction_tests.test_no_dirty_reads
+		end
 
---	mysql_transaction_repeatable_read
---		do
---			transaction_tests.test_repeatable_read
---		end
+	mysql_transaction_repeatable_read
+		do
+			transaction_tests.test_repeatable_read
+		end
 
 	mysql_transaction_cleanup
 		do

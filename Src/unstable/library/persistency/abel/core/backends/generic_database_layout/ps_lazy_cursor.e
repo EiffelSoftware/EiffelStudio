@@ -37,6 +37,8 @@ feature -- Cursor movement
 		do
 			if internal_result_cursor.after and backend.lazy_loading_batch_size > 0 then
 				next_batch
+			elseif internal_result_cursor.after then
+				after := True
 			end
 			if not after then
 				next_item
@@ -63,6 +65,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	next_item
+			-- Build the next item from the SQL result cursor
 		require
 			not_after: not after
 		local
@@ -84,36 +87,32 @@ feature {NONE} -- Implementation
 				end
 				internal_result_cursor.forth
 			end
---			from
---				create internal_item.make (internal_result_cursor.item.item(1).to_integer, type)
---			until
---				internal_result_cursor.after or else internal_result_cursor.item.item(1).to_integer /= item.primary_key
---			loop
---				-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
---				attribute_name := backend.db_metadata_manager.attribute_name_of_key (internal_result_cursor.item.item(2).to_integer)
---				attribute_value := internal_result_cursor.item.item(4)
---				class_name_of_value := backend.db_metadata_manager.class_name_of_key (internal_result_cursor.item.item(3).to_integer)
---				if not attribute_name.is_equal (backend.SQL_Strings.Existence_attribute) then
---					item.add_attribute (attribute_name, attribute_value, class_name_of_value)
---				end
---				internal_result_cursor.forth
---			end
---			-- do NOT go forth - we are already pointing to the next item, otherwise the inner loop would not have stopped.
 		end
 
 	next_batch
+			-- Retrieve the next batch of items from the database
 		require
 			not_after: not after
 		local
 			connection: PS_SQL_CONNECTION
 			sql_string: STRING
 			attribute_keys: LINKED_LIST[INTEGER]
+
+			conv: PS_CRITERION_SQL_CONVERTER
 		do
+			create conv.make (backend.db_metadata_manager, type)
+
 
 			if backend.db_metadata_manager.has_primary_key_of_class (type.base_class.name) then
 
 				attribute_keys := backend.db_metadata_manager.attribute_keys_of_class (backend.db_metadata_manager.primary_key_of_class (type.base_class.name))
 				sql_string := backend.sql_strings.query_values_from_class (backend.sql_strings.convert_to_sql (attribute_keys))
+
+				if not criteria.is_empty_criterion then
+					sql_string.append (" AND objectid IN (" + conv.visit (criteria) + ") ")
+				end
+
+				sql_string.append (backend.sql_strings.Order_by_appendix)
 
 				if backend.lazy_loading_batch_size > 0 then
 					sql_string.append (" LIMIT " + batch_index.out + "," + (backend.lazy_loading_batch_size * attribute_keys.count).out)
@@ -127,6 +126,7 @@ feature {NONE} -- Implementation
 
 				connection := backend.get_connection (transaction)
 				connection.execute_sql (sql_string)
+--				print (sql_string + "%N")
 
 				internal_result_cursor := connection.last_result
 				after := internal_result_cursor.after

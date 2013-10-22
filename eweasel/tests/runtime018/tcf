@@ -1,4 +1,4 @@
-test_name	memory_leak_with_dynamic_dispatch
+test_name	memory-leak-with-dynamic-dispatch
 test_description Reveals a memory leak due to Eiffel objects being created when it should not.
 
 copy_sub 	Ace $TEST Ace

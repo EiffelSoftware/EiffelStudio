@@ -263,6 +263,7 @@ feature
 			println
 			print (reflection.dynamic_type (string_integer_tuple_2).out + " " + reflection.type_name (string_integer_tuple))
 			println
+--			print (reflection.is_attached_type (reflection.dynamic_type (string_integer_tuple_2)))
 
 			assert ("attached vs detachable", reflection.attached_type (reflection.dynamic_type (string_integer_tuple)) = reflection.dynamic_type (string_integer_tuple_2))
 

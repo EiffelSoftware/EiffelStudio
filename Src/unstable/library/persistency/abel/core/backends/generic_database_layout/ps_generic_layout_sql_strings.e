@@ -65,12 +65,14 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR} -- Data queryin
 	Query_values_from_class (attributes: STRING): STRING
 		do
 			Result := "[
-				SELECT objectid, attributeid, runtimetype, value
+				SELECT DISTINCT objectid, attributeid, runtimetype, value
 				FROM ps_value
 				WHERE attributeid IN
 			]"
-			Result := Result + attributes + " ORDER BY objectid "
+			Result := Result + attributes
 		end
+
+	Order_by_appendix: STRING = " ORDER BY objectid "
 
 	For_update_appendix: STRING
 		deferred

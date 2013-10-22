@@ -16,6 +16,8 @@ feature
 			end
 		end
 
+feature {PS_CRITERION} -- Visitor functions
+
 	visit_and (and_crit: PS_AND_CRITERION): RETURN_VALUE
 		deferred
 		end

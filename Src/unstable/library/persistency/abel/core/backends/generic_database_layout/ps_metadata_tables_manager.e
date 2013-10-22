@@ -18,7 +18,7 @@ inherit
 create
 	make
 
-feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR} -- Status report
+feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQL_CONVERTER} -- Status report
 
 	has_primary_key_of_class (class_name: STRING): BOOLEAN
 			-- Does the class `class_name' have a primary key in the database?
@@ -46,7 +46,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR} -- Status repor
 			Result := attribute_key_to_name_map.has (attribute_key)
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR} -- Access - Class
+feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQL_CONVERTER} -- Access - Class
 
 	class_name_of_key (class_key: INTEGER): STRING
 			-- Get the class name of the class with primary key `class_key'
@@ -64,7 +64,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR} -- Access - Cla
 			Result := class_name_to_key_map [class_name]
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR} -- Access - Attribute
+feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQL_CONVERTER} -- Access - Attribute
 
 	attribute_name_of_key (attribute_key: INTEGER): STRING
 			-- Get the attribute name of the attribute with primary key `class_key'

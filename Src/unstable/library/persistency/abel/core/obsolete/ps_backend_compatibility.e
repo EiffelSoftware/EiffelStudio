@@ -17,8 +17,6 @@ inherit
 			is_generic_collection_supported as supports_object_collection
 		end
 
-inherit {NONE}
-
 	REFACTORING_HELPER
 
 feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities

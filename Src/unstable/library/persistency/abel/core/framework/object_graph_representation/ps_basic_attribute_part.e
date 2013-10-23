@@ -14,8 +14,6 @@ inherit
 			basic_attribute_value
 		end
 
-inherit {NONE}
-
 	REFACTORING_HELPER
 
 create

@@ -11,8 +11,6 @@ inherit
 
 	PS_COLLECTION_HANDLER [SPECIAL [detachable ANY]]
 
-inherit {NONE}
-
 	REFACTORING_HELPER
 
 create

@@ -10,7 +10,6 @@ deferred class
 inherit
 	PS_EIFFELSTORE_EXPORT
 
-inherit {NONE}
 	REFACTORING_HELPER
 
 

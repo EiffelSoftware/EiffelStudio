@@ -13,8 +13,6 @@ inherit
 
 	PS_PREDEFINED_OPERATORS
 
-inherit {NONE}
-
 	REFACTORING_HELPER
 
 create

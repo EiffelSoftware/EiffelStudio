@@ -499,6 +499,7 @@ feature {NONE} -- Initialization
 			create key_mapper.make
 			create key_set.make (default_class_size)
 			create db.make (default_class_size)
+			create plug_in_list.make
 		end
 
 	default_class_size: INTEGER = 20

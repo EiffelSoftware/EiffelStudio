@@ -418,6 +418,7 @@ feature {NONE} -- Initialization
 			create key_mapper.make
 			create curl.make
 			create key_set.make (100)
+			create plug_in_list.make
 		end
 
 	make_with_host_and_port (host: STRING; port: INTEGER)
@@ -425,6 +426,7 @@ feature {NONE} -- Initialization
 			create key_mapper.make
 			create curl.make_with_host_and_port (host, port)
 			create key_set.make (100)
+			create plug_in_list.make
 		end
 
 end

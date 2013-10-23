@@ -67,6 +67,7 @@ feature {PS_CRITERION} -- Visitor functions
 	visit_agent (agent_crit: PS_AGENT_CRITERION): STRING
 		do
 			fixme ("Should be filtered in advance and thus never called...")
+			check implementation_error: False end
 			Result := " SELECT DISTINCT objectid FROM ps_value "
 		end
 

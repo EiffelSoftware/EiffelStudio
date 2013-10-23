@@ -87,6 +87,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 		do
 			create database.make (50)
 			create collection_database.make (1)
+			create plug_in_list.make
+			plug_in_list.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation

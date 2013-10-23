@@ -45,7 +45,6 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 		require
 			supported: is_object_type_supported (type)
 			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
-			no_agent_criteria: to_implement_assertion ("Adapt upper layers for this precondition")--not criteria.has_agent_criterion
 			transaction_active: transaction.is_active
 		local
 			real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
@@ -178,10 +177,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Plugins
 			-- A collection of plugins providing additional functionality.
 			-- The list is traversed front-to-back during retrieval operations,
 			-- and back-to-front during write operations
-		once ("OBJECT")
-			fixme ("Move to creation procedure of all subclasses...")
-			create Result.make
-		end
 
 	add_plug_in (plug_in: PS_PLUGIN)
 			-- Add `plugin' to the end of the current plugin list.
@@ -205,7 +200,7 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		require
 			supported: is_object_type_supported (type)
-			no_agent_criteria: to_implement_assertion ("Adapt upper layers for this precondition")--not criteria.has_agent_criterion
+			no_agent_criteria: not criteria.has_agent_criterion
 		deferred
 		end
 

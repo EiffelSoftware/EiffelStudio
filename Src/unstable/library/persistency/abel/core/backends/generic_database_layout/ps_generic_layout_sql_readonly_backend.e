@@ -15,7 +15,7 @@ create
 
 feature -- Lazy loading
 
-	Default_batch_size: INTEGER = 5
+	Default_batch_size: INTEGER = -1
 
 	lazy_loading_batch_size: INTEGER
 			-- The amount of objects to retrieve in a single batch.
@@ -358,6 +358,10 @@ feature {NONE} -- Initialization
 			create active_connections.make
 
 			lazy_loading_batch_size := Default_batch_size
+			
+			create plug_in_list.make
+			plug_in_list.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
+
 		end
 
 invariant

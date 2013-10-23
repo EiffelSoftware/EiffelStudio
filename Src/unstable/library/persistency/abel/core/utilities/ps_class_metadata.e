@@ -18,9 +18,7 @@ inherit
 		redefine
 			is_equal
 		end
-
-inherit {NONE}
-
+	
 	REFACTORING_HELPER
 		undefine
 			is_equal

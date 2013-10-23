@@ -16,10 +16,6 @@ inherit
 
 	PS_EIFFELSTORE_EXPORT
 
-inherit {NONE}
-
-	REFACTORING_HELPER
-
 create
 	make
 

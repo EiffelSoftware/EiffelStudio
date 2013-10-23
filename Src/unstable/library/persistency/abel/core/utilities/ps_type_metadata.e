@@ -19,9 +19,9 @@ inherit
 			is_equal
 		end
 
-inherit {NONE}
-
 	REFACTORING_HELPER
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end

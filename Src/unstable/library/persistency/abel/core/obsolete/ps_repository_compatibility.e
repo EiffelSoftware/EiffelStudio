@@ -14,8 +14,6 @@ inherit
 
 	PS_REPOSITORY
 
-inherit {NONE}
-
 	REFACTORING_HELPER
 
 create

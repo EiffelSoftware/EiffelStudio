@@ -64,7 +64,7 @@ Content-Disposition: form-data; name="password"
 EWFpassword
 --__=_the_boundary_1332296477_1804289383_=__--
 ]"
-
+			b.replace_substring_all ("%N", "%R%N")
 			h.put_content_length (b.count)
 
 			--| Case #1

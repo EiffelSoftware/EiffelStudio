@@ -38,12 +38,14 @@ feature {NONE} -- Initialization
 			create header.make
 			wgi_response := r
 			if attached {WSF_WGI_DELAYED_HEADER_RESPONSE} r as r_delayed then
-				wres := r_delayed
-				wres.update_wsf_response (Current)
+				r_delayed.update_wsf_response (Current)
+				wgi_response := r_delayed
+			elseif attached {WGI_FILTER_RESPONSE} r as r_filter then
+				wgi_response := r_filter.wgi_response
 			else
 				create wres.make (r, Current)
+				wgi_response := wres
 			end
-			wgi_response := wres
 			set_status_code ({HTTP_STATUS_CODE}.ok) -- Default value
 		end
 
@@ -494,7 +496,7 @@ feature -- Error reporting
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

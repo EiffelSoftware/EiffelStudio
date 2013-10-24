@@ -62,14 +62,19 @@ feature -- Input
 				i > end_pos
 			loop
 				read_character
-				a_string.put (last_character, i)
-
-				if end_of_input then
-					Result := i
+				if last_character_available then
+					a_string.put (last_character, i)
+					if end_of_input then
+						Result := i
+							-- Jump out of the loop.
+						i := end_pos + 1
+					else
+						i := i + 1
+					end
+				else
+						-- reached end of input
 						-- Jump out of the loop.
 					i := end_pos + 1
-				else
-					i := i + 1
 				end
 			end
 			if not end_of_input then
@@ -107,13 +112,20 @@ feature -- Input
 				i > end_pos
 			loop
 				read_character
-				a_string.extend (last_character)
-				l_count := l_count + 1
-				if end_of_input then
+				if last_character_available then
+					a_string.extend (last_character)
+					l_count := l_count + 1
+
+					if end_of_input then
+							-- Jump out of the loop.
+						i := end_pos + 1
+					else
+						i := i + 1
+					end
+				else
+						-- reached end of input
 						-- Jump out of the loop.
 					i := end_pos + 1
-				else
-					i := i + 1
 				end
 			end
 			last_appended_count := l_count
@@ -192,6 +204,15 @@ feature -- Access
 			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
+		end
+
+	last_character_available: BOOLEAN
+			-- Is `last_character' available? i.e read?
+			--| with chunked encoding, we may reach the end and the `last_character'
+			--| should not be used.
+			--| to redefine in descendant if needed
+		do
+			Result := True
 		end
 
 	last_appended_count: INTEGER

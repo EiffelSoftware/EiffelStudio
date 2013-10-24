@@ -9,6 +9,9 @@ class
 
 inherit
 	WGI_INPUT_STREAM
+		redefine
+			last_character_available
+		end
 
 create
 	make
@@ -36,11 +39,17 @@ feature -- Input
 			index := index + 1
 			if index > chunk_upper then
 				read_chunk_block
-				if last_chunk_data = Void then
+				if
+					last_chunk_size = 0
+				then
 					read_trailer_and_crlf
+					last_character := '%U'
+				else
+					last_character := last_chunk_data.item (index)
 				end
+			else
+				last_character := last_chunk_data.item (index)
 			end
-			last_character := last_chunk_data.item (index)
 		end
 
 	read_string (nb: INTEGER)
@@ -54,7 +63,7 @@ feature -- Input
 			i: like index
 		do
 			last_string.wipe_out
-			if last_trailer /= Void then
+			if is_trailer_reached then
 				-- trailer already reached, no more data
 				check input.end_of_input end
 			else
@@ -103,6 +112,12 @@ feature -- Access
 	last_character: CHARACTER_8
 			-- Last item read.
 
+	last_character_available: BOOLEAN
+			-- <Precursor>
+		do
+			Result := not is_trailer_reached
+		end
+
 feature -- Access: chunk			
 
 	last_chunk_size: INTEGER
@@ -142,7 +157,13 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		do
-			Result := input.end_of_input
+			Result := input.end_of_input or is_trailer_reached
+		end
+
+	is_trailer_reached: BOOLEAN
+			-- Trailer reached?
+		do
+			Result := last_trailer /= Void
 		end
 
 feature {NONE} -- Parser
@@ -320,11 +341,7 @@ feature {NONE} -- Parser
 					check l_input.last_character = '%N' end
 				end
 			end
-			if s.is_empty then
-				last_trailer := Void
-			else
-				last_trailer := s
-			end
+			last_trailer := s
 		end
 
 feature {NONE} -- Implementation
@@ -333,7 +350,7 @@ feature {NONE} -- Implementation
 			-- Input Stream
 
 ;note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -20,8 +20,9 @@ feature {NONE} -- Initialization
 			res.set_post_commit_action (agent commit)
 		end
 
-	wgi_response: WGI_RESPONSE
+feature -- Access		
 
+	wgi_response: WGI_RESPONSE
 
 feature {WGI_FILTER_RESPONSE} -- Change		
 

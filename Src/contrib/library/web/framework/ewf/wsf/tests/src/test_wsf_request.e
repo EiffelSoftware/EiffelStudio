@@ -110,9 +110,9 @@ feature {NONE} -- Events
 			create h.make
 			b := base_url
 			if b = Void then
-				b := ""
+				b := "/"
 			end
-			if attached {HTTP_CLIENT_SESSION} h.new_session ("localhost:" + port_number.out + "/" + b) as sess then
+			if attached {HTTP_CLIENT_SESSION} h.new_session ("localhost:" + port_number.out + b) as sess then
 				http_session := sess
 				sess.set_timeout (-1)
 				sess.set_is_debug (True)
@@ -125,10 +125,16 @@ feature {NONE} -- Events
 		do
 			get_http_session
 			if attached http_session as sess then
-				if attached sess.get (a_url, adapted_context (ctx)) as res and then not res.error_occurred and then attached res.body as l_body then
-					assert ("Good answer got=%""+l_body+"%" expected=%""+a_expected_body+"%"", l_body.same_string (a_expected_body))
-				else
-					assert ("Request %""+a_url+"%" failed", False)
+				if attached sess.get (a_url, adapted_context (ctx)) as res then
+					if attached res.body as l_body then
+						if res.error_occurred then
+							assert ("Request %""+a_url+"%" failed, got=[" + l_body + "]", False)
+						else
+							assert ("Good answer got=%""+l_body+"%" expected=%""+a_expected_body+"%"", l_body.same_string (a_expected_body))
+						end
+					else
+						assert ("Request %""+a_url+"%" failed, no body, status=" + res.status.out , False)
+					end
 				end
 			end
 		end

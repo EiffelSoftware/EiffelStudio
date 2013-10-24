@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="conneg" uuid="D15DC4C4-D74F-4E4B-B4B1-2B03A35A284D" library_target="conneg">
+	<target name="conneg">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+			<exclude>/.git$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true">
+			<assertions precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="../http/http.ecf"/>
+		<cluster name="conneg" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/implementation</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="conneg_imp" location=".\src\implementation" recursive="true" hidden="true">
+		</cluster>
+	</target>
+</system>

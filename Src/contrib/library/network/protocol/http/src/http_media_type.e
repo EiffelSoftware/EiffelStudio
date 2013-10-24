@@ -63,7 +63,6 @@ feature {NONE} -- Initialization
 			t: STRING_8
 			i,n: INTEGER
 			p: INTEGER
-			cl: CELL [INTEGER]
 		do
 				-- Ignore starting space (should not be any)
 			from
@@ -79,15 +78,7 @@ feature {NONE} -- Initialization
 				p := s.index_of (';', i)
 				if p > 0 then
 					t := s.substring (i, p - 1)
-					from
-						create cl.put (p)
-						i := p + 1
-					until
-						i >= n
-					loop
-						add_parameter_from_string (s, i, cl)
-						i := cl.item
-					end
+					create parameters.make_from_substring (s, p + 1, s.count)
 				else
 					t := s.substring (i, n)
 				end
@@ -116,7 +107,7 @@ feature {NONE} -- Initialization
 				subtype := type
 			end
 		ensure
-			not has_error implies (create {HTTP_CONTENT_TYPE}.make_from_string (string)).same_string (string)
+			not has_error implies (create {HTTP_MEDIA_TYPE}.make_from_string (string)).same_string (string)
 		end
 
 feature -- Status report
@@ -149,7 +140,7 @@ feature -- Access
 			end
 		end
 
-	parameters: detachable HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	parameters: detachable HTTP_PARAMETER_TABLE
 			-- Parameters
 
 feature -- Conversion
@@ -262,90 +253,12 @@ feature -- Element change
 			-- Remove parameter named `a_name'
 		do
 			if attached parameters as plst then
-				plst.prune (a_name)
+				plst.remove (a_name)
 				if plst.is_empty then
 					parameters := Void
 				end
 			end
 			internal_string := Void
-		end
-
-feature {NONE} -- Implementation
-
-	add_parameter_from_string (s: READABLE_STRING_8; start_index: INTEGER; out_end_index: CELL [INTEGER])
-			-- Add parameter from string   "  attribute=value  "
-			-- and put in `out_end_index' the index after found parameter.
-		local
-			n: INTEGER
-			pn,pv: STRING_8
-			i: INTEGER
-			p, q: INTEGER
-			err: BOOLEAN
-		do
-			n := s.count
-				-- Skip spaces
-			from
-				i := start_index
-			until
-				i > n or not s[i].is_space
-			loop
-				i := i + 1
-			end
-			if s[i] = ';' then
-					-- empty parameter
-				out_end_index.replace (i + 1)
-			elseif i < n then
-				p := s.index_of ('=', i)
-				if p > 0 then
-					pn := s.substring (i, p - 1)
-					if p >= n then
-						pv := ""
-						out_end_index.replace (n + 1)
-					else
-						if s[p+1] = '%"' then
-							q := s.index_of ('%"', p + 2)
-							if q > 0 then
-								pv := s.substring (p + 2, q - 1)
-								from
-									i := q + 1
-								until
-									i > n or not s[i].is_space
-								loop
-									i := i + 1
-								end
-								if s[i] = ';' then
-									i := i + 1
-								end
-								out_end_index.replace (i)
-							else
-								err := True
-								pv := ""
-								-- missing closing double quote.								
-							end
-						else
-							q := s.index_of (';', p + 1)
-							if q = 0 then
-								q := n + 1
-							end
-							pv := s.substring (p + 1, q - 1)
-							out_end_index.replace (q + 1)
-						end
-						pv.right_adjust
-						if not err then
-							add_parameter (pn, pv)
-						end
-					end
-				else
-					-- expecting: attribute "=" value
-					err := True
-				end
-			end
-			if err then
-				out_end_index.replace (n + 1)
-			end
-			has_error := has_error or err
-		ensure
-			entry_processed: out_end_index.item > start_index
 		end
 
 feature {NONE} -- Internal

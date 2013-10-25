@@ -198,7 +198,13 @@ feature {NONE} -- HTML Generation
 			if attached title as l_title then
 				h.append ("<h2 class=%"bigtitle%">" + html_encoded_string (l_title) + "</h2>")
 			end
-			f := "</div><div id=%"footer%"> -- IRON package repository (<a href=%"" + request.script_url ("/access/api/") + "%">API</a>) -- "
+			f := "</div><div id=%"footer%"> -- IRON package repository ("
+			f.append ("<a href=%"" + request.script_url ("/access/api/") + "%">API</a>")
+			if iron.is_documentation_available then
+				f.append (" | ")
+				f.append ("<a href=%"" + request.script_url ("/access/doc/") + "%">Documentation</a>")
+			end
+			f.append (") -- ")
 			f.append ("<br/>version " + version)
 			f.append ("</div></div>")
 			old_body := body

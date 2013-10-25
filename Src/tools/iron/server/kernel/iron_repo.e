@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 		do
 			database := db
 			basedir := a_basedir
+			documentation_path := a_basedir.extended ("doc")
 		end
 
 feature -- Access
@@ -29,6 +30,19 @@ feature -- Access
 
 	basedir: PATH
 			-- Base directory for iron system
+
+	documentation_path: PATH
+			-- directory for iron documentation
+
+feature -- Status report
+
+	is_documentation_available: BOOLEAN
+			-- Is static documentation available?
+		local
+			f: FILE_UTILITIES
+		do
+			Result := f.directory_path_exists (documentation_path)
+		end
 
 feature {NONE} -- Observers
 

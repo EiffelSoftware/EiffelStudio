@@ -189,9 +189,12 @@ feature -- Router and Filter
 			end
 			if attached iron.basedir as p_basedir then
 				debug ("iron")
-					router.handle ("/access/db/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("repo").utf_8_name))
+					router.handle ("/access/db/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("repo").name))
 				end
-				router.handle ("/access/html/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("html").utf_8_name))
+				router.handle ("/access/html/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (p_basedir.extended ("html").name))
+			end
+			if iron.is_documentation_available then
+				router.handle ("/access/doc/", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (iron.documentation_path.name))
 			end
 			map_uri_with_request_methods ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (iron)), router.methods_get) --  Shutdown server
 
@@ -401,5 +404,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-		
+
 end

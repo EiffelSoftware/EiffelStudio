@@ -170,6 +170,8 @@ feature -- Status report
 					e := p
 				end
 				if e.is_parent_symbol then
+				elseif e.is_current_symbol then
+					Result := True
 				else
 					n := e.name
 					Result := n.starts_with ({STRING_32} ".")
@@ -273,8 +275,8 @@ feature -- Execution
 
 					else
 						n := p.name
-						create pf.make_with_path (p)
-						if pf.is_directory then
+						create pf.make_with_path (dn.extended_path (p))
+						if pf.exists and then pf.is_directory then
 							l_is_dir := True
 						else
 							l_is_dir := False
@@ -301,11 +303,13 @@ feature -- Execution
 
 						s.append ("</td>")
 						s.append ("<td>")
-						create httpdate.make_from_date_time (file_date (pf))
-						httpdate.append_to_rfc1123_string (s)
+						if pf.exists then
+							create httpdate.make_from_date_time (file_date (pf))
+							httpdate.append_to_rfc1123_string (s)
+						end
 						s.append ("</td>")
 						s.append ("<td>")
-						if not l_is_dir then
+						if not l_is_dir and pf.exists then
 							s.append_integer (file_size (pf))
 						end
 						s.append ("</td>")

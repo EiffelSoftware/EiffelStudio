@@ -1,0 +1,16 @@
+test_name	scoop-nested-chain-uncontrolled-check
+test_description Show a bug where nested scoop chains where not being propagated for uncontrolled call detection resulting in deadlock..
+
+copy_sub	Ace	$TEST Ace
+copy_raw	application.e	$CLUSTER application.e
+copy_raw	vertex.e	$CLUSTER vertex.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

@@ -1221,7 +1221,6 @@ feature -- Text Loading
 			if attached dev_window as l_window and then attached {ES_INFORMATION_TOOL_COMMANDER_I} l_window.shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander and then l_info_tool_commander.is_interface_usable then
 				if attached {CLASSI_STONE} stone as l_stone and then attached l_stone.class_i as l_classi then
 					l_list := l_info_tool_commander.class_entries (l_classi)
---					create l_cursor.make_from_integer (1, text_displayed)
 					across
 						l_list as l_c
 					loop

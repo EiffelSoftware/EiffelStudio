@@ -109,6 +109,10 @@ feature -- Access, stored in configuration file
 	uuid: UUID
 			-- Universal unique identifier that identifies this system.
 
+	is_generated_uuid: BOOLEAN
+			-- Is `uuid' internally generated?
+			-- i.e the original ecf has no uuid value.
+
 	is_readonly: BOOLEAN
 			-- Is this system readonly per default if it is used as a library?
 
@@ -447,6 +451,16 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+feature -- Status setting
+
+	set_is_generated_uuid (b: BOOLEAN)
+			-- Set `is_generated_uuid' to `b'.
+		do
+			is_generated_uuid := b
+		ensure
+			is_generated_uuid_set: is_generated_uuid = b
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_name (a_name: like name)
@@ -614,7 +628,7 @@ invariant
 	valid_level: valid_level
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

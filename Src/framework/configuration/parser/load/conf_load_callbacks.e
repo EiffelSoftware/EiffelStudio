@@ -89,11 +89,6 @@ feature {NONE} -- Implementation
 		do
 			create l_uuid_checker
 			Result := l_uuid_checker.is_valid_uuid (a_value)
-			if not Result then
-				set_error (create {CONF_ERROR_UUID})
-			end
-		ensure
-			no_error_implies_result: not is_error implies Result
 		end
 
 	check_version (a_value: detachable like current_namespace)

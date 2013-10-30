@@ -9,6 +9,11 @@
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer-safe.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light-safe.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader-safe.ecf"/>
 		<cluster name="emitter_loader" location=".\" recursive="true">

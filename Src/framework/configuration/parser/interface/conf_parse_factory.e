@@ -8,7 +8,7 @@ note
 class
 	CONF_PARSE_FACTORY
 
-feature
+feature -- Factory
 
 	new_system_generate_uuid (a_name: STRING_32): CONF_SYSTEM
 			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
@@ -16,6 +16,7 @@ feature
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
 			create Result.make_with_uuid (a_name, uuid_generator.generate_uuid)
+			Result.set_is_generated_uuid (True)
 		ensure
 			Result_not_void: Result /= Void
 		end

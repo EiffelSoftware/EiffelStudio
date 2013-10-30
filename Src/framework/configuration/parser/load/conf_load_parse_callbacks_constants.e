@@ -83,6 +83,7 @@ feature {NONE} -- Implementation constants
 	t_note: INTEGER = 44
 	t_test_cluster: INTEGER = 45
 	t_concurrency: INTEGER = 46
+	t_redirection: INTEGER = 47
 
 		-- Attribute states
 	at_abstract: INTEGER = 1000
@@ -158,7 +159,7 @@ feature {NONE} -- Implementation constants
 			-- Name of the attribute "enabled".
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

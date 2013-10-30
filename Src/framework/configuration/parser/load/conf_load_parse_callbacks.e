@@ -63,6 +63,12 @@ feature -- Access
 	last_system: CONF_SYSTEM
 			-- The last parsed system.
 
+	last_location: detachable READABLE_STRING_GENERAL
+			-- Last parsed location value if any.
+
+	last_location_uuid: detachable UUID
+			-- Last parsed location uuid if any.
+
 feature -- Callbacks
 
 	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
@@ -154,6 +160,8 @@ feature -- Callbacks
 			if not is_error then
 				inspect
 					current_tag.item
+				when t_redirection then
+					process_redirection_attributes
 				when t_system then
 					process_system_attributes
 				when t_target then
@@ -496,12 +504,48 @@ feature {NONE} -- Conversion from earlier version
 
 feature {NONE} -- Implementation attribute processing
 
+	process_redirection_attributes
+			-- Process attributes of a redirection tag.
+		local
+			l_uuid: like current_attributes.item
+			l_uu: detachable UUID
+		do
+			l_uuid := current_attributes.item (at_uuid)
+
+			if l_uuid /= Void then
+				if is_valid_uuid (l_uuid) then
+					create l_uu.make_from_string (l_uuid)
+				else
+						-- Error
+					set_error (create {CONF_ERROR_UUID})
+				end
+			end
+			if not is_error then
+				if attached current_attributes.item (at_location) as l_loc then
+					if includes_this_or_after (namespace_1_12_0) then
+						if l_loc.is_empty then
+							set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("location"))
+						else
+							last_location := l_loc
+							last_location_uuid := l_uu
+						end
+					else
+						report_unknown_attribute ("location")
+					end
+				elseif includes_this_or_after (namespace_1_12_0) then
+					set_parse_error_message (conf_interface_names.e_parse_missing_attribute ("location"))
+				end
+			end
+		ensure
+			last_location_not_void: not is_error implies last_location /= Void
+		end
+
 	process_system_attributes
 			-- Process attributes of a system tag.
 		local
 			l_name, l_lower_name,
 			l_uuid: like current_attributes.item
-			l_uu: UUID
+			l_uu: detachable UUID
 		do
 			l_name := current_attributes.item (at_name)
 			if l_name /= Void then
@@ -520,22 +564,30 @@ feature {NONE} -- Implementation attribute processing
 			else
 				if not is_valid_system_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_system_name (l_name))
-				elseif (l_uuid = Void or else is_valid_uuid (l_uuid)) then
+				else
 					if l_uuid /= Void then
-						create l_uu.make_from_string (l_uuid)
-					else
-						l_uu := factory.uuid_generator.generate_uuid
-					end
-					last_system := factory.new_system (l_lower_name, l_uu)
-					if attached current_attributes.item (at_readonly) as l_readonly then
-						if l_readonly.is_boolean then
-							last_system.set_readonly (l_readonly.to_boolean)
+						if is_valid_uuid (l_uuid) then
+							create l_uu.make_from_string (l_uuid)
 						else
-							set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
+							set_error (create {CONF_ERROR_UUID})
 						end
 					end
-				else
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_system_invalid_uuid (l_name))
+					if not is_error then
+						if l_uu = Void then
+							last_system := factory.new_system_generate_uuid (l_lower_name)
+						else
+							last_system := factory.new_system (l_lower_name, l_uu)
+						end
+						if attached current_attributes.item (at_readonly) as l_readonly then
+							if l_readonly.is_boolean then
+								last_system.set_readonly (l_readonly.to_boolean)
+							else
+								set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
+							end
+						end
+					else
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_system_invalid_uuid (l_name))
+					end
 				end
 			end
 		ensure
@@ -1924,6 +1976,7 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
+					namespace.same_string (namespace_1_12_0) or
 					namespace.same_string (namespace_1_11_0)
 				then
 						-- Use the defaults of ES 7.3.
@@ -2179,9 +2232,10 @@ feature {NONE} -- Implementation state transitions
 		once
 			create Result.make (14)
 
-				-- => system
-			create l_trans.make (1)
+				-- => system and location
+			create l_trans.make (2)
 			l_trans.force (t_system, "system")
+			l_trans.force (t_redirection, "redirection")
 			Result.force (l_trans, t_none)
 
 				-- system
@@ -2373,11 +2427,22 @@ feature {NONE} -- Implementation state transitions
 		once
 			create Result.make (25)
 
+				-- redirection
+				-- * uuid
+				-- * location
+
+			create l_attr.make (2)
+			l_attr.force (at_uuid, "uuid")
+			l_attr.force (at_location, "location")
+			Result.force (l_attr, t_redirection)
+
+
 				-- system
 				-- * name
 				-- * uuid
 				-- * readonly
 				-- * library_target
+
 			create l_attr.make (4)
 			l_attr.force (at_name, "name")
 			l_attr.force (at_uuid, "uuid")

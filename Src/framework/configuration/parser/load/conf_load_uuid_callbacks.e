@@ -24,6 +24,9 @@ feature -- Access
 	last_uuid: UUID
 			-- The last parsed uuid.
 
+	last_location: detachable READABLE_STRING_GENERAL
+			-- The last parsed location from <redirection location=".." />
+
 feature -- Callbacks
 
 	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
@@ -34,6 +37,7 @@ feature -- Callbacks
 				check_version (a_namespace)
 
 				is_system := a_local_part.is_case_insensitive_equal_general ("system")
+				is_redirection := a_local_part.is_case_insensitive_equal_general ("redirection")
 			end
 		end
 
@@ -42,9 +46,19 @@ feature -- Callbacks
 		do
 			if not is_error then
 				if
-					is_system and a_local_part.is_case_insensitive_equal_general ("uuid") and then is_valid_uuid (a_value)
+					(is_system or is_redirection) and
+					a_local_part.is_case_insensitive_equal_general ("uuid")
+				then --| xml attribute "uuid", relevant only for <system..> or <redirection..>
+					if is_valid_uuid (a_value) then
+						create last_uuid.make_from_string (a_value)
+					else
+						set_error (create {CONF_ERROR_UUID})			
+					end
+				elseif --| xml attribute "location", relevant only for <redirection..>
+					is_redirection and then 
+					a_local_part.is_case_insensitive_equal_general ("location")
 				then
-					create last_uuid.make_from_string (a_value)
+					last_location := a_value
 				end
 			end
 		end
@@ -54,16 +68,23 @@ feature -- Callbacks
 		do
 			if not is_error then
 				is_system := False
+				is_redirection := False
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	is_system: BOOLEAN;
+	is_system: BOOLEAN
 			-- Are we in a system tag?
 
+	is_redirection: BOOLEAN
+			-- Are we in a redirection tag?
+
+invariant
+	is_not_system_and_redirection: not (is_system and is_redirection)
+
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

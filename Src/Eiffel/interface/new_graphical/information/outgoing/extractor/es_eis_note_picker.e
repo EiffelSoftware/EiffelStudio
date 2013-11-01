@@ -84,6 +84,7 @@ feature {NONE} -- Implementation
 			l_source_pos, l_source_len: INTEGER
 			l_count, l_removed_chars: INTEGER
 		do
+			last_source_ast := Void
 			if a_index.tag /= Void and then a_index.tag.name_8.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
 				l_entry_tuple := [Void, Void, Void, Void, Void, Void, False]
@@ -138,6 +139,7 @@ feature {NONE} -- Implementation
 										-- Character positions.
 									l_source_pos := lt_str_as.character_start_position + l_removed_chars
 									l_source_len := lt_str_as.character_end_position - l_source_pos -- -1 + 1 '"'
+									last_source_ast := l_atomic
 								end
 							end
 						else
@@ -351,7 +353,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implemetation
 
-	attribute_regex_matcher: attached RX_PCRE_MATCHER
+	last_source_ast: detachable AST_EIFFEL
+			-- Last found source ast by `eis_entry_from_index'.
+
+	attribute_regex_matcher: RX_PCRE_MATCHER
 		once
 			create Result.make
 			Result.compile ("^(\w+)=(.*)$")

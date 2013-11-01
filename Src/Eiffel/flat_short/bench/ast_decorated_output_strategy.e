@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 			end
 
 			if not expr_type_visiting then
-				l_text_formatter_decorator.put_string_item (l_as.string_value_32)
+				l_text_formatter_decorator.put_string_item_with_as (l_as.string_value_32, l_as)
 			end
 		end
 
@@ -3863,6 +3863,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 			end
 			l_text_formatter_decorator.set_in_indexing_clause (True)
+			l_text_formatter_decorator.search_eis_entry_in_note_clause (l_as)
 			l_text_formatter_decorator.process_filter_item (f_indexing_content, True)
 			l_text_formatter_decorator.set_space_between_tokens
 			l_text_formatter_decorator.set_separator (ti_comma)

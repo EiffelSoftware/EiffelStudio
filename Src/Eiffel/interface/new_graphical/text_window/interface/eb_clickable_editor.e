@@ -150,7 +150,8 @@ feature -- Content Change
 					-- Load empty text to hold the invariant of the editor.
 				load_text ("")
 			end
-			allow_edition := False
+			allow_edition := True
+			in_generation_mode := True
 
 				-- Read and parse the text.
 			text_displayed.set_first_read_block_size (number_of_lines_in_block)
@@ -935,6 +936,11 @@ feature {NONE} -- Implementation
 		do
 			Result := wide_text
 		end
+
+	in_generation_mode: BOOLEAN
+			-- Is current editor in generation mode?
+			-- i.e. Receiving editor tokens directly,
+			-- instead of loading from text/file.
 
 feature {NONE} -- Memory management
 

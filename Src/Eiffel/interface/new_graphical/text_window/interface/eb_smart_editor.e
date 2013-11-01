@@ -422,6 +422,7 @@ feature {NONE} -- Text loading
 				-- So the parser to retrieve EIS info takes text from the editor
 				-- Instead of the text from original file.
 			setup_eis_links
+			in_generation_mode := False
 		end
 
 	is_text_loaded_called: BOOLEAN
@@ -1218,7 +1219,7 @@ feature -- Text Loading
 			l_list: SEARCH_TABLE [EIS_ENTRY]
 			l_context: ES_EIS_ENTRY_HELP_CONTEXT
 		do
-			if attached dev_window as l_window and then attached {ES_INFORMATION_TOOL_COMMANDER_I} l_window.shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander and then l_info_tool_commander.is_interface_usable then
+			if not in_generation_mode and then attached dev_window as l_window and then attached {ES_INFORMATION_TOOL_COMMANDER_I} l_window.shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander and then l_info_tool_commander.is_interface_usable then
 				if attached {CLASSI_STONE} stone as l_stone and then attached l_stone.class_i as l_classi then
 					l_list := l_info_tool_commander.class_entries (l_classi)
 					across

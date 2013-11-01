@@ -132,6 +132,15 @@ feature -- Process
 			process_basic_text (text)
 		end
 
+	process_string_text_with_pebble (text: READABLE_STRING_GENERAL; a_pebble: detachable ANY)
+			-- Process string text `text'.
+			-- possible `link', can be void.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
 	process_reserved_word_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		require

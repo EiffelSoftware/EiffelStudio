@@ -17,7 +17,8 @@ inherit
 
 create
 	make,
-	make_with_location
+	make_with_location,
+	make_no_extract
 
 feature {NONE} -- Initialization
 
@@ -25,9 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialize with `a_class'.
 			-- The extractor returns all EIS enties in the given class.
 		do
-			class_i := a_class
-			create eis_entries.make (2)
-			force_extracting := a_force
+			make_no_extract (a_class, a_force)
 			extract
 		ensure
 			force_extracting_set: force_extracting = a_force
@@ -44,6 +43,18 @@ feature {NONE} -- Initialization
 		ensure
 			location_set: location = a_location
 			location_specialized: location_specialized
+		end
+
+	make_no_extract (a_class: like class_i; a_force: BOOLEAN)
+			-- Initialize with no extracting.
+		do
+			class_i := a_class
+			create eis_entries.make (2)
+			force_extracting := a_force
+				-- Compute EIS class id.
+			eis_class_id := id_solution.id_of_class (class_i.config_class)
+		ensure
+			force_extracting_set: force_extracting = a_force
 		end
 
 feature -- Access
@@ -72,6 +83,27 @@ feature -- Querry
 	location_specialized: BOOLEAN
 			-- Does current extractor take cursor location into account?
 
+	source_ast_from_note_clause_ast (a_index: INDEX_AS; a_feature_name_id: INTEGER): detachable TUPLE [entry: EIS_ENTRY; source_ast: detachable AST_EIFFEL]
+			-- Find EIS entry from `a_index' clause.
+			-- If `a_feature_id' is not 0, it means a note clause from a feature.
+		do
+			if class_i.is_compiled and then attached class_i.compiled_representation as l_class_c then
+				if a_feature_name_id > 0 then
+					if attached l_class_c.feature_with_name_id (a_feature_name_id) as l_feature then
+						if attached id_solution.id_of_feature (l_feature) as l_id then
+							if attached eis_entry_from_index (a_index, l_id) as l_entry then
+								Result := [l_entry, last_source_ast]
+							end
+						end
+					end
+				else
+					if attached eis_entry_from_index (a_index, eis_class_id) as l_entry then
+						Result := [l_entry, last_source_ast]
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	extract
@@ -82,9 +114,6 @@ feature {NONE} -- Implementation
 			l_search_entries: detachable SEARCH_TABLE [EIS_ENTRY]
 			l_date: INTEGER
 		do
-				-- Compute EIS class id.
-			eis_class_id := id_solution.id_of_class (class_i.config_class)
-
 			if attached eis_class_id as lt_id then
 				if not location_specialized and not force_extracting then
 					l_entries := storage.entry_server.entries
@@ -331,7 +360,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

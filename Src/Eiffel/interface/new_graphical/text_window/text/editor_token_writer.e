@@ -2,7 +2,6 @@ note
 	description: "Editor tokens are created and put into last line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +11,7 @@ class
 inherit
 	GRAPHICAL_FORMATTER
 		redefine
-			process_string_text,
+			process_string_text, process_string_text_with_pebble,
 			process_assertion_tag_text, process_indexing_tag_text,
 			process_generic_text, process_character_text, process_local_text,
 			process_number_text, process_reserved_word_text,
@@ -131,6 +130,44 @@ feature -- Text processing
 				if url /= Void then
 					create stone.make (url.as_string_32)
 					tok.set_pebble (stone)
+				end
+				append_token (tok)
+			end
+		end
+
+	process_string_text_with_pebble (text: READABLE_STRING_GENERAL; a_pebble: detachable ANY)
+			-- Process string text `text' associated with a pebble.
+		local
+			tok: EDITOR_TOKEN_STRING
+			l_pos, l_previous: INTEGER
+			l_t: STRING_32
+		do
+			l_t := text.as_string_32
+			l_pos := l_t.index_of (new_line_32, 1)
+			if l_pos > 0 then
+				from
+					l_previous := 1
+				until
+					l_pos = 0
+				loop
+					create tok.make (l_t.substring (l_previous, l_pos -1))
+					if attached a_pebble as l_pebble then
+						tok.set_is_link (True)
+						tok.set_pebble (l_pebble)
+					end
+					append_token (tok)
+					add_new_line
+					l_previous := l_pos + 1
+					l_pos := l_t.index_of (new_line_32, l_previous)
+				end
+				if l_previous < l_t.count then
+					add (l_t.substring (l_previous, l_t.count))
+				end
+			else
+				create tok.make (l_t)
+				if attached a_pebble as l_pebble then
+					tok.set_is_link (True)
+					tok.set_pebble (l_pebble)
 				end
 				append_token (tok)
 			end

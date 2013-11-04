@@ -278,13 +278,8 @@ feature{NONE} -- Position calculation
 
 	cursor_screen_x: INTEGER
 			-- Cursor screen x position
-		local
-			l_font: EV_FONT
-			l_text_before_cursor: STRING_32
 		do
-			l_font := font
-			l_text_before_cursor := text.substring (1, caret_position - 1)
-			Result := screen_x + l_font.string_width (l_text_before_cursor)
+			Result := screen_x
 		end
 
 	cursor_screen_y: INTEGER
@@ -357,4 +352,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

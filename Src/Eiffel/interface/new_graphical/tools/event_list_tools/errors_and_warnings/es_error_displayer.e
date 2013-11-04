@@ -149,6 +149,8 @@ feature -- Basic operations
 				elseif not l_context_cookies.is_empty then
 					Precursor
 				end
+					-- Remove all managed syntax errors/warnings.
+				syntax_errors.wipe_out
 			end
 		end
 

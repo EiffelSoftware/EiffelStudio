@@ -11,7 +11,7 @@ inherit
 
 	PS_EIFFELSTORE_EXPORT
 
-create {PS_OBJECT_IDENTIFICATION_MANAGER}
+create --{PS_OBJECT_IDENTIFICATION_MANAGER}
 	make
 
 feature {NONE} -- Initialization

@@ -39,7 +39,7 @@ feature -- Cursor movement
 		do
 			real_cursor.forth
 			if not after and attached {PS_RETRIEVED_OBJECT} item as i then
-				backend.apply_plugins (i, transaction)
+				backend.apply_plugins (i, criterion, attributes, transaction)
 			end
 		ensure then
 			metadata_set: not after implies item.metadata.is_equal (type)

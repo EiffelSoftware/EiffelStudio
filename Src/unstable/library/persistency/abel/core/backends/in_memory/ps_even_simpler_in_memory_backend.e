@@ -69,7 +69,7 @@ feature{PS_READ_ONLY_BACKEND}
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		do
 			prepare(type)
-			Result := attach(database[type.type.type_id]).new_cursor
+			Result := attach(database[type.type.type_id]).deep_twin.new_cursor
 		end
 
 	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT

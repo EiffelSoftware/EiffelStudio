@@ -140,7 +140,7 @@ feature
 			end
 		end
 
-	after_retrieve (object: PS_RETRIEVED_OBJECT; transaction:PS_TRANSACTION)
+	after_retrieve (object: PS_RETRIEVED_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_TRANSACTION)
 			-- Check the version of the retrieved object and apply conversion functions if necessary
 		local
 			reflection: INTERNAL

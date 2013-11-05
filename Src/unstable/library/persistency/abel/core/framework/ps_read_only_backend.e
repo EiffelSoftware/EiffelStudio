@@ -30,7 +30,7 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 		deferred
 		end
 
-feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
+feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 
 
 	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
@@ -72,7 +72,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 
 			-- execute plugins after retrieve
 			if not Result.after then
-				apply_plugins (Result.item, transaction)
+				apply_plugins (Result.item, args.criteria, args.attr, transaction)
 			end
 		ensure
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
@@ -113,7 +113,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 
 			-- Apply plugins after retrieve, if necessary
 			if attached Result then
-				apply_plugins (Result, transaction)
+				apply_plugins (Result, Void, args.attr, transaction)
 			end
 		ensure
 			metadata_set: attached Result implies Result.metadata.is_equal (type)
@@ -124,7 +124,7 @@ feature {PS_RETRIEVAL_MANAGER} -- Object retrieval
 		end
 
 
-feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
+feature {PS_EIFFELSTORE_EXPORT} -- Collection retrieval
 
 
 	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
@@ -185,10 +185,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Plugins
 
 feature {PS_CURSOR_WRAPPER}
 
-	apply_plugins (item: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
+	apply_plugins (item: PS_RETRIEVED_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION)
 		do
 			across plug_in_list as cursor loop
-				cursor.item.after_retrieve (item, transaction)
+				cursor.item.after_retrieve (item, criterion, attributes, transaction)
 			end
 		end
 

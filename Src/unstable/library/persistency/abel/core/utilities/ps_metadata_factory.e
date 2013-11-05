@@ -12,6 +12,25 @@ create
 
 feature -- Factory methods
 
+	create_metadata_from_type_id (type_id: INTEGER): PS_TYPE_METADATA
+			-- Get the metadata of the type `type_id'.
+		local
+			reflection: INTERNAL
+			type: TYPE [detachable ANY]
+		do
+			if metadata_cache.has (type_id) then
+				check attached metadata_cache [type_id] as res then
+					Result := res
+				end
+			else
+				create reflection
+				type := reflection.type_of_type (type_id)
+				create Result.make (type, Current)
+				metadata_cache.extend (Result, type.type_id)
+				Result.initialize
+			end
+		end
+
 	create_metadata_from_type (type: TYPE [detachable ANY]): PS_TYPE_METADATA
 			-- Get the metadata of the type `type'.
 		do

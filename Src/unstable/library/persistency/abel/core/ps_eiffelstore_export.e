@@ -7,6 +7,11 @@ note
 class
 	PS_EIFFELSTORE_EXPORT
 
+inherit
+
+	REFACTORING_HELPER
+		export {NONE} fixme, to_implement, to_implement_assertion end
+
 feature {NONE} -- Utilities
 
 	attach (obj: detachable ANY): attached like obj

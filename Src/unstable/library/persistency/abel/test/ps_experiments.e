@@ -86,6 +86,38 @@ feature
 
 		end
 
+	experiment_none_expanded
+		local
+			type: TYPE[NONE]
+		do
+			type := {NONE}
+			print (type.name)
+			print (type.is_expanded)
+			println
+		end
+
+	experiment_integer_interval
+		local
+			int: INTEGER_INTERVAL
+			int2: PS_INTEGER_INTERVAL
+		do
+
+			int := 3 |..| 5
+			print (int.count)
+			int.extend (8)
+			print (int.count)
+
+			int := 3 |..| 1
+			print (int)
+			int.extend (5)
+			print (int)
+
+			create int2.make_new (5, 4)
+			print (int2)
+			int2.extend (5)
+			print (int2)
+		end
+
 --	experiment_trasient
 --		local
 --			p1, p2: PERSON

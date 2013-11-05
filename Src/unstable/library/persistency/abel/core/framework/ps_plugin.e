@@ -29,7 +29,7 @@ feature
 			criterion_still_attached: old (attached args.criterion) implies attached Result.criterion
 		end
 
-	after_retrieve (object: PS_RETRIEVED_OBJECT; transaction:PS_TRANSACTION)
+	after_retrieve (object: PS_RETRIEVED_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_TRANSACTION)
 		deferred
 		end
 

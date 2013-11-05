@@ -105,7 +105,7 @@ feature {NONE}
 				--if attached {ANY_LIST_BOX} cursor.item as box then print (box.items) print (box.items.first) print ("end") end
 			end
 				-- See if one result is equal
-			one_equal := across ref_list as cursor some equality_test.item ([cursor.item, object]) end
+			one_equal := across ref_list as cursor2 some equality_test.item ([cursor2.item, object]) end
 				--	across ref_list as cursor from print (object) loop print (cursor.item) end
 --				if attached {ANY_BOX} object as box and attached {ANY_BOX} ref_list.first as box2 then
 --					print (box.item.tagged_out)

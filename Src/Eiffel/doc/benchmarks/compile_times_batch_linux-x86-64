@@ -1,4 +1,10 @@
-Ubuntu Server 8.04 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
+Ubuntu Server 13.10 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
+
+13.11
+=====
+gcc (Ubuntu/Linaro 4.8.1-10ubuntu8) 4.8.1
+13.11.9.3210 non-RTEA, non-MT, inlining_size = 9, full class checking (exe size = 16498984):
+125.879u 5.759s 2:11.81 99.8%   0+0k 0+909768io 0pf+0w
 
 7.1
 ===

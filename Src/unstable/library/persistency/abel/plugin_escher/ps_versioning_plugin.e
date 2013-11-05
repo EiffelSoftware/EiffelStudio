@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	before_write (object: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
+	before_write (object: PS_BACKEND_OBJECT; transaction: PS_TRANSACTION)
 		local
 			stored_version: INTEGER
 			reflection: INTERNAL
@@ -140,14 +140,14 @@ feature
 			end
 		end
 
-	after_retrieve (object: PS_RETRIEVED_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_TRANSACTION)
+	after_retrieve (object: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_TRANSACTION)
 			-- Check the version of the retrieved object and apply conversion functions if necessary
 		local
 			reflection: INTERNAL
 			current_class_instance: ANY
 			current_version, stored_version, no_of_attr, i: INTEGER
-			result_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
-			stored_object: PS_RETRIEVED_OBJECT
+			result_list: LINKED_LIST [PS_BACKEND_OBJECT]
+			stored_object: PS_BACKEND_OBJECT
 			stored_obj_attr_values: HASH_TABLE [TUPLE [STRING, STRING], STRING]
 			set: BOOLEAN
 			current_class_name, attr_name, attr_type_as_string: STRING
@@ -287,7 +287,7 @@ feature
 
 feature {NONE} -- Schema Evolution helper functions
 
-	get_attribute_values (stored_obj: PS_RETRIEVED_OBJECT): HASH_TABLE [TUPLE [STRING, STRING], STRING]
+	get_attribute_values (stored_obj: PS_BACKEND_OBJECT): HASH_TABLE [TUPLE [STRING, STRING], STRING]
 			-- Fill hashtable with a tuple containing attribute value and class name of generating class for each attribute in 'stored_obj'
 		local
 			current_attr_name: STRING
@@ -304,7 +304,7 @@ feature {NONE} -- Schema Evolution helper functions
 			end
 		end
 
-	clean_stored_obj (stored_obj: PS_RETRIEVED_OBJECT)
+	clean_stored_obj (stored_obj: PS_BACKEND_OBJECT)
 			-- Remove all attributes in 'stored_obj'
 		local
 			current_name: STRING

@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_RETRIEVED_OBJECT_COLLECTION
+	PS_BACKEND_COLLECTION
 
 inherit
 

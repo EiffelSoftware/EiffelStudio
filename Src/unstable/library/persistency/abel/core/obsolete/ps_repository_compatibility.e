@@ -156,7 +156,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 	clean_db_for_testing
 			-- Wipe out all data.
 		local
-			handlers: LINKED_LIST[PS_COLLECTION_HANDLER[ITERABLE [detachable ANY]]]
+			handlers: LINKED_LIST[PS_COLLECTION_HANDLER_OLD[ITERABLE [detachable ANY]]]
 		do
 			handlers:= collection_handlers
 			backend.wipe_out
@@ -207,7 +207,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	add_collection_handler (handler: PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]])
+	add_collection_handler (handler: PS_COLLECTION_HANDLER_OLD [ITERABLE [detachable ANY]])
 			-- Add a handler for a specific type of collections.
 		do
 			retriever.add_handler (handler)
@@ -263,6 +263,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 	retriever: PS_RETRIEVAL_MANAGER
 			-- A retrieval manager to build objects.
 
-	collection_handlers: LINKED_LIST[PS_COLLECTION_HANDLER [ITERABLE [detachable ANY]]]
+	collection_handlers: LINKED_LIST[PS_COLLECTION_HANDLER_OLD [ITERABLE [detachable ANY]]]
 			-- The collection handlers registered with `Current'
 end

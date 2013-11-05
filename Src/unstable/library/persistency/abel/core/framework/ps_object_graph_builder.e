@@ -194,7 +194,7 @@ feature {NONE} -- Internal: Access
 	settings: PS_OBJECT_GRAPH_SETTINGS
 			-- The current object graph settings.
 
-	search_handler (object: ANY): detachable PS_COLLECTION_HANDLER [detachable ANY]
+	search_handler (object: ANY): detachable PS_COLLECTION_HANDLER_OLD [detachable ANY]
 			-- Search for a collection handler for `object'. Return Void if none present.
 		do
 			across
@@ -206,7 +206,7 @@ feature {NONE} -- Internal: Access
 			end
 		end
 
-	collection_handlers: LINKED_LIST [PS_COLLECTION_HANDLER [detachable ANY]]
+	collection_handlers: LINKED_LIST [PS_COLLECTION_HANDLER_OLD [detachable ANY]]
 			-- The registered collection handlers.
 
 	metadata_factory: PS_METADATA_FACTORY
@@ -304,7 +304,7 @@ feature {NONE} -- Initialization
 
 feature {PS_EIFFELSTORE_EXPORT} -- Initialization
 
-	add_handler (a_handler: PS_COLLECTION_HANDLER [detachable ANY])
+	add_handler (a_handler: PS_COLLECTION_HANDLER_OLD [detachable ANY])
 			-- Add `a_handler' to the collection handlers.
 		do
 			collection_handlers.extend (a_handler)

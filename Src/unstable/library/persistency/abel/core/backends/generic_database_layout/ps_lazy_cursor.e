@@ -8,7 +8,7 @@ class
 	PS_LAZY_CURSOR
 
 inherit
-	ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	ITERATION_CURSOR [PS_BACKEND_OBJECT]
 
 	PS_EIFFELSTORE_EXPORT
 
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	item: PS_RETRIEVED_OBJECT
+	item: PS_BACKEND_OBJECT
 			-- Item at current cursor position.
 		do
 			check attached internal_item as res then

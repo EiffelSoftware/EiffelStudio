@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	handler: PS_COLLECTION_HANDLER [detachable ANY]
+	handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]
 			-- The handler which created `Current'.
 
 	deletion_dependency_for_updates: detachable like Current

@@ -33,7 +33,7 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 
 
-	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- Retrieves all objects from the database where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -46,7 +46,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
 			transaction_active: transaction.is_active
 		local
-			real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
+			real_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT]
 			wrapper: PS_CURSOR_WRAPPER
 			args: TUPLE[type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
 		do
@@ -81,7 +81,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
-	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- Retrieve the object where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -96,7 +96,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 			transaction_active: transaction.is_active
 		local
 			keys: LINKED_LIST [INTEGER]
-			res: LIST[PS_RETRIEVED_OBJECT]
+			res: LIST[PS_BACKEND_OBJECT]
 			args: TUPLE[type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
 		do
 			-- execute plugins before retrieve
@@ -127,7 +127,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 feature {PS_EIFFELSTORE_EXPORT} -- Collection retrieval
 
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		require
 			collections_supported: is_generic_collection_supported
@@ -137,7 +137,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Collection retrieval
 			consistent: not Result.after implies Result.item.is_consistent
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		require
 			collections_supported: is_generic_collection_supported
@@ -185,7 +185,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Plugins
 
 feature {PS_CURSOR_WRAPPER}
 
-	apply_plugins (item: PS_RETRIEVED_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION)
+	apply_plugins (item: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION)
 		do
 			across plug_in_list as cursor loop
 				cursor.item.after_retrieve (item, criterion, attributes, transaction)
@@ -194,7 +194,7 @@ feature {PS_CURSOR_WRAPPER}
 
 feature {PS_READ_ONLY_BACKEND} -- Implementation
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		require
@@ -203,7 +203,7 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		deferred
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		require

@@ -43,10 +43,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := False
 		end
 
-	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_BACKEND_OBJECT]
 			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
 		local
-			all_items: ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+			all_items: ITERATION_CURSOR [PS_BACKEND_OBJECT]
 		do
 			create Result.make
 				-- Cheating a little ;-)

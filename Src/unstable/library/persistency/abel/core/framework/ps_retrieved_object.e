@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_RETRIEVED_OBJECT
+	PS_BACKEND_OBJECT
 
 inherit
 

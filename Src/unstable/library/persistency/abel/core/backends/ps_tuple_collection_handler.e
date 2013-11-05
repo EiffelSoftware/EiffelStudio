@@ -8,7 +8,7 @@ class
 	PS_TUPLE_COLLECTION_HANDLER
 
 inherit
-	PS_COLLECTION_HANDLER [TUPLE]
+	PS_COLLECTION_HANDLER_OLD [TUPLE]
 		redefine
 			create_collection_part
 		end
@@ -63,7 +63,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 
-	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_RETRIEVED_OBJECT_COLLECTION): TUPLE
+	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_BACKEND_COLLECTION): TUPLE
 			-- Build a collection object of type `collection_type' with items `objects', using `additional_information' that contains information generated during the last insert.
 		local
 			reflection: INTERNAL

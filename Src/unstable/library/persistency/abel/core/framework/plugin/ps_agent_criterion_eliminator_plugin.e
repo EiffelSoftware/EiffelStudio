@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	before_write (object: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION)
+	before_write (object: PS_BACKEND_OBJECT; transaction: PS_TRANSACTION)
 		do
 		end
 
@@ -32,7 +32,7 @@ feature
 			end
 		end
 
-	after_retrieve (object: PS_RETRIEVED_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_TRANSACTION)
+	after_retrieve (object: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_TRANSACTION)
 		do
 		end
 

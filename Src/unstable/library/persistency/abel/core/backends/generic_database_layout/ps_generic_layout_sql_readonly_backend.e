@@ -41,7 +41,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 
 
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- Retrieves all objects of type `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
 			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
 			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
@@ -54,7 +54,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 		end
 
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		local
@@ -91,10 +91,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		local
-			result_list: LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]
+			result_list: LINKED_LIST[PS_BACKEND_COLLECTION]
 --			current_item: PS_RETRIEVED_OBJECT_COLLECTION
 
 			primary_key: INTEGER
@@ -128,7 +128,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 
 				if position <= 0 then
 					-- new item
-					result_list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make (primary_key, collection_type))
+					result_list.extend (create {PS_BACKEND_COLLECTION}.make (primary_key, collection_type))
 				else
 					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)
 					value := row_cursor.item.at ("value")
@@ -162,7 +162,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			Result := result_list.new_cursor
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		local
 			position: INTEGER

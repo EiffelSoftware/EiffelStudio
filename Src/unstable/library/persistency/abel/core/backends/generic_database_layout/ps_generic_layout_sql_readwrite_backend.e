@@ -18,14 +18,14 @@ create
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
 		local
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
 			none_class_key: INTEGER
 			existence_attribute_key: INTEGER
-			current_list: LINKED_LIST[PS_RETRIEVED_OBJECT]
+			current_list: LINKED_LIST[PS_BACKEND_OBJECT]
 		do
 			connection := get_connection (transaction)
 
@@ -50,7 +50,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 					check unique_identifier: across current_list as c all c.item.primary_key /= new_primary_key end end
 
-					current_list.extend (create {PS_RETRIEVED_OBJECT}.make_fresh (new_primary_key, cursor.key))
+					current_list.extend (create {PS_BACKEND_OBJECT}.make_fresh (new_primary_key, cursor.key))
 				end
 			end
 
@@ -61,13 +61,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			rollback (transaction)
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
 		local
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
 			none_class_key: INTEGER
-			current_list: LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]
+			current_list: LINKED_LIST[PS_BACKEND_COLLECTION]
 		do
 			connection := get_connection (transaction)
 
@@ -90,7 +90,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 					connection.execute_sql (SQL_Strings.query_last_collection_autoincrement)
 					new_primary_key := connection.last_result.item.item (1).to_integer
 
-					current_list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make_fresh (new_primary_key, cursor.key))
+					current_list.extend (create {PS_BACKEND_COLLECTION}.make_fresh (new_primary_key, cursor.key))
 				end
 			end
 
@@ -125,7 +125,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST[PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
+	write_collections (collections: LIST[PS_BACKEND_COLLECTION]; transaction: PS_TRANSACTION)
 			-- Write every item in `collections' to the database
 		local
 			commands: LINKED_LIST[STRING]
@@ -256,9 +256,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 feature {PS_READ_WRITE_BACKEND} -- Implementation
 
-	internal_write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
+	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_TRANSACTION)
 			-- Write all `objects' to the database.
-			-- Only write the attributes present in {PS_RETRIEVED_OBJECT}.attributes.
+			-- Only write the attributes present in {PS_BACKEND_OBJECT}.attributes.
 		local
 			connection: PS_SQL_CONNECTION
 			commands: LINKED_LIST[STRING]

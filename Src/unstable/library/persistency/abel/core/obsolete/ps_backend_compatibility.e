@@ -299,7 +299,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Precondition checks
 
 feature {NONE} -- Correctness checks
 
-	are_attributes_loaded (type: PS_TYPE_METADATA; attributes: LIST [STRING]; obj: PS_RETRIEVED_OBJECT): BOOLEAN
+	are_attributes_loaded (type: PS_TYPE_METADATA; attributes: LIST [STRING]; obj: PS_BACKEND_OBJECT): BOOLEAN
 			-- Check that there is a value for every attribute in `attributes' (or `type.attributes', if `attributes' is empty).
 		do
 			if attributes.is_empty then
@@ -312,7 +312,7 @@ feature {NONE} -- Correctness checks
 	check_object_writes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
 			-- Check if all objects were successfully written
 		local
-			retrieved: LIST[PS_RETRIEVED_OBJECT]
+			retrieved: LIST[PS_BACKEND_OBJECT]
 		do
 			Result :=
 				across object_graph.new_smart_cursor as cursor
@@ -388,7 +388,7 @@ feature {NONE} -- Correctness checks
 			fixme ("TODO")
 		end
 
-	is_equal_object (object: PS_SINGLE_OBJECT_PART; retrieved_object: detachable PS_RETRIEVED_OBJECT; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_object (object: PS_SINGLE_OBJECT_PART; retrieved_object: detachable PS_BACKEND_OBJECT; transaction:PS_TRANSACTION): BOOLEAN
 			-- Check if the two objects are the same.
 		local
 			same_attribute: BOOLEAN
@@ -421,7 +421,7 @@ feature {NONE} -- Correctness checks
 			end
 		end
 
-	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART; retrieved_collection: detachable PS_RETRIEVED_OBJECT_COLLECTION; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART; retrieved_collection: detachable PS_BACKEND_COLLECTION; transaction:PS_TRANSACTION): BOOLEAN
 		local
 			collection_item, retrieved_collection_item: TUPLE [value: STRING; type: STRING]
 			same_item: BOOLEAN

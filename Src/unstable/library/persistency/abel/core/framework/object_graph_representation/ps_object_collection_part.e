@@ -86,7 +86,7 @@ feature {PS_COLLECTION_PART} -- Duplication
 
 feature {NONE} -- Initialization
 
-	make (obj: ANY; meta: PS_TYPE_METADATA; persistent: BOOLEAN; a_handler: PS_COLLECTION_HANDLER [detachable ANY]; a_root: PS_OBJECT_GRAPH_ROOT)
+	make (obj: ANY; meta: PS_TYPE_METADATA; persistent: BOOLEAN; a_handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; a_root: PS_OBJECT_GRAPH_ROOT)
 			-- initialize `Current'.
 		do
 			represented_object := obj

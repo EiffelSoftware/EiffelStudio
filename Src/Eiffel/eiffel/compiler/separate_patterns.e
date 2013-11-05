@@ -124,7 +124,8 @@ feature -- Generation
 						value := x.item
 						is_reference := value.is_reference
 						if is_reference then
-							buffer.put_string ("eif_access (")
+								-- Use RTS_EIF_ACCESS as this checks whether argument is null before calling `eif_access'.
+							buffer.put_string ("RTS_EIF_ACCESS (")
 						end
 						buffer.put_string ("a -> argument [")
 							-- `x' is a SPECIAL so it is already zero-indexed.
@@ -203,7 +204,7 @@ invariant
 	patterns_attached: attached patterns
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

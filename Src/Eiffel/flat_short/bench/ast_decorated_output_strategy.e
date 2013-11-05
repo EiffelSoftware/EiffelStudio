@@ -3863,7 +3863,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 			end
 			l_text_formatter_decorator.set_in_indexing_clause (True)
-			l_text_formatter_decorator.search_eis_entry_in_note_clause (l_as)
+			l_text_formatter_decorator.search_eis_entry_in_note_clause (l_as, current_class.original_class, source_feature)
 			l_text_formatter_decorator.process_filter_item (f_indexing_content, True)
 			l_text_formatter_decorator.set_space_between_tokens
 			l_text_formatter_decorator.set_separator (ti_comma)

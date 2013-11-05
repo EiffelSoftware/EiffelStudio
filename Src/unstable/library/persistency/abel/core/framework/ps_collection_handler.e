@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PS_COLLECTION_HANDLER [COLLECTION_TYPE ]--> ITERABLE [detachable ANY]]
+	PS_COLLECTION_HANDLER_OLD [COLLECTION_TYPE ]--> ITERABLE [detachable ANY]]
 
 inherit
 
@@ -73,7 +73,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 
-	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_RETRIEVED_OBJECT_COLLECTION): ANY
+	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_BACKEND_COLLECTION): ANY
 			-- Build a collection object of type `collection_type' with items `objects', using `additional_information' that contains information generated during the last insert.
 		require
 			can_handle_type: can_handle_type (collection_type)

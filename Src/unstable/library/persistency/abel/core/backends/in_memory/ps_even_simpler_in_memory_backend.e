@@ -24,14 +24,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
 			prepare_collection(collection_type)
 			Result := attach(collection_database[collection_type.type.type_id]).new_cursor
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT_COLLECTION
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		do
 			prepare_collection(collection_type)
@@ -64,7 +64,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 
 feature{PS_READ_ONLY_BACKEND}
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		do
@@ -72,7 +72,7 @@ feature{PS_READ_ONLY_BACKEND}
 			Result := attach(database[type.type.type_id]).deep_twin.new_cursor
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		do
@@ -95,10 +95,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
 	max_primary: INTEGER
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		local
-			list: LINKED_LIST[PS_RETRIEVED_OBJECT]
+			list: LINKED_LIST[PS_BACKEND_OBJECT]
 			index: INTEGER
 		do
 			across
@@ -113,7 +113,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 				until
 					index = cursor.item + 1
 				loop
-					list.extend (create {PS_RETRIEVED_OBJECT}.make_fresh (max_primary + index, cursor.key))
+					list.extend (create {PS_BACKEND_OBJECT}.make_fresh (max_primary + index, cursor.key))
 					index := index + 1
 				variant
 					cursor.item - index + 1
@@ -123,10 +123,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			end
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		local
-			list: LINKED_LIST[PS_RETRIEVED_OBJECT_COLLECTION]
+			list: LINKED_LIST[PS_BACKEND_COLLECTION]
 			index: INTEGER
 		do
 			across
@@ -140,7 +140,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 				until
 					index = cursor.item + 1
 				loop
-					list.extend (create {PS_RETRIEVED_OBJECT_COLLECTION}.make_fresh (max_primary + index, cursor.key))
+					list.extend (create {PS_BACKEND_COLLECTION}.make_fresh (max_primary + index, cursor.key))
 					index := index + 1
 				variant
 					cursor.item - index + 1
@@ -162,7 +162,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST [PS_RETRIEVED_OBJECT_COLLECTION]; transaction: PS_TRANSACTION)
+	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_TRANSACTION)
 		do
 			across collections as cursor
 			loop
@@ -184,9 +184,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 feature {NONE} -- Implementation
 
-	internal_write (objects: LIST[PS_RETRIEVED_OBJECT]; transaction: PS_TRANSACTION)
+	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_TRANSACTION)
 		local
-			old_obj: PS_RETRIEVED_OBJECT
+			old_obj: PS_BACKEND_OBJECT
 		do
 
 			across objects as cursor
@@ -207,9 +207,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	collection_database: HASH_TABLE[HASH_TABLE[PS_RETRIEVED_OBJECT_COLLECTION, INTEGER], INTEGER]
+	collection_database: HASH_TABLE[HASH_TABLE[PS_BACKEND_COLLECTION, INTEGER], INTEGER]
 
-	database: HASH_TABLE[HASH_TABLE[PS_RETRIEVED_OBJECT, INTEGER], INTEGER]
+	database: HASH_TABLE[HASH_TABLE[PS_BACKEND_OBJECT, INTEGER], INTEGER]
 		-- First key: Type ID
 		-- Second key: unique object identifier
 
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 	prepare (type: PS_TYPE_METADATA)
 		do
 			if not database.has (type.type.type_id) then
-				database.extend (create {HASH_TABLE[PS_RETRIEVED_OBJECT, INTEGER]}.make(100), type.type.type_id)
+				database.extend (create {HASH_TABLE[PS_BACKEND_OBJECT, INTEGER]}.make(100), type.type.type_id)
 			end
 		end
 
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 	prepare_collection (type: PS_TYPE_METADATA)
 		do
 			if not collection_database.has (type.type.type_id) then
-				collection_database.extend (create {HASH_TABLE[PS_RETRIEVED_OBJECT_COLLECTION, INTEGER]}.make(100), type.type.type_id)
+				collection_database.extend (create {HASH_TABLE[PS_BACKEND_COLLECTION, INTEGER]}.make(100), type.type.type_id)
 			end
 		end
 

@@ -9,7 +9,7 @@ class
 
 inherit
 
-	PS_COLLECTION_HANDLER [SPECIAL [detachable ANY]]
+	PS_COLLECTION_HANDLER_OLD [SPECIAL [detachable ANY]]
 
 	REFACTORING_HELPER
 
@@ -57,7 +57,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 
-	build_collection (type_id: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_RETRIEVED_OBJECT_COLLECTION): SPECIAL [detachable ANY]
+	build_collection (type_id: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_BACKEND_COLLECTION): SPECIAL [detachable ANY]
 			-- Build a collection object of type `type' with items `objects', using `additional_information' that contains information generated during the last insert.
 		local
 			reflection: INTERNAL

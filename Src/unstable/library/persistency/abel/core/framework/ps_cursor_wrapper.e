@@ -9,7 +9,7 @@ class
 
 inherit
 
-	ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	ITERATION_CURSOR [PS_BACKEND_OBJECT]
 
 	PS_EIFFELSTORE_EXPORT
 
@@ -18,7 +18,7 @@ create {PS_READ_ONLY_BACKEND}
 
 feature -- Access
 
-	item: PS_RETRIEVED_OBJECT
+	item: PS_BACKEND_OBJECT
 			-- Item at current cursor position.
 		do
 			Result := real_cursor.item
@@ -38,7 +38,7 @@ feature -- Cursor movement
 			-- Move to next position.
 		do
 			real_cursor.forth
-			if not after and attached {PS_RETRIEVED_OBJECT} item as i then
+			if not after and attached {PS_BACKEND_OBJECT} item as i then
 				backend.apply_plugins (i, criterion, attributes, transaction)
 			end
 		ensure then
@@ -53,7 +53,7 @@ feature {NONE} -- Impementation
 
 	backend: PS_READ_ONLY_BACKEND
 
-	real_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT]
+	real_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT]
 
 	type: PS_TYPE_METADATA
 
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 	make (
 			a_backend: PS_READ_ONLY_BACKEND;
-			a_cursor: ITERATION_CURSOR[PS_RETRIEVED_OBJECT];
+			a_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT];
 			a_type: like type;
 			a_criterion: like criterion
 			attr_list: like attributes

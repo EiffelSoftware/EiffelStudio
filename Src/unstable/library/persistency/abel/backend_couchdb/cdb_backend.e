@@ -38,7 +38,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- Retrieves all objects of class `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
 			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
 			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
@@ -46,9 +46,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
 		local
 --			temp_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
-			result_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
+			result_list: LINKED_LIST [PS_BACKEND_OBJECT]
 			highest_id, curr_id: INTEGER
-			curr_obj: detachable PS_RETRIEVED_OBJECT
+			curr_obj: detachable PS_BACKEND_OBJECT
 		do
 			create result_list.make
 --			create temp_list.make
@@ -72,10 +72,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			Result := result_list.new_cursor
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_RETRIEVED_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
 		local
 			list: LINKED_LIST[INTEGER]
-			res: LIST[PS_RETRIEVED_OBJECT]
+			res: LIST[PS_BACKEND_OBJECT]
 		do
 			create list.make
 			list.extend (key)
@@ -85,13 +85,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			end
 		end
 
-	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_RETRIEVED_OBJECT]
+	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_BACKEND_OBJECT]
 			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
 		local
-			all_items: ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
+			all_items: ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			output: STRING
 			result_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
-			current_obj: PS_RETRIEVED_OBJECT
+			current_obj: PS_BACKEND_OBJECT
 			err_in_get: BOOLEAN
 		do
 			create Result.make
@@ -289,16 +289,16 @@ feature --json operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
 			check
 				not_implemented: False
 			end
-			Result := (create {LINKED_LIST [PS_RETRIEVED_OBJECT_COLLECTION]}.make).new_cursor
+			Result := (create {LINKED_LIST [PS_BACKEND_COLLECTION]}.make).new_cursor
 		end
 
-	retrieve_object_oriented_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): PS_RETRIEVED_OBJECT_COLLECTION
+	retrieve_object_oriented_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		do
 			check

@@ -73,7 +73,7 @@ feature {NONE} -- Implementation - Retrieval
 			type := metadata_manager.create_metadata_from_type (query.generic_type)
 			bookkeeping := attach (bookkeeping_manager [query.backend_identifier])
 				-- Check if we have a query on normal objects or on collections
-			if attached {ITERATION_CURSOR [PS_RETRIEVED_OBJECT]} query_to_cursor_map [query.backend_identifier] as results then
+			if attached {ITERATION_CURSOR [PS_BACKEND_OBJECT]} query_to_cursor_map [query.backend_identifier] as results then
 					-- Normal objects: Retrieve until criteria match
 				from
 					found := False
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation - Retrieval
 				end
 			else
 					-- Collection: Retrieve the next one, as we don't have criteria on collections.
-				check attached {ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]} query_to_cursor_map [query.backend_identifier] as direct_collection then
+				check attached {ITERATION_CURSOR [PS_BACKEND_COLLECTION]} query_to_cursor_map [query.backend_identifier] as direct_collection then
 					if direct_collection.after then
 						query.result_cursor.set_entry (Void)
 					else
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation - Retrieval
 				type := metadata_manager.create_metadata_from_type (query.generic_type)
 				bookkeeping := attach (bookkeeping_manager [query.backend_identifier])
 					-- Check if we have a query on normal objects or on collections
-				if attached {ITERATION_CURSOR [PS_RETRIEVED_OBJECT]} query_to_cursor_map [query.backend_identifier] as results then
+				if attached {ITERATION_CURSOR [PS_BACKEND_OBJECT]} query_to_cursor_map [query.backend_identifier] as results then
 						-- Normal objects: Retrieve until criteria match
 					from
 						found := False
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation - Retrieval
 
 feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 
-	build_object (type: PS_TYPE_METADATA; obj: PS_RETRIEVED_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN; depth: INTEGER): ANY
+	build_object (type: PS_TYPE_METADATA; obj: PS_BACKEND_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN; depth: INTEGER): ANY
 			-- Build the object `obj'.
 		require
 			obj.metadata.base_class.name.is_equal (type.base_class.name)
@@ -169,8 +169,8 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			field_type: PS_TYPE_METADATA
 			field_type_name: STRING
 			keys: LINKED_LIST [INTEGER]
-			referenced_obj: LIST [PS_RETRIEVED_OBJECT]
-			collection_result: PS_RETRIEVED_OBJECT_COLLECTION
+			referenced_obj: LIST [PS_BACKEND_OBJECT]
+			collection_result: PS_BACKEND_COLLECTION
 		do
 			if bookkeeping.has (obj.primary_key + obj.metadata.base_class.name.hash_code) then
 				Result := attach (bookkeeping [obj.primary_key + obj.metadata.base_class.name.hash_code])
@@ -221,14 +221,14 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			type_correct: Result.generating_type.type_id = type.type.type_id
 		end
 
-	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
+	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `relational_collection'.
 		do
 			Result := handler.build_relational_collection (type, build_collection_items (type, relational_collection, transaction, bookkeeping, depth))
 			id_manager.identify (Result, transaction)
 		end
 
-	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_RETRIEVED_OBJECT_COLLECTION; handler: PS_COLLECTION_HANDLER [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
+	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_BACKEND_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `object_collection'.
 		do
 			Result := handler.build_collection (type, build_collection_items (type, object_collection, transaction, bookkeeping, depth), object_collection)
@@ -242,8 +242,8 @@ feature {NONE} -- Implementation - Build support functions.
 		require
 			type.type.name.is_equal (value.second)
 		local
-			object_result: detachable PS_RETRIEVED_OBJECT
-			collection_result: detachable PS_RETRIEVED_OBJECT_COLLECTION
+			object_result: detachable PS_BACKEND_OBJECT
+			collection_result: detachable PS_BACKEND_COLLECTION
 			managed: MANAGED_POINTER
 			trash: INTEGER
 			conv: UTF_CONVERTER
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation - Build support functions.
 			-- Build a list with all collection items correctly loaded.
 		local
 			collection_items: LINKED_LIST [detachable ANY]
-			retrieved_item: LIST [PS_RETRIEVED_OBJECT]
+			retrieved_item: LIST [PS_BACKEND_OBJECT]
 			item: detachable ANY
 			new_depth: INTEGER
 			new_type: PS_TYPE_METADATA
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation - Build support functions.
 
 feature {NONE} -- Implementation: Collection handlers
 
-	collection_handlers: LINKED_LIST [PS_COLLECTION_HANDLER [detachable ANY]]
+	collection_handlers: LINKED_LIST [PS_COLLECTION_HANDLER_OLD [detachable ANY]]
 			-- All registered collection handlers.
 
 	has_handler (type: PS_TYPE_METADATA): BOOLEAN
@@ -454,12 +454,12 @@ feature {NONE} -- Implementation: Collection handlers
 			Result := across collection_handlers as handler some handler.item.can_handle_type (type) end
 		end
 
-	get_handler (type: PS_TYPE_METADATA): PS_COLLECTION_HANDLER [detachable ANY]
+	get_handler (type: PS_TYPE_METADATA): PS_COLLECTION_HANDLER_OLD [detachable ANY]
 			-- Get the handler for collections of type `type'.
 		require
 			has_handler (type)
 		local
-			res: detachable PS_COLLECTION_HANDLER [detachable ANY]
+			res: detachable PS_COLLECTION_HANDLER_OLD [detachable ANY]
 		do
 			across
 				collection_handlers as handler
@@ -556,7 +556,7 @@ feature {NONE} -- Initialization
 
 feature {PS_REPOSITORY} -- Initialization - Collection handlers
 
-	add_handler (a_handler: PS_COLLECTION_HANDLER [detachable ANY])
+	add_handler (a_handler: PS_COLLECTION_HANDLER_OLD [detachable ANY])
 			-- Add a collection handler to `Current'.
 		do
 			collection_handlers.extend (a_handler)

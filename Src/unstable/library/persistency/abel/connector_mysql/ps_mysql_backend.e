@@ -18,13 +18,13 @@ create
 
 feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
 		local
 			all_primaries: INTEGER
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
-			current_list: LINKED_LIST[PS_RETRIEVED_OBJECT]
+			current_list: LINKED_LIST[PS_BACKEND_OBJECT]
 --			none_class_key: INTEGER
 --			existence_attribute_key: INTEGER
 		do
@@ -58,7 +58,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 					connection.last_results.first.forth
 
 					-- Create a new object
-					current_list.extend (create {PS_RETRIEVED_OBJECT}.make_fresh (new_primary_key, cursor.key))
+					current_list.extend (create {PS_BACKEND_OBJECT}.make_fresh (new_primary_key, cursor.key))
 				end
 			end
 
@@ -71,7 +71,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			rollback (transaction)
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_RETRIEVED_OBJECT_COLLECTION], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
 		do
 			fixme ("Use a stored procedure, like generate_all_object_primaries")

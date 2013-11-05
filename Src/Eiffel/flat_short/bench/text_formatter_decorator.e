@@ -48,7 +48,8 @@ inherit
 			process_class_menu_text,
 			set_context_group,
 			context_group,
-			set_meta_data
+			set_meta_data,
+			search_eis_entry_in_note_clause
 		end
 
 create
@@ -441,14 +442,10 @@ feature -- Setting
 			text_formatter.set_meta_data (a_data)
 		end
 
-	search_eis_entry_in_note_clause (a_index: detachable INDEX_AS)
-			-- Set `is_in_note_clause' with `b'.
+	search_eis_entry_in_note_clause (a_index: detachable INDEX_AS; a_class: detachable CLASS_I; a_feat: detachable FEATURE_I)
+			-- Search EIS entry in the context.
 		do
-			if attached a_index as l_index then
-				last_eis_entry_and_source_as := found_eis_entry (l_index, source_feature)
-			else
-				last_eis_entry_and_source_as := Void
-			end
+			text_formatter.search_eis_entry_in_note_clause (a_index, a_class, a_feat)
 		end
 
 feature -- Setting local format details
@@ -730,23 +727,14 @@ feature -- Output
 			s_not_void: s /= Void
 			a_as_not_void: a_as /= Void
 		local
-			l_context: ES_EIS_ENTRY_HELP_CONTEXT
 			l_pos: INTEGER
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end
 			if in_indexing_clause then
-				if attached last_eis_entry_and_source_as as l_tuple and then l_tuple.source = a_as then
-					create l_context.make (l_tuple.entry, False)
-					l_pos := s.substring_index ({ES_EIS_TOKENS}.value_assignment, 1)
-					if l_pos > 0 then
-						text_formatter.process_string_text (s.substring (1, l_pos), Void)
-						text_formatter.process_string_text_with_pebble (s.substring (l_pos + 1, s.count - 1), create {EIS_LINK_STONE}.make (l_context))
-						text_formatter.process_string_text ("%"", Void)
-					else
-						text_formatter.process_string_text_with_pebble (s, create {EIS_LINK_STONE}.make (l_context))
-					end
+				if text_formatter.format_eis_entry (a_as) then
+					text_formatter.add_eis_source (s)
 				else
 					text_formatter.add_indexing_string (s)
 				end
@@ -1210,25 +1198,6 @@ feature {NONE} -- Implementation
 			ast_output_strategy.set_current_feature (target_feature)
 			ast_output_strategy.wipe_out_error
 		end
-
-	found_eis_entry (a_index: INDEX_AS; a_feature: detachable FEATURE_I): detachable TUPLE [entry: EIS_ENTRY; source: AST_EIFFEL]
-			-- Found EIS entry and the source AS.
-		require
-			a_index_not_void: a_index /= Void
-		local
-			l_eis_extractor: ES_EIS_CLASS_EXTRACTOR
-		do
-			create l_eis_extractor.make_no_extract (current_class.original_class, True)
-			if attached a_feature as l_f then
-				Result := l_eis_extractor.source_ast_from_note_clause_ast (a_index, l_f.feature_name_id)
-			else
-				Result := l_eis_extractor.source_ast_from_note_clause_ast (a_index, 0)
-			end
-		end
-
-	last_eis_entry_and_source_as: detachable TUPLE [entry: EIS_ENTRY; source: AST_EIFFEL];
-			-- Last found EIS entry and the source AS.
-
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

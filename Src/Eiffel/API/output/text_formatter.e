@@ -61,6 +61,11 @@ feature -- Operation
 		do
 		end
 
+	search_eis_entry_in_note_clause (a_index: detachable INDEX_AS; a_class: detachable CLASS_I; a_feat: detachable FEATURE_I)
+			-- Search EIS entry in the context.
+		do
+		end
+
 feature -- Process
 
 	process_basic_text (text: READABLE_STRING_GENERAL)
@@ -585,6 +590,18 @@ feature -- Text operator
 			-- Put error of feature `feat', named `str' and located at `a_line'.
 		do
 			process_feature_error (str, feat, a_line)
+		end
+
+	add_eis_source (s: READABLE_STRING_GENERAL)
+			-- Add EIS source
+		do
+		end
+
+feature -- Query
+
+	format_eis_entry (a_as: AST_EIFFEL): BOOLEAN
+			-- Should eis entry be formatted?
+		do
 		end
 
 feature {NONE} -- Implementation

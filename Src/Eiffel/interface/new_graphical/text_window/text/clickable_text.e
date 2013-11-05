@@ -24,7 +24,10 @@ inherit
 			process_new_line,
 			start_processing,
 			end_processing,
-			append_token
+			append_token,
+			format_eis_entry,
+			search_eis_entry_in_note_clause,
+			add_eis_source
 		end
 
 	EDITABLE_TEXT
@@ -372,6 +375,61 @@ feature {NONE} -- Implementation
 
 	finish_reading_text_agent: PROCEDURE [like Current, TUPLE]
 			-- Agent for function `finish_reading_text'
+
+	add_eis_source (s: READABLE_STRING_GENERAL)
+			-- Add EIS source
+		local
+			l_context: ES_EIS_ENTRY_HELP_CONTEXT
+			l_pos: INTEGER
+		do
+			if attached last_eis_entry_and_source_as as l_tuple then
+				create l_context.make (l_tuple.entry, False)
+				l_pos := s.substring_index ({ES_EIS_TOKENS}.value_assignment, 1)
+				if l_pos > 0 then
+					process_string_text (s.substring (1, l_pos), Void)
+					process_string_text_with_pebble (s.substring (l_pos + 1, s.count - 1), create {EIS_LINK_STONE}.make (l_context))
+					process_string_text ("%"", Void)
+				else
+					process_string_text_with_pebble (s, create {EIS_LINK_STONE}.make (l_context))
+				end
+			end
+		end
+
+	format_eis_entry (a_as: AST_EIFFEL): BOOLEAN
+			-- Should eis entry be formatted?
+		do
+			Result := attached last_eis_entry_and_source_as as l_tuple and then l_tuple.source = a_as
+		end
+
+	search_eis_entry_in_note_clause (a_index: detachable INDEX_AS; a_class: detachable CLASS_I; a_feat: detachable FEATURE_I)
+			-- Search EIS entry in the context.
+		do
+			if attached a_index as l_index then
+				last_eis_entry_and_source_as := found_eis_entry (l_index, a_class, a_feat)
+			else
+				last_eis_entry_and_source_as := Void
+			end
+		end
+
+	found_eis_entry (a_index: INDEX_AS; a_class: detachable CLASS_I; a_feature: detachable FEATURE_I): detachable TUPLE [entry: EIS_ENTRY; source: AST_EIFFEL]
+			-- Found EIS entry and the source AS.
+		require
+			a_index_not_void: a_index /= Void
+		local
+			l_eis_extractor: ES_EIS_CLASS_EXTRACTOR
+		do
+			if attached a_class as l_class then
+				create l_eis_extractor.make_no_extract (l_class, True)
+				if attached a_feature as l_f then
+					Result := l_eis_extractor.source_ast_from_note_clause_ast (a_index, l_f.feature_name_id)
+				else
+					Result := l_eis_extractor.source_ast_from_note_clause_ast (a_index, 0)
+				end
+			end
+		end
+
+	last_eis_entry_and_source_as: detachable TUPLE [entry: EIS_ENTRY; source: AST_EIFFEL];
+			-- Last found EIS entry and the source AS.
 
 feature -- Debugger tooltip
 

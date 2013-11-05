@@ -1855,11 +1855,12 @@ feature {NONE} -- Scoop Processor Meta Data
 	processor_wake_up_and_wait (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
 			-- Signal processor `a_client_processor_id' to wake up  `a_supplier_processor_id' and then wait to be signalled.
 			-- Condition variable is not used here as this is for very short waits (ie: with lock passing synchronization).
-		local
-			i: NATURAL_32
+--		local
+--			i: NATURAL_32
 		do
 			processor_wake_up (a_supplier_processor_id, a_client_processor_id)
 			processor_wait (a_client_processor_id, a_supplier_processor_id)
+				--| The following implementation is faster than using condition variables when there are no processors in contention.
 --			if a_client_processor_id /= a_supplier_processor_id then
 --				from
 --				until

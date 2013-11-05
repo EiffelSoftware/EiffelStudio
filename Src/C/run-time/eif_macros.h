@@ -1363,7 +1363,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_OS(c,o) - tells if object o is separate relative to object c (i.e. they run on different processors)
  * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
  */
- 
+
+#define RTS_EIF_ACCESS(r) (r ? eif_access (r) : NULL) 
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) (RTS_PID (o1) != RTS_PID (o2))
 #define RTS_OS(c,o) (RTS_PID (c) != RTS_PID (o))
 #define RTS_OU(c,o) ((o) && (scp_mnger) && EIF_TEST (eif_is_uncontrolled (RTS_PID (c), RTS_PID (o))))
@@ -1522,15 +1523,22 @@ RT_LNK void eif_exit_eiffel_code(void);
 #	define RTS_AS(v,f,t,n,a) \
 		{	\
 			((call_data*)(a)) -> argument [(n) - 1] = (v);	\
-			((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) eif_protect ((v).it_r); \
-			if ( !RTS_OU(Current, eif_access ( ((call_data*)(a)) -> argument [(n) - 1].it_r ) ) )	\
+			if ( (v).it_r ) \
 			{	\
-				if (EIF_IS_DIFFERENT_PROCESSOR (eif_access (((call_data*)(a))->target),eif_access (((call_data*)(a))->argument [(n)-1].it_r))) \
+				((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) eif_protect ((v).it_r); \
+				if ( !RTS_OU(Current, eif_access ( ((call_data*)(a)) -> argument [(n) - 1].it_r ) ) )	\
 				{	\
-					((call_data*)(a)) -> is_lock_passing = EIF_TRUE; \
-					((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+					if (EIF_IS_DIFFERENT_PROCESSOR (eif_access (((call_data*)(a))->target),eif_access (((call_data*)(a))->argument [(n)-1].it_r))) \
+					{	\
+						((call_data*)(a)) -> is_lock_passing = EIF_TRUE; \
+						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+					}	\
 				}	\
 			}	\
+			else	\
+			{	\
+				((call_data*)(a)) -> argument [(n) - 1].it_r = (v).it_r;	\
+			}\
 		}
 #else
 #	define RTS_AA(v,f,t,n,a) \
@@ -1540,15 +1548,22 @@ RT_LNK void eif_exit_eiffel_code(void);
 		}
 #	define RTS_AS(v,f,t,n,a) \
 		{	                                                                                 \
-			((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) eif_protect (v);  \
 			((call_data*)(a)) -> argument [(n) - 1].type = SK_REF;                           \
-			if ( !RTS_OU(Current, eif_access ( ((call_data*)(a)) -> argument [(n) - 1].it_r ) ) )	\
+			if (v) \
 			{	\
-				if (EIF_IS_DIFFERENT_PROCESSOR (eif_access (((call_data*)(a))->target),eif_access (((call_data*)(a))->argument [(n)-1].it_r))) \
+				((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) eif_protect (v);  \
+				if (!RTS_OU(Current, eif_access ( ((call_data*)(a)) -> argument [(n) - 1].it_r ) ) )	\
 				{	\
-					((call_data*)(a)) -> is_lock_passing = EIF_TRUE; \
-					((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+					if (EIF_IS_DIFFERENT_PROCESSOR (eif_access (((call_data*)(a))->target),eif_access (((call_data*)(a))->argument [(n)-1].it_r))) \
+					{	\
+						((call_data*)(a)) -> is_lock_passing = EIF_TRUE; \
+						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+					}	\
 				}	\
+			}	\
+			else	\
+			{	\
+				((call_data*)(a)) -> argument [(n) - 1].it_r = v;  	\
 			}	\
 		}
 #endif /* WORKBENCH */

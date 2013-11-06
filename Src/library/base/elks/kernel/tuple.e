@@ -20,6 +20,11 @@ inherit
 			correct_mismatch, is_equal
 		end
 
+	READABLE_INDEXABLE [detachable separate ANY]
+		redefine
+			is_equal
+		end
+
 create
 	default_create, make
 
@@ -35,8 +40,6 @@ feature -- Access
 
 	item alias "[]", at alias "@" (index: INTEGER): detachable separate ANY assign put
 			-- Entry of key `index'.
-		require
-			valid_index: valid_index (index)
 		do
 			inspect eif_item_type ($Current, index)
 			when boolean_code then Result := eif_boolean_item ($Current, index)
@@ -191,7 +194,6 @@ feature -- Access
 		do
 			Result := eif_real_32_item ($Current, index)
 		end
-
 feature -- Comparison
 
 	object_comparison: BOOLEAN
@@ -354,6 +356,12 @@ feature -- Status report
 			-- Is Current empty?
 		do
 			Result := count = 0
+		end
+
+	index_set: INTEGER_INTERVAL
+			-- Range of acceptable indexes
+		do
+			create Result.make (lower, upper)
 		end
 
 feature -- Element change

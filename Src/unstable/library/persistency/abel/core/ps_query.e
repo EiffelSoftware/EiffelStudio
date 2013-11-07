@@ -30,11 +30,6 @@ feature -- Access
 			fixme ("TODO")
 		end
 
-	result_cursor: PS_RESULT_CURSOR [ANY]
-			-- Iteration cursor containing the result of the query.
-		deferred
-		end
-
 feature -- Status report
 
 	is_executed: BOOLEAN
@@ -140,6 +135,14 @@ feature -- Contract support functions
 
 feature {PS_EIFFELSTORE_EXPORT} -- Internal
 
+	result_cache: ARRAYED_LIST [ANY]
+			-- The cached results.
+
+	result_cursor: PS_RESULT_CURSOR [ANY]
+			-- Iteration cursor containing the result of the query.
+		deferred
+		end
+
 	transaction: PS_TRANSACTION
 			-- The transaction in which this query is embedded.
 		require
@@ -218,6 +221,7 @@ feature {NONE} -- Initialization
 			-- Initialize the shared parts between object and tuple queries.
 		do
 			create {PS_EMPTY_CRITERION} criteria
+			create result_cache.make (100)
 			reset
 		end
 

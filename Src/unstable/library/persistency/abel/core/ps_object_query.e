@@ -28,8 +28,14 @@ create
 
 feature -- Access
 
-	result_cursor: PS_RESULT_CURSOR [G]
-			-- Iteration cursor containing the result of the query.
+	new_cursor: ITERATION_CURSOR [G]
+			-- Return a fresh cursor over the query result.
+			-- | Note: The result is loaded lazily upon calling `{ITERATION_CURSOR}.forth'.
+			-- | Note: The results are cached interanlly, thus it is possible to iterate over the result
+			-- | many times without performance impact.
+		do
+			create {PS_ITERATION_CURSOR[G]} Result.make (Current)
+		end
 
 feature -- Status report
 
@@ -47,15 +53,6 @@ feature -- Element change
 			criteria := a_criterion
 		end
 
-feature -- Cursor generation
-
-	new_cursor: PS_RESULT_CURSOR [G]
-			-- Return the result_cursor.
-		do
-			fixme ("according to class ITERABLE, this should return a fresh copy of the cursor...")
-			Result := result_cursor
-		end
-
 feature {NONE} -- Initialization
 
 	make
@@ -69,5 +66,10 @@ feature {NONE} -- Initialization
 		do
 			create result_cursor.make
 		end
+
+feature {PS_EIFFELSTORE_EXPORT} -- Access
+
+	result_cursor: PS_RESULT_CURSOR [G]
+			-- Iteration cursor containing the result of the query.
 
 end

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			is_active := True
 		end
 
-feature -- Access
+feature {PS_EIFFELSTORE_EXPORT} -- Access
 
 	error: PS_ERROR
 			-- Error description of the last error.

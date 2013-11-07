@@ -56,6 +56,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 			if attached {G} object as new_item then
 				detachable_item := new_item
 				after := False
+				query.result_cache.extend (new_item)
 			else
 				after := True
 			end

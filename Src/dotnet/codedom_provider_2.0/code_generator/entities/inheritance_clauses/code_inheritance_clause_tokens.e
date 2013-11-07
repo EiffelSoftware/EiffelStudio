@@ -3,7 +3,7 @@ note
 	description: "Parser token codes"
 	generator: "geyacc version 3.9"
 
-class CODE_INHERITANCE_CLAUSE_TOKENS
+deferred class CODE_INHERITANCE_CLAUSE_TOKENS
 
 inherit
 
@@ -11,7 +11,7 @@ inherit
 
 feature -- Last values
 
-	last_any_value: ANY
+	last_detachable_any_value: detachable ANY
 
 feature -- Access
 

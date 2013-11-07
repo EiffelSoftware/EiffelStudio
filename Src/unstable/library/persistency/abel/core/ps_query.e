@@ -26,8 +26,7 @@ feature -- Access
 			-- The transaction context in which `Current' has been executed, if any.
 		require
 			executed: is_executed
-		do
-			fixme ("TODO")
+		attribute
 		end
 
 feature -- Status report
@@ -115,9 +114,13 @@ feature -- Disposal
 	close
 			-- Close the current query
 		do
-			transaction.repository.commit_transaction (transaction)
+			if transaction.is_readonly then
+				transaction.repository.commit_transaction (transaction)
+			end
+			if attached transaction_context as ctx then
+				ctx.internal_active_queries.prune_all (Current)
+			end
 			fixme ("TODO: clean up internal data structures")
-			fixme ("TODO: don't commit explicit transactions")
 		end
 
 feature -- Contract support functions
@@ -183,6 +186,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Internal
 			backend_identifier := identifier
 		ensure
 			identifier_set: backend_identifier = identifier
+		end
+
+	set_transaction_context (context: like transaction_context)
+		do
+			transaction_context := context
 		end
 
 feature {NONE} -- Implementation

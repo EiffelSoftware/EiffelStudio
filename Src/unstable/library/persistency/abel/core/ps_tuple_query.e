@@ -35,7 +35,7 @@ feature -- Access
 			-- | Note: The results are cached interanlly, thus it is possible to iterate over the result
 			-- | many times without performance impact.
 		do
-			create {PS_ITERATION_CURSOR[TUPLE]} Result.make (Current)
+			create {PS_ITERATION_CURSOR [TUPLE]} Result.make (Current)
 		end
 
 feature -- Status report
@@ -46,7 +46,7 @@ feature -- Status report
 feature -- Projections
 
 	projection: ARRAY [STRING]
-			-- Data to be included for projection. Defaults to all basic types: numbers and strings.
+			-- Data to be included for projection. Defaults to all fields of basic types and string types.
 
 	default_projection: ARRAY [STRING]
 			-- An array containing all the attribute names that are of a basic type.

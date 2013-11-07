@@ -74,7 +74,9 @@ feature {PS_REPOSITORY_TESTS} -- References
 			test: PS_GENERIC_CRUD_TEST [REFERENCE_CLASS_1]
 		do
 			create test.make (repository)
+			repository.default_object_graph.set_update_depth (-1)
 			test.test_crud_operations (test_data.reference_to_single_other, agent update_reference)
+			repository.default_object_graph.reset_to_default
 		end
 
 feature {PS_REPOSITORY_TESTS} -- Flat objects
@@ -555,7 +557,7 @@ feature {NONE} -- Update agents
 		do
 			ref_obj := attach (obj.refer)
 			ref_obj.update
-			executor.execute_update (ref_obj)
+--			executor.execute_update (ref_obj)
 		end
 
 end

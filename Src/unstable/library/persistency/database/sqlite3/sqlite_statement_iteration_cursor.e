@@ -72,8 +72,8 @@ feature {NONE} -- Initalization
 			a_bindings_attached: attached a_bindings
 			not_a_bindings_is_empty: not a_bindings.is_empty
 		do
-			make (a_statement)
 			bindings := a_bindings
+			make (a_statement)
 		ensure
 			statement_statement: statement = a_statement
 			bindings_set: bindings = a_bindings
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation: void-safety helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -41,24 +41,29 @@ feature -- Status report
 
 feature -- Query
 
-	new_binding_argument_array (a_args: TUPLE): ARRAY [SQLITE_BIND_ARG [ANY]]
+	new_binding_argument_array (a_args: ITERABLE [detachable separate ANY]): ARRAY [SQLITE_BIND_ARG [ANY]]
 			-- Creates a new argument array from a tuple of values.
 			--
 			-- `a_args': Arguments to create a new array for.
 			-- `Result': Argument array to use with processing
 		require
 			a_args_attached: attached a_args
-			not_a_args_is_empty: not a_args.is_empty
+			not_a_args_is_empty: across a_args as ic some True end
 			a_args_is_valid_arguments: is_valid_arguments (a_args)
 		local
 			i_count, i: INTEGER
 			l_arg: detachable ANY
 			l_var: STRING
 		do
-			i_count := a_args.count.min (SQLITE_LIMIT_VARIABLE_NUMBER)
+			i_count := iterable_min_count_or_value (a_args, SQLITE_LIMIT_VARIABLE_NUMBER)
 			create Result.make_filled (default_bind_arg, 1, i_count)
-			from i := 1 until i > i_count loop
-				l_arg := a_args[i]
+			i := 1
+			across
+				a_args as ic
+			until
+				i > i_count
+			loop
+				l_arg := ic.item
 				if attached {SQLITE_BIND_ARG [ANY]} l_arg as l_bind_arg then
 						-- Already a bound argument
 					Result[i] := l_bind_arg
@@ -72,7 +77,7 @@ feature -- Query
 			end
 		ensure
 			result_attached: attached Result
-			result_count_matches: Result.count = a_args.count
+			result_count_matches: iterable_has_count (a_args, Result.count)
 		end
 
 	new_binding_argument (a_value: detachable ANY; a_var: READABLE_STRING_8): SQLITE_BIND_ARG [ANY]
@@ -94,11 +99,19 @@ feature -- Query
 					Result := l_result
 				elseif attached {READABLE_STRING_8} a_value as l_value then
 					create {SQLITE_STRING_ARG} Result.make (a_var, l_value)
+				elseif attached {READABLE_STRING_32} a_value as l_s32 then
+					if l_s32.is_valid_as_string_8 then
+						create {SQLITE_STRING_ARG} Result.make (a_var, l_s32.as_string_8)
+					else
+							--| Should not occur due to precondition is_valid_argument
+						check unsupported_value_for_type_string_32: False end
+						create {SQLITE_NULL_ARG} Result.make (a_var)
+					end
 				elseif attached {MANAGED_POINTER} a_value as l_value then
 					create {SQLITE_BLOB_ARG} Result.make (a_var, l_value)
 				else
 						-- Must be a scalar
-					l_type_id := internal.dynamic_type (a_value)
+					l_type_id := a_value.generating_type.type_id
 					if l_type_id = ({INTEGER_8}).type_id then
 						if attached {INTEGER_8_REF} a_value as l_value then
 							create {SQLITE_INTEGER_ARG} l_scalar_result.make (a_var, l_value.item)
@@ -131,6 +144,18 @@ feature -- Query
 								create {SQLITE_INTEGER_ARG} l_scalar_result.make (a_var, l_value.item.as_integer_64)
 							end
 						end
+					elseif l_type_id = ({NATURAL_64}).type_id then
+						if attached {NATURAL_64_REF} a_value as l_value then
+							if l_value <= {INTEGER_32}.max_value.as_natural_64 then
+								create {SQLITE_INTEGER_ARG} l_scalar_result.make (a_var, l_value.item.as_integer_32)
+							elseif l_value <= {INTEGER_64}.max_value.as_natural_64 then
+								create {SQLITE_INTEGER_ARG} l_scalar_result.make (a_var, l_value.item.as_integer_64)
+							else
+									--| Should not occur due to precondition is_valid_argument
+								check unsupported_value_for_type_natural_64: False end
+								create {SQLITE_INTEGER_ARG} Result.make (a_var, 0)
+							end
+						end
 					elseif l_type_id = ({REAL_32}).type_id then
 						if attached {REAL_32_REF} a_value as l_value then
 							create {SQLITE_DOUBLE_ARG} l_scalar_result.make (a_var, l_value.item)
@@ -139,11 +164,19 @@ feature -- Query
 						if attached {REAL_64_REF} a_value as l_value then
 							create {SQLITE_DOUBLE_ARG} l_scalar_result.make (a_var, l_value.item)
 						end
+					elseif l_type_id = ({BOOLEAN}).type_id then
+						if attached {BOOLEAN_REF} a_value as l_value then
+							create {SQLITE_BOOLEAN_ARG} l_scalar_result.make (a_var, l_value.item)
+						end
 					else
+							--| Should not occur due to precondition is_valid_argument
 						check unsupported_type: False end
+						create {SQLITE_NULL_ARG} Result.make (a_var)
 					end
-					check l_scalar_result_attached: attached l_scalar_result end
-					Result := l_scalar_result
+					check l_scalar_result_attached: attached l_scalar_result then
+						-- Implied by precondition `is_valid_argument'
+						Result := l_scalar_result
+					end
 				end
 			else
 				create {SQLITE_NULL_ARG} Result.make (a_var)
@@ -154,7 +187,7 @@ feature -- Query
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

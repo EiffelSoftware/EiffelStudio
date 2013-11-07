@@ -63,6 +63,7 @@
 				<exclude>/spec$</exclude>
 				<exclude>/Clib$</exclude>
 				<exclude>/enumerated_type$</exclude>
+				<exclude>/testing$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

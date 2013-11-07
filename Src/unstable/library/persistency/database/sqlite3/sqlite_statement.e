@@ -164,7 +164,7 @@ feature -- Access: Cursor
 			result_attached: attached Result
 		end
 
-	execute_new_with_arguments (a_arguments: TUPLE): SQLITE_STATEMENT_ITERATION_CURSOR
+	execute_new_with_arguments (a_arguments: ITERABLE [detachable separate ANY]): SQLITE_STATEMENT_ITERATION_CURSOR
 			-- Executes the SQLite statement with bound set of arguments.
 			--
 			-- `a_arguments': The bound arguments to call the SQLite query statement with.
@@ -181,7 +181,7 @@ feature -- Access: Cursor
 			is_accessible: is_accessible
 			has_arguments: has_arguments
 			a_arguments_attached: attached a_arguments
-			a_arguments_count_correct: a_arguments.count.as_natural_32 = arguments_count
+--			a_arguments_count_correct: a_arguments.count.as_natural_32 = arguments_count
 			a_arguments_is_valid_arguments: is_valid_arguments (a_arguments)
 		do
 			create Result.make_with_bindings (Current, new_binding_argument_array (a_arguments))
@@ -191,7 +191,7 @@ feature -- Access: Cursor
 
 feature {NONE} -- Access
 
-	compile_statement_string: STRING
+	compile_statement_string: READABLE_STRING_8
 			-- The statement used to compile with, which may be a modified version of `statement'.
 		do
 			Result := statement_string
@@ -742,7 +742,7 @@ invariant
 	internal_thread_id_set: {PLATFORM}.is_thread_capable implies internal_thread_id /= 0
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

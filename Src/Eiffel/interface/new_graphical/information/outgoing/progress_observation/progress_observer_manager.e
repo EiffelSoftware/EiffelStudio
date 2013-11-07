@@ -60,21 +60,21 @@ feature {NONE} -- Observer notification
 			value_valid: is_value_valid (a_value)
 		local
 			l_observers: like progress_observers
-			l_propotion: REAL
+			l_proportion: REAL
 		do
 			if progress_observers /= Void then
 				l_observers := progress_observers
 				if total /= 0 then
-					l_propotion := (a_value / total).truncated_to_real
+					l_proportion := (a_value / total).truncated_to_real
 				else
-					l_propotion := 1
+					l_proportion := 1
 				end
 				from
 					l_observers.start
 				until
 					l_observers.after
 				loop
-					l_observers.item.on_progress_progress (l_propotion)
+					l_observers.item.on_progress_progress (l_proportion)
 					l_observers.forth
 				end
 			end
@@ -135,7 +135,7 @@ feature {NONE} -- Observers
 			-- Total amount of the progress.
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

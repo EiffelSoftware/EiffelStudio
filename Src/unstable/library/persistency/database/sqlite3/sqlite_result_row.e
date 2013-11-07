@@ -302,7 +302,7 @@ feature -- Query: Value affinity
 			a_column_small_enough: a_column <= count
 			not_a_column_is_null: not is_null (a_column)
 		do
-			Result := sqlite3_column_double (sqlite_api, statement.internal_stmt, (a_column + 1).as_integer_32)
+			Result := sqlite3_column_double (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
 		end
 
 --invariant

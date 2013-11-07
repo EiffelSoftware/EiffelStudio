@@ -1,11 +1,10 @@
 note
-
 	description: "[
-		General container data structures,
+		General container data structures, 
 		characterized by the membership properties of their items.
 		]"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: collection, access;
 	access: membership;
@@ -31,7 +30,7 @@ feature -- Status report
 
 	is_inserted (v: G): BOOLEAN
 			-- Has `v' been inserted by the most recent insertion?
-			-- (By default, the value returned is equivalent to calling
+			-- (By default, the value returned is equivalent to calling 
 			-- `has (v)'. However, descendants might be able to provide more
 			-- efficient implementations.)
 		do
@@ -107,23 +106,14 @@ feature -- Removal
 		end
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class COLLECTION
-
-
+end

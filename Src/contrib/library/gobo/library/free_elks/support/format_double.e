@@ -1,11 +1,8 @@
 note
-
-	description:
-		"Formatter for non-integral numbers"
-
+	description: "Formatter for non-integral numbers"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	names: format_double;
 	date: "$Date$"
 	revision: "$Revision$"
@@ -256,14 +253,14 @@ feature {NONE} -- Implementation
 				from
 					i := Result.count
 				until
-					i = 1 or else Result.item (i) /= '0'
+					i <= 1 or else Result.item (i) /= '0'
 				loop
 					Result.remove (i)
 					i := i - 1
 				end
 			end
 		ensure
-			Result.count = decimals
+			valid_result: trailing_zeros_shown implies Result.count = decimals
 		end
 
 	separate_fraction (s: STRING): STRING
@@ -301,5 +298,16 @@ feature {NONE} -- Implementation
 
 invariant
 	separate_all: no_separator implies not after_decimal_separate
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

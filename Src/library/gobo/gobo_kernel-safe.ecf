@@ -10,10 +10,10 @@
 			<exclude>/cvs$</exclude>
 			<exclude>/se$</exclude>
 			<exclude>/base$</exclude>
-			<exclude>/ve$</exclude>
+			<exclude>/\.svn</exclude>
 			<exclude>/Documentation$</exclude>
 			<exclude>/EIFGENs$</exclude>
-			<exclude>/\.svn</exclude>
+			<exclude>/ve$</exclude>
 		</file_rule>
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="Gobo.Library">
 		</option>

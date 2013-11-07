@@ -26,6 +26,10 @@ Version 3.10 - ?
 	  reported twice.
 	* Qualified anchored types are now accepted by default.
 
+	gelex:
+	
+	* Made the generated scanners compilable in void-safe mode with ISE 7.3.
+	
 	gelint:
 
 	* Fixed bug where it was reporting an internal error instead of a VTCT error
@@ -69,6 +73,10 @@ Version 3.10 - ?
 	* Eiffel classes need to be regenerated with geyacc from .y files because
 	  of a breaking change to make the internal stacks void-safe compliant.
 	  Otherwise this will result in a compilation error.
+	* Removed command-line option '--old_typing'.
+	* In order to be void-safe compliant, the generated token class has been
+	  made deferred (last_value attributes may be attached).
+	* Made the generated parsers compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Kernel Library:
 
@@ -79,22 +87,38 @@ Version 3.10 - ?
 	* Added feature `is_true' to class KL_AGENT_ROUTINES.
 	* Fixed bug in feature `read_to_string' of file classes where the
 	  hash code was not reset properly.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Lexical Library:
 
 	* Fixed bug in LX_DFA_REGULAR_EXPRESSION where `compile ("foo\$")' was
 	  setting `has_dollar' to True even though the dollar sign was escaped.
 	* Added features `pattern' and `is_case_insensitive' in class LX_PATTERN_MATCHER.
+	* Made it compilable in void-safe mode with ISE 7.3.
+
+	Gobo Eiffel Math Library:
+	
+	* Made it compilable in void-safe mode with ISE 7.3.
+	
+	Gobo Eiffel Parse Library:
+
+	* Made it compilable in void-safe mode with ISE 7.3.
+
+	Gobo Eiffel Pattern Library:
+
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Regexp Library:
 
 	* The pattern being matched and the case-sensitiveness are now available
 	  using queries `pattern' and `is_case_insensitive'.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel String Library:
 
 	* Fixed bug in the string formatter where the flags '+' and space where
 	  not taken into account. See bug#2768748.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Structure Library:
 
@@ -106,10 +130,18 @@ Version 3.10 - ?
 	* Added features `do_until' and `do_if_until' to DS_CONTAINER and its
 	  descendants.
 	* Added feature `has_void' to DS_CELL and DS_PAIR.
+	* Fixed bug in features `force_last_new' and `put_last_new' of DS_HASH_TABLE.
+	* Fixed bug in DS_HASH_TABLE when the calls to `key_equality_tester' in 
+	  `search_position' trigger the invariant which internally calls `search_position'.
+	   But this routine was not written to be re-entrant.
+	* Added iteration routines to the descendants of DS_TABLE so that the key can be
+	  passed first and then the item to the agents.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Time Library:
 
 	* Added class DT_STOPWATCH in cluster 'stopwatch'.
+	* Made it compilable in void-safe mode with ISE 7.3.
 
 	Gobo Eiffel Tools Library:
 
@@ -153,6 +185,10 @@ Version 3.10 - ?
 	  so that it can accept code appearing in ISE's libraries.
 	* Added support for across instructions/expressions.
 
+	Gobo Eiffel Utility Library:
+	
+	* Made it compilable in void-safe mode with ISE 7.3.
+	
 	Gobo Eiffel XML Library:
 
 	* Added option to let the XML pretty printer use empty element tags

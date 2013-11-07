@@ -4,8 +4,9 @@ note
 
 		"Sparse containers. Used for implementation of sparse tables and sparse sets."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +20,7 @@ inherit
 	DS_BILINEAR [G]
 		redefine
 			has,
-			occurrences,
-			cursor_off
+			occurrences
 		end
 
 	DS_RESIZABLE [G]
@@ -38,12 +38,12 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 		do
 			capacity := n
-			make_item_storage (n + 1)
-			make_key_storage (n + 1)
-			make_clashes (n + 1)
+			make_item_storage (n)
+			make_key_storage (n)
+			make_clashes (n)
 			modulus := new_modulus (n)
 			make_slots (modulus + 1)
-			last_position := 0
+			last_position := No_position
 			free_slot := No_position
 			position := No_position
 			unset_found_item
@@ -70,7 +70,7 @@ feature -- Access
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				clashes_item (i) > Free_watermark
 			loop
@@ -114,17 +114,15 @@ feature -- Measurement
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
 			i := last_position
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					i < 1
+					i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
-						if a_tester.test (item_storage_item (i), v) then
+						if l_tester.test (item_storage_item (i), v) then
 							Result := Result + 1
 						end
 					end
@@ -134,7 +132,7 @@ feature -- Measurement
 					-- Use `=' as comparison criterion.
 				from
 				until
-					i < 1
+					i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						if item_storage_item (i) = v then
@@ -154,19 +152,17 @@ feature -- Status report
 			-- if not void, use `=' criterion otherwise.)
 		local
 			i: INTEGER
-			a_tester: like equality_tester
 		do
 			i := last_position
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					i < 1
+					i < 0
 				loop
-					if clashes_item (i) > Free_watermark and then a_tester.test (item_storage_item (i), v) then
+					if clashes_item (i) > Free_watermark and then l_tester.test (item_storage_item (i), v) then
 						Result := True
 							-- Jump out of the loop.
-						i := 0
+						i := -1
 					else
 						i := i - 1
 					end
@@ -175,12 +171,12 @@ feature -- Status report
 					-- Use `=' as comparison criterion.
 				from
 				until
-					i < 1
+					i < 0
 				loop
 					if clashes_item (i) > Free_watermark and then item_storage_item (i) = v then
 						Result := True
 							-- Jump out of the loop.
-						i := 0
+						i := -1
 					else
 						i := i - 1
 					end
@@ -205,7 +201,7 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -224,7 +220,7 @@ feature -- Iteration
 			i, j: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -244,7 +240,7 @@ feature -- Iteration
 			l_item: G
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -267,7 +263,7 @@ feature -- Iteration
 			l_item: G
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -292,9 +288,9 @@ feature -- Iteration
 			l_item: G
 		do
 			from
-				i := 1
+				i := 0
 			invariant
-				i_large_enough: i >= 1
+				i_large_enough: i >= 0
 				i_small_enough: i <= last_position + 1
 			until
 				i > last_position
@@ -324,9 +320,9 @@ feature -- Iteration
 			l_item: G
 		do
 			from
-				i := 1
+				i := 0
 			invariant
-				i_large_enough: i >= 1
+				i_large_enough: i >= 0
 				i_small_enough: i <= last_position + 1
 			until
 				i > last_position
@@ -353,7 +349,7 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -361,7 +357,7 @@ feature -- Iteration
 					if a_test.item ([item_storage_item (i)]) then
 						Result := True
 							-- Jump out of the loop.
-						i := last_position + 1
+						i := last_position
 					end
 				end
 				i := i + 1
@@ -376,7 +372,7 @@ feature -- Iteration
 		do
 			Result := True
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -384,7 +380,7 @@ feature -- Iteration
 					if not a_test.item ([item_storage_item (i)]) then
 						Result := False
 							-- Jump out of the loop.
-						i := last_position + 1
+						i := last_position
 					end
 				end
 				i := i + 1
@@ -417,16 +413,12 @@ feature -- Duplication
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
 		local
-			old_cursor: like new_cursor
+			old_cursor: detachable like new_cursor
 		do
 			if other /= Current then
 				old_cursor := internal_cursor
 				move_all_cursors_after
 				standard_copy (other)
-					-- Set `internal_cursor' to Void before calling
-					-- `valid_cursor' and `new_cursor' to avoid an
-					-- invariant violation.
-				set_internal_cursor (Void)
 				if old_cursor /= Void and then valid_cursor (old_cursor) then
 					set_internal_cursor (old_cursor)
 				else
@@ -445,6 +437,10 @@ feature -- Removal
 	remove (k: K)
 			-- Remove item associated with `k'.
 			-- Move any cursors at this position `forth'.
+			--
+			-- Note: the item and key of attached types may still be referenced
+			-- internally. In order to release it to the garbage collector, you
+			-- will need to call `compress'.
 		do
 			unset_found_item
 			search_position (k)
@@ -456,6 +452,10 @@ feature -- Removal
 	remove_found_item
 			-- Remove item found by last call to `search'.
 			-- Move any cursors at this position `forth'.
+			--
+			-- Note: the item and key of attached types may still be referenced
+			-- internally. In order to release it to the garbage collector, you
+			-- will need to call `compress'.
 		require
 			item_found: found
 		do
@@ -476,7 +476,7 @@ feature -- Removal
 				key_storage_wipe_out
 				clashes_wipe_out
 				slots_wipe_out
-				last_position := 0
+				last_position := No_position
 				free_slot := No_position
 				count := 0
 			end
@@ -508,7 +508,7 @@ feature -- Resizing
 			from
 				i := last_position
 			until
-				i < 1
+				i < 0
 			loop
 				if clashes_item (i) > Free_watermark then
 					h := hash_position (key_storage_item (i))
@@ -517,9 +517,9 @@ feature -- Resizing
 				end
 				i := i - 1
 			end
-			item_storage_resize (n + 1)
-			key_storage_resize (n + 1)
-			clashes_resize (n + 1)
+			item_storage_resize (n)
+			key_storage_resize (n)
+			clashes_resize (n)
 			capacity := n
 			position := No_position
 		end
@@ -532,19 +532,17 @@ feature -- Optimization
 			-- Do not lose any item. Do not move cursors.
 		local
 			i, j, nb, h: INTEGER
-			dead_item: G
-			dead_key: K
 		do
-			if last_position /= count then
+			if last_position /= count - 1 then
 				unset_found_item
 				nb := last_position
 				from
-					i := 1
+					i := 0
+					j := 0
 				until
 					i > nb
 				loop
 					if clashes_item (i) > Free_watermark then
-						j := j + 1
 						if j /= i then
 							item_storage_put (item_storage_item (i), j)
 							key_storage_put (key_storage_item (i), j)
@@ -553,23 +551,17 @@ feature -- Optimization
 							clashes_put (No_position, j)
 							move_all_cursors (i, j)
 						end
+						j := j + 1
 					end
 					i := i + 1
 				end
-				from
-					j := j + 1
-				until
-					j > nb
-				loop
-					item_storage_put (dead_item, j)
-					key_storage_put (dead_key, j)
-					j := j + 1
-				end
+				item_storage_keep_head (count)
+				key_storage_keep_head (count)
 				clashes_wipe_out
 				slots_wipe_out
-				nb := count
+				nb := count - 1
 				from
-					i := 1
+					i := 0
 				until
 					i > nb
 				loop
@@ -583,8 +575,8 @@ feature -- Optimization
 			end
 		ensure
 			same_count: count = old count
-			compressed: last_position = count
-			not_reszied: capacity = old capacity
+			compressed: last_position = count - 1
+			not_resized: capacity = old capacity
 		end
 
 feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
@@ -596,16 +588,16 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 	item_storage_item (i: INTEGER): G
 			-- Item at position `i' in `item_storage'
 		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_large_enough: i >= 0
+			i_small_enough: i <= last_position
 		deferred
 		end
 
 	item_storage_put (v: G; i: INTEGER)
 			-- Put `v' at position `i' in `item_storage'.
 		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_large_enough: i >= 0
+			i_small_enough: i <= last_position
 		deferred
 		ensure
 			inserted: item_storage_item (i) = v
@@ -614,25 +606,25 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 	key_storage_item (i: INTEGER): K
 			-- Item at position `i' in `key_storage'
 		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_large_enough: i >= 0
+			i_small_enough: i <= last_position
 		deferred
 		end
 
 	clashes_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `clashes'
 		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_large_enough: i >= 0
+			i_small_enough: i < capacity
 		deferred
 		end
 
 	valid_position (i: INTEGER): BOOLEAN
 			-- Is there a slot at position `i'?
 		do
-			Result := 1 <= i and i <= capacity
+			Result := 0 <= i and i < capacity
 		ensure
-			definition: Result = (1 <= i and i <= capacity)
+			definition: Result = (0 <= i and i < capacity)
 		end
 
 	valid_slot (i: INTEGER): BOOLEAN
@@ -653,31 +645,33 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			prev: INTEGER
-			dead_key: K
-			a_tester: like key_equality_tester
+			l_position: INTEGER
+			l_slots_position: INTEGER
 		do
 			if k = Void then
 				position := slots_item (modulus)
 				slots_position := modulus
 				clashes_previous_position := No_position
 			else
-				a_tester := key_equality_tester
-				if a_tester /= Void then
+				if attached key_equality_tester as l_tester then
+					l_position := position
+					l_slots_position := slots_position
+					prev := clashes_previous_position
 					if
 						position = No_position or else
-						not a_tester.test (k, key_storage_item (position)) or else
-						a_tester.test (k, dead_key)
+						clashes_item (position) <= Free_watermark or else
+						not l_tester.test (k, key_storage_item (position))
 					then
 						from
-							slots_position := hash_position (k)
-							i := slots_item (slots_position)
-							position := No_position
+							l_slots_position := hash_position (k)
+							i := slots_item (l_slots_position)
+							l_position := No_position
 							prev := No_position
 						until
 							i = No_position
 						loop
-							if a_tester.test (k, key_storage_item (i)) then
-								position := i
+							if l_tester.test (k, key_storage_item (i)) then
+								l_position := i
 									-- Jump out of the loop.
 								i := No_position
 							else
@@ -685,10 +679,16 @@ feature {NONE} -- Implementation
 								i := clashes_item (i)
 							end
 						end
-						clashes_previous_position := prev
 					end
+					position := l_position
+					slots_position := l_slots_position
+					clashes_previous_position := prev
 				else
-					if position = No_position or else k /= key_storage_item (position) or else k = dead_key then
+					if
+						position = No_position or else
+						clashes_item (position) <= Free_watermark or else
+						k /= key_storage_item (position)
+					then
 						from
 							slots_position := hash_position (k)
 							i := slots_item (slots_position)
@@ -720,7 +720,7 @@ feature {NONE} -- Implementation
 					(slots_item (slots_position) = position)
 		end
 
-	key_equality_tester: KL_EQUALITY_TESTER [K]
+	key_equality_tester: detachable KL_EQUALITY_TESTER [K]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -746,12 +746,15 @@ feature {NONE} -- Implementation
 	remove_position (i: INTEGER)
 			-- Remove item at position `i'.
 			-- Move any cursors at this position `forth'.
+			--
+			-- Note: the item and key of attached types may still be referenced
+			-- internally. In order to release it to the garbage collector, you
+			-- will need to call `compress'.
 		require
 			valid_position: valid_position (i)
 			valid_slot: valid_slot (i)
 		local
-			dead_item: G
-			k, dead_key: K
+			k: K
 			h: INTEGER
 			a_tester: like key_equality_tester
 		do
@@ -775,12 +778,19 @@ feature {NONE} -- Implementation
 			else
 				clashes_put (clashes_item (position), clashes_previous_position)
 			end
-			item_storage_put (dead_item, position)
-			key_storage_put (dead_key, position)
 			if free_slot = No_position and position = last_position then
-				last_position := last_position - 1
+				item_storage_keep_head (position)
+				key_storage_keep_head (position)
 				clashes_put (No_position, position)
+				position := No_position
+				last_position := last_position - 1
 			else
+				if ({G}).has_default then
+					item_storage_put (({G}).default, position)
+				end
+				if ({K}).has_default then
+					key_storage_put (({K}).default, position)
+				end
 				clashes_put (Free_offset - free_slot, position)
 				free_slot := position
 			end
@@ -791,9 +801,9 @@ feature {NONE} -- Implementation
 
 	make_item_storage (n: INTEGER)
 			-- Create storage for items of the table indexed
-			-- from 0 to `n-1' (position 0 is not used).
+			-- from 0 to `n-1'.
 		require
-			positive_n: n > 0
+			positive_n: n >= 0
 		deferred
 		end
 
@@ -805,7 +815,7 @@ feature {NONE} -- Implementation
 	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
 		require
-			n_large_enough: n > capacity
+			n_large_enough: n >= capacity
 		deferred
 		end
 
@@ -814,19 +824,27 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	item_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `item_storage'.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= last_position + 1
+		deferred
+		end
+
 	make_key_storage (n: INTEGER)
 			-- Create storage for keys of the set indexed
-			-- from 0 to `n-1' (position 0 is not used).
+			-- from 0 to `n-1'.
 		require
-			positive_n: n > 0
+			positive_n: n >= 0
 		deferred
 		end
 
 	key_storage_put (k: K; i: INTEGER)
 			-- Put `k' at position `i' in `key_storage'.
 		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_large_enough: i >= 0
+			i_small_enough: i <= last_position
 		deferred
 		end
 
@@ -838,12 +856,20 @@ feature {NONE} -- Implementation
 	key_storage_resize (n: INTEGER)
 			-- Resize `key_storage'.
 		require
-			n_large_enough: n > capacity
+			n_large_enough: n >= capacity
 		deferred
 		end
 
 	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
+		deferred
+		end
+
+	key_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `key_storage'.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= last_position + 1
 		deferred
 		end
 
@@ -854,15 +880,15 @@ feature {NONE} -- Implementation
 			-- slot positions located before or at `last_position' with
 			-- indexes less that or equal to `Free_watermark'.
 		require
-			positive_n: n > 0
+			positive_n: n >= 0
 		deferred
 		end
 
 	clashes_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `clashes'.
 		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= capacity
+			i_large_enough: i >= 0
+			i_small_enough: i < capacity
 		deferred
 		ensure
 			inserted: clashes_item (i) = v
@@ -876,7 +902,7 @@ feature {NONE} -- Implementation
 	clashes_resize (n: INTEGER)
 			-- Resize `clashes'.
 		require
-			n_large_enough: n > capacity
+			n_large_enough: n >= capacity
 		deferred
 		end
 
@@ -890,7 +916,7 @@ feature {NONE} -- Implementation
 			-- by hash codes from 0 to `n-1' (the entry at index
 			-- `n-1' being reserved for void keys)
 		require
-			positive_n: n > 0
+			positive_n: n >= 0
 		deferred
 		end
 
@@ -954,13 +980,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	No_position: INTEGER = 0
+	No_position: INTEGER = -1
 			-- Not valid position mark
 
-	Free_watermark: INTEGER = -1
+	Free_watermark: INTEGER = -2
 			-- Limit between free and occupied slots in `clashes'
 
-	Free_offset: INTEGER = -1
+	Free_offset: INTEGER = -3
 			-- Offset used to make sure that free slot indexes
 			-- are below `Free_watermark' in `clashes'
 
@@ -978,14 +1004,14 @@ feature {NONE} -- Cursor movements
 	move_all_cursors_after
 			-- Move `after' all cursors.
 		local
-			a_cursor, next_cursor: like new_cursor
+			a_cursor, next_cursor: detachable like new_cursor
 		do
 			from
 				a_cursor := internal_cursor
 			until
 				(a_cursor = Void)
 			loop
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 				next_cursor := a_cursor.next_cursor
 				a_cursor.set_next_cursor (Void)
 				a_cursor := next_cursor
@@ -999,7 +1025,7 @@ feature {NONE} -- Cursor movements
 			valid_old_position: valid_position (old_position)
 			valid_new_position: valid_position (new_position) and then valid_slot (new_position)
 		local
-			a_cursor: like new_cursor
+			a_cursor: detachable like new_cursor
 		do
 			from
 				a_cursor := internal_cursor
@@ -1018,11 +1044,12 @@ feature {NONE} -- Cursor movements
 		require
 			valid_old_position: valid_position (old_position)
 		local
-			a_cursor, previous_cursor, next_cursor: like new_cursor
+			a_cursor, next_cursor: detachable like new_cursor
+			previous_cursor: like new_cursor
 		do
 			a_cursor := internal_cursor
 			if a_cursor.position = old_position then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 			end
 			previous_cursor := a_cursor
 			a_cursor := a_cursor.next_cursor
@@ -1031,7 +1058,7 @@ feature {NONE} -- Cursor movements
 				(a_cursor = Void)
 			loop
 				if a_cursor.position = old_position then
-					a_cursor.set_position (after_position)
+					a_cursor.set_after
 					next_cursor := a_cursor.next_cursor
 					previous_cursor.set_next_cursor (next_cursor)
 					a_cursor.set_next_cursor (Void)
@@ -1074,18 +1101,6 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			Result := item_storage_item (a_cursor.position)
 		end
 
-	cursor_after (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to right of `a_cursor'?
-		do
-			Result := (a_cursor.position = after_position)
-		end
-
-	cursor_before (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no valid position to left of `a_cursor'?
-		do
-			Result := (a_cursor.position = before_position)
-		end
-
 	cursor_is_first (a_cursor: like new_cursor): BOOLEAN
 			-- Is `a_cursor' on first item?
 		local
@@ -1093,7 +1108,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 		do
 			if not is_empty then
 				from
-					i := 1
+					i := 0
 				until
 					clashes_item (i) > Free_watermark
 				loop
@@ -1120,12 +1135,6 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 		end
 
-	cursor_off (a_cursor: like new_cursor): BOOLEAN
-			-- Is there no item at `a_cursor' position?
-		do
-			Result := (a_cursor.position < 0)
-		end
-
 	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN
 			-- Is `a_cursor' at same position as `other'?
 		do
@@ -1139,11 +1148,11 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			if is_empty then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 			else
 				was_off := cursor_off (a_cursor)
 				from
-					i := 1
+					i := 0
 					nb := last_position
 				until
 					i > nb or else clashes_item (i) > Free_watermark
@@ -1151,7 +1160,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 					i := i + 1
 				end
 				if i > nb then
-					a_cursor.set_position (after_position)
+					a_cursor.set_after
 					if not was_off then
 						remove_traversing_cursor (a_cursor)
 					end
@@ -1171,18 +1180,18 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			if is_empty then
-				a_cursor.set_position (before_position)
+				a_cursor.set_before
 			else
 				was_off := cursor_off (a_cursor)
 				from
 					i := last_position
 				until
-					i < 1 or else clashes_item (i) > Free_watermark
+					i < 0 or else clashes_item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
 				if i < 0 then
-					a_cursor.set_position (before_position)
+					a_cursor.set_before
 					if not was_off then
 						remove_traversing_cursor (a_cursor)
 					end
@@ -1203,7 +1212,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			p: INTEGER
 		do
 			p := a_cursor.position
-			if p = before_position then
+			if p = a_cursor.before_position then
 				was_off := True
 				i := 0
 			else
@@ -1218,7 +1227,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 				i := i + 1
 			end
 			if i > nb then
-				a_cursor.set_position (after_position)
+				a_cursor.set_after
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1238,7 +1247,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			p: INTEGER
 		do
 			p := a_cursor.position
-			if p = after_position then
+			if p = a_cursor.after_position then
 				was_off := True
 				i := last_position
 			else
@@ -1247,12 +1256,12 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			end
 			from
 			until
-				i < 1 or else clashes_item (i) > Free_watermark
+				i < 0 or else clashes_item (i) > Free_watermark
 			loop
 				i := i - 1
 			end
-			if i < 1 then
-				a_cursor.set_position (before_position)
+			if i < 0 then
+				a_cursor.set_before
 				if not was_off then
 					remove_traversing_cursor (a_cursor)
 				end
@@ -1270,14 +1279,11 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move `after' if not found.
-		local
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					cursor_after (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
+					cursor_after (a_cursor) or else l_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_forth (a_cursor)
 				end
@@ -1298,14 +1304,11 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Move `before' if not found.
-		local
-			a_tester: like equality_tester
 		do
-			a_tester := equality_tester
-			if a_tester /= Void then
+			if attached equality_tester as l_tester then
 				from
 				until
-					cursor_before (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
+					cursor_before (a_cursor) or else l_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_back (a_cursor)
 				end
@@ -1326,7 +1329,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := cursor_off (a_cursor)
-			a_cursor.set_position (after_position)
+			a_cursor.set_after
 			if not was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -1338,7 +1341,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			was_off: BOOLEAN
 		do
 			was_off := cursor_off (a_cursor)
-			a_cursor.set_position (before_position)
+			a_cursor.set_before
 			if not was_off then
 				remove_traversing_cursor (a_cursor)
 			end
@@ -1359,12 +1362,6 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 				remove_traversing_cursor (a_cursor)
 			end
 		end
-
-	before_position: INTEGER = -1
-			-- Special value for before cursor position
-
-	after_position: INTEGER = -2
-			-- Special values for after cursor position
 
 feature {NONE} -- Configuration
 

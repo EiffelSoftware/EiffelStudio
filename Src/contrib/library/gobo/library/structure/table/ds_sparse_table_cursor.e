@@ -4,8 +4,9 @@ note
 
 		"Cursors for sparse table traversals"
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +22,8 @@ inherit
 		end
 
 	DS_BILINEAR_TABLE_CURSOR [G, K]
+		undefine
+			off
 		redefine
 			container,
 			next_cursor
@@ -56,7 +59,7 @@ feature -- Element change
 
 feature {DS_SPARSE_TABLE} -- Implementation
 
-	next_cursor: DS_SPARSE_TABLE_CURSOR [G, K]
+	next_cursor: detachable DS_SPARSE_TABLE_CURSOR [G, K]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'

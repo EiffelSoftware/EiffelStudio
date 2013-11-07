@@ -5,8 +5,9 @@ note
 		"Sparse tables implemented with multi-arrays. Ancestor of %
 		%hash tables which should supply its hashing mechanism."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +39,15 @@ inherit
 		undefine
 			is_equal,
 			copy
+		end
+
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			correct_mismatch
 		end
 
 feature {NONE} -- Initialization
@@ -261,10 +271,10 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	item_storage_item (i: INTEGER): G
 			-- Item at position `i' in `item_storage'
 		local
-			subitems: SPECIAL [G]
+			subitems: detachable SPECIAL [G]
 		do
 			subitems := item_storage.item (i // chunk_size)
-			if subitems /= Void then
+			check valid_index: subitems /= Void then
 				Result := subitems.item (i \\ chunk_size)
 			end
 		end
@@ -272,14 +282,13 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	item_storage_put (v: G; i: INTEGER)
 			-- Put `v' at position `i' in `item_storage'.
 		local
-			subitems: SPECIAL [G]
+			subitems: detachable SPECIAL [G]
 			j: INTEGER
-			l_dead_item: G
 		do
 			j := i // chunk_size
 			subitems := item_storage.item (j)
 			if subitems = Void then
-				subitems := special_item_routines.make_filled (l_dead_item, chunk_size)
+				subitems := special_item_routines.make (chunk_size)
 				item_storage.put (subitems, j)
 			end
 			special_item_routines.force (subitems, v, i \\ chunk_size)
@@ -288,10 +297,10 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	key_storage_item (i: INTEGER): K
 			-- Item at position `i' in `key_storage'
 		local
-			subkeys: SPECIAL [K]
+			subkeys: detachable SPECIAL [K]
 		do
 			subkeys := key_storage.item (i // chunk_size)
-			if subkeys /= Void then
+			check valid_index: subkeys /= Void then
 				Result := subkeys.item (i \\ chunk_size)
 			end
 		end
@@ -299,17 +308,19 @@ feature {DS_MULTIARRAYED_SPARSE_TABLE_CURSOR} -- Implementation
 	clashes_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `clashes'
 		local
-			subclashes: SPECIAL [INTEGER]
+			subclashes: detachable SPECIAL [INTEGER]
 		do
 			subclashes := clashes.item (i // chunk_size)
 			if subclashes /= Void then
 				Result := subclashes.item (i \\ chunk_size)
+			else
+				Result := No_position
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	item_storage: ARRAY [SPECIAL [G]]
+	item_storage: ARRAY [detachable SPECIAL [G]]
 			-- Storage for items of the table indexed from 1 to `capacity'
 
 	make_item_storage (n: INTEGER)
@@ -324,7 +335,7 @@ feature {NONE} -- Implementation
 			-- Clone `item_storage'.
 		local
 			i, nb: INTEGER
-			subitems: SPECIAL [G]
+			subitems: detachable SPECIAL [G]
 		do
 			item_storage := array_special_item_routines.cloned_array (item_storage)
 			nb := item_storage.upper
@@ -351,21 +362,39 @@ feature {NONE} -- Implementation
 
 	item_storage_wipe_out
 			-- Wipe out items in `item_storage'.
-		local
-			i, nb: INTEGER
 		do
-			nb := item_storage.upper
-			from
-				i := 0
-			until
-				i > nb
-			loop
+			item_storage.fill_with (Void)
+		end
+
+	item_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `item_storage'.
+		local
+			subitems: detachable SPECIAL [G]
+			i, j: INTEGER
+			l_upper: INTEGER
+		do
+			i := n // chunk_size
+			j := n \\ chunk_size
+			if j = 0 then
 				item_storage.put (Void, i)
-				i := i + 1
+			else
+				subitems := item_storage.item (i)
+				if subitems /= Void then
+					subitems.keep_head (j)
+				end
+				from
+					i := i + 1
+					l_upper := item_storage.upper
+				until
+					i > l_upper
+				loop
+					item_storage.put (Void, i)
+					i := i + 1
+				end
 			end
 		end
 
-	key_storage: ARRAY [SPECIAL [K]]
+	key_storage: ARRAY [detachable SPECIAL [K]]
 			-- Storage for keys of the table indexed from 1 to `capacity'
 
 	make_key_storage (n: INTEGER)
@@ -379,14 +408,13 @@ feature {NONE} -- Implementation
 	key_storage_put (k: K; i: INTEGER)
 			-- Put `k' at position `i' in `key_storage'.
 		local
-			subkeys: SPECIAL [K]
+			subkeys: detachable SPECIAL [K]
 			j: INTEGER
-			l_dead_key: K
 		do
 			j := i // chunk_size
 			subkeys := key_storage.item (j)
 			if subkeys = Void then
-				subkeys := special_key_routines.make_filled (l_dead_key, chunk_size)
+				subkeys := special_key_routines.make (chunk_size)
 				key_storage.put (subkeys, j)
 			end
 			special_key_routines.force (subkeys, k, i \\ chunk_size)
@@ -396,7 +424,7 @@ feature {NONE} -- Implementation
 			-- Clone `key_storage'.
 		local
 			i, nb: INTEGER
-			subkeys: SPECIAL [K]
+			subkeys: detachable SPECIAL [K]
 		do
 			key_storage := array_special_key_routines.cloned_array (key_storage)
 			nb := key_storage.upper
@@ -423,21 +451,39 @@ feature {NONE} -- Implementation
 
 	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
-		local
-			i, nb: INTEGER
 		do
-			nb := key_storage.upper
-			from
-				i := 0
-			until
-				i > nb
-			loop
+			key_storage.fill_with (Void)
+		end
+
+	key_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `key_storage'.
+		local
+			subkeys: detachable SPECIAL [K]
+			i, j: INTEGER
+			l_upper: INTEGER
+		do
+			i := n // chunk_size
+			j := n \\ chunk_size
+			if j = 0 then
 				key_storage.put (Void, i)
-				i := i + 1
+			else
+				subkeys := key_storage.item (i)
+				if subkeys /= Void then
+					subkeys.keep_head (j)
+				end
+				from
+					i := i + 1
+					l_upper := key_storage.upper
+				until
+					i > l_upper
+				loop
+					key_storage.put (Void, i)
+					i := i + 1
+				end
 			end
 		end
 
-	clashes: ARRAY [SPECIAL [INTEGER]]
+	clashes: ARRAY [detachable SPECIAL [INTEGER]]
 			-- Indexes in `item_storage' and `key_storage'  when there are clashes
 			-- in `slots'. Each entry points to the next alternative
 			-- until `No_position' is reached. Also keep track of free
@@ -453,13 +499,13 @@ feature {NONE} -- Implementation
 	clashes_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `clashes'.
 		local
-			subclashes: SPECIAL [INTEGER]
+			subclashes: detachable SPECIAL [INTEGER]
 			j: INTEGER
 		do
 			j := i // chunk_size
 			subclashes := clashes.item (j)
 			if subclashes = Void then
-				subclashes := SPECIAL_INTEGER_.make_filled (0, chunk_size)
+				create subclashes.make_filled (No_position, chunk_size)
 				clashes.put (subclashes, j)
 			end
 			subclashes.put (v, i \\ chunk_size)
@@ -469,7 +515,7 @@ feature {NONE} -- Implementation
 			-- Clone `clashes'.
 		local
 			i, nb: INTEGER
-			subclashes: SPECIAL [INTEGER]
+			subclashes: detachable SPECIAL [INTEGER]
 		do
 			clashes := ARRAY_SPECIAL_INTEGER_.cloned_array (clashes)
 			nb := clashes.upper
@@ -496,21 +542,11 @@ feature {NONE} -- Implementation
 
 	clashes_wipe_out
 			-- Wipe out items in `clashes'.
-		local
-			i, nb: INTEGER
 		do
-			nb := clashes.upper
-			from
-				i := 0
-			until
-				i > nb
-			loop
-				clashes.put (Void, i)
-				i := i + 1
-			end
+			clashes.fill_with (Void)
 		end
 
-	slots: ARRAY [SPECIAL [INTEGER]]
+	slots: ARRAY [detachable SPECIAL [INTEGER]]
 			-- Indexes in `item_storage' and `key_storage', indexed by hash codes
 			-- from 0 to `modulus' (the entry at index `modulus'
 			-- being reserved for void items)
@@ -524,24 +560,26 @@ feature {NONE} -- Implementation
 	slots_item (i: INTEGER): INTEGER
 			-- Item at position `i' in `slots'
 		local
-			subslots: SPECIAL [INTEGER]
+			subslots: detachable SPECIAL [INTEGER]
 		do
 			subslots := slots.item (i // chunk_size)
 			if subslots /= Void then
 				Result := subslots.item (i \\ chunk_size)
+			else
+				Result := No_position
 			end
 		end
 
 	slots_put (v: INTEGER; i: INTEGER)
 			-- Put `v' at position `i' in `slots'.
 		local
-			subslots: SPECIAL [INTEGER]
+			subslots: detachable SPECIAL [INTEGER]
 			j: INTEGER
 		do
 			j := i // chunk_size
 			subslots := slots.item (j)
 			if subslots = Void then
-				subslots := SPECIAL_INTEGER_.make_filled (0, chunk_size)
+				create subslots.make_filled (No_position, chunk_size)
 				slots.put (subslots, j)
 			end
 			subslots.put (v, i \\ chunk_size)
@@ -551,7 +589,7 @@ feature {NONE} -- Implementation
 			-- Clone `slots'.
 		local
 			i, nb: INTEGER
-			subslots: SPECIAL [INTEGER]
+			subslots: detachable SPECIAL [INTEGER]
 		do
 			slots := ARRAY_SPECIAL_INTEGER_.cloned_array (slots)
 			nb := slots.upper
@@ -578,45 +616,162 @@ feature {NONE} -- Implementation
 
 	slots_wipe_out
 			-- Wipe out items in `slots'.
-		local
-			i, nb: INTEGER
 		do
-			nb := slots.upper
-			from
-				i := 0
-			until
-				i > nb
-			loop
-				slots.put (Void, i)
-				i := i + 1
-			end
+			slots.fill_with (Void)
 		end
 
 	special_item_routines: KL_SPECIAL_ROUTINES [G]
 			-- Routines that ought to be in SPECIAL
 
-	array_special_item_routines: KL_ARRAY_ROUTINES [SPECIAL [G]]
+	array_special_item_routines: KL_ARRAY_ROUTINES [detachable SPECIAL [G]]
 			-- Routines that ought to be in ARRAY
 
 	special_key_routines: KL_SPECIAL_ROUTINES [K]
 			-- Routines that ought to be in SPECIAL
 
-	array_special_key_routines: KL_ARRAY_ROUTINES [SPECIAL [K]]
+	array_special_key_routines: KL_ARRAY_ROUTINES [detachable SPECIAL [K]]
 			-- Routines that ought to be in ARRAY
+
+feature {NONE} -- Storable mismatch
+
+	correct_mismatch
+			-- Attempt to correct object mismatch using `mismatch_information'.
+		local
+			l_stored_version_number: INTEGER
+		do
+			if not attached mismatch_information.stored_version as l_stored_version or else l_stored_version.is_empty then
+				correct_mismatch_20130823
+			elseif l_stored_version.is_integer then
+				l_stored_version_number := l_stored_version.to_integer
+				if l_stored_version_number < 20130823 then
+					correct_mismatch_20130823
+				else
+					precursor
+				end
+			else
+				precursor
+			end
+		end
+
+	correct_mismatch_20130823
+			-- Correct storable mismatch introducted in version "20130823".
+		local
+			i, nb: INTEGER
+			j, l_count: INTEGER
+		do
+			from
+				i := item_storage.lower
+				nb := item_storage.upper
+			until
+				i > nb
+			loop
+				if attached item_storage.item (i) as l_subitems then
+					l_count := l_subitems.count
+					if i /= 0 and then l_count > 0 then
+						item_storage_put (l_subitems.item (0), i * chunk_size - 1)
+					end
+					l_count := l_count - 1
+					if l_count > 0 then
+						l_subitems.move_data (1, 0, l_count)
+						l_subitems.keep_head (l_count)
+					else
+						item_storage.put (Void, i)
+					end
+				end
+				i := i + 1
+			end
+			if item_storage.count /= ((capacity - 1) // chunk_size) + 1 then
+				item_storage := item_storage.subarray (0, (capacity - 1) // chunk_size)
+			end
+			from
+				i := key_storage.lower
+				nb := key_storage.upper
+			until
+				i > nb
+			loop
+				if attached key_storage.item (i) as l_subkeys then
+					l_count := l_subkeys.count
+					if i /= 0 and then l_count > 0 then
+						key_storage_put (l_subkeys.item (0), i * chunk_size - 1)
+					end
+					l_count := l_count - 1
+					if l_count > 0 then
+						l_subkeys.move_data (1, 0, l_count)
+						l_subkeys.keep_head (l_count)
+					else
+						key_storage.put (Void, i)
+					end
+				end
+				i := i + 1
+			end
+			if key_storage.count /= ((capacity - 1) // chunk_size) + 1 then
+				key_storage := key_storage.subarray (0, (capacity - 1) // chunk_size)
+			end
+			from
+				i := clashes.lower
+				nb := clashes.upper
+			until
+				i > nb
+			loop
+				if attached clashes.item (i) as l_subclashes then
+					l_count := l_subclashes.count
+					if i /= 0 and then l_count > 0 then
+						clashes_put (l_subclashes.item (0) - 1, i * chunk_size - 1)
+					end
+					from
+						j := 1
+						l_count := l_count - 1
+					until
+						j > nb
+					loop
+						l_subclashes.put (l_subclashes.item (j) - 1, j - 1)
+						j := j + 1
+					end
+					l_subclashes.put (No_position, l_count)
+				end
+				i := i + 1
+			end
+			if clashes.count /= ((capacity - 1) // chunk_size) + 1 then
+				clashes := clashes.subarray (0, (capacity - 1) // chunk_size)
+			end
+			from
+				i := slots.lower
+				nb := slots.upper
+			until
+				i > nb
+			loop
+				if attached slots.item (i) as l_subslots then
+					from
+						j := l_subslots.count - 1
+					until
+						j < 0
+					loop
+						l_subslots.put (l_subslots.item (j) - 1, j)
+						j := j - 1
+					end
+				end
+				i := i + 1
+			end
+			clashes_previous_position := clashes_previous_position - 1
+			found_position := found_position - 1
+			free_slot := free_slot - 1
+			position := position - 1
+			last_position := last_position - 1
+		end
 
 invariant
 
 	chunk_size_positive: chunk_size > 0
 	item_storage_not_void: item_storage /= Void
-	item_storage_count: item_storage.count = (capacity // chunk_size) + 1
+	item_storage_count: item_storage.count = ((capacity - 1) // chunk_size) + 1
 	special_item_routines_not_void: special_item_routines /= Void
 	array_special_item_routines_not_void: array_special_item_routines /= Void
 	key_storage_not_void: key_storage /= Void
-	key_storage_count: key_storage.count = (capacity // chunk_size) + 1
+	key_storage_count: key_storage.count = ((capacity - 1) // chunk_size) + 1
 	special_key_routines_not_void: special_key_routines /= Void
 	array_special_key_routines_not_void: array_special_key_routines /= Void
 	clashes_not_void: clashes /= Void
-	clashes_count: clashes.count = (capacity // chunk_size) + 1
+	clashes_count: clashes.count = ((capacity - 1) // chunk_size) + 1
 	slots_not_void: slots /= Void
 	slots_count: slots.count = (modulus // chunk_size) + 1
 

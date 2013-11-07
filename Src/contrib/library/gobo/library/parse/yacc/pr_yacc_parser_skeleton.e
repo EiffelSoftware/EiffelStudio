@@ -5,7 +5,7 @@ note
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,6 +62,7 @@ feature -- Initialization
 			rule := Void
 			precedence_token := Void
 			start_symbol := Void
+			in_generics := 0
 		end
 
 feature -- Parsing
@@ -291,10 +292,10 @@ feature {NONE} -- Factory
 		do
 			if is_terminal (a_name) then
 				report_variable_declared_as_token_error (a_name)
-				Result := new_dummy_variable
+				Result := new_midrule_variable
 			elseif is_nonterminal (a_name) then
 				report_variable_declared_twice_error (a_name)
-				Result := new_dummy_variable
+				Result := new_midrule_variable
 			else
 				Result := new_variable (a_name)
 			end
@@ -480,7 +481,7 @@ feature {NONE} -- Factory
 			variable_not_void: Result /= Void
 		end
 
-	new_dummy_variable: PR_VARIABLE
+	new_midrule_variable: PR_VARIABLE
 			-- New dummy nonterminal symbol used for mid-rule
 			-- semantic actions (Use unique symbol names.)
 		local
@@ -496,7 +497,7 @@ feature {NONE} -- Factory
 			nonterminal_symbols.force (Result, a_name)
 			last_grammar.put_variable (Result)
 		ensure
-			dummy_variable_not_void: Result /= Void
+			midrule_variable_not_void: Result /= Void
 		end
 
 	new_symbol (a_name: STRING): PR_SYMBOL
@@ -529,7 +530,7 @@ feature {NONE} -- Factory
 			symbol_not_void: Result /= Void
 		end
 
-	new_type (a_type_mark: STRING; a_name: STRING): PR_TYPE
+	new_type (a_type_mark: detachable STRING; a_name: STRING): PR_TYPE
 			-- Type named `a_name'; Create a new type if
 			-- it does not exist yet.
 		require
@@ -565,7 +566,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_basic_type (a_type_mark: STRING; a_name: STRING): PR_TYPE
+	new_basic_type (a_type_mark: detachable STRING; a_name: STRING): PR_TYPE
 			-- Basic type named `a_name'; Create a new type if
 			-- it does not exist yet.
 		require
@@ -601,7 +602,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_generic_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_TYPE]): PR_TYPE
+	new_generic_type (a_type_mark: detachable STRING; a_name: STRING; generics: detachable DS_ARRAYED_LIST [PR_TYPE]): PR_TYPE
 			-- Type named `a_name' with generic parameters `generics';
 			-- Create a new type if it does not exist yet.
 		require
@@ -622,11 +623,9 @@ feature {NONE} -- Factory
 				types.search (upper_name)
 				if types.found then
 					Result := types.found_item
-				else
-					if in_generics = 0 then
-						types.force_new (Result, upper_name)
-						last_grammar.put_type (Result)
-					end
+				elseif in_generics = 0 then
+					types.force_new (Result, upper_name)
+					last_grammar.put_type (Result)
 				end
 			else
 				Result := new_type (a_type_mark, a_name)
@@ -635,7 +634,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_labeled_tuple_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE]): PR_TYPE
+	new_labeled_tuple_type (a_type_mark: detachable STRING; a_name: STRING; generics: detachable DS_ARRAYED_LIST [PR_LABELED_TYPE]): PR_TYPE
 			-- Labeled Tuple type named `a_name' with generic parameters `generics';
 			-- Create a new type if it does not exist yet.
 		require
@@ -656,11 +655,9 @@ feature {NONE} -- Factory
 				types.search (upper_name)
 				if types.found then
 					Result := types.found_item
-				else
-					if in_generics = 0 then
-						types.force_new (Result, upper_name)
-						last_grammar.put_type (Result)
-					end
+				elseif in_generics = 0 then
+					types.force_new (Result, upper_name)
+					last_grammar.put_type (Result)
 				end
 			else
 				Result := new_type (a_type_mark, a_name)
@@ -669,7 +666,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_anchored_type (a_type_mark: STRING; a_name: STRING): PR_TYPE
+	new_anchored_type (a_type_mark: detachable STRING; a_name: STRING): PR_TYPE
 			-- Anchored type of the form "like `a_name'";
 			-- Create a new type if it does not exist yet.
 		require
@@ -705,7 +702,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_like_current_type (a_type_mark: STRING): PR_TYPE
+	new_like_current_type (a_type_mark: detachable STRING): PR_TYPE
 			-- Anchored type of the form "like Current";
 			-- Create a new type if it does not exist yet.
 		require
@@ -739,7 +736,7 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_qualified_anchored_type (a_type_mark: STRING; a_type: PR_TYPE; a_name: STRING): PR_TYPE
+	new_qualified_anchored_type (a_type_mark: detachable STRING; a_type: PR_TYPE; a_name: STRING): PR_TYPE
 			-- Qualified anchored type of the form "like {`a_type'}`a_name'";
 			-- Create a new type if it does not exist yet.
 		require
@@ -759,11 +756,9 @@ feature {NONE} -- Factory
 			types.search (lower_name)
 			if types.found then
 				Result := types.found_item
-			else
-				if in_generics = 0 then
-					types.force_new (Result, lower_name)
-					last_grammar.put_type (Result)
-				end
+			elseif in_generics = 0 then
+				types.force_new (Result, lower_name)
+				last_grammar.put_type (Result)
 			end
 		ensure
 			type_not_void: Result /= Void
@@ -842,18 +837,18 @@ feature {NONE} -- Implementation
 			rhs_not_void: rhs /= Void
 			a_rule_not_void: a_rule /= Void
 		local
-			dummy_rule: PR_RULE
-			dummy_variable: PR_VARIABLE
+			midrule: PR_RULE
+			midrule_variable: PR_VARIABLE
 		do
 			if a_rule.action /= No_action then
 					-- A mid-rule action has been detected.
-				dummy_variable := new_dummy_variable
-				dummy_variable.set_type (a_rule.lhs.type)
-				dummy_rule := new_rule (dummy_variable)
-				dummy_rule.set_action (a_rule.action)
-				dummy_rule.set_line_nb (a_rule.line_nb)
-				put_rule (dummy_rule)
-				a_rule.put_symbol (dummy_variable)
+				midrule_variable := new_midrule_variable
+				midrule_variable.set_type (a_rule.lhs.type)
+				midrule := new_rule (midrule_variable)
+				midrule.set_action (a_rule.action)
+				midrule.set_line_nb (a_rule.line_nb)
+				put_rule (midrule)
+				a_rule.put_symbol (midrule_variable)
 				a_rule.set_action (No_action)
 			end
 			a_rule.put_symbol (rhs)
@@ -867,18 +862,18 @@ feature {NONE} -- Implementation
 			an_action_not_void: an_action /= Void
 			a_rule_not_void: a_rule /= Void
 		local
-			dummy_rule: PR_RULE
-			dummy_variable: PR_VARIABLE
+			midrule: PR_RULE
+			midrule_variable: PR_VARIABLE
 		do
 			if a_rule.action /= No_action then
 					-- A mid-rule action has been detected.
-				dummy_variable := new_dummy_variable
-				dummy_variable.set_type (a_rule.lhs.type)
-				dummy_rule := new_rule (dummy_variable)
-				dummy_rule.set_action (a_rule.action)
-				dummy_rule.set_line_nb (a_rule.line_nb)
-				put_rule (dummy_rule)
-				a_rule.put_symbol (dummy_variable)
+				midrule_variable := new_midrule_variable
+				midrule_variable.set_type (a_rule.lhs.type)
+				midrule := new_rule (midrule_variable)
+				midrule.set_action (a_rule.action)
+				midrule.set_line_nb (a_rule.line_nb)
+				put_rule (midrule)
+				a_rule.put_symbol (midrule_variable)
 			end
 			a_rule.set_action (an_action)
 		ensure
@@ -904,8 +899,8 @@ feature {NONE} -- Implementation
 			a_symbol: PR_VARIABLE
 			a_name: STRING
 		do
-			if start_symbol /= Void then
-				a_name := start_symbol.first
+			if attached start_symbol as l_start_symbol then
+				a_name := l_start_symbol.first
 				if is_terminal (a_name) then
 					report_start_symbol_token_error
 				elseif not is_nonterminal (a_name) then
@@ -1038,12 +1033,12 @@ feature {NONE} -- Implementation
 			a_rule_not_void: a_rule /= Void
 		local
 			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
-			a_token: PR_TOKEN
+			a_token: detachable PR_TOKEN
 			i: INTEGER
 		do
-			if precedence_token /= Void then
-				a_token := precedence_token
-				a_token.set_useful (True)
+			if attached precedence_token as l_precedence_token then
+				a_token := l_precedence_token
+				l_precedence_token.set_useful (True)
 			else
 				from
 					rhs := a_rule.rhs
@@ -1107,8 +1102,8 @@ feature {NONE} -- Implementation
 				i > nb
 			loop
 				a_token := tokens.item (i)
-				if translate.item (a_token.token_id) /= Void then
-					report_token_id_used_twice_warning (translate.item (a_token.token_id), a_token)
+				if attached translate.item (a_token.token_id) as l_translate_token then
+					report_token_id_used_twice_warning (l_translate_token, a_token)
 				else
 					translate.put (a_token, a_token.token_id)
 				end
@@ -1134,14 +1129,14 @@ feature {NONE} -- Access
 	precedence: INTEGER
 			-- Precedence level of operators
 
-	precedence_token: PR_TOKEN
+	precedence_token: detachable PR_TOKEN
 			-- %prec token used to set the precedence level
 			-- and associativity of the rule being parsed
 
-	type: PR_TYPE
+	type: detachable PR_TYPE
 			-- Temporary variable
 
-	start_symbol: DS_PAIR [STRING, INTEGER]
+	start_symbol: detachable DS_PAIR [STRING, INTEGER]
 			-- Name and line number of the start symbol
 			-- declared by %start
 
@@ -1160,8 +1155,8 @@ feature {NONE} -- Access
 	last_value_names: DS_HASH_TABLE [PR_TYPE, STRING]
 			-- Types indexed by their 'last_value_name'
 
-	in_generics: INTEGER
-			-- If `0' type is not an actual generic parameter.
+ 	in_generics: INTEGER
+			-- If 0, the type is not an actual generic parameter
 
 feature {NONE} -- Status report
 
@@ -1280,11 +1275,13 @@ feature {NONE} -- Error handling
 			a_name: STRING
 			a_line: INTEGER
 		do
-			a_name := start_symbol.first
-			a_line := start_symbol.second
-			create an_error.make (filename, a_line, a_name)
-			error_handler.report_error (an_error)
-			successful := False
+			check start_symbol_not_void: attached start_symbol as l_start_symbol then
+				a_name := l_start_symbol.first
+				a_line := l_start_symbol.second
+				create an_error.make (filename, a_line, a_name)
+				error_handler.report_error (an_error)
+				successful := False
+			end
 		ensure
 			not_successful: not successful
 		end
@@ -1298,11 +1295,13 @@ feature {NONE} -- Error handling
 			a_name: STRING
 			a_line: INTEGER
 		do
-			a_name := start_symbol.first
-			a_line := start_symbol.second
-			create an_error.make (filename, a_line, a_name)
-			error_handler.report_error (an_error)
-			successful := False
+			check start_symbol_not_void: attached start_symbol as l_start_symbol then
+				a_name := l_start_symbol.first
+				a_line := l_start_symbol.second
+				create an_error.make (filename, a_line, a_name)
+				error_handler.report_error (an_error)
+				successful := False
+			end
 		ensure
 			not_successful: not successful
 		end
@@ -1617,7 +1616,7 @@ invariant
 	no_void_type: not types.has_void_item
 	last_value_names_not_void: last_value_names /= Void
 	no_void_last_value_name_type: not last_value_names.has_void_item
-	start_symbol_name_not_void: start_symbol /= Void implies start_symbol.first /= Void
+	start_symbol_name_not_void: attached start_symbol as l_start_symbol implies l_start_symbol.first /= Void
 	action_factory_not_void: action_factory /= Void
 
 end

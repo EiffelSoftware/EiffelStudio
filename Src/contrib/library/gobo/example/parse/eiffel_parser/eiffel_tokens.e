@@ -3,7 +3,7 @@ note
 	description: "Parser token codes"
 	generator: "geyacc version 3.9"
 
-class EIFFEL_TOKENS
+deferred class EIFFEL_TOKENS
 
 inherit
 
@@ -11,7 +11,7 @@ inherit
 
 feature -- Last values
 
-	last_any_value: ANY
+	last_detachable_any_value: detachable ANY
 	last_character_value: CHARACTER
 	last_integer_value: INTEGER
 	last_double_value: DOUBLE

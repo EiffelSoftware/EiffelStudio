@@ -1,8 +1,8 @@
 note
 	description: "References to objects meant to be exchanged with non-Eiffel software."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,6 +13,7 @@ frozen expanded class POINTER inherit
 			hash_code,
 			plus,
 			to_integer_32,
+			is_default_pointer,
 			out
 		end
 
@@ -27,6 +28,14 @@ feature -- Access
 
 	hash_code: INTEGER
 			-- Hash code value
+		external
+			"built_in"
+		end
+
+feature -- Status report
+
+	is_default_pointer: BOOLEAN
+			-- <Precursor>
 		external
 			"built_in"
 		end
@@ -54,5 +63,16 @@ feature -- Output
 		external
 			"built_in"
 		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

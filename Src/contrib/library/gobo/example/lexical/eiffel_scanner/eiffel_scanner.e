@@ -1731,6 +1731,7 @@ end
 feature {NONE} -- Table templates
 
 	yy_nxt_template: SPECIAL [INTEGER]
+			-- Template for `yy_nxt'
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -1877,6 +1878,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_chk_template: SPECIAL [INTEGER]
+			-- Template for `yy_chk'
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -2023,6 +2025,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_base_template: SPECIAL [INTEGER]
+			-- Template for `yy_base'
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   71,   72, 1065, 1066,   80, 1061, 1058,
@@ -2089,6 +2092,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_def_template: SPECIAL [INTEGER]
+			-- Template for `yy_def'
 		once
 			Result := yy_fixed_array (<<
 			    0,  537,    1,  538,  538,  537,  537,  537,  537,  537,
@@ -2155,6 +2159,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_ec_template: SPECIAL [INTEGER]
+			-- Template for `yy_ec'
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -2188,6 +2193,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]
+			-- Template for `yy_meta'
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    3,    4,    1,    5,    1,    1,    6,
@@ -2201,6 +2207,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_accept_template: SPECIAL [INTEGER]
+			-- Template for `yy_accept'
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,  189,  187,    1,    2,   17,

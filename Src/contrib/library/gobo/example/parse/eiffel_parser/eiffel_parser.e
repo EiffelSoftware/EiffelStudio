@@ -53,6 +53,21 @@ feature {NONE} -- Implementation
 	yy_create_value_stacks
 			-- Create value stacks.
 		do
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
 		end
 
 	yy_init_value_stacks
@@ -68,28 +83,12 @@ feature {NONE} -- Implementation
 	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
-		local
-			l_yyvs1_default_item: ANY
-			l_yyvs2_default_item: CHARACTER
-			l_yyvs3_default_item: INTEGER
-			l_yyvs4_default_item: DOUBLE
-			l_yyvs5_default_item: STRING
 		do
-			if yyvs1 /= Void then
-				yyvs1.fill_with (l_yyvs1_default_item, 0, yyvs1.upper)
-			end
-			if yyvs2 /= Void then
-				yyvs2.fill_with (l_yyvs2_default_item, 0, yyvs2.upper)
-			end
-			if yyvs3 /= Void then
-				yyvs3.fill_with (l_yyvs3_default_item, 0, yyvs3.upper)
-			end
-			if yyvs4 /= Void then
-				yyvs4.fill_with (l_yyvs4_default_item, 0, yyvs4.upper)
-			end
-			if yyvs5 /= Void then
-				yyvs5.fill_with (l_yyvs5_default_item, 0, yyvs5.upper)
-			end
+			yyvs1.keep_head (0)
+			yyvs2.keep_head (0)
+			yyvs3.keep_head (0)
+			yyvs4.keep_head (0)
+			yyvs5.keep_head (0)
 		end
 
 	yy_push_last_value (yychar1: INTEGER)
@@ -101,96 +100,51 @@ feature {NONE} -- Implementation
 			when 1 then
 				yyvsp1 := yyvsp1 + 1
 				if yyvsp1 >= yyvsc1 then
-					if yyvs1 = Void then
-						debug ("GEYACC")
-							std.error.put_line ("Create yyvs1")
-						end
-						create yyspecial_routines1
-						yyvsc1 := yyInitial_yyvs_size
-						yyvs1 := yyspecial_routines1.make (yyvsc1)
-					else
-						debug ("GEYACC")
-							std.error.put_line ("Resize yyvs1")
-						end
-						yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-						yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs1")
 					end
+					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 				end
-				yyspecial_routines1.force (yyvs1, last_any_value, yyvsp1)
+				yyspecial_routines1.force (yyvs1, last_detachable_any_value, yyvsp1)
 			when 2 then
 				yyvsp2 := yyvsp2 + 1
 				if yyvsp2 >= yyvsc2 then
-					if yyvs2 = Void then
-						debug ("GEYACC")
-							std.error.put_line ("Create yyvs2")
-						end
-						create yyspecial_routines2
-						yyvsc2 := yyInitial_yyvs_size
-						yyvs2 := yyspecial_routines2.make (yyvsc2)
-					else
-						debug ("GEYACC")
-							std.error.put_line ("Resize yyvs2")
-						end
-						yyvsc2 := yyvsc2 + yyInitial_yyvs_size
-						yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs2")
 					end
+					yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+					yyvs2 := yyspecial_routines2.aliased_resized_area (yyvs2, yyvsc2)
 				end
 				yyspecial_routines2.force (yyvs2, last_character_value, yyvsp2)
 			when 3 then
 				yyvsp3 := yyvsp3 + 1
 				if yyvsp3 >= yyvsc3 then
-					if yyvs3 = Void then
-						debug ("GEYACC")
-							std.error.put_line ("Create yyvs3")
-						end
-						create yyspecial_routines3
-						yyvsc3 := yyInitial_yyvs_size
-						yyvs3 := yyspecial_routines3.make (yyvsc3)
-					else
-						debug ("GEYACC")
-							std.error.put_line ("Resize yyvs3")
-						end
-						yyvsc3 := yyvsc3 + yyInitial_yyvs_size
-						yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs3")
 					end
+					yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+					yyvs3 := yyspecial_routines3.aliased_resized_area (yyvs3, yyvsc3)
 				end
 				yyspecial_routines3.force (yyvs3, last_integer_value, yyvsp3)
 			when 4 then
 				yyvsp4 := yyvsp4 + 1
 				if yyvsp4 >= yyvsc4 then
-					if yyvs4 = Void then
-						debug ("GEYACC")
-							std.error.put_line ("Create yyvs4")
-						end
-						create yyspecial_routines4
-						yyvsc4 := yyInitial_yyvs_size
-						yyvs4 := yyspecial_routines4.make (yyvsc4)
-					else
-						debug ("GEYACC")
-							std.error.put_line ("Resize yyvs4")
-						end
-						yyvsc4 := yyvsc4 + yyInitial_yyvs_size
-						yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs4")
 					end
+					yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+					yyvs4 := yyspecial_routines4.aliased_resized_area (yyvs4, yyvsc4)
 				end
 				yyspecial_routines4.force (yyvs4, last_double_value, yyvsp4)
 			when 5 then
 				yyvsp5 := yyvsp5 + 1
 				if yyvsp5 >= yyvsc5 then
-					if yyvs5 = Void then
-						debug ("GEYACC")
-							std.error.put_line ("Create yyvs5")
-						end
-						create yyspecial_routines5
-						yyvsc5 := yyInitial_yyvs_size
-						yyvs5 := yyspecial_routines5.make (yyvsc5)
-					else
-						debug ("GEYACC")
-							std.error.put_line ("Resize yyvs5")
-						end
-						yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-						yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs5")
 					end
+					yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+					yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
 				end
 				yyspecial_routines5.force (yyvs5, last_string_value, yyvsp5)
 			else
@@ -207,24 +161,15 @@ feature {NONE} -- Implementation
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
-			yyval1: ANY
+			yyval1: detachable ANY
 		do
 			yyvsp1 := yyvsp1 + 1
 			if yyvsp1 >= yyvsc1 then
-				if yyvs1 = Void then
-					debug ("GEYACC")
-						std.error.put_line ("Create yyvs1")
-					end
-					create yyspecial_routines1
-					yyvsc1 := yyInitial_yyvs_size
-					yyvs1 := yyspecial_routines1.make (yyvsc1)
-				else
-					debug ("GEYACC")
-						std.error.put_line ("Resize yyvs1")
-					end
-					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+				debug ("GEYACC")
+					std.error.put_line ("Resize yyvs1")
 				end
+				yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+				yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 			end
 			yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 		end
@@ -256,14 +201,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	yy_run_geyacc
+			-- You must run geyacc to regenerate this class.
+		do
+		end
+
 feature {NONE} -- Semantic actions
 
 	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
-			yyval1: ANY
+			yy_retried: BOOLEAN
+			yyval1: detachable ANY
 		do
-			inspect yy_act
+			if not yy_retried then
+				inspect yy_act
 when 1 then
 --|#line 75 "eiffel_parser.y"
 debug ("GEYACC")
@@ -275,20 +227,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -351,20 +294,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -403,20 +337,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -604,20 +529,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -665,20 +581,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -705,20 +612,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -757,20 +655,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -821,20 +710,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1004,20 +884,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1217,20 +1088,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1256,20 +1118,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1376,20 +1229,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1439,20 +1283,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1478,20 +1313,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1541,20 +1367,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1592,20 +1409,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1643,20 +1451,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1682,20 +1481,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1768,20 +1558,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1819,20 +1600,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -1893,20 +1665,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2003,20 +1766,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2425,20 +2179,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2465,20 +2210,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2586,20 +2322,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2686,20 +2413,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2726,20 +2444,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2766,20 +2475,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2818,20 +2518,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2870,20 +2561,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -2910,20 +2592,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3019,20 +2692,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3155,20 +2819,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3183,20 +2838,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3223,20 +2869,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3274,20 +2911,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3481,20 +3109,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3603,20 +3222,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3643,20 +3253,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3707,20 +3308,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3759,20 +3351,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3845,20 +3428,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp2 := yyvsp2 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3896,20 +3470,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -3971,20 +3536,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4011,20 +3567,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4040,20 +3587,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4236,20 +3774,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4276,20 +3805,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4474,20 +3994,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp2 := yyvsp2 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4503,20 +4014,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp3 := yyvsp3 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4532,20 +4034,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp4 := yyvsp4 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4561,20 +4054,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -4590,20 +4074,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5072,20 +4547,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5112,20 +4578,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5197,20 +4654,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5248,20 +4696,11 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5311,20 +4750,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp2 := yyvsp2 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5362,20 +4792,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5391,20 +4812,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5442,20 +4854,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp3 := yyvsp3 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5495,20 +4898,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp4 := yyvsp4 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5548,20 +4942,11 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 + 1
 	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
-		if yyvs1 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs1")
-			end
-			create yyspecial_routines1
-			yyvsc1 := yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.make (yyvsc1)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs1")
-			end
-			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
 		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
@@ -5576,13 +4961,19 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			else
-				debug ("GEYACC")
-					std.error.put_string ("Error in parser: unknown rule id: ")
-					std.error.put_integer (yy_act)
-					std.error.put_new_line
+				else
+					debug ("GEYACC")
+						std.error.put_string ("Error in parser: unknown rule id: ")
+						std.error.put_integer (yy_act)
+						std.error.put_new_line
+					end
+					abort
 				end
-				abort
+			end
+		rescue
+			if yy_parsing_status = yyAborted then
+				yy_retried := True
+				retry
 			end
 		end
 
@@ -6329,8 +5720,8 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Semantic value stacks
 
-	yyvs1: SPECIAL [ANY]
-			-- Stack for semantic values of type ANY
+	yyvs1: SPECIAL [detachable ANY]
+			-- Stack for semantic values of type detachable ANY
 
 	yyvsc1: INTEGER
 			-- Capacity of semantic value stack `yyvs1'
@@ -6338,8 +5729,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp1: INTEGER
 			-- Top of semantic value stack `yyvs1'
 
-	yyspecial_routines1: KL_SPECIAL_ROUTINES [ANY]
-			-- Routines that ought to be in SPECIAL [ANY]
+	yyspecial_routines1: KL_SPECIAL_ROUTINES [detachable ANY]
+			-- Routines that ought to be in SPECIAL [detachable ANY]
 
 	yyvs2: SPECIAL [CHARACTER]
 			-- Stack for semantic values of type CHARACTER

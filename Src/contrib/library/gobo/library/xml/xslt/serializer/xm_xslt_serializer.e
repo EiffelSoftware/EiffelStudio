@@ -5,7 +5,7 @@ note
 		"Interface to XSLT serializers"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

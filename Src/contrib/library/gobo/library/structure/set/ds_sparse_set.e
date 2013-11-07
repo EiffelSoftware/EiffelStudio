@@ -5,8 +5,9 @@ note
 		"Sets implemented with sparse arrays. Ancestor of hash sets %
 		%which should supply its hashing mechanism."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -123,7 +124,7 @@ feature -- Status report
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -149,7 +150,7 @@ feature -- Status report
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -193,7 +194,7 @@ feature -- Comparison
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -272,15 +273,15 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
+				if i >= capacity then
 					compress
 					i := last_position + 1
 				end
+				last_position := i
 				h := slots_position
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
 				item_storage_put (v, i)
-				last_position := i
 				count := count + 1
 			end
 		ensure then
@@ -364,16 +365,16 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
-					resize (new_capacity (i))
+				if i >= capacity then
+					resize (new_capacity (i + 1))
 					h := hash_position (v)
 				else
 					h := slots_position
 				end
+				last_position := i
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
 				item_storage_put (v, i)
-				last_position := i
 				count := count + 1
 			end
 		ensure then
@@ -508,7 +509,7 @@ feature -- Basic operations
 				from
 					i := last_position
 				until
-					i < 1
+					i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -541,7 +542,7 @@ feature -- Basic operations
 				from
 					i := last_position
 				until
-					i < 1
+					i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
@@ -607,7 +608,7 @@ feature {DS_SPARSE_SET_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	key_equality_tester: KL_EQUALITY_TESTER [G]
+	key_equality_tester: detachable KL_EQUALITY_TESTER [G]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -645,6 +646,11 @@ feature {NONE} -- Implementation
 
 	key_storage_wipe_out
 			-- Wipe out items in `key_storage'.
+		do
+		end
+
+	key_storage_keep_head (n: INTEGER)
+			-- Keep the first `n' items in `key_storage'.
 		do
 		end
 

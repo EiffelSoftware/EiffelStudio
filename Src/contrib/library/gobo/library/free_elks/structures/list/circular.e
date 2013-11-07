@@ -1,9 +1,7 @@
 note
-
-	description:
-		"Circular chains, without commitment to a particular representation"
+	description: "Circular chains, without commitment to a particular representation"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	names: circular, ring, sequence;
 	access: index, cursor, membership;
@@ -277,24 +275,14 @@ invariant
 	not_off_unless_empty: off implies is_empty
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class CIRCULAR
-
-
-
+end

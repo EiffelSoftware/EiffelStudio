@@ -166,9 +166,10 @@ feature -- Status report
 								Result := True
 							else
 								a_name := string_name
-								set_string_name (string_other_name)
-								other_inode := inode
-								set_string_name (a_name)
+								other_inode := tmp_file1.inode
+--								string_name := string_other_name
+--								other_inode := inode
+--								string_name := a_name
 								if inode /= other_inode then
 									Result := False
 								elseif tmp_file1.count /= count then
@@ -197,14 +198,18 @@ feature -- Status report
 												a_name := "gobotmp" + i.out
 												tmp_file1.reset (a_name)
 											end
-											old_change_name (a_name)
-											set_string_name (saved_string_name)
+											tmp_file1.reset (string_name)
+											tmp_file1.change_name (a_name)
+--											old_change_name (a_name)
+--											string_name := saved_string_name
 											if not exists then
 												tmp_file1.reset (string_other_name)
 												Result := not tmp_file1.exists
-												set_string_name (a_name)
-												old_change_name (saved_string_name)
-												set_string_name (saved_string_name)
+												tmp_file1.reset (a_name)
+												tmp_file1.change_name (string_name)
+--												string_name := a_name
+--												old_change_name (saved_string_name)
+--												string_name := saved_string_name
 											else
 													-- We don't know.
 													-- Return True for safety reason.
@@ -219,7 +224,7 @@ feature -- Status report
 				end
 			else
 				if saved_string_name /= Void then
-					set_string_name (saved_string_name)
+--					string_name := saved_string_name
 				end
 				Result := True
 			end
@@ -270,17 +275,17 @@ feature -- Basic operations
 					if exists then
 						if not same_physical_file (string_new_name) then
 							old_change_name (string_new_name)
-							set_string_name (saved_string_name)
-							tmp_file1.reset (string_name)
-							if not tmp_file1.exists then
+--							string_name := saved_string_name
+--							tmp_file1.reset (string_name)
+--							if not tmp_file1.exists then
 								name := new_name
-								set_string_name (string_new_name)
-							end
+--								string_name := string_new_name
+--							end
 						end
 					end
 				end
 			elseif saved_string_name /= Void then
-				set_string_name (saved_string_name)
+--				string_name := saved_string_name
 			end
 		rescue
 			if not rescued then
@@ -403,6 +408,26 @@ feature -- Basic operations
 			end
 		end
 
+	change_mode (a_mask: INTEGER)
+			-- Replace mode by `a_mask'.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				if string_name /= Empty_name then
+					if old_exists then
+						old_change_mode (a_mask)
+					end
+				end
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+		
+		
 feature {NONE} -- Implementation
 
 	Empty_name: STRING = "empty_name"
@@ -437,18 +462,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	set_string_name (a_name: READABLE_STRING_GENERAL)
-			-- Set `string_name' with `a_name'.
-		deferred
-		end
-
 	old_count: INTEGER
 			-- Size in bytes (0 if no associated physical file)
-		deferred
-		end
-
-	old_exists: BOOLEAN
-			-- Does physical file exist?
 		deferred
 		end
 
@@ -478,13 +493,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	inode: INTEGER
-			-- I-node number
-		require
-			file_exists: old_exists
-		deferred
-		end
-
 	old_change_name (new_name: STRING)
 			-- Change file name to `new_name'
 		require
@@ -495,6 +503,13 @@ feature {NONE} -- Implementation
 			name_changed: string_name.is_equal (new_name)
 		end
 
+	old_change_mode (a_mask: INTEGER)
+			-- Replace mode by `a_mask'.
+		require
+			file_exists: old_exists
+		deferred
+		end
+		
 	old_close
 			-- Close file.
 		require
@@ -515,6 +530,20 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+feature {KL_FILE} -- Implementation
+
+	inode: INTEGER
+			-- I-node number
+		require
+			file_exists: old_exists
+		deferred
+		end
+
+	old_exists: BOOLEAN
+			-- Does physical file exist?
+		deferred
+		end
+		
 invariant
 
 	string_name_not_void: string_name /= Void

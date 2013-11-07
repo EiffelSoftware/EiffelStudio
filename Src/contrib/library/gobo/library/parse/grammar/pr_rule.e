@@ -6,7 +6,7 @@ note
 		%about grammar rules, see $GOBO\doc\geyacc\rules.html"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +55,7 @@ feature -- Access
 	rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 			-- Right-hand-side of current rule
 
-	error_actions: DS_ARRAYED_LIST [PR_ERROR_ACTION]
+	error_actions: DS_ARRAYED_LIST [detachable PR_ERROR_ACTION]
 			-- Action to be executed if a syntax error occurs
 			-- before the i-th symbol of `rhs'
 
@@ -253,43 +253,6 @@ feature -- Output
 			end
 		end
 
-	print_precondition (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print precondition if we do not create/resize both "yyvs"
-			-- and "yyspecial_routines" as we assume it was previously created.
-		require
-			indent_positive: indent >= 0
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			a_type: PR_TYPE
-			i, nb: INTEGER_32
-			types: DS_HASH_TABLE [INTEGER_32, PR_TYPE]
-		do
-			a_type := lhs.type
-			nb := rhs.count
-			create types.make_map (nb + 1)
-			types.put_new (1, a_type)
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				a_type := rhs.item (i).type
-				types.search (a_type)
-				if types.found then
-					types.replace_found_item (types.found_item - 1)
-				else
-					types.put_new (-1, a_type)
-				end
-				i := i + 1
-			end
-
-			a_type := lhs.type
-			if types.item (a_type) <= 0 then
-				a_type.print_precondition (indent, a_file)
-			end
-		end
-
 	print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print semantic action to `a_file'.
 			-- `input_filename' is the name of the file where
@@ -366,79 +329,6 @@ feature -- Output
 				a_type.print_resize_yyvs (1, a_file)
 			end
 			a_type.print_push_yyval (1, a_file)
-			a_file.put_line ("end")
-		end
-
-	old_print_action (input_filename: STRING; a_line_pragma: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print semantic action to `a_file' using the old typing mechanism.
-			-- `input_filename' is the name of the file where
-			-- the action text as been specified.
-		require
-			input_filename_not_void: input_filename /= Void
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			a_type: PR_TYPE
-			nb: INTEGER
-		do
-			a_file.put_string ("--|#line ")
-			if a_line_pragma then
-				a_file.put_integer (line_nb)
-			else
-				a_file.put_string ("<not available>")
-			end
-			a_file.put_string (" %"")
-			a_file.put_string (input_filename)
-			a_file.put_line ("%"")
-			a_file.put_line ("debug (%"GEYACC%")")
-			a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
-			a_file.put_string (input_filename)
-			a_file.put_string ("' at line ")
-			if a_line_pragma then
-				a_file.put_integer (line_nb)
-			else
-				a_file.put_string ("<not available>")
-			end
-			a_file.put_line ("%")")
-			a_file.put_line ("end")
-			a_file.put_new_line
-			a_type := lhs.type
-			a_type.old_print_dollar_dollar_initialization (a_file)
-			a_file.put_new_line
-			a_file.put_string (action.out)
-			a_file.put_new_line
-			a_type.old_print_dollar_dollar_finalization (a_file)
-			a_file.put_new_line
-			a_file.put_line ("if yy_parsing_status >= yyContinue then")
-			nb := rhs.count
-			if nb /= 0 then
-				a_file.put_string ("%Tyyssp := yyssp - ")
-				a_file.put_integer (nb)
-				a_file.put_new_line
-			end
-			nb := nb - 1
-			if nb > 0 then
-				a_file.put_string ("%Tyyvsp := yyvsp - ")
-				a_file.put_integer (nb)
-				a_file.put_new_line
-			elseif nb < 0 then
-				a_file.put_string ("%Tyyvsp := yyvsp + ")
-				check
-					no_overflow: nb = -1
-				end
-				a_file.put_integer (-nb)
-				a_file.put_new_line
-				a_file.put_line ("%Tif yyvsp >= yyvsc then")
-				a_file.put_line ("%T%Tyyvsc := yyvsc + yyInitial_stack_size")
-				a_file.put_line ("%T%Tyyvs := yy_special_routines.resize (yyvs, yyvsc)")
-				a_file.put_line ("%T%Tdebug (%"GEYACC%")")
-				a_file.put_line ("%T%T%Tstd.error.put_string (%"Stack (yyvs) size increased to %")")
-				a_file.put_line ("%T%T%Tstd.error.put_integer (yyvsc)")
-				a_file.put_line ("%T%T%Tstd.error.put_new_line")
-				a_file.put_line ("%T%Tend")
-				a_file.put_line ("%Tend")
-			end
-			a_file.put_line ("%Tyyvs.put (yyval, yyvsp)")
 			a_file.put_line ("end")
 		end
 

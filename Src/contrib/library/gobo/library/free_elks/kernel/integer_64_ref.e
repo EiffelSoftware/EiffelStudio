@@ -1,8 +1,8 @@
 note
 	description: "References to objects containing an integer value coded on 64 bits"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -151,16 +151,19 @@ feature -- Status report
 	is_valid_character_8_code: BOOLEAN
 			-- Does current object represent a CHARACTER_8?
 		do
-			Result := item >= {CHARACTER_8}.Min_value and
-				item <= {CHARACTER_8}.Max_value
+			Result := item >= {CHARACTER_8}.Min_value and item <= {CHARACTER_8}.Max_value
+		ensure
+			in_bounds: Result = (item >= {CHARACTER_8}.Min_value and item <= {CHARACTER_8}.Max_value)
 		end
 
 	is_valid_character_32_code: BOOLEAN
-			-- Does current object represent a character?
+			-- Does current object represent a CHARACTER_32?
 		do
-			Result := item >= 0 and then
+			Result := item >= 0 and item.to_natural_64 <= {CHARACTER_32}.Max_value
+		ensure
+			in_bounds: Result = (item >= 0 and
 				item.to_natural_64 >= {CHARACTER_32}.Min_value and
-				item.to_natural_64 <= {CHARACTER_32}.Max_value
+				item.to_natural_64 <= {CHARACTER_32}.Max_value)
 		end
 
 feature -- Basic operations
@@ -611,5 +614,16 @@ feature {NONE} -- Implementation
 invariant
 
 	sign_times_abs: sign * abs = item
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

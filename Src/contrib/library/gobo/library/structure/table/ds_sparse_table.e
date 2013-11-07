@@ -5,8 +5,9 @@ note
 		"Sparse tables, implemented with arrays. Ancestor of hash tables %
 		%which should supply their hashing mechanisms."
 
+	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,8 +24,7 @@ inherit
 			has_item,
 			occurrences,
 			cursor_off,
-			key_for_iteration,
-			initialized
+			key_for_iteration
 		end
 
 	DS_SPARSE_CONTAINER [G, K]
@@ -35,8 +35,7 @@ inherit
 		redefine
 			search,
 			new_cursor,
-			copy,
-			initialized
+			copy
 		end
 
 feature {NONE} -- Initialization
@@ -140,7 +139,8 @@ feature {NONE} -- Initialization
 			equality_tester := an_item_tester
 			key_equality_tester := a_key_tester
 			make_sparse_container (n)
-			create internal_keys.make (Current)
+			create internal_keys.make_with_table_cursor (Current, new_cursor)
+			internal_keys.internal_set_equality_tester (key_equality_tester)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -193,7 +193,7 @@ feature -- Access
 			create Result.make (Current)
 		end
 
-	key_equality_tester: KL_EQUALITY_TESTER [K]
+	key_equality_tester: detachable KL_EQUALITY_TESTER [K]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
@@ -261,7 +261,7 @@ feature -- Comparison
 					i := last_position
 					Result := True
 				until
-					not Result or i < 1
+					not Result or i < 0
 				loop
 					if clashes_item (i) > Free_watermark then
 						a_key := key_storage_item (i)
@@ -391,16 +391,16 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
+				if i >= capacity then
 					compress
 					i := last_position + 1
 				end
+				last_position := i
 				h := slots_position
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
 				item_storage_put (v, i)
 				key_storage_put (k, i)
-				last_position := i
 				count := count + 1
 			end
 		ensure
@@ -421,16 +421,16 @@ feature -- Element change
 		do
 			unset_found_item
 			i := last_position + 1
-			if i > capacity then
+			if i >= capacity then
 				compress
 				i := last_position + 1
 			end
-			h := slots_position
+			last_position := i
+			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
 			item_storage_put (v, i)
 			key_storage_put (k, i)
-			last_position := i
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
@@ -512,17 +512,17 @@ feature -- Element change
 				item_storage_put (v, position)
 			else
 				i := last_position + 1
-				if i > capacity then
-					resize (new_capacity (i))
+				if i >= capacity then
+					resize (new_capacity (i + 1))
 					h := hash_position (k)
 				else
 					h := slots_position
 				end
+				last_position := i
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
 				item_storage_put (v, i)
 				key_storage_put (k, i)
-				last_position := i
 				count := count + 1
 			end
 		ensure
@@ -543,17 +543,15 @@ feature -- Element change
 		do
 			unset_found_item
 			i := last_position + 1
-			if i > capacity then
-				resize (new_capacity (i))
-				h := hash_position (k)
-			else
-				h := slots_position
+			if i >= capacity then
+				resize (new_capacity (i + 1))
 			end
+			last_position := i
+			h := hash_position (k)
 			clashes_put (slots_item (h), i)
 			slots_put (i, h)
 			item_storage_put (v, i)
 			key_storage_put (k, i)
-			last_position := i
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
@@ -571,7 +569,12 @@ feature -- Duplication
 		do
 			l_keys := internal_keys
 			precursor (other)
-			internal_keys := l_keys
+			if l_keys /= Void then
+				internal_keys := l_keys
+			else
+				create internal_keys.make_with_table_cursor (Current, new_cursor)
+				internal_keys.internal_set_equality_tester (key_equality_tester)
+			end
 		end
 
 feature -- Iteration
@@ -584,12 +587,31 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
 				if clashes_item (i) > Free_watermark then
 					an_action.call ([item_storage_item (i), key_storage_item (i)])
+				end
+				i := i + 1
+			end
+		end
+
+	do_all_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]])
+			-- Apply `an_action' to every item, from first to last.
+			-- `an_action' receives the key and its item.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					an_action.call ([key_storage_item (i), item_storage_item (i)])
 				end
 				i := i + 1
 			end
@@ -605,7 +627,7 @@ feature -- Iteration
 			l_key: K
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -620,6 +642,31 @@ feature -- Iteration
 			end
 		end
 
+	do_if_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]]; a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- `an_action' and `a_test' receive the key and its item.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			i: INTEGER
+			l_item: G
+			l_key: K
+		do
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					l_item := item_storage_item (i)
+					l_key := key_storage_item (i)
+					if a_test.item ([l_key, l_item]) then
+						an_action.call ([l_key, l_item])
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item and its key?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
@@ -627,7 +674,7 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -635,7 +682,29 @@ feature -- Iteration
 					if a_test.item ([item_storage_item (i), key_storage_item (i)]) then
 						Result := True
 							-- Jump out of the loop.
-						i := last_position + 1
+						i := last_position
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	there_exists_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for at least one key and its item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					if a_test.item ([key_storage_item (i), item_storage_item (i)]) then
+						Result := True
+							-- Jump out of the loop.
+						i := last_position
 					end
 				end
 				i := i + 1
@@ -650,7 +719,7 @@ feature -- Iteration
 		do
 			Result := True
 			from
-				i := 1
+				i := 0
 			until
 				i > last_position
 			loop
@@ -658,7 +727,30 @@ feature -- Iteration
 					if not a_test.item ([item_storage_item (i), key_storage_item (i)]) then
 						Result := False
 							-- Jump out of the loop.
-						i := last_position + 1
+						i := last_position
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	for_all_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for all keys and their items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			Result := True
+			from
+				i := 0
+			until
+				i > last_position
+			loop
+				if clashes_item (i) > Free_watermark then
+					if not a_test.item ([key_storage_item (i), item_storage_item (i)]) then
+						Result := False
+							-- Jump out of the loop.
+						i := last_position
 					end
 				end
 				i := i + 1
@@ -678,15 +770,17 @@ feature {NONE} -- Implementation
 	internal_keys: DS_SPARSE_TABLE_KEYS [G, K]
 			-- View of current table as a linear representation of its keys
 
-	initialized: BOOLEAN
-			-- Some Eiffel compilers check invariants even when the
-			-- execution of the creation procedure is not completed.
-			-- (In this case, checking the assertions of the being
-			-- created `internal_cursor' and `internal_keys'
-			-- triggers the invariants on the current container.
-			-- So these invariants need to be protected.)
+feature {DS_SPARSE_TABLE_KEYS} -- Implementation
+
+	set_internal_keys (a_keys: like internal_keys)
+			-- Set `internal_keys' to `a_keys'
+		require
+			a_keys_not_void: a_keys /= Void
+			valid_keys: a_keys.table = Current
 		do
-			Result := (internal_cursor /= Void and internal_keys /= Void)
+			internal_keys := a_keys
+		ensure
+			internal_keys_set: internal_keys = a_keys
 		end
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
@@ -699,7 +793,7 @@ feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
 invariant
 
-	internal_keys_not_void: initialized implies internal_keys /= Void
-	internal_keys_consistent: initialized implies internal_keys.table = Current
+	internal_keys_not_void: internal_keys /= Void
+	internal_keys_consistent: internal_keys.table = Current
 
 end

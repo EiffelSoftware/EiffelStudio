@@ -161,18 +161,40 @@ feature -- Status report
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
+		local
+			l_pathname: STRING
 		do
 			if precursor (a_filename) then
-				Result := (file_rules = Void or else file_rules.is_included (unix_file_system.pathname (full_unix_pathname, a_filename)))
+				if file_rules = Void then
+					Result := True
+				else
+					if is_implicit then
+						l_pathname := "/" + unix_file_system.pathname (implicit_relative_name ('/'), a_filename)
+					else
+						l_pathname := "/" + a_filename
+					end
+					Result := file_rules.is_included (l_pathname)
+				end
 			end
 		end
 
 	is_valid_directory_name (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a directory name other than "." and
 			-- ".." and which has not been excluded?
+		local
+			l_pathname: STRING
 		do
 			if precursor (a_dirname) then
-				Result := (file_rules = Void or else file_rules.is_included (unix_file_system.pathname (full_unix_pathname, a_dirname)))
+				if file_rules = Void then
+					Result := True
+				else
+					if is_implicit then
+						l_pathname := "/" + unix_file_system.pathname (implicit_relative_name ('/'), a_dirname)
+					else
+						l_pathname := "/" + a_dirname
+					end
+					Result := file_rules.is_included (l_pathname)
+				end
 			end
 		end
 

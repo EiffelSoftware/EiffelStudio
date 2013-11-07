@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 		require
 			a_file_name_attached: attached a_file_name
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
 		do
-			create locator.make_from_string (a_file_name.as_string_8)
+			create file_path.make_from_string (a_file_name)
 		ensure
-			locator_set: locator.same_string (a_file_name.as_string_8)
+			file_path_set: file_path.name.same_string_general (a_file_name)
+			locator_set: locator.same_string (file_path.utf_8_name)
 			not_is_temporary: not is_temporary
 		end
 
@@ -44,24 +44,30 @@ feature {NONE} -- Initialization
 			--
 			-- Note: The file name is not set here but internally by SQLite.
 		do
-			create locator.make_empty
+			create file_path.make_empty
 		ensure
 			is_temporary: is_temporary
 		end
 
 feature -- Access
 
+	file_path: PATH
+			-- File location for the SQLite database source.
+
 	locator: IMMUTABLE_STRING_8
 			-- <Precursor>
+		do
+			Result := file_path.utf_8_name
+		end
 
 feature -- Status report
 
 	exists: BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_temporary or else (create {RAW_FILE}.make (locator)).exists
+			Result := is_temporary or else (create {RAW_FILE}.make_with_path (file_path)).exists
 		ensure then
-			locator_exists: Result implies (is_temporary or else (create {RAW_FILE}.make (locator)).exists)
+			locator_exists: Result implies (is_temporary or else (create {RAW_FILE}.make_with_path (file_path)).exists)
 		end
 
 	is_special: BOOLEAN = False
@@ -70,17 +76,18 @@ feature -- Status report
 	is_temporary: BOOLEAN
 			-- Indicates if the file name is a temporary file.
 		do
-			Result := locator.is_empty
+			Result := file_path.is_empty
 		ensure
-			not_locator_is_empty: not Result implies not locator.is_empty
+			not_temp_implies_file_path_not_empty: not Result implies not file_path.is_empty
 		end
 
 invariant
+	file_path_attached : file_path /= Void
 	locator_attached: attached locator
-	not_locator_is_empty: not is_temporary implies not locator.is_empty
+	not_temp_implies_file_path_not_empty: not is_temporary implies not file_path.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

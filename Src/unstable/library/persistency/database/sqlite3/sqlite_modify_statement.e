@@ -35,7 +35,7 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_arguments (a_arguments: TUPLE)
+	frozen execute_with_arguments (a_arguments: ITERABLE [detachable separate ANY])
 			-- Executes the SQLite modification statement with bound set of arguments.
 			--
 			-- `a_arguments': The bound arguments to call the SQLite query statement with.
@@ -53,7 +53,7 @@ feature -- Basic operations
 			database_is_writable: database.is_writable
 			has_arguments: has_arguments
 			a_arguments_attached: attached a_arguments
-			a_arguments_count_correct: a_arguments.count.as_natural_32 = arguments_count
+			a_arguments_count_correct: iterable_has_count (a_arguments, arguments_count.as_integer_32)
 			a_arguments_is_valid_arguments: is_valid_arguments (a_arguments)
 		do
 			execute_internal (Void, new_binding_argument_array (a_arguments))
@@ -62,7 +62,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

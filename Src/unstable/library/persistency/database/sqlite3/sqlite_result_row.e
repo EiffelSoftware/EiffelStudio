@@ -165,13 +165,13 @@ feature -- Query
 		do
 			l_type := type (a_column)
 			if l_type /= {SQLITE_TYPE}.null then
-				if l_type /= {SQLITE_TYPE}.blob then
+				if l_type = {SQLITE_TYPE}.blob then
 					Result := blob_value (a_column)
-				elseif l_type /= {SQLITE_TYPE}.float then
-					create {CELL [REAL_64]}Result.put (real_64_value (a_column))
-				elseif l_type /= {SQLITE_TYPE}.integer then
-					create {CELL [INTEGER_64]}Result.put (integer_64_value (a_column))
-				elseif l_type /= {SQLITE_TYPE}.text then
+				elseif l_type = {SQLITE_TYPE}.float then
+					create {CELL [REAL_64]} Result.put (real_64_value (a_column))
+				elseif l_type = {SQLITE_TYPE}.integer then
+					create {CELL [INTEGER_64]} Result.put (integer_64_value (a_column))
+				elseif l_type = {SQLITE_TYPE}.text then
 					Result := string_value (a_column)
 				else
 					check unknown_type: False end
@@ -310,7 +310,7 @@ feature -- Query: Value affinity
 	--statement_mark_small_enough: statement_mark <= statement.mark
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

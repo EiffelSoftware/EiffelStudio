@@ -25,6 +25,7 @@ feature -- Constants: Success
 
 	ok: INTEGER
 			-- Successful result.
+			--| SQLITE_OD = 0
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -35,6 +36,7 @@ feature -- Constants: Failure
 
 	e_error: INTEGER
 			-- SQL error or missing database.
+			--| SQLITE_ERROR = 1
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -43,6 +45,7 @@ feature -- Constants: Failure
 
 	e_internal: INTEGER
 			-- Internal logic error in SQLite.
+			--| SQLITE_INTERNAL = 2
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -51,6 +54,7 @@ feature -- Constants: Failure
 
 	e_perm: INTEGER
 			-- Access permission denied.
+			--| SQLITE_PERM = 3
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -59,6 +63,7 @@ feature -- Constants: Failure
 
 	e_abort: INTEGER
 			-- Callback routine requested an abort.
+			--| SQLITE_ABORT = 4
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -67,6 +72,7 @@ feature -- Constants: Failure
 
 	e_busy: INTEGER
 			-- The database file is locked.
+			--| SQLITE_BUSY = 5
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -75,6 +81,7 @@ feature -- Constants: Failure
 
 	e_locked: INTEGER
 			-- A table in the database is locked.
+			--| SQLITE_LOCKED = 6
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -83,6 +90,7 @@ feature -- Constants: Failure
 
 	e_no_mem: INTEGER
 			-- A malloc() failed.
+			--| SQLITE_NOMEM = 7
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -91,6 +99,7 @@ feature -- Constants: Failure
 
 	e_read_only: INTEGER
 			-- Attempt to write a readonly database.
+			--| SQLITE_READONLY = 8
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -99,6 +108,7 @@ feature -- Constants: Failure
 
 	e_interrupt: INTEGER
 			-- Operation terminated by sqlite3_interrupt().
+			--| SQLITE_INTERRUPT = 9
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -107,6 +117,7 @@ feature -- Constants: Failure
 
 	e_io_err: INTEGER
 			-- Some kind of disk I/O error occurred.
+			--| SQLITE_IOERR = 10
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -115,6 +126,7 @@ feature -- Constants: Failure
 
 	e_corrupt: INTEGER
 			-- The database disk image is malformed.
+			--| SQLITE_CORRUPT = 11
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -123,6 +135,7 @@ feature -- Constants: Failure
 
 	e_not_found: INTEGER
 			-- NOT USED. Table or record not found.
+			--| SQLITE_NOTFOUND = 12
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -131,6 +144,7 @@ feature -- Constants: Failure
 
 	e_full: INTEGER
 			-- Insertion failed because database is full.
+			--| SQLITE_FULL = 13
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -139,6 +153,7 @@ feature -- Constants: Failure
 
 	e_cant_open: INTEGER
 			-- Unable to open the database file.
+			--| SQLITE_CANTOPEN = 14
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -147,6 +162,7 @@ feature -- Constants: Failure
 
 	e_protocol: INTEGER
 			-- NOT USED. Database lock protocol error.
+			--| SQLITE_PROTOCOL = 15
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -155,6 +171,7 @@ feature -- Constants: Failure
 
 	e_empty: INTEGER
 			-- Database is empty.
+			--| SQLITE_EMPTY = 16
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -163,6 +180,7 @@ feature -- Constants: Failure
 
 	e_schema: INTEGER
 			-- The database schema changed.
+			--| SQLITE_SCHEMA = 17
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -171,6 +189,7 @@ feature -- Constants: Failure
 
 	e_too_big: INTEGER
 			-- String or BLOB exceeds size limit.
+			--| SQLITE_TOOBIG = 18
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -179,6 +198,7 @@ feature -- Constants: Failure
 
 	e_constraint: INTEGER
 			-- Abort due to constraint violation.
+			--| SQLITE_CONSTRAINT = 19
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -187,6 +207,7 @@ feature -- Constants: Failure
 
 	e_mismatch: INTEGER
 			-- Data type mismatch.
+			--| SQLITE_MISMATCH = 20
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -195,6 +216,7 @@ feature -- Constants: Failure
 
 	e_misuse: INTEGER
 			-- Library used incorrectly.
+			--| SQLITE_MISUSE = 21
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -203,6 +225,7 @@ feature -- Constants: Failure
 
 	e_nolfs: INTEGER
 			-- Uses OS features not supported on host.
+			--| SQLITE_NOLFS = 22
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -211,6 +234,7 @@ feature -- Constants: Failure
 
 	e_auth: INTEGER
 			-- Authorization denied.
+			--| SQLITE_AUTH = 23
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -219,6 +243,7 @@ feature -- Constants: Failure
 
 	e_format: INTEGER
 			-- Auxiliary database format error.
+			--| SQLITE_FORMAT = 24
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -227,6 +252,7 @@ feature -- Constants: Failure
 
 	e_range: INTEGER
 			-- 2nd parameter to sqlite3_bind out of range.
+			--| SQLITE_RANGE = 25
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -235,6 +261,7 @@ feature -- Constants: Failure
 
 	e_not_a_db: INTEGER
 			-- File opened that is not a database file.
+			--| SQLITE_NOTADB = 26
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -245,6 +272,7 @@ feature -- Constants: Success
 
 	row: INTEGER
 			-- sqlite3_step() has another row ready.
+			--| SQLITE_ROW = 100
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -253,6 +281,7 @@ feature -- Constants: Success
 
 	done: INTEGER
 			-- sqlite3_step() has finished executing.
+			--| SQLITE_DONE = 101
 		external
 			"C macro use <sqlite3.h>"
 		alias
@@ -296,7 +325,7 @@ feature -- Status
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

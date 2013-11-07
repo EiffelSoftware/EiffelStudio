@@ -1241,7 +1241,6 @@ feature {NONE} -- Implementation
 			l_feature_name: ID_AS
 			l_parameters: EIFFEL_LIST [EXPR_AS]
 			l_wrapped_actuals: EIFFEL_LIST [EXPR_AS]
-			l_actual: EXPR_AS
 			l_needs_byte_node: BOOLEAN
 			l_conv_info: CONVERSION_INFO
 			l_expr: EXPR_B

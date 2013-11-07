@@ -1,5 +1,5 @@
 %{
-indexing
+note
 	description: "Scanners for external parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -296,7 +296,7 @@ feature {NONE} -- Constants
 invariant
 	token_buffer_not_void: token_buffer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

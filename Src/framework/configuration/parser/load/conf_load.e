@@ -70,10 +70,14 @@ feature -- Status
 
 feature -- Access
 
-	last_system: CONF_SYSTEM
+	last_system: detachable CONF_SYSTEM
 			-- The last retrieved system.
+			--| note: the loading follows the redirection, so it may be the system after redirection.
 
-	last_uuid: UUID
+	last_redirection: detachable CONF_REDIRECTION
+			-- Last retrieved redirection.
+
+	last_uuid: detachable UUID
 			-- The last retrieved uuid.
 
 feature -- Basic operation
@@ -83,6 +87,8 @@ feature -- Basic operation
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		do
+			last_system := Void
+			last_redirection := Void
 			recursive_retrieve_configuration (a_file, Void, Void)
 		ensure
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
@@ -93,6 +99,7 @@ feature -- Basic operation
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		do
+			last_uuid := Void
 			recursive_retrieve_uuid (a_file, Void)
 		ensure
 			no_error_implies_last_uuid_not_void: not is_error implies last_uuid /= Void
@@ -121,15 +128,18 @@ feature {NONE} -- Implementation
 				last_error := l_callback.last_error
 			elseif not is_error then
 				last_system := l_callback.last_system
-				if attached l_callback.last_location as l_new_location then
+				if attached l_callback.last_redirection as l_redirection then
+					if last_redirection = Void then
+						last_redirection := l_redirection
+					end
 						-- This means that `a_file' is a redirection, let's follow the new location
-						-- if `l_new_location' is an absolute path, it will be used as is
+						-- if `l_redirection.redirection_location' is an absolute path, it will be used as is
 						-- otherwise compute the path relative to the parent folder or a_file
 					redir := a_redirections
 					if redir = Void then
 						create redir.make (1)
 					end
-					if attached l_callback.last_location_uuid as l_new_location_uuid then
+					if attached l_redirection.uuid as l_new_location_uuid then
 							--| `a_file' has a UUID, then let's check if it is already in a redirection chain, and if ever
 							--| a UUID was previously set. If this is the case, if UUIDs are not the same
 							--| report UUID mismatch error
@@ -173,7 +183,7 @@ feature {NONE} -- Implementation
 					if not is_error then
 							--| `a_file' is a redirection, then follow the redirection and check the ecf at the new location
 							--| this will either end with a concrete ecf file, i.e not a redirection, or with an error.
-						retrieve_redirected_configuration (a_file, l_new_location, l_previous, redir)
+						retrieve_redirected_configuration (a_file, l_redirection.evaluated_redirection_location, l_previous, redir)
 					end
 				elseif attached last_system as l_last_system then
 						--| found <system ... />

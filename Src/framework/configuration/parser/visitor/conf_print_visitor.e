@@ -11,6 +11,7 @@ class
 inherit
 	CONF_ITERATOR
 		redefine
+			process_redirection,
 			process_system,
 			process_target,
 			process_assembly,
@@ -28,22 +29,29 @@ inherit
 
 create
 	make,
-	make_1_0_0
+	make_1_0_0,
+	make_namespace_and_schema
 
 feature {NONE} -- Initialization
 
 	make
 			-- Create.
 		do
-			namespace := latest_namespace
-			schema := latest_schema
+			make_namespace_and_schema (latest_namespace, latest_schema)
 		end
 
 	make_1_0_0
 			-- Create for EiffelStudio 5.7
 		do
-			namespace := namespace_1_0_0
-			schema := schema_1_0_0
+			make_namespace_and_schema (namespace_1_0_0, schema_1_0_0)
+		end
+
+	make_namespace_and_schema (a_namespace: like namespace; a_schema: like schema)
+			-- Create with `a_namespace' and `a_schema'.
+		do
+			namespace := a_namespace
+			schema := a_schema
+			create text.make_empty
 		end
 
 feature -- Access
@@ -82,6 +90,33 @@ feature -- Update
 		end
 
 feature -- Visit nodes
+
+	process_redirection (a_redirection: CONF_REDIRECTION)
+			-- Visit `a_redirection'.
+		do
+			create text.make_from_string (header)
+			if not text.is_empty then
+				append_text ("%N")
+			end
+			append_text_indent ("<redirection")
+			append_text (" xmlns=%"")
+			append_text_escaped (Namespace, False)
+--Alternative:	append_text (utf.string_32_to_utf_8_string_8 (Namespace)) -- FIXME: maybe add utf-8 BOM ...
+			append_text ("%"")
+			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
+			append_text (" xsi:schemaLocation=%"")
+			append_text_escaped (Schema, False)
+			append_text ("%"")
+			if attached a_redirection.uuid as l_uuid then
+				append_text (" uuid=%"" + l_uuid.out + "%"")
+			end
+			append_text_attribute ("location", a_redirection.redirection_location)
+			append_text (">%N")
+			Precursor (a_redirection)
+			append_text_indent ("</redirection>%N")
+		ensure then
+			indent_back: indent = old indent
+		end
 
 	process_system (a_system: CONF_SYSTEM)
 			-- Visit `a_system'.

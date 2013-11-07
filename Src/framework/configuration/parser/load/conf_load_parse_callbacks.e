@@ -63,11 +63,8 @@ feature -- Access
 	last_system: CONF_SYSTEM
 			-- The last parsed system.
 
-	last_location: detachable READABLE_STRING_GENERAL
-			-- Last parsed location value if any.
-
-	last_location_uuid: detachable UUID
-			-- Last parsed location uuid if any.
+	last_redirection: detachable CONF_REDIRECTION
+			-- Last parsed redirection if any.
 
 feature -- Callbacks
 
@@ -526,8 +523,7 @@ feature {NONE} -- Implementation attribute processing
 						if l_loc.is_empty then
 							set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("location"))
 						else
-							last_location := l_loc
-							last_location_uuid := l_uu
+							last_redirection := factory.new_redirection (l_loc, l_uu)
 						end
 					else
 						report_unknown_attribute ("location")
@@ -537,7 +533,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 		ensure
-			last_location_not_void: not is_error implies last_location /= Void
+			last_redirection_not_void: not is_error implies last_redirection /= Void
 		end
 
 	process_system_attributes

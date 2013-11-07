@@ -17,10 +17,7 @@ inherit
 
 	CONF_NOTABLE
 
-	CONF_FILE_DATE
-		export
-			{NONE} all
-		end
+	CONF_FILE
 
 	DEBUG_OUTPUT
 
@@ -48,27 +45,10 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	store_successful: BOOLEAN
-			-- Was the last `store' operation successful?
-
-	date_has_changed: BOOLEAN
-			-- Did the file modification date of the configuration file change?
-		require
-			is_location_set: is_location_set
-		do
-			Result := file_modified_date (file_name) /= file_date
-		end
-
 	is_fully_parsed: BOOLEAN
 			-- Has the complete system (incl. all libraries) been parsed?
 		do
 			Result := application_target /= Void
-		end
-
-	is_location_set: BOOLEAN
-			-- Has the location of the configuration file been set?
-		do
-			Result := file_name /= Void and then not file_name.is_empty
 		end
 
 	deep_date_has_changed: BOOLEAN
@@ -84,17 +64,6 @@ feature -- Status
 			loop
 				Result := all_libraries.item_for_iteration.system.date_has_changed
 				all_libraries.forth
-			end
-		end
-
-	is_storable: BOOLEAN
-			-- Is current system storable? See `store'
-		local
-			l_file: PLAIN_TEXT_FILE
-		do
-			if is_location_set then
-				create l_file.make_with_name (file_name)
-				Result := (l_file.exists and then l_file.is_writable) or else l_file.is_creatable
 			end
 		end
 
@@ -124,21 +93,6 @@ feature -- Access, stored in configuration file
 
 feature -- Access, in compiled only
 
-	directory: PATH
-			-- Directory where the configuration file is stored in platform specific format.
-
-	file_name: STRING_32
-			-- File name of config file.
-
-	file_path: PATH
-			-- File path of config file.
-		do
-			create Result.make_from_string (file_name)
-		end
-
-	file_date: INTEGER
-			-- File modification date of config file.
-
 	application_target: CONF_TARGET
 			-- Target of application this system is part of.
 
@@ -159,37 +113,6 @@ feature -- Access, in compiled only
 
 	application_target_library: CONF_LIBRARY
 			-- Library which uses this system and is written in the application target.
-
-feature -- Update, in compiled only
-
-	set_file_name (a_file_name: like file_name)
-			-- Set `file_name' to `a_file_name' and set `directory'.
-		require
-			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
-		local
-			i, cnt: INTEGER
-		do
-			file_name := a_file_name
-
-			cnt := file_name.count
-			i := file_name.last_index_of (operating_environment.directory_separator, cnt)
-			if i <= 0 then
-				i := cnt
-			end
-
-			create directory.make_from_string (file_name.substring (1, i - 1))
-		ensure
-			is_location_set: is_location_set
-			name_set: file_name = a_file_name
-		end
-
-	set_file_date
-			-- Set `file_date' to last modified date of `file_name'.
-		require
-			is_location_set: is_location_set
-		do
-			file_date := file_modified_date (file_name)
-		end
 
 feature {CONF_ACCESS} -- Access, in compiled only
 
@@ -250,30 +173,6 @@ feature {CONF_ACCESS} -- Access, in compiled only
 			end
 		ensure
 			added_libs: used_in_libraries.has (a_library)
-		end
-
-feature -- Store to disk
-
-	store
-			-- Store system back to its config file (only system itself is stored, libraries are not stored).
-		require
-			is_location_set: is_location_set
-		local
-			l_print: CONF_PRINT_VISITOR
-			l_file: PLAIN_TEXT_FILE
-		do
-			store_successful := False
-			create l_print.make
-			process (l_print)
-			if not l_print.is_error then
-				create l_file.make_with_name (file_name)
-				if (l_file.exists and then l_file.is_writable) or else l_file.is_creatable then
-					l_file.open_write
-					l_file.put_string (l_print.text)
-					l_file.close
-					store_successful := True
-				end
-			end
 		end
 
 feature -- Access queries
@@ -622,7 +521,6 @@ invariant
 	target_order_not_void: target_order /= Void
 	target_and_order_same_content: same_targets
 	fully_parsed: is_fully_parsed implies application_target /= Void
-	location_set: is_location_set implies file_name /= Void and then not file_name.is_empty and directory /= Void
 	lowest_in_used: lowest_used_in_library /= Void implies used_in_libraries /= Void and then used_in_libraries.has (lowest_used_in_library)
 	application_target_library_in_used: application_target_library /= Void implies used_in_libraries /= Void and then used_in_libraries.has (application_target_library)
 	valid_level: valid_level

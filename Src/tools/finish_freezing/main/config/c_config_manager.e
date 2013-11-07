@@ -289,6 +289,13 @@ feature {NONE} -- Access
 			l_32_bits := not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit
 			create Result.make (11)
 
+				-- Entry to be checked when this is actually released.
+				-- VS 13.0 (aka VS 2014???)
+			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\13.0\Setup\VC", a_use_32bit, "VC130", "Microsoft Visual Studio 2014 VC++ (13.0)", "2014-VS", False))
+
+				-- VS 12.0 (aka VS 2013)
+			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\12.0\Setup\VC", a_use_32bit, "VC120", "Microsoft Visual Studio 2013 VC++ (12.0)", "2013-VS", False))
+
 				-- VS 11.0 (aka VS 2012)
 			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\11.0\Setup\VC", a_use_32bit, "VC110", "Microsoft Visual Studio 2012 VC++ (11.0)", "2012-VS", False))
 
@@ -356,7 +363,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -189,9 +189,9 @@ feature -- Test routines
 			assert ("16 total changes", db.total_changes_count = 16)
 
 				-- Query the contents of the Example table
-			create q.make ("SELECT Quantity, Text, Value, State FROM Testing WHERE Id = 3;", db)
+			create q.make ("SELECT Quantity, Text, Value, State FROM Testing WHERE Id = ?1 ;", db)
 			assert ("select query is compiled", q.is_compiled)
-			q.execute (agent (ia_row: SQLITE_RESULT_ROW): BOOLEAN
+			q.execute_with_arguments (agent (ia_row: SQLITE_RESULT_ROW): BOOLEAN
 					do
 						assert ("col#1 is Quantity", ia_row.column_name (1).is_case_insensitive_equal ("Quantity"))
 						assert ("col#2 is Text", ia_row.column_name (2).is_case_insensitive_equal ("Text"))
@@ -212,7 +212,8 @@ feature -- Test routines
 						assert ("State is True", ia_row.boolean_value (4) = True)
 
 						Result := True -- One result is enough
-					end
+					end,
+					[3] -- argument ?1
 				)
 
 			create q_modify.make ("DELETE FROM Testing WHERE Id > 7 AND State=0 ;", db)

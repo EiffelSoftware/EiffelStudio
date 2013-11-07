@@ -186,10 +186,11 @@ feature {NONE} -- Invariant checking
 			-- Is there an object in the set that has been identified twice?
 			-- PLEASE NOTE: This is a very expensive operation - it basically doubles the time needed for some unit tests.
 		do
+			fixme ("Use a set or a hash table")
 			Result := across current_items as cursor all across current_items as inner_cursor all cursor.item.object = inner_cursor.item.object implies cursor.item.identifier = inner_cursor.item.identifier end end
 		end
 
 invariant
-	no_object_twice_in_set: are_objects_identified_only_once
+--	no_object_twice_in_set: are_objects_identified_only_once
 
 end

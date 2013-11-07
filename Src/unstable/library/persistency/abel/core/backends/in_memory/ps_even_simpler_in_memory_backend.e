@@ -64,10 +64,20 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 
 feature{PS_READ_ONLY_BACKEND}
 
+	success: BOOLEAN
+
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		do
+--			if success then -- Enable transaction conflict simulation
+--				success := False
+--			else
+--				success := True
+--				transaction.set_error(create {PS_TRANSACTION_ABORTED_ERROR})
+--				transaction.error.raise
+--			end
+
 			prepare(type)
 			Result := attach(database[type.type.type_id]).deep_twin.new_cursor
 		end
@@ -188,6 +198,14 @@ feature {NONE} -- Implementation
 		local
 			old_obj: PS_BACKEND_OBJECT
 		do
+
+--			if success then -- Enable transaction conflict simulation
+--				success := False
+--			else
+--				success := True
+--				transaction.set_error(create {PS_TRANSACTION_ABORTED_ERROR})
+--				transaction.error.raise
+--			end
 
 			across objects as cursor
 			loop

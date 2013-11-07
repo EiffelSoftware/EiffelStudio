@@ -5,7 +5,7 @@ note
 	Example: across my_query as cur
 			 loop 
 				-- do something with cur.item 
-			 end  
+			 end
 	]"
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -36,7 +36,7 @@ feature -- Status report
 	is_object_query: BOOLEAN = True
 			-- Is `Current' an instance of PS_OBJECT_QUERY?
 
-feature -- Basic operations
+feature -- Element change
 
 	set_criterion (a_criterion: PS_CRITERION)
 			-- Set the criteria `a_criterion', against which the objects will be selected.
@@ -52,7 +52,7 @@ feature -- Cursor generation
 	new_cursor: PS_RESULT_CURSOR [G]
 			-- Return the result_cursor.
 		do
-			--TODO: according to class ITERABLE, this should return a fresh copy of the cursor.
+			fixme ("according to class ITERABLE, this should return a fresh copy of the cursor...")
 			Result := result_cursor
 		end
 

@@ -242,7 +242,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 		do
 			connection := get_connection (a_transaction)
 			connection.commit
-			database.release_connection (connection)
+--			database.release_connection (connection)
 			release_connection (a_transaction)
 --			key_mapper.commit (a_transaction)
 		rescue
@@ -285,6 +285,7 @@ feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 			the_actual_result_as_detachable_because_of_stupid_void_safety_rule: detachable PS_SQL_CONNECTION
 		do
 			if transaction.is_readonly then
+				fixme ("remove this hack")
 				Result := management_connection
 			else
 				across
@@ -358,7 +359,7 @@ feature {NONE} -- Initialization
 			create active_connections.make
 
 			lazy_loading_batch_size := Default_batch_size
-			
+
 			create plug_in_list.make
 			plug_in_list.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 

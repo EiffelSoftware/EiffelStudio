@@ -7,6 +7,9 @@ note
 class
 	START
 
+inherit
+	PS_EIFFELSTORE_EXPORT
+
 create
 	make
 

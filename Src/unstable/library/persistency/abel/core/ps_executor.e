@@ -26,12 +26,12 @@ inherit
 create
 	make
 
-feature --Access
+feature {PS_EIFFELSTORE_EXPORT} --Access
 
 	repository: PS_REPOSITORY
 			-- The data repository on which `Current' operates.
 
-feature -- Status Report
+feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 
 	is_persistent (an_object: ANY): BOOLEAN
 			-- Is there a database entry for `an_object'?
@@ -51,7 +51,7 @@ feature -- Status Report
 			Result := repository.can_handle (object)
 		end
 
-feature -- Data retrieval
+feature {PS_EIFFELSTORE_EXPORT} -- Data retrieval
 
 	execute_query (query: PS_OBJECT_QUERY [ANY])
 			-- Execute `query' and store the result in `query.result_cursor'.
@@ -81,7 +81,7 @@ feature -- Data retrieval
 	--			still_persistent: is_persistent (object, new_transaction)
 	--		end
 
-feature -- Data manipulation
+feature {PS_EIFFELSTORE_EXPORT} -- Data manipulation
 
 	execute_insert (an_object: ANY)
 			-- Insert `an_object' into the repository.
@@ -123,7 +123,7 @@ feature -- Data manipulation
 			execute_within_implicit_transaction (agent execute_deletion_query_within_transaction (deletion_query, ?), False)
 		end
 
-feature -- Transaction-based data retrieval and querying
+feature {PS_EIFFELSTORE_EXPORT} -- Transaction-based data retrieval and querying
 
 	execute_query_within_transaction (a_query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
 			-- Execute `a_query' within the transaction `transaction'.
@@ -227,7 +227,7 @@ feature -- Transaction-based data retrieval and querying
 			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
-feature -- Transaction factory function
+feature {PS_EIFFELSTORE_EXPORT} -- Transaction factory function
 
 	new_transaction: PS_TRANSACTION
 			-- Create a new transaction for `Current.repository'..
@@ -235,7 +235,7 @@ feature -- Transaction factory function
 			create Result.make (repository)
 		end
 
-feature --Error handling
+feature {PS_EIFFELSTORE_EXPORT} --Error handling
 
 	has_error: BOOLEAN
 			-- Did the last operation have an error?

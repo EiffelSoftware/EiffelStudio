@@ -29,8 +29,14 @@ create
 
 feature -- Access
 
-	result_cursor: PS_RESULT_CURSOR [TUPLE]
-			-- Iteration cursor containing the result of the query.
+	new_cursor: ITERATION_CURSOR [TUPLE]
+			-- Return a fresh cursor over the query result.
+			-- | Note: The result is loaded lazily upon calling `{ITERATION_CURSOR}.forth'.
+			-- | Note: The results are cached interanlly, thus it is possible to iterate over the result
+			-- | many times without performance impact.
+		do
+			create {PS_ITERATION_CURSOR[TUPLE]} Result.make (Current)
+		end
 
 feature -- Status report
 
@@ -109,14 +115,14 @@ feature -- Utilities
 			correct: name.is_equal (projection [Result])
 		end
 
-feature -- Cursor generation
+--feature -- Cursor generation
 
-	new_cursor: PS_RESULT_CURSOR [TUPLE]
-			-- Return the result_cursor.
-		do
-			--TODO: according to class ITERABLE, this should return a fresh copy of the cursor.
-			Result := result_cursor
-		end
+--	new_cursor: PS_RESULT_CURSOR [TUPLE]
+--			-- Return the result_cursor.
+--		do
+--			--TODO: according to class ITERABLE, this should return a fresh copy of the cursor.
+--			Result := result_cursor
+--		end
 
 feature {NONE} -- Initialization
 
@@ -136,5 +142,10 @@ feature {NONE} -- Initialization
 		do
 			create result_cursor.make
 		end
+
+feature {PS_EIFFELSTORE_EXPORT} -- Access
+
+	result_cursor: PS_RESULT_CURSOR [TUPLE]
+			-- Iteration cursor containing the result of the query.
 
 end

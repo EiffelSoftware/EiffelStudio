@@ -97,15 +97,41 @@ feature -- Status report
 
 feature -- Change Element
 
-    add (value: JSON_VALUE)
+	put_front (v: JSON_VALUE)
         require
-            value_not_null: value /= void
+            v_not_void: v /= Void
         do
-            values.extend (value)
+            values.put_front (v)
         ensure
             has_new_value: old values.count + 1 = values.count and
-                              values.has (value)
+                              values.first = v
         end
+
+    add, extend (v: JSON_VALUE)
+        require
+            v_not_void: v /= Void
+        do
+            values.extend (v)
+        ensure
+            has_new_value: old values.count + 1 = values.count and
+                              values.has (v)
+        end
+
+	prune_all (v: JSON_VALUE)
+			-- Remove all occurrences of `v'.
+        require
+            v_not_void: v /= Void
+        do
+            values.prune_all (v)
+        ensure
+            not_has_new_value: not values.has (v)
+        end
+
+	wipe_out
+			-- Remove all items.
+       	do
+       		values.wipe_out
+       	end
 
 feature -- Report
 
@@ -128,6 +154,7 @@ feature -- Conversion
 
     array_representation: ARRAYED_LIST [JSON_VALUE]
             -- Representation as a sequences of values
+            -- be careful, modifying the return object may have impact on the original JSON_ARRAY object
         do
             Result := values
         end
@@ -137,7 +164,7 @@ feature -- Status report
     debug_output: STRING
             -- String that should be displayed in debugger to represent `Current'.
         do
-            Result := count.out
+            Result := count.out + " item(s)"
         end
 
 feature {NONE} -- Implementation

@@ -65,10 +65,10 @@ feature -- Change Element
             object.force (l_value, key)
         end
 
-	remove (k: JSON_STRING)
-			-- Remove item indexed by `k' if any.
+	remove (key: JSON_STRING)
+			-- Remove item indexed by `key' if any.
 		do
-			object.remove (k)
+			object.remove (key)
 		end
 
 	wipe_out
@@ -190,7 +190,7 @@ feature -- Status report
     debug_output: STRING
             -- String that should be displayed in debugger to represent `Current'.
         do
-            Result := object.count.out
+            Result := count.out + " item(s)"
         end
 
 feature {NONE} -- Implementation
@@ -199,6 +199,6 @@ feature {NONE} -- Implementation
             -- Value container
 
 invariant
-    object_not_null: object /= Void
+    object_not_void: object /= Void
 
 end

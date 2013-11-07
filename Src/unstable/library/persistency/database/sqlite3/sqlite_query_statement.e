@@ -106,7 +106,7 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_arguments: TUPLE)
+	frozen execute_with_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_arguments: ITERABLE [detachable separate ANY])
 			-- Executes the SQLite query statement with arguments and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
@@ -131,7 +131,7 @@ feature -- Basic operations
 			has_arguments: has_arguments
 			a_callback_attached: attached a_callback
 			a_arguments_attached: attached a_arguments
-			a_arguments_count_correct: a_arguments.count.as_natural_32 = arguments_count
+			a_arguments_count_correct: iterable_has_count (a_arguments, arguments_count.as_integer_32)
 			a_arguments_is_valid_arguments: is_valid_arguments (a_arguments)
 		do
 			execute_internal (a_callback, new_binding_argument_array (a_arguments))
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			-- Cached column names for the query `column_name'.
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

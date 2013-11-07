@@ -89,7 +89,7 @@ feature {NONE} -- Query
 						-- Ensures no blank lines at the beginning of the text
 					Result.append (a_lines.item.content)
 					if not a_lines.islast then
-						Result.extend (create {EDITOR_TOKEN_EOL}.make)
+						Result.extend (create {EDITOR_TOKEN_EOL}.make_unix_style)
 					end
 				end
 				a_lines.forth

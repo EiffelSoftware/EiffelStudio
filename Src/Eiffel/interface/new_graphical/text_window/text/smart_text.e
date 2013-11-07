@@ -876,10 +876,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_from_lexer (line_image: STRING): like line
+	new_line_from_lexer (line_image: STRING; a_windows_style: BOOLEAN): like line
 			-- <precursor>
 		do
-			Result ?= Precursor {CLICKABLE_TEXT} (line_image)
+			Result ?= Precursor {CLICKABLE_TEXT} (line_image, a_windows_style)
 			if current_class_is_clickable then
 				click_tool.setup_line (Result)
 			end

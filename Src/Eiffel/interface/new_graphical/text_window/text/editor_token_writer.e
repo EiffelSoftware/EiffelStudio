@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create last_line.make_empty_line
+			create last_line.make_unix_style
 		end
 
 feature -- Access
@@ -41,7 +41,7 @@ feature -- New line
 	new_line
 			-- Create new `last_line'
 		do
-			create last_line.make_empty_line
+			create last_line.make_unix_style
 		end
 
 feature -- Token operator

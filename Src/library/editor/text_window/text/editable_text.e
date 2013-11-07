@@ -933,7 +933,7 @@ feature {UNDO_CMD} -- Operations on selected text
 						-- Rebuild line from the lexer.
 					lexer.set_in_verbatim_string (False)
 					if line_image.is_empty then
-						ln.make_empty_line
+						ln.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, False)
@@ -984,7 +984,7 @@ feature {UNDO_CMD} -- Operations on selected text
 						-- Rebuild line from the lexer.
 					lexer.set_in_verbatim_string (False)
 					if line_image.is_empty then
-						ln.make_empty_line
+						ln.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, False)
@@ -1063,7 +1063,7 @@ feature {UNDO_CMD} -- Operations on selected text
 						-- Rebuild line from the lexer.
 					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 					if line_image.is_empty then
-						ln.make_empty_line
+						ln.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1106,7 +1106,7 @@ feature {UNDO_CMD} -- Operations on selected text
 						-- Rebuild line from the lexer.	
 					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 					if line_image.is_empty then
-						ln.make_empty_line
+						ln.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (line_image)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1216,7 +1216,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 
 			if s.is_empty then
-				ln.make_empty_line
+				ln.make (not is_unix_style)
 			else
 				execute_lexer_with_wide_string (s)
 				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1290,7 +1290,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					--| New line parsing.
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
-					ln.make_empty_line
+					ln.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (s)
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1371,7 +1371,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					end_pos := attached_cursor.x_in_characters + aux.count
 					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 					if (first_image + aux + last_image).is_empty then
-						ln.make_empty_line
+						ln.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (first_image + aux + last_image)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1383,7 +1383,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			else
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if (first_image + aux.substring (1, i - 1)).is_empty then
-					ln.make_empty_line
+					ln.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (first_image + aux.substring (1, i - 1))
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1401,7 +1401,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					j = 0
 				loop
 					if (aux.substring (i + 1, j - 1)).is_empty then
-						create new_line.make_empty_line
+						create new_line.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (aux.substring (i + 1, j - 1))
 						create new_line.make_from_lexer (lexer)
@@ -1417,7 +1417,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					end
 				end
 				if (aux.substring (i + 1, aux.count) + last_image).is_empty then
-					create new_line.make_empty_line
+					create new_line.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (aux.substring (i + 1, aux.count) + last_image)
 					create new_line.make_from_lexer (lexer)
@@ -1500,7 +1500,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			end_pos := attached_cursor.x_in_characters + aux.count
 			if not ln.part_of_verbatim_string then
 				if first_image.is_empty then
-					ln.make_empty_line
+					ln.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (first_image)
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1553,7 +1553,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					s.append (l_next.wide_image)
 					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 					if s.is_empty then
-						ln.make_empty_line
+						ln.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (s)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1596,7 +1596,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				end
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
-					ln.make_empty_line
+					ln.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (s)
 					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1712,7 +1712,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				-- Rebuild line with previously collected parts.
 			lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 			if s.is_empty then
-				ln.make_empty_line
+				ln.make (not is_unix_style)
 			else
 				execute_lexer_with_wide_string (s)
 				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
@@ -1754,7 +1754,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				s.extend (c)
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
-					ln.make_empty_line
+					ln.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (s)
 					ln.make_from_lexer (lexer)
@@ -1795,7 +1795,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				end
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
-					ln.make_empty_line
+					ln.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (s)
 					ln.make_from_lexer (lexer)
@@ -1851,14 +1851,14 @@ feature {UNDO_CMD} -- Basic Text changes
 					new_pos := aux.count + 1
 
 					if aux.is_empty then
-						create new_line.make_empty_line
+						create new_line.make (not is_unix_style)
 					else
 						execute_lexer_with_wide_string (aux)
 						create new_line.make_from_lexer (lexer)
 					end
 					new_line.set_auto_indented (True)
 				else
-					create new_line.make_empty_line
+					create new_line.make (not is_unix_style)
 					new_pos := 1
 				end
 				ln.add_right (new_line)
@@ -1890,7 +1890,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				end
 				delete_after_cursor
 				if s.is_empty then
-					create new_line.make_empty_line
+					create new_line.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (s)
 					create new_line.make_from_lexer (lexer)
@@ -1939,7 +1939,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				end
 				lexer.set_tab_size (editor_preferences.tabulation_spaces)
 				if s.is_empty then
-					ln.make_empty_line
+					ln.make (not is_unix_style)
 				else
 					execute_lexer_with_wide_string (s)
 					ln.rebuild_from_lexer (lexer, lexer.in_verbatim_string)

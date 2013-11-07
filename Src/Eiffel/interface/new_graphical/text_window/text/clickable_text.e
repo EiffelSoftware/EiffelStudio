@@ -329,11 +329,11 @@ feature {NONE} -- Load Text handling
 			Precursor {EDITABLE_TEXT}
 		end
 
-	new_line_from_lexer (line_image: STRING): like line
+	new_line_from_lexer (line_image: STRING; a_windows_style: BOOLEAN): like line
 			-- <precursor>
 		do
 			if line_image.is_empty then
-				create Result.make_empty_line
+				create Result.make (a_windows_style)
 			else
 				lexer.execute (line_image)
 				create Result.make_from_lexer (lexer)

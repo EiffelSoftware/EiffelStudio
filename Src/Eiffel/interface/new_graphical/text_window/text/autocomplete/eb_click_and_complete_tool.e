@@ -151,12 +151,12 @@ feature -- Analysis preparation
 					end
 				end
 				token.set_pos_in_text (pos_in_file)
-				pos_in_file := token.length + pos_in_file
+				pos_in_file := token.character_length + pos_in_file
 				token := token.next
 			end
 			if is_eol (token) then
 				token.set_pos_in_text (pos_in_file)
-				pos_in_file := token.length + pos_in_file
+				pos_in_file := token.character_length + pos_in_file
 			end
 		end
 
@@ -275,7 +275,7 @@ feature -- Retrieve information from ast
 			l_feature: FEATURE_AS
 		do
 			l_feature_clauses := current_class_as.features
-			if l_feature_clauses /= Void and then attached current_class_i.text_8 as l_text then
+			if l_feature_clauses /= Void then
 				create features_position.make (100)
 				create features_ast.make (100)
 				from
@@ -416,12 +416,12 @@ feature -- Click list update
 							if not l_image.is_empty and then l_image @ l_image.count /= ('%"').to_character_32 then
 								from
 									if token.next /= Void then
-										pos_in_file := token.length + pos_in_file
+										pos_in_file := token.character_length + pos_in_file
 										token.set_pos_in_text (pos_in_file)
 										token := token.next
 									elseif line.next /= Void then
 										line := line.next
-										pos_in_file := token.length + pos_in_file
+										pos_in_file := token.character_length + pos_in_file
 										token.set_pos_in_text (pos_in_file)
 										token := line.first_token
 									end
@@ -431,12 +431,12 @@ feature -- Click list update
 									is_string (token) or token = Void
 								loop
 									if token.next /= Void then
-										pos_in_file := token.length + pos_in_file
+										pos_in_file := token.character_length + pos_in_file
 										token.set_pos_in_text (pos_in_file)
 										token := token.next
 									elseif line.next /= Void then
 										line := line.next
-										pos_in_file := token.length + pos_in_file
+										pos_in_file := token.character_length + pos_in_file
 										token.set_pos_in_text (pos_in_file)
 										token := line.first_token
 									else
@@ -458,11 +458,11 @@ feature -- Click list update
 					token.set_pos_in_text (pos_in_file)
 				end
 				if token /= Void and then token.next /= Void then
-					pos_in_file := token.length + pos_in_file
+					pos_in_file := token.character_length + pos_in_file
 					token := token.next
 				elseif line.next /= Void then
 					line := line.next
-					pos_in_file := token.length + pos_in_file
+					pos_in_file := token.character_length + pos_in_file
 					token := line.first_token
 				else
 					token := Void

@@ -138,7 +138,9 @@ feature -- Access
 			until
 				li = last_line
 			loop
-				l_string_32.extend ('%N')
+				if attached li.eol_token as l_t then
+					l_string_32.append (l_t.wide_image)
+				end
 				li := li.next
 				check li /= Void end -- Only the `last_line.next' can be void.
 				l_string_32.append (li.wide_image)
@@ -211,6 +213,7 @@ feature -- Status Setting
 			-- Set `is_unix_style' with `a_style'.
 		do
 			is_unix_style := a_unix_style
+			lexer.set_is_windows_eol_preferred (not a_unix_style)
 		ensure
 			is_unix_style_set: is_unix_style = a_unix_style
 		end
@@ -429,7 +432,7 @@ feature {NONE} -- Text Loading
 			from
 				if l_current_string = Void or else l_current_string.is_empty then
 					j := 0
-					append_line (new_line_from_lexer (""))
+					append_line (new_line_from_lexer ("", not is_unix_style))
 				else
 					current_pos := 1
 					j := l_current_string.index_of ('%N', current_pos)
@@ -440,8 +443,13 @@ feature {NONE} -- Text Loading
 			until
 				number_of_lines > first_read_block_size or j = 0
 			loop
-				curr_string := l_current_string.substring (current_pos, j - 1)
-				append_line (new_line_from_lexer (curr_string))
+				if l_current_string @ (j - 1) = '%R' then
+					curr_string := l_current_string.substring (current_pos, j - 2)
+					append_line (new_line_from_lexer (curr_string, True))
+				else
+					curr_string := l_current_string.substring (current_pos, j - 1)
+					append_line (new_line_from_lexer (curr_string, False))
+				end
 				current_pos := j + 1
 				if current_pos > l_current_string.count then
 					j := 0
@@ -464,7 +472,7 @@ feature {NONE} -- Text Loading
 					not l_current_string.is_empty and then
 					(l_current_string.item (l_current_string.count) = '%N')
 				then
-					append_line (new_line_from_lexer (""))
+					append_line (new_line_from_lexer ("", not is_unix_style))
 				end
 				reading_text_finished := True
 				on_text_loaded
@@ -495,8 +503,14 @@ feature {NONE} -- Text Loading
 				until
 					lines_read > Lines_read_per_idle_action or else j = 0
 				loop
-					curr_string := l_current_string.substring (current_pos, j-1)
-					append_line (new_line_from_lexer (curr_string))
+					if l_current_string @ (j - 1) = '%R' then
+							-- Remove the `%R' and let the lexer EOL token.
+						curr_string := l_current_string.substring (current_pos, j - 2)
+						append_line (new_line_from_lexer (curr_string, True))
+					else
+						curr_string := l_current_string.substring (current_pos, j - 1)
+						append_line (new_line_from_lexer (curr_string, False))
+					end
 					current_pos := j + 1
 					if current_pos <= l_current_string.count then
 						j := l_current_string.index_of ('%N', current_pos)
@@ -517,7 +531,7 @@ feature {NONE} -- Text Loading
 						-- We have finished reading the file, so we remove
 						-- ourself from the idle actions.
 					if (l_current_string @ l_current_string.count) = '%N' then
-						append_line (new_line_from_lexer (""))
+						append_line (new_line_from_lexer ("", not is_unix_style))
 					end
 					reading_text_finished := True
 					on_text_loaded
@@ -528,15 +542,16 @@ feature {NONE} -- Text Loading
 			end
 		end
 
-	new_line_from_lexer (line_image: STRING): attached like line
+	new_line_from_lexer (line_image: STRING; a_windows_style: BOOLEAN): attached like line
 			-- create a new EDITOR_LINE from `line_image' using
 			-- `line_image' is in UTF-8.
 		require
 			no_new_line_in_image: not line_image.has ('%N')
+			no_new_line_in_image: not line_image.has ('%R')
 			lexer_has_right_tab_size: editor_preferences.tabulation_spaces = lexer.tab_size
 		do
 			if line_image.is_empty then
-				create Result.make_empty_line
+				create Result.make (a_windows_style)
 			else
 				lexer.execute (line_image)
 				create Result.make_from_lexer (lexer)

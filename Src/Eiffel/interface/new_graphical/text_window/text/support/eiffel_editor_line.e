@@ -11,25 +11,27 @@ class
 inherit
 	EDITOR_LINE
 		redefine
-			make_empty_line,
+			make,
 			make_from_lexer,
 			number_token
 		end
 
 create
-	make_empty_line,
+	make,
+	make_windows_style,
+	make_unix_style,
 	make_from_lexer
 
 feature -- Initialisation
 
-	make_empty_line
+	make (a_windows_style: BOOLEAN)
 			-- Create an empty line.
 		local
 			t_eol: EDITOR_TOKEN_EOL
 			t_begin: EDITOR_TOKEN_BREAKPOINT
 			t_second: EDITOR_TOKEN_LINE_NUMBER
 		do
-			create t_eol.make
+			create t_eol.make_with_style (a_windows_style)
 			create t_begin.make
 			create t_second.make
 			t_begin.set_next_token (t_second)
@@ -51,7 +53,7 @@ feature -- Initialisation
 			lexer_first_token	: EDITOR_TOKEN
 			lexer_end_token		: EDITOR_TOKEN
 		do
-			create t_eol.make
+			create t_eol.make_with_style (lexer.is_windows_eol_preferred)
 			create t_begin.make
 			create t_second.make
 			t_begin.set_next_token (t_second)
@@ -115,7 +117,7 @@ invariant
 	has_breakpoint_token: breakpoint_token /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -128,22 +130,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_EDITOR_LINE

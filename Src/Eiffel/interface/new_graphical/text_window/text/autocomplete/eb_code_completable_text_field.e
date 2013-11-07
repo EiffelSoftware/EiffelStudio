@@ -615,13 +615,13 @@ feature {NONE} -- Lexer
 		do
 			if not is_destroyed then
 				if text.is_empty then
-					create Result.make_empty_line
+					create Result.make_unix_style
 				else
 					scanner.execute (text)
 					create Result.make_from_lexer (scanner)
 				end
 			else
-				create Result.make_empty_line
+				create Result.make_unix_style
 			end
 		end
 

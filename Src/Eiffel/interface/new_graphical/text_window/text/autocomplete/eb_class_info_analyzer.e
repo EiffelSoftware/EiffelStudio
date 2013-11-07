@@ -1051,10 +1051,9 @@ feature {NONE}-- Implementation
 			if current_token /= Void then
 				if
 						-- not the "~feature" case
-					current_token.wide_image.is_empty
-						or else
-					current_token.wide_image @ 1 /= ('%L').to_character_32
-						or else
+					current_token.wide_image.is_empty or else
+					current_token.is_new_line or else
+					current_token.wide_image @ 1 /= ('%L').to_character_32 or else
 					not is_beginning_of_expression (current_token.previous)
 				then
 					from

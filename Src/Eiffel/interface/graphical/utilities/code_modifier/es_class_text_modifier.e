@@ -404,7 +404,6 @@ feature -- Basic operations
 
 						-- Set text, always using a merge.
 					l_new_text := l_text.wide_text
-					l_new_text.prune_all ('%R')
 					l_new_text := merge_text (l_new_text)
 					if attached l_new_text then
 							-- Set text to `modified_data' for use in `prepare'
@@ -444,8 +443,7 @@ feature -- Basic operations
 					-- Save only if the text wasn't set in the editor or the editor was not modified before applying the modifications.
 				if (create {RAW_FILE}.make_with_path (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
-					l_new_text := context_class.text_32.as_attached
-					l_new_text.prune_all ('%R')
+					l_new_text := context_class.text_32
 					l_new_text := merge_text (l_new_text)
 				else
 					l_new_text := text
@@ -537,7 +535,6 @@ feature {NONE} -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_dirty: is_dirty
 			a_current_text_attached: a_current_text /= Void
-			a_current_text_carriage_return_free: not a_current_text.has ('%R')
 		local
 			l_diff: DIFF_TEXT
 			l_patch: STRING
@@ -545,10 +542,6 @@ feature {NONE} -- Basic operations
 		do
 				-- Use UTF-8 encoding to diff.
 			l_text := ec_encoding_converter.utf32_to_utf8 (text)
-			if {PLATFORM}.is_windows and then preferences.misc_data.text_mode_is_windows then
-					-- Remove carriage returns, else the diff will think there are modifications.
-				l_text.replace_substring_all ("%R", "")
-			end
 
 			create l_diff
 			l_diff.set_text (ec_encoding_converter.utf32_to_utf8 (original_text), l_text)
@@ -562,8 +555,6 @@ feature {NONE} -- Basic operations
 					-- Log merge
 				logger.service.put_message_format_with_severity ("A class text merge was perform because {1} was modified.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
 			end
-		ensure
-			result_carriage_return_free: attached Result implies not Result.has ('%R')
 		end
 
 feature -- Batch processing

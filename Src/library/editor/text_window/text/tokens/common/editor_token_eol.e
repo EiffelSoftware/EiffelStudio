@@ -16,20 +16,24 @@ inherit
 			background_color_id,
 			background_color,
 			process,
-			is_new_line
+			is_new_line,
+			character_length
 		end
 
 create
 	make,
-	make_with_style
+	make_with_style,
+	make_windows_style,
+	make_unix_style
 
 feature -- Initialisation
 
 	make
 			-- Create the token in unix style
+		obsolete
+			"Use `make_with_style' instead."
 		do
-			wide_image := unix_style_new_line
-			length := wide_image.count
+			make_with_style (False)
 		end
 
 	make_with_style (a_windows_style: BOOLEAN)
@@ -40,7 +44,19 @@ feature -- Initialisation
 			else
 				wide_image := unix_style_new_line
 			end
-			length := wide_image.count
+			length := 1
+		end
+
+	make_windows_style
+			-- Create the token in Windows style.
+		do
+			make_with_style (True)
+		end
+
+	make_unix_style
+			-- Create the token in Unix style.
+		do
+			make_with_style (False)
 		end
 
 feature -- Status report
@@ -48,11 +64,21 @@ feature -- Status report
 	is_new_line: BOOLEAN = True
 			-- Is current a new line token?
 
-feature -- Display
+feature -- Access
 
 	width: INTEGER
+			-- Pixel width of eol symbol.
 		do
 		end
+
+	character_length: INTEGER
+			-- Number characters represented by the token.
+		do
+			Result := wide_image.count
+		end
+
+feature -- Display
+
 
 	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL)
 			-- Display the end token, at the coordinates (position,`d_y') on the
@@ -132,7 +158,7 @@ feature -- Visitor
 
 feature {NONE} -- Private Constants
 
-	eol_symbol: STRING
+	eol_symbol: STRING_32
 		once
 			Result := ""
 		end
@@ -205,6 +231,8 @@ feature -- Color
 			Result := 0
 		end
 
+invariant
+	wide_image_is_set: not wide_image.is_empty
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"

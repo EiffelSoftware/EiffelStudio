@@ -481,7 +481,8 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			list.fill (test_data.people)
 			create box.set_items (list)
 			create test.make (repository)
-			test.test_insert (box) -- BUG: the list within box gets initialized as LINKED_LIST[ANY], and the list is empty.
+			-- Regression test: the list within box got initialized as LINKED_LIST[ANY], and the list was empty.
+			test.test_insert (box)
 			repository.clean_db_for_testing
 		end
 
@@ -496,8 +497,9 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			create last.make_from_string ("string")
 			create person.make (first, last, 0)
 			create test.make (repository)
-
-			test.test_insert (person) -- BUG: instead of creating FILE_NAME objects, a STRING object is created.
+			-- Regression test: instead of creating FILE_NAME objects, a STRING object was created.
+			test.test_insert (person)
+			repository.clean_db_for_testing
 			test.test_crud_operations (person, agent (p:PERSON) do p.add_item end)
 			repository.clean_db_for_testing
 		end

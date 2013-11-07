@@ -34,6 +34,8 @@ feature {PS_TEST_PROVIDER}
 	executor: PS_EXECUTOR
 			-- An executor for `repository'
 
+	repo_access: PS_TRANSACTION_CONTEXT
+
 	test_data: PS_TEST_DATA
 			-- Some useful test data
 
@@ -43,6 +45,8 @@ feature {PS_TEST_PROVIDER}
 			default_create
 			repository := a_repository
 			create executor.make (repository)
+			repo_access := repository.new_transaction_context
+--			create {PS_REPOSITORY_ACCESS_IMPL} repo_access.make (repository)
 			create test_data.make
 			initialize
 		end

@@ -4093,10 +4093,8 @@ feature {NONE} -- Semantic actions
 	yy_do_action_1
 			--|#line 231 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 231 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 231")
@@ -4117,21 +4115,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_2
 			--|#line 235 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 235 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 235")
@@ -4155,21 +4145,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_3
 			--|#line 243 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 243 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 243")
@@ -4185,21 +4167,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp82 := yyvsp82 -1
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_4
 			--|#line 252 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 252 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 252")
@@ -4218,21 +4192,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_5
 			--|#line 253 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 253 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 253")
@@ -4244,21 +4210,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp45 := yyvsp45 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_6
 			--|#line 253 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 253 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 253")
@@ -4282,21 +4240,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_7
 			--|#line 264 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 264 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 264")
@@ -4319,21 +4269,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_8
 			--|#line 270 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 270 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 270")
@@ -4356,21 +4298,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_9
 			--|#line 276 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 276 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 276")
@@ -4392,21 +4326,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_10
 			--|#line 282 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 282 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 282")
@@ -4427,21 +4353,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_11
 			--|#line 288 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 288 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 288")
@@ -4461,21 +4379,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_12
 			--|#line 294 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 294 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 294")
@@ -4497,21 +4407,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_13
 			--|#line 294 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 294 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 294")
@@ -4535,21 +4437,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_14
 			--|#line 310 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 310 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 310")
@@ -4568,21 +4462,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_15
 			--|#line 315 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 315 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 315")
@@ -4599,21 +4485,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_16
 			--|#line 330 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 330 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 330")
@@ -4632,21 +4510,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_17
 			--|#line 335 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 335 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 335")
@@ -4666,21 +4536,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_18
 			--|#line 337 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 337 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 337")
@@ -4696,21 +4558,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_19
 			--|#line 337 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 337 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 337")
@@ -4731,21 +4585,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_20
 			--|#line 348 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 348 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 348")
@@ -4765,21 +4611,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_21
 			--|#line 350 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 350 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 350")
@@ -4795,21 +4633,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_22
 			--|#line 350 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 350 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 350")
@@ -4830,21 +4660,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_23
 			--|#line 363 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 363 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 363")
@@ -4863,21 +4685,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_24
 			--|#line 365 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 365 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 365")
@@ -4888,21 +4702,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_25
 			--|#line 369 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 369 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 369")
@@ -4930,21 +4736,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_26
 			--|#line 380 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 380 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 380")
@@ -4961,21 +4759,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp83 := yyvsp83 -1
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_27
 			--|#line 380 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 380 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 380")
@@ -4994,21 +4784,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_28
 			--|#line 389 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 389 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 389")
@@ -5025,21 +4807,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp83 := yyvsp83 -1
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_29
 			--|#line 389 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 389 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 389")
@@ -5058,21 +4832,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_30
 			--|#line 400 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 400 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 400")
@@ -5086,21 +4852,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_31
 			--|#line 407 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 407 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 407")
@@ -5123,21 +4881,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_32
 			--|#line 413 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 413 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 413")
@@ -5149,21 +4899,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp22 := yyvsp22 -1
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_33
 			--|#line 417 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 417 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 417")
@@ -5191,21 +4933,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_34
 			--|#line 428 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 428 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 428")
@@ -5233,21 +4967,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_35
 			--|#line 440 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 440 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 440")
@@ -5264,21 +4990,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp83 := yyvsp83 -1
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_36
 			--|#line 440 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 440 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 440")
@@ -5297,21 +5015,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_37
 			--|#line 449 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 449 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 449")
@@ -5328,21 +5038,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp83 := yyvsp83 -1
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_38
 			--|#line 449 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval82: ET_INDEXING_LIST
 		do
-			if not yy_retried then
 --|#line 449 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 449")
@@ -5361,21 +5063,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines82.force (yyvs82, yyval82, yyvsp82)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_39
 			--|#line 460 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 460 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 460")
@@ -5389,21 +5083,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_40
 			--|#line 467 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 467 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 467")
@@ -5424,21 +5110,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_41
 			--|#line 471 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 471 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 471")
@@ -5461,21 +5139,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_42
 			--|#line 477 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 477 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 477")
@@ -5487,21 +5157,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp22 := yyvsp22 -1
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_43
 			--|#line 479 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval83: ET_INDEXING_ITEM
 		do
-			if not yy_retried then
 --|#line 479 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 479")
@@ -5513,21 +5175,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp22 := yyvsp22 -1
 	yyspecial_routines83.force (yyvs83, yyval83, yyvsp83)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_44
 			--|#line 484 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval86: ET_INDEXING_TERM_LIST
 		do
-			if not yy_retried then
 --|#line 484 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 484")
@@ -5555,21 +5209,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines86.force (yyvs86, yyval86, yyvsp86)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_45
 			--|#line 495 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval86: ET_INDEXING_TERM_LIST
 		do
-			if not yy_retried then
 --|#line 495 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 495")
@@ -5585,21 +5231,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp85 := yyvsp85 -1
 	yyspecial_routines86.force (yyvs86, yyval86, yyvsp86)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_46
 			--|#line 504 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 504 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 504")
@@ -5619,21 +5257,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_47
 			--|#line 506 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 506 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 506")
@@ -5653,21 +5283,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_48
 			--|#line 508 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 508 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 508")
@@ -5687,21 +5309,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_49
 			--|#line 510 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 510 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 510")
@@ -5721,21 +5335,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_50
 			--|#line 512 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 512 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 512")
@@ -5755,21 +5361,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_51
 			--|#line 514 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 514 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 514")
@@ -5789,21 +5387,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_52
 			--|#line 516 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 516 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 516")
@@ -5823,21 +5413,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_53
 			--|#line 518 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 518 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 518")
@@ -5858,21 +5440,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_54
 			--|#line 520 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval84: ET_INDEXING_TERM
 		do
-			if not yy_retried then
 --|#line 520 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 520")
@@ -5894,21 +5468,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines84.force (yyvs84, yyval84, yyvsp84)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_55
 			--|#line 524 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval85: ET_INDEXING_TERM_ITEM
 		do
-			if not yy_retried then
 --|#line 524 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 524")
@@ -5933,21 +5499,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines85.force (yyvs85, yyval85, yyvsp85)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_56
 			--|#line 535 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 535 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 535")
@@ -5975,21 +5533,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_57
 			--|#line 545 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 545 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 545")
@@ -6018,21 +5568,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_58
 			--|#line 556 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 556 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 556")
@@ -6061,21 +5603,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_59
 			--|#line 567 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval45: ET_CLASS
 		do
-			if not yy_retried then
 --|#line 567 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 567")
@@ -6104,21 +5638,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines45.force (yyvs45, yyval45, yyvsp45)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_60
 			--|#line 580 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval2: ET_KEYWORD
 		do
-			if not yy_retried then
 --|#line 580 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 580")
@@ -6137,21 +5663,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_61
 			--|#line 582 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval2: ET_KEYWORD
 		do
-			if not yy_retried then
 --|#line 582 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 582")
@@ -6162,21 +5680,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_62
 			--|#line 586 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval2: ET_KEYWORD
 		do
-			if not yy_retried then
 --|#line 586 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 586")
@@ -6195,21 +5705,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_63
 			--|#line 588 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval2: ET_KEYWORD
 		do
-			if not yy_retried then
 --|#line 588 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 588")
@@ -6220,21 +5722,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_64
 			--|#line 594 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval80: ET_FORMAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 594 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 594")
@@ -6254,21 +5748,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines80.force (yyvs80, yyval80, yyvsp80)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_65
 			--|#line 598 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval80: ET_FORMAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 598 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 598")
@@ -6291,21 +5777,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines80.force (yyvs80, yyval80, yyvsp80)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_66
 			--|#line 604 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval80: ET_FORMAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 604 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 604")
@@ -6322,21 +5800,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp23 := yyvsp23 -1
 	yyspecial_routines80.force (yyvs80, yyval80, yyvsp80)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_67
 			--|#line 604 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval80: ET_FORMAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 604 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 604")
@@ -6357,21 +5827,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines80.force (yyvs80, yyval80, yyvsp80)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_68
 			--|#line 618 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval80: ET_FORMAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 618 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 618")
@@ -6400,21 +5862,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines80.force (yyvs80, yyval80, yyvsp80)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_69
 			--|#line 629 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval80: ET_FORMAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 629 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 629")
@@ -6430,21 +5884,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp79 := yyvsp79 -1
 	yyspecial_routines80.force (yyvs80, yyval80, yyvsp80)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_70
 			--|#line 638 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval79: ET_FORMAL_PARAMETER_ITEM
 		do
-			if not yy_retried then
 --|#line 638 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 638")
@@ -6469,21 +5915,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines79.force (yyvs79, yyval79, yyvsp79)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_71
 			--|#line 647 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 647 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 647")
@@ -6507,21 +5945,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_72
 			--|#line 654 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 654 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 654")
@@ -6546,21 +5976,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_73
 			--|#line 661 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 661 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 661")
@@ -6585,21 +6007,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_74
 			--|#line 668 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 668 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 668")
@@ -6625,21 +6039,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_75
 			--|#line 675 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 675 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 675")
@@ -6666,21 +6072,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_76
 			--|#line 682 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 682 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 682")
@@ -6707,21 +6105,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_77
 			--|#line 689 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 689 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 689")
@@ -6748,21 +6138,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_78
 			--|#line 696 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 696 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 696")
@@ -6790,21 +6172,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_79
 			--|#line 703 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval78: ET_FORMAL_PARAMETER
 		do
-			if not yy_retried then
 --|#line 703 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 703")
@@ -6832,21 +6206,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines78.force (yyvs78, yyval78, yyvsp78)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_80
 			--|#line 712 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval53: ET_CONSTRAINT_CREATOR
 		do
-			if not yy_retried then
 --|#line 712 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 712")
@@ -6866,21 +6232,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines53.force (yyvs53, yyval53, yyvsp53)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_81
 			--|#line 714 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval53: ET_CONSTRAINT_CREATOR
 		do
-			if not yy_retried then
 --|#line 714 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 714")
@@ -6896,21 +6254,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines53.force (yyvs53, yyval53, yyvsp53)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_82
 			--|#line 714 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval53: ET_CONSTRAINT_CREATOR
 		do
-			if not yy_retried then
 --|#line 714 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 714")
@@ -6931,21 +6281,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines53.force (yyvs53, yyval53, yyvsp53)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_83
 			--|#line 727 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval53: ET_CONSTRAINT_CREATOR
 		do
-			if not yy_retried then
 --|#line 727 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 727")
@@ -6974,21 +6316,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines53.force (yyvs53, yyval53, yyvsp53)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_84
 			--|#line 738 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval53: ET_CONSTRAINT_CREATOR
 		do
-			if not yy_retried then
 --|#line 738 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 738")
@@ -7013,21 +6347,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines53.force (yyvs53, yyval53, yyvsp53)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_85
 			--|#line 746 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval53: ET_CONSTRAINT_CREATOR
 		do
-			if not yy_retried then
 --|#line 746 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 746")
@@ -7043,21 +6369,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp74 := yyvsp74 -1
 	yyspecial_routines53.force (yyvs53, yyval53, yyvsp53)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_86
 			--|#line 755 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 755 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 755")
@@ -7078,21 +6396,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_87
 			--|#line 757 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 757 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 757")
@@ -7114,21 +6424,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_88
 			--|#line 759 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 759 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 759")
@@ -7150,21 +6452,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_89
 			--|#line 761 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 761 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 761")
@@ -7186,21 +6480,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_90
 			--|#line 763 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 763 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 763")
@@ -7222,21 +6508,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_91
 			--|#line 765 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 765 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 765")
@@ -7258,21 +6536,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_92
 			--|#line 767 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 767 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 767")
@@ -7294,21 +6564,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_93
 			--|#line 769 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 769 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 769")
@@ -7330,21 +6592,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_94
 			--|#line 771 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 771 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 771")
@@ -7366,21 +6620,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_95
 			--|#line 773 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 773 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 773")
@@ -7403,21 +6649,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_96
 			--|#line 775 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 775 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 775")
@@ -7439,21 +6677,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_97
 			--|#line 777 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 777 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 777")
@@ -7476,21 +6706,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_98
 			--|#line 779 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 779 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 779")
@@ -7510,21 +6732,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_99
 			--|#line 781 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 781 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 781")
@@ -7545,21 +6759,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_100
 			--|#line 783 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 783 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 783")
@@ -7579,21 +6785,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_101
 			--|#line 785 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 785 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 785")
@@ -7614,21 +6812,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_102
 			--|#line 787 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 787 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 787")
@@ -7650,21 +6840,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_103
 			--|#line 789 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 789 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 789")
@@ -7686,21 +6868,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_104
 			--|#line 791 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 791 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 791")
@@ -7722,21 +6896,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_105
 			--|#line 793 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 793 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 793")
@@ -7758,21 +6924,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_106
 			--|#line 795 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 795 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 795")
@@ -7794,21 +6952,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_107
 			--|#line 797 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 797 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 797")
@@ -7830,21 +6980,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_108
 			--|#line 799 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 799 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 799")
@@ -7867,21 +7009,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_109
 			--|#line 801 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 801 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 801")
@@ -7903,21 +7037,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_110
 			--|#line 803 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 803 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 803")
@@ -7940,21 +7066,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_111
 			--|#line 807 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 807 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 807")
@@ -7975,21 +7093,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_112
 			--|#line 809 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 809 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 809")
@@ -8011,21 +7121,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_113
 			--|#line 811 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 811 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 811")
@@ -8047,21 +7149,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_114
 			--|#line 813 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 813 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 813")
@@ -8083,21 +7177,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_115
 			--|#line 815 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 815 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 815")
@@ -8119,21 +7205,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_116
 			--|#line 817 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 817 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 817")
@@ -8155,21 +7233,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_117
 			--|#line 819 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 819 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 819")
@@ -8191,21 +7261,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_118
 			--|#line 821 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 821 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 821")
@@ -8227,21 +7289,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_119
 			--|#line 823 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 823 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 823")
@@ -8263,21 +7317,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_120
 			--|#line 825 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 825 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 825")
@@ -8300,21 +7346,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_121
 			--|#line 827 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 827 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 827")
@@ -8336,21 +7374,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_122
 			--|#line 829 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 829 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 829")
@@ -8373,21 +7403,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_123
 			--|#line 831 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 831 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 831")
@@ -8407,21 +7429,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_124
 			--|#line 833 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 833 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 833")
@@ -8442,21 +7456,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_125
 			--|#line 835 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 835 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 835")
@@ -8476,21 +7482,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_126
 			--|#line 837 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 837 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 837")
@@ -8511,21 +7509,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_127
 			--|#line 839 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 839 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 839")
@@ -8547,21 +7537,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_128
 			--|#line 841 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 841 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 841")
@@ -8583,21 +7565,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_129
 			--|#line 843 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 843 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 843")
@@ -8619,21 +7593,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_130
 			--|#line 845 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 845 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 845")
@@ -8655,21 +7621,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_131
 			--|#line 847 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 847 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 847")
@@ -8691,21 +7649,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_132
 			--|#line 849 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 849 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 849")
@@ -8727,21 +7677,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_133
 			--|#line 851 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 851 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 851")
@@ -8764,21 +7706,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_134
 			--|#line 853 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 853 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 853")
@@ -8800,21 +7734,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_135
 			--|#line 855 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval54: ET_CONSTRAINT_TYPE
 		do
-			if not yy_retried then
 --|#line 855 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 855")
@@ -8837,21 +7763,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines54.force (yyvs54, yyval54, yyvsp54)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_136
 			--|#line 859 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 859 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 859")
@@ -8870,21 +7788,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_137
 			--|#line 861 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 861 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 861")
@@ -8895,21 +7805,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_138
 			--|#line 865 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 865 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 865")
@@ -8930,21 +7832,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_139
 			--|#line 868 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 868 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 868")
@@ -8959,21 +7853,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_140
 			--|#line 876 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 876 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 876")
@@ -9002,21 +7888,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_141
 			--|#line 887 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 887 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 887")
@@ -9030,21 +7908,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp51 := yyvsp51 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_142
 			--|#line 892 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 892 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 892")
@@ -9060,21 +7930,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_143
 			--|#line 897 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 897 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 897")
@@ -9090,21 +7952,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_144
 			--|#line 904 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval51: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
-			if not yy_retried then
 --|#line 904 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 904")
@@ -9129,21 +7983,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines51.force (yyvs51, yyval51, yyvsp51)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_145
 			--|#line 913 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 913 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 913")
@@ -9162,21 +8008,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_146
 			--|#line 915 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 915 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 915")
@@ -9187,21 +8025,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_147
 			--|#line 919 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 919 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 919")
@@ -9222,21 +8052,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_148
 			--|#line 922 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 922 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 922")
@@ -9251,21 +8073,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_149
 			--|#line 928 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 928 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 928")
@@ -9280,21 +8094,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_150
 			--|#line 936 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 936 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 936")
@@ -9318,21 +8124,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_151
 			--|#line 941 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 941 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 941")
@@ -9346,21 +8144,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp51 := yyvsp51 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_152
 			--|#line 946 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 946 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 946")
@@ -9374,21 +8164,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp51 := yyvsp51 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_153
 			--|#line 951 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 951 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 951")
@@ -9410,21 +8192,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_154
 			--|#line 962 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 962 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 962")
@@ -9446,21 +8220,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_155
 			--|#line 973 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval52: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 973 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 973")
@@ -9482,21 +8248,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines52.force (yyvs52, yyval52, yyvsp52)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_156
 			--|#line 986 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval51: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
-			if not yy_retried then
 --|#line 986 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 986")
@@ -9522,21 +8280,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines51.force (yyvs51, yyval51, yyvsp51)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_157
 			--|#line 995 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval51: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
-			if not yy_retried then
 --|#line 995 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 995")
@@ -9563,21 +8313,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines51.force (yyvs51, yyval51, yyvsp51)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_158
 			--|#line 1006 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval101: ET_OBSOLETE
 		do
-			if not yy_retried then
 --|#line 1006 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1006")
@@ -9596,21 +8338,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines101.force (yyvs101, yyval101, yyvsp101)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_159
 			--|#line 1008 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval101: ET_OBSOLETE
 		do
-			if not yy_retried then
 --|#line 1008 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1008")
@@ -9631,21 +8365,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines101.force (yyvs101, yyval101, yyvsp101)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_160
 			--|#line 1014 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1014 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1014")
@@ -9664,21 +8390,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_161
 			--|#line 1016 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1016 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1016")
@@ -9698,21 +8416,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_162
 			--|#line 1018 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1018 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1018")
@@ -9726,21 +8436,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_163
 			--|#line 1025 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1025 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1025")
@@ -9755,21 +8457,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_164
 			--|#line 1033 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 1033 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1033")
@@ -9791,21 +8485,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_165
 			--|#line 1040 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval103: ET_PARENT
 		do
-			if not yy_retried then
 --|#line 1040 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1040")
@@ -9830,21 +8516,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines103.force (yyvs103, yyval103, yyvsp103)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_166
 			--|#line 1047 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval103: ET_PARENT
 		do
-			if not yy_retried then
 --|#line 1047 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1047")
@@ -9873,21 +8551,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines103.force (yyvs103, yyval103, yyvsp103)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_167
 			--|#line 1055 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval103: ET_PARENT
 		do
-			if not yy_retried then
 --|#line 1055 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1055")
@@ -9915,21 +8585,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines103.force (yyvs103, yyval103, yyvsp103)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_168
 			--|#line 1062 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval103: ET_PARENT
 		do
-			if not yy_retried then
 --|#line 1062 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1062")
@@ -9956,21 +8618,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines103.force (yyvs103, yyval103, yyvsp103)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_169
 			--|#line 1069 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval103: ET_PARENT
 		do
-			if not yy_retried then
 --|#line 1069 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1069")
@@ -9997,21 +8651,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines103.force (yyvs103, yyval103, yyvsp103)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_170
 			--|#line 1076 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval103: ET_PARENT
 		do
-			if not yy_retried then
 --|#line 1076 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1076")
@@ -10038,21 +8684,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines103.force (yyvs103, yyval103, yyvsp103)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_171
 			--|#line 1085 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval103: ET_PARENT
 		do
-			if not yy_retried then
 --|#line 1085 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1085")
@@ -10078,21 +8716,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines103.force (yyvs103, yyval103, yyvsp103)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_172
 			--|#line 1094 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1094 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1094")
@@ -10116,21 +8746,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_173
 			--|#line 1101 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1101 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1101")
@@ -10154,21 +8776,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_174
 			--|#line 1108 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1108 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1108")
@@ -10184,21 +8798,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp103 := yyvsp103 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_175
 			--|#line 1115 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1115 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1115")
@@ -10214,21 +8820,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp103 := yyvsp103 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_176
 			--|#line 1122 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1122 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1122")
@@ -10244,21 +8842,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp104 := yyvsp104 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_177
 			--|#line 1131 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1131 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1131")
@@ -10282,21 +8872,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_178
 			--|#line 1138 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1138 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1138")
@@ -10312,21 +8894,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp103 := yyvsp103 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_179
 			--|#line 1145 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1145 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1145")
@@ -10342,21 +8916,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp103 := yyvsp103 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_180
 			--|#line 1152 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval105: ET_PARENT_LIST
 		do
-			if not yy_retried then
 --|#line 1152 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1152")
@@ -10372,21 +8938,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp104 := yyvsp104 -1
 	yyspecial_routines105.force (yyvs105, yyval105, yyvsp105)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_181
 			--|#line 1161 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval104: ET_PARENT_ITEM
 		do
-			if not yy_retried then
 --|#line 1161 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1161")
@@ -10411,21 +8969,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines104.force (yyvs104, yyval104, yyvsp104)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_182
 			--|#line 1168 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval104: ET_PARENT_ITEM
 		do
-			if not yy_retried then
 --|#line 1168 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1168")
@@ -10450,21 +9000,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines104.force (yyvs104, yyval104, yyvsp104)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_183
 			--|#line 1179 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval112: ET_RENAME_LIST
 		do
-			if not yy_retried then
 --|#line 1179 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1179")
@@ -10484,21 +9026,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines112.force (yyvs112, yyval112, yyvsp112)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_184
 			--|#line 1181 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval112: ET_RENAME_LIST
 		do
-			if not yy_retried then
 --|#line 1181 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1181")
@@ -10514,21 +9048,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines112.force (yyvs112, yyval112, yyvsp112)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_185
 			--|#line 1181 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval112: ET_RENAME_LIST
 		do
-			if not yy_retried then
 --|#line 1181 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1181")
@@ -10549,21 +9075,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines112.force (yyvs112, yyval112, yyvsp112)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_186
 			--|#line 1194 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval112: ET_RENAME_LIST
 		do
-			if not yy_retried then
 --|#line 1194 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1194")
@@ -10587,21 +9105,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines112.force (yyvs112, yyval112, yyvsp112)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_187
 			--|#line 1201 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval112: ET_RENAME_LIST
 		do
-			if not yy_retried then
 --|#line 1201 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1201")
@@ -10627,21 +9137,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines112.force (yyvs112, yyval112, yyvsp112)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_188
 			--|#line 1210 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval112: ET_RENAME_LIST
 		do
-			if not yy_retried then
 --|#line 1210 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1210")
@@ -10657,21 +9159,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp111 := yyvsp111 -1
 	yyspecial_routines112.force (yyvs112, yyval112, yyvsp112)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_189
 			--|#line 1219 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval111: ET_RENAME_ITEM
 		do
-			if not yy_retried then
 --|#line 1219 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1219")
@@ -10697,21 +9191,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines111.force (yyvs111, yyval111, yyvsp111)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_190
 			--|#line 1228 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval111: ET_RENAME_ITEM
 		do
-			if not yy_retried then
 --|#line 1228 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1228")
@@ -10738,21 +9224,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines111.force (yyvs111, yyval111, yyvsp111)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_191
 			--|#line 1239 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1239 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1239")
@@ -10772,21 +9250,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_192
 			--|#line 1241 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1241 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1241")
@@ -10802,21 +9272,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_193
 			--|#line 1241 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1241 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1241")
@@ -10837,21 +9299,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_194
 			--|#line 1254 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1254 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1254")
@@ -10870,21 +9324,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_195
 			--|#line 1256 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1256 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1256")
@@ -10895,21 +9341,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_196
 			--|#line 1260 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1260 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1260")
@@ -10937,21 +9375,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_197
 			--|#line 1271 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1271 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1271")
@@ -10968,21 +9398,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp64 := yyvsp64 -1
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_198
 			--|#line 1271 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval65: ET_EXPORT_LIST
 		do
-			if not yy_retried then
 --|#line 1271 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1271")
@@ -11004,21 +9426,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines65.force (yyvs65, yyval65, yyvsp65)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_199
 			--|#line 1286 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval64: ET_EXPORT
 		do
-			if not yy_retried then
 --|#line 1286 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1286")
@@ -11040,21 +9454,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines64.force (yyvs64, yyval64, yyvsp64)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_200
 			--|#line 1290 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval64: ET_EXPORT
 		do
-			if not yy_retried then
 --|#line 1290 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1290")
@@ -11076,21 +9482,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines64.force (yyvs64, yyval64, yyvsp64)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_201
 			--|#line 1295 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval64: ET_EXPORT
 		do
-			if not yy_retried then
 --|#line 1295 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1295")
@@ -11105,21 +9503,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp72 := yyvsp72 -1
 	yyspecial_routines64.force (yyvs64, yyval64, yyvsp64)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_202
 			--|#line 1295 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval64: ET_EXPORT
 		do
-			if not yy_retried then
 --|#line 1295 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1295")
@@ -11140,21 +9530,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines64.force (yyvs64, yyval64, yyvsp64)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_203
 			--|#line 1305 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval64: ET_EXPORT
 		do
-			if not yy_retried then
 --|#line 1305 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1305")
@@ -11174,21 +9556,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines64.force (yyvs64, yyval64, yyvsp64)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_204
 			--|#line 1309 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval72: ET_FEATURE_EXPORT
 		do
-			if not yy_retried then
 --|#line 1309 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1309")
@@ -11216,21 +9590,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines72.force (yyvs72, yyval72, yyvsp72)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_205
 			--|#line 1320 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval72: ET_FEATURE_EXPORT
 		do
-			if not yy_retried then
 --|#line 1320 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1320")
@@ -11254,21 +9620,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines72.force (yyvs72, yyval72, yyvsp72)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_206
 			--|#line 1328 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval72: ET_FEATURE_EXPORT
 		do
-			if not yy_retried then
 --|#line 1328 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1328")
@@ -11284,21 +9642,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp74 := yyvsp74 -1
 	yyspecial_routines72.force (yyvs72, yyval72, yyvsp72)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_207
 			--|#line 1339 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval47: ET_CLIENTS
 		do
-			if not yy_retried then
 --|#line 1339 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1339")
@@ -11314,21 +9664,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines47.force (yyvs47, yyval47, yyvsp47)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_208
 			--|#line 1339 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval47: ET_CLIENTS
 		do
-			if not yy_retried then
 --|#line 1339 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1339")
@@ -11349,21 +9691,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines47.force (yyvs47, yyval47, yyvsp47)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_209
 			--|#line 1350 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval47: ET_CLIENTS
 		do
-			if not yy_retried then
 --|#line 1350 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1350")
@@ -11383,21 +9717,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines47.force (yyvs47, yyval47, yyvsp47)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_210
 			--|#line 1354 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval47: ET_CLIENTS
 		do
-			if not yy_retried then
 --|#line 1354 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1354")
@@ -11422,21 +9748,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines47.force (yyvs47, yyval47, yyvsp47)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_211
 			--|#line 1361 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval47: ET_CLIENTS
 		do
-			if not yy_retried then
 --|#line 1361 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1361")
@@ -11461,21 +9779,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines47.force (yyvs47, yyval47, yyvsp47)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_212
 			--|#line 1369 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval47: ET_CLIENTS
 		do
-			if not yy_retried then
 --|#line 1369 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1369")
@@ -11491,21 +9801,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp46 := yyvsp46 -1
 	yyspecial_routines47.force (yyvs47, yyval47, yyvsp47)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_213
 			--|#line 1376 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval47: ET_CLIENTS
 		do
-			if not yy_retried then
 --|#line 1376 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1376")
@@ -11521,21 +9823,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp46 := yyvsp46 -1
 	yyspecial_routines47.force (yyvs47, yyval47, yyvsp47)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_214
 			--|#line 1386 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval46: ET_CLIENT_ITEM
 		do
-			if not yy_retried then
 --|#line 1386 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1386")
@@ -11559,21 +9853,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines46.force (yyvs46, yyval46, yyvsp46)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_215
 			--|#line 1395 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval46: ET_CLIENT_ITEM
 		do
-			if not yy_retried then
 --|#line 1395 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1395")
@@ -11598,21 +9884,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines46.force (yyvs46, yyval46, yyvsp46)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_216
 			--|#line 1406 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1406 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1406")
@@ -11632,21 +9910,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_217
 			--|#line 1408 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1408 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1408")
@@ -11662,21 +9932,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_218
 			--|#line 1408 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1408 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1408")
@@ -11697,21 +9959,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_219
 			--|#line 1421 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1421 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1421")
@@ -11730,21 +9984,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_220
 			--|#line 1423 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1423 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1423")
@@ -11755,21 +10001,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_221
 			--|#line 1427 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1427 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1427")
@@ -11789,21 +10027,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_222
 			--|#line 1429 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1429 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1429")
@@ -11819,21 +10049,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_223
 			--|#line 1429 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1429 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1429")
@@ -11854,21 +10076,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_224
 			--|#line 1442 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1442 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1442")
@@ -11887,21 +10101,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_225
 			--|#line 1444 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1444 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1444")
@@ -11912,21 +10118,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_226
 			--|#line 1448 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1448 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1448")
@@ -11946,21 +10144,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_227
 			--|#line 1450 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1450 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1450")
@@ -11976,21 +10166,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_228
 			--|#line 1450 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1450 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1450")
@@ -12011,21 +10193,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_229
 			--|#line 1463 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1463 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1463")
@@ -12044,21 +10218,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_230
 			--|#line 1465 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1465 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1465")
@@ -12069,21 +10235,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_231
 			--|#line 1469 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1469 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1469")
@@ -12111,21 +10269,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_232
 			--|#line 1480 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1480 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1480")
@@ -12149,21 +10299,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_233
 			--|#line 1488 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval91: ET_KEYWORD_FEATURE_NAME_LIST
 		do
-			if not yy_retried then
 --|#line 1488 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1488")
@@ -12179,21 +10321,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp74 := yyvsp74 -1
 	yyspecial_routines91.force (yyvs91, yyval91, yyvsp91)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_234
 			--|#line 1497 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval74: ET_FEATURE_NAME_ITEM
 		do
-			if not yy_retried then
 --|#line 1497 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1497")
@@ -12218,21 +10352,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines74.force (yyvs74, yyval74, yyvsp74)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_235
 			--|#line 1508 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval60: ET_CREATOR_LIST
 		do
-			if not yy_retried then
 --|#line 1508 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1508")
@@ -12251,21 +10377,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines60.force (yyvs60, yyval60, yyvsp60)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_236
 			--|#line 1510 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval60: ET_CREATOR_LIST
 		do
-			if not yy_retried then
 --|#line 1510 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1510")
@@ -12279,21 +10397,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines60.force (yyvs60, yyval60, yyvsp60)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_237
 			--|#line 1517 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval60: ET_CREATOR_LIST
 		do
-			if not yy_retried then
 --|#line 1517 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1517")
@@ -12307,21 +10417,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines60.force (yyvs60, yyval60, yyvsp60)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_238
 			--|#line 1524 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval60: ET_CREATOR_LIST
 		do
-			if not yy_retried then
 --|#line 1524 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1524")
@@ -12349,21 +10451,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines60.force (yyvs60, yyval60, yyvsp60)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_239
 			--|#line 1535 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval60: ET_CREATOR_LIST
 		do
-			if not yy_retried then
 --|#line 1535 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1535")
@@ -12380,21 +10474,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp59 := yyvsp59 -1
 	yyspecial_routines60.force (yyvs60, yyval60, yyvsp60)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_240
 			--|#line 1535 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval60: ET_CREATOR_LIST
 		do
-			if not yy_retried then
 --|#line 1535 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1535")
@@ -12416,21 +10502,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines60.force (yyvs60, yyval60, yyvsp60)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_241
 			--|#line 1550 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1550 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1550")
@@ -12451,21 +10529,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_242
 			--|#line 1552 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1552 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1552")
@@ -12485,21 +10555,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_243
 			--|#line 1554 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1554 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1554")
@@ -12516,21 +10578,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp47 := yyvsp47 -1
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_244
 			--|#line 1554 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1554 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1554")
@@ -12552,21 +10606,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_245
 			--|#line 1566 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1566 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1566")
@@ -12582,21 +10628,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_246
 			--|#line 1566 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1566 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1566")
@@ -12618,21 +10656,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_247
 			--|#line 1578 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1578 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1578")
@@ -12653,21 +10683,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_248
 			--|#line 1580 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1580 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1580")
@@ -12687,21 +10709,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_249
 			--|#line 1582 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1582 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1582")
@@ -12718,21 +10732,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp47 := yyvsp47 -1
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_250
 			--|#line 1582 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1582 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1582")
@@ -12754,21 +10760,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_251
 			--|#line 1594 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1594 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1594")
@@ -12784,21 +10782,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_252
 			--|#line 1594 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1594 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1594")
@@ -12820,21 +10810,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_253
 			--|#line 1608 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1608 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1608")
@@ -12862,21 +10844,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_254
 			--|#line 1619 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1619 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1619")
@@ -12904,21 +10878,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_255
 			--|#line 1631 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval59: ET_CREATOR
 		do
-			if not yy_retried then
 --|#line 1631 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1631")
@@ -12934,21 +10900,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp74 := yyvsp74 -1
 	yyspecial_routines59.force (yyvs59, yyval59, yyvsp59)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_256
 			--|#line 1640 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval74: ET_FEATURE_NAME_ITEM
 		do
-			if not yy_retried then
 --|#line 1640 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1640")
@@ -12973,21 +10931,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines74.force (yyvs74, yyval74, yyvsp74)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_257
 			--|#line 1651 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval57: ET_CONVERT_FEATURE_LIST
 		do
-			if not yy_retried then
 --|#line 1651 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1651")
@@ -13006,21 +10956,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines57.force (yyvs57, yyval57, yyvsp57)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_258
 			--|#line 1653 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval57: ET_CONVERT_FEATURE_LIST
 		do
-			if not yy_retried then
 --|#line 1653 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1653")
@@ -13031,21 +10973,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines57.force (yyvs57, yyval57, yyvsp57)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_259
 			--|#line 1657 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval57: ET_CONVERT_FEATURE_LIST
 		do
-			if not yy_retried then
 --|#line 1657 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1657")
@@ -13061,21 +10995,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines57.force (yyvs57, yyval57, yyvsp57)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_260
 			--|#line 1657 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval57: ET_CONVERT_FEATURE_LIST
 		do
-			if not yy_retried then
 --|#line 1657 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1657")
@@ -13096,21 +11022,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines57.force (yyvs57, yyval57, yyvsp57)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_261
 			--|#line 1670 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval57: ET_CONVERT_FEATURE_LIST
 		do
-			if not yy_retried then
 --|#line 1670 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1670")
@@ -13134,21 +11052,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines57.force (yyvs57, yyval57, yyvsp57)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_262
 			--|#line 1677 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval57: ET_CONVERT_FEATURE_LIST
 		do
-			if not yy_retried then
 --|#line 1677 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1677")
@@ -13172,21 +11082,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines57.force (yyvs57, yyval57, yyvsp57)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_263
 			--|#line 1684 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval57: ET_CONVERT_FEATURE_LIST
 		do
-			if not yy_retried then
 --|#line 1684 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1684")
@@ -13202,21 +11104,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp56 := yyvsp56 -1
 	yyspecial_routines57.force (yyvs57, yyval57, yyvsp57)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_264
 			--|#line 1693 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval56: ET_CONVERT_FEATURE_ITEM
 		do
-			if not yy_retried then
 --|#line 1693 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1693")
@@ -13241,21 +11135,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines56.force (yyvs56, yyval56, yyvsp56)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_265
 			--|#line 1702 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval55: ET_CONVERT_FEATURE
 		do
-			if not yy_retried then
 --|#line 1702 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1702")
@@ -13278,21 +11164,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines55.force (yyvs55, yyval55, yyvsp55)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_266
 			--|#line 1706 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval55: ET_CONVERT_FEATURE
 		do
-			if not yy_retried then
 --|#line 1706 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1706")
@@ -13315,21 +11193,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines55.force (yyvs55, yyval55, yyvsp55)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_267
 			--|#line 1712 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval117: ET_TYPE_LIST
 		do
-			if not yy_retried then
 --|#line 1712 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1712")
@@ -13349,21 +11219,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines117.force (yyvs117, yyval117, yyvsp117)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_268
 			--|#line 1714 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval117: ET_TYPE_LIST
 		do
-			if not yy_retried then
 --|#line 1714 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1714")
@@ -13379,21 +11241,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines117.force (yyvs117, yyval117, yyvsp117)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_269
 			--|#line 1714 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval117: ET_TYPE_LIST
 		do
-			if not yy_retried then
 --|#line 1714 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1714")
@@ -13414,21 +11268,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines117.force (yyvs117, yyval117, yyvsp117)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_270
 			--|#line 1727 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval117: ET_TYPE_LIST
 		do
-			if not yy_retried then
 --|#line 1727 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1727")
@@ -13457,21 +11303,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines117.force (yyvs117, yyval117, yyvsp117)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_271
 			--|#line 1738 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval117: ET_TYPE_LIST
 		do
-			if not yy_retried then
 --|#line 1738 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1738")
@@ -13487,21 +11325,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp116 := yyvsp116 -1
 	yyspecial_routines117.force (yyvs117, yyval117, yyvsp117)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_272
 			--|#line 1747 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval116: ET_TYPE_ITEM
 		do
-			if not yy_retried then
 --|#line 1747 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1747")
@@ -13526,21 +11356,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines116.force (yyvs116, yyval116, yyvsp116)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_273
 			--|#line 1758 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval71: ET_FEATURE_CLAUSE_LIST
 		do
-			if not yy_retried then
 --|#line 1758 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1758")
@@ -13561,21 +11383,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_274
 			--|#line 1763 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval71: ET_FEATURE_CLAUSE_LIST
 		do
-			if not yy_retried then
 --|#line 1763 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1763")
@@ -13586,21 +11400,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_275
 			--|#line 1767 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval71: ET_FEATURE_CLAUSE_LIST
 		do
-			if not yy_retried then
 --|#line 1767 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1767")
@@ -13615,21 +11421,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_276
 			--|#line 1775 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval71: ET_FEATURE_CLAUSE_LIST
 		do
-			if not yy_retried then
 --|#line 1775 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1775")
@@ -13653,21 +11451,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_277
 			--|#line 1782 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval71: ET_FEATURE_CLAUSE_LIST
 		do
-			if not yy_retried then
 --|#line 1782 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1782")
@@ -13683,21 +11473,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp70 := yyvsp70 -1
 	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_278
 			--|#line 1791 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval70: ET_FEATURE_CLAUSE
 		do
-			if not yy_retried then
 --|#line 1791 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1791")
@@ -13712,21 +11494,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines70.force (yyvs70, yyval70, yyvsp70)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_279
 			--|#line 1798 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval70: ET_FEATURE_CLAUSE
 		do
-			if not yy_retried then
 --|#line 1798 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1798")
@@ -13742,21 +11516,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines70.force (yyvs70, yyval70, yyvsp70)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_280
 			--|#line 1807 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval70: ET_FEATURE_CLAUSE
 		do
-			if not yy_retried then
 --|#line 1807 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1807")
@@ -13779,21 +11545,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines70.force (yyvs70, yyval70, yyvsp70)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_281
 			--|#line 1812 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval70: ET_FEATURE_CLAUSE
 		do
-			if not yy_retried then
 --|#line 1812 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1812")
@@ -13815,21 +11573,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines70.force (yyvs70, yyval70, yyvsp70)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_282
 			--|#line 1819 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 1819 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1819")
@@ -13849,21 +11599,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_283
 			--|#line 1820 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 1820 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1820")
@@ -13883,21 +11625,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_284
 			--|#line 1821 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 1821 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1821")
@@ -13909,21 +11643,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp110 := yyvsp110 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_285
 			--|#line 1822 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 1822 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1822")
@@ -13935,21 +11661,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp108 := yyvsp108 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_286
 			--|#line 1827 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1827 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1827")
@@ -13962,21 +11680,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_287
 			--|#line 1832 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1832 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1832")
@@ -13991,21 +11701,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_288
 			--|#line 1838 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1838 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1838")
@@ -14020,21 +11722,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_289
 			--|#line 1843 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1843 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1843")
@@ -14048,21 +11742,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp68 := yyvsp68 -1
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_290
 			--|#line 1849 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1849 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1849")
@@ -14079,21 +11765,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_291
 			--|#line 1855 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1855 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1855")
@@ -14109,21 +11787,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp68 := yyvsp68 -1
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_292
 			--|#line 1864 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 1864 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1864")
@@ -14136,21 +11806,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_293
 			--|#line 1869 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 1869 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1869")
@@ -14165,21 +11827,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_294
 			--|#line 1875 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 1875 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1875")
@@ -14194,21 +11848,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_295
 			--|#line 1880 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 1880 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1880")
@@ -14222,21 +11868,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp68 := yyvsp68 -1
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_296
 			--|#line 1886 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 1886 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1886")
@@ -14253,21 +11891,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_297
 			--|#line 1892 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 1892 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1892")
@@ -14283,21 +11913,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp68 := yyvsp68 -1
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_298
 			--|#line 1901 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1901 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1901")
@@ -14320,21 +11942,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_299
 			--|#line 1903 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1903 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1903")
@@ -14358,21 +11972,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_300
 			--|#line 1905 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1905 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1905")
@@ -14404,21 +12010,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_301
 			--|#line 1909 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1909 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1909")
@@ -14444,21 +12042,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_302
 			--|#line 1911 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1911 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1911")
@@ -14488,21 +12078,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_303
 			--|#line 1919 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1919 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1919")
@@ -14527,21 +12109,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_304
 			--|#line 1921 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1921 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1921")
@@ -14571,21 +12145,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_305
 			--|#line 1929 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1929 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1929")
@@ -14616,21 +12182,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_306
 			--|#line 1932 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1932 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1932")
@@ -14666,21 +12224,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_307
 			--|#line 1941 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1941 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1941")
@@ -14712,21 +12262,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_308
 			--|#line 1945 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1945 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1945")
@@ -14763,21 +12305,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_309
 			--|#line 1955 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1955 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1955")
@@ -14809,21 +12343,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_310
 			--|#line 1958 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1958 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1958")
@@ -14860,21 +12386,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_311
 			--|#line 1967 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1967 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1967")
@@ -14907,21 +12425,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_312
 			--|#line 1971 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1971 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1971")
@@ -14959,21 +12469,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_313
 			--|#line 1981 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1981 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1981")
@@ -15002,21 +12504,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_314
 			--|#line 1983 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1983 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1983")
@@ -15050,21 +12544,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_315
 			--|#line 1991 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1991 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1991")
@@ -15094,21 +12580,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_316
 			--|#line 1994 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 1994 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1994")
@@ -15143,21 +12621,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_317
 			--|#line 2003 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 2003 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2003")
@@ -15188,21 +12658,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_318
 			--|#line 2006 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 2006 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2006")
@@ -15238,21 +12700,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_319
 			--|#line 2015 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 2015 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2015")
@@ -15284,21 +12738,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_320
 			--|#line 2019 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval110: ET_QUERY
 		do
-			if not yy_retried then
 --|#line 2019 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2019")
@@ -15335,21 +12781,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines110.force (yyvs110, yyval110, yyvsp110)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_321
 			--|#line 2031 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2031 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2031")
@@ -15377,21 +12815,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_322
 			--|#line 2034 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2034 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2034")
@@ -15420,21 +12850,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_323
 			--|#line 2038 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2038 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2038")
@@ -15463,21 +12885,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_324
 			--|#line 2041 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2041 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2041")
@@ -15507,21 +12921,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_325
 			--|#line 2045 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2045 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2045")
@@ -15547,21 +12953,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_326
 			--|#line 2047 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2047 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2047")
@@ -15588,21 +12986,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_327
 			--|#line 2050 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2050 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2050")
@@ -15630,21 +13020,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_328
 			--|#line 2053 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval108: ET_PROCEDURE
 		do
-			if not yy_retried then
 --|#line 2053 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2053")
@@ -15673,21 +13055,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines108.force (yyvs108, yyval108, yyvsp108)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_329
 			--|#line 2059 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval2: ET_KEYWORD
 		do
-			if not yy_retried then
 --|#line 2059 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2059")
@@ -15711,21 +13085,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_330
 			--|#line 2067 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval2: ET_KEYWORD
 		do
-			if not yy_retried then
 --|#line 2067 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2067")
@@ -15736,21 +13102,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_331
 			--|#line 2071 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval22: ET_SEMICOLON_SYMBOL
 		do
-			if not yy_retried then
 --|#line 2071 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2071")
@@ -15769,21 +13127,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines22.force (yyvs22, yyval22, yyvsp22)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_332
 			--|#line 2073 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval22: ET_SEMICOLON_SYMBOL
 		do
-			if not yy_retried then
 --|#line 2073 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2073")
@@ -15794,21 +13144,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines22.force (yyvs22, yyval22, yyvsp22)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_333
 			--|#line 2077 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval69: ET_EXTERNAL_ALIAS
 		do
-			if not yy_retried then
 --|#line 2077 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2077")
@@ -15827,21 +13169,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines69.force (yyvs69, yyval69, yyvsp69)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_334
 			--|#line 2079 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval69: ET_EXTERNAL_ALIAS
 		do
-			if not yy_retried then
 --|#line 2079 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2079")
@@ -15862,21 +13196,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines69.force (yyvs69, yyval69, yyvsp69)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_335
 			--|#line 2083 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval35: ET_ASSIGNER
 		do
-			if not yy_retried then
 --|#line 2083 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2083")
@@ -15895,21 +13221,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines35.force (yyvs35, yyval35, yyvsp35)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_336
 			--|#line 2085 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval35: ET_ASSIGNER
 		do
-			if not yy_retried then
 --|#line 2085 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2085")
@@ -15930,21 +13248,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines35.force (yyvs35, yyval35, yyvsp35)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_337
 			--|#line 2091 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2091 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2091")
@@ -15964,21 +13274,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_338
 			--|#line 2093 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2093 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2093")
@@ -15999,21 +13301,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_339
 			--|#line 2095 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2095 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2095")
@@ -16034,21 +13328,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_340
 			--|#line 2097 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2097 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2097")
@@ -16069,21 +13355,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_341
 			--|#line 2099 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2099 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2099")
@@ -16104,21 +13382,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_342
 			--|#line 2101 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2101 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2101")
@@ -16139,21 +13409,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_343
 			--|#line 2103 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2103 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2103")
@@ -16174,21 +13436,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_344
 			--|#line 2105 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2105 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2105")
@@ -16209,21 +13463,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_345
 			--|#line 2107 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2107 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2107")
@@ -16244,21 +13490,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_346
 			--|#line 2109 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2109 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2109")
@@ -16279,21 +13517,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_347
 			--|#line 2111 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2111 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2111")
@@ -16314,21 +13544,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_348
 			--|#line 2113 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2113 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2113")
@@ -16349,21 +13571,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_349
 			--|#line 2115 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2115 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2115")
@@ -16384,21 +13598,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_350
 			--|#line 2117 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2117 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2117")
@@ -16419,21 +13625,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_351
 			--|#line 2119 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2119 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2119")
@@ -16454,21 +13652,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_352
 			--|#line 2121 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2121 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2121")
@@ -16489,21 +13679,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_353
 			--|#line 2123 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2123 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2123")
@@ -16524,21 +13706,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_354
 			--|#line 2125 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2125 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2125")
@@ -16559,21 +13733,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_355
 			--|#line 2127 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2127 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2127")
@@ -16594,21 +13760,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_356
 			--|#line 2129 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2129 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2129")
@@ -16629,21 +13787,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_357
 			--|#line 2131 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2131 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2131")
@@ -16664,21 +13814,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_358
 			--|#line 2133 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2133 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2133")
@@ -16699,21 +13841,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_359
 			--|#line 2135 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2135 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2135")
@@ -16734,21 +13868,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_360
 			--|#line 2138 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2138 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2138")
@@ -16769,21 +13895,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_361
 			--|#line 2140 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2140 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2140")
@@ -16804,21 +13922,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_362
 			--|#line 2142 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2142 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2142")
@@ -16839,21 +13949,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_363
 			--|#line 2144 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2144 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2144")
@@ -16874,21 +13976,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_364
 			--|#line 2146 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2146 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2146")
@@ -16909,21 +14003,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_365
 			--|#line 2148 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2148 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2148")
@@ -16944,21 +14030,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_366
 			--|#line 2150 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2150 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2150")
@@ -16979,21 +14057,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_367
 			--|#line 2152 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2152 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2152")
@@ -17014,21 +14084,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_368
 			--|#line 2154 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2154 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2154")
@@ -17049,21 +14111,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_369
 			--|#line 2156 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2156 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2156")
@@ -17084,21 +14138,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_370
 			--|#line 2158 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2158 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2158")
@@ -17119,21 +14165,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_371
 			--|#line 2160 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2160 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2160")
@@ -17154,21 +14192,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_372
 			--|#line 2162 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2162 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2162")
@@ -17189,21 +14219,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_373
 			--|#line 2164 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2164 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2164")
@@ -17224,21 +14246,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_374
 			--|#line 2166 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2166 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2166")
@@ -17259,21 +14273,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_375
 			--|#line 2168 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2168 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2168")
@@ -17294,21 +14300,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_376
 			--|#line 2170 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2170 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2170")
@@ -17329,21 +14327,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_377
 			--|#line 2172 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval73: ET_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2172 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2172")
@@ -17364,21 +14354,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines73.force (yyvs73, yyval73, yyvsp73)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_378
 			--|#line 2176 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval68: ET_EXTENDED_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2176 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2176")
@@ -17398,21 +14380,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines68.force (yyvs68, yyval68, yyvsp68)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_379
 			--|#line 2178 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval68: ET_EXTENDED_FEATURE_NAME
 		do
-			if not yy_retried then
 --|#line 2178 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2178")
@@ -17433,21 +14407,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines68.force (yyvs68, yyval68, yyvsp68)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_380
 			--|#line 2182 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2182 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2182")
@@ -17468,21 +14434,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_381
 			--|#line 2184 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2184 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2184")
@@ -17503,21 +14461,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_382
 			--|#line 2186 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2186 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2186")
@@ -17538,21 +14488,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_383
 			--|#line 2188 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2188 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2188")
@@ -17573,21 +14515,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_384
 			--|#line 2190 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2190 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2190")
@@ -17608,21 +14542,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_385
 			--|#line 2192 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2192 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2192")
@@ -17643,21 +14569,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_386
 			--|#line 2194 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2194 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2194")
@@ -17678,21 +14596,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_387
 			--|#line 2196 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2196 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2196")
@@ -17713,21 +14623,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_388
 			--|#line 2198 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2198 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2198")
@@ -17748,21 +14650,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_389
 			--|#line 2200 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2200 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2200")
@@ -17783,21 +14677,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_390
 			--|#line 2202 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2202 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2202")
@@ -17818,21 +14704,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_391
 			--|#line 2204 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2204 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2204")
@@ -17853,21 +14731,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_392
 			--|#line 2206 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2206 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2206")
@@ -17888,21 +14758,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_393
 			--|#line 2208 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2208 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2208")
@@ -17923,21 +14785,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_394
 			--|#line 2210 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2210 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2210")
@@ -17958,21 +14812,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_395
 			--|#line 2212 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2212 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2212")
@@ -17993,21 +14839,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_396
 			--|#line 2214 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2214 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2214")
@@ -18028,21 +14866,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_397
 			--|#line 2216 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2216 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2216")
@@ -18063,21 +14893,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_398
 			--|#line 2218 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2218 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2218")
@@ -18098,21 +14920,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_399
 			--|#line 2220 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2220 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2220")
@@ -18133,21 +14947,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_400
 			--|#line 2222 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2222 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2222")
@@ -18168,21 +14974,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_401
 			--|#line 2225 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval34: ET_ALIAS_NAME
 		do
-			if not yy_retried then
 --|#line 2225 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2225")
@@ -18203,21 +15001,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines34.force (yyvs34, yyval34, yyvsp34)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_402
 			--|#line 2231 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2231 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2231")
@@ -18230,21 +15020,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_403
 			--|#line 2238 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2238 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2238")
@@ -18264,21 +15046,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_404
 			--|#line 2240 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2240 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2240")
@@ -18293,21 +15067,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_405
 			--|#line 2248 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval5: ET_SYMBOL
 		do
-			if not yy_retried then
 --|#line 2248 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2248")
@@ -18324,21 +15090,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_406
 			--|#line 2259 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2259 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2259")
@@ -18363,21 +15121,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_407
 			--|#line 2266 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2266 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2266")
@@ -18402,21 +15152,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_408
 			--|#line 2273 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2273 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2273")
@@ -18435,21 +15177,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp75 := yyvsp75 -1
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_409
 			--|#line 2283 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2283 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2283")
@@ -18469,21 +15203,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp75 := yyvsp75 -1
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_410
 			--|#line 2294 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2294 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2294")
@@ -18499,21 +15225,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp76 := yyvsp76 -1
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_411
 			--|#line 2301 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 2301 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2301")
@@ -18529,21 +15247,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp76 := yyvsp76 -1
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_412
 			--|#line 2310 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval75: ET_FORMAL_ARGUMENT
 		do
-			if not yy_retried then
 --|#line 2310 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2310")
@@ -18568,21 +15278,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines75.force (yyvs75, yyval75, yyvsp75)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_413
 			--|#line 2319 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval75: ET_FORMAL_ARGUMENT
 		do
-			if not yy_retried then
 --|#line 2319 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2319")
@@ -18606,21 +15308,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines75.force (yyvs75, yyval75, yyvsp75)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_414
 			--|#line 2328 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval76: ET_FORMAL_ARGUMENT_ITEM
 		do
-			if not yy_retried then
 --|#line 2328 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2328")
@@ -18646,21 +15340,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines76.force (yyvs76, yyval76, yyvsp76)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_415
 			--|#line 2337 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval76: ET_FORMAL_ARGUMENT_ITEM
 		do
-			if not yy_retried then
 --|#line 2337 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2337")
@@ -18687,21 +15373,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines76.force (yyvs76, yyval76, yyvsp76)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_416
 			--|#line 2348 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2348 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2348")
@@ -18720,21 +15398,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_417
 			--|#line 2350 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2350 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2350")
@@ -18754,21 +15424,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_418
 			--|#line 2352 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2352 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2352")
@@ -18784,21 +15446,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_419
 			--|#line 2352 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2352 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2352")
@@ -18819,21 +15473,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_420
 			--|#line 2365 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2365 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2365")
@@ -18857,21 +15503,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_421
 			--|#line 2372 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2372 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2372")
@@ -18895,21 +15533,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_422
 			--|#line 2379 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2379 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2379")
@@ -18928,21 +15558,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp93 := yyvsp93 -1
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_423
 			--|#line 2389 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2389 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2389")
@@ -18962,21 +15584,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp93 := yyvsp93 -1
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_424
 			--|#line 2400 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2400 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2400")
@@ -18992,21 +15606,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp94 := yyvsp94 -1
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_425
 			--|#line 2407 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval95: ET_LOCAL_VARIABLE_LIST
 		do
-			if not yy_retried then
 --|#line 2407 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2407")
@@ -19022,21 +15628,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp94 := yyvsp94 -1
 	yyspecial_routines95.force (yyvs95, yyval95, yyvsp95)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_426
 			--|#line 2416 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval93: ET_LOCAL_VARIABLE
 		do
-			if not yy_retried then
 --|#line 2416 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2416")
@@ -19061,21 +15659,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines93.force (yyvs93, yyval93, yyvsp93)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_427
 			--|#line 2425 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval93: ET_LOCAL_VARIABLE
 		do
-			if not yy_retried then
 --|#line 2425 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2425")
@@ -19099,21 +15689,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines93.force (yyvs93, yyval93, yyvsp93)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_428
 			--|#line 2434 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval94: ET_LOCAL_VARIABLE_ITEM
 		do
-			if not yy_retried then
 --|#line 2434 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2434")
@@ -19139,21 +15721,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines94.force (yyvs94, yyval94, yyvsp94)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_429
 			--|#line 2443 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval94: ET_LOCAL_VARIABLE_ITEM
 		do
-			if not yy_retried then
 --|#line 2443 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2443")
@@ -19180,21 +15754,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines94.force (yyvs94, yyval94, yyvsp94)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_430
 			--|#line 2454 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2454 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2454")
@@ -19214,21 +15780,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_431
 			--|#line 2456 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2456 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2456")
@@ -19249,21 +15807,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_432
 			--|#line 2458 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2458 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2458")
@@ -19284,21 +15834,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_433
 			--|#line 2460 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2460 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2460")
@@ -19320,21 +15862,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_434
 			--|#line 2462 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2462 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2462")
@@ -19346,21 +15880,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp66 := yyvsp66 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_435
 			--|#line 2464 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2464 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2464")
@@ -19373,21 +15899,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp22 := yyvsp22 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_436
 			--|#line 2466 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2466 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2466")
@@ -19400,21 +15918,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_437
 			--|#line 2468 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2468 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2468")
@@ -19428,21 +15938,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp22 := yyvsp22 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_438
 			--|#line 2472 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval107: ET_PRECONDITIONS
 		do
-			if not yy_retried then
 --|#line 2472 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2472")
@@ -19461,21 +15963,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines107.force (yyvs107, yyval107, yyvsp107)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_439
 			--|#line 2474 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval107: ET_PRECONDITIONS
 		do
-			if not yy_retried then
 --|#line 2474 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2474")
@@ -19495,21 +15989,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines107.force (yyvs107, yyval107, yyvsp107)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_440
 			--|#line 2476 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval107: ET_PRECONDITIONS
 		do
-			if not yy_retried then
 --|#line 2476 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2476")
@@ -19529,21 +16015,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines107.force (yyvs107, yyval107, yyvsp107)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_441
 			--|#line 2478 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval107: ET_PRECONDITIONS
 		do
-			if not yy_retried then
 --|#line 2478 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2478")
@@ -19564,21 +16042,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines107.force (yyvs107, yyval107, yyvsp107)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_442
 			--|#line 2480 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval107: ET_PRECONDITIONS
 		do
-			if not yy_retried then
 --|#line 2480 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2480")
@@ -19599,21 +16069,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines107.force (yyvs107, yyval107, yyvsp107)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_443
 			--|#line 2484 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval106: ET_POSTCONDITIONS
 		do
-			if not yy_retried then
 --|#line 2484 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2484")
@@ -19632,21 +16094,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines106.force (yyvs106, yyval106, yyvsp106)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_444
 			--|#line 2486 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval106: ET_POSTCONDITIONS
 		do
-			if not yy_retried then
 --|#line 2486 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2486")
@@ -19666,21 +16120,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines106.force (yyvs106, yyval106, yyvsp106)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_445
 			--|#line 2488 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval106: ET_POSTCONDITIONS
 		do
-			if not yy_retried then
 --|#line 2488 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2488")
@@ -19700,21 +16146,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines106.force (yyvs106, yyval106, yyvsp106)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_446
 			--|#line 2490 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval106: ET_POSTCONDITIONS
 		do
-			if not yy_retried then
 --|#line 2490 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2490")
@@ -19735,21 +16173,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines106.force (yyvs106, yyval106, yyvsp106)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_447
 			--|#line 2492 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval106: ET_POSTCONDITIONS
 		do
-			if not yy_retried then
 --|#line 2492 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2492")
@@ -19770,21 +16200,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines106.force (yyvs106, yyval106, yyvsp106)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_448
 			--|#line 2496 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval90: ET_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2496 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2496")
@@ -19803,21 +16225,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines90.force (yyvs90, yyval90, yyvsp90)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_449
 			--|#line 2498 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval90: ET_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2498 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2498")
@@ -19828,21 +16242,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines90.force (yyvs90, yyval90, yyvsp90)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_450
 			--|#line 2502 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval90: ET_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2502 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2502")
@@ -19863,21 +16269,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines90.force (yyvs90, yyval90, yyvsp90)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_451
 			--|#line 2504 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval90: ET_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2504 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2504")
@@ -19898,21 +16296,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines90.force (yyvs90, yyval90, yyvsp90)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_452
 			--|#line 2508 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2508 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2508")
@@ -19931,21 +16321,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_453
 			--|#line 2512 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval96: ET_LOOP_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2512 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2512")
@@ -19964,21 +16346,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines96.force (yyvs96, yyval96, yyvsp96)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_454
 			--|#line 2514 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval96: ET_LOOP_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2514 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2514")
@@ -19989,21 +16363,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines96.force (yyvs96, yyval96, yyvsp96)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_455
 			--|#line 2518 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval96: ET_LOOP_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2518 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2518")
@@ -20023,21 +16389,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines96.force (yyvs96, yyval96, yyvsp96)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_456
 			--|#line 2520 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval96: ET_LOOP_INVARIANTS
 		do
-			if not yy_retried then
 --|#line 2520 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2520")
@@ -20058,21 +16416,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines96.force (yyvs96, yyval96, yyvsp96)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_457
 			--|#line 2524 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval118: ET_VARIANT
 		do
-			if not yy_retried then
 --|#line 2524 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2524")
@@ -20093,21 +16443,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines118.force (yyvs118, yyval118, yyvsp118)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_458
 			--|#line 2526 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval118: ET_VARIANT
 		do
-			if not yy_retried then
 --|#line 2526 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2526")
@@ -20130,21 +16472,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines118.force (yyvs118, yyval118, yyvsp118)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_459
 			--|#line 2530 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval118: ET_VARIANT
 		do
-			if not yy_retried then
 --|#line 2530 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2530")
@@ -20163,21 +16497,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines118.force (yyvs118, yyval118, yyvsp118)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_460
 			--|#line 2532 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval118: ET_VARIANT
 		do
-			if not yy_retried then
 --|#line 2532 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2532")
@@ -20188,21 +16514,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines118.force (yyvs118, yyval118, yyvsp118)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_461
 			--|#line 2538 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 2538 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2538")
@@ -20221,21 +16539,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_462
 			--|#line 2540 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 2540 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2540")
@@ -20246,21 +16556,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_463
 			--|#line 2546 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2546 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2546")
@@ -20280,21 +16582,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_464
 			--|#line 2548 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2548 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2548")
@@ -20305,21 +16599,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_465
 			--|#line 2552 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2552 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2552")
@@ -20340,21 +16626,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_466
 			--|#line 2554 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2554 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2554")
@@ -20376,21 +16654,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_467
 			--|#line 2556 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2556 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2556")
@@ -20412,21 +16682,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_468
 			--|#line 2558 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2558 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2558")
@@ -20448,21 +16710,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_469
 			--|#line 2560 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2560 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2560")
@@ -20484,21 +16738,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_470
 			--|#line 2562 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2562 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2562")
@@ -20520,21 +16766,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_471
 			--|#line 2564 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2564 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2564")
@@ -20556,21 +16794,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_472
 			--|#line 2566 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2566 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2566")
@@ -20592,21 +16822,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_473
 			--|#line 2568 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2568 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2568")
@@ -20628,21 +16850,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_474
 			--|#line 2570 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2570 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2570")
@@ -20665,21 +16879,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_475
 			--|#line 2572 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2572 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2572")
@@ -20701,21 +16907,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_476
 			--|#line 2574 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2574 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2574")
@@ -20738,21 +16936,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_477
 			--|#line 2576 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2576 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2576")
@@ -20772,21 +16962,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_478
 			--|#line 2578 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2578 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2578")
@@ -20807,21 +16989,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_479
 			--|#line 2580 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2580 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2580")
@@ -20841,21 +17015,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_480
 			--|#line 2582 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2582 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2582")
@@ -20876,21 +17042,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_481
 			--|#line 2584 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2584 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2584")
@@ -20912,21 +17070,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_482
 			--|#line 2586 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2586 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2586")
@@ -20948,21 +17098,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_483
 			--|#line 2588 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2588 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2588")
@@ -20984,21 +17126,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_484
 			--|#line 2590 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2590 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2590")
@@ -21020,21 +17154,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_485
 			--|#line 2592 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2592 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2592")
@@ -21056,21 +17182,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_486
 			--|#line 2594 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2594 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2594")
@@ -21092,21 +17210,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_487
 			--|#line 2596 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2596 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2596")
@@ -21129,21 +17239,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_488
 			--|#line 2598 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2598 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2598")
@@ -21165,21 +17267,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_489
 			--|#line 2600 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2600 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2600")
@@ -21202,21 +17296,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_490
 			--|#line 2604 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2604 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2604")
@@ -21237,21 +17323,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_491
 			--|#line 2606 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2606 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2606")
@@ -21273,21 +17351,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_492
 			--|#line 2608 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2608 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2608")
@@ -21309,21 +17379,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_493
 			--|#line 2610 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2610 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2610")
@@ -21345,21 +17407,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_494
 			--|#line 2612 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2612 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2612")
@@ -21381,21 +17435,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_495
 			--|#line 2614 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2614 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2614")
@@ -21417,21 +17463,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_496
 			--|#line 2616 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2616 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2616")
@@ -21453,21 +17491,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_497
 			--|#line 2618 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2618 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2618")
@@ -21489,21 +17519,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_498
 			--|#line 2620 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2620 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2620")
@@ -21525,21 +17547,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_499
 			--|#line 2622 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2622 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2622")
@@ -21562,21 +17576,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_500
 			--|#line 2624 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2624 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2624")
@@ -21598,21 +17604,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_501
 			--|#line 2626 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2626 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2626")
@@ -21635,21 +17633,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_502
 			--|#line 2628 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2628 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2628")
@@ -21669,21 +17659,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_503
 			--|#line 2630 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2630 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2630")
@@ -21704,21 +17686,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_504
 			--|#line 2632 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2632 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2632")
@@ -21738,21 +17712,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_505
 			--|#line 2634 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2634 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2634")
@@ -21773,21 +17739,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_506
 			--|#line 2636 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2636 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2636")
@@ -21809,21 +17767,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_507
 			--|#line 2638 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2638 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2638")
@@ -21845,21 +17795,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_508
 			--|#line 2640 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2640 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2640")
@@ -21881,21 +17823,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_509
 			--|#line 2642 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2642 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2642")
@@ -21917,21 +17851,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_510
 			--|#line 2644 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2644 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2644")
@@ -21953,21 +17879,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_511
 			--|#line 2646 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2646 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2646")
@@ -21989,21 +17907,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_512
 			--|#line 2648 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2648 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2648")
@@ -22026,21 +17936,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_513
 			--|#line 2650 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2650 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2650")
@@ -22062,21 +17964,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_514
 			--|#line 2652 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2652 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2652")
@@ -22099,21 +17993,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_515
 			--|#line 2656 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2656 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2656")
@@ -22133,21 +18019,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_516
 			--|#line 2658 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2658 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2658")
@@ -22168,21 +18046,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_517
 			--|#line 2660 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2660 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2660")
@@ -22204,21 +18074,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_518
 			--|#line 2662 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2662 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2662")
@@ -22240,21 +18102,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_519
 			--|#line 2664 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2664 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2664")
@@ -22276,21 +18130,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_520
 			--|#line 2666 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2666 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2666")
@@ -22312,21 +18158,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_521
 			--|#line 2668 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2668 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2668")
@@ -22348,21 +18186,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_522
 			--|#line 2670 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2670 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2670")
@@ -22384,21 +18214,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_523
 			--|#line 2672 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2672 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2672")
@@ -22420,21 +18242,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_524
 			--|#line 2674 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2674 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2674")
@@ -22456,21 +18270,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_525
 			--|#line 2676 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2676 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2676")
@@ -22493,21 +18299,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_526
 			--|#line 2678 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2678 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2678")
@@ -22529,21 +18327,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_527
 			--|#line 2680 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2680 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2680")
@@ -22566,21 +18356,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_528
 			--|#line 2682 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2682 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2682")
@@ -22600,21 +18382,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_529
 			--|#line 2684 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2684 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2684")
@@ -22635,21 +18409,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_530
 			--|#line 2686 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2686 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2686")
@@ -22669,21 +18435,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_531
 			--|#line 2688 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2688 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2688")
@@ -22704,21 +18462,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_532
 			--|#line 2690 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2690 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2690")
@@ -22740,21 +18490,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_533
 			--|#line 2692 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2692 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2692")
@@ -22776,21 +18518,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_534
 			--|#line 2694 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2694 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2694")
@@ -22812,21 +18546,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_535
 			--|#line 2696 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2696 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2696")
@@ -22848,21 +18574,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_536
 			--|#line 2698 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2698 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2698")
@@ -22884,21 +18602,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_537
 			--|#line 2700 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2700 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2700")
@@ -22920,21 +18630,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_538
 			--|#line 2702 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2702 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2702")
@@ -22957,21 +18659,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_539
 			--|#line 2704 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2704 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2704")
@@ -22993,21 +18687,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_540
 			--|#line 2706 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval115: ET_TYPE
 		do
-			if not yy_retried then
 --|#line 2706 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2706")
@@ -23030,21 +18716,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines115.force (yyvs115, yyval115, yyvsp115)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_541
 			--|#line 2710 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval13: ET_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2710 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2710")
@@ -23055,21 +18733,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_542
 			--|#line 2714 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2714 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2714")
@@ -23088,21 +18758,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_543
 			--|#line 2716 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2716 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2716")
@@ -23113,21 +18775,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_544
 			--|#line 2720 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2720 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2720")
@@ -23148,21 +18802,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_545
 			--|#line 2723 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2723 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2723")
@@ -23177,21 +18823,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_546
 			--|#line 2731 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2731 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2731")
@@ -23213,21 +18851,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_547
 			--|#line 2738 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2738 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2738")
@@ -23256,21 +18886,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_548
 			--|#line 2749 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2749 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2749")
@@ -23284,21 +18906,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp28 := yyvsp28 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_549
 			--|#line 2754 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2754 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2754")
@@ -23314,21 +18928,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_550
 			--|#line 2759 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2759 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2759")
@@ -23344,21 +18950,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_551
 			--|#line 2766 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 2766 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2766")
@@ -23378,21 +18976,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_552
 			--|#line 2772 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval28: ET_ACTUAL_PARAMETER_ITEM
 		do
-			if not yy_retried then
 --|#line 2772 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2772")
@@ -23417,21 +19007,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines28.force (yyvs28, yyval28, yyvsp28)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_553
 			--|#line 2781 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2781 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2781")
@@ -23450,21 +19032,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_554
 			--|#line 2783 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2783 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2783")
@@ -23475,21 +19049,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_555
 			--|#line 2787 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2787 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2787")
@@ -23510,21 +19076,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_556
 			--|#line 2790 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2790 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2790")
@@ -23539,21 +19097,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_557
 			--|#line 2796 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2796 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2796")
@@ -23568,21 +19118,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_558
 			--|#line 2804 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2804 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2804")
@@ -23606,21 +19148,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_559
 			--|#line 2809 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2809 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2809")
@@ -23634,21 +19168,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp28 := yyvsp28 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_560
 			--|#line 2814 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2814 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2814")
@@ -23662,21 +19188,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp28 := yyvsp28 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_561
 			--|#line 2819 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2819 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2819")
@@ -23698,21 +19216,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_562
 			--|#line 2830 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2830 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2830")
@@ -23734,21 +19244,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_563
 			--|#line 2841 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval29: ET_ACTUAL_PARAMETER_LIST
 		do
-			if not yy_retried then
 --|#line 2841 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2841")
@@ -23770,21 +19272,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines29.force (yyvs29, yyval29, yyvsp29)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_564
 			--|#line 2854 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval28: ET_ACTUAL_PARAMETER_ITEM
 		do
-			if not yy_retried then
 --|#line 2854 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2854")
@@ -23810,21 +19304,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines28.force (yyvs28, yyval28, yyvsp28)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_565
 			--|#line 2863 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval28: ET_ACTUAL_PARAMETER_ITEM
 		do
-			if not yy_retried then
 --|#line 2863 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2863")
@@ -23851,21 +19337,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines28.force (yyvs28, yyval28, yyvsp28)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_566
 			--|#line 2872 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2872 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2872")
@@ -23886,21 +19364,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_567
 			--|#line 2874 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2874 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2874")
@@ -23921,21 +19391,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_568
 			--|#line 2876 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2876 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2876")
@@ -23955,21 +19417,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_569
 			--|#line 2880 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2880 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2880")
@@ -23990,21 +19444,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_570
 			--|#line 2882 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2882 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2882")
@@ -24025,21 +19471,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_571
 			--|#line 2884 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2884 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2884")
@@ -24060,21 +19498,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_572
 			--|#line 2886 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2886 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2886")
@@ -24095,21 +19525,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_573
 			--|#line 2888 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2888 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2888")
@@ -24130,21 +19552,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_574
 			--|#line 2890 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2890 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2890")
@@ -24165,21 +19579,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_575
 			--|#line 2892 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2892 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2892")
@@ -24201,21 +19607,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_576
 			--|#line 2894 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2894 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2894")
@@ -24237,21 +19635,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_577
 			--|#line 2896 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2896 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2896")
@@ -24273,21 +19663,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_578
 			--|#line 2898 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2898 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2898")
@@ -24309,21 +19691,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_579
 			--|#line 2900 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2900 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2900")
@@ -24344,21 +19718,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_580
 			--|#line 2902 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2902 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2902")
@@ -24379,21 +19745,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_581
 			--|#line 2904 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2904 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2904")
@@ -24414,21 +19772,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_582
 			--|#line 2906 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2906 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2906")
@@ -24449,21 +19799,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_583
 			--|#line 2908 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2908 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2908")
@@ -24484,21 +19826,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_584
 			--|#line 2910 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2910 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2910")
@@ -24519,21 +19853,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_585
 			--|#line 2912 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2912 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2912")
@@ -24555,21 +19881,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_586
 			--|#line 2914 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2914 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2914")
@@ -24591,21 +19909,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_587
 			--|#line 2916 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2916 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2916")
@@ -24627,21 +19937,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_588
 			--|#line 2918 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2918 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2918")
@@ -24663,21 +19965,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_589
 			--|#line 2920 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval92: ET_LIKE_TYPE
 		do
-			if not yy_retried then
 --|#line 2920 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2920")
@@ -24697,21 +19991,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines92.force (yyvs92, yyval92, yyvsp92)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_590
 			--|#line 2924 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2924 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2924")
@@ -24739,21 +20025,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_591
 			--|#line 2932 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2932 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2932")
@@ -24780,21 +20058,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_592
 			--|#line 2942 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2942 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2942")
@@ -24805,21 +20075,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_593
 			--|#line 2944 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2944 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2944")
@@ -24847,21 +20109,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_594
 			--|#line 2952 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2952 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2952")
@@ -24889,21 +20143,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_595
 			--|#line 2960 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2960 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2960")
@@ -24931,21 +20177,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_596
 			--|#line 2968 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2968 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2968")
@@ -24973,21 +20211,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_597
 			--|#line 2976 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2976 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2976")
@@ -25015,21 +20245,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_598
 			--|#line 2984 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2984 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2984")
@@ -25059,21 +20281,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_599
 			--|#line 2994 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 2994 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2994")
@@ -25103,21 +20317,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_600
 			--|#line 3004 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3004 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3004")
@@ -25148,21 +20354,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_601
 			--|#line 3014 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3014 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3014")
@@ -25193,21 +20391,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_602
 			--|#line 3024 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3024 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3024")
@@ -25235,21 +20425,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_603
 			--|#line 3032 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3032 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3032")
@@ -25277,21 +20459,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_604
 			--|#line 3040 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3040 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3040")
@@ -25319,21 +20493,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_605
 			--|#line 3048 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3048 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3048")
@@ -25361,21 +20527,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_606
 			--|#line 3056 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3056 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3056")
@@ -25403,21 +20561,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_607
 			--|#line 3064 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3064 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3064")
@@ -25444,21 +20594,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_608
 			--|#line 3072 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3072 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3072")
@@ -25486,21 +20628,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_609
 			--|#line 3080 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3080 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3080")
@@ -25528,21 +20662,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_610
 			--|#line 3088 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval109: ET_QUALIFIED_LIKE_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 3088 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3088")
@@ -25571,21 +20697,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines109.force (yyvs109, yyval109, yyvsp109)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_611
 			--|#line 3100 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3100 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3100")
@@ -25597,21 +20715,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_612
 			--|#line 3104 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3104 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3104")
@@ -25623,21 +20733,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_613
 			--|#line 3108 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3108 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3108")
@@ -25649,21 +20751,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_614
 			--|#line 3112 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3112 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3112")
@@ -25675,21 +20769,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_615
 			--|#line 3116 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3116 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3116")
@@ -25701,21 +20787,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_616
 			--|#line 3120 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3120 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3120")
@@ -25727,21 +20805,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_617
 			--|#line 3124 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3124 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3124")
@@ -25753,21 +20823,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_618
 			--|#line 3128 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3128 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3128")
@@ -25779,21 +20841,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_619
 			--|#line 3132 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3132 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3132")
@@ -25812,21 +20866,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_620
 			--|#line 3134 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3134 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3134")
@@ -25837,21 +20883,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_621
 			--|#line 3138 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3138 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3138")
@@ -25863,21 +20901,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_622
 			--|#line 3142 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3142 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3142")
@@ -25891,21 +20921,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_623
 			--|#line 3149 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3149 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3149")
@@ -25924,21 +20946,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_624
 			--|#line 3151 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3151 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3151")
@@ -25949,21 +20963,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_625
 			--|#line 3155 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3155 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3155")
@@ -25982,21 +20988,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_626
 			--|#line 3157 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3157 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3157")
@@ -26007,21 +21005,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_627
 			--|#line 3161 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3161 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3161")
@@ -26049,21 +21039,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_628
 			--|#line 3172 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3172 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3172")
@@ -26080,21 +21062,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp89 := yyvsp89 -1
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_629
 			--|#line 3172 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval48: ET_COMPOUND
 		do
-			if not yy_retried then
 --|#line 3172 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3172")
@@ -26116,21 +21090,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines48.force (yyvs48, yyval48, yyvsp48)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_630
 			--|#line 3193 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3193 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3193")
@@ -26141,21 +21107,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_631
 			--|#line 3195 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3195 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3195")
@@ -26166,21 +21124,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_632
 			--|#line 3197 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3197 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3197")
@@ -26191,21 +21141,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_633
 			--|#line 3199 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3199 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3199")
@@ -26227,21 +21169,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_634
 			--|#line 3201 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3201 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3201")
@@ -26263,21 +21197,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_635
 			--|#line 3203 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3203 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3203")
@@ -26299,21 +21225,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_636
 			--|#line 3205 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3205 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3205")
@@ -26335,21 +21253,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_637
 			--|#line 3207 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3207 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3207")
@@ -26369,21 +21279,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_638
 			--|#line 3209 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3209 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3209")
@@ -26403,21 +21305,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_639
 			--|#line 3211 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3211 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3211")
@@ -26441,21 +21335,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_640
 			--|#line 3213 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3213 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3213")
@@ -26483,21 +21369,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_641
 			--|#line 3221 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3221 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3221")
@@ -26526,21 +21404,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_642
 			--|#line 3234 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3234 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3234")
@@ -26565,21 +21435,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_643
 			--|#line 3236 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3236 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3236")
@@ -26599,21 +21461,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_644
 			--|#line 3238 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3238 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3238")
@@ -26633,21 +21487,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_645
 			--|#line 3240 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3240 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3240")
@@ -26667,21 +21513,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_646
 			--|#line 3242 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3242 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3242")
@@ -26701,21 +21539,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_647
 			--|#line 3248 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval40: ET_CHECK_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3248 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3248")
@@ -26736,21 +21566,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines40.force (yyvs40, yyval40, yyvsp40)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_648
 			--|#line 3250 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval40: ET_CHECK_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3250 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3250")
@@ -26771,21 +21593,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines40.force (yyvs40, yyval40, yyvsp40)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_649
 			--|#line 3252 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval40: ET_CHECK_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3252 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3252")
@@ -26807,21 +21621,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines40.force (yyvs40, yyval40, yyvsp40)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_650
 			--|#line 3254 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval40: ET_CHECK_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3254 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3254")
@@ -26843,21 +21649,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines40.force (yyvs40, yyval40, yyvsp40)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_651
 			--|#line 3258 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 3258 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3258")
@@ -26876,21 +21674,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_652
 			--|#line 3264 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3264 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3264")
@@ -26912,21 +21702,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_653
 			--|#line 3266 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3266 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3266")
@@ -26950,21 +21732,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_654
 			--|#line 3268 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3268 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3268")
@@ -26985,21 +21759,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_655
 			--|#line 3270 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3270 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3270")
@@ -27022,21 +21788,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_656
 			--|#line 3274 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3274 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3274")
@@ -27059,21 +21817,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_657
 			--|#line 3276 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3276 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3276")
@@ -27098,21 +21848,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_658
 			--|#line 3278 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3278 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3278")
@@ -27133,21 +21875,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_659
 			--|#line 3280 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3280 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3280")
@@ -27171,21 +21905,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_660
 			--|#line 3284 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval58: ET_CREATE_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3284 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3284")
@@ -27207,21 +21933,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines58.force (yyvs58, yyval58, yyvsp58)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_661
 			--|#line 3286 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval58: ET_CREATE_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3286 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3286")
@@ -27245,21 +21963,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines58.force (yyvs58, yyval58, yyvsp58)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_662
 			--|#line 3292 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval81: ET_IF_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3292 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3292")
@@ -27281,21 +21991,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines81.force (yyvs81, yyval81, yyvsp81)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_663
 			--|#line 3294 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval81: ET_IF_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3294 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3294")
@@ -27317,21 +22019,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines81.force (yyvs81, yyval81, yyvsp81)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_664
 			--|#line 3296 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval81: ET_IF_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3296 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3296")
@@ -27354,21 +22048,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines81.force (yyvs81, yyval81, yyvsp81)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_665
 			--|#line 3298 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval81: ET_IF_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3298 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3298")
@@ -27391,21 +22077,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines81.force (yyvs81, yyval81, yyvsp81)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_666
 			--|#line 3302 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval63: ET_ELSEIF_PART_LIST
 		do
-			if not yy_retried then
 --|#line 3302 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3302")
@@ -27419,21 +22097,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines63.force (yyvs63, yyval63, yyvsp63)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_667
 			--|#line 3309 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval63: ET_ELSEIF_PART_LIST
 		do
-			if not yy_retried then
 --|#line 3309 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3309")
@@ -27457,21 +22127,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines63.force (yyvs63, yyval63, yyvsp63)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_668
 			--|#line 3316 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval63: ET_ELSEIF_PART_LIST
 		do
-			if not yy_retried then
 --|#line 3316 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3316")
@@ -27487,21 +22149,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp62 := yyvsp62 -1
 	yyspecial_routines63.force (yyvs63, yyval63, yyvsp63)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_669
 			--|#line 3325 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval62: ET_ELSEIF_PART
 		do
-			if not yy_retried then
 --|#line 3325 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3325")
@@ -27527,21 +22181,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines62.force (yyvs62, yyval62, yyvsp62)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_670
 			--|#line 3336 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval88: ET_INSPECT_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3336 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3336")
@@ -27564,21 +22210,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines88.force (yyvs88, yyval88, yyvsp88)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_671
 			--|#line 3338 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval88: ET_INSPECT_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3338 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3338")
@@ -27600,21 +22238,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines88.force (yyvs88, yyval88, yyvsp88)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_672
 			--|#line 3342 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval120: ET_WHEN_PART_LIST
 		do
-			if not yy_retried then
 --|#line 3342 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3342")
@@ -27633,21 +22263,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines120.force (yyvs120, yyval120, yyvsp120)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_673
 			--|#line 3344 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval120: ET_WHEN_PART_LIST
 		do
-			if not yy_retried then
 --|#line 3344 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3344")
@@ -27661,21 +22283,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines120.force (yyvs120, yyval120, yyvsp120)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_674
 			--|#line 3351 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval120: ET_WHEN_PART_LIST
 		do
-			if not yy_retried then
 --|#line 3351 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3351")
@@ -27699,21 +22313,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines120.force (yyvs120, yyval120, yyvsp120)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_675
 			--|#line 3358 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval120: ET_WHEN_PART_LIST
 		do
-			if not yy_retried then
 --|#line 3358 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3358")
@@ -27729,21 +22335,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp119 := yyvsp119 -1
 	yyspecial_routines120.force (yyvs120, yyval120, yyvsp120)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_676
 			--|#line 3367 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval119: ET_WHEN_PART
 		do
-			if not yy_retried then
 --|#line 3367 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3367")
@@ -27768,21 +22366,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines119.force (yyvs119, yyval119, yyvsp119)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_677
 			--|#line 3376 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval44: ET_CHOICE_LIST
 		do
-			if not yy_retried then
 --|#line 3376 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3376")
@@ -27802,21 +22392,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines44.force (yyvs44, yyval44, yyvsp44)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_678
 			--|#line 3378 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval44: ET_CHOICE_LIST
 		do
-			if not yy_retried then
 --|#line 3378 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3378")
@@ -27832,21 +22414,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines44.force (yyvs44, yyval44, yyvsp44)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_679
 			--|#line 3378 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval44: ET_CHOICE_LIST
 		do
-			if not yy_retried then
 --|#line 3378 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3378")
@@ -27867,21 +22441,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines44.force (yyvs44, yyval44, yyvsp44)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_680
 			--|#line 3391 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval44: ET_CHOICE_LIST
 		do
-			if not yy_retried then
 --|#line 3391 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3391")
@@ -27909,21 +22475,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines44.force (yyvs44, yyval44, yyvsp44)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_681
 			--|#line 3402 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval44: ET_CHOICE_LIST
 		do
-			if not yy_retried then
 --|#line 3402 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3402")
@@ -27947,21 +22505,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines44.force (yyvs44, yyval44, yyvsp44)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_682
 			--|#line 3410 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval44: ET_CHOICE_LIST
 		do
-			if not yy_retried then
 --|#line 3410 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3410")
@@ -27977,21 +22527,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp43 := yyvsp43 -1
 	yyspecial_routines44.force (yyvs44, yyval44, yyvsp44)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_683
 			--|#line 3419 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval43: ET_CHOICE_ITEM
 		do
-			if not yy_retried then
 --|#line 3419 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3419")
@@ -28016,21 +22558,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines43.force (yyvs43, yyval43, yyvsp43)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_684
 			--|#line 3428 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval41: ET_CHOICE
 		do
-			if not yy_retried then
 --|#line 3428 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3428")
@@ -28050,21 +22584,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines41.force (yyvs41, yyval41, yyvsp41)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_685
 			--|#line 3430 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval41: ET_CHOICE
 		do
-			if not yy_retried then
 --|#line 3430 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3430")
@@ -28085,21 +22611,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines41.force (yyvs41, yyval41, yyvsp41)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_686
 			--|#line 3434 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval42: ET_CHOICE_CONSTANT
 		do
-			if not yy_retried then
 --|#line 3434 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3434")
@@ -28119,21 +22637,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines42.force (yyvs42, yyval42, yyvsp42)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_687
 			--|#line 3436 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval42: ET_CHOICE_CONSTANT
 		do
-			if not yy_retried then
 --|#line 3436 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3436")
@@ -28153,21 +22663,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines42.force (yyvs42, yyval42, yyvsp42)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_688
 			--|#line 3438 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval42: ET_CHOICE_CONSTANT
 		do
-			if not yy_retried then
 --|#line 3438 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3438")
@@ -28187,21 +22689,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines42.force (yyvs42, yyval42, yyvsp42)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_689
 			--|#line 3440 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval42: ET_CHOICE_CONSTANT
 		do
-			if not yy_retried then
 --|#line 3440 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3440")
@@ -28221,21 +22715,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines42.force (yyvs42, yyval42, yyvsp42)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_690
 			--|#line 3446 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval26: ET_ACROSS_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3446 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3446")
@@ -28257,21 +22743,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines26.force (yyvs26, yyval26, yyvsp26)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_691
 			--|#line 3450 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval49: ET_CONDITIONAL
 		do
-			if not yy_retried then
 --|#line 3450 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3450")
@@ -28290,21 +22768,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines49.force (yyvs49, yyval49, yyvsp49)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_692
 			--|#line 3452 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval49: ET_CONDITIONAL
 		do
-			if not yy_retried then
 --|#line 3452 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3452")
@@ -28325,21 +22795,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines49.force (yyvs49, yyval49, yyvsp49)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_693
 			--|#line 3458 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval61: ET_DEBUG_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3458 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3458")
@@ -28361,21 +22823,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines61.force (yyvs61, yyval61, yyvsp61)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_694
 			--|#line 3462 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval99: ET_MANIFEST_STRING_LIST
 		do
-			if not yy_retried then
 --|#line 3462 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3462")
@@ -28394,21 +22848,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines99.force (yyvs99, yyval99, yyvsp99)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_695
 			--|#line 3464 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval99: ET_MANIFEST_STRING_LIST
 		do
-			if not yy_retried then
 --|#line 3464 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3464")
@@ -28428,21 +22874,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines99.force (yyvs99, yyval99, yyvsp99)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_696
 			--|#line 3466 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval99: ET_MANIFEST_STRING_LIST
 		do
-			if not yy_retried then
 --|#line 3466 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3466")
@@ -28458,21 +22896,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines99.force (yyvs99, yyval99, yyvsp99)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_697
 			--|#line 3466 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval99: ET_MANIFEST_STRING_LIST
 		do
-			if not yy_retried then
 --|#line 3466 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3466")
@@ -28493,21 +22923,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines99.force (yyvs99, yyval99, yyvsp99)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_698
 			--|#line 3479 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval99: ET_MANIFEST_STRING_LIST
 		do
-			if not yy_retried then
 --|#line 3479 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3479")
@@ -28536,21 +22958,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines99.force (yyvs99, yyval99, yyvsp99)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_699
 			--|#line 3490 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval99: ET_MANIFEST_STRING_LIST
 		do
-			if not yy_retried then
 --|#line 3490 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3490")
@@ -28566,21 +22980,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp98 := yyvsp98 -1
 	yyspecial_routines99.force (yyvs99, yyval99, yyvsp99)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_700
 			--|#line 3499 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval98: ET_MANIFEST_STRING_ITEM
 		do
-			if not yy_retried then
 --|#line 3499 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3499")
@@ -28605,21 +23011,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines98.force (yyvs98, yyval98, yyvsp98)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_701
 			--|#line 3510 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3510 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3510")
@@ -28640,21 +23038,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_702
 			--|#line 3512 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3512 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3512")
@@ -28677,21 +23067,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_703
 			--|#line 3514 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3514 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3514")
@@ -28714,21 +23096,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_704
 			--|#line 3516 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3516 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3516")
@@ -28749,21 +23123,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_705
 			--|#line 3518 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3518 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3518")
@@ -28786,21 +23152,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_706
 			--|#line 3520 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3520 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3520")
@@ -28824,21 +23182,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_707
 			--|#line 3522 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval89: ET_INSTRUCTION
 		do
-			if not yy_retried then
 --|#line 3522 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3522")
@@ -28861,21 +23211,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines89.force (yyvs89, yyval89, yyvsp89)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_708
 			--|#line 3526 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3526 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3526")
@@ -28896,21 +23238,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_709
 			--|#line 3528 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3528 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3528")
@@ -28924,21 +23258,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp27 := yyvsp27 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_710
 			--|#line 3532 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3532 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3532")
@@ -28952,21 +23278,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp27 := yyvsp27 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_711
 			--|#line 3536 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval39: ET_CALL_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3536 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3536")
@@ -28989,21 +23307,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines39.force (yyvs39, yyval39, yyvsp39)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_712
 			--|#line 3538 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval39: ET_CALL_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3538 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3538")
@@ -29026,21 +23336,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines39.force (yyvs39, yyval39, yyvsp39)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_713
 			--|#line 3542 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval113: ET_STATIC_CALL_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3542 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3542")
@@ -29064,21 +23366,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines113.force (yyvs113, yyval113, yyvsp113)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_714
 			--|#line 3544 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval113: ET_STATIC_CALL_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3544 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3544")
@@ -29101,21 +23395,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines113.force (yyvs113, yyval113, yyvsp113)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_715
 			--|#line 3548 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3548 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3548")
@@ -29136,21 +23422,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_716
 			--|#line 3550 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3550 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3550")
@@ -29173,21 +23451,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_717
 			--|#line 3554 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3554 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3554")
@@ -29208,21 +23478,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_718
 			--|#line 3556 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3556 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3556")
@@ -29242,21 +23504,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_719
 			--|#line 3558 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3558 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3558")
@@ -29276,21 +23530,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_720
 			--|#line 3560 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3560 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3560")
@@ -29310,21 +23556,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_721
 			--|#line 3562 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3562 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3562")
@@ -29335,21 +23573,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_722
 			--|#line 3564 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3564 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3564")
@@ -29374,21 +23604,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_723
 			--|#line 3572 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3572 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3572")
@@ -29408,21 +23630,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_724
 			--|#line 3574 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3574 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3574")
@@ -29436,21 +23650,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp27 := yyvsp27 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_725
 			--|#line 3578 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3578 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3578")
@@ -29475,21 +23681,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_726
 			--|#line 3586 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3586 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3586")
@@ -29503,21 +23701,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp27 := yyvsp27 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_727
 			--|#line 3592 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval27: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3592 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3592")
@@ -29536,21 +23726,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines27.force (yyvs27, yyval27, yyvsp27)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_728
 			--|#line 3594 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval27: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3594 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3594")
@@ -29570,21 +23752,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines27.force (yyvs27, yyval27, yyvsp27)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_729
 			--|#line 3596 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval27: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3596 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3596")
@@ -29600,21 +23774,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines27.force (yyvs27, yyval27, yyvsp27)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_730
 			--|#line 3596 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval27: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3596 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3596")
@@ -29635,21 +23801,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines27.force (yyvs27, yyval27, yyvsp27)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_731
 			--|#line 3609 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval27: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3609 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3609")
@@ -29678,21 +23836,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines27.force (yyvs27, yyval27, yyvsp27)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_732
 			--|#line 3620 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval27: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3620 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3620")
@@ -29717,21 +23867,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines27.force (yyvs27, yyval27, yyvsp27)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_733
 			--|#line 3628 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval27: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3628 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3628")
@@ -29747,21 +23889,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp67 := yyvsp67 -1
 	yyspecial_routines27.force (yyvs27, yyval27, yyvsp27)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_734
 			--|#line 3637 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval67: ET_EXPRESSION_ITEM
 		do
-			if not yy_retried then
 --|#line 3637 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3637")
@@ -29786,21 +23920,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines67.force (yyvs67, yyval67, yyvsp67)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_735
 			--|#line 3646 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3646 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3646")
@@ -29821,21 +23947,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_736
 			--|#line 3648 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3648 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3648")
@@ -29856,21 +23974,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_737
 			--|#line 3650 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3650 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3650")
@@ -29891,21 +24001,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_738
 			--|#line 3652 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3652 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3652")
@@ -29926,21 +24028,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_739
 			--|#line 3659 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval121: ET_WRITABLE
 		do
-			if not yy_retried then
 --|#line 3659 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3659")
@@ -29960,21 +24054,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines121.force (yyvs121, yyval121, yyvsp121)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_740
 			--|#line 3661 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval121: ET_WRITABLE
 		do
-			if not yy_retried then
 --|#line 3661 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3661")
@@ -29994,21 +24080,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines121.force (yyvs121, yyval121, yyvsp121)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_741
 			--|#line 3667 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3667 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3667")
@@ -30019,21 +24097,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_742
 			--|#line 3669 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3669 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3669")
@@ -30044,21 +24114,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_743
 			--|#line 3673 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3673 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3673")
@@ -30071,21 +24133,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp12 := yyvsp12 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_744
 			--|#line 3675 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3675 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3675")
@@ -30098,21 +24152,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_745
 			--|#line 3677 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3677 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3677")
@@ -30125,21 +24171,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_746
 			--|#line 3679 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3679 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3679")
@@ -30152,21 +24190,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_747
 			--|#line 3681 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3681 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3681")
@@ -30179,21 +24209,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_748
 			--|#line 3683 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3683 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3683")
@@ -30206,21 +24228,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_749
 			--|#line 3685 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3685 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3685")
@@ -30233,21 +24247,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_750
 			--|#line 3687 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3687 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3687")
@@ -30260,21 +24266,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_751
 			--|#line 3689 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3689 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3689")
@@ -30287,21 +24285,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_752
 			--|#line 3691 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3691 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3691")
@@ -30314,21 +24304,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_753
 			--|#line 3693 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3693 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3693")
@@ -30341,21 +24323,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_754
 			--|#line 3695 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3695 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3695")
@@ -30368,21 +24342,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_755
 			--|#line 3697 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3697 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3697")
@@ -30395,21 +24361,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp15 := yyvsp15 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_756
 			--|#line 3699 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3699 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3699")
@@ -30422,21 +24380,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp15 := yyvsp15 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_757
 			--|#line 3701 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3701 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3701")
@@ -30449,21 +24399,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp15 := yyvsp15 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_758
 			--|#line 3703 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3703 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3703")
@@ -30477,21 +24419,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_759
 			--|#line 3705 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3705 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3705")
@@ -30505,21 +24439,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_760
 			--|#line 3707 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3707 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3707")
@@ -30532,21 +24458,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp15 := yyvsp15 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_761
 			--|#line 3709 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3709 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3709")
@@ -30559,21 +24477,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_762
 			--|#line 3711 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3711 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3711")
@@ -30586,21 +24496,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_763
 			--|#line 3713 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3713 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3713")
@@ -30613,21 +24515,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_764
 			--|#line 3715 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3715 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3715")
@@ -30640,21 +24534,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_765
 			--|#line 3719 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3719 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3719")
@@ -30665,21 +24551,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_766
 			--|#line 3721 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3721 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3721")
@@ -30699,21 +24577,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_767
 			--|#line 3723 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3723 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3723")
@@ -30733,21 +24603,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_768
 			--|#line 3725 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3725 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3725")
@@ -30758,21 +24620,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_769
 			--|#line 3727 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3727 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3727")
@@ -30792,21 +24646,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_770
 			--|#line 3729 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3729 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3729")
@@ -30827,21 +24673,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_771
 			--|#line 3733 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3733 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3733")
@@ -30852,21 +24690,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_772
 			--|#line 3735 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3735 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3735")
@@ -30886,21 +24716,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_773
 			--|#line 3737 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3737 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3737")
@@ -30920,21 +24742,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_774
 			--|#line 3739 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3739 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3739")
@@ -30954,21 +24768,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_775
 			--|#line 3741 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3741 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3741")
@@ -30988,21 +24794,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_776
 			--|#line 3743 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3743 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3743")
@@ -31022,21 +24820,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_777
 			--|#line 3745 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3745 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3745")
@@ -31056,21 +24846,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_778
 			--|#line 3747 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3747 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3747")
@@ -31090,21 +24872,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_779
 			--|#line 3749 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3749 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3749")
@@ -31116,21 +24890,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_780
 			--|#line 3751 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3751 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3751")
@@ -31142,21 +24908,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_781
 			--|#line 3753 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3753 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3753")
@@ -31168,21 +24926,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp15 := yyvsp15 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_782
 			--|#line 3755 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3755 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3755")
@@ -31194,21 +24944,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp12 := yyvsp12 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_783
 			--|#line 3757 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3757 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3757")
@@ -31220,21 +24962,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_784
 			--|#line 3759 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3759 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3759")
@@ -31253,21 +24987,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp115 := yyvsp115 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_785
 			--|#line 3767 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3767 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3767")
@@ -31279,21 +25005,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_786
 			--|#line 3769 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3769 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3769")
@@ -31307,21 +25025,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp115 := yyvsp115 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_787
 			--|#line 3771 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3771 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3771")
@@ -31334,21 +25044,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp13 := yyvsp13 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_788
 			--|#line 3773 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3773 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3773")
@@ -31363,21 +25065,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp13 := yyvsp13 -1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_789
 			--|#line 3777 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3777 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3777")
@@ -31388,21 +25082,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_790
 			--|#line 3779 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3779 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3779")
@@ -31422,21 +25108,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_791
 			--|#line 3781 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3781 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3781")
@@ -31447,21 +25125,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_792
 			--|#line 3783 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3783 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3783")
@@ -31481,21 +25151,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_793
 			--|#line 3785 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3785 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3785")
@@ -31515,21 +25177,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_794
 			--|#line 3787 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3787 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3787")
@@ -31549,21 +25203,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_795
 			--|#line 3789 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3789 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3789")
@@ -31583,21 +25229,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_796
 			--|#line 3791 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3791 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3791")
@@ -31617,21 +25255,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_797
 			--|#line 3793 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3793 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3793")
@@ -31651,21 +25281,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_798
 			--|#line 3795 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3795 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3795")
@@ -31685,21 +25307,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_799
 			--|#line 3797 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3797 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3797")
@@ -31719,21 +25333,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_800
 			--|#line 3799 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3799 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3799")
@@ -31753,21 +25359,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_801
 			--|#line 3801 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3801 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3801")
@@ -31788,21 +25386,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_802
 			--|#line 3834 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3834 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3834")
@@ -31822,21 +25412,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_803
 			--|#line 3836 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3836 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3836")
@@ -31856,21 +25438,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_804
 			--|#line 3838 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3838 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3838")
@@ -31890,21 +25464,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_805
 			--|#line 3840 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3840 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3840")
@@ -31915,21 +25481,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_806
 			--|#line 3844 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3844 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3844")
@@ -31940,21 +25498,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_807
 			--|#line 3846 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3846 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3846")
@@ -31974,21 +25524,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_808
 			--|#line 3848 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval66: ET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3848 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3848")
@@ -32008,21 +25550,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines66.force (yyvs66, yyval66, yyvsp66)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_809
 			--|#line 3852 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval37: ET_BRACKET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3852 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3852")
@@ -32033,21 +25567,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines37.force (yyvs37, yyval37, yyvsp37)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_810
 			--|#line 3854 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval37: ET_BRACKET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3854 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3854")
@@ -32058,21 +25584,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines37.force (yyvs37, yyval37, yyvsp37)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_811
 			--|#line 3858 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval37: ET_BRACKET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3858 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3858")
@@ -32089,21 +25607,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp36 := yyvsp36 -1
 	yyspecial_routines37.force (yyvs37, yyval37, yyvsp37)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_812
 			--|#line 3858 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval37: ET_BRACKET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3858 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3858")
@@ -32124,21 +25634,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines37.force (yyvs37, yyval37, yyvsp37)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_813
 			--|#line 3871 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval37: ET_BRACKET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3871 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3871")
@@ -32155,21 +25657,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp36 := yyvsp36 -1
 	yyspecial_routines37.force (yyvs37, yyval37, yyvsp37)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_814
 			--|#line 3871 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval37: ET_BRACKET_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3871 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3871")
@@ -32190,21 +25684,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines37.force (yyvs37, yyval37, yyvsp37)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_815
 			--|#line 3884 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval36: ET_BRACKET_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3884 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3884")
@@ -32233,21 +25719,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines36.force (yyvs36, yyval36, yyvsp36)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_816
 			--|#line 3895 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval36: ET_BRACKET_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3895 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3895")
@@ -32272,21 +25750,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines36.force (yyvs36, yyval36, yyvsp36)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_817
 			--|#line 3903 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval36: ET_BRACKET_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 3903 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3903")
@@ -32302,21 +25772,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp67 := yyvsp67 -1
 	yyspecial_routines36.force (yyvs36, yyval36, yyvsp36)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_818
 			--|#line 3912 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval102: ET_PARENTHESIZED_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 3912 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3912")
@@ -32340,21 +25802,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines102.force (yyvs102, yyval102, yyvsp102)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_819
 			--|#line 3920 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval97: ET_MANIFEST_ARRAY
 		do
-			if not yy_retried then
 --|#line 3920 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3920")
@@ -32374,21 +25828,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines97.force (yyvs97, yyval97, yyvsp97)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_820
 			--|#line 3922 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval97: ET_MANIFEST_ARRAY
 		do
-			if not yy_retried then
 --|#line 3922 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3922")
@@ -32404,21 +25850,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines97.force (yyvs97, yyval97, yyvsp97)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_821
 			--|#line 3922 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval97: ET_MANIFEST_ARRAY
 		do
-			if not yy_retried then
 --|#line 3922 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3922")
@@ -32439,21 +25877,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines97.force (yyvs97, yyval97, yyvsp97)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_822
 			--|#line 3935 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval97: ET_MANIFEST_ARRAY
 		do
-			if not yy_retried then
 --|#line 3935 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3935")
@@ -32482,21 +25912,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines97.force (yyvs97, yyval97, yyvsp97)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_823
 			--|#line 3946 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval97: ET_MANIFEST_ARRAY
 		do
-			if not yy_retried then
 --|#line 3946 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3946")
@@ -32521,21 +25943,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines97.force (yyvs97, yyval97, yyvsp97)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_824
 			--|#line 3954 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval97: ET_MANIFEST_ARRAY
 		do
-			if not yy_retried then
 --|#line 3954 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3954")
@@ -32551,21 +25965,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp67 := yyvsp67 -1
 	yyspecial_routines97.force (yyvs97, yyval97, yyvsp97)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_825
 			--|#line 3963 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval100: ET_MANIFEST_TUPLE
 		do
-			if not yy_retried then
 --|#line 3963 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3963")
@@ -32586,21 +25992,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines100.force (yyvs100, yyval100, yyvsp100)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_826
 			--|#line 3965 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval100: ET_MANIFEST_TUPLE
 		do
-			if not yy_retried then
 --|#line 3965 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3965")
@@ -32616,21 +26014,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp23 := yyvsp23 -1
 	yyspecial_routines100.force (yyvs100, yyval100, yyvsp100)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_827
 			--|#line 3965 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval100: ET_MANIFEST_TUPLE
 		do
-			if not yy_retried then
 --|#line 3965 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3965")
@@ -32651,21 +26041,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines100.force (yyvs100, yyval100, yyvsp100)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_828
 			--|#line 3978 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval100: ET_MANIFEST_TUPLE
 		do
-			if not yy_retried then
 --|#line 3978 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3978")
@@ -32694,21 +26076,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines100.force (yyvs100, yyval100, yyvsp100)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_829
 			--|#line 3989 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval100: ET_MANIFEST_TUPLE
 		do
-			if not yy_retried then
 --|#line 3989 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3989")
@@ -32733,21 +26107,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines100.force (yyvs100, yyval100, yyvsp100)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_830
 			--|#line 3997 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval100: ET_MANIFEST_TUPLE
 		do
-			if not yy_retried then
 --|#line 3997 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3997")
@@ -32763,21 +26129,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp67 := yyvsp67 -1
 	yyspecial_routines100.force (yyvs100, yyval100, yyvsp100)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_831
 			--|#line 4006 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval114: ET_STRIP_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4006 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4006")
@@ -32798,21 +26156,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines114.force (yyvs114, yyval114, yyvsp114)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_832
 			--|#line 4008 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval114: ET_STRIP_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4008 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4008")
@@ -32830,21 +26180,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines114.force (yyvs114, yyval114, yyvsp114)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_833
 			--|#line 4008 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval114: ET_STRIP_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4008 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4008")
@@ -32866,21 +26208,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines114.force (yyvs114, yyval114, yyvsp114)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_834
 			--|#line 4023 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval114: ET_STRIP_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4023 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4023")
@@ -32909,21 +26243,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines114.force (yyvs114, yyval114, yyvsp114)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_835
 			--|#line 4034 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval114: ET_STRIP_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4034 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4034")
@@ -32948,21 +26274,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines114.force (yyvs114, yyval114, yyvsp114)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_836
 			--|#line 4042 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval114: ET_STRIP_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4042 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4042")
@@ -32978,21 +26296,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp74 := yyvsp74 -1
 	yyspecial_routines114.force (yyvs114, yyval114, yyvsp114)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_837
 			--|#line 4051 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval50: ET_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4051 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4051")
@@ -33012,21 +26322,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines50.force (yyvs50, yyval50, yyvsp50)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_838
 			--|#line 4053 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval50: ET_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4053 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4053")
@@ -33046,21 +26348,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines50.force (yyvs50, yyval50, yyvsp50)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_839
 			--|#line 4055 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval50: ET_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4055 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4055")
@@ -33080,21 +26374,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines50.force (yyvs50, yyval50, yyvsp50)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_840
 			--|#line 4057 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval50: ET_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4057 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4057")
@@ -33114,21 +26400,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines50.force (yyvs50, yyval50, yyvsp50)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_841
 			--|#line 4059 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval50: ET_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4059 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4059")
@@ -33148,21 +26426,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines50.force (yyvs50, yyval50, yyvsp50)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_842
 			--|#line 4061 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval50: ET_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4061 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4061")
@@ -33182,21 +26452,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines50.force (yyvs50, yyval50, yyvsp50)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_843
 			--|#line 4065 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval25: ET_ACROSS_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4065 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4065")
@@ -33212,21 +26474,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp118 := yyvsp118 -1
 	yyspecial_routines25.force (yyvs25, yyval25, yyvsp25)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_844
 			--|#line 4069 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval25: ET_ACROSS_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4069 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4069")
@@ -33242,21 +26496,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp118 := yyvsp118 -1
 	yyspecial_routines25.force (yyvs25, yyval25, yyvsp25)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_845
 			--|#line 4073 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval25: ET_ACROSS_EXPRESSION
 		do
-			if not yy_retried then
 --|#line 4073 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4073")
@@ -33278,21 +26524,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines25.force (yyvs25, yyval25, yyvsp25)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_846
 			--|#line 4079 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval38: ET_CALL_AGENT
 		do
-			if not yy_retried then
 --|#line 4079 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4079")
@@ -33314,21 +26552,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines38.force (yyvs38, yyval38, yyvsp38)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_847
 			--|#line 4081 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval38: ET_CALL_AGENT
 		do
-			if not yy_retried then
 --|#line 4081 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4081")
@@ -33352,21 +26582,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines38.force (yyvs38, yyval38, yyvsp38)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_848
 			--|#line 4085 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4085 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4085")
@@ -33380,21 +26602,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp32 := yyvsp32 -1
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_849
 			--|#line 4092 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4092 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4092")
@@ -33424,21 +26638,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_850
 			--|#line 4102 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4102 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4102")
@@ -33468,21 +26674,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_851
 			--|#line 4108 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4108 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4108")
@@ -33513,21 +26711,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_852
 			--|#line 4114 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4114 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4114")
@@ -33558,21 +26748,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_853
 			--|#line 4120 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4120 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4120")
@@ -33602,21 +26784,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_854
 			--|#line 4126 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4126 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4126")
@@ -33646,21 +26820,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_855
 			--|#line 4132 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4132 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4132")
@@ -33688,21 +26854,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_856
 			--|#line 4138 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4138 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4138")
@@ -33730,21 +26888,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_857
 			--|#line 4144 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4144 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4144")
@@ -33773,21 +26923,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_858
 			--|#line 4150 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4150 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4150")
@@ -33815,21 +26957,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_859
 			--|#line 4155 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4155 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4155")
@@ -33857,21 +26991,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_860
 			--|#line 4161 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval87: ET_INLINE_AGENT
 		do
-			if not yy_retried then
 --|#line 4161 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4161")
@@ -33899,21 +27025,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines87.force (yyvs87, yyval87, yyvsp87)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_861
 			--|#line 4169 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval77: ET_FORMAL_ARGUMENT_LIST
 		do
-			if not yy_retried then
 --|#line 4169 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4169")
@@ -33926,21 +27044,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines77.force (yyvs77, yyval77, yyvsp77)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_862
 			--|#line 4176 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 4176 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4176")
@@ -33959,21 +27069,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_863
 			--|#line 4180 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval33: ET_AGENT_TARGET
 		do
-			if not yy_retried then
 --|#line 4180 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4180")
@@ -33993,21 +27095,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines33.force (yyvs33, yyval33, yyvsp33)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_864
 			--|#line 4182 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval33: ET_AGENT_TARGET
 		do
-			if not yy_retried then
 --|#line 4182 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4182")
@@ -34027,21 +27121,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines33.force (yyvs33, yyval33, yyvsp33)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_865
 			--|#line 4184 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval33: ET_AGENT_TARGET
 		do
-			if not yy_retried then
 --|#line 4184 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4184")
@@ -34061,21 +27147,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines33.force (yyvs33, yyval33, yyvsp33)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_866
 			--|#line 4186 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval33: ET_AGENT_TARGET
 		do
-			if not yy_retried then
 --|#line 4186 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4186")
@@ -34095,21 +27173,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines33.force (yyvs33, yyval33, yyvsp33)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_867
 			--|#line 4188 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval33: ET_AGENT_TARGET
 		do
-			if not yy_retried then
 --|#line 4188 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4188")
@@ -34130,21 +27200,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines33.force (yyvs33, yyval33, yyvsp33)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_868
 			--|#line 4192 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval32: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if not yy_retried then
 --|#line 4192 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4192")
@@ -34163,21 +27225,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines32.force (yyvs32, yyval32, yyvsp32)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_869
 			--|#line 4194 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval32: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if not yy_retried then
 --|#line 4194 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4194")
@@ -34197,21 +27251,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines32.force (yyvs32, yyval32, yyvsp32)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_870
 			--|#line 4196 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval32: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if not yy_retried then
 --|#line 4196 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4196")
@@ -34227,21 +27273,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp5 := yyvsp5 -1
 	yyspecial_routines32.force (yyvs32, yyval32, yyvsp32)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_871
 			--|#line 4196 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval32: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if not yy_retried then
 --|#line 4196 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4196")
@@ -34262,21 +27300,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines32.force (yyvs32, yyval32, yyvsp32)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_872
 			--|#line 4209 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval32: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if not yy_retried then
 --|#line 4209 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4209")
@@ -34305,21 +27335,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines32.force (yyvs32, yyval32, yyvsp32)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_873
 			--|#line 4220 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval32: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if not yy_retried then
 --|#line 4220 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4220")
@@ -34344,21 +27366,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines32.force (yyvs32, yyval32, yyvsp32)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_874
 			--|#line 4228 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval32: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if not yy_retried then
 --|#line 4228 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4228")
@@ -34374,21 +27388,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp31 := yyvsp31 -1
 	yyspecial_routines32.force (yyvs32, yyval32, yyvsp32)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_875
 			--|#line 4237 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval31: ET_AGENT_ARGUMENT_OPERAND_ITEM
 		do
-			if not yy_retried then
 --|#line 4237 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4237")
@@ -34413,21 +27419,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines31.force (yyvs31, yyval31, yyvsp31)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_876
 			--|#line 4246 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval30: ET_AGENT_ARGUMENT_OPERAND
 		do
-			if not yy_retried then
 --|#line 4246 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4246")
@@ -34447,21 +27445,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines30.force (yyvs30, yyval30, yyvsp30)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_877
 			--|#line 4248 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval30: ET_AGENT_ARGUMENT_OPERAND
 		do
-			if not yy_retried then
 --|#line 4248 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4248")
@@ -34481,21 +27471,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines30.force (yyvs30, yyval30, yyvsp30)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_878
 			--|#line 4250 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval30: ET_AGENT_ARGUMENT_OPERAND
 		do
-			if not yy_retried then
 --|#line 4250 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4250")
@@ -34517,21 +27499,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines30.force (yyvs30, yyval30, yyvsp30)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_879
 			--|#line 4256 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4256 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4256")
@@ -34542,21 +27516,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_880
 			--|#line 4258 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4258 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4258")
@@ -34567,21 +27533,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_881
 			--|#line 4262 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4262 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4262")
@@ -34592,21 +27550,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_882
 			--|#line 4264 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4264 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4264")
@@ -34617,21 +27567,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_883
 			--|#line 4266 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4266 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4266")
@@ -34642,21 +27584,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_884
 			--|#line 4268 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4268 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4268")
@@ -34667,21 +27601,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_885
 			--|#line 4270 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4270 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4270")
@@ -34692,21 +27618,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_886
 			--|#line 4272 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4272 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4272")
@@ -34717,21 +27635,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_887
 			--|#line 4274 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4274 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4274")
@@ -34742,21 +27652,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_888
 			--|#line 4276 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4276 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4276")
@@ -34767,21 +27669,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_889
 			--|#line 4278 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4278 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4278")
@@ -34792,21 +27686,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_890
 			--|#line 4280 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4280 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4280")
@@ -34817,21 +27703,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_891
 			--|#line 4282 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4282 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4282")
@@ -34842,21 +27720,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_892
 			--|#line 4284 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4284 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4284")
@@ -34867,21 +27737,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_893
 			--|#line 4286 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4286 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4286")
@@ -34892,21 +27754,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_894
 			--|#line 4288 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4288 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4288")
@@ -34917,21 +27771,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_895
 			--|#line 4290 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4290 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4290")
@@ -34942,21 +27788,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_896
 			--|#line 4292 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4292 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4292")
@@ -34967,21 +27805,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_897
 			--|#line 4294 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4294 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4294")
@@ -34992,21 +27822,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_898
 			--|#line 4296 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4296 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4296")
@@ -35017,21 +27839,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_899
 			--|#line 4298 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4298 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4298")
@@ -35042,21 +27856,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_900
 			--|#line 4300 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4300 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4300")
@@ -35067,21 +27873,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_901
 			--|#line 4302 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4302 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4302")
@@ -35092,21 +27890,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_902
 			--|#line 4304 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4304 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4304")
@@ -35117,21 +27907,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_903
 			--|#line 4306 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4306 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4306")
@@ -35151,21 +27933,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_904
 			--|#line 4310 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval16: ET_MANIFEST_STRING
 		do
-			if not yy_retried then
 --|#line 4310 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4310")
@@ -35180,21 +27954,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp115 := yyvsp115 -1
 	yyspecial_routines16.force (yyvs16, yyval16, yyvsp16)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_905
 			--|#line 4317 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval10: ET_CHARACTER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4317 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4317")
@@ -35205,21 +27971,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_906
 			--|#line 4319 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval10: ET_CHARACTER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4319 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4319")
@@ -35230,21 +27988,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_907
 			--|#line 4323 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval10: ET_CHARACTER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4323 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4323")
@@ -35255,21 +28005,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_908
 			--|#line 4325 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval10: ET_CHARACTER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4325 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4325")
@@ -35289,21 +28031,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_909
 			--|#line 4329 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval10: ET_CHARACTER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4329 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4329")
@@ -35318,21 +28052,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp115 := yyvsp115 -1
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_910
 			--|#line 4336 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval8: ET_BOOLEAN_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4336 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4336")
@@ -35343,21 +28069,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_911
 			--|#line 4338 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval8: ET_BOOLEAN_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4338 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4338")
@@ -35368,21 +28086,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_912
 			--|#line 4342 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval14: ET_INTEGER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4342 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4342")
@@ -35393,21 +28103,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines14.force (yyvs14, yyval14, yyvsp14)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_913
 			--|#line 4344 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval14: ET_INTEGER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4344 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4344")
@@ -35418,21 +28120,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines14.force (yyvs14, yyval14, yyvsp14)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_914
 			--|#line 4348 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval14: ET_INTEGER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4348 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4348")
@@ -35443,21 +28137,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines14.force (yyvs14, yyval14, yyvsp14)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_915
 			--|#line 4350 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval14: ET_INTEGER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4350 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4350")
@@ -35468,21 +28154,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines14.force (yyvs14, yyval14, yyvsp14)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_916
 			--|#line 4354 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval14: ET_INTEGER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4354 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4354")
@@ -35496,21 +28174,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines14.force (yyvs14, yyval14, yyvsp14)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_917
 			--|#line 4359 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval14: ET_INTEGER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4359 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4359")
@@ -35524,21 +28194,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines14.force (yyvs14, yyval14, yyvsp14)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_918
 			--|#line 4366 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval14: ET_INTEGER_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4366 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4366")
@@ -35553,21 +28215,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp115 := yyvsp115 -1
 	yyspecial_routines14.force (yyvs14, yyval14, yyvsp14)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_919
 			--|#line 4373 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval17: ET_REAL_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4373 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4373")
@@ -35578,21 +28232,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines17.force (yyvs17, yyval17, yyvsp17)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_920
 			--|#line 4375 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval17: ET_REAL_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4375 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4375")
@@ -35603,21 +28249,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines17.force (yyvs17, yyval17, yyvsp17)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_921
 			--|#line 4379 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval17: ET_REAL_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4379 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4379")
@@ -35628,21 +28266,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines17.force (yyvs17, yyval17, yyvsp17)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_922
 			--|#line 4381 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval17: ET_REAL_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4381 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4381")
@@ -35653,21 +28283,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines17.force (yyvs17, yyval17, yyvsp17)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_923
 			--|#line 4385 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval17: ET_REAL_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4385 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4385")
@@ -35681,21 +28303,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines17.force (yyvs17, yyval17, yyvsp17)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_924
 			--|#line 4390 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval17: ET_REAL_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4390 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4390")
@@ -35709,21 +28323,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp20 := yyvsp20 -1
 	yyspecial_routines17.force (yyvs17, yyval17, yyvsp17)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_925
 			--|#line 4397 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval17: ET_REAL_CONSTANT
 		do
-			if not yy_retried then
 --|#line 4397 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4397")
@@ -35738,21 +28344,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp115 := yyvsp115 -1
 	yyspecial_routines17.force (yyvs17, yyval17, yyvsp17)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_926
 			--|#line 4404 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval13: ET_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 4404 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4404")
@@ -35763,21 +28361,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_927
 			--|#line 4406 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval13: ET_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 4406 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4406")
@@ -35788,21 +28378,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_928
 			--|#line 4408 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval13: ET_IDENTIFIER
 		do
-			if not yy_retried then
 --|#line 4408 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4408")
@@ -35815,21 +28397,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_action_929
 			--|#line 4417 "et_eiffel_parser.y"
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 		do
-			if not yy_retried then
 --|#line 4417 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4417")
@@ -35848,12 +28422,6 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
-			end
 		end
 
 	yy_do_error_action (yy_act: INTEGER)

@@ -10,7 +10,11 @@ class
 inherit
 
 	REFACTORING_HELPER
-		export {NONE} fixme, to_implement, to_implement_assertion end
+		export {NONE}
+			--to_implement_assertion,
+			fixme,
+			to_implement
+		end
 
 feature {NONE} -- Utilities
 

@@ -135,7 +135,10 @@ feature -- Transaction-based data retrieval and querying
 			if a_query.is_executed then
 				a_query.reset
 			end
-			handle_error_on_action (agent repository.execute_query (a_query, transaction), transaction)
+			handle_error_on_action (agent repository.internal_execute_query (a_query, transaction), transaction)
+			if not a_query.is_executed then
+				a_query.register_as_executed (transaction)
+			end
 		ensure
 			query_executed: a_query.is_executed
 			transaction_set: a_query.transaction = transaction
@@ -252,36 +255,59 @@ feature {NONE} -- Implementation
 			-- This function will execute `action' with implicit transaction handling
 			-- It will retry `action' `Current.default_retries' times if there's a transaction conflict,
 			-- and then raise a `PS_TRANSACTION_ABORTED_ERROR' error.
+--		local
+--			retries: INTEGER
+--			transaction: PS_TRANSACTION
+--			success: BOOLEAN
+--		do
+--			from
+--				retries := 1
+--				success := False
+--			until
+--				retries > default_retries or success
+--			loop
+--				if readonly then
+--					create transaction.make_readonly (repository)
+--					action.call ([transaction])
+--				else
+--					transaction := new_transaction
+--					action.call ([transaction])
+--					transaction.commit
+--				end
+--				if not transaction.has_error then
+--					success := True
+--				end
+--				retries := retries + 1
+--			end
+--			if not success then
+--				fixme ("Should we create a more specific error for such a case?")
+--				create {PS_TRANSACTION_ABORTED_ERROR} last_error
+--				last_error.raise
+--			end
+--		end
 		local
 			retries: INTEGER
-			transaction: PS_TRANSACTION
-			success: BOOLEAN
+			transaction: detachable PS_TRANSACTION
 		do
-			from
-				retries := 1
-				success := False
-			until
-				retries > default_retries or success
-			loop
-				if readonly then
-					create transaction.make_readonly (repository)
-					action.call ([transaction])
-				else
-					transaction := new_transaction
-					action.call ([transaction])
-					transaction.commit
-				end
-				if not transaction.has_error then
-					success := True
-				end
-				retries := retries + 1
+			if readonly then
+				create transaction.make_readonly (repository)
+				action.call ([transaction])
+			else
+				create transaction.make (repository)
+				action.call ([transaction])
+				transaction.commit
 			end
-			if not success then
-				fixme ("Should we create a more specific error for such a case?")
-				create {PS_TRANSACTION_ABORTED_ERROR} last_error
-				last_error.raise
+		rescue
+			if
+				retries < Default_retries
+				and then attached transaction as t
+				and then attached {PS_TRANSACTION_ABORTED_ERROR} t.error
+			then
+				retries := retries + 1
+				retry
 			end
 		end
+
 
 	handle_error_on_action (action: PROCEDURE [ANY, TUPLE]; transaction: PS_TRANSACTION)
 			-- This function will try the repository operation `action' and catch any error.
@@ -317,7 +343,7 @@ feature {NONE} -- Implementation
 			if query.is_executed then
 				query.reset
 			end
-			handle_error_on_action (agent repository.execute_tuple_query (query, transaction), transaction)
+			handle_error_on_action (agent repository.internal_execute_tuple_query (query, transaction), transaction)
 		ensure
 			query_executed: query.is_executed
 			transaction_set: query.transaction = transaction

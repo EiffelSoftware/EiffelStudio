@@ -45,7 +45,7 @@ feature -- Access
 	repository: PS_REPOSITORY
 			-- The repository this `Current' is bound to.
 
-feature -- Status report
+feature {PS_EIFFELSTORE_EXPORT} -- Status report
 
 	is_active: BOOLEAN
 			-- Is the current transaction still active, or has it been commited or rolled back at some point?
@@ -66,7 +66,7 @@ feature -- Status report
 	is_readonly: BOOLEAN
 			-- Is this a readonly transaction?
 
-feature -- Basic operations
+feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 
 	commit
 			-- Try to commit the transaction.

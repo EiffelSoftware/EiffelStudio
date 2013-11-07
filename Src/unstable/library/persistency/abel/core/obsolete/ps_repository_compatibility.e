@@ -21,7 +21,7 @@ create
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object query
 
-	execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
+	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
 			-- Execute `query' within `transaction'.
 		do
 			id_manager.register_transaction (transaction)
@@ -44,7 +44,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 			default_transactional_rescue (query.transaction)
 		end
 
-	execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
+	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
 			-- Execute the tuple query `tuple_query' within the readonly transaction `transaction'.
 		local
 			exception: PS_INTERNAL_ERROR

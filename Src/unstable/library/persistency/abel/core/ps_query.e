@@ -10,24 +10,29 @@ note
 deferred class
 	PS_QUERY [G -> ANY]
 
+inherit PS_EIFFELSTORE_EXPORT
+
 feature -- Access
 
-	criteria: PS_CRITERION
-			-- Criteria for `Current' query.
+	repository: PS_REPOSITORY
+			-- The repository against which `Current' has been executed.
+		require
+			executed: is_executed
+		do
+			Result := transaction.repository
+		end
+
+	transaction_context: detachable PS_TRANSACTION_CONTEXT
+			-- The transaction context in which `Current' has been executed, if any.
+		require
+			executed: is_executed
+		do
+			fixme ("TODO")
+		end
 
 	result_cursor: PS_RESULT_CURSOR [ANY]
 			-- Iteration cursor containing the result of the query.
 		deferred
-		end
-
-	transaction: PS_TRANSACTION
-			-- The transaction in which this query is embedded.
-		require
-			already_executed: is_executed
-		do
-			check attached transaction_impl as transact then
-				Result := transact
-			end
 		end
 
 feature -- Status report
@@ -46,7 +51,23 @@ feature -- Status report
 			Result := not is_object_query
 		end
 
-feature -- Basic operations
+feature -- Access: query parameter
+
+	criteria: PS_CRITERION
+			-- Criteria for `Current' query.
+
+	is_non_root_ignored: BOOLEAN
+			-- Are non-root objects ignored?
+		do
+			fixme ("Implement root concept")
+			Result := False
+		end
+
+	object_initialization_depth: INTEGER
+			-- The depth up to which objects shall be initialized.
+			-- Default to -1, which means full initialization.
+
+feature -- Element change
 
 	set_criterion (a_criterion: PS_CRITERION)
 			-- Set the criteria `a_criterion', against which the objects will be selected.
@@ -60,6 +81,25 @@ feature -- Basic operations
 			criteria_set: criteria = a_criterion
 		end
 
+	set_is_non_root_ignored (value: BOOLEAN)
+			-- Set `is_non_root_ignored' to `value'
+		do
+			fixme ("implement")
+		end
+
+	set_object_initialization_depth (depth: INTEGER)
+			-- Set `object_initialization_depth' to `depth'.
+			-- A depth of 1 means only the object will be loaded, but none of its referenced objects.
+			-- A depth of 2 means the object will be loaded an all its referenced objects
+			-- will be loaded with depth 1 (and so on...).
+			-- | Note: This setting may increase performance but is very dangerous because
+			-- | you may get invariant violations and void references even in void-safe mode!
+		do
+			object_initialization_depth := depth
+		end
+
+feature -- Disposal
+
 	reset
 			-- Reset the query result, do not change criterion or projection.
 			-- Invoke if you want to reuse current query.
@@ -69,6 +109,7 @@ feature -- Basic operations
 			result_cursor.set_query (Current)
 			is_executed := False
 			backend_identifier := 0
+			-- object_initialization_depth := -1
 		ensure
 			not_executed: not is_executed
 			not_bound_to_transaction: transaction_impl = Void
@@ -76,7 +117,15 @@ feature -- Basic operations
 			criteria_unchanged: criteria = old criteria
 		end
 
-feature -- Miscellaneous
+	close
+			-- Close the current query
+		do
+			transaction.repository.commit_transaction (transaction)
+			fixme ("TODO: clean up internal data structures")
+			fixme ("TODO: don't commit explicit transactions")
+		end
+
+feature -- Contract support functions
 
 	is_criterion_fitting_generic_type (a_criterion: PS_CRITERION): BOOLEAN
 			-- Can `a_criterion' handle objects of type `G'?
@@ -90,6 +139,16 @@ feature -- Miscellaneous
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Internal
+
+	transaction: PS_TRANSACTION
+			-- The transaction in which this query is embedded.
+		require
+			already_executed: is_executed
+		do
+			check attached transaction_impl as transact then
+				Result := transact
+			end
+		end
 
 	register_as_executed (a_transaction: PS_TRANSACTION)
 			-- Set `is_executed' to true and bind query to `a_transaction'.

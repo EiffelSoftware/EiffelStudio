@@ -21,13 +21,23 @@ inherit
 
 	PS_EIFFELSTORE_EXPORT
 
-feature -- Settings
-
-	default_object_graph: PS_OBJECT_GRAPH_SETTINGS
-			-- Default object graph settings.
+feature -- Access
 
 	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
 			-- Transaction isolation level.
+
+	batch_retrieval_size: INTEGER
+			-- Define the number of objects to be retrieved in one batch for query operations.
+			-- Set to -1 to retrieve all objects at once (and disable lazy loading).
+
+	retry_count: INTEGER
+			-- The default retries for implicit transaction handling, if there is a transaction conflict.
+		once
+			fixme ("implement sane default initialization in all descendants")
+			Result := 1
+		end
+
+feature -- Element change
 
 	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
 			-- Set the isolation level for transactions.
@@ -35,9 +45,93 @@ feature -- Settings
 			transaction_isolation_level := a_level
 		end
 
+	set_batch_retrieval_size (size: INTEGER)
+			-- Set `batch_retrieval_size' to `size'.
+		require
+			valid: size > 0 or size = -1
+		do
+			batch_retrieval_size := size
+		ensure
+			correct: batch_retrieval_size = size
+		end
+
+	set_retry_count (count: INTEGER)
+			-- Set `retry_count' to `count'
+		require
+			positive: count >= 0
+		do
+			fixme ("implement sane default initialization in all descendants")
+			--retry_count := count
+		ensure
+			correct: retry_count = count
+		end
+
+feature -- Query execution
+
+	execute_query (query: PS_OBJECT_QUERY[ANY])
+			-- Execute `query' and store the results in `query.result_cursor'.
+			-- Note that the query is executed in an hidden, implicit transaction context
+			-- and that the result cannot be used for any subsequent write operations.
+		local
+			attempts: INTEGER
+			transaction: detachable PS_TRANSACTION
+		do
+			create transaction.make_readonly (Current)
+			internal_execute_query (query, transaction)
+		rescue
+			if
+				attempts <= retry_count
+				and then attached transaction as t
+				and then attached {PS_TRANSACTION_ABORTED_ERROR} t.error
+			then
+				attempts := attempts + 1
+				retry
+			end
+		end
+
+	execute_tuple_query (query: PS_TUPLE_QUERY[ANY])
+			-- Execute `query' and store the results in `query.result_cursor'.
+			-- Note that the query is executed in an hidden, implicit transaction context
+			-- and that the result cannot be used for any subsequent write operations.
+		local
+			attempts: INTEGER
+			transaction: detachable PS_TRANSACTION
+		do
+			create transaction.make_readonly (Current)
+			internal_execute_tuple_query (query, transaction)
+		rescue
+			if
+				attempts <= retry_count
+				and then attached transaction as t
+				and then attached {PS_TRANSACTION_ABORTED_ERROR} t.error
+			then
+				attempts := attempts + 1
+				retry
+			end
+		end
+
+feature -- Transactional access
+
+	new_transaction_context: PS_TRANSACTION_CONTEXT
+			-- Create a new transaction context.
+		do
+			create Result.make (Current)
+		end
+
+
+
+
+feature {PS_EIFFELSTORE_EXPORT} -- Settings
+
+	default_object_graph: PS_OBJECT_GRAPH_SETTINGS
+			-- Default object graph settings.
+		obsolete "Not supported any more"
+		attribute
+		end
+
 feature {PS_EIFFELSTORE_EXPORT} -- Object query
 
-	execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
+	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
 			-- Executes the object query `query' within `transaction'.
 		require
 			not_executed: not query.is_executed
@@ -68,7 +162,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 			not_after_means_known: not query.result_cursor.after implies is_identified (query.result_cursor.item, query.transaction)
 		end
 
-	execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
+	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
 			-- Execute the tuple query `tuple_query' within the readonly `transaction'.
 		require
 			readonly_transaction: transaction.is_readonly
@@ -153,7 +247,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 			active_transaction: transaction.is_active
 		do
 			from
-				execute_query (query, transaction)
+				internal_execute_query (query, transaction)
 			until
 				query.result_cursor.after
 			loop

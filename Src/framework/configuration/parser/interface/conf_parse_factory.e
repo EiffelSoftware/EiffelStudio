@@ -10,6 +10,14 @@ class
 
 feature -- Factory
 
+	new_redirection (a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID): CONF_REDIRECTION
+			-- Create a {CONF_REDIRECTION} object with `a_location' and optional `a_uuid'.
+		require
+			a_location_ok: a_location /= Void and then not a_location.is_empty
+		do
+			create Result.make (a_location, a_uuid)
+		end
+
 	new_system_generate_uuid (a_name: STRING_32): CONF_SYSTEM
 			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
 		require

@@ -1,4 +1,4 @@
-Eiffel wrapper for http://www.sqlite.org/ library.
+Eiffel SQLite wrapper for http://www.sqlite.org/ library.
 This provides a statically linked sqlite, based in SQLite 3.7.8
 
 Note: the extension loading feature is DISABLED.
@@ -15,5 +15,9 @@ Note: the extension loading feature is DISABLED.
    - Then you might have to solve local issues related to undefined dlopen and similar
 
 
-Check out https://addons.mozilla.org/en-US/firefox/addon/5817 for a free Firefox SQLite database manager.
-Or even http://www.dbsoftlab.com/database-editors/database-browser/overview.html
+To edit sqlite database 
+- https://addons.mozilla.org/en-US/firefox/addon/5817 for a free Firefox SQLite database manager.
+- or even http://www.dbsoftlab.com/database-editors/database-browser/overview.html
+- or http://sqlitestudio.pl/ 
+
+

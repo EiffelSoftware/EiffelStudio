@@ -20,6 +20,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+
 feature -- Status report
 
 	use_environment_variables: BOOLEAN
@@ -32,10 +34,16 @@ feature {NONE} -- Query
 
 	variable (a_id: READABLE_STRING_8): detachable STRING
 			-- <Precursor>
+		local
+			v: detachable STRING_32
 		do
-			check is_eiffel_layout_defined: is_eiffel_layout_defined end
 			if use_environment_variables and then is_eiffel_layout_defined then
-				if attached eiffel_layout.get_environment_32 (a_id) as v then
+				if is_eiffel_layout_defined then
+					v := eiffel_layout.get_environment_32 (a_id)
+				else
+					v := execution_environment.item (a_id)
+				end
+				if v /= Void then
 					Result := v.to_string_8
 				end
 			end
@@ -44,9 +52,12 @@ feature {NONE} -- Query
 	variable_32 (a_id: READABLE_STRING_32): detachable STRING_32
 			-- <Precursor>
 		do
-			check is_eiffel_layout_defined: is_eiffel_layout_defined end
-			if use_environment_variables and then is_eiffel_layout_defined then
-				Result := eiffel_layout.get_environment_32 (a_id)
+			if use_environment_variables then
+				if is_eiffel_layout_defined then
+					Result := eiffel_layout.get_environment_32 (a_id)
+				else
+					Result := execution_environment.item (a_id)
+				end
 			end
 		end
 

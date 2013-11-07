@@ -726,8 +726,6 @@ feature -- Output
 		require
 			s_not_void: s /= Void
 			a_as_not_void: a_as /= Void
-		local
-			l_pos: INTEGER
 		do
 			if not tabs_emitted then
 				emit_tabs

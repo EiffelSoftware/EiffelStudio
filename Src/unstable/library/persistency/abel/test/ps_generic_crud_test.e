@@ -26,10 +26,12 @@ feature {PS_CRUD_TESTS}
 			-- Tests an insert (and successive read) operation on `an_object'
 			-- Use `equality_function' to test if `object' and the retrieved object from the database are equal.
 		do
-			executor.execute_insert (object)
-			--repo_access.insert (object)
+			--executor.execute_insert (object)
+			repo_access.insert (object)
 
 			internal_check_equality (object, equality_function)
+			repo_access.commit
+			repo_access.start
 		end
 
 	test_crud_operations (object: G; update_operation: PROCEDURE [ANY, TUPLE [G]])
@@ -49,25 +51,30 @@ feature {PS_CRUD_TESTS}
 			first_count, second_count, third_count: INTEGER
 		do
 				-- Test successful insert
-			executor.execute_insert (object)
---			repo_access.insert (object)
+--			executor.execute_insert (object)
+			repo_access.insert (object)
 
 			internal_check_equality (object, equality_function)
 				-- Test successful update
 			update_operation.call ([object])
 			first_count := count_results
 
-			executor.execute_update (object)
---			repo_access.update (object)
+--			executor.execute_update (object)
+			repo_access.update (object)
 
 			second_count := count_results
 			internal_check_equality (object, equality_function)
 			assert ("Something has been deleted or inserted during an update", second_count = first_count)
 				-- Test successful delete
-			executor.execute_delete (object)
-			third_count := count_results
-				-- In a successful delete, all we can guarantee is that the third count is smaller than the second
-			assert ("The object still exists in the database", second_count > third_count)
+
+			repo_access.commit
+			repo_access.start
+
+--			executor.execute_delete (object)
+--			third_count := count_results
+--				-- In a successful delete, all we can guarantee is that the third count is smaller than the second
+--			assert ("The object still exists in the database", second_count > third_count)
+
 		end
 
 	default_update_operation (an_object: G)
@@ -82,8 +89,8 @@ feature {PS_CRUD_TESTS}
 		do
 			create query.make
 
-			executor.execute_query (query)
---			repo_access.execute_query (query)
+--			executor.execute_query (query)
+			repo_access.execute_query (query)
 
 			across
 				query as q
@@ -105,8 +112,8 @@ feature {NONE}
 		do
 			create query.make
 
---			repo_access.execute_query (query)
-			executor.execute_query (query)
+			repo_access.execute_query (query)
+--			executor.execute_query (query)
 
 			assert ("The result is empty", not query.result_cursor.after)
 				-- collect results - there may be many if an_object references other objects of type G

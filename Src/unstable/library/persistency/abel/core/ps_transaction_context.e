@@ -118,6 +118,7 @@ feature -- Data retrieval
 		do
 			repository.internal_execute_query (query, attach(transaction))
 			internal_active_queries.extend (query)
+			query.set_transaction_context (Current)
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
@@ -132,6 +133,7 @@ feature -- Data retrieval
 		do
 			repository.internal_execute_tuple_query (query, attach(transaction))
 			internal_active_queries.extend (query)
+			query.set_transaction_context (Current)
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
@@ -228,25 +230,6 @@ feature -- Root status modification
 
 feature -- Transaction operations
 
---	try_commit
---			-- Try to commit the active transaction.
---			-- If the transaction fails, `has_error' is True.
---		require
---			is_active: is_transaction_active
---			no_active_queries: active_queries.is_empty
---		local
---			retried: BOOLEAN
---		do
---			if not retried then
---				commit
---			end
---		ensure
---			not_active: not is_transaction_active
---		rescue
---			retried := True
---			retry
---		end
-
 	commit
 			-- Commit the active transaction.
 			-- If the transaction fails, `has_error' is True and an exception is raised.
@@ -286,10 +269,13 @@ feature -- Transaction operations
 			no_error: not has_error
 		end
 
+feature {PS_EIFFELSTORE_EXPORT} -- Implementation
+
+	internal_active_queries: LINKED_LIST [PS_QUERY [ANY]]
+			-- The internal storage for `active_queries'.
+
 feature {NONE} -- Implementation
 
-	internal_active_queries: LINKED_LIST[PS_QUERY[ANY]]
-			-- The internal storage for `active_queries'.
 
 	transaction: detachable PS_TRANSACTION
 			-- The currently active transaction.

@@ -36,7 +36,7 @@ CLUSTER \[{C}+\]
 
 %%
 .|\n		{
-				if seperate_comment then
+				if separate_comment then
 					set_start_condition (BREAK_TOKEN)
 				else
 					set_start_condition (NOT_BREAK_TOKEN)

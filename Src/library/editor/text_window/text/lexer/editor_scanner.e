@@ -114,6 +114,9 @@ feature -- Query
 	start_of_verbatim_string: BOOLEAN
 			-- Was start of verbatim string found?
 
+	is_windows_eol_preferred: BOOLEAN
+			-- Is windows eol preferred?
+
 feature -- Status Setting
 
 	set_in_verbatim_string (a_flag: BOOLEAN)
@@ -147,6 +150,12 @@ feature -- Element Change
 			-- Set `tab_size' to `size'.
 		do
 			tab_size := size
+		end
+
+	set_is_windows_eol_preferred (b: BOOLEAN)
+			-- Set `is_windows_eol_preferred' with `b'.
+		do
+			is_windows_eol_preferred := b
 		end
 
 feature {NONE} -- Factory

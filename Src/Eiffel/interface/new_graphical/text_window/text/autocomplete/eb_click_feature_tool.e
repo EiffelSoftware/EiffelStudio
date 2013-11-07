@@ -188,7 +188,7 @@ feature -- Analysis preparation
 						if token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
 							from
 								if token.next /= Void then
-									pos_in_file := token.length + pos_in_file
+									pos_in_file := token.character_length + pos_in_file
 									token := token.next
 								elseif line.next /= Void then
 									line := line.next
@@ -204,7 +204,7 @@ feature -- Analysis preparation
 								is_string (token)
 							loop
 								if token.next /= Void then
-									pos_in_file := token.length + pos_in_file
+									pos_in_file := token.character_length + pos_in_file
 									token := token.next
 								elseif line.next /= Void then
 									line := line.next
@@ -222,7 +222,7 @@ feature -- Analysis preparation
 				end
 				token.set_pos_in_text (pos_in_file)
 				if token.next /= Void then
-					pos_in_file := token.length + pos_in_file
+					pos_in_file := token.character_length + pos_in_file
 					token := token.next
 				elseif line.next /= Void then
 					line := line.next
@@ -246,7 +246,7 @@ feature -- Implementation
 	current_feature_id: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

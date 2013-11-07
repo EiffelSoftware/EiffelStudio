@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			l_color: EV_COLOR
 			l_font: EV_FONT
 		do
-			if not a_tok.wide_image.is_empty then
+			if not a_tok.is_new_line and then not a_tok.wide_image.is_empty then
 				l_color := a_tok.text_color
 				l_font := a_tok.font
 
@@ -255,7 +255,7 @@ invariant
 	print_color_table_not_void: print_color_table /= Void
 	print_font_table_not_void: print_font_table /= Void
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1201,6 +1201,7 @@ feature -- Text Loading
 				set_current_document_class (l_d_class)
 				l_scanner ?= l_d_class.scanner
 				if l_scanner /= Void then
+					l_scanner.set_is_windows_eol_preferred (not is_unix_file)
 					text_displayed.set_lexer (l_scanner)
 					l_stone ?= stone
 					if l_stone /= Void then
@@ -1409,7 +1410,7 @@ feature {NONE} -- Code completable implementation
 		do
 			Result := text_displayed.cursor.line
 			if Result = Void then
-				create Result.make_empty_line
+				create Result.make (not is_unix_file)
 			end
 		end
 

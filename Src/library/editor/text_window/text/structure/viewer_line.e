@@ -13,17 +13,28 @@ inherit
 	TREE_ITEM
 
 create
-	make_empty_line
+	make_empty_line,
+	make,
+	make_windows_style,
+	make_unix_style
 
 feature -- Initialisation
 
 	make_empty_line
 			-- Create an empty line.
+		obsolete
+			"Use `make' instead."
+		do
+			make_unix_style
+		end
+
+	make (a_windows_style: BOOLEAN)
+			-- Create an empty line.
 		local
 			t_eol: EDITOR_TOKEN_EOL
 			t_begin: EDITOR_TOKEN_LINE_NUMBER
 		do
-			create t_eol.make
+			create t_eol.make_with_style (a_windows_style)
 			create t_begin.make
 
 			t_begin.set_next_token (t_eol)
@@ -33,6 +44,18 @@ feature -- Initialisation
 			real_first_token := t_begin
 
 			update_token_information
+		end
+
+	make_windows_style
+			-- Create an empty line in Windows style.
+		do
+			make (True)
+		end
+
+	make_unix_style
+			-- Create an empty line in Unix style.
+		do
+			make (False)
 		end
 
 feature -- Access
@@ -273,6 +296,21 @@ feature -- Element change
 		end
 
 feature -- Status Report
+
+	character_length: INTEGER
+			-- Character length of current line including the EOL character.
+		local
+			t: detachable EDITOR_TOKEN
+		do
+			from
+				t := first_token
+			until
+				t = Void
+			loop
+				Result := Result + t.character_length
+				t := t.next
+			end
+		end
 
 	wide_image: STRING_32
 			-- string representation of the line.

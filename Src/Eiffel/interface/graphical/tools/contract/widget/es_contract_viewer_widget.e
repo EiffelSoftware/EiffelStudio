@@ -426,7 +426,7 @@ feature {NONE} -- Comment extraction
 
 					Result.append (a_token_writer.last_line.content)
 					if not l_comments.islast then
-						Result.extend (create {EDITOR_TOKEN_EOL}.make)
+						Result.extend (create {EDITOR_TOKEN_EOL}.make_unix_style)
 					end
 					l_comments.forth
 				end

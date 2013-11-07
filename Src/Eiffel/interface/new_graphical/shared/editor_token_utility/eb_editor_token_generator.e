@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create last_line.make_empty_line
+			create last_line.make_unix_style
 			separate_comment := True
 		end
 
@@ -98,7 +98,7 @@ feature -- Access
 					end
 
 					if not l_lines.islast then
-						Result.extend (create {EDITOR_TOKEN_EOL}.make)
+						Result.extend (create {EDITOR_TOKEN_EOL}.make_unix_style)
 						if a_indents > 0 then
 								-- Adds new line tabulation
 							Result.extend (create {EDITOR_TOKEN_TABULATION}.make (a_indents))
@@ -135,7 +135,7 @@ feature -- New line
 			if is_multiline_mode then
 				lines.extend (last_line.twin)
 			end
-			create last_line.make_empty_line
+			create last_line.make_unix_style
 		end
 
 feature -- Setting
@@ -172,7 +172,7 @@ feature -- Setting
 			if lines_internal /= Void then
 				lines_internal.wipe_out
 			end
-			create last_line.make_empty_line
+			create last_line.make_unix_style
 		ensure
 			lines_is_empty: lines.is_empty
 			last_line_empty: last_line.empty

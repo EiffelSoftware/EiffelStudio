@@ -627,8 +627,8 @@ feature {NONE} -- Basic operations
 						l_pos_token.set_pebble (event_context_stone_from_row (a_row))
 					end
 
-						-- Create editor item					
-					create l_line.make_empty_line
+						-- Create editor item
+					create l_line.make_unix_style
 					l_line.append_token (l_pos_token)
 					l_editor_item := create_clickable_grid_item (l_line, False)
 						-- No extra initialization needed so update `l_editor_item' to reflect settings.

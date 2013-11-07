@@ -482,7 +482,7 @@ feature{NONE} -- Implementation
 						l_line.forth
 					end
 					if l_lines.item /= l_lines.last and l_line.count > 0 then
-						Result.extend (create{EDITOR_TOKEN_EOL}.make)
+						Result.extend (create{EDITOR_TOKEN_EOL}.make_unix_style)
 					end
 					l_lines.forth
 				end
@@ -509,7 +509,7 @@ feature{NONE} -- Implementation
 							end
 							token_writer.add_comment_text (l_comment)
 							l_tokens.fill (token_writer.last_line.content)
-							l_tokens.extend (create{EDITOR_TOKEN_EOL}.make)
+							l_tokens.extend (create{EDITOR_TOKEN_EOL}.make_unix_style)
 							l_comments.forth
 						end
 						from
@@ -537,7 +537,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

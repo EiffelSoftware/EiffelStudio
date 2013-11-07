@@ -216,7 +216,6 @@ feature {NONE} -- Semantic actions
 	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 			yyval2: XM_EIFFEL_PARSER_NAME
 			yyval4: STRING
@@ -229,8 +228,7 @@ feature {NONE} -- Semantic actions
 			yyval8: XM_DTD_ATTRIBUTE_CONTENT
 			yyval9: DS_BILINKED_LIST [STRING]
 		do
-			if not yy_retried then
-				inspect yy_act
+			inspect yy_act
 when 1 then
 --|#line 124 "xm_eiffel_parser.y"
 debug ("GEYACC")
@@ -4264,19 +4262,13 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
-				else
-					debug ("GEYACC")
-						std.error.put_string ("Error in parser: unknown rule id: ")
-						std.error.put_integer (yy_act)
-						std.error.put_new_line
-					end
-					abort
+			else
+				debug ("GEYACC")
+					std.error.put_string ("Error in parser: unknown rule id: ")
+					std.error.put_integer (yy_act)
+					std.error.put_new_line
 				end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
+				abort
 			end
 		end
 

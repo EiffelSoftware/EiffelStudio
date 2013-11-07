@@ -195,7 +195,6 @@ feature {NONE} -- Semantic actions
 	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 			yyval7: ET_LACE_SYSTEM
 			yyval2: ET_IDENTIFIER
@@ -205,8 +204,7 @@ feature {NONE} -- Semantic actions
 			yyval8: ET_ADAPTED_DOTNET_ASSEMBLIES
 			yyval6: ET_LACE_DOTNET_ASSEMBLY
 		do
-			if not yy_retried then
-				inspect yy_act
+			inspect yy_act
 when 1 then
 --|#line 51 "et_lace_parser.y"
 debug ("GEYACC")
@@ -1973,19 +1971,13 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-				else
-					debug ("GEYACC")
-						std.error.put_string ("Error in parser: unknown rule id: ")
-						std.error.put_integer (yy_act)
-						std.error.put_new_line
-					end
-					abort
+			else
+				debug ("GEYACC")
+					std.error.put_string ("Error in parser: unknown rule id: ")
+					std.error.put_integer (yy_act)
+					std.error.put_new_line
 				end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
+				abort
 			end
 		end
 

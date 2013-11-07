@@ -171,12 +171,10 @@ feature {NONE} -- Semantic actions
 	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
-			yy_retried: BOOLEAN
 			yyval1: detachable ANY
 			yyval3: BOOLEAN
 		do
-			if not yy_retried then
-				inspect yy_act
+			inspect yy_act
 when 1 then
 --|#line 57 "ut_config_parser.y"
 debug ("GEYACC")
@@ -488,19 +486,13 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-				else
-					debug ("GEYACC")
-						std.error.put_string ("Error in parser: unknown rule id: ")
-						std.error.put_integer (yy_act)
-						std.error.put_new_line
-					end
-					abort
+			else
+				debug ("GEYACC")
+					std.error.put_string ("Error in parser: unknown rule id: ")
+					std.error.put_integer (yy_act)
+					std.error.put_new_line
 				end
-			end
-		rescue
-			if yy_parsing_status = yyAborted then
-				yy_retried := True
-				retry
+				abort
 			end
 		end
 

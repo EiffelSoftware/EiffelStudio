@@ -1,11 +1,9 @@
-note
-
-	description:
-		"Error for calling a feature with the wrong number of arguments."
+﻿note
+	description: "Error for calling a feature with the wrong number of arguments."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class VUAR1
 
@@ -18,15 +16,15 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER = 1;
+	subcode: INTEGER = 1
 
-	argument_count: INTEGER;
+	argument_count: INTEGER
 
-	formal_count: INTEGER;
+	formal_count: INTEGER
 
-	called_local: STRING;
+	called_local: STRING
 
-	called_arg: STRING;
+	called_arg: STRING
 
 feature -- Status report
 
@@ -42,43 +40,43 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if called_feature /= Void then
-				print_called_feature (a_text_formatter);
-				a_text_formatter.add_new_line;
-				a_text_formatter.add (" Number of formals: ");
-				a_text_formatter.add_int (formal_count);
-				a_text_formatter.add ("Number of actuals: ");
-				a_text_formatter.add_int (argument_count);
+				print_called_feature (a_text_formatter)
+				a_text_formatter.add ("Number of formals: ")
+				a_text_formatter.add_int (formal_count)
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("Number of actuals: ")
+				a_text_formatter.add_int (argument_count)
 			elseif called_local /= Void then
-				a_text_formatter.add ("Local variable name: ");
-				a_text_formatter.add (called_local);
+				a_text_formatter.add ("Local variable name: ")
+				a_text_formatter.add (called_local)
 			elseif called_arg /= Void then
-				a_text_formatter.add ("Argument name: ");
-				a_text_formatter.add (called_arg);
-			end;
+				a_text_formatter.add ("Argument name: ")
+				a_text_formatter.add (called_arg)
+			end
 			a_text_formatter.add_new_line
-		end;
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_argument_count (i: INTEGER)
 		do
 			argument_count := i
-		end;
+		end
 
 	set_formal_count(i: INTEGER)
 		do
 			formal_count := i
-		end;
+		end
 
 	set_local_name (s: STRING)
 		do
-			called_local := s;
-		end;
+			called_local := s
+		end
 
 	set_arg_name (s: STRING)
 		do
-			called_arg := s;
-		end;
+			called_arg := s
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
@@ -112,4 +110,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VUAR1
+end

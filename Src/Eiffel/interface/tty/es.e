@@ -58,6 +58,8 @@ inherit
 
 	PREFERENCES_VERSIONS
 
+	PROJECT_CONTEXT
+
 create
 	make
 
@@ -127,7 +129,6 @@ feature -- Initialization
 			new_resources: TTY_RESOURCES
 			file_degree_output: FILE_DEGREE_OUTPUT
 			compilation: EWB_COMP
-			ewb_loop: EWB_LOOP
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 			l_loader: EC_PROJECT_LOADER
 			l_generated_name: PATH
@@ -181,19 +182,30 @@ feature -- Initialization
 							end
 
 							if not error_occurred and not l_loader.has_error then
-								compilation ?= command
-								if compilation /= Void then
+								if attached {EWB_LOOP} command then
+										-- Interactive mode is exclusive of others.
+									command.execute
+								else
+									if attached {EWB_COMP} command as l_comp then
+											-- A compilation flag was passed
+										compilation := l_comp
+									else
+											-- No compilation flag was provided we default to a quick melt.
+										create {EWB_QUICK_MELT} compilation
+									end
+										-- If C compilation was required, enable it.
 									compilation.set_is_finish_freezing_called (is_finish_freezing_called)
-								end
-								ewb_loop ?= command
-								if compilation = Void and then ewb_loop = Void then
-									create {EWB_QUICK_MELT} compilation
 									compilation.execute
-									if system.successful then
+
+									if command /= compilation and then system.successful then
+											-- Case where we forced a quick melt. In the event we also have the `-tests'
+											-- flag and no executable is present, we force a C compilation.
+										if is_finish_freezing_for_test_needed then
+											eiffel_project.call_finish_freezing_and_wait (True)
+										end
+											-- Execute other commands if one was specified
 										command.execute
 									end
-								else
-									command.execute
 								end
 
 								if is_single_file_compilation and then l_loader.eiffel_project.successful then
@@ -247,6 +259,19 @@ feature -- Initialization
 			if not fail_on_rescue then
 				retried := True
 				retry
+			end
+		end
+
+	is_finish_freezing_for_test_needed: BOOLEAN
+			-- Check if test system is needed when -tests option is present.
+		local
+			u: FILE_UTILITIES
+		do
+			if attached {EWB_TEST_EXECUTION} command then
+				Result :=
+					not Eiffel_project.initialized or else
+					not Eiffel_project.system_defined or else
+					not u.file_path_exists (eiffel_system.application_name (True))
 			end
 		end
 

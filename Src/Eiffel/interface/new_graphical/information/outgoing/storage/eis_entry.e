@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags a_id: like target_id; a_parameters: like parameters)
+	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags; a_id: like target_id; a_parameters: like parameters)
 			-- Initialization
 		require
 			a_id_not_void: a_id /= Void

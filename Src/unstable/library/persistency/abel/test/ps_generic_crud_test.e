@@ -27,6 +27,8 @@ feature {PS_CRUD_TESTS}
 			-- Use `equality_function' to test if `object' and the retrieved object from the database are equal.
 		do
 			executor.execute_insert (object)
+			--repo_access.insert (object)
+
 			internal_check_equality (object, equality_function)
 		end
 
@@ -48,11 +50,16 @@ feature {PS_CRUD_TESTS}
 		do
 				-- Test successful insert
 			executor.execute_insert (object)
+--			repo_access.insert (object)
+
 			internal_check_equality (object, equality_function)
 				-- Test successful update
 			update_operation.call ([object])
 			first_count := count_results
+
 			executor.execute_update (object)
+--			repo_access.update (object)
+
 			second_count := count_results
 			internal_check_equality (object, equality_function)
 			assert ("Something has been deleted or inserted during an update", second_count = first_count)
@@ -74,12 +81,16 @@ feature {PS_CRUD_TESTS}
 			query: PS_OBJECT_QUERY [G]
 		do
 			create query.make
+
 			executor.execute_query (query)
+--			repo_access.execute_query (query)
+
 			across
 				query as q
 			loop
 				Result := Result + 1
 			end
+			query.close
 		end
 
 feature {NONE}
@@ -93,7 +104,10 @@ feature {NONE}
 			one_equal: BOOLEAN
 		do
 			create query.make
+
+--			repo_access.execute_query (query)
 			executor.execute_query (query)
+
 			assert ("The result is empty", not query.result_cursor.after)
 				-- collect results - there may be many if an_object references other objects of type G
 			create ref_list.make
@@ -104,6 +118,7 @@ feature {NONE}
 				--print (cursor.item)
 				--if attached {ANY_LIST_BOX} cursor.item as box then print (box.items) print (box.items.first) print ("end") end
 			end
+			query.close
 				-- See if one result is equal
 			one_equal := across ref_list as cursor2 some equality_test.item ([cursor2.item, object]) end
 				--	across ref_list as cursor from print (object) loop print (cursor.item) end

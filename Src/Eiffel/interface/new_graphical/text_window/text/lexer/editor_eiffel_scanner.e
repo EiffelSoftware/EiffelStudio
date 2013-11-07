@@ -564,6 +564,7 @@ terminate
 feature {NONE} -- Table templates
 
 	yy_nxt_template: SPECIAL [INTEGER]
+			-- Template for `yy_nxt'
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -1510,6 +1511,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_chk_template: SPECIAL [INTEGER]
+			-- Template for `yy_chk'
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -2456,6 +2458,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_base_template: SPECIAL [INTEGER]
+			-- Template for `yy_base'
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -2597,6 +2600,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_def_template: SPECIAL [INTEGER]
+			-- Template for `yy_def'
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -2738,6 +2742,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_ec_template: SPECIAL [INTEGER]
+			-- Template for `yy_ec'
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -2771,6 +2776,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]
+			-- Template for `yy_meta'
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    3,    4,    5,    1,    6,    1,    1,
@@ -2788,6 +2794,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_accept_template: SPECIAL [INTEGER]
+			-- Template for `yy_accept'
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -2927,6 +2934,7 @@ feature {NONE} -- Table templates
 		end
 
 	yy_acclist_template: SPECIAL [INTEGER]
+			-- Template for `yy_acclist'
 		local
 			an_array: ARRAY [INTEGER]
 		once

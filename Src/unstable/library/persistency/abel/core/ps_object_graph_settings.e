@@ -132,7 +132,7 @@ feature -- Creation
 		do
 			query_depth := Object_graph_depth_infinite
 			insert_depth := Object_graph_depth_infinite
-			update_depth := Minimum_depth
+			update_depth := Object_graph_depth_infinite
 			delete_depth := Minimum_depth
 		end
 

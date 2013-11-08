@@ -180,8 +180,7 @@ feature -- Data modification
 			persistent: is_persistent (object)
 			valid_direct_update: to_implement_assertion ("check that all referenced objects are persistent")
 		do
-			fixme ("Implement this function")
-			check not_impemented: False end
+			repository.direct_update (object, attach(transaction))
 		ensure
 			in_transaction: is_transaction_active
 			persistent: is_persistent (object)
@@ -200,8 +199,7 @@ feature -- Root status modification
 			persistent: is_persistent (object)
 			not_root: not is_root (object)
 		do
-			fixme ("Implement this function")
-			check not_impemented: False end
+			repository.set_root_status (object, True, attach (transaction))
 		ensure
 			in_transaction: is_transaction_active
 			persistent: is_persistent (object)
@@ -218,8 +216,7 @@ feature -- Root status modification
 			persistent: is_persistent (object)
 			not_root: is_root (object)
 		do
-			fixme ("Implement this function")
-			check not_impemented: False end
+			repository.set_root_status (object, False, attach (transaction))
 		ensure
 			in_transaction: is_transaction_active
 			persistent: is_persistent (object)

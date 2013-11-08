@@ -118,7 +118,13 @@ feature -- Transactional access
 			create Result.make (Current)
 		end
 
+feature -- Disposal
 
+	close
+			-- Close the current repository.
+		do
+
+		end
 
 
 feature {PS_EIFFELSTORE_EXPORT} -- Settings
@@ -223,6 +229,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 			object_known: is_identified (object, transaction)
 		end
 
+	direct_update (object: ANY; transaction: PS_TRANSACTION)
+			-- Update `object' only and none of its referenced objects.
+		do
+			default_object_graph.set_update_depth (1)
+			update (object, transaction)
+			default_object_graph.set_update_depth (-1)
+		end
+
 	delete (object: ANY; transaction: PS_TRANSACTION)
 			-- Delete `object' within `transaction' from `Current' within `transaction'.
 		require
@@ -260,6 +274,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 			transaction_active_in_id_manager: id_manager.is_registered (transaction)
 			query_executed: query.is_executed
 			no_result: query.result_cursor.after
+		end
+
+	set_root_status (object: ANY; value: BOOLEAN; transaction: PS_TRANSACTION)
+			-- Set the root status of `object' to `value'.
+		do
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling

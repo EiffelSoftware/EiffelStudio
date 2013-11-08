@@ -148,7 +148,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 			attribute_present: has_attribute (attribute_name)
 		do
 			values.remove (attribute_name)
-			attributes.prune (attribute_name)
+			attributes.prune_all (attribute_name)
 		ensure
 			attribute_removed: not has_attribute (attribute_name)
 		end

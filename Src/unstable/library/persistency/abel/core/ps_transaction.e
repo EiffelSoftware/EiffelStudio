@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			repository := a_repository
 			create {PS_NO_ERROR} error
+			create root_flags.make (100)
 			is_readonly := False
 			is_active := True
 		end
@@ -33,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			repository := a_repository
 			create {PS_NO_ERROR} error
+			create root_flags.make (100)
 			is_readonly := True
 			is_active := True
 		end
@@ -44,6 +46,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 
 	repository: PS_REPOSITORY
 			-- The repository this `Current' is bound to.
+
+	root_flags: HASH_TABLE[BOOLEAN, INTEGER]
+			-- Mapping for ABEL identifier -> root status of every object.
 
 feature {PS_EIFFELSTORE_EXPORT} -- Status report
 

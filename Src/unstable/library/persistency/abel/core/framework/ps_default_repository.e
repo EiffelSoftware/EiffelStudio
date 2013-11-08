@@ -9,6 +9,7 @@ class
 
 inherit
 	PS_REPOSITORY
+		redefine is_root end
 
 	REFACTORING_HELPER
 
@@ -146,6 +147,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 			-- Can `Current' handle the object `object'?
 		do
 			fixme ("TODO: implement a query")
+			Result := True
+		end
+
+	is_root (object: ANY; transaction: PS_TRANSACTION): BOOLEAN
+			-- Is `object' a garbage collection root?
+		do
 			Result := True
 		end
 

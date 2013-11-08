@@ -88,8 +88,7 @@ feature -- Status report
 			persistent: is_persistent (object)
 			no_error: not has_error
 		do
-			fixme ("Implement")
-			Result := True
+			Result := repository.is_root (object, attach (transaction))
 		end
 
 	has_error: BOOLEAN

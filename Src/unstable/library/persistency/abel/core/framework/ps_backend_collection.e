@@ -140,7 +140,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 	set_is_root (value: BOOLEAN)
 			-- Set `is_root' to `value'.
 		do
-			additional_information_hash.force (value.out, root_key)
+			if has_information (root_key) then
+				additional_information_hash.force (value.out, root_key)
+			else
+				add_information (root_key, value.out)
+			end
 		end
 
 feature {NONE}

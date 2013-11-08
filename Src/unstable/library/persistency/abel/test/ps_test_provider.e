@@ -101,10 +101,11 @@ feature {PS_TEST_PROVIDER}
 		end
 
 
-	test_read_write_cycle_with_root (object: ANY; update_operation: detachable PROCEDURE [ANY, TUPLE [ANY]])
+	test_read_write_cycle_with_root (an_object: ANY; update_operation: detachable PROCEDURE [ANY, TUPLE [ANY]])
 			-- Perform a write-read test on `object' with a possible `update_operation'.
 			-- Use root object status.
 		local
+			object: ANY
 			context: PS_TRANSACTION_CONTEXT
 			query: PS_OBJECT_QUERY [ANY]
 			first_count: INTEGER
@@ -112,12 +113,17 @@ feature {PS_TEST_PROVIDER}
 
 			cursor: ITERATION_CURSOR[ANY]
 		do
+			object := an_object
+
 			repository.clean_db_for_testing
 			context := repository.new_transaction_context
 			context.insert (object)
 
 			assert ("Object is not persistent", context.is_persistent (object))
 			assert ("Object is not root", context.is_root (object))
+
+--			context.commit
+--			context.start
 
 			create query.make
 			query.set_type (object.generating_type)
@@ -127,6 +133,9 @@ feature {PS_TEST_PROVIDER}
 			cursor := query.new_cursor
 			assert ("Query is empty", not cursor.after)
 			assert ("Insert-Retrieve cycle failed!", cursor.item.is_deep_equal (object))
+			assert ("Retrieved object is not root", context.is_root (cursor.item))
+
+--			object := cursor.item
 
 			cursor.forth
 			assert ("More than one result.", cursor.after)

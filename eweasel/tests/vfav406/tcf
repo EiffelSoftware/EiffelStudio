@@ -1,0 +1,13 @@
+test_name	 validity-vfav4-duplicated-4
+test_description Parenthesis alias should not be specified more than once.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VFAV(4)
+
+test_end

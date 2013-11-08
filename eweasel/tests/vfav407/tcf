@@ -1,7 +1,8 @@
-test_name	 validity-vfav4-argumentless-1
+test_name	 validity-vfav4-argumentless-2
 test_description Parenthesis alias should not be specified for a feature without arguments.
 
 copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
 copy_raw 	test.e $CLUSTER test.e
 
 compile_melted

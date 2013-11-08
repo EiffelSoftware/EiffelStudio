@@ -16,6 +16,7 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
+			is_root, set_is_root,
 			make, is_equal, out
 		end
 
@@ -23,6 +24,12 @@ create {PS_EIFFELSTORE_EXPORT}
 	make, make_fresh
 
 feature {PS_EIFFELSTORE_EXPORT} -- Access
+
+	is_root: BOOLEAN
+			-- Is the current entity a garbage collection root?
+		do
+			Result := has_attribute (root_key) and then attribute_value (root_key).value.to_boolean
+		end
 
 	attributes: LINKED_LIST [STRING]
 			-- The attributes of the object that have been loaded.
@@ -144,6 +151,15 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 			attributes.prune (attribute_name)
 		ensure
 			attribute_removed: not has_attribute (attribute_name)
+		end
+
+	set_is_root (value: BOOLEAN)
+			-- Set `is_root' to `value'.
+		do
+			if has_attribute (root_key) then
+				remove_attribute (root_key)
+			end
+			add_attribute (root_key, value.out, "BOOLEAN")
 		end
 
 feature -- Debugging output

@@ -78,8 +78,7 @@ feature -- Basic operations
 	launch
 			-- Launch searching.
 		local
-			l_compile_string, l_to_be_searched: UC_UTF8_STRING
-			l_searched_string: STRING_8
+			l_compile_string, l_to_be_searched: STRING_8
 			l_keyword: STRING_32
 		do
 			create item_matched_internal.make (0)
@@ -95,9 +94,11 @@ feature -- Basic operations
 				l_keyword := string_formatter.build_match_whole_word (l_keyword)
 			end
 
-			l_searched_string := utf32_to_utf8 (text_to_be_searched)
-			create l_to_be_searched.make_from_utf8 (l_searched_string)
-			create l_compile_string.make_from_utf8 (utf32_to_utf8 (l_keyword))
+				-- Gobo only supoorts partial Unicode at the moment.
+				-- Plus using UC_STRING is very slow. So we still do not
+				-- support Uncode search.
+			l_to_be_searched := text_to_be_searched.as_string_8
+			l_compile_string := l_keyword.as_string_8
 			pcre_regex.compile (l_compile_string)
 			if pcre_regex.is_compiled then
 				pcre_regex.match_substring (l_to_be_searched, start_position, l_to_be_searched.count)

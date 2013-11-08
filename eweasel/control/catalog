@@ -2235,8 +2235,9 @@ test	validity-vfav1-basic		vfav101  tcf pass validity vfav
 test	validity-vfav2-basic		vfav201  tcf pass validity vfav
 test	validity-vfav3-basic		vfav301  tcf pass validity vfav
 test	validity-vfav4-basic		vfav401  tcf pass validity vfav
-test	validity-vfav4-duplicated-declaration	vfav402  tcf pass validity vfav parenthesis_alias
+test	validity-vfav4-duplicated-1	vfav402  tcf pass validity vfav parenthesis_alias
 test	validity-vfav4-argumentless-declaration	vfav403  tcf pass validity vfav parenthesis_alias
+test	validity-vfav4-duplicated-2	vfav404  tcf pass validity vfav parenthesis_alias
 
 test	validity-vffd1-attribute	vffd101	 tcf pass validity vffd attribute
 test	validity-vffd2-basic		vffd201	 tcf pass validity vffd

@@ -55,10 +55,6 @@ feature -- Access: query parameter
 
 	is_non_root_ignored: BOOLEAN
 			-- Are non-root objects ignored?
-		do
-			fixme ("Implement root concept")
-			Result := False
-		end
 
 	object_initialization_depth: INTEGER
 			-- The depth up to which objects shall be initialized.
@@ -81,7 +77,7 @@ feature -- Element change
 	set_is_non_root_ignored (value: BOOLEAN)
 			-- Set `is_non_root_ignored' to `value'
 		do
-			fixme ("implement")
+			is_non_root_ignored := value
 		end
 
 	set_object_initialization_depth (depth: INTEGER)

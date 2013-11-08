@@ -303,6 +303,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status
 			Result := id_manager.is_identified (an_object, a_transaction)
 		end
 
+	is_root (object: ANY; transaction: PS_TRANSACTION): BOOLEAN
+			-- Is `object' a garbage collection root?
+		do
+			if id_manager.is_identified (object, transaction) then
+				Result := transaction.root_flags [id_manager.identifier_wrapper (object, transaction).object_identifier]
+			end
+		end
+
 	can_handle (object: ANY): BOOLEAN
 			-- Can `Current' handle the object `object'?
 		deferred

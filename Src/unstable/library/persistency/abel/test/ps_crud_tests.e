@@ -24,7 +24,15 @@ feature {PS_REPOSITORY_TESTS} -- References
 			test_insert_reference_cycle
 			test_crud_reference_cycle
 			test_crud_update_on_reference
+
+--			test_ref_new
 		end
+
+--	test_ref_new
+--		do
+--			test_read_write_cycle (test_data.reference_cycle, Void)
+--			test_read_write_cycle_with_root (test_data.reference_cycle, Void)
+--		end
 
 	test_insert_void_reference
 			-- Test inserting an object with a Void reference

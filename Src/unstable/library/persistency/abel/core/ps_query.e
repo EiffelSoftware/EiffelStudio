@@ -34,6 +34,9 @@ feature -- Status report
 	is_executed: BOOLEAN
 			-- Has query been executed?
 
+	is_closed: BOOLEAN
+			-- Has the query been closed?
+
 	is_object_query: BOOLEAN
 			-- Is `Current' an instance of PS_OBJECT_QUERY?
 		deferred
@@ -98,29 +101,45 @@ feature -- Disposal
 			-- Reset the query result, do not change criterion or projection.
 			-- Invoke if you want to reuse current query.
 		do
+			if not is_closed and is_executed then
+				close
+			end
+
+			is_closed := False
 			transaction_impl := Void
 			create_result_cursor
 			result_cursor.set_query (Current)
 			is_executed := False
 			backend_identifier := 0
+			create result_cache.make (100)
 			-- object_initialization_depth := -1
 		ensure
 			not_executed: not is_executed
 			not_bound_to_transaction: transaction_impl = Void
 			unrecognizable_to_backend: backend_identifier = 0
+
 			criteria_unchanged: criteria = old criteria
+			root_setting_unchanged: is_non_root_ignored = old is_non_root_ignored
+			initialization_depth_unchanged: object_initialization_depth = old object_initialization_depth
+			type_unchagned: generic_type  = old generic_type
 		end
 
 	close
 			-- Close the current query
 		do
-			if transaction.is_readonly then
-				transaction.repository.commit_transaction (transaction)
+			if not is_closed and is_executed then
+				fixme ("Remove the hack for readonly queries through EXECUTOR (-> attached transacion_context)")
+				if transaction.is_readonly and attached transaction_context then
+					transaction.repository.commit_transaction (transaction)
+				end
+				if attached transaction_context as ctx then
+					ctx.internal_active_queries.prune_all (Current)
+				end
+				fixme ("TODO: clean up internal data structures")
 			end
-			if attached transaction_context as ctx then
-				ctx.internal_active_queries.prune_all (Current)
-			end
-			fixme ("TODO: clean up internal data structures")
+			is_closed := True
+
+
 		end
 
 feature -- Contract support functions
@@ -137,6 +156,15 @@ feature -- Contract support functions
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Internal
+
+	set_type (type: TYPE[detachable ANY])
+			-- Helper function for testing.
+		local
+			reflection: INTERNAL
+		do
+			create reflection
+			generic_type := reflection.type_of_type (reflection.detachable_type (type.type_id))
+		end
 
 	result_cache: ARRAYED_LIST [ANY]
 			-- The cached results.
@@ -170,12 +198,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Internal
 
 	generic_type: TYPE [detachable ANY]
 			-- Get the (detachable) generic type of `Current'.
-		local
-			reflection: INTERNAL
-		once ("OBJECT")
-			create reflection
-			Result := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
-		end
+--		local
+--			reflection: INTERNAL
+--		once ("OBJECT")
+--			create reflection
+--			Result := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
+--		end
 
 	backend_identifier: INTEGER
 			-- Identifier for the backend to recognize an already executed query.
@@ -227,9 +255,14 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize the shared parts between object and tuple queries.
+		local
+			reflection: INTERNAL
 		do
+			object_initialization_depth := -1
 			create {PS_EMPTY_CRITERION} criteria
 			create result_cache.make (100)
+			create reflection
+			generic_type := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
 			reset
 		end
 
@@ -242,5 +275,6 @@ invariant
 	query_result_correctly_initialized: result_cursor.query = Current
 	transaction_set_if_executed: is_executed implies transaction_impl /= Void
 	not_executed_implies_after: not is_executed implies result_cursor.after
+	valid_initialization_depth: object_initialization_depth > 0 or object_initialization_depth = -1
 
 end

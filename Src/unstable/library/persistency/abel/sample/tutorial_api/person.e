@@ -7,9 +7,24 @@ note
 class PERSON
 
 create
-	make
+	make, make_with_age
 
 feature {NONE} -- Initialization
+
+	make_with_age (first, last: STRING; an_age: INTEGER)
+		require
+			first_exists: not first.is_empty
+			last_exists: not last.is_empty
+			age_positive: an_age >= 0
+		do
+			first_name := first
+			last_name := last
+			age := an_age
+		ensure
+			first_name_set: first_name = first
+			last_name_set: last_name = last
+			age_set: age = an_age
+		end
 
 	make (first, last: STRING)
 			-- Create a newborn person.

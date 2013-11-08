@@ -14,6 +14,7 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
+			is_root, set_is_root,
 			make, is_equal
 		end
 
@@ -41,6 +42,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Status report
+
+	is_root: BOOLEAN
+			-- Is the current entity a garbage collection root?
+		do
+			Result := has_information (root_key) and then get_information (root_key).to_boolean
+		end
 
 	has_information (description: STRING): BOOLEAN
 			-- Does the retrieved collection have a information value attached to the `description' key?
@@ -128,6 +135,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 			additional_information_hash.extend (value, description)
 		ensure
 			information_set: get_information (description).is_equal (value)
+		end
+
+	set_is_root (value: BOOLEAN)
+			-- Set `is_root' to `value'.
+		do
+			additional_information_hash.force (value.out, root_key)
 		end
 
 feature {NONE}

@@ -1,0 +1,46 @@
+Local
+E1: 2
+E2: 4, 6
+I1: 3
+I2: 5, 7
+Local with call
+E1: 7
+E2: 8, 9
+Argument
+E1: 0
+E2: 0, 0
+E1: 10
+E2: 10, 10
+E1: 12
+E2: 12, 13
+E1: 1
+E2: 2, 3
+I1: 4
+I2: 5, 6
+Unqualified
+E1: 2
+E2: 4, 6
+I1: 3
+I2: 5, 7
+Unqualified with call
+E1: 1
+E2: 2, 3
+Qualified
+E1: 1
+E2: 3, 5
+I1: 2
+I2: 4, 6
+Qualified with call
+E1: 3
+E2: 4, 5
+Precursor
+E1: 11
+E2: 12, 13
+I1: 14
+I2: 15, 16
+Renaming
+A.e1: 1
+A.e2: 2, 3
+A.i1: 4
+A.i2: 5, 6
+Execution completed

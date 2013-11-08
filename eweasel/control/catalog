@@ -328,7 +328,7 @@ test	undefine-external-make-internal	valid073 tcf pass validity
 test	vgcc4-called-vgcc6		valid074 tcf fail validity
 test	vqmc-extra-bogus-vffd7		valid075 tcf fail validity
 test	undef-mult-precursors 		valid076 tcf fail validity
-test	vjaw-called-vuar1 		valid077 tcf fail validity
+test	vjaw-called-vuar1 		valid077 tcf pass validity
 test	vkcn-sneak				valid078 tcf pass validity
 test	replicated-feat-multiple-select	valid079 tcf fail validity
 test	double-assigned-to-real		valid080 tcf pass validity
@@ -361,7 +361,7 @@ test	inherit-any-not-ancestor	valid106 tcf pass validity
 test	compare-procedure-to-void	valid107 tcf pass validity
 test	explicit-creation-bad-generic	valid108 tcf pass validity
 test	tricky-constraint-with-generic	valid109 tcf pass validity
-test	vgcc-called-vuar1		valid112 tcf fail validity
+test	vgcc-called-vuar1		valid112 tcf pass validity
 test	procedure-in-tuple		valid113 tcf pass validity tuple
 test	generic-constraint-not-used	valid114 tcf fail validity
 test	two-generic-precursors		valid115 tcf fail validity
@@ -560,7 +560,7 @@ test	svalid-inherited-invariant-not-checked	svalid017 tcf fail system-validity
 test	svalid-invalid-parent			svalid018 tcf pass system-validity conversion
 test	svalid-conversion-with-binary	svalid019 tcf pass system-validity conversion
 test	svalid-undetected-vwoe			svalid020 tcf pass system-validity conversion
-test	svalid-conversion-detachable	svalid022 tcf fail system-validity conversion
+test	svalid-conversion-detachable	svalid022 tcf pass system-validity conversion
 test	svalid-missing-recheck			svalid023 tcf fail system-validity conversion
 test	inspect-inherited-static-access-missing-library	svalid024 tcf pass system-validity
 test	svalid-inherited-agent-with-formal-switch	svalid025 tcf pass system-validity agents
@@ -569,7 +569,7 @@ test	svalid-conversion-forget		svalid027 tcf fail system-validity conversion
 test	svalid-generic-rename-with-alias	svalid028 tcf fail system-validity generic rename
 test	svalid-inherited-renamed-prefix		svalid029 tcf fail system-validity rename
 test	svalid-generic-creation			svalid030 tcf fail system-validity generic
-test	svalid-remove-bracket-alias-via-rename	svalid031 tcf fail system-validity bracket_expression
+test	svalid-remove-bracket-alias-via-rename	svalid031 tcf pass system-validity bracket_expression
 test	svalid-inherit-like-argument	svalid032 tcf fail system-validity anchored_type
 
 -- Exceptions
@@ -949,14 +949,14 @@ test	ececil-undefined-symbol-3	incr335	tcf fail incrementality
 test	can-be-inlined-crash		incr336	tcf fail incrementality
 if WINDOWS test	shared-library-definition-update	incr337 tcf pass incrementality windows dll
 test	bogus-construct-not-supported	incr338	tcf fail incrementality
-test	bracket-trigger-c-compilation-error	incr339 tcf pass incrementality c_compilation
+test	bracket-trigger-c-compilation-error	incr339 tcf pass incrementality c_compilation bracket_expression
 test	class-name-mismatch-internal-error	incr340 tcf fail incrementality
 test	nonexistent-veen			incr341 tcf fail incrementality
 test	formulate-inherited-assertions-crash	incr342 tcf fail incrementality
 test	feature_b-process-crash			incr343 tcf fail incrementality
 test	new-generic-deriv-attribute-agent	incr344 tcf fail incrementality agents
-test	supports-step-in-crash			incr345 tcf fail incrementality
-test	is-expanded-crash			incr346 tcf fail incrementality
+test	supports-step-in-crash			incr345 tcf pass incrementality
+test	is-expanded-crash			incr346 tcf pass incrementality
 test	class-removal-crash-freeze		incr347 tcf fail incrementality
 test	melted-agent-creation-crash		incr348 tcf fail incrementality agents
 test	storable-version-update			incr349 tcf fail incrementality reflection storable
@@ -1294,7 +1294,7 @@ test	tight-loop-integer-constant-infinite-loop final117 tcf fail finalizing manu
 test	finalize-once-strings-in-invariant	final118 tcf fail finalizing
 test	equation-evaluation-sequence	final119 tcf fail finalizing
 test	comparison-involving-allocation	final120 tcf fail finalizing
-test	bracket-wrong-dispatch			final121 tcf fail finalizing
+test	bracket-wrong-dispatch			final121 tcf fail finalizing bracket_expression
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime
@@ -1682,6 +1682,7 @@ test	integer-is-greater-equal-seg	exec352 tcf pass execution
 test	equality-operator-semantics		exec353 tcf pass execution equality attached_types
 test	agent-target-expanded			exec354 tcf pass execution expanded
 test	conditional-expression-smoke-test	exec355 tcf pass execution conditional expression
+test	parenthesis-alias-smoke-test		exec356 tcf pass execution expression parenthesis_alias
 
 -- Once specific
 
@@ -2294,7 +2295,7 @@ test	validity-vaol2-basic		vaol201	 tcf pass validity vaol
 
 test	validity-vuex2-in-multibranch	vuex201  tcf pass validity vuex
 
-test	bracket-expression-on-current	vwbr101  tcf pass validity vwbr anchored_type
+test	bracket-expression-on-current	vwbr101  tcf pass validity vwbr anchored_type bracket_expression
 
 test	validity-vwce-basic		vwce001  tcf pass validity vwce conditional expression
 
@@ -2512,7 +2513,7 @@ test	inherited-unary-with-generic				multicon058 tcf pass multiconstraint formal
 test	multi-constraint-real-type-in-crash			multicon059 tcf fail multiconstraint formal
 test	saving-multiconstraint-generic-class-crash	multicon060 tcf pass multiconstraint formal incrementality
 test	expanded-generic-with-multiconstraint		multicon061 tcf pass multiconstraint formal execution
-test	multi-constraint-with-bracket			multicon062 tcf pass multiconstraint validity
+test	multi-constraint-with-bracket			multicon062 tcf pass multiconstraint validity bracket_expression
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded
@@ -2811,7 +2812,7 @@ test	pretty-check-instruction		pretty016 tcf pass pretty
 test	pretty-nested-comment			pretty017 tcf pass pretty
 test	pretty-assertion-clause			pretty018 tcf pass pretty
 test	pretty-feature-adaptation		pretty019 tcf pass pretty
-test	pretty-bracket-expression		pretty020 tcf pass pretty
+test	pretty-bracket-expression		pretty020 tcf pass pretty bracket_expression
 test	pretty-attribute-comment		pretty021 tcf pass pretty
 test	pretty-expression-comment		pretty022 tcf pass pretty
 test	pretty-typed-character			pretty023 tcf pass pretty

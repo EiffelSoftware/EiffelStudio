@@ -1,5 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+.gitattributes text=crlf
+free_add_ons/gcc/windows/msys/1.0/msys.bat text=crlf
 
 # Custom for Visual Studio
 *.cs     diff=csharp

@@ -1038,6 +1038,10 @@ UTF8_TAIL	[\x80-\xBF]
 				update_character_locations
 				process_simple_string_as (TE_STR_BRACKET)
 			}
+\""()"\"	{
+				update_character_locations
+				process_simple_string_as (TE_STR_PARENTHESES)
+			}
 \"[aA][nN][dD]\"	{
 				update_character_locations
 				process_simple_string_as (TE_STR_AND)

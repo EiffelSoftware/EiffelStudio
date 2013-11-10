@@ -90,7 +90,7 @@ create
 %token <detachable STRING_AS> TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
 %token <detachable STRING_AS> TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
 %token <detachable STRING_AS> TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
-%token <detachable STRING_AS> TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
+%token <detachable STRING_AS> TE_STR_NOT TE_STR_FREE TE_STR_BRACKET TE_STR_PARENTHESES
 
 %type <detachable SYMBOL_AS>ASemi
 %type <detachable KEYWORD_AS> Alias_mark Is_keyword
@@ -213,7 +213,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 359
+%expect 364
 
 %%
 
@@ -842,6 +842,8 @@ Alias_name: Infix_operator
 	|	TE_STR_NOT
 			{ $$ := $1 }
 	|	TE_STR_BRACKET
+			{ $$ := $1 }
+	|	TE_STR_PARENTHESES
 			{ $$ := $1 }
 	;
 
@@ -3656,6 +3658,8 @@ Non_empty_string: TE_STRING
 	|	TE_STR_POWER
 			{ $$ := $1 }
 	|	TE_STR_BRACKET
+			{ $$ := $1 }
+	|	TE_STR_PARENTHESES
 			{ $$ := $1 }
 	|	TE_STR_AND
 			{ $$ := $1 }

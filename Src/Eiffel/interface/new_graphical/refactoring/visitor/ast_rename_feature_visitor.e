@@ -266,7 +266,7 @@ feature {NONE} -- Visitor implementation
 			if recursive_descendants.has (l_as.class_id) then
 					-- check if it is the right feature (correct has old routine_id and old name)
 				if
-					attached l_as.id_set as routine_ids and then
+					attached l_as.routine_ids as routine_ids and then
 					routine_ids.has (feature_i.rout_id_set.first) and then
 					old_feature_name.is_case_insensitive_equal (l_as.name.name)
 				then

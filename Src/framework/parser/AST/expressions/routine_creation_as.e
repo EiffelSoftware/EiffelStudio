@@ -1,8 +1,7 @@
-note
-	description: "Abstract description of an Eiffel routine object"
+﻿note
+	description: "Abstract description of an Eiffel routine object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,15 +10,7 @@ deferred class
 
 inherit
 	EXPR_AS
-
 	ID_SET_ACCESSOR
-		rename
-			make as make_id_set,
-			id_set as routine_ids,
-			set_id_set as set_routine_ids
-		undefine
-			copy, is_equal
-		end
 
 feature {NONE} -- Initialization
 
@@ -122,9 +113,6 @@ feature -- Attributes
 	has_target: BOOLEAN
 			-- Does Current has a target?
 
-	class_id: INTEGER
-			-- The class id.
-
 feature -- Roundtrip
 
 	internal_operands : detachable DELAYED_ACTUAL_LIST_AS
@@ -141,24 +129,12 @@ feature -- Comparison
 					  has_target = other.has_target
 		end
 
-feature -- Setting
-
-	set_class_id (a_class_id: like class_id)
-			-- Set `class_id' to `a_class_id'.
-		require
-			a_class_id_ok: a_class_id > 0 or a_class_id = -1
-		do
-			class_id := a_class_id
-		ensure
-			class_id_set: class_id = a_class_id
-		end
-
 invariant
 	operands_correct: (internal_operands /= Void implies operands = internal_operands.meaningful_content) and
 					  (internal_operands = Void implies operands = Void)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

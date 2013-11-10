@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Bracket expression node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,13 +15,6 @@ inherit
 		end
 
 	ID_SET_ACCESSOR
-		rename
-			make as make_id_set,
-			id_set as routine_ids,
-			set_id_set as set_routine_ids
-		undefine
-			is_equal, copy
-		end
 
 create
 	make
@@ -66,9 +59,6 @@ feature -- Access
 
 	operands: EIFFEL_LIST [EXPR_AS]
 			-- Operands of bracket expression
-
-	class_id: INTEGER
-			-- The class id of the qualified call.
 
 feature -- Status Report
 
@@ -116,23 +106,13 @@ feature -- Visitor
 			v.process_bracket_as (Current)
 		end
 
-feature -- Setting
-
-	set_class_id (a_class_id: like class_id)
-			-- Set `class_id' to `a_class_id'.
-		require
-			a_class_id_ok: a_class_id > 0 or a_class_id = -1
-		do
-			class_id := a_class_id
-		end
-
 invariant
 	target_not_void: target /= Void
 	operands_not_void: operands /= Void
 	operands_not_empty: not operands.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,43 +1,59 @@
-note
-	description: "ID_SET accessor."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Collection of routine IDs with the corresponding class ID of the call target."
 
-class
+deferred class
 	ID_SET_ACCESSOR
 
 inherit
 	ID_SET
+		rename
+			make as make_id_set
+		undefine
+			is_equal, copy
+		end
 
 feature -- Access
 
-	id_set: ID_SET
-			-- Access the id set.
+	routine_ids: ID_SET
+			-- Routine IDs of the feature being called.
 		do
 			Result := Current
 		ensure
 			id_set_not_void: Result /= Void
 		end
 
-feature -- Update
+	class_id: INTEGER
+			-- Class ID of the target of the call.
 
-	set_id_set (an_id_set: ID_SET)
-			-- Set the id_set.
+feature -- Modification
+
+	set_routine_ids (s: ID_SET)
+			-- Set `routine_ids' to `s'.
 		require
-			an_id_set_not_void: an_id_set /= Void
+			s_attached: attached s
 		do
-			first := an_id_set.first
-			if an_id_set.count > 1 and attached an_id_set.area as l_area then
+			first := s.first
+			if s.count > 1 and attached s.area as l_area then
 				area := l_area.twin
 			else
 				area := Void
 			end
 		end
 
+	set_class_id (id: like class_id)
+			-- Set `class_id' to `id'.
+		require
+			id_ok: id > 0 or id = -1
+		do
+			class_id := id
+		ensure
+			class_id_set: class_id = id
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

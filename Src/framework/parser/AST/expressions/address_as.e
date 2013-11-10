@@ -1,6 +1,5 @@
-note
-	description:
-		"AST representation of an Eiffel function pointer."
+﻿note
+	description: "AST representation of an Eiffel function pointer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,15 +10,7 @@ class
 
 inherit
 	EXPR_AS
-
 	ID_SET_ACCESSOR
-		rename
-			make as make_id_set,
-			id_set as routine_ids,
-			set_id_set as set_routine_ids
-		undefine
-			is_equal, copy
-		end
 
 create
 	initialize
@@ -95,9 +86,6 @@ feature -- Attributes
 	is_object_test_local: BOOLEAN
 			-- Is current entity an object test local?
 
-	class_id: INTEGER
-			-- The class id of the qualified call.
-
 	argument_position: INTEGER
 			-- If the current entity is an argument this gives the position in the argument list.
 
@@ -126,12 +114,6 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_class_id (a_class_id: like class_id)
-			-- Set `class_id' to `a_class_id'.
-		do
-			class_id := a_class_id
-		end
-
 	set_argument_position (an_argument_position: like argument_position)
 			-- Set `argument_position' to `an_argument_position'.
 		do
@@ -157,7 +139,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

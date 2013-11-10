@@ -1,5 +1,5 @@
-note
-	description: "Abstract class for binary expression nodes, Bench version"
+﻿note
+	description: "Abstract class for binary expression nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -14,13 +14,6 @@ inherit
 		end
 
 	ID_SET_ACCESSOR
-		rename
-			make as make_id_set,
-			id_set as routine_ids,
-			set_id_set as set_routine_ids
-		undefine
-			is_equal, copy
-		end
 
 	SHARED_ENCODING_CONVERTER
 		export
@@ -53,9 +46,6 @@ feature -- Attributes
 
 	right: EXPR_AS
 			-- Right opernad
-
-	class_id: INTEGER
-			-- The class id of the qualified call.
 
 feature -- Roundtrip
 
@@ -171,14 +161,6 @@ feature -- Comparison
 		end
 
 feature -- Setting
-
-	set_class_id (a_class_id: like class_id)
-			-- Set `class_id' to `a_class_id'.
-		require
-			a_class_id_ok: a_class_id > 0 or a_class_id = -1
-		do
-			class_id := a_class_id
-		end
 
 	set_left (a_left: like left)
 			-- Set `left' with `a_left'

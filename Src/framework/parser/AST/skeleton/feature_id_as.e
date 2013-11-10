@@ -1,19 +1,12 @@
-note
+﻿note
 	description: "AST node for a feature name used by a client."
 
 class
 	FEATURE_ID_AS
 
 inherit
-
 	AST_EIFFEL
-
 	ID_SET_ACCESSOR
-		rename
-			make as make_id_set
-		undefine
-			is_equal, copy
-		end
 
 create
 	make
@@ -40,23 +33,6 @@ feature {AST_VISITOR} -- Visitor
 			-- <Prfecursor>
 		do
 			v.process_feature_id_as (Current)
-		end
-
-feature -- Access: refactoring
-
-	class_id: INTEGER_32
-			-- ID of a class this feature comes from.
-
-feature -- Modification: refactoring
-
-	set_class_id (i: like class_id)
-			-- Set `class_id' to `i'.
-		require
-			good_class_id: i > 0 or i = -1
-		do
-			class_id := i
-		ensure
-			class_id_set: class_id = i
 		end
 
 feature -- Roundtrip/Token

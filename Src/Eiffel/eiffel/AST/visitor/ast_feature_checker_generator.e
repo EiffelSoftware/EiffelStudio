@@ -1184,10 +1184,14 @@ feature {NONE} -- Implementation
 						l_feature := last_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
 					end
 					l_error_level := error_level
-					process_call (l_type, Void, l_as.feature_name, l_feature, l_as.parameters, True, False, True, False)
+					process_call (l_type, Void, l_as.feature_name, l_feature, l_as.parameters, True, False, True, False, True)
 					if error_level = l_error_level and then not is_inherited then
 						set_routine_ids (last_routine_id_set, l_as)
 						l_as.set_class_id (last_calls_target_type.base_class.class_id)
+					end
+					if attached last_vuar_error as e and then attached last_type as t then
+							-- Feature without arguments is found, try parenthesis alias on it.
+						look_for_parenthesis_alias (l_as.internal_parameters, e, t)
 					end
 				end
 			end
@@ -1195,7 +1199,8 @@ feature {NONE} -- Implementation
 
 	process_call (
 			a_type, a_precursor_type: TYPE_A; a_name: ID_AS; a_feature: FEATURE_I;
-			a_params: EIFFEL_LIST [EXPR_AS]; is_static, is_agent, is_qualified, is_precursor: BOOLEAN)
+			a_params: EIFFEL_LIST [EXPR_AS]; is_static, is_agent, is_qualified, is_precursor: BOOLEAN;
+			is_vuar_delayed: BOOLEAN)
 
 			-- Process call to `a_name' in context of `a_type' with `a_params' if ANY.
 			-- If `is_static' it is a static call.
@@ -1208,6 +1213,7 @@ feature {NONE} -- Implementation
 			-- `is_static': Indicates a static call (C external or constant)
 			-- `is_qualified': True => Call of the form 'a.b' / False => Call of the form 'b'
 			-- `is_precursor': True => Call of the form Precursor {A_PRECURSOR_TYPE} (a_params)
+			-- `is_vuar_delayed': Is VUAR error report when a feature take no arguments, but there are actual arguments, delayed (the error is available in `last_vuar_error')?
 		require
 			a_type_not_void: a_type /= Void
 			a_precursor_type_not_void: is_precursor implies a_precursor_type /= Void
@@ -1269,6 +1275,8 @@ feature {NONE} -- Implementation
 			l_tcat: CAT_CALL_WARNING
 			l_is_controlled: BOOLEAN
 		do
+				-- Reset any previously reported VUAR error.
+			last_vuar_error := Void
 				-- Record if the call is controlled.
 			l_is_controlled := is_controlled
 				-- Reset
@@ -1553,7 +1561,12 @@ feature {NONE} -- Implementation
 									l_vuar1.set_argument_count (l_actual_count)
 									l_vuar1.set_formal_count (l_feature.argument_count)
 									l_vuar1.set_location (l_feature_name)
-									error_handler.insert_error (l_vuar1)
+									if l_formal_count = 0 and then is_vuar_delayed then
+											-- Record error for future use.
+										last_vuar_error := l_vuar1
+									else
+										error_handler.insert_error (l_vuar1)
+									end
 								end
 							elseif l_parameters /= Void then
 								if l_needs_byte_node then
@@ -1562,7 +1575,6 @@ feature {NONE} -- Implementation
 								if l_arg_types /= Void then
 										-- Parameters have been evaluated, nothing to be done.
 										-- Case for overloaded routine call or agent with all open arguments.
-									l_actual_count := l_actual_count + 1 -- Optimization for loop exit
 								else
 										-- Parameters haven't yet evaluated
 									from
@@ -1571,9 +1583,8 @@ feature {NONE} -- Implementation
 										if l_needs_byte_node then
 											create l_arg_nodes.make (l_actual_count)
 										end
-										l_actual_count := l_actual_count + 1 -- Optimization for loop exit
 									until
-										i = l_actual_count
+										i > l_actual_count
 									loop
 											-- Get formal argument type.
 										l_formal_arg_type := l_feature.arguments.i_th (i)
@@ -1582,35 +1593,14 @@ feature {NONE} -- Implementation
 										current_target_type :=
 											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 										l_parameters.i_th (i).process (Current)
-										if last_type /= Void and l_arg_types /= Void then
-												-- Check if last argument needs to be wrapped in a TUPLE.
-											if i = l_formal_count + 1 then
-												l_arg_type := last_type
-													-- Actual type of feature argument.
-												l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
-												if
-													not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) and then
-													not is_inherited and then
-													not l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type) and then
-													not (l_arg_type.is_expanded and then l_formal_arg_type.is_external and then
-														l_arg_type.is_conformant_to (l_context_current_class, l_formal_arg_type))
-												then
-														-- Use a TUPLE of last argument instead.
-													reset_for_unqualified_call_checking
-													create l_wrapped_actuals.make (1)
-													l_wrapped_actuals.extend (l_parameters.i_th (i))
-													(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
-												end
-											end
-										end
-										if last_type /= Void and l_arg_types /= Void then
+										if attached last_type and then attached l_arg_types then
 											l_arg_types.extend (last_type)
 											if l_needs_byte_node then
 												l_expr ?= last_byte_node
 												l_arg_nodes.extend (l_expr)
 											end
 										else
-												-- An error occurred, we reset `l_arg_types'
+												-- An error occurred, we reset `l_arg_types'.
 											l_arg_types := Void
 										end
 										i := i + 1
@@ -1618,45 +1608,47 @@ feature {NONE} -- Implementation
 								end
 
 								if error_level = l_error_level then
-										-- Conformance checking of arguments
+										-- Conformance checking of arguments.
+										-- Check if an actual type of the last actual argument is compatible with a formal type of that argument.
+									if attached argument_compatibility_error (a_type, l_last_constrained, l_actual_count, l_arg_types, l_feature, l_parameters [l_actual_count].start_location) then
+											-- Actual and formal types of the last argument are not compatible.
+											-- Try to wrap last argument in a tuple.
+										l_arg_type := l_arg_types [l_actual_count]
+										reset_for_unqualified_call_checking
+										create l_wrapped_actuals.make (1)
+										l_wrapped_actuals.extend (l_parameters [l_actual_count])
+										current_target_type :=
+											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
+										;(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
+										l_arg_types [l_actual_count] := last_type
+											-- Check if now actual and formal types of the last argument are compatible
+										if attached argument_compatibility_error (a_type, l_last_constrained, l_actual_count, l_arg_types, l_feature, l_parameters [l_actual_count].start_location) then
+												-- Revert changes back.
+											l_arg_types [l_actual_count] := l_arg_type
+										elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
+											-- Keep changes, update byte nodes.
+											l_arg_nodes [l_actual_count] := e
+										end
+									end
 										-- Compute required separateness status of arguments.
 									l_is_separate := a_type.is_separate
 									from
 										i := 1
 									until
-										i = l_actual_count
+										i > l_actual_count
 									loop
+											-- Report type compatibility issues if any.
+										if attached argument_compatibility_error (a_type, l_last_constrained, i, l_arg_types, l_feature, l_parameters [i].start_location) as e then
+											error_handler.insert_error (e)
+										end
+
 											-- Get actual argument type.
 										l_arg_type := l_arg_types.i_th (i)
 
 											-- Get formal argument type.
 										l_formal_arg_type := l_feature.arguments.i_th (i)
 
-											-- Take care of anchoring to argument
-										if l_formal_arg_type.is_like_argument then
-											l_like_arg_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id)
-											l_like_arg_type := l_like_arg_type.actual_argument_type (l_arg_types)
-											l_like_arg_type := l_like_arg_type.actual_type
-												-- Check that `l_arg_type' is compatible to its `like argument'.
-												-- Once this is done, then type checking is done on the real
-												-- type of the routine, not the anchor.
-											l_warning_count := error_handler.warning_list.count
-											if
-												not l_arg_type.conform_to (l_context_current_class, l_like_arg_type) and then
-												(is_inherited or else not l_arg_type.convert_to (l_context_current_class, l_like_arg_type.deep_actual_type))
-											then
-												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type, l_like_arg_type)
-											end
-											if l_warning_count /= error_handler.warning_list.count then
-												error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
-											end
-										elseif l_is_separate and then l_arg_type.is_reference and then not l_formal_arg_type.is_separate then
-											error_handler.insert_error (create {VUAR3}.make (context, l_feature, l_last_class, i, l_formal_arg_type, l_arg_type, l_parameters.i_th (i).start_location))
-										elseif l_arg_type.is_expanded and then not l_arg_type.is_processor_attachable_to (a_type) then
-											error_handler.insert_error (create {VUAR4}.make (context, l_feature, l_last_class, i, l_formal_arg_type, l_arg_type, l_parameters.i_th (i).start_location))
-										end
-
-											-- Actual type of feature argument
+											-- Actual formal type of feature argument.
 										l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
 
 											-- check if `l_formal_arg_type' involves some generics whose actuals
@@ -1680,7 +1672,6 @@ feature {NONE} -- Implementation
 											end
 										end
 
-
 										l_warning_count := error_handler.warning_list.count
 										if not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) then
 											if
@@ -1701,21 +1692,6 @@ feature {NONE} -- Implementation
 													l_expr ?= l_arg_nodes.i_th (i)
 													l_arg_nodes.put_i_th (l_conv_info.byte_node (l_expr), i)
 												end
-													-- Create a conversion node to keep the data used for conversion
-											elseif
-												l_arg_type.is_expanded and then l_formal_arg_type.is_external and then
-												l_arg_type.is_conformant_to (l_context_current_class, l_formal_arg_type)
-											then
-													-- No need for conversion, this is currently done at the code
-													-- generation level to properly handle the generic case.
-													-- If not done at the code generation, we would need the
-													-- following lines.
---												l_expr ?= l_arg_nodes.i_th (i)
---												l_arg_nodes.put_i_th ((create {BOX_CONVERSION_INFO}.make (l_arg_type)).
---												byte_node (l_expr), i)
-											else
-												insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
-													l_formal_arg_type)
 											end
 										elseif l_warning_count /= error_handler.warning_list.count then
 											error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
@@ -1762,6 +1738,8 @@ feature {NONE} -- Implementation
 										i := i + 1
 									end
 								end
+									-- Reset VUAR error (if any).
+								last_vuar_error := Void
 							end
 
 								-- Reset original name because it was polluted by the argument checking
@@ -2029,6 +2007,72 @@ feature {NONE} -- Implementation
 		ensure
 			last_calls_target_type_proper_set: (error_level = old error_level and not is_last_access_tuple_access) implies last_calls_target_type /= Void
 		end
+
+feature {NONE} -- Type checks
+
+	argument_compatibility_error (target_type: TYPE_A; target_base_type: TYPE_A; argument_number: INTEGER; actual_types: ARRAYED_LIST [TYPE_A]; callee: FEATURE_I; location: LOCATION_AS): detachable ERROR
+			-- Error describing validity violation in case actual an argument type `a' is not compatible with a formal argument type `f'.
+		local
+			actual_target_type: TYPE_A
+			actual_type: TYPE_A
+			current_class: CLASS_C
+			formal_type: TYPE_A
+			like_argument_type: TYPE_A
+			target_base_class: CLASS_C
+			target_base_class_id: INTEGER
+			warning_count: INTEGER
+		do
+			actual_type := actual_types [argument_number]
+			formal_type := callee.arguments [argument_number]
+			actual_target_type := target_type.actual_type
+			target_base_class := target_base_type.base_class
+			target_base_class_id := target_base_class.class_id
+			current_class := context.current_class
+			if formal_type.is_like_argument then
+				like_argument_type := formal_type.instantiation_in
+					(actual_target_type.as_implicitly_detachable, target_base_class_id).actual_argument_type
+					(actual_types).actual_type
+					-- Check that `actual_type' is compatible to its `like argument'.
+					-- Once this is done, then type checking is done on the real
+					-- type of the routine, not the anchor.
+				warning_count := error_handler.warning_list.count
+				if
+					not actual_type.conform_to (current_class, like_argument_type) and then
+					(is_inherited or else not actual_type.convert_to (current_class, like_argument_type.deep_actual_type))
+				then
+					Result := vuar2_error (callee, target_base_class_id, argument_number, actual_type, like_argument_type, location)
+				end
+				if warning_count /= error_handler.warning_list.count then
+					error_handler.warning_list.last.set_location (location)
+				end
+			elseif target_type.is_separate and then actual_type.is_reference and then not formal_type.is_separate then
+				create {VUAR3} Result.make (context, callee, target_base_class, argument_number, formal_type, actual_type, location)
+			elseif actual_type.is_expanded and then not actual_type.is_processor_attachable_to (target_type) then
+				create {VUAR4} Result.make (context, callee, target_base_class, argument_number, formal_type, actual_type, location)
+			end
+
+				-- Adapted formal type of a feature argument.
+			formal_type := formal_type.formal_instantiation_in (actual_target_type.as_implicitly_detachable, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
+
+			warning_count := error_handler.warning_list.count
+			if not actual_type.conform_to (current_class, formal_type) then
+				if
+					(not is_inherited and then
+					actual_type.convert_to (current_class, formal_type.deep_actual_type))
+				then
+				elseif
+					actual_type.is_expanded and then formal_type.is_external and then
+					actual_type.is_conformant_to (current_class, formal_type)
+				then
+				else
+					Result := vuar2_error (callee, target_base_class_id, argument_number, actual_type, formal_type, location)
+				end
+			elseif warning_count /= error_handler.warning_list.count then
+				error_handler.warning_list.last.set_location (location)
+			end
+		end
+
+feature {NONE} -- Visitor
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 		do
@@ -2525,7 +2569,9 @@ feature {NONE} -- Implementation
 			l_vtmc4: VTMC4
 			l_error_level: NATURAL_32
 			l_is_not_call: BOOLEAN
+			l_is_byte_node_enabled: BOOLEAN
 		do
+			l_is_byte_node_enabled := is_byte_node_enabled
 			l_type_a := last_type.actual_type
 			if l_type_a.is_formal then
 				l_formal ?= l_type_a
@@ -2540,35 +2586,29 @@ feature {NONE} -- Implementation
 			l_last_type := last_type
 
 			if  not l_type_a_is_multi_constrained then
-				if not l_type_a.is_none and not l_type_a.is_void then
-					if is_inherited then
-						if not l_as.is_tuple_access then
-								-- Reuse the feature when it is really one, otherwise when it is a tuple
-								-- access the call to `process_call' will do the right thing for
-								-- inherited code.
-							l_feature := l_type_a.base_class.feature_of_rout_id (l_as.routine_ids.first)
+				if not l_type_a.is_none and not l_type_a.is_void and then is_inherited then
+					if not l_as.is_tuple_access then
+							-- Reuse the feature when it is really one, otherwise when it is a tuple
+							-- access the call to `process_call' will do the right thing for
+							-- inherited code.
+						l_feature := l_type_a.base_class.feature_of_rout_id (l_as.routine_ids.first)
+					else
+						if attached {TUPLE_TYPE_A} l_last_type.actual_type as l_tuple_type then
+							l_is_not_call := True
+							is_last_access_tuple_access := True
+							is_assigner_call := False
+							set_type (l_tuple_type.generics.i_th (l_as.label_position), l_as)
 						else
-							if attached {TUPLE_TYPE_A} l_last_type.actual_type as l_tuple_type then
-								l_is_not_call := True
-								is_last_access_tuple_access := True
-								is_assigner_call := False
-								set_type (l_tuple_type.generics.i_th (l_as.label_position), l_as)
-							else
-								check
-									False
-								end
+							check
+								False
 							end
 						end
 					end
 				end
-					-- Type check the call
-				if not l_is_not_call then
-					process_call (l_last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
-						False, False, True, False)
-				end
 			else
 					-- Multi constraint case
 				if is_inherited then
+					l_is_not_call := True
 						-- This code here is very similar to some parts of `process_abstract_creation'.
 						-- It has the very same issues as described there.
 					fixme ("Related to fix me in `process_abstract_creation'")
@@ -2600,12 +2640,13 @@ feature {NONE} -- Implementation
 						last_calls_target_type :=  l_last_constrained
 							-- Type check the call
 						process_call (l_last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
-							False, False, True, False)
+							False, False, True, False, True)
 						l_result.forth
 							-- We inherited this feature. Adapt it's type. DELETEME and the commented code below
 						l_feature_type := last_type -- l_feature.type.instantiation_in (l_last_type, l_last_class_id).actual_type
 						if 	l_last_feature_type = Void then
 							l_last_feature_type := l_feature_type
+							is_byte_node_enabled := False
 						elseif not l_last_feature_type.same_as (l_feature_type) then
 								-- The two features have redefined their return type differently.
 								-- We don't allow this: Add an error, but continue checking as this only an additional
@@ -2619,14 +2660,21 @@ feature {NONE} -- Implementation
 							l_vtmc4.set_feature_info (l_result)
 							error_handler.insert_error (l_vtmc4)
 						end
+						if attached last_vuar_error as e and then attached last_type as t then
+							look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+							l_feature_type := last_type
+						end
 					end
 						-- We inherited this feature. Adapt it's type.
 					l_last_type := l_feature_type
-				else
-						-- Type check the call
-					process_call (l_last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
-						False, False, True, False)
+						-- Restore code generation status.
+					is_byte_node_enabled := l_is_byte_node_enabled
 				end
+			end
+			if not l_is_not_call then
+					-- Type check the call.
+				process_call (l_last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
+					False, False, True, False, True)
 			end
 
 			if error_level = l_error_level then
@@ -2656,6 +2704,9 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+				if not l_is_not_call and then attached last_vuar_error as e and then attached last_type as q then
+					look_for_parenthesis_alias (l_as.internal_parameters, e, q)
+				end
 			else
 				reset_types
 			end
@@ -2677,17 +2728,18 @@ feature {NONE} -- Implementation
 			l_class_id := l_type.base_class.class_id
 			l_local_info := context.object_test_local (l_as.feature_name.name_id)
 			if l_local_info /= Void then
-				l_local_info.set_is_used (True)
 				last_access_writable := False
-				if l_as.parameters /= Void then
+				l_local_info.set_is_used (True)
+				l_type := l_local_info.type
+				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, last_type.base_class.class_id)
+				set_type (l_type, l_as)
+				if attached l_as.parameters as p then
 					create l_vuar1
 					context.init_error (l_vuar1)
 					l_vuar1.set_local_name (l_as.feature_name.name)
 					l_vuar1.set_location (l_as.feature_name)
-					error_handler.insert_error (l_vuar1)
+					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
 				end
-				l_type := l_local_info.type
-				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, last_type.base_class.class_id)
 				if is_byte_node_enabled then
 					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
 				end
@@ -2695,17 +2747,20 @@ feature {NONE} -- Implementation
 					l_as.enable_object_test_local
 					l_as.set_class_id (class_id_of (l_type))
 				end
-				set_type (l_type, l_as)
 			else
 				if is_inherited then
 					l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
 				end
 				l_error_level := error_level
-				process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
+				process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False, True)
 				if error_level = l_error_level and not is_inherited then
 						-- set some type attributes of the node
 					l_as.set_class_id (l_class_id)
 					set_routine_ids (last_routine_id_set, l_as)
+				end
+				if attached last_vuar_error as e and then attached last_type as t then
+						-- Feature without arguments is found, try parenthesis alias on it.
+					look_for_parenthesis_alias (l_as.internal_parameters, e, t)
 				end
 			end
 		end
@@ -2846,27 +2901,34 @@ feature {NONE} -- Implementation
 						end
 
 						l_error_level := error_level
-						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
+						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False, True)
 						l_type := last_type
 						if error_level = l_error_level and not is_inherited then
 								-- set some type attributes of the node
 							l_as.set_class_id (l_last_id)
 							set_routine_ids (last_routine_id_set, l_as)
 						end
+						if attached {VUAR1} last_vuar_error as e and then attached last_type as t then
+								-- Feature without arguments is found, try parenthesis alias on it.
+							l_vuar1 := e
+							l_type := t
+							l_has_vuar_error := True
+						end
 					end
 				end
 			end
 			if l_has_vuar_error then
-				create l_vuar1
-				if l_arg_pos /= 0 then
-					l_vuar1.set_arg_name (l_as.feature_name.name)
-				else
-					l_vuar1.set_local_name (l_as.feature_name.name)
+				if not attached l_vuar1 then
+					create l_vuar1
+					if l_arg_pos /= 0 then
+						l_vuar1.set_arg_name (l_as.feature_name.name)
+					else
+						l_vuar1.set_local_name (l_as.feature_name.name)
+					end
+					context.init_error (l_vuar1)
+					l_vuar1.set_location (l_as.feature_name)
 				end
-				context.init_error (l_vuar1)
-				l_vuar1.set_location (l_as.feature_name)
-				error_handler.insert_error (l_vuar1)
-				reset_types
+				look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
 			else
 				set_type (l_type, l_as)
 			end
@@ -2914,24 +2976,23 @@ feature {NONE} -- Implementation
 					l_arg_type := l_arg_type.as_attached_in (context.current_class)
 				end
 				set_type (l_arg_type, l_as)
-				if l_as.parameters /= Void then
+				if is_byte_node_enabled then
+					create l_argument
+					l_argument.set_position (l_arg_pos)
+					last_byte_node := l_argument
+				end
+				if not is_inherited then
+						-- set some type attributes of the node
+					l_as.enable_argument
+					l_as.set_argument_position (l_arg_pos)
+					l_as.set_class_id (class_id_of (last_type))
+				end
+				if attached l_as.parameters as p then
 					create l_vuar1
 					context.init_error (l_vuar1)
 					l_vuar1.set_arg_name (l_as.feature_name.name)
 					l_vuar1.set_location (l_as.feature_name)
-					error_handler.insert_error (l_vuar1)
-				else
-					if is_byte_node_enabled then
-						create l_argument
-						l_argument.set_position (l_arg_pos)
-						last_byte_node := l_argument
-					end
-					if not is_inherited then
-							-- set some type attributes of the node
-						l_as.enable_argument
-						l_as.set_argument_position (l_arg_pos)
-						l_as.set_class_id (class_id_of (last_type))
-					end
+					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_arg_type)
 				end
 			else
 					-- Look for a local if in a pre- or postcondition
@@ -2950,13 +3011,6 @@ feature {NONE} -- Implementation
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
 						last_access_writable := False
-						if l_as.parameters /= Void then
-							create l_vuar1
-							context.init_error (l_vuar1)
-							l_vuar1.set_local_name (l_as.feature_name.name)
-							l_vuar1.set_location (l_as.feature_name)
-							error_handler.insert_error (l_vuar1)
-						end
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						if is_byte_node_enabled then
@@ -2968,17 +3022,28 @@ feature {NONE} -- Implementation
 							l_as.set_class_id (class_id_of (l_type))
 						end
 						set_type (l_type, l_as)
+						if attached l_as.parameters as p then
+							create l_vuar1
+							context.init_error (l_vuar1)
+							l_vuar1.set_local_name (l_as.feature_name.name)
+							l_vuar1.set_location (l_as.feature_name)
+							look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
+						end
 					else
 							-- Look for a feature
 						l_feature := Void
 						if is_inherited then
 							l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
 						end
-						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
+						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False, True)
 						if error_level = l_error_level and not is_inherited then
-								-- set some type attributes of the node
+								-- Record routine and class IDs for descendants and tools.
 							set_routine_ids (last_routine_id_set, l_as)
-							l_as.set_class_id (l_last_id)  -- last_type_of_call.associated_class.class_id -- seems to be wrong...
+							l_as.set_class_id (l_last_id)
+						end
+						if attached last_vuar_error as e and then attached last_type as t then
+								-- Feature without arguments is found, try parenthesis alias on it.
+							look_for_parenthesis_alias (l_as.internal_parameters, e, t)
 						end
 					end
 				end
@@ -3121,12 +3186,16 @@ feature {NONE} -- Implementation
 					l_precursor_keyword.position, l_precursor_keyword.location_count,
 					l_precursor_keyword.character_column, l_precursor_keyword.character_position, l_precursor_keyword.character_count)
 				process_call (context.current_class_type, l_parent_type, l_precursor_id, l_feature_i,
-					l_as.parameters, False, False, False, True)
+					l_as.parameters, False, False, False, True, True)
 
 					-- Now `last_type' is the type we got from the processing of `Precursor'. We have to adapt
 					-- it to the current class, but instead of using the malformed `last_type' we use `l_orig_result_type'.
 				set_type (l_orig_result_type.evaluated_type_in_descendant
 					(l_parent_type.base_class, context.current_class, context.current_feature), l_as)
+				if attached last_vuar_error as e and then attached last_type as t then
+						-- Feature without arguments is found, try parenthesis alias on it.
+					look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+				end
 			else
 				reset_types
 			end
@@ -3193,12 +3262,13 @@ feature {NONE} -- Implementation
 			l_target_access: ACCESS_B
 			l_call: CALL_B
 			l_nested: NESTED_B
+			l_intermediate_nested: NESTED_B
 			l_is_assigner_call: BOOLEAN
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
 		do
 			check attached last_type as c then
-					-- Mask out assigner call flag for target of the call
+					-- Mask out assigner call flag for target of the call.
 				l_is_assigner_call := is_assigner_call
 				is_assigner_call := False
 					-- Type check the target
@@ -3209,7 +3279,16 @@ feature {NONE} -- Implementation
 					l_is_qualified_call := is_qualified_call
 					is_qualified_call := True
 					if is_byte_node_enabled then
-						l_target_access ?= last_byte_node
+						if attached {ACCESS_B} last_byte_node as a then
+							l_target_access := a
+						else
+								-- Target generated an additional nested byte node.
+								-- The byte node tree has to be normalized.
+							check attached {NESTED_B} last_byte_node as n then
+								l_intermediate_nested := n
+								l_target_access := n.target
+							end
+						end
 					end
 					l_error_level := error_level
 						-- Check the target of a separate feature call.
@@ -3227,11 +3306,24 @@ feature {NONE} -- Implementation
 							check
 								l_call_not_void: l_call /= Void
 							end
+
 							create l_nested
 							l_nested.set_target (l_target_access)
-							l_nested.set_message (l_call)
-
 							l_target_access.set_parent (l_nested)
+
+							if attached l_intermediate_nested then
+									-- Change intermediate nested to take intermediate message as a target to which message is applied.
+								check attached {ACCESS_B} l_intermediate_nested.message as m then
+									l_intermediate_nested.set_target (m)
+									m.set_parent (l_intermediate_nested)
+									l_intermediate_nested.set_message (l_call)
+									l_call.set_parent (l_intermediate_nested)
+								end
+									-- Use intermediate nested as a message.
+								l_call := l_intermediate_nested
+							end
+
+							l_nested.set_message (l_call)
 							l_call.set_parent (l_nested)
 
 							last_byte_node := l_nested
@@ -3687,7 +3779,7 @@ feature {NONE} -- Implementation
 						l_feat_name.set_position (l_location.line, l_location.column,
 							l_location.position + l_location.location_count, 0,
 							l_location.character_column, l_location.character_position + l_location.character_count, 0)
-						process_call (last_type, Void, l_feat_name, l_feat, Void, False, False, True, False)
+						process_call (last_type, Void, l_feat_name, l_feat, Void, False, False, True, False, False)
 					else
 							-- We should not get there, but just in case we generate an internal
 							-- error message.
@@ -4081,7 +4173,7 @@ feature {NONE} -- Implementation
 					end
 
 						-- Type check the call
-					process_call (l_target_type, Void, l_feature_name, l_feature, l_as.operands, False, True, l_as.has_target, False)
+					process_call (l_target_type, Void, l_feature_name, l_feature, l_as.operands, False, True, l_as.has_target, False, False)
 					if error_level = l_error_level then
 						if l_feature = Void then
 							l_named_tuple ?= l_target_type
@@ -5050,24 +5142,16 @@ feature {NONE} -- Implementation
 	process_bracket_as (l_as: BRACKET_AS)
 		local
 			was_assigner_call: BOOLEAN
-			target_type: TYPE_A
 			constrained_target_type: TYPE_A
 			target_expr: EXPR_B
 			target_access: ACCESS_EXPR_B
-			target_class: CLASS_C
 			bracket_feature: FEATURE_I
 			id_feature_name: ID_AS
 			location: LOCATION_AS
 			call_b: CALL_B
 			nested_b: NESTED_B
-			vuex: VUEX
-			vwbr: VWBR
-			l_formal: FORMAL_A
 			l_is_multi_constraint: BOOLEAN
-			l_type_set: TYPE_SET_A
-			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
-			l_last_class_id: INTEGER
 			l_access_b: ACCESS_B
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
@@ -5082,115 +5166,59 @@ feature {NONE} -- Implementation
 				-- Check target
 			l_as.target.process (Current)
 			if attached last_type as l_target_type then
-				if l_target_type.is_separate then
-					validate_separate_target (l_as.target)
-				end
-				target_type := last_type.actual_type
 				if is_byte_node_enabled then
 					target_expr ?= last_byte_node
 				end
+				if l_target_type.is_separate then
+					validate_separate_target (l_as.target)
+				end
+				l_is_multi_constraint := attached {FORMAL_A} last_type.actual_type as p and then not p.is_single_constraint_without_renaming (context.current_class)
+				lookup_feature_alias (bracket_str, l_as, l_as.left_bracket_location, l_target_type)
 
-				check actual_type_called: target_type = target_type.actual_type end
-				l_formal ?= target_type
-				if l_formal /= Void then
-					if l_formal.is_single_constraint_without_renaming (l_context_current_class) then
-						constrained_target_type := l_formal.constrained_type (context.current_class)
-					else
-						l_is_multi_constraint := True
-					end
+				if attached last_alias_error as e then
+					error_handler.insert_error (e)
+					last_alias_error := Void
 				else
-					check actual_type_called: target_type = target_type.actual_type end
-					constrained_target_type := target_type
+					bracket_feature := last_alias_feature
 				end
 
-				if l_is_multi_constraint then
-					l_type_set := l_formal.constraints (l_context_current_class)
-					l_result_tuple := l_type_set.feature_i_state_by_alias_name (bracket_str)
-					if l_result_tuple.features_found_count > 1 then
-						error_handler.insert_error (new_vtmc_error (create {ID_AS}.initialize (bracket_str),
-							l_formal.position, l_context_current_class, False))
-					elseif l_result_tuple.features_found_count = 1 then
-						constrained_target_type := l_result_tuple.class_type_of_feature
-						target_class := constrained_target_type.base_class
-						bracket_feature := l_result_tuple.feature_item
-					end
-				else
-					check
-						constrained_target_type /= Void and then constrained_target_type = constrained_target_type.actual_type
-					end
-						-- Check if target is not of type NONE
-					if constrained_target_type.is_none then
-						create vuex.make_for_none (bracket_str)
-						context.init_error (vuex)
-						vuex.set_location (l_as.left_bracket_location)
-						error_handler.insert_error (vuex)
-					else
-							-- Check if bracket feature exists
-						target_class := constrained_target_type.base_class
-						bracket_feature := target_class.feature_table.alias_item (bracket_str)
-					end
-				end
-
-				if error_level = l_error_level then
-					if bracket_feature = Void then
-							-- Feature with bracket alias is not found
-						create {VWBR1} vwbr
-						context.init_error (vwbr)
-						vwbr.set_location (l_as.left_bracket_location)
-						if l_is_multi_constraint then
-							check type_set_not_loose: not l_type_set.is_loose end
-							vwbr.set_target_type_set (l_type_set)
-						else
-							vwbr.set_target_type (constrained_target_type)
-						end
-
-						error_handler.insert_error (vwbr)
-					else
-						if not is_inherited then
-							l_last_class_id := target_class.class_id
-							l_as.set_class_id (l_last_class_id)
-							set_routine_ids (bracket_feature.rout_id_set, l_as)
-						else
-							l_last_class_id := l_as.class_id
-						end
-
-							-- Process arguments
-						create id_feature_name.initialize_from_id (bracket_feature.feature_name_id)
-						location := l_as.left_bracket_location
-						id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
-							location.character_column, location.character_position, location.character_count)
-							-- Restore assigner call flag
-						is_assigner_call := was_assigner_call
-						last_calls_target_type := constrained_target_type
-							-- Process call to bracket feature
-						l_is_qualified_call := is_qualified_call
-						is_qualified_call := True
-						process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
-						is_qualified_call := l_is_qualified_call
-						if error_level = l_error_level then
-							if is_byte_node_enabled then
-								create nested_b
-								create target_access
-								target_access.set_expr (target_expr)
-								target_access.set_parent (nested_b)
-								if l_is_multi_constraint then
-									l_access_b ?= last_byte_node
-										-- Last generated bytenode is from `process_call'.
-									check is_access_b: l_access_b /= Void end
-									l_access_b.set_multi_constraint_static (constrained_target_type)
-									call_b := l_access_b
-								else
-									call_b ?= last_byte_node
-								end
-
-								check
-									call_b_not_void: call_b /= Void
-								end
-								call_b.set_parent (nested_b)
-								nested_b.set_message (call_b)
-								nested_b.set_target (target_access)
-								last_byte_node := nested_b
+				if l_error_level = error_level then
+						-- Process arguments
+					create id_feature_name.initialize_from_id (bracket_feature.feature_name_id)
+					location := l_as.left_bracket_location
+					id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
+						location.character_column, location.character_position, location.character_count)
+						-- Restore assigner call flag
+					is_assigner_call := was_assigner_call
+					constrained_target_type := last_calls_target_type
+						-- Process call to bracket feature
+					l_is_qualified_call := is_qualified_call
+					is_qualified_call := True
+					process_call (last_type, Void, id_feature_name, last_alias_feature, l_as.operands, False, False, True, False, False)
+					is_qualified_call := l_is_qualified_call
+					if error_level = l_error_level then
+						if is_byte_node_enabled then
+							create nested_b
+							create target_access
+							target_access.set_expr (target_expr)
+							target_access.set_parent (nested_b)
+							if l_is_multi_constraint then
+								l_access_b ?= last_byte_node
+									-- Last generated bytenode is from `process_call'.
+								check is_access_b: l_access_b /= Void end
+								l_access_b.set_multi_constraint_static (constrained_target_type)
+								call_b := l_access_b
+							else
+								call_b ?= last_byte_node
 							end
+
+							check
+								call_b_not_void: call_b /= Void
+							end
+							call_b.set_parent (nested_b)
+							nested_b.set_message (call_b)
+							nested_b.set_target (target_access)
+							last_byte_node := nested_b
 						end
 					end
 				end
@@ -6158,7 +6186,7 @@ feature {NONE} -- Implementation
 										-- to be reported.
 									l_last_type := last_type
 										-- Type check the call
-									process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
+									process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False, False)
 										-- Even though this code is very similar to the one in `process_access_feat_as' we do not
 										-- need to adapt last_type as this is a creation procedure without a result, but we still
 										-- need to restore it.
@@ -6180,7 +6208,7 @@ feature {NONE} -- Implementation
 									-- We set `last_calls_target_type' in order to be able to use the same code as we use in the multiconstrained case.
 								last_calls_target_type := l_creation_type
 									-- Type check the call
-								process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
+								process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False, False)
 							end
 						else
 								-- Type check the call
@@ -6190,7 +6218,7 @@ feature {NONE} -- Implementation
 							end
 								-- We set last_calls_target_type in case we have a multi constrained formal.
 							last_calls_target_type := l_creation_type
-							process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
+							process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False, False)
 						end
 						is_qualified_call := l_is_qualified_call
 
@@ -8228,6 +8256,98 @@ feature {NONE} -- Implementation
 			process_eiffel_list (l_as)
 		end
 
+feature {NONE} -- Feature lookup
+
+	lookup_feature_alias (n: STRING; a: ID_SET_ACCESSOR; l: LOCATION_AS; t: TYPE_A)
+			-- Look for a feature alias `n' called on a target of type `t' for AST node `a' at location `l'
+			-- and make it available in `last_alias_feature' if found without an error,
+			-- or set `last_alias_error' otherwise.
+		local
+			c: CLASS_C
+			target_type: TYPE_A
+			base_target_type: detachable TYPE_A
+			target_class: CLASS_C
+			formal_generic: detachable FORMAL_A
+			found_features: TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER_32]
+			vkcn3: VKCN3
+			vwbr: VWBR1
+			vuex: VUEX
+			f: FEATURE_I
+		do
+			last_alias_feature := Void
+			last_alias_error := Void
+			c := context.current_class
+			target_type := t.actual_type
+			check actual_type_called: target_type = target_type.actual_type end
+			if attached {FORMAL_A} target_type as p then
+				formal_generic := p
+				if p.is_single_constraint_without_renaming (c) then
+						-- This is a formal generic with one contraint without any feature renaming.
+					base_target_type := p.constrained_type (c)
+				end
+			else
+					-- This is a regular class type.
+				base_target_type := target_type
+			end
+
+			if attached base_target_type then
+					-- Base class is known.
+				if base_target_type.is_void then
+					create vkcn3
+					context.init_error (vkcn3)
+					vkcn3.set_location (l)
+					last_alias_error := vkcn3
+				elseif is_inherited then
+					f := base_target_type.base_class.feature_of_rout_id (a.routine_ids.first)
+				elseif base_target_type.is_none then
+						-- Check if target is not of type NONE
+					create vuex.make_for_none (n)
+					context.init_error (vuex)
+					vuex.set_location (l)
+					last_alias_error := vuex
+				else
+						-- Check if bracket feature exists.
+					target_class := base_target_type.base_class
+					f := target_class.feature_table.alias_item (n)
+				end
+			elseif is_inherited then
+					-- We need to iterate through the type set to find the routine of ID.
+				f := c.constraints (formal_generic.position).constraining_types
+					(c).feature_i_list_by_rout_id (a.routine_ids.first).first.feature_item
+			else
+				found_features := formal_generic.constraints (c).feature_i_state_by_alias_name (n)
+				if found_features.features_found_count > 1 then
+					last_alias_error := new_vtmc_error (create {ID_AS}.initialize (n), formal_generic.position, c, True)
+				elseif found_features.features_found_count = 1 then
+					base_target_type := found_features.class_type_of_feature
+					target_class := base_target_type.base_class
+					f := found_features.feature_item
+				end
+			end
+
+			if attached f then
+				last_alias_feature := f
+				last_calls_target_type := base_target_type
+				if not is_inherited then
+						-- Record routine and class IDs in the AST node for descendants.
+					set_routine_ids (f.rout_id_set, a)
+					a.set_class_id (target_class.class_id)
+				end
+			elseif not attached last_alias_error then
+					-- Feature with given alias is not found
+				create vwbr
+				context.init_error (vwbr)
+				vwbr.set_location (l)
+				if attached base_target_type then
+					vwbr.set_target_type (base_target_type)
+				else
+					check type_set_not_loose: not formal_generic.constraints (c).is_loose end
+					vwbr.set_target_type_set (formal_generic.constraints (c))
+				end
+				last_alias_error := vwbr
+			end
+		end
+
 feature {NONE} -- Predefined types
 
 	manifest_string_type: CL_TYPE_A
@@ -8254,6 +8374,112 @@ feature {NONE} -- Predefined types
 				-- Type of a strip is a frozen array.
 			Result.set_frozen_mark
 		end
+
+feature {NONE} -- Parenthesis alias
+
+	look_for_parenthesis_alias (p: PARAMETER_LIST_AS; e: ERROR; t: TYPE_A)
+			-- Look for parenthesis alias for the last access with arguments `p' on type `t' and error `e' if there is no such an alias.
+		require
+			p_attached: attached p
+		local
+			was_assigner_call: BOOLEAN
+			constrained_target_type: TYPE_A
+			target_access_expr: ACCESS_EXPR_B
+			id_feature_name: ID_AS
+			location: LOCATION_AS
+			call_b: CALL_B
+			nested_b: NESTED_B
+			l_is_multi_constraint: BOOLEAN
+			l_access_b: ACCESS_B
+			l_is_qualified_call: BOOLEAN
+			l_error_level: NATURAL_32
+			l_report_error: BOOLEAN
+			l_target_type: TYPE_A
+		do
+			last_alias_feature := Void
+			last_alias_error := Void
+				-- If something goes wrong, an original error is reported rather then related to parenthesis alias.
+			l_report_error :=  True
+				-- Clean assigner call flag for bracket target
+			was_assigner_call := is_assigner_call
+			is_assigner_call := False
+
+			l_error_level := error_level
+
+				-- Check if there are parentheses.
+			if attached p then
+				l_target_type := t
+			end
+
+			if attached l_target_type then
+				if is_byte_node_enabled then
+					create nested_b
+					if attached {ACCESS_B} last_byte_node as a then
+							-- Target is a (potentially qualified) feature call.
+						a.set_parent (nested_b)
+						nested_b.set_target (a)
+					else
+							-- Target is an (unqualified) expression.
+						check attached {EXPR_B} last_byte_node as v then
+							create target_access_expr
+							target_access_expr.set_expr (v)
+							target_access_expr.set_parent (nested_b)
+							nested_b.set_target (target_access_expr)
+						end
+					end
+				end
+				l_is_multi_constraint := attached {FORMAL_A} t.actual_type as g and then not g.is_single_constraint_without_renaming (context.current_class)
+				lookup_feature_alias (parentheses_str, p, p.first_token (void), l_target_type)
+					-- Report original error if alias feature is not found.
+				l_report_error := attached {VWBR} last_alias_error or else attached {VKCN3} last_alias_error
+				if attached last_alias_feature as alias_feature then
+						-- Process arguments
+					create id_feature_name.initialize_from_id (alias_feature.feature_name_id)
+					location := p.start_location
+					id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
+						location.character_column, location.character_position, location.character_count)
+						-- Restore assigner call flag
+					is_assigner_call := was_assigner_call
+					constrained_target_type := last_calls_target_type
+						-- Process call to bracket feature
+					l_is_qualified_call := is_qualified_call
+					is_qualified_call := True
+					process_call (t, Void, id_feature_name, alias_feature, p.meaningful_content, False, False, True, False, False)
+					is_qualified_call := l_is_qualified_call
+					if error_level = l_error_level and then attached nested_b then
+						if l_is_multi_constraint then
+							l_access_b ?= last_byte_node
+								-- Last generated bytenode is from `process_call'.
+							check is_access_b: l_access_b /= Void end
+							l_access_b.set_multi_constraint_static (constrained_target_type)
+							call_b := l_access_b
+						else
+							call_b ?= last_byte_node
+						end
+
+						check
+							call_b_not_void: call_b /= Void
+						end
+						call_b.set_parent (nested_b)
+						nested_b.set_message (call_b)
+						last_byte_node := nested_b
+					end
+				end
+				if not l_report_error and then l_target_type.is_separate then
+					validate_separate_target (p)
+				end
+			end
+			if l_report_error then
+				error_handler.insert_error (e)
+				reset_types
+			elseif error_level /= l_error_level then
+				reset_types
+			end
+		end
+
+	last_vuar_error: detachable ERROR
+			-- Last VUAR error set by `process_call' when found feature has no formal arguments, but there are actual arguments.
+			-- Used to delay error report in case there is a parenthesis alias.
 
 feature {NONE} -- Implementation
 
@@ -8868,18 +9094,30 @@ feature {NONE} -- Implementation
 			a_pos_valid: a_pos <= a_feature.argument_count
 			a_actual_type_not_void: a_actual_type /= Void
 			a_formal_type_not_void: a_formal_type /= Void
-		local
-			l_vuar2: VUAR2
 		do
-			create l_vuar2
-			context.init_error (l_vuar2)
-			l_vuar2.set_called_feature (a_feature, a_in_class_id)
-			l_vuar2.set_argument_position (a_pos)
-			l_vuar2.set_argument_name (a_feature.arguments.item_name (a_pos))
-			l_vuar2.set_actual_type (a_actual_type)
-			l_vuar2.set_formal_type (a_formal_type)
-			l_vuar2.set_location (a_params.i_th (a_pos).start_location)
-			error_handler.insert_error (l_vuar2)
+			error_handler.insert_error (vuar2_error (a_feature, a_in_class_id, a_pos, a_actual_type, a_formal_type, a_params.i_th (a_pos).start_location))
+		end
+
+	vuar2_error (a_feature: FEATURE_I; a_in_class_id, a_pos: INTEGER; a_actual_type, a_formal_type: TYPE_A; a_location: LOCATION_AS): VUAR2
+			-- VUAR2 error in call to `a_feature' from `a_in_class_id' class for argument at position `a_pos'
+			-- with actual type `a_actual_type', formal type `a_formal_type' at location `a_location'.
+		require
+			a_feature_not_void: attached a_feature
+			a_in_class_id_non_negative: a_in_class_id >= 0
+			a_pos_positive: a_pos > 0
+			a_pos_valid: a_pos <= a_feature.argument_count
+			a_actual_type_not_void: attached a_actual_type
+			a_formal_type_not_void: attached a_formal_type
+			a_location_attachedd: attached a_location
+		do
+			create Result
+			context.init_error (Result)
+			Result.set_called_feature (a_feature, a_in_class_id)
+			Result.set_argument_position (a_pos)
+			Result.set_argument_name (a_feature.arguments.item_name (a_pos))
+			Result.set_actual_type (a_actual_type)
+			Result.set_formal_type (a_formal_type)
+			Result.set_location (a_location)
 		end
 
 	process_type_compatibility (l_target_type: like last_type)
@@ -10824,7 +11062,7 @@ feature {INSPECT_CONTROL} -- AST modification
 			a_attached: attached a
 		do
 			if not ids.is_equal_id_list (a) then
-				a.set_id_set (ids)
+				a.set_routine_ids (ids)
 					-- Record that AST node is modified.
 				tmp_ast_server.touch (context.current_class.class_id)
 				is_ast_modified := True

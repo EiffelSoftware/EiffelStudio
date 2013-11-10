@@ -18,10 +18,8 @@ inherit
 
 	FEATURE_ID_AS
 		rename
-			id_set as routine_ids,
 			make as make_feature_id,
-			name as feature_name,
-			set_id_set as set_routine_ids
+			name as feature_name
 		redefine
 			is_equivalent,
 			last_token,

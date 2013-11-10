@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Abstract description of an access to the precursor of%
 		%an Eiffel feature. Version for Bench."
@@ -21,13 +21,6 @@ inherit
 		end
 
 	ID_SET_ACCESSOR
-		rename
-			make as make_id_set,
-			id_set as routine_ids,
-			set_id_set as set_routine_ids
-		undefine
-			copy, is_equal
-		end
 
 create
 	initialize
@@ -93,9 +86,6 @@ feature -- Attributes
 	is_precursor: BOOLEAN = True
 			-- Precursor makes reference to a class
 
-	class_id: INTEGER
-			-- Class ID where Current is coming from.
-
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Attributes
 
 	access_name: detachable STRING
@@ -154,18 +144,6 @@ feature -- Comparison
 				equivalent (parameters, other.parameters)
 		end
 
-feature -- Setting
-
-	set_class_id (a_class_id: like class_id)
-			-- Set `class_id' to `a_class_id'.
-		require
-			a_class_id_ok: a_class_id > 0 or a_class_id = -1
-		do
-			class_id := a_class_id
-		ensure
-			class_id_set: class_id = a_class_id
-		end
-
 invariant
 	precursor_keyword_not_void: precursor_keyword /= Void
 	valid_parent_base_class: parent_base_class /= Void implies parent_base_class.generics = Void
@@ -174,7 +152,7 @@ invariant
 	parameter_count_correct: (parameters = Void implies parameter_count = 0) and (parameters /= Void implies parameter_count > 0)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

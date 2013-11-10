@@ -639,7 +639,7 @@ feature {INSPECT_CONTROL} -- AST modification
 			--| Redefined to avoid doing the `touch' for expression evaluation
 		do
 			if not ids.is_equal_id_list (a) then
-				a.set_id_set (ids)
+				a.set_routine_ids (ids)
 --					-- Record that AST node is modified.
 --				tmp_ast_server.touch (context.current_class.class_id)
 --				is_ast_modified := True
@@ -647,7 +647,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

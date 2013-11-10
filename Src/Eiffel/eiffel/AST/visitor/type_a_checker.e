@@ -850,7 +850,7 @@ feature {NONE} -- Implementation
 								routine_id [i] := f.rout_id_set.first
 								if attached ast and then tmp_ast_server.is_loaded (current_class.class_id) then
 										-- Update AST with the type information for refactoring.
-									ast.chain [i + 1].set_id_set (f.rout_id_set)
+									ast.chain [i + 1].set_routine_ids (f.rout_id_set)
 									ast.chain [i + 1].set_class_id (c.class_id)
 									tmp_ast_server.touch (current_class.class_id)
 								end

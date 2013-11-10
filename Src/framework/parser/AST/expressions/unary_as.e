@@ -1,5 +1,5 @@
-note
-	description: "Abstract class for unary expression, Bench version"
+﻿note
+	description: "Abstract class for unary expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,13 +19,6 @@ inherit
 		end
 
 	ID_SET_ACCESSOR
-		rename
-			make as make_id_set,
-			id_set as routine_ids,
-			set_id_set as set_routine_ids
-		undefine
-			is_equal, copy
-		end
 
 feature {NONE} -- Initialization
 
@@ -71,9 +64,6 @@ feature -- Attributes
 
 	expr: EXPR_AS
 			-- Expression
-
-	class_id: INTEGER
-			-- The class id of the qualified call.
 
 feature -- Status report
 
@@ -169,14 +159,6 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (expr, other.expr)
-		end
-
-feature -- Setting
-
-	set_class_id (a_class_id: like class_id)
-			-- Set `class_id' to `a_class_id'.
-		do
-			class_id := a_class_id
 		end
 
 feature {UNARY_AS} -- Replication

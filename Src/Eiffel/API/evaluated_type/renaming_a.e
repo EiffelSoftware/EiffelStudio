@@ -322,6 +322,14 @@ feature {NONE} -- Implementation
 						-- Invalid convert mark
 					create {VFAV3_SYNTAX} l_vfav.make (a_name)
 				end
+			elseif a_name.is_parentheses then
+				if l_argument_count < 1 then
+						-- Invalid parenthesis alias.
+					create {VFAV4_SYNTAX} l_vfav.make (a_name)
+				elseif a_name.has_convert_mark then
+						-- Invalid convert mark.
+					create {VFAV3_SYNTAX} l_vfav.make (a_name)
+				end
 			elseif
 				a_old_feature.has_return_value and then
 				((l_argument_count = 0 and then a_name.is_valid_unary_operator (l_operator)) or else

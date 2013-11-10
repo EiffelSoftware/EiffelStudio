@@ -798,24 +798,35 @@ end;
 								end
 								if new_alias_name_id > 0 then
 									if new_alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
-											-- Bracket alias
+											-- Bracket alias.
 										l_inherit_info.a_feature.set_is_binary (False)
 										l_inherit_info.a_feature.set_is_bracket (True)
+										l_inherit_info.a_feature.set_is_parentheses (False)
 										l_inherit_info.a_feature.set_is_unary (False)
-									elseif l_inherit_info.a_feature.argument_count = 0 then
-											-- Unary operator
+									elseif new_alias_name_id = {PREDEFINED_NAMES}.parentheses_symbol_id then
+											-- Parenthesis alias.
 										l_inherit_info.a_feature.set_is_binary (False)
 										l_inherit_info.a_feature.set_is_bracket (False)
+										l_inherit_info.a_feature.set_is_parentheses (True)
+										l_inherit_info.a_feature.set_is_unary (False)
+									elseif l_inherit_info.a_feature.argument_count = 0 then
+											-- Unary operator.
+										l_inherit_info.a_feature.set_is_binary (False)
+										l_inherit_info.a_feature.set_is_bracket (False)
+										l_inherit_info.a_feature.set_is_parentheses (False)
 										l_inherit_info.a_feature.set_is_unary (True)
 									else
-											-- Binary operator
+											-- Binary operator.
 										l_inherit_info.a_feature.set_is_binary (True)
 										l_inherit_info.a_feature.set_is_bracket (False)
+										l_inherit_info.a_feature.set_is_parentheses (False)
 										l_inherit_info.a_feature.set_is_unary (False)
 									end
 								else
+										-- Feature name without alias.
 									l_inherit_info.a_feature.set_is_binary (False)
 									l_inherit_info.a_feature.set_is_bracket (False)
+									l_inherit_info.a_feature.set_is_parentheses (False)
 									l_inherit_info.a_feature.set_is_unary (False)
 								end
 									-- Remove the inherit info from its old location
@@ -1343,6 +1354,7 @@ end;
 			Result.set_is_infix (feat.is_infix)
 			Result.set_is_prefix (feat.is_prefix)
 			Result.set_is_bracket (feat.is_bracket)
+			Result.set_is_parentheses (feat.is_parentheses)
 			Result.set_is_binary (feat.is_binary)
 			Result.set_is_unary (feat.is_unary)
 			Result.set_has_convert_mark (feat.has_convert_mark)
@@ -1998,6 +2010,8 @@ feature {NONE} -- Implementation
 			if inherited_features.is_alias_conflict then
 				if f.is_bracket then
 					create {VFAV2} vfav
+				elseif f.is_parentheses then
+					create {VFAV4} vfav
 				else
 					create {VFAV1} vfav
 				end

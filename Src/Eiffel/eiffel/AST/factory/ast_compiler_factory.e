@@ -172,10 +172,18 @@ feature -- Access
 						end
 						if feature_name.is_bracket then
 							if not is_query or else argument_count < 1 then
-									-- Invalid bracket alias
+									-- Invalid bracket alias.
 								create {VFAV2_SYNTAX} vfav.make (feature_name)
 							elseif feature_name.has_convert_mark then
-									-- Invalid convert mark
+									-- Invalid convert mark.
+								create {VFAV3_SYNTAX} vfav.make (feature_name)
+							end
+						elseif feature_name.is_parentheses then
+							if argument_count < 1 then
+									-- Invalid parenthesis alias.
+								create {VFAV4_SYNTAX} vfav.make (feature_name)
+							elseif feature_name.has_convert_mark then
+									-- Invalid convert mark.
 								create {VFAV3_SYNTAX} vfav.make (feature_name)
 							end
 						elseif is_query and then (

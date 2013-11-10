@@ -3,7 +3,7 @@ note
 	description: "Parser token codes"
 	generator: "geyacc version 3.9"
 
-deferred class EIFFEL_TOKENS
+class EIFFEL_TOKENS
 
 inherit
 
@@ -306,6 +306,8 @@ feature -- Access
 				Result := "TE_STR_FREE"
 			when TE_STR_BRACKET then
 				Result := "TE_STR_BRACKET"
+			when TE_STR_PARENTHESES then
+				Result := "TE_STR_PARENTHESES"
 			else
 				Result := yy_character_token_name (a_token)
 			end
@@ -448,5 +450,6 @@ feature -- Token codes
 	TE_STR_NOT: INTEGER = 390
 	TE_STR_FREE: INTEGER = 391
 	TE_STR_BRACKET: INTEGER = 392
+	TE_STR_PARENTHESES: INTEGER = 393
 
 end

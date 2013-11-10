@@ -84,6 +84,11 @@ feature -- Status report
 		do
 		end
 
+	is_parentheses: BOOLEAN
+			-- Is feature alias (if any) parentheses?
+		do
+		end
+
 	is_binary: BOOLEAN
 			-- Is feature alias (if any) a binary operator?
 		do
@@ -167,6 +172,7 @@ feature -- Status setting
 		require
 			has_alias: alias_name /= Void
 			not_is_bracket: not is_bracket
+			not_is_parentheses: not is_parentheses
 			not_is_prefix: not is_prefix
 			is_valid_binary: is_valid_binary
 		do
@@ -179,6 +185,7 @@ feature -- Status setting
 		require
 			has_alias: alias_name /= Void
 			not_is_bracket: not is_bracket
+			not_is_parentheses: not is_parentheses
 			not_is_infix: not is_infix
 			is_valid_unary: is_valid_unary
 		do
@@ -224,11 +231,17 @@ feature {NONE} -- Implementation: helper functions
 		end
 
 invariant
-	consistent_operator_status: not (is_bracket and is_binary) and not (is_bracket and is_unary) and not (is_binary and is_unary)
-	consistent_operator_name: (is_bracket or is_binary or is_unary) = (alias_name /= Void)
+	consistent_operator_status:
+		not (is_bracket and is_binary) and
+		not (is_bracket and is_unary) and
+		not (is_bracket and is_parentheses) and
+		not (is_parentheses and is_binary) and
+		not (is_parentheses and is_unary) and
+		not (is_binary and is_unary)
+	consistent_operator_name: (is_bracket or is_parentheses or is_binary or is_unary) = (alias_name /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

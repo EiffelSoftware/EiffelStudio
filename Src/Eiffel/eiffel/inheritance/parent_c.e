@@ -228,6 +228,14 @@ feature
 									-- Bracket alias cannot have convert mark
 								create {VFAV3_VHRC} vfav
 							end
+						elseif alias_name_id = {PREDEFINED_NAMES}.parentheses_symbol_id then
+							if f.argument_count = 0 then
+									-- Parenthesis alias features should have at least one argument.
+								create {VFAV4_VHRC} vfav
+							elseif feature_renaming.has_convert_mark then
+									-- Parenthesis alias cannot have convert mark
+								create {VFAV3_VHRC} vfav
+							end
 						else
 							alias_name := extract_alias_name (names_heap.item (alias_name_id))
 							if
@@ -553,7 +561,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

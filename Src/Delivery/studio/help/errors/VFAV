@@ -18,3 +18,7 @@ VFAV, ECMA-367, 2nd edition, section 8.5.26
 
         3 If it includes a convert mark: it lists an
           Operator and f has one argument.
+
+        4 (Extension) If it lists a Parenthesis alias: f is
+          a routine with at least one argument, and no
+          other feature of C has a Parenthesis alias.

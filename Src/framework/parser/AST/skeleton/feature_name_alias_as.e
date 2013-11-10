@@ -19,6 +19,7 @@ inherit
 			is_binary,
 			is_bracket,
 			is_equivalent,
+			is_parentheses,
 			is_unary,
 			process,
 			set_is_binary,
@@ -40,13 +41,14 @@ feature {NONE} -- Creation
 			alias_id_not_empty: not alias_id.value.is_empty
 			valid_alias_name:
 				is_bracket_alias_name (alias_id.value) or else
+				is_parentheses_alias_name (alias_id.value) or else
 				is_valid_binary_operator (alias_id.value) or else
 				is_valid_unary_operator (alias_id.value)
 		do
 			initialize_id (feature_id)
 			alias_name := alias_id
 			has_convert_mark := convert_status
-			if not is_bracket then
+			if not is_bracket and then not is_parentheses then
 					-- Make sure we do not get "prefix %"or%"" or alike
 				if is_valid_unary_operator (alias_id.value) then
 					set_is_unary
@@ -92,8 +94,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := alias_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
+				Result := k
 			end
 		end
 
@@ -105,8 +107,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := convert_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
+				Result := k
 			end
 		end
 
@@ -119,7 +121,7 @@ feature -- Access
 			-- Operator associated with the feature (if any)
 			-- augmented with information about its arity in case of operator alias
 		do
-			if is_bracket then
+			if is_bracket or else is_parentheses then
 				create Result.initialize (alias_name.value)
 			else
 				create Result.initialize (get_internal_alias_name)
@@ -137,16 +139,22 @@ feature -- Status report
 			Result := alias_name.value.item (1) = '['
 		end
 
+	is_parentheses: BOOLEAN
+			-- <Precursor>
+		do
+			Result := alias_name.value.item (1) = '('
+		end
+
 	is_binary: BOOLEAN
 			-- Is feature alias (if any) a binary operator?
 		do
-			Result := not is_bracket and internal_is_binary
+			Result := not is_bracket and then internal_is_binary
 		end
 
 	is_unary: BOOLEAN
 			-- Is feature alias (if any) an unary operator?
 		do
-			Result := not is_bracket and not internal_is_binary
+			Result := not is_bracket and then not is_parentheses and then not internal_is_binary
 		end
 
 feature -- Status setting
@@ -209,7 +217,7 @@ invariant
 	alias_name_not_empty: not alias_name.value.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -32,12 +32,13 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 
 	is_mangled_alias_name (alias_name: READABLE_STRING_8): BOOLEAN
 			-- Does `alias_name' represent a valid mangled alias name?
-			--| I.e. either "[]", or "infix "op"", or "prefix "op"".
+			--| I.e. either "[]", "()", or "infix "op"", or "prefix "op"".
 		require
 			alias_name_not_void: alias_name /= Void
 		do
 			Result := not alias_name.is_empty and then
 				(syntax_checker.is_bracket_alias_name (alias_name) or
+				syntax_checker.is_parentheses_alias_name (alias_name) or
 				(alias_name.item (alias_name.count) = '"') and then
 				(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix (alias_name))) or
 				(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix (alias_name))))
@@ -61,7 +62,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 
 	is_mangled_alias_name_32 (alias_name: READABLE_STRING_32): BOOLEAN
 			-- Does `alias_name' represent a valid mangled alias name?
-			--| I.e. either "[]", or "infix "op"", or "prefix "op"".
+			--| I.e. either "[]", "()" or "infix "op"", or "prefix "op"".
 		require
 			alias_name_not_void: alias_name /= Void
 		do
@@ -185,6 +186,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			--   prefix "..."
 			--   infix "..."
 			--   []
+			--   ()
 		require
 			op_not_void: op /= Void
 			op_not_empty: not op.is_empty
@@ -193,15 +195,15 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			c: CHARACTER_8
 		do
 			c := op.item (1)
-			if c = '[' then
-					-- Bracket
-				Result := op
-			elseif c = 'p' then
-					-- Unary (prefix) operator
+			if c = 'p' then
+					-- Unary (prefix) operator.
 				Result := extract_symbol_from_prefix (op)
-			else
-					-- Binary (infix) operator
+			elseif c = 'i' then
+					-- Binary (infix) operator.
 				Result := extract_symbol_from_infix (op)
+			else
+					-- Bracket or parenthesis.
+				Result := op
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -212,6 +214,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			--   prefix "..."
 			--   infix "..."
 			--   []
+			--   ()
 		require
 			op_not_void: op /= Void
 			op_not_empty: not op.is_empty
@@ -220,15 +223,15 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			c: CHARACTER_32
 		do
 			c := op.item (1)
-			if c = '[' then
-					-- Bracket
-				Result := op
-			elseif c = 'p' then
-					-- Unary (prefix) operator
+			if c = 'p' then
+					-- Unary (prefix) operator.
 				Result := extract_symbol_from_prefix_32 (op)
-			else
-					-- Binary (infix) operator
+			elseif c = 'i' then
+					-- Binary (infix) operator.
 				Result := extract_symbol_from_infix_32 (op)
+			else
+					-- Bracket or parenthesis.
+				Result := op
 			end
 		ensure
 			result_not_void: Result /= Void

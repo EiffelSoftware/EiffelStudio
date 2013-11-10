@@ -242,6 +242,12 @@ feature -- Access
 			Result := feature_flags & is_bracket_mask = is_bracket_mask
 		end
 
+	frozen is_parentheses: BOOLEAN
+			-- Is feature a bracket one ?
+		do
+			Result := feature_flags & is_parentheses_mask = is_parentheses_mask
+		end
+
 	frozen is_binary: BOOLEAN
 			-- Is feature a binary one?
 		do
@@ -872,6 +878,14 @@ feature -- Setting
 			feature_flags := feature_flags.set_bit_with_mask (b, is_bracket_mask)
 		ensure
 			is_bracket_set: is_bracket = b
+		end
+
+	frozen set_is_parentheses (b: BOOLEAN)
+			-- Assign `b' to `is_parentheses'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_parentheses_mask)
+		ensure
+			is_parentheses_set: is_parentheses = b
 		end
 
 	frozen set_is_binary (b: BOOLEAN)
@@ -2962,6 +2976,7 @@ feature -- Undefinition
 			Result.set_has_postcondition (has_postcondition)
 			Result.set_has_false_postcondition (has_false_postcondition)
 			Result.set_is_bracket (is_bracket)
+			Result.set_is_parentheses (is_parentheses)
 			Result.set_is_binary (is_binary)
 			Result.set_is_unary (is_unary)
 			Result.set_has_convert_mark (has_convert_mark)
@@ -3078,6 +3093,7 @@ feature -- Replication
 			other.set_is_prefix (is_prefix)
 			other.set_is_origin (is_origin)
 			other.set_is_bracket (is_bracket)
+			other.set_is_parentheses (is_parentheses)
 			other.set_is_binary (is_binary)
 			other.set_is_unary (is_unary)
 			other.set_has_convert_mark (has_convert_mark)
@@ -3497,6 +3513,7 @@ feature {FEATURE_I} -- Implementation
 	is_type_evaluation_delayed_mask: NATURAL_32 =	0x1000_0000
 	has_false_postcondition_mask: NATURAL_32 =      0x2000_0000
 	is_hidden_in_debugger_call_stack_mask: NATURAL_32 = 0x4000_0000
+	is_parentheses_mask: NATURAL_32 =					0x8000_0000
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

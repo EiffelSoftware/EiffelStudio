@@ -150,6 +150,12 @@ feature -- Status report
 			Result := s /= Void and then s.same_string (bracket_str)
 		end
 
+	is_parentheses_alias_name (s: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `s' a parentheses  alias name?
+		do
+			Result := s /= Void and then s.same_string (parentheses_str)
+		end
+
 	is_constant (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel constant?
 		do

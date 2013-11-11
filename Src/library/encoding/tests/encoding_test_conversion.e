@@ -29,7 +29,7 @@ feature -- Test routines
 	similar_char_mapping_detection
 			-- Detect conversion to similar characters.
 		do
-			utf32.convert_to (iso_8859_1, {STRING_32} "。")
+			utf32.convert_to (iso_8859_1, {STRING_32} "“")
 			assert ("Data loss detected", utf32.last_conversion_lost_data)
 			if {PLATFORM}.is_windows then
 				assert ("Conversion done", utf32.last_conversion_successful)

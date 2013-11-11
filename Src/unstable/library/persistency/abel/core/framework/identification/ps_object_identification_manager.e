@@ -22,6 +22,21 @@ inherit
 create
 	make
 
+feature {PS_EIFFELSTORE_EXPORT} -- Status report
+
+	is_global_pool: BOOLEAN
+			-- Does `Current' maintain a global pool of object identifiers?
+
+feature {PS_EIFFELSTORE_EXPORT} -- Element change
+
+	set_is_global_pool (global_pool: like is_global_pool)
+			-- Assign `is_global_pool' with `global_pool'.
+		do
+			is_global_pool := global_pool
+		ensure
+			is_global_pool_assigned: is_global_pool = global_pool
+		end
+
 feature {PS_EIFFELSTORE_EXPORT} -- Identification
 
 	is_identified (an_object: ANY; transaction: PS_TRANSACTION): BOOLEAN
@@ -132,7 +147,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction management
 		require
 			registered: is_registered (transaction)
 		do
-			global_set.merge (local_set (transaction))
+			if is_global_pool then
+				global_set.merge (local_set (transaction))
+			end
 			-- That might be a bit misleading, but rollback just does cleanup
 			rollback (transaction)
 		ensure

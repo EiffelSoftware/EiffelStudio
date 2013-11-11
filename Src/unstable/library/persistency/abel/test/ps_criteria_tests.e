@@ -31,6 +31,8 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 			test_query_one_result_agent_string_contains
 			test_query_one_result_two_agent_criteria_anded
 			test_query_one_result_two_agent_criteria_ored
+
+			repository.set_global_pool (False)
 			repository.clean_db_for_testing
 		end
 
@@ -45,6 +47,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 			test_query_four_results_like_string
 			test_query_many_results_two_criteria_anded
 			test_query_many_results_two_criteria_ored
+			repository.set_global_pool (False)
 			repository.clean_db_for_testing
 		end
 
@@ -53,6 +56,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 		do
 			insert_data
 			test_query_many_results_three_mixed_criteria
+			repository.set_global_pool (False)
 			repository.clean_db_for_testing
 		end
 
@@ -360,6 +364,7 @@ feature {NONE} -- Initialization
 	insert_data
 			-- Insert the data needed for the tests into the repository
 		do
+			repository.set_global_pool (True)
 			across
 				test_data.people as p
 			loop

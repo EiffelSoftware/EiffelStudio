@@ -36,6 +36,7 @@ feature
 
 	mysql_tuple_queries
 		do
+			repository.clean_db_for_testing
 			tuple_query_tests.test_simple_query
 			tuple_query_tests.test_query_with_criteria
 			tuple_query_tests.test_query_projection

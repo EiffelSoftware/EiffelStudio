@@ -352,25 +352,38 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			special: SPECIAL[INTEGER]
 			query: PS_OBJECT_QUERY[SHARED_SPECIAL]
 			query2: PS_OBJECT_QUERY[SPECIAL[INTEGER]]
+			transaction: PS_TRANSACTION_CONTEXT
 		do
 			repository.clean_db_for_testing
 			create special.make_filled (0, 2)
 			create a.make(special)
 			create b.make(special)
 
-			executor.execute_insert (a)
-			executor.execute_insert (b)
+			transaction := repository.new_transaction_context
+
+			transaction.insert (a)
+			transaction.insert (b)
+			--executor.execute_insert (a)
+			--executor.execute_insert (b)
 
 			special[0] := 1
-			executor.execute_update (special)
+
+			transaction.update (special)
+--			executor.execute_update (special)
 
 			create query.make
-			executor.execute_query (query)
+
+			--executor.execute_query (query)
+			transaction.execute_query (query)
+
 			assert ("no result", not query.result_cursor.after)
 			across query as c loop
 				assert ("not void", attached c.item.special)
 				assert ("equal", c.item.is_deep_equal (a) and c.item.is_deep_equal (b))
 			end
+
+			query.close
+			transaction.commit
 		end
 
 		test_tuple

@@ -25,6 +25,7 @@ feature
 			query:PS_TUPLE_QUERY[PERSON]
 			res: LINKED_LIST[TUPLE[STRING, STRING, INTEGER]]
 		do
+			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make
 			create res.make
@@ -59,6 +60,7 @@ feature
 					end
 				end
 				)
+			repository.set_global_pool (False)
 		end
 
 
@@ -67,6 +69,7 @@ feature
 		local
 			query:PS_TUPLE_QUERY[PERSON]
 		do
+			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 
@@ -86,6 +89,7 @@ feature
 
 			query.result_cursor.forth
 			assert ("Too many items", query.result_cursor.after)
+			repository.set_global_pool (False)
 		end
 
 
@@ -94,6 +98,7 @@ feature
 		local
 			query:PS_TUPLE_QUERY[PERSON]
 		do
+			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 			query.set_projection (<<"last_name">>)
@@ -110,6 +115,7 @@ feature
 
 			query.result_cursor.forth
 			assert ("Too many items", query.result_cursor.after)
+			repository.set_global_pool (False)
 		end
 
 	test_query_criteria_not_in_projection
@@ -117,6 +123,7 @@ feature
 		local
 			query:PS_TUPLE_QUERY[PERSON]
 		do
+			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 			query.set_projection (<<"first_name">>)
@@ -133,6 +140,7 @@ feature
 
 			query.result_cursor.forth
 			assert ("Too many items", query.result_cursor.after)
+			repository.set_global_pool (False)
 		end
 
 
@@ -141,14 +149,21 @@ feature
 		local
 			query: PS_TUPLE_QUERY[REFERENCE_CLASS_1]
 			res: LINKED_LIST[TUPLE[INTEGER]]
+			transaction: PS_TRANSACTION_CONTEXT
 		do
 			repository.clean_db_for_testing
-			executor.execute_insert (test_data.reference_to_single_other)
+			transaction := repository.new_transaction_context
+
+--			repository.set_global_pool (True)
+--			executor.execute_insert (test_data.reference_to_single_other)
+			transaction.insert (test_data.reference_to_single_other)
+
 			create query.make
 			create res.make
 			assert ("Wrong default projection", query.projection.count = 1 and then	query.projection[1].is_equal ("ref_class_id"))
 
-			executor.execute_tuple_query (query)
+--			executor.execute_tuple_query (query)
+			transaction.execute_tuple_query (query)
 
 			assert ("Result is empty", not query.result_cursor.after)
 
@@ -171,6 +186,9 @@ feature
 					end
 				end
 			)
+			query.close
+			transaction.commit
+--			repository.set_global_pool (False)
 		end
 
 	test_query_objects_in_projection
@@ -180,6 +198,7 @@ feature
 			res: LINKED_LIST[TUPLE[INTEGER, detachable REFERENCE_CLASS_1]]
 		do
 			repository.clean_db_for_testing
+			repository.set_global_pool (True)
 			executor.execute_insert (test_data.reference_to_single_other)
 			create query.make
 			create res.make
@@ -210,6 +229,7 @@ feature
 					assert ("Error: Object with wrong ref_class_id loaded", false)
 				end
 			end
+			repository.set_global_pool (False)
 		end
 
 	test_query_reference_cycle
@@ -218,6 +238,7 @@ feature
 			query: PS_TUPLE_QUERY[REFERENCE_CLASS_1]
 		do
 			repository.clean_db_for_testing
+			repository.set_global_pool (True)
 			executor.execute_insert (test_data.reference_cycle)
 			create query.make_with_criterion (factory.create_predefined ("ref_class_id", factory.equals, test_data.reference_cycle.ref_class_id))
 			query.set_projection (<<"ref_class_id", "refer">>)
@@ -236,6 +257,7 @@ feature
 
 			query.result_cursor.forth
 			assert ("Too many items", query.result_cursor.after)
+			repository.set_global_pool (False)
 		end
 
 feature {NONE} -- Initialization
@@ -247,6 +269,7 @@ feature {NONE} -- Initialization
 			-- Fill backend with data
 		do
 			create factory
+			repository.set_global_pool (True)
 		end
 
 end

@@ -129,6 +129,18 @@ feature -- Disposal
 
 feature {PS_EIFFELSTORE_EXPORT} -- Settings
 
+	global_object_pool: BOOLEAN
+			-- Does `Current' maintain a global pool of object identifiers?
+		do
+			Result := id_manager.is_global_pool
+		end
+
+	set_global_pool (val: BOOLEAN)
+			-- Set `global_object_pool' to `val'.
+		do
+			id_manager.set_is_global_pool (val)
+		end
+
 	default_object_graph: PS_OBJECT_GRAPH_SETTINGS
 			-- Default object graph settings.
 		obsolete "Not supported any more"
@@ -171,7 +183,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
 			-- Execute the tuple query `tuple_query' within the readonly `transaction'.
 		require
-			readonly_transaction: transaction.is_readonly
+--			readonly_transaction: transaction.is_readonly
 			not_executed: not tuple_query.is_executed
 			transaction_repository_correct: transaction.repository = Current
 			active_transaction: transaction.is_active
@@ -190,7 +202,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 			already_executed: tuple_query.is_executed
 			active_transaction: tuple_query.transaction.is_active
 			query_executed_by_me: tuple_query.transaction.repository = Current
-			readonly_transaction: tuple_query.transaction.is_readonly
+--			readonly_transaction: tuple_query.transaction.is_readonly
 		deferred
 		ensure
 			transaction_still_alive: tuple_query.transaction.is_active

@@ -70,13 +70,13 @@ feature {PS_CRUD_TESTS}
 			repo_access.commit
 			repo_access.start
 
-			executor.execute_delete (object)
-			third_count := count_results
-				-- In a successful delete, all we can guarantee is that the third count is smaller than the second
-			assert ("The object still exists in the database", second_count > third_count)
+--			executor.execute_delete (object)
+--			third_count := count_results
+--				-- In a successful delete, all we can guarantee is that the third count is smaller than the second
+--			assert ("The object still exists in the database", second_count > third_count)
 
-			repo_access.commit
-			repo_access.start
+--			repo_access.commit
+--			repo_access.start
 
 		end
 

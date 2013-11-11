@@ -103,6 +103,10 @@ feature -- Creation
 			capacity_set: Result.capacity = count
 		end
 
+	new_tuple_from_special (type_id: INTEGER; values: SPECIAL [detachable separate ANY]): detachable TUPLE
+		do
+		end
+
 	new_tuple_from_tuple (type_id: INTEGER; source: separate TUPLE): detachable TUPLE
 		do
 		end

@@ -134,6 +134,22 @@ feature -- Command
 			l_pixmap_imp.image.unlock_focus
 		end
 
+	stretched (a_width, a_height: INTEGER): EV_PIXEL_BUFFER
+			-- <Precursor>
+		local
+			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
+		do
+			create Result.make_with_size (a_width, a_height)
+			l_pixel_buffer_imp ?= Result.implementation
+			check l_pixel_buffer_imp /= Void end
+			l_pixel_buffer_imp.image.lock_focus
+			image.draw_at_point (
+				create {NS_POINT}.make_point (0, 0),
+				create {NS_RECT}.make,-- .make_rect (0, 0, a_width, a_height),
+				{NS_IMAGE}.composite_source_over, 1)
+			l_pixel_buffer_imp.image.unlock_focus
+		end
+
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
@@ -228,7 +244,7 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementa
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

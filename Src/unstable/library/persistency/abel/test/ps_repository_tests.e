@@ -30,6 +30,7 @@ feature
 			create transaction_tests.make (repository)
 			create object_graph_tests.make (repository)
 			create tuple_query_tests.make (repository)
+			create tricky_tests.make (repository)
 		end
 
 feature {NONE} -- Initialization
@@ -58,6 +59,9 @@ feature {PS_REPOSITORY_TESTS} -- Access
 
 	tuple_query_tests: PS_TUPLE_QUERY_TESTS
 			-- Provider for tuple query tests
+
+	tricky_tests: PS_TRICKY_OBJECTS_TESTS
+			-- Provider for tricky object tests.
 
 feature {PS_REPOSITORY_TESTS} -- Utilities
 

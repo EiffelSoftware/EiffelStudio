@@ -24,7 +24,23 @@ feature {NONE} -- Initialization
 			query: PS_OBJECT_QUERY[SPECIAL[PERSON]]
 
 			query2: PS_OBJECT_QUERY[REFERENCE_CLASS_1]
+
+			factory2: TEST_DATA_FACTORY
+			sp_factory: SPECIAL_FACTORY
+			any: ANY
+			reflector: REFLECTED_REFERENCE_OBJECT
 		do
+--			create factory2
+--			create sp_factory
+--			any := factory2.nested_embedded_with_copysemantics
+--			create reflector.make (any)
+--			across
+--				1 |..| reflector.field_count as idx
+--			loop
+--				print (reflector.field_type (idx.item))
+--			end
+--			print (any)
+--			print (factory2.object_graph_cycle)
 			create factory
 			create data.make
 			create executor.make (factory.create_in_memory_repository)

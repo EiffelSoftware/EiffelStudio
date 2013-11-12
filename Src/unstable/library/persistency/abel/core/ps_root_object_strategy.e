@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {PS_ROOT_OBJECT_STRATEGY}."
-	author: ""
+	description: "[
+		Enumeration class for the different strategies of declaring objects 
+		as a garbage collection root. The default strategy is `Insert_argument_only'.
+		]"
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

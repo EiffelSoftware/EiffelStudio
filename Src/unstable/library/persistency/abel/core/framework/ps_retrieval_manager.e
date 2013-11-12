@@ -39,7 +39,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Query execution
 			thrash:INTEGER
 		do
 			create collector.make
-			thrash := collector.visit (query.criteria)
+			thrash := collector.visit (query.criterion)
 			collector.attributes.compare_objects
 			across query.projection as proj
 			loop
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation - Retrieval
 					found or results.after
 				loop
 					new_object := build_object (type, results.item, transaction, bookkeeping, true, repository.default_object_graph.query_depth)
-					if query.criteria.is_satisfied_by (new_object) then
+					if query.criterion.is_satisfied_by (new_object) then
 						query.result_cursor.set_entry (new_object)
 						found := True
 					else
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation - Retrieval
 					loop
 						fixme ("don't cheat...")
 						new_object := build_object (type, results.item, transaction, bookkeeping, false, repository.default_object_graph.query_depth)
-						if query.criteria.is_satisfied_by (new_object) then
+						if query.criterion.is_satisfied_by (new_object) then
 							-- extract the required information
 
 							check attached {TUPLE} type.reflection.new_instance_of (metadata_manager.generate_tuple_type (type.type, query.projection)) as t then
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation: Collection handlers
 
 feature {NONE} -- Implementation: Query initialization
 
-	initialize_query (query: PS_QUERY [ANY]; some_attributes: LIST [STRING]; transaction: PS_TRANSACTION)
+	initialize_query (query: PS_QUERY [ANY, ANY]; some_attributes: LIST [STRING]; transaction: PS_TRANSACTION)
 			-- Initialize query - Set an identifier, initialize with bookkeeping manager and execute against backend.
 		local
 			results: ITERATION_CURSOR [ANY]
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation: Query initialization
 					check not_implemented:false then results := attributes.new_cursor end
 				end
 			else
-				results := backend.retrieve (type, query.criteria, attributes, transaction)
+				results := backend.retrieve (type, query.criterion, attributes, transaction)
 			end
 			query_to_cursor_map.extend (results, query.backend_identifier)
 			create bookkeeping_table.make (100)

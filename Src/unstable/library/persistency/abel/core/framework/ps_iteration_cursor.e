@@ -50,12 +50,12 @@ feature -- Cursor movement
 
 feature {NONE} -- Initialization
 
-	query: PS_QUERY [ANY]
+	query: PS_QUERY [ANY, ANY]
 		-- The query to iterate over.
 
 	index: INTEGER
 
-	make (a_query: PS_QUERY[ANY])
+	make (a_query: PS_QUERY[ANY, ANY])
 			-- Initialization for `Current'.
 		do
 			query := a_query

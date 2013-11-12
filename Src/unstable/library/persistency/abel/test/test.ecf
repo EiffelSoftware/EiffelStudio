@@ -21,6 +21,7 @@
 		<library name="abel_core" location="$ISE_LIBRARY\unstable\library\persistency\abel\core\core.ecf" readonly="false"/>
 		<library name="abel_plugin_escher" location="$ISE_LIBRARY\unstable\library\persistency\abel\plugin_escher\plugin_escher.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_testing" location="$ISE_LIBRARY\library\base\test\test-safe.ecf" readonly="false"/>
 		<library name="mysql" location="$ISE_LIBRARY\unstable\library\persistency\database\mysqli\mysqli.ecf"/>
 		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite-safe.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>

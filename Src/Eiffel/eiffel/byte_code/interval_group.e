@@ -223,7 +223,7 @@ feature -- Element change
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B)
+	generate_il (a_generator: IL_NODE_GENERATOR; min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [detachable IL_LABEL]; instruction: INSPECT_B)
 			-- Generate code for group of intervals in `instruction' assuming that inspect value is in range `min'..`max'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.

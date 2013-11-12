@@ -160,7 +160,7 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B)
+	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [detachable IL_LABEL]; instruction: INSPECT_B)
 			-- Generate code for single interval of `instruction' assuming that inspect value is in range `min_value'..`max_value'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.

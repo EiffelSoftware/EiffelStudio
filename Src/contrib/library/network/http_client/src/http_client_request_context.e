@@ -5,7 +5,7 @@ note
 					- headers
 					- query_parameters
 					- form parameters
-					- upload_data or upload_filename
+					- upload_data xor upload_filename
 				And in addition it has 
 					- credentials_required
 					- proxy
@@ -86,16 +86,20 @@ feature -- Access
 feature -- Status report
 
 	has_form_data: BOOLEAN
+			-- Has any form parameters?
+			--| i.e coming from POST or PUT content.
 		do
 			Result := not form_parameters.is_empty
 		end
 
 	has_upload_data: BOOLEAN
+			-- Has associated upload_data?
 		do
 			Result := attached upload_data as d and then not d.is_empty
 		end
 
 	has_upload_filename: BOOLEAN
+			-- Has associated upload_filename?
 		do
 			Result := attached upload_filename as fn and then not fn.is_empty
 		end
@@ -109,11 +113,13 @@ feature -- Status report
 feature -- Element change
 
 	add_header (k: READABLE_STRING_8; v: READABLE_STRING_8)
+			-- Add http header line `k:v'.
 		do
 			headers.force (v, k)
 		end
 
 	add_header_line (s: READABLE_STRING_8)
+			-- Add http header line `s'.
 		local
 			i: INTEGER
 		do
@@ -124,6 +130,7 @@ feature -- Element change
 		end
 
 	add_header_lines (lst: ITERABLE [READABLE_STRING_8])
+			-- Add collection of http header lines `lst'
 		do
 			across
 				lst as c
@@ -133,44 +140,61 @@ feature -- Element change
 		end
 
 	add_query_parameter (k: READABLE_STRING_32; v: READABLE_STRING_32)
+			-- Add a query parameter `k=v'.
 		do
 			query_parameters.force (v, k)
 		end
 
 	add_form_parameter (k: READABLE_STRING_32; v: READABLE_STRING_32)
+			-- Add a form parameter `k'= `v'.
 		do
 			form_parameters.force (v, k)
 		end
 
 	set_credentials_required (b: BOOLEAN)
+			-- If b is True, credentials are required, otherwise just optional.
 		do
 			credentials_required := b
 		end
 
 	set_upload_data (a_data: like upload_data)
+			-- Set `upload_data' to `a_data'
+			--| note: the Current context can have upload_data XOR upload_filename, but not both.
 		require
-			has_no_upload_data: a_data /= Void implies not has_upload_data
+			has_upload_filename: (a_data /= Void and then not a_data.is_empty) implies not has_upload_filename
 		do
-			upload_data := a_data
+			if a_data = Void or else a_data.is_empty then
+				upload_data := Void
+			else
+				upload_data := a_data
+			end
+		ensure
+			(a_data /= Void and then not a_data.is_empty) implies (has_upload_data and not has_upload_filename)
 		end
 
 	set_upload_filename (a_fn: detachable READABLE_STRING_GENERAL)
+			-- Set `upload_filename' to `a_fn'
+			--| note: the Current context can have upload_data XOR upload_filename, but not both.	
 		require
-			has_no_upload_filename: a_fn /= Void implies not has_upload_filename
+			has_no_upload_data: (a_fn /= Void and then not a_fn.is_empty) implies not has_upload_data
 		do
-			if a_fn = Void then
+			if a_fn = Void or else a_fn.is_empty then
 				upload_filename := Void
 			else
 				create upload_filename.make_from_string_general (a_fn)
 			end
+		ensure
+			(a_fn /= Void and then not a_fn.is_empty) implies (has_upload_filename and not has_upload_data)
 		end
 
 	set_write_agent (agt: like write_agent)
+			-- Set `write_agent' to `agt'.
 		do
 			write_agent := agt
 		end
 
 	set_output_file (f: FILE)
+			-- Set `output_file' to `f'.
 		require
 			f_is_open_write: f.is_open_write
 		do
@@ -178,6 +202,7 @@ feature -- Element change
 		end
 
 	set_output_content_file (f: FILE)
+			-- Set `output_content_file' to `f'.
 		require
 			f_is_open_write: f.is_open_write
 		do
@@ -187,6 +212,8 @@ feature -- Element change
 feature -- Status setting
 
 	set_proxy (a_host: detachable READABLE_STRING_8; a_port: INTEGER)
+			-- Set proxy to `a_host:a_port'.
+			--| this can be used for instance with "http://fiddler2.com/" web debugging proxy.
 		do
 			if a_host = Void then
 				proxy := Void
@@ -212,6 +239,7 @@ feature -- Conversion helpers
 feature {NONE} -- Implementation
 
 	parameters_to_url_encoded_string (ht: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]): STRING_8
+			-- Build url encoded string using parameters from `ht'.
 		do
 			create Result.make (64)
 			from
@@ -230,6 +258,7 @@ feature {NONE} -- Implementation
 		end
 
 	url_encoder: URL_ENCODER
+			-- Shared URL encoder.
 		once
 			create Result
 		end

@@ -8,10 +8,14 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
-			<assertions precondition="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="http_client" location="..\http_client-safe.ecf" readonly="false"/>
+		<library name="http_client" location="..\http_client-safe.ecf" readonly="false" use_application_options="true">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<tests name="tests" location=".\"/>
 	</target>

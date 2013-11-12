@@ -1,16 +1,43 @@
 note
 	description:"[
-	Represents a general query on objects of type G to a repository.
-	To reuse a query object, invoke feature reset first.
+		This class contains the shared parts of both PS_TUPLE_QUERY
+		and PS_OBJECT_QUERY.
+
+		The generic parameter QUERY_TYPE denotes the type of the objects
+		to be queried. This does not include descendants.
+
+		The general workflow with queries is as follows:
+		
+			1) Create a new query object.
+			2) Adjust the retrieval paramaters
+			3) Execute them in a transaction or repository
+			4) Iterate over the results
+			5) Close the query.
+		
+		Iterating over the result can be done with the convenient 
+		across syntax. Example:
+		
+			across 
+				some_query as cursor
+			loop
+				print (cursor.item)
+			end
+		
+		The type of `cursor.item' is RESULT_TYPE, i.e. TUPLE for tuple
+		queries and QUERY_TYPE for object queries.
 	]"
-	author: "Marco Piccioni"
+	author: "Marco Piccioni, Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	PS_QUERY [G -> ANY]
+	PS_QUERY [QUERY_TYPE -> ANY, RESULT_TYPE -> ANY]
 
-inherit PS_EIFFELSTORE_EXPORT
+inherit
+
+	PS_EIFFELSTORE_EXPORT
+
+	ITERABLE [RESULT_TYPE]
 
 feature -- Access
 
@@ -27,6 +54,15 @@ feature -- Access
 		require
 			executed: is_executed
 		attribute
+		end
+
+	new_cursor: ITERATION_CURSOR [RESULT_TYPE]
+			-- Return a fresh cursor over the query result.
+			-- Note: The result is loaded lazily upon calling `{ITERATION_CURSOR}.forth'.
+			-- Note: The results are cached interanlly, thus it is possible to iterate over the result
+			--   many times without performance impact.
+		do
+			create {PS_ITERATION_CURSOR [RESULT_TYPE]} Result.make (Current)
 		end
 
 feature -- Status report
@@ -48,10 +84,10 @@ feature -- Status report
 			Result := not is_object_query
 		end
 
-feature -- Access: query parameter
+feature -- Access: Retrieval Parameter
 
-	criteria: PS_CRITERION
-			-- Criteria for `Current' query.
+	criterion: PS_CRITERION
+			-- The criterion against which the result will be filtered.
 
 	is_non_root_ignored: BOOLEAN
 			-- Are non-root objects ignored?
@@ -63,15 +99,15 @@ feature -- Access: query parameter
 feature -- Element change
 
 	set_criterion (a_criterion: PS_CRITERION)
-			-- Set the criteria `a_criterion', against which the objects will be selected.
+			-- Set `criterion' to  `a_criterion'.
 		require
 			set_before_execution: not is_executed
-			only_predefined: not a_criterion.has_agent_criterion
+			only_predefined_for_tuples: is_tuple_query implies not a_criterion.has_agent_criterion
 			criterion_can_handle_objects: is_criterion_fitting_generic_type (a_criterion)
 		do
-			criteria := a_criterion
+			criterion := a_criterion
 		ensure
-			criteria_set: criteria = a_criterion
+			criteria_set: criterion = a_criterion
 		end
 
 	set_is_non_root_ignored (value: BOOLEAN)
@@ -79,6 +115,8 @@ feature -- Element change
 		do
 			is_non_root_ignored := value
 		end
+
+feature {PS_EIFFELSTORE_EXPORT} -- Element change (unsafe)
 
 	set_object_initialization_depth (depth: INTEGER)
 			-- Set `object_initialization_depth' to `depth'.
@@ -103,18 +141,17 @@ feature -- Disposal
 
 			is_closed := False
 			transaction_impl := Void
-			create_result_cursor
+			create result_cursor.make
 			result_cursor.set_query (Current)
 			is_executed := False
 			backend_identifier := 0
 			create result_cache.make (100)
-			-- object_initialization_depth := -1
 		ensure
 			not_executed: not is_executed
 			not_bound_to_transaction: transaction_impl = Void
 			unrecognizable_to_backend: backend_identifier = 0
 
-			criteria_unchanged: criteria = old criteria
+			criteria_unchanged: criterion = old criterion
 			root_setting_unchanged: is_non_root_ignored = old is_non_root_ignored
 			initialization_depth_unchanged: object_initialization_depth = old object_initialization_depth
 			type_unchagned: generic_type  = old generic_type
@@ -134,24 +171,23 @@ feature -- Disposal
 				fixme ("TODO: clean up internal data structures")
 			end
 			is_closed := True
-
-
 		end
 
 feature -- Contract support functions
 
 	is_criterion_fitting_generic_type (a_criterion: PS_CRITERION): BOOLEAN
-			-- Can `a_criterion' handle objects of type `G'?
+			-- Can `a_criterion' handle objects of type `QUERY_TYPE'?
 		local
 			reflection: INTERNAL
-			type: TYPE[G]
+			type: TYPE[QUERY_TYPE]
 		do
-			type:= {G}
+			fixme ("Use internal type, but take care of `make_with_criterion' contract")
+			type:= {QUERY_TYPE}
 			create reflection
 			Result := a_criterion.can_handle_object (reflection.new_instance_of (type.type_id))
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Internal
+feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 	set_type (type: TYPE[detachable ANY])
 			-- Helper function for testing.
@@ -165,10 +201,8 @@ feature {PS_EIFFELSTORE_EXPORT} -- Internal
 	result_cache: ARRAYED_LIST [ANY]
 			-- The cached results.
 
-	result_cursor: PS_RESULT_CURSOR [ANY]
+	result_cursor: PS_RESULT_CURSOR [RESULT_TYPE]
 			-- Iteration cursor containing the result of the query.
-		deferred
-		end
 
 	transaction: PS_TRANSACTION
 			-- The transaction in which this query is embedded.
@@ -194,12 +228,6 @@ feature {PS_EIFFELSTORE_EXPORT} -- Internal
 
 	generic_type: TYPE [detachable ANY]
 			-- Get the (detachable) generic type of `Current'.
---		local
---			reflection: INTERNAL
---		once ("OBJECT")
---			create reflection
---			Result := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
---		end
 
 	backend_identifier: INTEGER
 			-- Identifier for the backend to recognize an already executed query.
@@ -224,13 +252,20 @@ feature {NONE} -- Implementation
 feature {NONE} -- Initialization
 
 	make
-			-- Create a query for all objects of type G (no filtering criteria).
-		deferred
+			-- Create a query for all objects of type `QUERY_TYPE' (without filtering criteria).
+		local
+			reflection: INTERNAL
+		do
+			object_initialization_depth := -1
+			create {PS_EMPTY_CRITERION} criterion
+			create reflection
+			generic_type := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
+			reset
 		ensure
 			not_executed: not is_executed
 			query_result_after: result_cursor.after
 			query_result_initialized: result_cursor.query = Current
-			default_criterion: attached {PS_EMPTY_CRITERION} criteria
+			default_criterion: attached {PS_EMPTY_CRITERION} criterion
 		end
 
 	make_with_criterion (a_criterion: PS_CRITERION)
@@ -245,26 +280,7 @@ feature {NONE} -- Initialization
 			not_executed: not is_executed
 			query_result_after: result_cursor.after
 			query_result_initialized: result_cursor.query = Current
-			criteria_set: criteria = a_criterion
-		end
-
-
-	initialize
-			-- Initialize the shared parts between object and tuple queries.
-		local
-			reflection: INTERNAL
-		do
-			object_initialization_depth := -1
-			create {PS_EMPTY_CRITERION} criteria
-			create result_cache.make (100)
-			create reflection
-			generic_type := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
-			reset
-		end
-
-	create_result_cursor
-			-- Create a new result set.
-		deferred
+			criteria_set: criterion = a_criterion
 		end
 
 invariant

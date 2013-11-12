@@ -43,7 +43,7 @@ feature -- Access
 	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
 			-- The default behaviour for root declaration on write functions.
 
-	active_queries: CONTAINER[PS_QUERY[ANY]]
+	active_queries: CONTAINER[PS_QUERY[ANY, ANY]]
 			-- The currently active queries.
 		do
 			Result := internal_active_queries
@@ -102,7 +102,8 @@ feature -- Element change
 	set_root_declaration_strategy (a_strategy: like root_declaration_strategy)
 			-- Set the new root declaration strategy
 		do
-			root_declaration_strategy := a_strategy
+			fixme ("Implement this setting in the backend")
+			-- root_declaration_strategy := a_strategy
 		ensure
 			correct: root_declaration_strategy = a_strategy
 		end
@@ -267,7 +268,7 @@ feature -- Transaction operations
 
 feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
-	internal_active_queries: LINKED_LIST [PS_QUERY [ANY]]
+	internal_active_queries: LINKED_LIST [PS_QUERY [ANY, ANY]]
 			-- The internal storage for `active_queries'.
 
 feature {NONE} -- Implementation

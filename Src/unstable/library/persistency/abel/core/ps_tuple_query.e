@@ -5,11 +5,14 @@ note
 		
 		You can set a projection on the attributes you would like to have, to restrict the amount of data that is going to be retrieved.
 		You'll get completely loaded objects as attributes if you include an attribute in your projection that is not of a basic type (strings and numbers).
+
 		Objects of this type can be used directly to iterate through the query result.
-		Example: across my_query as cur
-				 loop 
-					-- do something with cur.item 
-				 end
+		Example: 
+			across 
+				my_query as cursor
+			loop 
+				-- do something with cursor.item
+			end
 	]"
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -20,33 +23,35 @@ class
 
 inherit
 
-	PS_QUERY [G]
-
-	ITERABLE [TUPLE]
+	PS_QUERY [G, TUPLE]
+		redefine
+			make
+		end
 
 create
 	make, make_with_criterion
 
-feature -- Access
+feature -- Access: Retrieval Parameter
 
-	new_cursor: ITERATION_CURSOR [TUPLE]
-			-- Return a fresh cursor over the query result.
-			-- | Note: The result is loaded lazily upon calling `{ITERATION_CURSOR}.forth'.
-			-- | Note: The results are cached interanlly, thus it is possible to iterate over the result
-			-- | many times without performance impact.
-		do
-			create {PS_ITERATION_CURSOR [TUPLE]} Result.make (Current)
-		end
+	projection: ARRAY [STRING]
+			-- Data to be included for projection. Defaults to all fields of basic types and string types.
 
 feature -- Status report
 
 	is_object_query: BOOLEAN = False
 			-- Is `Current' an instance of PS_OBJECT_QUERY?
 
-feature -- Projections
+feature -- Element change
 
-	projection: ARRAY [STRING]
-			-- Data to be included for projection. Defaults to all fields of basic types and string types.
+	set_projection (a_projection: ARRAY [STRING])
+			-- Set `a_projection' to the current query.
+		do
+			projection := a_projection
+		ensure
+			projected_data_set: projection = a_projection
+		end
+
+feature -- Utilities
 
 	default_projection: ARRAY [STRING]
 			-- An array containing all the attribute names that are of a basic type.
@@ -87,16 +92,6 @@ feature -- Projections
 			Result.compare_objects
 		end
 
-	set_projection (a_projection: ARRAY [STRING])
-			-- Set `a_projection' to the current query.
-		do
-			projection := a_projection
-		ensure
-			projected_data_set: projection = a_projection
-		end
-
-feature -- Utilities
-
 	attribute_index (name: STRING): INTEGER
 			-- Get the tuple index for the attribute with name `name'
 		require
@@ -115,37 +110,18 @@ feature -- Utilities
 			correct: name.is_equal (projection [Result])
 		end
 
---feature -- Cursor generation
-
---	new_cursor: PS_RESULT_CURSOR [TUPLE]
---			-- Return the result_cursor.
---		do
---			--TODO: according to class ITERABLE, this should return a fresh copy of the cursor.
---			Result := result_cursor
---		end
-
 feature {NONE} -- Initialization
 
 	make
 			-- Create a query for all objects of type G (no filtering criteria).
 		do
 			create projection.make_empty
-			initialize
+			--initialize
+			Precursor
 			create projection.make_from_array (default_projection)
 			projection.compare_objects
 		ensure then
 			projection_correctly_initialized: projection.is_deep_equal (old default_projection)
 		end
-
-	create_result_cursor
-			-- Create a new result set.
-		do
-			create result_cursor.make
-		end
-
-feature {PS_EIFFELSTORE_EXPORT} -- Access
-
-	result_cursor: PS_RESULT_CURSOR [TUPLE]
-			-- Iteration cursor containing the result of the query.
 
 end

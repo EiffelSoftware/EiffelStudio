@@ -9,7 +9,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_REPOSITORY_FACTORY
+	PS_IN_MEMORY_REPOSITORY_FACTORY
 
 feature -- Factory methods
 

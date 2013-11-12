@@ -67,7 +67,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 
 feature {PS_QUERY} -- Initialization
 
-	set_query (a_query: PS_QUERY [ANY])
+	set_query (a_query: PS_QUERY [ANY, ANY])
 			-- Set query to `a_query'. Part of initialization process.
 		do
 			detachable_query := a_query
@@ -75,7 +75,7 @@ feature {PS_QUERY} -- Initialization
 			query_set: query = a_query
 		end
 
-	query: PS_QUERY [ANY]
+	query: PS_QUERY [ANY, ANY]
 			-- Get the query which has `Current' as its result cursor.
 		do
 			Result := attach (detachable_query)
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 	detachable_item: detachable G
 			-- `item' as detachable (Void safety).
 
-	detachable_query: detachable PS_QUERY [ANY]
+	detachable_query: detachable PS_QUERY [ANY, ANY]
 			-- `query' as detachable (Void safety).
 
 invariant

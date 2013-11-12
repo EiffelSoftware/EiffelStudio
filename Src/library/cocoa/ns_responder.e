@@ -79,16 +79,14 @@ feature -- Responding to Key Events
 	key_down (a_event: NS_EVENT)
 			-- Informs the receiver that the user has pressed a key.
 		local
-			original_method: detachable OBJC_METHOD
 			selector: OBJC_SELECTOR
 		do
 			create selector.make ("keyDown:")
 			if attached class_.superclass as l_superclass then
-				original_method := l_superclass.instance_method (selector.item)
-				check
-					original_method /= Void -- If this method is not a redefinition of a parent's method there is no precursor
+					-- If this method is not a redefinition of a parent's method there is no precursor
+				if attached l_superclass.instance_method (selector.item) as original_method then
+					call_original (original_method.implementation, item, selector.item, a_event.item)
 				end
-				call_original (original_method.implementation, item, selector.item, a_event.item)
 			else
 				check
 					has_superclass: False -- class_ needs to have a superlcass, otherwise calling the precursor makes no sense.
@@ -111,4 +109,14 @@ feature {NONE} -- Implementation
 			"((IMP)$a_method) ($a_object, $a_selector, $a_arg);"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

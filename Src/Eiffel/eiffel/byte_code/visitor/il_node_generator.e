@@ -458,7 +458,7 @@ feature -- Generation
 			il_generator.generate_precondition_check (a_node.tag, a_failure_block)
 		end
 
-	generate_il_when_part (a_node: INSPECT_B; case_index: INTEGER; labels: ARRAY [IL_LABEL])
+	generate_il_when_part (a_node: INSPECT_B; case_index: INTEGER; labels: ARRAY [detachable IL_LABEL])
 			-- Generate code for When_part idetified by `case_index' and
 			-- adjust `labels' if required.
 		require
@@ -469,7 +469,7 @@ feature -- Generation
 			labels_not_void: labels /= Void
 			valid_labels: labels.lower = -1 and labels.upper = a_node.case_list.count
 		local
-			case_label: IL_LABEL
+			case_label: detachable IL_LABEL
 			case_b: CASE_B
 			compound: BYTE_LIST [BYTE_NODE]
 		do
@@ -2200,7 +2200,7 @@ feature {NONE} -- Visitors
 			l_cl_type_i: CL_TYPE_A
 			min_value: INTERVAL_VAL_B
 			max_value: INTERVAL_VAL_B
-			labels: ARRAY [IL_LABEL]
+			labels: ARRAY [detachable IL_LABEL]
 		do
 			l_else_label := il_generator.create_label
 			l_end_label := il_generator.create_label
@@ -2237,8 +2237,9 @@ feature {NONE} -- Visitors
 					end
 						-- Group intervals.
 					l_spans := build_spans (a_node, l_intervals, min_value, max_value)
-						-- Create array of labels for all cases and put `l_else_label' at position 0.
-					create labels.make_filled (l_end_label, -1, a_node.case_list.count)
+						-- Create array of labels for all cases, put `l_end_label' at position `-1' and `l_else_label' at position `0'.
+					create labels.make_filled (Void, -1, a_node.case_list.count)
+					labels.put (l_end_label, -1)
 					labels.put (l_else_label, 0)
 					generate_spans (a_node, l_spans, 1, l_spans.count, min_value, max_value, True, True, labels)
 				end
@@ -3828,7 +3829,7 @@ feature {NONE} -- Implementation: Inspect
 			result_not_void: Result /= Void
 		end
 
-	generate_spans (a_node: INSPECT_B; spans: like build_spans; lower, upper: INTEGER; min, max: INTERVAL_VAL_B; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL])
+	generate_spans (a_node: INSPECT_B; spans: like build_spans; lower, upper: INTEGER; min, max: INTERVAL_VAL_B; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [detachable IL_LABEL])
 			-- Generate selectors for `spans' with indexes `lower'..`upper' within interval `min'..`max'
 			-- where these bounds are included according to `is_min_inclued' and `is_max_included'. Use
 			-- `else_label' to branch to Else_part.

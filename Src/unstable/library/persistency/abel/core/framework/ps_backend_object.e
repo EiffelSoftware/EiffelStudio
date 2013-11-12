@@ -130,7 +130,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 		require
 				--	attribute_exists: class_metadata.attributes.has (attribute_name)
 			class_name_not_empty: not class_name_of_value.is_empty
-			void_value_means_none_type: value.is_empty implies class_name_of_value.is_equal ("NONE")
+			none_means_void_value: class_name_of_value.is_equal ("NONE") implies value.is_empty
 		local
 			pair: PS_PAIR [STRING, STRING]
 		do
@@ -209,6 +209,6 @@ feature {NONE} -- Implementation
 
 invariant
 	has_value_for_all_attributes: across attributes as attribute_cursor all has_attribute (attribute_cursor.item) end
-	void_references_have_NONE_type: across values as val all val.item.first.is_empty implies val.item.second.is_equal ("NONE") end
+--	void_references_have_NONE_type: across values as val all val.item.first.is_empty implies val.item.second.is_equal ("NONE") end
 
 end

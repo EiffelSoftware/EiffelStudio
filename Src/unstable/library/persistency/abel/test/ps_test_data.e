@@ -16,7 +16,7 @@ create
 
 feature
 
-	people: LIST [PERSON]
+	people: LIST [TEST_PERSON]
 			-- A list of 4 persons
 
 	flat_class: FLAT_CLASS_1
@@ -36,10 +36,10 @@ feature
 
 	tuple_query: detachable PS_TUPLE_QUERY [ANY]
 
-	array_of_persons: ARRAY [PERSON]
+	array_of_persons: ARRAY [TEST_PERSON]
 			-- An array of 4 persons
 
-	special_of_persons: SPECIAL [PERSON]
+	special_of_persons: SPECIAL [TEST_PERSON]
 			-- A special object of 4 persons
 
 	array_of_integers: ARRAY [INTEGER]
@@ -163,9 +163,9 @@ feature {NONE} -- Initialization
 	fill_people
 			-- Add some persons to `people'
 		local
-			pe: PERSON
+			pe: TEST_PERSON
 		do
-			create {ARRAYED_LIST [PERSON]} people.make (4)
+			create {ARRAYED_LIST [TEST_PERSON]} people.make (4)
 			create pe.make ("Albo", "Bitossi", 3)
 			people.extend (pe)
 			create pe.make ("Berno", "Citrini", 5)

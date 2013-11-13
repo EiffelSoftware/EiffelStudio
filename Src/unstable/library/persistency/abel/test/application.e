@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {START}."
+	description: "Summary description for {APPLICATION}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	START
+	APPLICATION
 
 inherit
 	PS_EIFFELSTORE_EXPORT
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 			executor: PS_EXECUTOR
 			data: PS_TEST_DATA
-			query: PS_OBJECT_QUERY[SPECIAL[PERSON]]
+			query: PS_OBJECT_QUERY[SPECIAL[TEST_PERSON]]
 
 			query2: PS_OBJECT_QUERY[REFERENCE_CLASS_1]
 

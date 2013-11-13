@@ -38,8 +38,8 @@ note
 		(not necessarily in this order):
 			
 			*) Translate the backend error to a corresponding PS_ERROR,
-			*) Set the `last_error' attribute,
-			*) Rollback the current transaction, 
+			*) set the `last_error' attribute,
+			*) rollback the current transaction, 
 			*) and raise an exception
 			
 		The PS_ERROR class hierarchy has a visitor pattern which can

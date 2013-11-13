@@ -17,9 +17,9 @@ feature {PS_REPOSITORY_TESTS}
 	test_no_lost_update
 		-- Test if a lost update can happen.
 		local
-			some_person: PERSON
+			some_person: TEST_PERSON
 			t1, t2: PS_TRANSACTION
-			q1, q2: PS_OBJECT_QUERY[PERSON]
+			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 			executor.execute_insert (some_person)
@@ -60,9 +60,9 @@ feature {PS_REPOSITORY_TESTS}
 	test_no_dirty_reads
 		-- Test if a dirty read can happen.
 		local
-			some_person: PERSON
+			some_person: TEST_PERSON
 			t1, t2: PS_TRANSACTION
-			q1, q2, q3: PS_OBJECT_QUERY[PERSON]
+			q1, q2, q3: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 			executor.execute_insert (some_person)
@@ -107,9 +107,9 @@ feature {PS_REPOSITORY_TESTS}
 	test_repeatable_read
 		-- Test if a non-repeatable read can happen
 		local
-			some_person: PERSON
+			some_person: TEST_PERSON
 			t1, t2: PS_TRANSACTION
-			q1, q2, q3: PS_OBJECT_QUERY[PERSON]
+			q1, q2, q3: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 			executor.execute_insert (some_person)
@@ -149,9 +149,9 @@ feature {PS_REPOSITORY_TESTS}
 	test_correct_insert_rollback
 		-- Test if an object inserted within an aborted transaction gets removed correctly
 		local
-			some_person: PERSON
+			some_person: TEST_PERSON
 			t1: PS_TRANSACTION
-			q1, q2: PS_OBJECT_QUERY[PERSON]
+			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 			t1:= executor.new_transaction
@@ -175,9 +175,9 @@ feature {PS_REPOSITORY_TESTS}
 	test_correct_update_rollback
 		-- Test if an object updated within an aborted transaction gets rolled back correctly
 		local
-			some_person: PERSON
+			some_person: TEST_PERSON
 			t1: PS_TRANSACTION
-			q1, q2: PS_OBJECT_QUERY[PERSON]
+			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 			executor.execute_insert (some_person)
@@ -205,9 +205,9 @@ feature {PS_REPOSITORY_TESTS}
 	test_correct_delete_rollback
 		-- Test if an object deleted within an aborted transaction gets inserted again
 		local
-			some_person: PERSON
+			some_person: TEST_PERSON
 			t1: PS_TRANSACTION
-			q1, q2: PS_OBJECT_QUERY[PERSON]
+			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 			executor.execute_insert (some_person)

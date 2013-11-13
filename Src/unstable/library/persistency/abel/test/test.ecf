@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="abel_test" uuid="671C9530-CB14-493E-8F77-39A919C5723A" library_target="abel_test">
+<system 
+		xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd"
+		name="abel_test"
+		uuid="671C9530-CB14-493E-8F77-39A919C5723A"
+		library_target="abel_test" >
 	<description>Unit-tests for the ABEL library.</description>
 	<target name="abel_test">
 		<root class="START" feature="make"/>
@@ -20,17 +26,14 @@
 		<library name="abel_connector_sqlite" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_sqlite\connector_sqlite.ecf" readonly="false"/>
 		<library name="abel_core" location="$ISE_LIBRARY\unstable\library\persistency\abel\core\core.ecf" readonly="false"/>
 		<library name="abel_plugin_escher" location="$ISE_LIBRARY\unstable\library\persistency\abel\plugin_escher\plugin_escher.ecf" readonly="false"/>
+		<library name="abel_tutorial_api" location="$ISE_LIBRARY\unstable\library\persistency\abel\sample\tutorial_api\tutorial_api.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_testing" location="$ISE_LIBRARY\library\base\test\test-safe.ecf" readonly="false"/>
 		<library name="mysql" location="$ISE_LIBRARY\unstable\library\persistency\database\mysqli\mysqli.ecf"/>
 		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite-safe.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<tests name="abel_test" location=".\">
-			<option void_safety="transitional" syntax="provisional" namespace="Tests">
-			</option>
-			<tests name="schema_evolution_version_1" location="..\..\..\src\tests\eweasel\tests\schema_evolution_version_1\"/>
-			<tests name="schema_evolution_version_2" location="..\..\..\src\tests\eweasel\tests\schema_evolution_version_2\"/>
-		</tests>
+
+		<tests name="abel_test" location=".\" />
 		<cluster name="test_classes" location=".\test_classes\" recursive="true"/>
 	</target>
 </system>

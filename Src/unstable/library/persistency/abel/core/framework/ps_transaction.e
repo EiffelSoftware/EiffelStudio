@@ -5,16 +5,16 @@ note
 	revision: "$Revision$"
 
 class
-	PS_TRANSACTION
+	PS_INTERNAL_TRANSACTION
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create
 	make
 
-create {PS_EIFFELSTORE_EXPORT}
+create {PS_ABEL_EXPORT}
 	make_readonly
 
 feature {NONE} -- Initialization
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			is_active := True
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	error: PS_ERROR
 			-- Error description of the last error.
@@ -50,7 +50,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 	root_flags: HASH_TABLE[BOOLEAN, INTEGER]
 			-- Mapping for ABEL identifier -> root status of every object.
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_active: BOOLEAN
 			-- Is the current transaction still active, or has it been commited or rolled back at some point?
@@ -71,7 +71,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 	is_readonly: BOOLEAN
 			-- Is this a readonly transaction?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	commit
 			-- Try to commit the transaction.
@@ -101,7 +101,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 			no_success: not is_successful_commit
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Internals
+feature {PS_ABEL_EXPORT} -- Internals
 
 	set_error (an_error: PS_ERROR)
 			-- Set the error field if an error occurred.

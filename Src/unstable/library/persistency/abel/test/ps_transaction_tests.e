@@ -18,7 +18,7 @@ feature {PS_REPOSITORY_TESTS}
 		-- Test if a lost update can happen.
 		local
 			some_person: TEST_PERSON
-			t1, t2: PS_TRANSACTION
+			t1, t2: PS_INTERNAL_TRANSACTION
 			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
@@ -61,7 +61,7 @@ feature {PS_REPOSITORY_TESTS}
 		-- Test if a dirty read can happen.
 		local
 			some_person: TEST_PERSON
-			t1, t2: PS_TRANSACTION
+			t1, t2: PS_INTERNAL_TRANSACTION
 			q1, q2, q3: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
@@ -108,7 +108,7 @@ feature {PS_REPOSITORY_TESTS}
 		-- Test if a non-repeatable read can happen
 		local
 			some_person: TEST_PERSON
-			t1, t2: PS_TRANSACTION
+			t1, t2: PS_INTERNAL_TRANSACTION
 			q1, q2, q3: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
@@ -150,7 +150,7 @@ feature {PS_REPOSITORY_TESTS}
 		-- Test if an object inserted within an aborted transaction gets removed correctly
 		local
 			some_person: TEST_PERSON
-			t1: PS_TRANSACTION
+			t1: PS_INTERNAL_TRANSACTION
 			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
@@ -176,7 +176,7 @@ feature {PS_REPOSITORY_TESTS}
 		-- Test if an object updated within an aborted transaction gets rolled back correctly
 		local
 			some_person: TEST_PERSON
-			t1: PS_TRANSACTION
+			t1: PS_INTERNAL_TRANSACTION
 			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
@@ -206,7 +206,7 @@ feature {PS_REPOSITORY_TESTS}
 		-- Test if an object deleted within an aborted transaction gets inserted again
 		local
 			some_person: TEST_PERSON
-			t1: PS_TRANSACTION
+			t1: PS_INTERNAL_TRANSACTION
 			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)

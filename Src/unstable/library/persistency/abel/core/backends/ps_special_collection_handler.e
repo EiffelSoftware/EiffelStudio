@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_relationally_mapped (collection: PS_TYPE_METADATA; owner_type: PS_TYPE_METADATA): BOOLEAN
 			-- Is `collection' mapped as a 1:N or M:N Relation between two objects?
@@ -30,7 +30,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := False
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
+feature {PS_ABEL_EXPORT} -- Object graph creation
 
 	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[ANY, TUPLE[detachable ANY], PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
 			-- Iterate over the collection and call `object_graph_factory' on each item
@@ -55,7 +55,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
+feature {PS_ABEL_EXPORT} -- Object retrieval
 
 	build_collection (type_id: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_BACKEND_COLLECTION): SPECIAL [detachable ANY]
 			-- Build a collection object of type `type' with items `objects', using `additional_information' that contains information generated during the last insert.

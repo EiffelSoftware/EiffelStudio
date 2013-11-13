@@ -43,7 +43,7 @@ feature -- Access
 			correct_length: attached Result implies Result.count = 5
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Element change
+feature {PS_ABEL_EXPORT} -- Element change
 
 	set_backend_error_code (a_code: like backend_error_code)
 			-- Set the backend error code.

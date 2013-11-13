@@ -17,17 +17,17 @@ class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_global_pool: BOOLEAN
 			-- Does `Current' maintain a global pool of object identifiers?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Element change
+feature {PS_ABEL_EXPORT} -- Element change
 
 	set_is_global_pool (global_pool: like is_global_pool)
 			-- Assign `is_global_pool' with `global_pool'.
@@ -37,9 +37,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 			is_global_pool_assigned: is_global_pool = global_pool
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Identification
+feature {PS_ABEL_EXPORT} -- Identification
 
-	is_identified (an_object: ANY; transaction: PS_TRANSACTION): BOOLEAN
+	is_identified (an_object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `an_object' already identified and thus known to the system?
 		do
 			if is_registered (transaction) then
@@ -50,7 +50,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Identification
 			end
 		end
 
-	identify (an_object: ANY; transaction: PS_TRANSACTION)
+	identify (an_object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Generate an identifier for `an_object' and store it.
 		require
 			not_identified: not is_identified (an_object, transaction)
@@ -83,7 +83,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Identification
 			identified: is_identified (an_object, transaction)
 		end
 
-	delete_identification (an_object: ANY; transaction: PS_TRANSACTION)
+	delete_identification (an_object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete the identification.
 		require
 			identified: is_identified (an_object, transaction)
@@ -94,7 +94,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Identification
 			not_identified: not is_identified (an_object, transaction)
 		end
 
-	identifier_wrapper (an_object: ANY; transaction: PS_TRANSACTION): PS_OBJECT_IDENTIFIER_WRAPPER
+	identifier_wrapper (an_object: ANY; transaction: PS_INTERNAL_TRANSACTION): PS_OBJECT_IDENTIFIER_WRAPPER
 			-- Get the identifier of `an_object'.
 		require
 			identified: is_identified (an_object, transaction)
@@ -115,23 +115,23 @@ feature {PS_EIFFELSTORE_EXPORT} -- Identification
 			item_present: Result.item = an_object
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction Status
+feature {PS_ABEL_EXPORT} -- Transaction Status
 
-	can_commit (transaction: PS_TRANSACTION): BOOLEAN
+	can_commit (transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Can `Current' commit the changes in `Transaction'?
 		do
 			Result := True
 		end
 
-	is_registered (transaction: PS_TRANSACTION): BOOLEAN
+	is_registered (transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `transaction' known to `Current'?
 		do
 			Result := registered_transactions.has (transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction management
+feature {PS_ABEL_EXPORT} -- Transaction management
 
-	register_transaction (transaction: PS_TRANSACTION)
+	register_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Add `transaction' to the pool of active transactions, if not present yet.
 		do
 			if not is_registered (transaction) then
@@ -142,7 +142,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction management
 			is_registered (transaction)
 		end
 
-	commit (transaction: PS_TRANSACTION)
+	commit (transaction: PS_INTERNAL_TRANSACTION)
 			-- Commit `transaction', making all identifications permanent
 		require
 			registered: is_registered (transaction)
@@ -156,7 +156,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction management
 			not_registered: not is_registered (transaction)
 		end
 
-	rollback (transaction: PS_TRANSACTION)
+	rollback (transaction: PS_INTERNAL_TRANSACTION)
 			-- Rollback all identifications performed within `transaction'
 		require
 			registered: is_registered (transaction)
@@ -176,9 +176,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction management
 			not_registered: not is_registered (transaction)
 		end
 
-	registered_transactions: LINKED_LIST [PS_TRANSACTION]
+	registered_transactions: LINKED_LIST [PS_INTERNAL_TRANSACTION]
 
-feature {PS_EIFFELSTORE_EXPORT} -- Deletion management
+feature {PS_ABEL_EXPORT} -- Deletion management
 
 	cleanup
 			-- Remove all entries where the weak reference is Void, i.e. the garbage collector has collected the object
@@ -208,7 +208,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Deletion management
 	subscribers: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 			-- A list of all subscribers interested in deletion events
 
-feature {PS_EIFFELSTORE_EXPORT} -- Utilities
+feature {PS_ABEL_EXPORT} -- Utilities
 
 	metadata_manager: PS_METADATA_FACTORY
 			-- A manager to generate metadata
@@ -239,10 +239,10 @@ feature {NONE} -- Implementation
 	global_set: PS_IDENTIFIER_SET
 			-- The global set of (committed) identifiers
 
-	transaction_sets: LINKED_LIST [TUPLE [transaction: PS_TRANSACTION; set: PS_IDENTIFIER_SET]]
+	transaction_sets: LINKED_LIST [TUPLE [transaction: PS_INTERNAL_TRANSACTION; set: PS_IDENTIFIER_SET]]
 			-- The transaction-local sets
 
-	local_set (transaction: PS_TRANSACTION): PS_IDENTIFIER_SET
+	local_set (transaction: PS_INTERNAL_TRANSACTION): PS_IDENTIFIER_SET
 			-- Get the local set for `transaction'
 		require
 			registered: is_registered (transaction)

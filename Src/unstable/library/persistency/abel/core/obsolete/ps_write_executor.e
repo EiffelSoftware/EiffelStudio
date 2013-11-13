@@ -9,7 +9,7 @@ class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create
 	make
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			id_manager := an_id_manager
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	can_backend_handle_operations (operation_plan: LIST [PS_OBJECT_GRAPH_PART]): BOOLEAN
 			-- Can the backend handle all operations in `operation_plan'?
@@ -43,9 +43,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
-	perform_operations (operation_plan: LIST [PS_OBJECT_GRAPH_PART]; transaction: PS_TRANSACTION)
+	perform_operations (operation_plan: LIST [PS_OBJECT_GRAPH_PART]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Performs all operations in `operation_plan'.
 		do
 			across
@@ -63,7 +63,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	handle_object (object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION)
+	handle_object (object: PS_SINGLE_OBJECT_PART; transaction: PS_INTERNAL_TRANSACTION)
 			-- Perform a write operation on `object'.
 		local
 			attribute_values: LINKED_LIST [PS_OBJECT_GRAPH_PART]
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_object_collection (object_collection: PS_OBJECT_COLLECTION_PART; transaction: PS_TRANSACTION)
+	handle_object_collection (object_collection: PS_OBJECT_COLLECTION_PART; transaction: PS_INTERNAL_TRANSACTION)
 			-- Perform a write operation on `object_collection'.
 		do
 			identify_all (object_collection, object_collection.values.new_cursor, transaction)
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_relational_collection (relational_collection: PS_RELATIONAL_COLLECTION_PART; transaction: PS_TRANSACTION)
+	handle_relational_collection (relational_collection: PS_RELATIONAL_COLLECTION_PART; transaction: PS_INTERNAL_TRANSACTION)
 			-- Perform a write operation on `relational_collection'.
 		do
 			identify_all (relational_collection, relational_collection.values.new_cursor, transaction)
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	identify_all (object: PS_COMPLEX_PART; referenced_objects: ITERATION_CURSOR [PS_OBJECT_GRAPH_PART]; transaction: PS_TRANSACTION)
+	identify_all (object: PS_COMPLEX_PART; referenced_objects: ITERATION_CURSOR [PS_OBJECT_GRAPH_PART]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Identify `object' and all `referenced_objects' and set a wrapper for all of them.
 		local
 			value: PS_OBJECT_GRAPH_PART

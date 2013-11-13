@@ -16,9 +16,9 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object query
+feature {PS_ABEL_EXPORT} -- Object query
 
-	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
+	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute `query' within `transaction'.
 		do
 			id_manager.register_transaction (transaction)
@@ -43,7 +43,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 			default_transactional_rescue (query.transaction)
 		end
 
-	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
+	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute the tuple query `tuple_query' within the readonly transaction `transaction'.
 		local
 			exception: PS_INTERNAL_ERROR
@@ -67,9 +67,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object query
 			default_transactional_rescue (tuple_query.transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Modification
+feature {PS_ABEL_EXPORT} -- Modification
 
-	insert (object: ANY; transaction: PS_TRANSACTION)
+	insert (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert `object' within `transaction' into `Current'.
 		do
 			id_manager.register_transaction (transaction)
@@ -80,7 +80,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 			default_transactional_rescue (transaction)
 		end
 
-	update (object: ANY; transaction: PS_TRANSACTION)
+	update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Update `object' within `transaction'.
 		do
 			id_manager.register_transaction (transaction)
@@ -91,7 +91,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 			default_transactional_rescue (transaction)
 		end
 
-	delete (object: ANY; transaction: PS_TRANSACTION)
+	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `object' within `transaction' from `Current'.
 		do
 			id_manager.register_transaction (transaction)
@@ -102,9 +102,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Modification
 			default_transactional_rescue (transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
+feature {PS_ABEL_EXPORT} -- Transaction handling
 
-	commit_transaction (transaction: PS_TRANSACTION)
+	commit_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Explicitly commit the transaction.
 		do
 			if id_manager.can_commit (transaction) then
@@ -118,7 +118,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 			default_transactional_rescue (transaction)
 		end
 
-	rollback_transaction (transaction: PS_TRANSACTION; manual_rollback: BOOLEAN)
+	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION; manual_rollback: BOOLEAN)
 			-- Rollback the transaction.
 		do
 			backend.rollback (transaction)
@@ -126,7 +126,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 			transaction.declare_as_aborted
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Testing
+feature {PS_ABEL_EXPORT} -- Testing
 
 	clean_db_for_testing
 			-- Wipe out all data.
@@ -141,7 +141,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status Report
+feature {PS_ABEL_EXPORT} -- Status Report
 
 	can_handle (object: ANY): BOOLEAN
 			-- Can `Current' handle the object `object'?
@@ -150,7 +150,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 			Result := True
 		end
 
-	is_root (object: ANY; transaction: PS_TRANSACTION): BOOLEAN
+	is_root (object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `object' a garbage collection root?
 		do
 			Result := True
@@ -182,9 +182,9 @@ feature -- Initialization
 			collection_handlers.extend (handler)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Implementation
+feature {PS_ABEL_EXPORT} -- Implementation
 
-	identify_all (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+	identify_all (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_INTERNAL_TRANSACTION)
 			-- Add an identifier wrapper to all objects in the graph
 		do
 			across object_graph as cursor
@@ -211,7 +211,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			-- The collection handlers registered with `Current'
 
 
-	do_delete (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+	do_delete (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_INTERNAL_TRANSACTION)
 		local
 			entity: PS_BACKEND_ENTITY
 			objects_to_delete: LINKED_LIST[PS_BACKEND_ENTITY]
@@ -249,7 +249,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			end
 		end
 
-	do_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+	do_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_INTERNAL_TRANSACTION)
 		local
 			table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
 			collection_table: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
@@ -338,7 +338,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 		end
 
 
-	fill_retrieved (object: PS_SINGLE_OBJECT_PART; retrieved: PS_BACKEND_OBJECT; transaction: PS_TRANSACTION)
+	fill_retrieved (object: PS_SINGLE_OBJECT_PART; retrieved: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION)
 		local
 			attr: PS_PAIR[STRING, STRING]
 			id: INTEGER
@@ -365,7 +365,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 		end
 
 
-	to_retrieved (object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): PS_BACKEND_OBJECT
+	to_retrieved (object: PS_SINGLE_OBJECT_PART; transaction: PS_INTERNAL_TRANSACTION): PS_BACKEND_OBJECT
 
 		do
 			if object.write_operation = object.write_operation.insert then
@@ -377,7 +377,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 		end
 
 
-	to_retrieved_collection (coll: PS_OBJECT_COLLECTION_PART; transaction: PS_TRANSACTION): PS_BACKEND_COLLECTION
+	to_retrieved_collection (coll: PS_OBJECT_COLLECTION_PART; transaction: PS_INTERNAL_TRANSACTION): PS_BACKEND_COLLECTION
 		local
 			item: PS_PAIR[STRING, STRING]
 			id: INTEGER

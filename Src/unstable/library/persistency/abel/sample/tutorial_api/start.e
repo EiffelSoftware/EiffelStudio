@@ -149,7 +149,7 @@ feature -- Initialization
 			-- Populate the repository with some person objects.
 		local
 			p1, p2, p3: PERSON
-			transaction: PS_TRANSACTION_CONTEXT
+			transaction: PS_TRANSACTION
 		do
 
 			create p1.make_with_age ("Albo", "Bitossi", 1)
@@ -175,7 +175,7 @@ feature -- Initialization
 			-- Populate the repository with some children objects.
 		local
 			c1, c2, c3: CHILD
-			transaction: PS_TRANSACTION_CONTEXT
+			transaction: PS_TRANSACTION
 		do
 			create c1.make ("Baby", "Doe")
 			create c2.make ("John", "Doe")
@@ -203,7 +203,7 @@ feature -- Data modification
 			-- Increase the age of Berno Citrini by one.
 		local
 			query: PS_OBJECT_QUERY[PERSON]
-			context: PS_TRANSACTION_CONTEXT
+			context: PS_TRANSACTION
 		do
 			print ("Updating Berno Citrini's age by one.%N")
 
@@ -243,7 +243,7 @@ feature -- Data modification
 			-- Make use of criteria.
 		local
 			query: PS_OBJECT_QUERY[PERSON]
-			context: PS_TRANSACTION_CONTEXT
+			context: PS_TRANSACTION
 			berno: PERSON
 		do
 			print ("Updating Berno Citrini's age by one (the smart way).%N")
@@ -276,7 +276,7 @@ feature -- Data modification
 	update_john_doe
 			-- Try to update John Doe in several ways.
 		local
-			transaction: PS_TRANSACTION_CONTEXT
+			transaction: PS_TRANSACTION
 			query: PS_OBJECT_QUERY [CHILD]
 			baby: CHILD
 			john: CHILD
@@ -364,7 +364,11 @@ feature -- Criteria
 
 			repository.execute_query (query)
 			print_result (query)
+
+				-- If you don't plan on reusing the query object, call close.
 			query.close
+				-- :
+			query.reset
 
 				-- For string types you can use the `like' operator.
 				-- `like' compares against a pattern with wild cards:
@@ -372,13 +376,13 @@ feature -- Criteria
 				-- '?' for a single unknown character.
 
 			print ("Select all persons whose last name ends with *ni.%N")
+				-- TODO
 			create query.make_with_criterion (criterion_factory.new_predefined ("last_name", "like", "*ni"))
 
 			repository.execute_query (query)
 			print_result (query)
 
-				-- By the way, there's a shortcut to close and recreate a query:
-			query.reset
+
 
 				-- It is possible to combine criteria using `and' and `or'.
 
@@ -457,7 +461,7 @@ feature -- Root objects
 			-- See what can be done with the `root' status of an object.
 		local
 			query: PS_OBJECT_QUERY [CHILD]
-			transaction: PS_TRANSACTION_CONTEXT
+			transaction: PS_TRANSACTION
 		do
 			-- By default any root of an object graph during `insert'
 			-- is also a garbage collection root.
@@ -476,7 +480,7 @@ feature -- Root objects
 			loop
 				print (cursor.item.first_name + " " + cursor.item.last_name)
 				print (", is_root: ")
-					-- The root status can be queried with `{PS_TRANSACTION_CONTEXT}.is_root'.
+					-- The root status can be queried with `{PS_TRANSACTION}.is_root'.
 				print (transaction.is_root (cursor.item))
 				io.new_line
 			end

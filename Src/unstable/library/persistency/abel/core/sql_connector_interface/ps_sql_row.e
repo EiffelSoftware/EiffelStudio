@@ -7,14 +7,14 @@ note
 deferred class
 	PS_SQL_ROW
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	has_column (column_name: STRING): BOOLEAN
 			-- Does `Current' have a column with name `column_name'?
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER
 			-- The number of items in `Current' row.

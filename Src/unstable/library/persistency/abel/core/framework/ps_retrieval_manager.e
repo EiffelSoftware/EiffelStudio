@@ -9,16 +9,16 @@ class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 	REFACTORING_HELPER
 
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Query execution
+feature {PS_ABEL_EXPORT} -- Query execution
 
-	setup_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
+	setup_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Set up query `query' and retrieve the first result.
 		do
 			initialize_query (query, create {LINKED_LIST [STRING]}.make, transaction)
@@ -32,7 +32,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Query execution
 			retrieve_until_criteria_match (query, query.transaction)
 		end
 
-	setup_tuple_query (query: PS_TUPLE_QUERY[ANY]; transaction: PS_TRANSACTION)
+	setup_tuple_query (query: PS_TUPLE_QUERY[ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Set up the query and retrieve the first result
 		local
 			collector: PS_CRITERION_ATTRIBUTE_COLLECTOR
@@ -61,7 +61,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Query execution
 
 feature {NONE} -- Implementation - Retrieval
 
-	retrieve_until_criteria_match (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
+	retrieve_until_criteria_match (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Retrieve objects until the criteria in `query.criteria' are satisfied.
 		local
 			new_object: ANY
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation - Retrieval
 			end
 		end
 
-	retrieve_tuples_until_criteria_match (query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
+	retrieve_tuples_until_criteria_match (query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Retrieve objects until the criteria in `query.criteria' are satisfied.
 
 			local
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation - Retrieval
 
 feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 
-	build_object (type: PS_TYPE_METADATA; obj: PS_BACKEND_OBJECT; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN; depth: INTEGER): ANY
+	build_object (type: PS_TYPE_METADATA; obj: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; identify:BOOLEAN; depth: INTEGER): ANY
 			-- Build the object `obj'.
 		require
 			obj.metadata.base_class.name.is_equal (type.base_class.name)
@@ -221,14 +221,14 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			type_correct: Result.generating_type.type_id = type.type.type_id
 		end
 
-	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
+	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `relational_collection'.
 		do
 			Result := handler.build_relational_collection (type, build_collection_items (type, relational_collection, transaction, bookkeeping, depth))
 			id_manager.identify (Result, transaction)
 		end
 
-	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_BACKEND_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
+	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_BACKEND_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `object_collection'.
 		do
 			Result := handler.build_collection (type, build_collection_items (type, object_collection, transaction, bookkeeping, depth), object_collection)
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 
 feature {NONE} -- Implementation - Build support functions.
 
-	build (type: PS_TYPE_METADATA; value: PS_PAIR [STRING, STRING]; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): detachable ANY
+	build (type: PS_TYPE_METADATA; value: PS_PAIR [STRING, STRING]; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): detachable ANY
 			-- Build an object based on the type.
 		require
 			type.type.name.is_equal (value.second)
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation - Build support functions.
 
 		end
 
-	build_collection_items (type: PS_TYPE_METADATA; collection: PS_RETRIEVED_COLLECTION; transaction: PS_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): LINKED_LIST [detachable ANY]
+	build_collection_items (type: PS_TYPE_METADATA; collection: PS_RETRIEVED_COLLECTION; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): LINKED_LIST [detachable ANY]
 			-- Build a list with all collection items correctly loaded.
 		local
 			collection_items: LINKED_LIST [detachable ANY]
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation: Collection handlers
 
 feature {NONE} -- Implementation: Query initialization
 
-	initialize_query (query: PS_QUERY [ANY, ANY]; some_attributes: LIST [STRING]; transaction: PS_TRANSACTION)
+	initialize_query (query: PS_QUERY [ANY, ANY]; some_attributes: LIST [STRING]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Initialize query - Set an identifier, initialize with bookkeeping manager and execute against backend.
 		local
 			results: ITERATION_CURSOR [ANY]
@@ -544,7 +544,7 @@ feature {NONE} -- Initialization
 			repository := repo
 		end
 
-	internal_add_mapping (obj: PS_OBJECT_IDENTIFIER_WRAPPER; primary: INTEGER; transaction: PS_TRANSACTION)
+	internal_add_mapping (obj: PS_OBJECT_IDENTIFIER_WRAPPER; primary: INTEGER; transaction: PS_INTERNAL_TRANSACTION)
 		do
 			repository.mapper.add_entry (obj, primary, transaction)
 		end

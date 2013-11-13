@@ -16,7 +16,7 @@ deferred class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 		undefine
 			default_create
 		end
@@ -34,7 +34,7 @@ feature {PS_TEST_PROVIDER}
 	executor: PS_EXECUTOR
 			-- An executor for `repository'
 
-	repo_access: PS_TRANSACTION_CONTEXT
+	repo_access: PS_TRANSACTION
 
 	test_data: PS_TEST_DATA
 			-- Some useful test data
@@ -60,7 +60,7 @@ feature {PS_TEST_PROVIDER}
 	test_read_write_cycle (object: ANY; update_operation: detachable PROCEDURE [ANY, TUPLE [ANY]])
 			-- Perform a write-read test on `object' with a possible `update_operation'.
 		local
-			context: PS_TRANSACTION_CONTEXT
+			context: PS_TRANSACTION
 			query: PS_OBJECT_QUERY [ANY]
 			first_count: INTEGER
 			second_count: INTEGER
@@ -106,7 +106,7 @@ feature {PS_TEST_PROVIDER}
 			-- Use root object status.
 		local
 			object: ANY
-			context: PS_TRANSACTION_CONTEXT
+			context: PS_TRANSACTION
 			query: PS_OBJECT_QUERY [ANY]
 			first_count: INTEGER
 			second_count: INTEGER

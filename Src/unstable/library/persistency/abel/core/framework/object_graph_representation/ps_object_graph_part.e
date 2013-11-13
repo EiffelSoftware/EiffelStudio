@@ -11,9 +11,9 @@ inherit
 
 	ITERABLE [PS_OBJECT_GRAPH_PART]
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	represented_object: ANY
 			-- The object which gets represented by `Current'.
@@ -46,7 +46,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_persistent: BOOLEAN
 			-- Is `Current' already persistent?
@@ -86,7 +86,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 	is_visited: BOOLEAN
 			-- Has current part been visited?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Utilities
+feature {PS_ABEL_EXPORT} -- Utilities
 
 	as_attribute (primary_key: INTEGER): TUPLE [value: STRING; type: STRING]
 			-- The value and type of `Current' as an attribute to other objects.
@@ -117,7 +117,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Utilities
 			Result := ""
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	set_visited (flag: BOOLEAN)
 			-- Set `is_visited' to `flag'.
@@ -136,7 +136,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
 			not_present: not dependencies.has (dependency)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access: Cursor
+feature {PS_ABEL_EXPORT} -- Access: Cursor
 
 	new_cursor: PS_OBJECT_GRAPH_CURSOR
 			-- Create a new cursor over the current object graph.

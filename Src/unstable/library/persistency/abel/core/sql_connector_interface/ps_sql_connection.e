@@ -11,7 +11,7 @@ inherit
 
 	ITERABLE [PS_SQL_ROW]
 
-feature {PS_EIFFELSTORE_EXPORT} -- Settings
+feature {PS_ABEL_EXPORT} -- Settings
 
 	set_autocommit (flag: BOOLEAN)
 			-- Enable or disable autocommit on this connection.
@@ -26,7 +26,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Settings
 	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
 			-- The transaction isolation level of the current connection, as set at creation time.
 
-feature {PS_EIFFELSTORE_EXPORT} -- Database operations
+feature {PS_ABEL_EXPORT} -- Database operations
 
 	execute_sql (statement: STRING)
 			-- Execute the SQL statement `statement', and store the result (if any) in `Current.last_result'
@@ -50,7 +50,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Database operations
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Database results
+feature {PS_ABEL_EXPORT} -- Database results
 
 	last_result: ITERATION_CURSOR [PS_SQL_ROW]
 			-- The result of the last database operation.
@@ -67,7 +67,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Database results
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Utilities
+feature {PS_ABEL_EXPORT} -- Utilities
 
 	new_cursor: ITERATION_CURSOR [PS_SQL_ROW]
 			-- Get a cursor over the `last_result' (Convenience function to support the `across' syntax).

@@ -20,10 +20,10 @@ inherit
 			make, is_equal, out
 		end
 
-create {PS_EIFFELSTORE_EXPORT}
+create {PS_ABEL_EXPORT}
 	make, make_fresh
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	is_root: BOOLEAN
 			-- Is the current entity a garbage collection root?
@@ -43,7 +43,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			Result := attach (values [attribute_name])
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	has_attribute (attribute_name: STRING): BOOLEAN
 			-- Does the `Current' retrieved object have an attribute with name `attribute_name'?
@@ -123,7 +123,7 @@ feature -- Comparison
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Element change
+feature {PS_ABEL_EXPORT} -- Element change
 
 	add_attribute (attribute_name: STRING; value: STRING; class_name_of_value: STRING)
 			-- Add the attribute `attribute_name' with value tuple <`value', `class_name_of_value'>.

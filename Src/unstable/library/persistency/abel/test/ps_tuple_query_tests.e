@@ -149,7 +149,7 @@ feature
 		local
 			query: PS_TUPLE_QUERY[REFERENCE_CLASS_1]
 			res: LINKED_LIST[TUPLE[INTEGER]]
-			transaction: PS_TRANSACTION_CONTEXT
+			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
 			transaction := repository.new_transaction_context

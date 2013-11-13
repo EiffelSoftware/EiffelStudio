@@ -31,17 +31,17 @@ feature -- Lazy loading
 			correct: size = lazy_loading_batch_size
 		end
 
-feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
+feature {PS_ABEL_EXPORT}-- Backend capabilities
 
 	is_generic_collection_supported: BOOLEAN = True
 			-- Can the current backend support collections in general,
 			-- i.e. is there a default strategy?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
+feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
 
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- Retrieves all objects of type `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
 			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
 			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
@@ -54,7 +54,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 		end
 
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		local
@@ -89,9 +89,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
 			rollback (transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
+feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		local
 			result_list: LINKED_LIST[PS_BACKEND_COLLECTION]
@@ -162,7 +162,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			Result := result_list.new_cursor
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_BACKEND_COLLECTION
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		local
 			position: INTEGER
@@ -233,9 +233,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 --			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
+feature {PS_ABEL_EXPORT} -- Transaction handling
 
-	commit (a_transaction: PS_TRANSACTION)
+	commit (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'.
 		local
 			connection: PS_SQL_CONNECTION
@@ -249,7 +249,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 			rollback (a_transaction)
 		end
 
-	rollback (a_transaction: PS_TRANSACTION)
+	rollback (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Aborts `a_transaction' and undoes all changes in the database.
 		local
 			connection: PS_SQL_CONNECTION
@@ -277,11 +277,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 
 feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 
-	get_connection (transaction: PS_TRANSACTION): PS_SQL_CONNECTION
+	get_connection (transaction: PS_INTERNAL_TRANSACTION): PS_SQL_CONNECTION
 			-- Get the connection associated with `transaction'.
 			-- Acquire a new connection if the transaction is new.
 		local
-			new_connection: PS_PAIR [PS_SQL_CONNECTION, PS_TRANSACTION]
+			new_connection: PS_PAIR [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]
 			the_actual_result_as_detachable_because_of_stupid_void_safety_rule: detachable PS_SQL_CONNECTION
 		do
 			if transaction.is_readonly then
@@ -306,7 +306,7 @@ feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 			end
 		end
 
-	release_connection (transaction: PS_TRANSACTION)
+	release_connection (transaction: PS_INTERNAL_TRANSACTION)
 			-- Release the connection associated with `transaction'.
 		do
 			from
@@ -323,7 +323,7 @@ feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 			end
 		end
 
-	active_connections: LINKED_LIST [PS_PAIR [PS_SQL_CONNECTION, PS_TRANSACTION]]
+	active_connections: LINKED_LIST [PS_PAIR [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]]
 			-- These are the normal connections attached to a transaction.
 			-- They do not have auto-commit and they are closed once the transaction is finished.
 			-- They only write and read the ps_value table.

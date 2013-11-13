@@ -162,7 +162,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND, PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}
 			Result := "INSERT INTO ps_value (objectid, attributeid, runtimetype, value) VALUES ( " + object_primary.out + ", " + attribute_id.out + ", " + runtime_type.out + ", '" + value + "')"
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Table and column names
+feature {PS_ABEL_EXPORT} -- Table and column names
 
 	Class_table: STRING = "ps_class"
 
@@ -192,13 +192,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Table and column names
 
 	Collection_info_table: STRING = "ps_collection_info"
 
-feature {PS_EIFFELSTORE_EXPORT} -- Special attributes and classes
+feature {PS_ABEL_EXPORT} -- Special attributes and classes
 
 	None_class: STRING = "NONE"
 
 	Existence_attribute: STRING = "ps_existence"
 
-feature {PS_EIFFELSTORE_EXPORT} -- Management and testing
+feature {PS_ABEL_EXPORT} -- Management and testing
 
 	Delete_all_values: STRING = "DELETE FROM ps_value"
 
@@ -212,7 +212,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Management and testing
 
 	Drop_collection_info_table: STRING = "DROP TABLE ps_collection_info"
 
-feature {PS_EIFFELSTORE_EXPORT} -- Utilities
+feature {PS_ABEL_EXPORT} -- Utilities
 
 	to_list_with_braces(args: TUPLE): STRING
 		do

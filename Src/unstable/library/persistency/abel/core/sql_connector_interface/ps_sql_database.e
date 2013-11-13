@@ -12,9 +12,9 @@ deferred class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
-feature {PS_EIFFELSTORE_EXPORT}
+feature {PS_ABEL_EXPORT}
 
 	acquire_connection: PS_SQL_CONNECTION
 			-- Get a new connection.

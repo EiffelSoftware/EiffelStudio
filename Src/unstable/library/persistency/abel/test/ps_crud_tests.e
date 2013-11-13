@@ -352,7 +352,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			special: SPECIAL[INTEGER]
 			query: PS_OBJECT_QUERY[SHARED_SPECIAL]
 			query2: PS_OBJECT_QUERY[SPECIAL[INTEGER]]
-			transaction: PS_TRANSACTION_CONTEXT
+			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
 			create special.make_filled (0, 2)

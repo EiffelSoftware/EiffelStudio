@@ -11,7 +11,7 @@ inherit
 
 	PS_OBJECT_GRAPH_PART
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	root: PS_OBJECT_GRAPH_ROOT
 			-- The root of the object graph.
@@ -25,7 +25,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 	object_identifier: INTEGER = 0
 			-- The object identifier of `Current'. Returns 0 if `Current' is no complex part.
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_complex_attribute: BOOLEAN = False
 			-- Is `Current' an instance of PS_COMPLEX_ATTRIBUTE_PART?
@@ -33,7 +33,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 	is_collection: BOOLEAN = False
 			-- Is `Current' an instance of PS_COLLECTION_PART?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	break_dependency (dependency: PS_OBJECT_GRAPH_PART)
 			-- Break the dependency `dependency'.

@@ -10,14 +10,14 @@ class
 inherit
 
 	PS_SQL_CONNECTION
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 	
 	REFACTORING_HELPER
 
 create {PS_SQLITE_DATABASE}
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Settings
+feature {PS_ABEL_EXPORT} -- Settings
 
 	set_autocommit (flag: BOOLEAN)
 			-- Enable or disable autocommit
@@ -25,7 +25,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Settings
 				-- Autocommit has to be disabled with only a single connection, so don't enable it
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Database operations
+feature {PS_ABEL_EXPORT} -- Database operations
 
 	execute_sql (statement: STRING)
 			-- Execute the SQL statement `statement', and store the result (if any) in `Current.last_result'
@@ -108,7 +108,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Database operations
 			internal_connection.begin_transaction (False)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Database results
+feature {PS_ABEL_EXPORT} -- Database results
 
 	last_result: ITERATION_CURSOR [PS_SQL_ROW]
 			-- The result of the last database operation

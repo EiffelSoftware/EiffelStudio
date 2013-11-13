@@ -11,7 +11,7 @@ inherit
 
 	PS_OBJECT_GRAPH_PART
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	represented_object: ANY
 			-- The object which gets represented by `Current'.
@@ -33,7 +33,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			Result := object_wrapper.object_identifier
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_representing_object: BOOLEAN = True
 			-- Is `Current' representing an existing object?
@@ -47,7 +47,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := attached internal_object_id
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	set_object_wrapper (an_object_id: PS_OBJECT_IDENTIFIER_WRAPPER)
 			-- Set the object identifier wrapper of `Current'.

@@ -11,7 +11,7 @@ inherit
 
 	ITERATION_CURSOR [G]
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 		export {NONE}
 			all
 		end

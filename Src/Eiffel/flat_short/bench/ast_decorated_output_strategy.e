@@ -2990,7 +2990,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.new_expression
 				put_breakable
 			end
-			l_as.then_expression.process (Current)
+			l_as.else_expression.process (Current)
 			if not expr_type_visiting then
 				exdent.call (Void)
 				l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)

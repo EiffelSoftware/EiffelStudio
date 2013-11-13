@@ -116,7 +116,9 @@ feature -- Eiffel interaction
 		do
 			objc_to_eiffel_object_map.search (a_ptr)
 			if objc_to_eiffel_object_map.found then
-				Result ?= eif_id_object (objc_to_eiffel_object_map.found_item)
+				if attached {NS_OBJECT} eif_id_object (objc_to_eiffel_object_map.found_item) as l_result then
+					Result := l_result
+				end
 			end
 		end
 
@@ -198,7 +200,7 @@ feature {NONE}
 				end
 				if nargs > 2 then
 					create args_managed.own_from_pointer (args, nargs*4)
-					type := l_agent.empty_operands.generating_type.name
+					type := l_agent.generating_type.generic_parameter_type (2).name
 					if type.is_equal ("TUPLE [!NS_RECT]") or type.is_equal ("TUPLE [NS_RECT]") then
 						if attached {MEMORY_STRUCTURE} new_instance_of (dynamic_type_from_string ("NS_RECT")) as obj then
 							obj.make_by_pointer (args_managed.read_pointer (0))
@@ -332,7 +334,7 @@ feature {OBJC_CLASS} -- Externals, to be able to call the superclass or previous
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

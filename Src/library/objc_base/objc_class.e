@@ -257,16 +257,18 @@ feature {NONE} -- Implementation
 			elseif attached {ROUTINE [ANY, TUPLE]} a_agent as l_routine then
 				-- Command / No return type
 				Result.prepend ("v")
-				type := l_routine.empty_operands.generating_type.name
+				type := l_routine.generating_type.generic_parameter_type (2).name
 
 				if type.is_equal ("TUPLE") then
 					-- No arguments
 				elseif type.is_equal ("TUPLE [POINTER]") then
 					Result.append ("*")
-				elseif type.is_equal ("TUPLE [!NS_OBJECT]") or type.is_equal ("TUPLE [NS_OBJECT]") or
+				elseif
+					type.is_equal ("TUPLE [!NS_OBJECT]") or type.is_equal ("TUPLE [NS_OBJECT]") or
 					type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]") or
 					type.is_equal ("TUPLE [!NS_NOTIFICATION]") or type.is_equal ("TUPLE [NS_NOTIFICATION]") or
-					type.is_equal ("TUPLE [!NS_WINDOW]") or type.is_equal ("TUPLE [NS_WINDOW]") then
+					type.is_equal ("TUPLE [!NS_WINDOW]") or type.is_equal ("TUPLE [NS_WINDOW]")
+				then
 					-- dynamic_type_from_string (...), generic_dynamic_type(type, i)...
 					Result.append ("*")
 				elseif type.is_equal ("TUPLE [!NS_RECT]") or type.is_equal ("TUPLE [NS_RECT]") then
@@ -275,7 +277,7 @@ feature {NONE} -- Implementation
 					check
 						bridging_not_supported_for_method_signature: False
 					end
-					io.error.put_string ("ERROR: No callback for your argument types: '" + l_routine.empty_operands.generating_type.name + "' " + a_agent.out + "%N")
+					io.error.put_string ("ERROR: No callback for your argument types: '" + type + "' " + a_agent.out + "%N")
 				end
 			else
 				-- ERROR: The type a_agent is not supported
@@ -318,7 +320,7 @@ feature {OBJC_CALLBACK_MARSHAL, OBJC_CLASS, NS_OBJECT} -- C Object
 invariant
 	item_not_null: item /= default_pointer
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

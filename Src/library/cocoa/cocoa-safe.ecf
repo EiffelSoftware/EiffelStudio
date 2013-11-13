@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="cocoa" uuid="804E870E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="cocoa">
 	<target name="cocoa">
 		<description>Cocoa Eiffel Library.
-			Copyright (c) 2009, Daniel Furrer.</description>
+&#9;&#9;&#9;Copyright (c) 2009, Daniel Furrer.</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/EIFGEN.{0,1}$</exclude>
@@ -18,14 +18,14 @@
 		<external_object location="$(ISE_LIBRARY)/library/objc_base/spec/$(ISE_PLATFORM)/lib/objc_base_eiffel.o"/>
 		<external_linker_flag value="-framework Cocoa"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="objective_c" location="$ISE_LIBRARY\library\objc_base\objc_base-safe.ecf"/>
 		<cluster name="cocoa" location=".\" recursive="true">
 			<file_rule>
-				<exclude>spec</exclude>
 				<exclude>/tests</exclude>
+				<exclude>spec</exclude>
 				<exclude>/\.svn$</exclude>
 				<exclude>/\Clib$</exclude>
 			</file_rule>
-			<cluster name="objc_base" location="..\objc_base\" recursive="true"/>
 		</cluster>
 	</target>
 </system>

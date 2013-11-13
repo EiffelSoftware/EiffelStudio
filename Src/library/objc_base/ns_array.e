@@ -35,9 +35,7 @@ inherit
 
 create
 	make_with_objects,
-	make_from_array
-
-create {NS_OBJECT, NS_ENVIRONEMENT}
+	make_from_array,
 	share_from_pointer
 
 convert

@@ -42,8 +42,8 @@ feature -- Access
 
 	make
 		do
-			create_split_view_delegate
 			initialize
+			create_split_view_delegate
 			split_view.set_delegate (current)
 			first_expandable := True
 			second_expandable := True
@@ -60,7 +60,7 @@ feature -- Access
 			l_imp: detachable EV_WIDGET_IMP
 		do
 			l_imp ?= v.implementation
-			check l_imp_not_void: l_imp /= Void end
+			check l_imp_not_void: l_imp /= Void then end
 			first := v
 --			on_new_item (l_imp)
 			l_imp.set_parent_imp (current)
@@ -84,7 +84,7 @@ feature -- Access
 		do
 			v.implementation.on_parented
 			v_imp ?= v.implementation
-			check l_imp_not_void: v_imp /= Void end
+			check l_imp_not_void: v_imp /= Void then end
 			v_imp.set_parent_imp (Current)
 			notify_change (Nc_minsize, Current)
 			second := v
@@ -144,7 +144,7 @@ feature -- Access
 		do
 			if has (an_item) and then an_item /= Void then
 				an_item_imp ?= an_item.implementation
-				check an_item_imp_not_void: an_item_imp /= Void end
+				check an_item_imp_not_void: an_item_imp /= Void then end
 				an_item_imp.set_parent_imp (Void)
 				if an_item = first then
 					first_expandable := False
@@ -218,14 +218,14 @@ feature -- Widget relationships
 			if attached first as l_first then
 				widget_imp ?= l_first.implementation
 				check
-					widget_implementation_not_void: widget_imp /= Void
+					widget_implementation_not_void: widget_imp /= Void then
 				end
 				widget_imp.set_top_level_window_imp (a_window)
 			end
 			if attached second as l_second then
 				widget_imp ?= l_second.implementation
 				check
-					widget_implementation_not_void: widget_imp /= Void
+					widget_implementation_not_void: widget_imp /= Void then
 				end
 				widget_imp.set_top_level_window_imp (a_window)
 			end
@@ -291,4 +291,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_SPLIT_AREA_IMP

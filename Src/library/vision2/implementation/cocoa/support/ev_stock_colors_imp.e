@@ -19,7 +19,7 @@ feature --
 		do
 			create l_color.light_gray_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
-			check l_color /= Void end
+			check l_color /= Void  then end
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
 
@@ -29,7 +29,7 @@ feature --
 		do
 			create l_color.control_background_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
-			check l_color /= Void end
+			check l_color /= Void then end
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
 
@@ -40,7 +40,7 @@ feature --
 		do
 			create l_color.highlight_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
-			check l_color /= Void end
+			check l_color /= Void then end
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
 
@@ -51,7 +51,7 @@ feature --
 		do
 			create l_color.shadow_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
-			check l_color /= Void end
+			check l_color /= Void then end
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
 
@@ -95,4 +95,14 @@ feature --
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_STOCK_COLORS_IMP

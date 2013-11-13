@@ -89,9 +89,9 @@ feature {NONE} -- Graphical view
 			create horizontal_box
 			create tree
 			create vertical_box
-			create hide_button.make_with_text_and_action ("hide", agent hide_widget)
-			create show_button.make_with_text_and_action ("show", agent show_widget)
-			create debug_button.make_with_text_and_action ("debug", agent debug_widget)
+			create hide_button.make_with_text ("hide")
+			create show_button.make_with_text ("show")
+			create debug_button.make_with_text ("debug")
 			create info_label.default_create
 		end
 
@@ -103,6 +103,11 @@ feature {NONE} -- Graphical view
 			Precursor {EV_TITLED_WINDOW}
 
 			create refresh_button.make_with_text_and_action ("refresh", agent update_tree)
+
+			hide_button.select_actions.extend (agent hide_widget)
+			show_button.select_actions.extend (agent show_widget)
+			debug_button.select_actions.extend (agent debug_widget)
+
 			refresh_button.set_tooltip ("Testing tooltips")
 			--hide_button.disable_sensitive
 			--show_button.disable_sensitive
@@ -500,4 +505,14 @@ feature {NONE} -- Implementation
 	debug_button: EV_BUTTON
 
 	info_label: EV_LABEL
+;note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

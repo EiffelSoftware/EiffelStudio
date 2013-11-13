@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 				insert_separator_item (sep_imp, pos)
 			else
 				menu_item_imp ?= item_imp
-				check menu_item_imp /= Void end
+				check menu_item_imp /= Void then end
 				menu_imp ?= menu_item_imp
 				if menu_imp /= Void then
 --					insert_menu (menu_imp, pos)
@@ -192,4 +192,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_MENU_ITEM_LIST_IMP

@@ -139,7 +139,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 					if attached key_press_string_actions_internal as l_key_press_actions then
 						temp_key_string := a_key_string
 						if a_key /= Void then
-							if a_key.out.count /= 1 and not a_key.is_numpad then
+							if a_key.text.count /= 1 and not a_key.is_numpad then
 									-- The key pressed is an action key, we only want
 								inspect
 									a_key.code
@@ -300,4 +300,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_WIDGET_IMP

@@ -108,7 +108,7 @@ feature -- access
 		do
 			if first_visible and not second_visible then
 				l_first_imp := first_imp
-				check l_first_imp /= Void end
+				check l_first_imp /= Void then end
 				if originator then
 					l_first_imp.set_move_and_size (0, 0, width, height)
 				else
@@ -118,7 +118,7 @@ feature -- access
 
 			if second_visible and not first_visible then
 				l_second_imp := second_imp
-				check l_second_imp /= Void end
+				check l_second_imp /= Void then end
 				if originator then
 					l_second_imp.set_move_and_size (0, 0, width, height)
 				else
@@ -129,7 +129,7 @@ feature -- access
 			if first_visible and second_visible then
 				l_first_imp := first_imp
 				l_second_imp := second_imp
-				check l_first_imp /= Void and l_second_imp /= Void end
+				check l_first_imp /= Void and l_second_imp /= Void then end
 				if originator then
 					l_first_imp.set_move_and_size (0, 0, width, internal_split_position)
 					l_second_imp.set_move_and_size (0, internal_split_position +
@@ -153,4 +153,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_VERTICAL_SPLIT_AREA_IMP

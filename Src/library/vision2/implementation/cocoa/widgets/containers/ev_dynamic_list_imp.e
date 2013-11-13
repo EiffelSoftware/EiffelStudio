@@ -43,13 +43,11 @@ feature {NONE} -- Implementation
 
 	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
-		local
-			l_item: detachable G_IMP
 		do
-			l_item ?= v.implementation
-			check l_item /= Void end
-			ev_children.go_i_th (i)
-			ev_children.put_left (l_item)
+			check attached {G_IMP} v.implementation as l_item then
+				ev_children.go_i_th (i)
+				ev_children.put_left (l_item)
+			end
 		end
 
 	remove_i_th (i: INTEGER)

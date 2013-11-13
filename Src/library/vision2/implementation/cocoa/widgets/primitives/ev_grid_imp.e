@@ -72,6 +72,8 @@ feature {NONE} -- Initialization
 		local
 			l_color: detachable NS_COLOR
 		do
+			create_implementation_objects
+
 			create focused_selection_color.make_with_rgb (1, 0, 0)
 
 			create l_color.selected_text_background_color
@@ -136,7 +138,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				tuple.put_integer (0, 2)
 			else
 				l_font_imp ?= a_font.implementation
-				check l_font_imp /= void end
+				check l_font_imp /= void then end
 				create l_string.make_with_string (a_string)
 				create l_attributes.make_with_object_for_key (l_font_imp.font, font_attribute_name)
 				l_size := l_string.size_with_attributes (l_attributes)
@@ -164,4 +166,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

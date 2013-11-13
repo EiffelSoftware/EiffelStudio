@@ -59,7 +59,7 @@ feature -- Element change
 			if attached par then
 				par_imp ?= par.implementation
 				check
-					valid_cast: par_imp /= Void
+					valid_cast: par_imp /= Void then
 				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
 			end
@@ -117,4 +117,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PRIMITIVE note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_PRIMITIVE_IMP

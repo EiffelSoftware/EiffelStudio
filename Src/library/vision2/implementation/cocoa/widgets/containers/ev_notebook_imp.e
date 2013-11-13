@@ -254,16 +254,14 @@ feature -- Element change
 		do
 			tabs.go_i_th (i)
 			l_tab_imp ?= tabs.item.implementation
-			check l_tab_imp /= Void end
+			check l_tab_imp /= Void then end
 			tab_view.remove_tab_view_item (l_tab_imp.tab_view_item)
 			tabs.remove
 
 			v := i_th (i)
-			check v /= Void end
+			check v /= Void then end
 			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
+			check v_imp_not_void: v_imp /= Void then end
 			remove_item_actions.call ([v_imp.attached_interface])
 			v_imp.on_orphaned
 			v_imp.set_parent_imp (Void)
@@ -282,9 +280,7 @@ feature -- Element change
 			l_tab_imp: detachable EV_NOTEBOOK_TAB_IMP
 		do
 			v_imp ?= v.implementation
-			check
-				not_void : v_imp /=  Void
-			end
+			check not_void : v_imp /=  Void then end
 			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
 			if last_selected = 0 then
@@ -297,9 +293,7 @@ feature -- Element change
 
 			create l_tab.make_with_widgets (attached_interface, v)
 			l_tab_imp ?= l_tab.implementation
-			check
-				l_tab_imp /= Void
-			end
+			check l_tab_imp /= Void then end
 			tabs.go_i_th (i)
 			tabs.put_left (l_tab)
 

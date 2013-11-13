@@ -16,37 +16,18 @@ inherit
 	SHARED_FILE_SYSTEM
 
 create
-	make,
-	make_with_depth
+	make
 
 feature {NONE} -- Initialization
 
 	make
 		do
-			create ecf_scanner.make
-		end
-
-	make_with_depth (n: INTEGER)
-		do
-			create ecf_scanner.make_with_depth (n)
-		end
-
-feature {NONE} -- Implementation
-
-	ecf_scanner: LIBRARY_ECF_SCANNER
-
-feature -- Access
-
-	maximum_depth: INTEGER
-		do
-			Result := ecf_scanner.max_depth
 		end
 
 feature -- Change
 
 	reset
 		do
-			ecf_scanner.reset
 		end
 
 feature -- Visitor
@@ -55,7 +36,18 @@ feature -- Visitor
 		local
 			l_scanner: LIBRARY_ECF_SCANNER
 		do
-			l_scanner := ecf_scanner
+			create l_scanner.make
+			l_scanner.process_directory (p)
+			across l_scanner.items as ic loop
+				visit_ecf_file (ic.item)
+			end
+		end
+
+	visit_folder_with_depth (p: PATH; a_max_depth: INTEGER)
+		local
+			l_scanner: LIBRARY_ECF_SCANNER
+		do
+			create l_scanner.make_with_depth (a_max_depth)
 			l_scanner.process_directory (p)
 			across l_scanner.items as ic loop
 				visit_ecf_file (ic.item)

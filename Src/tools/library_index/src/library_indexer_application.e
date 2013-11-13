@@ -20,8 +20,8 @@ inherit
 			on_folder_leave,
 			on_ecf_file_enter,
 			on_ecf_file_leave,
-			on_system_enter,
-			on_system_leave,
+--			on_system_enter,
+--			on_system_leave,
 			on_target,
 			on_library,
 			on_cluster,
@@ -60,26 +60,47 @@ feature {NONE} -- Execution
 			a_options_attached: a_options /= Void
 			a_options_is_successful: a_options.is_successful
 		local
-			flag_is_new: BOOLEAN
+			db: like saved_database
+			l_db_manager: LIBRARY_DATABASE_MANAGER
+			is_updating: BOOLEAN
+			l_file_path: PATH
 		do
 			is_verbose := a_options.is_verbose
 
-			if a_options.reset_requested then
-				if has_saved_database then
-					print ("Reset database%N")
+			create l_file_path.make_from_string ("library.db")
+
+			db := saved_database (l_file_path)
+			if db = Void or a_options.reset_requested or a_options.update_requested then
+				if db /= Void then
+					if a_options.reset_requested then
+						if is_verbose then
+							print ("Reset database%N")
+						end
+						db.wipe_out
+					else
+						check a_options.update_requested end
+						is_updating := True
+						if is_verbose then
+							print ("Update database%N")
+						end
+					end
+				else
+					if is_verbose then
+						print ("Building database%N")
+					end
+					create db.make
 				end
-				flag_is_new := True
-				database := Void
+
+				create l_db_manager.make_with_database (db)
+				index_all (l_db_manager, a_options, is_updating)
+				check l_db_manager.database = db end
+				save_database (db, l_file_path)
 			else
-				database := saved_database
-				if database /= Void then
-					print ("Database loaded%N")
-				end
+				print ("Database loaded%N")
 			end
-			index_all (a_options, flag_is_new)
 
 			if attached a_options.searching_term as t then
-				execute_class_query (t)
+				execute_class_query (t, db)
 			end
 		end
 
@@ -90,12 +111,11 @@ feature {NONE} -- Execution
 		local
 			l_arg_dirs: LIST [PATH]
 			vvv: PACKAGE_CONF_VISITOR
+			l_limit: INTEGER
 		do
-			if a_options.use_directory_recursion then
-				create vvv.make
-			else
-				create vvv.make_with_depth (1)
-			end
+			l_limit := a_options.recursion_limit
+
+			create vvv.make
 			across
 				a_options.files as ic
 			loop
@@ -106,191 +126,162 @@ feature {NONE} -- Execution
 			if l_arg_dirs.is_empty then
 				if a_options.files.is_empty then
 						-- No files or directories, use current directory
-					vvv.visit_folder (execution_environment.current_working_path)
+					if l_limit > 0 then
+						vvv.visit_folder_with_depth (execution_environment.current_working_path, l_limit)
+					else
+						vvv.visit_folder (execution_environment.current_working_path)
+					end
 				end
 			else
 				across
 					l_arg_dirs as ic
 				loop
-					vvv.visit_folder (ic.item)
+					if l_limit > 0 then
+						vvv.visit_folder_with_depth (ic.item, l_limit)
+					else
+						vvv.visit_folder (ic.item)
+					end
 				end
 			end
 		end
 
-	index_all (a_options: LIBRARY_INDEXER_ARGUMENTS; flag_is_new: BOOLEAN)
+	index_all (a_dbm: LIBRARY_DATABASE_MANAGER; a_options: LIBRARY_INDEXER_ARGUMENTS; is_updating: BOOLEAN)
 		require
+			a_dbm_attached: a_dbm /= Void
 			a_options_attached: a_options /= Void
 			a_options_is_successful: a_options.is_successful
 		local
-			l_is_new: BOOLEAN
+			db: LIBRARY_DATABASE
 			l_arg_dirs: LIST [PATH]
 			l_lib_indexer: LIBRARY_INDEXER
-			db: like saved_database
 			lst: ARRAYED_LIST [PATH]
 		do
-			is_updating := a_options.update_requested
+			create l_lib_indexer.make
 
-			l_is_new := flag_is_new
-			if l_is_new then
-				create db.make
-				database := db
-			else
-				db := database
-				if db = Void then
-					l_is_new := True
-					create db.make
-					database := db
-				end
+			l_lib_indexer.register_observer (Current)
+
+			across
+				a_options.files as ic
+			loop
+				l_lib_indexer.add_file (ic.item)
 			end
-			if l_is_new or is_updating then
-				if is_updating then
-					print ("Updating database%N")
-				end
-				if a_options.use_directory_recursion then
-					create l_lib_indexer.make
-				else
-					create l_lib_indexer.make_with_depth (1)
-				end
 
-				l_lib_indexer.register_observer (Current)
+			l_arg_dirs := a_options.directories
+			if l_arg_dirs.is_empty then
+				if a_options.files.is_empty then
+						-- No files or directories, use current directory
+					l_lib_indexer.scan (<<execution_environment.current_working_path>>, a_options.use_directory_recursion)
+				end
+			else
+				l_lib_indexer.scan (l_arg_dirs, a_options.use_directory_recursion)
+			end
+			print (l_lib_indexer.count.out + " ecf file(s).%N")
 
+			if is_updating then
+				create lst.make (0)
+				db := a_dbm.database
 				across
-					a_options.files as ic
+					l_lib_indexer.files as ic
 				loop
-					l_lib_indexer.add_file (ic.item)
-				end
-
-				l_arg_dirs := a_options.directories
-				if l_arg_dirs.is_empty then
-					if a_options.files.is_empty then
-							-- No files or directories, use current directory
-						l_lib_indexer.scan (<<execution_environment.current_working_path>>, a_options.use_directory_recursion)
-					end
-				else
-					l_lib_indexer.scan (l_arg_dirs, a_options.use_directory_recursion)
-				end
-				print (l_lib_indexer.count.out + " ecf file(s).%N")
-				if is_updating then
-					create lst.make (0)
-					across
-						l_lib_indexer.files as ic
-					loop
-						if db.has_ecf_file (ic.item) then
-							if is_verbose then
-								print ("File %"")
-								localized_print (ic.item.name)
-								print ("%" already indexed.%N")
-							end
-							lst.force (ic.item)
-						else
+					if db.has_ecf_file (ic.item) then
+						if is_verbose then
+							print ("File %"")
+							localized_print (ic.item.name)
+							print ("%" already indexed.%N")
 						end
-					end
-					from
-						lst.start
-					until
-						lst.after
-					loop
-						l_lib_indexer.remove_file (lst.item)
-						lst.remove
+						lst.force (ic.item)
+					else
 					end
 				end
-				l_lib_indexer.execute
-
-				save_database (db)
-			else
-				database := db
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					l_lib_indexer.remove_file (lst.item)
+					lst.remove
+				end
 			end
+--			l_lib_indexer.execute
+			a_dbm.import_files (l_lib_indexer.files)
 		end
 
-	execute_class_query (a_classname: READABLE_STRING_8)
+	execute_class_query (a_classname: READABLE_STRING_8; db: LIBRARY_DATABASE)
 		local
 			q: LIBRARY_DATABASE_QUERY
 		do
 			print ("Libraries containing {" + a_classname + "} -> ")
-			if attached database as db then
-				create q.make (db, a_classname)
-				q.execute
-				if attached q.items as lst then
-					if lst.is_empty then
-						print (" none.%N")
+			create q.make (db, a_classname)
+			q.execute
+			if attached q.items as lst then
+				if lst.is_empty then
+					print (" none.%N")
+				else
+					if lst.count = 1 then
+						print ("%N")
 					else
-						if lst.count = 1 then
-							print ("%N")
-						else
-							print ("found " + lst.count.out + "%N")
-						end
-						across
-							lst as ic
-						loop
-							print ("  ")
-							print (ic.key.name)
-							print (" @ ")
-							localized_print (ic.key.location.name)
-							print ("%N")
-							if q.pattern_has_wildchar then
-								across
-									ic.item as ic_classes
-								loop
-									print ("    - ")
-									print (ic_classes.item)
-									print ("%N")
-								end
+						print ("found " + lst.count.out + "%N")
+					end
+					across
+						lst as ic
+					loop
+						print ("  ")
+						print (ic.key.name)
+						print (" @ ")
+						localized_print (ic.key.location.name)
+						print ("%N")
+						if q.pattern_has_wildchar then
+							across
+								ic.item as ic_classes
+							loop
+								print ("    - ")
+								print (ic_classes.item)
+								print ("%N")
 							end
 						end
 					end
 				end
-			else
-				print (" ERROR database not found!%N")
 			end
 		end
 
-feature -- Access
-
-	database: detachable LIBRARY_DATABASE
-
-	last_indexed_data: detachable LIBRARY_INFO
-
-	is_updating: BOOLEAN
-			-- Is updating `database' ?
-
 feature -- Storage
 
-	save_database (db: detachable LIBRARY_DATABASE)
+	save_database (db: detachable LIBRARY_DATABASE; a_file_path: PATH)
 		local
 			sed: SED_STORABLE_FACILITIES
 			w: SED_MEDIUM_READER_WRITER
 			f: RAW_FILE
 		do
 			if db /= Void then
-				create f.make_with_name ("library.db")
+				create f.make_with_path (a_file_path)
 				f.open_write
 				create w.make_for_writing (f)
 				create sed
 				sed.basic_store (db, w, True)
 				f.close
 			else
-				create f.make_with_name ("library.db")
+				create f.make_with_path (a_file_path)
 				if f.exists then
 					f.delete
 				end
 			end
 		end
 
-	has_saved_database: BOOLEAN
+	has_saved_database (a_file_path: PATH): BOOLEAN
 		local
 			f: RAW_FILE
 		do
-			create f.make_with_name ("library.db")
+			create f.make_with_path (a_file_path)
 			Result := f.exists and then f.is_access_readable
 		end
 
-	saved_database: detachable LIBRARY_DATABASE
+	saved_database (a_file_path: PATH): detachable LIBRARY_DATABASE
 		local
 			sed: SED_STORABLE_FACILITIES
 			r: SED_MEDIUM_READER_WRITER
 			f: RAW_FILE
 		do
-			create f.make_with_name ("library.db")
+			create f.make_with_path (a_file_path)
 			if f.exists and then f.is_access_readable then
 				f.open_read
 				create r.make_for_reading (f)
@@ -334,38 +325,6 @@ feature -- Visit
 			end
 		end
 
-	on_system_enter (a_cfg: CONF_SYSTEM)
-		do
-			check last_indexed_data = Void end
-			create last_indexed_data.make (a_cfg)
-			check last_indexed_data /= Void end
-		end
-
-	on_system_leave (a_cfg: CONF_SYSTEM)
-		local
-			d: like last_indexed_data
-		do
-			check last_indexed_data /= Void end
-			d := last_indexed_data
-			if
-				d /= Void and then
-				not d.is_testing_project
-			then
-				if attached database as db then
-					if db.has (d.uuid.out) then
---						check already_recorded: False end
-						db.force (d)
-					else
-						db.put (d)
-					end
-				else
-					check has_database: False end
-				end
-			end
-			last_indexed_data := Void
-			check last_indexed_data = Void end
-		end
-
 	on_target (a_target: CONF_TARGET)
 		do
 			if is_verbose then
@@ -380,9 +339,6 @@ feature -- Visit
 			if is_verbose then
 				print (" - library: " + a_library.name)
 				print ("%N")
-			end
-			if attached last_indexed_data as d then
-				d.add_dependency (a_library)
 			end
 		end
 
@@ -399,9 +355,6 @@ feature -- Visit
 			if is_verbose then
 				print (" - class: " + a_class.name)
 				print ("%N")
-			end
-			if attached last_indexed_data as d then
-				d.classes.force (a_class.name)
 			end
 		end
 

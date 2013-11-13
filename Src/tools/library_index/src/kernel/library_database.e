@@ -26,6 +26,14 @@ feature -- Access
 	ecf_files: ARRAYED_LIST [PATH]
 			-- Indexed ecf files
 
+feature -- Change
+
+	wipe_out
+		do
+			items.wipe_out
+			ecf_files.wipe_out
+		end
+
 feature -- Status report
 
 	has (a_uuid: READABLE_STRING_GENERAL): BOOLEAN

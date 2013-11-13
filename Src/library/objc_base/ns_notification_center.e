@@ -10,7 +10,7 @@ class
 inherit
 	NS_OBJECT
 
-create {NS_ENVIRONEMENT}
+create
 	make_from_pointer,
 	share_from_pointer
 

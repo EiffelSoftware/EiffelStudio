@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		local
 			backend: PS_EVEN_SIMPLER_IN_MEMORY_BACKEND
-			factory: PS_REPOSITORY_FACTORY
+			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
 			create criterion_factory
 			create factory

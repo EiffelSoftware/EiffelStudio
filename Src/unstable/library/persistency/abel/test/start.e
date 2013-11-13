@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		local
-			factory: PS_REPOSITORY_FACTORY
+			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 			executor: PS_EXECUTOR
 			data: PS_TEST_DATA
 			query: PS_OBJECT_QUERY[SPECIAL[PERSON]]

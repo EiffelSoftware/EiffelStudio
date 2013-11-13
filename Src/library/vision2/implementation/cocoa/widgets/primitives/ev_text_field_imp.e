@@ -57,9 +57,7 @@ feature {NONE} -- Initialization
 		local
 			a_font: EV_FONT
 		do
-			if text_field = Void then
-				create text_field.make
-			end
+			create text_field.make
 			cocoa_view := text_field
 			text_field.cell.set_wraps (False)
 
@@ -311,9 +309,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 feature {EV_TEXT_FIELD_I} -- Implementation
 
 	text_field: NS_TEXT_FIELD
-		attribute
-			create Result.make
-		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
@@ -321,4 +316,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			--Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_TEXT_FIELD_IMP

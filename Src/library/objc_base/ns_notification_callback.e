@@ -19,8 +19,6 @@ create
 feature -- Creation
 
 	make_with_agent (a_callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]])
-		local
-			ns_object: NS_OBJECT
 		do
 				-- Creates an invalid object here.
 			create instance.make_from_pointer (default_pointer + 1)

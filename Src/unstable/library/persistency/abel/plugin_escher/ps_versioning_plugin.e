@@ -240,6 +240,7 @@ feature
 						-- This values could be needed to calculate functions returned by the schema evolution handler
 						stored_obj_attr_values := get_attribute_values(stored_object)
 						clean_stored_obj(stored_object)
+						stored_object.remove_attribute ("version")
 						stored_object.add_attribute ("version", current_version.out, "INTEGER_32")
 						if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
 							-- Create a fresh instance of the current class

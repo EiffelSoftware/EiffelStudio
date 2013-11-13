@@ -89,13 +89,13 @@ feature -- Access
 	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
 			-- The default behaviour for root declaration on write functions.
 
-	active_queries: CONTAINER[PS_QUERY[ANY, ANY]]
+	active_queries: CONTAINER [PS_QUERY [ANY, ANY]]
 			-- The currently active queries.
 		do
 			Result := internal_active_queries
 		end
 
-	last_error: PS_ERROR
+	last_error: detachable PS_ERROR
 			-- The last encountered error.
 		require
 			error: has_error
@@ -140,7 +140,7 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Did the last operation produce an error?
 		do
-			Result := not attached {PS_NO_ERROR} last_error
+			Result := attached last_error and not attached {PS_NO_ERROR} last_error
 		end
 
 feature -- Element change
@@ -156,7 +156,7 @@ feature -- Element change
 
 feature -- Data retrieval
 
-	execute_query (query: PS_OBJECT_QUERY[ANY])
+	execute_query (query: PS_OBJECT_QUERY [ANY])
 			-- Execute `query' and store the result in `query.result_cursor'.
 		require
 			in_transaction: is_transaction_active
@@ -171,7 +171,7 @@ feature -- Data retrieval
 			in_transaction: is_transaction_active
 		end
 
-	execute_tuple_query (query: PS_TUPLE_QUERY[ANY])
+	execute_tuple_query (query: PS_TUPLE_QUERY [ANY])
 			-- Execute `query' and store the result in `query.result_cursor'.
 		require
 			in_transaction: is_transaction_active

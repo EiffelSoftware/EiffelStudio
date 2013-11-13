@@ -185,14 +185,33 @@ feature {PS_REPOSITORY_TESTS}
 
 	test_immediate_retrieve
 			-- Test if a retrieve with depth = 1 only retrieves the first object
+		local
+			transaction: PS_TRANSACTION_CONTEXT
+			head_query: PS_OBJECT_QUERY [CHAIN_HEAD]
 		do
-			reset
-			repository.default_object_graph.set_query_depth (1)
-			executor.execute_insert (test_data.reference_chain)
-			executor.execute_query (query)
-			assert ("The reference of the retrieved object should be Void", query.result_cursor.item.tail = Void)
+			transaction := repository.new_transaction_context
+			transaction.insert (test_data.reference_chain)
+
+			create head_query.make
+			head_query.set_object_initialization_depth (1)
+
+			transaction.execute_query (head_query)
+
+			assert ("The reference of the retrieved object should be Void", head_query.result_cursor.item.tail = Void)
+
+			head_query.close
+			transaction.commit
 			repository.clean_db_for_testing
-			repository.default_object_graph.reset_to_default
+--			
+--			reset
+--			query.object_initialization_depth (1)
+--			
+--			--repository.default_object_graph.set_query_depth (1)
+--			executor.execute_insert (test_data.reference_chain)
+--			executor.execute_query (query)
+--			assert ("The reference of the retrieved object should be Void", query.result_cursor.item.tail = Void)
+--			repository.clean_db_for_testing
+--			repository.default_object_graph.reset_to_default
 		end
 
 	test_exact_retrieve_depth

@@ -71,7 +71,7 @@ feature
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
-			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
+			create query.make_with_criterion (factory.new_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 
 			executor.execute_tuple_query (query)
 
@@ -100,7 +100,7 @@ feature
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
-			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
+			create query.make_with_criterion (factory.new_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 			query.set_projection (<<"last_name">>)
 
 			executor.execute_tuple_query (query)
@@ -125,7 +125,7 @@ feature
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
-			create query.make_with_criterion (factory.create_predefined ("last_name", factory.equals, test_data.people.first.last_name))
+			create query.make_with_criterion (factory.new_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 			query.set_projection (<<"first_name">>)
 
 			executor.execute_tuple_query (query)
@@ -240,7 +240,7 @@ feature
 			repository.clean_db_for_testing
 			repository.set_global_pool (True)
 			executor.execute_insert (test_data.reference_cycle)
-			create query.make_with_criterion (factory.create_predefined ("ref_class_id", factory.equals, test_data.reference_cycle.ref_class_id))
+			create query.make_with_criterion (factory.new_predefined ("ref_class_id", factory.equals, test_data.reference_cycle.ref_class_id))
 			query.set_projection (<<"ref_class_id", "refer">>)
 
 			executor.execute_tuple_query (query)

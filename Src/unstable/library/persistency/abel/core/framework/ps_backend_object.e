@@ -135,8 +135,13 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 			pair: PS_PAIR [STRING, STRING]
 		do
 			create pair.make (value, class_name_of_value)
-			values.extend (pair, attribute_name)
-			attributes.extend (attribute_name)
+
+			if values.has (attribute_name) then
+				values.force (pair, attribute_name)
+			else
+				values.extend (pair, attribute_name)
+				attributes.extend (attribute_name)
+			end
 		ensure
 			value_inserted: attribute_value (attribute_name).value.is_equal (value)
 			class_name_inserted: attribute_value (attribute_name).attribute_class_name.is_equal (class_name_of_value)

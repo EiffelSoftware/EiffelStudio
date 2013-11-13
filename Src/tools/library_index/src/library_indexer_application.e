@@ -9,7 +9,7 @@ class
 
 inherit
 	ANY
-	SHARED_FILE_SYSTEM
+--	SHARED_FILE_SYSTEM
 
 	SHARED_EXECUTION_ENVIRONMENT
 
@@ -104,46 +104,46 @@ feature {NONE} -- Execution
 			end
 		end
 
-	deep_visit (a_options: LIBRARY_INDEXER_ARGUMENTS)
-		require
-			a_options_attached: a_options /= Void
-			a_options_is_successful: a_options.is_successful
-		local
-			l_arg_dirs: LIST [PATH]
-			vvv: PACKAGE_CONF_VISITOR
-			l_limit: INTEGER
-		do
-			l_limit := a_options.recursion_limit
+--	deep_visit (a_options: LIBRARY_INDEXER_ARGUMENTS)
+--		require
+--			a_options_attached: a_options /= Void
+--			a_options_is_successful: a_options.is_successful
+--		local
+--			l_arg_dirs: LIST [PATH]
+--			vvv: PACKAGE_CONF_VISITOR
+--			l_limit: INTEGER
+--		do
+--			l_limit := a_options.recursion_limit
 
-			create vvv.make
-			across
-				a_options.files as ic
-			loop
-				vvv.visit_ecf_file (ic.item)
-			end
+--			create vvv.make
+--			across
+--				a_options.files as ic
+--			loop
+--				vvv.visit_ecf_file (ic.item)
+--			end
 
-			l_arg_dirs := a_options.directories
-			if l_arg_dirs.is_empty then
-				if a_options.files.is_empty then
-						-- No files or directories, use current directory
-					if l_limit > 0 then
-						vvv.visit_folder_with_depth (execution_environment.current_working_path, l_limit)
-					else
-						vvv.visit_folder (execution_environment.current_working_path)
-					end
-				end
-			else
-				across
-					l_arg_dirs as ic
-				loop
-					if l_limit > 0 then
-						vvv.visit_folder_with_depth (ic.item, l_limit)
-					else
-						vvv.visit_folder (ic.item)
-					end
-				end
-			end
-		end
+--			l_arg_dirs := a_options.directories
+--			if l_arg_dirs.is_empty then
+--				if a_options.files.is_empty then
+--						-- No files or directories, use current directory
+--					if l_limit > 0 then
+--						vvv.visit_folder_with_depth (execution_environment.current_working_path, l_limit)
+--					else
+--						vvv.visit_folder (execution_environment.current_working_path)
+--					end
+--				end
+--			else
+--				across
+--					l_arg_dirs as ic
+--				loop
+--					if l_limit > 0 then
+--						vvv.visit_folder_with_depth (ic.item, l_limit)
+--					else
+--						vvv.visit_folder (ic.item)
+--					end
+--				end
+--			end
+--		end
 
 	index_all (a_dbm: LIBRARY_DATABASE_MANAGER; a_options: LIBRARY_INDEXER_ARGUMENTS; is_updating: BOOLEAN)
 		require

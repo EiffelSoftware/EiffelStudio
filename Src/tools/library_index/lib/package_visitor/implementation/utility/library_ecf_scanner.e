@@ -16,8 +16,6 @@ inherit
 			process_directory
 		end
 
-	SHARED_FILE_SYSTEM
-
 create
 	make,
 	make_with_depth

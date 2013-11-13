@@ -7,8 +7,6 @@ class
 	LIBRARY_INDEXER
 
 inherit
-	SHARED_FILE_SYSTEM
-
 	SHARED_EXECUTION_ENVIRONMENT
 
 	LIBRARY_INDEXER_OBSERVER_FORWARD
@@ -116,19 +114,21 @@ feature -- Execution
 	execute
 		local
 			p: PATH
+			f: RAW_FILE
 		do
 			across
 				files as ic
 			loop
 				p := ic.item
-				if
-					not p.is_empty and then
-					file_system.is_file_readable (p)
-				then
-					visit_ecf_file (p)
+				if p.is_empty then
 				else
-					debug
-						print ("Invalid file ["+ p.utf_8_name +"]!%N")
+					create f.make_with_path (p)
+					if f.exists and then f.is_access_readable then
+						visit_ecf_file (p)
+					else
+						debug
+							print ("Invalid file ["+ p.utf_8_name +"]!%N")
+						end
 					end
 				end
 			end

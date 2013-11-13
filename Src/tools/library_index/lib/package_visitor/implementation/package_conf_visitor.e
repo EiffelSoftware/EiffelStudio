@@ -31,8 +31,11 @@ create
 feature -- Visitor
 
 	visit_ecf_file (p: PATH)
+		local
+			f: RAW_FILE
 		do
-			if file_system.is_file_readable (p) then
+			create f.make_with_path (p)
+			if f.exists and then f.is_access_readable then
 				if attached configuration_from (p) as cfg then
 					visit_system (cfg)
 				end
@@ -123,7 +126,7 @@ feature {NONE} -- Helper
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: file_system.is_file_readable (a_file_name)
+			a_file_name_exists: (create {FILE_UTILITIES}).file_path_exists (a_file_name)
 		local
 			l_reader: like ecf_reader
 			retried: BOOLEAN

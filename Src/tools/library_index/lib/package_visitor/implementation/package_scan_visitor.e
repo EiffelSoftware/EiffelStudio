@@ -13,8 +13,6 @@ inherit
 			visit_folder
 		end
 
-	SHARED_FILE_SYSTEM
-
 create
 	make
 

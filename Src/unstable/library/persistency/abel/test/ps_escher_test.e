@@ -146,7 +146,7 @@ feature {NONE}
 			-- Set up an in-memory database with an ESCHER integration layer
 		local
 			real_backend: PS_IN_MEMORY_DATABASE
-			factory: PS_REPOSITORY_FACTORY
+			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 			repo: PS_DEFAULT_REPOSITORY
 			--repo: PS_REPOSITORY_COMPATIBILITY
 			--repo2: PS_SIMPLE_IN_MEMORY_REPOSITORY

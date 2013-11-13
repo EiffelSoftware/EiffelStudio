@@ -18,7 +18,7 @@ feature {NONE}
 	make_repository: PS_REPOSITORY
 			-- Create the repository for this test
 		local
-			factory: PS_REPOSITORY_FACTORY
+			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
 			create factory
 			Result := factory.create_in_memory_repository

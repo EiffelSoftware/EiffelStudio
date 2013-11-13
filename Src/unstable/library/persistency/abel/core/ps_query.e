@@ -59,7 +59,7 @@ feature -- Access
 	new_cursor: ITERATION_CURSOR [RESULT_TYPE]
 			-- Return a fresh cursor over the query result.
 			-- Note: The result is loaded lazily upon calling `{ITERATION_CURSOR}.forth'.
-			-- Note: The results are cached interanlly, thus it is possible to iterate over the result
+			-- Note: The results are cached internally, thus it is possible to iterate over the result
 			--   many times without performance impact.
 		do
 			create {PS_ITERATION_CURSOR [RESULT_TYPE]} Result.make (Current)

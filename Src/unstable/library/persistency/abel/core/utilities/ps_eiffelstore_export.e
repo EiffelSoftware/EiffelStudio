@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 inherit
 
@@ -28,7 +28,7 @@ feature {NONE} -- Utilities
 		end
 
 
-feature {PS_EIFFELSTORE_EXPORT} -- Contracts
+feature {PS_ABEL_EXPORT} -- Contracts
 
 	enable_expensive_contracts: BOOLEAN = True
 			-- Defines if some very expensive contracts should be enabled as well.

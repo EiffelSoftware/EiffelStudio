@@ -14,7 +14,7 @@ inherit
 			is_empty_criterion
 		end
 
-create {PS_QUERY, PS_EIFFELSTORE_EXPORT}
+create {PS_QUERY, PS_ABEL_EXPORT}
 	default_create
 
 feature -- Check

@@ -19,7 +19,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	basic_attribute_value: STRING
 			-- The value of the basic attribute as a string.
@@ -53,7 +53,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_representing_object: BOOLEAN = True
 			-- Is `Current' representing an existing object?

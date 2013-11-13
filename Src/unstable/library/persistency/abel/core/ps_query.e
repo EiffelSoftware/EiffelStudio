@@ -35,7 +35,7 @@ deferred class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 	ITERABLE [RESULT_TYPE]
 
@@ -49,7 +49,7 @@ feature -- Access
 			Result := transaction.repository
 		end
 
-	transaction_context: detachable PS_TRANSACTION_CONTEXT
+	transaction_context: detachable PS_TRANSACTION
 			-- The transaction context in which `Current' has been executed, if any.
 		require
 			executed: is_executed
@@ -116,7 +116,7 @@ feature -- Element change
 			is_non_root_ignored := value
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Element change (unsafe)
+feature {PS_ABEL_EXPORT} -- Element change (unsafe)
 
 	set_object_initialization_depth (depth: INTEGER)
 			-- Set `object_initialization_depth' to `depth'.
@@ -187,7 +187,7 @@ feature -- Contract support functions
 			Result := a_criterion.can_handle_object (reflection.new_instance_of (type.type_id))
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Implementation
+feature {PS_ABEL_EXPORT} -- Implementation
 
 	set_type (type: TYPE[detachable ANY])
 			-- Helper function for testing.
@@ -204,7 +204,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 	result_cursor: PS_RESULT_CURSOR [RESULT_TYPE]
 			-- Iteration cursor containing the result of the query.
 
-	transaction: PS_TRANSACTION
+	transaction: PS_INTERNAL_TRANSACTION
 			-- The transaction in which this query is embedded.
 		require
 			already_executed: is_executed
@@ -214,7 +214,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 			end
 		end
 
-	register_as_executed (a_transaction: PS_TRANSACTION)
+	register_as_executed (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Set `is_executed' to true and bind query to `a_transaction'.
 		require
 			not_yet_executed: not is_executed
@@ -247,7 +247,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	transaction_impl: detachable PS_TRANSACTION
+	transaction_impl: detachable PS_INTERNAL_TRANSACTION
 
 feature {NONE} -- Initialization
 

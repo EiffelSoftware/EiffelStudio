@@ -8,12 +8,12 @@ deferred class
 	PS_READ_ONLY_BACKEND
 
 inherit
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 	REFACTORING_HELPER
 
 
-feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
+feature {PS_ABEL_EXPORT}-- Backend capabilities
 
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
@@ -30,10 +30,10 @@ feature {PS_EIFFELSTORE_EXPORT}-- Backend capabilities
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
+feature {PS_ABEL_EXPORT} -- Object retrieval
 
 
-	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- Retrieves all objects from the database where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -81,7 +81,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
-	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
+	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- Retrieve the object where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -124,10 +124,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
 		end
 
 
-feature {PS_EIFFELSTORE_EXPORT} -- Collection retrieval
+feature {PS_ABEL_EXPORT} -- Collection retrieval
 
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		require
 			collections_supported: is_generic_collection_supported
@@ -137,7 +137,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Collection retrieval
 			consistent: not Result.after implies Result.item.is_consistent
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_BACKEND_COLLECTION
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		require
 			collections_supported: is_generic_collection_supported
@@ -148,14 +148,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Collection retrieval
 			consistent: attached Result implies Result.is_consistent
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
+feature {PS_ABEL_EXPORT} -- Transaction handling
 
-	commit (a_transaction: PS_TRANSACTION)
+	commit (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'.
 		deferred
 		end
 
-	rollback (a_transaction: PS_TRANSACTION)
+	rollback (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Aborts `a_transaction' and undoes all changes in the database.
 		deferred
 		end
@@ -170,7 +170,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Plugins
+feature {PS_ABEL_EXPORT} -- Plugins
 
 	plug_in_list: LINKED_LIST[PS_PLUGIN]
 			-- A collection of plugins providing additional functionality.
@@ -185,7 +185,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Plugins
 
 feature {PS_CURSOR_WRAPPER}
 
-	apply_plugins (item: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION)
+	apply_plugins (item: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION)
 		do
 			across plug_in_list as cursor loop
 				cursor.item.after_retrieve (item, criterion, attributes, transaction)
@@ -194,7 +194,7 @@ feature {PS_CURSOR_WRAPPER}
 
 feature {PS_READ_ONLY_BACKEND} -- Implementation
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		require
@@ -203,7 +203,7 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		deferred
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		require

@@ -11,7 +11,7 @@ inherit
 
 	PS_COMPLEX_PART
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	values: LINKED_LIST [PS_OBJECT_GRAPH_PART]
 			-- The objects in the collection.
@@ -24,7 +24,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 --			end
 --		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	are_items_of_basic_type: BOOLEAN
 			-- are the current collection's items of a basic type?
@@ -40,7 +40,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 	is_collection: BOOLEAN = True
 			-- Is `Current' an instance of PS_COLLECTION_PART?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	add_value (a_graph_part: PS_OBJECT_GRAPH_PART)
 			-- Add a value to the collection.

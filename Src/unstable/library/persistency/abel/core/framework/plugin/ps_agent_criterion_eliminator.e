@@ -11,7 +11,7 @@ inherit
 
 	PS_CRITERION_VISITOR [PS_CRITERION]
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 feature {PS_CRITERION} -- Visitor functions
 

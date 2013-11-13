@@ -9,12 +9,12 @@ class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	object_graph: PS_OBJECT_GRAPH_ROOT
 			-- The root of an object graph to generate a plan for.
@@ -26,12 +26,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 		attribute
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_plan_generated: BOOLEAN
 			-- Has an operation plan for `object_graph' been generated?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	generate_plan
 			-- Generate an `operation_plan' for `object_graph'.

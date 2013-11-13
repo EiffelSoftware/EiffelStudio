@@ -10,7 +10,7 @@ class
 inherit
 
 	PS_SQL_CONNECTION
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 --inherit {NONE}
 
@@ -20,7 +20,7 @@ inherit
 create {PS_MYSQL_DATABASE}
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Settings
+feature {PS_ABEL_EXPORT} -- Settings
 
 	set_autocommit (flag: BOOLEAN)
 			-- Enable or disable autocommit
@@ -31,7 +31,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Settings
 			correctly_set: autocommit = flag
 		end
 
-feature {PS_EIFFELSTORE_EXPORT}
+feature {PS_ABEL_EXPORT}
 
 	execute_sql (statement: STRING)
 			-- Execute the SQL statement `statement', and store the result (if any) in `Current.last_result'

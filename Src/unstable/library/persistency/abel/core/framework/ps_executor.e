@@ -19,19 +19,19 @@ class
 	PS_EXECUTOR
 
 inherit
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 	REFACTORING_HELPER
 
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} --Access
+feature {PS_ABEL_EXPORT} --Access
 
 	repository: PS_REPOSITORY
 			-- The data repository on which `Current' operates.
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status Report
+feature {PS_ABEL_EXPORT} -- Status Report
 
 	is_persistent (an_object: ANY): BOOLEAN
 			-- Is there a database entry for `an_object'?
@@ -39,7 +39,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 			Result := repository.is_identified (an_object, new_transaction)
 		end
 
-	is_persistent_within_transaction (an_object: ANY; a_transaction: PS_TRANSACTION): BOOLEAN
+	is_persistent_within_transaction (an_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is there a database entry for `an_object' within `a_transaction'?
 		do
 			Result := repository.is_identified (an_object, a_transaction)
@@ -51,7 +51,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status Report
 			Result := repository.can_handle (object)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Data retrieval
+feature {PS_ABEL_EXPORT} -- Data retrieval
 
 	execute_query (query: PS_OBJECT_QUERY [ANY])
 			-- Execute `query' and store the result in `query.result_cursor'.
@@ -81,7 +81,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Data retrieval
 	--			still_persistent: is_persistent (object, new_transaction)
 	--		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Data manipulation
+feature {PS_ABEL_EXPORT} -- Data manipulation
 
 	execute_insert (an_object: ANY)
 			-- Insert `an_object' into the repository.
@@ -123,9 +123,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Data manipulation
 			execute_within_implicit_transaction (agent execute_deletion_query_within_transaction (deletion_query, ?), False)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction-based data retrieval and querying
+feature {PS_ABEL_EXPORT} -- Transaction-based data retrieval and querying
 
-	execute_query_within_transaction (a_query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
+	execute_query_within_transaction (a_query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute `a_query' within the transaction `transaction'.
 			-- In case of a conflict between transactions, it will abort `transaction' and return normally with an empty result.
 			-- In every other case of errors it will abort `transaction' and raise an exception.
@@ -161,7 +161,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction-based data retrieval and querying
 		--			still_persistent: is_persistent (object, transaction)
 		--		end
 
-	execute_insert_within_transaction (an_object: ANY; transaction: PS_TRANSACTION)
+	execute_insert_within_transaction (an_object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert `an_object' within the transaction `transaction' into the repository.
 			-- In case of a conflict between transactions, it will abort `transaction' and return normally.
 			-- In every other case of errors it will abort `transaction' and raise an exception.
@@ -179,7 +179,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction-based data retrieval and querying
 			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
-	execute_update_within_transaction (an_object: ANY; transaction: PS_TRANSACTION)
+	execute_update_within_transaction (an_object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write back changes of `an_object' into the repository, within the transaction `transaction'.
 			-- In case of a conflict between transactions, it will abort `transaction' and return normally.
 			-- In every other case of errors it will abort `transaction' and raise an exception.
@@ -193,7 +193,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction-based data retrieval and querying
 			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
-	execute_delete_within_transaction (an_object: ANY; transaction: PS_TRANSACTION)
+	execute_delete_within_transaction (an_object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `an_object' within the transaction `transaction' from the repository.
 			-- In case of a conflict between transactions, it will abort `transaction' and return normally.
 			-- In every other case of errors it will abort `transaction' and raise an exception.
@@ -209,7 +209,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction-based data retrieval and querying
 			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
-	execute_deletion_query_within_transaction (a_query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
+	execute_deletion_query_within_transaction (a_query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete, within the transaction `transaction', all objects that match the criteria defined in `a_query'
 			-- In case of a conflict between transactions, it will abort `transaction' and return normally.
 			-- In every other case of errors it will abort `transaction' and raise an exception.
@@ -227,15 +227,15 @@ feature {PS_EIFFELSTORE_EXPORT} -- Transaction-based data retrieval and querying
 			only_transaction_conflicts_return_normally: transaction.has_error implies attached {PS_TRANSACTION_ABORTED_ERROR} transaction.error
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction factory function
+feature {PS_ABEL_EXPORT} -- Transaction factory function
 
-	new_transaction: PS_TRANSACTION
+	new_transaction: PS_INTERNAL_TRANSACTION
 			-- Create a new transaction for `Current.repository'..
 		do
 			create Result.make (repository)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} --Error handling
+feature {PS_ABEL_EXPORT} --Error handling
 
 	has_error: BOOLEAN
 			-- Did the last operation have an error?
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 	default_retries: INTEGER = 2
 			-- The default retries for implicit transaction handling, if there is a transaction conflict.
 
-	execute_within_implicit_transaction (action: PROCEDURE [ANY, TUPLE [PS_TRANSACTION]]; readonly: BOOLEAN)
+	execute_within_implicit_transaction (action: PROCEDURE [ANY, TUPLE [PS_INTERNAL_TRANSACTION]]; readonly: BOOLEAN)
 			-- This function will execute `action' with implicit transaction handling
 			-- It will retry `action' `Current.default_retries' times if there's a transaction conflict,
 			-- and then raise a `PS_TRANSACTION_ABORTED_ERROR' error.
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 --		end
 		local
 			retries: INTEGER
-			transaction: detachable PS_TRANSACTION
+			transaction: detachable PS_INTERNAL_TRANSACTION
 		do
 			if readonly then
 				create transaction.make_readonly (repository)
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	handle_error_on_action (action: PROCEDURE [ANY, TUPLE]; transaction: PS_TRANSACTION)
+	handle_error_on_action (action: PROCEDURE [ANY, TUPLE]; transaction: PS_INTERNAL_TRANSACTION)
 			-- This function will try the repository operation `action' and catch any error.
 			-- In case of a conflict between transactions, it will abort `transaction' and return normally.
 			-- In every other case of errors it will abort `transaction' and raise an exception.
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_tuple_query_within_transaction (query: PS_TUPLE_QUERY [ANY]; transaction: PS_TRANSACTION)
+	execute_tuple_query_within_transaction (query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute tuple query `query'. Exported to `NONE' because you can only have tuple queries with readonly transactions and implicit transaction management.
 		require
 			readonly_transaction: transaction.is_readonly

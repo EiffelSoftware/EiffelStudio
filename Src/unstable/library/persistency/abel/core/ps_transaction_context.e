@@ -51,10 +51,10 @@ note
 	revision: "$Revision$"
 
 class
-	PS_TRANSACTION_CONTEXT
+	PS_TRANSACTION
 
 inherit
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 		redefine
 			default_rescue
 		end
@@ -97,10 +97,10 @@ feature -- Access
 
 	last_error: detachable PS_ERROR
 			-- The last encountered error.
-		require
-			error: has_error
-		attribute
-		end
+--		require
+--			error: has_error
+--		attribute
+--		end
 
 feature -- Status report
 
@@ -312,7 +312,7 @@ feature -- Transaction operations
 			no_error: not has_error
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Implementation
+feature {PS_ABEL_EXPORT} -- Implementation
 
 	internal_active_queries: LINKED_LIST [PS_QUERY [ANY, ANY]]
 			-- The internal storage for `active_queries'.
@@ -320,12 +320,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Implementation
 feature {NONE} -- Implementation
 
 
-	transaction: detachable PS_TRANSACTION
+	transaction: detachable PS_INTERNAL_TRANSACTION
 			-- The currently active transaction.
-		require
-			is_active: is_transaction_active
-		attribute
-		end
+--		require
+--			is_active: is_transaction_active
+--		attribute
+--		end
 
 	default_rescue
 			-- Set the `last_error' field.

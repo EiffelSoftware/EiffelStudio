@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	additional_information: HASH_TABLE [STRING, STRING]
 			-- Any additional information that the backend has to store.
@@ -43,12 +43,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_relationally_mapped: BOOLEAN = False
 			-- Is current collection mapped as a 1:N or M:N Relation between two objects?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	add_value (a_graph_part: PS_OBJECT_GRAPH_PART)
 			-- Add a value to the collection.

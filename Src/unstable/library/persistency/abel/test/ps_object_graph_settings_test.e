@@ -186,7 +186,7 @@ feature {PS_REPOSITORY_TESTS}
 	test_immediate_retrieve
 			-- Test if a retrieve with depth = 1 only retrieves the first object
 		local
-			transaction: PS_TRANSACTION_CONTEXT
+			transaction: PS_TRANSACTION
 			head_query: PS_OBJECT_QUERY [CHAIN_HEAD]
 		do
 			transaction := repository.new_transaction_context

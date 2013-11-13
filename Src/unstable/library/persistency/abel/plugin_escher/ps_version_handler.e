@@ -44,7 +44,7 @@ class
 --	schema_evolution_handlers_table: HASH_TABLE[SCHEMA_EVOLUTION_HANDLER,STRING]
 --			-- Hashtable with class names as keys and respective schema evolution handlers as values
 
---feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
+--feature {PS_ABEL_EXPORT} -- Supported collection operations
 
 --	supports_object_collection: BOOLEAN
 --			-- Can the current backend handle relational collections?
@@ -58,7 +58,7 @@ class
 --			Result := real_backend.supports_relational_collection
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Status report
+--feature {PS_ABEL_EXPORT} -- Status report
 
 --	can_handle_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA): BOOLEAN
 --			-- Can the current backend handle the relational collection between the two classes `owner_type' and `collection_type'?
@@ -72,7 +72,7 @@ class
 --			Result := real_backend.can_handle_object_oriented_collection (collection_type)
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval operations
+--feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
 --	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: LIST [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT]
 --			-- Retrieves all objects of class `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
@@ -248,7 +248,7 @@ class
 --			end
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
+--feature {PS_ABEL_EXPORT} -- Object write operations
 
 --	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
 --			-- Inserts the object into the database
@@ -309,7 +309,7 @@ class
 --			real_backend.delete (an_object, a_transaction)
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
+--feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 --	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_RETRIEVED_OBJECT_COLLECTION]
 --			-- Retrieves all collections of type `collection_type'.
@@ -335,7 +335,7 @@ class
 --			real_backend.delete_object_oriented_collection (a_collection, a_transaction)
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
+--feature {PS_ABEL_EXPORT} -- Relational collection operations
 
 --	retrieve_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA; owner_key: INTEGER; owner_attribute_name: STRING; transaction: PS_TRANSACTION): PS_RETRIEVED_RELATIONAL_COLLECTION
 --			-- Retrieves the relational collection between class `owner_type' and `collection_item_type', where the owner has primary key `owner_key' and the attribute name of the collection inside the owner object is called `owner_attribute_name'
@@ -355,7 +355,7 @@ class
 --			real_backend.delete_relational_collection (a_collection, a_transaction)
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
+--feature {PS_ABEL_EXPORT} -- Transaction handling
 
 --	commit (a_transaction: PS_TRANSACTION)
 --			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'
@@ -381,7 +381,7 @@ class
 --			real_backend.set_transaction_isolation_level (a_level)
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Mapping
+--feature {PS_ABEL_EXPORT} -- Mapping
 
 --	key_mapper: PS_KEY_POID_TABLE
 --			-- Maps POIDs to primary keys as used by this backend
@@ -656,7 +656,7 @@ class
 --			end
 --		end
 
---feature {PS_EIFFELSTORE_EXPORT} -- Testing
+--feature {PS_ABEL_EXPORT} -- Testing
 
 --	wipe_out
 --			-- Wipe out everything and initialize new.

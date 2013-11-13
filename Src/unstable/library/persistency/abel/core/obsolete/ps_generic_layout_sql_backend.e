@@ -24,12 +24,12 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
+feature {PS_ABEL_EXPORT} -- Supported collection operations
 
 	supports_relational_collection: BOOLEAN = False
 			-- Can the current backend handle relational collections?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	can_handle_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle the relational collection between the two classes `owner_type' and `collection_type'?
@@ -43,7 +43,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := False
 		end
 
-	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_TRANSACTION): LINKED_LIST [PS_BACKEND_OBJECT]
+	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_INTERNAL_TRANSACTION): LINKED_LIST [PS_BACKEND_OBJECT]
 			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
 		local
 			all_items: ITERATION_CURSOR [PS_BACKEND_OBJECT]
@@ -62,9 +62,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
+feature {PS_ABEL_EXPORT} -- Object write operations
 
-	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
+	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Inserts `an_object' into the database.
 		local
 			connection: PS_SQL_CONNECTION
@@ -90,7 +90,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 			rollback (a_transaction)
 		end
 
-	update (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
+	update (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Updates `an_object' in the database.
 		local
 			connection: PS_SQL_CONNECTION
@@ -101,7 +101,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 			rollback (a_transaction)
 		end
 
-	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
+	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Deletes `an_object' from the database.
 		local
 			connection: PS_SQL_CONNECTION
@@ -115,9 +115,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 			rollback (a_transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
+feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
-	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
 		do
 			check
@@ -125,7 +125,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			end
 		end
 
-	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		do
 			check
@@ -133,9 +133,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
+feature {PS_ABEL_EXPORT} -- Relational collection operations
 
-	retrieve_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA; owner_key: INTEGER; owner_attribute_name: STRING; transaction: PS_TRANSACTION): PS_RETRIEVED_RELATIONAL_COLLECTION
+	retrieve_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA; owner_key: INTEGER; owner_attribute_name: STRING; transaction: PS_INTERNAL_TRANSACTION): PS_RETRIEVED_RELATIONAL_COLLECTION
 			-- Retrieves the relational collection between class `owner_type' and `collection_item_type', where the owner has primary key `owner_key' and the attribute name of the collection inside the owner object is called `owner_attribute_name'.
 		do
 			check
@@ -144,7 +144,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 			create Result.make (owner_key, owner_type.base_class, owner_attribute_name)
 		end
 
-	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Add all entries in `a_collection' to the database.
 		do
 			check
@@ -152,7 +152,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 			end
 		end
 
-	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		do
 			check
@@ -160,12 +160,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Mapping
+feature {PS_ABEL_EXPORT} -- Mapping
 
 	key_mapper: PS_KEY_POID_TABLE
 			-- Maps POIDs to primary keys as used by this backend.
 
-feature {PS_EIFFELSTORE_EXPORT} -- Testing helpers
+feature {PS_ABEL_EXPORT} -- Testing helpers
 
 	wipe_out_data
 			-- Wipe out all object data, but keep the metadata.
@@ -199,7 +199,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing helpers
 
 feature {NONE} -- Implementation
 
-	write_attributes (object: PS_SINGLE_OBJECT_PART; a_connection: PS_SQL_CONNECTION; transaction: PS_TRANSACTION)
+	write_attributes (object: PS_SINGLE_OBJECT_PART; a_connection: PS_SQL_CONNECTION; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all attributes of `object'.
 		local
 			primary: INTEGER

@@ -14,9 +14,9 @@ deferred class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	collection_items: LINKED_LIST [PS_PAIR [STRING, STRING]]
 			-- All objects that are stored inside this collection.

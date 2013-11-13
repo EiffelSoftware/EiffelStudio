@@ -11,7 +11,7 @@ inherit
 
 	ITERATION_CURSOR [G]
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create {PS_QUERY}
 	make
@@ -46,7 +46,7 @@ feature -- Cursor movement
 			item_can_be_handled: attached{PS_TUPLE_QUERY[ANY]} query or query.transaction.repository.can_handle (item)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	set_entry (object: detachable ANY)
 			-- Set `item' to `object', or after if `object' is Void.

@@ -9,14 +9,14 @@ class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 	REFACTORING_HELPER
 
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	object_graph: PS_OBJECT_GRAPH_ROOT
 			-- The successfully disassembled object graph.
@@ -25,12 +25,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 		attribute
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status repurt
+feature {PS_ABEL_EXPORT} -- Status repurt
 
 	has_error: BOOLEAN
 			-- Has there been an error in the last operation?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	execute_disassembly (object: ANY; operation: PS_WRITE_OPERATION; persistence_query_agent: PREDICATE [ANY, TUPLE [ANY]])
 			-- Take `object' apart and store the result in `object_graph'.
@@ -302,7 +302,7 @@ feature {NONE} -- Initialization
 			operation_stack.extend (operation)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Initialization
+feature {PS_ABEL_EXPORT} -- Initialization
 
 	add_handler (a_handler: PS_COLLECTION_HANDLER_OLD [detachable ANY])
 			-- Add `a_handler' to the collection handlers.

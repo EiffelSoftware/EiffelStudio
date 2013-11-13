@@ -14,7 +14,7 @@ inherit
 create
 	default_make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_representing_object: BOOLEAN = False
 			-- Is `Current' representing an existing object?

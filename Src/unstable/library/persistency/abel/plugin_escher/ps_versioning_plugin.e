@@ -12,7 +12,7 @@ inherit
 		redefine
 			before_write_compatibility
 		end
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 	REFACTORING_HELPER
 
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	before_write (object: PS_BACKEND_OBJECT; transaction: PS_TRANSACTION)
+	before_write (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION)
 		local
 			stored_version: INTEGER
 			reflection: INTERNAL
@@ -82,7 +82,7 @@ feature
 			end
 		end
 
-	before_write_compatibility (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_TRANSACTION)
+	before_write_compatibility (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_INTERNAL_TRANSACTION)
 			-- Adds the version attribute.
 		local
 			stored_version: INTEGER
@@ -125,7 +125,7 @@ feature
 			end
 		end
 
-	before_retrieve (args: TUPLE[type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_TRANSACTION): like args
+	before_retrieve (args: TUPLE[type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
 			-- Add the version attribute, if necessary
 		local
 			attributes: LINKED_LIST[STRING]
@@ -140,7 +140,7 @@ feature
 			end
 		end
 
-	after_retrieve (object: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_TRANSACTION)
+	after_retrieve (object: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_INTERNAL_TRANSACTION)
 			-- Check the version of the retrieved object and apply conversion functions if necessary
 		local
 			reflection: INTERNAL
@@ -553,7 +553,7 @@ feature {NONE} -- Schema Evolution helper functions
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Testing
+feature {PS_ABEL_EXPORT} -- Testing
 
 feature -- Testing
 

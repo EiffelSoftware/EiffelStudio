@@ -9,7 +9,7 @@ deferred class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 	PS_READ_ONLY_BACKEND
 		rename
@@ -19,7 +19,7 @@ inherit
 
 	REFACTORING_HELPER
 
-feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
+feature {PS_ABEL_EXPORT} -- Backend capabilities
 
 
 	can_write_object_graph (an_object_graph: PS_OBJECT_GRAPH_ROOT): BOOLEAN
@@ -40,7 +40,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 				end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
+feature {PS_ABEL_EXPORT} -- Supported collection operations
 
 
 	supports_object_collection: BOOLEAN
@@ -53,7 +53,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Supported collection operations
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 
 	can_handle_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA): BOOLEAN
@@ -66,9 +66,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object graph write function
+feature {PS_ABEL_EXPORT} -- Object graph write function
 
-	frozen write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+	frozen write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all objects in `object_graph' to the database.		
 		require
 			can_handle_objects: enable_expensive_contracts implies can_write_object_graph (object_graph)
@@ -105,9 +105,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph write function
 			internal_write (object_graph, transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- internal_write: compatibility with new backend interface
+feature {PS_ABEL_EXPORT} -- internal_write: compatibility with new backend interface
 
-	internal_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_TRANSACTION)
+	internal_write (object_graph: PS_OBJECT_GRAPH_ROOT; transaction: PS_INTERNAL_TRANSACTION)
 			-- Semantics of different operations for `SIMPLE_OBJECT_GRAPH' objects:
 			-- Insert:
 			--		- Generate a mapping (primary key)
@@ -147,9 +147,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- internal_write: compatibility with new backen
 			collections_deleted: enable_expensive_contracts implies check_collection_deletes (object_graph, transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
+feature {PS_ABEL_EXPORT} -- Object write operations
 
-	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
+	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Inserts `an_object' into the database.
 		require
 			mode_is_insert: an_object.write_operation = an_object.write_operation.insert
@@ -162,7 +162,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 --			object_written: is_successful_write (an_object, a_transaction)
 		end
 
-	update (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
+	update (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Updates `an_object' in the database.
 		require
 			mode_is_update: an_object.write_operation = an_object.write_operation.update
@@ -174,7 +174,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 --			object_written: is_successful_write (an_object, a_transaction)
 		end
 
-	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_TRANSACTION)
+	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Deletes `an_object' from the database.
 		require
 			mode_is_delete: an_object.write_operation = an_object.write_operation.delete
@@ -185,9 +185,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object write operations
 			not_known_anymore: not key_mapper.has_primary_key_of (an_object.object_wrapper, a_transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
+feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
-	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
 		require
 --			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
@@ -200,14 +200,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			collection_known: key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 		end
 
-	update_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	update_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Update `a_collection' in the database.
 		do
 			delete_object_oriented_collection (a_collection, a_transaction)
 			insert_object_oriented_collection (a_collection, a_transaction)
 		end
 
-	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		require
 			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
@@ -220,9 +220,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object-oriented collection operations
 			not_known_anymore: not key_mapper.has_primary_key_of (a_collection.object_wrapper, a_transaction)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
+feature {PS_ABEL_EXPORT} -- Relational collection operations
 
-	retrieve_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA; owner_key: INTEGER; owner_attribute_name: STRING; transaction: PS_TRANSACTION): PS_RETRIEVED_RELATIONAL_COLLECTION
+	retrieve_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA; owner_key: INTEGER; owner_attribute_name: STRING; transaction: PS_INTERNAL_TRANSACTION): PS_RETRIEVED_RELATIONAL_COLLECTION
 			-- Retrieves the relational collection between class `owner_type' and `collection_item_type', where the owner has primary key `owner_key' and the attribute name of the collection inside the owner object is called `owner_attribute_name'.
 		require
 			relational_collection_operation_supported: supports_relational_collection
@@ -230,7 +230,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 		deferred
 		end
 
-	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Add all entries in `a_collection' to the database.
 		require
 			mode_is_insert: a_collection.write_operation = a_collection.write_operation.insert
@@ -240,7 +240,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 		deferred
 		end
 
-	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_TRANSACTION)
+	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `a_collection' from the database.
 		require
 			mode_is_delete: a_collection.write_operation = a_collection.write_operation.delete
@@ -251,22 +251,22 @@ feature {PS_EIFFELSTORE_EXPORT} -- Relational collection operations
 		end
 
 
-feature {PS_EIFFELSTORE_EXPORT} -- Mapping
+feature {PS_ABEL_EXPORT} -- Mapping
 
 
-	is_mapped (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): BOOLEAN
+	is_mapped (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `object' mapped to some database entry?
 		do
 			Result:= key_mapper.has_primary_key_of (object, transaction)
 		end
 
-	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_TRANSACTION)
+	add_mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; key: INTEGER; transaction: PS_INTERNAL_TRANSACTION)
 			-- Add a mapping from `object' to the database entry with primary key `key'
 		do
 			key_mapper.add_entry (object, key, transaction)
 		end
 
-	mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_TRANSACTION): INTEGER
+	mapping (object: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_INTERNAL_TRANSACTION): INTEGER
 			-- Get the mapping for `object'
 		do
 			Result := key_mapper.primary_key_of (object, transaction).first
@@ -277,16 +277,16 @@ feature {PS_EIFFELSTORE_EXPORT} -- Mapping
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Testing
+feature {PS_ABEL_EXPORT} -- Testing
 
 	wipe_out
 			-- Wipe out everything and initialize new.
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Precondition checks
+feature {PS_ABEL_EXPORT} -- Precondition checks
 
-	dependencies_have_primary_key (an_object: PS_SINGLE_OBJECT_PART; transaction: PS_TRANSACTION): BOOLEAN
+	dependencies_have_primary_key (an_object: PS_SINGLE_OBJECT_PART; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Ensure that every dependency in `an_object' has an object_wrapper attached.
 		do
 			Result := across an_object.attributes as attr_name
@@ -309,7 +309,7 @@ feature {NONE} -- Correctness checks
 			end
 		end
 
-	check_object_writes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
+	check_object_writes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if all objects were successfully written
 		local
 			retrieved: LIST[PS_BACKEND_OBJECT]
@@ -332,7 +332,7 @@ feature {NONE} -- Correctness checks
 				end
 		end
 
-	check_object_deletes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
+	check_object_deletes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if all objects were successfully deleted
 		do
 			Result :=
@@ -344,7 +344,7 @@ feature {NONE} -- Correctness checks
 				end
 		end
 
-	check_collection_writes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
+	check_collection_writes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if all object collections were successfully inserted
 		do
 			Result :=
@@ -364,7 +364,7 @@ feature {NONE} -- Correctness checks
 				end
 		end
 
-	check_collection_deletes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
+	check_collection_deletes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if all object collections were successfully deleted
 		do
 			Result :=
@@ -376,19 +376,19 @@ feature {NONE} -- Correctness checks
 				end
 		end
 
-	check_relational_collection_inserts (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
+	check_relational_collection_inserts (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if all relationally mapped collections were successfully inserted
 		do
 			fixme ("TODO")
 		end
 
-	check_relational_collection_deletes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_TRANSACTION): BOOLEAN
+	check_relational_collection_deletes (object_graph: PS_OBJECT_GRAPH_ROOT; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if all relationally mapped collections were successfully deleted
 		do
 			fixme ("TODO")
 		end
 
-	is_equal_object (object: PS_SINGLE_OBJECT_PART; retrieved_object: detachable PS_BACKEND_OBJECT; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_object (object: PS_SINGLE_OBJECT_PART; retrieved_object: detachable PS_BACKEND_OBJECT; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if the two objects are the same.
 		local
 			same_attribute: BOOLEAN
@@ -421,7 +421,7 @@ feature {NONE} -- Correctness checks
 			end
 		end
 
-	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART; retrieved_collection: detachable PS_BACKEND_COLLECTION; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_collection (collection: PS_OBJECT_COLLECTION_PART; retrieved_collection: detachable PS_BACKEND_COLLECTION; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 		local
 			collection_item, retrieved_collection_item: TUPLE [value: STRING; type: STRING]
 			same_item: BOOLEAN
@@ -464,7 +464,7 @@ feature {NONE} -- Correctness checks
 			fixme ("TODO")
 		end
 
-	is_equal_tuple (object_part: PS_OBJECT_GRAPH_PART; tuple: TUPLE[value:STRING; type:STRING]; transaction:PS_TRANSACTION): BOOLEAN
+	is_equal_tuple (object_part: PS_OBJECT_GRAPH_PART; tuple: TUPLE[value:STRING; type:STRING]; transaction:PS_INTERNAL_TRANSACTION): BOOLEAN
 		do
 			-- Check if the types are the same
 --			Result := object_part.metadata.base_class.name.is_equal (tuple.type) -- not used anymore - include generics!

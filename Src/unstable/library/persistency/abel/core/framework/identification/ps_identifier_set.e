@@ -14,7 +14,7 @@ class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create
 	make
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			create garbage_collected_items.make
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	identifier (object: ANY): INTEGER
 			-- Get the identifier for `object'
@@ -55,7 +55,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 	deleted_objects: LINKED_LIST [ANY]
 			-- All object identifiers that have been deleted
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_identified (object: ANY): BOOLEAN
 			--Does `Current' have an identifier for `object'?
@@ -69,7 +69,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := deleted_objects.has (object)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Element change
+feature {PS_ABEL_EXPORT} -- Element change
 
 	add_identifier (object: ANY; new_identifier: INTEGER)
 			-- Add `object' with identifier `new_identifier' to the set
@@ -89,7 +89,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Element change
 			deleted: is_deleted (object)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Set operations
+feature {PS_ABEL_EXPORT} -- Set operations
 
 	merge (other: PS_IDENTIFIER_SET)
 			-- Merge `Current' with `other'
@@ -120,7 +120,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Set operations
 			correctly_deleted: across other.deleted_objects as cursor all not is_identified (cursor.item) end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Cleanup
+feature {PS_ABEL_EXPORT} -- Cleanup
 
 	garbage_collected_items: LINKED_LIST [INTEGER]
 			-- All identifiers whose objects have been garbage collected

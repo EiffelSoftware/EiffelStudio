@@ -9,9 +9,9 @@ deferred class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	can_handle (a_collection: ANY): BOOLEAN
 			-- Can `Current' handle the collection `a_collection'?
@@ -37,7 +37,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			false_if_not_relational: not is_relationally_mapped (collection, owner_type) implies not Result
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
+feature {PS_ABEL_EXPORT} -- Object graph creation
 
 	create_collection_part (collection: ANY; metadata: PS_TYPE_METADATA; persistent: BOOLEAN; owner: PS_OBJECT_GRAPH_PART): PS_OBJECT_GRAPH_PART
 			-- Create a new OBJECT_GRAPH_PART for `collection'.
@@ -71,7 +71,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 		deferred
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
+feature {PS_ABEL_EXPORT} -- Object retrieval
 
 	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_BACKEND_COLLECTION): ANY
 			-- Build a collection object of type `collection_type' with items `objects', using `additional_information' that contains information generated during the last insert.

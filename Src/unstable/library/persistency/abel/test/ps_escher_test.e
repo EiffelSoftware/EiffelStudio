@@ -14,7 +14,7 @@ inherit
 			on_prepare
 		end
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 		undefine
 			default_create
 		end

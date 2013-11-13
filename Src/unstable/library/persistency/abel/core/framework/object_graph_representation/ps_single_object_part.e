@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	attributes: LINKED_LIST [STRING]
 			-- The names of all attributes in `Current'.
@@ -47,12 +47,12 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_collection: BOOLEAN = False
 			-- Is `Current' an instance of PS_COLLECTION_PART?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	add_attribute (name: STRING; value: PS_OBJECT_GRAPH_PART)
 			-- Add a attribute `name' with value `value' to `Current'.

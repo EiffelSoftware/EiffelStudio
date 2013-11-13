@@ -10,7 +10,7 @@ class
 inherit
 	ITERATION_CURSOR [PS_BACKEND_OBJECT]
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create
 	make
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 
 	attributes: PS_IMMUTABLE_STRUCTURE [STRING]
 
-	transaction: PS_TRANSACTION
+	transaction: PS_INTERNAL_TRANSACTION
 
 	backend: PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND
 
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Initialization
 
-	make (t: PS_TYPE_METADATA; cr: PS_CRITERION; att: PS_IMMUTABLE_STRUCTURE [STRING]; tr: PS_TRANSACTION; b: PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND)
+	make (t: PS_TYPE_METADATA; cr: PS_CRITERION; att: PS_IMMUTABLE_STRUCTURE [STRING]; tr: PS_INTERNAL_TRANSACTION; b: PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND)
 		do
 			type := t
 			criteria := cr

@@ -23,10 +23,10 @@ inherit
 			is_equal
 		end
 
-create {PS_EIFFELSTORE_EXPORT}
+create {PS_ABEL_EXPORT}
 	make, make_fresh
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	information_descriptions: LIST [STRING]
 			-- Get all descriptions which have an information value.
@@ -41,7 +41,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			Result := attach (additional_information_hash [description])
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_root: BOOLEAN
 			-- Is the current entity a garbage collection root?
@@ -123,7 +123,7 @@ feature -- Comparison
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Element change
+feature {PS_ABEL_EXPORT} -- Element change
 
 	add_information (description: STRING; value: STRING)
 			-- Add the information `value' with its description `description' to the retrieved collection.

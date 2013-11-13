@@ -9,7 +9,7 @@ deferred class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 		undefine
 			default_create
 		end

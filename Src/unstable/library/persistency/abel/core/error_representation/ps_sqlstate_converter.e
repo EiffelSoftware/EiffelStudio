@@ -7,7 +7,7 @@ note
 class
 	PS_SQLSTATE_CONVERTER
 inherit
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 feature
 

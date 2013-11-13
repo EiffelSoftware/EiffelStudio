@@ -13,7 +13,7 @@ inherit
 			create_collection_part
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_relationally_mapped (collection: PS_TYPE_METADATA; owner_type: PS_TYPE_METADATA): BOOLEAN
 			-- Is `collection' mapped as a 1:N or M:N Relation between two objects?
@@ -27,7 +27,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := False
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
+feature {PS_ABEL_EXPORT} -- Object graph creation
 
 	create_collection_part (collection: ANY; metadata: PS_TYPE_METADATA; persistent: BOOLEAN; owner: PS_OBJECT_GRAPH_PART): PS_OBJECT_GRAPH_PART
 			-- Create a new OBJECT_GRAPH_PART for `collection'.
@@ -61,7 +61,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Object graph creation
 		do
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Object retrieval
+feature {PS_ABEL_EXPORT} -- Object retrieval
 
 	build_collection (collection_type: PS_TYPE_METADATA; objects: LIST [detachable ANY]; additional_information: PS_BACKEND_COLLECTION): TUPLE
 			-- Build a collection object of type `collection_type' with items `objects', using `additional_information' that contains information generated during the last insert.

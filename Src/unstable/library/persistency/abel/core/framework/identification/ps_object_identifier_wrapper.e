@@ -9,7 +9,7 @@ class
 
 inherit
 
-	PS_EIFFELSTORE_EXPORT
+	PS_ABEL_EXPORT
 
 create --{PS_OBJECT_IDENTIFICATION_MANAGER}
 	make
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			metadata := object_metadata
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	object_identifier: INTEGER
 			-- The unique identifier for this object.

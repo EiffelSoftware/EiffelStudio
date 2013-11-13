@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	reference_owner: PS_SINGLE_OBJECT_PART
 			-- The object that holds a reference to `represented_object'.
@@ -37,7 +37,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_relationally_mapped: BOOLEAN = True
 			-- Is current collection mapped as a 1:N or M:N Relation between two objects?
@@ -45,7 +45,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 	is_mapped_as_1_to_N: BOOLEAN
 			-- Is current collection mapped as a 1:N - Relation in the database?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	add_value (a_graph_part: PS_OBJECT_GRAPH_PART)
 			-- Add a value to the collection.

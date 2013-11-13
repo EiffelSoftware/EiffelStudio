@@ -12,7 +12,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
+feature {PS_ABEL_EXPORT} -- Backend capabilities
 
 	is_generic_collection_supported: BOOLEAN
 			-- Can the current backend support collections in general,
@@ -24,28 +24,28 @@ feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
 			prepare_collection(collection_type)
 			Result := attach(collection_database[collection_type.type.type_id]).new_cursor
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_TRANSACTION): detachable PS_BACKEND_COLLECTION
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		do
 			prepare_collection(collection_type)
 			Result := attach(collection_database.item (collection_type.type.type_id)).item(collection_primary_key)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Transaction handling
+feature {PS_ABEL_EXPORT} -- Transaction handling
 
-	commit (a_transaction: PS_TRANSACTION)
+	commit (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'.
 		do
 		end
 
-	rollback (a_transaction: PS_TRANSACTION)
+	rollback (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Aborts `a_transaction' and undoes all changes in the database.
 		do
 		end
@@ -66,7 +66,7 @@ feature{PS_READ_ONLY_BACKEND}
 
 	success: BOOLEAN
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		do
@@ -82,7 +82,7 @@ feature{PS_READ_ONLY_BACKEND}
 			Result := attach(database[type.type.type_id]).deep_twin.new_cursor
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_TRANSACTION): detachable PS_BACKEND_OBJECT
+	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		do
@@ -90,7 +90,7 @@ feature{PS_READ_ONLY_BACKEND}
 			Result := attach(database.item (type.type.type_id)).item(key)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Testing
+feature {PS_ABEL_EXPORT} -- Testing
 
 	wipe_out, make
 			-- Wipe out everything and initialize new.
@@ -101,11 +101,11 @@ feature {PS_EIFFELSTORE_EXPORT} -- Testing
 			plug_in_list.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
+feature {PS_ABEL_EXPORT} -- Primary key generation
 
 	max_primary: INTEGER
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		local
 			list: LINKED_LIST[PS_BACKEND_OBJECT]
@@ -133,7 +133,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			end
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		local
 			list: LINKED_LIST[PS_BACKEND_COLLECTION]
@@ -160,9 +160,9 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			end
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Write operations
+feature {PS_ABEL_EXPORT} -- Write operations
 
-	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 		do
 			across objects as cursor
 			loop
@@ -172,7 +172,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_TRANSACTION)
+	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
 		do
 			across collections as cursor
 			loop
@@ -182,7 +182,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			end
 		end
 
-	delete_collections (collections: LIST [PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+	delete_collections (collections: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 		do
 			across collections as cursor
 			loop
@@ -194,7 +194,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 feature {NONE} -- Implementation
 
-	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_TRANSACTION)
+	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 		local
 			old_obj: PS_BACKEND_OBJECT
 		do

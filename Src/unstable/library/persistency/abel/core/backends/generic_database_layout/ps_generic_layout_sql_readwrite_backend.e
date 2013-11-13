@@ -16,9 +16,9 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
+feature {PS_ABEL_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
 		local
 			connection: PS_SQL_CONNECTION
@@ -61,7 +61,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 			rollback (transaction)
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
 		local
 			connection: PS_SQL_CONNECTION
@@ -99,10 +99,10 @@ feature {PS_EIFFELSTORE_EXPORT} -- Primary key generation
 		end
 
 
-feature {PS_EIFFELSTORE_EXPORT} -- Write operations
+feature {PS_ABEL_EXPORT} -- Write operations
 
 
-	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete every item in `objects' from the database
 		local
 			connection: PS_SQL_CONNECTION
@@ -125,7 +125,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST[PS_BACKEND_COLLECTION]; transaction: PS_TRANSACTION)
+	write_collections (collections: LIST[PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write every item in `collections' to the database
 		local
 			commands: LINKED_LIST[STRING]
@@ -205,7 +205,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 			rollback (transaction)
 		end
 
-	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_TRANSACTION)
+	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete every item in `collections' from the database
 		local
 			connection: PS_SQL_CONNECTION
@@ -256,7 +256,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Write operations
 
 feature {PS_READ_WRITE_BACKEND} -- Implementation
 
-	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_TRANSACTION)
+	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.
 			-- Only write the attributes present in {PS_BACKEND_OBJECT}.attributes.
 		local

@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT}
+feature {PS_ABEL_EXPORT}
 
 	acquire_connection: PS_SQL_CONNECTION
 			-- Get a new connection.

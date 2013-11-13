@@ -14,7 +14,7 @@ inherit
 create {PS_MYSQL_CONNECTION}
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	has_column (column_name: STRING): BOOLEAN
 			-- Does `Current' have a column with name `column_name'?
@@ -22,7 +22,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 			Result := internal_row.mysql_result.field_map.has (column_name)
 		end
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER
 			-- The number of items in `Current' row.

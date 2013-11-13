@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature {PS_EIFFELSTORE_EXPORT} -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	dependencies: LINKED_LIST [PS_OBJECT_GRAPH_PART]
 			-- All parts on which `Current' depends on.
@@ -31,7 +31,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Access
 	object_identifier: INTEGER = 0
 			-- The object identifier of `Current'. Returns 0 if `Current' is no complex part.
 
-feature {PS_EIFFELSTORE_EXPORT} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_representing_object: BOOLEAN = False
 			-- Is `Current' representing an existing object?
@@ -42,7 +42,7 @@ feature {PS_EIFFELSTORE_EXPORT} -- Status report
 	is_complex_attribute: BOOLEAN = False
 			-- Is `Current' an instance of PS_COMPLEX_ATTRIBUTE_PART?
 
-feature {PS_EIFFELSTORE_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Basic operations
 
 	break_dependency (dependency: PS_OBJECT_GRAPH_PART)
 			-- Break the dependency `dependency'.

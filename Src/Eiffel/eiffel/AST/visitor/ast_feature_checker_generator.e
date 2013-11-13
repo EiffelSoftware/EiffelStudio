@@ -6836,7 +6836,7 @@ feature {NONE} -- Visitor
 				-- Type check on default expression.
 			l_as.else_expression.process (Current)
 			if attached last_type as t and then l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
-				if attached l_expression_type and then not l_expression_type .is_safe_equivalent (t) then
+				if attached l_expression_type and then not l_expression_type.conformance_type.same_as (t.conformance_type) then
 					error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.else_expression.start_location, context))
 				end
 				l_else_expression := e
@@ -7873,7 +7873,7 @@ feature {NONE} -- Visitor
 			scope_matcher.add_scopes (l_as.condition)
 			l_as.expression.process (Current)
 			if attached l_condition and then attached {EXPR_B} last_byte_node as e then
-				if attached l_expression_type and then attached last_type as t and then not l_expression_type .is_safe_equivalent (t) then
+				if attached l_expression_type and then attached last_type as t and then not l_expression_type.conformance_type.same_as (t.conformance_type) then
 					error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.expression.start_location, context))
 				end
 				l_expression := e

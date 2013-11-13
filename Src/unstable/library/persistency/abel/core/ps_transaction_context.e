@@ -1,6 +1,52 @@
 note
-	description: "Summary description for {PS_TRANSACTIONAL_REPOSITORY_ACCESS}."
-	author: ""
+	description: "[
+		Represents a transaction context for read and write operations.
+
+		Insert and update operation always treat the whole object
+		graph, meaning the object given as an argument and all
+		objects transitively reachable from it. Similarly, a query
+		operation will always load the whole object graph from the
+		database.
+		
+		Whenever an object in an object graph gets inserted or 
+		retrieved from the database, ABEL will mark it as "persistent", 
+		meaning the object has a counterpart in the database. 
+		The persistent status is only valid within a transaction
+		context and can be queried with feature `is_persistent'.
+		
+		The persistent mark allows ABEL to distinguish between
+		an update and an insert operation. Update only works on
+		persistent objects, whereas insert only works on
+		non-persistent objects. 
+		Note that this is only relevant for the root of an object 
+		graph, and ABEL is able to handle object graphs with objects 
+		of mixed export status. The distinction in the API is
+		enforced mainly to avoid unpleasant surprises.
+		
+		ABEL introduces another object state: Root objects.
+		The root state is used mainly for garbage collection, i.e.
+		root objects and any objects transitively referenced by a 
+		root object cannot be deleted. However, it can also be used
+		as a filtering criterion for queries.
+		By default the object given as an argument to the insert 
+		function is a root object. It is possible to set the root
+		status manually using `declare_root' or `declare_non_root'
+		or change the defaults using `set_root_declaration_strategy'.
+		
+		
+		If an error happens in the backend, ABEL will do the following
+		(not necessarily in this order):
+			
+			*) Translate the backend error to a corresponding PS_ERROR,
+			*) Set the `last_error' attribute,
+			*) Rollback the current transaction, 
+			*) and raise an exception
+			
+		The PS_ERROR class hierarchy has a visitor pattern which can
+		be used for error handling.
+		]"
+
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

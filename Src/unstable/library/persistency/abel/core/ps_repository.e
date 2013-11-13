@@ -1,15 +1,20 @@
 note
 	description: "[
-		Common ancestor for all repository strategies.
-		Descendants, obtained from PS_REPOSITORY_FACTORY, implement support for different kinds of databases.
-		The repository object receives QUERYs from an EXECUTOR object and returns ANY objects.
+		Represents a repository containing persistent objects.
 		
-		Every feature with a PS_TRANSACTION as an argument will either
-			- return normally, if no error occurred
-			- raise an exception, if any kind of error has occured
-			
-		The actual error is returned in the PS_TRANSACTION.error field, and the transaction is automatically rolled back.
-	]"
+		A repository can be used to execute read-only queries or create
+		a new transaction context for read-write operations.
+		
+		It is possible to change some of the default settings
+		for performance tuning, such as the transaction isolation level
+		or the batch size for lazy loading during query execution.
+		
+		The repository class provides a common interface for all ABEL
+		backends. However, the creation process cannot be abstracted.
+		To hide the (often quite complicated) creation process each
+		backend should ship its own factory class for its repository
+		implementation.
+		]"
 	author: "Marco Piccioni"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -148,6 +153,14 @@ feature {PS_EIFFELSTORE_EXPORT} -- Settings
 		end
 
 feature {PS_EIFFELSTORE_EXPORT} -- Object query
+
+--		Note: Every feature with a PS_TRANSACTION as an argument will either
+--			- return normally, if no error occurred
+--			- raise an exception, if any kind of error has occured
+--			
+--		The actual error is returned in the PS_TRANSACTION.error field,
+--		and the transaction is automatically rolled back.
+
 
 	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_TRANSACTION)
 			-- Executes the object query `query' within `transaction'.

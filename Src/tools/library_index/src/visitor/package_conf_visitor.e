@@ -26,8 +26,7 @@ inherit
 		end
 
 create
-	make,
-	make_with_depth
+	make
 
 feature -- Visitor
 

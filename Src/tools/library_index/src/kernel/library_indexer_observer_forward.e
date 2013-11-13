@@ -35,77 +35,77 @@ feature {NONE} -- Initialization
 
 feature -- Visit
 
-	on_ecf_file_found (p: PATH)
+	frozen on_ecf_file_found (p: PATH)
 		do
 			across observers as o loop
 				o.item.on_ecf_file_found (p)
 			end
 		end
 
-	on_folder_enter (p: PATH)
+	frozen on_folder_enter (p: PATH)
 		do
 			across observers as o loop
 				o.item.on_folder_enter (p)
 			end
 		end
 
-	on_folder_leave (p: PATH)
+	frozen on_folder_leave (p: PATH)
 		do
 			across observers as o loop
 				o.item.on_folder_leave (p)
 			end
 		end
 
-	on_ecf_file_enter (p: PATH)
+	frozen on_ecf_file_enter (p: PATH)
 		do
 			across observers as o loop
 				o.item.on_ecf_file_enter (p)
 			end
 		end
 
-	on_ecf_file_leave (p: PATH)
+	frozen on_ecf_file_leave (p: PATH)
 		do
 			across observers as o loop
 				o.item.on_ecf_file_leave (p)
 			end
 		end
 
-	on_system_enter (a_cfg: CONF_SYSTEM)
+	frozen on_system_enter (a_cfg: CONF_SYSTEM)
 		do
 			across observers as o loop
 				o.item.on_system_enter (a_cfg)
 			end
 		end
 
-	on_system_leave (a_cfg: CONF_SYSTEM)
+	frozen on_system_leave (a_cfg: CONF_SYSTEM)
 		do
 			across observers as o loop
 				o.item.on_system_leave (a_cfg)
 			end
 		end
 
-	on_target (a_target: CONF_TARGET)
+	frozen on_target (a_target: CONF_TARGET)
 		do
 			across observers as o loop
 				o.item.on_target (a_target)
 			end
 		end
 
-	on_library (a_lib: CONF_LIBRARY)
+	frozen on_library (a_lib: CONF_LIBRARY)
 		do
 			across observers as o loop
 				o.item.on_library (a_lib)
 			end
 		end
 
-	on_cluster (a_cluster: CONF_CLUSTER)
+	frozen on_cluster (a_cluster: CONF_CLUSTER)
 		do
 			across observers as o loop
 				o.item.on_cluster (a_cluster)
 			end
 		end
 
-	on_class (a_class: CONF_CLASS)
+	frozen on_class (a_class: CONF_CLASS)
 		do
 			across observers as o loop
 				o.item.on_class (a_class)

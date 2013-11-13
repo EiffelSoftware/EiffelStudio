@@ -19,7 +19,6 @@ inherit
 	PACKAGE_CONF_VISITOR
 		rename
 			make as make_visitor,
-			make_with_depth as make_visitor_with_depth,
 			reset as reset_visitor
 		export
 			{NONE} all
@@ -33,21 +32,13 @@ inherit
 		end
 
 create
-	make,
-	make_with_depth
+	make
 
 feature {NONE} -- Initialization
 
 	make
 		do
 			make_visitor
-			make_observers (0)
-			create files.make (0)
-		end
-
-	make_with_depth (n: INTEGER)
-		do
-			make_visitor_with_depth (n)
 			make_observers (0)
 			create files.make (0)
 		end

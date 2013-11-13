@@ -33,7 +33,7 @@ feature -- Status settings
 	destroy
 			-- Destroy the current item.
 		do
-			if attached parent_imp as p_imp then
+			if attached parent_imp as p_imp and attached interface then
 				p_imp.prune (interface)
 			end
 			set_is_destroyed (True)

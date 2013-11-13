@@ -59,12 +59,13 @@ feature {NONE} -- Initialization
 		local
 			menu: NS_MENU
 		do
+			create windows_imp.make
+			make_application_cocoa
+
 			Precursor {EV_APPLICATION_I}
 			if {PLATFORM}.is_thread_capable then
 				create idle_action_mutex.make
 			end
-			create windows_imp.make
-			make_application_cocoa
 			set_is_initialized (True)
 
 			-- Fix the menu because we are not loading from a nib
@@ -297,7 +298,7 @@ feature {NONE} -- Implementation
 invariant
 	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -112,7 +112,7 @@ feature -- Access
 			l_view: detachable NS_VIEW
 		do
 			l_view ?= v.cocoa_view
-			check l_view /= void end
+			check l_view /= void then end
 			box.add_subview (l_view)
 			notify_change (nc_minsize, Current)
 		end
@@ -182,7 +182,7 @@ feature -- Implementation
 				ev_children.after
 			loop
 				litem ?= ev_children.item
-				check litem /= Void end
+				check litem /= Void then end
 				item_width := litem.minimum_width
 				litem.cocoa_set_size (x, 0, item_width, item_height)
 				x := x + item_width
@@ -221,7 +221,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			t_imp: detachable EV_TOOL_BAR_IMP
 		do
 			t_imp ?= other.implementation
-			check t_imp /= Void end
+			check t_imp /= Void then end
 			Result := t_imp.radio_group = radio_group
 		end
 
@@ -258,7 +258,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 		do
 			button_imp ?= w.implementation
 			check
-				implementation_not_void: button_imp /= Void
+				implementation_not_void: button_imp /= Void then
 			end
 			if not button_imp.is_sensitive then
 				--disable_button (button_imp.id)
@@ -288,4 +288,14 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_TOOL_BAR_IMP

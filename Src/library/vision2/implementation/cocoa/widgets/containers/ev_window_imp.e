@@ -77,6 +77,12 @@ feature {NONE} -- Initialization
 		local
 			l_delegate: NS_WINDOW_DELEGATE
 		do
+			create accel_list.make (10)
+			create lower_bar
+			create upper_bar
+			initialize
+			init_bars
+
 			cocoa_make (new_window_position, window_mask, True)
 			make_key_and_order_front (content_view)
 			order_out
@@ -86,12 +92,9 @@ feature {NONE} -- Initialization
 
 			set_maximum_width (32000)
 			set_maximum_height (32000)
-			create accel_list.make (10)
 
 			cocoa_view := content_view
-			initialize
 
-			init_bars
 			create l_delegate
 			set_delegate (l_delegate)
 			l_delegate.window_did_resize_actions.extend (agent (a_notification: NS_NOTIFICATION)
@@ -135,13 +138,12 @@ feature {NONE} -- Initialization
  		local
  			ub_imp, lb_imp: detachable EV_VERTICAL_BOX_IMP
  		do
- 			create upper_bar
- 			create lower_bar
  			ub_imp ?= upper_bar.implementation
   			lb_imp ?= lower_bar.implementation
   			check
   				ub_imp_not_void: ub_imp /= Void
   				lb_imp_not_void: lb_imp /= Void
+  			then
   			end
   			ub_imp.on_parented
   			lb_imp.on_parented
@@ -162,7 +164,7 @@ feature -- Delegate
 			if not upper_bar.is_empty then
 				bar_imp ?= upper_bar.implementation
 				check
-					bar_imp_not_void: bar_imp /= Void
+					bar_imp_not_void: bar_imp /= Void then
 				end
 				bar_imp.ev_apply_new_size (0, 0, client_width, client_y, True)
 			end
@@ -176,7 +178,7 @@ feature -- Delegate
 			if not lower_bar.is_empty then
 				bar_imp ?= lower_bar.implementation
 				check
-					bar_imp_not_void: bar_imp /= Void
+					bar_imp_not_void: bar_imp /= Void then
 				end
 				bar_imp.set_move_and_size (0, client_y + client_height + 1,
 					client_width, bar_imp.minimum_height)
@@ -238,14 +240,14 @@ feature -- Measurement
 			if not upper_bar.is_empty then
 				bar_imp ?= upper_bar.implementation
 				check
-					bar_imp_not_void: bar_imp /= Void
+					bar_imp_not_void: bar_imp /= Void then
 				end
 				bar_imp.ev_move_and_resize (0, 0, client_width, client_y, True)
 			end
 			if not lower_bar.is_empty then
 				bar_imp ?= lower_bar.implementation
 				check
-					bar_imp_not_void: bar_imp /= Void
+					bar_imp_not_void: bar_imp /= Void then
 				end
 				bar_imp.ev_move_and_resize (0, client_y + client_height + 1, client_width, bar_imp.minimum_height, True)
 			end
@@ -549,18 +551,14 @@ feature -- Element change
 			if attached item as l_item then
 				remove_item_actions.call ([l_item])
 				v_imp ?= l_item.implementation
-				check
-					item_has_implementation: v_imp /= Void
-				end
+				check item_has_implementation: v_imp /= Void then end
 				v_imp.set_parent_imp (Void)
 				notify_change (Nc_minsize, Current)
 			end
 			-- Insert new item, if any
 			if attached v as l_v then
 				v_imp ?= l_v.implementation
-				check
-					v_has_implementation: v_imp /= Void
-				end
+				check v_has_implementation: v_imp /= Void then end
 				content_view.add_subview (v_imp.attached_view)
 				v_imp.set_parent_imp (Current)
 				notify_change (Nc_minsize, Current)
@@ -576,7 +574,7 @@ feature -- Element change
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= a_menu_bar.implementation
-			check mb_imp /= Void end
+			check mb_imp /= Void then end
 			mb_imp.set_parent_window_imp (Current)
 
 			-- TODO attach the menubar to the current window / application in cocoa and switch on window switch
@@ -593,7 +591,7 @@ feature -- Element change
 		do
 			if attached menu_bar as l_menu_bar then
 				mb_imp ?= l_menu_bar.implementation
-				check mb_imp /= Void end
+				check mb_imp /= Void then end
 				mb_imp.remove_parent_window
 				-- TODO: remove the menubar in cocoa
 			end
@@ -623,4 +621,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_WINDOW note option: stable attribute end;
 		-- Interface object of `Current'
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_WINDOW_IMP

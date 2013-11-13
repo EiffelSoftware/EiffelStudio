@@ -20,6 +20,7 @@ inherit
 
 	EV_TEXT_IMP
 		redefine
+			make,
 			interface,
 			initialize,
 			initialize_buffer_events
@@ -30,17 +31,23 @@ create
 
 feature {NONE} -- Initialization
 
+	make
+		do
+			create tab_positions
+			Precursor
+		end
+
 	initialize
 			-- Set up `Current'
 		do
-			create tab_positions
-			tab_positions.internal_add_actions.extend (agent update_tab_positions)
-			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 
 	--		set_tab_width (96 // 2)
 	--		create temp_start_iter.make
     --		create temp_end_iter.make
 			Precursor {EV_TEXT_IMP}
+
+			tab_positions.internal_add_actions.extend (agent update_tab_positions)
+			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 		end
 
 	initialize_buffer_events
@@ -244,9 +251,6 @@ feature -- Status setting
 
 		end
 
-	current_format: EV_CHARACTER_FORMAT
-		-- Format to be applied to next typed characters
-
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
@@ -334,7 +338,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_RICH_TEXT;
+	interface: detachable EV_RICH_TEXT note option: stable attribute end
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"

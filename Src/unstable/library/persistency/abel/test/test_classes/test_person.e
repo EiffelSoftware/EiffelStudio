@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	PERSON
+	TEST_PERSON
 
 create
 	make

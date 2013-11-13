@@ -238,7 +238,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 	test_referenced_collection_store
 			-- Test if a SPECIAL collection, that is referenced by an ARRAY object, gets stored correctly
 		local
-			test: PS_GENERIC_CRUD_TEST [ARRAY [PERSON]]
+			test: PS_GENERIC_CRUD_TEST [ARRAY [TEST_PERSON]]
 		do
 			create test.make (repository)
 			test.test_insert (test_data.array_of_persons)
@@ -248,29 +248,29 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 	test_referenced_collection_update_known_object
 			-- Test if a reference change to a known object is correctly adjusted.
 		local
-			test: PS_GENERIC_CRUD_TEST [ARRAY [PERSON]]
+			test: PS_GENERIC_CRUD_TEST [ARRAY [TEST_PERSON]]
 		do
 			create test.make (repository)
-			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [PERSON]}.put(test_data.array_of_persons.item (1), 2))
+			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.put(test_data.array_of_persons.item (1), 2))
 			repository.clean_db_for_testing
 		end
 
 	test_referenced_collection_new_object
 			-- Test if a newly inserted collection item gets correctly inserted
 		local
-			test: PS_GENERIC_CRUD_TEST [ARRAY [PERSON]]
-			new: PERSON
+			test: PS_GENERIC_CRUD_TEST [ARRAY [TEST_PERSON]]
+			new: TEST_PERSON
 		do
 			create new.make ("some", "new_guy", 20)
 			create test.make (repository)
-			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [PERSON]}.force(new, 5))
+			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.force(new, 5))
 			repository.clean_db_for_testing
 		end
 
 	test_direct_collection_store
 			-- Test if a direct collection store is supported
 		local
-			test: PS_GENERIC_CRUD_TEST [SPECIAL [PERSON]]
+			test: PS_GENERIC_CRUD_TEST [SPECIAL [TEST_PERSON]]
 		do
 			create test.make (repository)
 			test.test_insert (test_data.special_of_persons)
@@ -280,22 +280,22 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 	test_direct_collection_update_known_object
 			-- Test if a reference change to a known object is correctly adjusted.
 		local
-			test: PS_GENERIC_CRUD_TEST [SPECIAL [PERSON]]
+			test: PS_GENERIC_CRUD_TEST [SPECIAL [TEST_PERSON]]
 		do
 			create test.make (repository)
-			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [PERSON]}.put(test_data.special_of_persons.item (0), 1))
+			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.put(test_data.special_of_persons.item (0), 1))
 			repository.clean_db_for_testing
 		end
 
 	test_direct_collection_new_object
 			-- Test if a newly inserted collection item gets correctly inserted
 		local
-			test: PS_GENERIC_CRUD_TEST [SPECIAL [PERSON]]
-			new: PERSON
+			test: PS_GENERIC_CRUD_TEST [SPECIAL [TEST_PERSON]]
+			new: TEST_PERSON
 		do
 			create new.make ("some", "new_guy", 20)
 			create test.make (repository)
-			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [PERSON]}.extend(new))
+			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.extend(new))
 			repository.clean_db_for_testing
 		end
 
@@ -497,7 +497,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			-- Test when an attribute has declared type LINKED_LIST[ANY] but dynamic type LINKED_LIST[PERSON]
 		local
 			box: ANY_LIST_BOX
-			list: LINKED_LIST[PERSON]
+			list: LINKED_LIST[TEST_PERSON]
 			test: PS_GENERIC_CRUD_TEST[ANY_LIST_BOX]
 		do
 			create list.make
@@ -513,8 +513,8 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			-- Check if the correct runtime type gets generated
 		local
 			first, last: FILE_NAME
-			person: PERSON
-			test: PS_GENERIC_CRUD_TEST[PERSON]
+			person: TEST_PERSON
+			test: PS_GENERIC_CRUD_TEST[TEST_PERSON]
 		do
 			create first.make_from_string ("some")
 			create last.make_from_string ("string")
@@ -523,7 +523,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			-- Regression test: instead of creating FILE_NAME objects, a STRING object was created.
 			test.test_insert (person)
 			repository.clean_db_for_testing
-			test.test_crud_operations (person, agent (p:PERSON) do p.add_item end)
+			test.test_crud_operations (person, agent (p:TEST_PERSON) do p.add_item end)
 			repository.clean_db_for_testing
 		end
 

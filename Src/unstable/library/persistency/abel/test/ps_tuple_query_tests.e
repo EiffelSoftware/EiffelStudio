@@ -22,7 +22,7 @@ feature
 	test_simple_query
 			-- Test a simple tuple query with no criteria and standard projection
 		local
-			query:PS_TUPLE_QUERY[PERSON]
+			query:PS_TUPLE_QUERY[TEST_PERSON]
 			res: LINKED_LIST[TUPLE[STRING, STRING, INTEGER]]
 		do
 			repository.set_global_pool (True)
@@ -67,7 +67,7 @@ feature
 	test_query_with_criteria
 				-- Test a simple query with default projection and some criteria
 		local
-			query:PS_TUPLE_QUERY[PERSON]
+			query:PS_TUPLE_QUERY[TEST_PERSON]
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
@@ -96,7 +96,7 @@ feature
 	test_query_projection
 			-- Test a simple query with a custom projection and some criteria
 		local
-			query:PS_TUPLE_QUERY[PERSON]
+			query:PS_TUPLE_QUERY[TEST_PERSON]
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
@@ -121,7 +121,7 @@ feature
 	test_query_criteria_not_in_projection
 			-- Test a query which has a criterion on an attribute not included in the projection array
 		local
-			query:PS_TUPLE_QUERY[PERSON]
+			query:PS_TUPLE_QUERY[TEST_PERSON]
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end

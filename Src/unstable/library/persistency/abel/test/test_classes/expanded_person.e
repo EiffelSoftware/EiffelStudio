@@ -8,7 +8,7 @@ expanded class
 	EXPANDED_PERSON
 
 inherit
-	PERSON
+	TEST_PERSON
 		redefine
 			default_create
 		end

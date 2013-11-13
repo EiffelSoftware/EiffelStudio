@@ -164,6 +164,7 @@ feature {NONE}
 			create factory
 			repo := factory.create_in_memory_repository
 			repo.backend.add_plug_in (escher_integration)
+			repo.set_global_pool (True)
 			create executor.make (repo)
 
 		end

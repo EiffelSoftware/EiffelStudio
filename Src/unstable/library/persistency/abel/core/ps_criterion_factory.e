@@ -4,8 +4,8 @@ note
 		
 		Example usage:
 			
-			criterion_1 := factory.create_predefined ("first_name", factory.equals, "John")
-			criterion_2 := factory.create_agent (agent last_name_equal (?, "Doe"))
+			criterion_1 := factory.new_predefined ("first_name", factory.equals, "John")
+			criterion_2 := factory.new_agent (agent last_name_equal (?, "Doe"))
 		
 		Combining criteria using logical operators:
 		
@@ -32,7 +32,7 @@ create
 
 feature -- Creating a criterion
 
-	create_uniform alias "[]" (tuple: TUPLE [ANY]): PS_CRITERION
+	new_uniform alias "[]" (tuple: TUPLE [ANY]): PS_CRITERION
 			-- Creates an agent, a predefined criterion or a combination of both
 			-- using an uniform notation. `tuple' containes either a single agent PREDICATE
 			-- or three values of type [STRING, STRING, ANY].
@@ -42,24 +42,24 @@ feature -- Creating a criterion
 		do
 			if is_agent (tuple) then
 				check attached {PREDICATE [ANY, TUPLE [ANY]]} tuple [1] as predicate then
-					Result := create_agent (predicate)
+					Result := new_agent (predicate)
 				end
 			else
 					-- is_predefined = True, otherwise there would be a contract violation
 					-- however, we need to do all these checks again because of void safety-.-
 				check attached {STRING} tuple [1] as attr and attached {STRING} tuple [2] as operator and attached tuple [3] as value then
-					Result := create_predefined (attr, operator, value)
+					Result := new_predefined (attr, operator, value)
 				end
 			end
 		end
 
-	create_agent (a_predicate: PREDICATE [ANY, TUPLE [ANY]]): PS_CRITERION
+	new_agent (a_predicate: PREDICATE [ANY, TUPLE [ANY]]): PS_CRITERION
 			-- Creates a criterion with a predicate acting as a filter.
 		do
 			create {PS_AGENT_CRITERION} Result.make (a_predicate)
 		end
 
-	create_predefined (object_attribute_name: STRING; operator: STRING; value: ANY): PS_CRITERION
+	new_predefined (object_attribute_name: STRING; operator: STRING; value: ANY): PS_CRITERION
 			-- Creates a predefined selection criterion given
 			-- an object attribute name,
 			-- an operator (see 'PS_PREDEFINED_OPERATORS'),

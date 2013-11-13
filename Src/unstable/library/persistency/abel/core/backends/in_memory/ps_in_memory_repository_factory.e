@@ -79,11 +79,11 @@ feature -- Factory methods
 		-- Create a simple in memory repository
 		local
 			repository: PS_DEFAULT_REPOSITORY
-			backend: PS_EVEN_SIMPLER_IN_MEMORY_BACKEND
+			backend: PS_IN_MEMORY_BACKEND
 			special_handler: PS_SPECIAL_COLLECTION_HANDLER
 			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
 		do
-			create backend.wipe_out
+			create backend.make
 			create repository.make (backend)
 			create special_handler.make
 			create tuple_handler

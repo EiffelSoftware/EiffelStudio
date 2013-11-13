@@ -1,16 +1,16 @@
 note
-	description: "Summary description for {PS_EVEN_SIMPLER_IN_MEMORY_BACKEND}."
+	description: "Summary description for {PS_IN_MEMORY_BACKEND}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PS_EVEN_SIMPLER_IN_MEMORY_BACKEND
+	PS_IN_MEMORY_BACKEND
 inherit
 	PS_READ_WRITE_BACKEND
 
 create
-	wipe_out
+	make
 
 feature {PS_EIFFELSTORE_EXPORT} -- Backend capabilities
 
@@ -92,7 +92,7 @@ feature{PS_READ_ONLY_BACKEND}
 
 feature {PS_EIFFELSTORE_EXPORT} -- Testing
 
-	wipe_out
+	wipe_out, make
 			-- Wipe out everything and initialize new.
 		do
 			create database.make (50)

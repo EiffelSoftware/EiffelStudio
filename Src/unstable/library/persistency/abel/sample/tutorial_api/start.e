@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		local
-			backend: PS_EVEN_SIMPLER_IN_MEMORY_BACKEND
+			backend: PS_IN_MEMORY_BACKEND
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
 			create criterion_factory
@@ -211,7 +211,7 @@ feature -- Data modification
 			create query.make
 			context := repository.new_transaction_context
 
-				-- As we're doing a read followed by a write, we now need to execute
+				-- As we're doing a read followed by a write, we need to execute
 				-- the query within a transaction context.
 			context.execute_query (query)
 
@@ -253,9 +253,10 @@ feature -- Data modification
 			context := repository.new_transaction_context
 
 				-- Only select the person with first name `Berno'.
-			query.set_criterion (criterion_factory.create_predefined ("first_name", "=", "Berno"))
+			query.set_criterion (criterion_factory.new_predefined ("first_name", "=", "Berno"))
 
-				-- Execute the query.
+				-- As we're doing a read followed by a write, we need to execute
+				-- the query within a transaction context.
 			context.execute_query (query)
 
 				-- The result now only contains Berno Citrini
@@ -285,7 +286,7 @@ feature -- Data modification
 			create query.make
 
 				-- Get "Baby Doe" from the database
-			query.set_criterion (criterion_factory.create_predefined ("first_name", "=", "Baby"))
+			query.set_criterion (criterion_factory.new_predefined ("first_name", "=", "Baby"))
 			transaction.execute_query (query)
 
 			baby := query.new_cursor.item
@@ -303,7 +304,7 @@ feature -- Data modification
 			transaction.update (john)
 
 			query.reset
-			query.set_criterion (criterion_factory.create_predefined ("first_name", "=", "John"))
+			query.set_criterion (criterion_factory.new_predefined ("first_name", "=", "John"))
 			transaction.execute_query (query)
 			check equal: query.new_cursor.item.is_deep_equal (john) end
 
@@ -359,7 +360,7 @@ feature -- Criteria
 		do
 				-- Predefined criteria work on any attribute of a basic or string type.
 			print ("Select all persons with age > 2")
-			create query.make_with_criterion (criterion_factory.create_predefined ("age", ">", 2))
+			create query.make_with_criterion (criterion_factory.new_predefined ("age", ">", 2))
 
 			repository.execute_query (query)
 			print_result (query)
@@ -371,7 +372,7 @@ feature -- Criteria
 				-- '?' for a single unknown character.
 
 			print ("Select all persons whose last name ends with *ni.%N")
-			create query.make_with_criterion (criterion_factory.create_predefined ("last_name", "like", "*ni"))
+			create query.make_with_criterion (criterion_factory.new_predefined ("last_name", "like", "*ni"))
 
 			repository.execute_query (query)
 			print_result (query)
@@ -383,9 +384,9 @@ feature -- Criteria
 
 			print ("Select all persons whose last name ends with *ni and with age = 5.%N")
 			query.set_criterion (
-				criterion_factory.create_predefined ("last_name", "like", "*ni")
+				criterion_factory.new_predefined ("last_name", "like", "*ni")
 				and
-				criterion_factory.create_predefined ("age", "=", 5))
+				criterion_factory.new_predefined ("age", "=", 5))
 
 			repository.execute_query (query)
 			print_result (query)
@@ -397,7 +398,7 @@ feature -- Criteria
 			print ("Select all persons with age = 5, using an agent.%N")
 
 			query.set_criterion (
-				criterion_factory.create_agent (
+				criterion_factory.new_agent (
 					agent (p: PERSON): BOOLEAN
 						do
 							Result := p.age = 5
@@ -441,7 +442,7 @@ feature -- Criteria
 			if not retried then
 
 				create query.make
-				query.set_criterion (criterion_factory.create_predefined ("a_bogus_name", "=", 42))
+				query.set_criterion (criterion_factory.new_predefined ("a_bogus_name", "=", 42))
 				print ("Error, no exception raised!")
 			end
 		rescue

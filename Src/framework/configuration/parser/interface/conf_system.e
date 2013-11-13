@@ -432,7 +432,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			library_target := a_target
 		end
 
-	set_library_target_by_name (a_target: STRING)
+	set_library_target_by_name (a_target: detachable STRING_32)
 			-- Set `library_target' to `a_target'.
 		require
 			a_target_valid: a_target /= Void and then not a_target.is_empty implies targets.has (a_target)

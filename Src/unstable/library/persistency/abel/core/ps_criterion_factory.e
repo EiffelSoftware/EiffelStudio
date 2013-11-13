@@ -1,14 +1,21 @@
 note
 	description: "[
-	Factory class to create criteria. Three kinds of criteria are possible:
-	1. Predefined criteria, using tuples of values of type [STRING, STRING, ANY], 
-	the first element representing an attribute name, the second representing predefined string operators
-	(see class PREDEFINED_OPERATORS), and the third representing any value to be checked on the attribute.
-	2.Agents criteria, in particular predicates used for selection.
-	3. A combination of the previous two criteria can be composed with loical operators and represented in a uniform tuple notation.
-	Example of a combination of criteria with the overloaded [] notation: 
-	[[ "first_name", equals, "Paco" ]] and [[ agent age_more_than (?, 20) ]]
-	]"
+		Factory class to create criteria. 
+		
+		Example usage:
+			
+			criterion_1 := factory.create_predefined ("first_name", factory.equals, "John")
+			criterion_2 := factory.create_agent (agent last_name_equal (?, "Doe"))
+		
+		Combining criteria using logical operators:
+		
+			criterion_3 := criterion_1 and criterion_2
+		
+		Alternative bracked syntax:
+		
+			criterion_3 := factory [["first_name", factory.equals, "John"]]
+							and factory [[agent last_name_equal (?, "Doe") ]]
+		]"
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"

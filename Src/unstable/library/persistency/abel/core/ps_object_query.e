@@ -1,23 +1,14 @@
 note
-	description: "[
-	Represents a query for objects of type G.
-	Objects of this type can be used directly to iterate through the query result.
-	Example:
-		across 
-			my_query as cursor
-		loop 
-			-- do something with cursor.item 
-		end
-	]"
+	description: "Represents a query for objects of type OBJECT_TYPE."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PS_OBJECT_QUERY [G -> ANY]
+	PS_OBJECT_QUERY [OBJECT_TYPE -> ANY]
 
 inherit
-	PS_QUERY [G, G]
+	PS_QUERY [OBJECT_TYPE, OBJECT_TYPE]
 
 create
 	make, make_with_criterion

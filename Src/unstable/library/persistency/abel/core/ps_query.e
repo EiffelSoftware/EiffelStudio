@@ -3,8 +3,8 @@ note
 		This class contains the shared parts of both PS_TUPLE_QUERY
 		and PS_OBJECT_QUERY.
 
-		The generic parameter QUERY_TYPE denotes the type of the objects
-		to be queried. This does not include descendants.
+		The generic parameter OBJECT_TYPE denotes the type of the objects
+		to be queried. This does not include any descendants.
 
 		The general workflow with queries is as follows:
 		
@@ -24,14 +24,14 @@ note
 			end
 		
 		The type of `cursor.item' is RESULT_TYPE, i.e. TUPLE for tuple
-		queries and QUERY_TYPE for object queries.
+		queries and OBJECT_TYPE for object queries.
 	]"
 	author: "Marco Piccioni, Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	PS_QUERY [QUERY_TYPE -> ANY, RESULT_TYPE -> ANY]
+	PS_QUERY [OBJECT_TYPE -> ANY, RESULT_TYPE -> ANY]
 
 inherit
 
@@ -176,13 +176,13 @@ feature -- Disposal
 feature -- Contract support functions
 
 	is_criterion_fitting_generic_type (a_criterion: PS_CRITERION): BOOLEAN
-			-- Can `a_criterion' handle objects of type `QUERY_TYPE'?
+			-- Can `a_criterion' handle objects of type `OBJECT_TYPE'?
 		local
 			reflection: INTERNAL
-			type: TYPE[QUERY_TYPE]
+			type: TYPE[OBJECT_TYPE]
 		do
 			fixme ("Use internal type, but take care of `make_with_criterion' contract")
-			type:= {QUERY_TYPE}
+			type:= {OBJECT_TYPE}
 			create reflection
 			Result := a_criterion.can_handle_object (reflection.new_instance_of (type.type_id))
 		end
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Initialization
 
 	make
-			-- Create a query for all objects of type `QUERY_TYPE' (without filtering criteria).
+			-- Create a query for all objects of type `OBJECT_TYPE' (without filtering criteria).
 		local
 			reflection: INTERNAL
 		do
@@ -269,7 +269,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_criterion (a_criterion: PS_CRITERION)
-			-- Create a query for object of type G filtered using `a_criterion'.
+			-- Create a query for object of type `OBJECT_TYPE' filtered using `a_criterion'.
 		require
 			only_predefined_for_tuples: is_tuple_query implies not a_criterion.has_agent_criterion
 			criterion_can_handle_objects: is_criterion_fitting_generic_type (a_criterion)

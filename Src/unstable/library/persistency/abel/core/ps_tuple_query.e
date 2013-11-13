@@ -1,18 +1,19 @@
 note
 	description: "[
-		Represents a repository query that returns data tuples of objects.
-		Please note that you cannot update or insert data tuples of objects into the repository.
+		Represents a query for objects of type OBJECT_TYPE.
+		The result is a TUPLE containing attributes of the object.
 		
-		You can set a projection on the attributes you would like to have, to restrict the amount of data that is going to be retrieved.
-		You'll get completely loaded objects as attributes if you include an attribute in your projection that is not of a basic type (strings and numbers).
-
-		Objects of this type can be used directly to iterate through the query result.
-		Example: 
-			across 
-				my_query as cursor
-			loop 
-				-- do something with cursor.item
-			end
+		Only the attributes listed in the projection array are loaded.
+		The i-th item in a result TUPLE corresponds to the i-th attribute
+		in the projection array.
+		
+		By default a projection contains only attributes of a basic or STRING type.
+		It is possible to change the default using feature`set_projection'.
+		Adding reference type attributes to the projection is possible.
+		
+		Note: If a predefined criterion is defined for an attribute which is not 
+		part of the projection, the attribute will internally be retrieved as well.
+		It will not be part of the result tuple however.
 	]"
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -35,6 +36,8 @@ feature -- Access: Retrieval Parameter
 
 	projection: ARRAY [STRING]
 			-- Data to be included for projection. Defaults to all fields of basic types and string types.
+			-- The projection also defines the layout of the TUPLE results:
+			-- The i-th item in a TUPLE corresponds to the i-th attribute in the projection.
 
 feature -- Status report
 
@@ -64,7 +67,6 @@ feature -- Utilities
 		do
 			create reflection
 			instance := reflection.new_instance_of (reflection.generic_dynamic_type (Current, 1))
-				--reflection.dynamic_type_from_string (class_name))
 			num_fields := reflection.field_count (instance)
 			create Result.make_filled (create {STRING}.make_empty, 1, num_fields)
 			from
@@ -116,7 +118,6 @@ feature {NONE} -- Initialization
 			-- Create a query for all objects of type G (no filtering criteria).
 		do
 			create projection.make_empty
-			--initialize
 			Precursor
 			create projection.make_from_array (default_projection)
 			projection.compare_objects

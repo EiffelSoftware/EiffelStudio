@@ -348,6 +348,7 @@ feature {NONE} -- Implementation
 			-- Reset `fingerprint'
 		do
 			internal_fingerprint := Void
+			internal_hash_code := 0
 		end
 
 	internal_fingerprint: detachable EIS_MD5_FINGERPRINT

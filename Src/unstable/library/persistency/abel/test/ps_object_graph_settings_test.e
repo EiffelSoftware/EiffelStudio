@@ -26,13 +26,13 @@ feature {PS_REPOSITORY_TESTS}
 
 	test_all_settings
 		do
-			test_default_settings
-			test_cascading_update
-			test_update_exact_depth
-			test_cascading_delete
-			test_exact_delete
-			test_immediate_insert
-			test_exact_insert_depth
+--			test_default_settings
+--			test_cascading_update
+--			test_update_exact_depth
+--			test_cascading_delete
+--			test_exact_delete
+--			test_immediate_insert
+--			test_exact_insert_depth
 			test_immediate_retrieve
 			test_exact_retrieve_depth
 		end
@@ -223,14 +223,25 @@ feature {PS_REPOSITORY_TESTS}
 			-- Test if a query with an arbitrary depth works
 		local
 			tail_count: INTEGER
+			transaction: PS_TRANSACTION
 		do
 			reset
-			repository.default_object_graph.set_query_depth (arbitrary_depth)
-			executor.execute_insert (test_data.reference_chain)
-			executor.execute_query (query)
+--			repository.default_object_graph.set_query_depth (arbitrary_depth)
+
+			transaction := repository.new_transaction_context
+			transaction.insert (test_data.reference_chain)
+
+			query.set_object_initialization_depth (arbitrary_depth)
+			transaction.execute_query (query)
+
+			--executor.execute_insert (test_data.reference_chain)
+			--executor.execute_query (query)
 			assert ("The reference of the retrieved object should be Void", query.result_cursor.item.tail.next.next.last)
-			repository.default_object_graph.set_query_depth (1)
-			executor.execute_query (tail_query)
+
+			tail_query.set_object_initialization_depth (1)
+			transaction.execute_query (tail_query)
+--			repository.default_object_graph.set_query_depth (1)
+--			executor.execute_query (tail_query)
 			across
 				tail_query as res
 			loop
@@ -239,31 +250,45 @@ feature {PS_REPOSITORY_TESTS}
 			end
 			-- This test is wrong: ABEL will still load all CHAIN_TAIL objects it can find for a tail query.
 			--assert ("The number of tails is wrong", arbitrary_depth - 1 = tail_count)
+			tail_query.close
 
-			repository.default_object_graph.set_query_depth (1)
+--			repository.default_object_graph.set_query_depth (1)
+--			query.reset
+--			executor.execute_query (query)
 			query.reset
-			executor.execute_query (query)
+			query.set_object_initialization_depth (1)
+			transaction.execute_query (query)
 			assert ("There should be no tail", not attached query.result_cursor.item.tail)
 
 
-			repository.default_object_graph.set_query_depth (2)
+--			repository.default_object_graph.set_query_depth (2)
+--			query.reset
+--			executor.execute_query (query)
 			query.reset
-			executor.execute_query (query)
+			query.set_object_initialization_depth (2)
+			transaction.execute_query (query)
 			assert ("There should be only one tail", query.result_cursor.item.tail.last)
 
-			repository.default_object_graph.set_query_depth (3)
+--			repository.default_object_graph.set_query_depth (3)
+--			query.reset
+--			executor.execute_query (query)
 			query.reset
-			executor.execute_query (query)
+			query.set_object_initialization_depth (3)
+			transaction.execute_query (query)
 			assert ("There should be only two tails", query.result_cursor.item.tail.next.last)
 
-			repository.default_object_graph.set_query_depth (4)
+--			repository.default_object_graph.set_query_depth (4)
+--			query.reset
+--			executor.execute_query (query)
 			query.reset
-			executor.execute_query (query)
+			query.set_object_initialization_depth (4)
+			transaction.execute_query (query)
 			assert ("There should be only three tails", query.result_cursor.item.tail.next.next.last)
 
-
+			query.close
+			transaction.commit
 			repository.clean_db_for_testing
-			repository.default_object_graph.reset_to_default
+--			repository.default_object_graph.reset_to_default
 		end
 
 feature {PS_TEST_PROVIDER}

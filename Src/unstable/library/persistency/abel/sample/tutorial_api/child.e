@@ -7,6 +7,12 @@ note
 class
 	CHILD
 
+inherit
+	ANY
+		redefine
+			is_equal
+		end
+
 create
 	make
 
@@ -27,7 +33,7 @@ feature {NONE} -- Initialization
 			default_age: age = 0
 		end
 
-feature -- Access
+feature -- Element change
 
 	celebrate_birthday
 			-- Increase age by 1.
@@ -38,6 +44,18 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' equal to `Current'?
+		do
+			Result := first_name.is_equal (other.first_name)
+				and last_name.is_equal (other.last_name)
+				and age = other.age
+				and equal (father, other.father)
+				and equal (mother, other.mother)
+		end
+
+feature -- Access
 
 	first_name: STRING
 			-- The child's first name.

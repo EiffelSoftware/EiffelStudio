@@ -31,7 +31,7 @@ feature {PS_CRUD_TESTS}
 
 			internal_check_equality (object, equality_function)
 			repo_access.commit
-			repo_access.start
+			repo_access.prepare
 		end
 
 	test_crud_operations (object: G; update_operation: PROCEDURE [ANY, TUPLE [G]])
@@ -68,7 +68,7 @@ feature {PS_CRUD_TESTS}
 				-- Test successful delete
 
 			repo_access.commit
-			repo_access.start
+			repo_access.prepare
 
 --			executor.execute_delete (object)
 --			third_count := count_results

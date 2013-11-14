@@ -77,7 +77,7 @@ feature -- Element change
 
 feature -- Query execution
 
-	execute_query (query: PS_OBJECT_QUERY[ANY])
+	execute_query (query: PS_OBJECT_QUERY [ANY])
 			-- Execute `query' and store the results in `query.result_cursor'.
 			-- Note that the query is executed in an hidden, implicit transaction context
 			-- and that the result cannot be used for any subsequent write operations.
@@ -98,7 +98,7 @@ feature -- Query execution
 			end
 		end
 
-	execute_tuple_query (query: PS_TUPLE_QUERY[ANY])
+	execute_tuple_query (query: PS_TUPLE_QUERY [ANY])
 			-- Execute `query' and store the results in `query.result_cursor'.
 			-- Note that the query is executed in an hidden, implicit transaction context
 			-- and that the result cannot be used for any subsequent write operations.

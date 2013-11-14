@@ -14,6 +14,11 @@ inherit
 			initialize
 		end
 
+	PS_UNSAFE
+		undefine
+			default_create
+		end
+
 create
 	make
 

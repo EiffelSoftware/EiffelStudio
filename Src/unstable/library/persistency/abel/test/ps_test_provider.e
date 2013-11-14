@@ -160,7 +160,7 @@ feature {PS_TEST_PROVIDER}
 				assert ("More than one result.", cursor.after)
 			end
 
-			context.declare_non_root (object)
+			context.unmark_root (object)
 			assert ("Object is still root", not context.is_root (object))
 
 			query.close
@@ -173,7 +173,7 @@ feature {PS_TEST_PROVIDER}
 
 			assert ("Query is not empty", cursor.after)
 
-			context.declare_root (object)
+			context.mark_root (object)
 			assert ("Object not declared as root", context.is_root (object))
 
 			query.close

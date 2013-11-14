@@ -57,7 +57,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			l_name := name
 			name := a_name
 			if not same_string_attribute (l_name, a_name) then
-				update_fingerprint
+				reset_fingerprint
 			end
 		ensure
 			name_set: name = a_name
@@ -74,7 +74,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			l_protocol := protocol
 			protocol := a_protocol
 			if not same_string_attribute (l_protocol, a_protocol) then
-				update_fingerprint
+				reset_fingerprint
 			end
 		ensure
 			protocol_set: protocol = a_protocol
@@ -91,7 +91,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			l_source := source
 			source := a_source
 			if not same_string_attribute (l_source, a_source) then
-				update_fingerprint
+				reset_fingerprint
 			end
 		ensure
 			source_set: source = a_source
@@ -108,7 +108,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			l_tags := tags
 			tags := a_tags
 			if l_tags /= a_tags then
-				update_fingerprint
+				reset_fingerprint
 			end
 		ensure
 			tags_set: tags = a_tags
@@ -137,7 +137,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			l_parameters := parameters
 			parameters := a_parameters
 			if l_parameters /= a_parameters then
-				update_fingerprint
+				reset_fingerprint
 			end
 		ensure
 			parameters_set: parameters = a_parameters
@@ -342,6 +342,12 @@ feature {NONE} -- Implementation
 			internal_fingerprint := updated_fingerprint
 		ensure
 			fingerprint_set: internal_fingerprint /= Void
+		end
+
+	reset_fingerprint
+			-- Reset `fingerprint'
+		do
+			internal_fingerprint := Void
 		end
 
 	internal_fingerprint: EIS_MD5_FINGERPRINT

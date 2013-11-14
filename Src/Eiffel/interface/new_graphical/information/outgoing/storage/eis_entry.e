@@ -347,7 +347,6 @@ feature {NONE} -- Hash code
 
 invariant
 	id_not_void: target_id /= Void
-	fingerprint_not_void: fingerprint /= Void
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

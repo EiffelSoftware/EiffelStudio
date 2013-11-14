@@ -44,6 +44,8 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
 			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
 			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
+		require else
+			True
 		local
 --			temp_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
 			result_list: LINKED_LIST [PS_BACKEND_OBJECT]
@@ -61,11 +63,11 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 				curr_obj := internal_retrieve_by_primary (type, curr_id, attributes, transaction)
 				if attached curr_obj then
 --					curr_obj := temp_list.first
-					if criteria.can_handle_object (curr_obj) then
-						if criteria.is_satisfied_by (curr_obj) then
+--					if criteria.can_handle_object (curr_obj) then
+--						if criteria.is_satisfied_by (curr_obj) then
 							result_list.extend (curr_obj)
-						end
-					end
+--						end
+--					end
 				end
 				curr_id := curr_id + 1
 			end
@@ -405,6 +407,7 @@ feature {PS_ABEL_EXPORT} -- Testing helpers
 			loop
 				output := curl.destroy_database (keyset.key.as_lower)
 			end
+			create key_mapper.make
 		end
 
 feature -- database

@@ -46,6 +46,9 @@ feature -- Operation
 			make
 
 				-- Remove the first item, possibly pending.
+				-- Before last execution is finished,
+				-- there might be a pending procedure was just scheduled.
+				-- We simply remove it to stop previous execution.
 			if not background_procedures.is_empty then
 				ev_application.remove_idle_action (background_procedures.first)
 			end

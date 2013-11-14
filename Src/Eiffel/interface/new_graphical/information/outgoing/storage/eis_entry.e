@@ -223,7 +223,7 @@ feature -- Access
 
 	tags_as_string: detachable STRING_32
 			-- Tags as a string
-			-- Simple combination, not for display popose.
+			-- Simple combination, not for display purpose.
 		do
 			if attached tags as lt_tags then
 				create Result.make (10)
@@ -243,7 +243,7 @@ feature -- Access
 
 	parameters_as_string: detachable STRING_32
 			-- Parameters as string
-			-- Simple combination, not for display popose.
+			-- Simple combination, not for display purpose.
 		do
 			if attached parameters as lt_parameters then
 				create Result.make (10)
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Hash code
 
 	internal_hash_code: like hash_code;
-			-- Catched hash code
+			-- Cached hash code
 
 invariant
 	id_not_void: target_id /= Void

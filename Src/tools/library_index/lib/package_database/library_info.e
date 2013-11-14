@@ -10,6 +10,8 @@ class
 inherit
 	HASHABLE
 
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -65,6 +67,20 @@ feature -- Change
 	add_dependency (a_lib: CONF_LIBRARY)
 		do
 			dependencies.force ([a_lib.name, a_lib.location.original_path, a_lib.location.evaluated_path])
+		end
+
+feature -- Status report
+
+	debug_output: STRING_32
+		do
+			create Result.make_empty
+			Result.append (name)
+			Result.append (" :")
+			Result.append_integer (classes.count)
+			Result.append (" classes")
+			Result.append (" (")
+			Result.append (location.name)
+			Result.append (")")
 		end
 
 note

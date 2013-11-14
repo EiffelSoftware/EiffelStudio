@@ -34,9 +34,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (opts: detachable STRING_TABLE [READABLE_STRING_GENERAL])
 		do
 			make_visitor
+			if opts /= Void then
+				if attached opts.item ("is_il_generation") as s then
+					is_il_generation := s.is_case_insensitive_equal ("True")
+				else
+					is_il_generation := False
+				end
+				set_platform (opts.item ("platform"))
+				set_concurrency (opts.item ("concurrency"))
+				set_build (opts.item ("build"))
+			end
+
 			make_observers (0)
 			create files.make (0)
 		end
@@ -175,7 +186,12 @@ feature -- Execution
 
 	visit_library (a_library: CONF_LIBRARY)
 		do
-			on_library (a_library)
+			if
+				attached last_state as l_state and then
+				a_library.is_enabled (l_state)
+			then
+				on_library (a_library)
+			end
 			Precursor {PACKAGE_CONF_VISITOR}(a_library)
 		end
 

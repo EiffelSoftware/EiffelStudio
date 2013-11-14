@@ -12,13 +12,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (ctx: detachable LIBRARY_DATABASE_CONTEXT)
 		do
+			context := ctx
 			create items.make (0)
 			create ecf_files.make (0)
 		end
 
 feature -- Access
+
+	context: detachable LIBRARY_DATABASE_CONTEXT
+			-- Associated context
 
 	items: STRING_TABLE [LIBRARY_INFO]
 			-- Info indexed by UUID

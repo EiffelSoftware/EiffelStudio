@@ -35,20 +35,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make
-			-- Instantiate Current.
+	make (ctx: detachable LIBRARY_DATABASE_CONTEXT)
+			-- Instantiate Current based on context `ctx'.
 		do
-			make_with_database (create {LIBRARY_DATABASE}.make)
+			make_with_database (create {LIBRARY_DATABASE}.make (ctx))
 		end
 
 	make_with_database (db: like database)
 		local
 			l_lib_indexer: LIBRARY_INDEXER
+			ht: STRING_TABLE [detachable READABLE_STRING_GENERAL]
 		do
 			database := db
 
 			is_verbose := True
-			create l_lib_indexer.make
+
+			create l_lib_indexer.make (db.context.to_table)
 			library_indexer := l_lib_indexer
 			l_lib_indexer.register_observer (Current)
 		end
@@ -109,48 +111,6 @@ feature -- Change
 feature {NONE} -- Implementation
 
 	library_indexer: LIBRARY_INDEXER
-
-	execute_class_query (a_classname: READABLE_STRING_8)
-		local
-			q: LIBRARY_DATABASE_QUERY
-		do
-			print ("Libraries containing {" + a_classname + "} -> ")
-			if attached database as db then
-				create q.make (db, a_classname)
-				q.execute
-				if attached q.items as lst then
-					if lst.is_empty then
-						print (" none.%N")
-					else
-						if lst.count = 1 then
-							print ("%N")
-						else
-							print ("found " + lst.count.out + "%N")
-						end
-						across
-							lst as ic
-						loop
-							print ("  ")
-							print (ic.key.name)
-							print (" @ ")
-							localized_print (ic.key.location.name)
-							print ("%N")
-							if q.pattern_has_wildchar then
-								across
-									ic.item as ic_classes
-								loop
-									print ("    - ")
-									print (ic_classes.item)
-									print ("%N")
-								end
-							end
-						end
-					end
-				end
-			else
-				print (" ERROR database not found!%N")
-			end
-		end
 
 feature -- Access
 

@@ -123,6 +123,7 @@ feature -- Access
 		once
 			if
 				attached option_of_name (limit_switch) as opt and then
+				opt.has_value and then
 				attached opt.value as s and then
 				s.is_integer
 			then
@@ -130,14 +131,83 @@ feature -- Access
 			end
 		end
 
+	is_dotnet: BOOLEAN
+			-- Is Dotnet?
+		once
+			Result := attached option_of_name (il_generation_switch)
+		end
+
+	platform: detachable READABLE_STRING_8
+			-- Platform setting.
+		local
+			s: READABLE_STRING_32
+		once
+			if
+				attached option_of_name (platform_switch) as opt and then
+				opt.has_value
+			then
+				s := opt.value
+				if s.is_valid_as_string_8 then
+					Result := s.as_string_8
+				end
+			end
+		end
+
+	concurrency: detachable READABLE_STRING_8
+			-- Concurrency setting.
+		local
+			s: READABLE_STRING_32
+		once
+			if
+				attached option_of_name (concurrency_switch) as opt and then
+				opt.has_value
+			then
+				s := opt.value
+				if s.is_valid_as_string_8 then
+					Result := s.as_string_8
+				end
+			end
+		end
+
+	build: detachable READABLE_STRING_8
+			-- Build setting.
+		local
+			s: READABLE_STRING_32
+		once
+			if
+				attached option_of_name (build_switch) as opt and then
+				opt.has_value
+			then
+				s := opt.value
+				if s.is_valid_as_string_8 then
+					Result := s.as_string_8
+				end
+			end
+		end
+
 	searching_term: detachable READABLE_STRING_32
 			-- Term to search in database.
 		once
 			if
-				attached option_of_name (search_switch) as opt
+				attached option_of_name (search_switch) as opt and then opt.has_value
 			then
 				Result := opt.value
 			end
+		end
+
+	browsing_term: detachable READABLE_STRING_32
+			-- Browse package name.
+		once
+			if
+				attached option_of_name (browse_switch) as opt  and then opt.has_value
+			then
+				Result := opt.value
+			end
+		end
+
+	is_browsing: BOOLEAN
+		do
+			Result := has_option (browse_switch)
 		end
 
 	reset_requested: BOOLEAN
@@ -183,12 +253,14 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_SWITCH}.make (update_switch, "Update database with new library if any", True, False))
 
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (search_switch, "Search library including class_name", True, False, "class_name", "A class name", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (browse_switch, "Browse library", True, False, "Package_name", "A package/project name", True))
 
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (platform_switch, "Platform", True, False, platform_switch, "Platform", True))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (concurrency_switch, "Concurrency", True, False, concurrency_switch, "Concurrency", True))
-
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (platform_switch, "Platform", True, False, platform_switch, "Platform: Windows, Dotnet, Unix, Mac, ...", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (concurrency_switch, "Concurrency", True, False, concurrency_switch, "Concurrency: none, thread, SCOOP", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (build_switch, "Build", True, False, build_switch, "Build: workbench, finalize", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (il_generation_switch, "Is Dotnet?", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (dynamic_runtime_switch, "Dynamic runtime?", True, False))
+--			Result.extend (create {ARGUMENT_SWITCH}.make (dynamic_runtime_switch, "Dynamic runtime?", True, False))
+
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursive scan any directories for *.ecf (default=True)", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (limit_switch, "Limit depth when scanning directories for *.ecf", True, False, "depth", "Depth in folder (default=1)", True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Verbose output?", True, False))
@@ -199,14 +271,13 @@ feature {NONE} -- Switches
 	update_switch: STRING = "u|update"
 
 	search_switch: STRING = "s|search"
+	browse_switch: STRING = "browse"
 
 	platform_switch: STRING = "platform"
-
 	concurrency_switch: STRING = "concurrency"
-
+	build_switch: STRING = "build"
 	il_generation_switch: STRING = "dotnet"
-
-	dynamic_runtime_switch: STRING = "dynamic_runtime"
+--	dynamic_runtime_switch: STRING = "dynamic_runtime"
 
 	recursive_switch: STRING = "r|recursive"
 	limit_switch: STRING = "limit"

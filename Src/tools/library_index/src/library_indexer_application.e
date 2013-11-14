@@ -64,12 +64,15 @@ feature {NONE} -- Execution
 			l_db_manager: LIBRARY_DATABASE_MANAGER
 			is_updating: BOOLEAN
 			l_file_path: PATH
+			ctx: LIBRARY_DATABASE_CONTEXT
 		do
 			is_verbose := a_options.is_verbose
 
-			create l_file_path.make_from_string ("library.db")
+			create ctx.make
+			ctx.platform := a_options.platform
+			ctx.concurrency := a_options.concurrency
 
-			db := saved_database (l_file_path)
+			db := saved_database (ctx)
 			if db = Void or a_options.reset_requested or a_options.update_requested then
 				if db /= Void then
 					if a_options.reset_requested then
@@ -88,15 +91,19 @@ feature {NONE} -- Execution
 					if is_verbose then
 						print ("Building database%N")
 					end
-					create db.make
+					create db.make (ctx)
 				end
 
 				create l_db_manager.make_with_database (db)
 				index_all (l_db_manager, a_options, is_updating)
 				check l_db_manager.database = db end
-				save_database (db, l_file_path)
+				save_database (db, ctx)
 			else
 				print ("Database loaded%N")
+			end
+
+			if a_options.is_browsing then
+				execute_browsing (a_options.browsing_term, db)
 			end
 
 			if attached a_options.searching_term as t then
@@ -155,8 +162,14 @@ feature {NONE} -- Execution
 			l_arg_dirs: LIST [PATH]
 			l_lib_indexer: LIBRARY_INDEXER
 			lst: ARRAYED_LIST [PATH]
+			ht: STRING_TABLE [detachable READABLE_STRING_GENERAL]
 		do
-			create l_lib_indexer.make
+			create ht.make_caseless (3)
+			ht.force (a_options.platform , "platform")
+			ht.force (a_options.concurrency , "concurrency")
+			ht.force (a_options.build , "build")
+
+			create l_lib_indexer.make (ht)
 
 			l_lib_indexer.register_observer (Current)
 
@@ -244,44 +257,56 @@ feature {NONE} -- Execution
 			end
 		end
 
+	execute_browsing (a_name: detachable READABLE_STRING_32; db: LIBRARY_DATABASE)
+		do
+			print ("Browsing database:%N")
+			print ("NOT YET IMPLEMENTED!%N")
+		end
+
 feature -- Storage
 
-	save_database (db: detachable LIBRARY_DATABASE; a_file_path: PATH)
+	database_location (ctx: LIBRARY_DATABASE_CONTEXT): PATH
+		do
+			Result := execution_environment.current_working_path.extended ("library-" + ctx.platform + ".db")
+		end
+
+	save_database (db: detachable LIBRARY_DATABASE; ctx: LIBRARY_DATABASE_CONTEXT)
 		local
 			sed: SED_STORABLE_FACILITIES
 			w: SED_MEDIUM_READER_WRITER
 			f: RAW_FILE
 		do
 			if db /= Void then
-				create f.make_with_path (a_file_path)
+				check db.context ~ ctx end
+				create f.make_with_path (database_location (ctx))
 				f.open_write
 				create w.make_for_writing (f)
 				create sed
 				sed.basic_store (db, w, True)
 				f.close
 			else
-				create f.make_with_path (a_file_path)
+				create f.make_with_path (database_location (ctx))
 				if f.exists then
 					f.delete
 				end
 			end
 		end
 
-	has_saved_database (a_file_path: PATH): BOOLEAN
+	has_saved_database (ctx: LIBRARY_DATABASE_CONTEXT): BOOLEAN
 		local
 			f: RAW_FILE
 		do
-			create f.make_with_path (a_file_path)
+			create f.make_with_path (database_location (ctx))
 			Result := f.exists and then f.is_access_readable
 		end
 
-	saved_database (a_file_path: PATH): detachable LIBRARY_DATABASE
+	saved_database (ctx: LIBRARY_DATABASE_CONTEXT): detachable LIBRARY_DATABASE
 		local
 			sed: SED_STORABLE_FACILITIES
 			r: SED_MEDIUM_READER_WRITER
 			f: RAW_FILE
 		do
-			create f.make_with_path (a_file_path)
+			create f.make_with_path (database_location (ctx))
 			if f.exists and then f.is_access_readable then
 				f.open_read
 				create r.make_for_reading (f)

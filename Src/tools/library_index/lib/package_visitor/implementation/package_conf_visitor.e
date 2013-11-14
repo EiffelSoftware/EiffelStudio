@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {PACKAGE_CONF_VISITOR}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,6 +9,7 @@ class
 inherit
 	PACKAGE_SCAN_VISITOR
 		redefine
+			make,
 			visit_ecf_file,
 			visit_system,
 			visit_target,
@@ -25,8 +25,127 @@ inherit
 			process_cluster
 		end
 
+	EIFFEL_LAYOUT
+
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+			initialize_environment
+			initialize_defaults
+			Precursor
+		end
+
+	initialize_environment
+			-- Initialize the environment.
+			--| mainly used to have ecf redirection
+			--| working with environment variable usage.
+			--| see {STRING_ENVIRONMENT_EXPANDER}
+		do
+			if not is_eiffel_layout_defined then
+				set_eiffel_layout (create {EC_EIFFEL_LAYOUT})
+				eiffel_layout.check_environment_variable
+			end
+		end
+
+	initialize_defaults
+		do
+			is_il_generation := False
+			build := {CONF_CONSTANTS}.Build_workbench
+			concurrency := {CONF_CONSTANTS}.concurrency_multithreaded
+			has_dynamic_runtime := False
+
+			if {PLATFORM}.is_dotnet then
+				platform := {CONF_CONSTANTS}.pf_windows
+				is_il_generation := True
+			elseif {PLATFORM}.is_windows then
+				platform := {CONF_CONSTANTS}.pf_windows
+			elseif {PLATFORM}.is_unix then
+				platform := {CONF_CONSTANTS}.pf_unix
+			elseif {PLATFORM}.is_mac then
+				platform := {CONF_CONSTANTS}.pf_mac
+			elseif {PLATFORM}.is_vms then
+				platform := {CONF_CONSTANTS}.pf_unix
+			elseif {PLATFORM}.is_vxworks then
+				platform := {CONF_CONSTANTS}.pf_vxworks
+			else
+				platform := {CONF_CONSTANTS}.pf_unix
+			end
+		end
+
+feature -- Settings
+
+	platform: INTEGER
+
+	build: INTEGER
+
+	concurrency: INTEGER
+
+	is_il_generation: BOOLEAN
+
+	has_dynamic_runtime: BOOLEAN
+
+feature -- Change
+
+	set_platform (a_platform: detachable READABLE_STRING_GENERAL)
+		local
+			p: READABLE_STRING_8
+		do
+			if a_platform = Void then
+				platform := {CONF_CONSTANTS}.pf_unix
+			else
+				is_il_generation := False
+				if a_platform.is_valid_as_string_8 then
+					p := a_platform.as_string_8
+				end
+				if p.is_case_insensitive_equal ("dotnet") then
+					platform := {CONF_CONSTANTS}.pf_windows
+					is_il_generation := True
+				elseif p.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_windows_name) then
+					platform := {CONF_CONSTANTS}.pf_windows
+				elseif
+					p.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_unix_name)
+					or p.as_lower.starts_with ("linux")
+				then
+					platform := {CONF_CONSTANTS}.pf_unix
+				elseif p.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_macintosh_name) then
+					platform := {CONF_CONSTANTS}.pf_mac
+				else
+					platform := {CONF_CONSTANTS}.pf_unix
+				end
+			end
+		end
+
+	set_concurrency (a_concurrency: detachable READABLE_STRING_GENERAL)
+		do
+			if a_concurrency = Void then
+				concurrency := {CONF_CONSTANTS}.concurrency_multithreaded
+			elseif a_concurrency.is_case_insensitive_equal ({CONF_CONSTANTS}.concurrency_none_name) then
+				concurrency := {CONF_CONSTANTS}.concurrency_none
+			elseif a_concurrency.is_case_insensitive_equal ({CONF_CONSTANTS}.concurrency_multithreaded_name) then
+				concurrency := {CONF_CONSTANTS}.concurrency_multithreaded
+			elseif a_concurrency.is_case_insensitive_equal ({CONF_CONSTANTS}.concurrency_scoop_name) then
+				concurrency := {CONF_CONSTANTS}.concurrency_scoop
+			else
+				concurrency := {CONF_CONSTANTS}.concurrency_multithreaded
+			end
+		end
+
+	set_build (a_build: detachable READABLE_STRING_GENERAL)
+		do
+			if a_build = Void then
+				build := {CONF_CONSTANTS}.build_finalize
+			elseif a_build.is_case_insensitive_equal ({CONF_CONSTANTS}.build_finalize_name) then
+				build := {CONF_CONSTANTS}.build_finalize
+			elseif a_build.is_case_insensitive_equal ({CONF_CONSTANTS}.build_workbench_name) then
+				build := {CONF_CONSTANTS}.build_workbench
+			else
+				build := {CONF_CONSTANTS}.build_finalize
+			end
+		end
 
 feature -- Visitor
 
@@ -64,6 +183,7 @@ feature -- Visitor
 				l_system := a_target.system
 
 				l_state := conf_state_from_target (a_target)
+				last_state := l_state
 				create vp.make_build (l_state, a_target, ecf_conf_factory)
 				create vb.make_build (l_state, a_target, ecf_conf_factory)
 				l_system.process (vp)
@@ -71,6 +191,7 @@ feature -- Visitor
 
 				a_target.process (Current)
 				Precursor (a_target)
+				last_state := Void
 			end
 		rescue
 			retried := True
@@ -213,6 +334,9 @@ feature {NONE} -- Helper
 
 feature {NONE} -- Implementation
 
+	last_state: detachable CONF_STATE
+			-- Current conf state during visiting, if any.
+
 	ecf_reader: CONF_LOAD
 			-- Configuration loader
 		once
@@ -224,31 +348,6 @@ feature {NONE} -- Implementation
 	ecf_conf_parse_factory: CONF_PARSE_FACTORY
 		once
 			create Result
-		end
-
-	platform: INTEGER
-		do
-			Result := {CONF_CONSTANTS}.pf_windows
-		end
-
-	build: INTEGER
-		do
-			Result := {CONF_CONSTANTS}.Build_workbench
-		end
-
-	concurrency: INTEGER
-		do
-			Result := {CONF_CONSTANTS}.concurrency_multithreaded
-		end
-
-	is_il_generation: BOOLEAN
-		do
-			Result := False
-		end
-
-	has_dynamic_runtime: BOOLEAN
-		do
-			Result := False
 		end
 
 	ecf_conf_factory: CONF_FACTORY

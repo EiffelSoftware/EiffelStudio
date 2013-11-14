@@ -45,10 +45,10 @@ feature {NONE} -- Initialization
 		end
 
 feature {ES_EIS_COMPONENT_VIEW} -- Element change
-								-- Be careful to change entry that has been registered in storage.
 
 	set_name (a_name: like name)
-			-- Set `name' with `a_name'
+			-- Set `name' with `a_name'.
+			-- Be careful to change entry that has been registered in storage.
 		require
 			name_valid: attached a_name as l_n implies valid_attribute (l_n)
 		local
@@ -64,7 +64,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 		end
 
 	set_protocol (a_protocol: like protocol)
-			-- Set `protocol' with `a_protocol'
+			-- Set `protocol' with `a_protocol'.
+			-- Be careful to change entry that has been registered in storage.
 		require
 			protocol_valid: attached a_protocol as l_p implies valid_attribute (l_p)
 		local
@@ -80,7 +81,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 		end
 
 	set_source (a_source: like source)
-			-- Set `source' with `a_source'
+			-- Set `source' with `a_source'.
+			-- Be careful to change entry that has been registered in storage.
 		require
 			source_valid: attached a_source as l_s implies valid_attribute (l_s)
 		local
@@ -96,7 +98,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 		end
 
 	set_tags (a_tags: like tags)
-			-- Set `tags' with `a_tags'
+			-- Set `tags' with `a_tags'.
+			-- Be careful to change entry that has been registered in storage.
 		require
 			tags_valid: attached a_tags as l_t implies valid_tags (l_t)
 		local
@@ -112,7 +115,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 		end
 
 	set_id (a_id: like target_id)
-			-- Set `id' with `a_id'
+			-- Set `id' with `a_id'.
+			-- Be careful to change entry that has been registered in storage.
 		require
 			a_id_not_void: a_id /= Void
 			id_valid: valid_attribute (a_id)
@@ -123,7 +127,8 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 		end
 
 	set_parameters (a_parameters: like parameters)
-			-- Set `parameters' with `a_parameters'
+			-- Set `parameters' with `a_parameters'.
+			-- Be careful to change entry that has been registered in storage.
 		require
 			parameters_valid: attached a_parameters as l_p implies valid_parameters (l_p)
 		local
@@ -161,7 +166,8 @@ feature -- Query
 feature {ES_EIS_NOTE_PICKER} -- Element change
 
 	set_override (a_v: like override)
-			-- Set `override' with `a_v'
+			-- Set `override' with `a_v'.
+			-- Be careful to change entry that has been registered in storage.
 		do
 			override := a_v
 		ensure
@@ -170,6 +176,7 @@ feature {ES_EIS_NOTE_PICKER} -- Element change
 
 	set_source_pos (a_pos: like source_pos)
 			-- Set `source_pos' with `a_pos'.
+			-- Be careful to change entry that has been registered in storage.
 		do
 			source_pos := a_pos
 		ensure

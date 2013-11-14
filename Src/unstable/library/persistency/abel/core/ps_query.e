@@ -4,7 +4,10 @@ note
 		and PS_OBJECT_QUERY.
 
 		The generic parameter OBJECT_TYPE denotes the type of the objects
-		to be queried. This does not include any descendants.
+		to be queried.
+		Note: Due to a limitation in the underlying reflection library,
+		ABEL will not return any descendants of OBJECT_TYPE. In a future
+		release this behaviour may change however.
 
 		The general workflow with queries is as follows:
 		
@@ -62,7 +65,11 @@ feature -- Access
 			-- Note: The results are cached internally, thus it is possible to iterate over the result
 			--   many times without performance impact.
 		do
-			create {PS_ITERATION_CURSOR [RESULT_TYPE]} Result.make (Current)
+			if is_executed and not is_closed then
+				create {PS_ITERATION_CURSOR [RESULT_TYPE]} Result.make (Current)
+			else
+				Result := (create {LINKED_LIST [RESULT_TYPE]}.make).new_cursor
+			end
 		end
 
 feature -- Status report
@@ -116,7 +123,7 @@ feature -- Element change
 			is_non_root_ignored := value
 		end
 
-feature {PS_ABEL_EXPORT} -- Element change (unsafe)
+feature {PS_UNSAFE} -- Element change (unsafe)
 
 	set_object_initialization_depth (depth: INTEGER)
 			-- Set `object_initialization_depth' to `depth'.
@@ -179,7 +186,7 @@ feature -- Contract support functions
 			-- Can `a_criterion' handle objects of type `OBJECT_TYPE'?
 		local
 			reflection: INTERNAL
-			type: TYPE[OBJECT_TYPE]
+			type: TYPE [OBJECT_TYPE]
 		do
 			fixme ("Use internal type, but take care of `make_with_criterion' contract")
 			type:= {OBJECT_TYPE}
@@ -189,7 +196,7 @@ feature -- Contract support functions
 
 feature {PS_ABEL_EXPORT} -- Implementation
 
-	set_type (type: TYPE[detachable ANY])
+	set_type (type: TYPE [detachable ANY])
 			-- Helper function for testing.
 		local
 			reflection: INTERNAL

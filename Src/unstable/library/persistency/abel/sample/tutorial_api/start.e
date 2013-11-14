@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 --			create backend.wipe_out
 --			create {PS_NEW_REPOSITORY} repository.make (backend)
 			explore
+			io.new_line
 		end
 
 feature -- Access
@@ -58,11 +59,9 @@ feature -- Tutorial
 			explore_criteria
 
 				-- ABEL is able to handle whole object graphs as well.
-			insert_children
-			print_children
-
-				-- Do some update operations.
-			update_john_doe
+			insert_children -- Insert
+			print_children	-- Retrieve
+			update_john_doe	-- Update
 
 				-- ABEL does not support delete operations.
 				-- Deletions may be dangerous as it may introduce Void references
@@ -75,7 +74,10 @@ feature -- Tutorial
 
 			--explore_root_objects
 
-			io.new_line
+				-- Loading whole object graphs may be too expensive in some cases.
+				-- ABEL provides an alternative query mechanism which returns value tuples.
+			explore_tuple_queries
+
 		end
 
 feature -- Printing results
@@ -91,7 +93,7 @@ feature -- Printing results
 			create query.make
 
 			-- Now let the repository execute the query and retrieve the result.
-			-- Note that we don't need a transaction context for read-only operations.
+			-- Note that we don't need a transaction for read-only operations.
 			repository.execute_query (query)
 
 			-- We can use the familiar across syntax to iterate over the result.
@@ -131,7 +133,7 @@ feature -- Printing results
 				print (", age ")
 				print (person_cursor.item.age)
 
-				-- Note that referenced items get loaded as well.
+					-- Note that referenced items get loaded as well.
 				if attached person_cursor.item.father as father then
 					print (", father: ")
 					print (father.first_name)
@@ -159,7 +161,7 @@ feature -- Initialization
 			print ("Insert 3 new persons in the database")
 			io.new_line
 
-				-- To insert data we first need to open a transaction context.
+				-- To insert data we first need to open a transaction.
 			transaction := repository.new_transaction_context
 
 				-- Now we can insert all three persons.
@@ -203,17 +205,17 @@ feature -- Data modification
 			-- Increase the age of Berno Citrini by one.
 		local
 			query: PS_OBJECT_QUERY[PERSON]
-			context: PS_TRANSACTION
+			transaction: PS_TRANSACTION
 		do
 			print ("Updating Berno Citrini's age by one.%N")
 
-				-- Create query and transaction context.
+				-- Create query and transaction.
 			create query.make
-			context := repository.new_transaction_context
+			transaction := repository.new_transaction_context
 
 				-- As we're doing a read followed by a write, we need to execute
-				-- the query within a transaction context.
-			context.execute_query (query)
+				-- the query within a transaction.
+			transaction.execute_query (query)
 
 				-- Search for Berno Citrini
 			across
@@ -221,11 +223,11 @@ feature -- Data modification
 			loop
 				if cursor.item.first_name.is_equal ("Berno") then
 
-					-- Do the update on the Eiffel object.
+						-- Do the update on the Eiffel object.
 					cursor.item.celebrate_birthday
 
-					-- Tell ABEL to update the database object.
-					context.update (cursor.item)
+						-- Tell ABEL to update the database object.
+					transaction.update (cursor.item)
 
 				end
 			end
@@ -235,7 +237,7 @@ feature -- Data modification
 			query.close
 
 				-- Make the changes effective
-			context.commit
+			transaction.commit
 		end
 
 	update_berno_citrini_smart
@@ -243,21 +245,21 @@ feature -- Data modification
 			-- Make use of criteria.
 		local
 			query: PS_OBJECT_QUERY[PERSON]
-			context: PS_TRANSACTION
+			transaction: PS_TRANSACTION
 			berno: PERSON
 		do
 			print ("Updating Berno Citrini's age by one (the smart way).%N")
 
-				-- Create query and transaction context.
+				-- Create query and transaction.
 			create query.make
-			context := repository.new_transaction_context
+			transaction := repository.new_transaction_context
 
 				-- Only select the person with first name `Berno'.
 			query.set_criterion (criterion_factory.new_predefined ("first_name", "=", "Berno"))
 
 				-- As we're doing a read followed by a write, we need to execute
-				-- the query within a transaction context.
-			context.execute_query (query)
+				-- the query within a transaction.
+			transaction.execute_query (query)
 
 				-- The result now only contains Berno Citrini
 			berno := query.new_cursor.item
@@ -265,11 +267,11 @@ feature -- Data modification
 
 				-- Perform the update
 			berno.celebrate_birthday
-			context.update (berno)
+			transaction.update (berno)
 
 				-- Cleanup
 			query.close
-			context.commit
+			transaction.commit
 		end
 
 
@@ -286,7 +288,7 @@ feature -- Data modification
 			create query.make
 
 				-- Get "Baby Doe" from the database
-			query.set_criterion (criterion_factory.new_predefined ("first_name", "=", "Baby"))
+			query.set_criterion (criterion_factory.new_predefined ("first_name", criterion_factory.equals, "Baby"))
 			transaction.execute_query (query)
 
 			baby := query.new_cursor.item
@@ -304,16 +306,16 @@ feature -- Data modification
 			transaction.update (john)
 
 			query.reset
-			query.set_criterion (criterion_factory.new_predefined ("first_name", "=", "John"))
+			query.set_criterion (criterion_factory.new_predefined ("first_name", criterion_factory.equals, "John"))
 			transaction.execute_query (query)
-			check equal: query.new_cursor.item.is_deep_equal (john) end
+			check equal: query.new_cursor.item.is_equal (john) end
 
 				-- You can also update `john' via the reference from Baby Doe.
 			john.celebrate_birthday
 			transaction.update (baby)
 			query.reset -- Note: reset keeps the criterion.
 			transaction.execute_query (query)
-			check equal: query.new_cursor.item.is_deep_equal (john) end
+			check equal: query.new_cursor.item.is_equal (john) end
 
 				-- It is not possible via Grandpa Doe however, as Grandpa doesn't have a reference to John...
 			john.celebrate_birthday
@@ -360,15 +362,18 @@ feature -- Criteria
 		do
 				-- Predefined criteria work on any attribute of a basic or string type.
 			print ("Select all persons with age > 2")
-			create query.make_with_criterion (criterion_factory.new_predefined ("age", ">", 2))
+			create query.make_with_criterion (criterion_factory.new_predefined ("age", criterion_factory.greater, 2))
 
 			repository.execute_query (query)
 			print_result (query)
 
-				-- If you don't plan on reusing the query object, call close.
+				-- If you don't plan on reusing the query object, always call `close'.
 			query.close
-				-- :
+				-- Else you can also call `reset'.
+				-- Reset will close a query first if necessary and then prepare it for the next
+				-- execution. `reset' does not change the criterion or other retrieval parameter.
 			query.reset
+
 
 				-- For string types you can use the `like' operator.
 				-- `like' compares against a pattern with wild cards:
@@ -376,21 +381,19 @@ feature -- Criteria
 				-- '?' for a single unknown character.
 
 			print ("Select all persons whose last name ends with *ni.%N")
-				-- TODO
-			create query.make_with_criterion (criterion_factory.new_predefined ("last_name", "like", "*ni"))
+			query.set_criterion (criterion_factory.new_predefined ("last_name", criterion_factory.like_string, "*ni"))
 
 			repository.execute_query (query)
 			print_result (query)
 
-
-
 				-- It is possible to combine criteria using `and' and `or'.
 
 			print ("Select all persons whose last name ends with *ni and with age = 5.%N")
+			query.reset
 			query.set_criterion (
-				criterion_factory.new_predefined ("last_name", "like", "*ni")
+				criterion_factory.new_predefined ("last_name", criterion_factory.like_string, "*ni")
 				and
-				criterion_factory.new_predefined ("age", "=", 5))
+				criterion_factory.new_predefined ("age", criterion_factory.equals, 5))
 
 			repository.execute_query (query)
 			print_result (query)
@@ -463,11 +466,11 @@ feature -- Root objects
 			query: PS_OBJECT_QUERY [CHILD]
 			transaction: PS_TRANSACTION
 		do
-			-- By default any root of an object graph during `insert'
-			-- is also a garbage collection root.
+				-- By default any root of an object graph during `insert'
+				-- is also a garbage collection root.
 
-			-- In our case, this is true for all PERSON objects and
-			-- for the "Baby Doe" CHILD object:
+				-- In our case, this is true for all PERSON objects and
+				-- for the "Baby Doe" CHILD object:
 
 			print ("Print name and root status of all CHILD objects:%N")
 
@@ -485,8 +488,8 @@ feature -- Root objects
 				io.new_line
 			end
 
-			-- It is possible to filter the query result according to the
-			-- root status of an object:
+				-- It is possible to filter the query result according to the
+				-- root status of an object:
 
 			print ("Print all CHILD root objects:%N")
 
@@ -499,14 +502,17 @@ feature -- Root objects
 				print (cursor.item.first_name + " " + cursor.item.last_name + "%N")
 			end
 
-			-- You can declare an object as root or non-root manually.
+				-- You can declare an object as root or non-root manually.
 			check attached query.new_cursor.item.father as john then
-				transaction.declare_root (john)
+				transaction.mark_root (john)
 			end
 
 			print ("Print all CHILD root objects, after declaring John Doe as root:%N")
 
-			query.reset -- Note that the `query.is_non_root_ignored' attibute survives a reset.
+			query.reset
+				 -- Note that the `query.is_non_root_ignored' attibute survives a reset.
+			check still_ignored: query.is_non_root_ignored end
+
 			transaction.execute_query (query)
 			across
 				query as cursor
@@ -514,7 +520,7 @@ feature -- Root objects
 				print (cursor.item.first_name + " " + cursor.item.last_name + "%N")
 			end
 
-			transaction.declare_non_root (query.new_cursor.item)
+			transaction.unmark_root (query.new_cursor.item)
 
 			print ("Print all CHILD root objects, after declaring Baby Doe as non-root:%N")
 
@@ -526,8 +532,105 @@ feature -- Root objects
 				print (cursor2.item.first_name + " " + cursor2.item.last_name + "%N")
 			end
 
-			-- Once a garbage collector is implemented in ABEL, declaring an object
-			-- as non-root and then running the GC is comparable to a delete.
+				-- Once a garbage collector is implemented in ABEL, declaring an object
+				-- as non-root and then running the GC is comparable to a delete.
+		end
+
+feature -- Tuple queries
+
+	explore_tuple_queries
+			-- See what can be done with tuple queries.
+		local
+			query: PS_TUPLE_QUERY [CHILD]
+			transaction: PS_TRANSACTION
+		do
+				-- Tuple queries are very similar to normal object queries.
+				-- I.e. you can query for CHILD objects by creating
+				-- a PS_TUPLE_QUERY [CHILD]
+			create query.make
+
+				-- It is also possible to add criteria. Agent criteria are not supported
+				-- for tuple queries however.
+				-- Lets search for all CHILD objects with last name Doe.
+			query.set_criterion (criterion_factory [["last_name", criterion_factory.equals, "Doe"]])
+
+				-- The big advantage of tuple queries is that you can define which attributes
+				-- should be loaded. Therefore you can avoid loading a whole object graph
+				-- if you're just interested in e.g. the first name.
+			query.set_projection (<<"first_name">>)
+
+				-- Tuple queries are executed by either using {PS_REPSOITORY}.execute_tuple_query
+				-- or {PS_TRANSACTION}.execute_tuple_query.
+			repository.execute_tuple_query (query)
+
+				-- The result of the query is a TUPLE containing the requested attributes,
+				-- in the order of the projection array.
+			print ("Printing the first name of all persons using a tuple query:%N")
+			across
+				query as cursor
+			loop
+					-- It is possible to downcast the TUPLE to a tagged tuple with correct type.
+				check attached {TUPLE [first_name: STRING]} cursor.item as tuple then
+					print (tuple.first_name)
+					io.new_line
+				end
+			end
+
+				-- It is possible to include reference-type attributes as well.
+			query.reset
+			query.set_projection (<<"first_name", "father">>)
+
+				-- We're now executing the query in a transaction such that we can
+				-- use the results for subsequent write operations.
+			transaction := repository.new_transaction_context
+			transaction.execute_tuple_query (query)
+
+				-- Search for John Doe
+			across
+				query as cursor
+			loop
+				check attached {TUPLE [first_name: STRING; father: detachable CHILD]} cursor.item as tuple then
+
+					if tuple.first_name.is_equal ("John") then
+
+							-- ABEL does not support updates on an object returned as TUPLE.
+							-- One of the reasons for this design decision is that the updates
+							-- bypass the encapsulation of an object and thus may violate
+							-- an invariant.
+							-- An attempt to update a tuple object will result in a precondition
+							-- violation.
+						check update_not_possible: not transaction.is_persistent (tuple) end
+							-- It is however possible to update referenced objects.
+						if attached tuple.father as grandpa then
+
+							print ("Printing Grandpa Doe, retrieved as reference attribute in a tuple query:%N")
+							print (grandpa.first_name + " " + grandpa.last_name + "%N")
+
+							grandpa.set_father (create {CHILD}.make ("Great-Grandpa", "Doe"))
+							transaction.update (grandpa)
+						end
+					end
+				end
+			end
+
+				-- Let's check if the update worked.
+			print ("Printing first name and father of all CHILD objects, after adding a father to Grandpa Doe:%N")
+			query.reset
+			transaction.execute_tuple_query (query)
+			across
+				query as cursor
+			loop
+				check attached {TUPLE [first_name: STRING; father: detachable CHILD]} cursor.item as tuple then
+
+					print (tuple.first_name)
+					if attached tuple.father as father then
+
+						print (", father: " + father.first_name)
+					end
+					io.new_line
+				end
+			end
+
 		end
 
 end

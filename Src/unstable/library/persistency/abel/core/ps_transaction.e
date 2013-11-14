@@ -34,13 +34,15 @@ note
 		or change the defaults using `set_root_declaration_strategy'.
 		
 		
-		If an error happens in the backend, ABEL will do the following
-		(not necessarily in this order):
-			
-			*) Translate the backend error to a corresponding PS_ERROR,
-			*) set the `last_error' attribute,
-			*) rollback the current transaction, 
-			*) and raise an exception
+		In case of an error in the backend, ABEL will do some cleanup
+		and raise an exception. Clients can expect the following 
+		conditions to hold:
+		
+			*) `has_error' is True.
+			*) `last_error' is attached and contains a 
+				PS_ERROR describing the error that occurred.
+			*) The transaction is rolled back.
+			*) The exception propagates to the client.
 			
 		The PS_ERROR class hierarchy has a visitor pattern which can
 		be used for error handling.
@@ -55,9 +57,6 @@ class
 
 inherit
 	PS_ABEL_EXPORT
-		redefine
-			default_rescue
-		end
 
 create
 	make
@@ -68,14 +67,15 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'
 		do
 			repository := a_repository
-			create {PS_NO_ERROR} last_error
+--			create {PS_NO_ERROR} last_error
+			last_error := Void
 			create internal_active_queries.make
 			create root_declaration_strategy
 			root_declaration_strategy := root_declaration_strategy.insert_argument_only
 			create transaction.make (repository)
 		ensure
 			default_strategy: root_declaration_strategy = root_declaration_strategy.insert_argument_only
-			active: is_transaction_active
+			active: is_active
 			repository_set: repository = a_repository
 			empty_queries: active_queries.is_empty
 			no_error: not has_error
@@ -97,10 +97,6 @@ feature -- Access
 
 	last_error: detachable PS_ERROR
 			-- The last encountered error.
---		require
---			error: has_error
---		attribute
---		end
 
 feature -- Status report
 
@@ -110,8 +106,8 @@ feature -- Status report
 			Result := repository.can_handle (object)
 		end
 
-	is_transaction_active: BOOLEAN
-			-- Is there an active transaction?
+	is_active: BOOLEAN
+			-- Is the current transaction active?
 		do
 			Result := attached transaction as t and then t.is_active
 		end
@@ -119,7 +115,7 @@ feature -- Status report
 	is_persistent (object: ANY): BOOLEAN
 			-- Is `object' stored in the database?
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			supported: is_supported (object)
 			no_error: not has_error
 		do
@@ -129,7 +125,7 @@ feature -- Status report
 	is_root (object: ANY): BOOLEAN
 			-- Is `object' a root object?
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			supported: is_supported (object)
 			persistent: is_persistent (object)
 			no_error: not has_error
@@ -159,7 +155,7 @@ feature -- Data retrieval
 	execute_query (query: PS_OBJECT_QUERY [ANY])
 			-- Execute `query' and store the result in `query.result_cursor'.
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			no_error: not has_error
 		do
 			repository.internal_execute_query (query, attach(transaction))
@@ -168,13 +164,15 @@ feature -- Data retrieval
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
-			in_transaction: is_transaction_active
+			in_transaction: is_active
+		rescue
+			set_error
 		end
 
 	execute_tuple_query (query: PS_TUPLE_QUERY [ANY])
 			-- Execute `query' and store the result in `query.result_cursor'.
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			no_error: not has_error
 		do
 			repository.internal_execute_tuple_query (query, attach(transaction))
@@ -183,7 +181,9 @@ feature -- Data retrieval
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
-			in_transaction: is_transaction_active
+			in_transaction: is_active
+		rescue
+			set_error
 		end
 
 feature -- Data modification
@@ -191,37 +191,41 @@ feature -- Data modification
 	insert (object: ANY)
 			-- Insert `object' and all transitively referenced objects into the repository.
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			no_error: not has_error
 			supported: is_supported (object)
 			not_persistent: not is_persistent (object)
 		do
 			repository.insert (object, attach(transaction))
 		ensure
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			persistent: is_persistent (object)
 			root_set: root_declaration_strategy > root_declaration_strategy.None implies is_root (object)
+		rescue
+			set_error
 		end
 
 	update (object: ANY)
 			-- Update `object' and all transitively referenced objects in the repository.
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			no_error: not has_error
 			supported: is_supported (object)
 			persistent: is_persistent (object)
 		do
 			repository.update (object, attach(transaction))
 		ensure
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			persistent: is_persistent (object)
 			root_set: root_declaration_strategy > root_declaration_strategy.insert_argument_only implies is_root (object)
+		rescue
+			set_error
 		end
 
 	direct_update (object: ANY)
 			-- Update `object' only, do not follow references.
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			no_error: not has_error
 			supported: is_supported (object)
 			persistent: is_persistent (object)
@@ -229,18 +233,20 @@ feature -- Data modification
 		do
 			repository.direct_update (object, attach(transaction))
 		ensure
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			persistent: is_persistent (object)
 			root_set: root_declaration_strategy > root_declaration_strategy.insert_argument_only implies is_root (object)
+		rescue
+			set_error
 		end
 
 feature -- Root status modification
 
-	declare_root (object: ANY)
-			-- Declare `object' as a root object.
+	mark_root (object: ANY)
+			-- Mark `object' as a root object.
 			-- Do not change the status of any referenced object.
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			no_error: not has_error
 			supported: is_supported (object)
 			persistent: is_persistent (object)
@@ -248,16 +254,18 @@ feature -- Root status modification
 		do
 			repository.set_root_status (object, True, attach (transaction))
 		ensure
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			persistent: is_persistent (object)
 			root: is_root (object)
+		rescue
+			set_error
 		end
 
-	declare_non_root (object: ANY)
+	unmark_root (object: ANY)
 			-- Remove the root status from `object'.
 			-- Do not change the status of any referenced object.
 		require
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			no_error: not has_error
 			supported: is_supported (object)
 			persistent: is_persistent (object)
@@ -265,9 +273,11 @@ feature -- Root status modification
 		do
 			repository.set_root_status (object, False, attach (transaction))
 		ensure
-			in_transaction: is_transaction_active
+			in_transaction: is_active
 			persistent: is_persistent (object)
 			root: not is_root (object)
+		rescue
+			set_error
 		end
 
 
@@ -277,38 +287,43 @@ feature -- Transaction operations
 			-- Commit the active transaction.
 			-- If the transaction fails, `has_error' is True and an exception is raised.
 		require
-			is_active: is_transaction_active
+			is_active: is_active
 			no_active_queries: active_queries.is_empty
 			no_error: not has_error
 		do
 			repository.commit_transaction (attach (transaction))
 			transaction := Void
 		ensure
-			not_active: not is_transaction_active
+			not_active: not is_active
+		rescue
+			set_error
 		end
 
 	rollback
 			-- Rollback the active transaction.
 		require
-			is_active: is_transaction_active
+			is_active: is_active
 			no_active_queries: active_queries.is_empty
 			no_error: not has_error
 		do
 			repository.rollback_transaction (attach (transaction), True)
 			transaction := Void
 		ensure
-			not_active: not is_transaction_active
+			not_active: not is_active
+		rescue
+			set_error
 		end
 
-	start
-			-- Start a new transaction.
+	prepare
+			-- Prepare `Current' to be reused as a new transaction.
 		require
-			not_active: not is_transaction_active
+			not_active: not is_active
 		do
-			create {PS_NO_ERROR} last_error
+			-- create {PS_NO_ERROR} last_error
+			last_error := Void
 			create transaction.make (repository)
 		ensure
-			active: is_transaction_active
+			active: is_active
 			no_error: not has_error
 		end
 
@@ -322,15 +337,11 @@ feature {NONE} -- Implementation
 
 	transaction: detachable PS_INTERNAL_TRANSACTION
 			-- The currently active transaction.
---		require
---			is_active: is_transaction_active
---		attribute
---		end
 
-	default_rescue
+	set_error
 			-- Set the `last_error' field.
 		do
-			if attached transaction as tr then
+			if attached transaction as tr and then not attached {PS_NO_ERROR} tr.error then
 				last_error := tr.error
 			end
 		end

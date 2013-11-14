@@ -178,29 +178,28 @@ feature {ES_EIS_NOTE_PICKER} -- Element change
 
 feature -- Access
 
-	name: detachable STRING_32
+	name: detachable STRING_32 assign set_name
 			-- Name of the entry
 
-	protocol: detachable STRING_32
+	protocol: detachable STRING_32 assign set_protocol
 			-- Protocol of the entry
 
-	source: detachable STRING_32
+	source: detachable STRING_32 assign set_source
 			-- Source of the entry
 
-	tags: detachable ARRAYED_LIST [STRING_32]
+	tags: detachable ARRAYED_LIST [STRING_32] assign set_tags
 			-- Tags of the entry
 
 	target_id: STRING
 			-- Id of the entry (from EB_SHARED_ID_SOLUTION)
-			--
 
-	parameters: detachable STRING_TABLE [STRING_32]
+	parameters: detachable STRING_TABLE [STRING_32] assign set_parameters
 			-- Parameters of the entry
 
-	override: BOOLEAN
+	override: BOOLEAN assign set_override
 			-- Overriding entry over auto entry?
 
-	source_pos: TUPLE [pos, len: INTEGER]
+	source_pos: TUPLE [pos, len: INTEGER] assign set_source_pos
 			-- Source character position in orignal file.
 
 	entry_id: STRING

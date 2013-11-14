@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			internal_fingerprint := Void
 		end
 
-	internal_fingerprint: EIS_MD5_FINGERPRINT
+	internal_fingerprint: detachable EIS_MD5_FINGERPRINT
 			-- Cache for md5
 
 feature {NONE} -- Hash code

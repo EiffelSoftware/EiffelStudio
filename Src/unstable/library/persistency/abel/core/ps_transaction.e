@@ -70,11 +70,11 @@ feature {NONE} -- Initialization
 --			create {PS_NO_ERROR} last_error
 			last_error := Void
 			create internal_active_queries.make
-			create root_declaration_strategy
-			root_declaration_strategy := root_declaration_strategy.insert_argument_only
+			create root_declaration_strategy.make_argument_of_insert
+--			root_declaration_strategy := root_declaration_strategy.insert_argument_only
 			create transaction.make (repository)
 		ensure
-			default_strategy: root_declaration_strategy = root_declaration_strategy.insert_argument_only
+			default_strategy: root_declaration_strategy.is_argument_of_insert
 			active: is_active
 			repository_set: repository = a_repository
 			empty_queries: active_queries.is_empty
@@ -200,7 +200,7 @@ feature -- Data modification
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object)
-			root_set: root_declaration_strategy > root_declaration_strategy.None implies is_root (object)
+			root_set: root_declaration_strategy > root_declaration_strategy.new_preserve implies is_root (object)
 		rescue
 			set_error
 		end
@@ -217,7 +217,7 @@ feature -- Data modification
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object)
-			root_set: root_declaration_strategy > root_declaration_strategy.insert_argument_only implies is_root (object)
+			root_set: root_declaration_strategy > root_declaration_strategy.new_argument_of_insert implies is_root (object)
 		rescue
 			set_error
 		end
@@ -235,7 +235,7 @@ feature -- Data modification
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object)
-			root_set: root_declaration_strategy > root_declaration_strategy.insert_argument_only implies is_root (object)
+			root_set: root_declaration_strategy > root_declaration_strategy.new_argument_of_insert implies is_root (object)
 		rescue
 			set_error
 		end

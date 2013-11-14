@@ -223,7 +223,7 @@ feature -- Access
 
 	tags_as_string: detachable STRING_32
 			-- Tags as a string
-			-- Simple combination, not for display popose
+			-- Simple combination, not for display popose.
 		do
 			if attached tags as lt_tags then
 				create Result.make (10)
@@ -243,7 +243,7 @@ feature -- Access
 
 	parameters_as_string: detachable STRING_32
 			-- Parameters as string
-			-- Simple combination, not for display popose
+			-- Simple combination, not for display popose.
 		do
 			if attached parameters as lt_parameters then
 				create Result.make (10)
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_fingerprint
-			-- Update fingerprint
+			-- Update fingerprint.
 		do
 			internal_fingerprint := updated_fingerprint
 		ensure
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 		end
 
 	reset_fingerprint
-			-- Reset `fingerprint'
+			-- Reset `fingerprint'.
 		do
 			internal_fingerprint := Void
 			internal_hash_code := 0

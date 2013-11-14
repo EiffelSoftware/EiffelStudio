@@ -23,11 +23,11 @@ feature {NONE} -- Initialization
 		require
 			a_id_not_void: a_id /= Void
 			id_valid: valid_attribute (a_id)
-			name_valid: attached a_name as l_n implies valid_attribute (l_n)
-			protocol_valid: attached a_protocol as l_p implies valid_attribute (l_p)
-			source_valid: attached a_source as l_s implies valid_attribute (l_s)
-			tags_valid: attached a_tags as l_t implies valid_tags (l_t)
-			parameters_valid: attached a_parameters as l_p implies valid_parameters (l_p)
+			name_valid: a_name /= Void implies valid_attribute (a_name)
+			protocol_valid: a_protocol /= Void implies valid_attribute (a_protocol)
+			source_valid: a_source /= Void implies valid_attribute (a_source)
+			tags_valid: a_tags /= Void implies valid_tags (a_tags)
+			parameters_valid: a_parameters /= Void implies valid_parameters (a_parameters)
 		do
 			name := a_name
 			protocol := a_protocol
@@ -50,7 +50,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `name' with `a_name'.
 			-- Be careful to change entry that has been registered in storage.
 		require
-			name_valid: attached a_name as l_n implies valid_attribute (l_n)
+			name_valid: a_name /= Void implies valid_attribute (a_name)
 		local
 			l_name: like name
 		do
@@ -67,7 +67,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `protocol' with `a_protocol'.
 			-- Be careful to change entry that has been registered in storage.
 		require
-			protocol_valid: attached a_protocol as l_p implies valid_attribute (l_p)
+			protocol_valid: a_protocol /= Void implies valid_attribute (a_protocol)
 		local
 			l_protocol: like protocol
 		do
@@ -84,7 +84,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `source' with `a_source'.
 			-- Be careful to change entry that has been registered in storage.
 		require
-			source_valid: attached a_source as l_s implies valid_attribute (l_s)
+			source_valid: a_source /= Void implies valid_attribute (a_source)
 		local
 			l_source: like source
 		do
@@ -101,7 +101,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `tags' with `a_tags'.
 			-- Be careful to change entry that has been registered in storage.
 		require
-			tags_valid: attached a_tags as l_t implies valid_tags (l_t)
+			tags_valid: a_tags /= Void implies valid_tags (a_tags)
 		local
 			l_tags: like tags
 		do
@@ -130,7 +130,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			-- Set `parameters' with `a_parameters'.
 			-- Be careful to change entry that has been registered in storage.
 		require
-			parameters_valid: attached a_parameters as l_p implies valid_parameters (l_p)
+			parameters_valid: a_parameters /= Void implies valid_parameters (a_parameters)
 		local
 			l_parameters: like parameters
 		do

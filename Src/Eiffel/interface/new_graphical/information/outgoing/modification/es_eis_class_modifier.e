@@ -14,7 +14,7 @@ inherit
 			commit
 		end
 
-	ES_EIS_CODE_MODIFIER
+	ES_EIS_NOTE_PICKER
 
 create
 	make

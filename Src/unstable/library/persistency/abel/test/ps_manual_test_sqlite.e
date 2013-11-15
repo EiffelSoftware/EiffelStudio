@@ -88,6 +88,19 @@ feature {NONE} -- Initialization
 			Result.add_collection_handler (tuple_handler)
 		end
 
+
+--	make_repository: PS_REPOSITORY
+--			-- Create the repository for this test
+--		local
+--			factory: PS_SQLITE_REPOSITORY_FACTORY
+--		do
+--			create factory
+--			factory.set_database (sqlite_file)
+--			Result := factory.new_repository
+--			-- TODO: implement close sqlite database...
+--			database := attach (factory.sqlite_database)
+--		end
+
 	sqlite_file: STRING = "/home/roman/sqlite_database.db"
 			-- The SQLite database file
 

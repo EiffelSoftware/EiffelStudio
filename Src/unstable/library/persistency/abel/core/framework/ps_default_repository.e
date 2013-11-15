@@ -163,6 +163,7 @@ feature {NONE} -- Initialization
 		do
 			backend := a_backend
 			create transaction_isolation_level
+			create transaction_isolation
 			set_transaction_isolation_level (transaction_isolation_level.repeatable_read)
 			create default_object_graph.make
 			create id_manager.make

@@ -27,12 +27,8 @@ inherit
 
 feature -- Access
 
-	transaction_isolation: PS_ANOMALY_SETTINGS
+	transaction_isolation: PS_TRANSACTION_SETTINGS
 			-- The isolation settings for transactions in `Current'.
-		once
-			fixme ("Initialize in factory classes.")
-			create Result
-		end
 
 	batch_retrieval_size: INTEGER
 			-- Define the number of objects to be retrieved in one batch for query operations.

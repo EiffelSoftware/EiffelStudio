@@ -1,17 +1,28 @@
 note
 	description: "[
-		Describes which concurrency anomalies are allowed.
+		Describes the current transaction isolation settings.
+		
+		ABEL doesn't let you set a transaction level yourself.
+		This is because the only official standard for transaction
+		isolation levels is the SQL standard - however many databases
+		don't support it, some introduce additional levels, and 
+		some support snapshot isolation which maps poorly to the
+		SQL standard.
+		 
+		Instead of defining an SQL isolation level you can describe
+		which anomalies are acceptable. ABEL will then choose a 
+		suitable transaction isolation level for you.
 		
 		Note: Individual backends may prevent certain anomalies
-		which are declared as allowed (i.e. choose  a stronger isolation
-		level), but not the other way round.
+		which are declared as allowed (i.e. choose  a stronger 
+		isolation level), but not the other way round.
 		]"
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 frozen class
-	PS_ANOMALY_SETTINGS
+	PS_TRANSACTION_SETTINGS
 
 feature -- Status report
 

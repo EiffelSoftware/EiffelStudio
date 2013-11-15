@@ -196,6 +196,7 @@ feature {NONE} -- Initialization
 			backend := a_backend
 			create transaction_isolation_level
 			set_transaction_isolation_level (transaction_isolation_level.repeatable_read)
+			create transaction_isolation
 			create default_object_graph.make
 			create id_manager.make
 			create planner.make

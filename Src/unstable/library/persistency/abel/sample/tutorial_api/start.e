@@ -21,9 +21,9 @@ feature {NONE} -- Initialization
 		do
 			create criterion_factory
 			create factory
+			-- TODO: switch creation procedures.
 			repository := factory.create_in_memory_repository
---			create backend.wipe_out
---			create {PS_NEW_REPOSITORY} repository.make (backend)
+			--repository := factory.new_repository
 			explore
 			io.new_line
 		end

@@ -71,7 +71,6 @@ feature {NONE} -- Initialization
 			last_error := Void
 			create internal_active_queries.make
 			create root_declaration_strategy.make_argument_of_insert
---			root_declaration_strategy := root_declaration_strategy.insert_argument_only
 			create transaction.make (repository)
 		ensure
 			default_strategy: root_declaration_strategy.is_argument_of_insert

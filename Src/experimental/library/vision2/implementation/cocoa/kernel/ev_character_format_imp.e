@@ -142,16 +142,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	app_implementation: EV_APPLICATION_IMP
-			-- App implementation object
-		local
-			l_result: detachable EV_APPLICATION_IMP
-		once
-			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check l_result /= Void end
-			Result := l_result
-		end
-
 	name: STRING_32
 			-- Face name used by `Current'.
 
@@ -206,14 +196,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

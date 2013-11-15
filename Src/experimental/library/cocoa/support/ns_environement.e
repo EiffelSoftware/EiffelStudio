@@ -23,12 +23,11 @@ feature -- Getting NSScreen Objects
 			-- This screen contains the menu bar, has its origin at (0,0) and is always the first object (index 0) in the array returned by the screens method.
 		local
 			l_screens: NS_ARRAY [NS_SCREEN]
-			l_root_screen: detachable NS_SCREEN
 		once
 			create l_screens.share_from_pointer ({NS_SCREEN_API}.screens)
-			l_root_screen := l_screens.item (0)
-			check l_root_screen /= void end
-			create Result.share_from_pointer (l_root_screen.item)
+			check attached l_screens.item (0) as l_root_screen then
+				create Result.share_from_pointer (l_root_screen.item)
+			end
 		end
 
 
@@ -48,4 +47,14 @@ feature -- Getting the Shared Font Manager
 			create Result.share_from_pointer ({NS_FONT_MANAGER_API}.shared_font_manager)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

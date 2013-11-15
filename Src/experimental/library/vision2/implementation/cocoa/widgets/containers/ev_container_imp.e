@@ -46,8 +46,8 @@ feature {NONE}
 		do
 			create radio_group.make
 			initialize_sizeable
-			new_item_actions.extend (agent add_radio_button)
 			create remove_item_actions
+			new_item_actions.extend (agent add_radio_button)
 			remove_item_actions.extend (agent remove_radio_button)
 			Precursor {EV_WIDGET_IMP}
 		end
@@ -96,7 +96,7 @@ feature -- Status Setting
 			peer: detachable EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation
-			check peer /= Void end
+			check peer /= Void then end
 			l := peer.radio_group
 			if l /= radio_group then
 				from
@@ -119,7 +119,7 @@ feature -- Status Setting
 			original_selected_button: detachable EV_RADIO_BUTTON_IMP
 		do
 			peer ?= a_container.implementation
-			check peer /= Void end
+			check peer /= Void then end
 			l := radio_group
 			from
 				l.start
@@ -127,7 +127,7 @@ feature -- Status Setting
 				l.off
 			loop
 				r ?= l.item
-				check r /= Void end
+				check r /= Void then end
 				if r.is_selected then
 						-- Store originally selected button,
 						-- for selection of necessary button at
@@ -238,7 +238,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			c_imp: detachable EV_CONTAINER_IMP
 		do
 			c_imp ?= other.implementation
-			check c_imp /= Void end
+			check c_imp /= Void then end
 			Result := c_imp.radio_group = radio_group
 		end
 
@@ -295,4 +295,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_CONTAINER_IMP

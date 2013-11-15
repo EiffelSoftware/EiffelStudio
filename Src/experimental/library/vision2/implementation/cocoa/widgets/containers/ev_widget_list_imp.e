@@ -42,8 +42,8 @@ feature {NONE} -- Initialization
 
 	initialize
 		do
-			Precursor {EV_CONTAINER_IMP}
 			Precursor {EV_DYNAMIC_LIST_IMP}
+			Precursor {EV_CONTAINER_IMP}
 		end
 
 feature -- Widget relationships
@@ -80,9 +80,7 @@ feature {NONE} -- Implementation
 		do
 			v.implementation.on_parented
 			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
+			check v_imp_not_void: v_imp /= Void then end
 			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
 			v_imp.set_parent_imp (Current)
@@ -100,7 +98,7 @@ feature {NONE} -- Implementation
 			v := i_th (i)
 			check v /= Void end
 			v_imp ?= v.implementation
-			check v_imp_not_void: v_imp /= Void	end
+			check v_imp_not_void: v_imp /= Void	then end
 			remove_item_actions.call ([v_imp.attached_interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
@@ -120,7 +118,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

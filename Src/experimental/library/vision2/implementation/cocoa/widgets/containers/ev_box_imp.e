@@ -73,7 +73,6 @@ feature -- Access
 			-- Compute number of visible children which are expanded
 			-- and assign to `child_expand_number'.
 		local
-			w: detachable EV_WIDGET_IMP
 			i: INTEGER
 		do
 			from
@@ -82,12 +81,10 @@ feature -- Access
 			until
 				i > ev_children.count
 			loop
-				w ?= ev_children.i_th (i)
-				check
-					w /= void
-				end
-				if w.is_show_requested and w.is_expandable then
-					childexpand_nb := childexpand_nb + 1
+				if attached ev_children.i_th (i) as w then
+					if w.is_show_requested and w.is_expandable then
+						childexpand_nb := childexpand_nb + 1
+					end
 				end
 				i := i + 1
 			end
@@ -191,4 +188,14 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_BOX_IMP

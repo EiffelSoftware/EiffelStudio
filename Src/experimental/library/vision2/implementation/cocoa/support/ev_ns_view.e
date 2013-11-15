@@ -176,7 +176,7 @@ feature -- Element change
 			pointer_style_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			pointer_style_imp ?= a_cursor.implementation
-			check pointer_style_imp /= void end
+			check pointer_style_imp /= void then end
 			attached_view.discard_cursor_rects
 			attached_view.add_cursor_rect (attached_view.visible_rect, pointer_style_imp.cursor)
 		end
@@ -212,12 +212,10 @@ feature -- Implementation
 	attached_view: NS_VIEW
 		require
 			cocoa_view /= void
-		local
-			l_result: detachable NS_VIEW
 		do
-			l_result := cocoa_view
-			check l_result /= Void end
-			Result := l_result
+			check attached cocoa_view as l_view then
+				Result := l_view
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -226,4 +224,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

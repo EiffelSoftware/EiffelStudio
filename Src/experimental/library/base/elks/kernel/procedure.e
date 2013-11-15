@@ -18,6 +18,9 @@ class
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]
+		rename
+			call as call alias "()"
+		end
 
 create {NONE}
 	set_rout_disp
@@ -30,7 +33,7 @@ feature -- Calls
 			call (operands)
 		end
 
-	call (args: detachable separate OPEN_ARGS)
+	call alias "()" (args: detachable separate OPEN_ARGS)
 		local
 			c: like closed_operands
 			l_closed_count: INTEGER

@@ -45,9 +45,7 @@ feature -- Status setting
 			w_imp: detachable EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			check
-				w_imp_not_void : w_imp /= Void
-			end
+			check w_imp_not_void : w_imp /= Void then end
 			w_imp.ev_move (a_x, a_y)
 			notify_change (Nc_minsize, w_imp)
 		end
@@ -59,9 +57,7 @@ feature -- Status setting
 			w_imp: detachable EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			check
-				w_imp_not_void : w_imp /= Void
-			end
+			check w_imp_not_void : w_imp /= Void then end
 			--w_imp.ev parent_ask_resize (a_width, a_height)
 			w_imp.ev_apply_new_size (x_position, y_position, a_width, a_height, True)
 			notify_change (Nc_minsize, w_imp)
@@ -179,4 +175,14 @@ feature -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_FIXED

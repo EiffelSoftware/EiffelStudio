@@ -16,19 +16,47 @@ inherit
 			background_color_id,
 			background_color,
 			process,
-			is_new_line
+			is_new_line,
+			character_length
 		end
 
 create
-	make
+	make,
+	make_with_style,
+	make_windows_style,
+	make_unix_style
 
 feature -- Initialisation
 
 	make
-			-- Create the token (image is an empty string)
+			-- Create the token in unix style
+		obsolete
+			"Use `make_with_style' instead."
 		do
-			wide_image := ""
+			make_with_style (False)
+		end
+
+	make_with_style (a_windows_style: BOOLEAN)
+			-- Create the token in `a_windows_style'.
+		do
+			if a_windows_style then
+				wide_image := windows_style_new_line
+			else
+				wide_image := unix_style_new_line
+			end
 			length := 1
+		end
+
+	make_windows_style
+			-- Create the token in Windows style.
+		do
+			make_with_style (True)
+		end
+
+	make_unix_style
+			-- Create the token in Unix style.
+		do
+			make_with_style (False)
 		end
 
 feature -- Status report
@@ -36,11 +64,21 @@ feature -- Status report
 	is_new_line: BOOLEAN = True
 			-- Is current a new line token?
 
-feature -- Display
+feature -- Access
 
 	width: INTEGER
+			-- Pixel width of eol symbol.
 		do
 		end
+
+	character_length: INTEGER
+			-- Number characters represented by the token.
+		do
+			Result := wide_image.count
+		end
+
+feature -- Display
+
 
 	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL)
 			-- Display the end token, at the coordinates (position,`d_y') on the
@@ -120,9 +158,14 @@ feature -- Visitor
 
 feature {NONE} -- Private Constants
 
-	eol_symbol: STRING
-		once
-			Result := ""
+	eol_symbol: STRING_32
+			-- EOL symbol to be displayed
+		do
+			if character_length = 1 then
+				Result := once {STRING_32} "¯"
+			else
+				Result := once {STRING_32} "¬"
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -168,6 +211,12 @@ feature {NONE} -- Implementation
  			end
 		end
 
+	windows_style_new_line: STRING_32 = "%R%N"
+			-- Windows style new line
+
+	unix_style_new_line: STRING_32 = "%N"
+			-- Unix style new line
+
 feature -- Color
 
 	text_color_id: INTEGER
@@ -187,16 +236,19 @@ feature -- Color
 			Result := 0
 		end
 
+invariant
+	wide_image_is_set: not wide_image.is_empty
+	character_length_restricted: character_length = 1 or character_length = 2
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

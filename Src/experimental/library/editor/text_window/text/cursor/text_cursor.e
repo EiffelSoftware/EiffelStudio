@@ -115,7 +115,6 @@ feature -- Access
 			Result := pos_in_token
 			from
 				tok := line.first_token
---				Result := tok.length
 			until
 				tok = Void or else tok = token
 			loop
@@ -147,7 +146,7 @@ feature -- Access
 			until
 				current_token = Void
 			loop
-				Result := Result + current_token.length
+				Result := Result + current_token.character_length
 				current_token := current_token.previous
 				if current_token = Void and then current_line /= Void and then attached current_line.previous as l_previous then
 					current_line := l_previous
@@ -181,16 +180,13 @@ feature -- Access
 		local
 			a_line: detachable EDITOR_LINE
 		do
-				--| First, we add the EOL characters
-			Result := y_in_lines -1
-				--| then we sum the lines
 			from
 				a_line := text.first_line
 			until
 				a_line = Void or else a_line = line
 			loop
-				--Result := Result + a_line.eol_token.x_in_characters
-				Result := Result + a_line.wide_image.count
+					-- Do not use the `wide_image' which is slow.
+				Result := Result + a_line.character_length
 				a_line := a_line.next
 			end
 			Result := Result + x_in_characters
@@ -432,9 +428,9 @@ feature -- Element change
 				t := cline.first_token
 				check t /= Void end -- First token not void.
 			until
-				stop or else pos <= t.length
+				stop or else pos <= t.character_length
 			loop
-				pos := pos - t.length
+				pos := pos - t.character_length
 				if t.next = Void then
 					if attached cline.next as l_next then
 							--| No next token? go to next line, if possible.
@@ -654,7 +650,7 @@ feature -- Cursor movement
 					end
 				else
 					image := token.wide_image
-					if not image.is_empty and then pos_in_token /= 1 and then not char_is_separator (image @ (pos_in_token - 1)) then
+					if not token.is_new_line and then not image.is_empty and then pos_in_token /= 1 and then not char_is_separator (image @ (pos_in_token - 1)) then
 						from
 							index := pos_in_token
 						until
@@ -693,40 +689,8 @@ feature -- Cursor movement
 
 	go_to_position (a_position: INTEGER)
 			-- Move `Current' to `a_position' of the text
-		local
-			pos: INTEGER
-			cline: detachable like line
-			t: detachable EDITOR_TOKEN
-			stop: BOOLEAN
 		do
-			if not text.is_empty then
-				from
-					pos := a_position
-					cline := text.first_line
-					check cline /= Void end -- Implied by precondition
-					t := cline.first_token
-					check t /= Void end
-				until
-					stop or else pos <= t.length
-				loop
-					pos := pos - t.length
-					if not attached t.next as l_next then
-						if attached cline.next as l_next_line then
-							cline := l_next_line
-							t := cline.first_token
-						else
-							stop := True
-							pos := 1
-						end
-					else
-						t := l_next
-					end
-					check t /= Void end -- Never, otherwise a bug
-				end
-				line := cline
-				y_in_lines := cline.index
-				set_current_char (t, pos)
-			end
+			set_from_integer (a_position, text)
 		end
 
 	char_is_separator (char: CHARACTER_32): BOOLEAN
@@ -846,7 +810,7 @@ invariant
 	text_not_void					: text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

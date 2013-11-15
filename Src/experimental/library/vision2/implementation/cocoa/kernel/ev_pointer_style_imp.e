@@ -38,7 +38,7 @@ feature {NONE} -- Initlization
 			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check l_pixel_buffer_imp /= Void end
+			check l_pixel_buffer_imp /= Void then end
 			create cursor.make_with_image (l_pixel_buffer_imp.image, create {NS_POINT}.make_point (a_hotspot_x, a_hotspot_y))
 		end
 
@@ -78,7 +78,7 @@ feature {NONE} -- Initlization
 			l_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			l_pixmap_imp ?= a_cursor.implementation
-			check l_pixmap_imp /= Void end
+			check l_pixmap_imp /= Void then end
 			create cursor.make_with_image (l_pixmap_imp.image, create {NS_POINT}.make_point (a_cursor.x_hotspot, a_cursor.y_hotspot))
 		end
 
@@ -88,7 +88,7 @@ feature {NONE} -- Initlization
 			l_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			l_pixmap_imp ?= a_pixmap.implementation
-			check l_pixmap_imp /= Void end
+			check l_pixmap_imp /= Void then end
 			create cursor.make_with_image (l_pixmap_imp.image, create {NS_POINT}.make_point (a_hotspot_x, a_hotspot_y))
 		end
 
@@ -142,4 +142,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_POINTER_STYLE note option: stable attribute end;
 			-- Interface
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

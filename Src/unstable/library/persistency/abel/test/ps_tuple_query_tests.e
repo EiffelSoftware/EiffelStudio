@@ -97,11 +97,13 @@ feature
 			-- Test a simple query with a custom projection and some criteria
 		local
 			query:PS_TUPLE_QUERY[TEST_PERSON]
+			projection: ARRAYED_LIST [STRING]
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.new_predefined ("last_name", factory.equals, test_data.people.first.last_name))
-			query.set_projection (<<"last_name">>)
+			create projection.make_from_array (<<"last_name">>)
+			query.set_projection (projection)
 
 			executor.execute_tuple_query (query)
 
@@ -122,11 +124,13 @@ feature
 			-- Test a query which has a criterion on an attribute not included in the projection array
 		local
 			query:PS_TUPLE_QUERY[TEST_PERSON]
+			projection: ARRAYED_LIST [STRING]
 		do
 			repository.set_global_pool (True)
 			across test_data.people as p loop executor.execute_insert(p.item) end
 			create query.make_with_criterion (factory.new_predefined ("last_name", factory.equals, test_data.people.first.last_name))
-			query.set_projection (<<"first_name">>)
+			create projection.make_from_array (<<"first_name">>)
+			query.set_projection (projection)
 
 			executor.execute_tuple_query (query)
 
@@ -196,13 +200,15 @@ feature
 		local
 			query: PS_TUPLE_QUERY[REFERENCE_CLASS_1]
 			res: LINKED_LIST[TUPLE[INTEGER, detachable REFERENCE_CLASS_1]]
+			projection: ARRAYED_LIST [STRING]
 		do
 			repository.clean_db_for_testing
 			repository.set_global_pool (True)
 			executor.execute_insert (test_data.reference_to_single_other)
 			create query.make
 			create res.make
-			query.set_projection (<<"ref_class_id", "refer">>)
+			create projection.make_from_array (<<"ref_class_id", "refer">>)
+			query.set_projection (projection)
 
 			executor.execute_tuple_query (query)
 
@@ -235,13 +241,15 @@ feature
 	test_query_reference_cycle
 			-- Test loading an object that is part of a reference cycle in a tuple query
 		local
-			query: PS_TUPLE_QUERY[REFERENCE_CLASS_1]
+			query: PS_TUPLE_QUERY [REFERENCE_CLASS_1]
+			projection: ARRAYED_LIST [STRING]
 		do
 			repository.clean_db_for_testing
 			repository.set_global_pool (True)
 			executor.execute_insert (test_data.reference_cycle)
 			create query.make_with_criterion (factory.new_predefined ("ref_class_id", factory.equals, test_data.reference_cycle.ref_class_id))
-			query.set_projection (<<"ref_class_id", "refer">>)
+			create projection.make_from_array (<<"ref_class_id", "refer">>)
+			query.set_projection (projection)
 
 			executor.execute_tuple_query (query)
 

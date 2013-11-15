@@ -55,7 +55,7 @@ feature -- Factory methods
 		end
 
 
-	generate_tuple_type (a_type: TYPE[detachable ANY]; projection: ARRAY[STRING]): INTEGER_32
+	generate_tuple_type (a_type: TYPE[detachable ANY]; projection: ARRAYED_LIST [STRING]): INTEGER_32
 			-- Generate a tuple of correct type and size
 		local
 			type: PS_TYPE_METADATA

@@ -354,7 +354,7 @@ feature
 			create p.make ("a", "b", 0)
 			type := factory.create_metadata_from_object (p)
 
-			id := factory.generate_tuple_type (type.type, <<"first_name", "items_owned">>)
+			id := factory.generate_tuple_type (type.type, create {ARRAYED_LIST [STRING]}.make_from_array (<<"first_name", "items_owned">>))
 			print (id.out + " ")
 			print (type.reflection.type_name_of_type (id))
 			println

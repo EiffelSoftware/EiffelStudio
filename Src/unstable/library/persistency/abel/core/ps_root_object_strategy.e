@@ -22,15 +22,17 @@ create
 feature -- Status report
 
 	is_preserve: BOOLEAN
-			-- Is the following strategy active?
-			-- Never declare a root automatically and preserve the previous status.
+			-- Is `Current' the `preserve' strategy?
+			-- Definition of `preserve' strategy: Never declare a root automatically
+			-- and preserve the previous status.
 		do
 			Result := internal_strategy = preserve
 		end
 
 	is_argument_of_insert: BOOLEAN
-			-- Is the following strategy active?
-			-- Declare only the object that is used as an argument in an insert operation as root.
+			-- Is `Current' the `argument_of_insert' strategy?
+			-- Definition of `argument_of_insert' strategy: Declare only the object
+			-- that is used as an argument in an insert operation as root.
 			-- Do not touch the root status of any referenced objects.
 		do
 			Result := internal_strategy = argument_of_insert
@@ -38,16 +40,18 @@ feature -- Status report
 
 
 	is_argument_of_write: BOOLEAN
-			-- Is the following strategy active?
-			-- Declare only the object that is used as an argument in an insert or update operation as root.
+			-- Is `Current' the `argument_of_write' strategy?
+			-- Definition of `argument_of_write' strategy: Declare only the object that
+			-- is used as an argument in an insert or update operation as root.
 			-- Do not touch the root status of any referenced objects.
 		do
 			Result := internal_strategy = argument_of_write
 		end
 
 	is_everything: BOOLEAN
-			-- Is the following strategy active?
-			-- Declare the top object and all transitively referenced objects as root.
+			-- Is `Current' the `everything' strategy?
+			-- Definition of `everything' strategy: Declare the argument object and
+			-- all transitively referenced objects as root.
 		do
 			Result := internal_strategy = everything
 		end

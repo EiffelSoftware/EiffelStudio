@@ -26,10 +26,19 @@ inherit
 
 	PS_ABEL_EXPORT
 
-feature -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
 			-- Transaction isolation level.
+
+feature -- Access
+
+	transaction_isolation: PS_ANOMALY_SETTINGS
+			-- The isolation settings for transactions in `Current'.
+		once
+			fixme ("Find a way to properly initialize this.")
+			create Result
+		end
 
 	batch_retrieval_size: INTEGER
 			-- Define the number of objects to be retrieved in one batch for query operations.
@@ -42,7 +51,8 @@ feature -- Access
 			Result := 1
 		end
 
-feature -- Element change
+
+feature {PS_ABEL_EXPORT} -- Element change
 
 	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
 			-- Set the isolation level for transactions.
@@ -53,6 +63,8 @@ feature -- Element change
 		ensure
 			transaction_isolation_level = a_level
 		end
+
+feature -- Element change
 
 	set_batch_retrieval_size (size: INTEGER)
 			-- Set `batch_retrieval_size' to `size'.

@@ -11,7 +11,30 @@ inherit
 
 	COMPARABLE
 
-feature -- Isolation levels
+--feature -- Status report
+
+--	is_read_uncommitted: BOOLEAN
+--			-- Is `Current' the `read uncommitted' transaction isolation level?
+--			-- Read uncommitted does not prevent any anomalies, i.e. dirty reads,
+--			-- lost updates, non-repeatable reads and phantom reads can happen.
+
+--	is_read_committed: BOOLEAN
+--			-- Is `Current' the `read committed' transaction isolation level?
+--			-- Read committed prevents reading dirty, uncommitted values.
+--			-- Lost updates, non-repeatable reads and phantom reads may still happen.
+
+--	is_repeatable_read: BOOLEAN
+--			-- Is `Current' the `repeatable read' transaction isolation level?
+--			-- Repeatable read prevents dirty reads, lost updates and non-repeatable reads.
+--			-- A phantom read may still happen.
+
+--	is_serializable: BOOLEAN
+--			-- Is `Current' the `serializable' transaction isolation level?
+--			-- Serializable prevents all anomalies that may occur when running concurrent transactions.
+
+
+
+feature {PS_ABEL_EXPORT}-- Isolation levels
 
 	Read_uncommitted: PS_TRANSACTION_ISOLATION_LEVEL
 			-- The READ UNCOMMITED isolation level.

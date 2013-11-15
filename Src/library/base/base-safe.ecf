@@ -170,4 +170,8 @@
 	<target name="base_dotnet" extends="base">
 		<setting name="msil_generation" value="true"/>
 	</target>
+	<target name="base_scoop" extends="base">
+		<setting name="concurrency" value="scoop"/>
+	</target>
+
 </system>

@@ -987,7 +987,7 @@ feature {NONE} -- Population
 				else
 					l_scanner.execute (encoding_converter.utf32_to_utf8 (l_editable_lines.item + "%N"))
 				end
-				create l_line.make_from_lexer (l_scanner)
+				create l_line.make_from_lexer_and_style (l_scanner, False)
 				l_editor_tokens.append (l_line.content)
 				l_editable_lines.forth
 			end

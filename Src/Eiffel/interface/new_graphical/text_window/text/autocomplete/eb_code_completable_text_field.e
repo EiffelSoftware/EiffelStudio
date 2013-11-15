@@ -618,7 +618,8 @@ feature {NONE} -- Lexer
 					create Result.make_unix_style
 				else
 					scanner.execute (text)
-					create Result.make_from_lexer (scanner)
+						-- We use Unix style because it is not relevant to source code.
+					create Result.make_from_lexer_and_style (scanner, False)
 				end
 			else
 				create Result.make_unix_style

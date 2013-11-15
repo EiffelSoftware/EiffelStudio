@@ -209,13 +209,12 @@ feature -- Status Setting
 			l_line.set_highlighted (False)
 		end
 
-	set_is_unix_style (a_unix_style: BOOLEAN)
+	set_is_windows_eol_style (a_windows_style: BOOLEAN)
 			-- Set `is_unix_style' with `a_style'.
 		do
-			is_unix_style := a_unix_style
-			lexer.set_is_windows_eol_preferred (not a_unix_style)
+			is_windows_eol_style := a_windows_style
 		ensure
-			is_unix_style_set: is_unix_style = a_unix_style
+			is_windows_eol_style_set: is_windows_eol_style = a_windows_style
 		end
 
 feature -- Query
@@ -337,8 +336,8 @@ feature -- Status report
 	text_being_processed: BOOLEAN
 			-- is the text currently processed?
 
-	is_unix_style: BOOLEAN
-			-- Is the text unix style?
+	is_windows_eol_style: BOOLEAN
+			-- Is the text windows eol style?
 
 feature -- Search
 
@@ -432,7 +431,7 @@ feature {NONE} -- Text Loading
 			from
 				if l_current_string = Void or else l_current_string.is_empty then
 					j := 0
-					append_line (new_line_from_lexer ("", not is_unix_style))
+					append_line (new_line_from_lexer ("", is_windows_eol_style))
 				else
 					current_pos := 1
 					j := l_current_string.index_of ('%N', current_pos)
@@ -472,7 +471,7 @@ feature {NONE} -- Text Loading
 					not l_current_string.is_empty and then
 					(l_current_string.item (l_current_string.count) = '%N')
 				then
-					append_line (new_line_from_lexer ("", not is_unix_style))
+					append_line (new_line_from_lexer ("", is_windows_eol_style))
 				end
 				reading_text_finished := True
 				on_text_loaded
@@ -531,7 +530,7 @@ feature {NONE} -- Text Loading
 						-- We have finished reading the file, so we remove
 						-- ourself from the idle actions.
 					if (l_current_string @ l_current_string.count) = '%N' then
-						append_line (new_line_from_lexer ("", not is_unix_style))
+						append_line (new_line_from_lexer ("", is_windows_eol_style))
 					end
 					reading_text_finished := True
 					on_text_loaded
@@ -554,7 +553,7 @@ feature {NONE} -- Text Loading
 				create Result.make (a_windows_style)
 			else
 				lexer.execute (line_image)
-				create Result.make_from_lexer (lexer)
+				create Result.make_from_lexer_and_style (lexer, a_windows_style)
 			end
 		end
 

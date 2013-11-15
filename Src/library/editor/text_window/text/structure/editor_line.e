@@ -23,12 +23,22 @@ create
 	make,
 	make_from_lexer,
 	make_unix_style,
-	make_windows_style
+	make_windows_style,
+	make_from_lexer_and_style
 
 feature -- Initialization
 
 	make_from_lexer (lexer: EDITOR_SCANNER)
-			-- Create a line using token from `lexer'
+			-- Create a line using token from `lexer'.
+			-- Defaults to Unix EOL style.
+		require
+			lexer_exists: lexer /= Void
+		do
+			make_from_lexer_and_style (lexer, False)
+		end
+
+	make_from_lexer_and_style (lexer: EDITOR_SCANNER; a_windows_style: BOOLEAN)
+			-- Create a line using token from `lexer' in `a_windows_style'.
 		require
 			lexer_exists: lexer /= Void
 		local
@@ -37,7 +47,7 @@ feature -- Initialization
 			lexer_first_token,
 			lexer_end_token		: detachable EDITOR_TOKEN
 		do
-			create t_eol.make_with_style (lexer.is_windows_eol_preferred)
+			create t_eol.make_with_style (a_windows_style)
 			create t_begin.make
 
 			lexer_end_token := lexer.end_token
@@ -117,13 +127,22 @@ feature -- Transformation
 	rebuild_from_lexer (lexer: EDITOR_SCANNER; in_v_string: BOOLEAN)
 			-- Rebuild Current using token from `lexer'.  If lexer is scanning a line that is part of
 			-- a verbatim string then `in_v_string' should be True.
+			-- EOL style defaults to Unix.
+		do
+			rebuild_from_lexer_and_style (lexer, in_v_string, False)
+		end
+
+	rebuild_from_lexer_and_style (lexer: EDITOR_SCANNER; in_v_string: BOOLEAN; a_windows_style: BOOLEAN)
+			-- Rebuild Current using token from `lexer'.  If lexer is scanning a line that is part of
+			-- a verbatim string then `in_v_string' should be True.
+			-- EOL style is windows style, when `a_windows_style' is set, otherwise unix style.
 		do
 			if attached previous as l_previous and then ((l_previous.part_of_verbatim_string and then not l_previous.end_of_verbatim_string) or l_previous.start_of_verbatim_string) then
 				lexer.set_in_verbatim_string (True)
 			else
 				lexer.set_in_verbatim_string (False)
 			end
-			make_from_lexer (lexer)
+			make_from_lexer_and_style (lexer, a_windows_style)
 		end
 
 feature -- Status Report					

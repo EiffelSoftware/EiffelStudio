@@ -170,6 +170,8 @@ feature {NONE} -- Initialization
 			create retriever.make (backend, id_manager, Current)
 			create collection_handlers.make
 			create mapper.make
+
+			retry_count := default_retry_count
 		end
 
 feature -- Initialization

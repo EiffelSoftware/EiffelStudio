@@ -23,53 +23,30 @@ deferred class
 	PS_REPOSITORY
 
 inherit
-
 	PS_ABEL_EXPORT
-
-feature {PS_ABEL_EXPORT} -- Access
-
-	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
-			-- Transaction isolation level.
 
 feature -- Access
 
 	transaction_isolation: PS_ANOMALY_SETTINGS
 			-- The isolation settings for transactions in `Current'.
 		once
-			fixme ("Find a way to properly initialize this.")
+			fixme ("Initialize in factory classes.")
 			create Result
 		end
 
 	batch_retrieval_size: INTEGER
 			-- Define the number of objects to be retrieved in one batch for query operations.
-			-- Set to -1 to retrieve all objects at once (and disable lazy loading).
+			-- Set to `infinite_batch_size' to retrieve all objects at once (and disable lazy loading).
 
 	retry_count: INTEGER
 			-- The default retries for implicit transaction handling, if there is a transaction conflict.
-		once
-			fixme ("implement sane default initialization in all descendants")
-			Result := 1
-		end
-
-
-feature {PS_ABEL_EXPORT} -- Element change
-
-	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
-			-- Set the isolation level for transactions.
-		require
-			supported: to_implement_assertion ("Supported transaction isolation levels")
-		do
-			transaction_isolation_level := a_level
-		ensure
-			transaction_isolation_level = a_level
-		end
 
 feature -- Element change
 
 	set_batch_retrieval_size (size: INTEGER)
 			-- Set `batch_retrieval_size' to `size'.
 		require
-			valid: size > 0 or size = -1
+			valid: size > 0 or size = infinite_batch_size
 		do
 			batch_retrieval_size := size
 		ensure
@@ -81,8 +58,7 @@ feature -- Element change
 		require
 			positive: count >= 0
 		do
-			fixme ("implement sane default initialization in all descendants")
-			--retry_count := count
+			retry_count := count
 		ensure
 			correct: retry_count = count
 		end
@@ -149,6 +125,19 @@ feature -- Disposal
 
 
 feature {PS_ABEL_EXPORT} -- Settings
+
+	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
+			-- Transaction isolation level.
+
+	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
+			-- Set the isolation level for transactions.
+		require
+			supported: to_implement_assertion ("Supported transaction isolation levels")
+		do
+			transaction_isolation_level := a_level
+		ensure
+			transaction_isolation_level = a_level
+		end
 
 	global_object_pool: BOOLEAN
 			-- Does `Current' maintain a global pool of object identifiers?
@@ -398,5 +387,16 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	mapper: PS_KEY_POID_TABLE
 		deferred
 		end
+
+feature -- Constants
+
+	default_retry_count: INTEGER = 1
+			-- The default number of retries for implicit transactions.
+
+	infinite_batch_size: INTEGER = -1
+			-- The special value for an infinite batch size (i.e. to effectively disable lazy loading).
+
+invariant
+--	valid_batch_size: batch_retrieval_size > 0 or batch_retrieval_size = infinite_batch_size
 
 end

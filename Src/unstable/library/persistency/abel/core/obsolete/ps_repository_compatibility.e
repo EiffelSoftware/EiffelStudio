@@ -203,6 +203,8 @@ feature {NONE} -- Initialization
 --			create executor.make (backend, id_manager)
 			create retriever.make (backend, id_manager, Current)
 			create collection_handlers.make
+
+			retry_count := default_retry_count
 		end
 
 feature -- Initialization

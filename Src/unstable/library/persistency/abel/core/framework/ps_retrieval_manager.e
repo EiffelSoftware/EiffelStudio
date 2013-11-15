@@ -80,7 +80,7 @@ feature {NONE} -- Implementation - Retrieval
 				until
 					found or results.after
 				loop
-					new_object := build_object (type, results.item, transaction, bookkeeping, true, repository.default_object_graph.query_depth)
+					new_object := build_object (type, results.item, transaction, bookkeeping, true, query.object_initialization_depth)
 					if query.criterion.is_satisfied_by (new_object) then
 						query.result_cursor.set_entry (new_object)
 						found := True
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation - Retrieval
 					if direct_collection.after then
 						query.result_cursor.set_entry (Void)
 					else
-						new_object := build_object_collection (type, direct_collection.item, get_handler (type), transaction, bookkeeping, repository.default_object_graph.query_depth)
+						new_object := build_object_collection (type, direct_collection.item, get_handler (type), transaction, bookkeeping, query.object_initialization_depth)
 						query.result_cursor.set_entry (new_object)
 					end
 				end
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation - Retrieval
 						found or results.after
 					loop
 						fixme ("don't cheat...")
-						new_object := build_object (type, results.item, transaction, bookkeeping, false, repository.default_object_graph.query_depth)
+						new_object := build_object (type, results.item, transaction, bookkeeping, false, query.object_initialization_depth)
 						if query.criterion.is_satisfied_by (new_object) then
 							-- extract the required information
 

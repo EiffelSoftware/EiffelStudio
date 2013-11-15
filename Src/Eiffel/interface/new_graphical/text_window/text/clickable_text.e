@@ -336,7 +336,7 @@ feature {NONE} -- Load Text handling
 				create Result.make (a_windows_style)
 			else
 				lexer.execute (line_image)
-				create Result.make_from_lexer (lexer)
+				create Result.make_from_lexer_and_style (lexer, a_windows_style)
 			end
 		end
 

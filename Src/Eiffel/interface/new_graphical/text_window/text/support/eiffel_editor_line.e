@@ -12,7 +12,7 @@ inherit
 	EDITOR_LINE
 		redefine
 			make,
-			make_from_lexer,
+			make_from_lexer_and_style,
 			number_token
 		end
 
@@ -20,7 +20,7 @@ create
 	make,
 	make_windows_style,
 	make_unix_style,
-	make_from_lexer
+	make_from_lexer_and_style
 
 feature -- Initialisation
 
@@ -44,7 +44,7 @@ feature -- Initialisation
 			update_token_information
 		end
 
-	make_from_lexer (lexer: EDITOR_SCANNER)
+	make_from_lexer_and_style (lexer: EDITOR_SCANNER; a_windows_style: BOOLEAN)
 			-- Create a line using token from `lexer'
 		local
 			t_eol				: EDITOR_TOKEN_EOL
@@ -53,7 +53,7 @@ feature -- Initialisation
 			lexer_first_token	: EDITOR_TOKEN
 			lexer_end_token		: EDITOR_TOKEN
 		do
-			create t_eol.make_with_style (lexer.is_windows_eol_preferred)
+			create t_eol.make_with_style (a_windows_style)
 			create t_begin.make
 			create t_second.make
 			t_begin.set_next_token (t_second)

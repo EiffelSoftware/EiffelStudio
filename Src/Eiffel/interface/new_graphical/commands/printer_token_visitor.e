@@ -233,7 +233,8 @@ feature {NONE} -- Implementation
 		once
 			create l_scanner.make
 			l_scanner.execute (ise_info)
-			create l_line.make_from_lexer (l_scanner)
+				-- We use Unix style because this is not relevant as it is only for the printer.
+			create l_line.make_from_lexer_and_style (l_scanner, False)
 			create Result.make (2)
 			Result.extend (l_line)
 		end

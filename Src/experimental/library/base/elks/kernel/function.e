@@ -36,7 +36,7 @@ feature -- Access
 			last_result := item (args)
 		end
 
-	item alias "[]" (args: detachable separate OPEN_ARGS): RESULT_TYPE
+	item alias "()" (args: detachable separate OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)

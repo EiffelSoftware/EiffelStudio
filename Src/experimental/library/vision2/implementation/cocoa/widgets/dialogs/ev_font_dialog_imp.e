@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize the dialog.
 		do
-			Precursor {EV_STANDARD_DIALOG_IMP}
 			create font_panel.shared_font_panel
+			Precursor {EV_STANDARD_DIALOG_IMP}
 --			window := font_panel
 		end
 
@@ -59,14 +59,16 @@ feature {NONE} -- Implementation
 			font_panel.make_key_and_order_front (current)
 
 			selected_button := ev_ok
-			interface.ok_actions.call (Void)
+			if attached ok_actions_internal as l_ok then
+				l_ok.call (Void)
+			end
 		end
 
 	font_panel: NS_FONT_PANEL
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_FONT_DIALOG;
+	interface: detachable EV_FONT_DIALOG note option: stable attribute end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

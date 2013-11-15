@@ -110,7 +110,7 @@ feature {NONE} -- Access
 				i > l_filenames.count
 			loop
 				l_item := l_filenames.item (i)
-				check l_item /= Void end
+				check l_item /= Void then end
 				Result.extend (create {PATH}.make_from_pointer (l_item.item))
 				i := i + 1
 			end
@@ -139,7 +139,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

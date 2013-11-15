@@ -45,9 +45,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
 			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
+			check v_imp_not_void: v_imp /= Void then end
 			v_imp.set_parent_imp (Current)
 			insert_item (v_imp, i)
 			v_imp.on_parented
@@ -59,10 +57,8 @@ feature {NONE} -- Implementation
 		local
 			v_imp: detachable G_IMP
 		do
-			v_imp ?= interface_i_th (i).implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
+			v_imp ?= i_th (i).implementation
+			check v_imp_not_void: v_imp /= Void then end
 			v_imp.on_orphaned
 			remove_item_actions.call ([v_imp.attached_interface])
 			remove_item (v_imp)
@@ -101,4 +97,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_ITEM_LIST_IMP

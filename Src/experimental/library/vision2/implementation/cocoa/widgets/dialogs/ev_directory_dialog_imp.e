@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			-- Setup action sequences.
 		do
 			make_panel
+			initialize_class
 			set_can_choose_directories (True)
 			set_can_create_directories (True)
 			set_can_choose_files (False)
@@ -69,7 +70,7 @@ feature -- Access
 	directory: PATH
 			-- Path of the current selected directory
 		do
-			if selected_button.is_equal (internal_accept) then
+			if attached selected_button as l_selected and then l_selected.is_equal (internal_accept) then
 				Result := path
 			else
 				create Result.make_empty
@@ -78,13 +79,20 @@ feature -- Access
 
 	start_directory: PATH
 			-- Base directory where browsing will start.
+		do
+			if attached internal_start_directory as l_path then
+				Result := l_path
+			else
+				create Result.make_empty
+			end
+		end
 
 feature -- Element change
 
 	set_start_directory (a_path: PATH)
 			-- Make `a_path' the base directory.
 		do
-			start_directory := a_path
+			internal_start_directory := a_path
 			set_directory_path (a_path)
 		end
 
@@ -121,12 +129,14 @@ feature {NONE} -- Implementation
 			Precursor {NS_OPEN_PANEL}
 		end
 
+	internal_start_directory: detachable like start_directory
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_DIRECTORY_DIALOG;
+	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			width := a_pixmap.width
 			height := a_pixmap.height
 			l_pixmap_imp ?= a_pixmap.implementation
-			check l_pixmap_imp /= Void end
+			check l_pixmap_imp /= Void then end
 			image := l_pixmap_imp.image.twin
 		end
 
@@ -62,7 +62,7 @@ feature -- Command
 			if l_image.representations.count > 0 then
 				-- File found, representation loaded
 				l_image_rep := l_image.representations.item (0)
-				check l_image_rep /= void end
+				check l_image_rep /= void then end
 				width := l_image_rep.pixels_wide
 				height := l_image_rep.pixels_high
 				image := l_image
@@ -124,7 +124,7 @@ feature -- Command
 		do
 			create Result.make_with_size (a_area.width, a_area.height)
 			l_pixmap_imp ?= Result.implementation
-			check l_pixmap_imp /= Void end
+			check l_pixmap_imp /= Void then end
 			l_pixmap_imp.image.lock_focus
 			l_area_y := height - a_area.height - a_area.y -- Flipped y coordinate
 			image.draw_in_rect (
@@ -134,6 +134,22 @@ feature -- Command
 			l_pixmap_imp.image.unlock_focus
 		end
 
+	stretched (a_width, a_height: INTEGER): EV_PIXEL_BUFFER
+			-- <Precursor>
+		local
+			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
+		do
+			create Result.make_with_size (a_width, a_height)
+			l_pixel_buffer_imp ?= Result.implementation
+			check l_pixel_buffer_imp /= Void then end
+			l_pixel_buffer_imp.image.lock_focus
+			image.draw_at_point (
+				create {NS_POINT}.make_point (0, 0),
+				create {NS_RECT}.make,-- .make_rect (0, 0, a_width, a_height),
+				{NS_IMAGE}.composite_source_over, 1)
+			l_pixel_buffer_imp.image.unlock_focus
+		end
+
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
@@ -141,7 +157,7 @@ feature -- Command
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
 			l_pixel_buffer_imp ?= Result.implementation
-			check l_pixel_buffer_imp /= Void end
+			check l_pixel_buffer_imp /= Void then end
 			l_pixel_buffer_imp.image.lock_focus
 			image.draw_at_point (
 				create {NS_POINT}.make_point (0, 0),
@@ -175,7 +191,7 @@ feature -- Command
 		do
 			image.lock_focus
 			pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check pixel_buffer_imp /= Void end
+			check pixel_buffer_imp /= Void then end
 			pixel_buffer_imp.image.draw_at_point (
 				create {NS_POINT}.make_point (a_rect.x, height - a_rect.y - a_rect.height),
 				create {NS_RECT}.make_rect (0, 0, a_rect.width, a_rect.height),
@@ -198,7 +214,7 @@ feature -- Query
 		do
 			image.lock_focus
 			pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check pixel_buffer_imp /= Void end
+			check pixel_buffer_imp /= Void then end
 			pixel_buffer_imp.image.draw_at_point (
 				create {NS_POINT}.make_point (a_x, height - a_y - a_pixel_buffer.height),
 				create {NS_RECT}.make_rect (0, 0, a_pixel_buffer.width, a_pixel_buffer.height),
@@ -228,7 +244,7 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementa
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

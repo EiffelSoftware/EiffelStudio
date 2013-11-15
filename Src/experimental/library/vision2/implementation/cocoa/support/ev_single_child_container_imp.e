@@ -56,9 +56,7 @@ feature -- Element change
 			if attached item as l_item then
 				remove_item_actions.call ([l_item])
 				v_imp ?= item_imp
-				check
-					v_imp_not_void: v_imp /= Void
-				end
+				check v_imp_not_void: v_imp /= Void then end
 				item := Void
 				v_imp.set_parent_imp (Void)
 				v_imp.on_orphaned
@@ -78,9 +76,7 @@ feature -- Element change
 				end
 				v.implementation.on_parented
 				v_imp ?= v.implementation
-				check
-					v_imp_not_void: v_imp /= Void
-				end
+				check v_imp_not_void: v_imp /= Void then end
 				v_imp.set_parent_imp (current)
 				item := v
 				notify_change (nc_minsize, Current)
@@ -210,13 +206,13 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EV_SINGLE_CHILD_CONTAINER_IMP

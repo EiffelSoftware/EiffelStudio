@@ -18,6 +18,7 @@
 		<external_object location="$(ISE_LIBRARY)/library/objc_base/spec/$(ISE_PLATFORM)/lib/objc_base_eiffel.o"/>
 		<external_linker_flag value="-framework Cocoa"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="objc_base" location="$ISE_LIBRARY\library\objc_base\objc_base.ecf" readonly="false"/>
 		<cluster name="cocoa" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/tests</exclude>
@@ -25,7 +26,6 @@
 				<exclude>/\.svn$</exclude>
 				<exclude>/\Clib$</exclude>
 			</file_rule>
-			<cluster name="objc_base" location="..\objc_base\" recursive="true"/>
 		</cluster>
 	</target>
 </system>

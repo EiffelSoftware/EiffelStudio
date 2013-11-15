@@ -22,14 +22,12 @@ feature {NONE} -- Initialization
 	make
 			-- Setup action sequences.
 		do
-			Precursor {EV_STANDARD_DIALOG_IMP}
-			set_is_initialized (False)
-
-			filter := "*.*"
 			create filters.make (5)
 			create internal_filename.make_empty
 			create start_path.make_empty
+			filter := "*.*"
 
+			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (True)
 		end
 
@@ -134,7 +132,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

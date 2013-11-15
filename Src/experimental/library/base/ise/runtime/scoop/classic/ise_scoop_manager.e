@@ -129,22 +129,42 @@ feature {NONE} -- C callback function
 	is_uncontrolled (a_client_processor_id, a_supplier_processor_id: like processor_id_type): BOOLEAN
 			-- Is `a_supplier_processor_id' uncontrolled in the current context of `a_client_processor_id'.
 		local
-			l_end_index, i: INTEGER
+			l_end_index, i, l_request_chain_stack_depth: INTEGER
+			l_client_request_chain_meta_data_stack: detachable like new_request_chain_meta_data_stack_list_entry
+			l_current_client_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 		do
 			if request_chain_meta_data [a_client_processor_id] /= default_request_chain_meta_data_entry then
 					-- Check first if we are lock passing, if not then we check the entire chain.
 				Result := (request_chain_meta_data [a_client_processor_id]) [request_chain_client_pid_index] /= a_supplier_processor_id
 				if Result then
-					l_end_index := (request_chain_meta_data [a_client_processor_id]) [request_chain_pid_count_index]
-					if l_end_index > 0 then
-						from
-							i := request_chain_meta_data_header_size
-							l_end_index := l_end_index + i
-						until
-							i = l_end_index or else not Result
-						loop
-							Result := (request_chain_meta_data [a_client_processor_id]) [i] /= a_supplier_processor_id
-							i := i + 1
+					from
+						l_request_chain_stack_depth := processor_meta_data [a_client_processor_id].item (current_request_chain_id_depth_index)
+						l_client_request_chain_meta_data_stack := request_chain_meta_data_stack_list [a_client_processor_id]
+					until
+						l_request_chain_stack_depth < 0
+					loop
+						l_current_client_request_chain_meta_data := l_client_request_chain_meta_data_stack.item (l_request_chain_stack_depth)
+						if l_current_client_request_chain_meta_data /= Void then
+							l_end_index := l_current_client_request_chain_meta_data.item (request_chain_pid_count_index)
+							if l_end_index > 0 then
+								from
+									i := request_chain_meta_data_header_size
+									l_end_index := l_end_index + i
+								until
+									i = l_end_index or else not Result
+								loop
+									Result := l_current_client_request_chain_meta_data.item (i) /= a_supplier_processor_id
+									i := i + 1
+								end
+							end
+						else
+							check current_client_request_chain_meta_data_void: False then end
+						end
+						if not Result then
+								-- `a_supplier_processor_id' is controlled so we can exit loop.
+							l_request_chain_stack_depth := -1
+						else
+							l_request_chain_stack_depth := l_request_chain_stack_depth - 1
 						end
 					end
 				end
@@ -746,7 +766,7 @@ feature -- Command/Query Handling
 			l_request_chain_node_id: like invalid_request_chain_node_id
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
-			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_pid: INTEGER_32
+			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_pid, l_request_chain_stack_depth: INTEGER_32
 			l_is_synchronous, l_client_sync_needed: BOOLEAN
 		do
 			debug ("ISE_SCOOP_MANAGER")
@@ -779,23 +799,36 @@ feature -- Command/Query Handling
 				end
 			end
 
-			l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-			if l_client_request_chain_meta_data /= Void then
+			from
 					-- Call is specific to `a_client_processor_id' so we need to retrieve the request chain node for `a_supplier_processor_id' from here.
-				l_unique_pid_count := l_client_request_chain_meta_data [request_chain_pid_count_index]
-					-- Search through remaining pid's to find the associating request chain node id.
-				from
-					i := request_chain_meta_data_header_size
-					l_last_pid_index := request_chain_meta_data_header_size + l_unique_pid_count - 1
-				until
-					i > l_last_pid_index
-				loop
-					l_pid := l_client_request_chain_meta_data [i]
-					if l_pid = a_supplier_processor_id then
-						l_request_chain_node_id := l_client_request_chain_meta_data [i + l_unique_pid_count]
+				l_request_chain_stack_depth := processor_meta_data [a_client_processor_id].item (current_request_chain_id_depth_index)
+			until
+				l_request_chain_stack_depth < 0
+			loop
+				l_client_request_chain_meta_data := request_chain_meta_data_stack_list [a_client_processor_id].item (l_request_chain_stack_depth)
+				if l_client_request_chain_meta_data /= Void then
+					l_unique_pid_count := l_client_request_chain_meta_data [request_chain_pid_count_index]
+						-- Search through remaining pid's to find the associating request chain node id.
+					from
+						i := request_chain_meta_data_header_size
+						l_last_pid_index := request_chain_meta_data_header_size + l_unique_pid_count - 1
+					until
+						i > l_last_pid_index
+					loop
+						l_pid := l_client_request_chain_meta_data [i]
+						if l_pid = a_supplier_processor_id then
+							l_request_chain_node_id := l_client_request_chain_meta_data [i + l_unique_pid_count]
+								-- Chain node id has been located so we can exit both inner and outer loops by setting exit conditions
+							i := l_last_pid_index
+							l_request_chain_stack_depth := 0
+						end
+						i := i + 1
 					end
-					i := i + 1
+				else
+						-- There should always be a client request chain meta data entry in the stack.
+					check client_request_chain_meta_data_void: False then end
 				end
+				l_request_chain_stack_depth := l_request_chain_stack_depth - 1
 			end
 
 			if l_request_chain_node_id = invalid_request_chain_id then
@@ -805,8 +838,8 @@ feature -- Command/Query Handling
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 			else
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
-					-- We may be lock passing from the creation of a new processor, in which case we check if the original chain client is the current supplier.
-				l_client_sync_needed := l_is_synchronous and then a_supplier_processor_id = l_client_request_chain_meta_data [request_chain_client_pid_index]
+					-- We may be lock passing from the creation of a new processor, in which case we check if the original chain client (if present) is the current supplier.
+				l_client_sync_needed := l_is_synchronous and then l_client_request_chain_meta_data /= Void and then a_supplier_processor_id = l_client_request_chain_meta_data [request_chain_client_pid_index]
 			end
 
 			if l_request_chain_node_queue_entry = Void then
@@ -929,6 +962,7 @@ feature -- Command/Query Handling
 			l_is_synchronous, l_exit_loop, l_temporary_chain_opened: BOOLEAN
 			l_call_ptr, l_null_ptr: POINTER
 			l_processor_dirty: BOOLEAN
+			l_initial_client_processor_id: like processor_id_type
 		do
 				-- Retrieve the node queue list for the client processor.
 			l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
@@ -961,6 +995,16 @@ feature -- Command/Query Handling
 					-- Wait until the request chain has started.
 				wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, l_client_request_chain_meta_data)
 					-- We make a copy of the current request chain meta data and pass to the supplier for controlled argument processing.
+				if a_request_chain_node_queue_entry.count > 0 then
+						-- Make sure that all previous asynchronous calls have been applied so that `a_supplier_processor_id' is in a static state.
+					from
+					until
+							--| FIXME: This can be replaced with a dummy scoop no-op so that the supplier can signal the client that it has performed all prior async tasks.
+						a_request_chain_node_queue_entry [a_request_chain_node_queue_entry.count - 1] = default_pointer
+					loop
+						processor_cpu_yield
+					end
+				end
 
 					-- Temporarily pass the locks of the client processor to the supplier processor.
 				l_supplier_request_chain_meta_data := request_chain_meta_data [a_supplier_processor_id]
@@ -976,6 +1020,8 @@ feature -- Command/Query Handling
 
 				if a_creation_request_chain_meta_data /= Void then
 						-- We are lock passing to a creation routine so we start the loop.
+					l_initial_client_processor_id := l_client_request_chain_meta_data [request_chain_client_pid_index]
+					l_client_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id
 					start_processor_application_loop (a_supplier_processor_id)
 					wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, a_creation_request_chain_meta_data)
 				end
@@ -1048,6 +1094,10 @@ feature -- Command/Query Handling
 					l_exit_loop := True
 				end
 			end
+			if a_creation_request_chain_meta_data /= Void then
+					-- Reset original chain client.
+				l_client_request_chain_meta_data [request_chain_client_pid_index] := l_initial_client_processor_id
+			end
 			if l_temporary_chain_opened then
 					-- Close temporary chain if opened.
 				signify_end_of_request_chain (a_client_processor_id)
@@ -1085,10 +1135,10 @@ feature -- Command/Query Handling
 					)
 					if l_chain_status = request_chain_status_open then
 							-- The chain is not yet being applied, wait for the head node to signal the processor to continue.
-
 							-- Chain status is now set to application so we update the flag so we don't needlessly enter the spin lock loop.
 						l_chain_status := request_chain_status_application
 						processor_wait (a_client_processor_id, a_supplier_processor_id)
+					else
 					end
 				end
 
@@ -1568,7 +1618,7 @@ feature {NONE} -- Resource Initialization
 				elseif
 					a_is_head and then a_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting
 				then
-						-- The chain status is set to waiting and we are the head pid so we must be a creation routine
+						-- The chain status is set to waiting and we are the head pid so we must be a creation routine or lock passing is occurring.
 						-- Signal client processor to wake up and wait until signalled to continue.
 					processor_wake_up (a_client_processor_id, a_logical_processor_id)
 					processor_wait (a_logical_processor_id, a_client_processor_id)
@@ -1805,34 +1855,37 @@ feature {NONE} -- Scoop Processor Meta Data
 	processor_wake_up_and_wait (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
 			-- Signal processor `a_client_processor_id' to wake up  `a_supplier_processor_id' and then wait to be signalled.
 			-- Condition variable is not used here as this is for very short waits (ie: with lock passing synchronization).
-		local
-			i: NATURAL_32
+--		local
+--			i: NATURAL_32
 		do
-			if a_client_processor_id /= a_supplier_processor_id then
-				from
-				until
-					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_supplier_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_signalled, processor_semaphore_status_running) = processor_semaphore_status_running
-				loop
-					if i < processor_spin_lock_limit then
-						processor_spin_loop (1)
-					else
-						processor_cpu_yield
-					end
-					i := i + 1
-				end
-				from
-					i := 0
-				until
-					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_running, processor_semaphore_status_signalled) = processor_semaphore_status_signalled
-				loop
-					if i < processor_spin_lock_limit then
-						processor_spin_loop (1)
-					else
-						processor_cpu_yield
-					end
-					i := i + 1
-				end
-			end
+			processor_wake_up (a_supplier_processor_id, a_client_processor_id)
+			processor_wait (a_client_processor_id, a_supplier_processor_id)
+				--| The following implementation is faster than using condition variables when there are no processors in contention.
+--			if a_client_processor_id /= a_supplier_processor_id then
+--				from
+--				until
+--					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_supplier_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_signalled, processor_semaphore_status_running) = processor_semaphore_status_running
+--				loop
+--					if i < processor_spin_lock_limit then
+--						processor_spin_loop (1)
+--					else
+--						processor_cpu_yield
+--					end
+--					i := i + 1
+--				end
+--				from
+--					i := 0
+--				until
+--					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_semaphore_status_index), processor_semaphore_status_running, processor_semaphore_status_signalled) = processor_semaphore_status_signalled
+--				loop
+--					if i < processor_spin_lock_limit then
+--						processor_spin_loop (1)
+--					else
+--						processor_cpu_yield
+--					end
+--					i := i + 1
+--				end
+--			end
 		end
 
 	new_processor_meta_data_entry: SPECIAL [INTEGER_32]
@@ -2091,19 +2144,34 @@ feature {NONE} -- Externals
 			"eif_sleep"
 		end
 
+--	frozen processor_yield (a_processor_id: like processor_id_type; a_iteration_number: NATURAL_32)
+--			-- Yield processor `a_processor_id' to competing threads for an OS specific set time.
+--		do
+--			if a_iteration_number < processor_spin_lock_limit then
+--					-- Spin lock
+--				processor_spin_loop (1)
+--			else
+--				processor_cpu_yield
+--					-- Check for any potential deadlock.
+--				if a_iteration_number \\ Max_yield_counter = 0 then
+--					check_for_deadlock
+--				end
+--			end
+--		end
+
 	frozen processor_yield (a_processor_id: like processor_id_type; a_iteration_number: NATURAL_32)
 			-- Yield processor `a_processor_id' to competing threads for an OS specific set time.
-		do
-			if a_iteration_number < processor_spin_lock_limit then
-					-- Spin lock
-				processor_spin_loop (1)
-			else
-				processor_cpu_yield
-					-- Check for any potential deadlock.
-				if a_iteration_number \\ Max_yield_counter = 0 then
-					check_for_deadlock
-				end
-			end
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"{
+				if ($a_iteration_number < 200) {
+					RTS_PROCESSOR_SPIN_LOOP(1);
+				}
+				else {
+					RTS_PROCESSOR_CPU_YIELD;
+				}
+			}"
 		end
 
 	check_for_deadlock
@@ -2331,18 +2399,22 @@ feature {NONE} -- Synchronization externals
 			"eif_thr_mutex_create"
 		end
 
+--	new_mutex: POINTER
+--		external
+--			"C inline use %"eif_threads.h%""
+--		alias
+--			"[
+--				EIF_CS_TYPE *section = (EIF_CS_TYPE *) eif_malloc(sizeof(EIF_CS_TYPE));
+--				InitializeCriticalSectionAndSpinCount(section, (DWORD) 4000);
+--				return section;
+--			]"
+--		end
+
 	lock_mutex (a_mutex_pointer: POINTER)
 		external
 			"C blocking use %"eif_threads.h%""
 		alias
 			"eif_pthread_mutex_lock"
-		end
-
-	try_lock_mutex (a_mutex_pointer: POINTER): BOOLEAN
-		external
-			"C blocking use %"eif_threads.h%""
-		alias
-			"eif_pthread_mutex_trylock"
 		end
 
 	unlock_mutex (a_mutex_pointer: POINTER)
@@ -2366,6 +2438,18 @@ feature {NONE} -- Synchronization externals
 			"eif_thr_cond_create"
 		end
 
+--	new_condition_variable: POINTER
+--		external
+--			"C inline use %"eif_threads.h%""
+--		alias
+--			"[
+--				CONDITION_VARIABLE *condvar;
+--				condvar = calloc (sizeof(CONDITION_VARIABLE),1);
+--				InitializeConditionVariable(condvar);
+--				return condvar;
+--			]"
+--		end
+
 	condition_variable_signal (a_cond_ptr: POINTER)
 		external
 			"C macro use %"eif_threads.h%""
@@ -2373,12 +2457,12 @@ feature {NONE} -- Synchronization externals
 			"eif_pthread_cond_signal"
 		end
 
-	condition_variable_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER)
-		external
-			"C blocking use %"eif_threads.h%""
-		alias
-			"eif_pthread_cond_wait"
-		end
+--	condition_variable_signal (a_cond_ptr: POINTER)
+--		external
+--			"C macro use %"eif_threads.h%""
+--		alias
+--			"WakeConditionVariable"
+--		end
 
 	condition_variable_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER
 		external
@@ -2387,12 +2471,26 @@ feature {NONE} -- Synchronization externals
 			"eif_pthread_cond_wait_with_timeout"
 		end
 
+--	condition_variable_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER
+--		external
+--			"C blocking use %"eif_threads.h%""
+--		alias
+--			"!SleepConditionVariableCS"
+--		end
+
 	destroy_condition_variable (a_mutex_ptr: POINTER)
 		external
 			"C use %"eif_threads.h%""
 		alias
 			"eif_thr_cond_destroy"
 		end
+
+--	destroy_condition_variable (a_mutex_ptr: POINTER)
+--		external
+--			"C use %"eif_threads.h%""
+--		alias
+--			"free"
+--		end
 
 feature {NONE} -- Debugger Helpers
 

@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			make
 
 			pointer_style_imp ?= a_pointer_style.implementation
-			check pointer_style_imp /= Void end
+			check pointer_style_imp /= Void then end
 			if attached pointer_style_imp.cursor.image as l_image then
 				image := l_image
 			else
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			make
 
 			pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check pixel_buffer_imp /= Void end
+			check pixel_buffer_imp /= Void then end
 			image := pixel_buffer_imp.image
 			internal_width := pixel_buffer_imp.width
 			internal_height := pixel_buffer_imp.height
@@ -156,7 +156,7 @@ feature -- Element change
 			if l_image.representations.count > 0 then
 				-- File found, representation loaded
 				l_image_rep := l_image.representations.item (0)
-				check l_image_rep /= void end
+				check l_image_rep /= void then end
 				internal_width := l_image_rep.pixels_wide
 				internal_height := l_image_rep.pixels_high
 				image := l_image
@@ -174,7 +174,7 @@ feature -- Element change
 			create l_image.make_named (a_name)
 			image_view.set_image (l_image)
 			l_image_rep := l_image.representations.item (0)
-			check l_image_rep /= void end
+			check l_image_rep /= void then end
 			internal_width := l_image_rep.pixels_wide
 			internal_height := l_image_rep.pixels_high
 			image := l_image
@@ -240,7 +240,7 @@ feature -- Duplication
 			other_imp: detachable EV_PIXMAP_IMP
 		do
 			other_imp ?= other.implementation
-			check other_imp /= void end
+			check other_imp /= void then end
 
 --			if other_imp.pixmap_filename /= Void then
 --				pixmap_filename := other_imp.pixmap_filename.twin
@@ -321,7 +321,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

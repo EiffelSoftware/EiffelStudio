@@ -131,7 +131,7 @@ feature -- Status setting
 --				trans.scale_by_xy (1.0, -1.0)
 --				trans.concat
 			l_color ?= foreground_color.implementation
-			check l_color /= void end
+			check l_color /= void then end
 			l_color.color.set
 		end
 
@@ -170,12 +170,12 @@ feature {NONE} -- Implementation
 			else -- if click_count >= 2
 				actions := pointer_double_press_actions_internal
 			end
-			if attached actions then
+			if attached actions and attached a_event.window as l_window then
 				create pointer_button_action
-				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
+				point := l_window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
 				pointer_button_action.x := point.x.rounded
 				pointer_button_action.y := point.y.rounded
-				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
+				point := l_window.convert_base_to_screen_top_left (a_event.location_in_window)
 				pointer_button_action.screen_x := point.x.rounded
 				pointer_button_action.screen_y := point.y.rounded
 				pointer_button_action.button :=	a_event.button_number + 1
@@ -188,12 +188,12 @@ feature {NONE} -- Implementation
 			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			point: NS_POINT
 		do
-			if attached pointer_button_release_actions_internal as actions then
+			if attached pointer_button_release_actions_internal as actions and attached a_event.window as l_window then
 				create pointer_button_action
-				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
+				point := l_window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
 				pointer_button_action.x := point.x.rounded
 				pointer_button_action.y := point.y.rounded
-				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
+				point := l_window.convert_base_to_screen_top_left (a_event.location_in_window)
 				pointer_button_action.screen_x := point.x.rounded
 				pointer_button_action.screen_y := point.y.rounded
 				pointer_button_action.button :=	a_event.button_number + 1
@@ -207,12 +207,12 @@ feature {NONE} -- Implementation
 			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			point: NS_POINT
 		do
-			if attached pointer_motion_actions_internal as actions then
+			if attached pointer_motion_actions_internal as actions and attached a_event.window as l_window then
 				create pointer_motion_action
-				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
+				point := l_window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
 				pointer_motion_action.x := point.x.rounded
 				pointer_motion_action.y := point.y.rounded
-				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
+				point := l_window.convert_base_to_screen_top_left (a_event.location_in_window)
 				pointer_motion_action.screen_x := point.x.rounded
 				pointer_motion_action.screen_y := point.y.rounded
 				actions.call (pointer_motion_action)
@@ -277,4 +277,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DRAWING_AREA note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_DRAWING_AREA_IMP

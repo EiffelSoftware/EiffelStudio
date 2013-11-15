@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -24,6 +24,17 @@ feature -- Test routines
 			-- New test routine
 		do
 			test
+		end
+
+	similar_char_mapping_detection
+			-- Detect conversion to similar characters.
+		do
+			utf32.convert_to (iso_8859_1, {STRING_32} "“")
+			assert ("Data loss detected", utf32.last_conversion_lost_data)
+			if {PLATFORM}.is_windows then
+				assert ("Conversion done", utf32.last_conversion_successful)
+				assert ("Got question mark", utf32.last_converted_stream ~ "?")
+			end
 		end
 
 	cache_testing
@@ -218,7 +229,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

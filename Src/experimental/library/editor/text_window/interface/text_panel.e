@@ -470,7 +470,13 @@ feature -- Query
 	is_unix_file: BOOLEAN
 			-- Is current file a Unix file? (i.e. is "%N" line separator?)
 		do
-			Result := text_displayed.is_unix_style
+			Result := not is_windows_file
+		end
+
+	is_windows_file: BOOLEAN
+			-- Is current file a Windows file? (i.e. is "%R%N" line separator?)
+		do
+			Result := text_displayed.is_windows_eol_style
 		end
 
 	is_in_editor_panel (a_screen_x, a_screen_y: INTEGER): BOOLEAN
@@ -765,7 +771,7 @@ feature -- Basic Operations
 				-- Reset the editor state
 			reset
 			l_text := evaluate_encoding_and_convert_to_utf8 (a_text)
-			text_displayed.set_is_unix_style (l_text.substring_index ("%R%N", 1) = 0)
+			text_displayed.set_is_windows_eol_style (l_text.substring_index ("%R%N", 1) > 0)
 
 			file_loading_setup
 

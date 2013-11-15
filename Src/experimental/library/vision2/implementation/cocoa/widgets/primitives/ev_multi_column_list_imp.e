@@ -152,7 +152,7 @@ feature -- DataSource
 			if attached outline_view.table_columns.item (0) as l_item and then l_item.item = a_table_column then
 				if attached a_node.pixmap as l_pixmap then
 					l_pixmap_imp ?= l_pixmap.implementation
-					check l_pixmap_imp /= Void end
+					check l_pixmap_imp /= Void then end
 					Result := l_pixmap_imp.image.item
 				end
 			else
@@ -544,4 +544,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_MULTI_COLUMN_LIST_IMP

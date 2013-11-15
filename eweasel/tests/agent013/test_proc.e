@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	call (args: OPEN_ARGS)
+	call alias "()" (args: OPEN_ARGS)
 				-- <Precursor>
 		do
 			unbound_arguments [1] := 47

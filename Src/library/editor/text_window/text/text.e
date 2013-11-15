@@ -443,7 +443,7 @@ feature {NONE} -- Text Loading
 			until
 				number_of_lines > first_read_block_size or j = 0
 			loop
-				if l_current_string @ (j - 1) = '%R' then
+				if j > 1 and then l_current_string @ (j - 1) = '%R' then
 					curr_string := l_current_string.substring (current_pos, j - 2)
 					append_line (new_line_from_lexer (curr_string, True))
 				else
@@ -503,7 +503,7 @@ feature {NONE} -- Text Loading
 				until
 					lines_read > Lines_read_per_idle_action or else j = 0
 				loop
-					if l_current_string @ (j - 1) = '%R' then
+					if j > 1 and then l_current_string @ (j - 1) = '%R' then
 							-- Remove the `%R' and let the lexer EOL token.
 						curr_string := l_current_string.substring (current_pos, j - 2)
 						append_line (new_line_from_lexer (curr_string, True))

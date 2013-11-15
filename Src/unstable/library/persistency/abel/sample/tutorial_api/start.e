@@ -543,6 +543,7 @@ feature -- Tuple queries
 		local
 			query: PS_TUPLE_QUERY [CHILD]
 			transaction: PS_TRANSACTION
+			projection: ARRAYED_LIST [STRING]
 		do
 				-- Tuple queries are very similar to normal object queries.
 				-- I.e. you can query for CHILD objects by creating
@@ -557,7 +558,8 @@ feature -- Tuple queries
 				-- The big advantage of tuple queries is that you can define which attributes
 				-- should be loaded. Therefore you can avoid loading a whole object graph
 				-- if you're just interested in e.g. the first name.
-			query.set_projection (<<"first_name">>)
+			create projection.make_from_array (<<"first_name">>)
+			query.set_projection (projection)
 
 				-- Tuple queries are executed by either using {PS_REPSOITORY}.execute_tuple_query
 				-- or {PS_TRANSACTION}.execute_tuple_query.
@@ -578,7 +580,8 @@ feature -- Tuple queries
 
 				-- It is possible to include reference-type attributes as well.
 			query.reset
-			query.set_projection (<<"first_name", "father">>)
+			create projection.make_from_array (<<"first_name", "father">>)
+			query.set_projection (projection)
 
 				-- We're now executing the query in a transaction such that we can
 				-- use the results for subsequent write operations.

@@ -34,7 +34,7 @@ create
 
 feature -- Access: Retrieval Parameter
 
-	projection: ARRAY [STRING]
+	projection: ARRAYED_LIST [STRING]
 			-- Data to be included for projection. Defaults to all fields of basic types and string types.
 			-- The projection also defines the layout of the TUPLE results:
 			-- The i-th item in a TUPLE corresponds to the i-th attribute in the projection.
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_projection (a_projection: ARRAY [STRING])
+	set_projection (a_projection: ARRAYED_LIST [STRING])
 			-- Set `a_projection' to the current query.
 		do
 			projection := a_projection
@@ -56,42 +56,31 @@ feature -- Element change
 
 feature -- Utilities
 
-	default_projection: ARRAY [STRING]
+	default_projection: ARRAYED_LIST [STRING]
 			-- An array containing all the attribute names that are of a basic type.
 		local
 			reflection: INTERNAL
-			instance: ANY
-			field: detachable ANY
-			i, j, num_fields: INTEGER
-			field_type, string_type: INTEGER
+			type: INTEGER
+			field_type: INTEGER
+			string_type: INTEGER
 		do
 			create reflection
-			instance := reflection.new_instance_of (reflection.generic_dynamic_type (Current, 1))
-			num_fields := reflection.field_count (instance)
-			create Result.make_filled (create {STRING}.make_empty, 1, num_fields)
-			from
-				i := 1
-				j := 1
-			until
-				i > num_fields
-			loop
-				field := reflection.field (i, instance)
-				if attached {NUMERIC} field or attached {BOOLEAN} field then
-					Result.put (reflection.field_name (i, instance), j)
-					j := j + 1
-				else
-					field_type := reflection.field_static_type_of_type (i, reflection.dynamic_type (instance))
-					string_type := reflection.dynamic_type_from_string ("READABLE_STRING_GENERAL")
-						--print (field_type.out + " " + string_type.out + "%N")
-					if reflection.field_conforms_to (field_type, string_type) then
-						Result.put (reflection.field_name (i, instance), j)
-						j := j + 1
-					end
-				end
-				i := i + 1
-			end
-			Result:= Result.subarray (1, j-1)
+			type := generic_type.type_id
+			string_type := ({READABLE_STRING_GENERAL}).type_id
+
+			create Result.make (10)
 			Result.compare_objects
+
+			across
+				1 |..| reflection.field_count_of_type (type) as idx
+			loop
+
+				field_type := reflection.field_static_type_of_type (idx.item, type)
+
+				if basic_types.has (field_type) or else reflection.type_conforms_to (field_type, string_type) then
+					Result.extend (reflection.field_name_of_type (idx.item, type))
+				end
+			end
 		end
 
 	attribute_index (name: STRING): INTEGER
@@ -117,12 +106,36 @@ feature {NONE} -- Initialization
 	make
 			-- Create a query for all objects of type G (no filtering criteria).
 		do
-			create projection.make_empty
+			create projection.make (0)
 			Precursor
-			create projection.make_from_array (default_projection)
-			projection.compare_objects
+			projection := default_projection
 		ensure then
-			projection_correctly_initialized: projection.is_deep_equal (old default_projection)
+--			projection_correctly_initialized: projection.is_deep_equal (default_projection)
 		end
 
+	basic_types: HASH_TABLE [BOOLEAN, INTEGER]
+			-- A quick lookup for basic types.
+		once
+			create Result.make (20)
+
+			Result.extend (True, ({INTEGER_8}).type_id)
+			Result.extend (True, ({INTEGER_16}).type_id)
+			Result.extend (True, ({INTEGER_32}).type_id)
+			Result.extend (True, ({INTEGER_64}).type_id)
+
+			Result.extend (True, ({NATURAL_8}).type_id)
+			Result.extend (True, ({NATURAL_16}).type_id)
+			Result.extend (True, ({NATURAL_32}).type_id)
+			Result.extend (True, ({NATURAL_64}).type_id)
+
+
+			Result.extend (True, ({REAL_32}).type_id)
+			Result.extend (True, ({REAL_64}).type_id)
+
+			Result.extend (True, ({CHARACTER_8}).type_id)
+			Result.extend (True, ({CHARACTER_32}).type_id)
+
+			Result.extend (True, ({BOOLEAN}).type_id)
+			Result.extend (True, ({POINTER}).type_id)
+		end
 end

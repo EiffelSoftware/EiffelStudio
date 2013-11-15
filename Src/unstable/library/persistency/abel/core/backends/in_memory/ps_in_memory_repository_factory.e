@@ -11,8 +11,8 @@ note
 class
 	PS_IN_MEMORY_REPOSITORY_FACTORY
 
-inherit
-	PS_REPOSITORY_FACTORY
+--inherit
+--	PS_REPOSITORY_FACTORY
 
 
 feature -- Status report
@@ -22,78 +22,18 @@ feature -- Status report
 
 feature {NONE}
 
-	new_backend: PS_READ_WRITE_BACKEND
-		do
-			create {PS_IN_MEMORY_BACKEND} Result.make
-			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
-		end
+--	new_backend: PS_READ_WRITE_BACKEND
+--		do
+--			create {PS_IN_MEMORY_BACKEND} Result.make
+--			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
+--		end
 
 feature -- Factory methods
 
---	create_mysql_repository (username, password, db_name, db_host: STRING; db_port: INTEGER): PS_RELATIONAL_REPOSITORY
---		-- Create a MySQL repository providing all the necessary information.
---		require
---			username_not_empty: not username.is_empty
---			db_name_not_empty: not db_name.is_empty
---			db_host_not_empty: not db_host.is_empty
---			db_port_legal: db_port > 1024 and db_port < 65535
---		local
---			database: PS_MYSQL_DATABASE
---			mysql_strings: PS_MYSQL_STRINGS
---			backend: PS_GENERIC_LAYOUT_SQL_BACKEND
---		do
---			create database.make (username, password, db_name, db_host, db_port)
---			create mysql_strings
---			create backend.make (database, mysql_strings)
---			create Result.make (backend)
---		end
-
---	create_mysql_repository_with_default_host_port (username, password, db_name: STRING): PS_RELATIONAL_REPOSITORY
---		-- Create a MySQL repository relying on the default host 127.0.0.1 and port 3306.
---		require
---			username_not_empty: not username.is_empty
---			db_name_not_empty: not db_name.is_empty
---		local
---			database: PS_MYSQL_DATABASE
---			mysql_strings: PS_MYSQL_STRINGS
---			backend: PS_GENERIC_LAYOUT_SQL_BACKEND
---		do
---			create database.make (username, password, db_name, "127.0.0.1", 3306)
---			create mysql_strings
---			create backend.make (database, mysql_strings)
---			create Result.make (backend)
---		end
-
---	create_sqlite_repository (db_file_name: STRING): PS_RELATIONAL_REPOSITORY
---		-- Create an SQLite repository named `db_file_name'.
---		-- If passing an empty string, then a private, temporary on-disk database is created.
---		local
---			database: PS_SQLITE_DATABASE
---			sqlite_strings: PS_SQLITE_STRINGS
---			backend: PS_GENERIC_LAYOUT_SQL_BACKEND
---		do
---			create database.make (db_file_name)
---			create sqlite_strings
---			create backend.make (database, sqlite_strings)
---			create Result.make (backend)
---		end
-
-	create_obsolete_in_memory_repository: PS_REPOSITORY_COMPATIBILITY
-		-- Create an in-memory repository that can be queried in a relational style.
-		local
-			repository: PS_REPOSITORY_COMPATIBILITY
-			in_memory_database: PS_IN_MEMORY_DATABASE
-			special_handler: PS_SPECIAL_COLLECTION_HANDLER
-		do
-			create in_memory_database.make
-			create repository.make (in_memory_database)
-			create special_handler.make
-			repository.add_collection_handler (special_handler)
-			Result := repository
-		end
-
 	create_in_memory_repository: PS_DEFAULT_REPOSITORY
 		-- Create a simple in memory repository
+		obsolete
+			"use new_repository"
 		local
 			repository: PS_DEFAULT_REPOSITORY
 			backend: PS_IN_MEMORY_BACKEND

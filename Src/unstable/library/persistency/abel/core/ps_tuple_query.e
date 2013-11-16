@@ -83,38 +83,30 @@ feature -- Utilities
 			end
 		end
 
-	attribute_index (name: STRING): INTEGER
-			-- Get the tuple index for the attribute with name `name'
-		require
-			 name_exists: projection.has (name)
-		do
-			from
-				Result:= 1
-			until
-				Result > projection.count or name.is_equal (projection [Result])
-			loop
-				Result:= Result + 1
-			end
-		ensure
-			positive: Result > 0
-			in_range: Result <= projection.count
-			correct: name.is_equal (projection [Result])
-		end
+--	attribute_index (name: STRING): INTEGER
+--			-- Get the tuple index for the attribute with name `name'
+--		require
+--			 name_exists: projection.has (name)
+--		do
+--			Result := projection.index_of (name, 1)
+--		ensure
+--			positive: Result > 0
+--			in_range: Result <= projection.count
+--			correct: name.is_equal (projection [Result])
+--		end
 
 feature {NONE} -- Initialization
 
 	make
 			-- Create a query for all objects of type G (no filtering criteria).
 		do
-			create projection.make (0)
+--			create projection.make (0)
 			Precursor
 			projection := default_projection
-		ensure then
---			projection_correctly_initialized: projection.is_deep_equal (default_projection)
 		end
 
 	basic_types: HASH_TABLE [BOOLEAN, INTEGER]
-			-- A quick lookup for basic types.
+			-- A quick lookup table for basic types.
 		once
 			create Result.make (20)
 

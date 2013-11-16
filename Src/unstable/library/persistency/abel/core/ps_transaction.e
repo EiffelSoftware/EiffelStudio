@@ -67,7 +67,6 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'
 		do
 			repository := a_repository
---			create {PS_NO_ERROR} last_error
 			last_error := Void
 			create internal_active_queries.make
 			create root_declaration_strategy.make_argument_of_insert

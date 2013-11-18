@@ -165,6 +165,8 @@ feature {NONE}
 			create factory
 			repo := factory.create_in_memory_repository
 			repo.backend.add_plug_in (escher_integration)
+--			factory.add_plugin (escher_integration)
+--			repo := factory.new_repository
 
 			transaction := repo.new_transaction
 		end

@@ -14,13 +14,15 @@ class
 --inherit
 --	PS_REPOSITORY_FACTORY
 
+--create
+--	default_create, make, make_uninitialized
 
-feature -- Status report
+--feature -- Status report
 
-	is_buildable: BOOLEAN = True
-			-- Does `Current' have enough information to build a repository?
+--	is_buildable: BOOLEAN = True
+--			-- Does `Current' have enough information to build a repository?
 
-feature {NONE}
+--feature {NONE}
 
 --	new_backend: PS_READ_WRITE_BACKEND
 --		do

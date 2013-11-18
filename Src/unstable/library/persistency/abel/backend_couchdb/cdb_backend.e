@@ -9,39 +9,16 @@ class
 
 inherit
 
---	PS_BACKEND_COMPATIBILITY
-
 	PS_READ_WRITE_BACKEND
 
 create
 	make, make_with_host_and_port
 
-feature {PS_ABEL_EXPORT} -- Supported collection operations
-
-	supports_object_collection: BOOLEAN = False
-			-- Can the current backend handle relational collections?
-
-	supports_relational_collection: BOOLEAN = False
-			-- Can the current backend handle relational collections?
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_generic_collection_supported: BOOLEAN = False
 			-- Can the current backend support collections in general,
 			-- i.e. is there a default strategy?
-
-
-feature {PS_ABEL_EXPORT} -- Status report
-
-	can_handle_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA): BOOLEAN
-			-- Can the current backend handle the relational collection between the two classes `owner_type' and `collection_type'?
-		do
-			Result := False
-		end
-
-	can_handle_object_oriented_collection (collection_type: PS_TYPE_METADATA): BOOLEAN
-			-- Can the current backend handle an object-oriented collection of type `collection_type'?
-		do
-			Result := False
-		end
 
 feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
@@ -176,45 +153,45 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 
 feature {PS_ABEL_EXPORT} -- Object write operations
 
-	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Inserts `an_object' into the database.
-		local
-			db_name, doc, rev: STRING
-			err, prev: detachable STRING
-			prev_attr_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
-			new_primary: PS_PAIR [INTEGER, STRING]
-		do
-			create prev_attr_list.make
-			new_primary := new_key (an_object.object_wrapper.metadata.base_class.name)
-			key_mapper.add_entry (an_object.object_wrapper, new_primary.first, a_transaction)
-			doc := make_json (an_object, new_primary.first.out, "", a_transaction)
-			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
-			err := curl.create_document (db_name, doc)
-			prev_attr_list := make_object (an_object.object_wrapper.metadata, err, "")
-			across
-				prev_attr_list as attr
-			loop
-				if attr.item.first.is_equal ("error") then
-					rev := get_rev (db_name, new_primary.first.out, an_object)
-					doc := make_json (an_object, new_primary.first.out, rev, a_transaction)
-					err := curl.update_document (db_name, new_primary.first.out, doc)
-				end
-			end
-		end
+--	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
+--			-- Inserts `an_object' into the database.
+--		local
+--			db_name, doc, rev: STRING
+--			err, prev: detachable STRING
+--			prev_attr_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
+--			new_primary: PS_PAIR [INTEGER, STRING]
+--		do
+--			create prev_attr_list.make
+--			new_primary := new_key (an_object.object_wrapper.metadata.base_class.name)
+--			key_mapper.add_entry (an_object.object_wrapper, new_primary.first, a_transaction)
+--			doc := make_json (an_object, new_primary.first.out, "", a_transaction)
+--			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
+--			err := curl.create_document (db_name, doc)
+--			prev_attr_list := make_object (an_object.object_wrapper.metadata, err, "")
+--			across
+--				prev_attr_list as attr
+--			loop
+--				if attr.item.first.is_equal ("error") then
+--					rev := get_rev (db_name, new_primary.first.out, an_object)
+--					doc := make_json (an_object, new_primary.first.out, rev, a_transaction)
+--					err := curl.update_document (db_name, new_primary.first.out, doc)
+--				end
+--			end
+--		end
 
-	update (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Updates `an_object' in the database.
-		local
-			primary: PS_PAIR [INTEGER, PS_TYPE_METADATA]
-			db_name, doc, rev: STRING
-			err: detachable STRING
-		do
-			primary := key_mapper.primary_key_of (an_object.object_wrapper, a_transaction)
-			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
-			rev := get_rev (db_name, primary.first.out, an_object)
-			doc := make_json (an_object, primary.first.out, rev, a_transaction)
-			err := curl.update_document (db_name, primary.first.out, doc)
-		end
+--	update (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
+--			-- Updates `an_object' in the database.
+--		local
+--			primary: PS_PAIR [INTEGER, PS_TYPE_METADATA]
+--			db_name, doc, rev: STRING
+--			err: detachable STRING
+--		do
+--			primary := key_mapper.primary_key_of (an_object.object_wrapper, a_transaction)
+--			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
+--			rev := get_rev (db_name, primary.first.out, an_object)
+--			doc := make_json (an_object, primary.first.out, rev, a_transaction)
+--			err := curl.update_document (db_name, primary.first.out, doc)
+--		end
 
 --	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
 --			-- Deletes `an_object' from the database.
@@ -269,23 +246,6 @@ feature {PS_READ_WRITE_BACKEND} -- Implementation
 				end
 
 			end
-
---			create prev_attr_list.make
---			new_primary := new_key (an_object.object_wrapper.metadata.base_class.name)
---			key_mapper.add_entry (an_object.object_wrapper, new_primary.first, a_transaction)
---			doc := make_json (an_object, new_primary.first.out, "", a_transaction)
---			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
---			err := curl.create_document (db_name, doc)
---			prev_attr_list := make_object (an_object.object_wrapper.metadata, err, "")
---			across
---				prev_attr_list as attr
---			loop
---				if attr.item.first.is_equal ("error") then
---					rev := get_rev (db_name, new_primary.first.out, an_object)
---					doc := make_json (an_object, new_primary.first.out, rev, a_transaction)
---					err := curl.update_document (db_name, new_primary.first.out, doc)
---				end
---			end
 		end
 
 feature --json operations
@@ -334,38 +294,38 @@ feature --json operations
 			end
 		end
 
-	make_json (object: PS_SINGLE_OBJECT_PART; id: STRING; rev: STRING; transaction: PS_INTERNAL_TRANSACTION): STRING
-			--creates a json document containing the attributes of object in the form:
-			--{"attribute1": "value1", "attribute2": "value2"}
-		local
-			referenced_part: PS_OBJECT_GRAPH_PART
-			value: STRING
-		do
-			create Result.make_empty
-			Result.append ("{ ")
-			if not id.is_empty then
-				Result.append ("%"_id%": %"" + id + "%", ")
-			end
-			if not rev.is_empty then
-				Result.append ("%"_rev%": %"" + rev + "%", ")
-			end
-			across
-				object.attributes as current_attribute
-			loop
-				Result.append ("%"" + current_attribute.item + "%": ")
-				referenced_part := object.attribute_value (current_attribute.item)
-				if referenced_part.is_basic_attribute then
-					value := referenced_part.basic_attribute_value
-				else
-					value := referenced_part.as_attribute (key_mapper.quick_translate (referenced_part.object_identifier, transaction)).value
-				end
-				Result.append ("%"" + value + "%"")
-				if not current_attribute.is_last then
-					Result.append (", ")
-				end
-			end
-			Result.append (" }")
-		end
+--	make_json (object: PS_SINGLE_OBJECT_PART; id: STRING; rev: STRING; transaction: PS_INTERNAL_TRANSACTION): STRING
+--			--creates a json document containing the attributes of object in the form:
+--			--{"attribute1": "value1", "attribute2": "value2"}
+--		local
+--			referenced_part: PS_OBJECT_GRAPH_PART
+--			value: STRING
+--		do
+--			create Result.make_empty
+--			Result.append ("{ ")
+--			if not id.is_empty then
+--				Result.append ("%"_id%": %"" + id + "%", ")
+--			end
+--			if not rev.is_empty then
+--				Result.append ("%"_rev%": %"" + rev + "%", ")
+--			end
+--			across
+--				object.attributes as current_attribute
+--			loop
+--				Result.append ("%"" + current_attribute.item + "%": ")
+--				referenced_part := object.attribute_value (current_attribute.item)
+--				if referenced_part.is_basic_attribute then
+--					value := referenced_part.basic_attribute_value
+--				else
+--					value := referenced_part.as_attribute (key_mapper.quick_translate (referenced_part.object_identifier, transaction)).value
+--				end
+--				Result.append ("%"" + value + "%"")
+--				if not current_attribute.is_last then
+--					Result.append (", ")
+--				end
+--			end
+--			Result.append (" }")
+--		end
 
 	make_json_new (object: PS_BACKEND_OBJECT; id: STRING; rev: STRING): STRING
 			--creates a json document containing the attributes of object in the form:
@@ -399,24 +359,24 @@ feature --json operations
 			Result.append (" }")
 		end
 
-	get_rev (db_name: STRING; id: STRING; an_object: PS_SINGLE_OBJECT_PART): STRING
-			--retrieves the rev value from the database
-		local
-			callback: STRING
-			attr_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
-		do
-			create attr_list.make
-			callback := curl.get_document (db_name, id)
-			attr_list := make_object (an_object.object_wrapper.metadata, callback, id)
-			create Result.make_empty
-			across
-				attr_list as curr_attr
-			loop
-				if curr_attr.item.first.is_equal ("_rev") then
-					Result := curr_attr.item.second
-				end
-			end
-		end
+--	get_rev (db_name: STRING; id: STRING; an_object: PS_SINGLE_OBJECT_PART): STRING
+--			--retrieves the rev value from the database
+--		local
+--			callback: STRING
+--			attr_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
+--		do
+--			create attr_list.make
+--			callback := curl.get_document (db_name, id)
+--			attr_list := make_object (an_object.object_wrapper.metadata, callback, id)
+--			create Result.make_empty
+--			across
+--				attr_list as curr_attr
+--			loop
+--				if curr_attr.item.first.is_equal ("_rev") then
+--					Result := curr_attr.item.second
+--				end
+--			end
+--		end
 
 	get_rev_new (db_name: STRING; id: STRING; object: PS_BACKEND_OBJECT): STRING
 			--retrieves the rev value from the database
@@ -456,32 +416,6 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			Result := (create {LINKED_LIST [PS_BACKEND_COLLECTION]}.make).new_cursor
 		end
 
-	retrieve_object_oriented_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): PS_BACKEND_COLLECTION
-			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
-		do
-			check
-				not_implemented: False
-			end
-			create Result.make (collection_primary_key, collection_type)
-		end
-
-	insert_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Add all entries in `a_collection' to the database. If the order is not conflicting with the items already in the database, it will try to preserve order.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-	delete_object_oriented_collection (a_collection: PS_OBJECT_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Delete `a_collection' from the database.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-
 	write_collections (collections: LIST[PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write every item in `collections' to the database
 		do
@@ -492,34 +426,6 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete every item in `collections' from the database
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-
-feature {PS_ABEL_EXPORT} -- Relational collection operations
-
-	retrieve_relational_collection (owner_type, collection_item_type: PS_TYPE_METADATA; owner_key: INTEGER; owner_attribute_name: STRING; transaction: PS_INTERNAL_TRANSACTION): PS_RETRIEVED_RELATIONAL_COLLECTION
-			-- Retrieves the relational collection between class `owner_type' and `collection_item_type', where the owner has primary key `owner_key' and the attribute name of the collection inside the owner object is called `owner_attribute_name'.
-		do
-			check
-				not_implemented: False
-			end
-			create Result.make (owner_key, owner_type.base_class, owner_attribute_name)
-		end
-
-	insert_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Add all entries in `a_collection' to the database.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-	delete_relational_collection (a_collection: PS_RELATIONAL_COLLECTION_PART; a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Delete `a_collection' from the database.
 		do
 			check
 				not_implemented: False
@@ -552,9 +458,6 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 feature {PS_ABEL_EXPORT} -- Mapping
 
-	key_mapper: PS_KEY_POID_TABLE
-			-- Maps POIDs to primary keys as used by this backend.
-
 	key_set: HASH_TABLE [INTEGER, STRING]
 			-- stores the maximum key for every class.
 
@@ -581,7 +484,6 @@ feature {PS_ABEL_EXPORT} -- Testing helpers
 			loop
 				output := curl.destroy_database (keyset.key.as_lower)
 			end
-			create key_mapper.make
 		end
 
 feature -- database
@@ -592,7 +494,6 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create key_mapper.make
 			create curl.make
 			create key_set.make (100)
 			create plug_in_list.make
@@ -600,7 +501,6 @@ feature {NONE} -- Initialization
 
 	make_with_host_and_port (host: STRING; port: INTEGER)
 		do
-			create key_mapper.make
 			create curl.make_with_host_and_port (host, port)
 			create key_set.make (100)
 			create plug_in_list.make

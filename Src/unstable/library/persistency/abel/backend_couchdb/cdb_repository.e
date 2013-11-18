@@ -12,7 +12,6 @@ class
 
 inherit
 
-	--PS_REPOSITORY_COMPATIBILITY
 	PS_DEFAULT_REPOSITORY
 
 create

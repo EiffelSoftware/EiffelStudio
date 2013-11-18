@@ -31,7 +31,7 @@ create
 
 feature -- Query settings
 
-	query_depth: INTEGER
+--	query_depth: INTEGER
 			-- Object graph depth for queries, or reading objects in general.
 
 feature -- Insert settings
@@ -85,13 +85,13 @@ feature -- Deletion settings
 
 feature -- Modification
 
-	set_query_depth (depth: INTEGER)
-			-- Change the object graph depth for queries.
-		require
-			valid_depth: is_valid_depth (depth)
-		do
-			query_depth := depth
-		end
+--	set_query_depth (depth: INTEGER)
+--			-- Change the object graph depth for queries.
+--		require
+--			valid_depth: is_valid_depth (depth)
+--		do
+--			query_depth := depth
+--		end
 
 	set_insert_depth (depth: INTEGER)
 			-- Change the object graph depth for insertion.
@@ -130,7 +130,7 @@ feature -- Creation
 	make, reset_to_default
 			-- Create a new OBJECT_GRAPH_DEPTH object with our system's default values.
 		do
-			query_depth := Object_graph_depth_infinite
+--			query_depth := Object_graph_depth_infinite
 			insert_depth := Object_graph_depth_infinite
 			update_depth := Object_graph_depth_infinite
 			delete_depth := Minimum_depth
@@ -145,7 +145,7 @@ feature -- Constants
 			-- Load/store full object.
 
 invariant
-	valid_query_depth: is_valid_depth (query_depth)
+--	valid_query_depth: is_valid_depth (query_depth)
 	valid_insert_depth: is_valid_depth (insert_depth)
 	valid_update_depth: is_valid_depth (update_depth)
 	valid_delete_depth: is_valid_depth (delete_depth)

@@ -9,12 +9,22 @@ class
 
 inherit
 	PS_REPOSITORY
-		redefine is_root end
+		redefine is_root, direct_update end
 
 	REFACTORING_HELPER
 
 create
 	make
+
+feature {PS_ABEL_EXPORT} -- Obsolete
+
+
+	default_object_graph: PS_OBJECT_GRAPH_SETTINGS
+			-- Default object graph settings.
+		obsolete "Not supported any more"
+		attribute
+		end
+
 
 feature {PS_ABEL_EXPORT} -- Object query
 
@@ -89,6 +99,14 @@ feature {PS_ABEL_EXPORT} -- Modification
 			do_write (disassembler.object_graph, transaction)
 		rescue
 			default_transactional_rescue (transaction)
+		end
+
+	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
+			-- Update `object' only and none of its referenced objects.
+		do
+			default_object_graph.set_update_depth (1)
+			update (object, transaction)
+			default_object_graph.set_update_depth (-1)
 		end
 
 	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)

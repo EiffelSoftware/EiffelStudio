@@ -194,7 +194,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 						if not try_basic_attribute (Result, obj.attribute_value (attr_cursor.item), type.field_index (attr_cursor.item)) then
 								-- If not it is either a referenced object or a collection. In either case, use the `Current.build' function.
 
-							if depth > 1 or depth = repository.default_object_graph.object_graph_depth_infinite then
+							if depth > 1 or depth = -1 then
 
 								--field_type := type.attribute_type (attr_cursor.item)
 								-- Important: Use type as stored in the database!
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 											type.reflection.dynamic_type_from_string (field_type_name)))
 
 
-									field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping, repository.default_object_graph.object_graph_depth_infinite.max (depth -1))
+									field_val := build (field_type, obj.attribute_value (attr_cursor.item), transaction, bookkeeping, (-1).max (depth -1))
 									if attached field_val then
 											--print (reflection.field_name (type.field_index (attr_cursor.item), Result).out + "%N")
 											--print (type.type.out + field_type.type.out + "%N")
@@ -341,11 +341,11 @@ feature {NONE} -- Implementation - Build support functions.
 			create reflection
 				-- Build every object of the list and store it in collection_items
 			create Result.make
-			if depth > 1 or depth = repository.default_object_graph.Object_graph_depth_infinite then
+			if depth > 1 or depth = -1 then
 				across
 					collection.collection_items as items
 				loop
-					new_depth := repository.default_object_graph.Object_graph_depth_infinite.max (depth - 1)
+					new_depth := (-1).max (depth - 1)
 
 					new_type := metadata_manager.create_metadata_from_type (reflection.type_of_type(reflection.dynamic_type_from_string(items.item.second)))
 --					item := build (type.actual_generic_parameter (1), items.item, transaction, bookkeeping, new_depth)

@@ -120,7 +120,7 @@ feature -- Disposal
 		end
 
 
-feature {PS_ABEL_EXPORT} -- Settings
+feature {NONE} -- Obsolete
 
 	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
 			-- Transaction isolation level.
@@ -145,12 +145,6 @@ feature {PS_ABEL_EXPORT} -- Settings
 			-- Set `global_object_pool' to `val'.
 		do
 			id_manager.set_is_global_pool (val)
-		end
-
-	default_object_graph: PS_OBJECT_GRAPH_SETTINGS
-			-- Default object graph settings.
-		obsolete "Not supported any more"
-		attribute
 		end
 
 feature {PS_ABEL_EXPORT} -- Object query
@@ -258,9 +252,8 @@ feature {PS_ABEL_EXPORT} -- Modification
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Update `object' only and none of its referenced objects.
 		do
-			default_object_graph.set_update_depth (1)
+			check not_implemented: False end
 			update (object, transaction)
-			default_object_graph.set_update_depth (-1)
 		end
 
 	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)

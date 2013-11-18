@@ -122,7 +122,7 @@ feature {PS_REPOSITORY_TESTS}
 		do
 			create some_person.make ("first_name", "last_name", 0)
 
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			create q1.make
 			create q2.make
 
@@ -158,7 +158,7 @@ feature {PS_REPOSITORY_TESTS}
 			transaction: PS_TRANSACTION
 		do
 			create some_person.make ("first_name", "last_name", 0)
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 			transaction.insert (some_person)
 			transaction.commit
@@ -235,13 +235,13 @@ feature {NONE} -- Support
 
 				create some_person.make ("first_name", "last_name", 0)
 
-				init := repository.new_transaction_context
+				init := repository.new_transaction
 				init.insert (some_person)
 				init.commit
 
 
-				tx1 := repository.new_transaction_context
-				tx2 := repository.new_transaction_context
+				tx1 := repository.new_transaction
+				tx2 := repository.new_transaction
 
 				create q1.make
 				create q2.make

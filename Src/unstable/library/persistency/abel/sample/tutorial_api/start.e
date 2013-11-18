@@ -162,7 +162,7 @@ feature -- Initialization
 			io.new_line
 
 				-- To insert data we first need to open a transaction.
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 				-- Now we can insert all three persons.
 			transaction.insert (p1)
@@ -189,7 +189,7 @@ feature -- Initialization
 			print ("Insert 3 children in the database")
 			io.new_line
 
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 				-- It is sufficient to just insert "Baby Joe", as the other CHILD objects
 				-- are (transitively) referenced and thus inserted automatically.
@@ -211,7 +211,7 @@ feature -- Data modification
 
 				-- Create query and transaction.
 			create query.make
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 				-- As we're doing a read followed by a write, we need to execute
 				-- the query within a transaction.
@@ -252,7 +252,7 @@ feature -- Data modification
 
 				-- Create query and transaction.
 			create query.make
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 				-- Only select the person with first name `Berno'.
 			query.set_criterion (criterion_factory.new_predefined ("first_name", "=", "Berno"))
@@ -284,7 +284,7 @@ feature -- Data modification
 			john: CHILD
 			grandpa: CHILD
 		do
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			create query.make
 
 				-- Get "Baby Doe" from the database
@@ -474,7 +474,7 @@ feature -- Root objects
 
 			print ("Print name and root status of all CHILD objects:%N")
 
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			create query.make
 
 			transaction.execute_query (query)
@@ -585,7 +585,7 @@ feature -- Tuple queries
 
 				-- We're now executing the query in a transaction such that we can
 				-- use the results for subsequent write operations.
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			transaction.execute_tuple_query (query)
 
 				-- Search for John Doe

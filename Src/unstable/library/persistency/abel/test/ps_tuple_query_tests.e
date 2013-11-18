@@ -26,7 +26,7 @@ feature
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			across
 				test_data.people as person
 			loop
@@ -78,7 +78,7 @@ feature
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			across
 				test_data.people as person
 			loop
@@ -116,7 +116,7 @@ feature
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			across
 				test_data.people as person
 			loop
@@ -149,7 +149,7 @@ feature
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			across
 				test_data.people as person
 			loop
@@ -185,7 +185,7 @@ feature
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 			transaction.insert (test_data.reference_to_single_other)
 
@@ -229,7 +229,7 @@ feature
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			transaction.insert (test_data.reference_to_single_other)
 			create query.make
 			create res.make
@@ -273,7 +273,7 @@ feature
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			transaction.insert (test_data.reference_cycle)
 			create query.make_with_criterion (factory.new_predefined ("ref_class_id", factory.equals, test_data.reference_cycle.ref_class_id))
 			create projection.make_from_array (<<"ref_class_id", "refer">>)

@@ -112,7 +112,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Data modification - Key manager
 			Result := "INSERT INTO ps_attribute (attributeid, name, class) VALUES (NULL, '" + attribute_name + "', " + class_key.out + ")"
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
+feature {PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND} -- Data modification - Backend
 
 	Insert_value_use_autoincrement (attribute_id, runtimetype: INTEGER; value: STRING): STRING
 		do

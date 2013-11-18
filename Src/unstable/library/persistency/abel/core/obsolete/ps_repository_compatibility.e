@@ -181,14 +181,14 @@ feature {PS_ABEL_EXPORT} -- Status Report
 	can_handle (object: ANY): BOOLEAN
 			-- Can `Current' handle the object `object'?
 		local
-			new_transaction: PS_INTERNAL_TRANSACTION
+			tx: PS_INTERNAL_TRANSACTION
 			executor: PS_WRITE_EXECUTOR
 		do
 			fixme ("TODO: implement a similar query in new backend interface")
 			if attached {PS_BACKEND_COMPATIBILITY} backend as b then
 				create executor.make (b, id_manager)
-				create new_transaction.make_readonly (Current)
-				disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, new_transaction))
+				create tx.make_readonly (Current)
+				disassembler.execute_disassembly (object, (create {PS_WRITE_OPERATION}).insert, agent id_manager.is_identified(?, tx))
 				planner.set_object_graph (disassembler.object_graph)
 				planner.generate_plan
 				Result := executor.can_backend_handle_operations (planner.operation_plan)

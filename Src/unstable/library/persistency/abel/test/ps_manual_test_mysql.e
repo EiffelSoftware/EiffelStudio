@@ -94,7 +94,7 @@ feature
 
 	mysql_transaction_dirty
 		do
-			transaction_tests.test_no_dirty_reads
+			transaction_tests.test_no_dirty_read
 		end
 
 	mysql_transaction_repeatable_read

@@ -11,7 +11,7 @@ inherit
 
 	EQA_TEST_SET
 		redefine
-			on_prepare
+			on_prepare, on_clean
 		end
 
 	PS_ABEL_EXPORT
@@ -31,8 +31,9 @@ feature
 			escher_integration.set_simulation_added_attribute (True)
 			if not retried then
 				create query.make
-				executor.execute_insert (test_data.escher_test_2)
-				executor.execute_query (query)
+				transaction.insert (test_data.escher_test_2)
+				transaction.execute_query (query)
+				query.close
 			end
 		end
 
@@ -46,8 +47,9 @@ feature
 			escher_integration.set_simulation_attribute_type_changed (True)
 			if not retried then
 				create query.make
-				executor.execute_insert (test_data.escher_test_2)
-				executor.execute_query (query)
+				transaction.insert (test_data.escher_test_2)
+				transaction.execute_query (query)
+				query.close
 			end
 		end
 
@@ -61,8 +63,9 @@ feature
 			escher_integration.set_simulation_attribute_name_changed (True)
 			if not retried then
 				create query.make
-				executor.execute_insert (test_data.escher_test_2)
-				executor.execute_query (query)
+				transaction.insert (test_data.escher_test_2)
+				transaction.execute_query (query)
+				query.close
 			end
 		end
 
@@ -76,8 +79,9 @@ feature
 			escher_integration.set_simulation_removed_attribute (True)
 			if not retried then
 				create query.make
-				executor.execute_insert (test_data.escher_test_2)
-				executor.execute_query (query)
+				transaction.insert (test_data.escher_test_2)
+				transaction.execute_query (query)
+				query.close
 			end
 		end
 
@@ -97,8 +101,9 @@ feature
 			escher_integration.set_simulation_multiple_changes (True)
 			if not retried then
 				create query.make
-				executor.execute_insert (test_data.escher_test_2)
-				executor.execute_query (query)
+				transaction.insert (test_data.escher_test_2)
+				transaction.execute_query (query)
+				query.close
 			end
 		end
 
@@ -109,35 +114,39 @@ feature
 		do
 			escher_integration.set_simulation (False)
 			create query.make
-			executor.execute_insert (test_data.escher_test)
-			executor.execute_query (query)
+			transaction.insert (test_data.escher_test)
+			transaction.execute_query (query)
+			query.close
 		end
 
 --	escher_version_mismatch
 --			-- Test the ESCHER version checking by simulating a version mismatch.
 --		local
---			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS]
+--			query: detachable PS_OBJECT_QUERY [ESCHER_TEST_CLASS]
 --			retried: BOOLEAN
 --		do
 --			escher_integration.set_simulation (True)
+
 --			if not retried then
 --				create query.make
---				executor.insert (test_data.escher_test)
---				executor.execute_query (query)
+--				transaction.insert (test_data.escher_test)
+--				transaction.execute_query (query)
 --			end
+
+--			if attached query then
+--				query.close
+--			end
+
 --		rescue
---			assert ("No version mismatch error was raised", executor.has_error and then attached {PS_VERSION_MISMATCH} executor.last_error)
+--			assert ("No version mismatch error was raised", transaction.has_error and then attached {PS_VERSION_MISMATCH_ERROR} transaction.last_error)
 --			retried := True
 --			retry
 --		end
 
 feature {NONE}
 
-	executor: PS_EXECUTOR
-
 	test_data: PS_TEST_DATA
 
---	escher_integration: PS_VERSION_HANDLER
 	escher_integration: PS_VERSIONING_PLUGIN
 
 	schema_evolution_manager: SCHEMA_EVOLUTION_PROJECT_MANAGER
@@ -148,25 +157,23 @@ feature {NONE}
 			real_backend: PS_IN_MEMORY_DATABASE
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 			repo: PS_DEFAULT_REPOSITORY
-			--repo: PS_REPOSITORY_COMPATIBILITY
-			--repo2: PS_SIMPLE_IN_MEMORY_REPOSITORY
-
 		do
 			create test_data.make
 			create schema_evolution_manager.make
 			create escher_integration.make (schema_evolution_manager.schema_evolution_handler)
 
---			create real_backend.make
---			real_backend.add_plug_in (escher_integration)
---			create {PS_RELATIONAL_REPOSITORY}repo.make (real_backend)
---			create executor.make (repo)
-
 			create factory
 			repo := factory.create_in_memory_repository
 			repo.backend.add_plug_in (escher_integration)
-			repo.set_global_pool (True)
-			create executor.make (repo)
 
+			transaction := repo.new_transaction_context
 		end
+
+	on_clean
+		do
+			transaction.commit
+		end
+
+	transaction: PS_TRANSACTION
 
 end

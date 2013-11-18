@@ -55,7 +55,7 @@ feature
 
 	cdb_transaction_dirty
 		do
-			transaction_tests.test_no_dirty_reads
+			transaction_tests.test_no_dirty_read
 		end
 
 	cdb_transaction_repeatable_read

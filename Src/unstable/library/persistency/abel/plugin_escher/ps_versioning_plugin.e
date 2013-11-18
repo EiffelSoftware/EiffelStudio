@@ -10,7 +10,7 @@ class
 inherit
 	PS_PLUGIN
 		redefine
-			before_write_compatibility
+--			before_write_compatibility
 		end
 	PS_ABEL_EXPORT
 
@@ -82,48 +82,48 @@ feature
 			end
 		end
 
-	before_write_compatibility (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_INTERNAL_TRANSACTION)
-			-- Adds the version attribute.
-		local
-			stored_version: INTEGER
-			version_attribute: PS_BASIC_ATTRIBUTE_PART
-			test_int_attribute: PS_BASIC_ATTRIBUTE_PART
-		do
-			if an_object.write_operation = an_object.write_operation.insert and
-					attached {VERSIONED_CLASS} an_object.represented_object as versioned_object then
-				stored_version := versioned_object.version
+--	before_write_compatibility (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_INTERNAL_TRANSACTION)
+--			-- Adds the version attribute.
+--		local
+--			stored_version: INTEGER
+--			version_attribute: PS_BASIC_ATTRIBUTE_PART
+--			test_int_attribute: PS_BASIC_ATTRIBUTE_PART
+--		do
+--			if an_object.write_operation = an_object.write_operation.insert and
+--					attached {VERSIONED_CLASS} an_object.represented_object as versioned_object then
+--				stored_version := versioned_object.version
 
-				-- Testing-related code start
-				if simulate_version_mismatch then
-					fixme ("Remove testing-related code")
-					stored_version := stored_version - 1
-					if simulate_added_attribute then
-						-- 'stored_version' has to be set to 1 such that 'v1_to_v2' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-						stored_version := 1
-					end
-					if simulate_attribute_type_changed then
-						-- 'stored_version' has to be set to 2 such that 'v2_to_v3' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-						stored_version := 2
-					end
-					if simulate_attribute_name_changed then
-						-- 'stored_version' has to be set to 3 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-						stored_version := 3
-					end
-					if simulate_removed_attribute then
-						-- 'stored_version' has to be set to 5 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
-						stored_version := 5
-					end
-					if simulate_multiple_changes then
-						-- 'stored_version' has to be set to 4 such that that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-						stored_version := 4
-					end
-				end
-				-- Testing-related code end
+--				-- Testing-related code start
+--				if simulate_version_mismatch then
+--					fixme ("Remove testing-related code")
+--					stored_version := stored_version - 1
+--					if simulate_added_attribute then
+--						-- 'stored_version' has to be set to 1 such that 'v1_to_v2' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+--						stored_version := 1
+--					end
+--					if simulate_attribute_type_changed then
+--						-- 'stored_version' has to be set to 2 such that 'v2_to_v3' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+--						stored_version := 2
+--					end
+--					if simulate_attribute_name_changed then
+--						-- 'stored_version' has to be set to 3 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+--						stored_version := 3
+--					end
+--					if simulate_removed_attribute then
+--						-- 'stored_version' has to be set to 5 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
+--						stored_version := 5
+--					end
+--					if simulate_multiple_changes then
+--						-- 'stored_version' has to be set to 4 such that that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+--						stored_version := 4
+--					end
+--				end
+--				-- Testing-related code end
 
-				create version_attribute.make (stored_version, integer_metadata, an_object.root)
-				an_object.add_attribute ("version", version_attribute)
-			end
-		end
+--				create version_attribute.make (stored_version, integer_metadata, an_object.root)
+--				an_object.add_attribute ("version", version_attribute)
+--			end
+--		end
 
 	before_retrieve (args: TUPLE[type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
 			-- Add the version attribute, if necessary

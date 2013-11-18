@@ -12,13 +12,6 @@ inherit
 
 feature
 
-	before_write_compatibility (object: PS_SINGLE_OBJECT_PART; transaction:PS_INTERNAL_TRANSACTION)
-		obsolete
-			"Only for old backend interface."
-		do
-		end
-
-
 	before_write (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION)
 		deferred
 		end

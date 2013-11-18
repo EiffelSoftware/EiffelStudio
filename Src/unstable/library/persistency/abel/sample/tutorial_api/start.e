@@ -361,7 +361,7 @@ feature -- Criteria
 			query: PS_OBJECT_QUERY [PERSON]
 		do
 				-- Predefined criteria work on any attribute of a basic or string type.
-			print ("Select all persons with age > 2")
+			print ("Select all persons with age > 2:%N")
 			create query.make_with_criterion (criterion_factory.new_predefined ("age", criterion_factory.greater, 2))
 
 			repository.execute_query (query)
@@ -380,7 +380,7 @@ feature -- Criteria
 				-- '*' for an arbitrary number of unknown characters and
 				-- '?' for a single unknown character.
 
-			print ("Select all persons whose last name ends with *ni.%N")
+			print ("Select all persons whose last name ends with *ni:%N")
 			query.set_criterion (criterion_factory.new_predefined ("last_name", criterion_factory.like_string, "*ni"))
 
 			repository.execute_query (query)
@@ -388,7 +388,7 @@ feature -- Criteria
 
 				-- It is possible to combine criteria using `and' and `or'.
 
-			print ("Select all persons whose last name ends with *ni and with age = 5.%N")
+			print ("Select all persons whose last name ends with *ni and with age = 5:%N")
 			query.reset
 			query.set_criterion (
 				criterion_factory.new_predefined ("last_name", criterion_factory.like_string, "*ni")
@@ -402,7 +402,7 @@ feature -- Criteria
 				-- There's a second type of criteria using an agent.
 				-- Agent criteria are a bit safer to use, but internally they cannot be
 				-- converted to a backend-specific query and are thus don't offer any performance improvements.
-			print ("Select all persons with age = 5, using an agent.%N")
+			print ("Select all persons with age = 5, using an agent:%N")
 
 			query.set_criterion (
 				criterion_factory.new_agent (

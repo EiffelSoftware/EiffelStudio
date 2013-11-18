@@ -221,12 +221,12 @@ feature {NONE} -- Implementation: Build functions for PS_RETRIEVED_* objects
 			type_correct: Result.generating_type.type_id = type.type.type_id
 		end
 
-	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
-			-- Build a new collection object from the retrieved collection `relational_collection'.
-		do
-			Result := handler.build_relational_collection (type, build_collection_items (type, relational_collection, transaction, bookkeeping, depth))
-			id_manager.identify (Result, transaction)
-		end
+--	build_relational_collection (type: PS_TYPE_METADATA; relational_collection: PS_RETRIEVED_RELATIONAL_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
+--			-- Build a new collection object from the retrieved collection `relational_collection'.
+--		do
+--			Result := handler.build_relational_collection (type, build_collection_items (type, relational_collection, transaction, bookkeeping, depth))
+--			id_manager.identify (Result, transaction)
+--		end
 
 	build_object_collection (type: PS_TYPE_METADATA; object_collection: PS_BACKEND_COLLECTION; handler: PS_COLLECTION_HANDLER_OLD [detachable ANY]; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth:INTEGER): ANY
 			-- Build a new collection object from the retrieved collection `object_collection'.
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation - Build support functions.
 
 		end
 
-	build_collection_items (type: PS_TYPE_METADATA; collection: PS_RETRIEVED_COLLECTION; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): LINKED_LIST [detachable ANY]
+	build_collection_items (type: PS_TYPE_METADATA; collection: PS_BACKEND_COLLECTION; transaction: PS_INTERNAL_TRANSACTION; bookkeeping: HASH_TABLE [ANY, INTEGER]; depth: INTEGER): LINKED_LIST [detachable ANY]
 			-- Build a list with all collection items correctly loaded.
 		local
 			collection_items: LINKED_LIST [detachable ANY]

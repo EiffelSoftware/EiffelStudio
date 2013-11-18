@@ -19,6 +19,16 @@ inherit
 create
 	make
 
+feature {PS_ABEL_EXPORT} -- Obsolete
+
+
+	default_object_graph: PS_OBJECT_GRAPH_SETTINGS
+			-- Default object graph settings.
+		obsolete "Not supported any more"
+		attribute
+		end
+
+
 feature {PS_ABEL_EXPORT} -- Object query
 
 	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)

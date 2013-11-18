@@ -82,9 +82,7 @@ feature {PS_REPOSITORY_TESTS} -- References
 			test: PS_GENERIC_CRUD_TEST [REFERENCE_CLASS_1]
 		do
 			create test.make (repository)
-			repository.default_object_graph.set_update_depth (-1)
 			test.test_crud_operations (test_data.reference_to_single_other, agent update_reference)
-			repository.default_object_graph.reset_to_default
 		end
 
 feature {PS_REPOSITORY_TESTS} -- Flat objects
@@ -331,7 +329,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			test: PS_GENERIC_CRUD_TEST[DATA_STRUCTURES_CLASS_1]
 		do
 			repository.clean_db_for_testing
-			repository.default_object_graph.set_update_depth (repository.default_object_graph.object_graph_depth_infinite)
 
 			create test.make (repository)
 			test.test_crud_operations (
@@ -341,7 +338,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 						retrieved_obj.array_1[1].update
 					end
 			)
-			repository.default_object_graph.set_update_depth (1)
 			repository.clean_db_for_testing
 		end
 
@@ -395,7 +391,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				repository.clean_db_for_testing
 				create box.set_item ([create {FLAT_CLASS_1}.make, 42, "abc"])
 				create test.make (repository)
-				repository.default_object_graph.set_update_depth (repository.default_object_graph.object_graph_depth_infinite)
 				test.test_crud_operations (box,
 					agent (b: ANY_BOX)
 					do
@@ -403,7 +398,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 							fc.update
 						end
 					end )
-				repository.default_object_graph.reset_to_default
 			end
 
 		test_hash_table
@@ -418,7 +412,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				hash.extend (test_data.flat_class.twin, "something")
 				create box.set_item (hash)
 				create test.make (repository)
-				repository.default_object_graph.set_update_depth (repository.default_object_graph.object_graph_depth_infinite)
 				test.test_crud_operations (box,
 					agent (b: ANY_BOX)
 					do
@@ -426,7 +419,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 							fc.update
 						end
 					end )
-				repository.default_object_graph.reset_to_default
 			end
 
 

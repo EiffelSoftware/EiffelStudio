@@ -139,7 +139,6 @@ feature
 
 			query.result_cursor.forth
 			assert ("Too many items", query.result_cursor.after)
-			repository.set_global_pool (False)
 		end
 
 	test_query_criteria_not_in_projection

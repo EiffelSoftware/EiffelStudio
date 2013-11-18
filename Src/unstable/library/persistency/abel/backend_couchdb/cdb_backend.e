@@ -9,7 +9,9 @@ class
 
 inherit
 
-	PS_BACKEND_COMPATIBILITY
+--	PS_BACKEND_COMPATIBILITY
+
+	PS_READ_WRITE_BACKEND
 
 create
 	make, make_with_host_and_port
@@ -21,6 +23,11 @@ feature {PS_ABEL_EXPORT} -- Supported collection operations
 
 	supports_relational_collection: BOOLEAN = False
 			-- Can the current backend handle relational collections?
+
+	is_generic_collection_supported: BOOLEAN = False
+			-- Can the current backend support collections in general,
+			-- i.e. is there a default strategy?
+
 
 feature {PS_ABEL_EXPORT} -- Status report
 
@@ -55,6 +62,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			create result_list.make
 --			create temp_list.make
 			highest_id := key_set [type.base_class.name]
+--			highest_id := max_key + 1
 			from
 				curr_id := 1
 			until
@@ -136,6 +144,36 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			end
 		end
 
+feature {PS_ABEL_EXPORT} -- Primary key generation
+
+	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
+		local
+			part: LINKED_LIST [PS_BACKEND_OBJECT]
+		do
+			across
+				order as cursor
+			from
+				create Result.make (order.count)
+			loop
+				across
+					1 |..| cursor.item as idx
+				from
+					create part.make
+					Result.extend (part, cursor.key)
+				loop
+					part.extend (create {PS_BACKEND_OBJECT}.make_fresh (new_key (cursor.key.base_class.name).first, cursor.key))
+				end
+			end
+		end
+
+	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
+		do
+			check not_implemented: False end
+			create Result.make (10)
+		end
+
 feature {PS_ABEL_EXPORT} -- Object write operations
 
 	insert (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
@@ -178,17 +216,76 @@ feature {PS_ABEL_EXPORT} -- Object write operations
 			err := curl.update_document (db_name, primary.first.out, doc)
 		end
 
-	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Deletes `an_object' from the database.
-		local
-			primary: PS_PAIR [INTEGER, PS_TYPE_METADATA]
-			err, rev, db_name: STRING
+--	delete (an_object: PS_SINGLE_OBJECT_PART; a_transaction: PS_INTERNAL_TRANSACTION)
+--			-- Deletes `an_object' from the database.
+--		local
+--			primary: PS_PAIR [INTEGER, PS_TYPE_METADATA]
+--			err, rev, db_name: STRING
+--		do
+--			primary := key_mapper.primary_key_of (an_object.object_wrapper, a_transaction)
+--			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
+--			rev := get_rev (db_name, primary.first.out, an_object)
+--			err := curl.delete_document (db_name, primary.first.out, rev)
+--			key_mapper.remove_primary_key (primary.first, an_object.object_wrapper.metadata, a_transaction)
+--		end
+
+	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+			-- Delete every item in `objects' from the database
 		do
-			primary := key_mapper.primary_key_of (an_object.object_wrapper, a_transaction)
-			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
-			rev := get_rev (db_name, primary.first.out, an_object)
-			err := curl.delete_document (db_name, primary.first.out, rev)
-			key_mapper.remove_primary_key (primary.first, an_object.object_wrapper.metadata, a_transaction)
+			check not_implemented: False end
+		end
+
+feature {PS_READ_WRITE_BACKEND} -- Implementation
+
+	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
+			-- Write all `objects' to the database.
+			-- Only write the attributes present in {PS_BACKEND_OBJECT}.attributes.
+		local
+			db_name, doc, rev: STRING
+			err, prev: detachable STRING
+			prev_attr_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
+			new_primary: PS_PAIR [INTEGER, STRING]
+		do
+
+			across
+				objects as cursor
+			loop
+				doc := make_json_new (cursor.item, cursor.item.primary_key.out, "")
+				db_name := cursor.item.metadata.base_class.name.twin
+				db_name.to_lower
+				err := curl.create_document (db_name, doc)
+				print (doc)
+				print (err)
+				-- ??
+				prev_attr_list := make_object (cursor.item.metadata, err, "")
+				across
+					prev_attr_list as attr
+				loop
+					if attr.item.first.is_equal ("error") then
+						rev := get_rev_new (db_name, cursor.item.primary_key.out, cursor.item)
+						doc := make_json_new (cursor.item, cursor.item.primary_key.out, rev)
+						err := curl.update_document (db_name, cursor.item.primary_key.out, doc)
+					end
+				end
+
+			end
+
+--			create prev_attr_list.make
+--			new_primary := new_key (an_object.object_wrapper.metadata.base_class.name)
+--			key_mapper.add_entry (an_object.object_wrapper, new_primary.first, a_transaction)
+--			doc := make_json (an_object, new_primary.first.out, "", a_transaction)
+--			db_name := an_object.object_wrapper.metadata.base_class.name.as_lower
+--			err := curl.create_document (db_name, doc)
+--			prev_attr_list := make_object (an_object.object_wrapper.metadata, err, "")
+--			across
+--				prev_attr_list as attr
+--			loop
+--				if attr.item.first.is_equal ("error") then
+--					rev := get_rev (db_name, new_primary.first.out, an_object)
+--					doc := make_json (an_object, new_primary.first.out, rev, a_transaction)
+--					err := curl.update_document (db_name, new_primary.first.out, doc)
+--				end
+--			end
 		end
 
 feature --json operations
@@ -270,6 +367,38 @@ feature --json operations
 			Result.append (" }")
 		end
 
+	make_json_new (object: PS_BACKEND_OBJECT; id: STRING; rev: STRING): STRING
+			--creates a json document containing the attributes of object in the form:
+			--{"attribute1": "value1", "attribute2": "value2"}
+		local
+			referenced_part: PS_OBJECT_GRAPH_PART
+			value: STRING
+		do
+			create Result.make_empty
+			Result.append ("{ ")
+			if not id.is_empty then
+				Result.append ("%"_id%": %"" + id + "%", ")
+			end
+			if not rev.is_empty then
+				Result.append ("%"_rev%": %"" + rev + "%", ")
+			end
+			across
+				object.attributes as current_attribute
+			loop
+				Result.append ("%"" + current_attribute.item + "%": ")
+
+				value := object.attribute_value (current_attribute.item).value
+
+				fixme ("Store the attribute type as well!")
+
+				Result.append ("%"" + value + "%"")
+				if not current_attribute.is_last then
+					Result.append (", ")
+				end
+			end
+			Result.append (" }")
+		end
+
 	get_rev (db_name: STRING; id: STRING; an_object: PS_SINGLE_OBJECT_PART): STRING
 			--retrieves the rev value from the database
 		local
@@ -289,7 +418,34 @@ feature --json operations
 			end
 		end
 
+	get_rev_new (db_name: STRING; id: STRING; object: PS_BACKEND_OBJECT): STRING
+			--retrieves the rev value from the database
+		local
+			callback: STRING
+			attr_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
+		do
+			create attr_list.make
+			callback := curl.get_document (db_name, id)
+			attr_list := make_object (object.metadata, callback, id)
+			create Result.make_empty
+			across
+				attr_list as curr_attr
+			loop
+				if curr_attr.item.first.is_equal ("_rev") then
+					Result := curr_attr.item.second
+				end
+			end
+		end
+
 feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
+
+	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
+			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
+		do
+			check
+				not_implemented: False
+			end
+		end
 
 	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
@@ -324,6 +480,24 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				not_implemented: False
 			end
 		end
+
+
+	write_collections (collections: LIST[PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
+			-- Write every item in `collections' to the database
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+			-- Delete every item in `collections' from the database
+		do
+			check
+				not_implemented: False
+			end
+		end
+
 
 feature {PS_ABEL_EXPORT} -- Relational collection operations
 

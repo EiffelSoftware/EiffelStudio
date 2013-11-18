@@ -45,7 +45,7 @@ feature {PS_TEST_PROVIDER}
 			default_create
 			repository := a_repository
 --			create executor.make (repository)
-			repo_access := repository.new_transaction_context
+			repo_access := repository.new_transaction
 --			create {PS_REPOSITORY_ACCESS_IMPL} repo_access.make (repository)
 			create test_data.make
 			initialize
@@ -66,7 +66,7 @@ feature {PS_TEST_PROVIDER}
 			second_count: INTEGER
 		do
 			repository.clean_db_for_testing
-			context := repository.new_transaction_context
+			context := repository.new_transaction
 			context.insert (object)
 
 			create query.make
@@ -116,7 +116,7 @@ feature {PS_TEST_PROVIDER}
 			object := an_object
 
 			repository.clean_db_for_testing
-			context := repository.new_transaction_context
+			context := repository.new_transaction
 			context.insert (object)
 
 			assert ("Object is not persistent", context.is_persistent (object))

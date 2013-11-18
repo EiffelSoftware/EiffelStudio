@@ -154,7 +154,7 @@ feature {NONE}
 	on_prepare
 			-- Set up an in-memory database with an ESCHER integration layer
 		local
-			real_backend: PS_IN_MEMORY_DATABASE
+--			real_backend: PS_IN_MEMORY_DATABASE
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 			repo: PS_DEFAULT_REPOSITORY
 		do
@@ -166,7 +166,7 @@ feature {NONE}
 			repo := factory.create_in_memory_repository
 			repo.backend.add_plug_in (escher_integration)
 
-			transaction := repo.new_transaction_context
+			transaction := repo.new_transaction
 		end
 
 	on_clean

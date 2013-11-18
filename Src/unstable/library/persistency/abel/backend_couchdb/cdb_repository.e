@@ -12,7 +12,8 @@ class
 
 inherit
 
-	PS_REPOSITORY_COMPATIBILITY
+	--PS_REPOSITORY_COMPATIBILITY
+	PS_DEFAULT_REPOSITORY
 
 create
 	make_empty, make_with_host_and_port

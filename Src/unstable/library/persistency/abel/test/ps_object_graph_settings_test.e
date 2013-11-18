@@ -36,7 +36,7 @@ feature {PS_REPOSITORY_TESTS}
 			transaction: PS_TRANSACTION
 		do
 			create query.make
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 			transaction.insert (test_data.reference_chain)
 			transaction.execute_query (query)
@@ -71,7 +71,7 @@ feature {PS_REPOSITORY_TESTS}
 			transaction: PS_TRANSACTION
 			head_query: PS_OBJECT_QUERY [CHAIN_HEAD]
 		do
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			transaction.insert (test_data.reference_chain)
 
 			create head_query.make
@@ -97,7 +97,7 @@ feature {PS_REPOSITORY_TESTS}
 			create query.make
 			create tail_query.make
 
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 			transaction.insert (test_data.reference_chain)
 
 			query.set_object_initialization_depth (some_depth)

@@ -105,8 +105,8 @@ feature -- Query execution
 
 feature -- Transactional access
 
-	new_transaction_context: PS_TRANSACTION
-			-- Create a new transaction context.
+	new_transaction: PS_TRANSACTION
+			-- Create a new transaction.
 		do
 			create Result.make (Current)
 		end

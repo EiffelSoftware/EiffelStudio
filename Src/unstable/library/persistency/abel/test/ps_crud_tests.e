@@ -355,7 +355,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			create a.make(special)
 			create b.make(special)
 
-			transaction := repository.new_transaction_context
+			transaction := repository.new_transaction
 
 			transaction.insert (a)
 			transaction.insert (b)

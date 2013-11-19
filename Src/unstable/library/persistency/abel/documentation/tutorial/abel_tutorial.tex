@@ -175,8 +175,7 @@ There are three very important classes in ABEL:
  \item The deferred class \lstinline!PS_REPOSITORY! provides an abstraction to the actual storage mechanism. It can only be used for read operations.
  \item The \lstinline!PS_TRANSACTION! class represents a transaction and can be used to execute read, insert and update operations. Any \lstinline!PS_TRANSACTION! object is bound to a \lstinline!PS_REPOSITORY!.
 
- \item The \lstinline!PS_OBJECT_QUERY [G]! class is used to describe a read operation over objects of type \lstinline!G!. You can execute such a query in the \lstinline!PS_EXECUTOR!. 
-	The result will be objects of type \lstinline!G!.
+ \item The \lstinline!PS_QUERY [G]! class is used to describe a read operation for objects of type \lstinline!G!.
 
  
 \end{itemize}
@@ -257,7 +256,7 @@ Let's add three new persons to the database:
 
 \section{Querying}
 \label{section:querying}
-A query for objects is done by creating a \lstinline!PS_OBJECT_QUERY [G]! object and executing it using features of \lstinline!PS_REPOSITORY! or \lstinline!PS_TRANSACTION!.
+A query for objects is done by creating a \lstinline!PS_QUERY [G]! object and executing it using features of \lstinline!PS_REPOSITORY! or \lstinline!PS_TRANSACTION!.
 The generic parameter \lstinline!G! denotes the type of objects that should be queried.
 
 After a successful execution of the query, you can iterate over the result using the \lstinline!across! syntax. 
@@ -268,7 +267,7 @@ The feature \lstinline{print_persons} below shows how to get and print a list of
 	print_persons
 			-- Print all persons in the repository
 		local
-			query: PS_OBJECT_QUERY[PERSON]
+			query: PS_QUERY[PERSON]
 		do
 			-- First create a query for PERSON objects.
 			create query.make
@@ -313,7 +312,7 @@ Please note that ABEL does not enforce any kind of order on a query result.
 %	simple_filtered_query (name: STRING; age: INTEGER): detachable PERSON
 %		-- Query a person object from the current repository
 %		local
-%			query:PS_OBJECT_QUERY[PERSON]
+%			query:PS_QUERY[PERSON]
 %			criterion:PS_PREDEFINED_CRITERION
 %		do
 %			create query.make
@@ -350,7 +349,7 @@ Let's update the \lstinline{age} attribute of Berno Citrini by celebrating his b
 	update_berno_citrini
 			-- Increase the age of Berno Citrini by one.
 		local
-			query: PS_OBJECT_QUERY[PERSON]
+			query: PS_QUERY[PERSON]
 			transaction: PS_TRANSACTION
 			berno: PERSON
 		do
@@ -477,7 +476,7 @@ The feature \lstinline{is_persistent} in \lstinline!PS_TRANSACTION! can tell you
 
 \section{The query mechanism}
 
-As you already know from Section~\ref{section:querying}, queries to a database are done by creating an object of type  \lstinline!PS_OBJECT_QUERY[G]! 
+As you already know from Section~\ref{section:querying}, queries to a database are done by creating a \lstinline!PS_QUERY[G]! object 
 and executing it against a \lstinline!PS_TRANSACTION! or \lstinline!PS_REPOSITORY!.
 The actual value of the generic parameter \lstinline!G! determines the type of the objects that will be returned.
 At the moment descendants of \lstinline!G! will not be loaded, but this behaviour may change in the future.
@@ -486,7 +485,7 @@ ABEL will by default load an object completely, meaning all objects that can be 
 
 \section{Criteria}
 
-You can filter your query results by setting criteria in the query object, using feature \lstinline{set_criterion} in \lstinline{PS_OBJECT_QUERY}.
+You can filter your query results by setting criteria in the query object, using feature \lstinline{set_criterion} in \lstinline{PS_QUERY}.
 There are two types of criteria: predefined and agent criteria.
 
 \subsection{Predefined Criteria}
@@ -659,7 +658,7 @@ The precedence rules are the same as in Eiffel, which means that \lstinline!NOT!
 % 	query_with_composite_criterion: LINKED_LIST [PERSON]
 % 		-- Query using a composite criterion.
 % 		local
-% 			query: PS_OBJECT_QUERY [PERSON]
+% 			query: PS_QUERY [PERSON]
 % 		do
 % 			create Result.make
 % 			create query.make
@@ -685,7 +684,7 @@ The precedence rules are the same as in Eiffel, which means that \lstinline!NOT!
 % 	delete_person_with_deletion_query (last_name: STRING)
 % 		-- Delete person with `last_name' using a deletion query.
 % 		local
-% 			deletion_query: PS_OBJECT_QUERY [PERSON]
+% 			deletion_query: PS_QUERY [PERSON]
 % 			criterion:PS_PREDEFINED_CRITERION
 % 		do
 % 			create deletion_query.make
@@ -973,7 +972,7 @@ You are welcome to test ABEL's capability with very complex objects, however ple
 % 	update_ages
 % 		-- Increase the age of all persons by one.
 % 		local
-% 			query: PS_OBJECT_QUERY [PERSON]
+% 			query: PS_QUERY [PERSON]
 % 			transaction: PS_TRANSACTION
 % 		do
 % 			create query.make

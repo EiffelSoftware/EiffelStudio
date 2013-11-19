@@ -6,6 +6,12 @@ note
 
 class PERSON
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 create
 	make, make_with_age
 
@@ -61,6 +67,14 @@ feature -- Access
 
 	age: INTEGER
 		-- The person's age.
+
+feature -- Output
+
+	out: STRING
+			-- Printable version of `Current'
+		do
+			Result := first_name + " " + last_name + ", age " + age.out + "%N"
+		end
 
 invariant
 	age_non_negative: age >= 0

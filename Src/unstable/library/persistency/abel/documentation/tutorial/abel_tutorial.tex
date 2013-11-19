@@ -35,7 +35,10 @@
 % HAS TO BE LAST PACKAGE:
 \usepackage[pdftex,bookmarks=true,pageanchor=false]{hyperref}
 
-
+%Nice tilde operator
+\lstset{
+    literate={~} {$\sim\ $}{1}
+}
 
 % Eiffel Code Stuff
 \lstset{language=OOSC2Eiffel,basicstyle=\ttfamily\small}
@@ -224,72 +227,82 @@ The feature \lstinline!explore! will guide us through the rest of this API tutor
 
 \section{Inserting}
 
-You insert an object in the repository using feature \lstinline{execute_insert} in class\\ 
-\lstinline{PS_EXECUTOR}. Let's add three new persons to the database in feature \lstinline{explore}:
+You can insert a new object using feature \lstinline{insert} in \lstinline{PS_TRANSACTION}.
+As every write operation in ABEL needs to be embedded in a transaction, you first need to create a \lstinline{PS_TRANSACTION} object.
+%using \lstinline!{PS_REPOSITORY}.new_transaction!.
+Let's add three new persons to the database:
 \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Insertion code.}, label={lst:tutorial_insert}]
-	explore
-			-- Tutorial code.
+	insert_persons
+			-- Populate the repository with some person objects.
 		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
 			p1, p2, p3: PERSON
+			transaction: PS_TRANSACTION
 		do
-			print ("---o--- ABEL Tutorial ---o---")
-			io.new_line
-			in_memory_repo := repo_factory.create_in_memory_repository
-			create executor.make (in_memory_repo)
-			-- Insert 3 new persons in the database
-			create p1.make ("Albo", "Bitossi")
-			p1.celebrate_birthday
-			executor.execute_insert (p1)
-			create p2.make ("Berno", "Citrini")
-			p2.celebrate_birthday
-			p2.celebrate_birthday
-			p2.celebrate_birthday
-			executor.execute_insert (p2)
-			create p3.make ("Dumbo", "Ermini")
-			executor.execute_insert (p3)			
+				-- Create persons
+			create p1.make (...)
+			create ...
+
+				-- We first need a new transaction.
+			transaction := repository.new_transaction
+
+				-- Now we can insert all three persons.
+			transaction.insert (p1)
+			transaction.insert (p2)
+			transaction.insert (p3)
+
+				-- Don't forget to commit.
+			transaction.commit
 		end
 \end{lstlisting}
 
 \section{Querying}
 \label{section:querying}
-A query for objects is done by creating a \lstinline!PS_OBJECT_QUERY [G]! object and executing it using features of \lstinline!PS_EXECUTOR!.
+A query for objects is done by creating a \lstinline!PS_OBJECT_QUERY [G]! object and executing it using features of \lstinline!PS_REPOSITORY! or \lstinline!PS_TRANSACTION!.
 The generic parameter \lstinline!G! denotes the type of objects that should be queried.
 
-After a successful execution of the query, you can find the result in the iteration cursor \lstinline{result_cursor} in class \lstinline{PS_OBJECT_QUERY}. The feature \lstinline{simple_query} below shows how to get a list of persons from the repository:
+After a successful execution of the query, you can iterate over the result using the \lstinline!across! syntax. 
+The feature \lstinline{print_persons} below shows how to get and print a list of persons from the repository:
 %Having an iteration cursor as a result has several advantages, e.g. support for lazy loading or the across syntax, as you will see in the next example:
 
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={A simple query.}, label={lst:simple_query}]
-	simple_query: LINKED_LIST [PERSON]
-		-- Query all persons from the current repository.
+\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Print all PERSON objects.}, label={lst:simple_query}]
+	print_persons
+			-- Print all persons in the repository
 		local
-			query: PS_OBJECT_QUERY [PERSON]
+			query: PS_OBJECT_QUERY[PERSON]
 		do
-			create Result.make
+			-- First create a query for PERSON objects.
 			create query.make
-			executor.execute_query (query)
 
-			across query as	query_result
+			-- Execute it against the repository.
+			repository.execute_query (query)
+
+			-- Iterate over the result.
+			across
+				query as person_cursor
 			loop
-				Result.extend (query_result.item)
+				print (person_cursor.item)
 			end
+
+			-- Don't forget to close the query.
+			query.close
 		end
 \end{lstlisting}
-We now add in feature \lstinline{explore} the code to print the linked list returned by feature \lstinline{simple_query}:  
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Printing the query result.}, label={lst:tutorial_print_result}]
-	explore
-			-- Tutorial code.
-		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
-		do
-			-- Same code as before
-			-- Query the database and print result
-			print_result (simple_query)
-		end
-\end{lstlisting}
-Feature  \lstinline{print_result} takes the linked list result of the query and prints all its elements.
-Usually the result of such a query is very big, and you are probably only interested in objects that meet certain criteria, e.g. all persons of age 20. You can read more about it in Chapter ~\ref{sec:advanced_queries}.
+% We now add in feature \lstinline{explore} the code to print the linked list returned by feature \lstinline{simple_query}:  
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Printing the query result.}, label={lst:tutorial_print_result}]
+% 	explore
+% 			-- Tutorial code.
+% 		local
+% 			in_memory_repo: PS_RELATIONAL_REPOSITORY
+% 			p1, p2, p3: PERSON
+% 		do
+% 			-- Same code as before
+% 			-- Query the database and print result
+% 			print_result (simple_query)
+% 		end
+% \end{lstlisting}
+% Feature  \lstinline{print_result} takes the linked list result of the query and prints all its elements.
+In a real database the result of a query may be very big, and you are probably only interested in objects that meet certain criteria, e.g. all persons of age 20. 
+You can read more about it in Chapter ~\ref{sec:advanced_queries}.
 
 Please note that ABEL does not enforce any kind of order on a query result.
 
@@ -327,77 +340,137 @@ Please note that ABEL does not enforce any kind of order on a query result.
 
 \section{Updating}
 
-Updating an object is done through feature \lstinline{execute_update} in \lstinline{PS_EXECUTOR}. Let's update the \lstinline{age} attribute of Berno Citrini by celebrating his birthday:
+Updating an object is done through feature \lstinline{update} in \lstinline{PS_TRANSACTION}.
+Like the insert operation, an update needs to happen within a transaction.
+Note that in order to \lstinline!update! an object, we first have to retrieve it.
 
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Printing the query result.}, label={lst:tutorial_print_result}]
-	explore
-			-- Tutorial code.
+Let's update the \lstinline{age} attribute of Berno Citrini by celebrating his birthday:
+
+\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Update Berno Citrini's age.}, label={lst:tutorial_update}]
+	update_berno_citrini
+			-- Increase the age of Berno Citrini by one.
 		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
+			query: PS_OBJECT_QUERY[PERSON]
+			transaction: PS_TRANSACTION
+			berno: PERSON
 		do
-			-- Same code as before
-			-- Update an existing person in the database and print the result again
-			p2.celebrate_birthday
-			executor.execute_update (p2)
-			print_result (simple_query)		
+			print ("Updating Berno Citrini's age by one.%N")
+
+				-- Create query and transaction.
+			create query.make
+			transaction := repository.new_transaction
+
+				-- As we're doing a read followed by a write, we
+				-- need to execute the query within a transaction.
+			transaction.execute_query (query)
+
+				-- Search for Berno Citrini
+			across
+				query as cursor
+			loop
+				if cursor.item.first_name ~  "Berno" then
+					berno := cursor.item
+
+						-- Change the object.
+					berno.celebrate_birthday
+
+						-- Perform the database update.
+					transaction.update (berno)
+				end
+			end
+
+			query.close
+			transaction.commit
 		end
+
 \end{lstlisting}
-The object to update needs to be previously known to ABEL through an insert or a successful query (see Section~\ref{section:dealing_with_known_objects}).
+
+To perform an update the object first needs to be retrieved or inserted within the same transaction.
+Otherwise ABEL cannot map the Eiffel object to its database counterpart (see also Section~\ref{section:dealing_with_known_objects}).
+%The object to be updated needs to be known to ABEL through an insert or a successful query (see Section~\ref{section:dealing_with_known_objects}).
 
 \section{Deleting}
 \label{section:simple_delete}
 
-Deletion is done through feature \lstinline{execute_delete} in \lstinline{PS_EXECUTOR}.
-Let's now delete Albo Bitossi from the database:
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Deleting an object.}, label={lst:tutorial_print_result}]
-	explore
-			-- Tutorial code.
-		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
-		do
-			-- Same code as before
-			-- Delete Dumbo Ermini from the database and print the result again
-			executor.execute_delete (p3)
-			print_result (simple_query)
-		end
-\end{lstlisting}
-The object to delete needs to be previously known to ABEL through an insert or a successful query (see Section~\ref{section:dealing_with_known_objects}). A way to delete objects that always works (because ABEL  queries for them in advance) is described in Section ~\ref{section:deletion_query}.
+ABEL does not support explicit deletes any longer, as it is considered dangerous for shared objects.
+Instead of deletion it is planned to introduce a garbage collection mechanism in the future.
+
+% Deletion is done through feature \lstinline{execute_delete} in \lstinline{PS_EXECUTOR}.
+% Let's now delete Albo Bitossi from the database:
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Deleting an object.}, label={lst:tutorial_print_result}]
+% 	explore
+% 			-- Tutorial code.
+% 		local
+% 			in_memory_repo: PS_RELATIONAL_REPOSITORY
+% 			p1, p2, p3: PERSON
+% 		do
+% 			-- Same code as before
+% 			-- Delete Dumbo Ermini from the database and print the result again
+% 			executor.execute_delete (p3)
+% 			print_result (simple_query)
+% 		end
+% \end{lstlisting}
+% The object to delete needs to be previously known to ABEL through an insert or a successful query (see Section~\ref{section:dealing_with_known_objects}). A way to delete objects that always works (because ABEL  queries for them in advance) is described in Section ~\ref{section:deletion_query}.
 \section{Dealing with Known Objects}
 \label{section:dealing_with_known_objects}
 
-ABEL keeps track of objects that have been inserted or queried.
-This is important because in case of an update or delete, the library internally needs to map the object in the current execution of the program to its specific entry in the database.
+Within a transaction ABEL keeps track of objects that have been inserted or queried.
+This is important because in case of an update, the library internally needs to map the object in the current execution of the program to its specific entry in the database.
 
-Because of that, you can't update or delete an object that is not yet known to ABEL.
-As an example, the following two functions will fail:
+Because of that, you can't update an object that is not yet known to ABEL.
+As an example, the following functions will fail:
 
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Failing updates and deletes.}, label={lst:failing_update_delete}]
+\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Common pitfalls with update.}, label={lst:failing_update_delete}]
 	failing_update
-		-- Try and fail to update a new person object
+			-- Trying to update a new person object.
 		local
-			a_person: PERSON
+			bob: PERSON
+			transaction: PS_TRANSACTION
 		do
-			create a_person.make ("Bob", "Barath")
-			executor.execute_update (a_person)
-				-- Results in a precondition violation
+			create bob.make ("Robert", "Baratheon")
+			transaction := repository.new_transaction
+				-- Error: Bob was not inserted / retrieved before.
+			transaction.update (bob)
+			transaction.commit
 		end
 
-	failing_delete
-		-- Try and fail to delete a new person object
+	update_after_commit
+			-- Update after transaction committed.
 		local
-			a_person:PERSON
+			joff: PERSON
+			transaction: PS_TRANSACTION
 		do
-			create a_person.make ("Cersei", "Lannis")
-			executor.execute_delete (a_person) 
-				-- Results in a precondition violation
+			create joff.make ("Joffrey", "Baratheon")
+			transaction := repository.new_transaction
+			transaction.insert (joff)
+			transaction.commit
+
+			joff.celebrate_birthday
+
+				-- Prepare can be used to restart a transaction.
+			transaction.prepare
+
+				-- Error: Joff was not inserted / retrieved before.
+			transaction.update (joff)
+			
+				-- Note: After commit and prepare,`transaction'
+				-- represents a completely new transaction.
 		end
 \end{lstlisting}
+% 	failing_delete
+% 		-- Try and fail to delete a new person object
+% 		local
+% 			a_person:PERSON
+% 		do
+% 			create a_person.make ("Cersei", "Lannis")
+% 			executor.execute_delete (a_person) 
+% 				-- Results in a precondition violation
+% 		end
+%\end{lstlisting}
 
-Please note that there's another way to delete objects, described in Section ~\ref{section:deletion_query}, which doesn't have this restriction.
+%Please note that there's another way to delete objects, described in Section ~\ref{section:deletion_query}, which doesn't have this restriction.
 
-The feature \lstinline{is_persistent} in \lstinline!PS_EXECUTOR! can tell you if a specific object is known to ABEL and hence has a link to its entry in the database.
+The feature \lstinline{is_persistent} in \lstinline!PS_TRANSACTION! can tell you if a specific object is known to ABEL and hence has a link to its entry in the database.
 
 \chapter{Advanced Queries}
 \label{sec:advanced_queries}

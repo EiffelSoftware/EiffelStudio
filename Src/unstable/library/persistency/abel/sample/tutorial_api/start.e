@@ -122,19 +122,7 @@ feature -- Printing results
 			from
 				print ("Printing all CHILD objects in the repository:%N")
 			loop
-				print (person_cursor.item.first_name)
-				print (" ")
-				print (person_cursor.item.last_name)
-				print (", age ")
-				print (person_cursor.item.age)
-
-					-- Note that referenced items get loaded as well.
-				if attached person_cursor.item.father as father then
-					print (", father: ")
-					print (father.first_name)
-				end
-
-				io.new_line
+				print (person_cursor.item)
 			end
 
 			query.close
@@ -181,8 +169,7 @@ feature -- Initialization
 			c2.set_father (c3)
 
 
-			print ("Insert 3 children in the database")
-			io.new_line
+			print ("Insert 3 children in the database.%N")
 
 			transaction := repository.new_transaction
 

@@ -10,7 +10,7 @@ class
 inherit
 	ANY
 		redefine
-			is_equal
+			is_equal, out
 		end
 
 create
@@ -33,16 +33,6 @@ feature {NONE} -- Initialization
 			default_age: age = 0
 		end
 
-feature -- Element change
-
-	celebrate_birthday
-			-- Increase age by 1.
-		do
-			age := age + 1
-		ensure
-			age_incremented_by_one: age = old age + 1
-		end
-
 feature -- Status report
 
 	is_equal (other: like Current): BOOLEAN
@@ -52,7 +42,6 @@ feature -- Status report
 				and last_name.is_equal (other.last_name)
 				and age = other.age
 				and equal (father, other.father)
-				and equal (mother, other.mother)
 		end
 
 feature -- Access
@@ -66,20 +55,17 @@ feature -- Access
 	age: INTEGER
 			-- The child's age.
 
-feature -- Parents
-
-	mother: detachable CHILD
-			-- The child's mother.
-
 	father: detachable CHILD
 			-- The child's father.
 
-	set_mother (a_mother: CHILD)
-			-- Set a mother for the child.
+feature -- Element Change
+
+	celebrate_birthday
+			-- Increase age by 1.
 		do
-			mother := a_mother
+			age := age + 1
 		ensure
-			mother_set: mother = a_mother
+			age_incremented_by_one: age = old age + 1
 		end
 
 	set_father (a_father: CHILD)
@@ -88,6 +74,18 @@ feature -- Parents
 			father := a_father
 		ensure
 			father_set: father = a_father
+		end
+
+feature -- Output
+
+	out: STRING
+			-- Printable version of `Current'
+		do
+			Result := first_name + " " + last_name + ", age " + age.out
+			if attached father as f then
+				Result.append (", father: " + f.first_name)
+			end
+			Result.append ("%N")
 		end
 
 invariant

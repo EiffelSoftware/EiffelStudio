@@ -780,7 +780,9 @@ The precedence rules are the same as in Eiffel, which means that \lstinline!NOT!
 \label {chapter:references}
 
 In ABEL, a basic type is an object of type \lstinline!STRING!, \lstinline!BOOLEAN!, \lstinline!CHARACTER! or any numeric class like \lstinline!REAL! or \lstinline!INTEGER!.
-The \lstinline!PERSON! class only has attributes of a basic type. However, an object can contain references to other objects. ABEL is able to handle these references by storing and reconstructing the whole object graph (an object graph is roughly defined as all the objects that can be reached by recursively following all references, starting at some root object).
+The \lstinline!PERSON! class only has attributes of a basic type. 
+However, an object can contain references to other objects. ABEL is able to handle these references by storing and reconstructing the whole object graph 
+(an object graph is roughly defined as all the objects that can be reached by recursively following all references, starting at some root object).
 
 \section{Inserting objects with dependencies}
 Let's look at the new class \lstinline!CHILD!:
@@ -812,16 +814,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	celebrate_birthday
-			-- Increase age by 1.
-		do
-			age := age + 1
-		ensure
-			age_incremented_by_one: age = old age + 1
-		end
-
-feature -- Status report
-
 	first_name: STRING
 			-- The child's first name.
 
@@ -831,20 +823,17 @@ feature -- Status report
 	age: INTEGER
 			-- The child's age.
 
-feature -- Parents
-
-	mother: detachable CHILD
-			-- The child's mother.
-
 	father: detachable CHILD
 			-- The child's father.
 
-	set_mother (a_mother: CHILD)
-			-- Set a mother for the child.
+feature -- Element Change
+
+	celebrate_birthday
+			-- Increase age by 1.
 		do
-			mother := a_mother
+			age := age + 1
 		ensure
-			mother_set: mother = a_mother
+			age_incremented_by_one: age = old age + 1
 		end
 
 	set_father (a_father: CHILD)
@@ -861,10 +850,13 @@ invariant
 	last_name_exists: not last_name.is_empty
 end
 
+
 \end{lstlisting}
 
 
-This adds in some complexity: instead of having a single object, ABEL has to insert a \lstinline!CHILD!'s mother and father as well, and it has to repeat this procedure if their parent attribute is also attached. The good news are that the examples above will work exactly the same.
+This adds in some complexity: 
+instead of having a single object, ABEL has to insert a \lstinline!CHILD!'s mother and father as well, and it has to repeat this procedure if their parent attribute is also attached. 
+The good news are that the examples above will work exactly the same.
 
 However, there are some additional caveats to take into consideration. 
 Let's consider a simple example with \lstinline!CHILD! objects ``Baby Doe'', ``John Doe'' and ``Grandpa Doe''.
@@ -889,67 +881,87 @@ This is usually the desired behavior, as objects are stored completely that way,
 
 \begin{itemize}
 \item Assume an insert of ``Baby Doe'' has happened to an empty database. 
-If you now query the database for \lstinline!CHILD! objects, it will return exactly the same object graph as above, but the query result will actually have three items, as the object graph consists of three single \lstinline!CHILD! objects.
+If you now query the database for \lstinline!CHILD! objects, it will return exactly the same object graph as above, 
+but the query result will actually have three items, as the object graph consists of three single \lstinline!CHILD! objects.
 	
-\item After you've inserted ``Baby Doe'', it has no effect if you insert ``John Doe'' or ``Grandpa Doe'' afterwards, because they have already been inserted by the first statement.
+\item After inserting ``Baby Doe'', an insert of ``John Doe'' or ``Grandpa Doe'' will result in a precondition violation, because they have already been inserted as references of ``Baby Doe''.
 \end{itemize}
 
-Here is the code in feature \lstinline{explore} that tests what we have stated above:
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Inserting objects having references to other objects.}, label={lst:references_handling}]
-	explore
-			-- Tutorial code.
+In our main tutorial class \lstinline{START} we have the following two features that show how to deal with object graphs. 
+You will notice it is very similar to the corresponding routines for the flat \lstinline!PERSON! objects.
+\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Dealing with object graphs.}, label={lst:references_handling}]
+	insert_children
+			-- Populate the repository with some children objects.
 		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
 			c1, c2, c3: CHILD
+			transaction: PS_TRANSACTION
 		do
-			-- Same code as before
-			print ("Insert 3 children in the database")
+				-- Create the object graph.
 			create c1.make ("Baby", "Doe")
 			create c2.make ("John", "Doe")
 			create c3.make ("Grandpa", "Doe")
 			c1.set_father (c2)
 			c2.set_father (c3)
-			executor.execute_insert (c1)
-			io.new_line
-			print ("Query the database for children and print result")
-			print_children_result (query_for_children)
-			print ("Inserting John Doe has no effect")
-			executor.execute_insert (c2)
-			print_children_result (query_for_children)
+
+			print ("Insert 3 children in the database.%N")
+			transaction := repository.new_transaction
+
+				-- It is sufficient to just insert "Baby Joe", 
+				-- as the other CHILD objects are (transitively) 
+				-- referenced and thus inserted automatically.
+			transaction.insert (c1)
+			transaction.commit
 		end
-\end{lstlisting}
-You can find the code for \lstinline{query_for_children} and \lstinline{print_children_result} in the ABEL repository. You will notice it is very similar to the corresponding routines seen before (the only thing that changes is the kind of linked list that is passed as an argument).
 
-\section{Updating objects with dependencies}
-ABEL does not follow references during an update by default, so for example the following statement has no effect on the database:
-
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={References are not followed by default during updates.}, label={lst:reference_update}]
-	explore
-			-- Tutorial code.
+	print_children
+			-- Print all children in the repository
 		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
-			c1, c2, c3: CHILD
+			query: PS_QUERY[CHILD]
 		do
-			-- Same code as before
-			print ("Updating John Doe has no effect")
-			if attached {CHILD} c1.father as dad then
-				dad.celebrate_birthday
+			create query.make
+			repository.execute_query (query)
+			
+				-- The result will also contain
+				-- all referenced CHILD objects.
+			across
+				query as person_cursor
+			loop
+				print (person_cursor.item)
 			end
-			executor.execute_update (c1)
-			print_children_result (query_for_children)
+
+			query.close
 		end
 \end{lstlisting}
-Section~\ref{sec:going_deeper_in_object_graph} will tell you how do change the default settings.
+
+% \section{Updating objects with dependencies}
+% ABEL does not follow references during an update by default, so for example the following statement has no effect on the database:
+% 
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={References are not followed by default during updates.}, label={lst:reference_update}]
+% 	explore
+% 			-- Tutorial code.
+% 		local
+% 			in_memory_repo: PS_RELATIONAL_REPOSITORY
+% 			p1, p2, p3: PERSON
+% 			c1, c2, c3: CHILD
+% 		do
+% 			-- Same code as before
+% 			print ("Updating John Doe has no effect")
+% 			if attached {CHILD} c1.father as dad then
+% 				dad.celebrate_birthday
+% 			end
+% 			executor.execute_update (c1)
+% 			print_children_result (query_for_children)
+% 		end
+% \end{lstlisting}
+% Section~\ref{sec:going_deeper_in_object_graph} will tell you how do change the default settings.
  
 \section{Going deeper in the Object Graph}
 \label{sec:going_deeper_in_object_graph}
 ABEL has no limits regarding the depth of an object graph, and it will detect and handle reference cycles correctly. 
 You are welcome to test ABEL's capability with very complex objects, however please keep in mind that this may impact performance significantly.
 
-To overcome this problem, you can either use simple object structures, or you can tell ABEL to only load or store an object up to a certain depth.
-The default ABEL's behavior with respect to the object graph can be changed by using feature \lstinline{default_object_graph} in class \lstinline{PS_REPOSITORY} and passing an appropriate object of type \lstinline{PS_DEFAULT_OBJECT_GRAPH_SETTINGS}.
+% To overcome this problem, you can either use simple object structures, or you can tell ABEL to only load or store an object up to a certain depth.
+% The default ABEL's behavior with respect to the object graph can be changed by using feature \lstinline{default_object_graph} in class \lstinline{PS_REPOSITORY} and passing an appropriate object of type \lstinline{PS_DEFAULT_OBJECT_GRAPH_SETTINGS}.
 
 %\chapter{Advanced Initialization}
 %\label{chapter:advanced_initialization}
@@ -1010,84 +1022,84 @@ The default ABEL's behavior with respect to the object graph can be changed by u
 %
 %All examples from this tutorial work exactly the same, regardless of the specific kind of repository you are working with.
 
-\chapter{Transaction handling}
-
-Every CRUD operation in ABEL is by default executed within a transaction. 
-Transactions are created and committed implicitly. This is convenient when dealing with complex object graphs, because an object doesn't get inserted halfway in case of an error.
-
-As a user, you also have the possibility to use transactions explicitly. 
-This is done by manually creating an object of type \lstinline!PS_TRANSACTION! and using the \lstinline!*_within_transaction! features in \lstinline!PS_EXECUTOR! instead of the normal ones.
-For your convenience there is a factory method \lstinline{new_transaction} in class \lstinline!PS_EXECUTOR!.
-
-Let's consider an example where you want to update the age of every person by one:
-
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={}, label={lst:update_all_ages}]
-	update_ages
-		-- Increase the age of all persons by one.
-		local
-			query: PS_OBJECT_QUERY [PERSON]
-			transaction: PS_TRANSACTION
-		do
-			create query.make
-			transaction := executor.new_transaction
-
-			executor.execute_query_within_transaction (query, transaction)
-
-			across query as query_result
-			loop
-				query_result.item.celebrate_birthday
-				executor.update_within_transaction 
-					(query_result.item, transaction)
-			end
-
-			transaction.commit
-
-			-- The commit may have failed
-			if transaction.has_error then
-				if attached transaction.error.message as msg then
-					print ("Commit has failed. Error: " + msg)
-				end
-			end
-		end
-\end{lstlisting}
-
-You can see here that a commit can fail in some situations, e.g. when a write conflict happened in the database.
-The errors are reported in the \lstinline!PS_TRANSACTION.has_error! attribute.
-In case of an error, all changes of the transaction are rolled back automatically.
-
-You can also abort a transaction manually by calling feature \lstinline{rollback} in class \lstinline{PS_TRANSACTION}.
-
-As usual, here is the code for feature \lstinline{explore}:
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Testing an update with explicit transaction.}, label={lst:explicit_transactions_update}]
-	explore
-			-- Tutorial code.
-		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
-			c1, c2, c3: CHILD
-		do
-			-- Same code as before
-			print ("Celebrating the birthday for all PERSON objects in the repository")
-			update_ages
-			print_result (simple_query)
-		end
-\end{lstlisting}
-
-\section{Transaction isolation levels}
-ABEL supports the four standard transaction isolation levels found in almost every database system:
-\begin{itemize}
- \item Read Uncommitted
- \item Read Committed
- \item Repeatable Read
- \item Serializable
-\end{itemize}
-The different levels are defined in \lstinline!TRANSACTION_ISOLATION_LEVEL!.
-You can change the transaction isolation level by calling feature\\
- \lstinline{set_transaction_isolation_level} in class \lstinline{PS_REPOSITORY}.
-The default transaction isolation level of ABEL is defined by the actual storage backend.
-
-Please note that not every backend supports all isolation levels.
-Therefore a backend can also use a more restrictive isolation level than you actually instruct it to use, but it is not allowed to use a less restrictive isolation level.
+% \chapter{Transaction handling}
+% 
+% Every CRUD operation in ABEL is by default executed within a transaction. 
+% Transactions are created and committed implicitly. This is convenient when dealing with complex object graphs, because an object doesn't get inserted halfway in case of an error.
+% 
+% As a user, you also have the possibility to use transactions explicitly. 
+% This is done by manually creating an object of type \lstinline!PS_TRANSACTION! and using the \lstinline!*_within_transaction! features in \lstinline!PS_EXECUTOR! instead of the normal ones.
+% For your convenience there is a factory method \lstinline{new_transaction} in class \lstinline!PS_EXECUTOR!.
+% 
+% Let's consider an example where you want to update the age of every person by one:
+% 
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={}, label={lst:update_all_ages}]
+% 	update_ages
+% 		-- Increase the age of all persons by one.
+% 		local
+% 			query: PS_OBJECT_QUERY [PERSON]
+% 			transaction: PS_TRANSACTION
+% 		do
+% 			create query.make
+% 			transaction := executor.new_transaction
+% 
+% 			executor.execute_query_within_transaction (query, transaction)
+% 
+% 			across query as query_result
+% 			loop
+% 				query_result.item.celebrate_birthday
+% 				executor.update_within_transaction 
+% 					(query_result.item, transaction)
+% 			end
+% 
+% 			transaction.commit
+% 
+% 			-- The commit may have failed
+% 			if transaction.has_error then
+% 				if attached transaction.error.message as msg then
+% 					print ("Commit has failed. Error: " + msg)
+% 				end
+% 			end
+% 		end
+% \end{lstlisting}
+% 
+% You can see here that a commit can fail in some situations, e.g. when a write conflict happened in the database.
+% The errors are reported in the \lstinline!PS_TRANSACTION.has_error! attribute.
+% In case of an error, all changes of the transaction are rolled back automatically.
+% 
+% You can also abort a transaction manually by calling feature \lstinline{rollback} in class \lstinline{PS_TRANSACTION}.
+% 
+% As usual, here is the code for feature \lstinline{explore}:
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Testing an update with explicit transaction.}, label={lst:explicit_transactions_update}]
+% 	explore
+% 			-- Tutorial code.
+% 		local
+% 			in_memory_repo: PS_RELATIONAL_REPOSITORY
+% 			p1, p2, p3: PERSON
+% 			c1, c2, c3: CHILD
+% 		do
+% 			-- Same code as before
+% 			print ("Celebrating the birthday for all PERSON objects in the repository")
+% 			update_ages
+% 			print_result (simple_query)
+% 		end
+% \end{lstlisting}
+% 
+% \section{Transaction isolation levels}
+% ABEL supports the four standard transaction isolation levels found in almost every database system:
+% \begin{itemize}
+%  \item Read Uncommitted
+%  \item Read Committed
+%  \item Repeatable Read
+%  \item Serializable
+% \end{itemize}
+% The different levels are defined in \lstinline!TRANSACTION_ISOLATION_LEVEL!.
+% You can change the transaction isolation level by calling feature\\
+%  \lstinline{set_transaction_isolation_level} in class \lstinline{PS_REPOSITORY}.
+% The default transaction isolation level of ABEL is defined by the actual storage backend.
+% 
+% Please note that not every backend supports all isolation levels.
+% Therefore a backend can also use a more restrictive isolation level than you actually instruct it to use, but it is not allowed to use a less restrictive isolation level.
 
 \chapter{Error handling}
 

@@ -16,16 +16,15 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		local
-			backend: PS_IN_MEMORY_BACKEND
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
-			create criterion_factory
 			create factory
 			-- TODO: switch creation procedures.
 			repository := factory.create_in_memory_repository
 			--repository := factory.new_repository
+
+			create criterion_factory
 			explore
-			io.new_line
 		end
 
 feature -- Access
@@ -78,6 +77,7 @@ feature -- Tutorial
 				-- ABEL provides an alternative query mechanism which returns value tuples.
 			explore_tuple_queries
 
+			io.new_line
 		end
 
 feature -- Printing results

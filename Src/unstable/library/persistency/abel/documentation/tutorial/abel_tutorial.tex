@@ -96,7 +96,20 @@
 ABEL (A Better EiffelStore Library) is an object-oriented persistence library written in Eiffel and aiming at seamlessly integrating various kinds of data stores.
  
 \section{Setting things up}
-We are assuming you have checked out the ABEL code from the EiffelStudio SVN repository\footnote{\url{https://svn.eiffel.com/eiffelstudio/branches/eth/eve/Src/library/abel}}, and have EiffelStudio installed. Launch EiffelStudio and in the initial window choose "tutorial\_project". If it is not there just choose "Add project" and navigate to the location where you downloaded ABEL, and look for the \emph{tutorial\_project.ecf} project file in \emph{abel/apps/sample/tutorial/}. As the abel project file referenced by the tutorial project file \footnote{You can find the ABEL project file in \emph{abel/libraries/ethz/src/abel/eiffelstore2.ecf}} includes references to drivers that you might not have installed yet (e.g. MySQL-related drivers), you can comment out these references from the abel project file until your compilation succeeds \footnote{For example if some missing mysql references prevent your compilation from completing without errors you can try commenting out line \emph{$<$library name="mysql" location="../mysqli/mysqli.ecf"/$>$} in \emph{eiffelstore2.ecf}}. You can then load and compile the project. To be able to compile the ABEL tutorial you don't need particular dependencies, because it is using an in-memory database simulating a relational database. If you want to experiment with ABEL's support for full-fledged relational back-ends (like MySQL or SQLite), you need to install the databases and the appropriate drivers first (also check the readme files when they are there).
+ABEL is shipped with EiffelStudio in the \emph{unstable} directory.
+You can get the latest code from the SVN directory \footnote{\url{https://svn.eiffel.com/eiffelstudio/trunk/Src/unstable/library/persistency/abel}}.
+
+If you want to modify the sample code used in this tutorial, just check out the tutorial code from SVN \footnote{\url{https://svn.eiffel.com/eiffelstudio/trunk/Src/unstable/library/persistency/abel/sample/tutorial_api}}.
+
+% We are assuming you have checked out the ABEL code from the EiffelStudio SVN repository\footnote{\url{https://svn.eiffel.com/eiffelstudio/branches/eth/eve/Src/library/abel}}, and have EiffelStudio installed. 
+% Launch EiffelStudio and in the initial window choose "tutorial\_project". 
+% If it is not there just choose "Add project" and navigate to the location where you downloaded ABEL, and look for the \emph{tutorial\_project.ecf} project file in \emph{abel/apps/sample/tutorial/}. 
+% As the abel project file referenced by the tutorial project file \footnote{You can find the ABEL project file in \emph{abel/libraries/ethz/src/abel/eiffelstore2.ecf}} 
+% includes references to drivers that you might not have installed yet (e.g. MySQL-related drivers), 
+% you can comment out these references from the abel project file until your compilation succeeds \footnote{For example if some missing mysql references 
+% prevent your compilation from completing without errors you can try commenting out line \emph{$<$library name="mysql" location="../mysqli/mysqli.ecf"/$>$} in \emph{eiffelstore2.ecf}}. 
+% You can then load and compile the project. To be able to compile the ABEL tutorial you don't need particular dependencies, because it is using an in-memory database simulating a relational database. 
+% If you want to experiment with ABEL's support for full-fledged relational back-ends (like MySQL or SQLite), you need to install the databases and the appropriate drivers first (also check the readme files when they are there).
 
 \section{Getting started}
 We will be using \lstinline!PERSON! objects to show the usage of the API. 
@@ -156,49 +169,57 @@ end
 
 There are three very important classes in ABEL:
 \begin{itemize}
- \item The deferred class \lstinline!PS_REPOSITORY! provides an abstraction to the actual storage mechanism.
- \item The \lstinline!PS_EXECUTOR! class is responsible to execute CRUD (Create Read Update Delete) commands. Every \lstinline!PS_EXECUTOR! object works with a \lstinline!PS_REPOSITORY!.
+ \item The deferred class \lstinline!PS_REPOSITORY! provides an abstraction to the actual storage mechanism. It can only be used for read operations.
+ \item The \lstinline!PS_TRANSACTION! class represents a transaction and can be used to execute read, insert and update operations. Every \lstinline!PS_TRANSACTION! object is bound to a \lstinline!PS_REPOSITORY!.
 
  \item The \lstinline!PS_OBJECT_QUERY [G]! class is used to describe a read operation over objects of type \lstinline!G!. You can execute such a query in the \lstinline!PS_EXECUTOR!. 
 	The result will be objects of type \lstinline!G!.
 
  
 \end{itemize}
-To start using the library, we first need to create an object of type\\
-\lstinline!PS_REPOSITORY!. In this case we will be using a more specific object of type \lstinline{PS_RELATIONAL_REPOSITORY}, and even more specifically a  \lstinline!PS_IN_MEMORY_REPOSITORY!, which simulates a relational repository while storing the data in memory. ABEL provides support for creating all kinds of \lstinline!PS_REPOSITORY! objects through the factory class \lstinline!PS_REPOSITORY_FACTORY!, so that is what we are going to use.\\
-As a second step, we need to create an object of type  \lstinline{PS_EXECUTOR}. To do so, we will pass the previously created repository as an argument to its creation feature.
+To start using the library, we first need to create a \lstinline!PS_REPOSITORY!.
+For this tutorial we are going to use an in-memory repository to avoid setting up any external database.
+Each ABEL backend will ship a repository factory class to make initialization easier.
+The factory for the in-memory repository is called \lstinline!PS_IN_MEMORY_REPOSITORY_FACTORY!.
 
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={The TUTORIAL class}, label={lst:tutorial_class}]
-class TUTORIAL
+% In this case we will be using a more specific object of type \lstinline{PS_RELATIONAL_REPOSITORY}, and even more specifically a  \lstinline!PS_IN_MEMORY_REPOSITORY!, which simulates a relational repository while storing the data in memory. 
+% ABEL provides support for creating all kinds of \lstinline!PS_REPOSITORY! objects through the factory class \lstinline!PS_REPOSITORY_FACTORY!, so that is what we are going to use.
+
+% As a second step, we need to create an object of type  \lstinline{PS_EXECUTOR}. To do so, we will pass the previously created repository as an argument to its creation feature.
+
+\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={The START class}, label={lst:tutorial_class}]
+class START
 
 create
+  make
+
+feature {NONE} -- Initialization
+
 	make
-
-feature 	-- Tutorial exploration features
-
-	explore
-			-- Tutorial code.
+			-- Initialization for `Current'.
 		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
+			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
-			print ("---o--- ABEL Tutorial ---o---")
-			io.new_line
-			in_memory_repo := repo_factory.create_in_memory_repository
-			create executor.make (in_memory_repo)
+			create factory
+			repository := factory.new_repository
+			
+			create criterion_factory
+			explore
 		end
 
-feature -- Access
+	repository: PS_REPOSITORY
+		-- The main repository.
 
-	repo_factory: PS_REPOSITORY_FACTORY
-		-- Repository factory.	
-
-	executor: PS_EXECUTOR
-		-- The executor of database operations used throughout the tutorial.
+	end
 
 end
 \end{lstlisting}
-We will use this class throughout the tutorial. You can assume that the Eiffel features listed in this tutorial are located inside the \lstinline!TUTORIAL! class, if they are not enclosed in another class declaration.\\ 
-We encourage you to test the features shown in this tutorial by calling them from feature \lstinline{explore} in class \lstinline!TUTORIAL!.
+We will use \lstinline!criterion_factory! later in this tutorial.
+The feature \lstinline!explore! will guide us through the rest of this API tutorial and show the possibilities in ABEL.
+
+% We will use this class throughout the tutorial. 
+% You can assume that the Eiffel features listed in this tutorial are located inside the \lstinline!TUTORIAL! class, if they are not enclosed in another class declaration.\\ 
+% We encourage you to test the features shown in this tutorial by calling them from feature \lstinline{explore} in class \lstinline!TUTORIAL!.
 \chapter{Basic operations}
 
 \section{Inserting}

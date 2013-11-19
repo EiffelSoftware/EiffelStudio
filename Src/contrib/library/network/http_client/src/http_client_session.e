@@ -36,9 +36,10 @@ feature {NONE} -- Initialization
 		end
 
 	set_defaults
+			-- Set default settings.
 		do
-			timeout := 5
-			connect_timeout := 1
+			timeout := 0 --| never timeout
+			connect_timeout := 0 --| never timeout
 			max_redirects := 5
 			set_basic_auth_type
 		end
@@ -149,10 +150,12 @@ feature -- Status report
 feature -- Settings
 
 	timeout: INTEGER
-			-- HTTP transaction timeout in seconds. Defaults to 5 seconds.
+			-- HTTP transaction timeout in seconds.
+			-- Defaults to 0 second  i.e never timeout.
 
 	connect_timeout: INTEGER
-			-- HTTP connection timeout in seconds. Defaults to 1 second.
+			-- HTTP connection timeout in seconds.
+			-- Defaults to 0 second i.e never timeout.
 
 	max_redirects: INTEGER
     		-- Maximum number of times to follow redirects.

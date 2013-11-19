@@ -83,6 +83,7 @@
 				<exclude>/support/class_name_translations.e$</exclude>
 				<exclude>/support/double_math.e$</exclude>
 				<exclude>/support/execution_environment.e$</exclude>
+				<exclude>/support/object_graph_marker.e$</exclude>
 				<exclude>/support/reflector.e$</exclude>
 				<exclude>/support/reflected_object.e$</exclude>
 				<exclude>/support/reflected_reference_object.e$</exclude>

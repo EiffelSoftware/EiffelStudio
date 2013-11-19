@@ -173,7 +173,7 @@ end
 There are three very important classes in ABEL:
 \begin{itemize}
  \item The deferred class \lstinline!PS_REPOSITORY! provides an abstraction to the actual storage mechanism. It can only be used for read operations.
- \item The \lstinline!PS_TRANSACTION! class represents a transaction and can be used to execute read, insert and update operations. Every \lstinline!PS_TRANSACTION! object is bound to a \lstinline!PS_REPOSITORY!.
+ \item The \lstinline!PS_TRANSACTION! class represents a transaction and can be used to execute read, insert and update operations. Any \lstinline!PS_TRANSACTION! object is bound to a \lstinline!PS_REPOSITORY!.
 
  \item The \lstinline!PS_OBJECT_QUERY [G]! class is used to describe a read operation over objects of type \lstinline!G!. You can execute such a query in the \lstinline!PS_EXECUTOR!. 
 	The result will be objects of type \lstinline!G!.
@@ -1105,87 +1105,99 @@ You are welcome to test ABEL's capability with very complex objects, however ple
 
 As ABEL is dealing with I/O and databases, runtime errors may happen. 
 The library will in general raise an exception in case of an error and expose the error to the library user as an \lstinline!PS_ERROR! object.
-ABEL recognizes two different kinds of errors:
-
-\begin{itemize}
-
-\item Irrecoverable errors:  fatal errors happening in scenarios like a dropped connection or a database integrity constraint violation.
-The default behavior is to rollback the current transaction and raise an exception. 
-If you catch the exception in a rescue clause and manage to solve the problem, you can continue using ABEL.
-
-\item Recoverable errors: exceptional situations typically not visible to the user, because no exception is raised when they occur.
-An example is a conflict between two transactions.
-ABEL will detect the issue and, in case of implicit transaction management, retry.
-If you use explicit transaction management, ABEL will just doom the current transaction to fail at commit time.
-\end{itemize}
+% ABEL recognizes two different kinds of errors:
+% 
+% \begin{itemize}
+% 
+% \item Irrecoverable errors:  fatal errors happening in scenarios like a dropped connection or a database integrity constraint violation.
+% The default behavior is to rollback the current transaction and raise an exception. 
+% If you catch the exception in a rescue clause and manage to solve the problem, you can continue using ABEL.
+% 
+% \item Recoverable errors: exceptional situations typically not visible to the user, because no exception is raised when they occur.
+% An example is a conflict between two transactions.
+% ABEL will detect the issue and, in case of implicit transaction management, retry.
+% If you use explicit transaction management, ABEL will just doom the current transaction to fail at commit time.
+% \end{itemize}
 
 ABEL maps database specific error messages to its own representation for errors, which is a hierarchy of classes rooted at \lstinline!PS_ERROR!.
-The following list shows all error classes that are currently defined.
-
-If not explicitly stated otherwise, the errors in this lists belong to the first category (fatal errors).
+The following list shows all error classes that are currently defined with some examples (the \lstinline!PS_! prefix is omitted for brevity):
 
 \begin{itemize}
-\item \lstinline!CONNECTION_PROBLEM!: A broken internet link, or a deleted serialization file.
-\item \lstinline!TRANSACTION_CONFLICT!: A write conflict between two transactions. This is a recoverable error.
-\item \lstinline!UNRESOLVABLE_TRANSACTION_CONFLICT!: A write conflict between implicit transactions that doesn't resolve after a retry.
-\item \lstinline!ACCESS_RIGHT_VIOLATION!: Insufficient privileges in database, or no write permission to serialization file.
+\item \lstinline!CONNECTION_SETUP_ERROR!: No internet link, or a deleted serialization file.
+\item \lstinline!AUTHORIZATION_ERROR!: Usually a wrong password.
+\item \lstinline!BACKEND_ERROR!: An unrecoverable error in the storage backend, e.g. a disk failure.
+\item \lstinline!INTERNAL_ERROR!: Any error happening inside ABEL.
+\item \lstinline!PS_OPERATION_ERROR!: For invalid operations, e.g. no access rights to a table.
+\item \lstinline!TRANSACTION_ABORTED_ERROR!: A conflict between two transactions.
+\item \lstinline!MESSAGE_NOT_UNDERSTOOD_ERROR!: Malformed SQL or JSON statements.
+\item \lstinline!INTEGRITY_CONSTRAINT_VIOLATION_ERROR!: The operation violates an integrity constraint in the database.
+\item \lstinline!EXTERNAL_ROUTINE_ERROR!: An SQL routine or triggered action has failed.
 \item \lstinline!VERSION_MISMATCH!: The stored version of an object isn't compatible any more to the current type.
-\item \lstinline!INTERNAL_ERROR!: Any error happening inside the library, e.g. a wrong SQL compilation.
-\item \lstinline!GENERAL_ERROR!: Anything that doesn't fit into one of the categories above.
 \end{itemize}
 
 If you want to handle an error, you have to add a \lstinline{rescue} clause somewhere in your code.
 
-You can get the actual error from the feature \lstinline!PS_EXECUTOR.error! or \lstinline!PS_TRANSACTION.error! or - due to the fact that the \lstinline!PS_ERROR! class inherits from \lstinline!DEVELOPER_EXCEPTION! -
-by performing an object test on Eiffel's \lstinline!EXCEPTION_MANAGER.last_exception!.
+You can get the actual error from \lstinline!PS_TRANSACTION.last_error! or - due to the fact that \lstinline!PS_ERROR! inherits from \lstinline!DEVELOPER_EXCEPTION! -
+by performing an object test on \lstinline!EXCEPTION_MANAGER.last_exception!.
 
 For your convenience, there is a visitor pattern for all ABEL error types. 
 You can just implement the appropriate functions and use it for your error handling code.
 
-The following code shows an example. 
-Note that only relevant features are shown:
+The following code shows an example:
 
 \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Sample error handling using a visitor.}, label={lst:error_visitor_example}]
 
 class
 	MY_PRIVATE_VISITOR
-inherit
-	PS_ERROR_VISITOR
 
-feature
+inherit
+	PS_DEFAULT_ERROR_VISITOR
+		redefine
+			visit_transaction_aborted_error,
+			visit_connection_setup_error
+		end
+
+feature -- Status report
+
 	shall_retry: BOOLEAN
 		-- Should my client retry the operation?
 
-	visit_access_right_violation (
-		error: PS_ACCESS_RIGHT_VIOLATION)
-		-- Visit an access right violation error.
+feature -- Visitor features
+
+	visit_transaction_aborted_error (tae: PS_TRANSACTION_ABORTED_ERROR)
+			-- Visit a transaction aborted error
 		do
-			add_some_privileges
 			shall_retry := True
 		end
 
-	visit_connection_problem (error: PS_CONNECTION_PROBLEM)
-		-- Visit a connection problem error.
+	visit_connection_setup_error (cse: PS_CONNECTION_SETUP_ERROR)
+			-- Visit a connection setup error
 		do
 			notify_user_of_abort
 			shall_retry:=False
 		end
+
+feature {NONE} -- Pseudocode
+
+	notify_user_of_abort
+			-- Notify the user that the operation has been aborted
+		do
+		end
+
 end
 
 class
-	TUTORIAL
+	EXAMPLE
 
 feature
 
 	my_visitor: MY_PRIVATE_VISITOR
 		-- A user-defined visitor to react to an error.
 
-	executor: PS_EXECUTOR
-		-- The CRUD executor used throughout the tutorial.
-
-
 	do_something_with_error_handling
 		-- Perform some operations. Deal with errors in case of a problem.
+		local
+			transaction: PS_TRANSACTION
 		do
 			-- Some complicated operations
 		rescue
@@ -1203,66 +1215,68 @@ end
 \end{lstlisting}
 
 
-\chapter{CouchDB Support}
+% \chapter{CouchDB Support}
+% 
+% ABEL does not only work with an in-memory database. It is also able to store objects in other database, both relational (like MySQL and SQLite) and non-relational like CouchDB, always using the same API.
+% 
+% \section{What is CouchDB}
+% 
+% CouchDB is a free, open-source document-oriented database \footnote{\url{http://couchdb.apache.org}}. CouchDB stores objects on a persistent database using JSON documents.
+% JSON is a textual notation similar to XML that stores Eiffel objects like this:
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Sample Eiffel Object in JSON}, label={lst:person_json}]
+% {
+% 	"firstname": "Albo",
+% 	"lastname": "Bitossi",
+% 	"age": 0
+% }
+% \end{lstlisting}
+% 
+% \section{Setting up CouchDB}
+% 
+% Before we can start using CouchDB from within Eiffel we have to set it up either on a local machine or get hold of a database on the internet. To install CouchDB locally visit \url{www.couchdb.com} and download the appropriate package.
+% 
+% Once installed, CouchDB should be running in the background and is accessible trough a browser by accessing \emph{127.0.0.1:5984/\_utils}
+% To work with CouchDB in Eiffel we have created another tutorial which you can get at \emph{abel/apps/sample/tutorial-couchdb/}. Look for the \emph{tutorial\_project.ecf} and open it with EiffelStudio.
+% 
+% \section{Getting started with CouchDB}
+% 
+% On the surface there is not much difference between using the in-memory database and CouchDB. You may notice that all we changed in the tutorial is the call to the repo\_factory. 
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={The CouchDB Tutorial}, label={lst:explore_couchdb}]
+% 	explore
+% 			-- Tutorial code.
+% 		local
+% 			p1, p2, p3: PERSON
+% 			c1, c2, c3: CHILD
+% 			couchdb_repo: PS_RELATIONAL_REPOSITORY
+% 		do
+% 			print ("---o--- CouchDB Tutorial ---o---")
+% 			io.new_line
+% 			couchdb_repo := repo_factory.create_cdb_repository ("127.0.0.1", 5984)
+% 			create executor.make (couchdb_repo)
+% 			...
+% \end{lstlisting}
+% Instead of using \emph{repo\_factory.create\_in\_memory\_repository} we now use \newline
+% \emph{repo\_factory.create\_cdb\_repository("127.0.0.1", 5984)}.
+% Whereby the first argument of this method denotes the URL where the database is located (In this case we use the localhost) and the second argument is the used port (we use the default CouchDB port which is 5984). If for some reason your couch is not located on your own machine, you might have to adjust these values to point to the correct location.
+% 
+% If you compare the output of this tutorial to the output you got when using the in-memory database you might notice that nothing changed. On the surface both these databases provide the same services. Namely storing Eiffel objects.
+% 
+% \section{Beneath the surface}
+% 
+% Using CouchDB, Eiffel can store objects on a persistent database that can also be accessed by other programs. If not deleted, the data will persist after your program has ended.
+% To accomplish this, ABEL will convert Eiffel objects to JSON documents, whereby each attribute will get its own \emph{"name": "value"} pair. The resulting document for a person will look similar to \emph{Listing 7.1}. After running the tutorial, the stored objects can also be explored by visiting \emph{127.0.0.1:5984/\_utils}.
+% 
+% You will notice that for both person and child a sub-database was created. The person database will only contain person-objects and the child database will only contain child-objects.
+% If you don't want your data to remain in the database after the program has ended, insert a \emph{couchdb\_repo.wipe\_out} at the end of the feature explore
+% 
+% \section{Limitations}
+% 
+% CouchDB is not meant to be a relational database: it can nicely store objects as JSON Documents, that can then be searched by key. 
+% CouchDB was mainly developed for the world wide web. For its basic API it uses cURL which is really easy to use but for its more advanced features like map-reduce it uses JavaScript. Map-reduce would come in handy when querying for objects in the database but it is not yet integrated and therefore for queries rather than using the inbuilt map-reduce of CouchDB ABEL uses an Eiffel function to accomplish the same. 
+% 
+% For more information on CoachDB see the online documentation.
 
-ABEL does not only work with an in-memory database. It is also able to store objects in other database, both relational (like MySQL and SQLite) and non-relational like CouchDB, always using the same API.
 
-\section{What is CouchDB}
-
-CouchDB is a free, open-source document-oriented database \footnote{\url{http://couchdb.apache.org}}. CouchDB stores objects on a persistent database using JSON documents.
-JSON is a textual notation similar to XML that stores Eiffel objects like this:
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Sample Eiffel Object in JSON}, label={lst:person_json}]
-{
-	"firstname": "Albo",
-	"lastname": "Bitossi",
-	"age": 0
-}
-\end{lstlisting}
-
-\section{Setting up CouchDB}
-
-Before we can start using CouchDB from within Eiffel we have to set it up either on a local machine or get hold of a database on the internet. To install CouchDB locally visit \url{www.couchdb.com} and download the appropriate package.
-
-Once installed, CouchDB should be running in the background and is accessible trough a browser by accessing \emph{127.0.0.1:5984/\_utils}
-To work with CouchDB in Eiffel we have created another tutorial which you can get at \emph{abel/apps/sample/tutorial-couchdb/}. Look for the \emph{tutorial\_project.ecf} and open it with EiffelStudio.
-
-\section{Getting started with CouchDB}
-
-On the surface there is not much difference between using the in-memory database and CouchDB. You may notice that all we changed in the tutorial is the call to the repo\_factory. 
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={The CouchDB Tutorial}, label={lst:explore_couchdb}]
-	explore
-			-- Tutorial code.
-		local
-			p1, p2, p3: PERSON
-			c1, c2, c3: CHILD
-			couchdb_repo: PS_RELATIONAL_REPOSITORY
-		do
-			print ("---o--- CouchDB Tutorial ---o---")
-			io.new_line
-			couchdb_repo := repo_factory.create_cdb_repository ("127.0.0.1", 5984)
-			create executor.make (couchdb_repo)
-			...
-\end{lstlisting}
-Instead of using \emph{repo\_factory.create\_in\_memory\_repository} we now use \newline
-\emph{repo\_factory.create\_cdb\_repository("127.0.0.1", 5984)}.
-Whereby the first argument of this method denotes the URL where the database is located (In this case we use the localhost) and the second argument is the used port (we use the default CouchDB port which is 5984). If for some reason your couch is not located on your own machine, you might have to adjust these values to point to the correct location.
-
-If you compare the output of this tutorial to the output you got when using the in-memory database you might notice that nothing changed. On the surface both these databases provide the same services. Namely storing Eiffel objects.
-
-\section{Beneath the surface}
-
-Using CouchDB, Eiffel can store objects on a persistent database that can also be accessed by other programs. If not deleted, the data will persist after your program has ended.
-To accomplish this, ABEL will convert Eiffel objects to JSON documents, whereby each attribute will get its own \emph{"name": "value"} pair. The resulting document for a person will look similar to \emph{Listing 7.1}. After running the tutorial, the stored objects can also be explored by visiting \emph{127.0.0.1:5984/\_utils}.
-
-You will notice that for both person and child a sub-database was created. The person database will only contain person-objects and the child database will only contain child-objects.
-If you don't want your data to remain in the database after the program has ended, insert a \emph{couchdb\_repo.wipe\_out} at the end of the feature explore
-
-\section{Limitations}
-
-CouchDB is not meant to be a relational database: it can nicely store objects as JSON Documents, that can then be searched by key. 
-CouchDB was mainly developed for the world wide web. For its basic API it uses cURL which is really easy to use but for its more advanced features like map-reduce it uses JavaScript. Map-reduce would come in handy when querying for objects in the database but it is not yet integrated and therefore for queries rather than using the inbuilt map-reduce of CouchDB ABEL uses an Eiffel function to accomplish the same. 
-
-For more information on CoachDB see the online documentation.
 
 %\chapter{Technical documentation}
 %\input{technical_documentation}

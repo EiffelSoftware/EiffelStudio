@@ -102,12 +102,7 @@ feature -- Printing results
 			from
 				print ("Printing all PERSON objects in the repository:%N")
 			loop
-				print (person_cursor.item.first_name)
-				print (" ")
-				print (person_cursor.item.last_name)
-				print (", age ")
-				print (person_cursor.item.age)
-				io.new_line
+				print (person_cursor.item)
 			end
 
 			-- Don't forget to close the query.
@@ -206,6 +201,7 @@ feature -- Data modification
 		local
 			query: PS_OBJECT_QUERY[PERSON]
 			transaction: PS_TRANSACTION
+			berno: PERSON
 		do
 			print ("Updating Berno Citrini's age by one.%N")
 
@@ -213,27 +209,27 @@ feature -- Data modification
 			create query.make
 			transaction := repository.new_transaction
 
-				-- As we're doing a read followed by a write, we need to execute
-				-- the query within a transaction.
+				-- As we're doing a read followed by a write, we
+				-- need to execute the query within a transaction.
 			transaction.execute_query (query)
 
 				-- Search for Berno Citrini
 			across
 				query as cursor
 			loop
-				if cursor.item.first_name.is_equal ("Berno") then
+				if cursor.item.first_name ~  "Berno" then
+					berno := cursor.item
 
-						-- Do the update on the Eiffel object.
-					cursor.item.celebrate_birthday
+						-- Change the object.
+					berno.celebrate_birthday
 
-						-- Tell ABEL to update the database object.
-					transaction.update (cursor.item)
-
+						-- Perform the database update.
+					transaction.update (berno)
 				end
 			end
 
-				-- Don't forget to close the query.
-				-- This has to be done before committing the transaction.
+				-- Don't forget to close the query. This has to
+				-- be done before committing the transaction.
 			query.close
 
 				-- Make the changes effective
@@ -634,6 +630,44 @@ feature -- Tuple queries
 				end
 			end
 
+		end
+
+feature -- Common pitfalls
+
+	failing_update
+			-- Trying to update a new person object.
+		local
+			bob: PERSON
+			transaction: PS_TRANSACTION
+		do
+			create bob.make ("Robert", "Baratheon")
+			transaction := repository.new_transaction
+				-- Error: Bob was not inserted / retrieved before.
+			transaction.update (bob)
+			transaction.commit
+		end
+
+	update_after_commit
+			-- Update after transaction committed.
+		local
+			joff: PERSON
+			transaction: PS_TRANSACTION
+		do
+			create joff.make ("Joffrey", "Baratheon")
+			transaction := repository.new_transaction
+			transaction.insert (joff)
+			transaction.commit
+
+			joff.celebrate_birthday
+
+				-- Prepare can be used to restart a transaction.
+			transaction.prepare
+
+				-- Error: Joff was not inserted / retrieved before.
+			transaction.update (joff)
+
+				-- Note: After commit and prepare,`transaction'
+				-- represents a completely new transaction.
 		end
 
 end

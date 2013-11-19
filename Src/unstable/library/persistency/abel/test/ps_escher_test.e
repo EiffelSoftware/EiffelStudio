@@ -24,7 +24,7 @@ feature
 	escher_add_attribute
 			-- Test if added attribute is handled correctly
 		local
-			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
+			query: PS_QUERY [ESCHER_TEST_CLASS_2]
 			retried: BOOLEAN
 		do
 			escher_integration.set_simulation (True)
@@ -40,7 +40,7 @@ feature
 	escher_change_attribute_type
 			-- Test if attribute type change is handled correctly
 		local
-			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
+			query: PS_QUERY [ESCHER_TEST_CLASS_2]
 			retried: BOOLEAN
 		do
 			escher_integration.set_simulation (True)
@@ -56,7 +56,7 @@ feature
 	escher_change_attribute_name
 			-- Test if attribute name change is handled correctly
 		local
-			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
+			query: PS_QUERY [ESCHER_TEST_CLASS_2]
 			retried: BOOLEAN
 		do
 			escher_integration.set_simulation (True)
@@ -72,7 +72,7 @@ feature
 	escher_remove_attribute
 			-- Test if removed attribute is handled correctly
 		local
-			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
+			query: PS_QUERY [ESCHER_TEST_CLASS_2]
 			retried: BOOLEAN
 		do
 			escher_integration.set_simulation (True)
@@ -89,7 +89,7 @@ feature
 			-- Test whether multiple changes are handled correctly
 			-- Uses 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER
 		local
-			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS_2]
+			query: PS_QUERY [ESCHER_TEST_CLASS_2]
 			retried: BOOLEAN
 		do
 			escher_integration.set_simulation (True)
@@ -110,7 +110,7 @@ feature
 	escher_normal_operation
 			-- Test if no version mismatch gets handled correctly
 		local
-			query: PS_OBJECT_QUERY [ESCHER_TEST_CLASS]
+			query: PS_QUERY [ESCHER_TEST_CLASS]
 		do
 			escher_integration.set_simulation (False)
 			create query.make

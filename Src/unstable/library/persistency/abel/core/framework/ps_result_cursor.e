@@ -13,7 +13,7 @@ inherit
 
 	PS_ABEL_EXPORT
 
-create {PS_QUERY}
+create {PS_ABSTRACT_QUERY}
 	make
 
 feature -- Access
@@ -34,7 +34,7 @@ feature -- Cursor movement
 	forth
 			-- Move cursor to next position.
 		do
-			if attached {PS_OBJECT_QUERY [ANY]} query as q then
+			if attached {PS_QUERY [ANY]} query as q then
 				q.transaction.repository.next_entry (q)
 			else
 				check attached {PS_TUPLE_QUERY [ANY]} query as tq then
@@ -65,9 +65,9 @@ feature {PS_ABEL_EXPORT} -- Basic operations
 			not_void_means_item: object /= Void implies not after and object = item
 		end
 
-feature {PS_QUERY} -- Initialization
+feature {PS_ABSTRACT_QUERY} -- Initialization
 
-	set_query (a_query: PS_QUERY [ANY, ANY])
+	set_query (a_query: PS_ABSTRACT_QUERY [ANY, ANY])
 			-- Set query to `a_query'. Part of initialization process.
 		do
 			detachable_query := a_query
@@ -75,7 +75,7 @@ feature {PS_QUERY} -- Initialization
 			query_set: query = a_query
 		end
 
-	query: PS_QUERY [ANY, ANY]
+	query: PS_ABSTRACT_QUERY [ANY, ANY]
 			-- Get the query which has `Current' as its result cursor.
 		do
 			Result := attach (detachable_query)
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 	detachable_item: detachable G
 			-- `item' as detachable (Void safety).
 
-	detachable_query: detachable PS_QUERY [ANY, ANY]
+	detachable_query: detachable PS_ABSTRACT_QUERY [ANY, ANY]
 			-- `query' as detachable (Void safety).
 
 invariant

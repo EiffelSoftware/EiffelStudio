@@ -18,14 +18,14 @@ create
 
 feature {PS_ABEL_EXPORT} -- Query execution
 
-	setup_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
+	setup_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Set up query `query' and retrieve the first result.
 		do
 			initialize_query (query, create {LINKED_LIST [STRING]}.make, transaction)
 			retrieve_until_criteria_match (query, transaction)
 		end
 
-	next_entry (query: PS_OBJECT_QUERY [ANY])
+	next_entry (query: PS_QUERY [ANY])
 			-- Retrieve the next entry of query `query'.
 		do
 			attach (query_to_cursor_map [query.backend_identifier]).forth
@@ -61,7 +61,7 @@ feature {PS_ABEL_EXPORT} -- Query execution
 
 feature {NONE} -- Implementation - Retrieval
 
-	retrieve_until_criteria_match (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
+	retrieve_until_criteria_match (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Retrieve objects until the criteria in `query.criteria' are satisfied.
 		local
 			new_object: ANY
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation: Collection handlers
 
 feature {NONE} -- Implementation: Query initialization
 
-	initialize_query (query: PS_QUERY [ANY, ANY]; some_attributes: LIST [STRING]; transaction: PS_INTERNAL_TRANSACTION)
+	initialize_query (query: PS_ABSTRACT_QUERY [ANY, ANY]; some_attributes: LIST [STRING]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Initialize query - Set an identifier, initialize with bookkeeping manager and execute against backend.
 		local
 			results: ITERATION_CURSOR [ANY]

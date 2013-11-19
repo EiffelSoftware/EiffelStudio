@@ -28,11 +28,11 @@ feature {PS_ABEL_EXPORT} -- Obsolete
 
 feature {PS_ABEL_EXPORT} -- Object query
 
-	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
+	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute `query' within `transaction'.
 		do
 			id_manager.register_transaction (transaction)
-			if attached {PS_OBJECT_QUERY [ANY]} query as obj_query then
+			if attached {PS_QUERY [ANY]} query as obj_query then
 				retriever.setup_query (obj_query, transaction)
 			end
 		rescue
@@ -40,12 +40,12 @@ feature {PS_ABEL_EXPORT} -- Object query
 			default_transactional_rescue (transaction)
 		end
 
-	next_entry (query: PS_OBJECT_QUERY [ANY])
+	next_entry (query: PS_QUERY [ANY])
 			-- Retrieves the next object. Stores item directly into result_set.
 			-- In case of an error it is written into the transaction connected to the query.
 		do
 			id_manager.register_transaction (query.transaction)
-			if attached {PS_OBJECT_QUERY [ANY]} query as obj_query then
+			if attached {PS_QUERY [ANY]} query as obj_query then
 				retriever.next_entry (obj_query)
 			end
 		rescue

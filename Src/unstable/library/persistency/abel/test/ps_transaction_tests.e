@@ -18,7 +18,7 @@ feature {PS_REPOSITORY_TESTS}
 			-- Test if a lost update can happen.
 		do
 			check_failure (
-				agent (q1, q2: PS_OBJECT_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
+				agent (q1, q2: PS_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
 						-- Simulate a lost update situation.
 					do
 							-- T1 reads
@@ -52,7 +52,7 @@ feature {PS_REPOSITORY_TESTS}
 			-- Test if a dirty read can happen.
 		do
 			check_failure (
-				agent (q1, q2: PS_OBJECT_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
+				agent (q1, q2: PS_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
 						-- Simulate a dirty read situation.
 					do
 							-- T1 reads and updates
@@ -82,7 +82,7 @@ feature {PS_REPOSITORY_TESTS}
 		-- Test if a non-repeatable read can happen
 		do
 			check_failure (
-				agent (q1, q2: PS_OBJECT_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
+				agent (q1, q2: PS_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
 						-- Simulate a non-repeatable read situation.
 					do
 							-- T1 reads
@@ -116,7 +116,7 @@ feature {PS_REPOSITORY_TESTS}
 		local
 			some_person: TEST_PERSON
 			retrieved_person: TEST_PERSON
-			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
+			q1, q2: PS_QUERY[TEST_PERSON]
 
 			transaction: PS_TRANSACTION
 		do
@@ -153,7 +153,7 @@ feature {PS_REPOSITORY_TESTS}
 		local
 			some_person: TEST_PERSON
 			t1: PS_INTERNAL_TRANSACTION
-			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
+			q1, q2: PS_QUERY[TEST_PERSON]
 
 			transaction: PS_TRANSACTION
 		do
@@ -217,13 +217,13 @@ feature {PS_REPOSITORY_TESTS}
 feature {NONE} -- Support
 
 	check_failure (action: PROCEDURE [ANY, TUPLE [
-			PS_OBJECT_QUERY [TEST_PERSON],
-			PS_OBJECT_QUERY [TEST_PERSON],
+			PS_QUERY [TEST_PERSON],
+			PS_QUERY [TEST_PERSON],
 			PS_TRANSACTION,
 			PS_TRANSACTION]])
 			-- Call `action' and check if it triggers a transaction conflict.
 		local
-			q1, q2: detachable PS_OBJECT_QUERY [TEST_PERSON]
+			q1, q2: detachable PS_QUERY [TEST_PERSON]
 			tx1, tx2: detachable PS_TRANSACTION
 			init: PS_TRANSACTION
 

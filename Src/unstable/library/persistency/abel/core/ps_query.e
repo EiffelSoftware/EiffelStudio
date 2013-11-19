@@ -1,7 +1,7 @@
 note
 	description:"[
 		This class contains the shared parts of both PS_TUPLE_QUERY
-		and PS_OBJECT_QUERY.
+		and PS_QUERY.
 
 		The generic parameter OBJECT_TYPE denotes the type of the objects
 		to be queried.
@@ -27,14 +27,14 @@ note
 			end
 		
 		The type of `cursor.item' is RESULT_TYPE, i.e. TUPLE for tuple
-		queries and OBJECT_TYPE for object queries.
+		queries and OBJECT_TYPE for normal queries.
 	]"
 	author: "Marco Piccioni, Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	PS_QUERY [OBJECT_TYPE -> ANY, RESULT_TYPE -> ANY]
+	PS_ABSTRACT_QUERY [OBJECT_TYPE -> ANY, RESULT_TYPE -> ANY]
 
 inherit
 
@@ -80,15 +80,9 @@ feature -- Status report
 	is_closed: BOOLEAN
 			-- Has the query been closed?
 
-	is_object_query: BOOLEAN
-			-- Is `Current' an instance of PS_OBJECT_QUERY?
-		deferred
-		end
-
 	is_tuple_query: BOOLEAN
 			-- Is `Current' an instance of PS_TUPLE_QUERY?
-		do
-			Result := not is_object_query
+		deferred
 		end
 
 feature -- Access: Retrieval Parameter

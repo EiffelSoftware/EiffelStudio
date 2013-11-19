@@ -85,10 +85,10 @@ feature -- Printing results
 	print_persons
 			-- Print all persons in the repository
 		local
-			query: PS_OBJECT_QUERY[PERSON]
+			query: PS_QUERY[PERSON]
 		do
 			-- To retrieve data we need to create a query object.
-			-- Note that the generic argunent in PS_OBJECT_QUERY denotes
+			-- Note that the generic argunent in PS_QUERY denotes
 			-- the type of objects we're interested in.
 			create query.make
 
@@ -112,7 +112,7 @@ feature -- Printing results
 	print_children
 			-- Print all children in the repository
 		local
-			query: PS_OBJECT_QUERY[CHILD]
+			query: PS_QUERY[CHILD]
 		do
 			create query.make
 			repository.execute_query (query)
@@ -199,7 +199,7 @@ feature -- Data modification
 	update_berno_citrini
 			-- Increase the age of Berno Citrini by one.
 		local
-			query: PS_OBJECT_QUERY[PERSON]
+			query: PS_QUERY[PERSON]
 			transaction: PS_TRANSACTION
 			berno: PERSON
 		do
@@ -240,7 +240,7 @@ feature -- Data modification
 			-- Increase the age of Berno Citrini by one.
 			-- Make use of criteria.
 		local
-			query: PS_OBJECT_QUERY[PERSON]
+			query: PS_QUERY[PERSON]
 			transaction: PS_TRANSACTION
 			berno: PERSON
 		do
@@ -275,7 +275,7 @@ feature -- Data modification
 			-- Try to update John Doe in several ways.
 		local
 			transaction: PS_TRANSACTION
-			query: PS_OBJECT_QUERY [CHILD]
+			query: PS_QUERY [CHILD]
 			baby: CHILD
 			john: CHILD
 			grandpa: CHILD
@@ -354,7 +354,7 @@ feature -- Criteria
 	explore_criteria
 			-- See what can be done with criteria.
 		local
-			query: PS_OBJECT_QUERY [PERSON]
+			query: PS_QUERY [PERSON]
 		do
 				-- Predefined criteria work on any attribute of a basic or string type.
 			print ("Select all persons with age > 2:%N")
@@ -421,7 +421,7 @@ feature -- Criteria
 		end
 
 
-	print_result (query: PS_OBJECT_QUERY [PERSON])
+	print_result (query: PS_QUERY [PERSON])
 			-- Print all results in `query'.
 		do
 			across
@@ -440,7 +440,7 @@ feature -- Criteria
 			-- Show that a wrong attribute name leads to an exception.
 		local
 			retried: BOOLEAN
-			query: PS_OBJECT_QUERY[PERSON]
+			query: PS_QUERY[PERSON]
 		do
 			if not retried then
 
@@ -459,7 +459,7 @@ feature -- Root objects
 	explore_root_objects
 			-- See what can be done with the `root' status of an object.
 		local
-			query: PS_OBJECT_QUERY [CHILD]
+			query: PS_QUERY [CHILD]
 			transaction: PS_TRANSACTION
 		do
 				-- By default any root of an object graph during `insert'
@@ -541,7 +541,7 @@ feature -- Tuple queries
 			transaction: PS_TRANSACTION
 			projection: ARRAYED_LIST [STRING]
 		do
-				-- Tuple queries are very similar to normal object queries.
+				-- Tuple queries are very similar to normal queries.
 				-- I.e. you can query for CHILD objects by creating
 				-- a PS_TUPLE_QUERY [CHILD]
 			create query.make

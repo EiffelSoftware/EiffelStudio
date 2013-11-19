@@ -5,17 +5,17 @@ note
 	revision: "$Revision$"
 
 class
-	PS_OBJECT_QUERY [OBJECT_TYPE -> ANY]
+	PS_QUERY [OBJECT_TYPE -> ANY]
 
 inherit
-	PS_QUERY [OBJECT_TYPE, OBJECT_TYPE]
+	PS_ABSTRACT_QUERY [OBJECT_TYPE, OBJECT_TYPE]
 
 create
 	make, make_with_criterion
 
 feature -- Status report
 
-	is_object_query: BOOLEAN = True
-			-- Is `Current' an instance of PS_OBJECT_QUERY?
+	is_tuple_query: BOOLEAN = False
+			-- Is `Current' an instance of PS_TUPLE_QUERY?
 
 end

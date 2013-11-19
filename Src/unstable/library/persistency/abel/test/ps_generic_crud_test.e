@@ -88,7 +88,7 @@ feature {PS_CRUD_TESTS}
 	count_results: INTEGER
 			-- Count the number of results of objects of type G
 		local
-			query: PS_OBJECT_QUERY [G]
+			query: PS_QUERY [G]
 		do
 			create query.make
 
@@ -109,7 +109,7 @@ feature {NONE}
 			-- See if any retrieved object from the database is equal to `object'
 			-- Use `equality_test' to test on equality.
 		local
-			query: PS_OBJECT_QUERY [G]
+			query: PS_QUERY [G]
 			ref_list: LINKED_LIST [G]
 			one_equal: BOOLEAN
 		do

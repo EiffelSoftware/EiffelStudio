@@ -31,7 +31,7 @@ feature {PS_REPOSITORY_TESTS}
 	test_write_operations
 			-- Test the initialization depth for write operations.
 		local
-			query: PS_OBJECT_QUERY [CHAIN_HEAD]
+			query: PS_QUERY [CHAIN_HEAD]
 			res, res2: CHAIN_HEAD
 			transaction: PS_TRANSACTION
 		do
@@ -69,7 +69,7 @@ feature {PS_REPOSITORY_TESTS}
 			-- Test if a retrieve with `object_initialization_depth' = 1 only retrieves the first object
 		local
 			transaction: PS_TRANSACTION
-			head_query: PS_OBJECT_QUERY [CHAIN_HEAD]
+			head_query: PS_QUERY [CHAIN_HEAD]
 		do
 			transaction := repository.new_transaction
 			transaction.insert (test_data.reference_chain)
@@ -91,8 +91,8 @@ feature {PS_REPOSITORY_TESTS}
 		local
 			tail_count: INTEGER
 			transaction: PS_TRANSACTION
-			query: PS_OBJECT_QUERY [CHAIN_HEAD]
-			tail_query: PS_OBJECT_QUERY [CHAIN_TAIL]
+			query: PS_QUERY [CHAIN_HEAD]
+			tail_query: PS_QUERY [CHAIN_TAIL]
 		do
 			create query.make
 			create tail_query.make

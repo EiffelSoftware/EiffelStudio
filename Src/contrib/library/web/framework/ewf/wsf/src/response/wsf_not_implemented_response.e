@@ -55,6 +55,8 @@ feature {WSF_RESPONSE} -- Output
 			res.set_status_code ({HTTP_STATUS_CODE}.not_implemented)
 
 			s := "Error 501 Not Implemented ! "
+			s.append (request.request_method)
+			s.append (" ")
 			s.append (request.request_uri)
 			if attached body as b then
 				s.append ("%N")
@@ -69,7 +71,7 @@ feature {WSF_RESPONSE} -- Output
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

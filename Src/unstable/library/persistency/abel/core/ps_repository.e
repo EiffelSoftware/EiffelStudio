@@ -61,7 +61,7 @@ feature -- Element change
 
 feature -- Query execution
 
-	execute_query (query: PS_OBJECT_QUERY [ANY])
+	execute_query (query: PS_QUERY [ANY])
 			-- Execute `query' and store the results in `query.result_cursor'.
 			-- Note that the query is executed in an hidden, implicit transaction context
 			-- and that the result cannot be used for any subsequent write operations.
@@ -157,7 +157,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 --		and the transaction is automatically rolled back.
 
 
-	internal_execute_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
+	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Executes the object query `query' within `transaction'.
 		require
 			not_executed: not query.is_executed
@@ -173,7 +173,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 			not_after_means_known: not query.result_cursor.after implies is_identified (query.result_cursor.item, transaction)
 		end
 
-	next_entry (query: PS_OBJECT_QUERY [ANY])
+	next_entry (query: PS_QUERY [ANY])
 			-- Retrieves the next object and stores the result directly into `query.result_cursor'.
 		require
 			not_after: not query.result_cursor.after
@@ -271,7 +271,7 @@ feature {PS_ABEL_EXPORT} -- Modification
 			transaction_active_in_id_manager: id_manager.is_registered (transaction)
 		end
 
-	delete_query (query: PS_OBJECT_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
+	delete_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete all objects that match the criteria in `query' from `Current' within `transaction'.
 		require
 			not_executed: not query.is_executed

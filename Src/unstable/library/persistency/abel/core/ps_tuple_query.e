@@ -24,7 +24,7 @@ class
 
 inherit
 
-	PS_QUERY [G, TUPLE]
+	PS_ABSTRACT_QUERY [G, TUPLE]
 		redefine
 			make
 		end
@@ -41,8 +41,8 @@ feature -- Access: Retrieval Parameter
 
 feature -- Status report
 
-	is_object_query: BOOLEAN = False
-			-- Is `Current' an instance of PS_OBJECT_QUERY?
+	is_tuple_query: BOOLEAN = True
+			-- Is `Current' an instance of PS_TUPLE_QUERY?
 
 feature -- Element change
 

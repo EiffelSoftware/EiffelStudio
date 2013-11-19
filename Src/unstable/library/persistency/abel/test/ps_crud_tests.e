@@ -322,7 +322,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 	test_update_on_reference
 			-- test if an update on a referenced object works
 		local
-			query: PS_OBJECT_QUERY [DATA_STRUCTURES_CLASS_1]
+			query: PS_QUERY [DATA_STRUCTURES_CLASS_1]
 			retrieved: DATA_STRUCTURES_CLASS_1
 			testdata_copy: DATA_STRUCTURES_CLASS_1
 
@@ -346,8 +346,8 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		local
 			a,b: SHARED_SPECIAL
 			special: SPECIAL[INTEGER]
-			query: PS_OBJECT_QUERY[SHARED_SPECIAL]
-			query2: PS_OBJECT_QUERY[SPECIAL[INTEGER]]
+			query: PS_QUERY[SHARED_SPECIAL]
+			query2: PS_QUERY[SPECIAL[INTEGER]]
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing

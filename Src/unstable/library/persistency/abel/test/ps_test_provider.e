@@ -61,7 +61,7 @@ feature {PS_TEST_PROVIDER}
 			-- Perform a write-read test on `object' with a possible `update_operation'.
 		local
 			context: PS_TRANSACTION
-			query: PS_OBJECT_QUERY [ANY]
+			query: PS_QUERY [ANY]
 			first_count: INTEGER
 			second_count: INTEGER
 		do
@@ -107,7 +107,7 @@ feature {PS_TEST_PROVIDER}
 		local
 			object: ANY
 			context: PS_TRANSACTION
-			query: PS_OBJECT_QUERY [ANY]
+			query: PS_QUERY [ANY]
 			first_count: INTEGER
 			second_count: INTEGER
 

@@ -88,7 +88,7 @@ feature -- Access
 	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
 			-- The default behaviour for root declaration on write functions.
 
-	active_queries: CONTAINER [PS_QUERY [ANY, ANY]]
+	active_queries: CONTAINER [PS_ABSTRACT_QUERY [ANY, ANY]]
 			-- The currently active queries.
 		do
 			Result := internal_active_queries
@@ -151,7 +151,7 @@ feature -- Element change
 
 feature -- Data retrieval
 
-	execute_query (query: PS_OBJECT_QUERY [ANY])
+	execute_query (query: PS_QUERY [ANY])
 			-- Execute `query' and store the result in `query.result_cursor'.
 		require
 			in_transaction: is_active
@@ -329,7 +329,7 @@ feature -- Transaction operations
 
 feature {PS_ABEL_EXPORT} -- Implementation
 
-	internal_active_queries: LINKED_LIST [PS_QUERY [ANY, ANY]]
+	internal_active_queries: LINKED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]
 			-- The internal storage for `active_queries'.
 
 feature {NONE} -- Implementation

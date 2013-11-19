@@ -16,7 +16,7 @@ inherit
 			all
 		end
 
-create {PS_QUERY}
+create {PS_ABSTRACT_QUERY}
 	make
 
 feature -- Access
@@ -50,12 +50,12 @@ feature -- Cursor movement
 
 feature {NONE} -- Initialization
 
-	query: PS_QUERY [ANY, ANY]
+	query: PS_ABSTRACT_QUERY [ANY, ANY]
 		-- The query to iterate over.
 
 	index: INTEGER
 
-	make (a_query: PS_QUERY[ANY, ANY])
+	make (a_query: PS_ABSTRACT_QUERY[ANY, ANY])
 			-- Initialization for `Current'.
 		do
 			query := a_query

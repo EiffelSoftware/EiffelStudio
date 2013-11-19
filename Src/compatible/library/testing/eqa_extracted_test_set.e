@@ -141,7 +141,7 @@ feature {NONE} -- Query
 			elseif attached {SPECIAL [CHARACTER_8]} a_special as l_c8_special then
 				Result := a_tuple.is_uniform_character_8
 			elseif attached {SPECIAL [CHARACTER_32]} a_special as l_c32_special then
-				Result := a_tuple.is_uniforme_character_32
+				Result := a_tuple.is_uniform_character_32
 			elseif attached {SPECIAL [INTEGER_8]} a_special as l_i8_special then
 				Result := a_tuple.is_uniform_integer_8
 			elseif attached {SPECIAL [INTEGER_16]} a_special as l_i16_special then
@@ -170,7 +170,7 @@ feature {NONE} -- Query
 		ensure
 			tuple_uniform_boolean: (Result and attached {SPECIAL [BOOLEAN]} a_special as l_b) implies a_tuple.is_uniform_boolean
 			tuple_uniform_character_8: (Result and attached {SPECIAL [CHARACTER_8]} a_special as l_c8) implies a_tuple.is_uniform_character_8
-			tuple_uniform_character_32: (Result and attached {SPECIAL [CHARACTER_32]} a_special as l_c32) implies a_tuple.is_uniforme_character_32
+			tuple_uniform_character_32: (Result and attached {SPECIAL [CHARACTER_32]} a_special as l_c32) implies a_tuple.is_uniform_character_32
 			tuple_uniform_integer_8: (Result and attached {SPECIAL [INTEGER_8]} a_special as l_i8) implies a_tuple.is_uniform_integer_8
 			tuple_uniform_integer_16: (Result and attached {SPECIAL [INTEGER_16]} a_special as l_i16) implies a_tuple.is_uniform_integer_16
 			tuple_uniform_integer_32: (Result and attached {SPECIAL [INTEGER_32]} a_special as l_i32) implies a_tuple.is_uniform_integer_32

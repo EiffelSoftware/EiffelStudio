@@ -1,0 +1,187 @@
+note
+	description: "Summary description for {PS_WRITE_MANAGER}."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	PS_WRITE_MANAGER
+
+inherit
+	PS_ABSTRACT_MANAGER
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_metadata_factory: like metadata_factory; an_id_manager: like id_manager; a_primary_key_mapper: like primary_key_mapper;  a_backend: like backend)
+			-- Initialization for `Current'.
+		do
+			initialize (a_metadata_factory, an_id_manager, a_primary_key_mapper)
+			backend := a_backend
+			create traversal.make (create {ANY}, metadata_factory)
+
+			-- NOTE: Be aware that object_storage is aliased!
+			object_storage := traversal.traversed_objects
+
+			create object_primary_key_order.make (small_size)
+			create collection_primary_key_order.make (small_size)
+			create generated_object_primary_keys.make (small_size)
+			create generated_collection_primary_keys.make (small_size)
+			create objects_to_write.make (small_size)
+			create collections_to_write.make (small_size)
+		end
+
+feature -- Accesss: Static
+
+	backend: PS_READ_WRITE_BACKEND
+			-- An actual backend for the write operations.
+
+	traversal: PS_OBJECT_GRAPH_TRAVERSAL
+			-- An object to traverse and generate an object graph.
+
+feature -- Access: Per Write
+
+
+	object_primary_key_order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
+			-- All primary keys for objects to be generated.
+
+	collection_primary_key_order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
+			-- All primary keys for collections to be generated.
+
+	generated_object_primary_keys: HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+			-- The generated object primary keys.
+
+	generated_collection_primary_keys: HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+			-- The generated collection primary keys.
+
+	objects_to_write: ARRAYED_LIST[PS_BACKEND_OBJECT]
+			-- All objects to be written to the database.
+
+	collections_to_write: ARRAYED_LIST[PS_BACKEND_COLLECTION]
+			-- All collections to be written to the database.
+
+feature -- Write execution
+
+
+	write (root_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION)
+			-- Insert or update `root_object' and all objects reachable from it.
+		do
+			wipe_out
+			internal_transaction := a_transaction
+			traversal.set_root_object (root_object)
+			traversal.traverse
+			-- The next step is not necessary due to aliasing
+			-- object_storage := traversal.traversed_objects
+
+			assign_handlers (1 |..| count)
+			do_all (agent {PS_HANDLER}.set_is_persistent)
+			do_all (agent {PS_HANDLER}.set_identifier)
+			do_all (agent {PS_HANDLER}.generate_primary_key)
+
+			if not object_primary_key_order.is_empty then
+				generated_object_primary_keys := backend.generate_all_object_primaries (object_primary_key_order, transaction)
+				across generated_object_primary_keys as cursor loop cursor.item.start end
+			end
+
+			if not collection_primary_key_order.is_empty then
+				generated_collection_primary_keys := backend.generate_collection_primaries (collection_primary_key_order, transaction)
+				across generated_collection_primary_keys as cursor2 loop cursor2.item.start end
+			end
+
+			do_all (agent {PS_HANDLER}.generate_backend_representation)
+			do_all (agent {PS_HANDLER}.initialize_backend_representation)
+
+			fixme ("Support the other root object strategies as well")
+			if not item(1).is_persistent then
+				transaction.root_flags.force (True, item(1).identifier)
+			end
+			across
+				1 |..| count as idx
+			loop
+				if attached item(idx.item).backend_representation as br then
+					br.set_is_root (transaction.root_flags[item(idx.item).identifier])
+				end
+			end
+
+			do_all (agent {PS_HANDLER}.write_backend_representation)
+
+			if not objects_to_write.is_empty then
+				backend.write (objects_to_write, transaction)
+			end
+
+			if not collections_to_write.is_empty then
+				backend.write_collections (collections_to_write, transaction)
+			end
+		end
+
+
+	update_root (object: ANY; value: BOOLEAN; a_transaction: PS_INTERNAL_TRANSACTION)
+			-- Set the root status of `object' to `value'.
+		local
+			reflected_object: REFLECTED_REFERENCE_OBJECT
+			type: PS_TYPE_METADATA
+			object_data: PS_OBJECT_DATA
+		do
+				-- Initialize the data structures first.
+			wipe_out
+			object_storage.wipe_out
+
+			internal_transaction := a_transaction
+			create reflected_object.make (object)
+			type := traversal.factory.create_metadata_from_type_id (reflected_object.dynamic_type)
+
+			create object_data.make_with_object (1, reflected_object, 0, type)
+			object_storage.extend (object_data)
+
+			check count_is_one: count = 1 end
+
+			assign_handlers (1 |..| count)
+			do_all (agent {PS_HANDLER}.set_is_persistent)
+			do_all (agent {PS_HANDLER}.set_identifier)
+			do_all (agent {PS_HANDLER}.generate_primary_key)
+
+			-- No need to generate primary keys in a batch, as the object should be identified already.
+			check object_persistent: object_primary_key_order.is_empty and collection_primary_key_order.is_empty end
+
+			do_all (agent {PS_HANDLER}.generate_backend_representation)
+
+			-- Do not initialize... we don't want to perform an actual update...
+
+			-- Set the root status in the backend representation
+			transaction.root_flags.force (value, item(1).identifier)
+			check attached item(1).backend_representation as br then
+				br.set_is_root (transaction.root_flags[item(1).identifier])
+			end
+
+			do_all (agent {PS_HANDLER}.write_backend_representation)
+
+			if not objects_to_write.is_empty then
+				backend.write (objects_to_write, transaction)
+			end
+
+			fixme ("Collections need a different way of setting root status... The next statements will just overwrite the collection.")
+--			if not collections_to_write.is_empty then
+--				backend.write_collections (collections_to_write, transaction)
+--			end
+
+
+
+		end
+
+
+feature {NONE} -- Implementation
+
+	wipe_out
+			-- Wipe out all data structures.
+		do
+			object_primary_key_order.wipe_out
+			collection_primary_key_order.wipe_out
+			generated_object_primary_keys.wipe_out
+			generated_collection_primary_keys.wipe_out
+			objects_to_write.wipe_out
+			collections_to_write.wipe_out
+		end
+
+end

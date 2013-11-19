@@ -15,6 +15,9 @@ class
 
 inherit
 	REFLECTED_OBJECT
+		export
+			{ANY} physical_offset
+		end
 
 create
 	make
@@ -69,7 +72,9 @@ feature -- Access
 	copy_semantics_field (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
 			-- <Precursor>
 		do
-			create Result.make (Current, i)
+				-- We create a copy of `Current' otherwise if we update it with a new object
+				-- the newly created instance would become invalid.
+			create Result.make (twin, i)
 		end
 
 	expanded_field (i: INTEGER): REFLECTED_REFERENCE_OBJECT

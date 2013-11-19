@@ -477,21 +477,23 @@ The feature \lstinline{is_persistent} in \lstinline!PS_TRANSACTION! can tell you
 
 \section{The query mechanism}
 
-As you already know from Section~\ref{section:querying}, queries to a database are done by creating an object of type  \lstinline!PS_OBJECT_QUERY[G]! and using it from within a \lstinline!PS_EXECUTOR!.
-The actual value of the generic parameter \lstinline!G! determines the type of the objects that will be returned, including any conforming type (e.g. descendants of \lstinline!G!).
+As you already know from Section~\ref{section:querying}, queries to a database are done by creating an object of type  \lstinline!PS_OBJECT_QUERY[G]! 
+and executing it against a \lstinline!PS_TRANSACTION! or \lstinline!PS_REPOSITORY!.
+The actual value of the generic parameter \lstinline!G! determines the type of the objects that will be returned.
+At the moment descendants of \lstinline!G! will not be loaded, but this behaviour may change in the future.
 
 ABEL will by default load an object completely, meaning all objects that can be reached by following references will be loaded as well (see also Chapter ~\ref{chapter:references}).
 
 \section{Criteria}
 
-You can filter your query results by setting criteria in the query object, using feature \lstinline{set_criteria} in \lstinline{PS_OBJECT_QUERY}.
+You can filter your query results by setting criteria in the query object, using feature \lstinline{set_criterion} in \lstinline{PS_OBJECT_QUERY}.
 There are two types of criteria: predefined and agent criteria.
 
 \subsection{Predefined Criteria}
 When using a predefined criterion you pick an attribute name, an operator and a value. 
 During a read operation, ABEL checks the attribute value of the freshly retrieved object against the value set in the criterion, and filters away objects that don't satisfy the criterion.
 
-Most of the supported operators are pretty self-describing (see class \lstinline{CRITERION_FACTORY} in Section~\ref{sec:creating_criteria_objects}).
+Most of the supported operators are pretty self-describing (see class \lstinline{PS_CRITERION_FACTORY} in Section~\ref{sec:creating_criteria_objects}).
 An exception could be the \lstinline!like! operator, which does pattern-matching on strings.
 You can provide the \lstinline!like! operator with a pattern as a value. The pattern can contain the wildcard characters \lstinline!*! and \lstinline!?!.
 The asterisk stands for any number (including zero) of undefined characters, and the question mark means exactly one undefined character.
@@ -527,7 +529,7 @@ create
 
 feature -- Creating a criterion
 
-	new alias "[]" (tuple: TUPLE [ANY]): PS_CRITERION
+	new_uniform alias "[]" (tuple: TUPLE [ANY]): PS_CRITERION
 		-- Creates a new criterion according to a `tuple'
 		-- containing either a single PREDICATE or three 
 		-- values of type [STRING, STRING, ANY].
@@ -556,7 +558,7 @@ feature -- Operators
 end
 \end{lstlisting}
 
-Assuming you have an object \lstinline{f: PS_CRITERION_FACTORY}, to create a new criterion you have  two possibilities:
+Assuming you have an object \lstinline{f: PS_CRITERION_FACTORY}, to create a new criterion you have two possibilities:
 
  \begin{itemize}
   \item The "traditional" way
@@ -564,13 +566,13 @@ Assuming you have an object \lstinline{f: PS_CRITERION_FACTORY}, to create a new
   \item \lstinline!f.new_agent (agent an_agent)!
   \item \lstinline!f.new_predefined (an_attr_name, an_operator, a_val)!
   \end{itemize}
-  \item The "syntactic sugared" way
+  \item The "syntactic sugar" way
   \begin{itemize}
   \item \lstinline!f[[an_attr_name, an_operator, a_value]]!
   \item \lstinline!f[[agent an_agent]]!
   \end{itemize} 
   \end{itemize}
-caption={The CRITERION\_FACTORY interface}
+caption={The PS\_CRITERION\_FACTORY interface}
 \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Different ways of creating criteria.}, label={lst:factory_usage}]
 
 	create_criteria_traditional : PS_CRITERION
@@ -628,7 +630,7 @@ For example, if you want to search for a person called ``Albo Bitossi'' with $ag
 			
 			Result := first_name_criterion and last_name_criterion and not age_criterion
 
-			-- using double brackets for compactness. 
+			-- Using double brackets for compactness. 
 			Result := factory[[ "first_name", "=", "Albo" ]] 
 				and factory[[ "last_name", "=", "Bitossi" ]] 
 				and not factory[[ agent age_more_than (?, 20)  ]]
@@ -638,76 +640,77 @@ For example, if you want to search for a person called ``Albo Bitossi'' with $ag
 ABEL supports the three standard logical operators \lstinline!AND!, \lstinline!OR! and \lstinline!NOT!. 
 The precedence rules are the same as in Eiffel, which means that \lstinline!NOT! is stronger than \lstinline!AND!, which in turn is stronger than \lstinline!OR!.
 
-We can now add the necessary code to feature \lstinline{explore}:  
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Invoking the code that searches for Albo Bitossi}, label={lst:tutorial_print_result}]
-	explore
-			-- Tutorial code.
-		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
-		do
-			-- Same code as before
-			-- Search for Albo Bitossi with age <= 20
-			print_result (query_with_composite_criterion)
-		end
-\end{lstlisting}
+% We can now add the necessary code to feature \lstinline{explore}:  
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Invoking the code that searches for Albo Bitossi}, label={lst:tutorial_print_result_1}]
+% 	explore
+% 			-- Tutorial code.
+% 		local
+% 			in_memory_repo: PS_RELATIONAL_REPOSITORY
+% 			p1, p2, p3: PERSON
+% 		do
+% 			-- Same code as before
+% 			-- Search for Albo Bitossi with age <= 20
+% 			print_result (query_with_composite_criterion)
+% 		end
+% \end{lstlisting}
+% 
+% Where feature \lstinline{query_with_composite_criterion} looks like the following:
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Invoking the code that searches for Albo Bitossi}, label={lst:tutorial_print_result_2}]
+% 	query_with_composite_criterion: LINKED_LIST [PERSON]
+% 		-- Query using a composite criterion.
+% 		local
+% 			query: PS_OBJECT_QUERY [PERSON]
+% 		do
+% 			create Result.make
+% 			create query.make
+% 			query.set_criterion (composite_search_criterion)
+% 			executor.execute_query (query)
+% 
+% 			across query as	query_result
+% 			loop
+% 				Result.extend (query_result.item)
+% 			end
+% 		end
+% \end{lstlisting}
+% 
+% As you may have noticed, it is very simple to set criteria on a query.
 
-Where feature \lstinline{query_with_composite_criterion} looks like the following:
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Invoking the code that searches for Albo Bitossi}, label={lst:tutorial_print_result}]
-	query_with_composite_criterion: LINKED_LIST [PERSON]
-		-- Query using a composite criterion.
-		local
-			query: PS_OBJECT_QUERY [PERSON]
-		do
-			create Result.make
-			create query.make
-			query.set_criterion (composite_search_criterion)
-			executor.execute_query (query)
-
-			across query as	query_result
-			loop
-				Result.extend (query_result.item)
-			end
-		end
-\end{lstlisting}
-
-As you may have noticed, it is very simple to set criteria on a query.
-
-\section{Deletion queries}
-\label{section:deletion_query}
-
-As mentioned in Section~\ref{section:simple_delete}, there is another way to perform a deletion in the repository from within
-\lstinline!PS_EXECUTOR!. By calling \lstinline{execute_deletion_query} instead of \lstinline{execute_delete}, ABEL will delete all objects in the database that would have been retrieved by executing the query normally.
-
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Using a deletion query.}, label={lst:deletion_query}]
-	delete_person_with_deletion_query (last_name: STRING)
-		-- Delete person with `last_name' using a deletion query.
-		local
-			deletion_query: PS_OBJECT_QUERY [PERSON]
-			criterion:PS_PREDEFINED_CRITERION
-		do
-			create deletion_query.make
-			create criterion.make ("last_name", "=", last_name)
-			deletion_query.set_criterion (criterion)
-			executor.execute_deletion_query (deletion_query)
-		end
-\end{lstlisting}
-
-We can now add the necessary code to feature \lstinline{explore}:  
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Invoking the code that searches for Albo Bitossi}, label={lst:tutorial_print_result}]
-	explore
-			-- Tutorial code.
-		local
-			in_memory_repo: PS_RELATIONAL_REPOSITORY
-			p1, p2, p3: PERSON
-		do
-			-- Same code as before
-			-- Delete Albo Bitossi using a deletion query
-			delete_person_with_deletion_query ("Bitossi")
-			print_result (simple_query)
-		end
-\end{lstlisting}
-Using a deletion query instead of a direct delete command depends upon the situation. Usually, a direct command is better if you already have the object in memory, whereas deletion queries are nice to use if the object is not yet loaded from the database.
+% \section{Deletion queries}
+% \label{section:deletion_query}
+% 
+% As mentioned in Section~\ref{section:simple_delete}, there is another way to perform a deletion in the repository from within
+% \lstinline!PS_EXECUTOR!. By calling \lstinline{execute_deletion_query} instead of \lstinline{execute_delete}, ABEL will delete all objects in the database that would have been retrieved by executing the query normally.
+% 
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Using a deletion query.}, label={lst:deletion_query}]
+% 	delete_person_with_deletion_query (last_name: STRING)
+% 		-- Delete person with `last_name' using a deletion query.
+% 		local
+% 			deletion_query: PS_OBJECT_QUERY [PERSON]
+% 			criterion:PS_PREDEFINED_CRITERION
+% 		do
+% 			create deletion_query.make
+% 			create criterion.make ("last_name", "=", last_name)
+% 			deletion_query.set_criterion (criterion)
+% 			executor.execute_deletion_query (deletion_query)
+% 		end
+% \end{lstlisting}
+% 
+% We can now add the necessary code to feature \lstinline{explore}:  
+% \begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Invoking the code that searches for Albo Bitossi}, label={lst:tutorial_print_result}]
+% 	explore
+% 			-- Tutorial code.
+% 		local
+% 			in_memory_repo: PS_RELATIONAL_REPOSITORY
+% 			p1, p2, p3: PERSON
+% 		do
+% 			-- Same code as before
+% 			-- Delete Albo Bitossi using a deletion query
+% 			delete_person_with_deletion_query ("Bitossi")
+% 			print_result (simple_query)
+% 		end
+% \end{lstlisting}
+% Using a deletion query instead of a direct delete command depends upon the situation. 
+% Usually, a direct command is better if you already have the object in memory, whereas deletion queries are nice to use if the object is not yet loaded from the database.
 
 %\section{Tuple queries}
 %
@@ -1196,7 +1199,7 @@ ABEL does not only work with an in-memory database. It is also able to store obj
 
 CouchDB is a free, open-source document-oriented database \footnote{\url{http://couchdb.apache.org}}. CouchDB stores objects on a persistent database using JSON documents.
 JSON is a textual notation similar to XML that stores Eiffel objects like this:
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Sample Eiffel Object in JSON}, label={lst:error_visitor_example}]
+\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={Sample Eiffel Object in JSON}, label={lst:person_json}]
 {
 	"firstname": "Albo",
 	"lastname": "Bitossi",
@@ -1214,7 +1217,7 @@ To work with CouchDB in Eiffel we have created another tutorial which you can ge
 \section{Getting started with CouchDB}
 
 On the surface there is not much difference between using the in-memory database and CouchDB. You may notice that all we changed in the tutorial is the call to the repo\_factory. 
-\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={The CouchDB Tutorial}, label={lst:error_visitor_example}]
+\begin{lstlisting}[language=OOSC2Eiffel, captionpos=b, caption={The CouchDB Tutorial}, label={lst:explore_couchdb}]
 	explore
 			-- Tutorial code.
 		local
@@ -1255,11 +1258,11 @@ For more information on CoachDB see the online documentation.
 %\chapter{Conclusions}
 %\input{conclusions}
 
-\begin{flushleft}
- 
-{{{
-\bibliographystyle {plain}
-\bibliography {./references}
-}}}
-\end{flushleft}
+% \begin{flushleft}
+%  
+% {{{
+% \bibliographystyle {plain}
+% \bibliography {./references}
+% }}}
+% \end{flushleft}
 \end{document}

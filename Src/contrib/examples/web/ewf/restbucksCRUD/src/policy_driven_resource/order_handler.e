@@ -65,7 +65,7 @@ feature -- Access
 			-- At present, there is no support for this except for DELETE.
 		end
 
-	conneg (req: WSF_REQUEST): CONNEG_SERVER_SIDE
+	conneg (req: WSF_REQUEST): SERVER_CONTENT_NEGOTIATION
 			-- Content negotiatior for all requests
 		once
 			create Result.make ({HTTP_MIME_TYPES}.application_json, "en", "UTF-8", "identity")

@@ -11,24 +11,24 @@ note
 class
 	PS_IN_MEMORY_REPOSITORY_FACTORY
 
---inherit
---	PS_REPOSITORY_FACTORY
+inherit
+	PS_REPOSITORY_FACTORY
 
---create
---	default_create, make, make_uninitialized
+create
+	default_create, make, make_uninitialized
 
---feature -- Status report
+feature -- Status report
 
---	is_buildable: BOOLEAN = True
---			-- Does `Current' have enough information to build a repository?
+	is_buildable: BOOLEAN = True
+			-- Does `Current' have enough information to build a repository?
 
---feature {NONE}
+feature {NONE}
 
---	new_backend: PS_READ_WRITE_BACKEND
---		do
---			create {PS_IN_MEMORY_BACKEND} Result.make
---			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
---		end
+	new_backend: PS_READ_WRITE_BACKEND
+		do
+			create {PS_IN_MEMORY_BACKEND} Result.make
+			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
+		end
 
 feature -- Factory methods
 

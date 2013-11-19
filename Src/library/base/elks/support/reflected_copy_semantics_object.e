@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 	make_special (a_enclosing_object: REFLECTED_OBJECT; i: INTEGER)
 			-- Setup a proxy to copy semantics item located at the `i'-th position of special represented by `a_enclosing_object'.
 		require
+			a_enclosing_object_is_special: a_enclosing_object.is_special
 			a_enclosing_object_is_special_reference: a_enclosing_object.is_special_of_reference
 			valid_index: attached {ABSTRACT_SPECIAL} a_enclosing_object.object as l_spec and then l_spec.valid_index (i)
 			i_th_field_is_expanded: a_enclosing_object.is_special_copy_semantics_item (i)

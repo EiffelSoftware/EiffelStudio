@@ -90,6 +90,7 @@ feature -- Access
 		do
 			Result := internal_field (i)
 		end
+
 feature {REFLECTED_OBJECT} -- Access
 
 	physical_offset: INTEGER
@@ -122,10 +123,26 @@ feature -- Status report
 			Result := helper.is_special_type (dynamic_type)
 		end
 
+	is_special_of_expanded: BOOLEAN
+			-- Is Current a SPECIAL [XX] where `XX' is a user defined expanded type?
+		require
+			is_special: is_special
+		do
+			Result := helper.is_special_expanded_type (dynamic_type)
+		end
+
 	is_special_of_reference: BOOLEAN
 			-- Is Current a SPECIAL [XX] where `XX' is a reference type?
+		require
+			is_special: is_special
 		do
 			Result := helper.is_special_any_type (dynamic_type)
+		end
+
+	is_expanded: BOOLEAN
+			-- Is Current an instance of an expanded type?
+		do
+			Result := helper.is_expanded_type (dynamic_type)
 		end
 
 	is_tuple: BOOLEAN
@@ -169,6 +186,7 @@ feature -- Status report
 	is_special_copy_semantics_item (i: INTEGER): BOOLEAN
 			-- Is `i'-th field of `object' a reference with copy-semantics properties?
 		require
+			is_specail: is_special
 			is_special_of_reference: is_special_of_reference
 			valid_index: attached {ABSTRACT_SPECIAL} object as l_spec and then l_spec.valid_index (i)
 		local
@@ -261,10 +279,13 @@ feature -- Access
 	special_copy_semantics_item (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
 			-- Object attached to the `i'th item of special.
 		require
+			is_special: is_special
 			is_special_reference: is_special_of_reference
 			valid_index: attached {ABSTRACT_SPECIAL} object as l_spec and then l_spec.valid_index (i)
 		do
-			create Result.make_special (Current, i)
+				-- We create a copy of `Current' otherwise if we update it with a new object
+				-- the newly created instance would become invalid.
+			create Result.make_special (twin, i)
 		end
 
 	expanded_field (i: INTEGER): REFLECTED_OBJECT

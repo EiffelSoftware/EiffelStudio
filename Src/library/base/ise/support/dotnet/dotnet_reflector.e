@@ -194,6 +194,22 @@ feature -- Status report
 			end
 		end
 
+	is_special_expanded_type (type_id: INTEGER): BOOLEAN
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a user defined expanded type.
+		require
+			type_id_nonnegative: type_id >= 0
+			is_special_type: is_special_type (type_id)
+		do
+			if attached {RT_GENERIC_TYPE} pure_implementation_type (type_id) as l_gen_type then
+				Result := attached l_gen_type.generics as l_generics and then
+					attached {RT_CLASS_TYPE} l_generics.item (0) as l_type and then
+					not l_type.is_basic and then
+					attached l_type.dotnet_type as l_dotnet_type and then
+					l_dotnet_type.is_value_type
+			end
+		end
+
 	is_special_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type
@@ -218,6 +234,15 @@ feature -- Status report
 			object_not_void: object /= Void
 		do
 			Result := is_special_type (dynamic_type (object))
+		end
+
+	is_expanded_type (type_id: INTEGER): BOOLEAN
+			-- Is type represented by `type_id' represent an expanded type?
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := attached  Id_to_eiffel_implementation_type.item (type_id) as l_type and then
+				attached l_type.dotnet_type as l_dotnet_type and then l_dotnet_type.is_value_type
 		end
 
 	is_tuple_type (type_id: INTEGER): BOOLEAN

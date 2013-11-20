@@ -308,27 +308,27 @@ feature -- Data modification
 				-- Updating the whole object graph could be costly in some cases.
 				-- ABEL provides an alternative. A direct update only updates the object
 				-- given in its argument, and does not follow any references.
---			transaction.direct_update (john)
---			query.reset
---			transaction.execute_query (query)
---			check equal: query.new_cursor.item.age = john.age end
+			transaction.direct_update (john)
+			query.reset
+			transaction.execute_query (query)
+			check equal: query.new_cursor.item.age = john.age end
 
---				-- Check that the update really only affects the immediate argument.
---			john.celebrate_birthday
---			grandpa.celebrate_birthday
+				-- Check that the update really only affects the immediate argument.
+			john.celebrate_birthday
+			grandpa.celebrate_birthday
 
---			transaction.direct_update (john)
+			transaction.direct_update (john)
 
---			query.reset
---			transaction.execute_query (query)
---			check
---				john_updated: query.new_cursor.item.age = john.age
---			end
---			check
---				grandpa_not_updated:
---					attached query.new_cursor.item.father as new_grandpa
---					and then new_grandpa.age /= grandpa.age
---			end
+			query.reset
+			transaction.execute_query (query)
+			check
+				john_updated: query.new_cursor.item.age = john.age
+			end
+			check
+				grandpa_not_updated:
+					attached query.new_cursor.item.father as new_grandpa
+					and then new_grandpa.age /= grandpa.age
+			end
 
 			query.close
 			transaction.commit

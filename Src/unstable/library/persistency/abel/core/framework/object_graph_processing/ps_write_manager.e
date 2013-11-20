@@ -171,6 +171,53 @@ feature -- Write execution
 		end
 
 
+	direct_update (root_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION)
+			-- Insert or update `root_object' and all objects reachable from it.
+		local
+			i, k: INTEGER
+		do
+			wipe_out
+			internal_transaction := a_transaction
+			traversal.set_root_object (root_object)
+			traversal.traverse
+
+			from
+				i := 1
+			until
+				i > count or else item (i).level > 1
+			loop
+				k := i
+				i := i + 1
+			end
+
+
+			assign_handlers (1 |..| k)
+			do_all_in_set (agent {PS_HANDLER}.set_is_persistent, 1 |..| k)
+			do_all_in_set (agent {PS_HANDLER}.set_identifier, 1 |..| k)
+			do_all_in_set (agent {PS_HANDLER}.generate_primary_key, 1 |..| k)
+
+			check object_primary_key_order.is_empty and collection_primary_key_order.is_empty end
+
+			do_all_in_set (agent {PS_HANDLER}.generate_backend_representation, 1 |..| k)
+			do_all_in_set (agent {PS_HANDLER}.initialize_backend_representation, 1 |..| 1)
+
+			check attached item(1).backend_representation as br then
+				fixme ("Other root declaration strategies")
+				br.set_is_root (transaction.root_flags[item(1).identifier])
+			end
+
+			do_all_in_set (agent {PS_HANDLER}.write_backend_representation, 1 |..| 1)
+
+			if not objects_to_write.is_empty then
+				backend.write (objects_to_write, transaction)
+			end
+
+			if not collections_to_write.is_empty then
+				backend.write_collections (collections_to_write, transaction)
+			end
+		end
+
+
 feature {NONE} -- Implementation
 
 	wipe_out

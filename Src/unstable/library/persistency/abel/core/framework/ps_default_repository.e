@@ -91,6 +91,13 @@ feature {PS_ABEL_EXPORT} -- Modification
 			default_transactional_rescue (transaction)
 		end
 
+	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
+			-- Update `object' only and none of its referenced objects.
+		do
+			id_manager.register_transaction (transaction)
+			write_manager.direct_update (object, transaction)
+		end
+
 	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `object' within `transaction' from `Current'.
 		local

@@ -162,7 +162,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 	clean_db_for_testing
 			-- Wipe out all data.
 		local
-			handlers: LINKED_LIST[PS_COLLECTION_HANDLER_OLD[detachable ANY]]
+--			handlers: LINKED_LIST[PS_COLLECTION_HANDLER_OLD[detachable ANY]]
 		do
 --			handlers:= collection_handlers
 			backend.wipe_out

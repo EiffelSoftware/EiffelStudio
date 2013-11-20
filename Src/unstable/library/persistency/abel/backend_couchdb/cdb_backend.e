@@ -331,7 +331,6 @@ feature --json operations
 			--creates a json document containing the attributes of object in the form:
 			--{"attribute1": "value1", "attribute2": "value2"}
 		local
-			referenced_part: PS_OBJECT_GRAPH_PART
 			value: STRING
 		do
 			create Result.make_empty

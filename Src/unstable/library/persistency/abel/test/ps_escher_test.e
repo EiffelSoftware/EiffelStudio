@@ -162,7 +162,7 @@ feature {NONE}
 			create schema_evolution_manager.make
 			create escher_integration.make (schema_evolution_manager.schema_evolution_handler)
 
-			create factory
+			create factory.make
 --			repo := factory.create_in_memory_repository
 --			repo.backend.add_plug_in (escher_integration)
 			factory.add_plugin (escher_integration)

@@ -145,7 +145,7 @@ feature -- Factory function
 			internal_handler.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
 			internal_handler.do_all (agent write_manager.add_handler)
 
-			create {PS_NEW_REPOSITORY} Result.make_from_factory (
+			create {PS_DEFAULT_REPOSITORY} Result.make_from_factory (
 				backend,
 				id_manager,
 				key_mapper,

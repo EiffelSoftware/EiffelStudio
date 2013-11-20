@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_NEW_REPOSITORY
+	PS_DEFAULT_REPOSITORY
 
 inherit
 	PS_REPOSITORY

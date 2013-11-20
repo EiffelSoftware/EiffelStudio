@@ -1,9 +1,9 @@
 note
-	description	: "EiffelVision horizontal separator, windows implementation."
+	description: "EiffelVision horizontal separator, windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$";
-	revision	: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	EV_HORIZONTAL_SEPARATOR_IMP

@@ -1,12 +1,12 @@
 note
-	description	: "[
+	description: "[
 		Default widget for viewing and editing preferences represented in string
 		format (i.e. STRING, INTEGER and ARRAY preferences).
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STRING_PREFERENCE_WIDGET

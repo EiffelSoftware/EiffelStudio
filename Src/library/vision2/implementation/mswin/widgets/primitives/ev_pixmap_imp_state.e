@@ -1,10 +1,10 @@
 note
-	description	: "EiffelVision pixmap. Common attributes between%
+	description: "EiffelVision pixmap. Common attributes between%
 				  %all different EV_PIXMAP Windows implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EV_PIXMAP_IMP_STATE

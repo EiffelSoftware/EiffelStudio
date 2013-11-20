@@ -1,9 +1,9 @@
 note
-	description	: "About dialog box"
+	description: "About dialog box"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "1.0.0"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ABOUT_DIALOG

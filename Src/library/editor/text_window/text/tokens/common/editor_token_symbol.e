@@ -1,10 +1,10 @@
 note
-	description	: "Token that describe a symbol ( [, {, ...)"
+	description: "Token that describe a symbol ( [, {, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EDITOR_TOKEN_SYMBOL

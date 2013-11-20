@@ -1,10 +1,10 @@
 note
-	description	: "Eiffel Vision container. Implementation interface."
+	description: "Eiffel Vision container. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "container"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "container"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EV_CONTAINER_I

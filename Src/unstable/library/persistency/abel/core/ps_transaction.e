@@ -58,7 +58,7 @@ class
 inherit
 	PS_ABEL_EXPORT
 
-create
+create {PS_REPOSITORY}
 	make
 
 feature {NONE} -- Initialization

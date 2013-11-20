@@ -1,9 +1,9 @@
 note
-	description	: "Reflected Window Message IDs. Defined in OleCtl.h"
+	description: "Reflected Window Message IDs. Defined in OleCtl.h"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_OCM_CONSTANTS

@@ -1,13 +1,13 @@
 note
-	description	: "[
+	description: "[
 		List view next item (LVNI) constants.
 	
 		Note: Used to find items in a list view with the given properties.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_LVNI_CONSTANTS

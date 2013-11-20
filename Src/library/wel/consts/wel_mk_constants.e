@@ -1,9 +1,9 @@
 note
-	description	: "Mouse and Key (MK) constants."
+	description: "Mouse and Key (MK) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_MK_CONSTANTS

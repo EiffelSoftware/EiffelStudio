@@ -1,9 +1,9 @@
 note
-	description	: "Virtual Key code (VK) constants."
+	description: "Virtual Key code (VK) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_VK_CONSTANTS

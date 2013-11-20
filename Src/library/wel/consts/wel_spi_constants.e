@@ -1,5 +1,5 @@
 note
-	description	: "SPI constants for SystemParametersInfo."
+	description: "SPI constants for SystemParametersInfo."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

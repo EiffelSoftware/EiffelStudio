@@ -251,9 +251,7 @@ feature {PS_ABEL_EXPORT} -- Modification
 
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Update `object' only and none of its referenced objects.
-		do
-			check not_implemented: False end
-			update (object, transaction)
+		deferred
 		end
 
 	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)

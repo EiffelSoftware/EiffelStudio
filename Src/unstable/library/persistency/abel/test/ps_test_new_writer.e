@@ -16,54 +16,11 @@ feature {NONE}
 	make_repository: PS_REPOSITORY
 			-- Create the repository for this test
 		local
-			repo: PS_NEW_REPOSITORY
-			backend: PS_IN_MEMORY_BACKEND
-			special_handler: PS_SPECIAL_COLLECTION_HANDLER
-			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
 			create factory.make
---			create backend.make
---			create repo.make (backend)
---			create special_handler.make
---			create tuple_handler
---			repo.add_collection_handler (special_handler)
---			repo.add_collection_handler (tuple_handler)
-
---			Result := repo
 			Result := factory.new_repository
 		end
-
---feature {NONE} -- Initialization
-
---	make_repository: PS_NEW_REPOSITORY
---			-- Create the repository for this test
---		local
---			database: PS_MYSQL_DATABASE
---			backend: PS_MYSQL_BACKEND
---			special_handler: PS_SPECIAL_COLLECTION_HANDLER
---			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
---		do
---			create database.make (username, password, db_name, db_host, db_port)
---			create backend.make (database, create {PS_MYSQL_STRINGS})
---			backend.wipe_out
---			create Result.make (backend)
-
---			create special_handler.make
---			create tuple_handler
---			Result.add_collection_handler (special_handler)
---			Result.add_collection_handler (tuple_handler)
---		end
-
---	username: STRING = "eiffelstoretest"
-
---	password: STRING = "eiffelstoretest"
-
---	db_name: STRING = "eiffelstoretest"
-
---	db_host: STRING = "127.0.0.1"
-
---	db_port: INTEGER = 3306
 
 feature
 

@@ -114,7 +114,7 @@ feature -- Element change
 
 feature {NONE}
 
-	new_backend: PS_READ_WRITE_BACKEND
+	new_backend: PS_BACKEND
 			-- Create a new backend.
 		local
 			l_host: STRING

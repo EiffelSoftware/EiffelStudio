@@ -8,7 +8,7 @@ class
 	PS_MYSQL_BACKEND
 
 inherit
-	PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND
+	PS_GENERIC_LAYOUT_SQL_BACKEND
 		redefine
 			generate_all_object_primaries, generate_collection_primaries, make
 		end

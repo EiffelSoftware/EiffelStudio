@@ -49,7 +49,7 @@ feature -- Element change
 
 feature {NONE}
 
-	new_backend: PS_READ_WRITE_BACKEND
+	new_backend: PS_BACKEND
 		local
 			l_host: STRING
 			backend: CDB_BACKEND

@@ -148,7 +148,7 @@ It is responsible to take an object graph apart into its pieces and generate a m
 During retrieval this layer is responsible for reconstructing the object graph from the data.
 %This layer is described more precisely in section ~\ref{section:ORM}.
 
-On the next level there is the \lstinline!READ_WRITE_BACKEND! layer.
+On the next level there is the \lstinline!BACKEND! layer.
 Its task is to map the objects, represented as string-value pairs in class \lstinline!BACKEND_OBJECT!, 
 to a specific storage engine like a database with some table layout.
 
@@ -363,7 +363,7 @@ As the exception propagates upwards, every layer in the back-end can do the appr
 \chapter{Backend abstraction}
 
 The framework provides some very flexible interfaces to be able to support many different storage engines. 
-The three main levels of abstraction are the \lstinline!REPOSITORY!, the \lstinline!READ_WRITE_BACKEND! and the database wrapper classes.
+The three main levels of abstraction are the \lstinline!REPOSITORY!, the \lstinline!BACKEND! and the database wrapper classes.
 
 \section{REPOSITORY}
 
@@ -371,11 +371,11 @@ The deferred class \lstinline!REPOSITORY! provides the highest level of abstract
 It provides a good interface to wrap a persistence mechanism that provides a similarly high level of abstraction, like for example db4o \cite{db4o}.
 
 The \lstinline!DEFAULT_REPOSITORY! is the main implementation of this interface.
-It uses the ORM layer and a \lstinline!READ_WRITE_BACKEND! and is therefore the default repository for persistence libraries which are wrapped through \lstinline!READ_WRITE_BACKEND!.
+It uses the ORM layer and a \lstinline!BACKEND! and is therefore the default repository for persistence libraries which are wrapped through \lstinline!BACKEND!.
 
 \section{BACKEND}
 
-Another important interface is the deferred class \lstinline!READ_WRITE_BACKEND!.
+Another important interface is the deferred class \lstinline!BACKEND!.
 This layer only deals with \lstinline!BACKEND_OBJECT! or \lstinline!BACKEND_COLLECTION!.
 It is responsible to map them to the actual persistence mechanism which is usually a specific layout in a database.
 
@@ -399,7 +399,7 @@ The wrapper is very useful if you want to easily swap e.g. from a MySQL database
 However, keep in mind that the abstraction is not perfect. 
 For example, the wrapper doesn't care about the different SQL variations as it just forwards the statements to the database.
 
-To overcome this problem, you can put all SQL statements in your implementation of \lstinline!READ_WRITE_BACKEND! into a separate class, and generally stick to standard SQL as much as possible.
+To overcome this problem, you can put all SQL statements in your implementation of \lstinline!BACKEND! into a separate class, and generally stick to standard SQL as much as possible.
 
 
 % \chapter{Extensions}
@@ -438,7 +438,7 @@ The database layout is based upon metadata of the class.
 It is very flexible and allows for any type of objects to be inserted.
 The layout is a modified version from the suggestion in Scott W. Ambler's article ``Mapping Objects to Relational Databases'' \cite{AmblerORM}.
 
-\begin{figure} [h!]
+\begin{figure} [!ht]
 \centering
 \begin{tikzpicture}[node distance=3.5cm, auto]
 
@@ -471,7 +471,7 @@ The layout is a modified version from the suggestion in Scott W. Ambler's articl
 \label{fig:er_model_generic_layout}
 \end{figure}
 
-The ER-model in the diagram is in fact a simplified view. 
+The ER-model in figure~\ref{fig:er_model_generic_layout} is in fact a simplified view. 
 The real model uses another relationship between value and class to determine the runtime type of a value, which is required in some special cases.
 
 The backend located in \lstinline!backends/generic_database_layout! maps Eiffel objects to this database layout.
@@ -479,7 +479,7 @@ The backend located in \lstinline!backends/generic_database_layout! maps Eiffel 
 It is split into three classes:
 \begin{itemize}
  \item The \lstinline!METADATA_TABLES_MANAGER! is responsible to read and write tables \lstinline!ps_class! and \lstinline!ps_attribute!.
- \item The \lstinline!GENERIC_LAYOUT_SQL_READWRITE_BACKEND! is responsible to write and read the \lstinline!ps_value! table. It is an implementation of \lstinline!READ_WRITE_BACKEND!.
+ \item The \lstinline!GENERIC_LAYOUT_SQL_BACKEND! is responsible to write and read the \lstinline!ps_value! table. It is an implementation of \lstinline!BACKEND!.
  \item The \lstinline!GENERIC_LAYOUT_SQL_STRINGS! collects all SQL statements. Its descendants adapt the statements to a specific database if there is an incompatibility.
 \end{itemize}
 
@@ -488,8 +488,8 @@ It just caches table \lstinline!ps_class! and \lstinline!ps_attribute! in memory
 If the class is not present in the database, then it will insert it and return the new primary key.
 
 Using the table manager, the \lstinline!GENERIC_LAYOUT_SQL_BACKEND! has all information to perform a write operation:
-The attribute value inside the \lstinline!BACKEND_OBJECT!, the attribute foreign key which is provided by the \lstinline!METADATA_TABLES_MANAGER!, 
-and the object primary key which is also stored in the \lstinline!BACKEND_OBJECT!.
+The attribute value inside the \lstinline!BACKEND_OBJECT!, the attribute foreign key which is stored inside the class \lstinline!METADATA_TABLES_MANAGER!, 
+and the object primary key which is part of the \lstinline!BACKEND_OBJECT! as well.
 
 The retrieval operation is similar.
 First, the backend gets all attribute primary keys of a specific class from the table manager, and then it executes an SQL query to retrieve all values whose attribute foreign keys match the ones retrieved before.

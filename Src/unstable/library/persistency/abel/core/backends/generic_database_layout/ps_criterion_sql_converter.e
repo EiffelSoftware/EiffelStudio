@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_CRITERION_SQL_CONVERTER}."
-	author: ""
+	description: "Converts a predefined criterion to an SQL `WHERE' clause."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

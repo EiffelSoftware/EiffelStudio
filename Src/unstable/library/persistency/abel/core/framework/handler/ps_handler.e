@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {PS_HANDLER}."
-	author: ""
+	description: "[
+	Provides the handler interface. 
+	The descendants each take care of a specific object type and are used by the read-write mechanism"
+	]"
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

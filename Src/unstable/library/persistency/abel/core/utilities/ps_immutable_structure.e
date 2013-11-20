@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_IMMUTABLE_STRUCTURE}."
-	author: ""
+	description: "Wrapper for a data structure that should not be modified."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

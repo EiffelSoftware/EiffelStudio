@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_DEFAULT_OBJECT_HANDLER}."
-	author: ""
+	description: "A default handler for any kind of object except SPECIAL and TUPLE."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_SQLITE_REPOSITORY_FACTORY}."
-	author: ""
+	description: "A factory class for creating a SQLite repository."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

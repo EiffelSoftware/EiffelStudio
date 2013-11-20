@@ -103,4 +103,18 @@ feature {NONE}
 --			add_collection_handler (special_handler)
 --		end
 
+
+
+--	create_cdb_repository(host:STRING; port:INTEGER): PS_RELATIONAL_REPOSITORY
+--		-- Create a CouchDB repository
+--		local
+--			repository: CDB_REPOSITORY
+--		do
+--			if host.is_empty or port=0 then
+--				create repository.make_empty
+--			else
+--				create repository.make_with_host_and_port(host, port)
+--			end
+--			Result := repository
+--		end
 end

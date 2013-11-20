@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_ATTRIBUTE_REMOVER_PLUGIN}."
-	author: ""
+	description: "Removes all attributes which are not listed in the projection array."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

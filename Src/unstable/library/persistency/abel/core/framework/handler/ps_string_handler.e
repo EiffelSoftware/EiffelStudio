@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_STRING_HANDLER}."
-	author: ""
+	description: "Handler for different STRING types."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

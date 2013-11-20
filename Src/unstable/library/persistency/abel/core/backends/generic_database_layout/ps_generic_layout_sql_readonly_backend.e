@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {GENERIC_LAYOUT_SQL_READONLY_BACKEND}."
-	author: ""
+	description: "Retrieves objects from an SQL database using a generic database layout."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

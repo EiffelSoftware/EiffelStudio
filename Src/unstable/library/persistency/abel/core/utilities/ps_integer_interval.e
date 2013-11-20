@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_INTEGER_INTERVAL}."
-	author: ""
+	description: "An INTEGER_INTERVAL with a smarter initialization."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

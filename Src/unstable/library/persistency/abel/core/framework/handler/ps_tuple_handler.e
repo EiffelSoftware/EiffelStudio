@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_TUPLE_HANDLER}."
-	author: ""
+	description: "Handler for TUPLE."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

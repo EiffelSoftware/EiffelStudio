@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND}."
-	author: ""
+	description: "Stores objects in a SQL database using a generic database layout."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

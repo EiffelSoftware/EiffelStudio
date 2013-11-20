@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_LAZY_CURSOR}."
-	author: ""
+	description: "A query result cursor which loads items in batches, using SQL `LIMIT' keyword."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

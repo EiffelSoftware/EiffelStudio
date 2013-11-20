@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_SPECIAL_HANDLER_NEW}."
-	author: ""
+	description: "Handler for SPECIAL."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -14,7 +14,7 @@ feature {OBJECT_GRAPH_TRAVERSABLE} -- Status report
 		require
 			object_exists: obj /= Void
 		do
-			Result := {ISE_RUNTIME}.is_object_marked ($obj)
+			Result := {ISE_RUNTIME}.is_object_marked (obj)
 		end
 
 feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
@@ -26,7 +26,7 @@ feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 		require
 			object_not_void: obj /= Void
 		do
-			{ISE_RUNTIME}.mark_object ($obj)
+			{ISE_RUNTIME}.mark_object (obj)
 		ensure
 			is_marked: is_marked (obj)
 		end
@@ -38,7 +38,7 @@ feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 		require
 			object_not_void: obj /= Void
 		do
-			{ISE_RUNTIME}.unmark_object ($obj)
+			{ISE_RUNTIME}.unmark_object (obj)
 		ensure
 			is_not_marked: not is_marked (obj)
 		end

@@ -49,10 +49,10 @@ feature -- Access
 		require
 			executed: is_executed
 		do
-			Result := transaction.repository
+			Result := internal_transaction.repository
 		end
 
-	transaction_context: detachable PS_TRANSACTION
+	transaction: detachable PS_TRANSACTION
 			-- The transaction context in which `Current' has been executed, if any.
 		require
 			executed: is_executed
@@ -163,10 +163,10 @@ feature -- Disposal
 		do
 			if not is_closed and is_executed then
 				fixme ("Remove the hack for readonly queries through EXECUTOR (-> attached transacion_context)")
-				if transaction.is_readonly and attached transaction_context then
-					transaction.repository.commit_transaction (transaction)
+				if internal_transaction.is_readonly and attached transaction then
+					internal_transaction.repository.commit_transaction (internal_transaction)
 				end
-				if attached transaction_context as ctx then
+				if attached transaction as ctx then
 					ctx.internal_active_queries.prune_all (Current)
 				end
 				fixme ("TODO: clean up internal data structures")
@@ -205,7 +205,7 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	result_cursor: PS_RESULT_CURSOR [RESULT_TYPE]
 			-- Iteration cursor containing the result of the query.
 
-	transaction: PS_INTERNAL_TRANSACTION
+	internal_transaction: PS_INTERNAL_TRANSACTION
 			-- The transaction in which this query is embedded.
 		require
 			already_executed: is_executed
@@ -224,7 +224,7 @@ feature {PS_ABEL_EXPORT} -- Implementation
 			transaction_impl := a_transaction
 		ensure
 			is_executed = True
-			transaction_set: transaction = a_transaction
+			transaction_set: internal_transaction = a_transaction
 		end
 
 	generic_type: TYPE [detachable ANY]
@@ -241,9 +241,9 @@ feature {PS_ABEL_EXPORT} -- Implementation
 			identifier_set: backend_identifier = identifier
 		end
 
-	set_transaction_context (context: like transaction_context)
+	set_transaction_context (context: like transaction)
 		do
-			transaction_context := context
+			transaction := context
 		end
 
 feature {NONE} -- Implementation

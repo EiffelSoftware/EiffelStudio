@@ -158,7 +158,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 
 
 	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
-			-- Executes the object query `query' within `transaction'.
+			-- Executes the object query `query' within `internal_transaction'.
 		require
 			not_executed: not query.is_executed
 			transaction_repository_correct: transaction.repository = Current
@@ -166,7 +166,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 		deferred
 		ensure
 			executed: query.is_executed
-			transaction_set: query.transaction = transaction
+			transaction_set: query.internal_transaction = transaction
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
 			can_handle_retrieved_object: not query.result_cursor.after implies can_handle (query.result_cursor.item)
@@ -178,14 +178,14 @@ feature {PS_ABEL_EXPORT} -- Object query
 		require
 			not_after: not query.result_cursor.after
 			already_executed: query.is_executed
-			active_transaction: query.transaction.is_active
-			query_executed_by_me: query.transaction.repository = Current
+			active_transaction: query.internal_transaction.is_active
+			query_executed_by_me: query.internal_transaction.repository = Current
 		deferred
 		ensure
-			transaction_still_alive: query.transaction.is_active
-			no_error: not query.transaction.has_error
+			transaction_still_alive: query.internal_transaction.is_active
+			no_error: not query.internal_transaction.has_error
 			can_handle_retrieved_object: not query.result_cursor.after implies can_handle (query.result_cursor.item)
-			not_after_means_known: not query.result_cursor.after implies is_identified (query.result_cursor.item, query.transaction)
+			not_after_means_known: not query.result_cursor.after implies is_identified (query.result_cursor.item, query.internal_transaction)
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -198,7 +198,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 		deferred
 		ensure
 			executed: tuple_query.is_executed
-			transaction_set: tuple_query.transaction = transaction
+			transaction_set: tuple_query.internal_transaction = transaction
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
 		end
@@ -208,13 +208,13 @@ feature {PS_ABEL_EXPORT} -- Object query
 		require
 			not_after: not tuple_query.result_cursor.after
 			already_executed: tuple_query.is_executed
-			active_transaction: tuple_query.transaction.is_active
-			query_executed_by_me: tuple_query.transaction.repository = Current
+			active_transaction: tuple_query.internal_transaction.is_active
+			query_executed_by_me: tuple_query.internal_transaction.repository = Current
 --			readonly_transaction: tuple_query.transaction.is_readonly
 		deferred
 		ensure
-			transaction_still_alive: tuple_query.transaction.is_active
-			no_error: not tuple_query.transaction.has_error
+			transaction_still_alive: tuple_query.internal_transaction.is_active
+			no_error: not tuple_query.internal_transaction.has_error
 		end
 
 feature {PS_ABEL_EXPORT} -- Modification

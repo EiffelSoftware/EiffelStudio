@@ -36,12 +36,12 @@ feature {PS_ABEL_EXPORT} -- Object query
 			-- Retrieves the next object. Stores item directly into result_set.
 			-- In case of an error it is written into the transaction connected to the query.
 		do
-			id_manager.register_transaction (query.transaction)
+			id_manager.register_transaction (query.internal_transaction)
 			attach (read_manager_cache[query.backend_identifier]).next_entry (query)
 		rescue
 			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
 			query.reset
-			default_transactional_rescue (query.transaction)
+			default_transactional_rescue (query.internal_transaction)
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -63,12 +63,12 @@ feature {PS_ABEL_EXPORT} -- Object query
 		local
 			exception: PS_INTERNAL_ERROR
 		do
-			id_manager.register_transaction (tuple_query.transaction)
+			id_manager.register_transaction (tuple_query.internal_transaction)
 			attach (read_manager_cache[tuple_query.backend_identifier]).next_tuple_entry (tuple_query)
 		rescue
 			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
 			tuple_query.reset
-			default_transactional_rescue (tuple_query.transaction)
+			default_transactional_rescue (tuple_query.internal_transaction)
 		end
 
 feature {PS_ABEL_EXPORT} -- Modification

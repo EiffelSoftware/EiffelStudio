@@ -24,7 +24,7 @@ feature -- Status report
 
 feature {NONE}
 
-	new_backend: PS_READ_WRITE_BACKEND
+	new_backend: PS_BACKEND
 		do
 			create {PS_IN_MEMORY_BACKEND} Result.make
 			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})

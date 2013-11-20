@@ -133,7 +133,7 @@ feature -- Factory function
 		require
 			buildable: is_buildable
 		local
-			backend: PS_READ_WRITE_BACKEND
+			backend: PS_BACKEND
 			write_manager: PS_WRITE_MANAGER
 		do
 			backend := new_backend
@@ -156,7 +156,7 @@ feature -- Factory function
 
 feature {NONE}
 
-	new_backend: PS_READ_WRITE_BACKEND
+	new_backend: PS_BACKEND
 		require
 			buildable: is_buildable
 		deferred

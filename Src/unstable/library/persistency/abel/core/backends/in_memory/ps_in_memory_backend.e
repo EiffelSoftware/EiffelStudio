@@ -7,7 +7,7 @@ note
 class
 	PS_IN_MEMORY_BACKEND
 inherit
-	PS_READ_WRITE_BACKEND
+	PS_BACKEND
 
 create
 	make

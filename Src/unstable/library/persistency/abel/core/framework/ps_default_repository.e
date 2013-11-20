@@ -190,7 +190,7 @@ feature {PS_ABEL_EXPORT} -- Status Report
 
 feature {NONE} -- Initialization
 
-	make (a_backend: PS_READ_WRITE_BACKEND)
+	make (a_backend: PS_BACKEND)
 			-- Initialize `Current'.
 		do
 			backend := a_backend
@@ -217,7 +217,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_factory (
-			a_backend: PS_READ_WRITE_BACKEND;
+			a_backend: PS_BACKEND;
 			an_id_manager: PS_OBJECT_IDENTIFICATION_MANAGER;
 			a_mapper: PS_KEY_POID_TABLE;
 			a_write_manager: PS_WRITE_MANAGER;
@@ -239,7 +239,7 @@ feature {NONE} -- Initialization
 
 feature {PS_ABEL_EXPORT} -- Implementation
 
-	backend: PS_READ_WRITE_BACKEND
+	backend: PS_BACKEND
 			-- A BACKEND implementation
 
 	mapper: PS_KEY_POID_TABLE

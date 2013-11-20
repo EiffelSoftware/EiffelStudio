@@ -1,10 +1,10 @@
 note
-	description	: "Token that describe either space(s) or tabulation(s)."
+	description: "Token that describe either space(s) or tabulation(s)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EDITOR_TOKEN_BLANK

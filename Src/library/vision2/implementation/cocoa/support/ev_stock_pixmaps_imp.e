@@ -1,9 +1,9 @@
 note
-	description	: "Facilities for accessing default pixmaps."
-	author		: "Daniel Furrer"
+	description: "Facilities for accessing default pixmaps."
+	author: "Daniel Furrer"
 	keywords	: "pixmap, default"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 -- TODO find the icons by tag instead of using fixed icon paths (probably by using NS_WORKSPACE and constants from IconsCore)
 

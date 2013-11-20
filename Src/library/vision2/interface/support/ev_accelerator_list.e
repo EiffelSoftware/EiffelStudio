@@ -1,10 +1,10 @@
 note
-	description	: "Objects that store a list of unique keyboard accelerators."
+	description: "Objects that store a list of unique keyboard accelerators."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "accelerator, shortcut"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "accelerator, shortcut"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_ACCELERATOR_LIST

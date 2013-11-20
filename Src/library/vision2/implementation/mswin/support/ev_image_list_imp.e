@@ -1,10 +1,10 @@
 note
-	description	: "List of images. The list is cached to avoid %
+	description: "List of images. The list is cached to avoid %
 				  %multiplication of indexes for the same image"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_IMAGE_LIST_IMP

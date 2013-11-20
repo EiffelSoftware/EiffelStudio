@@ -1,10 +1,10 @@
 note
-	description	: "Objects that represent a line in the editor."
+	description: "Objects that represent a line in the editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Christophe Bonnard / Arnaud PICHERY [ aranud@mail.dotcom.fr] "
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Christophe Bonnard / Arnaud PICHERY [ aranud@mail.dotcom.fr] "
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EDITOR_LINE

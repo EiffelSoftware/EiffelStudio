@@ -1,10 +1,10 @@
 note
-	description	: "Objects that represent the cursor of an editor window "
+	description: "Objects that represent the cursor of an editor window "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Christophe Bonnard  / Arnaud PICHERY / Etienne Amodeo"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Christophe Bonnard  / Arnaud PICHERY / Etienne Amodeo"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TEXT_CURSOR

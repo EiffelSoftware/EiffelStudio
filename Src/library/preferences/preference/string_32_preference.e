@@ -1,9 +1,9 @@
 note
-	description	: "String 32 preference."
+	description: "String 32 preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STRING_32_PREFERENCE

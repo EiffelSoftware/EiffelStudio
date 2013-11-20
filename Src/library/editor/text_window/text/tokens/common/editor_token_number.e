@@ -1,10 +1,10 @@
 note
-	description	: "Token that describe an number (integer, real, ...) "
+	description: "Token that describe an number (integer, real, ...) "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EDITOR_TOKEN_NUMBER

@@ -1,9 +1,9 @@
 note
-	description	: "An example application for internatioaliztion"
+	description: "An example application for internatioaliztion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "1.0.0"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	APPLICATION

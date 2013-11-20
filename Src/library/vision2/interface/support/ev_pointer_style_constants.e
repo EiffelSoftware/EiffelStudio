@@ -2,9 +2,9 @@ note
 	description: "Pointer sytle constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "pixmap, cursor, default, pointer style"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "pixmap, cursor, default, pointer style"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_POINTER_STYLE_CONSTANTS

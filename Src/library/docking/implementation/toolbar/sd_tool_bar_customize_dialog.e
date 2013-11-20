@@ -1,11 +1,11 @@
 note
-	description	: "A dialog box that allows the user to customize a toolbar%
+	description: "A dialog box that allows the user to customize a toolbar%
 				  %Call `customize' each time a toolbar must be edited"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Xavier Rousselot"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Xavier Rousselot"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SD_TOOL_BAR_CUSTOMIZE_DIALOG

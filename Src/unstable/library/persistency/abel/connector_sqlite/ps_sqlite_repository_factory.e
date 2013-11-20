@@ -48,7 +48,7 @@ feature {PS_ABEL_EXPORT} -- Testing Internal
 
 feature {NONE}
 
-	new_backend: PS_READ_WRITE_BACKEND
+	new_backend: PS_BACKEND
 			-- Create a new backend.
 		local
 			l_sqlite_database: PS_SQLITE_DATABASE
@@ -57,7 +57,7 @@ feature {NONE}
 			check attached database as l_database then
 				create l_sqlite_database.make (l_database)
 				sqlite_database := l_sqlite_database
-				create {PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND} Result.make (l_sqlite_database, create {PS_SQLITE_STRINGS})
+				create {PS_GENERIC_LAYOUT_SQL_BACKEND} Result.make (l_sqlite_database, create {PS_SQLITE_STRINGS})
 			end
 
 --			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})

@@ -9,7 +9,7 @@ class
 
 inherit
 
-	PS_READ_WRITE_BACKEND
+	PS_BACKEND
 
 create
 	make, make_with_host_and_port
@@ -212,7 +212,7 @@ feature {PS_ABEL_EXPORT} -- Object write operations
 			check not_implemented: False end
 		end
 
-feature {PS_READ_WRITE_BACKEND} -- Implementation
+feature {PS_BACKEND} -- Implementation
 
 	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.

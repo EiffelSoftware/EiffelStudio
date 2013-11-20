@@ -1,13 +1,13 @@
 note
-	description	: "[
+	description: "[
 		Object that holds a list of images (Bitmaps or Icons).
 		
 		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to be loaded to use this control.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_IMAGE_LIST

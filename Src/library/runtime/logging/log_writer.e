@@ -1,9 +1,9 @@
 note
-	description:	"Abstract notion of a log writer"
-	legal:			"See note at the end of this class"
-	status:			"See notice at the end of this class"
-	date:			"$Date$"
-	revision:		"$Revision$"
+	description: "Abstract notion of a log writer"
+	legal: "See note at the end of this class"
+	status: "See notice at the end of this class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	LOG_WRITER

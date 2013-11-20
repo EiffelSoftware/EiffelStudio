@@ -1,10 +1,10 @@
 note
-	description	: "Objects to synthesize keystrokes, mouse motions %
+	description: "Objects to synthesize keystrokes, mouse motions %
 				  %and button clicks."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_INPUT_EVENT

@@ -1,9 +1,9 @@
 note
-	description	: "Object to share image lists among all vision2 controls"
+	description: "Object to share image lists among all vision2 controls"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_SHARED_IMAGE_LIST_IMP

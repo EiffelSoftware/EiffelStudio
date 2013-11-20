@@ -1,10 +1,10 @@
 note
-	description	: "Object that represent the buffered screen of an editor window"
+	description: "Object that represent the buffered screen of an editor window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EDITOR_BUFFERED_SCREEN

@@ -1,8 +1,8 @@
 note
-	description_key: "Provides functions for converting keycodes between Cocoa and Vision."
-	author_key: "Daniel Furrer <daniel.furrer@gmail.com>"
-	date_key: "$Date$"
-	revision_key: "$Revision$"
+	description: "Provides functions for converting keycodes between Cocoa and Vision."
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_COCOA_KEY_CONVERSION

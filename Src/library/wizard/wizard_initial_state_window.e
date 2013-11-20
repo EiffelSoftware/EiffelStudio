@@ -1,10 +1,10 @@
 note
-	description	: "Template for the first state of a wizard"
+	description: "Template for the first state of a wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WIZARD_INITIAL_STATE_WINDOW

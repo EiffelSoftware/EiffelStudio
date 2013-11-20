@@ -1,5 +1,5 @@
 note
-	description:	"[
+	description: "[
 						Log Writer that writes to a file, which, by default, is a file called
 						'system.log' in the application's current working directory (as gathered
 						from EXECUTION_ENVIRONMENT.
@@ -7,10 +7,10 @@ note
 						If that is not the appropriate place / file name for your application,
 						please call `set_file_name' to set it to a different location
 					]"
-	legal:			"See note at the end of this class"
-	status:			"See notice at the end of this class"
-	date:			"$Date$"
-	revision:		"$Revision$"
+	legal: "See note at the end of this class"
+	status: "See notice at the end of this class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	LOG_WRITER_FILE

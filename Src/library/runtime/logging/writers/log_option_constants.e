@@ -1,9 +1,9 @@
 note
-	description:	"Log Options determine how the messages are logged"
-	legal:			"See notice at end of class."
-	status:			"See notice at end of class."
-	date:			"$Date$"
-	revision:		"$Revision$"
+	description: "Log Options determine how the messages are logged"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LOG_OPTION_CONSTANTS
 

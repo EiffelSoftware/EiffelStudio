@@ -1,12 +1,12 @@
 note
-	description:	"[
+	description: "[
 						Log Writer that writes to the system log, using syslog on Unix and the Event
 						Log on Windows
 					]"
-	legal:			"See note at the end of this class"
-	status:			"See notice at the end of this class"
-	date:			"$Date$"
-	revision:		"$Revision$"
+	legal: "See note at the end of this class"
+	status: "See notice at the end of this class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	LOG_WRITER_SYSTEM

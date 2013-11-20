@@ -1,10 +1,10 @@
 note
-	description	: "Object used to retrieve total and free disk space on any%
+	description: "Object used to retrieve total and free disk space on any%
 	 			  %local hard drive. Remote drive are not yet supported"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_DISK_SPACE

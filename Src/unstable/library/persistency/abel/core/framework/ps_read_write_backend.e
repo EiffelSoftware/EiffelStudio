@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {PS_READ_WRITE_BACKEND}."
-	author: ""
+	description: "Provides an abstraction to the actual database."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	PS_READ_WRITE_BACKEND
+	PS_BACKEND
 inherit
 	PS_READ_ONLY_BACKEND
 
@@ -128,7 +128,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		end
 
 
-feature {PS_READ_WRITE_BACKEND} -- Implementation
+feature {PS_BACKEND} -- Implementation
 
 	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.

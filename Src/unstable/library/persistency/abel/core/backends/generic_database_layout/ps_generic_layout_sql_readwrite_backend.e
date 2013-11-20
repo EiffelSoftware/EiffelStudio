@@ -5,13 +5,13 @@ note
 	revision: "$Revision$"
 
 class
-	PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND
+	PS_GENERIC_LAYOUT_SQL_BACKEND
 
 inherit
 
 	PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND
 
-	PS_READ_WRITE_BACKEND
+	PS_BACKEND
 
 create
 	make
@@ -254,7 +254,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			make (database, SQL_Strings)
 		end
 
-feature {PS_READ_WRITE_BACKEND} -- Implementation
+feature {PS_BACKEND} -- Implementation
 
 	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Accesss: Static
 
-	backend: PS_READ_WRITE_BACKEND
+	backend: PS_BACKEND
 			-- An actual backend for the write operations.
 
 	traversal: PS_OBJECT_GRAPH_TRAVERSAL

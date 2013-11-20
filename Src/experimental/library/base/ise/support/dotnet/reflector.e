@@ -86,6 +86,87 @@ feature -- Creation
 			capacity_set: Result.capacity = count
 		end
 
+	new_tuple_from_special (type_id: INTEGER; values: SPECIAL [detachable separate ANY]): detachable TUPLE
+			-- New instance of a tuple of type `type_id' filled with `values' if all types of items are suitable.
+			-- `Void' if some items from `values' are inappropriate for a tuple of type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+			is_tuple_type: is_tuple_type (type_id)
+			-- sufficient_values_count: values.count >= tuple_type_count (type_id)
+			-- valid_value_types: across 1 |..| tuple_type_count (type_id) as i all valid_object_for_tuple_index (values [i - 1], i)
+		local
+			i: INTEGER
+			v: detachable separate ANY
+		do
+			if attached {TUPLE} new_instance_of (type_id) as l_tuple then
+				i := l_tuple.count
+				if i <= values.count then
+					from
+						Result := l_tuple
+					until
+						i <= 0 or else not attached Result
+					loop
+						v := values [i - 1]
+						if Result.valid_type_for_index (v, i) then
+								-- Value `v' is compatible with tuple item at index `i'.
+							Result [i] := v
+						else
+								-- Value `v' is not compatible with tuple item at index `i'.
+							Result := Void
+						end
+						i := i - 1
+					end
+				end
+			end
+		ensure
+			dynamic_type_set: attached Result implies Result.generating_type.type_id = type_id
+			values_set: attached Result implies across 1 |..| Result.count as k all Result.item (k.item) = values [k.item - 1] end
+		end
+
+	new_tuple_from_tuple (type_id: INTEGER; source: separate TUPLE): detachable TUPLE
+			-- New instance of a tuple of type `type_id' filled with values fom `source' if all value types are suitable.
+			-- `Void' if some values from `source' are inappropriate for a tuple of type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+			is_tuple_type: is_tuple_type (type_id)
+			-- sufficient_values_count: source.count >= tuple_type_count (type_id)
+			-- valid_value_types: across 1 |..| tuple_type_count (type_id) as i all valid_object_for_tuple_index (values [i - 1], i)
+		local
+			i: INTEGER
+			v: detachable separate ANY
+		do
+			if attached {TUPLE} new_instance_of (type_id) as l_tuple then
+				i := l_tuple.count
+				if i <= source.count then
+					Result := l_tuple
+					if source.object_comparison then
+						Result.compare_objects
+					end
+					from
+					until
+						i <= 0 or else not attached Result
+					loop
+						v := source [i]
+						if Result.valid_type_for_index (v, i) then
+								-- Value `v' is compatible with tuple item at index `i'.
+							Result [i] := v
+						else
+								-- Value `v' is not compatible with tuple item at index `i'.
+							Result := Void
+						end
+						i := i - 1
+					end
+				else
+						-- Insufficient number of values.
+					Result := Void
+				end
+			end
+		ensure
+			dynamic_type_set: attached Result implies Result.generating_type.type_id = type_id
+			object_comparison_set: attached Result implies Result.object_comparison = source.object_comparison
+			values_set: attached Result implies across 1 |..| Result.count as k all Result.item (k.item) = source [k.item] end
+		end
+
 	type_of_type (type_id: INTEGER): TYPE [detachable ANY]
 			-- Associated TYPE instance for an object of type id `type_id'
 		require

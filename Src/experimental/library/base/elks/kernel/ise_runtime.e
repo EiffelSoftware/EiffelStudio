@@ -415,9 +415,22 @@ feature -- Internal support
 			"built_in static"
 		end
 
+	frozen is_special_of_expanded (a_object: POINTER): BOOLEAN
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a user defined expanded type.
+		external
+			"built_in static"
+		end
+
 	frozen is_special_of_reference (a_object: POINTER): BOOLEAN
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type.
+		external
+			"built_in static"
+		end
+
+	frozen is_expanded (a_object: POINTER): BOOLEAN
+			-- Is `a_object' an instance of an expanded type?
 		external
 			"built_in static"
 		end
@@ -612,17 +625,17 @@ feature -- Object marking
 			"eif_unlock_marking"
 		end
 
-	frozen is_object_marked (obj: separate ANY): BOOLEAN
+	frozen is_object_marked (obj: POINTER): BOOLEAN
 		external
 			"built_in static"
 		end
 
-	frozen unmark_object (obj: separate ANY)
+	frozen unmark_object (obj: POINTER)
 		external
 			"built_in static"
 		end
 
-	frozen mark_object (obj: separate ANY)
+	frozen mark_object (obj: POINTER)
 		external
 			"built_in static"
 		end

@@ -35,15 +35,15 @@ feature -- Cursor movement
 			-- Move cursor to next position.
 		do
 			if attached {PS_QUERY [ANY]} query as q then
-				q.transaction.repository.next_entry (q)
+				q.internal_transaction.repository.next_entry (q)
 			else
 				check attached {PS_TUPLE_QUERY [ANY]} query as tq then
-					tq.transaction.repository.next_tuple_entry (tq)
+					tq.internal_transaction.repository.next_tuple_entry (tq)
 				end
 			end
 		ensure then
-			item_is_identified: attached{TUPLE}item or (not after implies query.transaction.repository.is_identified (item, query.transaction))
-			item_can_be_handled: attached{PS_TUPLE_QUERY[ANY]} query or query.transaction.repository.can_handle (item)
+			item_is_identified: attached{TUPLE}item or (not after implies query.internal_transaction.repository.is_identified (item, query.internal_transaction))
+			item_can_be_handled: attached{PS_TUPLE_QUERY[ANY]} query or query.internal_transaction.repository.can_handle (item)
 		end
 
 feature {PS_ABEL_EXPORT} -- Basic operations
@@ -99,5 +99,5 @@ invariant
 	attached_item_or_after: attached detachable_item or after
 	attached_query_or_after: attached detachable_query or after
 	item_can_be_handled: not after and not attached {PS_TUPLE_QUERY[ANY]} detachable_query
-		 implies query.transaction.repository.can_handle (item)
+		 implies query.internal_transaction.repository.can_handle (item)
 end

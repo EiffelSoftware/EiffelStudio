@@ -154,13 +154,13 @@ feature -- Factory function
 				anomaly_settings.twin)
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	new_backend: PS_BACKEND
+			-- Create a backend.
 		require
 			buildable: is_buildable
 		deferred
---			internal_plugins.extend (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
 		end
 
 

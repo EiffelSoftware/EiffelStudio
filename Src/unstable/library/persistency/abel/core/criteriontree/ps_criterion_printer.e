@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_CRITERION_PRINTER}."
-	author: ""
+	description: "A visitor to print a composite criterion."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,11 +1,12 @@
 note
-	description: "Summary description for {PS_IN_MEMORY_BACKEND}."
-	author: ""
+	description: "A simple backend which stores all objects in memory."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	PS_IN_MEMORY_BACKEND
+
 inherit
 	PS_BACKEND
 

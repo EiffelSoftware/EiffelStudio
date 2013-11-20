@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN}."
-	author: ""
+	description: "Removes all agent criteria from a composite criterion tree."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

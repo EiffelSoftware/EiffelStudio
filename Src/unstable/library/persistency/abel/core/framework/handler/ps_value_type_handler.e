@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_VALUE_TYPE_HANDLER}."
-	author: ""
+	description: "A handler which can map objects to a value (represented as a string)."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

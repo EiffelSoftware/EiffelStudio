@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_AGENT_CRITERION_ELIMINATOR}."
-	author: ""
+	description: "A visitor to remove agent criteria from a composite criterion."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

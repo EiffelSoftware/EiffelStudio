@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_OBJECT_HANDLER}."
-	author: ""
+	description: "A handler which maps its objects to PS_BACKEND_OBJECT."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

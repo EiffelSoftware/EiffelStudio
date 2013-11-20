@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_MYSQL_BACKEND}."
-	author: ""
+	description: "A MySQL backend making use of stored procedures to generate all primary keys at once."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

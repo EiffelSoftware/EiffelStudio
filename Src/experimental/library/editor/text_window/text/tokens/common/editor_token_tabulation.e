@@ -1,10 +1,10 @@
 note
-	description	: "Token that describe one or several tabulations."
+	description: "Token that describe one or several tabulations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EDITOR_TOKEN_TABULATION

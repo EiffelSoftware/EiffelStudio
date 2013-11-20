@@ -1,10 +1,10 @@
 note
-	description	: "EiffelVision pixmap. Mswindows implementation for %
+	description: "EiffelVision pixmap. Mswindows implementation for %
 				  %widget pixmap (drawable & self-displayable)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_PIXMAP_IMP_WIDGET

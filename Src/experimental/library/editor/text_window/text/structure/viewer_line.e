@@ -1,10 +1,10 @@
 note
-	description	: "Objects that represent a line in the editor."
+	description: "Objects that represent a line in the editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Christophe Bonnard / Arnaud PICHERY [ aranud@mail.dotcom.fr] "
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Christophe Bonnard / Arnaud PICHERY [ aranud@mail.dotcom.fr] "
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	VIEWER_LINE
@@ -340,8 +340,8 @@ feature -- Status Report
 		require
 			text_cursor.line = Current
 		local
-			local_token		: detachable EDITOR_TOKEN
-			cursor_token	: EDITOR_TOKEN
+			local_token: detachable EDITOR_TOKEN
+			cursor_token: EDITOR_TOKEN
 			l_string_32		: STRING_32
 		do
 			cursor_token := text_cursor.token
@@ -375,8 +375,8 @@ feature -- Status Report
 		require
 			text_cursor.line = Current
 		local
-			local_token		: detachable EDITOR_TOKEN
-			cursor_token	: EDITOR_TOKEN
+			local_token: detachable EDITOR_TOKEN
+			cursor_token: EDITOR_TOKEN
 			l_string_32		: STRING_32
 		do
 			cursor_token := text_cursor.token
@@ -405,11 +405,11 @@ feature -- Status Report
 			-- Substring of the line starting at `start_char' and
 			-- ending at `end_char' - included
 		local
-			local_token		: detachable EDITOR_TOKEN
+			local_token: detachable EDITOR_TOKEN
 			local_char 		: INTEGER
-			next_local_char	: INTEGER
+			next_local_char: INTEGER
 			token_start_char: INTEGER
-			token_end_char	: INTEGER
+			token_end_char: INTEGER
 			l_string_32		: STRING_32
 		do
 			if start_char <= end_char then

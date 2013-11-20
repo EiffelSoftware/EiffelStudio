@@ -1,11 +1,11 @@
 note
-	description	: "Abstaction for a widget representing a particular preference.%
+	description: "Abstaction for a widget representing a particular preference.%
 		%Used for reading and writing preference values.  Actual interface is `change_item_widget'. To%
 		%create an custom interface redefine this."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	PREFERENCE_WIDGET

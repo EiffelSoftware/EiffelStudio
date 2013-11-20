@@ -1,11 +1,11 @@
 note
-	description	: "Facilities for accessing default%
+	description: "Facilities for accessing default%
 				  %pixmaps and cursors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "pixmap, cursor, default"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "pixmap, cursor, default"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_STOCK_PIXMAPS_IMP

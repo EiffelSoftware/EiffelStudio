@@ -2,9 +2,9 @@ note
 	description	: "A list containing toolbar buttons in order to customize a tool bar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Xavier Rousselot"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Xavier Rousselot"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SD_CUSTOM_TOOLBAR_LIST

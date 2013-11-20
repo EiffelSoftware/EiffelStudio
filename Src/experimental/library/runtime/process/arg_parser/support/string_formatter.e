@@ -1,9 +1,9 @@
 note
 	description: "Permits argument-based formatting of string instances."
-	legal      : "See notice at end of class."
-	status     : "See notice at end of class."
-	date       : "$Date$"
-	revision   : "$Revision$"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STRING_FORMATTER

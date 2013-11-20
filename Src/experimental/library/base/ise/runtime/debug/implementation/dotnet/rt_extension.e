@@ -2,8 +2,8 @@ note
 	description : "Eiffel class instanciated and used from the Eiffel runtime."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	RT_EXTENSION

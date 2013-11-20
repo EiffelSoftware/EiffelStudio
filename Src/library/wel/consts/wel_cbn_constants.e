@@ -1,9 +1,9 @@
 note
-	description	: "ComboBox notification message (CBN) constants."
+	description: "ComboBox notification message (CBN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_CBN_CONSTANTS

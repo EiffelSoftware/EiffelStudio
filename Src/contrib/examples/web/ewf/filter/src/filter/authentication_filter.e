@@ -21,10 +21,14 @@ feature -- Basic operations
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter
 		local
-			l_auth: HTTP_AUTHORIZATION
+			l_auth: detachable HTTP_AUTHORIZATION
 		do
-			create l_auth.make (req.http_authorization)
-			if (attached l_auth.type as l_auth_type and then l_auth_type.is_equal ("basic")) and
+			if attached req.http_authorization as l_http_authorization then
+				create l_auth.make (l_http_authorization)
+			end
+			if
+				l_auth /= Void and then
+				(attached l_auth.type as l_auth_type and then l_auth_type.same_string ("basic")) and then
 				attached l_auth.login as l_auth_login and then
 				attached Db_access.user (0, l_auth_login) as l_user and then
 				l_auth_login.same_string (l_user.name) and then

@@ -13,10 +13,14 @@ inherit
 
 feature {NONE}
 
-	make_repository: CDB_REPOSITORY
+	make_repository: PS_REPOSITORY
 			-- Create the repository for this test
+		local
+			factory: CDB_REPOSITORY_FACTORY
 		do
-			create Result.make_empty
+			create factory.make
+			Result := factory.new_repository
+--			create Result.make_empty
 		end
 
 feature

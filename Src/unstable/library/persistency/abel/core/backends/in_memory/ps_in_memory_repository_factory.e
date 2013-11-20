@@ -32,24 +32,24 @@ feature {NONE}
 
 feature -- Factory methods
 
-	create_in_memory_repository: PS_DEFAULT_REPOSITORY
-		-- Create a simple in memory repository
-		obsolete
-			"use new_repository"
-		local
-			repository: PS_DEFAULT_REPOSITORY
-			backend: PS_IN_MEMORY_BACKEND
-			special_handler: PS_SPECIAL_COLLECTION_HANDLER
-			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
-		do
-			create backend.make
-			create repository.make (backend)
-			create special_handler.make
-			create tuple_handler
-			repository.add_collection_handler (special_handler)
-			repository.add_collection_handler (tuple_handler)
-			Result := repository
-		end
+--	create_in_memory_repository: PS_DEFAULT_REPOSITORY
+--		-- Create a simple in memory repository
+--		obsolete
+--			"use new_repository"
+--		local
+--			repository: PS_DEFAULT_REPOSITORY
+--			backend: PS_IN_MEMORY_BACKEND
+--			special_handler: PS_SPECIAL_COLLECTION_HANDLER
+--			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
+--		do
+--			create backend.make
+--			create repository.make (backend)
+--			create special_handler.make
+--			create tuple_handler
+--			repository.add_collection_handler (special_handler)
+--			repository.add_collection_handler (tuple_handler)
+--			Result := repository
+--		end
 
 --	create_cdb_repository(host:STRING; port:INTEGER): PS_RELATIONAL_REPOSITORY
 --		-- Create a CouchDB repository

@@ -1,5 +1,5 @@
 note
-	description	: "[
+	description: "[
 		Enhancement of the toolbar. This toolbar appears flat
 		and use imagelist to store bitmaps - when available.
 		
@@ -9,8 +9,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_FLAT_TOOL_BAR

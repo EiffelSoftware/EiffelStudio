@@ -1,9 +1,9 @@
 note
-	description	: "Information about an icon or a cursor."
+	description: "Information about an icon or a cursor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_ICON_INFO

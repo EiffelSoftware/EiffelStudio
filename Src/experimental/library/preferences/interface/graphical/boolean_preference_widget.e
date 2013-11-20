@@ -1,9 +1,9 @@
 note
-	description	: "Default widget for viewing and editing boolean preferences.  A combo box with two values ('True' and 'False')"
+	description: "Default widget for viewing and editing boolean preferences.  A combo box with two values ('True' and 'False')"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$ and "
+	date: "$Date$"
+	revision: "$Revision$ and "
 
 class
 	BOOLEAN_PREFERENCE_WIDGET

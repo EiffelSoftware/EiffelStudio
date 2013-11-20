@@ -2,8 +2,8 @@ note
 	description: "Summary description for {SHORTCUT_PREFERENCE_GRID_ITEM}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SHORTCUT_PREFERENCE_GRID_EDITABLE_ITEM

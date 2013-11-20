@@ -1,9 +1,9 @@
 note
-	description	: "A groups of tokens."
+	description: "A groups of tokens."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$"
-	revision	: "$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EDITOR_TOKEN_GROUP

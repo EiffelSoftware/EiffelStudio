@@ -1,9 +1,9 @@
 note
-	description	: "String preference."
+	description: "String preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ABSTRACT_STRING_PREFERENCE [G -> READABLE_STRING_GENERAL]

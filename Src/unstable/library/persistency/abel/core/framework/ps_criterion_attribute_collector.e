@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_CRITERION_ATTRIBUTE_COLLECTOR}."
-	author: ""
+	description: "Visitor for object trees to collect the required attributes for criterion evaluation."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

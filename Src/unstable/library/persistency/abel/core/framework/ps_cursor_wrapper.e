@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_CURSOR_WRAPPER}."
-	author: ""
+	description: "A wrapper to the cursor provided by the backend. Used to apply plugins on retrieved objects."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

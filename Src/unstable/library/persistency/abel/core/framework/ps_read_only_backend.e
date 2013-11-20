@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_READONLY_BACKEND}."
-	author: ""
+	description: "Provides an abstraction to the actual database. This class only contains the read functions."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

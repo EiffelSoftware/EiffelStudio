@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_NEW_REPOSITORY}."
-	author: ""
+	description: "A default repository that does the object-relational mapping, but relies on a PS_BACKEND for the stoage mechanism."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -112,7 +112,7 @@ feature {PS_ABEL_EXPORT} -- Modification
 			primary := mapper.quick_translate (id.object_identifier, transaction)
 
 			create to_delete.make
-			to_delete.extend (create {PS_BACKEND_ENTITY}.make (primary, id.metadata))
+			to_delete.extend (create {PS_BACKEND_OBJECT}.make (primary, id.metadata))
 
 			across
 				all_handlers as h_cursor

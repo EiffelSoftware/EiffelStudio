@@ -1,6 +1,6 @@
 note
 	description: "[
-		Represents a freshly retrieved object.
+		Represents an object in the database.
 		The attribute values are all stored as strings, no matter if they are an actual value or just a foreign key.
 		Every attribute value is attached to the class name of its generating class as well.
 		A NULL value in the database is represented as an empty string, and the class name of a NULL value is `NONE'.
@@ -16,7 +16,6 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
-			is_root, set_is_root,
 			make, is_equal, out
 		end
 

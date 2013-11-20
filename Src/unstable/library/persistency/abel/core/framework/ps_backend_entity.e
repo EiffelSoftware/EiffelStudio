@@ -4,18 +4,11 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	PS_BACKEND_ENTITY
 
 inherit
 	PS_ABEL_EXPORT
-		redefine
-			is_equal
-		end
-
-
-create {PS_ABEL_EXPORT}
-	make
 
 feature {PS_ABEL_EXPORT} -- Access
 
@@ -32,8 +25,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 	is_root: BOOLEAN
 			-- Is the current entity a garbage collection root?
-		do
-			fixme ("Declare as deferred")
+		deferred
 		end
 
 	has_type (type: PS_TYPE_METADATA): BOOLEAN
@@ -42,21 +34,11 @@ feature {PS_ABEL_EXPORT} -- Status report
 			Result := metadata.is_equal (type)
 		end
 
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-		do
-			Result := primary_key.is_equal (other.primary_key) and metadata.is_equal (other.metadata)
-		end
-
 feature {PS_ABEL_EXPORT} -- Element change
 
 	set_is_root (value: BOOLEAN)
 			-- Set `is_root' to `value'.
-		do
-			fixme ("Declare as deferred")
+		deferred
 		end
 
 	declare_as_old

@@ -19,7 +19,8 @@ feature {NONE}
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
 			create factory
-			Result := factory.create_in_memory_repository
+			--Result := factory.create_in_memory_repository
+			Result := factory.new_repository
 		end
 
 feature

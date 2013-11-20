@@ -156,17 +156,17 @@ feature {NONE}
 		local
 --			real_backend: PS_IN_MEMORY_DATABASE
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
-			repo: PS_DEFAULT_REPOSITORY
+			repo: PS_REPOSITORY
 		do
 			create test_data.make
 			create schema_evolution_manager.make
 			create escher_integration.make (schema_evolution_manager.schema_evolution_handler)
 
 			create factory
-			repo := factory.create_in_memory_repository
-			repo.backend.add_plug_in (escher_integration)
---			factory.add_plugin (escher_integration)
---			repo := factory.new_repository
+--			repo := factory.create_in_memory_repository
+--			repo.backend.add_plug_in (escher_integration)
+			factory.add_plugin (escher_integration)
+			repo := factory.new_repository
 
 			transaction := repo.new_transaction
 		end

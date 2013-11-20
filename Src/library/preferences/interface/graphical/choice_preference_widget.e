@@ -1,11 +1,11 @@
 note
-	description	: "[
+	description: "[
 		Default widget for viewing and editing ARRAY preferences for which there must be only one selected value.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CHOICE_PREFERENCE_WIDGET

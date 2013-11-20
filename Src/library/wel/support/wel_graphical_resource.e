@@ -1,9 +1,9 @@
 note
-	description	: "Graphical resource common features (Icons & Cursors)"
+	description: "Graphical resource common features (Icons & Cursors)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WEL_GRAPHICAL_RESOURCE

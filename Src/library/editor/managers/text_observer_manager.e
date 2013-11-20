@@ -1,10 +1,10 @@
 note
-	description	: "Observer manager for TEXT_PANEL"
+	description: "Observer manager for TEXT_PANEL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Etienne Amodeo"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Etienne Amodeo"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TEXT_OBSERVER_MANAGER

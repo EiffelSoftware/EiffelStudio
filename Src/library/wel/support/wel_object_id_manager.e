@@ -1,9 +1,9 @@
 note
-	description	: "Ancestor for every class using a 'Object vs Id' conversion in WEL."
+	description: "Ancestor for every class using a 'Object vs Id' conversion in WEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_OBJECT_ID_MANAGER

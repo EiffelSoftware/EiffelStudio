@@ -1,9 +1,9 @@
 note
-	description:	"Log Writer that writes to stderr"
-	legal:			"See note at the end of this class"
-	status:			"See notice at the end of this class"
-	date:			"$Date$"
-	revision:		"$Revision$"
+	description: "Log Writer that writes to stderr"
+	legal: "See note at the end of this class"
+	status: "See notice at the end of this class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	LOG_WRITER_STDERR

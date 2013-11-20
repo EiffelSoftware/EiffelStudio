@@ -1,9 +1,9 @@
 note
-	description	: "Constants relative to scroll bar"
+	description: "Constants relative to scroll bar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_SCROLL_BAR_CONSTANTS

@@ -1,9 +1,9 @@
 note
-	description	: "List of path preference."
+	description: "List of path preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date:"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	PATH_LIST_PREFERENCE

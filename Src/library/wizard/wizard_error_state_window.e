@@ -1,10 +1,10 @@
 note
-	description	: "Wizard state: Error "
+	description: "Wizard state: Error "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WIZARD_ERROR_STATE_WINDOW

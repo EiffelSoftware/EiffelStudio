@@ -1,10 +1,10 @@
 note
-	description	: "Text field which are used by the Wizard"
+	description: "Text field which are used by the Wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_SMART_TEXT_FIELD

@@ -1,9 +1,9 @@
 note
-	description	: "Default widget for viewing and editing color preferences."
+	description: "Default widget for viewing and editing color preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	COLOR_PREFERENCE_WIDGET

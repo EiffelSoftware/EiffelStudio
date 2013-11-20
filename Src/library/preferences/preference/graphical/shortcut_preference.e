@@ -1,9 +1,9 @@
 note
-	description	: "Shortcut preference."
+	description: "Shortcut preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date:"
-	revision	: "$Revision$"
+	date: "$Date:"
+	revision: "$Revision$"
 
 class
 	SHORTCUT_PREFERENCE

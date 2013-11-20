@@ -55,16 +55,14 @@ feature -- Access
 			Result := "</body>%N</html>%N"
 		end
 
-	print_environment_variables (vars: HASH_TABLE [STRING, STRING])
+	print_environment_variables (vars: TABLE_ITERABLE [READABLE_STRING_8, READABLE_STRING_GENERAL])
 		local
+			utf: UTF_CONVERTER
 		do
-			from
-				vars.start
-			until
-				vars.after
+			across
+				vars as ic
 			loop
-				fcgi.put_string ("<li><strong>" + vars.key_for_iteration + "</strong> = " + vars.item_for_iteration + "</li>%N")
-				vars.forth
+				fcgi.put_string ("<li><strong>" + utf.utf_32_string_to_utf_8_string_8 (ic.key.as_string_8) + "</strong> = " + ic.item + "</li>%N")
 			end
 		end
 

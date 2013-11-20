@@ -1,10 +1,10 @@
 note
-	description	: "Sub-Window which displays user entries needed in order to proceed"
+	description: "Sub-Window which displays user entries needed in order to proceed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "pascalf"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "pascalf"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WIZARD_STATE_WINDOW

@@ -1,10 +1,10 @@
 note
-	description	: "Constants used in WEL_INPUT_EVENT %
+	description: "Constants used in WEL_INPUT_EVENT %
 				  %about mouse and keyboard events"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_INPUT_EVENT_CONSTANTS

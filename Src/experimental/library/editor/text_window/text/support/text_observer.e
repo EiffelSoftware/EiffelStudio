@@ -1,10 +1,10 @@
 note
-	description:	"Observer for TEXT."
+	description: "Observer for TEXT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author:		"Etienne Amodeo"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	author: "Etienne Amodeo"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	TEXT_OBSERVER

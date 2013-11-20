@@ -1,10 +1,10 @@
 note
-	description	: "undo/redo command stack"
+	description: "undo/redo command stack"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Christophe Bonnard / Etienne Amodeo"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Christophe Bonnard / Etienne Amodeo"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	UNDO_REDO_STACK

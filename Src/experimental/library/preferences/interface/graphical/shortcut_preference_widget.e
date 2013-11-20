@@ -1,11 +1,11 @@
 note
-	description	: "[
+	description: "[
 		Default widget for viewing and editing key shortcut preferences.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SHORTCUT_PREFERENCE_WIDGET

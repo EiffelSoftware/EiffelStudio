@@ -1,9 +1,9 @@
 note
-	description	: "Font preference."
+	description: "Font preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	FONT_PREFERENCE

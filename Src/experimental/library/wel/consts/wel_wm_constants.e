@@ -1,9 +1,9 @@
 note
-	description	: "Window message (WM) constants."
+	description: "Window message (WM) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_WM_CONSTANTS

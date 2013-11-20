@@ -1,10 +1,10 @@
 note
-	description	: "Shared font constants for the editor"
+	description: "Shared font constants for the editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SHARED_EDITOR_FONT

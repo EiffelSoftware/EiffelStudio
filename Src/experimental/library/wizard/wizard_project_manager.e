@@ -1,10 +1,10 @@
 note
-	description	: "Class which is launching the application."
+	description: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "pascalf"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "pascalf"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WIZARD_PROJECT_MANAGER

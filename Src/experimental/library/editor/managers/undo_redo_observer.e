@@ -1,9 +1,9 @@
 note
-	description	: "Observer for UNDO_REDO_STACK"
+	description: "Observer for UNDO_REDO_STACK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	UNDO_REDO_OBSERVER

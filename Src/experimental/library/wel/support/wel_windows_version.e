@@ -1,9 +1,9 @@
 note
-	description	: "Objects that allow the user to know about Windows versions"
+	description: "Objects that allow the user to know about Windows versions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_WINDOWS_VERSION

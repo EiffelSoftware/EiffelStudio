@@ -1,10 +1,10 @@
 note
-	description	: "Scroll bar arrows (ESB) constants.%
+	description: "Scroll bar arrows (ESB) constants.%
 				  %used in message SBM_ENABLE_ARROWS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_ESB_CONSTANTS

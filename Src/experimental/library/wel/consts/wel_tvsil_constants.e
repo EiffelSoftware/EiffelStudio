@@ -1,9 +1,9 @@
 note
-	description	: "Tree View State Image List (TVSIL) constants."
+	description: "Tree View State Image List (TVSIL) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_TVSIL_CONSTANTS

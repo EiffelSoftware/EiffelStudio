@@ -1,9 +1,9 @@
 note
-	description:	"Priority constants and helper features"
-	legal:			"See note at the end of this class"
-	status:			"See notice at the end of this class"
-	date:			"$Date$"
-	revision:		"$Revision$"
+	description: "Priority constants and helper features"
+	legal: "See note at the end of this class"
+	status: "See notice at the end of this class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LOG_PRIORITY_CONSTANTS
 

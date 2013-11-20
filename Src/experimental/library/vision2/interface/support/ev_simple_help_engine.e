@@ -1,10 +1,10 @@
 note
-	description	: "Display content of simple help context in a dialog."
+	description: "Display content of simple help context in a dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "help"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "help"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_SIMPLE_HELP_ENGINE

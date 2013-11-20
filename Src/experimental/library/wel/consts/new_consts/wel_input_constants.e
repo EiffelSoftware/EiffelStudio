@@ -1,9 +1,9 @@
 note
-	description	: "Constants relative to input (Mouse, Keyboard, ...)"
+	description: "Constants relative to input (Mouse, Keyboard, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_INPUT_CONSTANTS

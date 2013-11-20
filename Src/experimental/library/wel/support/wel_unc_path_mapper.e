@@ -1,9 +1,9 @@
 note
-	description	: "Objects that map a networking path to a local drive"
+	description: "Objects that map a networking path to a local drive"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_UNC_PATH_MAPPER

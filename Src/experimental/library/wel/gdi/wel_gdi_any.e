@@ -1,9 +1,9 @@
 note
-	description	: "This class is an ancestor to all GDI classes."
+	description: "This class is an ancestor to all GDI classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_GDI_ANY

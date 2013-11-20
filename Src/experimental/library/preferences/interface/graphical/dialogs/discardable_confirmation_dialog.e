@@ -1,10 +1,10 @@
 note
-	description	: "Dialog asking the user if he really wants to start a command"
+	description: "Dialog asking the user if he really wants to start a command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	DISCARDABLE_CONFIRMATION_DIALOG

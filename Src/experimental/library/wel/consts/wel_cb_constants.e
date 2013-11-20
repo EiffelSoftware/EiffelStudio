@@ -1,9 +1,9 @@
 note
-	description	: "ComboBox message (CB) constants."
+	description: "ComboBox message (CB) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_CB_CONSTANTS

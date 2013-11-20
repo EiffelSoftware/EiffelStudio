@@ -1,9 +1,9 @@
 note
-	description:	"Pattern matcher through the Knuth Morris Pratt algorithm. See details at the end"
+	description: "Pattern matcher through the Knuth Morris Pratt algorithm. See details at the end"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date:		"$Date$";
-	revision:	"$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class KMP_MATCHER
 

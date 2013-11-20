@@ -1,9 +1,9 @@
 note
-	description	: "Image constants (Image type)"
+	description: "Image constants (Image type)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_IMAGE_CONSTANTS

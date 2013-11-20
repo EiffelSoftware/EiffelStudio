@@ -1,7 +1,7 @@
 note
 	description : "External iteration cursor used by `across...loop...end'."
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	XML_COMPOSITE_CURSOR

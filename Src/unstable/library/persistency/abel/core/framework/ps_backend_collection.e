@@ -1,8 +1,5 @@
 note
-	description: "[
-		Represents a freshly retrieved object-oriented collection.
-		See also description of PS_RETRIEVED_COLLECTION.
-	]"
+	description: "Represents a collection in the database."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +11,6 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
-			is_root, set_is_root,
 			make, is_equal
 		end
 

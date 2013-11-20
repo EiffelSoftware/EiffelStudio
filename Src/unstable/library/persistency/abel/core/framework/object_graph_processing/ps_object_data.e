@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_OBJECT_DATA}."
-	author: ""
+	description: "Contains an object alongside lots of metadata used during store and retrieve operations."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

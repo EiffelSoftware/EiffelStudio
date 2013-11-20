@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_WRITE_MANAGER}."
-	author: ""
+	description: "This class processes object graphs and generates PS_BACKEND_OBJECTs to be written by the backend."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

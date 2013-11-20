@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_READ_MANAGER}."
-	author: ""
+	description: "This class processes queries and builds objects from the data provided by a PS_BACKEND."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

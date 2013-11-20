@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_OBJECT_GRAPH_TRAVERSAL}."
-	author: ""
+	description: "Traverses an object graph and creates an array of OBJECT_DATA for every visited object."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

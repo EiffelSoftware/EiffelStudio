@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_OBJECT_SET}."
-	author: ""
+	description: "Shared parts between read and write manager. Contains an array of OBJECT_DATA and some utility functions to manipulate the items."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

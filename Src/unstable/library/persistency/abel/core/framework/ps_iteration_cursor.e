@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_ITERATION_CURSOR}."
-	author: ""
+	description: "The implementation for {PS_QUERY}.new_cursor."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

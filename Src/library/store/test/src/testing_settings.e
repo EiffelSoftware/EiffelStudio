@@ -1,8 +1,8 @@
 note
 	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	TESTING_SETTINGS

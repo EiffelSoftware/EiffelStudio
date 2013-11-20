@@ -1,9 +1,9 @@
 note
-	description	: "Window managment constants (WM_xxxx, ...)"
+	description: "Window managment constants (WM_xxxx, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_WINDOW_CONSTANTS

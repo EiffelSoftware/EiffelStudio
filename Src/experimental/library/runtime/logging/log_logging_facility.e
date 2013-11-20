@@ -1,9 +1,9 @@
 note
-	description:	"Application Logging Facilities"
-	legal:			"See note at the end of this class"
-	status:			"See notice at the end of this class"
-	date:			"$Date$"
-	revision:		"$Revision$"
+	description: "Application Logging Facilities"
+	legal: "See note at the end of this class"
+	status: "See notice at the end of this class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	LOG_LOGGING_FACILITY

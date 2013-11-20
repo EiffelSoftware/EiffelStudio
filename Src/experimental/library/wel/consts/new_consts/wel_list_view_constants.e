@@ -1,9 +1,9 @@
 note
-	description	: "ListView Control Constants."
+	description: "ListView Control Constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_LIST_VIEW_CONSTANTS

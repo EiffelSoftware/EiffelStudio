@@ -3,12 +3,9 @@ note
 		"Action sequence used for versioning calls"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords:
-		"event, action"
-	date:
-		"$Date$"
-	revision:
-		"$Revision$"
+	keywords: "event, action"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_LITE_ACTION_SEQUENCE [EVENT_DATA -> detachable TUPLE create default_create end]

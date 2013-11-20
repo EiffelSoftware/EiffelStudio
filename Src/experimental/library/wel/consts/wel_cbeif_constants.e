@@ -1,9 +1,9 @@
 note
-	description	: "Combo-Box-Ex Item Flag (CBEIF) constants."
+	description: "Combo-Box-Ex Item Flag (CBEIF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_CBEIF_CONSTANTS

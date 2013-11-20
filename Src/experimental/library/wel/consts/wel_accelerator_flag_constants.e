@@ -1,10 +1,10 @@
 note
-	description	: "Constants for defining accelerator keys %
+	description: "Constants for defining accelerator keys %
 				  %in WEL_ACCELERATOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_ACCELERATOR_FLAG_CONSTANTS

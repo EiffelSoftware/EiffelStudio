@@ -1,9 +1,9 @@
 note
-	description	: "Toolbar style (TB_STYLE...) constants."
+	description: "Toolbar style (TB_STYLE...) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_TB_STYLE_CONSTANTS

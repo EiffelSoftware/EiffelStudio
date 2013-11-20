@@ -1,10 +1,10 @@
 note
-	description	: "Objects that process help requests according to a given help context."
+	description: "Objects that process help requests according to a given help context."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "help"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "help"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EV_HELP_ENGINE

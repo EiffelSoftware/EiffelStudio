@@ -1,9 +1,9 @@
 note
-	description	: "Raster operations constants."
+	description: "Raster operations constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_RASTER_OPERATIONS_CONSTANTS

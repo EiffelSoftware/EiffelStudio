@@ -1,12 +1,12 @@
 note
-	description	: "[
+	description: "[
 		Flags defining search in a list view.
 		Used in WEL_LIST_VIEW_SEARCH_INFO.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_LVFI_CONSTANTS

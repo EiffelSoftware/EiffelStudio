@@ -1,9 +1,9 @@
 note
-	description	: "Document Item"
+	description: "Document Item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	DOCUMENT_ITEM

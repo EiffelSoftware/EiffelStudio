@@ -1,12 +1,12 @@
 note
-	description:	"Pattern match algorithm to match a pattern%
+	description: "Pattern match algorithm to match a pattern%
 			% containing wild cards.%
 			% Done through the Knuth, Morris, Pratt%
 			% algorithm."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
-	date:		"$Date$";
-	revision:	"$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class KMP_WILD
 

@@ -1,12 +1,12 @@
 note
-	description	: "The NONCLIENTMETRICS structure contains the scalable metrics%
+	description: "The NONCLIENTMETRICS structure contains the scalable metrics%
 				  %associated with the nonclient area of a nonminimized window.%
 				  %This structure is used by the SPI_GETNONCLIENTMETRICS and %
 				  %SPI_SETNONCLIENTMETRICS actions of SystemParametersInfo"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 
 class

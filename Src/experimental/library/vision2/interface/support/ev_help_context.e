@@ -1,10 +1,10 @@
 note
-	description	: "Objects that are sent to the help engine when help is requested."
+	description: "Objects that are sent to the help engine when help is requested."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "help"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "help"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EV_HELP_CONTEXT

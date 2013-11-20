@@ -1,9 +1,9 @@
 note
-	description	: "Window drawing constants (DT_xxxx, DI_xxxx, ...)"
+	description: "Window drawing constants (DT_xxxx, DI_xxxx, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WEL_DRAWING_CONSTANTS

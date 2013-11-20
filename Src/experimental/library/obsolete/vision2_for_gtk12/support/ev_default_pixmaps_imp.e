@@ -1,10 +1,10 @@
 note
-	description	: "Facilities for accessing default pixmaps."
+	description: "Facilities for accessing default pixmaps."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "pixmap, default"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "pixmap, default"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_STOCK_PIXMAPS_IMP

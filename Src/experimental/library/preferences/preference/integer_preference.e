@@ -1,9 +1,9 @@
 note
-	description	: "Integer preference."
+	description: "Integer preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date		: "$Date$";
-	revision	: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	INTEGER_PREFERENCE

@@ -1,9 +1,9 @@
 note
-	description	: "List of string_32 preference."
+	description: "List of string_32 preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date:"
-	revision	: "$Revision$"
+	date: "$Date:"
+	revision: "$Revision$"
 
 class
 	STRING_LIST_PREFERENCE

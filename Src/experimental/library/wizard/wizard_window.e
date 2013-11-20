@@ -1,10 +1,10 @@
 note
-	description	: "Window on which is displayed the wizards"
+	description: "Window on which is displayed the wizards"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "pascalf"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "pascalf"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_WINDOW

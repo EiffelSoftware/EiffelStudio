@@ -1,10 +1,10 @@
 note
-	description	: "Implement an help context as a string."
+	description: "Implement an help context as a string."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords	: "help"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	keywords: "help"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_SIMPLE_HELP_CONTEXT

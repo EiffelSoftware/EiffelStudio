@@ -111,38 +111,38 @@ feature
 
 feature {NONE} -- Initialization
 
-	make_repository: PS_DEFAULT_REPOSITORY
-			-- Create the repository for this test
-		local
-			database: PS_MYSQL_DATABASE
-			backend: PS_MYSQL_BACKEND
-			special_handler: PS_SPECIAL_COLLECTION_HANDLER
-			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
---			backend: PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND
-		do
-			create database.make (username, password, db_name, db_host, db_port)
-			create backend.make (database, create {PS_MYSQL_STRINGS})
-			backend.wipe_out
-			create Result.make (backend)
-
-			create special_handler.make
-			create tuple_handler
-			Result.add_collection_handler (special_handler)
-			Result.add_collection_handler (tuple_handler)
-		end
-
---	make_repository: PS_REPOSITORY
+--	make_repository: PS_DEFAULT_REPOSITORY
 --			-- Create the repository for this test
 --		local
---			factory: PS_MYSQL_REPOSITORY_FACTORY
+--			database: PS_MYSQL_DATABASE
+--			backend: PS_MYSQL_BACKEND
+--			special_handler: PS_SPECIAL_COLLECTION_HANDLER
+--			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
+----			backend: PS_GENERIC_LAYOUT_SQL_READWRITE_BACKEND
 --		do
---			create factory
---			factory.set_user (username)
---			factory.set_password (password)
---			factory.set_database (db_name)
+--			create database.make (username, password, db_name, db_host, db_port)
+--			create backend.make (database, create {PS_MYSQL_STRINGS})
+--			backend.wipe_out
+--			create Result.make (backend)
 
---			Result := factory.new_repository
+--			create special_handler.make
+--			create tuple_handler
+--			Result.add_collection_handler (special_handler)
+--			Result.add_collection_handler (tuple_handler)
 --		end
+
+	make_repository: PS_REPOSITORY
+			-- Create the repository for this test
+		local
+			factory: PS_MYSQL_REPOSITORY_FACTORY
+		do
+			create factory.make
+			factory.set_user (username)
+			factory.set_password (password)
+			factory.set_database (db_name)
+
+			Result := factory.new_repository
+		end
 
 	username: STRING = "eiffelstoretest"
 

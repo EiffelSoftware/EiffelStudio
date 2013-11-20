@@ -15,7 +15,7 @@ inherit
 	PS_REPOSITORY_FACTORY
 
 create
-	default_create, make, make_uninitialized
+	make, make_uninitialized
 
 feature -- Status report
 

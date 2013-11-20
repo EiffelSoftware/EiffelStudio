@@ -18,7 +18,7 @@ feature {NONE}
 		local
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
-			create factory
+			create factory.make
 			--Result := factory.create_in_memory_repository
 			Result := factory.new_repository
 		end

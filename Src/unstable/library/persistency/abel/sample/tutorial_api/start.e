@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 		local
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
-			create factory
+			create factory.make
 			repository := factory.new_repository
 
 			create criterion_factory

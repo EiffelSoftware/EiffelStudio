@@ -22,16 +22,16 @@ feature {NONE}
 			tuple_handler: PS_TUPLE_COLLECTION_HANDLER
 			factory: PS_IN_MEMORY_REPOSITORY_FACTORY
 		do
-			create factory
-			create backend.make
-			create repo.make (backend)
+			create factory.make
+--			create backend.make
+--			create repo.make (backend)
 --			create special_handler.make
 --			create tuple_handler
 --			repo.add_collection_handler (special_handler)
 --			repo.add_collection_handler (tuple_handler)
 
-			Result := repo
---			Result := factory.new_repository
+--			Result := repo
+			Result := factory.new_repository
 		end
 
 --feature {NONE} -- Initialization

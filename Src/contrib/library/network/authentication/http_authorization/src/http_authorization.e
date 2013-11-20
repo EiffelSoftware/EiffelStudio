@@ -21,9 +21,9 @@ create
 	make_basic_auth,
 	make_custom_auth
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (a_http_authorization: READABLE_STRING_8)
+	make (a_http_authorization: detachable READABLE_STRING_8)
 			-- Initialize `Current'.
 		local
 			i: INTEGER
@@ -31,39 +31,49 @@ feature {NONE} -- Initialization
 			u,p: READABLE_STRING_32
 			utf: UTF_CONVERTER
 		do
-			create http_authorization.make_from_string (a_http_authorization)
-			create t.make_empty
-			type := t
-			if not a_http_authorization.is_empty then
-				i := 1
-				if a_http_authorization[i] = ' ' then
-					i := i + 1
-				end
-				i := a_http_authorization.index_of (' ', i)
-				if i > 0 then
-					t.append (a_http_authorization.substring (1, i - 1))
-					t.right_adjust; t.left_adjust
-					if t.same_string (Basic_auth_type) then
-						type := Basic_auth_type
-						s := (create {BASE64}).decoded_string (a_http_authorization.substring (i + 1, a_http_authorization.count))
-						i := s.index_of (':', 1) --| Let's assume ':' is forbidden in login ...
-						if i > 0 then
-							u := utf.utf_8_string_8_to_string_32 (s.substring (1, i - 1)) -- UTF_8 decoding to support unicode password
-							p := utf.utf_8_string_8_to_string_32 (s.substring (i + 1, s.count)) -- UTF_8 decoding to support unicode password
-							login := u
-							password := p
-							check
-								(create {HTTP_AUTHORIZATION}.make_custom_auth (u, p, t)).http_authorization ~ http_authorization
+			login := Void
+			password := Void
+			if a_http_authorization = Void then
+					-- Default: Basic
+				type := basic_auth_type
+				http_authorization := Void
+			else
+				create http_authorization.make_from_string (a_http_authorization)
+				create t.make_empty
+				type := t
+				if not a_http_authorization.is_empty then
+					i := 1
+					if a_http_authorization[i] = ' ' then
+						i := i + 1
+					end
+					i := a_http_authorization.index_of (' ', i)
+					if i > 0 then
+						t.append (a_http_authorization.substring (1, i - 1))
+						t.right_adjust; t.left_adjust
+						if t.same_string (Basic_auth_type) then
+							type := Basic_auth_type
+							s := (create {BASE64}).decoded_string (a_http_authorization.substring (i + 1, a_http_authorization.count))
+							i := s.index_of (':', 1) --| Let's assume ':' is forbidden in login ...
+							if i > 0 then
+								u := utf.utf_8_string_8_to_string_32 (s.substring (1, i - 1)) -- UTF_8 decoding to support unicode password
+								p := utf.utf_8_string_8_to_string_32 (s.substring (i + 1, s.count)) -- UTF_8 decoding to support unicode password
+								login := u
+								password := p
+								check
+									(create {HTTP_AUTHORIZATION}.make_custom_auth (u, p, t)).http_authorization ~ http_authorization
+								end
 							end
+						elseif t.same_string (Digest_auth_type) then
+							type := Digest_auth_type
+							to_implement ("HTTP Authorization %"digest%", not yet implemented")
+						else
+							to_implement ("HTTP Authorization %""+ t +"%", not yet implemented")
 						end
-					elseif t.same_string (Digest_auth_type) then
-						type := Digest_auth_type
-						to_implement ("HTTP Authorization %"digest%", not yet implemented")
-					else
-						to_implement ("HTTP Authorization %""+ t +"%", not yet implemented")
 					end
 				end
 			end
+		ensure
+			a_http_authorization /= Void implies http_authorization /= Void
 		end
 
 	make_basic_auth (u: READABLE_STRING_32; p: READABLE_STRING_32)
@@ -101,7 +111,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	http_authorization: IMMUTABLE_STRING_8
+	http_authorization: detachable IMMUTABLE_STRING_8
 
 	type: READABLE_STRING_8
 

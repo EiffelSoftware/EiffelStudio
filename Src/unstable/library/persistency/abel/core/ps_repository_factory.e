@@ -9,18 +9,8 @@ deferred class
 
 inherit
 	PS_ABEL_EXPORT
-		redefine
-			default_create
-		end
 
 feature {NONE} -- Initialization
-
-	default_create
-		obsolete
-			"use make"
-		do
-			make
-		end
 
 	make
 			-- Initialize with default handlers and plugins.

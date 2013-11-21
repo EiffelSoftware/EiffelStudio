@@ -101,7 +101,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			-- Get the collection items
 			connection := get_connection (transaction)
 			sql_string := "SELECT collectionid, position, runtimetype, value FROM ps_collection WHERE collectiontype = "
-				+ db_metadata_manager.primary_key_of_class (collection_type.base_class.name).out
+				+ db_metadata_manager.primary_key_of_class (collection_type.name).out
 				+ " ORDER BY collectionid, position " + SQL_Strings.for_update_appendix
 			connection.execute_sql (sql_string)
 

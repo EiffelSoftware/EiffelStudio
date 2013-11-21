@@ -227,7 +227,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 				else
 					-- Value type
 					if attached obj.reflector.field (i) as field then
-						new_command.add_attribute (obj.reflector.field_name (i), basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).base_class.name)
+						new_command.add_attribute (obj.reflector.field_name (i), basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).name)
 					end
 				end
 				i := i + 1

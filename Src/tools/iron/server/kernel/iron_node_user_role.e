@@ -1,42 +1,42 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_USER_ROLE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_USER_ROLE
+
+inherit
+	ANY
+		redefine
+			is_equal
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make (a_role_name: READABLE_STRING_GENERAL)
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			create name.make_from_string_general (a_role_name)
 		end
 
 feature -- Access
 
-	layout: IRON_LAYOUT
+	name: IMMUTABLE_STRING_32
 
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
+feature -- Comparison
 
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := name.is_case_insensitive_equal (other.name)
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +67,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

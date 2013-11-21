@@ -1,42 +1,55 @@
 note
-	description: "Summary description for {IRON}."
-	author: ""
+	description: "Summary description for {ACCESS_API_HANDLER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	ACCESS_API_HANDLER
+
+inherit
+	WSF_URI_HANDLER
+		rename
+			new_mapping as new_uri_mapping
+		end
+
+	WSF_URI_TEMPLATE_HANDLER
+		select
+			new_mapping
+		end
+
+	IRON_NODE_API_HANDLER
+		rename
+			set_iron as make
+		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Execution
 
-	make (a_layout: IRON_LAYOUT)
+	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			if req.is_get_request_method then
+				handle_access_package (req, res)
+			else
+				res.send (create {WSF_METHOD_NOT_ALLOWED_RESPONSE}.make (req))
+			end
 		end
 
-feature -- Access
-
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	handle_access_package (req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
 		end
 
-;note
+feature -- Documentation
+
+	mapping_documentation (m: WSF_ROUTER_MAPPING; a_request_methods: detachable WSF_REQUEST_METHODS): WSF_ROUTER_MAPPING_DOCUMENTATION
+		do
+			create Result.make (m)
+			Result.add_description ("GET: Access the repositories information.")
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

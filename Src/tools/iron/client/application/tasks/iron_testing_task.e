@@ -81,7 +81,7 @@ feature -- Execute
 				end
 			end
 
-			create l_uri.make_from_string ("http://localhost:9090/7.3/eiffel.com/library/preferences/xml_pref-safe.ecf")
+			create l_uri.make_from_string ("http://localhost:9090/13.11/eiffel.com/library/preferences/xml_pref-safe.ecf")
 			print ("* Path associated with "+ l_uri.string +" ?%N")
 
 			if attached a_iron.installation_api.local_path_associated_with_uri (l_uri.string) as l_path then

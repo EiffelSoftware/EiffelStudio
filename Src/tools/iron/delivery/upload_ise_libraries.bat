@@ -7,7 +7,7 @@ if not exist "%~dp0set_credential.bat" goto create_set_credential_script
 set T_HERE=%cd%
 if "%ISE_PLATFORM%" == "" goto failure
 
-set TMP_IRON_REPOSITORY=http://iron.eiffel.com/7.3
+set TMP_IRON_REPOSITORY=http://iron.eiffel.com/13.11
 set TMP_IRON_ISE_DOMAIN=com.eiffel
 
 set IRON_CREATE_OPTS=create -u %IRON_USERNAME% -p %IRON_PASSWORD% --repository %TMP_IRON_REPOSITORY% --batch
@@ -157,7 +157,7 @@ rem
 
 set TMP_SRC_CONTRIB=%~dp0%\_contribs
 if exist %TMP_SRC_CONTRIB% svn update _contribs
-if not exist %TMP_SRC_CONTRIB% svn checkout https://svn.eiffel.com/eiffelstudio/branches/Eiffel_73/Src/contrib/library _contribs
+if not exist %TMP_SRC_CONTRIB% svn checkout https://svn.eiffel.com/eiffelstudio/branches/Eiffel_1311/Src/contrib/library _contribs
 
 %IRON_CMD% %IRON_CREATE_OPTS% --package-name "gobo" --package-description "Gobosoft.org" --package-archive-source "%TMP_SRC_CONTRIB%\gobo"
 %IRON_CMD% %IRON_UPDATE_OPTS% --package-name "gobo" --index "/%TMP_IRON_ISE_DOMAIN%/contrib/library/gobo"

@@ -1,42 +1,63 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_ITERATOR}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_ITERATOR
 
-create
-	make
+inherit
+	IRON_NODE_VISITOR
 
-feature {NONE} -- Initialization
+feature -- Visit
 
-	make (a_layout: IRON_LAYOUT)
+	visit_node (v: IRON_NODE)
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			across
+				v.database.versions as ic
+			loop
+				ic.item.accept (Current)
+			end
 		end
 
-feature -- Access
+	visit_version (v: IRON_NODE_VERSION)
+		do
 
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
 		end
 
-;note
+	visit_package (p: IRON_NODE_PACKAGE)
+		do
+			-- Iterate on version?
+		end
+
+	visit_package_version (p: IRON_NODE_VERSION_PACKAGE)
+		do
+		end
+
+	visit_project (p: IRON_NODE_PACKAGE_PROJECT)
+		do
+		end
+
+	visit_package_iterable (it: ITERABLE [IRON_NODE_PACKAGE])
+		do
+			across
+				it as ic
+			loop
+				ic.item.accept (Current)
+			end
+		end
+
+	visit_package_version_iterable (it: ITERABLE [IRON_NODE_VERSION_PACKAGE])
+		do
+			across
+				it as ic
+			loop
+				ic.item.accept (Current)
+			end
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +88,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -1,42 +1,20 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_INFO}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_INFO
+
+inherit
+	INI_FILE
 
 create
-	make
+	make_empty,
+	make_with_path
 
-feature {NONE} -- Initialization
-
-	make (a_layout: IRON_LAYOUT)
-		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
-		end
-
-feature -- Access
-
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
-		end
-
-;note
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +45,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

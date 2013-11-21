@@ -2,7 +2,7 @@ note
 	description: "[
 			Summary description for {IRON_SHARE_ARGUMENT_PARSER}.
 						
-				iron package {create|update|delete} --user username --pwd password --repository http://iron.eiffel.com/7.3 --data data_file
+				iron package {create|update|delete} --user username --pwd password --repository http://iron.eiffel.com/13.11 --data data_file
 		]"
 	author: ""
 	date: "$Date$"

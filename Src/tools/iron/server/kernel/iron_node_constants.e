@@ -1,42 +1,28 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_CONSTANTS}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_CONSTANTS
 
-create
-	make
+feature -- Access
 
-feature {NONE} -- Initialization
+	major: INTEGER = 0
+	minor: INTEGER = 1
+	built: STRING = "0007"
 
-	make (a_layout: IRON_LAYOUT)
+	version: STRING
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			Result := major.out + "." + minor.out + "." + built
 		end
 
 feature -- Access
 
-	layout: IRON_LAYOUT
+	iron_repo_variable_name: STRING = "IRON_REPO"
 
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
-		end
-
-;note
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +53,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

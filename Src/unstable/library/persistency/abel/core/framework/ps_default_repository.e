@@ -187,14 +187,21 @@ feature {PS_ABEL_EXPORT} -- Testing
 	clean_db_for_testing
 			-- Wipe out all data.
 		local
---			handlers: LINKED_LIST[PS_COLLECTION_HANDLER_OLD[detachable ANY]]
+			batch_size: INTEGER
 		do
---			handlers:= collection_handlers
+			batch_size := batch_retrieval_size
 			backend.wipe_out
-			make (backend)
---			across handlers as handler_cursor loop
---				add_collection_handler (handler_cursor.item)
---			end
+
+			create id_manager.make
+			create mapper.make
+			create read_manager_cache.make (100)
+
+			create write_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
+
+			all_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
+			all_handlers.do_all (agent write_manager.add_handler)
+
+			set_batch_retrieval_size (batch_size)
 		end
 
 feature {PS_ABEL_EXPORT} -- Status Report
@@ -207,32 +214,6 @@ feature {PS_ABEL_EXPORT} -- Status Report
 		end
 
 feature {NONE} -- Initialization
-
-	make (a_backend: PS_BACKEND)
-			-- Initialize `Current'.
-		do
-			backend := a_backend
-			create transaction_isolation_level
-			set_transaction_isolation_level (transaction_isolation_level.repeatable_read)
-			create id_manager.make
-			create mapper.make
-			create read_manager_cache.make (100)
-			create transaction_isolation
-
-			create write_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
-
-			create all_handlers.make
-			all_handlers.extend (create {PS_STRING_HANDLER}.make (write_manager))
-			all_handlers.extend (create {PS_DEFAULT_OBJECT_HANDLER}.make (write_manager))
-			all_handlers.extend (create {PS_SPECIAL_HANDLER}.make (write_manager))
-			all_handlers.extend (create {PS_TUPLE_HANDLER}.make (write_manager))
-
-			all_handlers.do_all (agent write_manager.add_handler)
-
-			backend.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
-
-			retry_count := default_retry_count
-		end
 
 	make_from_factory (
 			a_backend: PS_BACKEND;
@@ -252,6 +233,8 @@ feature {NONE} -- Initialization
 
 			create read_manager_cache.make (100)
 			create transaction_isolation_level
+			set_transaction_isolation_level (transaction_isolation_level.repeatable_read)
+
 			retry_count := default_retry_count
 			set_batch_retrieval_size (infinite_batch_size)
 		end

@@ -142,6 +142,7 @@ feature {NONE} -- Initialization
 			factory.set_database (db_name)
 
 			Result := factory.new_repository
+			--Result.set_batch_retrieval_size (1)
 		end
 
 	username: STRING = "eiffelstoretest"

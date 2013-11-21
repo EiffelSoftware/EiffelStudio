@@ -12,6 +12,8 @@ remtrace base
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base base 
 remtrace base_extension
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base_extension base_extension 
+remtrace cocoa
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/cocoa cocoa
 remtrace cURL
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/cURL cURL
 remtrace diff
@@ -41,6 +43,8 @@ remtrace memory_analyzer
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/memory_analyzer memory_analyzer 
 remtrace net
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/net net 
+remtrace objc_base
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/objc_base objc_base 
 remtrace obsolete
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/obsolete obsolete 
 remtrace parse

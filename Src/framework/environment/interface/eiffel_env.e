@@ -49,10 +49,12 @@ feature -- Access
 
 	product_version_name: STRING_8
 			-- Versioned name of the product.
-			-- I.e. Eiffel7x
+			-- I.e. Eiffel_MM.mm
 		once
 			create Result.make_from_string (product_name)
+			Result.append_character ('_')
 			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
+			Result.append_character ('.')
 			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
 			if is_unix_layout then
 				Result.to_lower
@@ -2094,7 +2096,7 @@ feature -- Preferences
 				end
 			else
 				p := hidden_files_path
-				p := p.extended (application_name + "rc" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out)
+				p := p.extended (product_version_name + ".rc")
 				create Result.make_from_string_general (p.name)
 			end
 		ensure

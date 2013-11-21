@@ -88,7 +88,7 @@ feature -- Repository task
 		do Result := string_with_args ("Registering repository %"$1%" [$2] ", [a_name, a_url]) end
 
 	m_unregistering_repository (a_name_or_uri: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Un-Registering repository [$2] ", [a_name_or_uri]) end
+		do Result := string_with_args ("Un-Registering repository [$1] ", [a_name_or_uri]) end
 
 feature {NONE} -- Implementation
 

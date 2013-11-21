@@ -1,44 +1,84 @@
 note
-	description: "Summary description for {IRON}."
-	author: ""
+	description: "[
+				Iterator on package files
+				It iterates recursively on directory and process files
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_FS_PATH_ITERATOR
+
+inherit
+	DIRECTORY_ITERATOR
+		redefine
+			path_excluded,
+			directory_excluded,
+			file_excluded,
+			process_directory,
+			process_file
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			create file_actions
+			create directory_actions
 		end
 
-feature -- Access
+feature -- Actions		
 
-	layout: IRON_LAYOUT
+	file_actions: ACTION_SEQUENCE [TUPLE [PATH]]
+	directory_actions: ACTION_SEQUENCE [TUPLE [PATH]]
 
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
+feature -- Visitor
 
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	process_file (fn: PATH)
+		do
+			file_actions.call ([fn])
+			Precursor (fn)
 		end
 
-;note
+	process_directory (dn: PATH)
+		do
+			directory_actions.call ([dn])
+			Precursor (dn)
+		end
+
+feature -- Status
+
+	path_excluded (a_path: PATH): BOOLEAN
+		do
+			Result := a_path.name.starts_with ({STRING_32} ".")
+		end
+
+	directory_excluded (dn: PATH): BOOLEAN
+		local
+			s: STRING_32
+		do
+			s := dn.name
+			Result := s.starts_with ({STRING_32} ".")  or s.starts_with ({STRING_32} "_")
+		end
+
+	file_excluded (fn: PATH): BOOLEAN
+		do
+			Result := False
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -59,13 +99,6 @@ feature -- Access
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-		]"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
 		]"
 
 end

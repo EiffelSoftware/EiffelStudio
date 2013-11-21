@@ -1,42 +1,53 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_CONTROLLER_TASK}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	IRON
-
-create
-	make
+deferred class
+	IRON_NODE_CONTROLLER_TASK
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			set_arguments ((create {ARGUMENTS_32}).argument_array)
 		end
 
 feature -- Access
 
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	name: READABLE_STRING_8
+		deferred
 		end
 
-;note
+	arguments: ARRAY [IMMUTABLE_STRING_32]
+
+feature -- Change
+
+	set_arguments (args: like arguments)
+		local
+			l_arguments: like arguments
+		do
+			create l_arguments.make_from_array (args)
+			l_arguments.rebase (0) -- First argument is command line.
+			arguments := l_arguments
+		end
+
+feature -- Status report
+
+	is_available (iron: IRON_NODE): BOOLEAN
+		deferred
+		end
+
+feature -- Execution
+
+	execute (iron: IRON_NODE)
+		require
+			is_available: is_available (iron)
+		deferred
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

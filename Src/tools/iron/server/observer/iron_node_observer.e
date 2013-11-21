@@ -1,42 +1,29 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_OBSERVER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	IRON
+deferred class
+	IRON_NODE_OBSERVER
 
-create
-	make
+feature -- User
 
-feature {NONE} -- Initialization
-
-	make (a_layout: IRON_LAYOUT)
-		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+	on_user_event (a_user: IRON_NODE_USER; a_title: READABLE_STRING_32; a_message: READABLE_STRING_32)
+		deferred
 		end
 
-feature -- Access
-
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	on_user_updated (u: IRON_NODE_USER; flag_is_new: BOOLEAN)
+		deferred
 		end
 
-;note
+feature -- Package
+
+	on_package_updated (p: IRON_NODE_PACKAGE; flag_is_new: BOOLEAN)
+		deferred
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

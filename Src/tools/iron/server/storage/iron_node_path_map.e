@@ -1,42 +1,56 @@
 note
-	description: "Summary description for {IRON}."
-	author: ""
+	description: "[
+			Path association map between `path' and `package' for a specific version
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_PATH_MAP
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make (v: like version)
+			-- Initialize `Current'.
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			version := v
+			create maps.make (1)
 		end
+
+feature -- Status
+
+	version: IRON_NODE_VERSION
+			-- Associated version.
+
+	maps: STRING_TABLE [attached like paths]
+			-- Paths indexed by package's `id'.
 
 feature -- Access
 
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	paths (a_package_id: READABLE_STRING_GENERAL): ARRAYED_LIST [READABLE_STRING_32]
+			-- Path associated with package
+		local
+			lst: detachable like paths
+		do
+			lst := maps.item (a_package_id)
+			if lst = Void then
+				create lst.make (1)
+				maps.force (lst, a_package_id)
+			end
+			Result := lst
 		end
 
-;note
+feature -- Change
+
+	register_path (a_package_id: READABLE_STRING_GENERAL; a_path: READABLE_STRING_32)
+		do
+			paths (a_package_id).force (a_path)
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +81,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -1,42 +1,43 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_VISITOR}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	IRON
+deferred class
+	IRON_NODE_VISITOR
 
-create
-	make
+feature -- Visit
 
-feature {NONE} -- Initialization
-
-	make (a_layout: IRON_LAYOUT)
-		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+	visit_node (v: IRON_NODE)
+		deferred
 		end
 
-feature -- Access
-
-	layout: IRON_LAYOUT
-
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	visit_version (v: IRON_NODE_VERSION)
+		deferred
 		end
 
-;note
+	visit_package (p: IRON_NODE_PACKAGE)
+		deferred
+		end
+
+	visit_package_version (p: IRON_NODE_VERSION_PACKAGE)
+		deferred
+		end
+
+	visit_project (p: IRON_NODE_PACKAGE_PROJECT)
+		deferred
+		end
+
+	visit_package_iterable (it: ITERABLE [IRON_NODE_PACKAGE])
+		deferred
+		end
+
+	visit_package_version_iterable (it: ITERABLE [IRON_NODE_VERSION_PACKAGE])
+		deferred
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +68,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

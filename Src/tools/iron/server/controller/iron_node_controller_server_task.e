@@ -1,42 +1,42 @@
 note
-	description: "Summary description for {IRON}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description : "Objects that ..."
+	author      : "$Author$"
+	date        : "$Date$"
+	revision    : "$Revision$"
 
 class
-	IRON
+	IRON_NODE_CONTROLLER_SERVER_TASK
+
+inherit
+	IRON_NODE_CONTROLLER_TASK
+		rename
+			set_arguments as make_with_arguments
+		end
 
 create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_layout: IRON_LAYOUT)
-		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
-		end
+	make,
+	make_with_arguments
 
 feature -- Access
 
-	layout: IRON_LAYOUT
+	name: STRING = "server"
 
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
+feature -- Execution
 
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+	is_available (iron: IRON_NODE): BOOLEAN
+		do
+			Result := iron.is_available
 		end
 
-;note
+	execute (iron: IRON_NODE)
+		local
+			app: IRON_NODE_SERVICE_APPLICATION
+		do
+			create app.make_from_iron_and_arguments (iron, arguments)
+			app.launch
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

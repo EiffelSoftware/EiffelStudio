@@ -36,6 +36,9 @@
 	<target name="es_iron" extends="iron">
 		<description>customized IRON client to be integrated with EiffelStudio</description>
 		<root class="ES_IRON_CLIENT" feature="make"/>
+		<option debug="true">
+			<debug name="iron" enabled="true"/>
+		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="iron"/>
 		<library name="environment" location="..\..\..\framework\environment\environment-safe.ecf"/>

@@ -1,42 +1,83 @@
 note
-	description: "Summary description for {IRON}."
-	author: ""
+	description: "Summary description for {IRON_NODE_VERSION}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_VERSION
+
+inherit
+	HASHABLE
+		redefine
+			is_equal
+		end
+
+	DEBUG_OUTPUT
+		redefine
+			is_equal
+		end
 
 create
-	make
+	make,
+	make_default
+
+convert
+	value: {READABLE_STRING_8}
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make (v: READABLE_STRING_8)
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			create value.make_from_string (v)
+		end
+
+	make_default
+			-- Make Current as default
+			-- the default version is known by the IRON server
+		do
+			make ("")
 		end
 
 feature -- Access
 
-	layout: IRON_LAYOUT
+	value: IMMUTABLE_STRING_8
 
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+ 	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := value.hash_code
 		end
 
-;note
+feature -- Status report
+
+	debug_output: READABLE_STRING_GENERAL
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := value
+		end
+
+feature -- Status report
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := value.is_case_insensitive_equal (other.value)
+		end
+
+	is_default: BOOLEAN
+		do
+			Result := value.is_empty
+		end
+
+feature -- Visitor
+
+	accept (vis: IRON_NODE_VISITOR)
+		do
+			vis.visit_version (Current)
+		end
+
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +108,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

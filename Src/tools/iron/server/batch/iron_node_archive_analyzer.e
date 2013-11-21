@@ -1,39 +1,65 @@
 note
-	description: "Summary description for {IRON}."
+	description: "Summary description for {IRON_NODE_ARCHIVE_ANALYZER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_ARCHIVE_ANALYZER
+
+inherit
+	DIRECTORY_ITERATOR
+		redefine
+			process_file,
+			directory_excluded,
+			file_excluded
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_layout: IRON_LAYOUT)
+	make
 		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
+			create ecfs.make (0)
 		end
 
 feature -- Access
 
-	layout: IRON_LAYOUT
+	reset
+		do
+			ecfs.wipe_out
+		end
 
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
+	ecfs: ARRAYED_LIST [PATH]
 
-	installation_api: IRON_INSTALLATION_API
+feature -- Visitor
 
-	catalog_api: IRON_CATALOG_API
+	process_file (fn: PATH)
+			-- Visit file `fn'
+		do
+			check is_ecf: fn.name.ends_with_general (".ecf") end
+			ecfs.force (fn)
+		end
 
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+feature -- Visitor status
+
+	directory_excluded (dn: PATH): BOOLEAN
+			-- Is Directory `dn' excluded?
+		do
+			Result := attached dn.entry as e and then
+						(
+								e.name.same_string_general ("EIFGENs")
+							or  e.name.starts_with_general (".") -- exclude .svn, .git, .*
+								-- a .* is not a great place for source files.
+						)
+		end
+
+	file_excluded (fn: PATH): BOOLEAN
+			-- Is file `fn' excluded?
+		do
+			Result := not fn.name.ends_with_general (".ecf")
 		end
 
 ;note
@@ -67,5 +93,5 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end
+

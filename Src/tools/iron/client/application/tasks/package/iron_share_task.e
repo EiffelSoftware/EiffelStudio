@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	name: STRING = "package"
+	name: STRING = "share"
 			-- Iron client task
 
 feature -- Execute
@@ -37,15 +37,14 @@ feature -- Execute
 		local
 			l_data: like data_from
 			uri: URI
-			sess: HTTP_CLIENT_SESSION
-			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			tgt: PATH
 			l_package: detachable IRON_PACKAGE
 			err, done: BOOLEAN
-			resp: HTTP_CLIENT_RESPONSE
 			l_name, l_id: detachable READABLE_STRING_32
 			l_archive_path: detachable PATH
+			remote_node: IRON_REMOTE_NODE
 		do
+			create remote_node.make (a_iron.urls, a_iron.api_version)
 			err := False
 			if
 				attached args.username as u and
@@ -79,24 +78,19 @@ feature -- Execute
 							-- error
 						elseif args.is_delete then
 							if l_package /= Void then
-								sess := new_client_session (repo, u, p)
-								create ctx.make_with_credentials_required
-								ctx.add_header ("Accept", "application/json")
-								resp := sess.delete (a_iron.urls.path_package_delete (repo, l_package), ctx)
-								if resp.error_occurred then
-									print ("[Error] operation failed!")
-									print_new_line
-									print (resp.error_message)
-									print_new_line
-									err := True
-								elseif resp.status = 401 then
-									print ("[Error] not authorized!")
-									print_new_line
-									err := True
-								else
+								remote_node.delete_package (l_package, u, p)
+								if remote_node.last_operation_succeed then
 									print ("Package successfully deleted.")
 									print_new_line
 									done := True
+								else
+									if attached remote_node.last_operation_error_message as l_last_operation_error_message then
+										print (l_last_operation_error_message)
+									else
+										print ("[Error] deletion failed!")
+									end
+									print_new_line
+									err := True
 								end
 							else
 								if l_name /= Void then
@@ -131,6 +125,8 @@ feature -- Execute
 										print ({STRING_32} "[Error] Could not find package !")
 									end
 									print_new_line
+								else
+									create {STRING_32} l_id.make_from_string_general (l_package.id)
 								end
 							else
 								err := True
@@ -140,18 +136,6 @@ feature -- Execute
 						end
 
 						if not done and not err then
-							sess := new_client_session (repo, u, p)
-							create ctx.make_with_credentials_required
-							ctx.add_header ("Accept", "application/json")
-							if l_id /= Void then
-								ctx.add_form_parameter ("id", l_id)
-							end
-							if l_name /= Void then
-								ctx.add_form_parameter ("name", l_name)
-							end
-							if attached l_data.description as l_description then
-								ctx.add_form_parameter ("description", l_description)
-							end
 							if attached l_data.source as src then
 								create tgt.make_from_string ("tmp_archive")
 								if l_package /= Void then
@@ -163,28 +147,19 @@ feature -- Execute
 							elseif attached l_data.archive as l_archive then
 								l_archive_path := l_archive
 							end
-							if l_package /= Void then
-								print ({STRING_32} "Update package %"" + l_package.human_identifier + {STRING_32} "%" %N")
-								resp := sess.post (a_iron.urls.path_update_package (repo, l_package), ctx, Void)
-							else
+
+							if l_package = Void then
 								if l_name /= Void then
 									print ({STRING_32} "Create new package %"" + l_name + "%"%N")
 								else
 									print ({STRING_32} "Create new package %N")
 								end
-								resp := sess.post (a_iron.urls.path_create_package (repo), ctx, Void)
-							end
-							if resp.error_occurred then
-								print ("[Error] operation failed!")
-								print_new_line
-								print (resp.error_message)
-								print_new_line
-								err := True
-							elseif resp.status = 401 then
-								print ("[Error] not authorized!")
-								print_new_line
-								err := True
+								remote_node.publish_package (l_id, l_name, l_data.description, l_archive_path, repo, l_package, u, p)
 							else
+								print ({STRING_32} "Update package %"" + l_package.human_identifier + {STRING_32} "%" %N")
+								remote_node.publish_package (l_id, l_name, l_data.description, l_archive_path, repo, l_package, u, p)
+							end
+							if remote_node.last_operation_succeed then
 								if l_package /= Void then
 									print ({STRING_32} "Package %""+ l_package.human_identifier + {STRING_32} "%" updated.")
 									print_new_line
@@ -199,60 +174,57 @@ feature -- Execute
 										err := True
 									end
 								end
-								debug
-									if attached resp.body as l_body then
-										print (l_body)
-										print_new_line
-									end
+							else
+								if attached remote_node.last_operation_error_message as errmsg then
+									print (errmsg)
+								else
+									print ("[Error] operation failed!")
 								end
+								print_new_line
+								err := True
 							end
 							if not err and l_package /= Void then
 								if attached l_data.indexes as l_paths then
 									print ({STRING_32} "Adding indexes:%N")
-									create ctx.make_with_credentials_required
-									ctx.add_header ("Accept", "application/json")
-									ctx.add_form_parameter ("id", l_package.id.to_string_32)
 									across
 										l_paths as c
 									loop
 										print ({STRING_32} "  - " + c.item)
 										print_new_line
-										ctx.add_form_parameter ("map[]", c.item.to_string_8)
 									end
-									resp := sess.post (a_iron.urls.path_add_package_index (repo, l_package), ctx, Void)
-									if resp.error_occurred then
-										print ("[Error] path association failed!")
-										print_new_line
-										print (resp.error_message)
-										print_new_line
-										err := True
-									else
+									remote_node.add_indexes (l_package, l_paths, u, p)
+									if remote_node.last_operation_succeed then
 										if l_paths.count > 1 then
 											print ("Package successfully associated with indexes!")
 										else
 											print ("Package successfully associated with index!")
 										end
 										print_new_line
+									else
+										if attached remote_node.last_operation_error_message as errmsg then
+											print (errmsg)
+										else
+											print ("[Error] path association failed!")
+										end
+										print_new_line
+										err := True
 									end
 								end
 								if l_archive_path /= Void then
---									sess.set_proxy ("localhost", 8888)
-									ctx.set_upload_filename (l_archive_path.utf_8_name)
-									ctx.add_header ("Content-Type", "application/zip")
-									sess.set_timeout (-1)
 									print ({STRING_32} "Uploading package archive ...%N")
-									resp := sess.post (a_iron.urls.path_upload_package_archive (repo, l_package), ctx, Void)
-									if resp.error_occurred then
-										print ("[Error] archive uploading failed!")
-										print_new_line
-										print (resp.error_message)
-										print_new_line
-										err := True
-									else
+									remote_node.upload_package_archive (l_package, l_archive_path, u, p)
+									if remote_node.last_operation_succeed then
 										print ("Archive successfully uploaded!")
 										print_new_line
+									else
+										if attached remote_node.last_operation_error_message as errmsg then
+											print (errmsg)
+										else
+											print ("[Error] Archive uploading failed!")
+										end
+										print_new_line
+										err := True
 									end
-									ctx.set_upload_filename (Void)
 								end
 							end
 						end
@@ -328,16 +300,17 @@ feature -- Execute
 			end
 		end
 
-	new_client_session (repo: IRON_REPOSITORY; u,p: READABLE_STRING_32): HTTP_CLIENT_SESSION
-		local
-			cl: LIBCURL_HTTP_CLIENT
-		do
-			create cl.make
-			Result := cl.new_session (repo.uri.string)
-			Result.set_connect_timeout (-1)
-			Result.set_is_insecure (False)
-			Result.set_credentials (u, p)
-		end
+--	new_client_session (repo: IRON_REPOSITORY; u,p: READABLE_STRING_32): HTTP_CLIENT_SESSION
+--		local
+--			cl: LIBCURL_HTTP_CLIENT
+--		do
+--			create cl.make
+--			Result := cl.new_session (repo.uri.string)
+--			Result.set_connect_timeout (-1)
+--			Result.set_timeout (50)
+--			Result.set_is_insecure (False)
+--			Result.set_credentials (u, p)
+--		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

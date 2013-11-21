@@ -11,20 +11,20 @@ In the beginning Eiffel users were getting the library source code with archive 
 =What is an iron package?=
 This is shared Eiffel code, mostly used for Eiffel libraries. A package can contains one or more libraries (and thus one or more .ecf files), even if this is recommended to have just one library per package. 
 
-Each package belongs to a specific Iron ecosystem, that's is to say a ''release'' collection. Currently it is synchronized with EiffelStudio releases (i.e 7.3, ...). 
-For instance, a package belongs to [http://iron.eiffel.com/7.3/] collection.
+Each package belongs to a specific Iron ecosystem, that's is to say a ''release'' collection. Currently it is synchronized with EiffelStudio releases (i.e 13.11, ...). 
+For instance, a package belongs to [http://iron.eiffel.com/13.11/] collection.
 
 =How can I use a library from an iron package?=
 Traditionally, Eiffel user uses path to indicate the location of the library on their machine, typically <code>$ISE_LIBRARY/library/base/base.ecf</code> where <code>$ISE_LIBRARY</code> is usually pointing to 'local-path-to-eiffel-installation'.
 
-Now how could one use the ''base'' package hosted on [http://iron.eiffel.com] for version 7.3 of EiffelStudio? 
+Now how could one use the ''base'' package hosted on [http://iron.eiffel.com] for version 13.11 of EiffelStudio? 
 
-You can see basic information about 'base' package at [http://iron.eiffel.com/access/7.3/package/?name=base] and see the associated URIs that you can use to reference this package from ecf file. For instance the url will point to the ''base'' iron package  [http://iron.eiffel.com/7.3/es/library/base] , which is similar to current <code>$ISE_LIBRARY/library/base</code>.
+You can see basic information about 'base' package at [http://iron.eiffel.com/access/13.11/package/?name=base] and see the associated URIs that you can use to reference this package from ecf file. For instance the url will point to the ''base'' iron package  [http://iron.eiffel.com/13.11/es/library/base] , which is similar to current <code>$ISE_LIBRARY/library/base</code>.
 
-The reference location to the base.ecf configuration file is simple the full URI [http://iron.eiffel.com/7.3/es/library/base/base.ecf], so the ecf file could have
-:   <code><library name="base" location="http://iron.eiffel.com/7.3/es/library/base/base.ecf" /></code>
+The reference location to the base.ecf configuration file is simple the full URI [http://iron.eiffel.com/13.11/es/library/base/base.ecf], so the ecf file could have
+:   <code><library name="base" location="http://iron.eiffel.com/13.11/es/library/base/base.ecf" /></code>
 
-Note that for convenience, you can simply define the environment variable <code>ISE_LIBRARY</code> to be '''[http://iron.eiffel.com/7.3/es]''', then the existing location <code>''$ISE_LIBRARY/library/base/base.ecf''</code> will use transparently the iron package ''base''.
+Note that for convenience, you can simply define the environment variable <code>ISE_LIBRARY</code> to be '''[http://iron.eiffel.com/13.11/es]''', then the existing location <code>''$ISE_LIBRARY/library/base/base.ecf''</code> will use transparently the iron package ''base''.
 
 However, it might occurs that a package is not ''installed'' on the local machine, the current iron integration in Eiffel compiler, does not download and install the package automatically.
 
@@ -43,9 +43,9 @@ Note: the iron executable is available with EiffelStudio in <code>$ISE_EIFFEL/to
 :  > iron update
 Example:
 :  Updating iron data ...
-:  Updating repository http://iron.eiffel.com version=7.3 ...
-:  - http://iron.eiffel.com/7.3 base
-:  - http://iron.eiffel.com/7.3 api_wrapper
+:  Updating repository http://iron.eiffel.com version=13.11 ...
+:  - http://iron.eiffel.com/13.11 base
+:  - http://iron.eiffel.com/13.11 api_wrapper
 :  - ...
 
 ==Display information on specific package==
@@ -62,11 +62,11 @@ If the package is installed, you will also get the local path installation
 ==Install a package==
 :  > iron install base
 Or also
-:  > iron install http://iron.eiffel.com/7.3/es/library/base
+:  > iron install http://iron.eiffel.com/13.11/es/library/base
 
 Note: if you use ''iron install -v base'', it will display the location of the installation for the package ''base''.
 This is usually under the ''Eiffel User Files'' folder, example
-    <code>C:\Users\{your-login}\Documents\Eiffel User Files\7.3\iron</code>
+    <code>C:\Users\{your-login}\Documents\Eiffel User Files\13.11\iron</code>
 
 If the environment variables <code>ISE_IRON_PATH</code> or else <code>IRON_PATH</code> are defined, the location for the iron package installation will use their value.
 
@@ -79,22 +79,22 @@ If the environment variables <code>ISE_IRON_PATH</code> or else <code>IRON_PATH<
 ==Advanced usage==
 ===You can have more than one iron repository server registered===
 :  > iron repository --list
-:  > iron repository --add iron http://iron.eiffel.com/7.3
-:  > iron repository --add custom http://iron.example.com/7.3
-:  > iron repository --remove http://iron.eiffel.com/7.3
+:  > iron repository --add iron http://iron.eiffel.com/13.11
+:  > iron repository --add custom http://iron.example.com/13.11
+:  > iron repository --remove http://iron.eiffel.com/13.11
 
 ===To build and share your own package, use ''iron package''===
 :  > iron share --help
 For that, you need an iron user account on the related iron server, please visit [http://iron.eiffel.com/access/]
 
 For example to build the ''foobar'' package from your library c:\eiffel\library\foobar
-:  > iron share --username {your-login} --password {your-password} --repository http://iron.eiffel.com/7.3 create --package-archive-source ''c:\eiffel\library\foobar'' --name ''foobar'' --description ''foobar package for testing iron'' --index ''/dummy/lib/foobar''
+:  > iron share --username {your-login} --password {your-password} --repository http://iron.eiffel.com/13.11 create --package-archive-source ''c:\eiffel\library\foobar'' --name ''foobar'' --description ''foobar package for testing iron'' --index ''/dummy/lib/foobar''
 
-This command will create a new package named ''foobar'' on iron repository [http://iron.eiffel.com/7.3], and using the local folder ''c:\eiffel\library\foobar'' as the source code for the package.
-Then associate this package with uri [http://iron.eiffel.com/7.3/dummy/lib/foobar]
+This command will create a new package named ''foobar'' on iron repository [http://iron.eiffel.com/13.11], and using the local folder ''c:\eiffel\library\foobar'' as the source code for the package.
+Then associate this package with uri [http://iron.eiffel.com/13.11/dummy/lib/foobar]
 
 =Future enhancements=
-The version of iron published at the same time of EiffelStudio 7.3 is a first implementation, it covers the basic functionalities, but the goal of iron is also to improve quality and ensure the ecosystem as a whole is coherent.
+The version of iron published at the same time of EiffelStudio 13.11 is a first implementation, it covers the basic functionalities, but the goal of iron is also to improve quality and ensure the ecosystem as a whole is coherent.
 
 * additional meta data to describe the package
 * analyze the content of the archive, to extract information related to the various existing ecf

@@ -1,42 +1,45 @@
 note
-	description: "Summary description for {IRON}."
-	author: ""
+	description: "[
+			Objects that ...
+		]"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON
+	IRON_NODE_FACTORY
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_layout: IRON_LAYOUT)
-		do
-			layout := a_layout
-			create urls
-			create installation_api.make_with_layout (a_layout, urls)
-			create catalog_api.make_with_layout (a_layout, urls)
-		end
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
 
 feature -- Access
 
-	layout: IRON_LAYOUT
+	iron_node: IRON_NODE
+		local
+			db: IRON_NODE_DATABASE
+			mailer: NOTIFICATION_MAILER
+			ext_mailer: NOTIFICATION_EXTERNAL_MAILER
+			lay: IRON_NODE_LAYOUT
+		do
+			if attached execution_environment.item ({IRON_NODE_CONSTANTS}.IRON_REPO_variable_name) as s then
 
-	urls: IRON_URL_BUILDER
-			-- IRON url builder.
-
-	installation_api: IRON_INSTALLATION_API
-
-	catalog_api: IRON_CATALOG_API
-
-	api_version: IMMUTABLE_STRING_8
-		once
-			Result := (create {IRON_API_CONSTANTS}).version
+				create lay.make_with_path (create {PATH}.make_from_string (s))
+			else
+				create lay.make_default
+			end
+			create {IRON_NODE_FS_DATABASE} db.make_with_layout (lay)
+			if {PLATFORM}.is_windows then
+				create ext_mailer.make (lay.binaries_path.extended ("sendmail.bat").name, Void)
+				mailer := ext_mailer
+			else
+				create {NOTIFICATION_SENDMAIL_MAILER} mailer
+			end
+			create Result.make (db, lay)
+				-- FIXME: do not hardcode email address.
+			Result.register_observer (create {IRON_NODE_MAILER_OBSERVER}.make_with_mailer (mailer, "jfiat@eiffel.com"))
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -67,5 +70,4 @@ feature -- Access
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

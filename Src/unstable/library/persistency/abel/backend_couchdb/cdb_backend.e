@@ -87,7 +87,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			across
 				primary_keys as id
 			loop
-				output := curl.get_document (type.base_class.name.as_lower, id.item.out)
+				output := curl.get_document (convert_type (type), id.item.out)
 				result_list := make_object (type, output, id.item.out)
 				across
 					result_list as attr
@@ -104,6 +104,8 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 						elseif not attr.item.first.starts_with ("_") then
 							if attr.item.first.starts_with ("ps_") then
 								current_obj.add_attribute (attr.item.first, attr.item.second, "BOOLEAN")
+							elseif attr.item.second.is_empty then
+								current_obj.add_attribute (attr.item.first, "", "NONE")
 							else
 								current_obj.add_attribute (attr.item.first, attr.item.second, type.attribute_type (attr.item.first).base_class.name)
 							end
@@ -232,8 +234,11 @@ feature {PS_BACKEND} -- Implementation
 				objects as cursor
 			loop
 				doc := make_json_new (cursor.item, cursor.item.primary_key.out, "")
-				db_name := cursor.item.metadata.base_class.name.twin
-				db_name.to_lower
+--				db_name := cursor.item.metadata.base_class.name.twin
+--				db_name.to_lower
+				db_name := convert_type (cursor.item.metadata)
+--				print (db_name)
+
 				err := curl.create_document (db_name, doc)
 --				print (doc)
 --				print (err)
@@ -503,6 +508,34 @@ feature {PS_ABEL_EXPORT} -- Testing helpers
 feature -- database
 
 	curl: CDB_DATABASE
+
+feature {NONE}
+
+	convert_type (type: PS_TYPE_METADATA): STRING
+		local
+			i: INTEGER
+		do
+			Result := type.base_class.name.twin
+			Result.to_lower
+			Result.replace_substring_all (" ", "")
+
+			from
+				i := 1
+			until
+				i > Result.count
+			loop
+				if Result.item(i) = '[' then
+					Result.put ('(', i)
+				end
+				if Result.item(i) = ']' then
+					Result.put (')', i)
+				end
+				if Result.item(i) = '!' then
+					Result.put ('$', i)
+				end
+				i := i + 1
+			end
+		end
 
 feature {NONE} -- Initialization
 

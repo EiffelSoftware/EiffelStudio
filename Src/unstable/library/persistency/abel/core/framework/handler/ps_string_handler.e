@@ -51,7 +51,7 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			end
 		end
 
-	as_string_pair (object: PS_OBJECT_DATA): TUPLE[value: STRING; type: STRING]
+	as_string_pair (object: PS_OBJECT_DATA): TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 			-- The `object' converted to a string pair.
 		local
 			conv: UTF_CONVERTER

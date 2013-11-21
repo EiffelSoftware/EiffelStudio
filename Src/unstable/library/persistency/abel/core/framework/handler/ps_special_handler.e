@@ -143,7 +143,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			i: INTEGER
 			capacity: INTEGER
 
-			field: TUPLE[value: STRING; type:STRING]
+			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
 		do
@@ -185,7 +185,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		local
 			index: INTEGER
 			reflector: REFLECTED_OBJECT
-			field: TUPLE[value: STRING; type:STRING]
+			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 		do
 			index := object.index
@@ -209,7 +209,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			obj: PS_OBJECT_DATA
 			i, k: INTEGER
 			type: PS_TYPE_METADATA
-			tuple: TUPLE[value: STRING; type: STRING]
+			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 
 			special: SPECIAL[detachable ANY]
 
@@ -245,7 +245,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 					end
 
 					if k > obj.references.count then
-						tuple := ["", "NONE"]
+						tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
 					else
 						check attached write_manager.item(obj.references[k]).handler as handler then
 							tuple := handler.as_string_pair (write_manager.item (obj.references[k]))

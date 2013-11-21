@@ -33,7 +33,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	attributes: LINKED_LIST [STRING]
 			-- The attributes of the object that have been loaded.
 
-	attribute_value (attribute_name: STRING): TUPLE [value: STRING; attribute_class_name: STRING]
+	attribute_value (attribute_name: STRING): TUPLE [value: STRING; attribute_class_name: IMMUTABLE_STRING_8]
 			-- The value of the attribute `attribute_name'.
 			-- The first item in the result is the value, and the second item is the class name of the generating class of the first item.
 		require
@@ -124,14 +124,14 @@ feature -- Comparison
 
 feature {PS_ABEL_EXPORT} -- Element change
 
-	add_attribute (attribute_name: STRING; value: STRING; class_name_of_value: STRING)
+	add_attribute (attribute_name: STRING; value: STRING; class_name_of_value: IMMUTABLE_STRING_8)
 			-- Add the attribute `attribute_name' with value tuple <`value', `class_name_of_value'>.
 		require
 				--	attribute_exists: class_metadata.attributes.has (attribute_name)
 			class_name_not_empty: not class_name_of_value.is_empty
 			none_means_void_value: class_name_of_value.is_equal ("NONE") implies value.is_empty
 		local
-			pair: PS_PAIR [STRING, STRING]
+			pair: PS_PAIR [STRING, IMMUTABLE_STRING_8]
 		do
 			create pair.make (value, class_name_of_value)
 
@@ -188,7 +188,7 @@ feature -- Debugging output
 
 feature {NONE} -- Initialization
 
-	values: HASH_TABLE [PS_PAIR [STRING, STRING], STRING]
+	values: HASH_TABLE [PS_PAIR [STRING, IMMUTABLE_STRING_8], STRING]
 			-- Maps attribute names to the corresponding value and runtime types.
 
 	make (key: INTEGER; class_data: PS_TYPE_METADATA)
@@ -206,7 +206,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	is_equal_tuple (a, b: TUPLE[first: STRING; second:STRING]): BOOLEAN
+	is_equal_tuple (a, b: TUPLE[first: STRING; second:IMMUTABLE_STRING_8]): BOOLEAN
 		do
 			Result := a.first.is_equal (b.first) and a.second.is_equal (b.second)
 		end

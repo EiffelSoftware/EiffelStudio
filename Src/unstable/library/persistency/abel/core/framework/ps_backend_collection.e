@@ -19,7 +19,7 @@ create {PS_ABEL_EXPORT}
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	collection_items: LINKED_LIST [PS_PAIR [STRING, STRING]]
+	collection_items: LINKED_LIST [PS_PAIR [STRING, IMMUTABLE_STRING_8]]
 			-- All objects that are stored inside this collection.
 			-- The first item in the PS_PAIR is the actual value of the item (foreign key or basic value), and the second item is the class name of the generating class of the first item.
 
@@ -126,7 +126,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 			class_name_not_empty: not class_name_of_item_value.is_empty
 			void_value_means_none_type: item_value.is_empty implies class_name_of_item_value.is_equal ("NONE")
 		do
-			collection_items.extend (create {PS_PAIR [STRING, STRING]}.make (item_value, class_name_of_item_value))
+			collection_items.extend (create {PS_PAIR [STRING, IMMUTABLE_STRING_8]}.make (item_value, class_name_of_item_value))
 		ensure
 			item_inserted: collection_items.last.first.is_equal (item_value)
 			class_name_inserted: collection_items.last.second.is_equal (class_name_of_item_value)

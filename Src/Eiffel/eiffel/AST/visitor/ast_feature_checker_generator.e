@@ -1221,7 +1221,7 @@ feature {NONE} -- Implementation
 		local
 			l_arg_nodes: BYTE_LIST [EXPR_B]
 			l_arg_types: like last_expressions_type
-			l_formal_arg_type, l_like_arg_type: TYPE_A
+			l_formal_arg_type: TYPE_A
 			l_like_argument: LIKE_ARGUMENT
 			l_feature: FEATURE_I
 			l_seed: FEATURE_I

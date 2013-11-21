@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			repository := repo
 			create id.make_from_string (a_id)
 			create associated_paths.make (0)
+			create tags.make (0)
 		end
 
 feature -- Status
@@ -122,6 +123,9 @@ feature -- Access
 
 	associated_paths: ARRAYED_LIST [READABLE_STRING_8]
 			-- Associated path on the repositories
+
+	tags: ARRAYED_LIST [READABLE_STRING_32]
+			-- Tags
 
 feature -- Access: items	
 

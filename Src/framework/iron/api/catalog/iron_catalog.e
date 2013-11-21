@@ -9,6 +9,11 @@ deferred class
 
 feature -- Access
 
+	api_version: IMMUTABLE_STRING_8
+		once
+			Result := (create {IRON_API_CONSTANTS}).version
+		end
+
 	layout: IRON_LAYOUT
 		deferred
 		end
@@ -58,7 +63,6 @@ feature -- Access: packages
 
 	package_associated_with_uri (a_uri: URI): detachable IRON_PACKAGE
 		local
-			repo: detachable IRON_REPOSITORY
 			s: STRING
 		do
 			s := a_uri.string
@@ -74,14 +78,12 @@ feature -- Access: packages
 		end
 
 	packages_associated_with_name (a_name: READABLE_STRING_GENERAL): detachable LIST [IRON_PACKAGE]
-		local
-			l_package: detachable IRON_PACKAGE
 		do
 			create {ARRAYED_LIST [IRON_PACKAGE]} Result.make (1)
 			across
-				repositories as r
+				repositories as ic
 			loop
-				if attached r.item.packages_associated_with_name (a_name) as lst then
+				if attached ic.item.packages_associated_with_name (a_name) as lst then
 					Result.append (lst)
 				end
 			end

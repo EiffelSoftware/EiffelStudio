@@ -95,6 +95,15 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+				if attached {JSON_ARRAY} j_package.item ("tags") as j_tags then
+					across
+						j_tags.array_representation as c
+					loop
+						if attached {JSON_STRING} c.item as js then
+							Result.tags.force (js.item)
+						end
+					end
+				end
 			end
 		end
 

@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			layout := a_layout
 			urls := a_urls
+			create remote_node.make (a_urls, api_version)
 
 			ensure_folder_exists (a_layout.repositories_path)
 			ensure_folder_exists (a_layout.archives_path)
@@ -68,6 +69,8 @@ feature -- Access
 	layout: IRON_LAYOUT
 
 	urls: IRON_URL_BUILDER
+
+	remote_node: IRON_REMOTE_NODE
 
 feature -- Access: repository
 
@@ -204,35 +207,17 @@ feature -- Operation
 		end
 
 	update_repository (repo: IRON_REPOSITORY; is_silent: BOOLEAN)
-		local
-			cl: HTTP_CLIENT
 		do
 			if not is_silent then
 				print ("Updating repository " + repo.uri.string + " version=" + repo.version + " ...%N")
 			end
-			cl := new_client
-			if attached cl.new_session (repo.uri.string) as sess then
-				sess.add_header ("Accept", "application/json")
-				if attached sess.get (urls.path_package_list (repo), Void) as res then
-					if res.error_occurred then
-						if not is_silent then
-							print ("ERROR: connection%N")
-						end
-					elseif attached res.body as l_body then
-						repo.available_packages.wipe_out
-						import_packages_from_json (l_body, repo, is_silent)
-						if not is_silent and then repo.available_packages.is_empty then
-							print ("ERROR: invalid data!%N")
-						end
-					else
-						if not is_silent then
-							print ("ERROR: empty%N")
-						end
-					end
-				else
-					if not is_silent then
-						print ("ERROR: connection%N")
-					end
+			repo.available_packages.wipe_out
+			if attached remote_node.packages (repo) as lst then
+				across lst as ic loop
+					repo.put_package (ic.item)
+				end
+				if not is_silent and then repo.available_packages.is_empty then
+					print ("ERROR: no information from repository!%N")
 				end
 			end
 			save_repository (repo)
@@ -283,56 +268,18 @@ feature -- Package operations
 
 	download_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 		local
-			cl: like new_client
-			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
 			f: RAW_FILE
-			p,t: PATH
-			hdate: HTTP_DATE
-			h: HTTP_HEADER
-			res: HTTP_CLIENT_RESPONSE
+			p: PATH
 		do
-			cl := new_client
-			if attached a_package.archive_uri as l_uri then
-				if attached cl.new_session (l_uri.string) as sess then
---					sess.add_header ("Accept", "application/zip")
-					create ctx.make
-					sess.set_timeout (0)
-
-					p := layout.package_archive_path (a_package)
-					create f.make_with_path (p)
-					if f.exists then
-						if ignoring_cache then
-							f.delete
-						else
-							create h.make_with_count (1)
-							create hdate.make_from_timestamp (f.date)
-							h.put_header_key_value ({HTTP_HEADER_NAMES}.header_if_modified_since, hdate.rfc1123_string)
-							ctx.add_header_lines (h)
-						end
-					end
-					t := p.appended_with_extension ("tmp-download")
-					ensure_folder_exists (p.parent)
-					ensure_folder_exists (t.parent)
-					create f.make_with_path (t)
-					f.create_read_write
-					ctx.set_output_content_file (f)
-					res := sess.get ("", ctx)
-					if res.error_occurred then
-						f.close
-						f.delete
-					else
-						a_package.set_archive_uri (path_to_uri_string (p.absolute_path.canonical_path))
-						f.close
-						if res.status = {HTTP_STATUS_CODE}.not_modified then
-							f.delete
-						else
-							f.rename_path (p)
-							if f.exists and then f.is_empty then
-									-- No empty package !!!
-								f.delete
-							end
-						end
-					end
+			p := layout.package_archive_path (a_package)
+			ensure_folder_exists (p.parent)
+			if a_package.has_archive_uri then
+				remote_node.download_package_archive (a_package, p, ignoring_cache)
+				create f.make_with_path (p)
+				if f.exists then
+					a_package.set_archive_uri (path_to_uri_string (p.absolute_path.canonical_path))
+				else
+						-- Failure
 				end
 			end
 		end

@@ -170,6 +170,12 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 		deferred
 		end
 
+	close
+			-- Close the backend.
+		do
+			
+		end
+
 feature {PS_ABEL_EXPORT} -- Plugins
 
 	plug_in_list: LINKED_LIST[PS_PLUGIN]

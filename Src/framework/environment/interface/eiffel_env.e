@@ -601,7 +601,7 @@ feature -- Directories (top-level)
 	installation_precompilation_path (a_is_dotnet: BOOLEAN): PATH
 			-- Eiffel path where the ECFs are located in the installation directory.
 			-- With platform: $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-			-- Without: /usr/share/eiffelstudio-7.x/precomp/spec/unix
+			-- Without: /usr/share/eiffelstudio-MM.mm/precomp/spec/unix
 		require
 			is_valid_environment: is_valid_environment
 		local
@@ -627,9 +627,9 @@ feature -- Directories (top-level)
 			-- When ISE_PRECOMP is defined:
 			--   $ISE_PRECOMP
 			-- Otherwise if `is_user_files_supported':
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\7.x\precomp\spec\$ISE_PLATFORM
-			--   On Mac: ~/Eiffel User Files/7.x/precomp/spec/$ISE_PLATFORM
-			--   On Unix: ~/.es/Eiffel User Files/7.x/precomp/spec/$ISE_PLATFORM
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm\precomp\spec\$ISE_PLATFORM
+			--   On Mac: ~/Eiffel User Files/MM.mm/precomp/spec/$ISE_PLATFORM
+			--   On Unix: ~/.es/Eiffel User Files/MM.mm/precomp/spec/$ISE_PLATFORM
 			-- Otherwise
 			--   $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 		require
@@ -667,7 +667,7 @@ feature -- Directories (top-level)
 	installation_iron_path: PATH
 			-- path where the iron is located in the installation directory.
 			-- With platform: $ISE_EIFFEL/iron
-			-- Without: /usr/share/eiffelstudio-7.x/iron
+			-- Without: /usr/share/eiffelstudio-MM.mm/iron
 		require
 			is_valid_environment: is_valid_environment
 		do
@@ -683,9 +683,9 @@ feature -- Directories (top-level)
 			-- Otherwise if IRON_PATH is defined
 			--	 $IRON_PATH
 			-- Otherwise if `is_user_files_supported':
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\7.x\iron
-			--   On Mac: ~/Eiffel User Files/7.x/iron
-			--   On Unix: ~/.es/Eiffel User Files/7.x/iron
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm\iron
+			--   On Mac: ~/Eiffel User Files/MM.mm/iron
+			--   On Unix: ~/.es/Eiffel User Files/MM.mm/iron
 			-- Otherwise
 			--   $ISE_EIFFEL/iron
 		require
@@ -718,9 +718,9 @@ feature  -- Directories (dotnet)
 	assemblies_path: PATH
 			-- Location of Eiffel Assembly Cache.
 			-- If `is_user_files_supported':
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\7.x\dotnet\assemblies
-			--   On Mac: ~/Eiffel User Files/7.x/dotnet/assemblies
-			--   On Unix: ~/.es/Eiffel User Files/7.x/dotnet/assemblies
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm\dotnet\assemblies
+			--   On Mac: ~/Eiffel User Files/MM.mm/dotnet/assemblies
+			--   On Unix: ~/.es/Eiffel User Files/MM.mm/dotnet/assemblies
 			-- Otherwise
 			--   $ISE_EIFFEL/dotnet/assemblies
 
@@ -1005,8 +1005,8 @@ feature -- Directories (top-level user)
 			-- With ISE_APP_DATA defined:
 			--   $ISE_APP_DATA
 			-- When hidden files is available:
-			--   On Windows: C:\Users\manus\AppData\Local\Eiffel Software\.es\7.x
-			--   On Unix & Mac: ~/.es/7.x
+			--   On Windows: C:\Users\manus\AppData\Local\Eiffel Software\.es\MM.mm
+			--   On Unix & Mac: ~/.es/MM.mm
 			-- Otherwise we use a subdirectory of `user_files_path':
 			--   `user_files_path'\settings
 		require
@@ -1056,9 +1056,9 @@ feature -- Directories (top-level user)
 			-- With ISE_USER_FILES is defined:
 			--   $ISE_USER_FILES
 			-- Otherwise
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\7.x
-			--   On Mac: ~/Eiffel User Files/7.x
-			--   On Unix: ~/.es/Eiffel User Files/7.x
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm
+			--   On Mac: ~/Eiffel User Files/MM.mm
+			--   On Unix: ~/.es/Eiffel User Files/MM.mm
 			-- When purge the ES stored configuration data, it will not erase the files
 			-- under this path
 		require
@@ -1359,7 +1359,7 @@ feature -- Directories (platform independent)
 	shared_path: PATH
 			-- Location of shared files (platform independent).
 			-- With platform: $ISE_EIFFEL.
-			-- Without: /usr/share/eiffelstudio-7.x
+			-- Without: /usr/share/eiffelstudio-MM.mm
 		require
 			is_valid_environment: is_valid_environment
 		local

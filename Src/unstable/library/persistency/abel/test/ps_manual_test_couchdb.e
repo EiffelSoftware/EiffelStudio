@@ -20,6 +20,7 @@ feature {NONE}
 		do
 			create factory.make
 			Result := factory.new_repository
+			Result.clean_db_for_testing
 --			create Result.make_empty
 		end
 

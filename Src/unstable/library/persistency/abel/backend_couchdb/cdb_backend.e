@@ -102,7 +102,11 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 								create current_obj.make (0, type)
 							end
 						elseif not attr.item.first.starts_with ("_") then
-							current_obj.add_attribute (attr.item.first, attr.item.second, type.attribute_type (attr.item.first).base_class.name)
+							if attr.item.first.starts_with ("ps_") then
+								current_obj.add_attribute (attr.item.first, attr.item.second, "BOOLEAN")
+							else
+								current_obj.add_attribute (attr.item.first, attr.item.second, type.attribute_type (attr.item.first).base_class.name)
+							end
 						end
 					end
 				end
@@ -231,8 +235,9 @@ feature {PS_BACKEND} -- Implementation
 				db_name := cursor.item.metadata.base_class.name.twin
 				db_name.to_lower
 				err := curl.create_document (db_name, doc)
-				print (doc)
-				print (err)
+--				print (doc)
+--				print (err)
+
 				-- ??
 				prev_attr_list := make_object (cursor.item.metadata, err, "")
 				across
@@ -476,12 +481,22 @@ feature {PS_ABEL_EXPORT} -- Testing helpers
 	wipe_out
 			-- Wipe out everything and initialize new.
 		local
+			db_string: STRING
+			databases: LIST [STRING]
 			output: STRING
 		do
+				-- Returns a string of the form: ["_user", "person", "chain_head"].
+			db_string := curl.list_databases
+
+				-- Remove all user-defined databases (i.e. not prefixed by underline).
+			databases := db_string.split ('"')
 			across
-				key_set as keyset
+				databases as cursor
 			loop
-				output := curl.destroy_database (keyset.key.as_lower)
+				cursor.item.trim
+				if not cursor.item.is_empty or else cursor.item.item (1).is_alpha then
+					output := curl.destroy_database (cursor.item)
+				end
 			end
 		end
 

@@ -35,6 +35,12 @@ feature -- Access
 	type: TYPE [detachable ANY]
 			-- The actual dynamic type.
 
+	name: IMMUTABLE_STRING_8
+			-- The type name.
+		do
+			Result := type.name
+		end
+
 	base_class: PS_CLASS_METADATA
 			-- The class of which `Current' type is an instance of.
 		obsolete
@@ -81,10 +87,10 @@ feature -- Status report
 			Result := conforms (other.type, type)
 		end
 
-	has_attribute (name: STRING): BOOLEAN
+	has_attribute (a_name: STRING): BOOLEAN
 			-- Does `Current' have an attribute with name `name'?
 		do
-			Result := attributes.has (name)
+			Result := attributes.has (a_name)
 		end
 
 feature -- Genericity
@@ -299,7 +305,7 @@ feature {NONE} -- Implementation
 invariant
 	non_negative_generic_count: generic_parameter_count >= 0
 	correct_genericity: (generic_parameter_count = 0) = not is_generic_derivation
-	class_and_type_generic: is_generic_derivation = base_class.is_generic
+--	class_and_type_generic: is_generic_derivation = base_class.is_generic
 	attributes_splitted_correctly: basic_attributes.count + reference_attributes.count = attributes.count
 
 end

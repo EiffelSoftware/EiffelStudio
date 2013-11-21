@@ -85,7 +85,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 feature {PS_ABEL_EXPORT} -- String pair conversion
 
-	as_string_pair (object: PS_OBJECT_DATA): TUPLE[value: STRING; type: STRING]
+	as_string_pair (object: PS_OBJECT_DATA): TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 			-- The `object' as a string pair, i.e. when referenced by another object.
 		require else
 			can_handle: can_handle_type (object.type)

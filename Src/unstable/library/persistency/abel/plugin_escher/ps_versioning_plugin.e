@@ -148,12 +148,12 @@ feature
 			current_version, stored_version, no_of_attr, i: INTEGER
 			result_list: LINKED_LIST [PS_BACKEND_OBJECT]
 			stored_object: PS_BACKEND_OBJECT
-			stored_obj_attr_values: HASH_TABLE [TUPLE [STRING, STRING], STRING]
+			stored_obj_attr_values: HASH_TABLE [TUPLE [STRING, STRING_8], STRING]
 			set: BOOLEAN
 			current_class_name, attr_name, attr_type_as_string: STRING
 			exception: EXCEPTIONS
 
-			test_var: TUPLE[STRING,STRING]
+			test_var: TUPLE[STRING, IMMUTABLE_STRING_8]
 				-- Used for testing purposes
 		do
 			create reflection
@@ -205,7 +205,7 @@ feature
 							object.remove_attribute ("name_changed")
 							object.attributes.start
 							if attached {STRING} test_var.item (1) as attr_value then
-								if attached {STRING} test_var.item (2) as attr_type then
+								if attached {IMMUTABLE_STRING_8} test_var.item (2) as attr_type then
 									object.add_attribute ("old_name", attr_value, attr_type)
 								end
 							end
@@ -288,10 +288,11 @@ feature
 
 feature {NONE} -- Schema Evolution helper functions
 
-	get_attribute_values (stored_obj: PS_BACKEND_OBJECT): HASH_TABLE [TUPLE [STRING, STRING], STRING]
+	get_attribute_values (stored_obj: PS_BACKEND_OBJECT): HASH_TABLE [TUPLE [STRING, STRING_8], STRING]
 			-- Fill hashtable with a tuple containing attribute value and class name of generating class for each attribute in 'stored_obj'
 		local
 			current_attr_name: STRING
+			tuple: TUPLE [val: STRING; type: IMMUTABLE_STRING_8]
 		do
 			create Result.make (10)
 			from
@@ -300,7 +301,8 @@ feature {NONE} -- Schema Evolution helper functions
 				stored_obj.attributes.after
 			loop
 				current_attr_name := stored_obj.attributes.item
-				Result.extend (stored_obj.attribute_value (current_attr_name), current_attr_name)
+				tuple := stored_obj.attribute_value (current_attr_name)
+				Result.extend ([tuple.val, tuple.type.to_string_8], current_attr_name)
 				stored_obj.attributes.forth
 			end
 		end

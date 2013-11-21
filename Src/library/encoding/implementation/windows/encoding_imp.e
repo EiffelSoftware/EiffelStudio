@@ -261,9 +261,9 @@ feature {NONE} -- Implementation
 					lpUsedDefaultChar = &l_lost;
 				}
 				
-				/ * For following values, dwFlags = 0 is required by MSDN
-				  * See http://msdn.microsoft.com/en-us/library/windows/desktop/dd374130(v=vs.85).aspx
-				  */
+				/* For following values, dwFlags = 0 is required by MSDN
+				 * See http://msdn.microsoft.com/en-us/library/windows/desktop/dd374130(v=vs.85).aspx
+				 */
 				if ($cpid == 50220 || $cpid == 50221 || $cpid == 50222 || $cpid == 50225 || $cpid == 50227 || $cpid == 50229 || $cpid == 65000 || $cpid == 42) {
 					dwFlags = 0;
 				} else if ($cpid == 65001 || $cpid == 54936) {

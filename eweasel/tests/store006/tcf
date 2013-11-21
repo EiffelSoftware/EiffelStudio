@@ -21,7 +21,7 @@ compile_result 	ok
 c_compile_work
 c_compile_result	ok
 
-execute_work 	NONE exec_output1
+execute_work 	NONE exec_output_w
 execute_result 	ok
 
 compile_final
@@ -30,7 +30,7 @@ compile_result ok
 c_compile_final
 c_compile_result ok
 
-execute_final 	NONE exec_output1
+execute_final 	NONE exec_output_f
 execute_result 	ok
 
 test_end

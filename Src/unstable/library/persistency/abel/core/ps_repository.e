@@ -116,8 +116,7 @@ feature -- Disposal
 
 	close
 			-- Close the current repository.
-		do
-
+		deferred
 		end
 
 

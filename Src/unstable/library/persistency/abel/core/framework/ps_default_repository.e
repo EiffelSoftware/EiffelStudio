@@ -36,6 +36,14 @@ feature -- Element change
 			backend.set_lazy_loading_batch_size (size)
 		end
 
+feature -- Disposal
+
+	close
+			-- Close the current repository.
+		do
+			backend.close
+		end
+
 feature {PS_ABEL_EXPORT} -- Object query
 
 	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)

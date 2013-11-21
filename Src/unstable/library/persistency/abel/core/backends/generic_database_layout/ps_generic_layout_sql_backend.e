@@ -12,6 +12,9 @@ inherit
 	PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND
 
 	PS_BACKEND
+		undefine
+			close
+		end
 
 create
 	make

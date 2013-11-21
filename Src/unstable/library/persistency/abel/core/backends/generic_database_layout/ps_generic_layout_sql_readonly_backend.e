@@ -9,6 +9,9 @@ class
 
 inherit
 	PS_READ_ONLY_BACKEND
+		redefine
+			close
+		end
 
 create
 	make
@@ -17,7 +20,7 @@ feature {PS_ABEL_EXPORT} -- Lazy loading
 
 	Default_batch_size: INTEGER = -1
 
-	
+
 
 feature {PS_ABEL_EXPORT}-- Backend capabilities
 
@@ -261,6 +264,12 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 			-- Set the transaction isolation level `a_level' for all future transactions.
 		do
 			database.set_transaction_isolation_level (a_level)
+		end
+
+	close
+			-- Close all connections.
+		do
+			database.close_connections
 		end
 
 feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling

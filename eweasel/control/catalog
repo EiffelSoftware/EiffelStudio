@@ -1315,6 +1315,7 @@ test	array-allocation-failure		runtime015	tcf pass runtime special expanded arra
 if not DOTNET test	special-copy-data	runtime016	tcf pass runtime special memory
 test	weak-reference					runtime017	tcf pass runtime weak_reference
 test	memory-leak-with-dynamic-dispatch	runtime018	tcf pass runtime
+test	special-expanded-referring-new-object	runtime019	tcf pass runtime special
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded

@@ -148,7 +148,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 				across
 					cursor.item.collection_items as collection_item
 				from
-					collection_type_key := db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)
+					collection_type_key := db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.name)
 
 					-- Insert a default item at position -1 to acknowledge the existence of the collection.
 					commands.extend (SQL_Strings.to_list_with_braces ([
@@ -279,7 +279,7 @@ feature {PS_BACKEND} -- Implementation
 						-- Primary key
 						cursor.item.primary_key,
 						-- Attribute key of default attribute ps_existence
-						db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)),
+						db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.name)),
 						-- Runtime type of ps_existence (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
 						-- Do we need a longtext value?
@@ -292,7 +292,7 @@ feature {PS_BACKEND} -- Implementation
 						-- Primary key
 						cursor.item.primary_key,
 						-- Attribute key
-						db_metadata_manager.create_get_primary_key_of_attribute (attribute_cursor.item, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.base_class.name)),
+						db_metadata_manager.create_get_primary_key_of_attribute (attribute_cursor.item, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.name)),
 						-- Runtime type
 						db_metadata_manager.create_get_primary_key_of_class (cursor.item.attribute_value(attribute_cursor.item).attribute_class_name),
 						-- Do we need a longtext value?

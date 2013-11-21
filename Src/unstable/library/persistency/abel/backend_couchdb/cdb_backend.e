@@ -38,7 +38,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 		do
 			create result_list.make
 --			create temp_list.make
-			highest_id := key_set [type.base_class.name]
+			highest_id := key_set [type.name]
 --			highest_id := max_key + 1
 			from
 				curr_id := 1
@@ -107,7 +107,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 							elseif attr.item.second.is_empty then
 								current_obj.add_attribute (attr.item.first, "", "NONE")
 							else
-								current_obj.add_attribute (attr.item.first, attr.item.second, type.attribute_type (attr.item.first).base_class.name)
+								current_obj.add_attribute (attr.item.first, attr.item.second, type.attribute_type (attr.item.first).name)
 							end
 						end
 					end
@@ -145,7 +145,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 					create part.make
 					Result.extend (part, cursor.key)
 				loop
-					part.extend (create {PS_BACKEND_OBJECT}.make_fresh (new_key (cursor.key.base_class.name).first, cursor.key))
+					part.extend (create {PS_BACKEND_OBJECT}.make_fresh (new_key (cursor.key.name).first, cursor.key))
 				end
 			end
 		end
@@ -475,6 +475,7 @@ feature {PS_ABEL_EXPORT} -- Mapping
 		local
 			max: INTEGER
 		do
+			fixme ("Use IMMUTABLE_STRING")
 			max := key_set [class_name]
 			max := max + 1
 			create Result.make (max, class_name)
@@ -515,7 +516,7 @@ feature {NONE}
 		local
 			i: INTEGER
 		do
-			Result := type.base_class.name.twin
+			Result := type.name.to_string_8
 			Result.to_lower
 			Result.replace_substring_all (" ", "")
 

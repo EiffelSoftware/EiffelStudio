@@ -60,9 +60,9 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 
 			if attached {READABLE_STRING_32} object.reflector.object as string_32 then
 				create conv
-				Result := [conv.string_32_to_utf_8_string_8 (string_32), object.type.base_class.name]
+				Result := [conv.string_32_to_utf_8_string_8 (string_32), object.type.name]
 			else
-				Result := [object.reflector.object.out, object.type.base_class.name]
+				Result := [object.reflector.object.out, object.type.name]
 			end
 		end
 

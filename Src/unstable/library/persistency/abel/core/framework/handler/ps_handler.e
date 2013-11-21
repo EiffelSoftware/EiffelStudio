@@ -247,7 +247,7 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			primary_key_set: rep.primary_key > 0
 		do
 			check attached object.backend_representation as rep then
-				Result := [rep.primary_key.out, rep.metadata.base_class.name]
+				Result := [rep.primary_key.out, rep.metadata.name]
 			end
 		end
 

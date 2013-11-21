@@ -23,6 +23,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 	has_primary_key_of_class (class_name: STRING): BOOLEAN
 			-- Does the class `class_name' have a primary key in the database?
 		do
+			fixme ("Use IMMUTABLE_STRING")
 			Result := class_name_to_key_map.has (class_name)
 		end
 
@@ -61,6 +62,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 		require
 			class_present_in_database: has_primary_key_of_class (class_name)
 		do
+			fixme ("Use IMMUTABLE_STRING")
 			Result := class_name_to_key_map [class_name]
 		end
 

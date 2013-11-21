@@ -78,7 +78,7 @@ feature
 				end
 				-- Testing-related code end
 
-				object.add_attribute ("version", stored_version.out,integer_metadata.base_class.name)
+				object.add_attribute ("version", stored_version.out, integer_metadata.name)
 			end
 		end
 

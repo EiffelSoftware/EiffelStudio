@@ -147,7 +147,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 				else
 					-- Value type
 					if attached tuple_to_build.item (i) as field then
-						new_command.collection_items.extend ([ basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).base_class.name])
+						new_command.collection_items.extend ([ basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).name])
 					end
 				end
 				i := i + 1

@@ -33,6 +33,8 @@ feature -- Access
 	batch_retrieval_size: INTEGER
 			-- Define the number of objects to be retrieved in one batch for query operations.
 			-- Set to `infinite_batch_size' to retrieve all objects at once (and disable lazy loading).
+		deferred
+		end
 
 	retry_count: INTEGER
 			-- The default retries for implicit transaction handling, if there is a transaction conflict.
@@ -43,8 +45,7 @@ feature -- Element change
 			-- Set `batch_retrieval_size' to `size'.
 		require
 			valid: size > 0 or size = infinite_batch_size
-		do
-			batch_retrieval_size := size
+		deferred
 		ensure
 			correct: batch_retrieval_size = size
 		end
@@ -384,6 +385,6 @@ feature -- Constants
 			-- The special value for an infinite batch size (i.e. to effectively disable lazy loading).
 
 invariant
---	valid_batch_size: batch_retrieval_size > 0 or batch_retrieval_size = infinite_batch_size
+	valid_batch_size: batch_retrieval_size > 0 or batch_retrieval_size = infinite_batch_size
 
 end

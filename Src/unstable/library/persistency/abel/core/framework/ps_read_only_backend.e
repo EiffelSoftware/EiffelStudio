@@ -211,4 +211,20 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		deferred
 		end
 
+feature {PS_ABEL_EXPORT} -- Lazy loading
+
+	lazy_loading_batch_size: INTEGER
+			-- The amount of objects to retrieve in a single batch.
+			-- Set to -1 to retrieve all objects.
+
+	set_lazy_loading_batch_size (size: INTEGER)
+			-- Set the batch size.
+		require
+			valid: size > 0 or size = -1
+		do
+			lazy_loading_batch_size := size
+		ensure
+			correct: size = lazy_loading_batch_size
+		end
+
 end

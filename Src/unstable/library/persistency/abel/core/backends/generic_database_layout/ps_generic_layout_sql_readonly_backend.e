@@ -13,23 +13,11 @@ inherit
 create
 	make
 
-feature -- Lazy loading
+feature {PS_ABEL_EXPORT} -- Lazy loading
 
 	Default_batch_size: INTEGER = -1
 
-	lazy_loading_batch_size: INTEGER
-			-- The amount of objects to retrieve in a single batch.
-			-- Set to -1 to retrieve all objects.
-
-	set_lazy_loading_batch_size (size: INTEGER)
-			-- Set the batch size.
-		require
-			valid: size > 0 or size = -1
-		do
-			lazy_loading_batch_size := size
-		ensure
-			correct: size = lazy_loading_batch_size
-		end
+	
 
 feature {PS_ABEL_EXPORT}-- Backend capabilities
 

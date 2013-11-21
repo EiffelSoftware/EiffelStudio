@@ -178,14 +178,8 @@ feature -- Contract support functions
 
 	is_criterion_fitting_generic_type (a_criterion: PS_CRITERION): BOOLEAN
 			-- Can `a_criterion' handle objects of type `OBJECT_TYPE'?
-		local
-			reflection: INTERNAL
-			type: TYPE [OBJECT_TYPE]
 		do
-			fixme ("Use internal type, but take care of `make_with_criterion' contract")
-			type:= {OBJECT_TYPE}
-			create reflection
-			Result := a_criterion.can_handle_object (reflection.new_instance_of (type.type_id))
+			Result := a_criterion.can_handle_type (generic_type)
 		end
 
 feature {PS_ABEL_EXPORT} -- Implementation
@@ -255,12 +249,13 @@ feature {NONE} -- Initialization
 	make
 			-- Create a query for all objects of type `OBJECT_TYPE' (without filtering criteria).
 		local
-			reflection: INTERNAL
+--			reflection: INTERNAL
 		do
 			object_initialization_depth := -1
 			create {PS_EMPTY_CRITERION} criterion
-			create reflection
-			generic_type := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
+--			create reflection
+--			generic_type := reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type (Current, 1)))
+			generic_type := {detachable OBJECT_TYPE}
 			reset
 		ensure
 			not_executed: not is_executed
@@ -273,7 +268,7 @@ feature {NONE} -- Initialization
 			-- Create a query for object of type `OBJECT_TYPE' filtered using `a_criterion'.
 		require
 			only_predefined_for_tuples: is_tuple_query implies not a_criterion.has_agent_criterion
-			criterion_can_handle_objects: is_criterion_fitting_generic_type (a_criterion)
+			criterion_can_handle_objects: a_criterion.can_handle_type ({detachable OBJECT_TYPE})
 		do
 			make
 			set_criterion (a_criterion)

@@ -41,6 +41,15 @@ feature -- Check
 		deferred
 		end
 
+	can_handle_type (type: TYPE [detachable ANY]): BOOLEAN
+			-- Can `Current' handle objects of type `type'?
+		local
+			reflection: INTERNAL
+		do
+			create reflection
+			Result := can_handle_object (reflection.new_instance_of (type.type_id))
+		end
+
 feature -- Miscellaneous
 
 	has_agent_criterion: BOOLEAN

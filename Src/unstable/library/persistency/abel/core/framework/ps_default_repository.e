@@ -16,7 +16,25 @@ inherit
 	REFACTORING_HELPER
 
 create
-	make, make_from_factory
+	make_from_factory
+
+
+feature -- Access.
+
+	batch_retrieval_size: INTEGER
+			-- Define the number of objects to be retrieved in one batch for query operations.
+			-- Set to `infinite_batch_size' to retrieve all objects at once (and disable lazy loading).
+		do
+			Result := backend.lazy_loading_batch_size
+		end
+
+feature -- Element change
+
+	set_batch_retrieval_size (size: INTEGER)
+			-- Set `batch_retrieval_size' to `size'.
+		do
+			backend.set_lazy_loading_batch_size (size)
+		end
 
 feature {PS_ABEL_EXPORT} -- Object query
 
@@ -235,6 +253,7 @@ feature {NONE} -- Initialization
 			create read_manager_cache.make (100)
 			create transaction_isolation_level
 			retry_count := default_retry_count
+			set_batch_retrieval_size (infinite_batch_size)
 		end
 
 feature {PS_ABEL_EXPORT} -- Implementation

@@ -110,7 +110,6 @@ feature -- Conversion
 			-- Void if error occured.
 		local
 			l_print: CONF_PRINT_VISITOR
-			l_file: PLAIN_TEXT_FILE
 		do
 			create l_print.make
 			process (l_print)

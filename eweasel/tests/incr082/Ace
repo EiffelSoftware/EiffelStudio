@@ -39,6 +39,7 @@
 				<exclude>/support/mismatch_information.e$</exclude>
 				<exclude>/support/operating_environment.e$</exclude>
 				<exclude>/support/single_math.e$</exclude>
+				<exclude>/support/object_graph_marker.e$</exclude>
 				<exclude>/support/reflector.e$</exclude>
 				<exclude>/support/reflected_object.e$</exclude>
 				<exclude>/support/reflected_reference_object.e$</exclude>

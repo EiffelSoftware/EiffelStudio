@@ -252,14 +252,29 @@ feature {NONE} -- Implementation
 			"[
 				DWORD dw;
 				BOOL l_lost = EIF_FALSE;
+				LPBOOL lpUsedDefaultChar = NULL;
+				DWORD dwFlags = WC_NO_BEST_FIT_CHARS;
 
 				if ($cpid == CP_UTF7 || $cpid == CP_UTF8) {
-					WideCharToMultiByte ((UINT) $cpid, (DWORD) 0, (LPCWSTR) $a_wide_string,
-						(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) NULL);
+					lpUsedDefaultChar = NULL;
 				} else {
-					WideCharToMultiByte ((UINT) $cpid, (DWORD) 0, (LPCWSTR) $a_wide_string,
-						(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, (LPBOOL) &l_lost);
+					lpUsedDefaultChar = &l_lost;
 				}
+				
+				/* For following values, dwFlags = 0 is required by MSDN
+				 * See http://msdn.microsoft.com/en-us/library/windows/desktop/dd374130(v=vs.85).aspx
+				 */
+				if ($cpid == 50220 || $cpid == 50221 || $cpid == 50222 || $cpid == 50225 || $cpid == 50227 || $cpid == 50229 || $cpid == 65000 || $cpid == 42) {
+					dwFlags = 0;
+				} else if ($cpid == 65001 || $cpid == 54936) {
+					dwFlags = 0;
+				} else if ($cpid >= 57002 && $cpid <= 57011) {
+					dwFlags = 0;
+				}
+				
+				WideCharToMultiByte ((UINT) $cpid, dwFlags, (LPCWSTR) $a_wide_string,
+					(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, lpUsedDefaultChar);
+					
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER) {
 					*$a_b = 0;

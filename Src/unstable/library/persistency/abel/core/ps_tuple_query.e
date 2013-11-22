@@ -83,51 +83,12 @@ feature -- Utilities
 			end
 		end
 
---	attribute_index (name: STRING): INTEGER
---			-- Get the tuple index for the attribute with name `name'
---		require
---			 name_exists: projection.has (name)
---		do
---			Result := projection.index_of (name, 1)
---		ensure
---			positive: Result > 0
---			in_range: Result <= projection.count
---			correct: name.is_equal (projection [Result])
---		end
-
 feature {NONE} -- Initialization
 
 	make
 			-- Create a query for all objects of type G (no filtering criteria).
 		do
---			create projection.make (0)
 			Precursor
 			projection := default_projection
-		end
-
-	basic_types: HASH_TABLE [BOOLEAN, INTEGER]
-			-- A quick lookup table for basic types.
-		once
-			create Result.make (20)
-
-			Result.extend (True, ({INTEGER_8}).type_id)
-			Result.extend (True, ({INTEGER_16}).type_id)
-			Result.extend (True, ({INTEGER_32}).type_id)
-			Result.extend (True, ({INTEGER_64}).type_id)
-
-			Result.extend (True, ({NATURAL_8}).type_id)
-			Result.extend (True, ({NATURAL_16}).type_id)
-			Result.extend (True, ({NATURAL_32}).type_id)
-			Result.extend (True, ({NATURAL_64}).type_id)
-
-
-			Result.extend (True, ({REAL_32}).type_id)
-			Result.extend (True, ({REAL_64}).type_id)
-
-			Result.extend (True, ({CHARACTER_8}).type_id)
-			Result.extend (True, ({CHARACTER_32}).type_id)
-
-			Result.extend (True, ({BOOLEAN}).type_id)
-			Result.extend (True, ({POINTER}).type_id)
 		end
 end

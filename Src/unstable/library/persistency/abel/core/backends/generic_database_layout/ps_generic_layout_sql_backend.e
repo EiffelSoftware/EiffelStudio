@@ -287,7 +287,6 @@ feature {PS_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
 						-- Store the root status.
 						cursor.item.is_root.out]))
-					print (commands.last.out + "%N")
 				loop
 					commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key

@@ -356,51 +356,6 @@ Test eiffelstore_various_functions (eiffelstore001): failed
 	Actual result: failure C_compilation_not_completed
 	Expected result: no_failure C_compilation_completed
 
-Test old-expression-exception (except001): passed
-Test invariant-violation-on-entry (except002): passed
-Test exception-during-evaluation-of-invariant-on-entry (except003): passed
-Test exception-during-evaluation-of-precondition (except004): passed
-Test precondition-violation (except005): passed
-Test attached-target-violation-in-routine-body (except006): passed
-Test exception-during-evaluation-of-invariant-on-exit (except007): passed
-Test invariant-violation-on-exit (except008): passed
-Test exception-during-evaluation-of-postcondition-on-exit (except009): passed
-Test postcondition-violation (except010): passed
-Test exception-in-rescue (except011): passed
-Test raise-and-catch-user-defined-exception (except012): passed
-Test ignoring-developer-exception (except013): passed
-Test raising-catching-exception-in-once (except014): passed
-Test stack-trace-indefinitely-grows (except015): passed
-Test queries_of_exceptions_class_1 (except016): passed
-Test queries_of_exceptions_class_2 (except017): passed
-Test no_routine_failure_on_rescue_exception (except018): passed
-Test memory_leak_when_retried (except019): failed
-	Description: Reveals a C memory leak when `loc_stack' has not been allocated before Eiffel call but allocated in the call, rescue at that level resets the stack, hence looses the allocated chunk of memory.
-	Execution error in file C:\work\eweasel\eweasel\tests\except019\tcf at line 11
-	Original text:    compare exec_output2 output
-	Substituted text: compare exec_output2 output
-	Reason: files being compared do not have identical contents
-
-Test corrupted_trace (except020): passed
-Test top_n_call_incorrect (except021): passed
-Test incorrect_local_restoration (except022): passed
-Test native_signal_number_in_exception (except023): passed
-Test native_error_number_in_exception (except024): passed
-Test native_error_number_ise_io_error (except025): passed
-Test buffer_overflows_printing_trace (except026): passed
-Test static_buffer_for_trace_not_thread_safe (except027): passed
-Test assertion_violations_in_onces (except028): passed
-Test exception_on_invalid_object_has_no_trace (except029): passed
-Test incorrect_once_trace_at_first_call (except030): passed
-Test every_trace_has_root (except031): passed
-Test trace_has_no_pass (except032): passed
-Test precondition-violation-infinite-loop (except033): passed
-Test last-exception-not-cleared (except034): passed
-Test code-compatible-io-failure (except035): passed
-Test original_routines_in_exceptions (except036): passed
-Test exception_cause (except037): passed
-Test io_exception_code (except038): passed
-Test unicode_in_exception (except039): passed
 Test unicode_manifest_string_char_and_constants (unicode001): passed
 Test unicode_free_operator (unicode002): passed
 Test big_extended_ascii_src (unicode003): passed
@@ -1888,18 +1843,7 @@ Test svalid-generic-creation (svalid030): failed
 	Expected result:
 		Final status:  completed 
 
-Test svalid-remove-bracket-alias-via-rename (svalid031): failed
-	Description: A descendant class that renames a feature with a bracket alias to remove the alias causes report of a spurious VWBR(1) error if full class checking is enabled because the compiler is not processing the unfolded form
-	Execution error in file C:\work\eweasel\eweasel\tests\svalid031\tcf at line 10
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST1 code VWBR(1)
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test svalid-remove-bracket-alias-via-rename (svalid031): passed
 Test svalid-inherit-like-argument (svalid032): failed
 	Description: A feature using a like argument in its body in a generic class whose formal generic parameterG is transformed in descendant class into LIST [G] triggers some spurious system validity errors when none should be reported.
 	Execution error in file C:\work\eweasel\eweasel\tests\svalid032\tcf at line 10
@@ -1914,6 +1858,51 @@ Test svalid-inherit-like-argument (svalid032): failed
 	Expected result:
 		Final status:  completed 
 
+Test old-expression-exception (except001): passed
+Test invariant-violation-on-entry (except002): passed
+Test exception-during-evaluation-of-invariant-on-entry (except003): passed
+Test exception-during-evaluation-of-precondition (except004): passed
+Test precondition-violation (except005): passed
+Test attached-target-violation-in-routine-body (except006): passed
+Test exception-during-evaluation-of-invariant-on-exit (except007): passed
+Test invariant-violation-on-exit (except008): passed
+Test exception-during-evaluation-of-postcondition-on-exit (except009): passed
+Test postcondition-violation (except010): passed
+Test exception-in-rescue (except011): passed
+Test raise-and-catch-user-defined-exception (except012): passed
+Test ignoring-developer-exception (except013): passed
+Test raising-catching-exception-in-once (except014): passed
+Test stack-trace-indefinitely-grows (except015): passed
+Test queries_of_exceptions_class_1 (except016): passed
+Test queries_of_exceptions_class_2 (except017): passed
+Test no_routine_failure_on_rescue_exception (except018): passed
+Test memory_leak_when_retried (except019): failed
+	Description: Reveals a C memory leak when `loc_stack' has not been allocated before Eiffel call but allocated in the call, rescue at that level resets the stack, hence looses the allocated chunk of memory.
+	Execution error in file C:\work\eweasel\eweasel\tests\except019\tcf at line 11
+	Original text:    compare exec_output2 output
+	Substituted text: compare exec_output2 output
+	Reason: files being compared do not have identical contents
+
+Test corrupted_trace (except020): passed
+Test top_n_call_incorrect (except021): passed
+Test incorrect_local_restoration (except022): passed
+Test native_signal_number_in_exception (except023): passed
+Test native_error_number_in_exception (except024): passed
+Test native_error_number_ise_io_error (except025): passed
+Test buffer_overflows_printing_trace (except026): passed
+Test static_buffer_for_trace_not_thread_safe (except027): passed
+Test assertion_violations_in_onces (except028): passed
+Test exception_on_invalid_object_has_no_trace (except029): passed
+Test incorrect_once_trace_at_first_call (except030): passed
+Test every_trace_has_root (except031): passed
+Test trace_has_no_pass (except032): passed
+Test precondition-violation-infinite-loop (except033): passed
+Test last-exception-not-cleared (except034): passed
+Test code-compatible-io-failure (except035): passed
+Test original_routines_in_exceptions (except036): passed
+Test exception_cause (except037): passed
+Test io_exception_code (except038): passed
+Test unicode_in_exception (except039): passed
 Test simple-catcall (catcall001): passed
 Test simple-catcall-generic (catcall002): failed
 	Description: Simple detection of a catcall involving call of feature with generic formal arguments which is only allowed on non-variant actual generic parameter.
@@ -2423,7 +2412,7 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	Version 13.11.9.2960 GPL Edition - win64
+	Version 13.11.9.3492 GPL Edition - win64
 	
 	There is already a project compiled in "C:\work\eweasel\test_classic\incr226"
 	It needs to be deleted before a precompilation.
@@ -2812,7 +2801,7 @@ Test constant-suppliers-crash (incr390): failed
 	Substituted text: compile_result validity_error TEST1 VLEC
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Validity error in class TEST1 code VLEC
 		Final status:  paused 
@@ -2877,7 +2866,7 @@ Test once-per-object-to-attribute (incr407): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2888,7 +2877,7 @@ Test non-conforming-remove-precondition (incr408): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2899,7 +2888,7 @@ Test has-stable-attribute-crash (incr409): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -2910,7 +2899,7 @@ Test type-to-create-crash (incr410): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2921,7 +2910,7 @@ Test rout-entry-crash-3 (incr411): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2932,7 +2921,7 @@ Test create-qualified-explicit-crash (incr412): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2945,7 +2934,7 @@ Test system-change-crash (incr415): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2969,7 +2958,7 @@ Test qat-precursor-anchored-to-caller (incr418): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (is_descendant_feature_found) 
+		Final status:  aborted system_failed had_exception (is_descendant_feature_found) 
 	Expected result:
 		Final status:  completed 
 
@@ -2980,7 +2969,7 @@ Test static-type-id-crash-3 (incr419): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -3008,7 +2997,7 @@ Test inline-agent-removal-crash (incr424): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -3019,7 +3008,7 @@ Test inline-agent-removal-crash-2 (incr425): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -3030,7 +3019,7 @@ Test finalization-with-error-crash (incr426): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -3441,7 +3430,7 @@ Test finalize-inline-external-redef-constant (final081): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -3485,7 +3474,7 @@ Test finalize-generic-once-per-object (final095): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -3561,7 +3550,7 @@ Test finalize-inline-none-generic-derivation (final115): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -3638,7 +3627,8 @@ Test array-allocation-failure (runtime015): failed
 
 Test special-copy-data (runtime016): passed
 Test weak-reference (runtime017): passed
-Test memory_leak_with_dynamic_dispatch (runtime018): passed
+Test memory-leak-with-dynamic-dispatch (runtime018): passed
+Test special-expanded-referring-new-object (runtime019): passed
 Test cond-timedwait-failure (thread001): passed
 Test nested-thread-exit-failure (thread002): passed
 Test memory-leak-in-eif-thr-wait (thread003): passed
@@ -4409,18 +4399,10 @@ Test equality-operator-semantics (exec353): failed
 	Reason: files being compared do not have identical contents
 
 Test agent-target-expanded (exec354): passed
-Test conditional-expression-smoke-test (exec355): failed
-	Description: Minimal set of tests for conditional expression.
-	Execution error in file C:\work\eweasel\eweasel\tests\exec355\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Syntax error in class TEST at line 11
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test conditional-expression-smoke-test (exec355): passed
+Test parenthesis-alias-smoke-test (exec356): passed
+Test parenthesis-alias-tuple-convention (exec357): passed
+Test conditional-expression-constant (exec358): passed
 Test once-per-object-exec (once001): passed
 Test once-per-object-exec-with-exception (once002): passed
 Test once-per-object-redefinition (once003): passed
@@ -4481,7 +4463,7 @@ Test once-per-object-nonconforming-2 (once020): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -4705,7 +4687,7 @@ Test conversion-query-constant-attribute (term173): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -4716,7 +4698,7 @@ Test create-generic-constrained-by-none (term174): failed
 	Substituted text: compile_result validity_error TEST2 V???
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Validity error in class TEST2 code V???
 		Final status:  paused 
@@ -4737,7 +4719,7 @@ Test create-generic-with-rename (term184): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -4770,7 +4752,7 @@ Test across-with-constrained-generic-crash (term196): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -4781,7 +4763,7 @@ Test shared-library-with-generic-root (term197): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -4792,7 +4774,7 @@ Test iteration-over-inline-agent (term198): failed
 	Substituted text: compile_result validity_error TEST VOIT(1) VOIT(1)
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Validity error in class TEST code VOIT(1)
 		Validity error in class TEST code VOIT(1)
@@ -4805,7 +4787,7 @@ Test expanded-constrained-generic-root-crash (term199): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -4817,7 +4799,7 @@ Test inherit-generic-with-self-as-formal (term201): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -4832,7 +4814,7 @@ Test generic-constrained-by-self-2 (term206): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -4843,7 +4825,7 @@ Test inherited-static-access-on-generic (term207): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception (Segmentation violation) 
 	Expected result:
 		Final status:  completed 
 
@@ -4857,7 +4839,7 @@ Test root-class-none (term211): failed
 	Substituted text: compile_result validity_error NONE VD27
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Validity error code VD27
 		Final status:  paused 
@@ -5227,7 +5209,17 @@ Test retrieve-corrupted-file (store002): passed
 Test melt-retrieval-mismatch (store003): passed
 Test melted-retrieve-list-expanded (store004): passed
 Test store-tuple-integer (store005): passed
-Test store-generic-reference-class-used-as-expanded (store006): passed
+Test store-generic-reference-class-used-as-expanded (store006): failed
+	Description: A system stores an expanded generic type whose base class is a reference class. The run-time omits to say that this class is generic and fails when trying to retrieve this object.
+	Execution error in file C:\work\eweasel\eweasel\tests\store006\tcf at line 34
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  system_failed 
+	Expected result:
+		Final status:  completed 
+
 Test various-storable-format-testing (store007): passed
 Test missing-type-retrieval (store008): passed
 Test store-expanded-as-reference (store009): passed
@@ -5241,10 +5233,14 @@ Test storable-formats-3 (store016): passed
 Test storable-with-attached-type (store017): passed
 Test storable-with-attached-type-by-62 (store018): failed
 	Description: Trying to store/retrieve a storable with attached type with a modified version of 6.2 that does not recognize attachment mark.
-	Execution error in file C:\work\eweasel\eweasel\tests\store018\tcf at line 50
-	Original text:    compare exec_output_3 output
-	Substituted text: compare exec_output_3 output
-	Reason: files being compared do not have identical contents
+	Execution error in file C:\work\eweasel\eweasel\tests\store018\tcf at line 37
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  system_failed 
+	Expected result:
+		Final status:  completed 
 
 Test storable-with-attached-type-1 (store019): passed
 Test storable-with-attached-type-by-63 (store020): passed
@@ -5420,6 +5416,13 @@ Test validity-vfav1-basic (vfav101): passed
 Test validity-vfav2-basic (vfav201): passed
 Test validity-vfav3-basic (vfav301): passed
 Test validity-vfav4-basic (vfav401): passed
+Test validity-vfav4-duplicated-1 (vfav402): passed
+Test validity-vfav4-argumentless-1 (vfav403): passed
+Test validity-vfav4-duplicated-2 (vfav404): passed
+Test validity-vfav4-duplicated-3 (vfav405): passed
+Test validity-vfav4-duplicated-4 (vfav406): passed
+Test validity-vfav4-argumentless-2 (vfav407): passed
+Test validity-vfav4-argumentless-3 (vfav408): passed
 Test validity-vffd1-attribute (vffd101): passed
 Test validity-vffd2-basic (vffd201): passed
 Test validity-vffd2-diff-decls (vffd202): passed
@@ -5464,20 +5467,7 @@ Test validity-vaol1-basic (vaol101): passed
 Test validity-vaol2-basic (vaol201): passed
 Test validity-vuex2-in-multibranch (vuex201): passed
 Test bracket-expression-on-current (vwbr101): passed
-Test validity-vwce-basic (vwce001): failed
-	Description: Expressions in conditional expressions should be of the same type.
-	Execution error in file C:\work\eweasel\eweasel\tests\vwce001\tcf at line 8
-	Original text:    compile_result validity_error TEST VWCE VWCE
-	Substituted text: compile_result validity_error TEST VWCE VWCE
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Syntax error in class TEST at line 15
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST code VWCE
-		Validity error in class TEST code VWCE
-		Final status:  paused 
-
+Test validity-vwce-basic (vwce001): passed
 Test validity-vwmq-string-conversion (vwmq001): passed
 Test lace-vd01-basic (vd01001): passed
 Test lace-vd04-basic (vd04001): passed
@@ -5734,21 +5724,7 @@ Test expanded-generic-with-multiconstraint (multicon061): failed
 	Expected result:
 		Final status:  completed 
 
-Test multi-constraint-with-bracket (multicon062): failed
-	Description: A call using a bracket "[]" alias on an entity whose type is a multi-constrained generic type should be reported as a VTMC(2) error, not VTMC(1)
-	Execution error in file C:\work\eweasel\eweasel\tests\multicon062\tcf at line 13
-	Original text:    compile_result validity_error TEST1 VTMC(2) VTMC(2)
-	Substituted text: compile_result validity_error TEST1 VTMC(2) VTMC(2)
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST1 code VTMC(1)
-		Validity error in class TEST1 code VTMC(2)
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST1 code VTMC(2)
-		Validity error in class TEST1 code VTMC(2)
-		Final status:  paused 
-
+Test multi-constraint-with-bracket (multicon062): passed
 Test expanded-array-attached-reference-array (expanded001): passed
 Test expanded-reverse-assignment (expanded002): passed
 Test array-of-user-defined-expanded (expanded003): passed
@@ -5976,23 +5952,7 @@ Test void-safe-convert-to-generic (attach097): failed
 	Expected result:
 		Final status:  completed 
 
-Test targeted-expanded-type (attach098): failed
-	Description: An entity of an expanded type is always targeted.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach098\tcf at line 14
-	Original text:    compile_result validity_error A VEVI VEVI VEVI VEVI
-	Substituted text: compile_result validity_error A VEVI VEVI VEVI VEVI
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class A code VEVI
-		Validity error in class A code VEVI
-		Final status:  paused 
-	Expected result:
-		Validity error in class A code VEVI
-		Validity error in class A code VEVI
-		Validity error in class A code VEVI
-		Validity error in class A code VEVI
-		Final status:  paused 
-
+Test targeted-expanded-type (attach098): passed
 Test targeted-object-call (attach099): passed
 Test targeted-equality-operand (attach100): passed
 Test targeted-assignment-source (attach101): passed
@@ -6002,46 +5962,10 @@ Test targeted-nested-current-access (attach104): passed
 Test initialization-in-postcondition (attach105): passed
 Test object-test-local-use-error (attach106): passed
 Test uninitialized-without-current (attach107): passed
-Test object-test-local-in-implication (attach108): failed
-	Description: Object test local should be available in implication after conjunction.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach108\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VEEN
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
-Test object-test-local-in-conditional (attach109): failed
-	Description: Object test local in conditional expression follows the same rules as in conditional instruction.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach109\tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Syntax error in class TEST at line 13
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
-Test initialization-in-conditional (attach110): failed
-	Description: Initialization rules should be respected by conditional expression and instruction.
-	Execution error in file C:\work\eweasel\eweasel\tests\attach110\tcf at line 12
-	Original text:    compile_result validity_error TEST VEVI VEVI VEVI VEVI
-	Substituted text: compile_result validity_error TEST VEVI VEVI VEVI VEVI
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Syntax error in class TEST at line 44
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Validity error in class TEST code VEVI
-		Final status:  paused 
-
+Test object-test-local-in-implication (attach108): passed
+Test object-test-local-in-conditional (attach109): passed
+Test initialization-in-conditional (attach110): passed
+Test targeted-in-structure-classes (attach111): passed
 Test basic-conformance (conform001): passed
 Test formal-conformance (conform002): passed
 Test catcall-checking-conformance (conform003): passed
@@ -6165,7 +6089,7 @@ Test qat-static-type-id-crash-2 (anchor055): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -6177,7 +6101,7 @@ Test qat-multi-constraint-type (anchor057): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -6205,7 +6129,7 @@ Test qat-generic-func-expanded-actual (anchor065): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -6252,7 +6176,7 @@ Test qat-instantiated-in-crash-4 (anchor069): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -6301,7 +6225,7 @@ Test scoop-expanded-class-constrained-generic (scoop023): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation violation) 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -6395,8 +6319,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2269 / 2657  (86%)
-Failed:  356 / 2657  (14%)
-Manual:  26 / 2657  (1%)
-Skipped:  6 / 2657  (1%)
+Passed:  2288 / 2669  (86%)
+Failed:  349 / 2669  (14%)
+Manual:  26 / 2669  (1%)
+Skipped:  6 / 2669  (1%)
 

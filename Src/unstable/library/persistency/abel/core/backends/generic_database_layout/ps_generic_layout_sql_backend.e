@@ -138,6 +138,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			connection: PS_SQL_CONNECTION
 			stmt: STRING
 		do
+			fixme ("Collections should get deleted first")
 			across
 				collections as cursor
 			from

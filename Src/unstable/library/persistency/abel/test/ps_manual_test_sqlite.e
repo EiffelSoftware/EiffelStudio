@@ -64,6 +64,80 @@ feature -- Tests
 			object_graph_tests.test_all_settings
 		end
 
+	sqlite_tricky_basic_types
+			-- Test basic types such as INTEGER.
+		do
+			tricky_tests.test_basic_types
+		end
+
+	sqlite_tricky_string_types
+			-- Test string types.
+		do
+			tricky_tests.test_string_types
+		end
+
+
+	sqlite_tricky_wrapped_basic_types
+			-- Test basic types wrapped in CELL[ANY].
+		do
+			tricky_tests.test_wrapped_basic_types
+		end
+
+	sqlite_tricky_wrapped_string_types
+			-- Test string types wrapped in CELL[ANY].
+		do
+			tricky_tests.test_wrapped_string_types
+		end
+
+	sqlite_tricky_object_graph_simple
+			-- Test some simple object graphs.
+		do
+			tricky_tests.test_object_graph_simple
+		end
+
+	sqlite_tricky_object_graph_complex
+			-- Test some complex object graphs containing copy-semantics references.
+		do
+			tricky_tests.test_object_graph_complex
+		end
+
+	sqlite_tricky_direct_special_basic
+			-- Test storing special objects of a basic type.
+		do
+			tricky_tests.test_direct_special_basic
+		end
+
+	sqlite_tricky_direct_special_simple
+			-- Test storing special objects with some normal references.
+		do
+			tricky_tests.test_direct_special_simple
+		end
+
+	sqlite_tricky_direct_special_complex
+			-- Test storing special objects with copy-semantics references and expanded items.
+		do
+			tricky_tests.test_direct_special_complex
+		end
+
+
+	sqlite_tricky_wrapped_special_basic
+			-- Test storing wrapped special objects of a basic type.
+		do
+			tricky_tests.test_wrapped_special_basic
+		end
+
+	sqlite_tricky_wrapped_special_simple
+			-- Test storing wrapped special objects with some normal references.
+		do
+			tricky_tests.test_wrapped_special_simple
+		end
+
+	sqlite_tricky_wrapped_special_complex
+			-- Test storing wrapped special objects with copy-semantics references and expanded items.
+		do
+			tricky_tests.test_wrapped_special_complex
+		end
+
 
 feature {NONE} -- Initialization
 

@@ -174,12 +174,32 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 
 	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
+		local
+			db: HASH_TABLE[PS_BACKEND_COLLECTION, INTEGER]
 		do
-			across collections as cursor
+			across
+				collections as cursor
 			loop
 				prepare_collection (cursor.item.metadata)
-				attach (collection_database[cursor.item.metadata.type.type_id]).force(cursor.item, cursor.item.primary_key)
-				cursor.item.declare_as_old
+				db := attach (collection_database[cursor.item.metadata.type.type_id])
+
+				if cursor.item.is_update_delta and attached db[cursor.item.primary_key] as old_coll then
+
+					old_coll.set_is_root (cursor.item.is_root)
+					across
+						cursor.item.information_descriptions as key
+					loop
+						old_coll.add_information (key.item, cursor.item.get_information (key.item))
+					end
+					across
+						1 |..| cursor.item.collection_items.count as idx
+					loop
+						old_coll.collection_items.put_i_th (cursor.item.collection_items.i_th (idx.item), idx.item)
+					end
+				else
+					db.force(cursor.item, cursor.item.primary_key)
+					cursor.item.declare_as_old
+				end
 			end
 		end
 

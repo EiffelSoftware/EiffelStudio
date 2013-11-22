@@ -28,10 +28,9 @@ feature {PS_ABEL_EXPORT} -- Status report
 			-- This can be used as a hint by the backend, because if `is_new'
 			-- is true the backend doesn't have to delete the old version first.
 
-	is_update: BOOLEAN
-			-- Is `Current' used to describe an update operation?
-			-- Update means that only values in `Current' get written to the database,
-			-- and nothing else gets changed.
+	is_update_delta: BOOLEAN
+			-- Is the information stored in `Current' only the difference
+			-- for an update operation?
 
 	has_type (type: PS_TYPE_METADATA): BOOLEAN
 			-- Is `Current.metadata' equal to `type'?
@@ -47,6 +46,14 @@ feature {PS_ABEL_EXPORT} -- Element change
 			is_root := value
 		ensure
 			correct: is_root = value
+		end
+
+	set_is_update_delta (value: BOOLEAN)
+			-- Set `is_update_delta' to `value'.
+		do
+			is_update_delta := value
+		ensure
+			correct: is_update_delta = value
 		end
 
 	declare_as_old

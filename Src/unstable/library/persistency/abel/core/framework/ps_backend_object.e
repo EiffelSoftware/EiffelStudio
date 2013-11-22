@@ -24,11 +24,11 @@ create {PS_ABEL_EXPORT}
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	is_root: BOOLEAN
-			-- Is the current entity a garbage collection root?
-		do
-			Result := has_attribute (root_key) and then attribute_value (root_key).value.to_boolean
-		end
+--	is_root: BOOLEAN
+--			-- Is the current entity a garbage collection root?
+--		do
+--			Result := has_attribute (root_key) and then attribute_value (root_key).value.to_boolean
+--		end
 
 	attributes: LINKED_LIST [STRING]
 			-- The attributes of the object that have been loaded.
@@ -157,14 +157,15 @@ feature {PS_ABEL_EXPORT} -- Element change
 			attribute_removed: not has_attribute (attribute_name)
 		end
 
-	set_is_root (value: BOOLEAN)
-			-- Set `is_root' to `value'.
-		do
-			if has_attribute (root_key) then
-				remove_attribute (root_key)
-			end
-			add_attribute (root_key, value.out, "BOOLEAN")
-		end
+--	set_is_root (value: BOOLEAN)
+--			-- Set `is_root' to `value'.
+--		do
+--			is_root := value
+--			if has_attribute (root_key) then
+--				remove_attribute (root_key)
+--			end
+--			add_attribute (root_key, value.out, "BOOLEAN")
+--		end
 
 feature -- Debugging output
 
@@ -214,5 +215,8 @@ feature {NONE} -- Implementation
 invariant
 	has_value_for_all_attributes: across attributes as attribute_cursor all has_attribute (attribute_cursor.item) end
 --	void_references_have_NONE_type: across values as val all val.item.first.is_empty implies val.item.second.is_equal ("NONE") end
+
+--	root_correct: has_attribute (root_key) implies is_root = attribute_value (root_key).value.to_boolean
+
 
 end

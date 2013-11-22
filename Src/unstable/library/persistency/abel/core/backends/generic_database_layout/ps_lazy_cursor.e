@@ -83,7 +83,12 @@ feature {NONE} -- Implementation
 				attribute_value := internal_result_cursor.item.at (backend.SQL_Strings.Value_table_value_column)
 				class_name_of_value := backend.db_metadata_manager.class_name_of_key (internal_result_cursor.item.at (backend.SQL_Strings.Value_table_runtimetype_column).to_integer)
 				if not attribute_name.is_equal (backend.SQL_Strings.Existence_attribute) then
-					item.add_attribute (attribute_name, attribute_value, class_name_of_value)
+--					if attribute_name /~ item.root_key then
+						item.add_attribute (attribute_name, attribute_value, class_name_of_value)
+--					end
+				else
+--					print (attribute_value)
+					item.set_is_root (attribute_value.to_boolean)
 				end
 				internal_result_cursor.forth
 			end

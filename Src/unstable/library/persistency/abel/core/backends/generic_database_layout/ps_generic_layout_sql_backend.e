@@ -160,8 +160,10 @@ feature {PS_ABEL_EXPORT} -- Write operations
 						-1,
 						-- Runtime type of the default item (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
-						-- Some dummy value
-						""]))
+						-- Store the root status.
+						cursor.item.is_root.out]))
+--						-- Some dummy value
+--						""]))
 
 				loop
 					commands.extend (SQL_Strings.to_list_with_braces ([
@@ -282,11 +284,9 @@ feature {PS_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.name)),
 						-- Runtime type of ps_existence (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
-						-- Do we need a longtext value?
---						0, -- False
-						-- Some dummy value
-						""]))
-
+						-- Store the root status.
+						cursor.item.is_root.out]))
+					print (commands.last.out + "%N")
 				loop
 					commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key

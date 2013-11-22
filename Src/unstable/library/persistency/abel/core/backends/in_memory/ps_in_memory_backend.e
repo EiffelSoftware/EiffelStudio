@@ -217,10 +217,14 @@ feature {NONE} -- Implementation
 --					print(cursor.item)
 				else
 					old_obj := attach (attach (database[cursor.item.metadata.type.type_id])[cursor.item.primary_key])
-					across cursor.item.attributes as attr
+					old_obj.set_is_root (cursor.item.is_root)
+					across
+						cursor.item.attributes as attr
 					loop
-						old_obj.remove_attribute (attr.item)
-						old_obj.add_attribute (attr.item, cursor.item.attribute_value(attr.item).value, cursor.item.attribute_value(attr.item).attribute_class_name)
+--						if attr.item /~ cursor.item.root_key then
+							old_obj.remove_attribute (attr.item)
+							old_obj.add_attribute (attr.item, cursor.item.attribute_value(attr.item).value, cursor.item.attribute_value(attr.item).attribute_class_name)
+--						end
 					end
 				end
 			end

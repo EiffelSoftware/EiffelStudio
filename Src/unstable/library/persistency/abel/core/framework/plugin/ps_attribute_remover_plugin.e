@@ -27,7 +27,14 @@ feature
 			across
 				object.attributes.twin as attr
 			loop
-				if not attr.item.is_equal (object.root_key) and then across attributes as attr2 all not attr.item.is_equal (attr2.item) end then
+				if
+--					not attr.item.is_equal (object.root_key) and then
+					across
+						attributes as attr2
+					all
+						not attr.item.is_equal (attr2.item)
+					end
+				then
 					object.remove_attribute (attr.item)
 				end
 			end

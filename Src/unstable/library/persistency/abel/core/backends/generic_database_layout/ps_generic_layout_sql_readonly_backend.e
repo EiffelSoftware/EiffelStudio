@@ -70,9 +70,19 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 					attribute_name := db_metadata_manager.attribute_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_attributeid_column).to_integer)
 					attribute_value := row_cursor.item.at (SQL_Strings.Value_table_value_column)
 					class_name_of_value := db_metadata_manager.class_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_runtimetype_column).to_integer)
+--					if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
+--						Result.add_attribute (attribute_name, attribute_value, class_name_of_value)
+--					end
 					if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
-						Result.add_attribute (attribute_name, attribute_value, class_name_of_value)
+--						if attribute_name /~ Result.root_key then
+							Result.add_attribute (attribute_name, attribute_value, class_name_of_value)
+--						end
+					else
+						if attribute_value /~ "NULL" then
+							Result.set_is_root (attribute_value.to_boolean)
+						end
 					end
+
 					row_cursor.forth
 				end
 			end
@@ -120,6 +130,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				if position <= 0 then
 					-- new item
 					result_list.extend (create {PS_BACKEND_COLLECTION}.make (primary_key, collection_type))
+					result_list.last.set_is_root (row_cursor.item.at ("value").to_boolean)
 				else
 					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)
 					value := row_cursor.item.at ("value")
@@ -146,7 +157,10 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 					key := row_cursor.item.at ("info_key")
 					info := row_cursor.item.at ("info")
 
-					cursor.item.add_information (key, info)
+--					if key /~ cursor.item.root_key then
+						cursor.item.add_information (key, info)
+--					end
+
 					row_cursor.forth
 				end
 			end
@@ -184,6 +198,8 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 					if position > 0 then
 						Result.add_item (value, runtime_type)
+					else
+						Result.set_is_root (value.to_boolean)
 					end
 					row_cursor.forth
 				end
@@ -213,7 +229,9 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				key := row_cursor.item.at ("info_key")
 				info := row_cursor.item.at ("info")
 
-				Result.add_information (key, info)
+--				if key /~ Result.root_key then
+					Result.add_information (key, info)
+--				end
 				row_cursor.forth
 			end
 

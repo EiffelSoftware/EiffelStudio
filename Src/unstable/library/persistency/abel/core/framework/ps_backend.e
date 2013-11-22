@@ -157,7 +157,8 @@ feature {NONE} -- Agents for contracts
 	check_collection_write (collection: PS_BACKEND_COLLECTION; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a delete was successful
 		do
-			Result := equal (collection, retrieve_collection (collection.metadata, collection.primary_key, transaction))
+			fixme ("Implement an is_subset_of query in BACKEND_COLLECTION")
+			Result := collection.is_update_delta or equal (collection, retrieve_collection (collection.metadata, collection.primary_key, transaction))
 		end
 
 	check_collection_delete (collection: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN

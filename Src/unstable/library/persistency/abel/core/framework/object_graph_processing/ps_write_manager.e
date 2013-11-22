@@ -153,6 +153,7 @@ feature -- Write execution
 			transaction.root_flags.force (value, item(1).identifier)
 			check attached item(1).backend_representation as br then
 				br.set_is_root (transaction.root_flags[item(1).identifier])
+				br.set_is_update_delta (True)
 			end
 
 			do_all (agent {PS_HANDLER}.write_backend_representation)
@@ -161,13 +162,9 @@ feature -- Write execution
 				backend.write (objects_to_write, transaction)
 			end
 
-			fixme ("Collections need a different way of setting root status... The next statements will just overwrite the collection.")
---			if not collections_to_write.is_empty then
---				backend.write_collections (collections_to_write, transaction)
---			end
-
-
-
+			if not collections_to_write.is_empty then
+				backend.write_collections (collections_to_write, transaction)
+			end
 		end
 
 

@@ -952,9 +952,9 @@ end
 		do
 			inspect yy_sc
 when 3 then
---|#line 0 "pr_yacc_scanner.l"
+--|#line 276 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 276")
 end
 
 					report_missing_characters_error ("%%}")
@@ -963,9 +963,9 @@ end
 					set_start_condition (INITIAL)
 				
 when 4, 6 then
---|#line 0 "pr_yacc_scanner.l"
+--|#line 353 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 353")
 end
 
 					report_missing_characters_error ("}")

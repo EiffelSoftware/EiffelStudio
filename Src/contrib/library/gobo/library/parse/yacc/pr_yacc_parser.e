@@ -222,7 +222,7 @@ feature {NONE} -- Semantic actions
 			yyval9: PR_LABELED_TYPE
 			yyval5: PR_TOKEN
 		do
-			inspect yy_act
+				inspect yy_act
 when 1 then
 --|#line 58 "pr_yacc_parser.y"
 debug ("GEYACC")
@@ -3078,14 +3078,14 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			else
-				debug ("GEYACC")
-					std.error.put_string ("Error in parser: unknown rule id: ")
-					std.error.put_integer (yy_act)
-					std.error.put_new_line
+				else
+					debug ("GEYACC")
+						std.error.put_string ("Error in parser: unknown rule id: ")
+						std.error.put_integer (yy_act)
+						std.error.put_new_line
+					end
+					abort
 				end
-				abort
-			end
 		end
 
 	yy_do_error_action (yy_act: INTEGER)

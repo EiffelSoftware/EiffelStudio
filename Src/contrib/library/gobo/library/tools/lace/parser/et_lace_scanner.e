@@ -561,15 +561,15 @@ end
 		do
 			inspect yy_sc
 when 0 then
---|#line 0 "et_lace_scanner.l"
+--|#line 159 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 159")
 end
 terminate
 when 1 then
---|#line 0 "et_lace_scanner.l"
+--|#line 151 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 151")
 end
 	-- Catch-all rules (no backing up)
 							last_token := L_STRERR

@@ -228,7 +228,7 @@ feature {NONE} -- Semantic actions
 			yyval8: XM_DTD_ATTRIBUTE_CONTENT
 			yyval9: DS_BILINKED_LIST [STRING]
 		do
-			inspect yy_act
+				inspect yy_act
 when 1 then
 --|#line 124 "xm_eiffel_parser.y"
 debug ("GEYACC")
@@ -4262,14 +4262,14 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
-			else
-				debug ("GEYACC")
-					std.error.put_string ("Error in parser: unknown rule id: ")
-					std.error.put_integer (yy_act)
-					std.error.put_new_line
+				else
+					debug ("GEYACC")
+						std.error.put_string ("Error in parser: unknown rule id: ")
+						std.error.put_integer (yy_act)
+						std.error.put_new_line
+					end
+					abort
 				end
-				abort
-			end
 		end
 
 	yy_do_error_action (yy_act: INTEGER)

@@ -1709,15 +1709,15 @@ end
 		do
 			inspect yy_sc
 when 0 then
---|#line 0 "eiffel_scanner.l"
+--|#line 396 "eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line 396")
 end
 terminate
 when 1 then
---|#line 0 "eiffel_scanner.l"
+--|#line 331 "eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line 331")
 end
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR

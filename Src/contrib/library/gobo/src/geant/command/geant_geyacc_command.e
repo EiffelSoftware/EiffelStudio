@@ -49,6 +49,9 @@ feature -- Access
 	verbose_filename: STRING
 			-- -v option
 
+	rescue_on_abort: BOOLEAN
+			-- --rescue-on-abort option, default: false
+			
 	separate_actions: BOOLEAN
 			-- -x option, default: false
 
@@ -64,9 +67,6 @@ feature -- Access
 	input_filename: STRING
 			-- Input filename
 
-	new_typing: BOOLEAN
-			-- Use new typing mechanism
-
 feature -- Setting
 
 	set_verbose_filename (a_filename: like verbose_filename)
@@ -80,6 +80,14 @@ feature -- Setting
 			verbose_filename_set: verbose_filename = a_filename
 		end
 
+	set_rescue_on_abort (b: BOOLEAN)
+			-- Set  `rescue_on_abort' to `b'.
+		do
+			rescue_on_abort := b
+		ensure
+			rescue_on_abort_set: rescue_on_abort = b
+		end
+		
 	set_separate_actions (b: BOOLEAN)
 			-- Set  `separate_actions' to `b'.
 		do
@@ -132,14 +140,6 @@ feature -- Setting
 			input_filename_set: input_filename = a_filename
 		end
 
-	set_new_typing (b: BOOLEAN)
-			-- Set `new_typing' to `b'.
-		do
-			new_typing := b
-		ensure
-			new_typing_set: new_typing = b
-		end
-
 feature -- Execution
 
 	execute
@@ -157,13 +157,13 @@ feature -- Execution
 				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
 			end
-				-- Option --new_typing
-			if new_typing then
-				cmd.append_string ("--new_typing ")
-			end
 				-- Option -x
 			if separate_actions then
 				cmd.append_string ("-x ")
+			end
+				-- Option --rescue-on-abort
+			if rescue_on_abort then
+				cmd.append_string ("--rescue-on-abort ")
 			end
 				-- Option -t
 			if tokens_classname /= Void and then tokens_classname.count > 0 then

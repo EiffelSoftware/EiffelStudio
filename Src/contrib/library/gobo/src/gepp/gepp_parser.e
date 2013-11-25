@@ -172,7 +172,7 @@ feature {NONE} -- Semantic actions
 			yyval1: detachable ANY
 			yyval3: BOOLEAN
 		do
-			inspect yy_act
+				inspect yy_act
 when 1 then
 --|#line 55 "gepp_parser.y"
 debug ("GEYACC")
@@ -440,14 +440,14 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-			else
-				debug ("GEYACC")
-					std.error.put_string ("Error in parser: unknown rule id: ")
-					std.error.put_integer (yy_act)
-					std.error.put_new_line
+				else
+					debug ("GEYACC")
+						std.error.put_string ("Error in parser: unknown rule id: ")
+						std.error.put_integer (yy_act)
+						std.error.put_new_line
+					end
+					abort
 				end
-				abort
-			end
 		end
 
 	yy_do_error_action (yy_act: INTEGER)

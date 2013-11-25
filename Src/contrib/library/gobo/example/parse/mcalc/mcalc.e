@@ -208,7 +208,7 @@ feature {NONE} -- Semantic actions
 			yyval1: detachable ANY
 			yyval2: DOUBLE
 		do
-			inspect yy_act
+				inspect yy_act
 when 1 then
 --|#line 43 "mcalc.y"
 debug ("GEYACC")
@@ -395,14 +395,14 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
-			else
-				debug ("GEYACC")
-					std.error.put_string ("Error in parser: unknown rule id: ")
-					std.error.put_integer (yy_act)
-					std.error.put_new_line
+				else
+					debug ("GEYACC")
+						std.error.put_string ("Error in parser: unknown rule id: ")
+						std.error.put_integer (yy_act)
+						std.error.put_new_line
+					end
+					abort
 				end
-				abort
-			end
 		end
 
 	yy_do_error_action (yy_act: INTEGER)

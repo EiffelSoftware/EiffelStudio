@@ -351,27 +351,27 @@ end
 		do
 			inspect yy_sc
 when 1 then
---|#line 0 "ut_config_scanner.l"
+--|#line 117 "ut_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ut_config_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'ut_config_scanner.l' at line 117")
 end
 
 						last_token := P_EOL
 						set_start_condition (INITIAL)
 					
 when 5 then
---|#line 0 "ut_config_scanner.l"
+--|#line 142 "ut_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ut_config_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'ut_config_scanner.l' at line 142")
 end
 
 						last_token := P_EOL
 						set_start_condition (INITIAL)
 					
 when 6 then
---|#line 0 "ut_config_scanner.l"
+--|#line 154 "ut_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ut_config_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'ut_config_scanner.l' at line 154")
 end
 
 						last_token := P_EOL

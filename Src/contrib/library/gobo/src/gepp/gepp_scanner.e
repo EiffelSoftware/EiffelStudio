@@ -339,9 +339,9 @@ end
 		do
 			inspect yy_sc
 when 1 then
---|#line 0 "gepp_scanner.l"
+--|#line 150 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 150")
 end
 
 						last_token := P_EOL

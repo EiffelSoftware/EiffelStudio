@@ -2176,15 +2176,15 @@ end
 		do
 			inspect yy_sc
 when 0 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 1172 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1172")
 end
 terminate
 when 1 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 1160 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1160")
 end
 
 					-- Should never happen.
@@ -2194,9 +2194,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 2 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 711 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 711")
 end
 
 					-- Syntax error: missing double quote at
@@ -2212,9 +2212,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 3 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 755 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 755")
 end
 
 					-- Syntax error: missing character % at beginning
@@ -2230,9 +2230,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 4 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 358 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 358")
 end
 
 					-- No final brace-double-quote.
@@ -2242,9 +2242,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 5 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 415 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 415")
 end
 
 					-- No final brace-double-quote.
@@ -2254,9 +2254,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 6 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 443 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 443")
 end
 
 					-- No final brace-double-quote.
@@ -2266,9 +2266,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 7 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 473 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 473")
 end
 
 					-- No final bracket-double-quote.
@@ -2278,9 +2278,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 8 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 530 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 530")
 end
 
 					-- No final bracket-double-quote.
@@ -2290,9 +2290,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 9 then
---|#line 0 "et_eiffel_scanner.l"
+--|#line 558 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 558")
 end
 
 					-- No final bracket-double-quote.

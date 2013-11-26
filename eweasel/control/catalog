@@ -112,6 +112,7 @@ test	recursive-delete-with-symlinks	directory001 tcf pass directory
 test	basic-iterations		iteration001 tcf pass iteration
 test	iteration-cursor-two-generics	iteration002 tcf pass iteration formal generic
 test	indexable-iteration-cursor		iteration003 tcf pass iteration
+test	iteration-with-renaming		iteration004 tcf pass iteration
 
 test	chain-count				chain001	tcf fail chain
 

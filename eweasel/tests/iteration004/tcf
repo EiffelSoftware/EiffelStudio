@@ -1,0 +1,14 @@
+test_name	 iteration-with-renaming
+test_description Iteration on a container with renamed iteration features should proceed with renamed versions.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+execute_work NONE exec_output_m
+execute_result ok
+compare exec_output_m output
+
+test_end

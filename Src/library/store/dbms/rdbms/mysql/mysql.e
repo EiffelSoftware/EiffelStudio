@@ -112,6 +112,7 @@ feature -- For DATABASE_CHANGE
 		end
 
 	max_descriptor_number: INTEGER = 20
+			-- Max number of descriptors
 
 	is_affected_row_count_supported: BOOLEAN = True
 			-- <Precursor>
@@ -453,7 +454,7 @@ feature -- External features
 				Result := 0
 				l_descriptor_index := 1
 			until
-				Result > 0 or else l_descriptor_index = 20
+				Result > 0 or else l_descriptor_index = max_descriptor_number
 			loop
 				if descriptors.item (l_descriptor_index) = Void then
 					Result := l_descriptor_index
@@ -1246,17 +1247,14 @@ feature {NONE} -- C Externals
 		end
 
 note
-	copyright:	"Copyright (c) 2010, ITPassion Ltd, Eiffel Software and others"
-	license:	"[
-					Eiffel Forum License v2
-					(see http://www.eiffel.com/licensing/forum.txt)
-				]"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
-				ITPassion Ltd
-				5 Anstice Close, Chiswick, Middlesex, W4 2RJ, United Kingdom
-				Telephone 0044-208-742-3422, Fax 0044-208-742-3468
-				Website http://www.itpassion.com
-				Customer support http://powerdesk.itpassion.com
-				]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

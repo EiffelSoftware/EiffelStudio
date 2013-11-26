@@ -36,7 +36,7 @@ feature -- Initialization
 			full_collect
 			full_collect
 			full_coalesce
-			t1.set_person ("New")
+			t1.set_person ("New2")
 			l_spec.put (t1, 1)
 			full_collect
 			print (l_spec.item (1).person)

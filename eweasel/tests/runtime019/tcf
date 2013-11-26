@@ -15,4 +15,13 @@ execute_work 	NONE 	exec_output_w
 execute_result 	ok
 compare		exec_output_w output
 
+copy_raw	test_rev1.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE	execute_output_m
+execute_result 	ok
+compare		exec_output_m output
+
 test_end

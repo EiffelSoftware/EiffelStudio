@@ -69,6 +69,15 @@ feature
 			type := metadata_factory.create_metadata_from_type(q.generic_type)
 
 			across
+				value_type_handlers as cursor
+			loop
+				if cursor.item.can_handle_type (type) then
+					query_result := backend.retrieve (type, q.criterion, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (<<value_type_item>>), transaction)
+					found := True
+				end
+			end
+
+			across
 				identity_type_handlers as cursor
 			until
 				found

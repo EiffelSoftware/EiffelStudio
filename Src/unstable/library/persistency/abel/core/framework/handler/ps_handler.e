@@ -97,7 +97,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			has_primary: object.primary_key > 0
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 		deferred
 		end
 
@@ -106,7 +106,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			object_retrieved: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_retrieved: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
 		local
@@ -128,7 +128,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			object_retrieved: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_retrieved: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
 			created: object.is_object_initialized
@@ -140,7 +140,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			object_retrieved: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_retrieved: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
 			created: object.is_object_initialized
@@ -163,7 +163,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 		do
 			if not object.reflector.is_expanded then
 				if not object.is_persistent then
@@ -184,7 +184,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			identifier_set: object.identifier > 0
 		deferred
 		end
@@ -194,7 +194,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			identifier_set: object.identifier > 0
 		deferred
 		ensure
@@ -212,7 +212,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			identifier_set: object.identifier > 0
 			object_generated: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_generated: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
@@ -229,7 +229,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
-			not_value_type: not is_mapping_to_value_type
+			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			identifier_set: object.identifier > 0
 			object_generated: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_generated: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation

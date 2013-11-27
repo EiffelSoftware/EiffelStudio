@@ -21,7 +21,10 @@ feature -- Access
 	item: G
 			-- Item at current cursor position.
 		do
-			Result := attach (detachable_item)
+			check attached detachable_item as res then
+				Result := res
+			end
+--			Result := attach (detachable_item)
 		end
 
 feature -- Status report
@@ -42,7 +45,7 @@ feature -- Cursor movement
 				end
 			end
 		ensure then
-			item_is_identified: attached{TUPLE}item or (not after implies query.internal_transaction.repository.is_identified (item, query.internal_transaction))
+			item_is_identified: attached{TUPLE}item or (not after implies query.generic_type.is_expanded or query.internal_transaction.repository.is_identified (item, query.internal_transaction))
 			item_can_be_handled: attached{PS_TUPLE_QUERY[ANY]} query or query.internal_transaction.repository.can_handle (item)
 		end
 

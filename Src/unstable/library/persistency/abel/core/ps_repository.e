@@ -185,7 +185,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 			transaction_still_alive: query.internal_transaction.is_active
 			no_error: not query.internal_transaction.has_error
 			can_handle_retrieved_object: not query.result_cursor.after implies can_handle (query.result_cursor.item)
-			not_after_means_known: not query.result_cursor.after implies is_identified (query.result_cursor.item, query.internal_transaction)
+			not_after_means_known: not query.result_cursor.after implies query.generic_type.is_expanded or is_identified (query.result_cursor.item, query.internal_transaction)
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)

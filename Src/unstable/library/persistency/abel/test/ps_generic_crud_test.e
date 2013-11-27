@@ -56,16 +56,22 @@ feature {PS_CRUD_TESTS}
 
 			internal_check_equality (object, equality_function)
 				-- Test successful update
-			update_operation.call ([object])
-			first_count := count_results
 
---			executor.execute_update (object)
-			repo_access.update (object)
+			if not object.generating_type.is_expanded then
 
-			second_count := count_results
-			internal_check_equality (object, equality_function)
-			assert ("Something has been deleted or inserted during an update", second_count = first_count)
-				-- Test successful delete
+				update_operation.call ([object])
+				first_count := count_results
+
+	--			executor.execute_update (object)
+				repo_access.update (object)
+
+				second_count := count_results
+				internal_check_equality (object, equality_function)
+				assert ("Something has been deleted or inserted during an update", second_count = first_count)
+					-- Test successful delete
+
+
+			end
 
 			repo_access.commit
 			repo_access.prepare

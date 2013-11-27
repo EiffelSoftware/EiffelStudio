@@ -54,17 +54,24 @@ feature -- Execution
 	handle_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			cl: CELL [detachable PATH]
+			m: like new_response_message
 		do
 			if attached package_version_from_id_path_parameter (req, "id") as l_package then
 				if has_permission_to_modify_package_version (req, l_package) then
+					m := new_response_message (req)
+					m.add_normal_message (req.absolute_script_url (iron.package_version_view_resource (l_package)))
+
 					if attached {WSF_UPLOADED_FILE} req.form_parameter ("file") as l_uploaded_file then
 						iron.database.save_uploaded_package_archive (l_package, l_uploaded_file)
-						redirect_to_package_version (req, res, l_package)
+						m.add_normal_message ("archive uploaded")
+						res.send (m)
 					elseif attached {WSF_STRING} req.form_parameter ("url") as l_url then
 						create cl.put (Void)
 						download (l_url.url_encoded_value, cl, req)
 						if attached cl.item as p then
 							iron.database.save_package_archive (l_package, p, False)
+							m.add_normal_message ("archive uploaded")
+							res.send (m)
 						else
 							res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
 						end
@@ -73,9 +80,13 @@ feature -- Execution
 							req.read_input_data_into_file (f)
 							f.close
 							iron.database.save_package_archive (l_package, f.path, False)
+							m.add_normal_message ("archive uploaded")
+							res.send (m)
 						else
 							res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
 						end
+					else
+						res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
 					end
 				else
 					res.send (new_not_permitted_response_message (req))

@@ -54,6 +54,24 @@ feature -- Package
 		deferred
 		end
 
+	package_by_name (a_name: READABLE_STRING_GENERAL): detachable IRON_NODE_PACKAGE
+			-- Package named `a_name'.
+		do
+			if attached packages (1, 0) as lst then
+				across
+					lst as ic
+				until
+					Result /= Void
+				loop
+					if ic.item.is_named (a_name) then
+						Result := ic.item
+					end
+				end
+			end
+		ensure
+			Result /= Void implies Result.is_named (a_name)
+		end
+
 	packages (a_lower, a_upper: INTEGER): detachable LIST [IRON_NODE_PACKAGE]
 			-- Range [a_lower:a_upper] of packages for version `v'
 			-- if a_upper <= 0 then a_upper start from the end.

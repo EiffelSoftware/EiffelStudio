@@ -88,6 +88,12 @@ feature -- Tags
 
 feature -- Access: archive
 
+	is_named (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is Current package named `a_name' ?
+		do
+			Result := attached name as n and then a_name.is_case_insensitive_equal (n)
+		end
+
 	has_archive: BOOLEAN
 --		do
 --			Result := archive_path /= Void

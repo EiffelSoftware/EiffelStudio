@@ -150,7 +150,7 @@ feature -- Redirection
 			html: IRON_NODE_HTML_RESPONSE
 		do
 			create html.make (req, iron)
-			html.set_location (iron.package_version_view_web_page (a_package))
+			html.set_location (req.absolute_script_url (iron.package_version_view_web_page (a_package)))
 			res.send (html)
 		end
 
@@ -376,6 +376,29 @@ feature -- Package form
 						fd.report_error ("Package id is missing from URI!")
 						create p.make (l_id)
 					end
+				elseif attached fd.string_item ("name") as l_name then
+					check no_id_item: fd.string_item ("id") = Void end
+					if attached iron.database.package_by_name (l_name) as l_package then
+						p := l_package
+						if l_path_id /= Void then
+							if not l_package.id.is_case_insensitive_equal (l_path_id) then
+								fd.report_error ("Package id mismatch! " + l_path_id.out + " and " + l_package.id.out)
+							end
+						end
+					elseif l_path_id /= Void then
+						if attached iron.database.package (l_path_id) as l_package then
+							p := l_package
+						else
+								-- Error
+							fd.report_error ("Package ["+ l_path_id +"] not found")
+							create p.make_empty
+							p.set_name (l_name)
+						end
+					else
+							-- Error
+						create p.make_empty
+						p.set_name (l_name)
+					end					
 				elseif l_path_id /= Void then
 					fd.report_error ("Missing package id from post!")
 					create p.make (l_path_id)

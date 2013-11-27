@@ -1,0 +1,2 @@
+name=kmp_matcher
+source=../library/text/regexp/kmp_matcher

@@ -27,6 +27,12 @@ feature {NONE} -- Implementation
 			Result := not attached {TYPE[detachable SPECIAL[detachable ANY]]} type.type and not attached {TYPE[detachable TUPLE]} type.type
 		end
 
+feature {PS_ABEL_EXPORT} -- Status report
+
+	is_mapping_to_value_type: BOOLEAN = False
+			-- Does `Current' map objects to a value type (i.e. STRING)?
+
+
 feature {PS_ABEL_EXPORT} -- Read functions
 
 	initialize (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)

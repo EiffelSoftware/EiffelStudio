@@ -54,7 +54,10 @@ feature {NONE} -- Utilities
 			Result.extend (True, ({POINTER}).type_id)
 		end
 
-feature {PS_ABEL_EXPORT} -- Contracts
+feature {PS_ABEL_EXPORT} -- Constants
+
+	value_type_item: STRING = "ps_value_item"
+			-- The fake attribute for value type objects.
 
 	enable_expensive_contracts: BOOLEAN = True
 			-- Defines if some very expensive contracts should be enabled as well.

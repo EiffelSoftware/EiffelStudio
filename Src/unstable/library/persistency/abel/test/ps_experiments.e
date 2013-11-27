@@ -13,6 +13,45 @@ inherit
 
 feature
 
+	experiment_reflector
+		local
+			factory: OBJECT_GRAPH_FACTORY
+
+			reflector: REFLECTED_REFERENCE_OBJECT
+			item_reflector: REFLECTED_REFERENCE_OBJECT
+
+			cell: CELL[E_DOUBLE_CELL[ANY, ANY]]
+			any: ANY
+		do
+			create factory
+			cell := factory.embedded_expanded
+
+			create reflector.make (cell)
+			any := reflector.expanded_field (1).object
+
+				-- This works
+			check attached {E_DOUBLE_CELL [ANY, ANY]} any as cell_item then
+				assert ("Equal objects", reflector.expanded_field (1).object = cell_item)
+
+					--or this:
+				item_reflector := reflector.expanded_field (1)
+				assert ("Equal objects", item_reflector.object = cell_item)
+			end
+
+				-- Fails when frozen
+			check attached any as cell_item then
+
+
+				assert ("Equal objects", reflector.expanded_field (1).object = cell_item)
+
+					--or this:
+				item_reflector := reflector.expanded_field (1)
+				assert ("Equal objects", item_reflector.object = cell_item)
+			end
+
+
+		end
+
 
 	experiment_expanded_types
 		local

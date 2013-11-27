@@ -42,6 +42,8 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			field_name: STRING
 			i: INTEGER
 
+			pos: INTEGER
+
 			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
@@ -118,16 +120,16 @@ feature {PS_ABEL_EXPORT} -- Read functions
 							check unknown_basic_type: False end
 						end
 
-					else -- NONE, POINTER, References and expanded userdefined attributes
+					else -- NONE, References and expanded userdefined attributes
 
 						-- Try to assign as much as possible
-						check expanded_not_implemented: field_type = reference_type end
+						--check expanded_not_implemented: field_type = reference_type end
 
 						if not field.type.is_equal ("NONE") then
 							dynamic_field_type := type_from_string (field.type)
 
 							if read_manager.is_processable (field.value, dynamic_field_type) then
-								if attached read_manager.processed_object (field.value, dynamic_field_type, object) as val then
+								if field_type = reference_type and then attached read_manager.processed_object (field.value, dynamic_field_type, object) as val then
 									reflector.set_reference_field (i, val)
 								end
 							else
@@ -153,7 +155,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 
-			trash: INTEGER
+			ref_item: INTEGER
 		do
 			index := object.index
 			across
@@ -164,20 +166,25 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				field := object.backend_object.attribute_value (reflector.field_name (field_idx.item))
 				dynamic_field_type := type_from_string (field.type)
 
-				reflector.set_reference_field (field_idx.item, read_manager.processed_object (field.value, dynamic_field_type, object))
-			end
+				inspect
+					reflector.field_type (field_idx.item)
+				when expanded_type then
 
+					ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+					read_manager.item (ref_item).set_object (reflector.expanded_field (field_idx.item))
+				when reference_type then
 
-			-- HASH_TABLE fix:
-			-- The internal_hash_code of STRING doesn't get stored , but we can recreate it easily
-			if attached {HASH_TABLE[detachable ANY, READABLE_STRING_GENERAL]} reflector.object as table then
-				across
-					table as cursor
-				loop
-					trash := cursor.key.hash_code
+					reflector.set_reference_field (field_idx.item, read_manager.processed_object (field.value, dynamic_field_type, object))
+
+					if reflector.is_copy_semantics_field (field_idx.item) then
+							-- Update the reflector of the referenced item!
+						ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+						read_manager.item (ref_item).set_object (reflector.copy_semantics_field (field_idx.item))
+					end
+				else
+					check implementation_error: False end
 				end
 			end
-
 		end
 
 feature {PS_ABEL_EXPORT} -- Write functions
@@ -185,50 +192,74 @@ feature {PS_ABEL_EXPORT} -- Write functions
 	initialize_backend_representation (object: PS_OBJECT_DATA)
 			-- Initialize all attributes or items in `object.backend_representation'
 		local
-			obj: PS_OBJECT_DATA
 			i, k: INTEGER
-			type: PS_TYPE_METADATA
 			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 
-			new_command: PS_BACKEND_OBJECT
-		do
-			obj := object--write_manager.objects[index]
-			check attached {PS_BACKEND_OBJECT} obj.backend_representation as cmd then
-				new_command := cmd
-			end
+			backend_object: PS_BACKEND_OBJECT
+			field_type: PS_TYPE_METADATA
 
-			check attached obj.type as t then
-				type := t
-			end
+			det_field: detachable ANY
+
+			found: BOOLEAN
+			is_expanded: BOOLEAN
+			ref_item: PS_OBJECT_DATA
+		do
+			backend_object := object.backend_object
 
 			from
 				i := 1
-				k := 1
 			until
-				i > obj.reflector.field_count
+				i > object.reflector.field_count
 			loop
-				if obj.reflector.field_type (i) = obj.reflector.reference_type and not obj.reflector.is_copy_semantics_field (i) then
-					-- Reference type
-					from
-						k := 1
-					until
-						k > obj.references.count or write_manager.item(obj.references[k]).reflector.object =  obj.reflector.field (i)
-					loop
-						k := k + 1
-					end
-					if k > obj.references.count then
-						tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
-					else
-						check attached write_manager.item(obj.references[k]).handler as handler then
-							tuple := handler.as_string_pair (write_manager.item (obj.references[k]))
-						end
-					end
-					new_command.add_attribute (obj.reflector.field_name (i), tuple.value, tuple.type)
+				fixme ("Try to avoid unnecessary copies")
+				if object.reflector.field_type (i) = object.reflector.expanded_type then
+					det_field := object.reflector.expanded_field (i).object
+					is_expanded := True
 				else
-					-- Value type
-					if attached obj.reflector.field (i) as field then
-						new_command.add_attribute (obj.reflector.field_name (i), basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).name)
+					det_field := object.reflector.field (i)
+					is_expanded := False
+				end
+
+				if attached det_field as field then
+					field_type := write_manager.metadata_factory.create_metadata_from_object (field)
+
+					if not basic_types.has (field_type.type.type_id) then
+							-- Reference type
+						from
+							k := 0
+							found := False
+						until
+							k >= object.references.count or found
+						loop
+							k := k + 1
+
+							fixme ("[
+								In theory the equality (=) operation should call `is_equal' on expanded objects.
+								In practice this doesn't work on expanded types created by {REFLECTED_OBJECT}.object.
+								Therefore we call the tilde (~) operator manually to ensure that `is_equal' is being
+								called on copy-semantics objects
+								]")
+
+
+							if is_expanded then
+								found :=  write_manager.item(object.references[k]).reflector.object ~ field
+							else
+								found :=  write_manager.item(object.references[k]).reflector.object = field
+							end
+						end
+
+						check reference_found: k <= object.references.count end
+
+						ref_item := write_manager.item (object.references[k])
+						tuple := ref_item.handler.as_string_pair (ref_item)
+						backend_object.add_attribute (object.reflector.field_name (i), tuple.value, tuple.type)
+					else
+							-- Value type
+						backend_object.add_attribute (object.reflector.field_name (i), basic_attribute_value(field), field_type.name)
 					end
+				else
+						-- Void reference
+					backend_object.add_attribute (object.reflector.field_name (i), "", create {IMMUTABLE_STRING_8}.make_from_string ("NONE"))
 				end
 				i := i + 1
 			end

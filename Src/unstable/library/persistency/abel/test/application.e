@@ -5,10 +5,14 @@ note
 	revision: "$Revision$"
 
 class
-	APPLICATION
+	QUICK_START
 
 inherit
 	PS_ABEL_EXPORT
+
+	INTERNAL
+
+	MEMORY
 
 create
 	make
@@ -29,34 +33,92 @@ feature {NONE} -- Initialization
 			sp_factory: SPECIAL_FACTORY
 			any: ANY
 			reflector: REFLECTED_REFERENCE_OBJECT
+
+--			special: SPECIAL [detachable ANY]
+--			special: detachable ANY
+			person: EXPANDED_PERSON
+			str: STRING
+
+			int: INTERNAL
 		do
---			create factory2
---			create sp_factory
---			any := factory2.nested_embedded_with_copysemantics
---			create reflector.make (any)
---			across
---				1 |..| reflector.field_count as idx
---			loop
---				print (reflector.field_type (idx.item))
---			end
---			print (any)
---			print (factory2.object_graph_cycle)
---			create factory
---			create data.make
---			create executor.make (factory.create_in_memory_repository)
---			executor.execute_insert (data.reference_cycle)
---			executor.execute_insert (data.array_of_persons)
---			executor.execute_insert (data.data_structures_1)
+			new_special
+--			create int
 
---			create query.make
---			executor.execute_query (query)
---			across query as cursor loop cursor.item.do_nothing end
+--			create special.make_filled (person, 4)
+			print (special.item (0).first_name)
+			--create special.make_empty (4)
+--			special := new_special_any_instance (({detachable SPECIAL[ANY]}).type_id, 2)
+--			special := int.new_instance_of (({detachable SPECIAL[EXPANDED_PERSON]}).type_id)
+--			fix_header (special)
+--			print ("header: " + header (special).out + "%N ")
 
---			create query2.make
---			executor.execute_query (query2)
---			across query2 as cursor loop cursor.item.do_nothing end
+--			print ("new: " + eo_new (special).out + "%N ")
+--			print ("spec: " + eo_spec (special).out + "%N ")
+--			print ("ref: " + eo_ref (special).out + "%N ")
+--			print ("comp: " + eo_comp (special).out + "%N ")
 
+			create int
+			create int
+
+			full_collect
+			full_coalesce
+
+--			str := special.tagged_out
+			print (special.item (0).first_name)
 
 		end
 
+	new_special
+		local
+			person: EXPANDED_PERSON
+		do
+			create special.make_filled (person, 4)
+		end
+
+	special: SPECIAL [EXPANDED_PERSON]
+
+
+	frozen fix_header (object: ANY)
+			-- Add the flags EO_SPEC (indicating a SPECIAL object)
+			-- and EO_COMP (indicating expanded types) to `object'.
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"HEADER(eif_access($object)) -> ov_flags |= (EO_SPEC | EO_COMP | EO_REF);"
+		end
+
+	frozen header (object: ANY): NATURAL_16
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"return (HEADER(eif_access($object)) -> ov_flags) ;"
+		end
+
+	frozen eo_new (object: ANY): NATURAL_16
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"return (HEADER(eif_access($object)) -> ov_flags) & EO_NEW;"
+		end
+
+	frozen eo_spec (object: ANY): NATURAL_16
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"return (HEADER(eif_access($object)) -> ov_flags) & EO_SPEC;"
+		end
+
+	frozen eo_comp (object: ANY): NATURAL_16
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"return (HEADER(eif_access($object)) -> ov_flags) & EO_COMP;"
+		end
+
+	frozen eo_ref (object: ANY): NATURAL_16
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"return (HEADER(eif_access($object)) -> ov_flags) & EO_REF;"
+		end
 end

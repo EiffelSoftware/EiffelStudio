@@ -54,6 +54,7 @@ feature {PS_ABEL_EXPORT} -- Identification
 			-- Generate an identifier for `an_object' and store it.
 		require
 			not_identified: not is_identified (an_object, transaction)
+			not_expanded: not an_object.generating_type.is_expanded
 		local
 			temp: WEAK_REFERENCE [ANY]
 			pair: PS_PAIR [WEAK_REFERENCE [ANY], INTEGER]
@@ -213,6 +214,13 @@ feature {PS_ABEL_EXPORT} -- Utilities
 	metadata_manager: PS_METADATA_FACTORY
 			-- A manager to generate metadata
 
+	new_id: INTEGER
+			-- Create a new identifier
+		do
+			last_id := last_id + 1
+			Result := last_id
+		end
+
 feature {NONE} -- Implementation
 
 	make
@@ -224,13 +232,6 @@ feature {NONE} -- Implementation
 			create registered_transactions.make
 			create global_set.make
 			create transaction_sets.make
-		end
-
-	new_id: INTEGER
-			-- Create a new identifier
-		do
-			last_id := last_id + 1
-			Result := last_id
 		end
 
 	last_id: INTEGER

@@ -100,6 +100,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 			create collection_database.make (1)
 			create plug_in_list.make
 			plug_in_list.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
+			max_primary := 0
 		end
 
 feature {PS_ABEL_EXPORT} -- Primary key generation

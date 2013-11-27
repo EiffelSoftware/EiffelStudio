@@ -165,11 +165,15 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			not_ignored: not object.is_ignored
 			not_value_type: not is_mapping_to_value_type
 		do
-			if not object.is_persistent then
-				write_manager.id_manager.identify (object.reflector.object, write_manager.transaction)
-			end
+			if not object.reflector.is_expanded then
+				if not object.is_persistent then
+					write_manager.id_manager.identify (object.reflector.object, write_manager.transaction)
+				end
 
-			object.set_identifier (write_manager.id_manager.identifier_wrapper (object.reflector.object, write_manager.transaction).object_identifier)
+				object.set_identifier (write_manager.id_manager.identifier_wrapper (object.reflector.object, write_manager.transaction).object_identifier)
+			else
+				object.set_identifier (write_manager.id_manager.new_id)
+			end
 		ensure
 			identifier_set: object.identifier > 0
 		end

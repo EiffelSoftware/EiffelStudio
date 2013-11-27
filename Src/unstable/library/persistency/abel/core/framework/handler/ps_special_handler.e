@@ -44,6 +44,8 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			managed: MANAGED_POINTER
 
 			item_type: INTEGER
+
+			new_expanded_special: ANY
 		do
 			index := object.index
 			-- Create object
@@ -105,23 +107,19 @@ feature {PS_ABEL_EXPORT} -- Read functions
 					create {SPECIAL [POINTER]} new_instance.make_empty (capacity)
 
 				else
-					check not_implemented: False end
-					create {SPECIAL [detachable ANY]} new_instance.make_empty (0)
-				end
+					fixme ("The fix_header is not enough... Some unrelated tests randomly crash (probably during GC) when this code is enabled.")
+					check disable: False end
+					new_expanded_special := internal_lib.new_instance_of (type.type.type_id)
+					fix_header (new_expanded_special)
+					print (header (new_expanded_special))
+					check attached {SPECIAL [detachable ANY]} new_expanded_special as spec then
+						new_instance := spec.resized_area (capacity)
+						print (header (new_instance))
+					end
 
---				fixme ("TODO: all other basic types")
---				if type.actual_generic_parameter (1).type.out.is_equal ("BOOLEAN") then
---					create {SPECIAL [BOOLEAN]} new_instance.make_empty (capacity)
---				elseif type.actual_generic_parameter (1).type.out.is_equal ("CHARACTER_8") then
---					create {SPECIAL [CHARACTER_8]} new_instance.make_empty (capacity)
---				elseif type.actual_generic_parameter (1).type.out.is_equal ("CHARACTER_32") then
---					create {SPECIAL [CHARACTER_32]} new_instance.make_empty (capacity)
---				elseif type.actual_generic_parameter (1).type.out.is_equal ("INTEGER_32")  then
---					create {SPECIAL [INTEGER]} new_instance.make_empty (capacity)
---				else
 --					check not_implemented: False end
 --					create {SPECIAL [detachable ANY]} new_instance.make_empty (0)
---				end
+				end
 			end
 
 			create reflector.make (new_instance)
@@ -171,12 +169,24 @@ feature {PS_ABEL_EXPORT} -- Read functions
 					else
 						read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
 						object.uninitialized_attributes.extend (i)
-						new_instance.extend (Void)
+						if not new_instance.generating_type.generic_parameter_type (1).is_expanded then
+							new_instance.extend (Void)
+						end
 					end
 				else
 					new_instance.extend (Void)
 				end
 				i := i + 1
+			end
+
+				--HASH_TABLE fix
+				-- The internal_hash_code of STRING doesn't get stored , but we can recreate it easily
+			if attached {SPECIAL[READABLE_STRING_GENERAL]} new_instance as inst then
+				across
+					inst as cursor
+				loop
+					i := cursor.item.hash_code
+				end
 			end
 		end
 
@@ -187,6 +197,10 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			reflector: REFLECTED_OBJECT
 			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
+
+			ref: INTEGER
+
+			processed: detachable ANY
 		do
 			index := object.index
 			across
@@ -196,12 +210,91 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				dynamic_field_type := type_from_string (field.type)
 
 				check attached {SPECIAL[detachable ANY]} object.reflector.object as special then
-					special.put (read_manager.processed_object (field.value, dynamic_field_type, object), field_idx.item-1)
+					processed := read_manager.processed_object (field.value, dynamic_field_type, object)
+
+						-- Update reflector for user-defined expanded objects or copy-semantics
+					if special.generating_type.generic_parameter_type(1).is_expanded then
+
+						special.extend (processed)
+
+						ref := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+						read_manager.item (ref).set_object (create {PS_REFLECTED_SPECIAL_EXPANDED}.make_special_expanded (special, field_idx.item - 1))
+
+					else
+
+						special.put (processed, field_idx.item-1)
+
+						if object.reflector.is_special_copy_semantics_item (field_idx.item - 1) then
+							ref := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+							read_manager.item (ref).set_object (object.reflector.special_copy_semantics_item(field_idx.item - 1))
+						end
+					end
 				end
 			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Write functions
+
+--	initialize_backend_representation (object: PS_OBJECT_DATA)
+--			-- Initialize all attributes or items in `object.backend_representation'
+--		local
+--			obj: PS_OBJECT_DATA
+--			i, k: INTEGER
+--			type: PS_TYPE_METADATA
+--			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+
+--			special: SPECIAL[detachable ANY]
+
+--			new_command: PS_BACKEND_COLLECTION
+--		do
+--			obj := object -- write_manager.objects[index]
+--			check attached {PS_BACKEND_COLLECTION} obj.backend_representation as cmd then
+--				new_command := cmd
+--			end
+
+--			check attached obj.type as t then
+--				type := t
+--			end
+
+--			check attached {SPECIAL[detachable ANY]} obj.reflector.object as sp then
+--				special := sp
+--			end
+
+--			from
+--				i := 1
+--				k := 1
+--			until
+--				i > special.count
+--			loop
+--				if obj.reflector.is_special_of_reference and not obj.reflector.is_special_copy_semantics_item (i-1) then
+--					-- Reference type
+--					from
+--						k := 1
+--					until
+--						k > obj.references.count or write_manager.item(obj.references[k]).reflector.object =  special.item (i-1)
+--					loop
+--						k := k + 1
+--					end
+
+--					if k > obj.references.count then
+--						tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
+--					else
+--						check attached write_manager.item(obj.references[k]).handler as handler then
+--							tuple := handler.as_string_pair (write_manager.item (obj.references[k]))
+--						end
+--					end
+--					new_command.collection_items.extend ([tuple.value, tuple.type])
+--				else
+--					-- Value type
+--					if attached special.item (i-1) as field then
+--						new_command.collection_items.extend ([ basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).name])
+--					end
+--				end
+--				i := i + 1
+--			end
+
+--			new_command.add_information ("capacity", special.capacity.out)
+--		end
 
 	initialize_backend_representation (object: PS_OBJECT_DATA)
 			-- Initialize all attributes or items in `object.backend_representation'
@@ -209,59 +302,87 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			obj: PS_OBJECT_DATA
 			i, k: INTEGER
 			type: PS_TYPE_METADATA
+
+			new_command: PS_BACKEND_OBJECT
+
+			collection: PS_BACKEND_COLLECTION
+			item_type: TYPE[detachable ANY]
+
+			field_type: PS_TYPE_METADATA
+
+			det_field: detachable ANY
+
+			special: SPECIAL [detachable ANY]
+
 			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
 
-			special: SPECIAL[detachable ANY]
+			used_refs: LINKED_LIST[INTEGER]
 
-			new_command: PS_BACKEND_COLLECTION
 		do
-			obj := object -- write_manager.objects[index]
-			check attached {PS_BACKEND_COLLECTION} obj.backend_representation as cmd then
-				new_command := cmd
+			collection := object.backend_collection
+			create used_refs.make
+
+			check attached {SPECIAL [detachable ANY]} object.reflector.object as spec then
+				special := spec
 			end
 
-			check attached obj.type as t then
-				type := t
-			end
-
-			check attached {SPECIAL[detachable ANY]} obj.reflector.object as sp then
-				special := sp
-			end
-
-			from
-				i := 1
-				k := 1
-			until
-				i > special.count
+			across
+				0 |..| (special.count - 1) as idx
 			loop
-				if obj.reflector.is_special_of_reference and not obj.reflector.is_special_copy_semantics_item (i-1) then
-					-- Reference type
-					from
-						k := 1
-					until
-						k > obj.references.count or write_manager.item(obj.references[k]).reflector.object =  special.item (i-1)
-					loop
-						k := k + 1
-					end
+				if attached special [idx.item] as item then
+					item_type := item.generating_type
 
-					if k > obj.references.count then
-						tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
+						-- Basic types
+					if basic_types.has (item_type.type_id) then
+						collection.collection_items.extend ([ basic_attribute_value(item), item_type.name])
+						-- Reference and expanded
 					else
-						check attached write_manager.item(obj.references[k]).handler as handler then
-							tuple := handler.as_string_pair (write_manager.item (obj.references[k]))
+						from
+							k := 1
+						until
+							k > object.references.count or (
+--							write_manager.item (object.references[k]).referers.has (object.index) and
+							not used_refs.has (k) and
+							write_manager.item(object.references[k]).reflector.object = special.item (idx.item))
+						loop
+							k := k + 1
 						end
+
+						if k > object.references.count then
+							tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
+						else
+							check attached write_manager.item(object.references[k]).handler as handler then
+								tuple := handler.as_string_pair (write_manager.item (object.references[k]))
+								used_refs.extend (k)
+							end
+						end
+						collection.collection_items.extend ([tuple.value, tuple.type])
 					end
-					new_command.collection_items.extend ([tuple.value, tuple.type])
 				else
-					-- Value type
-					if attached special.item (i-1) as field then
-						new_command.collection_items.extend ([ basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).name])
-					end
+					collection.collection_items.extend (["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")])
 				end
-				i := i + 1
 			end
 
-			new_command.add_information ("capacity", special.capacity.out)
+			collection.add_information ("capacity", special.capacity.out)
 		end
 
+
+feature {NONE} -- Special: Object header fix
+
+
+	frozen fix_header (object: ANY)
+			-- Add the flags EO_SPEC (indicating a SPECIAL object)
+			-- and EO_COMP (indicating expanded types) to `object'.
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"HEADER(eif_access($object)) -> ov_flags |= (EO_SPEC | EO_COMP);"
+		end
+
+	frozen header (object: ANY): NATURAL_16
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"return HEADER(eif_access($object)) -> ov_flags;"
+		end
 end

@@ -108,9 +108,6 @@ feature {PS_TEST_PROVIDER}
 			object: ANY
 			context: PS_TRANSACTION
 			query: PS_QUERY [ANY]
-			first_count: INTEGER
-			second_count: INTEGER
-
 			cursor: ITERATION_CURSOR[ANY]
 		do
 			object := an_object
@@ -119,11 +116,10 @@ feature {PS_TEST_PROVIDER}
 			context := repository.new_transaction
 			context.insert (object)
 
-			assert ("Object is not persistent", context.is_persistent (object))
-			assert ("Object is not root", context.is_root (object))
-
---			context.commit
---			context.start
+			if not object.generating_type.is_expanded then
+				assert ("Object is not persistent", context.is_persistent (object))
+				assert ("Object is not root", context.is_root (object))
+			end
 
 			create query.make
 			query.set_type (object.generating_type)
@@ -133,16 +129,39 @@ feature {PS_TEST_PROVIDER}
 			cursor := query.new_cursor
 			assert ("Query is empty", not cursor.after)
 			assert ("Insert-Retrieve cycle failed!", cursor.item.is_deep_equal (object))
-			assert ("Retrieved object is not root", context.is_root (cursor.item))
 
---			object := cursor.item
+			if not object.generating_type.is_expanded then
+
+				assert ("Retrieved object is not root", context.is_root (cursor.item))
+			end
 
 			cursor.forth
 			assert ("More than one result.", cursor.after)
 
-			if attached update_operation then
+			if not object.generating_type.is_expanded then
 
-				update_operation.call ([object])
+				if attached update_operation then
+
+					update_operation.call ([object])
+
+					query.close
+					create query.make
+					query.set_type (object.generating_type)
+					query.set_is_non_root_ignored (True)
+
+					context.execute_query (query)
+					cursor := query.new_cursor
+
+					cursor := query.new_cursor
+					assert ("Query is empty", not cursor.after)
+					assert ("Update-Retrieve cycle failed!", cursor.item.is_deep_equal (object))
+
+					cursor.forth
+					assert ("More than one result.", cursor.after)
+				end
+
+				context.unmark_root (object)
+				assert ("Object is still root", not context.is_root (object))
 
 				query.close
 				create query.make
@@ -152,47 +171,30 @@ feature {PS_TEST_PROVIDER}
 				context.execute_query (query)
 				cursor := query.new_cursor
 
+				assert ("Query is not empty", cursor.after)
+
+				context.mark_root (object)
+				assert ("Object not declared as root", context.is_root (object))
+
+				query.close
+				create query.make
+				query.set_type (object.generating_type)
+				query.set_is_non_root_ignored (True)
+
+				context.execute_query (query)
 				cursor := query.new_cursor
+
 				assert ("Query is empty", not cursor.after)
-				assert ("Update-Retrieve cycle failed!", cursor.item.is_deep_equal (object))
+				assert ("Object has changed!", cursor.item.is_deep_equal (object))
 
 				cursor.forth
 				assert ("More than one result.", cursor.after)
+
 			end
 
-			context.unmark_root (object)
-			assert ("Object is still root", not context.is_root (object))
-
-			query.close
-			create query.make
-			query.set_type (object.generating_type)
-			query.set_is_non_root_ignored (True)
-
-			context.execute_query (query)
-			cursor := query.new_cursor
-
-			assert ("Query is not empty", cursor.after)
-
-			context.mark_root (object)
-			assert ("Object not declared as root", context.is_root (object))
-
-			query.close
-			create query.make
-			query.set_type (object.generating_type)
-			query.set_is_non_root_ignored (True)
-
-			context.execute_query (query)
-			cursor := query.new_cursor
-
-			assert ("Query is empty", not cursor.after)
-			assert ("Object has changed!", cursor.item.is_deep_equal (object))
-
-			cursor.forth
-			assert ("More than one result.", cursor.after)
 
 			query.close
 			context.commit
 		end
-
 
 end

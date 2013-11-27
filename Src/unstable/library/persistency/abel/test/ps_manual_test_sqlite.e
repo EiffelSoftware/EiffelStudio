@@ -139,6 +139,12 @@ feature -- Tests
 		end
 
 
+	sqlite_tricky_direct_special_copysemantics
+			-- Test storing special objects full of copy-semantics referenes
+		do
+			tricky_tests.test_direct_special_copysemantics
+		end
+
 feature {NONE} -- Initialization
 
 	make_repository: PS_REPOSITORY

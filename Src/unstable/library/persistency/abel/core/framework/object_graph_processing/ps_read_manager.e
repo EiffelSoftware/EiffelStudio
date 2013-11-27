@@ -45,6 +45,14 @@ feature {NONE} -- Initialization
 
 feature
 
+	cache_lookup (primary_key: INTEGER; type: PS_TYPE_METADATA):INTEGER
+		do
+			if attached cache[type] as inner then
+				Result := inner[primary_key]
+			end
+		end
+
+
 	execute (q: PS_QUERY[ANY]; a_transaction: PS_INTERNAL_TRANSACTION; a_max_level: INTEGER)
 		local
 			type: PS_TYPE_METADATA
@@ -170,7 +178,8 @@ feature
 				new_obj := next_query_result (True)
 				if
 					query.criterion.is_satisfied_by (new_obj.reflector.object)
-					and (query.is_non_root_ignored implies transaction.root_flags[new_obj.identifier])
+					and (query.is_non_root_ignored
+					implies (transaction.root_flags[new_obj.identifier] or else (attached new_obj.backend_representation as br and then br.is_root)))
 				then
 					query.result_cursor.set_entry (new_obj.reflector.object)
 				else
@@ -284,8 +293,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			-- can be processed right now. The result is true when
 			-- `type' is a value type or when the object has been retrieved before.
 		do
-			fixme ("Don't include userdefined expanded types!")
-			Result := type.type.is_expanded
+			Result := (type.type.is_expanded and then basic_types.has (type.type.type_id))
 				or else type.type.name.ends_with ("NONE")
 				or else (across value_type_handlers as cursor some cursor.item.can_handle_type (type) end)
 				or else (attached cache[type] as second_lvl
@@ -317,7 +325,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 
 			if type.type.name.ends_with ("NONE") then
 				Result := Void
-			elseif type.type.is_expanded then
+			elseif type.type.is_expanded and then basic_types.has (type.type.type_id) then
 				if type.type.name.is_equal ("INTEGER_8") then
 					Result := value.to_integer_8
 				elseif type.type.name.is_equal ("INTEGER_16") then
@@ -418,6 +426,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			end
 		end
 
+
 feature {PS_ABEL_EXPORT} -- Handler support: Batch Retrieval
 
 
@@ -468,7 +477,7 @@ feature {NONE} -- Implementation
 				to_process as idx_cursor
 			loop
 				i := idx_cursor.item
-				if not item(i).is_ignored then
+				if not item(i).is_ignored and not item(i).type.type.is_expanded then
 					-- Identify the object with the id_manager
 					id_manager.identify (item(i).reflector.object, transaction)
 
@@ -485,12 +494,13 @@ feature {NONE} -- Implementation
 				end
 			end
 
+			-- Update the references from the last iteration
+			do_all_in_set (agent {PS_HANDLER}.finish_initialize (?, Current), to_finalize)
+
 			-- Do some basic initialization and search for objects
 			-- which need to be built in the next iteration
 			do_all_in_set (agent {PS_HANDLER}.initialize (?, Current), to_process)
 
-			-- Update the references from the last iteration
-			do_all_in_set (agent {PS_HANDLER}.finish_initialize (?, Current), to_finalize)
 		end
 
 	add_object (object: PS_OBJECT_DATA)

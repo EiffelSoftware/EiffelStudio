@@ -145,6 +145,8 @@ feature
 
 	memory_tricky_direct_special_complex
 			-- Test storing special objects with copy-semantics references and expanded items.
+		note
+			test: "execution/isolated"
 		do
 			tricky_tests.test_direct_special_complex
 		end
@@ -166,6 +168,12 @@ feature
 			-- Test storing wrapped special objects with copy-semantics references and expanded items.
 		do
 			tricky_tests.test_wrapped_special_complex
+		end
+
+	memory_tricky_direct_special_copysemantics
+			-- Test storing special objects full of copy-semantics referenes
+		do
+			tricky_tests.test_direct_special_copysemantics
 		end
 
 end

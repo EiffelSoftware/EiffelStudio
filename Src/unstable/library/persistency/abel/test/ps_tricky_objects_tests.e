@@ -117,6 +117,16 @@ feature {PS_REPOSITORY_TESTS} -- SPECIAL
 			objects.do_all (agent test_read_write_cycle_with_root (?, Void))
 		end
 
+	test_direct_special_copysemantics
+			-- Test storing special objects full of copy-semantics referenes
+		local
+			objects: ARRAYED_LIST[ANY]
+		do
+			create objects.make (2)
+			objects.extend (factory.special_factory.special_any_with_integer)
+			objects.extend (factory.special_factory.special_any_with_expanded)
+			objects.do_all (agent test_read_write_cycle_with_root (?, Void))
+		end
 
 	test_wrapped_special_basic
 			-- Test storing wrapped special objects of a basic type.

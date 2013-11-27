@@ -28,7 +28,7 @@ fi
 
 if [ -d "${T_SOURCE_DIR}" ]; then
 	cd "${T_SOURCE_DIR}"
-	tar cjfp "${T_ARCHIVE_DIR}/${T_ARCHIVE_NAME}" *
+	tar cjfp "${T_ARCHIVE_DIR}/${T_ARCHIVE_NAME}" --exclude-vcs *
 fi
 chdir "${T_HERE}"
 if [ -f "${T_ARCHIVE_DIR}/${T_ARCHIVE_NAME}" ]; then

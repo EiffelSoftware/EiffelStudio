@@ -1020,7 +1020,7 @@ feature {NONE} -- Implementation: maps
 			f: RAW_FILE
 			utf: UTF_CONVERTER
 			s: STRING_8
-			l_id: detachable READABLE_STRING_8
+			l_id: detachable IMMUTABLE_STRING_8
 		do
 			create f.make_with_path (packages_version_index_map_path (v))
 			if f.exists and f.is_access_readable then
@@ -1042,7 +1042,7 @@ feature {NONE} -- Implementation: maps
 							end
 						else
 							s.right_adjust
-							l_id := s
+							create l_id.make_from_string (s)
 						end
 						f.read_line_thread_aware
 					end

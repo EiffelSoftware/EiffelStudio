@@ -1,0 +1,5 @@
+name=curl
+description=Eiffel libcurl wrapper
+source=../library/cURL
+maps=/com.eiffel/library/cURL
+maps=/com.eiffel/library/network/curl

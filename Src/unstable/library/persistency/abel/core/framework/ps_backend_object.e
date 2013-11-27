@@ -69,7 +69,8 @@ feature {PS_ABEL_EXPORT} -- Status report
 	is_complete: BOOLEAN
 			-- Does `Current' have all attributes to build the object?
 		do
-			Result := metadata.attributes.for_all (agent has_attribute)
+			Result := (attributes.count = 1 and attributes.first = value_type_item)
+			 or else metadata.attributes.for_all (agent has_attribute)
 		end
 
 	is_consistent: BOOLEAN

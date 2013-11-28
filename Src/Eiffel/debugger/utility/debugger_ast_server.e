@@ -158,7 +158,7 @@ feature -- Report
 			l_name_id: INTEGER
 			l_type_as: TYPE_AS
 			l_cl_type_a: CL_TYPE_A
-			l_solved_type_a: TYPE_A
+			l_solved_type_a: detachable TYPE_A
 			li: LOCAL_INFO
 			l_feat_tbl: FEATURE_TABLE
 			l_dbg_type_checker: like dbg_type_checker
@@ -236,11 +236,12 @@ feature -- Report
 					loop
 						l_ot_loc := l_object_test_locals.item
 						if l_ot_loc /= Void then
-							l_type_as := l_ot_loc.type
-							if l_type_as /= Void then
-								l_solved_type_a := l_dbg_type_checker.type_a_from_type_as (l_type_as)
+							if attached l_ot_loc.type as t then
+								l_solved_type_a := l_dbg_type_checker.type_a_from_type_as (t)
+							elseif attached l_ot_loc.expression as e then
+								l_solved_type_a := l_dbg_type_checker.type_a_from_expr_as (e)
 							else
-								l_solved_type_a := l_dbg_type_checker.type_a_from_expr_as (l_ot_loc.expression)
+								l_solved_type_a := Void
 							end
 							l_id := l_ot_loc.name_id
 							create li --.make (l_id.name_id)
@@ -341,7 +342,7 @@ feature {NONE} -- Implementation
 			-- current index for FIFO `breakable_feature_info_storage'
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

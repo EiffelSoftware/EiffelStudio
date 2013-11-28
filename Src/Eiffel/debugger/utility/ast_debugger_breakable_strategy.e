@@ -239,12 +239,7 @@ feature {NONE} -- Context
 
 	context_data: TUPLE [leaf: like leaf_as_list; c: CLASS_C; f: FEATURE_I; sc: CLASS_C; sf: FEATURE_I]
 		do
-			create Result
-			Result.leaf := leaf_as_list
-			Result.c := current_class
-			Result.f := current_feature_i
-			Result.sc := current_source_class
-			Result.sf := current_source_feature_i
+			Result := [leaf_as_list, current_class, current_feature_i, current_source_class, current_source_feature_i]
 		ensure
 			Result_attached: Result /= Void
 		end
@@ -432,7 +427,7 @@ feature {NONE} -- Iteration
 
 	process_iteration_as (l_as: ITERATION_AS)
 		do
-			register_object_test_local (l_as.identifier, Void,  l_as.cursor_expression)
+			register_object_test_local (l_as.identifier, Void, Void)
 			Precursor (l_as)
 		end
 
@@ -701,7 +696,7 @@ feature {NONE} -- Implementation: Iteration
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

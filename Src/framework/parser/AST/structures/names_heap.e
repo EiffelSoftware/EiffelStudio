@@ -409,6 +409,7 @@ feature {NONE} -- Implementation: access
 			put ("is_default_pointer") check found_item = is_default_pointer_name_id end
 			put ("is_character_8") check found_item = is_character_8_name_id end
 			put ("()") check found_item = parentheses_symbol_id end
+			put ("new_cursor") check found_item = new_cursor_name_id end
 		end
 
 invariant

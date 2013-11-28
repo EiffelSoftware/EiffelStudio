@@ -229,6 +229,7 @@ feature -- Constants
 	is_default_pointer_name_id: INTEGER = 216
 	is_character_8_name_id: INTEGER = 217
 	parentheses_symbol_id: INTEGER = 218
+	new_cursor_name_id: INTEGER = 219
 
 feature -- Classification
 

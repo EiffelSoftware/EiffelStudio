@@ -7387,22 +7387,19 @@ feature {NONE} -- Visitor
 			-- <Precursor>
 			-- Set `last_type' to the type on which features "start", "after" and "forth" are to be called.
 		local
-			l_needs_byte_node: BOOLEAN
 			local_id: ID_AS
 			local_name_id: INTEGER
+			unattached_local_type: TYPE_A
 			local_type: TYPE_A
 			local_info: LOCAL_INFO
 			iteration_cursor_type: TYPE_A
 			initialization_code: BYTE_LIST [INSTR_B]
 			assign_b: ASSIGN_B
+			access_expr_b: ACCESS_EXPR_B
+			new_cursor_b: NESTED_B
 		do
-			l_needs_byte_node := is_byte_node_enabled
-
-				-- Type check iteration expression avoiding code generation to get type information
-			is_byte_node_enabled := False
+				-- Type check iteration expression.
 			l_as.expression.process (Current)
-			is_byte_node_enabled := l_needs_byte_node
-
 				-- Type check loop local name.
 			local_id := l_as.identifier
 			local_name_id := local_id.name_id
@@ -7426,9 +7423,9 @@ feature {NONE} -- Visitor
 				error_handler.insert_error (create {VOIT2}.make (context, local_id))
 			end
 
-			if last_type /= Void then
+			if attached last_type as iteration_type then
 					-- Calculate the type of an iteration local.
-				context.find_iteration_classes
+				context.find_iteration_classes (context.written_class)
 				if not attached context.iterable_class as i then
 						-- Suitable class ITERABLE is not found.
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERABLE [G]", local_id))
@@ -7439,36 +7436,59 @@ feature {NONE} -- Visitor
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERATION_CURSOR [G]", local_id))
 						-- Clear `last_type' to make sure it is not set when there is an error.
 					reset_types
-				elseif not last_type.base_class.conform_to (i) then
-						-- Iteration expression type does not conform to ITERABLE.
-					error_handler.insert_error (create {VOIT1}.make (context, last_type, i.actual_type, local_id))
+				elseif not attached i.feature_of_name_id (names_heap.new_cursor_name_id) as n then
+						-- Class "ITERABLE" has no feature "new_cursor".
+					error_handler.insert_error (create {LOOP_ITERATION_NO_FEATURE_ERROR}.make (context, names_heap.item (names_heap.new_cursor_name_id), i, local_id))
+						-- Clear `last_type' to make sure it is not set when there is an error.
+					reset_types
+				elseif n.argument_count > 0 or else n.type.is_void then
+						-- Feature "new_cursor" has incorrect signature.
+					error_handler.insert_error (create {LOOP_ITERATION_FEATURE_SIGNATURE_ERROR}.make (context, n, i, local_id))
 						-- Clear `last_type' to make sure it is not set when there is an error.
 					reset_types
 				else
-						-- Save `last_type' for evaluation of `iteration_cursor_type'.
-					iteration_cursor_type := last_type
-						-- Type check cursor creation code.
-					l_as.cursor_expression.process (Current)
-					local_type := last_type
-					if local_type /= Void then
+						-- Lookup for a feature using general feature finder to deal with formal generics correctly.
+					feature_finder.find_by_routine_id (n.rout_id_set.first, iteration_type, context.current_class)
+					if not attached feature_finder.found_feature as f or else not attached feature_finder.found_site as iteration_base_type then
+							-- Iteration expression type does not conform to ITERABLE.
+						error_handler.insert_error (create {VOIT1}.make (context, iteration_type, i.actual_type, local_id))
+							-- Clear `last_type' to make sure it is not set when there is an error.
+						reset_types
+					else
+							-- Record dependency on cursor creation.
+						if not is_inherited then
+							context.supplier_ids.extend_depend_unit_with_level (iteration_base_type.class_id, f, depend_unit_level)
+						end
+							-- Generate cursor creation code.
+						if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as e then
+							create new_cursor_b
+							if attached {ACCESS_B} e as a then
+								a.set_parent (new_cursor_b)
+								new_cursor_b.set_target (a)
+							else
+								create access_expr_b
+								access_expr_b.set_expr (e)
+								access_expr_b.set_parent (new_cursor_b)
+								new_cursor_b.set_target (access_expr_b)
+							end
+							new_cursor_b.set_message (f.access_for_feature (iteration_type, Void, True))
+							new_cursor_b.message.set_parent (new_cursor_b)
+						end
 							-- Use an attached variant of a cursor type if required.
-						local_type := local_type.as_attached_in (context.current_class)
+						unattached_local_type := f.type.actual_type.instantiated_in (iteration_base_type)
+						local_type := unattached_local_type.as_attached_in (context.current_class)
 						if not local_type.base_class.conform_to (c) then
 								-- Type of a cursor does not conform to ITERATION_CURSOR.
 							error_handler.insert_error
 								(create {LOOP_ITERATION_NOT_ITERATION_CURSOR_ERROR}.make (context, last_type, local_id))
-								-- Clear `iteration_cursor_type' to make sure `last_type' is not set when there is an error.
-							iteration_cursor_type := Void
-						elseif not last_type.conform_to (context.current_class, local_type) then
+						elseif not unattached_local_type.conform_to (context.current_class, local_type) then
 								-- Type of a cursor is not attached.
 							error_handler.insert_error
-								(create {LOOP_ITERATION_NOT_ATTACHED_ERROR}.make (context, last_type, local_id))
-								-- Clear `iteration_cursor_type' to make sure `last_type' is not set when there is an error.
-							iteration_cursor_type := Void
+								(create {LOOP_ITERATION_NOT_ATTACHED_ERROR}.make (context, unattached_local_type, local_id))
 						else
 								-- Evaluate a type of a cursor.
 							iteration_cursor_type := c.actual_type.evaluated_type_in_descendant
-								(i, iteration_cursor_type.base_class, Void).instantiated_in (iteration_cursor_type)
+								(i, iteration_base_type.base_class, Void).instantiated_in (iteration_base_type)
 						end
 						if current_feature.written_in = context.current_class.class_id then
 							instantiator.dispatch (local_type, context.current_class)
@@ -7485,21 +7505,19 @@ feature {NONE} -- Visitor
 							context.add_object_test_local (local_info, local_id)
 							local_info.set_is_used (True)
 						end
-						if is_byte_node_enabled then
+						if attached new_cursor_b then
 							create initialization_code.make (2)
-							if attached {EXPR_B} last_byte_node as e then
-								create assign_b
-								assign_b.set_source (e)
-								assign_b.set_target (
-									create {OBJECT_TEST_LOCAL_B}.make (
-										local_info.position,
-										current_feature.body_index,
-										local_type
-									)
+							create assign_b
+							assign_b.set_source (new_cursor_b)
+							assign_b.set_target (
+								create {OBJECT_TEST_LOCAL_B}.make (
+									local_info.position,
+									current_feature.body_index,
+									local_type
 								)
-								assign_b.set_line_number (l_as.start_location.line)
-								initialization_code.extend (assign_b)
-							end
+							)
+							assign_b.set_line_number (l_as.start_location.line)
+							initialization_code.extend (assign_b)
 						end
 							-- Make iteration variable visible to the loop.
 						context.add_object_test_instruction_scope (local_id)
@@ -7508,12 +7526,12 @@ feature {NONE} -- Visitor
 								-- Process AST tree that initializes the iteration.
 							local_info.set_type (iteration_cursor_type)
 							l_as.initialization.process (Current)
-						end
-						local_info.set_type (local_type)
-						if is_byte_node_enabled then
-							if attached {INSTR_B} last_byte_node as b then
+							local_info.set_type (local_type)
+							if attached initialization_code and then attached {INSTR_B} last_byte_node as b then
 								initialization_code.extend (b)
 							end
+						end
+						if is_byte_node_enabled then
 							last_byte_node := initialization_code
 						end
 							-- Set `last_type' to the type that is used to call
@@ -8346,6 +8364,12 @@ feature {NONE} -- Feature lookup
 				end
 				last_alias_error := vwbr
 			end
+		end
+
+	feature_finder: TYPE_A_FEATURE_FINDER
+			-- A facility to find a feature.
+		once
+			create Result
 		end
 
 feature {NONE} -- Predefined types

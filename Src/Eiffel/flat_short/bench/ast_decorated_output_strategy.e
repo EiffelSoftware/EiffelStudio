@@ -4556,7 +4556,9 @@ feature {NONE} -- Implementation: helpers
 				l_text_formatter_decorator.put_space
 			end
 			l_text_formatter_decorator.new_expression
+			l_text_formatter_decorator.indent
 			l_as.expr.process (Current)
+			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.commit
 		end
 
@@ -5129,8 +5131,17 @@ feature {NONE} -- Implementation: helpers
 				exdent.call (Void)
 			end
 				-- Compute type of the cursor and associate cursor name with this type.
-			if attached last_type and then attached expr_type (l_as.cursor_expression) as t then
-				object_test_locals_for_current_feature.force (t.as_attached_in (current_class), l_as.identifier.name_32)
+			if attached last_type then
+				context.find_iteration_classes (source_class)
+				if
+					attached last_type.base_class as b and then
+					attached context.iterable_class as i and then
+					attached i.feature_of_name_id (names_heap.new_cursor_name_id) as n and then
+					attached b.feature_of_rout_id (n.rout_id_set.first) as f and then
+					attached f.type.instantiation_in (last_type, last_type.base_class.class_id) as t
+				then
+					object_test_locals_for_current_feature.force (t.as_attached_in (current_class), l_as.identifier.name_32)
+				end
 			end
 		end
 

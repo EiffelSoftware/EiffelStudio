@@ -870,28 +870,28 @@ feature -- Setting
 
 feature -- Iteration classes
 
-	find_iteration_classes
-			-- Look for iteration classes and initialize `iterable_class' and `iteration_cursor'
+	find_iteration_classes (c: CLASS_C)
+			-- Look for iteration classes for class `c' and initialize `iterable_class' and `iteration_cursor'
 			-- if possible or report error otherwise.
 		do
 			if iterable_class = Void and then iteration_cursor_class = Void then
 				if
-					attached universe.class_named ("ITERABLE", current_class.group) as i and then
+					attached universe.class_named ("ITERABLE", c.group) as i and then
 					i.is_compiled and then
-					attached i.compiled_class as c and then
-					attached c.generics as g and then
+					attached i.compiled_class as x and then
+					attached x.generics as g and then
 					g.count = 1
 				then
-					iterable_class := c
+					iterable_class := x
 				end
 				if
-					attached universe.class_named ("ITERATION_CURSOR", current_class.group) as i and then
+					attached universe.class_named ("ITERATION_CURSOR", c.group) as i and then
 					i.is_compiled and then
-					attached i.compiled_class as c and then
-					attached c.generics as g and then
+					attached i.compiled_class as x and then
+					attached x.generics as g and then
 					g.count = 1
 				then
-					iteration_cursor_class := c
+					iteration_cursor_class := x
 				end
 			end
 		end

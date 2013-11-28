@@ -34,16 +34,6 @@ feature {NONE} -- Initialization
 				as_keyword_index := b.index
 			end
 			identifier := i
-				-- Build cursor creation expression in the form
-				--    `expression'.new_cursor
-			create {EXPR_CALL_AS} cursor_expression.initialize (
-				create {NESTED_EXPR_AS}.initialize (
-					e,
-					create_access_feat_as ("new_cursor", i),
-					Void,
-					Void,
-					Void
-			))
 				-- Build initialization code in the form
 				--    `identifier'.start
 			create {INSTR_CALL_AS} initialization.initialize (
@@ -147,11 +137,6 @@ feature -- Attributes
 
 feature -- AST used during code generation
 
-	cursor_expression: EXPR_AS
-			-- Expression to obtain cursor for iteration
-			-- (Generated automatically to allow for subsequent checks in inherited code
-			-- that refers to the original class and routine IDs.)
-
 	initialization: INSTRUCTION_AS
 			-- Instruction to initialize iteration
 			-- (Generated automatically to allow for subsequent checks in inherited code
@@ -196,13 +181,12 @@ feature -- Comparison
 invariant
 	expression_attached: expression /= Void
 	identifier_attached: identifier /= Void
-	cursor_expression_attached: cursor_expression /= Void
 	initialization_attached: initialization /= Void
 	exit_condition_attached: exit_condition /= Void
 	advance_attached: advance /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

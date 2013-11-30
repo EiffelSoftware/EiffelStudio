@@ -49,7 +49,7 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 			feature_finder.find (t.chain [i], q, c)
 			check attached feature_finder.found_feature as f1 then
 				f := f1
-				make_explicit (q.create_info, q, feature_finder.found_site.class_id, f)
+				make_explicit (q.create_info, q, feature_finder.found_site, f)
 				from
 					n := t.chain.upper
 				until
@@ -60,7 +60,7 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 					feature_finder.find (t.chain [i], q, c)
 					check attached feature_finder.found_feature as fn then
 						f := fn
-						make_explicit (twin, q, feature_finder.found_site.class_id, f)
+						make_explicit (twin, q, feature_finder.found_site, f)
 					end
 				end
 			end
@@ -68,49 +68,74 @@ feature {QUALIFIED_ANCHORED_TYPE_A} -- Initialization
 
 feature {CREATE_QUALIFIED} -- Creation
 
-	make_explicit (c: CREATE_INFO; q: TYPE_A; i: like {CLASS_C}.class_id; f: FEATURE_I)
+	make_explicit (c: CREATE_INFO; q: TYPE_A; b: CL_TYPE_A; f: FEATURE_I)
+			-- Create qualified anchored type descritor with the specified qualifier `c' of type `q' with base type `b' and feature `f'.
 		require
 			c_attached: attached c
 			q_attached: attached q
-			i_valid: attached system.class_of_id (i)
+			b_attached: attached b
 			f_attached: attached f
 		do
 			qualifier_creation := c
 			qualifier := q
-			qualifier_class_id := i
+			qualifier_base_type := b
 			feature_id := f.feature_id
 			routine_id := f.rout_id_set.first
+		ensure
+			qualifier_creation_set: qualifier_creation = c
+			qualifier_set: qualifier = q
+			qualifier_base_type_set: qualifier_base_type = b
+			feature_id_set: feature_id = f.feature_id
+			routine_id_set: routine_id = f.rout_id_set.first
 		end
 
 feature {CREATE_QUALIFIED} -- Access
 
 	qualifier_creation: CREATE_INFO
-			-- Creation information of `qualifier'
+			-- Creation information of `qualifier'.
 
 	qualifier: TYPE_A
-			-- First part of the qualified type
+			-- First part of the qualified type.
 
-	qualifier_class_id: INTEGER
-			-- Class corresponding to a qualifier type
+	qualifier_base_type: CL_TYPE_A
+			-- Base class type of `qualifier'.
 
 	feature_id: INTEGER
-			-- Routine ID of the second part of the qualified type
+			-- Routine ID of the second part of the qualified type.
 
 	routine_id: INTEGER
-			-- Routine ID of the second part of the qualified type
+			-- Routine ID of the second part of the qualified type.
 
 feature {NONE} -- Convenience
 
-	qualifier_class: CLASS_C
-			-- Class, associated with qualifier
+	qualifier_class_type: CLASS_TYPE
+			-- Class type of `qualifier' in current context.
+		local
+			c: CL_TYPE_A
+			q: TYPE_A
 		do
-			Result := system.class_of_id (qualifier_class_id)
+			c := Context.context_class_type.type
+			q := context.real_type (qualifier)
+			if q.has_associated_class_type (c) then
+				Result := q.associated_class_type (c)
+			else
+				q := context.real_type (qualifier_base_type)
+				check q.has_associated_class_type (c) then
+					Result := q.associated_class_type (c)
+				end
+			end
 		end
 
 	qualifier_static_type_id: INTEGER
 			-- Static type ID of `qualifier' class type.
 		do
-			Result := context.real_type (qualifier).static_type_id (Context.context_class_type.type)
+			Result := qualifier_class_type.static_type_id
+		end
+
+	is_precompiled: BOOLEAN
+			-- Is code generated in precompilation mode?
+		do
+			Result := Compilation_modes.is_precompiling or else qualifier_base_type.base_class.is_precompiled
 		end
 
 feature -- Update
@@ -120,13 +145,14 @@ feature -- Update
 		local
 			c: CREATE_INFO
 			q: TYPE_A
-			a: CLASS_C
 		do
 			c := qualifier_creation.updated_info
 			q := context.descendant_type (qualifier)
-			if c /= qualifier_creation or else q /= qualifier and then not qualifier.same_as (q) then
-				a := context.real_type (q).base_class
-				create {CREATE_QUALIFIED} Result.make_explicit (q.create_info, q, a.class_id, a.feature_of_rout_id (routine_id))
+			if
+				(c /= qualifier_creation or else q /= qualifier and then not qualifier.same_as (q)) and then
+				attached {CL_TYPE_A} context.real_type (qualifier_base_type) as b
+			then
+				create {CREATE_QUALIFIED} Result.make_explicit (q.create_info, q, b, b.base_class.feature_of_rout_id (routine_id))
 			else
 				Result := Current
 			end
@@ -135,7 +161,7 @@ feature -- Update
 feature -- C code generation
 
 	generate
-			-- Generate creation type
+			-- Generate creation type.
 		local
 			buffer: GENERATION_BUFFER
 		do
@@ -207,10 +233,7 @@ feature -- C code generation
 					buffer.put_character (')')
 				end
 			else
-				if
-					Compilation_modes.is_precompiling or
-					qualifier_class.is_precompiled
-				then
+				if is_precompiled then
 					buffer.put_string ("RTWPCTT(")
 					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
@@ -261,7 +284,7 @@ feature -- IL code generation
 			qualifier_creation.generate_il
 			il_generator.create_type
 
-			target_type := context.real_type (qualifier_class.anchored_features.item
+			target_type := context.real_type (qualifier_base_type.base_class.anchored_features.item
 				(routine_id).type)
 			if target_type.is_expanded then
 					-- Load value of a value type object.
@@ -278,7 +301,7 @@ feature -- IL code generation
 		do
 				-- Create qualifier object.
 			qualifier_creation.generate_il
-			c := context.real_type (qualifier).associated_class_type (context.context_class_type.type).type
+			c := qualifier_class_type.type
 				-- Generate call to feature that will give the type we want to create.
 			il_generator.generate_type_feature_call_on_type (c.base_class.anchored_features.item (routine_id), c)
 		end
@@ -290,7 +313,7 @@ feature -- Byte code generation
 		local
 			rout_info: ROUT_INFO
 		do
-			if qualifier_class.is_precompiled then
+			if is_precompiled then
 				ba.append (Bc_pqlike)
 				qualifier_creation.make_byte_code (ba)
 				ba.append_type_id (qualifier_static_type_id)
@@ -316,8 +339,6 @@ feature -- Genericity
 				table := Eiffel_table.poly_table (routine_id)
 				Result := table.has_one_type and then
 					table.first.type.instantiated_in (qualifier).deep_actual_type.is_explicit
-			else
-				Result := False
 			end
 		end
 
@@ -334,6 +355,7 @@ feature -- Genericity
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)
+			-- <Precursor>
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
@@ -384,10 +406,7 @@ feature -- Genericity
 					buffer.put_character (',')
 				end
 			else
-				if
-					Compilation_modes.is_precompiling or
-					qualifier_class.is_precompiled
-				then
+				if is_precompiled then
 					buffer.put_string ("RTWPCTT(")
 					buffer.put_static_type_id (qualifier_static_type_id)
 					buffer.put_string ({C_CONST}.comma_space)
@@ -410,6 +429,7 @@ feature -- Genericity
 
 	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode : BOOLEAN; idx_cnt : COUNTER)
+			-- <Precursor>
 		local
 			dummy : INTEGER
 			table: POLY_TABLE [ENTRY]
@@ -452,6 +472,7 @@ feature -- Genericity
 
 	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL)
+			-- <Precursor>
 		local
 			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
@@ -495,10 +516,11 @@ feature -- Genericity
 		end
 
 	make_type_byte_code (ba : BYTE_ARRAY)
+			-- <Precursor>
 		local
 			rout_info: ROUT_INFO
 		do
-			if qualifier_class.is_precompiled then
+			if is_precompiled then
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_pfeature_type)
 				qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
 				ba.append_type_id (qualifier_static_type_id)
@@ -519,8 +541,8 @@ feature -- Genericity
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
-				if table.has_one_type then
-					Result ?= table.first.type.instantiated_in (qualifier).deep_actual_type
+				if table.has_one_type and then attached {CL_TYPE_A} table.first.type.instantiated_in (qualifier).deep_actual_type as r then
+					Result := r
 				end
 			end
 		end
@@ -534,12 +556,13 @@ feature -- Genericity
 feature {NONE} -- Lookup
 
 	feature_finder: TYPE_A_FEATURE_FINDER
+			-- A facility to find a feature.
 		once
 			create Result
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

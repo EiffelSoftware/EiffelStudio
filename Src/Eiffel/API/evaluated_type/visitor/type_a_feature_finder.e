@@ -137,6 +137,7 @@ feature -- Search
 			attached_c: attached c
 			valid_t: is_type_valid_for_class (t, c)
 		do
+			has_multiple := False
 			found_feature := Void
 			found_site := Void
 			context_class := c
@@ -170,6 +171,7 @@ feature -- Search
 			attached_c: attached c
 			valid_t: is_type_valid_for_class (t, c)
 		do
+			has_multiple := False
 			found_feature := Void
 			found_site := Void
 			context_class := c
@@ -253,9 +255,13 @@ feature {TYPE_A} -- Visitor
 				loop
 					find_in_renamed_type_a.call ([c.item])
 					if attached found_feature as f then
-							-- Record found data for future use.
-						last_feature := found_feature
-						last_site := found_site
+						if attached last_feature as h and then (h.code_id /= f.code_id or else not h.rout_id_set.intersect (f.rout_id_set)) then
+							has_multiple := True
+						else
+								-- Record found data for future use.
+							last_feature := f
+							last_site := found_site
+						end
 					end
 				end
 				found_feature := last_feature

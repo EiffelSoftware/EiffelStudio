@@ -69,16 +69,18 @@ feature -- Request processing
 			vn: STRING
 
 			e: EXECUTION_ENVIRONMENT
+			enc: URL_ENCODER
 		do
 			l_request_uri := a_handler.uri
 			l_headers_map := a_handler.request_header_map
 			create e
-			if attached e.starting_environment_variables as vars then
+			if attached e.starting_environment as vars then
+				create enc
 				create env.make_equal (vars.count)
 				across
 					vars as c
 				loop
-					env.force (c.item.to_string_8, c.key)
+					env.force (enc.encoded_string (c.item), enc.encoded_string (c.key))
 				end
 			else
 				create env.make (0)

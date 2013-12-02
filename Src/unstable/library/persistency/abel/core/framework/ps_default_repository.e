@@ -25,7 +25,7 @@ feature -- Access.
 			-- Define the number of objects to be retrieved in one batch for query operations.
 			-- Set to `infinite_batch_size' to retrieve all objects at once (and disable lazy loading).
 		do
-			Result := backend.lazy_loading_batch_size
+			Result := backend.batch_retrieval_size
 		end
 
 feature -- Element change
@@ -33,7 +33,7 @@ feature -- Element change
 	set_batch_retrieval_size (size: INTEGER)
 			-- Set `batch_retrieval_size' to `size'.
 		do
-			backend.set_lazy_loading_batch_size (size)
+			backend.set_batch_retrieval_size (size)
 		end
 
 feature -- Disposal
@@ -51,10 +51,13 @@ feature {PS_ABEL_EXPORT} -- Object query
 		do
 			id_manager.register_transaction (transaction)
 			initialize_query (query, transaction)
---			attach (read_manager_cache[query.backend_identifier]).execute (query, transaction, default_object_graph.query_depth)
-			attach (read_manager_cache[query.backend_identifier]).execute (query, transaction, query.object_initialization_depth)
+			check attached query.read_manager as rm then
+				rm.execute (query, transaction, query.object_initialization_depth)
+			end
+--			attach (read_manager_cache[query.backend_identifier]).execute (query, transaction, query.object_initialization_depth)
 		rescue
-			query.reset
+--			query.reset
+			query.close
 			default_transactional_rescue (transaction)
 		end
 
@@ -63,10 +66,15 @@ feature {PS_ABEL_EXPORT} -- Object query
 			-- In case of an error it is written into the transaction connected to the query.
 		do
 			id_manager.register_transaction (query.internal_transaction)
-			attach (read_manager_cache[query.backend_identifier]).next_entry (query)
+			check attached query.read_manager as rm then
+				rm.next_entry (query)
+			end
+
+			--attach (read_manager_cache[query.backend_identifier]).next_entry (query)
 		rescue
 			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
-			query.reset
+--			query.reset
+			query.close
 			default_transactional_rescue (query.internal_transaction)
 		end
 
@@ -77,8 +85,11 @@ feature {PS_ABEL_EXPORT} -- Object query
 		do
 			id_manager.register_transaction (transaction)
 			initialize_query (tuple_query, transaction)
---			attach (read_manager_cache[tuple_query.backend_identifier]).execute_tuple (tuple_query, transaction, default_object_graph.query_depth)
-			attach (read_manager_cache[tuple_query.backend_identifier]).execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
+			check attached tuple_query.read_manager as rm then
+				rm.execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
+			end
+
+--			attach (read_manager_cache[tuple_query.backend_identifier]).execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
 		rescue
 			tuple_query.reset
 			default_transactional_rescue (transaction)
@@ -90,7 +101,11 @@ feature {PS_ABEL_EXPORT} -- Object query
 			exception: PS_INTERNAL_ERROR
 		do
 			id_manager.register_transaction (tuple_query.internal_transaction)
-			attach (read_manager_cache[tuple_query.backend_identifier]).next_tuple_entry (tuple_query)
+--			attach (read_manager_cache[tuple_query.backend_identifier]).next_tuple_entry (tuple_query)
+
+			check attached tuple_query.read_manager as rm then
+				rm.next_tuple_entry (tuple_query)
+			end
 		rescue
 			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
 			tuple_query.reset
@@ -202,7 +217,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 
 			create id_manager.make
 			create mapper.make
-			create read_manager_cache.make (100)
+--			create read_manager_cache.make (100)
 
 			create write_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
 
@@ -239,7 +254,7 @@ feature {NONE} -- Initialization
 			all_handlers := handler_list
 			transaction_isolation := transaction_settings
 
-			create read_manager_cache.make (100)
+--			create read_manager_cache.make (100)
 			create transaction_isolation_level
 			set_transaction_isolation_level (transaction_isolation_level.repeatable_read)
 
@@ -258,8 +273,8 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	write_manager: PS_WRITE_MANAGER
 			-- The write manager.
 
-	read_manager_cache: HASH_TABLE[PS_READ_MANAGER, INTEGER]
-			-- The read managers, as associated to queries.
+--	read_manager_cache: HASH_TABLE[PS_READ_MANAGER, INTEGER]
+--			-- The read managers, as associated to queries.
 
 
 	all_handlers: LINKED_LIST[PS_HANDLER]
@@ -273,22 +288,23 @@ feature {NONE} -- Implementation
 		local
 			new_read_manager: PS_READ_MANAGER
 		do
-			query.set_identifier (new_query_identifier)
+--			query.set_identifier (new_query_identifier)
 			create new_read_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
 			all_handlers.do_all (agent new_read_manager.add_handler)
-			read_manager_cache.extend (new_read_manager, query.backend_identifier)
+--			read_manager_cache.extend (new_read_manager, query.backend_identifier)
+			query.prepare_execution (transaction, new_read_manager)
 		end
 
 
-	new_query_identifier: INTEGER
-			-- Get a new identifier for a query.
-		do
-			Result := next_query_identifier
-			next_query_identifier := next_query_identifier + 1
-		end
+--	new_query_identifier: INTEGER
+--			-- Get a new identifier for a query.
+--		do
+--			Result := next_query_identifier
+--			next_query_identifier := next_query_identifier + 1
+--		end
 
-	next_query_identifier: INTEGER
-			-- The next identifier number
+--	next_query_identifier: INTEGER
+--			-- The next identifier number
 
 end
 

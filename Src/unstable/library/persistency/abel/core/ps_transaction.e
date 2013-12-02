@@ -157,9 +157,9 @@ feature -- Data retrieval
 			in_transaction: is_active
 			no_error: not has_error
 		do
-			repository.internal_execute_query (query, attach(transaction))
 			internal_active_queries.extend (query)
-			query.set_transaction_context (Current)
+			query.set_transaction (Current)
+			repository.internal_execute_query (query, attach(transaction))
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
@@ -174,9 +174,9 @@ feature -- Data retrieval
 			in_transaction: is_active
 			no_error: not has_error
 		do
-			repository.internal_execute_tuple_query (query, attach(transaction))
 			internal_active_queries.extend (query)
-			query.set_transaction_context (Current)
+			query.set_transaction (Current)
+			repository.internal_execute_tuple_query (query, attach(transaction))
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed

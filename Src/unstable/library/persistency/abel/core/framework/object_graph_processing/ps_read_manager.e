@@ -64,7 +64,7 @@ feature
 			cache.wipe_out
 			internal_transaction := a_transaction
 
-			q.register_as_executed (transaction)
+--			q.register_as_executed (transaction)
 
 			type := metadata_factory.create_metadata_from_type(q.generic_type)
 
@@ -107,7 +107,7 @@ feature
 			cache.wipe_out
 			internal_transaction := a_transaction
 
-			q.register_as_executed (transaction)
+--			q.register_as_executed (transaction)
 
 			type := metadata_factory.create_metadata_from_type(q.generic_type)
 

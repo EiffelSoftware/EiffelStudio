@@ -372,7 +372,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			--executor.execute_query (query)
 			transaction.execute_query (query)
 
-			assert ("no result", not query.result_cursor.after)
+			assert ("no result", not query.new_cursor.after)
 			across query as c loop
 				assert ("not void", attached c.item.special)
 				assert ("equal", c.item.is_deep_equal (a) and c.item.is_deep_equal (b))

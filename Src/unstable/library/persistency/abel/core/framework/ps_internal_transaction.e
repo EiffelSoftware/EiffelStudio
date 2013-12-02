@@ -11,11 +11,11 @@ inherit
 
 	PS_ABEL_EXPORT
 
-create
-	make
+--create
+--	make
 
 create {PS_ABEL_EXPORT}
-	make_readonly
+	make, make_readonly
 
 feature {NONE} -- Initialization
 

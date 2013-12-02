@@ -35,7 +35,7 @@ feature -- Cursor movement
 	forth
 			-- Move to next position.
 		do
-			if internal_result_cursor.after and backend.lazy_loading_batch_size > 0 then
+			if internal_result_cursor.after and backend.batch_retrieval_size > 0 then
 				next_batch
 			elseif internal_result_cursor.after then
 				after := True
@@ -119,9 +119,9 @@ feature {NONE} -- Implementation
 
 				sql_string.append (backend.sql_strings.Order_by_appendix)
 
-				if backend.lazy_loading_batch_size > 0 then
-					sql_string.append (" LIMIT " + batch_index.out + "," + (backend.lazy_loading_batch_size * attribute_keys.count).out)
-					batch_index := batch_index + (backend.lazy_loading_batch_size * attribute_keys.count)
+				if backend.batch_retrieval_size > 0 then
+					sql_string.append (" LIMIT " + batch_index.out + "," + (backend.batch_retrieval_size * attribute_keys.count).out)
+					batch_index := batch_index + (backend.batch_retrieval_size * attribute_keys.count)
 				end
 
 				if not transaction.is_readonly then

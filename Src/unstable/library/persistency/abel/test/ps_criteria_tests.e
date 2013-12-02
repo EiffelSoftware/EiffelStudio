@@ -81,7 +81,7 @@ feature {NONE} -- Implementation: Agent criteria tests
 			create query.make
 			query.set_criterion (factory [[agent p_dao.items_greater_than(?, 7)]])
 			transaction.execute_query (query)
-			assert ("The result list is not empty, but it should be.", query.result_cursor.after)
+			assert ("The result list is not empty, but it should be.", query.stable_cursor.after)
 				-- How to establish the difference between the empty result list because there is no data matching
 				-- and the empty list because the retrieval did not work correctly?
 				-- You know the answer by looking at the last_error attribute.
@@ -98,10 +98,10 @@ feature {NONE} -- Implementation: Agent criteria tests
 			query.set_criterion (factory [[agent p_dao.items_greater_than(?, 3)]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to own 5 items but owns " + p.items_owned.out + " instead.", p.items_owned = 5)
 			query.close
 		end
@@ -116,10 +116,10 @@ feature {NONE} -- Implementation: Agent criteria tests
 			query.set_criterion (factory [[agent p_dao.items_equal_to(?, 5)]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to own 5 items but owns " + p.items_owned.out + " instead.", p.items_owned = 5)
 			assert ("The person in result is supposed to be called Berno but is called " + p.first_name + " instead.", p.first_name.is_equal ("Berno"))
 			query.close
@@ -135,10 +135,10 @@ feature {NONE} -- Implementation: Agent criteria tests
 			query.set_criterion (factory [[agent p_dao.first_name_matches(?, "Crispo")]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to be called Crispo but is called " + p.first_name + " instead.", p.first_name.is_equal ("Crispo"))
 			query.close
 		end
@@ -153,10 +153,10 @@ feature {NONE} -- Implementation: Agent criteria tests
 			query.set_criterion (factory [[agent p_dao.items_less_than(?, 3)]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to own 2 items but owns " + p.items_owned.out + " instead.", p.items_owned = 2)
 			query.close
 		end
@@ -171,10 +171,10 @@ feature {NONE} -- Implementation: Agent criteria tests
 			query.set_criterion (factory [[agent p_dao.first_name_contains(?, "ris")]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to be called Crispo but is called " + p.first_name + " instead.", p.first_name.is_equal ("Crispo"))
 			query.close
 		end
@@ -189,10 +189,10 @@ feature {NONE} -- Implementation: Agent criteria tests
 			query.set_criterion (factory [[agent p_dao.items_greater_than(?, 3)]] and factory [[agent p_dao.first_name_matches(?, "Berno")]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to be called Berno but is called " + p.first_name + " instead.", p.first_name.is_equal ("Berno"))
 			assert ("The person in result is supposed to own 5 items but owns " + p.items_owned.out + " instead.", p.items_owned = 5)
 			query.close
@@ -208,10 +208,10 @@ feature {NONE} -- Implementation: Agent criteria tests
 			query.set_criterion (factory [[agent p_dao.items_less_than(?, 3)]] or factory [[agent p_dao.items_greater_than(?, 5)]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to be called Dumbo but is called " + p.first_name + " instead.", p.first_name.is_equal ("Dumbo"))
 			assert ("The person in result is supposed to own 2 items but owns " + p.items_owned.out + " instead.", p.items_owned = 2)
 			query.close
@@ -231,10 +231,10 @@ feature {NONE} -- Implementation: Predefined criteria tests
 			query.set_criterion (factory [["items_owned", factory.greater, 3]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to own 5 items but owns " + p.items_owned.out + " instead.", p.items_owned = 5)
 			query.close
 		end
@@ -250,10 +250,10 @@ feature {NONE} -- Implementation: Predefined criteria tests
 			query.set_criterion (factory [["items_owned", factory.equals, 5]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to own 5 items but owns " + p.items_owned.out + " instead.", p.items_owned = 5)
 			query.close
 		end
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation: Predefined criteria tests
 			create query.make
 			query.set_criterion (factory [["first_name", factory.like_string, "*lb*"]] and factory [["last_name", factory.like_string, "it*ssi"]])
 			transaction.execute_query (query)
-			assert ("The result list is not empty, but it should be.", query.result_cursor.after)
+			assert ("The result list is not empty, but it should be.", query.stable_cursor.after)
 			query.close
 		end
 
@@ -279,10 +279,10 @@ feature {NONE} -- Implementation: Predefined criteria tests
 			create query.make
 			query.set_criterion (factory [["first_name", factory.like_string, "*lb*"]] and factory [["last_name", factory.like_string, "*?ssi"]])
 			transaction.execute_query (query)
-			assert ("The result list is empty", not query.result_cursor.after)
-			p := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than one item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than one item", query.stable_cursor.after)
 			assert ("The person in result is supposed to own 3 items but owns " + p.items_owned.out + " instead.", p.items_owned = 3)
 			query.close
 		end
@@ -300,19 +300,19 @@ feature {NONE} -- Implementation: Predefined criteria tests
 			create query.make
 			query.set_criterion (factory [["last_name", factory.like_string, "*i"]])
 			transaction.execute_query (query)
-			assert ("The result list is empty", not query.result_cursor.after)
-			p1 := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list only has one item, but it should have 4", not query.result_cursor.after)
-			p2 := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list only has two items, but it should have 4", not query.result_cursor.after)
-			p3 := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list only has three items, but it should have 4", not query.result_cursor.after)
-			p4 := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than four items", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p1 := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list only has one item, but it should have 4", not query.stable_cursor.after)
+			p2 := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list only has two items, but it should have 4", not query.stable_cursor.after)
+			p3 := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list only has three items, but it should have 4", not query.stable_cursor.after)
+			p4 := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than four items", query.stable_cursor.after)
 			sum := p1.items_owned + p2.items_owned + p3.items_owned + p4.items_owned
 			assert ("The person in result is supposed to own 13 items but owns " + sum.out + " instead.", sum = 13)
 			query.close
@@ -330,12 +330,12 @@ feature {NONE} -- Implementation: Predefined criteria tests
 			query.set_criterion (factory [["items_owned", ">", 2]] and factory [["items_owned", factory.less, 5]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p1 := query.result_cursor.item
-			query.result_cursor.forth
-			p2 := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than two item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p1 := query.stable_cursor.item
+			query.stable_cursor.forth
+			p2 := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than two item", query.stable_cursor.after)
 			assert ("The sum of the items owned by the retrieved persons is supposed to be 6 items but is " + (p1.items_owned + p2.items_owned).out + " instead.", p1.items_owned + p2.items_owned = 6)
 			query.close
 		end
@@ -352,12 +352,12 @@ feature {NONE} -- Implementation: Predefined criteria tests
 			query.set_criterion (factory [["items_owned", ">", 3]] or factory [["items_owned", factory.less, 3]])
 			transaction.execute_query (query)
 
-			assert ("The result list is empty", not query.result_cursor.after)
-			p1 := query.result_cursor.item
-			query.result_cursor.forth
-			p2 := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than two item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p1 := query.stable_cursor.item
+			query.stable_cursor.forth
+			p2 := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than two item", query.stable_cursor.after)
 			assert ("The sum of the items owned by the retrieved persons is supposed to be 7 items but is " + (p1.items_owned + p2.items_owned).out + " instead.", p1.items_owned + p2.items_owned = 7)
 			query.close
 		end
@@ -375,12 +375,12 @@ feature {NONE} -- Implementation: Mixed criteria tests
 			query.set_criterion (factory [["items_owned", factory.greater, 3]] or factory [["items_owned", factory.less, 3]] and factory [[agent p_dao.items_equal_to(?, 2)]])
 			transaction.execute_query (query)
 				--assert ("The result list has " + query.matched.count.out + " items instead of 2.", query.matched.count = 2)
-			assert ("The result list is empty", not query.result_cursor.after)
-			p1 := query.result_cursor.item
-			query.result_cursor.forth
-			p2 := query.result_cursor.item
-			query.result_cursor.forth
-			assert ("The result list has more than two item", query.result_cursor.after)
+			assert ("The result list is empty", not query.stable_cursor.after)
+			p1 := query.stable_cursor.item
+			query.stable_cursor.forth
+			p2 := query.stable_cursor.item
+			query.stable_cursor.forth
+			assert ("The result list has more than two item", query.stable_cursor.after)
 			assert ("The sum of the items owned by the retrieved persons is supposed to be 7 items but is " + (p1.items_owned + p2.items_owned).out + " instead.", p1.items_owned + p2.items_owned = 7)
 			query.close
 		end

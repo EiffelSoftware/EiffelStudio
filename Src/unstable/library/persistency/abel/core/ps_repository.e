@@ -377,10 +377,10 @@ feature {PS_ABEL_EXPORT} -- Implementation
 
 feature -- Constants
 
-	default_retry_count: INTEGER = 1
+	Default_retry_count: INTEGER = 1
 			-- The default number of retries for implicit transactions.
 
-	infinite_batch_size: INTEGER = -1
+	Infinite_batch_size: INTEGER = -1
 			-- The special value for an infinite batch size (i.e. to effectively disable lazy loading).
 
 invariant

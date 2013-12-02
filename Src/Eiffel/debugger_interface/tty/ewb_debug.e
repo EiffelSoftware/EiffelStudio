@@ -231,7 +231,11 @@ feature {NONE} -- Implementation
 			end
 			ctlr := debugger_manager.controller
 			create prof.make
-			prof.set_arguments (param_args)
+			if attached param_args as l_args then
+				prof.set_arguments (l_args)
+			else
+				prof.set_arguments ("")
+			end
 			prof.set_working_directory (wdir)
 			prof.set_environment_variables (param_env_variables)
 			debugger_manager.set_execution_ignoring_breakpoints (ign_bp)
@@ -240,7 +244,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

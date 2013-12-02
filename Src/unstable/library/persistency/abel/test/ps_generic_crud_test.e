@@ -124,7 +124,7 @@ feature {NONE}
 			repo_access.execute_query (query)
 --			executor.execute_query (query)
 
-			assert ("The result is empty", not query.result_cursor.after)
+			assert ("The result is empty", not query.new_cursor.after)
 				-- collect results - there may be many if an_object references other objects of type G
 			create ref_list.make
 			across

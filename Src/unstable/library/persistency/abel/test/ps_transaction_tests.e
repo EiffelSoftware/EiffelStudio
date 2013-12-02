@@ -31,14 +31,14 @@ feature {PS_REPOSITORY_TESTS}
 							-- The next step may abort in lock-based systems
 						tx2.execute_query (q2)
 
-						q2.result_cursor.item.add_item
-						tx2.update (q2.result_cursor.item)
+						q2.stable_cursor.item.add_item
+						tx2.update (q2.stable_cursor.item)
 						q2.close
 						tx2.commit
 
 
-						q1.result_cursor.item.add_item
-						tx1.update (q1.result_cursor.item)
+						q1.stable_cursor.item.add_item
+						tx1.update (q1.stable_cursor.item)
 						q1.close
 						tx1.commit
 
@@ -61,15 +61,15 @@ feature {PS_REPOSITORY_TESTS}
 							--> T2 either reads an old value, or fails.
 
 						tx1.execute_query (q1)
-						q1.result_cursor.item.add_item
-						tx1.update (q1.result_cursor.item)
+						q1.stable_cursor.item.add_item
+						tx1.update (q1.stable_cursor.item)
 						q1.close
 
 							-- The next step may abort in lock-based systems
 						tx2.execute_query (q2)
 
 							-- In Snapshot Isolation, T2 has to read an old value.
-						assert ("A dirty read has happened", q2.result_cursor.item.items_owned = 0)
+						assert ("A dirty read has happened", q2.stable_cursor.item.items_owned = 0)
 
 						tx1.rollback
 						q2.close
@@ -96,8 +96,8 @@ feature {PS_REPOSITORY_TESTS}
 							-- The next step may abort in lock-based systems
 						tx2.execute_query (q2)
 
-						q2.result_cursor.item.add_item
-						tx2.update (q2.result_cursor.item)
+						q2.stable_cursor.item.add_item
+						tx2.update (q2.stable_cursor.item)
 						q2.close
 						tx2.commit
 
@@ -129,14 +129,14 @@ feature {PS_REPOSITORY_TESTS}
 			transaction.insert (some_person)
 			transaction.execute_query (q1)
 
-			assert ("Person not inserted", not q1.result_cursor.after)
-			retrieved_person := q1.result_cursor.item
+			assert ("Person not inserted", not q1.stable_cursor.after)
+			retrieved_person := q1.stable_cursor.item
 
 			q1.close
 			transaction.rollback
 
 			repository.execute_query (q2)
-			assert ("Result not empty", q2.result_cursor.after)
+			assert ("Result not empty", q2.stable_cursor.after)
 
 			transaction.prepare
 			assert ("Person not properly removed", not transaction.is_persistent (some_person) and not transaction.is_persistent (retrieved_person))
@@ -169,19 +169,19 @@ feature {PS_REPOSITORY_TESTS}
 
 			transaction.execute_query (q1)
 
-			q1.result_cursor.item.add_item
-			transaction.update (q1.result_cursor.item)
+			q1.stable_cursor.item.add_item
+			transaction.update (q1.stable_cursor.item)
 
 			transaction.execute_query (q2)
 
-			assert ("Not updated correctly", q2.result_cursor.item.is_deep_equal (q1.result_cursor.item))
+			assert ("Not updated correctly", q2.stable_cursor.item.is_deep_equal (q1.stable_cursor.item))
 
 			q1.close
 			q2.reset
 			transaction.rollback
 
 			repository.execute_query (q2)
-			assert ("Update not rolled back", q2.result_cursor.item.is_deep_equal (some_person))
+			assert ("Update not rolled back", q2.stable_cursor.item.is_deep_equal (some_person))
 			q2.close
 			repository.clean_db_for_testing
 		end
@@ -203,12 +203,12 @@ feature {PS_REPOSITORY_TESTS}
 
 --			executor.execute_delete_within_transaction (some_person, t1)
 --			executor.execute_query_within_transaction (q1, t1)
---			assert ("Not deleted correctly", q1.result_cursor.after)
+--			assert ("Not deleted correctly", q1.stable_cursor.after)
 
 --			t1.rollback
 
 --			executor.execute_query (q2)
---			assert ("Item not present in database", not q2.result_cursor.after)
+--			assert ("Item not present in database", not q2.stable_cursor.after)
 --			assert ("Object not known any more", executor.is_persistent_within_transaction (some_person, executor.new_transaction))
 --			repository.clean_db_for_testing
 		end

@@ -101,6 +101,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 			create plug_in_list.make
 			plug_in_list.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 			max_primary := 0
+			batch_retrieval_size := {PS_REPOSITORY}.Infinite_batch_size
 		end
 
 feature {PS_ABEL_EXPORT} -- Primary key generation

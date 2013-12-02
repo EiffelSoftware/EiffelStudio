@@ -43,7 +43,7 @@ feature
 
 			transaction.execute_tuple_query (query)
 
-			assert ("Query result is empty", not query.result_cursor.after)
+			assert ("Query result is empty", not query.stable_cursor.after)
 
 			across query as q
 			loop
@@ -89,10 +89,10 @@ feature
 
 			transaction.execute_tuple_query (query)
 
-			assert ("Result is empty", not query.result_cursor.after)
-			assert ("Tuple type is wrong", attached {TUPLE[STRING, STRING, INTEGER]} query.result_cursor.item)
+			assert ("Result is empty", not query.stable_cursor.after)
+			assert ("Tuple type is wrong", attached {TUPLE[STRING, STRING, INTEGER]} query.stable_cursor.item)
 
-			check attached {TUPLE[STRING, STRING, INTEGER]} query.result_cursor.item as res then
+			check attached {TUPLE[STRING, STRING, INTEGER]} query.stable_cursor.item as res then
 
 				assert ("Data is wrong",
 					attach (res[1]).is_equal (test_data.people.first.first_name)
@@ -101,8 +101,8 @@ feature
 					)
 			end
 
-			query.result_cursor.forth
-			assert ("Too many items", query.result_cursor.after)
+			query.stable_cursor.forth
+			assert ("Too many items", query.stable_cursor.after)
 			query.close
 			transaction.commit
 		end
@@ -129,16 +129,16 @@ feature
 
 			transaction.execute_tuple_query (query)
 
-			assert ("Result is empty", not query.result_cursor.after)
-			assert ("Tuple type is wrong", attached {TUPLE[STRING]} query.result_cursor.item
-						and not attached {TUPLE[STRING, STRING]} query.result_cursor.item)
+			assert ("Result is empty", not query.stable_cursor.after)
+			assert ("Tuple type is wrong", attached {TUPLE[STRING]} query.stable_cursor.item
+						and not attached {TUPLE[STRING, STRING]} query.stable_cursor.item)
 
-			check attached {TUPLE[STRING]} query.result_cursor.item as res then
+			check attached {TUPLE[STRING]} query.stable_cursor.item as res then
 				assert ("Data is wrong", attach (res[1]).is_equal (test_data.people.first.last_name))
 			end
 
-			query.result_cursor.forth
-			assert ("Too many items", query.result_cursor.after)
+			query.stable_cursor.forth
+			assert ("Too many items", query.stable_cursor.after)
 		end
 
 	test_query_criteria_not_in_projection
@@ -162,16 +162,16 @@ feature
 
 			transaction.execute_tuple_query (query)
 
-			assert ("Result is empty", not query.result_cursor.after)
-			assert ("Tuple type is wrong", attached {TUPLE[STRING]} query.result_cursor.item
-						and not attached {TUPLE[STRING, STRING]} query.result_cursor.item)
+			assert ("Result is empty", not query.stable_cursor.after)
+			assert ("Tuple type is wrong", attached {TUPLE[STRING]} query.stable_cursor.item
+						and not attached {TUPLE[STRING, STRING]} query.stable_cursor.item)
 
-			check attached {TUPLE[STRING]} query.result_cursor.item as res then
+			check attached {TUPLE[STRING]} query.stable_cursor.item as res then
 				assert ("Data is wrong", attach (res[1]).is_equal (test_data.people.first.first_name))
 			end
 
-			query.result_cursor.forth
-			assert ("Too many items", query.result_cursor.after)
+			query.stable_cursor.forth
+			assert ("Too many items", query.stable_cursor.after)
 			query.close
 			transaction.commit
 		end
@@ -195,7 +195,7 @@ feature
 
 			transaction.execute_tuple_query (query)
 
-			assert ("Result is empty", not query.result_cursor.after)
+			assert ("Result is empty", not query.stable_cursor.after)
 
 			across query as q
 			loop
@@ -238,7 +238,7 @@ feature
 
 			transaction.execute_tuple_query (query)
 
-			assert ("Result is empty", not query.result_cursor.after)
+			assert ("Result is empty", not query.stable_cursor.after)
 
 			across query as q
 			loop
@@ -281,18 +281,18 @@ feature
 
 			transaction.execute_tuple_query (query)
 
-			assert ("Result is empty", not query.result_cursor.after)
+			assert ("Result is empty", not query.stable_cursor.after)
 
-			assert ("Tuple type is wrong", attached {TUPLE[INTEGER, detachable REFERENCE_CLASS_1]} query.result_cursor.item)
-			check attached {TUPLE[INTEGER, detachable REFERENCE_CLASS_1]} query.result_cursor.item as tup then
+			assert ("Tuple type is wrong", attached {TUPLE[INTEGER, detachable REFERENCE_CLASS_1]} query.stable_cursor.item)
+			check attached {TUPLE[INTEGER, detachable REFERENCE_CLASS_1]} query.stable_cursor.item as tup then
 
 				assert ("ref_class_id is wrong", tup.integer_item (1) = test_data.reference_cycle.ref_class_id)
 				assert ("attribute refer is Void", attached {REFERENCE_CLASS_1} tup[2])
 				assert ("Data is wrong", deep_equal (tup[2], test_data.reference_cycle.refer))
 			end
 
-			query.result_cursor.forth
-			assert ("Too many items", query.result_cursor.after)
+			query.stable_cursor.forth
+			assert ("Too many items", query.stable_cursor.after)
 			query.close
 			transaction.commit
 		end

@@ -12,22 +12,59 @@ inherit
 
 	REFACTORING_HELPER
 
+feature {PS_ABEL_EXPORT} -- Access
 
-feature {PS_ABEL_EXPORT}-- Backend capabilities
+	stored_types: LIST [READABLE_STRING_GENERAL]
+			-- The type string for all objects and collections stored in `Current'.
+		do
+			-- Note to implementors: It is highly recommended to cache the result, and
+			-- refresh it during a `retrieve' operation (or not at all if the result
+			-- is always stable).
+			fixme ("TODO")
+			create {LINKED_LIST [READABLE_STRING_GENERAL]} Result.make
+		end
+
+	batch_retrieval_size: INTEGER
+			-- The amount of objects to retrieve in a single batch.
+			-- Set to -1 to retrieve all objects.
+
+feature {PS_ABEL_EXPORT} -- Backend capabilities
 
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
 		do
-			-- The attached syntax is used here because the {TYPE}.is_conforming_to will always generate a catcall.
 			Result := not attached {TYPE[detachable SPECIAL[detachable ANY]]} type.type and not attached {TYPE[detachable TUPLE]} type.type
---			Result := not type.type.is_conforming_to ({detachable SPECIAL[detachable ANY]})
---				and not type.type.is_conforming_to ({detachable TUPLE})
 		end
 
 	is_generic_collection_supported: BOOLEAN
 			-- Can the current backend support collections in general,
 			-- i.e. is there a default strategy?
 		deferred
+		end
+
+	is_active: BOOLEAN
+			-- Is the current backend active and ready for operation?
+		do
+			fixme ("TODO")
+			Result := True
+		end
+
+feature {PS_ABEL_EXPORT} -- Element change
+
+	set_batch_retrieval_size (size: INTEGER)
+			-- Set the batch retrieval size.
+		require
+			valid: size > 0 or size = -1
+		do
+			batch_retrieval_size := size
+		ensure
+			correct: size = batch_retrieval_size
+		end
+
+	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
+			-- Set the transaction isolation level such that all values in `settings' are respected.
+		do
+			fixme ("TODO")
 		end
 
 feature {PS_ABEL_EXPORT} -- Object retrieval
@@ -162,18 +199,22 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
 			-- The currently active transaction isolation level.
+		obsolete
+			"Remove it."
 		deferred
 		end
 
 	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
 			-- Set the transaction isolation level `a_level' for all future transactions.
+		obsolete
+			"Implement `set_transaction_isolation'."
 		deferred
 		end
 
 	close
 			-- Close the backend.
 		do
-			
+
 		end
 
 feature {PS_ABEL_EXPORT} -- Plugins
@@ -217,20 +258,7 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		deferred
 		end
 
-feature {PS_ABEL_EXPORT} -- Lazy loading
-
-	lazy_loading_batch_size: INTEGER
-			-- The amount of objects to retrieve in a single batch.
-			-- Set to -1 to retrieve all objects.
-
-	set_lazy_loading_batch_size (size: INTEGER)
-			-- Set the batch size.
-		require
-			valid: size > 0 or size = -1
-		do
-			lazy_loading_batch_size := size
-		ensure
-			correct: size = lazy_loading_batch_size
-		end
+invariant
+	valid_batch_retrieval_size: batch_retrieval_size > 0 or batch_retrieval_size = {PS_REPOSITORY}.Infinite_batch_size
 
 end

@@ -29,11 +29,29 @@ feature -- Basic operations
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter
+		local
+			ut: FILE_UTILITIES
+			s: STRING
+			l_continue: BOOLEAN
 		do
+			l_continue := True
 			if attached uploaded_file_path as p then
-				req.set_uploaded_file_path (p)
+				if ut.directory_path_exists (p) then
+					req.set_uploaded_file_path (p)
+				else
+					res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error)
+					s := "tmp folder is missing %"" + p.utf_8_name + "%""
+					res.put_header_line ("Content-Length:" + s.count.out)
+					res.put_header_line ("Content-Type:text/plain")
+					res.add_header_line ("X-Iron-Debug: uploadpath=" + p.utf_8_name)
+
+					res.put_string (s)
+					l_continue := False
+				end
 			end
-			execute_next (req, res)
+			if l_continue then
+				execute_next (req, res)
+			end
 		end
 
 note

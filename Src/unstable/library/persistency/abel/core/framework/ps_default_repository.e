@@ -9,9 +9,6 @@ class
 
 inherit
 	PS_REPOSITORY
-		redefine
-			set_root_status
-		end
 
 	REFACTORING_HELPER
 
@@ -54,21 +51,8 @@ feature {PS_ABEL_EXPORT} -- Object query
 				rm.execute (query, transaction, query.object_initialization_depth)
 			end
 		rescue
-			query.close
 			default_transactional_rescue (transaction)
-		end
-
-	next_entry (query: PS_QUERY [ANY])
-			-- Retrieves the next object. Stores item directly into result_set.
-			-- In case of an error it is written into the transaction connected to the query.
-		do
-			check attached query.read_manager as rm then
-				rm.next_entry (query)
-			end
-		rescue
-			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
 			query.close
-			default_transactional_rescue (query.internal_transaction)
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -79,34 +63,14 @@ feature {PS_ABEL_EXPORT} -- Object query
 				rm.execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
 			end
 		rescue
-			tuple_query.close
 			default_transactional_rescue (transaction)
-		end
-
-	next_tuple_entry (tuple_query: PS_TUPLE_QUERY [ANY])
-			-- Retrieves the next tuple and stores it in `query.result_cursor'.
-		do
-			check attached tuple_query.read_manager as rm then
-				rm.next_tuple_entry (tuple_query)
-			end
-		rescue
-			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
 			tuple_query.close
-			default_transactional_rescue (tuple_query.internal_transaction)
 		end
 
 feature {PS_ABEL_EXPORT} -- Modification
 
-	insert (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
+	write (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert `object' within `transaction' into `Current'.
-		do
-			write_manager.write (object, transaction)
-		rescue
-			default_transactional_rescue (transaction)
-		end
-
-	update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
-			-- Update `object' within `transaction'.
 		do
 			write_manager.write (object, transaction)
 		rescue
@@ -117,38 +81,6 @@ feature {PS_ABEL_EXPORT} -- Modification
 			-- Update `object' only and none of its referenced objects.
 		do
 			write_manager.direct_update (object, transaction)
-		end
-
-	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
-			-- Delete `object' within `transaction' from `Current'.
-		local
-			id: PS_OBJECT_IDENTIFIER_WRAPPER
-			primary: INTEGER
-			to_delete: LINKED_LIST[PS_BACKEND_ENTITY]
-			found: BOOLEAN
-		do
-			id := id_manager.identifier_wrapper (object, transaction)
-			primary := mapper.quick_translate (id.object_identifier, transaction)
-
-			create to_delete.make
-			to_delete.extend (create {PS_BACKEND_OBJECT}.make (primary, id.metadata))
-
-			across
-				all_handlers as h_cursor
-			until
-				found
-			loop
-				if h_cursor.item.can_handle_type (id.metadata) then
-					found := True
-					if h_cursor.item.is_mapping_to_collection then
-						backend.delete_collections (to_delete, transaction)
-					else
-						backend.delete (to_delete, transaction)
-					end
-				end
-			end
-			mapper.remove_primary_key (primary, id.metadata, transaction)
-			id_manager.delete_identification (object, transaction)
 		rescue
 			default_transactional_rescue (transaction)
 		end
@@ -157,6 +89,8 @@ feature {PS_ABEL_EXPORT} -- Modification
 			-- Set the root status of `object' to `value'.
 		do
 			write_manager.update_root (object, value, transaction)
+		rescue
+			default_transactional_rescue (transaction)
 		end
 
 feature {PS_ABEL_EXPORT} -- Transaction handling
@@ -260,6 +194,77 @@ feature {NONE} -- Implementation
 			create new_read_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
 			all_handlers.do_all (agent new_read_manager.add_handler)
 			query.prepare_execution (transaction, new_read_manager)
+		end
+
+feature {NONE} -- Obsolete
+
+		-- The two functions are just here to prevent bit-rot in case we need them again.
+
+
+	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
+			-- Delete `object' within `transaction' from `Current'.
+		require
+			transaction_repository_correct: transaction.repository = Current
+			active_transaction: transaction.is_active
+			can_handle_object: can_handle (object)
+			object_known: is_identified (object, transaction)
+		local
+			id: PS_OBJECT_IDENTIFIER_WRAPPER
+			primary: INTEGER
+			to_delete: LINKED_LIST[PS_BACKEND_ENTITY]
+			found: BOOLEAN
+		do
+			id := id_manager.identifier_wrapper (object, transaction)
+			primary := mapper.quick_translate (id.object_identifier, transaction)
+
+			create to_delete.make
+			to_delete.extend (create {PS_BACKEND_OBJECT}.make (primary, id.metadata))
+
+			across
+				all_handlers as h_cursor
+			until
+				found
+			loop
+				if h_cursor.item.can_handle_type (id.metadata) then
+					found := True
+					if h_cursor.item.is_mapping_to_collection then
+						backend.delete_collections (to_delete, transaction)
+					else
+						backend.delete (to_delete, transaction)
+					end
+				end
+			end
+			mapper.remove_primary_key (primary, id.metadata, transaction)
+			id_manager.delete_identification (object, transaction)
+		ensure
+			transaction_still_alive: transaction.is_active
+			no_error: not transaction.has_error
+			object_not_known: not is_identified (object, transaction)
+			transaction_active_in_id_manager: id_manager.is_registered (transaction)
+		rescue
+			default_transactional_rescue (transaction)
+		end
+
+	delete_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
+			-- Delete all objects that match the criteria in `query' from `Current' within `transaction'.
+		require
+			not_executed: not query.is_executed
+			transaction_repository_correct: transaction.repository = Current
+			--active_transaction: query.transaction.is_active
+			active_transaction: transaction.is_active
+		do
+			internal_execute_query (query, transaction)
+			across
+				query as cursor
+			loop
+				delete (cursor.item, transaction)
+			end
+		ensure
+			transaction_still_alive: transaction.is_active
+			no_error: not transaction.has_error
+			transaction_active_in_id_manager: id_manager.is_registered (transaction)
+			query_executed: query.is_executed
+			no_result: query.is_after
 		end
 
 end

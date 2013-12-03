@@ -88,7 +88,12 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 	retrieve_next
 			-- Retrieve the next item from the database and store it in `result_cache'.
 		do
-			internal_transaction.repository.next_tuple_entry (Current)
+			check attached read_manager as rm then
+				rm.next_tuple_entry (Current)
+			end
+		rescue
+			repository.rollback_transaction (internal_transaction, False)
+			close
 		end
 
 feature {NONE} -- Initialization

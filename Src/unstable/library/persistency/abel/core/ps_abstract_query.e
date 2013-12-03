@@ -273,7 +273,12 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			-- Retrieve the next item from the database and store it in `result_cache'.
 		require
 			not_after: not is_after
+			executed: is_executed
+			active_transaction: internal_transaction.is_active
 		deferred
+		ensure
+			active_transaction: internal_transaction.is_active
+			no_error: not internal_transaction.has_error
 		end
 
 feature {NONE} -- Initialization

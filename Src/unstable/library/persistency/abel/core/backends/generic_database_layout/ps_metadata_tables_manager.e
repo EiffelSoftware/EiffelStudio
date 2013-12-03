@@ -66,6 +66,18 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 			Result := class_name_to_key_map [class_name]
 		end
 
+	all_types: LINKED_LIST [READABLE_STRING_GENERAL]
+			-- Get all types in the database.
+		do
+			across
+				class_name_to_key_map as cursor
+			from
+				create Result.make
+			loop
+				Result.extend (cursor.key)
+			end
+		end
+
 feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQL_CONVERTER} -- Access - Attribute
 
 	attribute_name_of_key (attribute_key: INTEGER): STRING
@@ -202,6 +214,8 @@ feature {NONE} -- Initialization
 		local
 			existing_tables: LINKED_LIST [STRING]
 		do
+			fixme ("As the metadata is basically cached from the database, find a way to avoid inconsistencies.")
+
 				-- Initialize `Current'
 			SQL_Strings := strings
 			create class_name_to_key_map.make (20)

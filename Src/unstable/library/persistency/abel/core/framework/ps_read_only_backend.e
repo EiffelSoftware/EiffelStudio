@@ -16,12 +16,10 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	stored_types: LIST [READABLE_STRING_GENERAL]
 			-- The type string for all objects and collections stored in `Current'.
-		do
+		deferred
 			-- Note to implementors: It is highly recommended to cache the result, and
 			-- refresh it during a `retrieve' operation (or not at all if the result
 			-- is always stable).
-			fixme ("TODO")
-			create {LINKED_LIST [READABLE_STRING_GENERAL]} Result.make
 		end
 
 	batch_retrieval_size: INTEGER

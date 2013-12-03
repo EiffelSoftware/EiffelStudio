@@ -20,6 +20,17 @@ feature {PS_ABEL_EXPORT} -- Lazy loading
 
 	Default_batch_size: INTEGER = -1
 
+feature {PS_ABEL_EXPORT} -- Access
+
+	stored_types: LIST [READABLE_STRING_GENERAL]
+			-- The type string for all objects and collections stored in `Current'.
+		do
+			-- Note to implementors: It is highly recommended to cache the result, and
+			-- refresh it during a `retrieve' operation (or not at all if the result
+			-- is always stable).
+			fixme ("This also returns some basic types which are sometimes just present as attributes of other objects.")
+			Result := db_metadata_manager.all_types
+		end
 
 
 feature {PS_ABEL_EXPORT}-- Backend capabilities

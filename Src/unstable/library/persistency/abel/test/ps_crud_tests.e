@@ -103,7 +103,7 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 		do
 			create test.make (repository)
 			create obj
-			test.test_crud_operations (obj, agent test.default_update_operation(?))
+			test.test_crud_operations (obj, agent {ANY}.do_nothing)
 				-- repository is clean after delete...
 		end
 

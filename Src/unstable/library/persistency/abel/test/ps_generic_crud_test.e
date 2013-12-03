@@ -19,42 +19,26 @@ feature {PS_CRUD_TESTS}
 	test_insert (object: G)
 			-- Tests an insert (and successive read) operation on `an_object'
 		do
-			test_insert_special_equality (object, agent standard_deep_equal)
-		end
-
-	test_insert_special_equality (object: G; equality_function: PREDICATE [ANY, TUPLE [G, G]])
-			-- Tests an insert (and successive read) operation on `an_object'
-			-- Use `equality_function' to test if `object' and the retrieved object from the database are equal.
-		do
-			--executor.execute_insert (object)
 			repo_access.insert (object)
 
-			internal_check_equality (object, equality_function)
+			internal_check_equality (object)
 			repo_access.commit
 			repo_access.prepare
 		end
 
+
 	test_crud_operations (object: G; update_operation: PROCEDURE [ANY, TUPLE [G]])
 			-- Tests all the CRUD operations on `object'
 			-- An update on object is done with `update_operation'.
-			-- In default reference graph depth settings, `update_operation' should only update `an_object' directly and not any referenced object.
-		do
-			test_crud_operations_special_equality (object, update_operation, agent standard_deep_equal)
-		end
-
-	test_crud_operations_special_equality (object: G; update_operation: PROCEDURE [ANY, TUPLE [G]]; equality_function: PREDICATE [ANY, TUPLE [G, G]])
-			-- Tests all the CRUD operations on `object'
-			-- An update on object is done with `update_operation'.
-			-- In default reference graph depth settings, `update_operation' should only update `an_object' directly and not any referenced object.
-			-- Use `equality_function' to test if `object' and the retrieved object from the database are equal.
 		local
 			first_count, second_count, third_count: INTEGER
 		do
 				-- Test successful insert
---			executor.execute_insert (object)
 			repo_access.insert (object)
 
-			internal_check_equality (object, equality_function)
+--			check attached {PS_DEFAULT_REPOSITORY} repository as repo then across repo.backend.stored_types as cursor loop print (cursor.item.out + "%N") end end
+
+			internal_check_equality (object)
 				-- Test successful update
 
 			if not object.generating_type.is_expanded then
@@ -62,11 +46,10 @@ feature {PS_CRUD_TESTS}
 				update_operation.call ([object])
 				first_count := count_results
 
-	--			executor.execute_update (object)
 				repo_access.update (object)
 
 				second_count := count_results
-				internal_check_equality (object, equality_function)
+				internal_check_equality (object)
 				assert ("Something has been deleted or inserted during an update", second_count = first_count)
 					-- Test successful delete
 
@@ -76,7 +59,6 @@ feature {PS_CRUD_TESTS}
 			repo_access.commit
 			repo_access.prepare
 
---			executor.execute_delete (object)
 --			third_count := count_results
 --				-- In a successful delete, all we can guarantee is that the third count is smaller than the second
 --			assert ("The object still exists in the database", second_count > third_count)
@@ -86,11 +68,6 @@ feature {PS_CRUD_TESTS}
 
 		end
 
-	default_update_operation (an_object: G)
-			-- A default operation that does nothing.
-		do
-		end
-
 	count_results: INTEGER
 			-- Count the number of results of objects of type G
 		local
@@ -98,7 +75,6 @@ feature {PS_CRUD_TESTS}
 		do
 			create query.make
 
---			executor.execute_query (query)
 			repo_access.execute_query (query)
 
 			across
@@ -111,7 +87,7 @@ feature {PS_CRUD_TESTS}
 
 feature {NONE}
 
-	internal_check_equality (object: G; equality_test: PREDICATE [ANY, TUPLE [G, G]])
+	internal_check_equality (object: G)
 			-- See if any retrieved object from the database is equal to `object'
 			-- Use `equality_test' to test on equality.
 		local
@@ -122,7 +98,6 @@ feature {NONE}
 			create query.make
 
 			repo_access.execute_query (query)
---			executor.execute_query (query)
 
 			assert ("The result is empty", not query.new_cursor.after)
 				-- collect results - there may be many if an_object references other objects of type G
@@ -136,7 +111,7 @@ feature {NONE}
 			end
 			query.close
 				-- See if one result is equal
-			one_equal := across ref_list as cursor2 some equality_test.item ([cursor2.item, object]) end
+			one_equal := across ref_list as cursor2 some deep_equal (cursor2.item, object) end
 				--	across ref_list as cursor from print (object) loop print (cursor.item) end
 --				if attached {ANY_BOX} object as box and attached {ANY_BOX} ref_list.first as box2 then
 --					print (box.item.tagged_out)
@@ -147,12 +122,6 @@ feature {NONE}
 --					end
 --				end
 			assert ("The results are not the same", one_equal)
-		end
-
-	standard_deep_equal (a, b: G): BOOLEAN
-			-- The standard deep_equal feature from ANY
-		do
-			Result := deep_equal (a, b)
 		end
 
 end

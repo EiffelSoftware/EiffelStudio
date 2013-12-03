@@ -83,6 +83,14 @@ feature -- Utilities
 			end
 		end
 
+feature {PS_ABEL_EXPORT} -- Implementation: Element change
+
+	retrieve_next
+			-- Retrieve the next item from the database and store it in `result_cache'.
+		do
+			internal_transaction.repository.next_tuple_entry (Current)
+		end
+
 feature {NONE} -- Initialization
 
 	make

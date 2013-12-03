@@ -144,11 +144,10 @@ feature -- Disposal
 			transaction := Void
 			transaction_impl := Void
 			read_manager := Void
-			create result_cursor.make
-			result_cursor.set_query (Current)
 			create {PS_ITERATION_CURSOR [RESULT_TYPE]} stable_cursor.make (Current)
 			is_executed := False
 			create result_cache.make (100)
+			is_after := True
 		ensure
 			not_executed: not is_executed
 			not_closed: not is_closed
@@ -212,18 +211,12 @@ feature {PS_ABEL_EXPORT} -- Implementation : Access
 
 	is_after: BOOLEAN
 			-- Has `Current' retrieved all items?
-		do
-			Result := result_cursor.after
-		end
 
 	generic_type: TYPE [detachable ANY]
 			-- Get the (detachable) generic type of `Current'.
 
 	result_cache: ARRAYED_LIST [ANY]
 			-- The cached results.
-
-	result_cursor: PS_RESULT_CURSOR [RESULT_TYPE]
-			-- Iteration cursor containing the result of the query.
 
 	internal_transaction: PS_INTERNAL_TRANSACTION
 			-- The transaction in which this query is embedded.
@@ -248,6 +241,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			not_yet_executed: not is_executed
 		do
 			is_executed := True
+			is_after := False
 			transaction_impl := a_transaction
 			read_manager := a_read_manager
 		ensure
@@ -266,21 +260,20 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 		require
 			actual_type_is_G: attached {RESULT_TYPE} object
 		do
-			result_cursor.set_entry (object)
+			result_cache.extend (object)
 		end
 
 	set_is_after
 			-- Set `is_after' to True.
 		do
-			result_cursor.set_entry (Void)
+			is_after := True
 		end
 
 	retrieve_next
 			-- Retrieve the next item from the database and store it in `result_cache'.
 		require
 			not_after: not is_after
-		do
-			result_cursor.forth
+		deferred
 		end
 
 feature {NONE} -- Initialization
@@ -294,8 +287,7 @@ feature {NONE} -- Initialization
 			reset
 		ensure
 			not_executed: not is_executed
-			query_result_after: result_cursor.after
-			query_result_initialized: result_cursor.query = Current
+			query_result_after: is_after
 			default_criterion: attached {PS_EMPTY_CRITERION} criterion
 		end
 
@@ -309,13 +301,11 @@ feature {NONE} -- Initialization
 			set_criterion (a_criterion)
 		ensure
 			not_executed: not is_executed
-			query_result_after: result_cursor.after
-			query_result_initialized: result_cursor.query = Current
+			query_result_after: is_after
 			criteria_set: criterion = a_criterion
 		end
 
 invariant
-	query_result_correctly_initialized: result_cursor.query = Current
 	valid_initialization_depth: object_initialization_depth > 0 or object_initialization_depth = -1
 
 	attached_transaction_when_executed: is_executed = attached transaction_impl

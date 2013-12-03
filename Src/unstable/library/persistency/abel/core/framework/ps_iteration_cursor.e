@@ -34,7 +34,7 @@ feature -- Status report
 	after: BOOLEAN
 			-- Are there no more items to iterate over?
 		do
-			Result := not query.is_executed or else (index > query.result_cache.count and query.result_cursor.after)
+			Result := not query.is_executed or else (index > query.result_cache.count and query.is_after)
 		end
 
 feature -- Cursor movement

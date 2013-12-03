@@ -181,6 +181,7 @@ feature-- Versioning
 				{EIFFEL_CONSTANTS}.minor_version,
 				(svn_revision // (9999 + 1).as_natural_32).as_natural_16,
 				(svn_revision \\ (9999 + 1).as_natural_32).as_natural_16)
+			Result.set_is_two_digit_mimimum_minor (True)
 		end
 
 	Version_number: STRING_32

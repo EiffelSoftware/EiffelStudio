@@ -65,10 +65,10 @@ feature -- File extensions
 
 feature -- Version
 
-	major_version: NATURAL_16 = 13
+	major_version: NATURAL_16 = 14
 			-- Major release version.
 
-	minor_version: NATURAL_16 = 11
+	minor_version: NATURAL_16 = 05
 			-- Minor release version.
 
 ;note

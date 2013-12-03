@@ -26,7 +26,7 @@
       <Property Id="USERNAME">Eiffel User</Property>
       <Property Id="PIDTemplate" Hidden="yes"><![CDATA[12345<#####-#####-#####-#####-#####-#####>@@@@@]]></Property>
       <?ifdef EiffelStudio?>
-        <Property Id="PIDKEY" Hidden="yes">46782-67611-21125-82441-92581-71882</Property>
+        <Property Id="PIDKEY" Hidden="yes">95568-38287-27185-06220-19513-63384</Property>
       <?else?>
         <Property Id="PIDKEY" Hidden="yes">91169-08119-81772-37111-92871-67979</Property>
       <?endif?>

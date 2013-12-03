@@ -62,6 +62,7 @@ feature -- Execution
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				a_input.reset
 				create req.make (vars, a_input, Current)
 				create res.make (a_output, a_output)
 				service.execute (req, res)

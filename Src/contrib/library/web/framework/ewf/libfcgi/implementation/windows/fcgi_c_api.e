@@ -65,10 +65,28 @@ feature {FCGI_IMP} -- Internal
 
 	feof (v: POINTER): INTEGER
 			-- FCGI_feof()
+			-- 0 means EOF not detected.
 		external
 			"dll libfcgi.dll signature (EIF_POINTER): EIF_INTEGER use fcgi_stdio.h "
 		alias
 			"FCGI_feof"
+		end
+
+	ferror (v: POINTER): INTEGER
+			-- FCGI_ferror()
+			-- 0 means no error.
+		external
+			"dll libfcgi.dll signature (EIF_POINTER): EIF_INTEGER use fcgi_stdio.h "
+		alias
+			"FCGI_ferror"
+		end
+
+	clearerr (v: POINTER)
+			-- FCGI_clearerr().
+		external
+			"dll libfcgi.dll signature (EIF_POINTER) use fcgi_stdio.h "
+		alias
+			"FCGI_clearerr"
 		end
 
 feature {NONE} -- Input
@@ -123,29 +141,28 @@ feature {NONE} -- Output
 feature -- Access
 
 	stdout: POINTER
-			-- FCGI_stdout() return pointer on output FCGI_FILE
+			-- FCGI_stdout return pointer on output FCGI_FILE
 		external
 			"C inline use %"fcgi_stdio.h%""
 		alias
-			"FCGI_stdout"
+			"return FCGI_stdout;"
 		end
 
 	stdin: POINTER
-			-- FCGI_stdin() return pointer on input FCGI_FILE
+			-- FCGI_stdin return pointer on input FCGI_FILE
 		external
 			"C inline use %"fcgi_stdio.h%""
 		alias
-			"FCGI_stdin"
+			"return FCGI_stdin;"
 		end
 
 	stderr: POINTER
-			-- FCGI_stderr() return pointer on error FCGI_FILE
+			-- FCGI_stderr return pointer on error FCGI_FILE
 		external
 			"C inline use %"fcgi_stdio.h%""
 		alias
-			"FCGI_stderr"
+			"return FCGI_stderr;"
 		end
-		
 
 note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"

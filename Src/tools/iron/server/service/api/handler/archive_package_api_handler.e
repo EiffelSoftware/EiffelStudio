@@ -79,8 +79,14 @@ feature -- Execution
 						if attached new_temporary_output_file ("tmp-uploaded-file") as f then
 							req.read_input_data_into_file (f)
 							f.close
+							check all_data_fetched: f.count.to_natural_64 = req.content_length_value end
 							iron.database.save_package_archive (l_package, f.path, False)
 							m.add_normal_message ("archive uploaded")
+							if l_package.has_archive then
+								m.add_normal_message ("archive-size=" + l_package.archive_file_size.out)
+							else
+								m.add_error_message ("archive is missing!!")
+							end
 							res.send (m)
 						else
 							res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))

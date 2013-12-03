@@ -80,6 +80,9 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error?
 
+	is_two_digit_minimum_minor: BOOLEAN
+			-- Is current minor version printed on at least 2 digits?
+
 feature -- Access, stored in configuration file
 
 	major: NATURAL_16
@@ -100,6 +103,9 @@ feature -- Access, stored in configuration file
 			create Result.make_empty
 			Result.append_integer (major)
 			Result.append_character ('.')
+			if is_two_digit_minimum_minor and then minor < 10 then
+				Result.append_character ('0')
+			end
 			Result.append_integer (minor)
 			Result.append_character ('.')
 			Result.append_integer (release)
@@ -118,6 +124,16 @@ feature -- Access, stored in configuration file
 
 	copyright: STRING_32
 			-- The copyright
+
+feature -- Settings
+
+	set_is_two_digit_mimimum_minor (v: BOOLEAN)
+			-- Set `is_two_digit_minimum_minor' to `v'.
+		do
+			is_two_digit_minimum_minor := v
+		ensure
+			is_two_digit_minimum_minor_set: is_two_digit_minimum_minor = v
+		end
 
 feature {CONF_ACCESS}  -- Update, stored in configuration file
 

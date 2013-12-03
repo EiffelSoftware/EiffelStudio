@@ -71,6 +71,30 @@ feature -- Version
 	minor_version: NATURAL_16 = 05
 			-- Minor release version.
 
+	two_digit_minimum_major_version: STRING
+			-- Two-digit or more string representation of `major_version'.
+		once
+			create Result.make (2)
+			if major_version < 10 then
+				Result.append_character ('0')
+			end
+			Result.append_integer (major_version)
+		ensure
+			two_digits_or_more: Result.count >= 2
+		end
+
+	two_digit_minimum_minor_version: STRING
+			-- Two-digit or more string representation of `minor_version'.
+		once
+			create Result.make (2)
+			if minor_version < 10 then
+				Result.append_character ('0')
+			end
+			Result.append_integer (minor_version)
+		ensure
+			two_digits_or_more: Result.count >= 2
+		end
+
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

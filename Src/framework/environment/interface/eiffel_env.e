@@ -53,9 +53,9 @@ feature -- Access
 		once
 			create Result.make_from_string (product_name)
 			Result.append_character ('_')
-			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
+			Result.append_string (two_digit_minimum_major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append_string (two_digit_minimum_minor_version)
 			if is_unix_layout then
 				Result.to_lower
 			end
@@ -145,8 +145,7 @@ feature {NONE} -- Access
 			-- Suffix containing release version which is used for Unix layout
 		once
 			if is_unix_layout then
-				Result := "-" + {EIFFEL_CONSTANTS}.major_version.out + "." +
-					{EIFFEL_CONSTANTS}.minor_version.out
+				Result := "-" + two_digit_minimum_major_version + "." + two_digit_minimum_minor_version
 			else
 					-- No suffix in normal mode.
 				Result := ""
@@ -1032,9 +1031,9 @@ feature -- Directories (top-level user)
 					safe_create_dir (Result)
 
 					create l_dir.make (4)
-					l_dir.append_integer ({EIFFEL_CONSTANTS}.major_version)
+					l_dir.append_string (two_digit_minimum_major_version)
 					l_dir.append_character ('.')
-					l_dir.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+					l_dir.append_string (two_digit_minimum_minor_version)
 					Result := Result.extended (l_dir)
 					safe_create_dir (Result)
 				else
@@ -1108,9 +1107,9 @@ feature -- Directories (top-level user)
 
 						-- Per version directory structure to avoid clutter.
 					create l_dir.make (4)
-					l_dir.append_integer ({EIFFEL_CONSTANTS}.major_version)
+					l_dir.append_string (two_digit_minimum_major_version)
 					l_dir.append_character ('.')
-					l_dir.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+					l_dir.append_string (two_digit_minimum_minor_version)
 					Result := Result.extended (l_dir)
 					safe_create_dir (Result)
 				end

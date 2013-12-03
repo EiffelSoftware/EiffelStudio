@@ -23,11 +23,13 @@ feature -- Access
 			l_key: detachable WEL_REGISTRY_KEY_VALUE
 			l_eiffel: STRING_32
 			l_lowered_var: READABLE_STRING_GENERAL
+			l_constants: EIFFEL_CONSTANTS
 		do
 			Result := item (a_var)
 			if Result = Void then
 				l_lowered_var := a_var.as_lower
-				l_eiffel := {STRING_32} "\Software\ISE\Eiffel_" + {EIFFEL_CONSTANTS}.major_version.out + "." + {EIFFEL_CONSTANTS}.minor_version.out
+				create l_constants
+				l_eiffel := {STRING_32} "\Software\ISE\Eiffel_" + l_constants.two_digit_minimum_major_version + "." + l_constants.two_digit_minimum_minor_version
 				create l_reg
 				if a_app /= Void then
 						-- Lookup application-specific setting.

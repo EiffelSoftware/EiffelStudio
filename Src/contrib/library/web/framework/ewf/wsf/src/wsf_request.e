@@ -270,7 +270,9 @@ feature -- Access: Input
 			s: STRING
 			l_input: WGI_INPUT_STREAM
 			l_raw_data: detachable STRING_8
-			n: INTEGER
+			len: NATURAL_64
+			nb, l_step: INTEGER
+			l_size: NATURAL_64
 		do
 			if raw_input_data_recorded and then attached raw_input_data as d then
 				a_file.put_string (d)
@@ -279,22 +281,44 @@ feature -- Access: Input
 					create l_raw_data.make_empty
 				end
 				l_input := input
+				len := content_length_value
+
+				debug ("wsf")
+					io.error.put_string (generator + ".read_input_data_into_file (a_file) content_length=" + len.out + "%N")
+				end
+
 				from
-					n := 8_192
-					create s.make (n)
+					l_size := 0
+					l_step := 8_192
+					create s.make (l_step)
 				until
-					n = 0 or l_input.end_of_input
+					l_step = 0 or l_input.end_of_input
 				loop
-					l_input.append_to_string (s, n)
+					l_input.append_to_string (s, l_step)
+					nb := l_input.last_appended_count
+					l_size := l_size + nb.to_natural_64
+					len := len - nb.to_natural_64
+
+					debug ("wsf")
+						io.error.put_string ("   append (s, " + l_step.out + ") -> " + nb.out + " (" + l_size.out + " / "+ content_length_value.out + ")%N")
+					end
+
 					a_file.put_string (s)
 					if l_raw_data /= Void then
 						l_raw_data.append (s)
 					end
 					s.wipe_out
-					if l_input.last_appended_count < n then
-						n := 0
+					if nb < l_step then
+						l_step := 0
+					elseif len < l_step.to_natural_64 then
+						l_step := len.to_integer_32
 					end
 				end
+				a_file.flush
+				debug ("wsf")
+					io.error.put_string ("offset =" + len.out + "%N")
+				end
+				check got_all_data: len = 0 end
 				if l_raw_data /= Void then
 					set_raw_input_data (l_raw_data)
 				end

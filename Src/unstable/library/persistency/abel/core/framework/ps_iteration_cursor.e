@@ -43,8 +43,8 @@ feature -- Cursor movement
 			-- Move to next position.
 		do
 			index := index + 1
-			if index > query.result_cache.count and not query.result_cursor.after then
-				query.result_cursor.forth
+			if index > query.result_cache.count and not query.is_after then
+				query.retrieve_next
 			end
 		end
 

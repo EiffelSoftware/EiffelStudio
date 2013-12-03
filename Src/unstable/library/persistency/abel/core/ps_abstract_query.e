@@ -210,9 +210,14 @@ feature {PS_ABEL_EXPORT} -- Testing support
 
 feature {PS_ABEL_EXPORT} -- Implementation : Access
 
+	is_after: BOOLEAN
+			-- Has `Current' retrieved all items?
+		do
+			Result := result_cursor.after
+		end
+
 	generic_type: TYPE [detachable ANY]
 			-- Get the (detachable) generic type of `Current'.
-
 
 	result_cache: ARRAYED_LIST [ANY]
 			-- The cached results.
@@ -254,6 +259,28 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 	set_transaction (context: like transaction)
 		do
 			transaction := context
+		end
+
+	set_result_item (object: ANY)
+			-- Add `object' to the results.
+		require
+			actual_type_is_G: attached {RESULT_TYPE} object
+		do
+			result_cursor.set_entry (object)
+		end
+
+	set_is_after
+			-- Set `is_after' to True.
+		do
+			result_cursor.set_entry (Void)
+		end
+
+	retrieve_next
+			-- Retrieve the next item from the database and store it in `result_cache'.
+		require
+			not_after: not is_after
+		do
+			result_cursor.forth
 		end
 
 feature {NONE} -- Initialization

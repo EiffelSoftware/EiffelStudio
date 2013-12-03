@@ -515,6 +515,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			-- Regression test: instead of creating FILE_NAME objects, a STRING object was created.
 			test.test_insert (person)
 			repository.clean_db_for_testing
+			create test.make (repository)
 			test.test_crud_operations (person, agent (p:TEST_PERSON) do p.add_item end)
 			repository.clean_db_for_testing
 		end

@@ -165,13 +165,13 @@ feature
 						i:= i+1
 					end
 
-					query.result_cursor.set_entry (tuple)
+					query.set_result_item (tuple)
 
 				else
 					next_tuple_entry (query)
 				end
 			else
-				query.result_cursor.set_entry (Void)
+				query.set_is_after
 			end
 		end
 
@@ -190,12 +190,12 @@ feature
 					and (query.is_non_root_ignored
 					implies (transaction.root_flags[new_obj.identifier] or else (attached new_obj.backend_representation as br and then br.is_root)))
 				then
-					query.result_cursor.set_entry (new_obj.reflector.object)
+					query.set_result_item (new_obj.reflector.object)
 				else
 					next_entry (query)
 				end
 			else
-				query.result_cursor.set_entry (Void)
+				query.set_is_after
 			end
 		end
 

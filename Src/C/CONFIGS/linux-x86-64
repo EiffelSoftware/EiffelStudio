@@ -196,7 +196,7 @@ mtcppflags="$cppflags -DEIF_THREADS -DEIF_LINUXTHREADS"
 optimize="-O3"
 voidflags='15'
 #Check value for next 1
-warning_level='-Wall -Wno-unused-parameter -pedantic -std=gnu99'
+warning_level='-Wall -Wextra -Wno-unused-parameter -pedantic -std=gnu99'
 wkoptimize="-O0"
 
 #Makefiles

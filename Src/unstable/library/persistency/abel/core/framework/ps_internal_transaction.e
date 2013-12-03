@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 			create root_flags.make (100)
 			is_readonly := False
 			is_active := True
+
+			repository.id_manager.register_transaction (Current)
 		end
 
 	make_readonly (a_repository: PS_REPOSITORY)
@@ -37,6 +39,8 @@ feature {NONE} -- Initialization
 			create root_flags.make (100)
 			is_readonly := True
 			is_active := True
+			
+			repository.id_manager.register_transaction (Current)
 		end
 
 feature {PS_ABEL_EXPORT} -- Access

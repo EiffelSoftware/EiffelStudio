@@ -39,6 +39,21 @@ feature -- Access
 	retry_count: INTEGER
 			-- The default retries for implicit transaction handling, if there is a transaction conflict.
 
+	active_queries: CONTAINER [PS_ABSTRACT_QUERY [ANY, ANY]]
+			-- The currently active queries (which are not executed within a transaction).
+		do
+			fixme ("TODO")
+			create {LINKED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]} Result.make
+		end
+
+	active_transactions: CONTAINER [PS_TRANSACTION]
+			-- The currently active transactions.
+		do
+			fixme ("TODO")
+			create {LINKED_LIST [PS_TRANSACTION]} Result.make
+		end
+
+
 feature -- Element change
 
 	set_batch_retrieval_size (size: INTEGER)
@@ -122,19 +137,6 @@ feature -- Disposal
 
 feature {NONE} -- Obsolete
 
-	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
-			-- Transaction isolation level.
-
-	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
-			-- Set the isolation level for transactions.
-		require
-			supported: to_implement_assertion ("Supported transaction isolation levels")
-		do
-			transaction_isolation_level := a_level
-		ensure
-			transaction_isolation_level = a_level
-		end
-
 	global_object_pool: BOOLEAN
 			-- Does `Current' maintain a global pool of object identifiers?
 		do
@@ -169,14 +171,14 @@ feature {PS_ABEL_EXPORT} -- Object query
 			transaction_set: query.internal_transaction = transaction
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
-			can_handle_retrieved_object: not query.result_cursor.after implies can_handle (query.result_cursor.item)
-			not_after_means_known: not query.result_cursor.after implies (query.generic_type.is_expanded or is_identified (query.result_cursor.item, transaction))
+			can_handle_retrieved_object: not query.is_after implies can_handle (query.result_cache.last)
+			not_after_means_known: not query.is_after implies (query.generic_type.is_expanded or is_identified (query.result_cache.last, transaction))
 		end
 
 	next_entry (query: PS_QUERY [ANY])
 			-- Retrieves the next object and stores the result directly into `query.result_cursor'.
 		require
-			not_after: not query.result_cursor.after
+			not_after: not query.is_after
 			already_executed: query.is_executed
 			active_transaction: query.internal_transaction.is_active
 			query_executed_by_me: query.internal_transaction.repository = Current
@@ -184,8 +186,8 @@ feature {PS_ABEL_EXPORT} -- Object query
 		ensure
 			transaction_still_alive: query.internal_transaction.is_active
 			no_error: not query.internal_transaction.has_error
-			can_handle_retrieved_object: not query.result_cursor.after implies can_handle (query.result_cursor.item)
-			not_after_means_known: not query.result_cursor.after implies query.generic_type.is_expanded or is_identified (query.result_cursor.item, query.internal_transaction)
+			can_handle_retrieved_object: not query.is_after implies can_handle (query.result_cache.last)
+			not_after_means_known: not query.is_after implies query.generic_type.is_expanded or is_identified (query.result_cache.last, query.internal_transaction)
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -206,7 +208,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 	next_tuple_entry (tuple_query: PS_TUPLE_QUERY [ANY])
 			-- Retrieves the next tuple and stores it in `query.result_cursor'.
 		require
-			not_after: not tuple_query.result_cursor.after
+			not_after: not tuple_query.is_after
 			already_executed: tuple_query.is_executed
 			active_transaction: tuple_query.internal_transaction.is_active
 			query_executed_by_me: tuple_query.internal_transaction.repository = Current
@@ -277,20 +279,18 @@ feature {PS_ABEL_EXPORT} -- Modification
 			--active_transaction: query.transaction.is_active
 			active_transaction: transaction.is_active
 		do
-			from
-				internal_execute_query (query, transaction)
-			until
-				query.result_cursor.after
+			internal_execute_query (query, transaction)
+			across
+				query as cursor
 			loop
-				delete (query.result_cursor.item, transaction)
-				query.result_cursor.forth
+				delete (cursor.item, transaction)
 			end
 		ensure
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
 			transaction_active_in_id_manager: id_manager.is_registered (transaction)
 			query_executed: query.is_executed
-			no_result: query.result_cursor.after
+			no_result: query.is_after
 		end
 
 	set_root_status (object: ANY; value: BOOLEAN; transaction: PS_INTERNAL_TRANSACTION)

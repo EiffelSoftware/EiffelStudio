@@ -49,14 +49,11 @@ feature {PS_ABEL_EXPORT} -- Object query
 	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute `query' within `transaction'.
 		do
-			id_manager.register_transaction (transaction)
 			initialize_query (query, transaction)
 			check attached query.read_manager as rm then
 				rm.execute (query, transaction, query.object_initialization_depth)
 			end
---			attach (read_manager_cache[query.backend_identifier]).execute (query, transaction, query.object_initialization_depth)
 		rescue
---			query.reset
 			query.close
 			default_transactional_rescue (transaction)
 		end
@@ -65,50 +62,36 @@ feature {PS_ABEL_EXPORT} -- Object query
 			-- Retrieves the next object. Stores item directly into result_set.
 			-- In case of an error it is written into the transaction connected to the query.
 		do
-			id_manager.register_transaction (query.internal_transaction)
 			check attached query.read_manager as rm then
 				rm.next_entry (query)
 			end
-
-			--attach (read_manager_cache[query.backend_identifier]).next_entry (query)
 		rescue
 			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
---			query.reset
 			query.close
 			default_transactional_rescue (query.internal_transaction)
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute the tuple query `tuple_query' within the readonly transaction `transaction'.
-		local
-			exception: PS_INTERNAL_ERROR
 		do
-			id_manager.register_transaction (transaction)
 			initialize_query (tuple_query, transaction)
 			check attached tuple_query.read_manager as rm then
 				rm.execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
 			end
-
---			attach (read_manager_cache[tuple_query.backend_identifier]).execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
 		rescue
-			tuple_query.reset
+			tuple_query.close
 			default_transactional_rescue (transaction)
 		end
 
 	next_tuple_entry (tuple_query: PS_TUPLE_QUERY [ANY])
 			-- Retrieves the next tuple and stores it in `query.result_cursor'.
-		local
-			exception: PS_INTERNAL_ERROR
 		do
-			id_manager.register_transaction (tuple_query.internal_transaction)
---			attach (read_manager_cache[tuple_query.backend_identifier]).next_tuple_entry (tuple_query)
-
 			check attached tuple_query.read_manager as rm then
 				rm.next_tuple_entry (tuple_query)
 			end
 		rescue
 			fixme ("What to do in such a case (i.e. exception during lazy loading)?")
-			tuple_query.reset
+			tuple_query.close
 			default_transactional_rescue (tuple_query.internal_transaction)
 		end
 
@@ -117,7 +100,6 @@ feature {PS_ABEL_EXPORT} -- Modification
 	insert (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert `object' within `transaction' into `Current'.
 		do
-			id_manager.register_transaction (transaction)
 			write_manager.write (object, transaction)
 		rescue
 			default_transactional_rescue (transaction)
@@ -126,7 +108,6 @@ feature {PS_ABEL_EXPORT} -- Modification
 	update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Update `object' within `transaction'.
 		do
-			id_manager.register_transaction (transaction)
 			write_manager.write (object, transaction)
 		rescue
 			default_transactional_rescue (transaction)
@@ -135,7 +116,6 @@ feature {PS_ABEL_EXPORT} -- Modification
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Update `object' only and none of its referenced objects.
 		do
-			id_manager.register_transaction (transaction)
 			write_manager.direct_update (object, transaction)
 		end
 
@@ -147,8 +127,6 @@ feature {PS_ABEL_EXPORT} -- Modification
 			to_delete: LINKED_LIST[PS_BACKEND_ENTITY]
 			found: BOOLEAN
 		do
-			id_manager.register_transaction (transaction)
-
 			id := id_manager.identifier_wrapper (object, transaction)
 			primary := mapper.quick_translate (id.object_identifier, transaction)
 
@@ -217,7 +195,6 @@ feature {PS_ABEL_EXPORT} -- Testing
 
 			create id_manager.make
 			create mapper.make
---			create read_manager_cache.make (100)
 
 			create write_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
 
@@ -254,10 +231,6 @@ feature {NONE} -- Initialization
 			all_handlers := handler_list
 			transaction_isolation := transaction_settings
 
---			create read_manager_cache.make (100)
-			create transaction_isolation_level
-			set_transaction_isolation_level (transaction_isolation_level.repeatable_read)
-
 			retry_count := default_retry_count
 			set_batch_retrieval_size (infinite_batch_size)
 		end
@@ -273,10 +246,6 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	write_manager: PS_WRITE_MANAGER
 			-- The write manager.
 
---	read_manager_cache: HASH_TABLE[PS_READ_MANAGER, INTEGER]
---			-- The read managers, as associated to queries.
-
-
 	all_handlers: LINKED_LIST[PS_HANDLER]
 			-- All object handlers known to `Current'
 
@@ -288,23 +257,10 @@ feature {NONE} -- Implementation
 		local
 			new_read_manager: PS_READ_MANAGER
 		do
---			query.set_identifier (new_query_identifier)
 			create new_read_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
 			all_handlers.do_all (agent new_read_manager.add_handler)
---			read_manager_cache.extend (new_read_manager, query.backend_identifier)
 			query.prepare_execution (transaction, new_read_manager)
 		end
-
-
---	new_query_identifier: INTEGER
---			-- Get a new identifier for a query.
---		do
---			Result := next_query_identifier
---			next_query_identifier := next_query_identifier + 1
---		end
-
---	next_query_identifier: INTEGER
---			-- The next identifier number
 
 end
 

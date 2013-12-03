@@ -33,6 +33,11 @@ feature -- Access
 			Result := fcgi.feof (fcgi.stdin) /= 0 --| in fact, True if feof (..) = EOF
 		end
 
+	fcgi_clearerr
+		do
+			fcgi.clearerr (fcgi.stdin)
+		end
+
 --	updated_environ_variables: HASH_TABLE [STRING, STRING]
 --		local
 ----			n, l_size,

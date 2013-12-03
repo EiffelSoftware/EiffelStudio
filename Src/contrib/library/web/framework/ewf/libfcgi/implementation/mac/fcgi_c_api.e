@@ -68,10 +68,28 @@ feature {FCGI_IMP} -- Internal
 
 	feof (v: POINTER): INTEGER
 			-- FCGI_feof()
+			-- 0 means EOF not detected.
 		external
 			"C inline use %"fcgi_stdio.h%""
 		alias
-			"FCGI_feof"
+			"return FCGI_feof($v);"
+		end
+
+	ferror (v: POINTER): INTEGER
+			-- FCGI_ferror()
+			-- 0 means no error.
+		external
+			"C inline use %"fcgi_stdio.h%""
+		alias
+			"return FCGI_ferror($v);"
+		end
+
+	clearerr (v: POINTER)
+			-- FCGI_clearerr().
+		external
+			"C inline use %"fcgi_stdio.h%""
+		alias
+			"FCGI_clearerr($v)"
 		end
 
 feature {NONE} -- Input
@@ -108,27 +126,27 @@ feature -- Error
 feature -- Access
 
 	stdout: POINTER
-			-- FCGI_stdout() return pointer on output FCGI_FILE
+			-- FCGI_stdout return pointer on output FCGI_FILE
 		external
 			"C inline use %"fcgi_stdio.h%""
 		alias
-			"FCGI_stdout"
+			"return FCGI_stdout;"
 		end
 
 	stdin: POINTER
-			-- FCGI_stdin() return pointer on input FCGI_FILE
+			-- FCGI_stdin return pointer on input FCGI_FILE
 		external
 			"C inline use %"fcgi_stdio.h%""
 		alias
-			"FCGI_stdin"
+			"return FCGI_stdin;"
 		end
 
 	stderr: POINTER
-			-- FCGI_stderr() return pointer on error FCGI_FILE
+			-- FCGI_stderr return pointer on error FCGI_FILE
 		external
 			"C inline use %"fcgi_stdio.h%""
 		alias
-			"FCGI_stderr"
+			"return FCGI_stderr;"
 		end
 
 note

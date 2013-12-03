@@ -32,6 +32,21 @@ feature {NONE} -- Initialization
 			create last_string.make_empty
 		end
 
+feature -- Reset
+
+	reset
+			-- Reset current input stream
+			-- especially any previous error if any.
+		do
+			debug ("wsf")
+				io.error.put_string (generator + " : reset %N")
+			end
+			last_string.wipe_out
+			last_character := '%U'
+			internal_end_of_input := False
+			fcgi.fcgi_clearerr
+		end
+
 feature -- Status report
 
 	is_open_read: BOOLEAN
@@ -43,8 +58,10 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		do
-			Result := fcgi.fcgi_end_of_input
+			Result := fcgi.fcgi_end_of_input or internal_end_of_input
 		end
+
+	internal_end_of_input: BOOLEAN
 
 feature -- Input
 
@@ -59,6 +76,7 @@ feature -- Input
 			if s.count >= 1 then
 				last_character := s.item (1)
 			else
+				internal_end_of_input := True
 				last_character := '%U'
 			end
 		end
@@ -69,6 +87,7 @@ feature -- Input
 			-- Make result available in `last_string'.	
 		do
 			fcgi.fill_string_from_stdin (last_string, nb_char)
+			internal_end_of_input := last_string.count < nb_char
 		end
 
 feature -- Access		
@@ -86,7 +105,7 @@ feature {NONE} -- Implementation
 			-- Bridge to FCGI world
 
 note
-	copyright: "2011-2011, Eiffel Software and others"
+	copyright: "2011-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -32,7 +32,12 @@ feature -- Access
 
 	fcgi_end_of_input: BOOLEAN
 		do
-			Result := fcgi.feof (fcgi.stdin) = 0
+			Result := fcgi.feof (fcgi.stdin) /= 0 --| in fact, True if feof (..) = EOF
+		end
+
+	fcgi_clearerr
+		do
+			fcgi.clearerr (fcgi.stdin)
 		end
 
 feature -- FCGI Connection
@@ -52,7 +57,7 @@ feature -- FCGI Connection
 				eif_environ = (char**) environ;
 			]"
 		end
-		
+
 	fcgi_finish
 			-- Finish current request from HTTP server started from
 			-- the most recent call to `fcgi_accept'.
@@ -175,7 +180,7 @@ feature -- I/O Routines
 --RFO		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

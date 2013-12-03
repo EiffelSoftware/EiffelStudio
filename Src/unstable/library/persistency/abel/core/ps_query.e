@@ -23,7 +23,15 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 	retrieve_next
 			-- Retrieve the next item from the database and store it in `result_cache'.
 		do
-			internal_transaction.repository.next_entry (Current)
+			check attached read_manager as rm then
+				rm.next_entry (Current)
+			end
+		ensure then
+			not_after_means_known: not is_after implies generic_type.is_expanded or repository.is_identified (result_cache.last, internal_transaction)
+			can_handle_retrieved_object: not is_after implies repository.can_handle (result_cache.last)
+		rescue
+			repository.rollback_transaction (internal_transaction, False)
+			close
 		end
 
 end

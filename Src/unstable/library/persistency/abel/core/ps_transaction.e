@@ -195,7 +195,7 @@ feature -- Data modification
 			supported: is_supported (object)
 			not_persistent: not is_persistent (object)
 		do
-			repository.insert (object, attach(transaction))
+			repository.write (object, attach(transaction))
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object) xor object.generating_type.is_expanded
@@ -213,7 +213,7 @@ feature -- Data modification
 			supported: is_supported (object)
 			persistent: is_persistent (object)
 		do
-			repository.update (object, attach(transaction))
+			repository.write (object, attach(transaction))
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object)

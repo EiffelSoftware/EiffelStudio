@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			l_string_prop.set_description (conf_interface_names.target_name_description)
 			l_string_prop.set_value (current_target.name)
 			l_string_prop.validate_value_actions.extend (agent check_target_name)
-			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent current_target.set_name))
+			l_string_prop.change_value_actions.extend (agent current_target.set_name)
 			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
 

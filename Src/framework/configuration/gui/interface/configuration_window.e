@@ -1106,7 +1106,7 @@ feature {NONE} -- Implementation
 				l_choice_prop.set_value (conf_system.library_target.name)
 			end
 			l_choice_prop.validate_value_actions.extend (agent check_library_target)
-			l_choice_prop.change_value_actions.extend (agent simple_wrapper({STRING_32}?, agent conf_system.set_library_target_by_name))
+			l_choice_prop.change_value_actions.extend (agent conf_system.set_library_target_by_name)
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_choice_prop)
 
@@ -1472,7 +1472,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

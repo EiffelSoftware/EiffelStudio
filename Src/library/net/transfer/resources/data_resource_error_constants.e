@@ -32,6 +32,10 @@ feature {NONE} -- Constants
 
 	Connection_timeout: INTEGER = 10
 
+	No_socket_to_connect: INTEGER = 11
+
+	Read_error: INTEGER = 12
+
 feature -- Status report
 
 	error_text (code: INTEGER): STRING
@@ -61,18 +65,24 @@ feature -- Status report
 				Result := "Transmission error"
 			when Connection_timeout then
 				Result := "Connection timeout"
+			when No_socket_to_connect then
+				Result := "No socket available"
+			when Read_error then
+				Result := "Read error"
+			else
+				Result := "Unknown error code " + code.out
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

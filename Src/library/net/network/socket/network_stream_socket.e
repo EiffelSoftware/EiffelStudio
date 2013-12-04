@@ -60,12 +60,10 @@ feature -- Initialization
 		require
 			valid_peer_host: a_peer_host /= Void and then not a_peer_host.is_empty
 			valid_port: a_peer_port >= 0
-		local
-			l_peer_address: detachable INET_ADDRESS
 		do
-			l_peer_address := create_from_name (a_peer_host)
-			check l_peer_address_attached: l_peer_address /= Void end
-			make_client_by_address_and_port (l_peer_address, a_peer_port)
+			check attached create_from_name (a_peer_host) as l_peer_address then
+				make_client_by_address_and_port (l_peer_address, a_peer_port)
+			end
 		end
 
 	make_server_by_port (a_port: INTEGER)
@@ -108,7 +106,7 @@ feature -- Initialization
 
 feature {NETWORK_STREAM_SOCKET} -- Initialization
 
-	make_from_descriptor_and_address (a_fd: INTEGER; a_address: like address)
+	make_from_descriptor_and_address (a_fd: INTEGER; a_address: attached like address)
 		require
 			a_fd_positive: a_fd > 0
 			a_address_positive: a_address /= Void
@@ -165,16 +163,14 @@ feature
 			-- Listen on socket for at most `queue' connections.
 		local
 			l_fd, l_fd1: INTEGER
-			l_address: like address
 		do
-			l_fd := fd
-			l_fd1 := fd1
-			l_address := address
-				-- Per inherited assertion.
-			check l_address_attached: l_address /= Void end
-			c_listen ($l_fd, $l_fd1, l_address.socket_address.item, queue)
-			fd := l_fd;
-			fd1 := l_fd1;
+			check address_attached: attached address as l_address then
+				l_fd := fd
+				l_fd1 := fd1
+				c_listen ($l_fd, $l_fd1, l_address.socket_address.item, queue)
+				fd := l_fd;
+				fd1 := l_fd1;
+			end
 		end
 
 	accept
@@ -182,7 +178,6 @@ feature
 			-- Accepted service socket available in `accepted'.
 		local
 			retried: BOOLEAN
-			l_address: like address
 			pass_address: like address
 			return: INTEGER;
 			l_last_fd: like fd
@@ -190,23 +185,23 @@ feature
 		do
 			if not retried then
 				accepted := Void
-				l_address := address
 					-- Per inherited assertion
-				check l_address_attached: l_address /= Void end
-				pass_address := l_address.twin
-				l_last_fd := last_fd
-				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
-				last_fd := l_last_fd
-				if return > 0 then
-					create l_accepted.make_from_descriptor_and_address (return, l_address.twin);
-					l_accepted.set_peer_address (pass_address)
-						-- We preserve the blocking state specified on Current.
-					if is_blocking then
-						l_accepted.set_blocking
-					else
-						l_accepted.set_non_blocking
+				check address_attached: attached address as l_address then
+					pass_address := l_address.twin
+					l_last_fd := last_fd
+					return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
+					last_fd := l_last_fd
+					if return > 0 then
+						create l_accepted.make_from_descriptor_and_address (return, l_address.twin);
+						l_accepted.set_peer_address (pass_address)
+							-- We preserve the blocking state specified on Current.
+						if is_blocking then
+							l_accepted.set_blocking
+						else
+							l_accepted.set_non_blocking
+						end
+						accepted := l_accepted
 					end
-					accepted := l_accepted
 				end
 			end
 		rescue
@@ -439,14 +434,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

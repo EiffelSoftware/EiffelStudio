@@ -57,12 +57,11 @@ feature -- Status report
 			-- Is resource open?
 		local
 			l_socket: like main_socket
-			l_proxy: like proxy_connection
 		do
 			if is_proxy_used then
-				l_proxy := proxy_connection
-				check l_proxy_attached: l_proxy /= Void end
-				Result := l_proxy.is_open
+				check attached proxy_connection as l_proxy then
+					Result := l_proxy.is_open
+				end
 			else
 				l_socket := main_socket
 				Result := (l_socket /= Void) and then not l_socket.is_closed
@@ -104,18 +103,16 @@ feature -- Status setting
 
 	open
 			-- Open resource.
-		local
-			l_socket: like main_socket
 		do
 			if not is_open then
 				open_connection
 				if not is_open then
 					error_code := Connection_refused
-				else
-					l_socket := main_socket
-					check l_socket_attached: l_socket /= Void end
+				elseif attached main_socket as l_socket then
 					receive (l_socket)
 					if not error then login end
+				else
+					error_code := no_socket_to_connect
 				end
 			end
 		rescue
@@ -124,22 +121,19 @@ feature -- Status setting
 
 	close
 			-- Close.
-		local
-			l_socket: like main_socket
-			l_proxy: like proxy_connection
 		do
 			if is_proxy_used then
-				l_proxy := proxy_connection
-				check l_proxy_attached: l_proxy /= Void end
-				l_proxy.close
-			else
-				l_socket := main_socket
-				check l_socket_attached: l_socket /= Void end
+				check attached proxy_connection as l_proxy then
+					l_proxy.close
+				end
+			elseif attached main_socket as l_socket then
 				l_socket.close
 				main_socket := Void
-				l_socket := accepted_socket
-				if l_socket /= Void and then (l_socket.is_open_read or l_socket.is_open_write) then
-					l_socket.close
+				if
+					attached accepted_socket as l_accepted_socket and then
+					(l_accepted_socket.is_open_read or l_accepted_socket.is_open_write)
+				then
+					l_accepted_socket.close
 					accepted_socket := Void
 					data_socket := Void
 				end
@@ -159,12 +153,11 @@ feature -- Status setting
 			-- Initiate transfer.
 		local
 			l_socket: like accepted_socket
-			l_proxy: like proxy_connection
 		do
 			if is_proxy_used then
-				l_proxy := proxy_connection
-				check l_proxy_attached: l_proxy /= Void end
-				l_proxy.initiate_transfer
+				check attached proxy_connection as l_proxy then
+					l_proxy.initiate_transfer
+				end
 			else
 				if not passive_mode then
 					create l_socket.make_server_by_port (0)
@@ -176,8 +169,7 @@ feature -- Status setting
 					debug Io.error.put_string ("Accepting socket...%N") end
 					if passive_mode then
 						accepted_socket := data_socket
-					else
-						check l_socket_attached: l_socket /= Void end
+					elseif l_socket /= Void then
 						l_socket.accept
 						l_socket := l_socket.accepted
 						check l_socket_attached: l_socket /= Void end
@@ -278,37 +270,33 @@ feature -- Output
 
 	put (other: DATA_RESOURCE)
 			-- Write out resource `other'.
-		local
-			l_socket: like accepted_socket
-			l_packet: like last_packet
-			l_proxy: like proxy_connection
 		do
 			if is_proxy_used then
-				l_proxy := proxy_connection
-				check l_proxy_attached: l_proxy /= Void end
-				l_proxy.put (other)
+				check attached proxy_connection as l_proxy then
+					l_proxy.put (other)
+				end
 			else
 				from
 				until
 					error or else not other.is_packet_pending
 				loop
-					l_socket := accepted_socket
-					check l_socket_attached: l_socket /= Void end
-					check_socket (l_socket, Write_only)
-					if not error then
-						other.read
-						l_socket := accepted_socket
-						l_packet := other.last_packet
-						check
-							l_socket_attached: l_socket /= Void
-							l_packet_attached: l_packet /= Void
+					if attached accepted_socket as l_socket then
+						check_socket (l_socket, Write_only)
+						if not error then
+							other.read
+							if attached other.last_packet as l_packet then
+								l_socket.put_string (l_packet)
+								last_packet_size := l_packet.count
+								bytes_transferred := bytes_transferred + last_packet_size
+								if last_packet_size /= other.last_packet_size then
+									error_code := Write_error
+								end
+							else
+								error_code := read_error
+							end
 						end
-						l_socket.put_string (l_packet)
-						last_packet_size := l_packet.count
-						bytes_transferred := bytes_transferred + last_packet_size
-						if last_packet_size /= other.last_packet_size then
-							error_code := Write_error
-						end
+					else
+						error_code := no_socket_to_connect
 					end
 				end
 			end
@@ -322,16 +310,12 @@ feature -- Input
 			-- Read packet.
 		local
 			l_packet: like last_packet
-			l_socket: like main_socket
-			l_proxy: like proxy_connection
 		do
 			if is_proxy_used then
-				l_proxy := proxy_connection
-				check l_proxy_attached: l_proxy /= Void end
-				l_proxy.read
-			else
-				l_socket := accepted_socket
-				check l_socket_attached: l_socket /= Void end
+				check attached proxy_connection as l_proxy then
+					l_proxy.read
+				end
+			elseif attached accepted_socket as l_socket then
 				check_socket (l_socket, Read_only)
 				if not error then
 					l_socket.read_stream (read_buffer_size)
@@ -341,14 +325,18 @@ feature -- Input
 					bytes_transferred := bytes_transferred + last_packet_size
 					if last_packet_size = 0 then
 						is_packet_pending := False
-						l_socket := main_socket
-						check l_socket_attached: l_socket /= Void end
-						receive (l_socket)
-						if not reply_code_ok (last_reply, <<226>>) then
-							error_code := Transfer_failed
+						if attached main_socket as l_main_socket then
+							receive (l_socket)
+							if not reply_code_ok (last_reply, <<226>>) then
+								error_code := Transfer_failed
+							end
+						else
+							error_code := no_socket_to_connect
 						end
 					end
 				end
+			else
+				error_code := no_socket_to_connect
 			end
 		rescue
 			error_code := Transfer_failed
@@ -548,7 +536,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_size (s: detachable STRING)
+	get_size (s: STRING)
 			-- Extract file size from `s'.
 		require
 			no_error_occurred: not error
@@ -628,17 +616,18 @@ feature {NONE} -- Implementation
 			-- Send username. Did it work?
 		local
 			cmd: STRING
-			l_socket: like main_socket
 		do
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			cmd := Ftp_user_command.twin
-			cmd.extend (' ')
-			cmd.append (address.username)
-			send (l_socket, cmd)
-			Result := reply_code_ok (last_reply, <<230, 331>>)
-			if not Result then
-				error_code := No_such_user
+			if attached main_socket as l_socket then
+				cmd := Ftp_user_command.twin
+				cmd.extend (' ')
+				cmd.append (address.username)
+				send (l_socket, cmd)
+				Result := reply_code_ok (last_reply, <<230, 331>>)
+				if not Result then
+					error_code := No_such_user
+				end
+			else
+				error_code := no_socket_to_connect
 			end
 		end
 
@@ -646,63 +635,66 @@ feature {NONE} -- Implementation
 			-- Send password. Did it work?
 		local
 			cmd: STRING
-			l_socket: like main_socket
 		do
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			cmd := Ftp_password_command.twin
-			cmd.extend (' ')
-			cmd.append (address.password)
-			send (l_socket, cmd)
-			Result := reply_code_ok (last_reply, <<202, 230>>)
-			if not Result then
-				error_code := Access_denied
+			if attached main_socket as l_socket then
+				cmd := Ftp_password_command.twin
+				cmd.extend (' ')
+				cmd.append (address.password)
+				send (l_socket, cmd)
+				Result := reply_code_ok (last_reply, <<202, 230>>)
+				if not Result then
+					error_code := Access_denied
+				end
+			else
+				error_code := no_socket_to_connect
 			end
 		end
 
 	send_passive_mode_command: BOOLEAN
 			-- Send passive mode command. Did it work?
 		local
-			l_socket: like main_socket
+			l_data_socket: like data_socket
 		do
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			send (l_socket, Ftp_passive_mode_command)
-			Result := reply_code_ok (last_reply, <<227>>)
-			if Result then
-				l_socket := setup_passive_mode_socket (last_reply)
-				data_socket := l_socket
-				l_socket.connect
+			if attached main_socket as l_socket then
+				send (l_socket, Ftp_passive_mode_command)
+				Result := reply_code_ok (last_reply, <<227>>)
+				if Result then
+					l_data_socket := setup_passive_mode_socket (last_reply)
+					l_data_socket.connect
+					data_socket := l_data_socket
+				else
+					error_code := Wrong_command
+				end
 			else
-				error_code := Wrong_command
+				error_code := no_socket_to_connect
 			end
 		end
 
 	send_text_mode_command: BOOLEAN
 			-- Send ASCII text transfer mode command. Did it work?
-		local
-			l_socket: like main_socket
 		do
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			send (l_socket, Ftp_text_mode_command)
-			Result := reply_code_ok (last_reply, <<200>>)
-			if not Result then
-				error_code := Wrong_command
+			if attached main_socket as l_socket then
+				send (l_socket, Ftp_text_mode_command)
+				Result := reply_code_ok (last_reply, <<200>>)
+				if not Result then
+					error_code := Wrong_command
+				end
+			else
+				error_code := no_socket_to_connect
 			end
 		end
 
 	send_binary_mode_command: BOOLEAN
 			-- Send binary transfer mode command. Did it work?
-		local
-			l_socket: like main_socket
 		do
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			send (l_socket, Ftp_binary_mode_command)
-			Result := reply_code_ok (last_reply, <<200>>)
-			if not Result then
-				error_code := Wrong_command
+			if attached main_socket as l_socket then
+				send (l_socket, Ftp_binary_mode_command)
+				Result := reply_code_ok (last_reply, <<200>>)
+				if not Result then
+					error_code := Wrong_command
+				end
+			else
+				error_code := no_socket_to_connect
 			end
 		end
 
@@ -722,19 +714,22 @@ feature {NONE} -- Implementation
 			data_socket_exists: data_socket /= Void
 		local
 			port_str: STRING
-			l_socket: like main_socket
+			l_data_socket: like data_socket
 		do
-			l_socket := data_socket
-			check l_socket_attached: l_socket /= Void end
-			port_str := port_command (l_socket.port)
+			l_data_socket := data_socket
+			check l_socket_attached: l_data_socket /= Void then
+				port_str := port_command (l_data_socket.port)
 
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			send (l_socket, port_str)
+				if attached main_socket as l_socket then
+					send (l_socket, port_str)
 
-			Result := reply_code_ok (last_reply, <<200>>)
-			if not Result then
-				error_code := Wrong_command
+					Result := reply_code_ok (last_reply, <<200>>)
+					if not Result then
+						error_code := Wrong_command
+					end
+				else
+					error_code := no_socket_to_connect
+				end
 			end
 		end
 
@@ -742,48 +737,45 @@ feature {NONE} -- Implementation
 			-- Send transfer command. Did it work?
 		local
 			cmd: STRING
-			l_socket: like main_socket
 		do
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			if passive_mode then
-				Result := send_passive_mode_command
-			else
-				Result := send_port_command
-			end
-
-			if Result then
-				if Read_mode then
-					cmd := Ftp_retrieve_command.twin
+			if attached main_socket as l_socket then
+				if passive_mode then
+					Result := send_passive_mode_command
 				else
-					check write_mode: write_mode end
-					cmd := Ftp_store_command.twin
+					Result := send_port_command
 				end
-				cmd.extend (' ')
-				cmd.append (address.path)
-				send (l_socket, cmd)
-				Result := reply_code_ok (last_reply, <<150>>)
-				if not Result then
-					error_code := Permission_denied
-				elseif Read_mode then
-					get_size (last_reply)
+
+				if Result then
+					if Read_mode then
+						cmd := Ftp_retrieve_command.twin
+					else
+						check write_mode: write_mode end
+						cmd := Ftp_store_command.twin
+					end
+					cmd.extend (' ')
+					cmd.append (address.path)
+					send (l_socket, cmd)
+					Result := reply_code_ok (last_reply, <<150>>)
+					if not Result then
+						error_code := Permission_denied
+					elseif Read_mode then
+						get_size (last_reply)
+					end
 				end
+			else
+				error_code := no_socket_to_connect
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class FTP_PROTOCOL
-
+end

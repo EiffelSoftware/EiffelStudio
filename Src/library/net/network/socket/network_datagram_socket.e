@@ -168,8 +168,10 @@ feature -- Status setting
 			l_peer_address := peer_address
 			if l_peer_address = Void then
 				make_peer_address
-				l_peer_address := peer_address
-				check l_peer_address_attached: l_peer_address /= Void end
+					-- Per postcondition.
+				check attached peer_address as l_address then
+					l_peer_address := l_address
+				end
 			end
 			create Result.make (size);
 			return_val := c_recv_from (fd, fd1, $a_last_fd, p.item, size, flags, 0, l_peer_address.socket_address.item)
@@ -185,12 +187,10 @@ feature {NONE} -- Implementation
 			-- Create a peer address.
 		require
 			address_attached: address /= Void
-		local
-			l_address: like address
 		do
-			l_address := address
-			check l_address_attached: l_address /= Void end
-			peer_address := l_address.twin
+			check address_attached: attached address as l_address then
+				peer_address := l_address.twin
+			end
 		ensure
 			peer_address_attached: peer_address /= Void
 		end
@@ -262,14 +262,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class NETWORK_DATAGRAM_SOCKET

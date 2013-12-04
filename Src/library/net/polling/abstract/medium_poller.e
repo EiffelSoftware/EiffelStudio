@@ -135,12 +135,9 @@ feature -- process set commands
 		local
 			counter: INTEGER;
 			a_command: POLL_COMMAND
-			l_last_mask: detachable POLL_MASK
 		do
-			if not ignore_read and then not internal_read_command_list.is_empty then
+			if not ignore_read and then not internal_read_command_list.is_empty and then attached last_read_mask as l_last_mask then
 				from
-					l_last_mask := last_read_mask
-					check l_last_mask_attached: l_last_mask /= Void end
 					internal_read_command_list.start
 				until
 					internal_read_command_list.after or else not (counter < number_of_selected)
@@ -153,10 +150,11 @@ feature -- process set commands
 					internal_read_command_list.forth
 				end
 			end;
-			if not ignore_write and then counter < number_of_selected and then not internal_write_command_list.is_empty then
+			if
+				not ignore_write and then counter < number_of_selected and then not internal_write_command_list.is_empty and then
+				attached last_write_mask as l_last_mask
+			then
 				from
-					l_last_mask := last_write_mask
-					check l_last_mask_attached: l_last_mask /= Void end
 					internal_write_command_list.start
 				until
 					internal_write_command_list.after or else not (counter < number_of_selected)
@@ -169,10 +167,11 @@ feature -- process set commands
 					internal_write_command_list.forth
 				end
 			end;
-			if not ignore_exception and then counter < number_of_selected and then not internal_exception_command_list.is_empty then
+			if
+				not ignore_exception and then counter < number_of_selected and then not internal_exception_command_list.is_empty and then
+				attached last_except_mask as l_last_mask
+			then
 				from
-					l_last_mask := last_except_mask
-					check l_last_mask_attached: l_last_mask /= Void end
 					internal_exception_command_list.start
 				until
 					internal_exception_command_list.after or else not (counter < number_of_selected)
@@ -491,14 +490,14 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -38,13 +38,11 @@ feature -- Access
 	manager: TRANSFER_MANAGER
 			-- The built manager
 		require
-			built: manager_built
-		local
-			l_result: like transfer_manager
+			manager_built: manager_built
 		do
-			l_result := transfer_manager
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			check manager_built: attached transfer_manager as l_result then
+				Result := l_result
+			end
 		end
 
 	transaction (n: INTEGER): TRANSACTION
@@ -98,34 +96,32 @@ feature -- Status report
 		local
 			res: detachable DATA_RESOURCE
 			u: detachable URL
-			l_proxy: detachable PROXY_INFORMATION
 		do
 			resource_factory.set_address (addr)
 			if resource_factory.is_address_correct then
 				u := resource_factory.url
-				check u_attached: u /= Void end
-				resource_hash.search (u.location)
-				if resource_hash.found then
-					res := resource_hash.found_item
+				if u /= Void and then attached resource_hash.item (u.location) as l_res then
+					res := l_res
 				else
 					resource_factory.create_resource
-					res := resource_factory.resource
+					check attached resource_factory.resource as l_res then
+						res := l_res
+					end
 				end
-				check res_attached: res /= Void end
 				inspect
 					mode
 				when Readable then
 					if res.is_proxy_supported then
-						l_proxy := source_proxy
-						check l_proxy_attached: l_proxy /= Void end
-						res.set_proxy_information (l_proxy)
+						check attached source_proxy as l_proxy then
+							res.set_proxy_information (l_proxy)
+						end
 					end
 					Result := add_reference (readable_set, res, agent res.is_readable)
 				when Writable then
 					if res.is_proxy_supported then
-						l_proxy := target_proxy
-						check l_proxy_attached: l_proxy /= Void end
-						res.set_proxy_information (l_proxy)
+						check attached target_proxy as l_proxy then
+							res.set_proxy_information (l_proxy)
+						end
 					end
 					Result := add_reference (writable_set, res, agent res.is_writable)
 				end
@@ -265,10 +261,8 @@ feature -- Element change
 			source_exists: s /= Void
 			target_exists: t /= Void
 		local
-			sr: detachable DATA_RESOURCE
-			tr: detachable DATA_RESOURCE
-			su: detachable URL
-			tu: detachable URL
+			l_sr: detachable DATA_RESOURCE
+			l_tr: detachable DATA_RESOURCE
 			ta: SINGLE_TRANSACTION
 			l_timeout: like timeout
 		do
@@ -278,46 +272,34 @@ feature -- Element change
 				optimized_transactions := Void
 				transfer_manager := Void
 
+					-- Set `address' and `url'.
 				resource_factory.set_address (s)
-				su := resource_factory.url
-				check su_attached: su /= Void end
-				resource_hash.search (su.location)
 				check
-						-- Because resource has been created during correctness check
-					found: resource_hash.found
+					attached resource_factory.url as su and then
+					attached resource_hash.item (su.location) as sr
+				then
+					l_sr := sr.deep_twin
 				end
-				sr := resource_hash.found_item
-				check sr_attached: sr /= Void end
-				sr := sr.deep_twin
 
+					-- Set `address' and `url'.
 				resource_factory.set_address (t)
-				tu := resource_factory.url
-				check tu_attached: tu /= Void end
-				resource_hash.search (tu.location)
 				check
-						-- Because resource has been created during correctness check
-					found: resource_hash.found
-				end
-				tr := resource_hash.found_item
-				check tr_attached: tr /= Void end
-				tr := tr.deep_twin
-				debug
-					Io.error.put_string (s)
-					Io.error.put_string (" -> ")
-					Io.error.put_string (t)
-					Io.error.put_string (" added.%N")
+					attached resource_factory.url as tu and then
+					attached resource_hash.item (tu.location) as tr
+				then
+					l_tr := tr.deep_twin
 				end
 				l_timeout := timeout
 				if l_timeout /= Void then
-					sr.set_timeout (l_timeout.item)
-					tr.set_timeout (l_timeout.item)
+					l_sr.set_timeout (l_timeout.item)
+					l_tr.set_timeout (l_timeout.item)
 					debug
 						Io.error.put_string ("Timeout set to ")
 						Io.error.put_integer (l_timeout.item)
 						Io.error.put_string (" seconds%N")
 					end
 				end
-				create ta.make (sr, tr)
+				create ta.make (l_sr, l_tr)
 				transactions.extend (ta)
 			end
 		ensure
@@ -454,22 +436,19 @@ feature {NONE} -- Implementation
 		local
 			hash: HASH_TABLE [LINKED_LIST [INTEGER], URL]
 			addr: URL
-			lst: detachable LINKED_LIST [INTEGER]
+			l_list: LINKED_LIST [INTEGER]
 			multitrans: MULTIPLE_TRANSACTION
 			l_optimized_transactions: like optimized_transactions
 		do
 			create hash.make (count)
 			from transactions.start until transactions.after loop
 				addr := transactions.item.source.address
-				hash.search (addr)
-				if hash.found then
-					lst := hash.found_item
-					check lst_attached: lst /= Void end
+				if attached hash.item (addr) as lst then
 					lst.extend (transactions.index)
 				else
-					create lst.make
-					lst.extend (transactions.index)
-					hash.put (lst, addr)
+					create l_list.make
+					l_list.extend (transactions.index)
+					hash.put (l_list, addr)
 				end
 				transactions.forth
 			end
@@ -478,10 +457,7 @@ feature {NONE} -- Implementation
 			optimized_transactions := l_optimized_transactions
 
 			from transactions.start until transactions.after loop
-				hash.search (transactions.item.source.address)
-				if hash.found then
-					lst := hash.found_item
-					check lst_attached: lst /= Void end
+				if attached hash.item (transactions.item.source.address) as lst then
 					lst.start
 					if not (transactions @ lst.item).source.supports_multiple_transactions or lst.count = 1 then
 						from lst.start until lst.after loop
@@ -516,21 +492,20 @@ feature {NONE} -- Implementation
 			no_manager: not manager_built
 			optimized: optimized_count > 0
 		local
-			l_optimized_transactions: like optimized_transactions
 			l_manager: like transfer_manager
 		do
-			l_optimized_transactions := optimized_transactions
-			check l_optimized_transactions_attached: l_optimized_transactions /= Void end
-			from
-				l_optimized_transactions.start
-				create l_manager.make
-				transfer_manager := l_manager
-				l_manager.stop_on_error
-			until
-				l_optimized_transactions.after
-			loop
-				l_manager.add_transaction (l_optimized_transactions.item)
-				l_optimized_transactions.forth
+			create l_manager.make
+			transfer_manager := l_manager
+			if attached optimized_transactions as l_optimized_transactions then
+				from
+					l_optimized_transactions.start
+					l_manager.stop_on_error
+				until
+					l_optimized_transactions.after
+				loop
+					l_manager.add_transaction (l_optimized_transactions.item)
+					l_optimized_transactions.forth
+				end
 			end
 		ensure
 			manager_set_up: manager_built
@@ -577,14 +552,14 @@ invariant
 	count_equality: (optimized_count > 0) implies (count = optimized_count)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

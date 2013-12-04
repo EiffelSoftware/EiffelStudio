@@ -110,14 +110,12 @@ feature -- Status setting
 
 	close
 			-- Close.
-		local
-			l_socket: like main_socket
 		do
-			l_socket := main_socket
-			check l_socket_attached: l_socket /= Void end
-			l_socket.close
+			if attached main_socket as l_socket then
+				l_socket.close
+				main_socket := Void
+			end
 			if is_packet_pending then is_count_valid := False end
-			main_socket := Void
 			last_packet := Void
 			is_packet_pending := False
 		rescue
@@ -128,7 +126,6 @@ feature -- Status setting
 			-- Initiate transfer.
 		local
 			str: STRING
-			l_socket: like main_socket
 		do
 			str := Http_get_command.twin
 			str.extend (' ')
@@ -148,20 +145,20 @@ feature -- Status setting
 			end
 			if not address.username.is_empty then
 				str.append (Http_end_of_header_line)
-				str.append (Http_Authorization_header + ": Basic "
+				str.append (Http_authorization_header + ": Basic "
 						+ base64_encoded (address.username + ":" + address.password))
 			end
 			str.append (Http_end_of_command)
 			if not error then
-				l_socket := main_socket
-				check l_socket_attached: l_socket /= Void end
-				l_socket.put_string (str)
-				debug ("eiffelnet")
-					Io.error.put_string (str)
+				check main_socket_attached: attached main_socket as l_socket then
+					l_socket.put_string (str)
+					debug ("eiffelnet")
+						Io.error.put_string (str)
+					end
+					get_headers
+					transfer_initiated := True
+					is_packet_pending := True
 				end
-				get_headers
-				transfer_initiated := True
-				is_packet_pending := True
 			end
 		rescue
 			error_code := Transfer_failed
@@ -200,26 +197,25 @@ feature {NONE} -- Implementation
 			open: is_open
 		local
 			str: detachable STRING
-			l_socket: like main_socket
 		do
 			headers.wipe_out
-			l_socket := main_socket
-			check l_socket_not_void: l_socket /= Void end
-			from
-			until
-				error or else (str /= Void and then str.is_equal ("%R"))
-			loop
-				check_socket (l_socket, Read_only)
-				if not error then
-					l_socket.read_line
-					str := l_socket.last_string
-					if not str.is_empty then
-						headers.extend (str.twin)
+			check attached main_socket as l_socket then
+				from
+				until
+					error or else (str /= Void and then str.is_equal ("%R"))
+				loop
+					check_socket (l_socket, Read_only)
+					if not error then
+						l_socket.read_line
+						str := l_socket.last_string
+						if not str.is_empty then
+							headers.extend (str.twin)
+						end
 					end
 				end
+				check_error
+				if not error then get_content_length end
 			end
-			check_error
-			if not error then get_content_length end
 		end
 
 	get_content_length
@@ -345,14 +341,14 @@ invariant
 				(is_packet_pending = (bytes_transferred < count))
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

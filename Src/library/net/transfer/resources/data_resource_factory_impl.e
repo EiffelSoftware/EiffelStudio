@@ -77,7 +77,6 @@ feature -- Status setting
 		local
 			s: STRING
 			pos: INTEGER
-			l_url_function: like url_function
 		do
 			s := addr.twin
 			pos := s.substring_index ("://", 1)
@@ -95,12 +94,9 @@ feature -- Status setting
 			address := s.substring (pos + 3, s.count)
 			if is_service_supported then
 				setup_factory
-				l_url_function := url_function
-				check
-						-- Because we know that the requested service is supported.
-					function_set: l_url_function /= Void
+				if attached url_function as l_url_function then
+					url := l_url_function.item (Void)
 				end
-				url := l_url_function.item (Void)
 			else
 				address := Void
 				service := Void
@@ -125,12 +121,10 @@ feature -- Basic operations
 			-- Create resource.
 		require
 			correct_address: is_address_correct
-		local
-			l_resource_function: like resource_function
 		do
-			l_resource_function := resource_function
-			check l_resource_function_attached: l_resource_function /= Void end
-			resource := l_resource_function.item (Void)
+			check resource_function_attached: attached resource_function as l_resource_function then
+				resource := l_resource_function.item (Void)
+			end
 		ensure
 			resource_created: resource /= Void
 		end
@@ -151,7 +145,7 @@ feature {NONE} -- Implementation
 			until
 				(i = supported_services.count + 1) or (Result /= 0)
 			loop
-				if equal (service, supported_services @ i) then
+				if service ~ supported_services.item (i) then
 					Result := i
 				end
 				i := i + 1
@@ -196,12 +190,10 @@ feature {NONE} -- Implementation (Factory setup)
 			-- Create file URL.
 		require
 			is_address_set: is_address_set
-		local
-			l_address: like address
 		do
-			l_address := address
-			check l_address_not_void: l_address /= Void end
-			create Result.make (l_address)
+			check address_set: attached address as l_address then
+				create Result.make (l_address)
+			end
 		end
 
 	create_file_resource: FILE_PROTOCOL
@@ -211,7 +203,7 @@ feature {NONE} -- Implementation (Factory setup)
 			is_file_url: attached {FILE_URL} url
 		do
 				-- Because factory has created the right URL type
-			check attached {FILE_URL} url as u then
+			check is_file_url: attached {FILE_URL} url as u then
 				create Result.make (u)
 			end
 		end
@@ -221,7 +213,7 @@ feature {NONE} -- Implementation (Factory setup)
 		require
 			is_address_set: is_address_set
 		do
-			check attached address as l_address then
+			check is_address_set: attached address as l_address then
 				create Result.make (l_address)
 			end
 		end
@@ -242,12 +234,10 @@ feature {NONE} -- Implementation (Factory setup)
 			-- Create FTP URL.
 		require
 			is_address_set: is_address_set
-		local
-			l_address: like address
 		do
-			l_address := address
-			check l_address_not_void: l_address /= Void end
-			create Result.make (l_address)
+			check l_address_not_void: attached address as l_address then
+				create Result.make (l_address)
+			end
 		end
 
 	create_ftp_resource: FTP_PROTOCOL
@@ -268,7 +258,7 @@ invariant
 							not default_service.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

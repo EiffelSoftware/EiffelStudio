@@ -45,11 +45,15 @@ feature {PS_ABEL_EXPORT} -- Object query
 
 	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute `query' within `transaction'.
+		local
+			type: PS_TYPE_METADATA
 		do
-			initialize_query (query, transaction)
-			check attached query.read_manager as rm then
-				rm.execute (query, transaction, query.object_initialization_depth)
-			end
+			type := id_manager.metadata_manager.create_metadata_from_type (query.generic_type)
+
+			initialize_query (query, transaction, type.attributes)
+--			check attached query.read_manager as rm then
+--				rm.execute (query, transaction, query.object_initialization_depth)
+--			end
 		rescue
 			default_transactional_rescue (transaction)
 			query.close
@@ -57,11 +61,25 @@ feature {PS_ABEL_EXPORT} -- Object query
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Execute the tuple query `tuple_query' within the readonly transaction `transaction'.
+		local
+			collector: PS_CRITERION_ATTRIBUTE_COLLECTOR
+			trash: INTEGER
 		do
-			initialize_query (tuple_query, transaction)
-			check attached tuple_query.read_manager as rm then
-				rm.execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
+			create collector.make
+			trash := collector.visit (tuple_query.criterion)
+			collector.attributes.compare_objects
+			across
+				tuple_query.projection as proj
+			loop
+				if not collector.attributes.has (proj.item) then
+					collector.attributes.extend (proj.item)
+				end
 			end
+
+			initialize_query (tuple_query, transaction, collector.attributes)
+--			check attached tuple_query.read_manager as rm then
+--				rm.execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
+--			end
 		rescue
 			default_transactional_rescue (transaction)
 			tuple_query.close
@@ -187,13 +205,20 @@ feature {PS_ABEL_EXPORT} -- Implementation
 feature {NONE} -- Implementation
 
 
-	initialize_query (query: PS_ABSTRACT_QUERY[ANY, ANY]; transaction: PS_INTERNAL_TRANSACTION)
+	initialize_query (query: PS_ABSTRACT_QUERY[ANY, ANY]; transaction: PS_INTERNAL_TRANSACTION; filter: READABLE_INDEXABLE [STRING])
 		local
 			new_read_manager: PS_READ_MANAGER
+			query_cursor: PS_QUERY_CURSOR
 		do
-			create new_read_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
+			create new_read_manager.make (id_manager.metadata_manager, id_manager, mapper, backend, transaction)
 			all_handlers.do_all (agent new_read_manager.add_handler)
 			query.prepare_execution (transaction, new_read_manager)
+
+			create query_cursor.make (query, filter, new_read_manager)
+			query.set_internal_cursor (query_cursor)
+
+			query.retrieve_next
+
 		end
 
 feature {NONE} -- Obsolete

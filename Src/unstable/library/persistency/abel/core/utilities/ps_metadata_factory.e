@@ -55,42 +55,41 @@ feature -- Factory methods
 		end
 
 
-	generate_tuple_type (a_type: TYPE[detachable ANY]; projection: ARRAYED_LIST [STRING]): INTEGER_32
-			-- Generate a tuple of correct type and size
-		local
-			type: PS_TYPE_METADATA
---			storage: SPECIAL[detachable ANY]
-			attribute_type: PS_TYPE_METADATA
-			tuple_string: STRING
-			tuple_type_id: INTEGER
-			index: INTEGER
-		do
-			type := create_metadata_from_type (a_type)
-			check projection_not_empty: projection.count > 0 end
+--	generate_tuple_type (a_type: TYPE[detachable ANY]; projection: ARRAYED_LIST [STRING]): INTEGER_32
+--			-- Generate a tuple of correct type and size
+--		local
+--			type: PS_TYPE_METADATA
+--			attribute_type: PS_TYPE_METADATA
+--			tuple_string: STRING
+--			tuple_type_id: INTEGER
+--			index: INTEGER
+--		do
+--			type := create_metadata_from_type (a_type)
+--			check projection_not_empty: projection.count > 0 end
 
-			tuple_string := "detachable TUPLE ["
+--			tuple_string := "detachable TUPLE ["
 
-			from index := 1
-			until index > projection.count
-			loop
+--			from index := 1
+--			until index > projection.count
+--			loop
 
-				-- NOTE: We cannot just take the runtime type of the attribute, since those types are (for whatever reason)
-				-- always detachable. Instead the generated tuple needs to have the statically declared types as its generic
-				-- attributes. This way object tests like
-				--		check attached TUPLE[STRING, STING, detachable STRING] generated_tuple end
-				--  will succeed for objects having those fields.
+--				-- NOTE: We cannot just take the runtime type of the attribute, since those types are (for whatever reason)
+--				-- always detachable. Instead the generated tuple needs to have the statically declared types as its generic
+--				-- attributes. This way object tests like
+--				--		check attached TUPLE[STRING, STING, detachable STRING] generated_tuple end
+--				--  will succeed for objects having those fields.
 
-				tuple_string := tuple_string + type.reflection.type_name_of_type (type.reflection.field_static_type_of_type (type.field_index (projection[index]), type.type.type_id))
-				index := index + 1
+--				tuple_string := tuple_string + type.reflection.type_name_of_type (type.reflection.field_static_type_of_type (type.field_index (projection[index]), type.type.type_id))
+--				index := index + 1
 
-				if index <= projection.count then
-					tuple_string := tuple_string + ", "
-				end
-			end
+--				if index <= projection.count then
+--					tuple_string := tuple_string + ", "
+--				end
+--			end
 
-			tuple_string := tuple_string + "]"
-			Result:= type.reflection.dynamic_type_from_string (tuple_string)
-		end
+--			tuple_string := tuple_string + "]"
+--			Result:= type.reflection.dynamic_type_from_string (tuple_string)
+--		end
 
 
 feature {NONE} -- Initialization

@@ -381,25 +381,25 @@ feature
 			println
 		end
 
-	experiment_tuple_generation_metadata_factory
-		local
-			factory: PS_METADATA_FACTORY
-			type: PS_TYPE_METADATA
-			p:TEST_PERSON
-			id: INTEGER
-		do
-			create factory.make
-			create p.make ("a", "b", 0)
-			type := factory.create_metadata_from_object (p)
+--	experiment_tuple_generation_metadata_factory
+--		local
+--			factory: PS_METADATA_FACTORY
+--			type: PS_TYPE_METADATA
+--			p:TEST_PERSON
+--			id: INTEGER
+--		do
+--			create factory.make
+--			create p.make ("a", "b", 0)
+--			type := factory.create_metadata_from_object (p)
 
-			id := factory.generate_tuple_type (type.type, create {ARRAYED_LIST [STRING]}.make_from_array (<<"first_name", "items_owned">>))
-			print (id.out + " ")
-			print (type.reflection.type_name_of_type (id))
-			println
+--			id := factory.generate_tuple_type (type.type, create {ARRAYED_LIST [STRING]}.make_from_array (<<"first_name", "items_owned">>))
+--			print (id.out + " ")
+--			print (type.reflection.type_name_of_type (id))
+--			println
 
-			print (type.reflection.new_instance_of (id))
+--			print (type.reflection.new_instance_of (id))
 
-		end
+--		end
 
 	experiment_converter
 		local

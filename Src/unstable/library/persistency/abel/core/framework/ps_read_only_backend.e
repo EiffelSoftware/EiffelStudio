@@ -20,6 +20,8 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- Note to implementors: It is highly recommended to cache the result, and
 			-- refresh it during a `retrieve' operation (or not at all if the result
 			-- is always stable).
+		ensure
+			no_none_type: across Result as cursor all not cursor.item.is_equal ("NONE") end
 		end
 
 	batch_retrieval_size: INTEGER

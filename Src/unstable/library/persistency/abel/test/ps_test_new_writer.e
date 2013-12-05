@@ -24,6 +24,34 @@ feature {NONE}
 
 feature
 
+	memory_subtypes_quicktest
+		local
+			obj: TEST_PERSON
+			query: PS_QUERY [ANY]
+			tr: PS_TRANSACTION
+		do
+			create obj.make ("a", "b", 3)
+			repository.clean_db_for_testing
+			tr := repository.new_transaction
+			tr.insert (obj)
+
+			create query.make
+			tr.execute_query (query)
+
+			across
+				query as c
+			from
+				assert ("not empty", not c.after)
+			loop
+				print (c.item)
+				assert ("equal", c.item.is_deep_equal (obj))
+			end
+			query.close
+			tr.commit
+			repository.clean_db_for_testing
+
+		end
+
 	memory_criteria
 		do
 			criteria_tests.test_criteria_agents

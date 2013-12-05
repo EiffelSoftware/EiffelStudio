@@ -233,6 +233,8 @@ feature {PS_ABEL_EXPORT} -- Implementation : Access
 
 	transaction_impl: detachable PS_INTERNAL_TRANSACTION
 
+	internal_cursor: detachable ITERATION_CURSOR [ANY]
+
 feature {PS_ABEL_EXPORT} -- Implementation: Element change
 
 	prepare_execution (a_transaction: PS_INTERNAL_TRANSACTION; a_read_manager: PS_READ_MANAGER)
@@ -248,6 +250,11 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			executed: is_executed = True
 			transaction_set: internal_transaction = a_transaction
 			read_manager_set: read_manager = a_read_manager
+		end
+
+	set_internal_cursor (cursor: like internal_cursor)
+		do
+			internal_cursor := cursor
 		end
 
 	set_transaction (context: like transaction)

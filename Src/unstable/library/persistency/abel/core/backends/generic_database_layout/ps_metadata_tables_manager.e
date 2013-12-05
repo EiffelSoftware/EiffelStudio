@@ -74,7 +74,9 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 			from
 				create Result.make
 			loop
-				Result.extend (cursor.key)
+				if not cursor.key.is_equal ("NONE") then
+					Result.extend (cursor.key)
+				end
 			end
 		end
 

@@ -26,9 +26,10 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			check attached internal_cursor as cursor then
 				cursor.forth
 				if cursor.after then
-					set_is_after
+					is_after := True
 				else
-					set_result_item (cursor.item)
+					result_cache.extend (cursor.item)
+--					set_result_item (cursor.item)
 				end
 			end
 --			check attached read_manager as rm then

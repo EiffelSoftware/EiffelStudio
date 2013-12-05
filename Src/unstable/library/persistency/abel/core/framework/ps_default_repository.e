@@ -212,13 +212,11 @@ feature {NONE} -- Implementation
 		do
 			create new_read_manager.make (id_manager.metadata_manager, id_manager, mapper, backend, transaction)
 			all_handlers.do_all (agent new_read_manager.add_handler)
-			query.prepare_execution (transaction, new_read_manager)
 
 			create query_cursor.make (query, filter, new_read_manager)
-			query.set_internal_cursor (query_cursor)
 
+			query.prepare_execution (transaction, query_cursor)
 			query.retrieve_next
-
 		end
 
 feature {NONE} -- Obsolete

@@ -158,15 +158,26 @@ feature {PS_ABEL_EXPORT} -- Element change
 			attribute_removed: not has_attribute (attribute_name)
 		end
 
---	set_is_root (value: BOOLEAN)
---			-- Set `is_root' to `value'.
---		do
---			is_root := value
---			if has_attribute (root_key) then
---				remove_attribute (root_key)
---			end
---			add_attribute (root_key, value.out, "BOOLEAN")
---		end
+	filter_attributes (attributes_to_keep: HASH_TABLE [BOOLEAN, STRING])
+			-- Remove all attributes except the ones listed in `attributes_to_keep'.
+		do
+			from
+				attributes.start
+			until
+				attributes.after
+			loop
+				if attributes_to_keep.has (attributes.item) then
+					attributes.forth
+				else
+--					print (attributes.item + "%N")
+					values.remove (attributes.item)
+					attributes.remove
+				end
+			variant
+					-- In each iteration, either count or index decreases.
+				attributes.count - attributes.index + 1
+			end
+		end
 
 feature -- Debugging output
 

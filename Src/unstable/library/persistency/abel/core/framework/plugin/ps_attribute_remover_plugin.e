@@ -24,6 +24,7 @@ feature
 	after_retrieve (object: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction:PS_INTERNAL_TRANSACTION)
 			-- Sort out all superfluous attributes, in case the backend didn't do it by itself.
 		do
+--			across attributes as c from print ("in plugin%N") loop print ("filter: " + c.item + "%N")  end
 			across
 				object.attributes.twin as attr
 			loop
@@ -35,6 +36,7 @@ feature
 						not attr.item.is_equal (attr2.item)
 					end
 				then
+--					print ("attribute remover: " + attr.item + "%N")
 					object.remove_attribute (attr.item)
 				end
 			end

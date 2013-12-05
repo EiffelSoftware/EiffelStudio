@@ -19,11 +19,13 @@ feature {NONE} -- Initialization
 			a_metadata_factory: like metadata_factory;
 			an_id_manager: like id_manager;
 			a_primary_key_mapper: like primary_key_mapper;
-			a_backend: like backend)
+			a_backend: like backend;
+			a_transaction: like transaction)
 			-- Initialization for `Current'
 		do
 			initialize (a_metadata_factory, an_id_manager, a_primary_key_mapper)
 			backend := a_backend
+			internal_transaction := a_transaction
 
 			create object_storage.make (default_size)
 			create cache.make (small_size)
@@ -56,76 +58,63 @@ feature
 		end
 
 
-	execute (q: PS_QUERY[ANY]; a_transaction: PS_INTERNAL_TRANSACTION; a_max_level: INTEGER)
-		local
-			type: PS_TYPE_METADATA
-			new_obj: PS_OBJECT_DATA
-			found: BOOLEAN
-			query_cursor: PS_QUERY_CURSOR
-		do
-			max_level := a_max_level
-			object_storage.wipe_out
-			cache.wipe_out
-			internal_transaction := a_transaction
+--	execute (q: PS_QUERY[ANY]; a_transaction: PS_INTERNAL_TRANSACTION; a_max_level: INTEGER)
+--		local
+--			type: PS_TYPE_METADATA
+--			new_obj: PS_OBJECT_DATA
+--			found: BOOLEAN
+--			query_cursor: PS_QUERY_CURSOR
+--		do
+--			max_level := a_max_level
+--			object_storage.wipe_out
+--			cache.wipe_out
+--			internal_transaction := a_transaction
 
---			q.register_as_executed (transaction)
+----			q.register_as_executed (transaction)
 
-			type := metadata_factory.create_metadata_from_type(q.generic_type)
+--			type := metadata_factory.create_metadata_from_type(q.generic_type)
 
-			create query_cursor.make (q, type.attributes, Current)
---			query_result_attr := dispatch_retrieve (type, q.criterion, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (type.attributes), transaction)
-			q.set_internal_cursor (query_cursor)
+--			create query_cursor.make (q, type.attributes, Current)
+----			query_result_attr := dispatch_retrieve (type, q.criterion, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (type.attributes), transaction)
+--			q.set_internal_cursor (query_cursor)
 
-			q.retrieve_next
---			next_entry (q)
-		end
+--			q.retrieve_next
+----			next_entry (q)
+--		end
 
-	execute_tuple (q: PS_TUPLE_QUERY[ANY]; a_transaction: PS_INTERNAL_TRANSACTION; a_max_level: INTEGER)
-		local
-			type: PS_TYPE_METADATA
-			new_obj: PS_OBJECT_DATA
-			found: BOOLEAN
-			collector: PS_CRITERION_ATTRIBUTE_COLLECTOR
-			trash: INTEGER
-			query_cursor: PS_QUERY_CURSOR
-		do
-			max_level := a_max_level
-			object_storage.wipe_out
-			cache.wipe_out
-			internal_transaction := a_transaction
-
---			q.register_as_executed (transaction)
-
-			type := metadata_factory.create_metadata_from_type(q.generic_type)
+--	execute_tuple (q: PS_TUPLE_QUERY[ANY]; a_transaction: PS_INTERNAL_TRANSACTION; a_max_level: INTEGER)
+--		local
+--			type: PS_TYPE_METADATA
+--			new_obj: PS_OBJECT_DATA
+--			found: BOOLEAN
+--			collector: PS_CRITERION_ATTRIBUTE_COLLECTOR
+--			trash: INTEGER
+--			query_cursor: PS_QUERY_CURSOR
+--		do
+--			max_level := a_max_level
+--			object_storage.wipe_out
+--			cache.wipe_out
+--			internal_transaction := a_transaction
 
 
-			create collector.make
-			trash := collector.visit (q.criterion)
-			collector.attributes.compare_objects
-			across q.projection as proj
-			loop
-				if not collector.attributes.has (proj.item) then
-					collector.attributes.extend (proj.item)
-				end
-			end
+--			type := metadata_factory.create_metadata_from_type(q.generic_type)
 
-			create query_cursor.make (q, collector.attributes, Current)
-			q.set_internal_cursor (query_cursor)
 
---			across
---				identity_type_handlers as cursor
---			until
---				found
+--			create collector.make
+--			trash := collector.visit (q.criterion)
+--			collector.attributes.compare_objects
+--			across q.projection as proj
 --			loop
---				if cursor.item.can_handle_type (type) then
---					found := True
---					check cursor.item.is_mapping_to_object end
---					query_result_attr := backend.retrieve (type, q.criterion, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (collector.attributes), transaction)
+--				if not collector.attributes.has (proj.item) then
+--					collector.attributes.extend (proj.item)
 --				end
 --			end
-			q.retrieve_next
---			next_tuple_entry (q)
-		end
+
+--			create query_cursor.make (q, collector.attributes, Current)
+--			q.set_internal_cursor (query_cursor)
+
+--			q.retrieve_next
+--		end
 
 	dispatch_retrieve (type: PS_TYPE_METADATA; criterion: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; a_transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_ENTITY]
 			-- Retrieve a set of collections or objects (based on the handler for `type').
@@ -161,78 +150,78 @@ feature
 			check handler_found: found end
 		end
 
-	next_tuple_entry (query: PS_TUPLE_QUERY [ANY])
-			-- Retrieve the next entry of query `query'.
-		local
-			type: PS_TYPE_METADATA
-			new_obj: PS_OBJECT_DATA
-			tuple: TUPLE
-			i, index: INTEGER
+--	next_tuple_entry (query: PS_TUPLE_QUERY [ANY])
+--			-- Retrieve the next entry of query `query'.
+--		local
+--			type: PS_TYPE_METADATA
+--			new_obj: PS_OBJECT_DATA
+--			tuple: TUPLE
+--			i, index: INTEGER
 
-			l_query_cursor: ITERATION_CURSOR [ANY]
-		do
-			-- Get the type of objects that the query operates on.
-			type := metadata_factory.create_metadata_from_type (query.generic_type)
-
-
-		check attached query.internal_cursor as qc then
-			l_query_cursor := qc
-		end
-
-		l_query_cursor.forth
-
-		if l_query_cursor.after then
-			query.set_is_after
-		else
-				-- extract the required information
-
---			new_obj := item (l_query_cursor.item)
-
-			check attached {TUPLE} type.reflection.new_instance_of (metadata_factory.generate_tuple_type (type.type, query.projection)) as t then
-				tuple := t
-			end
-
-			across query.projection as attr_cursor
-			from i := 1
-			loop
-				index := type.field_index (attr_cursor.item)
-				tuple.put (type.reflection.field (index, l_query_cursor.item), i)
-				i:= i+1
-			end
-
-			query.set_result_item (tuple)
-
-		end
+--			l_query_cursor: ITERATION_CURSOR [ANY]
+--		do
+--			-- Get the type of objects that the query operates on.
+--			type := metadata_factory.create_metadata_from_type (query.generic_type)
 
 
+--		check attached query.internal_cursor as qc then
+--			l_query_cursor := qc
+--		end
 
---			if not query_result_attr.after then
---				new_obj := next_query_result (False, query_result_attr)
---				query_result_attr.forth
---				if query.criterion.is_satisfied_by (new_obj.reflector.object) then
+--		l_query_cursor.forth
 
---						-- extract the required information
---					check attached {TUPLE} type.reflection.new_instance_of (metadata_factory.generate_tuple_type (type.type, query.projection)) as t then
---						tuple := t
---					end
+--		if l_query_cursor.after then
+--			query.set_is_after
+--		else
+--				-- extract the required information
 
---					across query.projection as attr_cursor
---					from i := 1
---					loop
---						index := type.field_index (attr_cursor.item)
---						tuple.put (type.reflection.field (index, new_obj.reflector.object), i)
---						i:= i+1
---					end
+----			new_obj := item (l_query_cursor.item)
 
---					query.set_result_item (tuple)
-
---				else
---					next_tuple_entry (query)
---				end
---			else
---				query.set_is_after
+--			check attached {TUPLE} type.reflection.new_instance_of (metadata_factory.generate_tuple_type (type.type, query.projection)) as t then
+--				tuple := t
 --			end
-		end
+
+--			across query.projection as attr_cursor
+--			from i := 1
+--			loop
+--				index := type.field_index (attr_cursor.item)
+--				tuple.put (type.reflection.field (index, l_query_cursor.item), i)
+--				i:= i+1
+--			end
+
+--			query.set_result_item (tuple)
+
+--		end
+
+
+
+----			if not query_result_attr.after then
+----				new_obj := next_query_result (False, query_result_attr)
+----				query_result_attr.forth
+----				if query.criterion.is_satisfied_by (new_obj.reflector.object) then
+
+----						-- extract the required information
+----					check attached {TUPLE} type.reflection.new_instance_of (metadata_factory.generate_tuple_type (type.type, query.projection)) as t then
+----						tuple := t
+----					end
+
+----					across query.projection as attr_cursor
+----					from i := 1
+----					loop
+----						index := type.field_index (attr_cursor.item)
+----						tuple.put (type.reflection.field (index, new_obj.reflector.object), i)
+----						i:= i+1
+----					end
+
+----					query.set_result_item (tuple)
+
+----				else
+----					next_tuple_entry (query)
+----				end
+----			else
+----				query.set_is_after
+----			end
+--		end
 
 
 --	query_item: INTEGER
@@ -311,10 +300,12 @@ feature {NONE}
 
 feature {PS_ABEL_EXPORT} -- Object building: loop control variables
 
-	build (index_set: INDEXABLE [INTEGER, INTEGER])
+	build (index_set: INDEXABLE [INTEGER, INTEGER]; a_max_level: INTEGER)
 			-- Build all items in `index_set'.
 		do
 			from
+				max_level := a_max_level
+
 				to_finalize := new_interval
 				to_process := new_interval
 				to_process_next := index_set

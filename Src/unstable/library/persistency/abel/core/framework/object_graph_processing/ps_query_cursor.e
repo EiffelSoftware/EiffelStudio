@@ -177,7 +177,7 @@ feature {PS_ABEL_EXPORT}
 				batch_count := batch_count - 1
 			end
 
-			read_manager.build (to_build)
+			read_manager.build (to_build, query.object_initialization_depth)
 			processed_items := processed_item_list.new_cursor
 		end
 

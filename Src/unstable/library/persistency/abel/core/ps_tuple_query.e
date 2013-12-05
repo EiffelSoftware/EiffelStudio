@@ -50,6 +50,7 @@ feature -- Element change
 			-- Set `a_projection' to the current query.
 		do
 			projection := a_projection
+			generate_tuple_type
 		ensure
 			projected_data_set: projection = a_projection
 		end
@@ -87,9 +88,33 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 
 	retrieve_next
 			-- Retrieve the next item from the database and store it in `result_cache'.
+		local
+			reflector: INTERNAL
+			i: INTEGER
 		do
-			check attached read_manager as rm then
-				rm.next_tuple_entry (Current)
+			check attached internal_cursor as my_cursor then
+				my_cursor.forth
+
+				if my_cursor.after then
+					set_is_after
+				else
+
+					create reflector
+
+					check attached {TUPLE} reflector.new_instance_of (tuple_type) as new_tuple then
+
+						across
+							projection as attr_cursor
+						from
+							i := 1
+						loop
+							new_tuple.put (reflector.field (field_indices [attr_cursor.item], my_cursor.item), i)
+							i := i + 1
+						end
+
+						set_result_item (new_tuple)
+					end
+				end
 			end
 		rescue
 			repository.rollback_transaction (internal_transaction, False)
@@ -100,8 +125,66 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create a query for all objects of type G (no filtering criteria).
+		local
+			reflector: REFLECTOR
+			field_count: INTEGER
 		do
 			Precursor
-			projection := default_projection
+
+			create reflector
+			field_count := reflector.field_count_of_type (generic_type.type_id)
+			create field_indices.make (field_count)
+
+			across
+				1 |..| field_count as index
+			loop
+				field_indices.extend (index.item, reflector.field_name_of_type (index.item, generic_type.type_id))
+			end
+
+			set_projection (default_projection)
 		end
+
+
+	field_indices: HASH_TABLE [INTEGER, STRING]
+			-- A quick lookup: field_name -> index, as used by reflection.
+
+	tuple_type: INTEGER
+			-- The dynamic type of the result tuples.
+
+
+	generate_tuple_type
+			-- Generate a tuple of correct type and size
+		require
+			 projection_not_empty: projection.count > 0
+		local
+			tuple_string: STRING
+			index: INTEGER
+			reflection: REFLECTOR
+		do
+			create reflection
+			tuple_string := "detachable TUPLE ["
+
+			from index := 1
+			until index > projection.count
+			loop
+
+				-- NOTE: We cannot just take the runtime type of the attribute, since those types are (for whatever reason)
+				-- always detachable. Instead the generated tuple needs to have the statically declared types as its generic
+				-- attributes. This way object tests like
+				--		check attached TUPLE[STRING, STING, detachable STRING] generated_tuple end
+				--  will succeed for objects having those fields.
+
+				tuple_string := tuple_string + reflection.type_name_of_type (reflection.field_static_type_of_type (field_indices [projection[index]], generic_type.type_id))
+				index := index + 1
+
+				if index <= projection.count then
+					tuple_string := tuple_string + ", "
+				end
+			end
+
+			tuple_string := tuple_string + "]"
+			tuple_type := reflection.dynamic_type_from_string (tuple_string)
+		end
+
+
 end

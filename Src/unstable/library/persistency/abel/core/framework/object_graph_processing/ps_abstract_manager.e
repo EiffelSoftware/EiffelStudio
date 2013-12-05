@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	default_size: INTEGER = 100
 			-- A predefined size for normal arrays.
 
-feature -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER
 			-- The number of objects known to this manager.
@@ -52,7 +52,7 @@ feature -- Access
 			index_set: Result.index = index
 		end
 
-feature -- Access
+feature {PS_ABEL_EXPORT} -- Access
 
 	metadata_factory: PS_METADATA_FACTORY
 			-- A factory for PS_TYPE_METADATA.
@@ -71,7 +71,7 @@ feature -- Access
 			end
 		end
 
-feature -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_transaction_initialized: BOOLEAN
 			-- Is `transaction' initialized?
@@ -79,7 +79,7 @@ feature -- Status report
 			Result := attached internal_transaction
 		end
 
-feature -- Element change
+feature {PS_ABEL_EXPORT} -- Element change
 
 	add_handler (handler: PS_HANDLER)
 			-- Add `handler' to the current manager.

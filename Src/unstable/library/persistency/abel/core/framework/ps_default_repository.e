@@ -49,11 +49,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 			type: PS_TYPE_METADATA
 		do
 			type := id_manager.metadata_manager.create_metadata_from_type (query.generic_type)
-
 			initialize_query (query, transaction, type.attributes)
---			check attached query.read_manager as rm then
---				rm.execute (query, transaction, query.object_initialization_depth)
---			end
 		rescue
 			default_transactional_rescue (transaction)
 			query.close
@@ -77,9 +73,6 @@ feature {PS_ABEL_EXPORT} -- Object query
 			end
 
 			initialize_query (tuple_query, transaction, collector.attributes)
---			check attached tuple_query.read_manager as rm then
---				rm.execute_tuple (tuple_query, transaction, tuple_query.object_initialization_depth)
---			end
 		rescue
 			default_transactional_rescue (transaction)
 			tuple_query.close
@@ -175,6 +168,7 @@ feature {NONE} -- Initialization
 			handler_list: LINKED_LIST [PS_HANDLER];
 			transaction_settings: PS_TRANSACTION_SETTINGS
 			)
+			-- Initialization for `Current'
 		do
 			backend := a_backend
 			id_manager := an_id_manager
@@ -206,6 +200,7 @@ feature {NONE} -- Implementation
 
 
 	initialize_query (query: PS_ABSTRACT_QUERY[ANY, ANY]; transaction: PS_INTERNAL_TRANSACTION; filter: READABLE_INDEXABLE [STRING])
+			-- Set up the internal query cursor and retrieve the first result.
 		local
 			new_read_manager: PS_READ_MANAGER
 			query_cursor: PS_QUERY_CURSOR

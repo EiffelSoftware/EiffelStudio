@@ -24,7 +24,6 @@ feature {NONE} -- Implmentation
 			-- Create a backend.
 		do
 			create {PS_IN_MEMORY_BACKEND} Result.make
-			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
 		end
 
 end

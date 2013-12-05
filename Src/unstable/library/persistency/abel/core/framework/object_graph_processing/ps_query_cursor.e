@@ -30,9 +30,14 @@ feature {NONE} -- Initialization
 			empty_processed: LINKED_LIST [INTEGER]
 		do
 			query := a_query
-			filter := a_filter
+			create filter.make (a_filter)
 			read_manager := a_read_manager
 			type := read_manager.metadata_factory.create_metadata_from_type (query.generic_type)
+
+			create filter_lookup.make (filter.count)
+			filter.do_all (agent filter_lookup.extend (True, ?))
+
+
 			create reflector
 
 			create subtypes_list.make
@@ -68,7 +73,9 @@ feature {PS_ABEL_EXPORT}
 
 	query: PS_ABSTRACT_QUERY [ANY, ANY]
 
-	filter: READABLE_INDEXABLE [STRING]
+	filter: PS_IMMUTABLE_STRUCTURE [STRING]
+
+	filter_lookup: HASH_TABLE [BOOLEAN, STRING]
 
 	subtypes: ITERATION_CURSOR [PS_TYPE_METADATA]
 
@@ -85,7 +92,7 @@ feature {PS_ABEL_EXPORT}
 		do
 			if not subtypes.after then
 					-- Query the database and initialize the new current_result.
-				current_result := read_manager.dispatch_retrieve (subtypes.item, query.criterion, create {PS_IMMUTABLE_STRUCTURE [STRING] }.make (filter), read_manager.transaction)
+				current_result := read_manager.dispatch_retrieve (subtypes.item, query.criterion, filter, read_manager.transaction)
 				subtypes.forth
 			end
 		end
@@ -169,7 +176,14 @@ feature {PS_ABEL_EXPORT}
 					end
 
 					if not new_object.is_object_initialized then
-						fixme ("Remove suberfluous attributes for TUPLE_QUERY")
+
+
+							-- Remove suberfluous attributes for tuple queries to prevent
+							-- automatic loading in the handlers.
+						if query.is_tuple_query and then attached {PS_BACKEND_OBJECT} retrieved_entity as backend_obj then
+							backend_obj.filter_attributes (filter_lookup)
+						end
+
 						new_object.set_backend_representation (retrieved_entity)
 						to_build.extend (index)
 					end

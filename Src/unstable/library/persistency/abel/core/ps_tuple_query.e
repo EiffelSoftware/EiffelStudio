@@ -96,7 +96,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 				my_cursor.forth
 
 				if my_cursor.after then
-					set_is_after
+					is_after := True
 				else
 
 					create reflector
@@ -112,7 +112,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 							i := i + 1
 						end
 
-						set_result_item (new_tuple)
+						result_cache.extend (new_tuple)
 					end
 				end
 			end

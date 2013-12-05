@@ -34,18 +34,21 @@ feature {NONE} -- Initialization
 			read_manager := a_read_manager
 			type := read_manager.metadata_factory.create_metadata_from_type (query.generic_type)
 			create reflector
-			create subtypes_list.make
-			stored_types := read_manager.backend.stored_types
 
-			across
-				stored_types as cursor
-			from
-				create subtypes_list.make
-				subtypes_list.extend (type)
-			loop
-				l_type := read_manager.metadata_factory.create_metadata_from_type_id (reflector.dynamic_type_from_string (cursor.item))
-				if l_type.type.type_id /= type.type.type_id and reflector.type_conforms_to (l_type.type.type_id, type.type.type_id) then
-					subtypes_list.extend (l_type)
+			create subtypes_list.make
+			subtypes_list.extend (type)
+
+			if query.is_subtype_included then
+
+				stored_types := read_manager.backend.stored_types
+
+				across
+					stored_types as cursor
+				loop
+					l_type := read_manager.metadata_factory.create_metadata_from_type_id (reflector.dynamic_type_from_string (cursor.item))
+					if l_type.type.type_id /= type.type.type_id and reflector.type_conforms_to (l_type.type.type_id, type.type.type_id) then
+						subtypes_list.extend (l_type)
+					end
 				end
 			end
 

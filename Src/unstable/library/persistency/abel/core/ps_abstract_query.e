@@ -4,10 +4,9 @@ note
 		and PS_QUERY.
 
 		The generic parameter OBJECT_TYPE denotes the type of the objects
-		to be queried.
-		Note: Due to a limitation in the underlying reflection library,
-		ABEL will not return any descendants of OBJECT_TYPE. In a future
-		release this behaviour may change however.
+		to be queried. By default ABEL will also return all objects of
+		a subtype of OBJECT_TYPE, but you can change this behaviour with
+		the feature `set_is_subtype_included'.
 
 		The general workflow with queries is as follows:
 		
@@ -93,6 +92,9 @@ feature -- Access: Retrieval Parameter
 	is_non_root_ignored: BOOLEAN
 			-- Are non-root objects ignored?
 
+	is_subtype_included: BOOLEAN
+			-- Are objects of a subtype of `OBJECT_TYPE' included in the result?
+
 	object_initialization_depth: INTEGER
 			-- The depth up to which objects shall be initialized.
 			-- Default to -1, which means full initialization.
@@ -112,9 +114,15 @@ feature -- Element change
 		end
 
 	set_is_non_root_ignored (value: BOOLEAN)
-			-- Set `is_non_root_ignored' to `value'
+			-- Set `is_non_root_ignored' to `value'.
 		do
 			is_non_root_ignored := value
+		end
+
+	set_is_subtype_included (value: BOOLEAN)
+			-- Set `is_subtype_included' to `value'.
+		do
+			is_subtype_included := value
 		end
 
 feature {PS_UNSAFE} -- Element change (unsafe)
@@ -143,7 +151,7 @@ feature -- Disposal
 			is_closed := False
 			transaction := Void
 			transaction_impl := Void
-			read_manager := Void
+			internal_cursor := Void
 			create {PS_ITERATION_CURSOR [RESULT_TYPE]} stable_cursor.make (Current)
 			is_executed := False
 			create result_cache.make (100)
@@ -152,7 +160,7 @@ feature -- Disposal
 			not_executed: not is_executed
 			not_closed: not is_closed
 			no_internal_transaction: transaction_impl = Void
-			no_read_manager: read_manager = Void
+			no_internal_cursor: internal_cursor = Void
 
 			criteria_unchanged: criterion = old criterion
 			root_setting_unchanged: is_non_root_ignored = old is_non_root_ignored
@@ -228,16 +236,14 @@ feature {PS_ABEL_EXPORT} -- Implementation : Access
 			end
 		end
 
-	read_manager: detachable PS_READ_MANAGER
-			-- The read manager associated to `Current'.
-
 	transaction_impl: detachable PS_INTERNAL_TRANSACTION
 
 	internal_cursor: detachable ITERATION_CURSOR [ANY]
+			-- The internal result cursor
 
 feature {PS_ABEL_EXPORT} -- Implementation: Element change
 
-	prepare_execution (a_transaction: PS_INTERNAL_TRANSACTION; a_read_manager: PS_READ_MANAGER)
+	prepare_execution (a_transaction: PS_INTERNAL_TRANSACTION; cursor: ITERATION_CURSOR [ANY])
 			-- Set `is_executed' to True and initialize the internal data structures.
 		require
 			not_yet_executed: not is_executed
@@ -245,35 +251,17 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			is_executed := True
 			is_after := False
 			transaction_impl := a_transaction
-			read_manager := a_read_manager
+			--read_manager := a_read_manager
+			internal_cursor := cursor
 		ensure
 			executed: is_executed = True
 			transaction_set: internal_transaction = a_transaction
-			read_manager_set: read_manager = a_read_manager
-		end
-
-	set_internal_cursor (cursor: like internal_cursor)
-		do
-			internal_cursor := cursor
+			cursor_set: internal_cursor = cursor
 		end
 
 	set_transaction (context: like transaction)
 		do
 			transaction := context
-		end
-
-	set_result_item (object: ANY)
-			-- Add `object' to the results.
-		require
-			actual_type_is_G: attached {RESULT_TYPE} object
-		do
-			result_cache.extend (object)
-		end
-
-	set_is_after
-			-- Set `is_after' to True.
-		do
-			is_after := True
 		end
 
 	retrieve_next
@@ -286,6 +274,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 		ensure
 			active_transaction: internal_transaction.is_active
 			no_error: not internal_transaction.has_error
+			type_correct: not is_after implies attached {RESULT_TYPE}result_cache.last
 		end
 
 feature {NONE} -- Initialization
@@ -295,12 +284,15 @@ feature {NONE} -- Initialization
 		do
 			object_initialization_depth := -1
 			create {PS_EMPTY_CRITERION} criterion
+			is_subtype_included := True
 			generic_type := {detachable OBJECT_TYPE}
 			reset
 		ensure
 			not_executed: not is_executed
 			query_result_after: is_after
 			default_criterion: attached {PS_EMPTY_CRITERION} criterion
+			subtypes_included_by_default: is_subtype_included
+			non_root_included_by_default: not is_non_root_ignored
 		end
 
 	make_with_criterion (a_criterion: PS_CRITERION)
@@ -315,13 +307,15 @@ feature {NONE} -- Initialization
 			not_executed: not is_executed
 			query_result_after: is_after
 			criteria_set: criterion = a_criterion
+			subtypes_included_by_default: is_subtype_included
+			non_root_included_by_default: not is_non_root_ignored
 		end
 
 invariant
 	valid_initialization_depth: object_initialization_depth > 0 or object_initialization_depth = -1
 
 	attached_transaction_when_executed: is_executed = attached transaction_impl
-	attached_read_manager_when_executed: is_executed = attached read_manager
+	attached_cursor_when_executed: is_executed = attached internal_cursor
 	after_when_closed: is_closed implies new_cursor.after
 	after_when_not_executed: not is_executed implies new_cursor.after
 end

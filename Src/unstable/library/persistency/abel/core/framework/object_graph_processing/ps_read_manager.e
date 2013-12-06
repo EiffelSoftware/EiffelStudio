@@ -403,9 +403,9 @@ feature {NONE} -- Implementation: Batch retrieval
 			-- If the entity is present in the database, update the reference in the corresponding
 			-- `{PS_OBJECT_DATA}.backend_representation'. Else set `{PS_OBJECT_DATA}.is_ignored' to true.
 		local
-			retrieved_objects: LIST [PS_BACKEND_OBJECT]
+			retrieved_objects: READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+			retrieved_collections: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 		do
-			fixme ("Implement support for batch retrieval in the backends.")
 
 			if not objects_to_retrieve.is_empty then
 				retrieved_objects := backend.retrieve_by_primaries (objects_to_retrieve, transaction)
@@ -426,24 +426,23 @@ feature {NONE} -- Implementation: Batch retrieval
 
 			end
 
---			across
---				objects_to_retrieve as cursor
---			loop
---				if attached backend.retrieve_by_primary (cursor.item.type, cursor.item.primary, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (cursor.item.type.attributes), transaction) as retrieved then
---					item(cursor.item.index).set_backend_representation (retrieved)
---				else
---					item(cursor.item.index).ignore
---				end
---			end
+			if not collections_to_retrieve.is_empty then
+				retrieved_collections := backend.retrieve_collections (collections_to_retrieve, transaction)
 
-			across
-				collections_to_retrieve as cursor
-			loop
-				if attached backend.retrieve_collection (cursor.item.type, cursor.item.primary, transaction) as retrieved then
-					item(cursor.item.index).set_backend_representation (retrieved)
-				else
-					item(cursor.item.index).ignore
+				across
+					retrieved_collections as coll
+				loop
+					item (cache_lookup (coll.item.primary_key, coll.item.metadata)).set_backend_representation (coll.item)
 				end
+
+				across
+					collections_to_retrieve as cursor
+				loop
+					if not attached item (cursor.item.index).backend_representation then
+						item (cursor.item.index).ignore
+					end
+				end
+
 			end
 
 			collections_to_retrieve.wipe_out

@@ -118,7 +118,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
-	frozen retrieve_by_primaries (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): LIST [PS_BACKEND_OBJECT]
+	frozen retrieve_by_primaries (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			-- For each tuple in the list, retrieve the object where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -134,21 +134,24 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			transaction_active: transaction.is_active
 		local
 			struct: PS_IMMUTABLE_STRUCTURE [STRING]
+			list: LINKED_LIST [PS_BACKEND_OBJECT]
 		do
-			create {LINKED_LIST [PS_BACKEND_OBJECT]} Result.make
 			across
 				order as cursor
+			from
+				create list.make
+				Result := list
 			loop
 				create struct.make (cursor.item.type.attributes)
 				if attached retrieve_by_primary (cursor.item.type, cursor.item.primary_key, struct, transaction) as retrieved_obj then
-					Result.extend (retrieved_obj)
+					list.extend (retrieved_obj)
 				end
 			end
 
 		ensure
 			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
 			attributes_present: across Result as cursor all cursor.item.metadata.attributes.for_all (agent (cursor.item).has_attribute) end
-			consistent: Result.for_all (agent {PS_BACKEND_OBJECT}.is_consistent)
+			consistent: across Result as res_cursor all res_cursor.item.is_consistent end
 			transaction_unchanged: transaction.is_active
 		end
 
@@ -202,10 +205,39 @@ feature {PS_ABEL_EXPORT} -- Collection retrieval
 			-- Retrieves all collections of type `collection_type'.
 		require
 			collections_supported: is_generic_collection_supported
+			transaction_active: transaction.is_active
 		deferred
 		ensure
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (collection_type)
 			consistent: not Result.after implies Result.item.is_consistent
+			transaction_unchanged: transaction.is_active
+		end
+
+	retrieve_collections (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
+			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
+		require
+			collection_supported: is_generic_collection_supported
+			not_empty: not order.is_empty
+			transaction_active: transaction.is_active
+		local
+			list: LINKED_LIST [PS_BACKEND_COLLECTION]
+		do
+			fixme ("Implement support for batch retrieval in the backends.")
+			across
+				order as cursor
+			from
+				create list.make
+				Result := list
+			loop
+				if attached retrieve_collection (cursor.item.type, cursor.item.primary_key, transaction) as retrieved_collection then
+					list.extend (retrieved_collection)
+				end
+			end
+		ensure
+			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
+			consistent: across Result as cursor all cursor.item.is_consistent end
+			transaction_unchanged: transaction.is_active
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION

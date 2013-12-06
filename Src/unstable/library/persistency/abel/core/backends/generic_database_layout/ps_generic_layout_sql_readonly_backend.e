@@ -16,6 +16,7 @@ inherit
 	PS_BACKEND_CONVERTER
 		rename
 			internal_specific_retrieve as unnecessary
+			, specific_collection_retrieve as unnecessary_2
 		end
 
 create
@@ -266,6 +267,102 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				end
 			end
 			Result := result_list.new_cursor
+		end
+
+	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
+			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
+		local
+			key_type_lookup: HASH_TABLE [PS_TYPE_METADATA, INTEGER]
+
+			connection: PS_SQL_CONNECTION
+			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
+			sql_get_collection: STRING
+			sql_get_info: STRING
+
+			primary_key: INTEGER
+			position: INTEGER
+			runtime_type_foreign_key: INTEGER
+
+			value: STRING
+
+			info_key: STRING
+			info_value: STRING
+
+			current_object: PS_BACKEND_COLLECTION
+			actual_result: HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER]
+		do
+
+				-- Prepare the SQL strings and the type lookup table.
+			across
+				order as order_cursor
+			from
+				sql_get_collection := "SELECT collectionid, position, runtimetype, value FROM ps_collection WHERE collectionid IN ("
+				sql_get_info := "SELECT collectionid, info_key, info FROM ps_collection_info WHERE collectionid IN ("
+
+				create key_type_lookup.make (order.count)
+				create actual_result.make (order.count)
+			loop
+				sql_get_collection.append (order_cursor.item.primary_key.out + ", ")
+				sql_get_info.append (order_cursor.item.primary_key.out + ", ")
+
+				key_type_lookup.extend (order_cursor.item.type, order_cursor.item.primary_key)
+			end
+			sql_get_collection.put (')', sql_get_collection.count - 1)
+			sql_get_info.put (')', sql_get_info.count - 1)
+
+			if transaction.is_readonly then
+				sql_get_collection.append (SQL_Strings.for_update_appendix)
+				sql_get_info.append (SQL_Strings.for_update_appendix)
+			end
+
+				-- Execute the statements.
+			connection := get_connection (transaction)
+			connection.execute_sql (sql_get_collection + "; " + sql_get_info)
+
+				-- Build all collections. As the result is unordered, build the objects
+				-- on the fly and use `actual_result' to store the intermediate results.
+			from
+				row_cursor := connection.last_results.first
+			until
+				row_cursor.after
+			loop
+				primary_key := row_cursor.item.at ("collectionid").to_integer
+				position := row_cursor.item.at ("position").to_integer
+				value := row_cursor.item.at ("value")
+
+				if attached actual_result [primary_key] as obj then
+					current_object := obj
+				else
+					create current_object.make (primary_key, attach (key_type_lookup [primary_key]))
+					actual_result.extend (current_object, primary_key)
+				end
+
+				if position > 0 then
+					runtime_type_foreign_key := row_cursor.item.at ("runtimetype").to_integer
+					current_object.put_item (value, db_metadata_manager.class_name_of_key (runtime_type_foreign_key), position)
+				else
+					current_object.set_is_root (value.to_boolean)
+				end
+
+				row_cursor.forth
+			end
+
+				-- Now also check the second result to fill in the additional information.
+			from
+				row_cursor := connection.last_results.last
+			until
+				row_cursor.after
+			loop
+				primary_key := row_cursor.item.at ("collectionid").to_integer
+				info_key := row_cursor.item.at ("info_key")
+				info_value := row_cursor.item.at ("info")
+
+				attach (actual_result [primary_key]).add_information (info_key, info_value)
+				row_cursor.forth
+			end
+
+			Result := actual_result
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION

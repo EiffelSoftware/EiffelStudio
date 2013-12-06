@@ -118,6 +118,40 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
+	frozen retrieve_by_primaries (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): LIST [PS_BACKEND_OBJECT]
+			-- For each tuple in the list, retrieve the object where the following conditions hold:
+			--		1) The object is a (direct) instance of `type'
+			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
+			--		3) The object has the unique primary key `primary_key'.
+			-- All attributes defined in `type.attributes' are guaranteed to be present. Additional attributes may be included.
+			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch,
+			-- the attribute value during retrieval will be an empty string and its class name `NONE'.
+			-- Note: A primary key only has to be unique among the set of objects with type `type'.
+			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
+		require
+			not_empty: not order.is_empty
+			supported: across order as cursor all is_object_type_supported (cursor.item.type) end
+			transaction_active: transaction.is_active
+		local
+			struct: PS_IMMUTABLE_STRUCTURE [STRING]
+		do
+			create {LINKED_LIST [PS_BACKEND_OBJECT]} Result.make
+			across
+				order as cursor
+			loop
+				create struct.make (cursor.item.type.attributes)
+				if attached retrieve_by_primary (cursor.item.type, cursor.item.primary_key, struct, transaction) as retrieved_obj then
+					Result.extend (retrieved_obj)
+				end
+			end
+
+		ensure
+			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
+			attributes_present: across Result as cursor all cursor.item.metadata.attributes.for_all (agent (cursor.item).has_attribute) end
+			consistent: Result.for_all (agent {PS_BACKEND_OBJECT}.is_consistent)
+			transaction_unchanged: transaction.is_active
+		end
+
 	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- Retrieve the object where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'

@@ -295,10 +295,12 @@ feature -- Code generation: C
 			condition.unanalyze
 			then_expression.unanalyze
 			else_expression.unanalyze
-			across
-				elsif_list as c
-			loop
-				c.item.unanalyze
+			if elsif_list /= Void then
+				across
+					elsif_list as c
+				loop
+					c.item.unanalyze
+				end
 			end
 			register := Void
 		end

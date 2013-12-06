@@ -11,6 +11,8 @@ inherit
 
 	PS_BACKEND
 
+	PS_BACKEND_CONVERTER
+
 create
 	make, make_with_host_and_port
 
@@ -428,7 +430,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			end
 		end
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
 			check

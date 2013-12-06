@@ -13,6 +13,8 @@ inherit
 			close
 		end
 
+	PS_BACKEND_CONVERTER
+
 create
 	make
 
@@ -103,7 +105,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
 feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		local
 			result_list: LINKED_LIST[PS_BACKEND_COLLECTION]

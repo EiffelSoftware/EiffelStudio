@@ -144,27 +144,53 @@ feature {NONE} -- Agents for contracts
 
 	check_write (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a write was successful
+		local
+			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
+			retrieved: READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 		do
-			Result := object.is_subset_of (internal_retrieve_by_primary (object.metadata, object.primary_key, object.attributes, transaction))
+			create order.make
+			order.extend ([object.metadata, object.primary_key])
+			retrieved := internal_retrieve_by_primaries (order, transaction)
+			Result := retrieved.index_set.count = 1 and then object.is_subset_of (retrieved.item (retrieved.index_set.lower))
 		end
 
 	check_delete (object: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a delete was successful
+		local
+			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
+			retrieved: READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 		do
-			Result := internal_retrieve_by_primary (object.metadata, object.primary_key, object.metadata.attributes, transaction) = Void
+			create order.make
+			order.extend ([object.metadata, object.primary_key])
+			retrieved := internal_retrieve_by_primaries (order, transaction)
+			Result := retrieved.index_set.count = 0
 		end
 
 	check_collection_write (collection: PS_BACKEND_COLLECTION; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
-			-- Check if a delete was successful
+			-- Check if a collection write was successful
+		local
+			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
+			retrieved: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 		do
+			create order.make
+			order.extend ([collection.metadata, collection.primary_key])
+			retrieved := specific_collection_retrieve (order, transaction)
+
 			fixme ("Implement an is_subset_of query in BACKEND_COLLECTION")
-			Result := collection.is_update_delta or equal (collection, retrieve_collection (collection.metadata, collection.primary_key, transaction))
+			Result := retrieved.index_set.count = 1 and then
+				(collection.is_update_delta or collection ~ retrieved.item (retrieved.index_set.lower))
 		end
 
 	check_collection_delete (collection: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
-			-- Check if a delete was successful
+			-- Check if a collection delete was successful
+		local
+			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
+			retrieved: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 		do
-			Result := retrieve_collection (collection.metadata, collection.primary_key, transaction) = Void
+			create order.make
+			order.extend ([collection.metadata, collection.primary_key])
+			retrieved := specific_collection_retrieve (order, transaction)
+			Result := retrieved.index_set.count = 0
 		end
 
 end

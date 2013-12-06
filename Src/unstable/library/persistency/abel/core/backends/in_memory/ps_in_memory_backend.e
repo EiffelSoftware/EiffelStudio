@@ -10,6 +10,8 @@ class
 inherit
 	PS_BACKEND
 
+	PS_BACKEND_CONVERTER
+
 create
 	make
 
@@ -51,7 +53,7 @@ feature {PS_ABEL_EXPORT} -- Access
 feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 
 
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
 			prepare_collection(collection_type)

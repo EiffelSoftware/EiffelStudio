@@ -118,14 +118,15 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
-	frozen retrieve_by_primaries (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+	frozen specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			-- For each tuple in the list, retrieve the object where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
 			--		3) The object has the unique primary key `primary_key'.
-			-- All attributes defined in `type.attributes' are guaranteed to be present. Additional attributes may be included.
-			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch,
-			-- the attribute value during retrieval will be an empty string and its class name `NONE'.
+			-- All of the object's attributes stored in the database will be present in the result.
+			-- If an attribute defined in `type.attributes' was `Void' during an insert, or it doesn't
+			-- exist in the database because of a version mismatch, the attribute value during retrieval
+			-- will be an empty string and its class name `NONE'.
 			-- Note: A primary key only has to be unique among the set of objects with type `type'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		require
@@ -136,18 +137,12 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			struct: PS_IMMUTABLE_STRUCTURE [STRING]
 			list: LINKED_LIST [PS_BACKEND_OBJECT]
 		do
+			Result := internal_retrieve_by_primaries (order, transaction)
 			across
-				order as cursor
-			from
-				create list.make
-				Result := list
+				Result as cursor
 			loop
-				create struct.make (cursor.item.type.attributes)
-				if attached retrieve_by_primary (cursor.item.type, cursor.item.primary_key, struct, transaction) as retrieved_obj then
-					list.extend (retrieved_obj)
-				end
+				apply_plugins (cursor.item, Void, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (cursor.item.metadata.attributes), transaction)
 			end
-
 		ensure
 			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
 			attributes_present: across Result as cursor all cursor.item.metadata.attributes.for_all (agent (cursor.item).has_attribute) end
@@ -155,100 +150,34 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
-	frozen retrieve_by_primary (type: PS_TYPE_METADATA; primary_key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE[STRING] transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
-			-- Retrieve the object where the following conditions hold:
-			--		1) The object is a (direct) instance of `type'
-			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
-			--		3) The object has the unique primary key `primary_key'.
-			-- All attributes defined in `attributes' are guaranteed to be present. Additional attributes may be included.
-			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch,
-			-- the attribute value during retrieval will be an empty string and its class name `NONE'.
-			-- Note: A primary key only has to be unique among the set of objects with type `type'.
-		require
-			supported: is_object_type_supported (type)
-			attributes_exist: across attributes as attr all type.attributes.has (attr.item) end
-			transaction_active: transaction.is_active
-		local
-			keys: LINKED_LIST [INTEGER]
-			res: LIST[PS_BACKEND_OBJECT]
-			args: TUPLE[type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
-		do
-			-- execute plugins before retrieve
-			across
-				plug_in_list as cursor
-			from
-				args := [type, Void , attributes]
-			loop
-				args := cursor.item.before_retrieve (args, transaction)
-			end
-
-			-- Retrieve the result from the actual backend
-			Result := internal_retrieve_by_primary (args.type, primary_key, args.attr, transaction)
-
-			-- Apply plugins after retrieve, if necessary
-			if attached Result then
-				apply_plugins (Result, Void, args.attr, transaction)
-			end
-		ensure
-			metadata_set: attached Result implies Result.metadata.is_equal (type)
-			primary_key_correct: attached Result implies Result.primary_key = primary_key
-			attributes_present: attached Result implies attributes.for_all (agent Result.has_attribute)
-			consistent: attached Result implies Result.is_consistent
-			transaction_unchanged: transaction.is_active
-		end
-
-
 feature {PS_ABEL_EXPORT} -- Collection retrieval
 
-
-	retrieve_all_collections (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
-			-- Retrieves all collections of type `collection_type'.
+	collection_retrieve (type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+			-- Retrieves all collections from the database where the following conditions hold:
+			--		1) The object is a (direct) instance of `type'
+			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
 		require
 			collections_supported: is_generic_collection_supported
 			transaction_active: transaction.is_active
 		deferred
 		ensure
-			metadata_set: not Result.after implies Result.item.metadata.is_equal (collection_type)
+			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
 			consistent: not Result.after implies Result.item.is_consistent
 			transaction_unchanged: transaction.is_active
 		end
 
-	retrieve_collections (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		require
 			collection_supported: is_generic_collection_supported
 			not_empty: not order.is_empty
 			transaction_active: transaction.is_active
-		local
-			list: LINKED_LIST [PS_BACKEND_COLLECTION]
-		do
-			fixme ("Implement support for batch retrieval in the backends.")
-			across
-				order as cursor
-			from
-				create list.make
-				Result := list
-			loop
-				if attached retrieve_collection (cursor.item.type, cursor.item.primary_key, transaction) as retrieved_collection then
-					list.extend (retrieved_collection)
-				end
-			end
+		deferred
 		ensure
 			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
 			consistent: across Result as cursor all cursor.item.is_consistent end
 			transaction_unchanged: transaction.is_active
-		end
-
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
-			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
-		require
-			collections_supported: is_generic_collection_supported
-		deferred
-		ensure
-			metadata_set: attached Result implies Result.metadata.is_equal (collection_type)
-			primary_key_correct: attached Result implies Result.primary_key = collection_primary_key
-			consistent: attached Result implies Result.is_consistent
 		end
 
 feature {PS_ABEL_EXPORT} -- Transaction handling
@@ -260,20 +189,6 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 	rollback (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Aborts `a_transaction' and undoes all changes in the database.
-		deferred
-		end
-
-	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
-			-- The currently active transaction isolation level.
-		obsolete
-			"Remove it."
-		deferred
-		end
-
-	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
-			-- Set the transaction isolation level `a_level' for all future transactions.
-		obsolete
-			"Implement `set_transaction_isolation'."
 		deferred
 		end
 
@@ -316,11 +231,12 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		deferred
 		end
 
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
-			-- See function `retrieve_by_primary'.
-			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
+	internal_retrieve_by_primaries (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+			-- See function `retrieve'.
+			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		require
-			supported: is_object_type_supported (type)
+			not_empty: not order.is_empty
+			supported: across order as cursor all is_object_type_supported (cursor.item.type) end
 		deferred
 		end
 

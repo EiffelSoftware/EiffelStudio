@@ -241,13 +241,13 @@ feature {NONE} -- Initialization
 			register_action (show_tooltip_button.select_actions, agent on_option_button_selected (show_tooltip_button))
 			register_action (remember_size_button.select_actions, agent on_option_button_selected (remember_size_button))
 
-			register_action (preferences.editor_data.filter_completion_list_preference.change_actions, agent on_option_button_selected (filter_button))
-			register_action (preferences.editor_data.show_completion_type_preference.change_actions, agent on_option_button_selected (show_return_type_button))
-			register_action (preferences.editor_data.show_completion_signature_preference.change_actions, agent on_option_button_selected (show_signature_button))
-			register_action (preferences.editor_data.show_completion_disambiguated_name_preference.change_actions, agent on_option_button_selected (show_disambiguated_name_button))
-			register_action (preferences.editor_data.show_completion_obsolete_items_preference.change_actions, agent on_option_button_selected (show_obsolete_items_button))
-			register_action (preferences.editor_data.show_completion_tooltip_preference.change_actions, agent on_option_button_selected (show_tooltip_button))
-			register_action (preferences.development_window_data.remember_completion_list_size_preference.change_actions, agent on_option_button_selected (remember_size_button))
+			register_action (preferences.editor_data.filter_completion_list_preference.change_actions, agent on_option_preferenced_changed (filter_button))
+			register_action (preferences.editor_data.show_completion_type_preference.change_actions, agent on_option_preferenced_changed (show_return_type_button))
+			register_action (preferences.editor_data.show_completion_signature_preference.change_actions, agent on_option_preferenced_changed (show_signature_button))
+			register_action (preferences.editor_data.show_completion_disambiguated_name_preference.change_actions, agent on_option_preferenced_changed (show_disambiguated_name_button))
+			register_action (preferences.editor_data.show_completion_obsolete_items_preference.change_actions, agent on_option_preferenced_changed (show_obsolete_items_button))
+			register_action (preferences.editor_data.show_completion_tooltip_preference.change_actions, agent on_option_preferenced_changed (show_tooltip_button))
+			register_action (preferences.development_window_data.remember_completion_list_size_preference.change_actions, agent on_option_preferenced_changed (remember_size_button))
 		end
 
 	register_accelerator_preference_change_actions
@@ -468,69 +468,6 @@ feature {NONE} -- Option Preferences
 
 feature {NONE} -- Option behaviour
 
-	on_option_changed (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
-			-- On option changed
-		require
-			a_button_not_void: a_button /= Void
-		do
-			a_button.select_actions.block
-			if a_button = filter_button then
-				apply_filter_completion_list (filter_completion_list)
-				if filter_completion_list then
-					a_button.enable_select
-				else
-					a_button.disable_select
-				end
-			elseif a_button = show_return_type_button then
-				apply_show_return_type (show_completion_type)
-				if show_completion_type then
-					a_button.enable_select
-				else
-					a_button.disable_select
-				end
-			elseif a_button = show_signature_button then
-				apply_show_completion_signature (show_completion_signature)
-				if show_completion_signature then
-					a_button.enable_select
-				else
-					a_button.disable_select
-				end
-			elseif a_button = show_disambiguated_name_button then
-				apply_show_completion_disambiguated_name (show_completion_disambiguated_name)
-				if show_completion_disambiguated_name then
-					a_button.enable_select
-				else
-					a_button.disable_select
-				end
-			elseif a_button = show_obsolete_items_button then
-				apply_show_obsolete_items (show_obsolete_items)
-				if remember_window_size then
-					a_button.enable_select
-				else
-					a_button.disable_select
-				end
-			elseif a_button = show_tooltip_button then
-				apply_show_tooltip (show_completion_tooltip)
-				if remember_window_size then
-					a_button.enable_select
-				else
-					a_button.disable_select
-				end
-			elseif a_button = remember_size_button then
-				apply_remember_window_size (remember_window_size)
-				if remember_window_size then
-					a_button.enable_select
-				else
-					a_button.disable_select
-				end
-			else
-				check
-					error: False
-				end
-			end
-			a_button.select_actions.resume
-		end
-
 	on_option_button_selected (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
 			-- On option button selected
 		require
@@ -538,68 +475,79 @@ feature {NONE} -- Option behaviour
 		local
 			l_preference: BOOLEAN_PREFERENCE
 		do
+			clicking_option_button := True
 			if a_button = filter_button then
-				if filter_completion_list /= a_button.is_selected then
-					l_preference := preferences.editor_data.filter_completion_list_preference
-					l_preference.change_actions.block
-					l_preference.set_value (a_button.is_selected)
-					apply_filter_completion_list (filter_completion_list)
-					l_preference.change_actions.resume
-				end
+				l_preference := preferences.editor_data.filter_completion_list_preference
+				apply_filter_completion_list (a_button.is_selected)
 			elseif a_button = show_return_type_button then
-				if show_completion_type /= a_button.is_selected then
-					l_preference := preferences.editor_data.show_completion_type_preference
-					l_preference.change_actions.block
-					l_preference.set_value (a_button.is_selected)
-					apply_show_return_type (show_completion_type)
-					l_preference.change_actions.resume
-				end
+				l_preference := preferences.editor_data.show_completion_type_preference
+				apply_show_return_type (a_button.is_selected)
 			elseif a_button = show_signature_button then
-				if show_completion_signature /= a_button.is_selected then
-					l_preference := preferences.editor_data.show_completion_signature_preference
-					l_preference.change_actions.block
-					l_preference.set_value (a_button.is_selected)
-					apply_show_completion_signature (show_completion_signature)
-					l_preference.change_actions.resume
-				end
+				l_preference := preferences.editor_data.show_completion_signature_preference
+				apply_show_completion_signature (a_button.is_selected)
 			elseif a_button = show_disambiguated_name_button then
-				if show_completion_disambiguated_name /= a_button.is_selected then
-					l_preference := preferences.editor_data.show_completion_disambiguated_name_preference
-					l_preference.change_actions.block
-					l_preference.set_value (a_button.is_selected)
-					apply_show_completion_disambiguated_name (show_completion_disambiguated_name)
-					l_preference.change_actions.resume
-				end
+				l_preference := preferences.editor_data.show_completion_disambiguated_name_preference
+				apply_show_completion_disambiguated_name (a_button.is_selected)
 			elseif a_button = show_obsolete_items_button then
-				if show_obsolete_items /= a_button.is_selected then
-					l_preference := preferences.editor_data.show_completion_obsolete_items_preference
-					l_preference.change_actions.block
-					l_preference.set_value (a_button.is_selected)
-					apply_show_obsolete_items (show_obsolete_items)
-					l_preference.change_actions.resume
-				end
+				l_preference := preferences.editor_data.show_completion_obsolete_items_preference
+				apply_show_obsolete_items (a_button.is_selected)
 			elseif a_button = show_tooltip_button then
-				if show_completion_tooltip /= a_button.is_selected then
-					l_preference := preferences.editor_data.show_completion_tooltip_preference
-					l_preference.change_actions.block
-					l_preference.set_value (a_button.is_selected)
-					apply_show_tooltip (show_completion_tooltip)
-					l_preference.change_actions.resume
-				end
+				l_preference := preferences.editor_data.show_completion_tooltip_preference
+				apply_show_tooltip (a_button.is_selected)
 			elseif a_button = remember_size_button then
-				if remember_window_size /= a_button.is_selected then
-					l_preference := preferences.development_window_data.remember_completion_list_size_preference
-					l_preference.change_actions.block
-					l_preference.set_value (a_button.is_selected)
-					apply_remember_window_size (remember_window_size)
-					l_preference.change_actions.resume
-				end
+				l_preference := preferences.development_window_data.remember_completion_list_size_preference
+				apply_remember_window_size (a_button.is_selected)
 			else
 				check
 					error: False
 				end
 			end
-			l_preference.change_actions.resume
+			l_preference.set_value (a_button.is_selected)
+			clicking_option_button := False
+		end
+
+	on_option_preferenced_changed (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
+			-- On option button selected
+		require
+			a_button_not_void: a_button /= Void
+		local
+			l_preference: BOOLEAN_PREFERENCE
+		do
+			if not clicking_option_button then
+				a_button.select_actions.block
+				if a_button = filter_button then
+					l_preference := preferences.editor_data.filter_completion_list_preference
+					apply_filter_completion_list (l_preference.value)
+				elseif a_button = show_return_type_button then
+					l_preference := preferences.editor_data.show_completion_type_preference
+					apply_show_return_type (l_preference.value)
+				elseif a_button = show_signature_button then
+					l_preference := preferences.editor_data.show_completion_signature_preference
+					apply_show_completion_signature (l_preference.value)
+				elseif a_button = show_disambiguated_name_button then
+					l_preference := preferences.editor_data.show_completion_disambiguated_name_preference
+					apply_show_completion_disambiguated_name (l_preference.value)
+				elseif a_button = show_obsolete_items_button then
+					l_preference := preferences.editor_data.show_completion_obsolete_items_preference
+					apply_show_obsolete_items (l_preference.value)
+				elseif a_button = show_tooltip_button then
+					l_preference := preferences.editor_data.show_completion_tooltip_preference
+					apply_show_tooltip (l_preference.value)
+				elseif a_button = remember_size_button then
+					l_preference := preferences.development_window_data.remember_completion_list_size_preference
+					apply_remember_window_size (l_preference.value)
+				else
+					check
+						error: False
+					end
+				end
+				if l_preference.value then
+					a_button.enable_select
+				else
+					a_button.disable_select
+				end
+				a_button.select_actions.resume
+			end
 		end
 
 	apply_filter_completion_list (a_b: BOOLEAN)
@@ -1181,6 +1129,9 @@ feature {NONE} -- Implementation
 			-- Did the last inserted completed feature name contain arguments?
 
 	last_row_data: detachable ANY
+
+	clicking_option_button: BOOLEAN
+			-- Clicking option button?
 
 	show_timer: EV_TIMEOUT;
 			-- Timer to show the tooltip

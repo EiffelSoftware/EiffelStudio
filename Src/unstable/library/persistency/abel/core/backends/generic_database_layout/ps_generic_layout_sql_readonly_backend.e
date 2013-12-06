@@ -388,8 +388,8 @@ feature {NONE} -- Initialization
 
 			batch_retrieval_size := Default_batch_size
 
-			create plug_in_list.make
-			plug_in_list.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
+			create plugins.make
+			plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 
 		end
 

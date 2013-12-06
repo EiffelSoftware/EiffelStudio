@@ -138,7 +138,7 @@ feature -- Factory function
 		do
 			backend := new_backend
 
-			internal_plugins.do_all (agent backend.add_plug_in)
+			internal_plugins.do_all (agent backend.add_plugin)
 
 			create write_manager.make (id_manager.metadata_manager, id_manager, key_mapper, backend)
 

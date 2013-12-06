@@ -114,7 +114,7 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 					if cursor.item.is_mapping_to_object then
 						Result := backend.retrieve (type, criterion, attributes, a_transaction)
 					else
-						Result := backend.retrieve_all_collections (type, a_transaction)
+						Result := backend.collection_retrieve (type, a_transaction)
 					end
 				end
 			end
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation: Batch retrieval
 		do
 
 			if not objects_to_retrieve.is_empty then
-				retrieved_objects := backend.retrieve_by_primaries (objects_to_retrieve, transaction)
+				retrieved_objects := backend.specific_retrieve (objects_to_retrieve, transaction)
 
 				across
 					retrieved_objects as obj
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation: Batch retrieval
 			end
 
 			if not collections_to_retrieve.is_empty then
-				retrieved_collections := backend.retrieve_collections (collections_to_retrieve, transaction)
+				retrieved_collections := backend.specific_collection_retrieve (collections_to_retrieve, transaction)
 
 				across
 					retrieved_collections as coll

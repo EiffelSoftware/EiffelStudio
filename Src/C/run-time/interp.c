@@ -4522,8 +4522,8 @@ rt_private void diadic_op(int code)
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
 			f->it_char = f->it_char + (EIF_CHARACTER_8) s->it_int32;
 		} else if ((f->type & SK_HEAD) == SK_CHAR32) {
-			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
-			f->it_wchar = f->it_wchar + s->it_int32;
+			CHECK ("right operand is NATURAL_32", sk_type == SK_UINT32);
+			f->it_wchar = f->it_wchar + s->it_uint32;
 		} else {
 				/* Normal case of addition between numeric types. */
 			CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));

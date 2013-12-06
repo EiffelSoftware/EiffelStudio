@@ -14,6 +14,9 @@ inherit
 		end
 
 	PS_BACKEND_CONVERTER
+		rename
+			internal_specific_retrieve as unnecessary
+		end
 
 create
 	make
@@ -55,6 +58,91 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			Result := create {PS_LAZY_CURSOR}.make (type, criteria, attributes, transaction, Current)
 		rescue
 			rollback (transaction)
+		end
+
+	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+			-- See function `specific_retrieve'.
+			-- Use `internal_specific_retrieve' for contracts and other calls within a backend.
+		local
+			key_type_lookup: HASH_TABLE [PS_TYPE_METADATA, INTEGER]
+
+			connection: PS_SQL_CONNECTION
+			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
+			sql_string: STRING
+
+			primary_key: INTEGER
+			attribute_foreign_key: INTEGER
+			runtime_type_foreign_key: INTEGER
+
+			attribute_name: STRING
+			runtime_type: STRING
+			value: STRING
+
+			current_object: PS_BACKEND_OBJECT
+
+			actual_result: HASH_TABLE [PS_BACKEND_OBJECT, INTEGER]
+		do
+			create key_type_lookup.make (order.count)
+			create actual_result.make (order.count)
+
+				-- Build the SQL query
+			sql_string := "SELECT * FROM ps_value WHERE objectid IN ("
+			sql_string.grow (sql_string.count + 10 * order.count + SQL_Strings.for_update_appendix.count)
+			across
+				order as order_cursor
+			loop
+				sql_string.append (order_cursor.item.primary_key.out + ", ")
+				key_type_lookup.extend (order_cursor.item.type, order_cursor.item.primary_key)
+			end
+			sql_string.put (')', sql_string.count - 1)
+			if not transaction.is_readonly then
+				sql_string.append (SQL_Strings.for_update_appendix)
+			end
+
+			from
+					-- Execute the result
+				connection := get_connection (transaction)
+				connection.execute_sql (sql_string)
+				row_cursor := connection.last_result
+			until
+				row_cursor.after
+			loop
+					-- Build the data. Since the result is allowed to be unordered,
+					-- just iterate over the result and create objects or add attributes
+					-- however necessary.
+				primary_key := row_cursor.item.at (SQL_Strings.value_table_id_column).to_integer
+
+				attribute_foreign_key := row_cursor.item.at (SQL_Strings.value_table_attributeid_column).to_integer
+				attribute_name := db_metadata_manager.attribute_name_of_key (attribute_foreign_key)
+
+				value := row_cursor.item.at (SQL_Strings.value_table_value_column)
+
+					-- Check if there is already a (maybe incomplete) object in the result set.
+				if attached actual_result [primary_key] as obj then
+					current_object := obj
+				else
+					create current_object.make (primary_key, attach (key_type_lookup [primary_key]))
+					actual_result.extend (current_object, primary_key)
+				end
+
+				if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
+
+						-- Add an attribute. For that we also need the runtime type.
+					runtime_type_foreign_key := row_cursor.item.at (SQL_Strings.value_table_runtimetype_column).to_integer
+					runtime_type := db_metadata_manager.class_name_of_key (runtime_type_foreign_key)
+
+					current_object.add_attribute (attribute_name, value, runtime_type)
+				else
+						-- We are dealing with the artificial `ps_existence' attribute.
+						-- Set the root status if present.
+					if value /~ "NULL" then
+						current_object.set_is_root (value.to_boolean)
+					end
+				end
+				row_cursor.forth
+			end
+
+			Result := actual_result
 		end
 
 

@@ -13,7 +13,7 @@ inherit
 feature {PS_ABEL_EXPORT}
 
 
-	internal_retrieve_by_primaries (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 		local
 			struct: PS_IMMUTABLE_STRUCTURE [STRING]
 			list: LINKED_LIST [PS_BACKEND_OBJECT]

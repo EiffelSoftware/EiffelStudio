@@ -19,7 +19,7 @@ create {PS_ABEL_EXPORT}
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	collection_items: LINKED_LIST [PS_PAIR [STRING, IMMUTABLE_STRING_8]]
+	collection_items: LIST [PS_PAIR [STRING, IMMUTABLE_STRING_8]]
 			-- All objects that are stored inside this collection.
 			-- The first item in the PS_PAIR is the actual value of the item (foreign key or basic value), and the second item is the class name of the generating class of the first item.
 
@@ -132,6 +132,24 @@ feature {PS_ABEL_EXPORT} -- Element change
 			class_name_inserted: collection_items.last.second.is_equal (class_name_of_item_value)
 		end
 
+	put_item (value: STRING; runtime_type: IMMUTABLE_STRING_8; position: INTEGER)
+			-- Add the tuple [`value', `runtime_type'] at position `position'.
+			-- Fill the list with ["", "NONE"] tuples if necessary.
+		require
+			runtime_type_set: not runtime_type.is_empty
+			none_means_void: runtime_type ~ "NONE" implies value.is_empty
+			position_positive: position > 0
+		do
+			from
+			until
+				collection_items.count >= position
+			loop
+				collection_items.extend (["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")])
+			end
+
+			collection_items.put_i_th ([value, runtime_type], position)
+		end
+
 	add_information (description: STRING; value: STRING)
 			-- Add the information `value' with its description `description' to the retrieved collection.
 		require
@@ -166,7 +184,7 @@ feature {NONE}
 			Precursor (key, meta)
 			create additional_information_hash.make (10)
 			create {LINKED_LIST [STRING]} information_descriptions.make
-			create collection_items.make
+			create {ARRAYED_LIST [PS_PAIR [STRING, IMMUTABLE_STRING_8]]} collection_items.make (25)
 		ensure then
 			additional_info_empty: additional_information_hash.is_empty
 			collection_items_empty: collection_items.is_empty

@@ -402,17 +402,39 @@ feature {NONE} -- Implementation: Batch retrieval
 			-- Retrieve all objects and collections `objects_to_retrieve' and `collections_to_retrieve'.
 			-- If the entity is present in the database, update the reference in the corresponding
 			-- `{PS_OBJECT_DATA}.backend_representation'. Else set `{PS_OBJECT_DATA}.is_ignored' to true.
+		local
+			retrieved_objects: LIST [PS_BACKEND_OBJECT]
 		do
 			fixme ("Implement support for batch retrieval in the backends.")
-			across
-				objects_to_retrieve as cursor
-			loop
-				if attached backend.retrieve_by_primary (cursor.item.type, cursor.item.primary, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (cursor.item.type.attributes), transaction) as retrieved then
-					item(cursor.item.index).set_backend_representation (retrieved)
-				else
-					item(cursor.item.index).ignore
+
+			if not objects_to_retrieve.is_empty then
+				retrieved_objects := backend.retrieve_by_primaries (objects_to_retrieve, transaction)
+
+				across
+					retrieved_objects as obj
+				loop
+					item (cache_lookup (obj.item.primary_key, obj.item.metadata)).set_backend_representation (obj.item)
 				end
+
+				across
+					objects_to_retrieve as cursor
+				loop
+					if not attached item (cursor.item.index).backend_representation then
+						item (cursor.item.index).ignore
+					end
+				end
+
 			end
+
+--			across
+--				objects_to_retrieve as cursor
+--			loop
+--				if attached backend.retrieve_by_primary (cursor.item.type, cursor.item.primary, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (cursor.item.type.attributes), transaction) as retrieved then
+--					item(cursor.item.index).set_backend_representation (retrieved)
+--				else
+--					item(cursor.item.index).ignore
+--				end
+--			end
 
 			across
 				collections_to_retrieve as cursor

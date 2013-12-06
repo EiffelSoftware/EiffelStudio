@@ -150,7 +150,7 @@ feature {NONE} -- Agents for contracts
 		do
 			create order.make
 			order.extend ([object.metadata, object.primary_key])
-			retrieved := internal_retrieve_by_primaries (order, transaction)
+			retrieved := internal_specific_retrieve (order, transaction)
 			Result := retrieved.index_set.count = 1 and then object.is_subset_of (retrieved.item (retrieved.index_set.lower))
 		end
 
@@ -162,7 +162,7 @@ feature {NONE} -- Agents for contracts
 		do
 			create order.make
 			order.extend ([object.metadata, object.primary_key])
-			retrieved := internal_retrieve_by_primaries (order, transaction)
+			retrieved := internal_specific_retrieve (order, transaction)
 			Result := retrieved.index_set.count = 0
 		end
 

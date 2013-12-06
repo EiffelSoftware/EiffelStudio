@@ -131,8 +131,8 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			transaction_active: transaction.is_active
 		do
 				-- Retrieve the results.
-			Result := internal_retrieve_by_primaries (order, transaction)
-			
+			Result := internal_specific_retrieve (order, transaction)
+
 				-- Apply the plugins for each item in the result.
 			across
 				Result as cursor
@@ -227,9 +227,9 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		deferred
 		end
 
-	internal_retrieve_by_primaries (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
-			-- See function `retrieve'.
-			-- Use `internal_retrieve' for contracts and other calls within a backend.
+	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+			-- See function `specific_retrieve'.
+			-- Use `internal_specific_retrieve' for contracts and other calls within a backend.
 		require
 			not_empty: not order.is_empty
 			supported: across order as cursor all is_object_type_supported (cursor.item.type) end

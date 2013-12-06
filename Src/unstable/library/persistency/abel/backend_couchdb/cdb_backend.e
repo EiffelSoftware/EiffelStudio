@@ -557,6 +557,7 @@ feature {NONE} -- Initialization
 			create curl.make
 			create key_set.make (100)
 			create plug_in_list.make
+			batch_retrieval_size := {PS_REPOSITORY}.infinite_batch_size
 		end
 
 	make_with_host_and_port (host: STRING; port: INTEGER)
@@ -564,6 +565,7 @@ feature {NONE} -- Initialization
 			create curl.make_with_host_and_port (host, port)
 			create key_set.make (100)
 			create plug_in_list.make
+			batch_retrieval_size := {PS_REPOSITORY}.infinite_batch_size
 		end
 
 end

@@ -66,55 +66,6 @@ feature {NONE}
 			create backend.make_with_host_and_port (l_host, port)
 
 			Result := backend
-
-			internal_plugins.extend (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
 		end
 
---inherit
-
---	PS_DEFAULT_REPOSITORY
-
---create
---	make_empty, make_with_host_and_port
-
---feature {NONE} -- Initialization
-
---	make_empty
---			-- Initialization for `Current'.
---		local
---			in_memory_database: CDB_BACKEND
---			special_handler: PS_SPECIAL_COLLECTION_HANDLER
---		do
---			create in_memory_database.make
---			make (in_memory_database)
---			create special_handler.make
---			add_collection_handler (special_handler)
---		end
-
---	make_with_host_and_port (host: STRING; port: INTEGER)
---			-- Initialization for `Current'.
---		local
---			in_memory_database: CDB_BACKEND
---			special_handler: PS_SPECIAL_COLLECTION_HANDLER
---		do
---			create in_memory_database.make_with_host_and_port (host, port)
---			make (in_memory_database)
---			create special_handler.make
---			add_collection_handler (special_handler)
---		end
-
-
-
---	create_cdb_repository(host:STRING; port:INTEGER): PS_RELATIONAL_REPOSITORY
---		-- Create a CouchDB repository
---		local
---			repository: CDB_REPOSITORY
---		do
---			if host.is_empty or port=0 then
---				create repository.make_empty
---			else
---				create repository.make_with_host_and_port(host, port)
---			end
---			Result := repository
---		end
 end

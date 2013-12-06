@@ -93,6 +93,8 @@ feature {PS_REPOSITORY_TESTS}
 			transaction: PS_TRANSACTION
 			query: PS_QUERY [CHAIN_HEAD]
 			tail_query: PS_QUERY [CHAIN_TAIL]
+
+			old_batch_size: INTEGER
 		do
 			create query.make
 			create tail_query.make
@@ -105,6 +107,11 @@ feature {PS_REPOSITORY_TESTS}
 
 			assert ("The reference of the retrieved object should be Void", query.new_cursor.item.tail.next.next.last)
 
+				-- The next test only works when loading the objects one-by-one.
+				-- If not ABEL will detect that the other tail items are already loaded
+				-- and establish the links.
+			old_batch_size := repository.batch_retrieval_size
+			repository.set_batch_retrieval_size (1)
 			tail_query.set_object_initialization_depth (1)
 			transaction.execute_query (tail_query)
 
@@ -115,6 +122,8 @@ feature {PS_REPOSITORY_TESTS}
 				tail_count := tail_count + 1
 			end
 			tail_query.close
+
+			repository.set_batch_retrieval_size (old_batch_size)
 
 			query.reset
 			query.set_object_initialization_depth (1)

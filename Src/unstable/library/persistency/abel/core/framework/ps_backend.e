@@ -69,7 +69,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		do
 			-- Apply plugins first
 			across
-				plug_in_list.new_cursor.reversed as plugin_cursor
+				plugins.new_cursor.reversed as plugin_cursor
 			loop
 				across
 					objects as object_cursor

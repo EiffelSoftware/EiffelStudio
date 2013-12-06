@@ -85,31 +85,27 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 		local
 			real_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT]
 			wrapper: PS_CURSOR_WRAPPER
-			args: TUPLE[type: PS_TYPE_METADATA; criteria: detachable PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
+			args: TUPLE[type: PS_TYPE_METADATA; criteria: PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
 		do
-			-- execute plugins before retrieve
+				-- Execute plugins to adapt the query parameters
 			across
-				plug_in_list as cursor
+				plugins as cursor
 			from
 				args := [type, criteria, attributes]
 			loop
 				args := cursor.item.before_retrieve (args, transaction)
 			end
 
-			-- Due to the postcondition in PS_PLUGIN, this is safe:
-			check attached args.criteria as final_criteria then
-
 				-- Retrieve result from backend
-				real_cursor := internal_retrieve (args.type, final_criteria, args.attr, transaction)
+			real_cursor := internal_retrieve (args.type, args.criteria, args.attr, transaction)
 
 				-- Wrap the cursor
-				create wrapper.make (Current, real_cursor, args.type, final_criteria, args.attr, transaction)
-				Result := wrapper
-			end
+			create wrapper.make (Current, real_cursor, args.type, args.attr, transaction)
+			Result := wrapper
 
-			-- execute plugins after retrieve
+				-- Execute plugins for the first item after retrieval.
 			if not Result.after then
-				apply_plugins (Result.item, args.criteria, args.attr, transaction)
+				apply_plugins (Result.item, transaction)
 			end
 		ensure
 			metadata_set: not Result.after implies Result.item.metadata.is_equal (type)
@@ -133,15 +129,15 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			not_empty: not order.is_empty
 			supported: across order as cursor all is_object_type_supported (cursor.item.type) end
 			transaction_active: transaction.is_active
-		local
-			struct: PS_IMMUTABLE_STRUCTURE [STRING]
-			list: LINKED_LIST [PS_BACKEND_OBJECT]
 		do
+				-- Retrieve the results.
 			Result := internal_retrieve_by_primaries (order, transaction)
+			
+				-- Apply the plugins for each item in the result.
 			across
 				Result as cursor
 			loop
-				apply_plugins (cursor.item, Void, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (cursor.item.metadata.attributes), transaction)
+				apply_plugins (cursor.item, transaction)
 			end
 		ensure
 			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
@@ -200,23 +196,23 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 feature {PS_ABEL_EXPORT} -- Plugins
 
-	plug_in_list: LINKED_LIST[PS_PLUGIN]
+	plugins: LINKED_LIST[PS_PLUGIN]
 			-- A collection of plugins providing additional functionality.
 			-- The list is traversed front-to-back during retrieval operations,
 			-- and back-to-front during write operations
 
-	add_plug_in (plug_in: PS_PLUGIN)
+	add_plugin (plug_in: PS_PLUGIN)
 			-- Add `plugin' to the end of the current plugin list.
 		do
-			plug_in_list.extend (plug_in)
+			plugins.extend (plug_in)
 		end
 
 feature {PS_CURSOR_WRAPPER}
 
-	apply_plugins (item: PS_BACKEND_OBJECT; criterion: detachable PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION)
+	apply_plugins (item: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION)
 		do
-			across plug_in_list as cursor loop
-				cursor.item.after_retrieve (item, criterion, attributes, transaction)
+			across plugins as cursor loop
+				cursor.item.after_retrieve (item, transaction)
 			end
 		end
 

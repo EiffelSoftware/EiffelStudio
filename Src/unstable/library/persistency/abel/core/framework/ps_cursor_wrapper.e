@@ -39,7 +39,7 @@ feature -- Cursor movement
 		do
 			real_cursor.forth
 			if not after and attached {PS_BACKEND_OBJECT} item as i then
-				backend.apply_plugins (i, criterion, attributes, transaction)
+				backend.apply_plugins (i, transaction)
 			end
 		ensure then
 			metadata_set: not after implies item.metadata.is_equal (type)
@@ -57,8 +57,6 @@ feature {NONE} -- Impementation
 
 	type: PS_TYPE_METADATA
 
-	criterion: PS_CRITERION
-
 	attributes: PS_IMMUTABLE_STRUCTURE [STRING]
 
 	transaction: PS_INTERNAL_TRANSACTION
@@ -69,14 +67,12 @@ feature {NONE} -- Initialization
 			a_backend: PS_READ_ONLY_BACKEND;
 			a_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT];
 			a_type: like type;
-			a_criterion: like criterion
 			attr_list: like attributes
 			a_transaction: like transaction)
 		do
 			backend := a_backend
 			real_cursor := a_cursor
 			type := a_type
-			criterion := a_criterion
 			attributes := attr_list
 			transaction := a_transaction
 		end

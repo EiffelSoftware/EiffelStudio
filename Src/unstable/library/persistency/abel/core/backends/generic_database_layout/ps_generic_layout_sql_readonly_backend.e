@@ -13,12 +13,6 @@ inherit
 			close
 		end
 
-	PS_BACKEND_CONVERTER
-		rename
-			internal_specific_retrieve as unnecessary
-			, specific_collection_retrieve as unnecessary_2
-		end
-
 create
 	make
 
@@ -146,59 +140,12 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			Result := actual_result
 		end
 
-
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
-			-- See function `retrieve_by_primary'.
-			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
-		local
-			connection: PS_SQL_CONNECTION
-			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
-			sql_string: STRING
-			attribute_name, attribute_value, class_name_of_value: STRING
-		do
-			connection := get_connection (transaction)
-			sql_string := "SELECT * FROM ps_value WHERE objectid = " + key.out + " " + SQL_Strings.for_update_appendix
-			connection.execute_sql (sql_string)
-			row_cursor := connection.last_result
-
-			if not row_cursor.after then
-				from
-					create Result.make (row_cursor.item.at (SQL_Strings.Value_table_id_column).to_integer, type)
-				until
-					row_cursor.after
-				loop
-					-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
-
-					attribute_name := db_metadata_manager.attribute_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_attributeid_column).to_integer)
-					attribute_value := row_cursor.item.at (SQL_Strings.Value_table_value_column)
-					class_name_of_value := db_metadata_manager.class_name_of_key (row_cursor.item.at (SQL_Strings.Value_table_runtimetype_column).to_integer)
---					if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
---						Result.add_attribute (attribute_name, attribute_value, class_name_of_value)
---					end
-					if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
---						if attribute_name /~ Result.root_key then
-							Result.add_attribute (attribute_name, attribute_value, class_name_of_value)
---						end
-					else
-						if attribute_value /~ "NULL" then
-							Result.set_is_root (attribute_value.to_boolean)
-						end
-					end
-
-					row_cursor.forth
-				end
-			end
-		rescue
-			rollback (transaction)
-		end
-
 feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		local
 			result_list: LINKED_LIST[PS_BACKEND_COLLECTION]
---			current_item: PS_RETRIEVED_OBJECT_COLLECTION
 
 			primary_key: INTEGER
 			position: INTEGER
@@ -259,9 +206,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 					key := row_cursor.item.at ("info_key")
 					info := row_cursor.item.at ("info")
 
---					if key /~ cursor.item.root_key then
-						cursor.item.add_information (key, info)
---					end
+					cursor.item.add_information (key, info)
 
 					row_cursor.forth
 				end
@@ -363,81 +308,6 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			end
 
 			Result := actual_result
-		end
-
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
-			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
-		local
-			position: INTEGER
-			connection: PS_SQL_CONNECTION
-			row_cursor: ITERATION_CURSOR [PS_SQL_ROW]
-			sql_string: STRING
-			value: STRING
-			runtime_type: STRING
-			key, info: STRING
-		do
-			-- Get the collection items
-			connection := get_connection (transaction)
-			sql_string := "SELECT position, runtimetype, value FROM ps_collection WHERE collectionid= "
-				+ collection_primary_key.out + " ORDER BY position " + SQL_Strings.for_update_appendix
-			connection.execute_sql (sql_string)
-
-			row_cursor := connection.last_result
-
-			if not row_cursor.after then
-				from
-					create Result.make (collection_primary_key, collection_type)
-				until
-					row_cursor.after
-				loop
-					position:= row_cursor.item.at ("position").to_integer
-					value := row_cursor.item.at (SQL_Strings.Value_table_value_column)
-					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)
-
-					if position > 0 then
-						Result.add_item (value, runtime_type)
-					else
-						Result.set_is_root (value.to_boolean)
-					end
-					row_cursor.forth
-				end
-			end
-
---			check attached Result then
---				across
---					Result.collection_items as item
---				from
---					print (Result.primary_key.out + " " + Result.metadata.type.name + "%N")
---				loop
---					print ("%T" + item.item.first + " " + item.item.second + "%N")
---				end
---			end
-
-			-- Get the additional information
-
-			sql_string := "SELECT info_key, info FROM ps_collection_info WHERE collectionid= "
-				+ collection_primary_key.out + SQL_Strings.for_update_appendix
-			connection.execute_sql (sql_string)
-
-			from
-				row_cursor := connection.last_result
-			until
-				row_cursor.after or not attached Result
-			loop
-				key := row_cursor.item.at ("info_key")
-				info := row_cursor.item.at ("info")
-
---				if key /~ Result.root_key then
-					Result.add_information (key, info)
---				end
-				row_cursor.forth
-			end
-
-
---			connection.commit
---			check
---				not_implemented: False
---			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Transaction handling

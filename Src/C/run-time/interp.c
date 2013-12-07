@@ -144,7 +144,7 @@ doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
-doc:	<attribute name="iregsz" return_type="int" export="private">
+doc:	<attribute name="iregsz" return_type="size_t" export="private">
 doc:		<summary>Size of `iregs' array (bytes)</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
@@ -164,7 +164,7 @@ doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_TYPED_VALUE **iregs = NULL;
-rt_private int iregsz = 0;	/* Size of 'iregs' array (bytes) */
+rt_private size_t iregsz = 0;	/* Size of 'iregs' array (bytes) */
 rt_private uint32 argnum = 0;		/* Number of arguments */
 rt_private uint32 locnum = 0;		/* Number of locals */
 
@@ -218,7 +218,7 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_V
 rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
-rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj, EIF_TYPE_INDEX dtype);			/* Get a compound type id */
+rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj);			/* Get a compound type id */
 rt_private EIF_TYPE_INDEX get_creation_type(int for_creation);		/* Get a creation type id */
 
 /* Interpreter interface */
@@ -676,8 +676,7 @@ rt_private void interpret(int flag, int where)
 					if (ref == NULL)
 						xraise(EN_VEXP);	/* Void assigned to expanded */
 					RT_GC_PROTECT(ref);
-					type = get_int16(&IC);
-					type = get_compound_id(MTC icurrent->it_ref, type);
+					type = get_compound_id(MTC icurrent->it_ref);
 					last->it_ref = RTLN(type);
 					RT_GC_WEAN(ref);
 					last->type = SK_EXP;
@@ -2196,8 +2195,7 @@ rt_private void interpret(int flag, int where)
 
 			open_map = closed_operands = (EIF_REFERENCE) 0;
 			has_closed = get_bool(&IC); /* Do we have an closed operands tuple? */
-			type = get_int16(&IC);
-			type = get_compound_id(MTC icurrent->it_ref,(short)type);
+			type = get_compound_id(MTC icurrent->it_ref);
 
 			class_id = get_int32(&IC);
 			feature_id = get_int32(&IC);
@@ -2467,9 +2465,8 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_BOX\n");
 #endif
-		type = get_int16(&IC);
 			/* GENERIC CONFORMANCE */
-		type = get_compound_id(MTC icurrent->it_ref,(short)type);
+		type = get_compound_id(MTC icurrent->it_ref);
 		/* Creation of a new object. */
 		{
 			EIF_REFERENCE new_obj;		/* New object */
@@ -3419,7 +3416,9 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE *it;
 			EIF_REFERENCE sp_area;
 			rt_uint_ptr elem_size;
-			rt_uint_ptr l_index = (rt_uint_ptr) get_int32(&IC);
+			EIF_INTEGER_32 l_index = get_int32(&IC);
+
+			CHECK ("Index non-negative", l_index >= 0);
 
 				/* Get the expression value. */
 			it = opop();
@@ -3544,10 +3543,8 @@ rt_private void interpret(int flag, int where)
 			unsigned char *OLD_IC;
 			EIF_BOOLEAN is_atomic;
 
-			dtype = get_int16(&IC);			/* Get the static type */
-
 				/*GENERIC CONFORMANCE */
-			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
+			dtype = get_compound_id(MTC icurrent->it_ref);
 
 			nbr_of_items = get_int32(&IC);	  	/* Number of items in tuple */
 			is_atomic = EIF_TEST(get_int32(&IC));
@@ -5976,10 +5973,8 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				short stype;
 				int32 origin, ooffset;
 				EIF_TYPE_INDEX dftype;
-				EIF_TYPE_INDEX dtype;
 
-				dtype = get_int16(&IC);
-				dftype = get_compound_id(Current, dtype);
+				dftype = get_compound_id(Current);
 				stype = get_int16(&IC);			/* Get static type of caller */
 				origin = get_int32(&IC);			/* Get the origin class id */
 				ooffset = get_int32(&IC);			/* Get the offset in origin */
@@ -5991,10 +5986,8 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				short code;
 				long  offset;
 				EIF_TYPE_INDEX dftype;
-				EIF_TYPE_INDEX dtype;
 
-				dtype = get_int16(&IC);
-				dftype = get_compound_id(Current, dtype);
+				dftype = get_compound_id(Current);
 				code = get_int16(&IC);		/* Get the static type first */
 				offset = get_int32(&IC);	/* Get the feature id of the anchor */
 				result = RTWCTT(code, offset, dftype);
@@ -6006,29 +5999,29 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 	return result;
 }
 
-rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current, EIF_TYPE_INDEX dtype)
+rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current)
 {
 	/* Get array of short ints and convert it to a compound id. */
-	EIF_TYPE_INDEX   gen_types [MAX_CID_SIZE+1], *gp;
-	int cnt;
+	EIF_TYPE_INDEX   gen_types [MAX_CID_SIZE+1];
+	int cnt = 0;
 
-	gp  = gen_types;
-	cnt = 0;
-
-	do
-	{
-		++cnt;
-		*(gp++) = get_next_compound_id (Current);
+	gen_types [cnt] = get_next_compound_id (Current);
+	while (gen_types [cnt] != TERMINATOR) {
 		if (cnt >= MAX_CID_SIZE) {
 			eif_panic(MTC "Too many generic parameters in compound type");
+		} else {
+			cnt++;
+			gen_types [cnt] = get_next_compound_id (Current);
 		}
-	} while (*(gp - 1) != TERMINATOR);
+	}
 
 		/* If not generic then return dtype */
-	if (cnt <= 2)
-		return dtype;
-
-	return eif_compound_id (Dftype (Current), dtype, gen_types);
+	if (cnt <= 1) {
+			/* Optimization type is in the first entry of `gen_types'. */
+		return gen_types [0];
+	} else {
+		return eif_compound_id (Dftype (Current), gen_types);
+	}
 }
 
 rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
@@ -6041,9 +6034,8 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 
 	switch (*IC++) {
 	case BC_CTYPE:				/* Hardcoded creation type */
-		type = get_int16(&IC);
 /* GENERIC CONFORMANCE */
-		type = get_compound_id(MTC icurrent->it_ref,(short)type);
+		type = get_compound_id(MTC icurrent->it_ref);
 		break;
 	case BC_CARG:				/* Like argument creation type */
 		type = get_creation_type (1);
@@ -6112,8 +6104,6 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 
 rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE current_ref)
 {
-	EIF_GET_CONTEXT
-
 	/* Initializes variable 'ptr' to be of type 'type' */
 	short dtype;
 
@@ -6133,8 +6123,7 @@ rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE curren
 	case SK_INT64:		ptr->it_int64 = (EIF_INTEGER_64) 0; break;
 	case SK_REAL32:		ptr->it_real32 = (EIF_REAL_32) 0; break;
 	case SK_REAL64:		ptr->it_real64 = (EIF_REAL_64) 0; break;
-	case SK_EXP:		dtype = get_int16(&IC);
-						dtype = get_compound_id(MTC current_ref, (short) dtype);
+	case SK_EXP:		dtype = get_compound_id(MTC current_ref);
 						ptr->type = (type & SK_HEAD) | ((uint32) dtype);
 						ptr->it_ref = (EIF_REFERENCE) 0;
 						break;
@@ -6287,7 +6276,7 @@ rt_private void allocate_registers(void)
 
 	RT_GET_CONTEXT
 	static int bigger = 0;			/* Records # of time array is bigger */
-	int size;				/* Size of iregs array */
+	size_t size;				/* Size of iregs array */
 	EIF_TYPED_VALUE **new;	/* New location for array extension */
 
 	size = nbregs * ITEM_SZ;				/* The size it should have */
@@ -6983,17 +6972,20 @@ doc:	</routine>
 rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsigned char *bc, int count)
 {
 	unsigned char *bcode;
-	rt_uint_ptr old_count;
+	rt_uint_ptr old_count, l_body_id;
 
 	REQUIRE("valid body_id", body_id >= 0);
 	REQUIRE("valid pattern_id", pattern_id >= 0);
 	REQUIRE ("valid byte_code", bc);
 	REQUIRE ("valid byte_code count", count >= 0);
 
+		/* Changed type to conform to the type of `melt_count'. It is safe per precondition. */
+	l_body_id = (rt_uint_ptr) body_id;
+
 		/* First allocate the `melt' and `mpatidtab' arrays if not yet created. And if created
-		 * but too small for `body_id' we resize them. */
+		 * but too small for `l_body_id' we resize them. */
 	if (!melt) {
-		melt_count = body_id + 1;
+		melt_count = l_body_id + 1;
 		melt = (unsigned char **) cmalloc (melt_count* sizeof(unsigned char *));
 		if (!melt) {
 			enomem();
@@ -7006,9 +6998,9 @@ rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsi
 				memset (mpatidtab, 0, melt_count * sizeof(int));
 			}
 		}
-	} else if (melt_count <= body_id) {
+	} else if (melt_count <= l_body_id) {
 		old_count = melt_count;
-		melt_count = body_id + 1;
+		melt_count = l_body_id + 1;
 		melt = (unsigned char **) crealloc (melt, melt_count * sizeof(unsigned char *));
 		if (!melt) {
 			enomem();
@@ -7024,9 +7016,9 @@ rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsi
 	}
 	CHECK("melt allocated", melt);
 	CHECK("mpatidtab allocated", mpatidtab);
-	CHECK("valid melt array count", melt_count > body_id);
+	CHECK("valid melt array count", melt_count > l_body_id);
 
-	bcode = melt [body_id];
+	bcode = melt [l_body_id];
 	if (bcode != NULL) {
 			/* Let's free the previously allocated byte code. */
 		eif_rt_xfree (bcode);
@@ -7037,9 +7029,9 @@ rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsi
 		enomem();
 	} else {
 		memcpy (bcode, bc, count * sizeof(unsigned char));
-		melt [body_id] = bcode;
-		mpatidtab [body_id] = pattern_id;
-		egc_frozen [body_id] = 0;
+		melt [l_body_id] = bcode;
+		mpatidtab [l_body_id] = pattern_id;
+		egc_frozen [l_body_id] = 0;
 	}
 }
 

@@ -285,7 +285,7 @@ extern struct opstack op_stack;               /* Operational stack */
 
 /* Manifest tuple */
 #define BC_TUPLE	(unsigned char) 168
-#define BC_PTUPLE	(unsigned char) 169
+#define BC_NOTUSED_169		(unsigned char) 169
 
 /* Unicode*/
 #define BC_STRING32	(unsigned char) 170
@@ -326,7 +326,7 @@ extern void opstack_reset(struct opstack *stk);
 extern void dynamic_eval(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed);	/* Dynamic evaluation of a feature */
 extern void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result);
 
-extern EIF_TYPE_INDEX get_compound_id (EIF_REFERENCE, EIF_TYPE_INDEX);
+extern EIF_TYPE_INDEX get_compound_id (EIF_REFERENCE);
 
 #ifdef __cplusplus
 }

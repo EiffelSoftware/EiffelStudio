@@ -488,7 +488,7 @@ rt_private void root_class_updt (void)
 		l_obj = RTLNSMART((EIF_TYPE_INDEX) wint32());
 			/* compute the full dynamic type for `root_obj'. */
 		IC = (unsigned char *) wtype_array(NULL);
-		egc_rcdt[i] = get_compound_id (l_obj, get_int16(&IC));
+		egc_rcdt[i] = get_compound_id (l_obj);
 		IC = old_IC;
 
 		egc_rcoffset[i] = wint32();
@@ -568,12 +568,8 @@ rt_public void cnode_updt(void)
 		for (i=0; i<nbattr; i++) {
 			attr_flags[i] = (uint16) wshort();
 		}
-		for (i=0; i<nbattr; i++)
-		{
-			if (wshort ())
-				gtypes[i] = wtype_array(NULL);
-			else
-				gtypes[i] = NULL;
+		for (i=0; i<nbattr; i++) {
+			gtypes[i] = wtype_array(NULL);
 		}
 
 	} else {

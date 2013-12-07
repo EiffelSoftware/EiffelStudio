@@ -252,10 +252,8 @@ static  void    prepare_types (void)
 		i = acount;
 			/* Read attribute full types. */
 		while (i--) {
-			if (rshort ()) {
-				while (rshort() != -1)
-					;
-			}
+			while (rshort() != -1)
+				;
 		}
 
 		(void) rshort(); /* Skeleton flags */
@@ -477,6 +475,7 @@ static  void    analyze_cnodes (void)
 		} else {
 			fprintf (mfp, "NULL");
 		}
+		fprintf (mfp, "\n");
 
 		print_line ();
 	}

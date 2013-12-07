@@ -3068,7 +3068,7 @@ rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_p
 		EIF_TYPE_INDEX *l_cid = cidarr;
 		for (i = 0; gtypes[i] != TERMINATOR; i++) {
 				/* Make sure we don't go outside the bounds of `l_cid'. */
-			if ((i + 1) >= l_count) {
+			if (i >= l_count) {
 					/* Reallocate array to allow ranges between `0' and `(i + 1) + 1'. */
 				if (l_count >= CIDARR_SIZE) {
 						/* Let's resize our existing allocated `l_cid' array by 1.5 times. */
@@ -3087,12 +3087,12 @@ rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_p
 					memcpy (l_cid, cidarr, CIDARR_SIZE * sizeof(EIF_TYPE_INDEX));
 				}
 			}
-			l_cid [i + 1] = gtypes[i];
+			l_cid [i] = gtypes[i];
 		}
 		CHECK("valid cound", rt_valid_type_index(i));
-		l_cid [0] = (EIF_TYPE_INDEX) i;
-		l_cid [i + 1] = TERMINATOR;
-		dftype = eif_compound_id (0, l_cid[1], l_cid);
+		CHECK("i large enough", i > 0);
+		l_cid [i] = TERMINATOR;
+		dftype = eif_compound_id (0, l_cid);
 		if (l_cid != cidarr) {
 			free(l_cid);
 		}
@@ -3135,7 +3135,7 @@ rt_private void find_attribute (type_descriptor *context_type, rt_uint_ptr att_i
 				 * reference type detail matches the request, then we have
 				 * matched the attribute.
 				 */
-				if (atypes == NULL || attribute_types_matched (context_type, att_index, System (dtype).cn_gtypes[i]+1, atypes)) {
+				if (atypes == NULL || attribute_types_matched (context_type, att_index, System (dtype).cn_gtypes[i], atypes)) {
 					result = i;
 				}
 			}
@@ -3143,7 +3143,7 @@ rt_private void find_attribute (type_descriptor *context_type, rt_uint_ptr att_i
 #ifdef RECOVERABLE_DEBUG
 		printf ("      %s %s: ", (result == -1 ? "-" : " "), att_name);
 		if (result != -1)
-			print_attribute_type (System (dtype).cn_gtypes[result]+1);
+			print_attribute_type (System (dtype).cn_gtypes[result]);
 		else {
 			if (atypes == NULL)
 				printf (type2name (att_type));
@@ -3614,7 +3614,7 @@ rt_private void check_mismatch (type_descriptor *t)
 				t->mismatched |= MISMATCH_ADDED_ATTRIBUTE;
 #ifdef RECOVERABLE_DEBUG
 				printf ("      + %s: ", System (t->new_type).cn_names[i]);
-				print_attribute_type (System (t->new_type).cn_gtypes[i]+1);
+				print_attribute_type (System (t->new_type).cn_gtypes[i]);
 				printf ("\n");
 #endif
 			}
@@ -4831,30 +4831,29 @@ rt_private EIF_TYPE_INDEX rt_read_cid (EIF_TYPE_INDEX odtype)
 
 	buffer_read ((char *) &count, sizeof (int16));
 
-	if (count >= 2) {
+	if (count > 1) {
 			/* We now read the generic parameters' type. */
-		if (count >= CIDARR_SIZE) {
+		if ((count + 1) >= CIDARR_SIZE) {
 				/* In case it is more than the allocated memory for `cidarr'.
-				 * `count + 2' because `l_cid' array has indices between the
-				 * range of `0' to `count + 1'*/
-			l_cid = (EIF_TYPE_INDEX *) malloc ((count + 2) * sizeof(EIF_TYPE_INDEX));
+				 * `count + 1' because `l_cid' array has indices between the
+				 * range of `0' to `count'. */
+			l_cid = (EIF_TYPE_INDEX *) malloc ((count + 1) * sizeof(EIF_TYPE_INDEX));
 			if (!l_cid) {
 				xraise(EN_MEM);
 			}
 		} else {
 			l_cid = cidarr;
 		}
-		l_cid [0] = count;
-		buffer_read ((char *) (l_cid + 1), count * sizeof (EIF_TYPE_INDEX));
-		l_cid [count + 1] = TERMINATOR;
+		buffer_read ((char *) l_cid, count * sizeof (EIF_TYPE_INDEX));
+		l_cid [count] = TERMINATOR;
 
 		if (rt_kind) {
-			dftype = eif_gen_id_from_cid (l_cid, dtypes);
+			dftype = eif_gen_id_from_cid (l_cid, dtypes, count);
 		} else {
-			dftype = eif_gen_id_from_cid (l_cid, NULL);
+			dftype = eif_gen_id_from_cid (l_cid, NULL, count);
 		}
 
-		if (count >= CIDARR_SIZE) {
+		if (l_cid != cidarr) {
 				/* Let's free the allocated array. */
 			free (l_cid);
 		}
@@ -4881,21 +4880,21 @@ doc:	</routine>
 rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 {
 	RT_GET_CONTEXT
-	uint32 l_real_count, count = 0, val;
+	uint32 l_real_count, count, val;
 	EIF_TYPE_INDEX dftype;
 	int16 old_dftype;
-	EIF_TYPE_INDEX *ip, *l_cid;
-	int i;
+	EIF_TYPE_INDEX *l_cid;
+	int i, j;
 
 	ridr_norm_int (&count);
 
-	if (count >= 2) {
+	if (count > 1) {
 			/* We now read the generic parameters' type. */
-		if (count >= CIDARR_SIZE) {
+		if ((count + 1) >= CIDARR_SIZE) {
 				/* In case it is more than the allocated memory for `cidarr'.
-				 * `count + 2' because `l_cid' array has indices between the
-				 * range of `0' to `count + 1'*/
-			l_cid = (EIF_TYPE_INDEX *) malloc ((count + 2) * sizeof(EIF_TYPE_INDEX));
+				 * `count + 1' because `l_cid' array has indices between the
+				 * range of `0' to `count'. */
+			l_cid = (EIF_TYPE_INDEX *) malloc ((count + 1) * sizeof(EIF_TYPE_INDEX));
 			if (!l_cid) {
 				xraise(EN_MEM);
 			}
@@ -4903,91 +4902,95 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 			l_cid = cidarr;
 		}
 
+		l_real_count = count;
+
 		if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
-			l_real_count = count;
-			ip = l_cid + 1;
-			for (i = count; i; --i, ++ip) {
+			for (i = 0; i < count; i++) {
 				ridr_norm_int (&val);
-				*ip = (EIF_TYPE_INDEX) val;
+				l_cid [i] = (EIF_TYPE_INDEX) val;
 			}
 		} else {
 				/* Read old format of `cid' array corresponding to storable versions strictly less
 				 * than INDEPENDENT_STORE_5_5 and convert as we go to new format. */
-			ip = l_cid + 1;
-			l_real_count = 0;
-			for (i = count; i; --i) {
+			for (i = 0, j = 0; i < count; i++) {
 				ridr_norm_int (&val);
 				old_dftype = (EIF_TYPE_INDEX) val;
 				if (old_dftype <= OLD_EXPANDED_LEVEL) {
-					ip[l_real_count] = (EIF_TYPE_INDEX) (OLD_EXPANDED_LEVEL - old_dftype);
-					l_real_count++;
+					l_cid[j] = (EIF_TYPE_INDEX) (OLD_EXPANDED_LEVEL - old_dftype);
+					j++;
 				} else if (old_dftype == OLD_TUPLE_TYPE) {
-					ip[l_real_count] = TUPLE_TYPE;
-					l_real_count++;
-					ridr_norm_int (&val);	/* Uniformizer, not used. */
+					l_cid[j] = TUPLE_TYPE;
+						/* Since we do not need the uniformizer, we simply read it but
+						 * ignore it, this causes `l_real_count' to be decreased by `1'. */
+					ridr_norm_int (&val);
+					l_real_count--;
 					ridr_norm_int (&val);	/* Nb of generics. */
-					ip[l_real_count] = (EIF_TYPE_INDEX) val;
-					l_real_count++;
+					l_cid[j + 1] = (EIF_TYPE_INDEX) val;
+
 					ridr_norm_int (&val);	/* Base id for TUPLE */
-					ip[l_real_count] = (EIF_TYPE_INDEX) val;
-					l_real_count++;
-						/* We skip the already treated elements */
-					i -= 3;
+					l_cid[j + 2] = (EIF_TYPE_INDEX) val;
+						/* Update indexes by number of entries we read. Note that `i' will be increased by
+						 * one more as part of the loop iteration. */
+					j += 3;
+					i += 3;
 				} else if (old_dftype <= OLD_FORMAL_TYPE) {
-					ip[l_real_count] = FORMAL_TYPE;
+					l_cid[j] = FORMAL_TYPE;
+					j++;
+						/* This is the only place where the new encoding is bigger than the old one. So we need to
+						 * allocate more space. */
 					l_real_count++;
-						/* This is the only place where the new encoding is bigger than the old one.
-						 * So we need to make sure that we are in the proper bounds of the `l_cid' array. */
-					if ((l_real_count + 1) >= count) {
-							/* Reallocate array to allow ranges between `0' and `(l_real_count + 1) + 1'. */
-						if (count >= CIDARR_SIZE) {
-								/* Let's resize our existing allocated `l_cid' array. */
-							l_cid = (EIF_TYPE_INDEX *) realloc (l_cid, (l_real_count + 3) * sizeof(EIF_TYPE_INDEX));
+					if (l_real_count > count) {
+							/* We have more entries than previously computed, we check if we can still use `l_cidé to accomodate
+							 * the additional entry, if we need to resize the previously allocated blocks or create a new block
+							 * if `cidarr' is too small. */
+						if (l_cid != cidarr) {
+								/* Array was already manually allocated. We simply resize it by increasing its size by one. */
+							l_cid = (EIF_TYPE_INDEX *) realloc (l_cid, (l_real_count + 1) * sizeof(EIF_TYPE_INDEX));
 							if (!l_cid) {
 								xraise(EN_MEM);
 							}
-						} else {
+						} else if ((l_real_count + 1) > CIDARR_SIZE) {
 								/* Create a new memory block and copy content of `cidarr' in it. */
-							l_cid = (EIF_TYPE_INDEX *) malloc ((l_real_count + 3) * sizeof(EIF_TYPE_INDEX));
+							l_cid = (EIF_TYPE_INDEX *) malloc ((l_real_count + 1) * sizeof(EIF_TYPE_INDEX));
 							if (!l_cid) {
 								xraise(EN_MEM);
 							}
 							memcpy (l_cid, cidarr, CIDARR_SIZE * sizeof(EIF_TYPE_INDEX));
+						} else {
+								/* Nothing to do, `cidarr' is large enough to accomodate `l_real_count' items. */
 						}
-						ip = l_cid + 1;
 					}
-					ip[l_real_count] = (EIF_TYPE_INDEX) (OLD_FORMAL_TYPE - old_dftype);	/* Insert position of formal */
-					l_real_count++;
+					l_cid[j] = (EIF_TYPE_INDEX) (OLD_FORMAL_TYPE - old_dftype);	/* Insert position of formal */
+					j++;
 				} else {
 					switch (old_dftype) {
-						case OLD_CHARACTER_8_TYPE: ip[l_real_count] = egc_char_dtype; l_real_count++; break;
-						case OLD_BOOLEAN_TYPE: ip[l_real_count] = egc_bool_dtype; l_real_count++; break;
-						case OLD_INTEGER_8_TYPE: ip[l_real_count] = egc_int8_dtype; l_real_count++; break;
-						case OLD_INTEGER_16_TYPE: ip[l_real_count] = egc_int16_dtype; l_real_count++; break;
-						case OLD_INTEGER_32_TYPE: ip[l_real_count] = egc_int32_dtype; l_real_count++; break;
-						case OLD_INTEGER_64_TYPE: ip[l_real_count] = egc_int64_dtype; l_real_count++; break;
-						case OLD_REAL_32_TYPE: ip[l_real_count] = egc_real32_dtype; l_real_count++; break;
-						case OLD_REAL_64_TYPE: ip[l_real_count] = egc_real64_dtype; l_real_count++; break;
-						case OLD_POINTER_TYPE: ip[l_real_count] = egc_point_dtype; l_real_count++; break;
-						case OLD_CHARACTER_32_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
+						case OLD_CHARACTER_8_TYPE: l_cid[j] = egc_char_dtype; break;
+						case OLD_BOOLEAN_TYPE: l_cid[j] = egc_bool_dtype; break;
+						case OLD_INTEGER_8_TYPE: l_cid[j] = egc_int8_dtype; break;
+						case OLD_INTEGER_16_TYPE: l_cid[j] = egc_int16_dtype; break;
+						case OLD_INTEGER_32_TYPE: l_cid[j] = egc_int32_dtype; break;
+						case OLD_INTEGER_64_TYPE: l_cid[j] = egc_int64_dtype; break;
+						case OLD_REAL_32_TYPE: l_cid[j] = egc_real32_dtype; break;
+						case OLD_REAL_64_TYPE: l_cid[j] = egc_real64_dtype; break;
+						case OLD_POINTER_TYPE: l_cid[j] = egc_point_dtype; break;
+						case OLD_CHARACTER_32_TYPE: l_cid[j] = egc_wchar_dtype; break;
 						default:
-							ip[l_real_count] = (EIF_TYPE_INDEX) old_dftype;
-							l_real_count++;
+							l_cid[j] = (EIF_TYPE_INDEX) old_dftype;
 					}
+					j++;
 				}
 			}
 		}
 
-		l_cid [0] = (EIF_TYPE_INDEX) l_real_count;
-		l_cid [l_real_count + 1] = TERMINATOR;
+		l_cid [l_real_count] = TERMINATOR;
 
 		if (rt_kind) {
-			dftype = eif_gen_id_from_cid (l_cid, dtypes);
+			dftype = eif_gen_id_from_cid (l_cid, dtypes, l_real_count);
 		} else {
-			dftype = eif_gen_id_from_cid (l_cid, NULL);
+			dftype = eif_gen_id_from_cid (l_cid, NULL, l_real_count);
 		}
 
-		if (count >= CIDARR_SIZE) {
+		if (l_cid != cidarr) {
 				/* Let's free the allocated array. */
 			free (l_cid);
 		}

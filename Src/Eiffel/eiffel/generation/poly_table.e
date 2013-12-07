@@ -336,7 +336,7 @@ feature
 						buffer.put_string (l_table_name)
 						buffer.put_string ("_pgtype")
 						buffer.put_integer (j)
-						buffer.put_string ("[] = {0,")
+						buffer.put_string ("[] = {")
 						entry.generate_cid (buffer, True);
 						buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 						buffer.put_string ("};");

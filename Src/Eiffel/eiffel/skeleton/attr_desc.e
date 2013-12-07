@@ -196,7 +196,7 @@ feature -- Code generation
 			buffer.put_integer (a_class_type.type_id)
 			buffer.put_character ('_')
 			buffer.put_integer (idx)
-			buffer.put_string (once " [] = {0,")
+			buffer.put_string (once " [] = {")
 				-- In order to generate proper type description for current entry we need to
 				-- evaluate `type_i' in the context of `current_type' from BYTE_CONTEXT, otherwise
 				-- it is possible that we would not find the associated class type of `l_type'

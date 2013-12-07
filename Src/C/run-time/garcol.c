@@ -1532,7 +1532,6 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		/* Deal with TYPE instances. */
 		/* We add +2 to `eif_next_gen_id' because index 0 and 1 are reserved for detachable NONE and
 		 * attached NONE. See `eif_type_malloc'. */
-	CHECK("valid bounds", eif_next_gen_id + 2 <= rt_type_set_count);
 	mark_array (rt_type_set, (rt_type_set_count > eif_next_gen_id ? eif_next_gen_id + (rt_uint_ptr) 2 : rt_type_set_count), MARK_SWITCH, moving);
 
 		/* Detect live and dead processors without taking once manifest strings into account,

@@ -733,13 +733,12 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 
 	if (is_generic (&l_cecil_type, a_type) == 1) {
 			/* Initial count for `typearr':
-			 * 1 for static type id, currently not used
 			 * 1 if base type is attached
 			 * 1 for the base type id
 			 * the number of actual generic parameter
 			 * 1 for the terminator
 			 */
-		sdata.count = 2 + (a_type->is_attached ? 1 : 0) + l_cecil_type.nb_param + 1;
+		sdata.count = (a_type->is_attached ? 1 : 0) + 1 + l_cecil_type.nb_param + 1;
 
 			/* Allocate the typearr structures and do the basic
 			 * initialization, the first element is set to `INVALID_DTYPE' since
@@ -748,12 +747,11 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 			 */
 		sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 		if (sdata.typearr) {
-			sdata.typearr [0] = INVALID_DTYPE;
 			if (a_type->is_attached) {
-				sdata.typearr [1] = ATTACHED_TYPE;
-				sdata.position = 2;
-			} else {
+				sdata.typearr [0] = ATTACHED_TYPE;
 				sdata.position = 1;
+			} else {
+				sdata.position = 0;
 			}
 			sdata.typearr [sdata.count - 1] = TERMINATOR;
 
@@ -761,7 +759,7 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 				 * before finding out the real type */
 			eif_gen_type_id (&l_cecil_type, a_type, data);
 			if (sdata.has_error == 0) {
-				result = eif_compound_id (0, sdata.typearr[1], sdata.typearr);
+				result = eif_compound_id (0, sdata.typearr);
 			}
 			eif_free (sdata.typearr);
 		} else {
@@ -770,15 +768,14 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 		}
 	} else if (is_tuple (a_type)) {
 			/* Initial count for `typearr':
-			 * 1 for static type id, currently not used
 			 * 1 if base type is attached
 			 * TUPLE_OFFSET because it is a tuple
-			 * 1 for the base type id
+			 * 1 for the base type id of TUPLE
 			 * the number of actual generic parameter
 			 * 1 for the terminator
 			 */
 
-		sdata.count = 2 + (a_type->is_attached ? 1 : 0) + TUPLE_OFFSET + a_type->count + 1;
+		sdata.count = (a_type->is_attached ? 1 : 0) + TUPLE_OFFSET + 1 + a_type->count + 1;
 
 		l_cecil_id = eifcid(a_type);
 		if (l_cecil_id == INVALID_DTYPE) {
@@ -792,12 +789,11 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 				 */
 			sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 			if (sdata.typearr) {
-				sdata.typearr [0] = INVALID_DTYPE;
 				if (a_type->is_attached) {
-					sdata.typearr [1] = ATTACHED_TYPE;
-					sdata.position = 2;
-				} else {
+					sdata.typearr [0] = ATTACHED_TYPE;
 					sdata.position = 1;
+				} else {
+					sdata.position = 0;
 				}
 				sdata.typearr [sdata.position] = TUPLE_TYPE;
 				sdata.typearr [sdata.position + 1] = a_type->count;
@@ -808,7 +804,7 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 					/* Analyze TUPLE type before finding its real type. */
 				eif_tuple_type_id (a_type, data);
 				if (sdata.has_error == 0) {
-					result = eif_compound_id (0, sdata.typearr[1], sdata.typearr);
+					result = eif_compound_id (0, sdata.typearr);
 				}
 				eif_free (sdata.typearr);
 			} else {

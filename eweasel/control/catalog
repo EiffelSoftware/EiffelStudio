@@ -966,7 +966,7 @@ test	inline-agent-invariant-crash	incr351 tcf pass incrementality agents
 test	qat-change-remote-anchor-name		incr352 tcf fail incrementality anchored_type
 test	qat-change-remote-anchor-type		incr353 tcf fail incrementality anchored_type
 test	qat-none-crash				incr354 tcf pass incrementality anchored_type
-test	resume-vlec-eat-memory			incr355	tcf fail incrementality expanded manual
+test	resume-vlec-eat-memory			incr355	tcf fail incrementality expanded 
 test	qat-is-expanded-crash			incr356 tcf fail incrementality anchored_type
 test	change-expanded-anchor-type		incr357 tcf fail incrementality anchored_type
 test	qat-is-expanded-crash-2			incr358 tcf fail incrementality anchored_type
@@ -1033,7 +1033,7 @@ test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_
 test	static-type-id-crash-3			incr419 tcf fail incrementality anchored_type
 test	internal-search-crash			incr420 tcf fail incrementality skip
 test	change-application-options		incr421 tcf fail incrementality
-test	fix-vlec-infinite-recursion		incr422	tcf fail incrementality scoop expanded manual
+test	fix-vlec-infinite-recursion		incr422	tcf fail incrementality scoop expanded
 test	duplicate-vlec-after-resume		incr423	tcf fail incrementality expanded
 test 	inline-agent-removal-crash		incr424	tcf fail incrementality agents
 test 	inline-agent-removal-crash-2	incr425	tcf fail incrementality agents
@@ -1054,7 +1054,6 @@ test	multiple-unary-free-ops		melt006  tcf pass melting
 test	chained-assertion-melt		melt007  tcf pass melting assertion
 test	melted-putreal-wrong		melt008  tcf pass melting
 test	invariant-melt-panic		melt009  tcf pass melting
-test	weird-sprintf-melt-panic	melt010  tcf pass melting manual
 test	manifest-array-int-double	melt011  tcf pass melting
 test	raise-exception-call-self	melt012  tcf fail melting
 test	creation-proc-modify-target	melt014  tcf pass melting
@@ -1282,7 +1281,7 @@ test	finalize-wrong-generating-type		final104 tcf fail finalizing expanded
 test	inlining-parent-with-less-formals	final105 tcf fail finalizing inlining
 test	inlining-in-parent-with-child-with-less-formals final106 tcf fail finalizing inlining
 test	finalize-argument-anchors-formal	final107 tcf fail finalizing anchored_type
-test	finalize-external-invariant-skipped	final108 tcf fail finalizing assertions external
+test	finalize-external-invariant-2kipped	final108 tcf fail finalizing assertions external
 test	inline-manifest-type			final109 tcf fail finalizing
 test	profile-once-per-process-function	final110 tcf fail finalizing
 test	inline-qat-static-external		final111 tcf fail finalizing inlining anchored_type
@@ -1357,7 +1356,7 @@ test	free-binary-wrong-precedence	exec009  tcf pass execution
 test	divide-by-real-zero		exec010  tcf fail execution
 test	expanded-creation-order		exec011  tcf pass execution
 test	redecl-implicit-precond		exec012  tcf pass execution
-test	variable-attr-wrong-address	exec014  tcf pass execution manual
+test	variable-attr-wrong-address	exec014  tcf pass execution
 test	readline-long-line-wrong	exec015  tcf pass execution
 
 test	rescue-floating-exception	exec016  tcf pass execution
@@ -1383,7 +1382,6 @@ test	once-expanded-result		exec038  tcf pass execution
 test	create-zero-len-bool-string	exec039  tcf pass execution
 test	merge-sort-panic		exec040  tcf pass execution
 test	random-memory-alloc-panic	exec041  tcf pass execution
-test	cecil-panic			exec042  tcf pass execution manual
 test	auto-resize-exp-arrayed-list	exec044  tcf pass execution
 test	reference-to-sub-object		exec045  tcf pass execution
 if not DOTNET test	class-invariant-fail-panic	exec046  tcf pass execution
@@ -1405,7 +1403,7 @@ test	random-string-blank-panic	exec064  tcf pass execution
 test	random-array-alloc-loop		exec065  tcf pass execution
 test	many-locals-deep-recursion	exec066  tcf pass execution
 test	big-expanded-attributes		exec067  tcf pass execution
-test	big-manifest-array-of-strings	exec068  tcf pass execution manual
+test	big-manifest-array-of-strings	exec068  tcf pass execution
 test	keep-on-stripping		exec069  tcf pass execution
 test	deep-exception-in-rescue	exec070  tcf pass execution skip
 test	few-locals-deep-recursion	exec071  tcf pass execution
@@ -1656,7 +1654,7 @@ test	do-nothing-optimization			exec324 tcf pass execution
 test	assertion-incorrect-type		exec325 tcf pass execution assertion
 test	ieee-min-max-values				exec326 tcf pass execution ieee
 test	assertion-reset-with-check		exec327 tcf pass execution assertion
-test	default-on-expanded-string		exec328 tcf fail execution expanded manual
+test	default-on-expanded-string		exec328 tcf fail execution expanded
 test	ieee-abs-minus-zero				exec329 tcf pass execution ieee
 test	catcall-in-expanded-class-invariant	exec330 tcf fail execution catcall
 test	once-string-seg-fault			exec331 tcf fail execution
@@ -2095,15 +2093,6 @@ test	store-retrieve-bogus-version-mismatch	store035 tcf pass storable
 test	correct-mismatch-memory-corruption store036 tcf pass storable
 test	store-retrieve-non-void-safe	store037 tcf pass storable attached_types
 test	storable-performance-testing	store038 tcf pass storable performance
-
--- Flat, short, flatshort tests
-
-test	rename-inherited-wrong-flat	flat001	 tcf pass flat manual
-test	flat-after-change		flat002	 tcf pass flat manual
-test	flat-feature-two-defs		flat003	 tcf pass flat manual
-test	eff-class-flat-deferred-feature	flat004	 tcf pass flat manual
-test	flat-multi-export-lists		flat005	 tcf fail flat manual
-test	rename-inherited-bad-flat	flat006	 tcf pass flat manual
 
 -- Library class tests
 

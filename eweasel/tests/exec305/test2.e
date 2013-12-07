@@ -14,7 +14,7 @@ feature
 	default_create
 		do
 			print ("Starting%N")
-			if attached {TEST2} Current as x then
+			if attached {TEST2} (Current) as x then
 				print ("Conforms in TEST2%N")
 			end
 		end

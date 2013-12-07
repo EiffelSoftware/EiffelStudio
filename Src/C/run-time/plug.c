@@ -827,10 +827,11 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 
 			cid = cn_gtypes [i];
 
-			if (cid && (cid [1] != TERMINATOR)) {
-				dftype = eif_compound_id (Dftype (obj), exp_dtype, cid);
+			if (cid && (cid [0] != TERMINATOR)) {
+				dftype = eif_compound_id (Dftype (obj), cid);
 				exp_dtype = To_dtype(dftype);
 			} else {
+					/* Non-generic expanded type. */
 				dftype = exp_dtype;
 			}
 

@@ -243,7 +243,7 @@ doc:	</attribute>
 */
 rt_shared EIF_CS_TYPE *eif_gen_mutex = NULL;
 
-rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX *);
+rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX, EIF_TYPE_INDEX *);
 rt_public EIF_TYPE_INDEX eifthd_final_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX **, EIF_TYPE_INDEX, int );
 rt_shared uint32 eifthd_gen_count_with_dftype (EIF_TYPE_INDEX );
 rt_shared char eifthd_gen_typecode_with_dftype (EIF_TYPE_INDEX , uint32);
@@ -253,7 +253,7 @@ rt_shared EIF_TYPE_INDEX eifthd_typeof_array_of (EIF_TYPE_INDEX);
 rt_shared EIF_TYPE_INDEX eifthd_typeof_type_of (EIF_TYPE_INDEX);
 rt_public char *eifthd_gen_typename (EIF_REFERENCE );
 rt_shared EIF_TYPE_INDEX *eifthd_gen_cid (EIF_TYPE_INDEX);
-rt_shared EIF_TYPE_INDEX eifthd_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *);
+rt_shared EIF_TYPE_INDEX eifthd_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *, int);
 rt_public int eifthd_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 
 #define EIFMTX_LOCK \
@@ -293,12 +293,12 @@ rt_private void eif_put_gen_seq (EIF_TYPE_INDEX, EIF_TYPE_INDEX*, EIF_TYPE_INDEX
 /* Public features protected with a MUTEX.                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX base_id, EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX *types)
 {
 	EIF_TYPE_INDEX   result;
 
 	EIFMTX_LOCK;
-	result = eifthd_compound_id (current_dftype, base_id, types);
+	result = eifthd_compound_id (current_dftype, types);
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -389,12 +389,12 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
 }
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE_INDEX *dtype_map)
+rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE_INDEX *dtype_map, int count)
 {
 	EIF_TYPE_INDEX   result;
 
 	EIFMTX_LOCK;
-	result = eifthd_gen_id_from_cid (a_cidarr, dtype_map);
+	result = eifthd_gen_id_from_cid (a_cidarr, dtype_map, count);
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -654,22 +654,20 @@ rt_shared void eif_gen_conf_cleanup (void)
 /* Compute id for `types'. `cache' is used to cache the result in   */
 /* the generated C code if possible.                                */
 /*                                                                  */
-/* cache   : To cache result;                                       */
-/* base_id : Base id of type                                        */
 /* types   : Id array                                               */
 /* Result  : Resulting id;                                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX base_id, EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX *types)
 {
-	if ((types != NULL) && (*(types+1) != TERMINATOR)) {
-		EIF_TYPE_INDEX   outtab [256], *outtable, *intable;
-		intable  = types+1;
-		outtable = outtab;
-		return eif_id_of (&intable, &outtable, current_dftype);
-	} else {
-		return base_id;
-	}
+	EIF_TYPE_INDEX   outtab [256], *outtable, *intable;
+
+	REQUIRE("types not NULL", types);
+	REQUIRE("types not empty", types [0] != TERMINATOR);
+
+	intable  = types;
+	outtable = outtab;
+	return eif_id_of (&intable, &outtable, current_dftype);
 }
 
 /*------------------------------------------------------------------*/
@@ -678,25 +676,24 @@ rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYP
 /*------------------------------------------------------------------*/
 
 rt_public EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **gttable, EIF_TYPE_INDEX dftype, int offset)
-
 {
-	EIF_TYPE_INDEX   result, *gtp;
-	EIF_TYPE_INDEX	dtype = To_dtype(dftype);
+	EIF_TYPE_INDEX *gtp;
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 	int	table_index = dtype - offset;
 
-	if (gttable != NULL) {
-		gtp = gttable [table_index];
+	REQUIRE("gttable not NULL", gttable);
 
-		if ((gtp != NULL) && (*(gtp+1) != TERMINATOR)) {
-			*gtp = dtype;
-			return eif_compound_id (dftype, ttable[table_index], gtp);
-		}
+	gtp = gttable [table_index];
+
+	if ((gtp != NULL) && (*(gtp+1) != TERMINATOR)) {
+			/* Type is actually generic. */
+		return eif_compound_id (dftype, gtp);
+	} else {
+			/* Optimization for non-generic type. */
+		return ttable[table_index];
 	}
-
-	result = ttable[table_index];
-
-	return result;
 }
+
 /*------------------------------------------------------------------*/
 /* Number of generic parameters of `obj's type. Can ONLY be used for*/
 /* TUPLE and its descendants!                                       */
@@ -899,17 +896,16 @@ rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 
 rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dftype)
 {
-	EIF_TYPE_INDEX   typearr [4], result;
+	EIF_TYPE_INDEX typearr [3], result;
 
 	REQUIRE("Valid ARRAY generic type", dftype <= MAX_DTYPE);
 	REQUIRE("Valid ARRAY reference type", egc_arr_dtype <= MAX_DTYPE);
 
-	typearr [0] = INVALID_DTYPE;	/* No static call context */
-	typearr [1] = egc_arr_dtype;	/* Base type of ARRAY     */
-	typearr [2] = dftype;			/* Parameter type */
-	typearr [3] = TERMINATOR;
+	typearr [0] = egc_arr_dtype;	/* Base type of ARRAY     */
+	typearr [1] = dftype;			/* Parameter type */
+	typearr [2] = TERMINATOR;
 
-	result = eif_compound_id (0, typearr[1], typearr);
+	result = eif_compound_id (0, typearr);
 	return result;
 }
 
@@ -920,7 +916,7 @@ rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dftype)
 
 rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
 {
-	EIF_TYPE_INDEX   typearr [4], result, l_type;
+	EIF_TYPE_INDEX   typearr [3], result, l_type;
 	struct cecil_info *cecil_type;
 	uint32 sk_type;			/* Generic information for dftype */
 	uint32 *t;				/* To walk through the patterns array */
@@ -949,12 +945,11 @@ rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
 	}
 
 	if (matched == 1) {
-		typearr [0] = INVALID_DTYPE;	/* No static call context */
-		typearr [1] = cecil_type->dynamic_types[index - 1];		/* Base type of TYPE */
-		typearr [2] = dftype;			/* Parameter type */
-		typearr [3] = TERMINATOR;
+		typearr [0] = cecil_type->dynamic_types[index - 1];		/* Base type of TYPE */
+		typearr [1] = dftype;			/* Parameter type */
+		typearr [2] = TERMINATOR;
 
-		result = eif_compound_id (0, typearr[1], typearr);
+		result = eif_compound_id (0, typearr);
 	} else {
 		result = INVALID_DTYPE;
 	}
@@ -1032,19 +1027,17 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
 /* Then 'count' type ids, then TERMINATOR                           */
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE_INDEX *dtype_map)
+rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE_INDEX *dtype_map, int count)
 {
-	EIF_TYPE_INDEX   dftype;
-	EIF_TYPE_INDEX   count, i, dtype;
+	EIF_TYPE_INDEX i, dtype;
 
 	REQUIRE ("Valid cid array", a_cidarr);
-
-	count   = *a_cidarr;
-	*a_cidarr = 0;	/* Not used anyway. */
+	REQUIRE ("Valid cid array count", count > 1);
+	REQUIRE ("Valid cid array terminator", a_cidarr [count] == TERMINATOR);
 
 	if (dtype_map) {
 			/* We need to map old dtypes to new dtypes */
-		for (i = 1; i <= count; i++) {
+		for (i = 0; i < count; i++) {
 			dtype = a_cidarr [i];
 
 				/* Read annotation if any. */
@@ -1067,12 +1060,7 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 			}
 		}
 	}
-
-	a_cidarr [count+1] = TERMINATOR;
-	dftype  = eif_compound_id (0, *(a_cidarr+1), a_cidarr);
-	*a_cidarr = count;
-
-	return dftype;
+	return eif_compound_id (0, a_cidarr);
 }
 
 /*------------------------------------------------------------------*/

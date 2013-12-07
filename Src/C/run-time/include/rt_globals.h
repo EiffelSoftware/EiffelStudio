@@ -132,7 +132,7 @@ typedef struct tag_rt_globals
 #ifdef WORKBENCH
 	struct opstack op_stack_cx;			/* Operational stack */
 	EIF_TYPED_VALUE **iregs_cx;				/* Interpreter registers */
-	int iregsz_cx;						/* Size of 'iregs' array (bytes) */
+	size_t iregsz_cx;						/* Size of 'iregs' array (bytes) */
 	uint32 argnum_cx;					/* Number of arguments */
 	uint32 locnum_cx;					/* Number of locals */
 	unsigned long tagval_cx;			/* Records number of interpreter's call */

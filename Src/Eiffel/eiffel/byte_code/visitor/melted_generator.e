@@ -2060,19 +2060,9 @@ feature {NONE} -- Visitors
 				end
 				a_node.expressions.back
 			end
-			if l_real_ty.base_class.is_precompiled then
-				ba.append (Bc_ptuple)
-				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
-				ba.append_short_integer (context.class_type.static_type_id-1)
-				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
-				ba.append_short_integer (-1)
-			else
-				ba.append (Bc_tuple)
-				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
-				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
-				ba.append_short_integer (-1)
-			end
+			ba.append (Bc_tuple)
+			l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
+			ba.append_short_integer (-1)
 			ba.append_integer (a_node.expressions.count + 1)
 			if l_real_ty.is_basic_uniform then
 				ba.append_integer (1)

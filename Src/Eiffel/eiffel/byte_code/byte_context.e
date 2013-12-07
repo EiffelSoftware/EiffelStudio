@@ -384,12 +384,9 @@ feature -- Code generation
 			l_buffer.put_natural_32 (a_level)
 			l_buffer.put_string ("[] = {")
 
-			l_buffer.put_integer (context_class_type.type.generated_id (final_mode, Void))
-			l_buffer.put_character (',')
-
 			if use_init then
 				create idx_cnt
-				idx_cnt.set_value (1)
+				idx_cnt.set_value (0)
 				l_gen_type.generate_cid_array (l_buffer, final_mode, True, idx_cnt, context_class_type.type)
 			else
 				l_gen_type.generate_cid (l_buffer, final_mode, True, context_class_type.type)
@@ -411,7 +408,7 @@ feature -- Code generation
 
 			if use_init then
 				-- Reset counter
-				idx_cnt.set_value (1)
+				idx_cnt.set_value (0)
 				l_gen_type.generate_cid_init (l_buffer, final_mode, True, idx_cnt, context_class_type.type, a_level)
 			end
 
@@ -430,8 +427,6 @@ feature -- Code generation
 			end
 			l_buffer.put_string (" = eif_compound_id(")
 			generate_current_dftype
-			l_buffer.put_string (", ")
-			l_buffer.put_integer (l_gen_type.generated_id (final_mode, context_class_type.type))
 			l_buffer.put_string (", typarr")
 			l_buffer.put_natural_32 (a_level)
 			if l_can_save_result then

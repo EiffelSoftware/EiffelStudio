@@ -145,14 +145,6 @@ feature -- Generic conformance
 			a_context_type_not_void: a_context_type /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
 		do
-			if has_associated_class_type (a_context_type) then
-				ba.append_short_integer (type_id (a_context_type) - 1)
-			else
-				ba.append_short_integer (0)
-			end
-				-- We can provide `Void' for `generated_id' since it is the one
-				-- from `a_context_type' that we are retrieving.
-			ba.append_natural_16 (a_context_type.generated_id (False, Void))
 			make_type_byte_code (ba, True, a_context_type)
 			ba.append_short_integer (-1)
 		end

@@ -460,10 +460,10 @@ rt_public EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id,
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
 
 	if (gen_type) {
-		*gen_type = dyn_type;
+		return eif_compound_id (Dftype (object), gen_type);
+	} else {
+		return type;
 	}
-
-	return eif_compound_id (Dftype (object), type, gen_type);
 }
 
 rt_public EIF_TYPE_INDEX wttype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_TYPE_INDEX dftype)
@@ -484,10 +484,10 @@ rt_public EIF_TYPE_INDEX wttype_gen(EIF_TYPE_INDEX static_type, int32 feature_id
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
 
 	if (gen_type) {
-		*gen_type = dyn_type;
+		return eif_compound_id (dftype, gen_type);
+	} else {
+		return type;
 	}
-
-	return eif_compound_id (dftype, type, gen_type);
 }
 
 rt_public EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_REFERENCE object)
@@ -506,10 +506,11 @@ rt_public EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, in
 	desc = desc_tab[origin][dyn_type] + offset;
 
 	if (desc->gen_type) {
-		*(desc->gen_type) = dyn_type;
+		return eif_compound_id (Dftype (object), desc->gen_type);
+	} else {
+		return desc->type;
 	}
 
-	return eif_compound_id (Dftype (object), desc->type, desc->gen_type);
 }
 
 rt_public EIF_TYPE_INDEX wtptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_TYPE_INDEX dftype)
@@ -528,10 +529,11 @@ rt_public EIF_TYPE_INDEX wtptype_gen(EIF_TYPE_INDEX static_type, int32 origin, i
 	desc = desc_tab[origin][dyn_type] + offset;
 
 	if (desc->gen_type) {
-		*(desc->gen_type) = dyn_type;
+		return eif_compound_id (dftype, desc->gen_type);
+	} else {
+		return desc->type;
 	}
 
-	return eif_compound_id (dftype, desc->type, desc->gen_type);
 }
 
 rt_public EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type)

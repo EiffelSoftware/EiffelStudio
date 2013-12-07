@@ -251,7 +251,7 @@ feature -- Access
 
 		-- Manifest tuple
 	Bc_tuple:				CHARACTER = '%/168/'
-	Bc_ptuple:				CHARACTER = '%/169/';
+	bc_not_used_169:		CHARACTER = '%/169/';
 
 		-- Unicode
 	Bc_string32:		CHARACTER = '%/170/';

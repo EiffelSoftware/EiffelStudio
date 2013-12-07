@@ -160,7 +160,7 @@ rt_private void account_attributes (EIF_TYPE_INDEX dtype)
 	long num_attrib = System (dtype).cn_nbattr;
 	long i, k;
 	for (i=0; i<num_attrib; i++) {
-		EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[i] + 1;
+		EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[i];
 		for (k=0; gtypes[k] != TERMINATOR; k++) {
 			EIF_TYPE_INDEX gtype = gtypes[k];
 

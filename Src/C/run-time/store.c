@@ -1742,7 +1742,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 	RT_GET_CONTEXT
 	char *name = System (dtype).cn_names[attrib_index];
 	int16 name_length = (int16) strlen (name);
-	EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index] + 1;
+	EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index];
 	int16 num_gtypes;
 	int16 i;
 	unsigned char basic_type;

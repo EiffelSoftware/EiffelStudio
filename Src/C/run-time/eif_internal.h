@@ -68,7 +68,7 @@ rt_private rt_inline long ei_field_static_type_of_type(long i, EIF_INTEGER type_
 {
 	EIF_TYPE_INDEX *typearr;
 	typearr = System(To_dtype(type_id)).cn_gtypes[i];
-	return eif_compound_id ((EIF_TYPE_INDEX) type_id, typearr [1], typearr);
+	return eif_compound_id ((EIF_TYPE_INDEX) type_id, typearr);
 }
 
 #ifdef WORKBENCH

@@ -215,7 +215,7 @@ static  char    *names [] = {
 "BC_WAIT_ARG" ,
 "BC_TUPLE_CATCALL" ,
 "BC_TUPLE",
-"BC_PTUPLE",
+"BC_NOTUSED_169",
 "BC_STRING32",
 "BC_ONCE_STRING32",
 "BC_TRY",
@@ -820,7 +820,6 @@ static  void    print_instructions (void)
 				{
 				int open_count;
 				fprintf (ofp, " Args:%d ", get_bool(&ip));
-				print_ctype (get_int16(&ip));
 				print_cid ();
 				fprintf (ofp, " Class_id:%d ", get_int32(&ip));
 				fprintf (ofp, " Feature_id:%d ", get_int32(&ip));
@@ -902,9 +901,6 @@ static  void    print_instructions (void)
 				break;
 
 			case BC_TUPLE:
-			case BC_PTUPLE:
-					/* Dynamic type of tuple */
-				fprintf (ofp, "dtype %d ", get_int16(&ip));
 					/* Full dynamic typle of tuple */
 				print_cid ();
 					/* Number of elements in tuple */
@@ -1086,8 +1082,6 @@ static  void    print_instructions (void)
 			case  BC_METAMORPHOSE :
 				break;
 			case  BC_BOX :
-					/* Object reattachment */
-				print_ctype (get_int16(&ip));
 					/* GENERIC CONFORMANCE */
 				print_cid ();
 				break;
@@ -1468,7 +1462,6 @@ static void get_creation_type (void)
 		case  BC_CTYPE :
 			/* creation type */
 			fprintf (ofp, " (BC_CTYPE) ");
-			print_ctype (get_int16(&ip));
 /*GENERIC CONFORMANCE*/
 			print_cid ();
 			break;

@@ -277,7 +277,7 @@ feature -- Generation
 		do
 			from
 				static_decl := once "static EIF_TYPE_INDEX gen_type"
-				start_decl := once " [] = {0,"
+				start_decl := once " [] = {"
 				end_decl := once "};%N"
 				l_count := count - 1
 				l_area := area
@@ -362,7 +362,6 @@ feature -- Melting
 					ba.append_short_integer (entry_item.static_feature_type_id - 1)
 
 					if entry_item.needs_extended_info then
-						ba.append_short_integer (0)
 						entry_item.make_gen_type_byte_code (ba)
 					end
 
@@ -380,7 +379,7 @@ feature -- Melting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

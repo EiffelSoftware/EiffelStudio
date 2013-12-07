@@ -1,10 +1,16 @@
 
 expanded class TEST
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
 create
         make, default_create
 
 feature
-	make
+	make, default_create
 		do
 			create x
 			try (x)

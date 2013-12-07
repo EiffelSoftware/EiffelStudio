@@ -15,15 +15,26 @@ creation
 feature
 	
 	make is
+		local
+			p: POINTER
 		do
 			weasel := 47.0;
 			hamster := 47;
 			shark := 47;
-			print ($make); io.new_line;
-			print ($wimp); io.new_line;
-			print ($weasel); io.new_line;
-			print ($shark); io.new_line;
-			print ($hamster); io.new_line;
+			p := $make
+			p := $wimp
+			p := $weasel
+			if p = default_pointer + 47 then
+				io.put_string ("Not OK")
+			end
+			p := $shark
+			if p = default_pointer + 47 then
+				io.put_string ("Not OK")
+			end
+			p := $hamster
+			if p = default_pointer + 47 then
+				io.put_string ("Not OK")
+			end
 		end;
 	
 	wimp is

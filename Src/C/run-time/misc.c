@@ -54,9 +54,6 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
-#if defined(EIF_SGI) || defined(EIF_SOLARIS)
-#include <strings.h>	/* for index and rindex. */
-#endif
 #include "rt_assert.h"
 #include "eif_misc.h"
 #include "eif_malloc.h"
@@ -337,7 +334,7 @@ rt_public void eif_system_asynchronous (EIF_NATIVE_CHAR *cmd)
 		return;
 
 #ifdef EIF_VMS_V6_ONLY
-	appname = rindex (meltpath, ']');
+	appname = strrchr (meltpath, ']');
 	if (appname)
 		*appname = 0;
 	else
@@ -351,7 +348,7 @@ rt_public void eif_system_asynchronous (EIF_NATIVE_CHAR *cmd)
 			strcpy (meltpath, "[]");
 	}
 #else
-	appname = rindex (meltpath, '/');
+	appname = strrchr (meltpath, '/');
 	if (appname)
 		*appname = 0;
 	else

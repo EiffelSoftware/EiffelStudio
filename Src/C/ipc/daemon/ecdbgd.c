@@ -45,11 +45,6 @@
 #include "dbg_proto.h"
 #include "listen.h"
 
-#include <string.h>
-#if defined(EIF_SGI) || defined(EIF_SOLARIS)
-#include <strings.h> /* for index and rindex. */
-#endif
-
 #include <signal.h>
 #include "eif_logfile.h"
 #include "stream.h"

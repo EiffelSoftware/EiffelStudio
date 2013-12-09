@@ -47,12 +47,7 @@
 #include "eif_config.h"	    /* must always be first include files */
 #include "eif_portable.h"
 
-#ifdef I_SYS_TIMES
-#include <sys/times.h>
-#elif defined(I_SYS_TIME)
-#include <sys/times.h>
-#endif
-#include <sys/types.h> /* for Cray */
+#include <sys/select.h> /* for Cray */
 #include <errno.h>
 #include "timehdr.h" 	/* %%ss moved */
 #include "select.h"

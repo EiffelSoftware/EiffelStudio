@@ -106,7 +106,6 @@ rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst, BOOL reset);	/* Req
 rt_private LPVOID get_interrupt_flag(EIF_PSTREAM sp, Request *rqst);	/* retrieve the address of the interrupt flag */
 #else
 rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst);			/* Request reception */
-extern int errno;												/* System call error number */
 #endif
 
 rt_private void kill_app(EIF_PSTREAM sp);		/* Kill Eiffel application brutally*/

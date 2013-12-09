@@ -3525,13 +3525,8 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	case BC_TUPLE:
-	case BC_PTUPLE:
 #ifdef DEBUG
-		if (code == BC_TUPLE) {
-			dprintf(2)("BC_TUPLE\n");
-		} else {
-			dprintf(2)("BC_PTUPLE\n");
-		}
+		dprintf(2)("BC_TUPLE\n");
 #endif
 		{
 			long nbr_of_items;

@@ -17,7 +17,7 @@ feature -- Access
 			Result.extend (void_reference)
 			Result.extend (single_reference)
 			Result.extend (linear_object_graph)
-			Result.extend (object_tree)
+--			Result.extend (object_tree)
 			Result.extend (shared_object)
 			Result.extend (object_graph_cycle)
 		end
@@ -29,6 +29,7 @@ feature -- Access
 			Result.extend (any_cell_with_integer)
 			Result.extend (any_cell_with_expanded)
 			Result.extend (embedded_expanded)
+			Result.extend (embedded_expanded_with_integer)
 			Result.extend (direct_expanded)
 			Result.extend (nested_embedded_with_copysemantics)
 		end
@@ -124,7 +125,7 @@ feature -- Reference-type object graphs
 				i < 2
 			loop
 				create tail
-				head.first := tail
+				tail.first := head
 				head := tail
 				i := i - 1
 			variant
@@ -214,6 +215,16 @@ feature -- Copy-semantics items
 			create Result.put (item)
 			Result.item.first := create {ANY}
 			Result.item.second := create {ANY}
+		end
+
+	embedded_expanded_with_integer: CELL [E_DOUBLE_CELL [ANY, INTEGER]]
+			-- A CELL object containing an embedded expanded object with an integer
+		local
+			item: E_DOUBLE_CELL [ANY, INTEGER]
+		do
+			create Result.put (item)
+			Result.item.first := create {ANY}
+			Result.item.second := 42
 		end
 
 	direct_expanded: E_DOUBLE_CELL [ANY, ANY]

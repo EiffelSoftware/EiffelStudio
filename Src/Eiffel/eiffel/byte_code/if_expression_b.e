@@ -84,10 +84,8 @@ feature -- Status report
 			Result :=
 				condition.has_gcable_variable or else
 				then_expression.has_gcable_variable or else
-				else_expression.has_gcable_variable
-			if not Result and then attached elsif_list as e then
-				Result := across elsif_list as c some c.item.has_gcable_variable end
-			end
+				else_expression.has_gcable_variable or else
+				attached elsif_list as l and then across l as c some c.item.has_gcable_variable end
 		end
 
 	has_call: BOOLEAN
@@ -96,10 +94,8 @@ feature -- Status report
 			Result :=
 				condition.has_call or else
 				then_expression.has_call or else
-				else_expression.has_call
-			if not Result and then attached elsif_list as e then
-				Result := across elsif_list as c some c.item.has_call end
-			end
+				else_expression.has_call or else
+				attached elsif_list as l and then across l as c some c.item.has_call end
 		end
 
 	allocates_memory: BOOLEAN
@@ -108,10 +104,8 @@ feature -- Status report
 			Result :=
 				condition.allocates_memory or else
 				then_expression.allocates_memory or else
-				else_expression.allocates_memory
-			if not Result and then attached elsif_list as e then
-				Result := across elsif_list as c some c.item.allocates_memory end
-			end
+				else_expression.allocates_memory or else
+				attached elsif_list as l and then across l as c some c.item.allocates_memory end
 		end
 
 feature -- Code generation: C
@@ -122,10 +116,8 @@ feature -- Code generation: C
 			Result :=
 				condition.used (r) or else
 				then_expression.used (r) or else
-				else_expression.used (r)
-			if not Result and then attached elsif_list as e then
-				Result := across elsif_list as c some c.item.used (r) end
-			end
+				else_expression.used (r) or else
+				attached elsif_list as l and then across l as c some c.item.used (r) end
 		end
 
 	enlarged: EXPR_B
@@ -150,20 +142,20 @@ feature -- Code generation: C
 				if l_value.is_boolean then
 					if l_value.boolean_value then
 						Result := then_expression
-					elseif elsif_list = Void then
+					elseif not attached elsif_list as l then
 						Result := else_expression
 					else
 						check
-							not_elsif_list_empty: not elsif_list.is_empty
+							not_elsif_list_empty: not l.is_empty
 						end
 
 							-- Now remove useless `elseif' statements.
 						from
-							elsif_list.start
+							l.start
 						until
-							elsif_list.after
+							l.after
 						loop
-							l_elseif_b := elsif_list.item
+							l_elseif_b := l.item
 							l_expr := l_elseif_b.condition
 							l_value := l_expr.evaluate
 							if l_value.is_boolean then
@@ -172,25 +164,25 @@ feature -- Code generation: C
 									else_expression := l_elseif_b.expression
 									from
 									until
-										elsif_list.after
+										l.after
 									loop
-										elsif_list.remove
+										l.remove
 									end
 								else
 										-- Code will never be executed, get rid of it.
-									elsif_list.remove
+									l.remove
 								end
 							else
-								elsif_list.forth
+								l.forth
 							end
 						end
 
 							-- Create new node.
-						if not elsif_list.is_empty then
-							l_elseif_b := elsif_list.first
-							elsif_list.start
-							elsif_list.remove
-							if not elsif_list.is_empty then
+						if not l.is_empty then
+							l_elseif_b := l.first
+							l.start
+							l.remove
+							if not l.is_empty then
 								elsif_list := Void
 							end
 							condition := l_elseif_b.condition
@@ -204,18 +196,18 @@ feature -- Code generation: C
 						-- We could not simplify first if statment, let's see if we can simplifiy
 						-- remaining `elsif_list'.
 					Result := Current
-					if elsif_list /= Void then
+					if attached elsif_list as l then
 						check
-							not_elsif_list_empty: not elsif_list.is_empty
+							not_elsif_list_empty: not l.is_empty
 						end
 
 							-- Now remove useless `elseif' statements.
 						from
-							elsif_list.start
+							l.start
 						until
-							elsif_list.after
+							l.after
 						loop
-							l_elseif_b := elsif_list.item
+							l_elseif_b := l.item
 							l_expr := l_elseif_b.condition
 							l_value := l_expr.evaluate
 							if l_value.is_boolean then
@@ -224,20 +216,20 @@ feature -- Code generation: C
 									else_expression := l_elseif_b.expression
 									from
 									until
-										elsif_list.after
+										l.after
 									loop
-										elsif_list.remove
+										l.remove
 									end
 								else
 										-- Code will never be executed, get rid of it.
-									elsif_list.remove
+									l.remove
 								end
 							else
-								elsif_list.forth
+								l.forth
 							end
 						end
 
-						if elsif_list.is_empty then
+						if l.is_empty then
 							elsif_list := Void
 						end
 					end
@@ -252,8 +244,8 @@ feature -- Code generation: C
 		do
 			condition := condition.enlarged
 			then_expression := then_expression.enlarged
-			if elsif_list /= Void then
-				elsif_list.enlarge_tree
+			if attached elsif_list as l then
+				l.enlarge_tree
 			end
 			else_expression := else_expression.enlarged
 		end
@@ -269,8 +261,8 @@ feature -- Code generation: C
 			then_expression.propagate (No_register)
 			then_expression.analyze
 			then_expression.free_register
-			if elsif_list /= Void then
-				elsif_list.analyze
+			if attached elsif_list as l then
+				l.analyze
 			end
 			else_expression.propagate (No_register)
 			else_expression.analyze
@@ -295,9 +287,9 @@ feature -- Code generation: C
 			condition.unanalyze
 			then_expression.unanalyze
 			else_expression.unanalyze
-			if elsif_list /= Void then
+			if attached elsif_list as l then
 				across
-					elsif_list as c
+					l as c
 				loop
 					c.item.unanalyze
 				end
@@ -383,10 +375,10 @@ feature -- Code generation: C
 			i: INTEGER
 			buf: GENERATION_BUFFER
 		do
-			if elsif_list /= Void then
+			if attached elsif_list as l then
 				from
 					buf := buffer
-					i := elsif_list.count
+					i := l.count
 				until
 					i = 0
 				loop
@@ -412,7 +404,7 @@ feature -- Array optimization
 				condition.calls_special_features (array_desc) or else
 				then_expression.calls_special_features (array_desc) or else
 				else_expression.calls_special_features (array_desc) or else
-				elsif_list /= Void and then elsif_list.calls_special_features (array_desc)
+				attached elsif_list as l and then l.calls_special_features (array_desc)
 		end
 
 	is_unsafe: BOOLEAN
@@ -422,7 +414,7 @@ feature -- Array optimization
 				condition.is_unsafe or else
 				then_expression.is_unsafe or else
 				else_expression.is_unsafe or else
-				attached elsif_list as e and then e.is_unsafe
+				attached elsif_list as l and then l.is_unsafe
 		end
 
 	optimized_byte_node: like Current
@@ -431,8 +423,8 @@ feature -- Array optimization
 			Result := Current
 			condition := condition.optimized_byte_node
 			then_expression := then_expression.optimized_byte_node
-			if elsif_list /= Void then
-				elsif_list := elsif_list.optimized_byte_node
+			if attached elsif_list as l then
+				elsif_list := l.optimized_byte_node
 			end
 			else_expression := else_expression.optimized_byte_node
 		end
@@ -444,8 +436,8 @@ feature -- Inlining
 		do
 			Result := 1 + condition.size
 			Result := Result + then_expression.size
-			if elsif_list /= Void then
-				Result := Result + elsif_list.size
+			if attached elsif_list as l then
+				Result := Result + l.size
 			end
 			Result := Result + else_expression.size
 		end
@@ -456,8 +448,8 @@ feature -- Inlining
 			Result := Current
 			condition := condition.pre_inlined_code
 			then_expression := then_expression.pre_inlined_code
-			if elsif_list /= Void then
-				elsif_list := elsif_list.pre_inlined_code
+			if attached elsif_list as l then
+				elsif_list := l.pre_inlined_code
 			end
 			else_expression := else_expression.pre_inlined_code
 		end
@@ -468,8 +460,8 @@ feature -- Inlining
 			Result := Current
 			condition := condition.inlined_byte_code
 			then_expression := then_expression.inlined_byte_code
-			if elsif_list /= Void then
-				elsif_list := elsif_list.inlined_byte_code
+			if attached elsif_list as l then
+				elsif_list := l.inlined_byte_code
 			end
 			else_expression := else_expression.inlined_byte_code
 		end

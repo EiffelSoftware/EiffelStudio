@@ -15,14 +15,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_controller: CONTROLLER)
+	make (a_controller: ABSTRACT_CONTROLLER)
 			-- Initialization for `Current'.
 		do
 			controller := a_controller
 			create test_execution.make_now_utc
 			create results.make (50)
 
-			create partial_result.make_from_string ("../part.txt")
+			create partial_result.make_from_string ("../results/part.txt")
 		end
 
 	partial_result: FILE_NAME
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	controller: CONTROLLER
+	controller: ABSTRACT_CONTROLLER
 
 	test_execution: DATE_TIME
 

@@ -3,7 +3,7 @@
 	<target name="framework">
 		<root class="CONTROLLER" feature="start_test"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="abel_connector_mysql" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_mysql\connector_mysql.ecf"/>

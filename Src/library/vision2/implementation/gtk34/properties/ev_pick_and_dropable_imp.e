@@ -31,6 +31,12 @@ inherit
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
+	button_actions_handled_by_signals: BOOLEAN
+			-- Are the button actions (press/release) handled by signals?
+		do
+			Result := False
+		end
+
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Handle motion event for `Current'.
 		local
@@ -494,7 +500,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

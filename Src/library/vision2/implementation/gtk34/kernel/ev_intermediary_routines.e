@@ -27,6 +27,13 @@ feature -- Timeout intermediary agent routine
 			end
 		end
 
+feature {EV_ANY_IMP} -- Button intermediary agent routines
+
+	on_button_event (a_application_imp: EV_APPLICATION_IMP; a_gdk_event: POINTER)
+		do
+			a_application_imp.process_button_event (a_gdk_event, True)
+		end
+
 feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
 	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: NATURAL_32)

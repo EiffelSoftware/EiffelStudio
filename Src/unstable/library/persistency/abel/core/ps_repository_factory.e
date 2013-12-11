@@ -26,7 +26,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_uninitialized
-			-- Do not initialize any defaults.
+			-- Initialize the factory, but do not set any default handlers and plugins.
+			-- Note that a repository created by this factory, when no further handlers
+			-- are added, will not be able to process any kind of object.
 		do
 			create internal_handler.make
 			create internal_plugins.make

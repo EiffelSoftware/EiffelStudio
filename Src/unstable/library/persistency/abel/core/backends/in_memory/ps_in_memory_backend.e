@@ -147,7 +147,6 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			from
 				create Result.make (order.count)
 			loop
---				Result.extend ((create {INTEGER_INTERVAL}.make (max_primary, max_primary + cursor.item)).new_cursor, cursor.key)
 				from
 					index := 1
 					create list.make
@@ -264,17 +263,14 @@ feature {NONE} -- Implementation
 					prepare(cursor.item.metadata)
 					attach (database[cursor.item.metadata.type.type_id]).extend(cursor.item, cursor.item.primary_key)
 					cursor.item.declare_as_old
---					print(cursor.item)
 				else
 					old_obj := attach (attach (database[cursor.item.metadata.type.type_id])[cursor.item.primary_key])
 					old_obj.set_is_root (cursor.item.is_root)
 					across
 						cursor.item.attributes as attr
 					loop
---						if attr.item /~ cursor.item.root_key then
-							old_obj.remove_attribute (attr.item)
-							old_obj.add_attribute (attr.item, cursor.item.attribute_value(attr.item).value, cursor.item.attribute_value(attr.item).attribute_class_name)
---						end
+						old_obj.remove_attribute (attr.item)
+						old_obj.add_attribute (attr.item, cursor.item.attribute_value(attr.item).value, cursor.item.attribute_value(attr.item).attribute_class_name)
 					end
 				end
 			end

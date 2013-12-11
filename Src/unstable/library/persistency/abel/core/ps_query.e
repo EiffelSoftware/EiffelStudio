@@ -29,12 +29,8 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 					is_after := True
 				else
 					result_cache.extend (cursor.item)
---					set_result_item (cursor.item)
 				end
 			end
---			check attached read_manager as rm then
---				rm.next_entry (Current)
---			end
 		ensure then
 			not_after_means_known: not is_after implies result_cache.last.generating_type.is_expanded or repository.is_identified (result_cache.last, internal_transaction)
 			can_handle_retrieved_object: not is_after implies repository.can_handle (result_cache.last)

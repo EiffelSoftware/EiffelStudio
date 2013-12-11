@@ -1,6 +1,10 @@
 note
 	description: "[
-		Represents a repository containing persistent objects.
+		Represents an abstract repository with a common interface to 
+		read and manipulate persistent objects.
+		
+		To create a new repository, use the PS_*_REPOSITORY_FACTORY 
+		shipped with each ABEL backend.
 		
 		A repository can be used to execute read-only queries or create
 		a new transaction context for read-write operations.
@@ -8,12 +12,6 @@ note
 		It is possible to change some of the default settings
 		for performance tuning, such as the transaction isolation level
 		or the batch size for lazy loading during query execution.
-		
-		The repository class provides a common interface for all ABEL
-		backends. However, the creation process cannot be abstracted.
-		To hide the (often quite complicated) creation process each
-		backend should ship its own factory class for its repository
-		implementation.
 		]"
 	author: "Marco Piccioni"
 	date: "$Date$"

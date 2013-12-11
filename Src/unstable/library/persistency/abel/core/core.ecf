@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" 
-		name="abel_core" 
-		uuid="067A6237-38BE-4CA2-82E6-03A37BF60E9F" 
-		library_target="abel_core">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd"
+	name="abel_core"
+	uuid="067A6237-38BE-4CA2-82E6-03A37BF60E9F"
+	library_target="abel_core">
 	<description>A library for unified access to persistence services.
 Copyright (c) 1984-2006, Eiffel Software and others.
 Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
@@ -15,40 +15,12 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 			<exclude>/CVS$</exclude>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>^/obsolete$</exclude>
 		</file_rule>
-		<option is_attached_by_default="true" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-			<!--		<library name="persistence_utils" location="..\persistence_utils\persistence_utils.ecf" /> -->
-			<!--		<library name="generic_database_wrapper" location="..\generic_database_wrapper\generic_database_wrapper.ecf" />  -->
-			<!--		<library name="db" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/> -->
-			<!--		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf"/>-->
-			<!--		<library name="serializer" location="..\schema_evolution\serializer_lib\serializer.ecf"/> -->
-			<!--		<library name="cdb_database" location="..\CDB\cdb_database.ecf"/> -->
-		<cluster name="abel_core" location=".\" recursive="true">
-			<option void_safety="all" namespace="EiffelStore2">
-			</option>
-			<file_rule>
-				<exclude>^/framework$</exclude>
-			</file_rule>
-			<file_rule>
-				<exclude>^/criteriontree$</exclude>
-			</file_rule>
-			<file_rule>
-				<exclude>^/utilities</exclude>
-			</file_rule>
-			<file_rule>
-				<exclude>^/backends</exclude>
-			</file_rule>
-			<file_rule>
-				<exclude>^/obsolete</exclude>
-			</file_rule>
-			<cluster name="framework" location=".\framework\" recursive="true"/>
-			<cluster name="criteriontree" location=".\criteriontree\"/>
-			<cluster name="utilities" location=".\utilities\"/>
-			<cluster name="backends" location=".\backends\" recursive="true"/>
-		</cluster>
+		<cluster name="abel_core" location=".\" recursive="true" />
 	</target>
 </system>

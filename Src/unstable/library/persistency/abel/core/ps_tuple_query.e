@@ -129,6 +129,9 @@ feature {NONE} -- Initialization
 			reflector: REFLECTOR
 			field_count: INTEGER
 		do
+			create field_indices.make (0)
+			create projection.make (0)
+
 			Precursor
 
 			create reflector

@@ -145,15 +145,15 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			Result := "UPDATE ps_value SET runtimetype = " + new_runtime_type.out + ", value = '" + new_value + "' WHERE objectid = " + object_primary.out + " AND attributeid = " + attribute_id.out
 		end
 
-	Assemble_multi_replace (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace (tuples: LIST [STRING]): STRING
 		deferred
 		end
 
-	Assemble_multi_replace_collection (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace_collection (tuples: LIST [STRING]): STRING
 		deferred
 		end
 
-	Assemble_multi_replace_collection_info (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace_collection_info (tuples: LIST [STRING]): STRING
 		deferred
 		end
 
@@ -214,7 +214,7 @@ feature {PS_ABEL_EXPORT} -- Management and testing
 
 feature {PS_ABEL_EXPORT} -- Utilities
 
-	to_list_with_braces(args: TUPLE): STRING
+	to_list_with_braces (args: TUPLE): STRING
 		do
 			Result := "(" + to_list (args) + ")"
 		end

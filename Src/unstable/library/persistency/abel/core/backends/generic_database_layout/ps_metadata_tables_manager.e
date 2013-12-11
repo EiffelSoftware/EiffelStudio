@@ -233,19 +233,19 @@ feature {NONE} -- Initialization
 			loop
 				existing_tables.extend (cursor.item.item (1))
 			end
-			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal(SQL_Strings.Class_table)) then
+			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal (SQL_Strings.Class_table)) then
 				management_connection.execute_sql (SQL_Strings.Create_class_table)
 			end
-			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal(SQL_Strings.Attribute_table)) then
+			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal (SQL_Strings.Attribute_table)) then
 				management_connection.execute_sql (SQL_Strings.Create_attribute_table)
 			end
-			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal(SQL_Strings.Value_table)) then
+			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal (SQL_Strings.Value_table)) then
 				management_connection.execute_sql (SQL_Strings.Create_value_table)
 			end
-			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal(SQL_Strings.Collection_table)) then
+			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal (SQL_Strings.Collection_table)) then
 				management_connection.execute_sql (SQL_Strings.create_collections_table)
 			end
-			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal(SQL_Strings.Collection_info_table)) then
+			if not existing_tables.there_exists (agent {STRING}.is_case_insensitive_equal (SQL_Strings.Collection_info_table)) then
 				management_connection.execute_sql (SQL_Strings.create_collection_info_table)
 			end
 				-- Get the needed information from ps_class and ps_attribute table

@@ -241,7 +241,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 feature {PS_ABEL_EXPORT} -- String pair conversion
 
-	as_string_pair (object: PS_OBJECT_DATA): TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+	as_string_pair (object: PS_OBJECT_DATA): TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			-- The `object' as a string pair, i.e. when referenced by another object.
 		require
 			can_handle: can_handle (object)
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			elseif attached {REAL_32} represented_object as real then
 				create managed.make ({PLATFORM}.real_32_bytes)
 				managed.put_real_32_be (real, 0)
-				Result := managed.read_integer_32_be(0).out
+				Result := managed.read_integer_32_be (0).out
 
 --				Reversed:
 --				managed.put_integer_32_be (Result.to_integer, 0)
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			elseif attached {REAL_64} represented_object as real then
 				create managed.make ({PLATFORM}.real_64_bytes)
 				managed.put_real_64_be (real, 0)
-				Result := managed.read_integer_64_be(0).out
+				Result := managed.read_integer_64_be (0).out
 			else
 				Result := represented_object.out
 			end

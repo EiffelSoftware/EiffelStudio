@@ -33,7 +33,7 @@ feature {PS_ABEL_EXPORT} -- Backend capabilities
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can the current backend handle objects of type `type'?
 		do
-			Result := not attached {TYPE[detachable SPECIAL[detachable ANY]]} type.type and not attached {TYPE[detachable TUPLE]} type.type
+			Result := not attached {TYPE [detachable SPECIAL [detachable ANY]]} type.type and not attached {TYPE [detachable TUPLE]} type.type
 		end
 
 	is_generic_collection_supported: BOOLEAN
@@ -83,9 +83,9 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			attributes_exist: across attributes as attr all attr.item = value_type_item  or else type.attributes.has (attr.item) end
 			transaction_active: transaction.is_active
 		local
-			real_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT]
+			real_cursor: ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			wrapper: PS_CURSOR_WRAPPER
-			args: TUPLE[type: PS_TYPE_METADATA; criteria: PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE[STRING]]
+			args: TUPLE [type: PS_TYPE_METADATA; criteria: PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE [STRING]]
 		do
 				-- Execute plugins to adapt the query parameters
 			across
@@ -196,7 +196,7 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 feature {PS_ABEL_EXPORT} -- Plugins
 
-	plugins: LINKED_LIST[PS_PLUGIN]
+	plugins: LINKED_LIST [PS_PLUGIN]
 			-- A collection of plugins providing additional functionality.
 			-- The list is traversed front-to-back during retrieval operations,
 			-- and back-to-front during write operations

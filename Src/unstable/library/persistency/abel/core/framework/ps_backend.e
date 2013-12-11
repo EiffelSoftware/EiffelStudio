@@ -17,8 +17,8 @@ feature {PS_ABEL_EXPORT} -- Backend capabilities
 
 feature {PS_ABEL_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
-			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
+	generate_all_object_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+			-- For each type `type_key' in `order', generate `order [type_key]' new objects in the database.
 		require
 			not_empty: not order.is_empty
 			positive_numbers: across order as cursor all cursor.item > 0 end
@@ -28,16 +28,16 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 		deferred
 		ensure
 			same_count: order.count = Result.count
-			same_keys: across order as cursor all Result.has(cursor.key) end
-			correct_amount_of_objects: across order as cursor all attach (Result[cursor.key]).count = cursor.item end
+			same_keys: across order as cursor all Result.has (cursor.key) end
+			correct_amount_of_objects: across order as cursor all attach (Result [cursor.key]).count = cursor.item end
 			type_correct: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_OBJECT}.has_type (cursor.key)) end
 			empty_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_OBJECT}.is_empty) end
 			new_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_OBJECT}.is_new) end
 			transaction_unchanged: transaction.is_active
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
-			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
+	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+			-- For each type `type_key' in the hash table `order', generate `order [type_key]' new collections in the database.
 		require
 			not_empty: not order.is_empty
 			positive_numbers: across order as cursor all cursor.item > 0 end
@@ -47,8 +47,8 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 		deferred
 		ensure
 			same_count: order.count = Result.count
-			same_keys: across order as cursor all Result.has(cursor.key) end
-			correct_amount_of_objects: across order as cursor all attach (Result[cursor.key]).count = cursor.item end
+			same_keys: across order as cursor all Result.has (cursor.key) end
+			correct_amount_of_objects: across order as cursor all attach (Result [cursor.key]).count = cursor.item end
 			type_correct: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_COLLECTION}.has_type (cursor.key)) end
 			empty_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_COLLECTION}.is_empty) end
 			new_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_COLLECTION}.is_new) end
@@ -57,12 +57,12 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 
 feature {PS_ABEL_EXPORT} -- Write operations
 
-	frozen write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
+	frozen write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write every item in `objecs' to the database.
 		require
 			not_empty: not objects.is_empty
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
---			no_additional_attributes: across objects as cursor all across cursor.item.attributes as attr all cursor.item.metadata.attributes.has(attr.item) end end
+--			no_additional_attributes: across objects as cursor all across cursor.item.attributes as attr all cursor.item.metadata.attributes.has (attr.item) end end
 			new_attributes_complete: across objects as cursor all cursor.item.is_new implies cursor.item.is_complete end
 			active_transaction: transaction.is_active
 			not_readonly: not transaction.is_readonly
@@ -83,7 +83,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			transaction_unchanged: transaction.is_active
 		end
 
-	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete every item in `objects' from the database
 		require
 			not_empty: not objects.is_empty
@@ -96,7 +96,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			transaction_unchanged: transaction.is_active
 		end
 
-	write_collections (collections: LIST[PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
+	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write every item in `collections' to the database
 		require
 			not_empty: not collections.is_empty
@@ -109,7 +109,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			transaction_unchanged: transaction.is_active
 		end
 
-	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+	delete_collections (collections: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete every item in `collections' from the database
 		require
 			not_empty: not collections.is_empty
@@ -130,7 +130,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 feature {PS_BACKEND} -- Implementation
 
-	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
+	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.
 			-- Only write the attributes present in {PS_BACKEND_OBJECT}.attributes.
 		deferred

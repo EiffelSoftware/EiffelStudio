@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		end
 
 
-	cache: HASH_TABLE[HASH_TABLE[INTEGER, INTEGER], PS_TYPE_METADATA]
+	cache: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], PS_TYPE_METADATA]
 			-- A cache to map a [type, primary_key] tuple to an index in `object_storage'.
 
 
@@ -53,8 +53,8 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- See if an object of type `type' and with primary key `primary_key' is already loaded.
 			-- The result is 0 if no such object exists.
 		do
-			if attached cache[type] as inner then
-				Result := inner[primary_key]
+			if attached cache [type] as inner then
+				Result := inner [primary_key]
 			end
 		end
 
@@ -65,7 +65,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 		require
 			correct_index: object.index = count + 1
 		local
-			new_inner_cache: HASH_TABLE[INTEGER, INTEGER]
+			new_inner_cache: HASH_TABLE [INTEGER, INTEGER]
 		do
 			object_storage.extend (object)
 
@@ -73,7 +73,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 			-- Also add items which have not been found in the database (i.e. backend_representation = Void).
 			-- This avoids a potential problem that a shared object that got deleted may be queried several times.
 			if cached then
-				if attached cache[object.type] as inner_cache then
+				if attached cache [object.type] as inner_cache then
 					inner_cache.extend (object.index, object.primary_key)
 				else
 					create new_inner_cache.make (small_size)
@@ -83,7 +83,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 			end
 		ensure
 			inserted: count - 1 = old count
-			correct_position: item(object.index) = object
+			correct_position: item (object.index) = object
 		end
 
 feature {PS_ABEL_EXPORT} -- Smart retrieval
@@ -99,7 +99,7 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 				value_type_handlers as cursor
 			loop
 				if cursor.item.can_handle_type (type) then
-					Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (<<value_type_item>>), a_transaction)
+					Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<value_type_item>>), a_transaction)
 					found := True
 				end
 			end
@@ -159,13 +159,13 @@ feature {NONE}  -- Object building: loop control variables
 	current_level: INTEGER
 			-- The current object initialization depth.
 
-	to_process_next: INDEXABLE[INTEGER, INTEGER]
+	to_process_next: INDEXABLE [INTEGER, INTEGER]
 			-- The objects to retrieve and build in the next iteration.
 
 	to_process: INDEXABLE [INTEGER, INTEGER]
 			-- The objects to retrieve and (partially) build in this iteration.
 
-	to_finalize: INDEXABLE[INTEGER, INTEGER]
+	to_finalize: INDEXABLE [INTEGER, INTEGER]
 			-- The objects from the last iteration which need to be finalized.
 
 	new_interval: PS_INTEGER_INTERVAL
@@ -184,10 +184,10 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			Result := (type.type.is_expanded and then basic_types.has (type.type.type_id))
 				or else type.type.name.ends_with ("NONE")
 				or else (across value_type_handlers as cursor some cursor.item.can_handle_type (type) end)
-				or else (attached cache[type] as second_lvl
-					and then second_lvl[value.to_integer] > 0
-					and then (item(second_lvl[value.to_integer]).is_object_initialized
-						or item(second_lvl[value.to_integer]).is_ignored))
+				or else (attached cache [type] as second_lvl
+					and then second_lvl [value.to_integer] > 0
+					and then (item (second_lvl [value.to_integer]).is_object_initialized
+						or item (second_lvl [value.to_integer]).is_ignored))
 		end
 
 	processed_object (value: STRING; type: PS_TYPE_METADATA; referer: PS_OBJECT_DATA): detachable ANY
@@ -258,15 +258,15 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				Result := safe_handler.build_from_string (value, type)
 
 			elseif
-				attached cache[type] as second_lvl
+				attached cache [type] as second_lvl
 				and then value.is_integer
-				and then second_lvl[value.to_integer] > 0
+				and then second_lvl [value.to_integer] > 0
 			then
-				if attached item(second_lvl[value.to_integer]).backend_representation then
-					Result := item(second_lvl[value.to_integer]).reflector.object
+				if attached item (second_lvl [value.to_integer]).backend_representation then
+					Result := item (second_lvl [value.to_integer]).reflector.object
 
-					item(current_index).references.extend (second_lvl[value.to_integer])
-					item(second_lvl[value.to_integer]).referers.extend (current_index)
+					item (current_index).references.extend (second_lvl [value.to_integer])
+					item (second_lvl [value.to_integer]).referers.extend (current_index)
 				else
 					Result := Void
 				end
@@ -286,7 +286,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 		do
 				-- First check if the item is not already registered for retrieval
 			i := cache_lookup (key, type)
-			if i > 0 and then item(i).primary_key = key then
+			if i > 0 and then item (i).primary_key = key then
 				check
 					equal_algorithm:
 						to_process_next.has (i)
@@ -296,7 +296,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				found := True
 					-- Update the referers and references tables
 				referer.references.extend (i)
-				item(i).referers.extend (referer.index)
+				item (i).referers.extend (referer.index)
 			end
 --			across
 --				to_process_next as cursor
@@ -307,12 +307,12 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 --				found
 --			loop
 --				i := cursor.item
---				if item(i).primary_key = primary and then item(i).type.is_equal (type) then
+--				if item (i).primary_key = primary and then item (i).type.is_equal (type) then
 --					check found_implies_cached: cache_lookup (key, type) = i end
 --					found := True
 --					-- Update the referers and references tables
 --					referer.references.extend (i)
---					item(i).referers.extend (referer.index)
+--					item (i).referers.extend (referer.index)
 --				end
 --			end
 
@@ -322,7 +322,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				to_process_next.extend (count)
 					-- Update the referers and references tables
 				referer.references.extend (count)
-				item(count).referers.extend (referer.index)
+				item (count).referers.extend (referer.index)
 			end
 		end
 
@@ -377,18 +377,18 @@ feature {NONE} -- Implementation: Loop body
 				to_process as idx_cursor
 			loop
 				i := idx_cursor.item
-				if not item(i).is_ignored and not item(i).type.type.is_expanded then
+				if not item (i).is_ignored and not item (i).type.type.is_expanded then
 					-- Identify the object with the id_manager
-					id_manager.identify (item(i).reflector.object, transaction)
+					id_manager.identify (item (i).reflector.object, transaction)
 
-					identifier := id_manager.identifier_wrapper (item(i).reflector.object, transaction)
-					item(i).set_identifier (identifier.object_identifier)
+					identifier := id_manager.identifier_wrapper (item (i).reflector.object, transaction)
+					item (i).set_identifier (identifier.object_identifier)
 
 					-- Update the ABEL id -> primary key mapping
-					primary_key_mapper.add_entry (identifier, item(i).primary_key, transaction)
+					primary_key_mapper.add_entry (identifier, item (i).primary_key, transaction)
 
 					-- Update the root status
-					check attached item(i).backend_representation as br then
+					check attached item (i).backend_representation as br then
 						transaction.root_flags.force (br.is_root, identifier.object_identifier)
 					end
 				end
@@ -405,10 +405,10 @@ feature {NONE} -- Implementation: Loop body
 
 feature {NONE} -- Implementation: Batch retrieval
 
-	objects_to_retrieve: ARRAYED_LIST[TUPLE[type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
+	objects_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
 			-- All objects to be retrieved in the next batch retrieval operation.
 
-	collections_to_retrieve: ARRAYED_LIST[TUPLE[type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
+	collections_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
 			-- All collections to be retrieved in the next batch retrieval operation.
 
 	process_batch_retrieve

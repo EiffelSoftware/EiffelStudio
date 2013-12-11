@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			create root_flags.make (100)
 			is_readonly := True
 			is_active := True
-			
+
 			repository.id_manager.register_transaction (Current)
 		end
 
@@ -51,7 +51,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	repository: PS_REPOSITORY
 			-- The repository this `Current' is bound to.
 
-	root_flags: HASH_TABLE[BOOLEAN, INTEGER]
+	root_flags: HASH_TABLE [BOOLEAN, INTEGER]
 			-- Mapping for ABEL identifier -> root status of every object.
 
 feature {PS_ABEL_EXPORT} -- Status report

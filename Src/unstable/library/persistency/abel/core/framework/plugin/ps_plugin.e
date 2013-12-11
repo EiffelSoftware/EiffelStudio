@@ -17,7 +17,7 @@ feature
 		deferred
 		end
 
-	before_retrieve (args: TUPLE[type: PS_TYPE_METADATA; criterion: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
+	before_retrieve (args: TUPLE [type: PS_TYPE_METADATA; criterion: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
 			-- Action to be applied to the query parameters.
 			-- This feature is only called in `{PS_READ_ONLY_BACKEND}.retrieve', but not in `{PS_READ_ONLY_BACKEND}.specific_retrieve'
 		deferred

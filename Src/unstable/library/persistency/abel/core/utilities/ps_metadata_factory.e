@@ -55,7 +55,7 @@ feature -- Factory methods
 		end
 
 
---	generate_tuple_type (a_type: TYPE[detachable ANY]; projection: ARRAYED_LIST [STRING]): INTEGER_32
+--	generate_tuple_type (a_type: TYPE [detachable ANY]; projection: ARRAYED_LIST [STRING]): INTEGER_32
 --			-- Generate a tuple of correct type and size
 --		local
 --			type: PS_TYPE_METADATA
@@ -76,10 +76,10 @@ feature -- Factory methods
 --				-- NOTE: We cannot just take the runtime type of the attribute, since those types are (for whatever reason)
 --				-- always detachable. Instead the generated tuple needs to have the statically declared types as its generic
 --				-- attributes. This way object tests like
---				--		check attached TUPLE[STRING, STING, detachable STRING] generated_tuple end
+--				--		check attached TUPLE [STRING, STING, detachable STRING] generated_tuple end
 --				--  will succeed for objects having those fields.
 
---				tuple_string := tuple_string + type.reflection.type_name_of_type (type.reflection.field_static_type_of_type (type.field_index (projection[index]), type.type.type_id))
+--				tuple_string := tuple_string + type.reflection.type_name_of_type (type.reflection.field_static_type_of_type (type.field_index (projection [index]), type.type.type_id))
 --				index := index + 1
 
 --				if index <= projection.count then

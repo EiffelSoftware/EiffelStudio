@@ -88,8 +88,4 @@ feature {NONE} -- Initialization
 			fresh: is_new
 		end
 
-feature {PS_ABEL_EXPORT} -- Constants
-
---	root_key: STRING = "ps_is_root"
-
 end

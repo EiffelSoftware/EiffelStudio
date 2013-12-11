@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	traversed_objects: ARRAYED_LIST[PS_OBJECT_DATA]
+	traversed_objects: ARRAYED_LIST [PS_OBJECT_DATA]
 
 	factory: PS_METADATA_FACTORY
 			-- A factory for PS_TYPE_METADATA objects.
@@ -82,17 +82,17 @@ feature {NONE} -- Implementation: Agents
 		do
 			current_index := current_index + 1
 		ensure
-			index_correct: traversed_objects[current_index].reflector.object.is_equal (an_object.object)
+			index_correct: traversed_objects [current_index].reflector.object.is_equal (an_object.object)
 
 			-- This version doesn't work due to some copying of copy-semantics reference items...
-			--index_correct: traversed_objects[current_index].object.is_deep_equal (object)
+			--index_correct: traversed_objects [current_index].object.is_deep_equal (object)
 		end
 
 	on_reference_agent (referer: REFLECTED_OBJECT; referee: REFLECTED_OBJECT)
 			-- Update the {PS_OBJECT_DATA}.referers and {PS_OBJECT_DATA}.references
 			-- for both `referer' and `referee'.
 		require
-			index_correct: traversed_objects[current_index].reflector.object.is_equal (referer.object)
+			index_correct: traversed_objects [current_index].reflector.object.is_equal (referer.object)
 		local
 			new_object: PS_OBJECT_DATA
 			found: BOOLEAN
@@ -106,16 +106,16 @@ feature {NONE} -- Implementation: Agents
 			loop
 				if cursor.item.reflector.is_equal (referee) then
 					cursor.item.referers.extend (current_index)
-					traversed_objects[current_index].references.extend (cursor.cursor_index)
+					traversed_objects [current_index].references.extend (cursor.cursor_index)
 					found := True
 				end
 			end
 
 			if not found then
-				create new_object.make_with_object (traversed_objects.count + 1, referee.twin, traversed_objects[current_index].level + 1, factory.create_metadata_from_type_id (referee.dynamic_type))
+				create new_object.make_with_object (traversed_objects.count + 1, referee.twin, traversed_objects [current_index].level + 1, factory.create_metadata_from_type_id (referee.dynamic_type))
 				new_object.referers.extend (current_index)
 				traversed_objects.extend (new_object)
-				traversed_objects[current_index].references.extend (traversed_objects.count)
+				traversed_objects [current_index].references.extend (traversed_objects.count)
 			end
 		ensure
 			index_unchanged: current_index = old current_index
@@ -160,7 +160,7 @@ feature -- Debugging output
 				Result.put ('%N', Result.count)
 
 				Result.append ("%TReferences:  ")
-				across cursor.item.references as ref_cursor loop Result.append(ref_cursor.item.out + ", ") end
+				across cursor.item.references as ref_cursor loop Result.append (ref_cursor.item.out + ", ") end
 
 				Result.put ('%N', Result.count-1)
 				Result.put ('%N', Result.count)

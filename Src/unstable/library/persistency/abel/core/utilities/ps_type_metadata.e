@@ -41,14 +41,6 @@ feature -- Access
 			Result := type.name
 		end
 
---	base_class: PS_TYPE_METADATA
---			-- The class of which `Current' type is an instance of.
---		obsolete
---			"Skip function call."
---		do
---			Result := Current
---		end
-
 feature -- Status report
 
 	is_equal (other: like Current): BOOLEAN
@@ -65,7 +57,7 @@ feature -- Status report
 				--or reflection.type_conforms_to (type.type_id, reflection.dynamic_type_from_string ("READABLE_STRING_GENERAL"))
 				or type.type_id = ({detachable STRING_8}).type_id or type.type_id = ({detachable STRING_32}).type_id
 				-- The attached syntax is used here because the {TYPE}.is_conforming_to will always generate a catcall.
-				or attached {TYPE[detachable IMMUTABLE_STRING_GENERAL]} type
+				or attached {TYPE [detachable IMMUTABLE_STRING_GENERAL]} type
 				--or type.is_conforming_to ({detachable IMMUTABLE_STRING_GENERAL})
 		end
 
@@ -166,7 +158,7 @@ feature -- Attributes
 				end
 			end
 		ensure
-			exists: Result.for_all (agent has_attribute(?))
+			exists: Result.for_all (agent has_attribute (?))
 			only_basic: across Result as cursor all attribute_type (cursor.item).is_basic_type end
 			complete: across attributes as cursor all attribute_type (cursor.item).is_basic_type implies Result.has (cursor.item) end
 		end
@@ -183,7 +175,7 @@ feature -- Attributes
 				end
 			end
 		ensure
-			exists: Result.for_all (agent has_attribute(?))
+			exists: Result.for_all (agent has_attribute (?))
 			only_reference: across Result as cursor all not attribute_type (cursor.item).is_basic_type end
 			complete: across attributes as cursor all not attribute_type (cursor.item).is_basic_type implies Result.has (cursor.item) end
 		end
@@ -281,7 +273,7 @@ feature {NONE} -- Implementation
 			end
 			create {LINKED_LIST [TYPE [detachable ANY]]} Result.make
 		ensure
-			definition: Result.for_all (agent conforms(?, a_type))
+			definition: Result.for_all (agent conforms (?, a_type))
 		end
 
 	supertypes_internal_wrapper (a_type: TYPE [detachable ANY]): LIST [TYPE [detachable ANY]]
@@ -293,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 			create {LINKED_LIST [TYPE [detachable ANY]]} Result.make
 		ensure
-			definition: Result.for_all (agent conforms(a_type, ?))
+			definition: Result.for_all (agent conforms (a_type, ?))
 		end
 
 	conforms (subtype, supertype: TYPE [detachable ANY]): BOOLEAN
@@ -305,7 +297,6 @@ feature {NONE} -- Implementation
 invariant
 	non_negative_generic_count: generic_parameter_count >= 0
 	correct_genericity: (generic_parameter_count = 0) = not is_generic_derivation
---	class_and_type_generic: is_generic_derivation = base_class.is_generic
 	attributes_splitted_correctly: basic_attributes.count + reference_attributes.count = attributes.count
 
 end

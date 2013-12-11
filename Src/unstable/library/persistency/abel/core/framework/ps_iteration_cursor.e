@@ -24,7 +24,7 @@ feature -- Access
 	item: G
 			-- Item at current cursor position.
 		do
-			check attached {G} query.result_cache[index] as res then
+			check attached {G} query.result_cache [index] as res then
 				Result := res
 			end
 		end
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 	index: INTEGER
 
-	make (a_query: PS_ABSTRACT_QUERY[ANY, ANY])
+	make (a_query: PS_ABSTRACT_QUERY [ANY, ANY])
 			-- Initialization for `Current'.
 		do
 			query := a_query

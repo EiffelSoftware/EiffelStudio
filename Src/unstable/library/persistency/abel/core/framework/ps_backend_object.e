@@ -24,12 +24,6 @@ create {PS_ABEL_EXPORT}
 
 feature {PS_ABEL_EXPORT} -- Access
 
---	is_root: BOOLEAN
---			-- Is the current entity a garbage collection root?
---		do
---			Result := has_attribute (root_key) and then attribute_value (root_key).value.to_boolean
---		end
-
 	attributes: LINKED_LIST [STRING]
 			-- The attributes of the object that have been loaded.
 
@@ -117,7 +111,7 @@ feature -- Comparison
 		do
 			if attached other then
 				Result := primary_key.is_equal (other.primary_key) and metadata.is_equal (other.metadata) and then
-					across attributes as cursor all other.has_attribute (cursor.item) and then is_equal_tuple (other.attribute_value (cursor.item), attribute_value(cursor.item)) end
+					across attributes as cursor all other.has_attribute (cursor.item) and then is_equal_tuple (other.attribute_value (cursor.item), attribute_value (cursor.item)) end
 			else
 				Result := False
 			end
@@ -169,7 +163,6 @@ feature {PS_ABEL_EXPORT} -- Element change
 				if attributes_to_keep.has (attributes.item) then
 					attributes.forth
 				else
---					print (attributes.item + "%N")
 					values.remove (attributes.item)
 					attributes.remove
 				end
@@ -207,9 +200,7 @@ feature {NONE} -- Initialization
 	make (key: INTEGER; class_data: PS_TYPE_METADATA)
 			-- Initialization for `Current'.
 		do
-			precursor(key, class_data)
---			primary_key := key
---			metadata := class_data
+			precursor (key, class_data)
 			create values.make (10)
 			create attributes.make
 			attributes.compare_objects
@@ -219,16 +210,12 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	is_equal_tuple (a, b: TUPLE[first: STRING; second:IMMUTABLE_STRING_8]): BOOLEAN
+	is_equal_tuple (a, b: TUPLE [first: STRING; second:IMMUTABLE_STRING_8]): BOOLEAN
 		do
 			Result := a.first.is_equal (b.first) and a.second.is_equal (b.second)
 		end
 
 invariant
 	has_value_for_all_attributes: across attributes as attribute_cursor all has_attribute (attribute_cursor.item) end
---	void_references_have_NONE_type: across values as val all val.item.first.is_empty implies val.item.second.is_equal ("NONE") end
-
---	root_correct: has_attribute (root_key) implies is_root = attribute_value (root_key).value.to_boolean
-
 
 end

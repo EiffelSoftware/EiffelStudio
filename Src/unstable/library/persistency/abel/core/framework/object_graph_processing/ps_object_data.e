@@ -29,10 +29,10 @@ feature {PS_ABEL_EXPORT} -- Access: General information
 	index: INTEGER
 			-- The index of the current object.
 
-	referers: LIST[INTEGER]
+	referers: LIST [INTEGER]
 			-- The index set of the objects holding a reference to the current object.
 
-	references: LIST[INTEGER]
+	references: LIST [INTEGER]
 			-- The index set of the objects referred to by the current object.
 
 	type: PS_TYPE_METADATA
@@ -74,7 +74,7 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 	primary_key: INTEGER
 			-- The primary key of the current object, as used by the backend.
 
-	uninitialized_attributes: LINKED_LIST[INTEGER]
+	uninitialized_attributes: LINKED_LIST [INTEGER]
 			-- The fields which have not yet been set during retrieval.
 
 	handler: PS_HANDLER
@@ -197,8 +197,8 @@ feature {NONE} -- Initialization
 			internal_object := an_object
 			level := a_level
 			type := a_type
-			create {LINKED_LIST[INTEGER]} referers.make
-			create {LINKED_LIST[INTEGER]} references.make
+			create {LINKED_LIST [INTEGER]} referers.make
+			create {LINKED_LIST [INTEGER]} references.make
 			create uninitialized_attributes.make
 		end
 
@@ -209,8 +209,8 @@ feature {NONE} -- Initialization
 			type := a_type
 			level := a_level
 			primary_key := a_primary_key
-			create {LINKED_LIST[INTEGER]} referers.make
-			create {LINKED_LIST[INTEGER]} references.make
+			create {LINKED_LIST [INTEGER]} referers.make
+			create {LINKED_LIST [INTEGER]} references.make
 			create uninitialized_attributes.make
 		end
 

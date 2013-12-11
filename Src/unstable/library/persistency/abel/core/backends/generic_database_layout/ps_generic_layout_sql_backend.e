@@ -21,14 +21,14 @@ create
 
 feature {PS_ABEL_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
-			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
+	generate_all_object_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+			-- For each type `type_key' in `order', generate `order [type_key]' new objects in the database.
 		local
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
 			none_class_key: INTEGER
 			existence_attribute_key: INTEGER
-			current_list: LINKED_LIST[PS_BACKEND_OBJECT]
+			current_list: LINKED_LIST [PS_BACKEND_OBJECT]
 		do
 			connection := get_connection (transaction)
 
@@ -64,13 +64,13 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			rollback (transaction)
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
-			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
+	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+			-- For each type `type_key' in the hash table `order', generate `order [type_key]' new collections in the database.
 		local
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
 			none_class_key: INTEGER
-			current_list: LINKED_LIST[PS_BACKEND_COLLECTION]
+			current_list: LINKED_LIST [PS_BACKEND_COLLECTION]
 		do
 			connection := get_connection (transaction)
 
@@ -105,7 +105,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 feature {PS_ABEL_EXPORT} -- Write operations
 
 
-	delete (objects: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete every item in `objects' from the database
 		local
 			connection: PS_SQL_CONNECTION
@@ -128,11 +128,11 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		end
 
 
-	write_collections (collections: LIST[PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
+	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write every item in `collections' to the database
 		local
-			commands: LINKED_LIST[STRING]
-			info_commands: LINKED_LIST[STRING]
+			commands: LINKED_LIST [STRING]
+			info_commands: LINKED_LIST [STRING]
 			collection_type_key: INTEGER
 
 			connection: PS_SQL_CONNECTION
@@ -196,7 +196,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 			end
 
-			stmt := SQL_Strings.assemble_multi_replace_collection(commands)
+			stmt := SQL_Strings.assemble_multi_replace_collection (commands)
 
 			if not info_commands.is_empty then
 				stmt.append (";" + SQL_Strings.assemble_multi_replace_collection_info (info_commands))
@@ -211,7 +211,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			rollback (transaction)
 		end
 
-	delete_collections (collections: LIST[PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+	delete_collections (collections: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete every item in `collections' from the database
 		local
 			connection: PS_SQL_CONNECTION
@@ -262,12 +262,12 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 feature {PS_BACKEND} -- Implementation
 
-	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
+	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.
 			-- Only write the attributes present in {PS_BACKEND_OBJECT}.attributes.
 		local
 			connection: PS_SQL_CONNECTION
-			commands: LINKED_LIST[STRING]
+			commands: LINKED_LIST [STRING]
 		do
 			across
 				objects as cursor
@@ -294,17 +294,17 @@ feature {PS_BACKEND} -- Implementation
 						-- Attribute key
 						db_metadata_manager.create_get_primary_key_of_attribute (attribute_cursor.item, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.name)),
 						-- Runtime type
-						db_metadata_manager.create_get_primary_key_of_class (cursor.item.attribute_value(attribute_cursor.item).attribute_class_name),
+						db_metadata_manager.create_get_primary_key_of_class (cursor.item.attribute_value (attribute_cursor.item).attribute_class_name),
 						-- Do we need a longtext value?
 --						0, -- False
 						-- Value
-						cursor.item.attribute_value(attribute_cursor.item).value
+						cursor.item.attribute_value (attribute_cursor.item).value
 						]))
 				end
 			end
 
 			connection := get_connection (transaction)
-			connection.execute_sql (SQL_Strings.assemble_multi_replace(commands))
+			connection.execute_sql (SQL_Strings.assemble_multi_replace (commands))
 		rescue
 			rollback (transaction)
 		end

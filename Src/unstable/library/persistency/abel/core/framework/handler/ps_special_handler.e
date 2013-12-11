@@ -21,7 +21,7 @@ feature {NONE} -- Impementation
 	internal_can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can `Current' handle objects of type `type'?
 		do
-			Result := attached {TYPE[detachable SPECIAL[detachable ANY]]} type.type
+			Result := attached {TYPE [detachable SPECIAL [detachable ANY]]} type.type
 		end
 
 feature {PS_ABEL_EXPORT} -- Read functions
@@ -31,7 +31,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		local
 			index: INTEGER
 			type: PS_TYPE_METADATA
-			new_instance: SPECIAL[detachable ANY]
+			new_instance: SPECIAL [detachable ANY]
 			reflector: REFLECTED_REFERENCE_OBJECT
 
 			retrieved: PS_BACKEND_COLLECTION
@@ -39,7 +39,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			i: INTEGER
 			capacity: INTEGER
 
-			field: TUPLE[value: STRING; type:STRING]
+			field: TUPLE [value: STRING; type:STRING]
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
 
@@ -133,7 +133,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		local
 			index: INTEGER
 			type: PS_TYPE_METADATA
-			new_instance: SPECIAL[detachable ANY]
+			new_instance: SPECIAL [detachable ANY]
 			reflector: REFLECTED_REFERENCE_OBJECT
 
 			retrieved: PS_BACKEND_COLLECTION
@@ -141,7 +141,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			i: INTEGER
 			capacity: INTEGER
 
-			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
 		do
@@ -149,7 +149,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			type := object.type
 			retrieved := object.backend_collection
 
-			check attached {SPECIAL[detachable ANY]} object.reflector.object as inst then
+			check attached {SPECIAL [detachable ANY]} object.reflector.object as inst then
 				new_instance := inst
 			end
 
@@ -158,7 +158,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			until
 				i > retrieved.collection_items.count
 			loop
-				field := retrieved.collection_items[i]
+				field := retrieved.collection_items [i]
 
 				if not field.type.is_equal ("NONE") then
 
@@ -181,7 +181,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 				--HASH_TABLE fix
 				-- The internal_hash_code of STRING doesn't get stored , but we can recreate it easily
-			if attached {SPECIAL[READABLE_STRING_GENERAL]} new_instance as inst then
+			if attached {SPECIAL [READABLE_STRING_GENERAL]} new_instance as inst then
 				across
 					inst as cursor
 				loop
@@ -195,7 +195,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		local
 			index: INTEGER
 			reflector: REFLECTED_OBJECT
-			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 
 			ref: INTEGER
@@ -206,14 +206,14 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			across
 				object.uninitialized_attributes as field_idx
 			loop
-				field := object.backend_collection.collection_items[field_idx.item]
+				field := object.backend_collection.collection_items [field_idx.item]
 				dynamic_field_type := type_from_string (field.type)
 
-				check attached {SPECIAL[detachable ANY]} object.reflector.object as special then
+				check attached {SPECIAL [detachable ANY]} object.reflector.object as special then
 					processed := read_manager.processed_object (field.value, dynamic_field_type, object)
 
 						-- Update reflector for user-defined expanded objects or copy-semantics
-					if special.generating_type.generic_parameter_type(1).is_expanded then
+					if special.generating_type.generic_parameter_type (1).is_expanded then
 
 						special.extend (processed)
 
@@ -226,7 +226,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 						if object.reflector.is_special_copy_semantics_item (field_idx.item - 1) then
 							ref := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
-							read_manager.item (ref).set_object (object.reflector.special_copy_semantics_item(field_idx.item - 1))
+							read_manager.item (ref).set_object (object.reflector.special_copy_semantics_item (field_idx.item - 1))
 						end
 					end
 				end
@@ -234,67 +234,6 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		end
 
 feature {PS_ABEL_EXPORT} -- Write functions
-
---	initialize_backend_representation (object: PS_OBJECT_DATA)
---			-- Initialize all attributes or items in `object.backend_representation'
---		local
---			obj: PS_OBJECT_DATA
---			i, k: INTEGER
---			type: PS_TYPE_METADATA
---			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
-
---			special: SPECIAL[detachable ANY]
-
---			new_command: PS_BACKEND_COLLECTION
---		do
---			obj := object -- write_manager.objects[index]
---			check attached {PS_BACKEND_COLLECTION} obj.backend_representation as cmd then
---				new_command := cmd
---			end
-
---			check attached obj.type as t then
---				type := t
---			end
-
---			check attached {SPECIAL[detachable ANY]} obj.reflector.object as sp then
---				special := sp
---			end
-
---			from
---				i := 1
---				k := 1
---			until
---				i > special.count
---			loop
---				if obj.reflector.is_special_of_reference and not obj.reflector.is_special_copy_semantics_item (i-1) then
---					-- Reference type
---					from
---						k := 1
---					until
---						k > obj.references.count or write_manager.item(obj.references[k]).reflector.object =  special.item (i-1)
---					loop
---						k := k + 1
---					end
-
---					if k > obj.references.count then
---						tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
---					else
---						check attached write_manager.item(obj.references[k]).handler as handler then
---							tuple := handler.as_string_pair (write_manager.item (obj.references[k]))
---						end
---					end
---					new_command.collection_items.extend ([tuple.value, tuple.type])
---				else
---					-- Value type
---					if attached special.item (i-1) as field then
---						new_command.collection_items.extend ([ basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).name])
---					end
---				end
---				i := i + 1
---			end
-
---			new_command.add_information ("capacity", special.capacity.out)
---		end
 
 	initialize_backend_representation (object: PS_OBJECT_DATA)
 			-- Initialize all attributes or items in `object.backend_representation'
@@ -306,7 +245,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			new_command: PS_BACKEND_OBJECT
 
 			collection: PS_BACKEND_COLLECTION
-			item_type: TYPE[detachable ANY]
+			item_type: TYPE [detachable ANY]
 
 			field_type: PS_TYPE_METADATA
 
@@ -314,9 +253,9 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 			special: SPECIAL [detachable ANY]
 
-			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			tuple: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 
-			used_refs: LINKED_LIST[INTEGER]
+			used_refs: LINKED_LIST [INTEGER]
 
 		do
 			collection := object.backend_collection
@@ -334,16 +273,16 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 						-- Basic types
 					if basic_types.has (item_type.type_id) then
-						collection.collection_items.extend ([ basic_attribute_value(item), item_type.name])
+						collection.collection_items.extend ([ basic_attribute_value (item), item_type.name])
 						-- Reference and expanded
 					else
 						from
 							k := 1
 						until
 							k > object.references.count or (
---							write_manager.item (object.references[k]).referers.has (object.index) and
+--							write_manager.item (object.references [k]).referers.has (object.index) and
 							not used_refs.has (k) and
-							write_manager.item(object.references[k]).reflector.object = special.item (idx.item))
+							write_manager.item (object.references [k]).reflector.object = special.item (idx.item))
 						loop
 							k := k + 1
 						end
@@ -351,8 +290,8 @@ feature {PS_ABEL_EXPORT} -- Write functions
 						if k > object.references.count then
 							tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
 						else
-							check attached write_manager.item(object.references[k]).handler as handler then
-								tuple := handler.as_string_pair (write_manager.item (object.references[k]))
+							check attached write_manager.item (object.references [k]).handler as handler then
+								tuple := handler.as_string_pair (write_manager.item (object.references [k]))
 								used_refs.extend (k)
 							end
 						end
@@ -376,13 +315,13 @@ feature {NONE} -- Special: Object header fix
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"HEADER(eif_access($object)) -> ov_flags |= (EO_SPEC | EO_COMP);"
+			"HEADER (eif_access ($object)) -> ov_flags |= (EO_SPEC | EO_COMP);"
 		end
 
 	frozen header (object: ANY): NATURAL_16
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"return HEADER(eif_access($object)) -> ov_flags;"
+			"return HEADER (eif_access ($object)) -> ov_flags;"
 		end
 end

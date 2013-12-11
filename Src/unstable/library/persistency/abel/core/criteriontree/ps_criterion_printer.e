@@ -13,14 +13,14 @@ inherit
 feature
 	visit_and (and_crit: PS_AND_CRITERION): STRING
 		do
-			Result := "(" + visit(and_crit.left) + " and " + visit (and_crit.right) + ")"
+			Result := "(" + visit (and_crit.left) + " and " + visit (and_crit.right) + ")"
 		end
 
 	visit_or (or_crit: PS_OR_CRITERION): STRING
 		local
 			left, right: STRING
 		do
-			Result := "(" + visit(or_crit.left) + " or " + visit (or_crit.right) + ")"
+			Result := "(" + visit (or_crit.left) + " or " + visit (or_crit.right) + ")"
 		end
 
 	visit_not (not_crit: PS_NOT_CRITERION): STRING

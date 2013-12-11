@@ -40,7 +40,7 @@ feature -- Check
 				if attribute_name.is_case_insensitive_equal (intern.field_name (loop_var, object)) then
 					attribute_is_present := true
 					index := loop_var
-						--print ("attribute name: "+field_name(loop_var,object) + " index: " + index.out + " value: " + (field (index, object)).out)
+						--print ("attribute name: "+field_name (loop_var,object) + " index: " + index.out + " value: " + (field (index, object)).out)
 				end
 				loop_var := loop_var - 1
 			variant
@@ -108,7 +108,7 @@ feature -- Check
 			end
 				-- now see if both types match
 			if attribute_is_present then
-				Result := valid_types.there_exists (agent intern.field_conforms_to(field_type, ?))
+				Result := valid_types.there_exists (agent intern.field_conforms_to (field_type, ?))
 			else
 				Result := False
 			end
@@ -242,36 +242,36 @@ feature {NONE} -- Creation
 				-- Initialize the agent. This is kind of ugly, but I think there's no other way if we want to support all the basic types
 				-- Strings
 			if attached {READABLE_STRING_8} value as str then
-				my_agent := agent string8_op(?, str);
+				my_agent := agent string8_op (?, str);
 			elseif attached {READABLE_STRING_32} value as str then
-				my_agent := agent string32_op(?, str);
+				my_agent := agent string32_op (?, str);
 				-- Booleans
 			elseif attached {BOOLEAN} value as bool then
-				my_agent := agent boolean_op(?, bool);
+				my_agent := agent boolean_op (?, bool);
 				-- Integers
 			elseif attached {INTEGER_64} value as int then
-				my_agent := agent integer_op(?, int)
+				my_agent := agent integer_op (?, int)
 			elseif attached {INTEGER_32} value as int then
-				my_agent := agent integer_op(?, int)
+				my_agent := agent integer_op (?, int)
 			elseif attached {INTEGER_16} value as int then
-				my_agent := agent integer_op(?, int)
+				my_agent := agent integer_op (?, int)
 			elseif attached {INTEGER_8} value as int then
-				my_agent := agent integer_op(?, int)
+				my_agent := agent integer_op (?, int)
 					-- Reals
 			elseif attached {REAL_64} value as real then
-				my_agent := agent real_op(?, real)
+				my_agent := agent real_op (?, real)
 			elseif attached {REAL_32} value as real then
-				my_agent := agent real_op(?, real)
+				my_agent := agent real_op (?, real)
 					-- Naturals
 			elseif attached {NATURAL_64} value as nat then
-				my_agent := agent natural_op(?, nat)
+				my_agent := agent natural_op (?, nat)
 			elseif attached {NATURAL_32} value as nat then
-				my_agent := agent natural_op(?, nat)
+				my_agent := agent natural_op (?, nat)
 			elseif attached {NATURAL_16} value as nat then
-				my_agent := agent natural_op(?, nat)
+				my_agent := agent natural_op (?, nat)
 			else
 				check attached {NATURAL_8} value as nat then
-					my_agent := agent natural_op(?, nat)
+					my_agent := agent natural_op (?, nat)
 				end
 					-- There should not be any other type according to the precondition
 			end

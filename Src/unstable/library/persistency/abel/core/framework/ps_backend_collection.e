@@ -38,12 +38,6 @@ feature {PS_ABEL_EXPORT} -- Access
 
 feature {PS_ABEL_EXPORT} -- Status report
 
---	is_root: BOOLEAN
---			-- Is the current entity a garbage collection root?
---		do
---			Result := has_information (root_key) and then get_information (root_key).to_boolean
---		end
-
 	has_information (description: STRING): BOOLEAN
 			-- Does the retrieved collection have a information value attached to the `description' key?
 		require
@@ -66,7 +60,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 			reflection: INTERNAL
 		do
 			Result := True
-			if not attached {TYPE[detachable TUPLE]} metadata.type then
+			if not attached {TYPE [detachable TUPLE]} metadata.type then
 				across
 					collection_items as cursor
 				from
@@ -107,7 +101,7 @@ feature -- Comparison
 						across information_descriptions as cursor
 						all
 							other.has_information (cursor.item) and then
-							other.get_information (cursor.item).is_equal (get_information(cursor.item))
+							other.get_information (cursor.item).is_equal (get_information (cursor.item))
 						end
 				until
 					collection_items.after or not Result
@@ -166,17 +160,6 @@ feature {PS_ABEL_EXPORT} -- Element change
 			information_set: get_information (description).is_equal (value)
 		end
 
---	set_is_root (value: BOOLEAN)
---			-- Set `is_root' to `value'.
---		do
---			is_root := value
---			if has_information (root_key) then
---				additional_information_hash.force (value.out, root_key)
---			else
---				add_information (root_key, value.out)
---			end
---		end
-
 feature {NONE}
 
 	additional_information_hash: HASH_TABLE [STRING, STRING]
@@ -205,8 +188,5 @@ feature {NONE} -- Consistency checks
 invariant
 	all_void_values_have_none_type: check_void_types
 	all_descriptions_have_information: information_descriptions.count = additional_information_hash.count and then across information_descriptions as desc all has_information (desc.item) end
-
---	root_correct: has_information (root_key) implies is_root = get_information (root_key).to_boolean
-
 
 end

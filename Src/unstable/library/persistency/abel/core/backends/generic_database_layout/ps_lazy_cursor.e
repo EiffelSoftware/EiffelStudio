@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		local
 			connection: PS_SQL_CONNECTION
 			sql_string: STRING
-			attribute_keys: LINKED_LIST[INTEGER]
+			attribute_keys: LINKED_LIST [INTEGER]
 
 			conv: PS_CRITERION_SQL_CONVERTER
 		do
@@ -141,11 +141,11 @@ feature {NONE} -- Implementation
 				after := True
 
 				-- Void safety...
-				internal_result_cursor := (create {LINKED_LIST[PS_SQL_ROW]}.make).new_cursor
+				internal_result_cursor := (create {LINKED_LIST [PS_SQL_ROW]}.make).new_cursor
 			end
 		end
 
-	internal_result_cursor: ITERATION_CURSOR[PS_SQL_ROW]
+	internal_result_cursor: ITERATION_CURSOR [PS_SQL_ROW]
 		require
 			not_after: not after
 		attribute

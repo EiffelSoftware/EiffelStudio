@@ -31,7 +31,7 @@ feature -- Status report
 			-- Dirty Read:
 
 			--	write (x, 42)	|
-			--					| read(x) -> 42
+			--					| read (x) -> 42
 			--	abort			|
 			--					| commit
 
@@ -40,8 +40,8 @@ feature -- Status report
 			-- Is a lost update allowed?
 			-- Lost Update:
 
-			--	read(x) -> a	|
-			--					| read(x) -> b
+			--	read (x) -> a	|
+			--					| read (x) -> b
 			--	a := a + 3		|
 			--					| b := b + 5
 			--  write (x, a)	|

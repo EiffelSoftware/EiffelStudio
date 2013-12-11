@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 	internal_can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can `Current' handle objects of type `type'?
 		do
-			Result := not attached {TYPE[detachable SPECIAL[detachable ANY]]} type.type and not attached {TYPE[detachable TUPLE]} type.type
+			Result := not attached {TYPE [detachable SPECIAL [detachable ANY]]} type.type and not attached {TYPE [detachable TUPLE]} type.type
 		end
 
 feature {PS_ABEL_EXPORT} -- Status report
@@ -50,7 +50,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 			pos: INTEGER
 
-			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
 		do
@@ -158,7 +158,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		local
 			index: INTEGER
 			reflector: REFLECTED_OBJECT
-			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 
 			ref_item: INTEGER
@@ -199,7 +199,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			-- Initialize all attributes or items in `object.backend_representation'
 		local
 			i, k: INTEGER
-			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			tuple: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 
 			backend_object: PS_BACKEND_OBJECT
 			field_type: PS_TYPE_METADATA
@@ -248,20 +248,20 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 
 							if is_expanded then
-								found :=  write_manager.item(object.references[k]).reflector.object ~ field
+								found :=  write_manager.item (object.references [k]).reflector.object ~ field
 							else
-								found :=  write_manager.item(object.references[k]).reflector.object = field
+								found :=  write_manager.item (object.references [k]).reflector.object = field
 							end
 						end
 
 						check reference_found: k <= object.references.count end
 
-						ref_item := write_manager.item (object.references[k])
+						ref_item := write_manager.item (object.references [k])
 						tuple := ref_item.handler.as_string_pair (ref_item)
 						backend_object.add_attribute (object.reflector.field_name (i), tuple.value, tuple.type)
 					else
 							-- Value type
-						backend_object.add_attribute (object.reflector.field_name (i), basic_attribute_value(field), field_type.name)
+						backend_object.add_attribute (object.reflector.field_name (i), basic_attribute_value (field), field_type.name)
 					end
 				else
 						-- Void reference

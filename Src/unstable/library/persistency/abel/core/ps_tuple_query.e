@@ -174,10 +174,10 @@ feature {NONE} -- Initialization
 				-- NOTE: We cannot just take the runtime type of the attribute, since those types are (for whatever reason)
 				-- always detachable. Instead the generated tuple needs to have the statically declared types as its generic
 				-- attributes. This way object tests like
-				--		check attached TUPLE[STRING, STING, detachable STRING] generated_tuple end
+				--		check attached TUPLE [STRING, STING, detachable STRING] generated_tuple end
 				--  will succeed for objects having those fields.
 
-				tuple_string := tuple_string + reflection.type_name_of_type (reflection.field_static_type_of_type (field_indices [projection[index]], generic_type.type_id))
+				tuple_string := tuple_string + reflection.type_name_of_type (reflection.field_static_type_of_type (field_indices [projection [index]], generic_type.type_id))
 				index := index + 1
 
 				if index <= projection.count then

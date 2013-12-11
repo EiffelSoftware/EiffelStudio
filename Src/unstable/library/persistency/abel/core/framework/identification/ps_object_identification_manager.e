@@ -44,7 +44,7 @@ feature {PS_ABEL_EXPORT} -- Identification
 		do
 			if is_registered (transaction) then
 				Result:= local_set (transaction).is_identified (an_object) or
-				(not local_set(transaction).is_deleted (an_object) and global_set.is_identified(an_object))
+				(not local_set (transaction).is_deleted (an_object) and global_set.is_identified (an_object))
 			else
 				Result:= global_set.is_identified (an_object)
 			end
@@ -107,7 +107,7 @@ feature {PS_ABEL_EXPORT} -- Identification
 			meta := metadata_manager.create_metadata_from_object (an_object)
 
 			if local_set (transaction).is_identified (an_object) then
-				create Result.make (local_set(transaction).identifier (an_object), an_object, meta)
+				create Result.make (local_set (transaction).identifier (an_object), an_object, meta)
 			else
 				create Result.make (global_set.identifier (an_object), an_object, meta)
 			end

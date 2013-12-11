@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	PS_IMMUTABLE_STRUCTURE[G]
+	PS_IMMUTABLE_STRUCTURE [G]
 
 inherit
 	READABLE_INDEXABLE [G]
@@ -14,11 +14,11 @@ create
 	make
 
 convert
-	make ({LIST[G], LINKED_LIST[G]})
+	make ({LIST [G], LINKED_LIST [G]})
 
 feature {NONE} -- Initialization
 
-	make (a_structure: READABLE_INDEXABLE[G])
+	make (a_structure: READABLE_INDEXABLE [G])
 			-- Initialization for `Current'.
 		do
 			structure := a_structure
@@ -29,7 +29,7 @@ feature -- Access
 	item alias "[]" (i: INTEGER): G
 			-- Entry at position `i'
 		do
-			Result:= structure[i]
+			Result:= structure [i]
 		end
 
 feature -- Measurement
@@ -89,6 +89,6 @@ feature -- Iteration
 
 feature {NONE} -- Implementation
 
-	structure: READABLE_INDEXABLE[G]
+	structure: READABLE_INDEXABLE [G]
 
 end

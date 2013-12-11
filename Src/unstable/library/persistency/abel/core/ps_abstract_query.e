@@ -154,7 +154,7 @@ feature -- Disposal
 			internal_cursor := Void
 			create {PS_ITERATION_CURSOR [RESULT_TYPE]} stable_cursor.make (Current)
 			is_executed := False
-			create result_cache.make (100)
+			result_cache.wipe_out
 			is_after := True
 		ensure
 			not_executed: not is_executed
@@ -286,6 +286,8 @@ feature {NONE} -- Initialization
 			create {PS_EMPTY_CRITERION} criterion
 			is_subtype_included := True
 			generic_type := {detachable OBJECT_TYPE}
+			create result_cache.make (100)
+			create {PS_ITERATION_CURSOR [RESULT_TYPE]} stable_cursor.make (Current)
 			reset
 		ensure
 			not_executed: not is_executed

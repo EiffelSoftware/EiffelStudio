@@ -1,0 +1,15 @@
+Before running `dynamic_sql' sample, one must do
+link a specific file to data.sql as follows:
+
+With Oracle:
+
+	ln data.sql.oracle data.sql
+
+With MySQL:
+	
+	ln data.sql.mysql data.sql
+
+With ODBC:
+
+	ln data.sql.odbc data.sql
+

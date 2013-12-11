@@ -35,7 +35,8 @@ feature -- Creating a criterion
 	new_uniform alias "[]" (tuple: TUPLE [ANY]): PS_CRITERION
 			-- Creates an agent, a predefined criterion or a combination of both
 			-- using an uniform notation. `tuple' containes either a single agent PREDICATE
-			-- or three values of type [STRING, STRING, ANY].
+			-- or three values of type [STRING, STRING, ANY], where the tuple values correspond
+			-- to the arguments of the `new_predefined' routine.
 			-- Using this notation criteria can be combined as shown in the example in the class header.
 		require
 			well_formed: is_agent (tuple) or is_predefined (tuple)
@@ -61,9 +62,9 @@ feature -- Creating a criterion
 
 	new_predefined (object_attribute_name: STRING; operator: STRING; value: ANY): PS_CRITERION
 			-- Creates a predefined selection criterion given
-			-- an object attribute name,
-			-- an operator (see 'PS_PREDEFINED_OPERATORS'),
-			-- and a value for the attribute.
+			-- an `object_attribute_name' denoting the attribute name,
+			-- an `operator' (see 'PS_PREDEFINED_OPERATORS'),
+			-- and a `value' against which the attribute should be checked.
 		require
 			correct_operator_and_value: is_valid_combination (operator, value)
 		do

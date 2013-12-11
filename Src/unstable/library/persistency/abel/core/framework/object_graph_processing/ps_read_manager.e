@@ -282,32 +282,45 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			-- The `referer' denotes the object issuing the request.
 		local
 			i: INTEGER
-			primary: INTEGER
 			found: BOOLEAN
 		do
-			-- First check if the item is not already registered for retrieval
-			across
-				to_process_next as cursor
-			from
-				primary := key
-				found := False
-			until
-				found
-			loop
-				i := cursor.item
-				if item(i).primary_key = primary and then item(i).type.is_equal (type) then
-					found := True
-					-- Update the referers and references tables
-					referer.references.extend (i)
-					item(i).referers.extend (referer.index)
+				-- First check if the item is not already registered for retrieval
+			i := cache_lookup (key, type)
+			if i > 0 and then item(i).primary_key = key then
+				check
+					equal_algorithm:
+						to_process_next.has (i)
+						and item (i).primary_key = key
+						and item (i).type ~ type
 				end
+				found := True
+					-- Update the referers and references tables
+				referer.references.extend (i)
+				item(i).referers.extend (referer.index)
 			end
+--			across
+--				to_process_next as cursor
+--			from
+--				primary := key
+--				found := False
+--			until
+--				found
+--			loop
+--				i := cursor.item
+--				if item(i).primary_key = primary and then item(i).type.is_equal (type) then
+--					check found_implies_cached: cache_lookup (key, type) = i end
+--					found := True
+--					-- Update the referers and references tables
+--					referer.references.extend (i)
+--					item(i).referers.extend (referer.index)
+--				end
+--			end
 
-			-- Extend the objects list for retrieval
+				-- Extend the objects list for retrieval
 			if not found then
-				add_object (create {PS_OBJECT_DATA}.make_with_primary_key (count + 1, primary, type, current_level + 1), True)
+				add_object (create {PS_OBJECT_DATA}.make_with_primary_key (count + 1, key, type, current_level + 1), True)
 				to_process_next.extend (count)
-				-- Update the referers and references tables
+					-- Update the referers and references tables
 				referer.references.extend (count)
 				item(count).referers.extend (referer.index)
 			end

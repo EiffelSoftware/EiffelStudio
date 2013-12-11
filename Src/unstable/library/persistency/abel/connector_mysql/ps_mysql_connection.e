@@ -72,16 +72,8 @@ feature {PS_ABEL_EXPORT}
 
 	last_result: ITERATION_CURSOR [PS_SQL_ROW]
 			-- The result of the last database operation
-		local
-			result_list: LINKED_LIST [PS_SQL_ROW]
 		do
-			create result_list.make
-			across
-				internal_connection.last_result as res
-			loop
-				result_list.extend (create {PS_MYSQL_ROW}.make (res.item))
-			end
-			Result := result_list.new_cursor
+			Result := last_results.last
 		end
 
 	last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
@@ -111,7 +103,7 @@ feature {NONE} -- Implementation
 	compute_last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
 			-- Get the last results as a linked list.
 		local
-			result_list: LINKED_LIST [PS_SQL_ROW]
+			result_list: ARRAYED_LIST [PS_SQL_ROW]
 		do
 			across
 				internal_connection.last_results as cursor
@@ -121,7 +113,7 @@ feature {NONE} -- Implementation
 				across
 					cursor.item as res
 				from
-					create result_list.make
+					create result_list.make (cursor.item.count)
 				loop
 					result_list.extend (create {PS_MYSQL_ROW}.make (res.item))
 				end

@@ -33,7 +33,7 @@ feature {PS_ABEL_EXPORT} -- Database operations
 		local
 			all_statements: LIST [STRING]
 			stmt: SQLITE_QUERY_STATEMENT
-			result_list: LINKED_LIST [PS_SQLITE_ROW]
+			result_list: ARRAYED_LIST [PS_SQLITE_ROW]
 			res: SQLITE_STATEMENT_ITERATION_CURSOR
 		do
 				-- By default we can get multiple SQL statements - SQLite somehow handles them differently, therefore split them.
@@ -56,10 +56,9 @@ feature {PS_ABEL_EXPORT} -- Database operations
 			across
 				all_statements as current_statement
 			from
-				create result_list.make
 				create last_results.make
+				create result_list.make (0)
 			loop
-				create result_list.make
 				create stmt.make (current_statement.item, internal_connection)
 				create res.make (stmt) -- This executes the statement
 					-- Do error handling
@@ -74,6 +73,7 @@ feature {PS_ABEL_EXPORT} -- Database operations
 				end
 					-- Collect the result (if any)
 				from
+					create result_list.make (100)
 				until
 					res.after
 				loop

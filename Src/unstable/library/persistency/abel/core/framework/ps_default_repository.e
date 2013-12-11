@@ -192,14 +192,14 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	write_manager: PS_WRITE_MANAGER
 			-- The write manager.
 
-	all_handlers: LINKED_LIST[PS_HANDLER]
+	all_handlers: LINKED_LIST [PS_HANDLER]
 			-- All object handlers known to `Current'
 
 
 feature {NONE} -- Implementation
 
 
-	initialize_query (query: PS_ABSTRACT_QUERY[ANY, ANY]; transaction: PS_INTERNAL_TRANSACTION; filter: READABLE_INDEXABLE [STRING])
+	initialize_query (query: PS_ABSTRACT_QUERY [ANY, ANY]; transaction: PS_INTERNAL_TRANSACTION; filter: READABLE_INDEXABLE [STRING])
 			-- Set up the internal query cursor and retrieve the first result.
 		local
 			new_read_manager: PS_READ_MANAGER
@@ -229,7 +229,7 @@ feature {NONE} -- Obsolete
 		local
 			id: PS_OBJECT_IDENTIFIER_WRAPPER
 			primary: INTEGER
-			to_delete: LINKED_LIST[PS_BACKEND_ENTITY]
+			to_delete: LINKED_LIST [PS_BACKEND_ENTITY]
 			found: BOOLEAN
 		do
 			id := id_manager.identifier_wrapper (object, transaction)

@@ -117,7 +117,7 @@ feature -- Status report
 			supported: is_supported (object)
 			no_error: not has_error
 		do
-			Result := repository.is_identified (object, attach(transaction))
+			Result := repository.is_identified (object, attach (transaction))
 		end
 
 	is_root (object: ANY): BOOLEAN
@@ -158,7 +158,7 @@ feature -- Data retrieval
 		do
 			internal_active_queries.extend (query)
 			query.set_transaction (Current)
-			repository.internal_execute_query (query, attach(transaction))
+			repository.internal_execute_query (query, attach (transaction))
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
@@ -175,7 +175,7 @@ feature -- Data retrieval
 		do
 			internal_active_queries.extend (query)
 			query.set_transaction (Current)
-			repository.internal_execute_tuple_query (query, attach(transaction))
+			repository.internal_execute_tuple_query (query, attach (transaction))
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
@@ -194,7 +194,7 @@ feature -- Data modification
 			supported: is_supported (object)
 			not_persistent: not is_persistent (object)
 		do
-			repository.write (object, attach(transaction))
+			repository.write (object, attach (transaction))
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object) xor object.generating_type.is_expanded
@@ -212,7 +212,7 @@ feature -- Data modification
 			supported: is_supported (object)
 			persistent: is_persistent (object)
 		do
-			repository.write (object, attach(transaction))
+			repository.write (object, attach (transaction))
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object)
@@ -230,7 +230,7 @@ feature -- Data modification
 			persistent: is_persistent (object)
 			valid_direct_update: to_implement_assertion ("check that all referenced objects are persistent")
 		do
-			repository.direct_update (object, attach(transaction))
+			repository.direct_update (object, attach (transaction))
 		ensure
 			in_transaction: is_active
 			persistent: is_persistent (object)

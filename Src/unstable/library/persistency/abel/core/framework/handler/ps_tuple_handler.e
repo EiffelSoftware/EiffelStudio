@@ -18,7 +18,7 @@ feature {NONE} -- Impementation
 	internal_can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can `Current' handle objects of type `type'?
 		do
-			Result := attached {TYPE[detachable TUPLE]} type.type
+			Result := attached {TYPE [detachable TUPLE]} type.type
 		end
 
 feature {PS_ABEL_EXPORT} -- Read functions
@@ -38,7 +38,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			i: INTEGER
 			capacity: INTEGER
 
-			field: TUPLE[value: STRING; type:IMMUTABLE_STRING_8]
+			field: TUPLE [value: STRING; type:IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
 		do
@@ -53,7 +53,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				until
 					i > retrieved.collection_items.count
 				loop
-					field := retrieved.collection_items[i]
+					field := retrieved.collection_items [i]
 
 					if not field.type.is_equal ("NONE") then
 
@@ -77,14 +77,14 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		local
 			index: INTEGER
 			reflector: REFLECTED_OBJECT
-			field: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 		do
 			index := object.index
 			across
 				object.uninitialized_attributes as field_idx
 			loop
-				field := object.backend_collection.collection_items[field_idx.item]
+				field := object.backend_collection.collection_items [field_idx.item]
 				dynamic_field_type := type_from_string (field.type)
 
 				check attached {TUPLE} object.reflector.object as tuple then
@@ -101,7 +101,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			obj: PS_OBJECT_DATA
 			i, k: INTEGER
 			type: PS_TYPE_METADATA
-			tuple: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			tuple: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 
 			tuple_to_build: TUPLE
 
@@ -131,7 +131,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 					from
 						k := 1
 					until
-						k > obj.references.count or write_manager.item(obj.references[k]).reflector.object =  field
+						k > obj.references.count or write_manager.item (obj.references [k]).reflector.object =  field
 					loop
 						k := k + 1
 					end
@@ -139,15 +139,15 @@ feature {PS_ABEL_EXPORT} -- Write functions
 					if k > obj.references.count then
 						tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
 					else
-						check attached write_manager.item(obj.references[k]).handler as handler then
-							tuple := handler.as_string_pair (write_manager.item (obj.references[k]))
+						check attached write_manager.item (obj.references [k]).handler as handler then
+							tuple := handler.as_string_pair (write_manager.item (obj.references [k]))
 						end
 					end
 					new_command.collection_items.extend ([tuple.value, tuple.type])
 				else
 					-- Value type
 					if attached tuple_to_build.item (i) as field then
-						new_command.collection_items.extend ([ basic_attribute_value(field), write_manager.metadata_factory.create_metadata_from_object (field).name])
+						new_command.collection_items.extend ([ basic_attribute_value (field), write_manager.metadata_factory.create_metadata_from_object (field).name])
 					end
 				end
 				i := i + 1

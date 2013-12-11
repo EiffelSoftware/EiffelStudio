@@ -45,15 +45,13 @@ feature -- Cursor movement
 			metadata_set: not after implies item.metadata.is_equal (type)
 			attributes_present: not after implies attributes.for_all (agent item.has_attribute)
 			consistent: not after implies item.is_consistent
-
---			item_correctly_retrieved: not after implies backend.check_retrieved_object(item, type, attributes)
 		end
 
 feature {NONE} -- Impementation
 
 	backend: PS_READ_ONLY_BACKEND
 
-	real_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT]
+	real_cursor: ITERATION_CURSOR [PS_BACKEND_OBJECT]
 
 	type: PS_TYPE_METADATA
 
@@ -65,7 +63,7 @@ feature {NONE} -- Initialization
 
 	make (
 			a_backend: PS_READ_ONLY_BACKEND;
-			a_cursor: ITERATION_CURSOR[PS_BACKEND_OBJECT];
+			a_cursor: ITERATION_CURSOR [PS_BACKEND_OBJECT];
 			a_type: like type;
 			attr_list: like attributes
 			a_transaction: like transaction)

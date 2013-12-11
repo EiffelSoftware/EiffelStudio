@@ -29,13 +29,13 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			-- For any referenced object not yet loaded, tell the `read_manager'
 			-- to retrieve it in the next iteration.
 		local
-			pair: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			pair: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			type: PS_TYPE_METADATA
 			reflector: REFLECTED_REFERENCE_OBJECT
 		do
 			pair := object.backend_object.attribute_value (value_type_item)
 			type := type_from_string (pair.type)
-			if attached build_from_string(pair.value, type) as obj then
+			if attached build_from_string (pair.value, type) as obj then
 				create reflector.make (obj)
 				object.set_object (reflector)
 			end
@@ -78,7 +78,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 	initialize_backend_representation (object: PS_OBJECT_DATA)
 			-- Initialize all attributes or items in `object.backend_representation'
 		local
-			pair: TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+			pair: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 		do
 			pair := as_string_pair (object)
 			object.backend_object.add_attribute (value_type_item, pair.value, pair.type)
@@ -86,7 +86,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 feature {PS_ABEL_EXPORT} -- String pair conversion
 
-	as_string_pair (object: PS_OBJECT_DATA): TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+	as_string_pair (object: PS_OBJECT_DATA): TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			-- The `object' as a string pair, i.e. when referenced by another object.
 		require else
 			can_handle: can_handle_type (object.type)

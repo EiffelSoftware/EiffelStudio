@@ -62,19 +62,19 @@ feature {PS_ERROR} -- Visitor functions: Operation Error subcategories
 	visit_external_routine_error (external_routine_error: PS_EXTERNAL_ROUTINE_ERROR)
 			-- Visit an external routine failure
 		do
-			visit_operation_error(external_routine_error)
+			visit_operation_error (external_routine_error)
 		end
 
 	visit_message_not_understood_error (message_not_understood_error: PS_MESSAGE_NOT_UNDERSTOOD_ERROR)
 			-- Visit a message not understood error
 		do
-			visit_operation_error(message_not_understood_error)
+			visit_operation_error (message_not_understood_error)
 		end
 
 	visit_integrity_constraint_violation_error (integrity_constraint_violation_error: PS_INTEGRITY_CONSTRAINT_VIOLATION_ERROR)
 			-- Visit an integrity constraint violation error
 		do
-			visit_operation_error(integrity_constraint_violation_error)
+			visit_operation_error (integrity_constraint_violation_error)
 		end
 
 	visit_transaction_aborted_error (transaction_aborted_error: PS_TRANSACTION_ABORTED_ERROR)

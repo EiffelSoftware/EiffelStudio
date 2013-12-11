@@ -57,7 +57,7 @@ feature {PS_ABEL_EXPORT} -- Database results
 		deferred
 		end
 
-	last_results: LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+	last_results: LIST [ITERATION_CURSOR [PS_SQL_ROW]]
 			-- The results from the last multi-statement database operations
 		deferred
 		end

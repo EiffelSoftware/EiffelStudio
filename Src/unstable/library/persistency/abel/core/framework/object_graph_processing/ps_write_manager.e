@@ -44,22 +44,22 @@ feature -- Accesss: Static
 feature -- Access: Per Write
 
 
-	object_primary_key_order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
+	object_primary_key_order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]
 			-- All primary keys for objects to be generated.
 
-	collection_primary_key_order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]
+	collection_primary_key_order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]
 			-- All primary keys for collections to be generated.
 
-	generated_object_primary_keys: HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+	generated_object_primary_keys: HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- The generated object primary keys.
 
-	generated_collection_primary_keys: HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+	generated_collection_primary_keys: HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- The generated collection primary keys.
 
-	objects_to_write: ARRAYED_LIST[PS_BACKEND_OBJECT]
+	objects_to_write: ARRAYED_LIST [PS_BACKEND_OBJECT]
 			-- All objects to be written to the database.
 
-	collections_to_write: ARRAYED_LIST[PS_BACKEND_COLLECTION]
+	collections_to_write: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 			-- All collections to be written to the database.
 
 feature -- Write execution
@@ -94,14 +94,14 @@ feature -- Write execution
 			do_all (agent {PS_HANDLER}.initialize_backend_representation)
 
 			fixme ("Support the other root object strategies as well")
-			if not item(1).is_persistent then
-				transaction.root_flags.force (True, item(1).identifier)
+			if not item (1).is_persistent then
+				transaction.root_flags.force (True, item (1).identifier)
 			end
 			across
 				1 |..| count as idx
 			loop
-				if attached item(idx.item).backend_representation as br then
-					br.set_is_root (transaction.root_flags[item(idx.item).identifier])
+				if attached item (idx.item).backend_representation as br then
+					br.set_is_root (transaction.root_flags [item (idx.item).identifier])
 				end
 			end
 
@@ -150,9 +150,9 @@ feature -- Write execution
 			-- Do not initialize... we don't want to perform an actual update...
 
 			-- Set the root status in the backend representation
-			transaction.root_flags.force (value, item(1).identifier)
-			check attached item(1).backend_representation as br then
-				br.set_is_root (transaction.root_flags[item(1).identifier])
+			transaction.root_flags.force (value, item (1).identifier)
+			check attached item (1).backend_representation as br then
+				br.set_is_root (transaction.root_flags [item (1).identifier])
 				br.set_is_update_delta (True)
 			end
 
@@ -198,9 +198,9 @@ feature -- Write execution
 			do_all_in_set (agent {PS_HANDLER}.generate_backend_representation, 1 |..| k)
 			do_all_in_set (agent {PS_HANDLER}.initialize_backend_representation, 1 |..| 1)
 
-			check attached item(1).backend_representation as br then
+			check attached item (1).backend_representation as br then
 				fixme ("Other root declaration strategies")
-				br.set_is_root (transaction.root_flags[item(1).identifier])
+				br.set_is_root (transaction.root_flags [item (1).identifier])
 			end
 
 			do_all_in_set (agent {PS_HANDLER}.write_backend_representation, 1 |..| 1)

@@ -56,15 +56,15 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
-			prepare_collection(collection_type)
-			Result := attach(collection_database[collection_type.type.type_id]).new_cursor
+			prepare_collection (collection_type)
+			Result := attach (collection_database [collection_type.type.type_id]).new_cursor
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		do
-			prepare_collection(collection_type)
-			Result := attach(collection_database.item (collection_type.type.type_id)).item(collection_primary_key)
+			prepare_collection (collection_type)
+			Result := attach (collection_database.item (collection_type.type.type_id)).item (collection_primary_key)
 		end
 
 feature {PS_ABEL_EXPORT} -- Transaction handling
@@ -103,20 +103,20 @@ feature{PS_READ_ONLY_BACKEND}
 --				success := False
 --			else
 --				success := True
---				transaction.set_error(create {PS_TRANSACTION_ABORTED_ERROR})
+--				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
 --				transaction.error.raise
 --			end
 
-			prepare(type)
-			Result := attach(database[type.type.type_id]).deep_twin.new_cursor
+			prepare (type)
+			Result := attach (database [type.type.type_id]).deep_twin.new_cursor
 		end
 
 	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		do
-			prepare(type)
-			Result := attach(database.item (type.type.type_id)).item(key)
+			prepare (type)
+			Result := attach (database.item (type.type.type_id)).item (key)
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing
@@ -136,10 +136,10 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 
 	max_primary: INTEGER
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+	generate_all_object_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		local
-			list: LINKED_LIST[PS_BACKEND_OBJECT]
+			list: LINKED_LIST [PS_BACKEND_OBJECT]
 			index: INTEGER
 		do
 			across
@@ -163,10 +163,10 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			end
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		local
-			list: LINKED_LIST[PS_BACKEND_COLLECTION]
+			list: LINKED_LIST [PS_BACKEND_COLLECTION]
 			index: INTEGER
 		do
 			across
@@ -197,22 +197,22 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			across objects as cursor
 			loop
 				prepare (cursor.item.metadata)
-				attach (database[cursor.item.metadata.type.type_id]).remove (cursor.item.primary_key)
+				attach (database [cursor.item.metadata.type.type_id]).remove (cursor.item.primary_key)
 			end
 		end
 
 
 	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
 		local
-			db: HASH_TABLE[PS_BACKEND_COLLECTION, INTEGER]
+			db: HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER]
 		do
 			across
 				collections as cursor
 			loop
 				prepare_collection (cursor.item.metadata)
-				db := attach (collection_database[cursor.item.metadata.type.type_id])
+				db := attach (collection_database [cursor.item.metadata.type.type_id])
 
-				if cursor.item.is_update_delta and attached db[cursor.item.primary_key] as old_coll then
+				if cursor.item.is_update_delta and attached db [cursor.item.primary_key] as old_coll then
 
 					old_coll.set_is_root (cursor.item.is_root)
 					across
@@ -226,7 +226,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 						old_coll.collection_items.put_i_th (cursor.item.collection_items.i_th (idx.item), idx.item)
 					end
 				else
-					db.force(cursor.item, cursor.item.primary_key)
+					db.force (cursor.item, cursor.item.primary_key)
 					cursor.item.declare_as_old
 				end
 			end
@@ -237,14 +237,14 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			across collections as cursor
 			loop
 				prepare_collection (cursor.item.metadata)
-				attach (collection_database[cursor.item.metadata.type.type_id]).remove(cursor.item.primary_key)
+				attach (collection_database [cursor.item.metadata.type.type_id]).remove (cursor.item.primary_key)
 			end
 		end
 
 
 feature {NONE} -- Implementation
 
-	internal_write (objects: LIST[PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
+	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 		local
 			old_obj: PS_BACKEND_OBJECT
 		do
@@ -253,32 +253,32 @@ feature {NONE} -- Implementation
 --				success := False
 --			else
 --				success := True
---				transaction.set_error(create {PS_TRANSACTION_ABORTED_ERROR})
+--				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
 --				transaction.error.raise
 --			end
 
 			across objects as cursor
 			loop
 				if cursor.item.is_new then
-					prepare(cursor.item.metadata)
-					attach (database[cursor.item.metadata.type.type_id]).extend(cursor.item, cursor.item.primary_key)
+					prepare (cursor.item.metadata)
+					attach (database [cursor.item.metadata.type.type_id]).extend (cursor.item, cursor.item.primary_key)
 					cursor.item.declare_as_old
 				else
-					old_obj := attach (attach (database[cursor.item.metadata.type.type_id])[cursor.item.primary_key])
+					old_obj := attach (attach (database [cursor.item.metadata.type.type_id])[cursor.item.primary_key])
 					old_obj.set_is_root (cursor.item.is_root)
 					across
 						cursor.item.attributes as attr
 					loop
 						old_obj.remove_attribute (attr.item)
-						old_obj.add_attribute (attr.item, cursor.item.attribute_value(attr.item).value, cursor.item.attribute_value(attr.item).attribute_class_name)
+						old_obj.add_attribute (attr.item, cursor.item.attribute_value (attr.item).value, cursor.item.attribute_value (attr.item).attribute_class_name)
 					end
 				end
 			end
 		end
 
-	collection_database: HASH_TABLE[HASH_TABLE[PS_BACKEND_COLLECTION, INTEGER], INTEGER]
+	collection_database: HASH_TABLE [HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER], INTEGER]
 
-	database: HASH_TABLE[HASH_TABLE[PS_BACKEND_OBJECT, INTEGER], INTEGER]
+	database: HASH_TABLE [HASH_TABLE [PS_BACKEND_OBJECT, INTEGER], INTEGER]
 		-- First key: Type ID
 		-- Second key: unique object identifier
 
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 	prepare (type: PS_TYPE_METADATA)
 		do
 			if not database.has (type.type.type_id) then
-				database.extend (create {HASH_TABLE[PS_BACKEND_OBJECT, INTEGER]}.make(100), type.type.type_id)
+				database.extend (create {HASH_TABLE [PS_BACKEND_OBJECT, INTEGER]}.make (100), type.type.type_id)
 			end
 		end
 
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 	prepare_collection (type: PS_TYPE_METADATA)
 		do
 			if not collection_database.has (type.type.type_id) then
-				collection_database.extend (create {HASH_TABLE[PS_BACKEND_COLLECTION, INTEGER]}.make(100), type.type.type_id)
+				collection_database.extend (create {HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER]}.make (100), type.type.type_id)
 			end
 		end
 

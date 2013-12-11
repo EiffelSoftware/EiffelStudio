@@ -46,9 +46,9 @@ feature {PS_ABEL_EXPORT} -- Access
 		require
 			valid_index: 1 <= index and index <= count
 		do
-			Result := object_storage[index]
+			Result := object_storage [index]
 		ensure
-			object_correct: object_storage[index] = Result
+			object_correct: object_storage [index] = Result
 			index_set: Result.index = index
 		end
 
@@ -94,7 +94,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 	cascading_ignore (object: PS_OBJECT_DATA)
 			-- Ignore `object' and all objects transitively referenced by it.
 		local
-			stack: LINKED_STACK[INTEGER]
+			stack: LINKED_STACK [INTEGER]
 			i: INTEGER
 		do
 			from
@@ -106,10 +106,10 @@ feature {PS_ABEL_EXPORT} -- Element change
 				i := stack.item
 				stack.remove
 
-				item(i).ignore
+				item (i).ignore
 
 				across
-					item(i).references as ref_cursor
+					item (i).references as ref_cursor
 				loop
 
 					check
@@ -127,7 +127,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 
 feature {NONE} -- Utilities
 
-	assign_handlers (set: INDEXABLE[INTEGER, INTEGER])
+	assign_handlers (set: INDEXABLE [INTEGER, INTEGER])
 			-- Assign an appropriate handler for all objects with an index in `set'.
 		local
 			i: INTEGER
@@ -145,8 +145,8 @@ feature {NONE} -- Utilities
 				until
 					found
 				loop
-					if v_cursor.item.can_handle (item(i)) then
-						item(i).set_handler (v_cursor.item)
+					if v_cursor.item.can_handle (item (i)) then
+						item (i).set_handler (v_cursor.item)
 						found := True
 					end
 				end
@@ -156,8 +156,8 @@ feature {NONE} -- Utilities
 				until
 					found
 				loop
-					if i_cursor.item.can_handle (item(i)) then
-						item(i).set_handler (i_cursor.item)
+					if i_cursor.item.can_handle (item (i)) then
+						item (i).set_handler (i_cursor.item)
 						found := True
 					end
 				end
@@ -165,7 +165,7 @@ feature {NONE} -- Utilities
 				if not found then
 					create not_found_exception
 					not_found_exception.set_description (
-						"Could not find a handler for type: " + item(i).type.type.name + "%N")
+						"Could not find a handler for type: " + item (i).type.type.name + "%N")
 					not_found_exception.raise
 				end
 			end
@@ -187,14 +187,14 @@ feature {NONE} -- Utilities
 			correct: attached Result implies Result.can_handle_type (type)
 		end
 
-	do_all (operation: PROCEDURE[ANY, TUPLE[PS_HANDLER, PS_OBJECT_DATA]])
+	do_all (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, PS_OBJECT_DATA]])
 			-- Apply `operation' on all items.
 			-- Ignore items when {PS_OBJECT_DATA}.handler is void or {PS_OBJECT_DATA}.is_ignored is True.
 		do
 			do_all_in_set (operation, 1 |..| count)
 		end
 
-	do_all_in_set (operation: PROCEDURE[ANY, TUPLE[PS_HANDLER, PS_OBJECT_DATA]]; set: INDEXABLE[INTEGER, INTEGER])
+	do_all_in_set (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, PS_OBJECT_DATA]]; set: INDEXABLE [INTEGER, INTEGER])
 			-- Apply `operation' on all items with an index in `set'.
 			-- Ignore items when {PS_OBJECT_DATA}.handler is void or {PS_OBJECT_DATA}.is_ignored is True.
 			-- Do nothing if `from_index' > `to_index'
@@ -208,23 +208,23 @@ feature {NONE} -- Utilities
 			loop
 				index := idx_cursor.item
 				if
-					item(index).is_handler_initialized
-					and not item(index).is_ignored
+					item (index).is_handler_initialized
+					and not item (index).is_ignored
 				then
-					operation.call ([item(index).handler, item(index)])
+					operation.call ([item (index).handler, item (index)])
 				end
 			end
 		end
 
 feature {NONE} -- Internal data structures
 
-	identity_type_handlers: ARRAYED_LIST[PS_HANDLER]
+	identity_type_handlers: ARRAYED_LIST [PS_HANDLER]
 			-- All identity type handlers.
 
-	value_type_handlers: ARRAYED_LIST[PS_HANDLER]
+	value_type_handlers: ARRAYED_LIST [PS_HANDLER]
 			-- All value type handlers.
 
-	object_storage: ARRAYED_LIST[PS_OBJECT_DATA]
+	object_storage: ARRAYED_LIST [PS_OBJECT_DATA]
 			-- An internal storage for objects.
 
 	internal_transaction: detachable like transaction

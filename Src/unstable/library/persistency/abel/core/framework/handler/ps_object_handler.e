@@ -36,7 +36,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			-- If the object is not yet persistent, create a new primary key in the backend.
 		do
 			if not object.is_persistent then
-				write_manager.object_primary_key_order[object.type] := write_manager.object_primary_key_order[object.type] + 1
+				write_manager.object_primary_key_order [object.type] := write_manager.object_primary_key_order [object.type] + 1
 			end
 		end
 
@@ -48,7 +48,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			if object.is_persistent then
 				create new_command.make (write_manager.primary_key_mapper.quick_translate (object.identifier, write_manager.transaction), object.type)
 			else
-				check attached write_manager.generated_object_primary_keys[object.type] as generated_list then
+				check attached write_manager.generated_object_primary_keys [object.type] as generated_list then
 					new_command := generated_list.item
 					generated_list.forth
 					write_manager.primary_key_mapper.add_entry (create {PS_OBJECT_IDENTIFIER_WRAPPER}.make (object.identifier, object.reflector.object, object.type), new_command.primary_key, write_manager.transaction)

@@ -15,7 +15,7 @@ create
 
 feature
 
-	attributes: LINKED_LIST[STRING]
+	attributes: LINKED_LIST [STRING]
 
 	visit_and (and_crit: PS_AND_CRITERION): INTEGER
 		do
@@ -30,12 +30,12 @@ feature
 		end
 	visit_not (not_crit: PS_NOT_CRITERION): INTEGER
 		do
-			Result:=visit(not_crit.child)
+			Result:=visit (not_crit.child)
 		end
 
 	visit_predefined (predef_crit: PS_PREDEFINED_CRITERION): INTEGER
 		do
-			attributes.extend(predef_crit.attribute_name)
+			attributes.extend (predef_crit.attribute_name)
 		end
 
 	visit_agent (agent_crit: PS_AGENT_CRITERION): INTEGER

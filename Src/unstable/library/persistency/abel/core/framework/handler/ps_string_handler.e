@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 			Result :=
 				type.type.type_id = ({detachable STRING_8}).type_id
 				or else type.type.type_id = ({detachable STRING_32}).type_id
-				or else attached {TYPE[detachable IMMUTABLE_STRING_GENERAL]} type.type
+				or else attached {TYPE [detachable IMMUTABLE_STRING_GENERAL]} type.type
 		end
 
 feature {PS_ABEL_EXPORT} -- String pair conversion
@@ -51,7 +51,7 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			end
 		end
 
-	as_string_pair (object: PS_OBJECT_DATA): TUPLE[value: STRING; type: IMMUTABLE_STRING_8]
+	as_string_pair (object: PS_OBJECT_DATA): TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			-- The `object' converted to a string pair.
 		local
 			conv: UTF_CONVERTER

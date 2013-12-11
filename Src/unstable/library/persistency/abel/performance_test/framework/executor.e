@@ -169,16 +169,16 @@ feature -- Insertion tests
 			emitter.start ("insert_shared")
 			from
 				i := 1
+				transaction := controller.repository.new_transaction
 			until
 				i > controller.object_count
 			loop
-				transaction := controller.repository.new_transaction
 				transaction.insert (generated_objects[i])
-				transaction.commit
 				i := i + 1
 			variant
 				controller.object_count - i + 1
 			end
+			transaction.commit
 
 			emitter.stop
 		end

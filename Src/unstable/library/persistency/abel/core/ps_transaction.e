@@ -71,7 +71,6 @@ feature {NONE} -- Initialization
 			create internal_active_queries.make
 			create root_declaration_strategy.make_argument_of_insert
 			create transaction.make (repository)
---			repository.id_manager.register_transaction (attach (transaction))
 		ensure
 			default_strategy: root_declaration_strategy.is_argument_of_insert
 			active: is_active
@@ -319,10 +318,8 @@ feature -- Transaction operations
 		require
 			not_active: not is_active
 		do
-			-- create {PS_NO_ERROR} last_error
 			last_error := Void
 			create transaction.make (repository)
---			repository.id_manager.register_transaction (attach (transaction))
 		ensure
 			active: is_active
 			no_error: not has_error

@@ -251,7 +251,6 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			is_executed := True
 			is_after := False
 			transaction_impl := a_transaction
-			--read_manager := a_read_manager
 			internal_cursor := cursor
 		ensure
 			executed: is_executed = True

@@ -67,7 +67,7 @@ feature -- Utilities
 		do
 			create reflection
 			type := generic_type.type_id
-			string_type := ({READABLE_STRING_GENERAL}).type_id
+			string_type := ({detachable READABLE_STRING_GENERAL}).type_id
 
 			create Result.make (10)
 			Result.compare_objects

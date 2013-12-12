@@ -85,7 +85,7 @@ feature -- Preconditions
 			if attached {TUPLE [STRING, STRING, ANY]} tuple and then (attached {STRING} tuple [2] as operator and attached tuple [3] as value) then
 				Result := is_valid_combination (operator, value)
 			else
-				Result := false
+				Result := False
 			end
 		end
 

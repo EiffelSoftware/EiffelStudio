@@ -92,16 +92,18 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			reflector: INTERNAL
 			i: INTEGER
 		do
-			check attached internal_cursor as my_cursor then
+				-- This check is safe because of a combination of the invariant
+				-- and the precondition in ABSTRACT_QUERY.
+			check attached_cursor_and_executed: attached internal_cursor as my_cursor then
 				my_cursor.forth
 
 				if my_cursor.after then
 					is_after := True
 				else
-
 					create reflector
 
-					check attached {TUPLE} reflector.new_instance_of (tuple_type) as new_tuple then
+						-- Safe because of the postcondition of `generate_tuple_type'.
+					check valid_tuple_type: attached {TUPLE} reflector.new_instance_of (tuple_type) as new_tuple then
 
 						across
 							projection as attr_cursor
@@ -187,6 +189,8 @@ feature {NONE} -- Initialization
 
 			tuple_string := tuple_string + "]"
 			tuple_type := reflection.dynamic_type_from_string (tuple_string)
+		ensure
+			valid_tuple_type: tuple_type > 0 and then attached {TUPLE} (create {REFLECTOR}).new_instance_of (tuple_type)
 		end
 
 

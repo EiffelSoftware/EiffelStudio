@@ -1325,7 +1325,7 @@ feature -- Access
 			end
 		end
 
-	new_elseif_expression_as (c: detachable EXPR_AS; e: EXPR_AS; l_as, t_as: detachable KEYWORD_AS): detachable ELSIF_EXPRESSION_AS
+	new_elseif_expression_as (c: detachable EXPR_AS; e: detachable EXPR_AS; l_as, t_as: detachable KEYWORD_AS): detachable ELSIF_EXPRESSION_AS
 			-- New ELSIF_EXPRESSION AST node with condition `c', value `e', "elseif" keyword `l_as' and "then" keyword `t_as'.
 		do
 			if attached c and attached e then
@@ -1531,7 +1531,7 @@ feature -- Access
 			end
 		end
 
-	new_instr_call_as (c: CALL_AS): detachable INSTR_CALL_AS
+	new_instr_call_as (c: detachable CALL_AS): detachable INSTR_CALL_AS
 			-- New INSTR_CALL AST node
 		do
 			if c /= Void then

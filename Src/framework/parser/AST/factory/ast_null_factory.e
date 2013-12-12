@@ -836,7 +836,7 @@ feature -- Access
 		do
 		end
 
-	new_instr_call_as (c: CALL_AS): detachable INSTR_CALL_AS
+	new_instr_call_as (c: detachable CALL_AS): detachable INSTR_CALL_AS
 			-- New INSTR_CALL AST node
 		do
 		end

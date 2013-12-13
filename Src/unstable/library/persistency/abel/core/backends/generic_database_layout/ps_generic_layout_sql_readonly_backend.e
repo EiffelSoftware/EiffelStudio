@@ -116,8 +116,11 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 				if attached actual_result [primary_key] as obj then
 					current_object := obj
 				else
-					create current_object.make (primary_key, attach (key_type_lookup [primary_key]))
-					actual_result.extend (current_object, primary_key)
+						-- The check is safe because we did only query for objects where we also have a type.
+					check type_present: attached key_type_lookup [primary_key] as type then
+						create current_object.make (primary_key, type)
+						actual_result.extend (current_object, primary_key)
+					end
 				end
 
 				if not attribute_name.is_equal (SQL_Strings.Existence_attribute) then
@@ -279,8 +282,11 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				if attached actual_result [primary_key] as obj then
 					current_object := obj
 				else
-					create current_object.make (primary_key, attach (key_type_lookup [primary_key]))
-					actual_result.extend (current_object, primary_key)
+						-- The check is safe because we did only query for objects where we also have a type.
+					check type_present: attached key_type_lookup [primary_key] as type then
+						create current_object.make (primary_key, type)
+						actual_result.extend (current_object, primary_key)
+					end
 				end
 
 				if position > 0 then
@@ -303,7 +309,10 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				info_key := row_cursor.item.at ("info_key")
 				info_value := row_cursor.item.at ("info")
 
-				attach (actual_result [primary_key]).add_information (info_key, info_value)
+				if attached actual_result [primary_key] as partial then
+					partial.add_information (info_key, info_value)
+				end
+--				attach (actual_result [primary_key]).add_information (info_key, info_value)
 				row_cursor.forth
 			end
 
@@ -365,27 +374,28 @@ feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 			-- Acquire a new connection if the transaction is new.
 		local
 			new_connection: PS_PAIR [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]
-			the_actual_result_as_detachable_because_of_stupid_void_safety_rule: detachable PS_SQL_CONNECTION
+			found: detachable PS_SQL_CONNECTION
 		do
 			if transaction.is_readonly then
 				fixme ("remove this hack")
 				Result := management_connection
 			else
+				fixme ("A hash table would be nice.")
 				across
 					active_connections as cursor
 				loop
-					if cursor.item.second.is_equal (transaction) then
-						the_actual_result_as_detachable_because_of_stupid_void_safety_rule := cursor.item.first
-							--					print ("found existing%N")
+					if cursor.item.second ~ transaction then
+						found := cursor.item.first
 					end
 				end
-				if not attached the_actual_result_as_detachable_because_of_stupid_void_safety_rule then
-					the_actual_result_as_detachable_because_of_stupid_void_safety_rule := database.acquire_connection
-					create new_connection.make (the_actual_result_as_detachable_because_of_stupid_void_safety_rule, transaction)
+
+				if attached found then
+					Result := found
+				else
+					Result := database.acquire_connection
+					create new_connection.make (Result, transaction)
 					active_connections.extend (new_connection)
-						--					print ("created new%N")
 				end
-				Result := attach (the_actual_result_as_detachable_because_of_stupid_void_safety_rule)
 			end
 		end
 

@@ -60,8 +60,8 @@ feature
 				all
 					across res as retrieved_person
 					some
-						attach (retrieved_person.item[1]).is_equal (person.item.first_name)
-						and attach (retrieved_person.item[2]).is_equal (person.item.last_name)
+						retrieved_person.item[1] ~ person.item.first_name
+						and retrieved_person.item[2] ~ person.item.last_name
 						and person.item.items_owned = retrieved_person.item.integer_item (3)
 					end
 				end
@@ -95,8 +95,8 @@ feature
 			check attached {TUPLE[STRING, STRING, INTEGER]} query.stable_cursor.item as res then
 
 				assert ("Data is wrong",
-					attach (res[1]).is_equal (test_data.people.first.first_name)
-					and attach (res[2]).is_equal (test_data.people.first.last_name)
+					res[1] ~ test_data.people.first.first_name
+					and res[2] ~ test_data.people.first.last_name
 					and res.integer_item (3) = test_data.people.first.items_owned
 					)
 			end
@@ -134,7 +134,7 @@ feature
 						and not attached {TUPLE[STRING, STRING]} query.stable_cursor.item)
 
 			check attached {TUPLE[STRING]} query.stable_cursor.item as res then
-				assert ("Data is wrong", attach (res[1]).is_equal (test_data.people.first.last_name))
+				assert ("Data is wrong", res[1] ~ test_data.people.first.last_name)
 			end
 
 			query.stable_cursor.forth
@@ -167,7 +167,7 @@ feature
 						and not attached {TUPLE[STRING, STRING]} query.stable_cursor.item)
 
 			check attached {TUPLE[STRING]} query.stable_cursor.item as res then
-				assert ("Data is wrong", attach (res[1]).is_equal (test_data.people.first.first_name))
+				assert ("Data is wrong", res[1] ~ test_data.people.first.first_name)
 			end
 
 			query.stable_cursor.forth

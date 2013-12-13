@@ -33,7 +33,9 @@ feature {PS_ABEL_EXPORT} -- Access
 			description_not_empty: not description.is_empty
 			information_present: has_information (description)
 		do
-			Result := attach (additional_information_hash [description])
+			check from_precondition: attached additional_information_hash [description] as res then
+				Result := res
+			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Status report

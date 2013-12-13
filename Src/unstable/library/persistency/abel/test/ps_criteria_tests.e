@@ -24,7 +24,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 		do
 
 			repository.clean_db_for_testing
-			internal_transaction := repository.new_transaction
+			transaction := repository.new_transaction
 			insert_data
 
 			test_query_no_result
@@ -43,7 +43,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 	test_criteria_predefined
 			-- All tests with predefined criteria
 		do
-			internal_transaction := repository.new_transaction
+			transaction := repository.new_transaction
 			insert_data
 
 			test_query_one_result_greater_than
@@ -62,7 +62,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 	test_criteria_agents_and_predefined
 			-- all tests with predefined and agent criteria combined
 		do
-			internal_transaction := repository.new_transaction
+			transaction := repository.new_transaction
 			insert_data
 
 			test_query_many_results_three_mixed_criteria
@@ -390,19 +390,17 @@ feature {NONE} -- Initialization
 	p_dao: PERSON_DAO
 
 	factory: PS_CRITERION_FACTORY
-
-	internal_transaction: detachable PS_TRANSACTION
+	
+	transaction: PS_TRANSACTION
 
 	initialize
 		do
 			create p_dao
 			create factory
+			transaction := repository.new_transaction
+			transaction.rollback
 		end
 
-	transaction: PS_TRANSACTION
-		do
-			Result := attach (internal_transaction)
-		end
 
 	insert_data
 			-- Insert the data needed for the tests into the repository

@@ -29,7 +29,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 		ensure
 			same_count: order.count = Result.count
 			same_keys: across order as cursor all Result.has (cursor.key) end
-			correct_amount_of_objects: across order as cursor all attach (Result [cursor.key]).count = cursor.item end
+			correct_amount_of_objects: across order as cursor all attached Result[cursor.key] as inner and then inner.count = cursor.item end
 			type_correct: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_OBJECT}.has_type (cursor.key)) end
 			empty_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_OBJECT}.is_empty) end
 			new_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_OBJECT}.is_new) end
@@ -48,7 +48,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 		ensure
 			same_count: order.count = Result.count
 			same_keys: across order as cursor all Result.has (cursor.key) end
-			correct_amount_of_objects: across order as cursor all attach (Result [cursor.key]).count = cursor.item end
+			correct_amount_of_objects: across order as cursor all attached Result[cursor.key] as inner and then inner.count = cursor.item end
 			type_correct: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_COLLECTION}.has_type (cursor.key)) end
 			empty_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_COLLECTION}.is_empty) end
 			new_objects: across Result as cursor all cursor.item.for_all (agent {PS_BACKEND_COLLECTION}.is_new) end

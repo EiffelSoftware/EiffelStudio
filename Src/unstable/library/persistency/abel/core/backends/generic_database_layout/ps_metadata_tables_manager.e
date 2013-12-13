@@ -32,7 +32,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 		require
 			class_key_exists: is_valid_class_key (class_key)
 		do
-			Result := attach (attribute_name_to_key_map [class_key]).has (attribute_name)
+			Result := attached attribute_name_to_key_map [class_key] as inner and then inner.has (attribute_name)
 		end
 
 	is_valid_class_key (class_key: INTEGER): BOOLEAN
@@ -54,7 +54,9 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 		require
 			class_key_exists: is_valid_class_key (class_key)
 		do
-			Result := attach (class_key_to_name_map [class_key])
+			check from_precondition: attached class_key_to_name_map [class_key] as res then
+				Result := res
+			end
 		end
 
 	primary_key_of_class (class_name: STRING): INTEGER
@@ -87,7 +89,9 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 		require
 			attribute_key_exists: is_valid_attribute_key (attribute_key)
 		do
-			Result := attach (attribute_key_to_name_map [attribute_key])
+			check from_precondition: attached attribute_key_to_name_map [attribute_key] as res then
+				Result := res
+			end
 		end
 
 	primary_key_of_attribute (attribute_name: STRING; class_key: INTEGER): INTEGER
@@ -96,7 +100,9 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 			class_key_exists: is_valid_class_key (class_key)
 			attribute_present_in_database: has_primary_key_of_attribute (attribute_name, class_key)
 		do
-			Result := attach (attribute_name_to_key_map [class_key]).item (attribute_name)
+			check from_precondition: attached attribute_name_to_key_map [class_key] as inner then
+				Result := inner.item (attribute_name)
+			end
 		end
 
 	attribute_keys_of_class (class_key: INTEGER): LINKED_LIST [INTEGER]
@@ -104,11 +110,14 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 		require
 			class_key_exists: is_valid_class_key (class_key)
 		do
-			create Result.make
-			across
-				attach (attribute_name_to_key_map [class_key]) as keys
-			loop
-				Result.extend (keys.item)
+			check from_precondition: attached attribute_name_to_key_map [class_key] as inner then
+				across
+					inner as cursor
+				from
+					create Result.make
+				loop
+					Result.extend (cursor.item)
+				end
 			end
 		end
 
@@ -200,9 +209,13 @@ feature {NONE} -- Implementation - Local copy
 
 	add_attribute_key (attribute_name: STRING; attribute_key: INTEGER; class_key: INTEGER)
 			-- Add a new mapping for `attribute_name' and its primary key `attribute_key' in class `class_key'
+		require
+			class_present: attribute_name_to_key_map.has (class_key)
 		do
-			attach (attribute_name_to_key_map [class_key]).extend (attribute_key, attribute_name)
-			attribute_key_to_name_map.extend (attribute_name, attribute_key)
+			check from_precondition: attached attribute_name_to_key_map [class_key] as inner_hash then
+				inner_hash.extend (attribute_key, attribute_name)
+				attribute_key_to_name_map.extend (attribute_name, attribute_key)
+			end
 		end
 
 	management_connection: PS_SQL_CONNECTION

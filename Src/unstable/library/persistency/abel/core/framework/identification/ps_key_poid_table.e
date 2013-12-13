@@ -27,20 +27,20 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	primary_key_of (obj: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_INTERNAL_TRANSACTION): PS_PAIR [INTEGER, PS_TYPE_METADATA]
-			-- Returns the primary key of object `obj' as stored in the backend.
-		do
-			Result := attach (obj_to_key_hash [obj.object_identifier])
-			fixme ("first check transaction-local set, then global one")
-		ensure
-			same_type: obj.metadata.is_equal (Result.second)
-		end
+--	primary_key_of (obj: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_INTERNAL_TRANSACTION): PS_PAIR [INTEGER, PS_TYPE_METADATA]
+--			-- Returns the primary key of object `obj' as stored in the backend.
+--		do
+--			Result := attach (obj_to_key_hash [obj.object_identifier])
+--			fixme ("first check transaction-local set, then global one")
+--		ensure
+--			same_type: obj.metadata.is_equal (Result.second)
+--		end
 
 	quick_translate (a_poid: INTEGER; transaction: PS_INTERNAL_TRANSACTION): INTEGER
 			-- Returns the primary key of a_poid, or 0 if a_poid doesn't have a primary key.
 		do
-			if obj_to_key_hash.has (a_poid) then
-				Result := attach (obj_to_key_hash [a_poid]).first
+			if attached obj_to_key_hash [a_poid] as pair then
+				Result := pair.first
 			end
 			fixme ("first check transaction-local set, then global one")
 		end

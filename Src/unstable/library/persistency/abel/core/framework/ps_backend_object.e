@@ -33,7 +33,9 @@ feature {PS_ABEL_EXPORT} -- Access
 		require
 			attribute_present: has_attribute (attribute_name) and then has_value_for_attribute (attribute_name)
 		do
-			Result := attach (values [attribute_name])
+			check from_precondition: attached values [attribute_name] as res then
+				Result := res
+			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Status report

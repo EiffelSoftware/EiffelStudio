@@ -251,7 +251,7 @@ feature {TYPE_A} -- Visitor
 			if not g.has (t) then
 				g.extend (t)
 				across
-					context_class.constraints (t.position) as c
+					context_class.constraints (t.position).constraining_types (context_class) as c
 				loop
 					find_in_renamed_type_a.call ([c.item])
 					if attached found_feature as f then

@@ -29,6 +29,8 @@ inherit
 			make
 		end
 
+	PS_TYPE_TABLE
+
 create
 	make, make_with_criterion
 
@@ -78,7 +80,7 @@ feature -- Utilities
 
 				field_type := reflection.field_static_type_of_type (idx.item, type)
 
-				if basic_types.has (field_type) or else reflection.type_conforms_to (field_type, string_type) then
+				if basic_expanded_types.has (field_type) or else reflection.type_conforms_to (field_type, string_type) then
 					Result.extend (reflection.field_name_of_type (idx.item, type))
 				end
 			end

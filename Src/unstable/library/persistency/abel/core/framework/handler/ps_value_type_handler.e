@@ -33,7 +33,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			type: PS_TYPE_METADATA
 			reflector: REFLECTED_REFERENCE_OBJECT
 		do
-			pair := object.backend_object.attribute_value (value_type_item)
+			pair := object.backend_object.attribute_value ({PS_BACKEND_OBJECT}.value_type_item)
 			type := type_from_string (pair.type)
 			if attached build_from_string (pair.value, type) as obj then
 				create reflector.make (obj)
@@ -81,7 +81,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			pair: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 		do
 			pair := as_string_pair (object)
-			object.backend_object.add_attribute (value_type_item, pair.value, pair.type)
+			object.backend_object.add_attribute ({PS_BACKEND_OBJECT}.value_type_item, pair.value, pair.type)
 		end
 
 feature {PS_ABEL_EXPORT} -- String pair conversion

@@ -272,7 +272,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 					item_type := item.generating_type
 
 						-- Basic types
-					if basic_types.has (item_type.type_id) then
+					if basic_expanded_types.has (item_type.type_id) then
 						collection.collection_items.extend ([ basic_attribute_value (item), item_type.name])
 						-- Reference and expanded
 					else

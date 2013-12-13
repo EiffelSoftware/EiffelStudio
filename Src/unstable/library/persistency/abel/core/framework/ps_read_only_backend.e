@@ -80,7 +80,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			-- the attribute value during retrieval will be an empty string and its class name `NONE'.
 		require
 			supported: is_object_type_supported (type)
-			attributes_exist: across attributes as attr all attr.item = value_type_item  or else type.attributes.has (attr.item) end
+			attributes_exist: across attributes as attr all attr.item = {PS_BACKEND_OBJECT}.value_type_item or else type.attributes.has (attr.item) end
 			transaction_active: transaction.is_active
 		local
 			real_cursor: ITERATION_CURSOR [PS_BACKEND_OBJECT]

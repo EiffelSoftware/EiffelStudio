@@ -41,7 +41,7 @@ feature
 --				Result := connection_stack.item
 --				connection_stack.remove
 --				check attached {PS_MYSQL_CONNECTION} Result as conn then
---					Result.set_autocommit(false)
+--					Result.set_autocommit (false)
 --					internal_set_transaction_level (conn.internal_connection)
 --				end
 --			end
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Connection details
 
-	connection_stack: LINKED_STACK[PS_SQL_CONNECTION]
+	connection_stack: LINKED_STACK [PS_SQL_CONNECTION]
 
 	database_user: STRING
 

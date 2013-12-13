@@ -56,9 +56,9 @@ feature -- Basic operations
 			-- Returns the function to convert the version `from_v' to the version `to_v'.
 		require
 			from_and_to_different: from_v /= to_v
-			conversion_function_available: conversion_function_available(to_v, from_v)
+			conversion_function_available: conversion_function_available (to_v, from_v)
 		local
-			tmp: ARRAYED_LIST[HASH_TABLE[TUPLE[LIST[STRING],FUNCTION[ANY,TUPLE[LIST[ANY]],ANY]],STRING]]
+			tmp: ARRAYED_LIST [HASH_TABLE [TUPLE [LIST [STRING],FUNCTION [ANY,TUPLE [LIST [ANY]],ANY]],STRING]]
 		do
 			tmp := versions.i_th (to_v)
 			Result := tmp.i_th (from_v)

@@ -34,7 +34,7 @@ feature -- Creating a criterion
 
 	new_uniform alias "[]" (tuple: TUPLE [ANY]): PS_CRITERION
 			-- Creates an agent, a predefined criterion or a combination of both
-			-- using an uniform notation. `tuple' containes either a single agent PREDICATE
+			-- using an uniform notation. `tuple' contains either a single agent PREDICATE
 			-- or three values of type [STRING, STRING, ANY], where the tuple values correspond
 			-- to the arguments of the `new_predefined' routine.
 			-- Using this notation criteria can be combined as shown in the example in the class header.

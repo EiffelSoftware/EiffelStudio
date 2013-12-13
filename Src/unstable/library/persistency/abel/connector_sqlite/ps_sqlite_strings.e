@@ -35,7 +35,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 				
 								CREATE TABLE ps_class (
 									classid INTEGER PRIMARY KEY AUTOINCREMENT,
-									classname VARCHAR(64)
+									classname VARCHAR (64)
 								)
 			]"
 		end
@@ -45,7 +45,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 			Result := "[
 								CREATE TABLE ps_attribute (
 									attributeid INTEGER PRIMARY KEY AUTOINCREMENT,
-									name VARCHAR(128),
+									name VARCHAR (128),
 									class INTEGER,
 				
 									FOREIGN KEY (class) REFERENCES ps_class (classid) ON DELETE CASCADE
@@ -61,7 +61,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 					collectiontype INTEGER,
 					position INTEGER,
 					runtimetype INTEGER,
-					value VARCHAR(128),
+					value VARCHAR (128),
 
 					PRIMARY KEY (collectionid ASC, position),
 					FOREIGN KEY (collectiontype) REFERENCES ps_class (classid) ON DELETE CASCADE,
@@ -75,8 +75,8 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 			Result := "[
 					CREATE TABLE ps_collection_info (
 					collectionid INTEGER NOT NULL,
-					info_key VARCHAR(128) NOT NULL,
-					info VARCHAR(128),
+					info_key VARCHAR (128) NOT NULL,
+					info VARCHAR (128),
 
 					PRIMARY KEY (collectionid, info_key),
 					FOREIGN KEY (collectionid) REFERENCES ps_collection (collectionid) ON DELETE CASCADE
@@ -116,16 +116,16 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 
 	Insert_value_use_autoincrement (attribute_id, runtimetype: INTEGER; value: STRING): STRING
 		do
-			Result := "INSERT INTO ps_value (objectid, attributeid, runtimetype, value) VALUES ( (SELECT CASE WHEN MAX(objectid) IS NULL THEN 1 ELSE (MAX(objectid) + 1) END FROM ps_value) ," + attribute_id.out + ", " + runtimetype.out + ", '" + value + "')"
+			Result := "INSERT INTO ps_value (objectid, attributeid, runtimetype, value) VALUES ( (SELECT CASE WHEN MAX (objectid) IS NULL THEN 1 ELSE (MAX (objectid) + 1) END FROM ps_value) ," + attribute_id.out + ", " + runtimetype.out + ", '" + value + "')"
 		end
 
 	Insert_new_collection (none_key: INTEGER): STRING
 		do
-			Result := "INSERT INTO ps_collection (collectionid, collectiontype, position, runtimetype, value) VALUES ( (SELECT CASE WHEN MAX(collectionid) IS NULL THEN 1 ELSE (MAX(collectionid) + 1) END FROM ps_collection),"
+			Result := "INSERT INTO ps_collection (collectionid, collectiontype, position, runtimetype, value) VALUES ( (SELECT CASE WHEN MAX (collectionid) IS NULL THEN 1 ELSE (MAX (collectionid) + 1) END FROM ps_collection),"
 				+ none_key.out + ", -1, " + none_key.out + ", '')"
 		end
 
-	Assemble_multi_replace (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace (tuples: LIST [STRING]): STRING
 		do
 			across
 				tuples as cursor
@@ -136,7 +136,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			end
 		end
 
-	Assemble_multi_replace_collection (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace_collection (tuples: LIST [STRING]): STRING
 		do
 			across
 				tuples as cursor
@@ -147,7 +147,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			end
 		end
 
-	Assemble_multi_replace_collection_info (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace_collection_info (tuples: LIST [STRING]): STRING
 		do
 			across
 				tuples as cursor
@@ -162,8 +162,8 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
 
 	For_update_appendix: STRING = ""
 
-	Query_last_object_autoincrement: STRING = "SELECT objectid FROM ps_value WHERE rowid = last_insert_rowid()"
+	Query_last_object_autoincrement: STRING = "SELECT objectid FROM ps_value WHERE rowid = last_insert_rowid ()"
 
-	Query_last_collection_autoincrement: STRING = "SELECT collectionid FROM ps_collection WHERE rowid = last_insert_rowid()"
+	Query_last_collection_autoincrement: STRING = "SELECT collectionid FROM ps_collection WHERE rowid = last_insert_rowid ()"
 
 end

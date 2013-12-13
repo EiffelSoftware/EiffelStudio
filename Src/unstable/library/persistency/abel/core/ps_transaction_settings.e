@@ -1,6 +1,6 @@
 note
 	description: "[
-		Describes the current transaction isolation settings.
+		The current transaction isolation settings.
 		
 		ABEL doesn't let you set a transaction level yourself.
 		This is because the only official standard for transaction
@@ -102,7 +102,7 @@ feature -- Status report
 feature {PS_ABEL_EXPORT} -- Element change
 
 	set_is_dirty_read_allowed (value: BOOLEAN)
-			-- Set `is_dirty_read_allowed' to `value'
+			-- Set `is_dirty_read_allowed' to `value'.
 		do
 			is_dirty_read_allowed := value
 		ensure
@@ -111,7 +111,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 
 
 	set_is_lost_update_allowed (value: BOOLEAN)
-			-- Set `is_lost_update_allowed' to `value'
+			-- Set `is_lost_update_allowed' to `value'.
 		do
 			is_lost_update_allowed := value
 		ensure
@@ -120,7 +120,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 
 
 	set_is_fuzzy_read_allowed (value: BOOLEAN)
-			-- Set `is_fuzzy_read_allowed' to `value'
+			-- Set `is_fuzzy_read_allowed' to `value'.
 		do
 			is_fuzzy_read_allowed := value
 		ensure
@@ -128,7 +128,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 		end
 
 	set_is_phantom_allowed (value: BOOLEAN)
-			-- Set `is_phantom_allowed' to `value'
+			-- Set `is_phantom_allowed' to `value'.
 		do
 			is_phantom_allowed := value
 		ensure
@@ -136,7 +136,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 		end
 
 	set_is_read_skew_allowed (value: BOOLEAN)
-			-- Set `is_read_skew_allowed' to `value'
+			-- Set `is_read_skew_allowed' to `value'.
 		do
 			is_read_skew_allowed := value
 		ensure
@@ -144,7 +144,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 		end
 
 	set_is_write_skew_allowed (value: BOOLEAN)
-			-- Set `is_write_skew_allowed' to `value'
+			-- Set `is_write_skew_allowed' to `value'.
 		do
 			is_write_skew_allowed := value
 		ensure

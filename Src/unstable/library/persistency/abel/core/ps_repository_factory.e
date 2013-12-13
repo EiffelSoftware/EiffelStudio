@@ -17,10 +17,10 @@ feature {NONE} -- Initialization
 		do
 			make_uninitialized
 
-			internal_handler.extend (create {PS_STRING_HANDLER})
-			internal_handler.extend (create {PS_TUPLE_HANDLER})
-			internal_handler.extend (create {PS_SPECIAL_HANDLER})
-			internal_handler.extend (create {PS_DEFAULT_OBJECT_HANDLER})
+			internal_handlers.extend (create {PS_STRING_HANDLER})
+			internal_handlers.extend (create {PS_TUPLE_HANDLER})
+			internal_handlers.extend (create {PS_SPECIAL_HANDLER})
+			internal_handlers.extend (create {PS_DEFAULT_OBJECT_HANDLER})
 
 			internal_plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 		end
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Note that a repository created by this factory, when no further handlers
 			-- are added, will not be able to process any kind of object.
 		do
-			create internal_handler.make
+			create internal_handlers.make
 			create internal_plugins.make
 			create id_manager.make
 			create key_mapper.make
@@ -39,14 +39,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	handler: CONTAINER [PS_HANDLER]
-			-- The handler for different object types.
+	handlers: CONTAINER [PS_HANDLER]
+			-- The handlers for different object types.
 		do
-			Result := internal_handler
+			Result := internal_handlers
 		end
 
 	plugins: CONTAINER [PS_PLUGIN]
-			-- The defined plugins
+			-- The plugins to the repository.
 		do
 			Result := internal_plugins
 		end
@@ -67,19 +67,23 @@ feature -- Element change
 			-- Add `a_handler' to the handlers.
 			-- The new handler has precedence over any previously added handlers.
 		do
-			internal_handler.put_front (a_handler)
+			internal_handlers.put_front (a_handler)
+		ensure
+			handler_added: handlers.has (a_handler)
 		end
 
 	add_plugin (a_plugin: PS_PLUGIN)
 			-- Add `a_plugin' to the plugin list.
 		do
 			internal_plugins.put_front (a_plugin)
+		ensure
+			plugin_added: plugins.has (a_plugin)
 		end
 
 feature -- Element change: Anomaly Settings
 
 	set_is_dirty_read_allowed (value: BOOLEAN)
-			-- Set `anomaly_settings.is_dirty_read_allowed' to `value'
+			-- Set `anomaly_settings.is_dirty_read_allowed' to `value'.
 		do
 			anomaly_settings.set_is_dirty_read_allowed (value)
 		ensure
@@ -88,7 +92,7 @@ feature -- Element change: Anomaly Settings
 
 
 	set_is_lost_update_allowed (value: BOOLEAN)
-			-- Set `anomaly_settings.is_lost_update_allowed' to `value'
+			-- Set `anomaly_settings.is_lost_update_allowed' to `value'.
 		do
 			anomaly_settings.set_is_lost_update_allowed (value)
 		ensure
@@ -97,7 +101,7 @@ feature -- Element change: Anomaly Settings
 
 
 	set_is_fuzzy_read_allowed (value: BOOLEAN)
-			-- Set `anomaly_settings.is_fuzzy_read_allowed' to `value'
+			-- Set `anomaly_settings.is_fuzzy_read_allowed' to `value'.
 		do
 			anomaly_settings.set_is_fuzzy_read_allowed (value)
 		ensure
@@ -105,7 +109,7 @@ feature -- Element change: Anomaly Settings
 		end
 
 	set_is_phantom_allowed (value: BOOLEAN)
-			-- Set `anomaly_settings.is_phantom_allowed' to `value'
+			-- Set `anomaly_settings.is_phantom_allowed' to `value'.
 		do
 			anomaly_settings.set_is_phantom_allowed (value)
 		ensure
@@ -113,7 +117,7 @@ feature -- Element change: Anomaly Settings
 		end
 
 	set_is_read_skew_allowed (value: BOOLEAN)
-			-- Set `anomaly_settings.is_read_skew_allowed' to `value'
+			-- Set `anomaly_settings.is_read_skew_allowed' to `value'.
 		do
 			anomaly_settings.set_is_read_skew_allowed (value)
 		ensure
@@ -121,7 +125,7 @@ feature -- Element change: Anomaly Settings
 		end
 
 	set_is_write_skew_allowed (value: BOOLEAN)
-			-- Set `anomaly_settings.is_write_skew_allowed' to `value'
+			-- Set `anomaly_settings.is_write_skew_allowed' to `value'.
 		do
 			anomaly_settings.set_is_write_skew_allowed (value)
 		ensure
@@ -144,15 +148,15 @@ feature -- Factory function
 
 			create write_manager.make (id_manager.metadata_manager, id_manager, key_mapper, backend)
 
-			internal_handler.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
-			internal_handler.do_all (agent write_manager.add_handler)
+			internal_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
+			internal_handlers.do_all (agent write_manager.add_handler)
 
 			create {PS_DEFAULT_REPOSITORY} Result.make_from_factory (
 				backend,
 				id_manager,
 				key_mapper,
 				write_manager,
-				internal_handler,
+				internal_handlers,
 				anomaly_settings.twin)
 		end
 
@@ -167,11 +171,15 @@ feature {NONE} -- Implementation
 
 
 	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
+			-- The object identifier manager for the new repository.
 
 	key_mapper: PS_KEY_POID_TABLE
+			-- The identifier -> primary_key table for the new repository.
 
-	internal_handler: LINKED_LIST [PS_HANDLER]
+	internal_handlers: LINKED_LIST [PS_HANDLER]
+			-- Mutable container for `handlers'.
 
 	internal_plugins: LINKED_LIST [PS_PLUGIN]
+			-- Mutable container for `plugins'.
 
 end

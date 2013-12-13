@@ -7,12 +7,12 @@ deferred class
 	VERSIONED_CLASS
 
 feature
-	version: INTEGER
-		-- The class version.
-	deferred
 
-	ensure
-		version_is_positive: Result > 0
-	end
+	version: INTEGER
+			-- The class version.
+		deferred
+		ensure
+			version_is_positive: Result > 0
+		end
 
 end

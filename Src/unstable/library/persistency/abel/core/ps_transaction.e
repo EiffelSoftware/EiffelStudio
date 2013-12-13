@@ -1,6 +1,6 @@
 note
 	description: "[
-		Represents a transaction context for read and write operations.
+		Transaction context for read and write operations.
 
 		Insert and update operation always treat the whole object
 		graph, meaning the object given as an argument and all
@@ -64,7 +64,7 @@ create {PS_REPOSITORY}
 feature {NONE} -- Initialization
 
 	make (a_repository: like repository)
-			-- Initialization for `Current'
+			-- Initialization for `Current'.
 		do
 			repository := a_repository
 			last_error := Void
@@ -140,7 +140,7 @@ feature -- Status report
 feature -- Element change
 
 	set_root_declaration_strategy (a_strategy: like root_declaration_strategy)
-			-- Set the new root declaration strategy
+			-- Set the new root declaration strategy.
 		do
 			fixme ("Implement this setting in the backend")
 			-- root_declaration_strategy := a_strategy
@@ -192,11 +192,25 @@ feature -- Data modification
 			in_transaction: is_active
 			no_error: not has_error
 			supported: is_supported (object)
-			not_persistent: not is_persistent (object)
+		local
+			saved: detachable PS_ROOT_OBJECT_STRATEGY
 		do
+			fixme ("The commented code is more efficient. Switch the code as soon as set_root_declaration_strategy gets implemented.")
+			if root_declaration_strategy.is_argument_of_insert and then is_persistent (object) then
+--				saved := root_declaration_strategy
+--				set_root_declaration_strategy (saved.new_argument_of_write)
+				mark_root (object)
+			end
+
 			repository.write (object, attach (transaction))
+
+--			if attached saved then
+--				set_root_declaration_strategy (saved)
+--			end
+
 		ensure
 			in_transaction: is_active
+			root_declaration_unchanged: root_declaration_strategy = old root_declaration_strategy
 			persistent: is_persistent (object) xor object.generating_type.is_expanded
 			root_set: object.generating_type.is_expanded xor
 				(root_declaration_strategy > root_declaration_strategy.new_preserve implies is_root (object))

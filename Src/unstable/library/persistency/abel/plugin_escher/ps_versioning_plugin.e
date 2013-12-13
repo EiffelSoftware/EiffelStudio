@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (schema_evolution_handlers: HASH_TABLE[SCHEMA_EVOLUTION_HANDLER,STRING])
+	make (schema_evolution_handlers: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER,STRING])
 			-- Initialization for `Current'.
 		local
 			factory: PS_METADATA_FACTORY
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	integer_metadata: PS_TYPE_METADATA
 			-- Metadata for INTEGER
 
-	schema_evolution_handlers_table: HASH_TABLE[SCHEMA_EVOLUTION_HANDLER,STRING]
+	schema_evolution_handlers_table: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER,STRING]
 			-- Hashtable with class names as keys and respective schema evolution handlers as values
 
 feature
@@ -46,7 +46,7 @@ feature
 			reflection: INTERNAL
 		do
 			-- TODO: check if it's sufficient to only add the version attribute to new objects!
-			if object.is_new and object.metadata.type.is_conforming_to({detachable VERSIONED_CLASS}) then
+			if object.is_new and object.metadata.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
 				create reflection
 				check attached {VERSIONED_CLASS} reflection.new_instance_of (object.metadata.type.type_id) as versioned_object then
 					stored_version := versioned_object.version
@@ -125,16 +125,16 @@ feature
 --			end
 --		end
 
-	before_retrieve (args: TUPLE[type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
+	before_retrieve (args: TUPLE [type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
 			-- Add the version attribute, if necessary
 		local
-			attributes: LINKED_LIST[STRING]
+			attributes: LINKED_LIST [STRING]
 		do
 			if args.type.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
 				create attributes.make
 				args.attributes.do_all (agent attributes.extend)
 				attributes.extend ("version")
-				Result := [args.type, args.criteria, create {PS_IMMUTABLE_STRUCTURE[STRING]}.make (attributes)]
+				Result := [args.type, args.criteria, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (attributes)]
 			else
 				Result := args
 			end
@@ -153,7 +153,7 @@ feature
 			current_class_name, attr_name, attr_type_as_string: STRING
 			exception: EXCEPTIONS
 
-			test_var: TUPLE[STRING, IMMUTABLE_STRING_8]
+			test_var: TUPLE [STRING, IMMUTABLE_STRING_8]
 				-- Used for testing purposes
 		do
 			create reflection
@@ -238,8 +238,8 @@ feature
 					if stored_version /= current_version then
 						-- Save all attribute values in 'stored_obj_attr_values'
 						-- This values could be needed to calculate functions returned by the schema evolution handler
-						stored_obj_attr_values := get_attribute_values(stored_object)
-						clean_stored_obj(stored_object)
+						stored_obj_attr_values := get_attribute_values (stored_object)
+						clean_stored_obj (stored_object)
 						stored_object.remove_attribute ("version")
 						stored_object.add_attribute ("version", current_version.out, "INTEGER_32")
 						if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
@@ -259,7 +259,7 @@ feature
 									end
 								else
 									-- Attribute wasn't set by the schema evolution handler
-									if attached {TUPLE[STRING,STRING]} stored_obj_attr_values.item (attr_name) as tuple then
+									if attached {TUPLE [STRING,STRING]} stored_obj_attr_values.item (attr_name) as tuple then
 										if attached {STRING} tuple.item (1) as attr_value then
 											if attached {STRING} tuple.item (2) as attr_type then
 												stored_object.add_attribute (attr_name, attr_value, attr_type)
@@ -336,7 +336,7 @@ feature {NONE} -- Schema Evolution helper functions
 				-- If conversion function is available get it from the current schema evolution handler
 				if attached {HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]} current_schema_evolution_handler.create_schema_evolution_handler (current_version, stored_version) as tmp then
 					if attached {TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]]} tmp.item (attr_name) as tuple then
-						evaluate_function(current_class_instance, stored_obj_attr_values, type, index, tuple)
+						evaluate_function (current_class_instance, stored_obj_attr_values, type, index, tuple)
 						Result := true
 					end
 				end
@@ -350,26 +350,26 @@ feature {NONE} -- Schema Evolution helper functions
 			-- The attribute with index 'index' and type 'type' inside 'current_class_instance' needs to be set to the result of the function
 		local
 			reflection: INTERNAL
-			values: ARRAYED_LIST[ANY]
+			values: ARRAYED_LIST [ANY]
 		do
 			create reflection
 			-- Get the list of variables
-			if attached {LIST[STRING]} tuple.item (1) as vars then
+			if attached {LIST [STRING]} tuple.item (1) as vars then
 				-- Get the function
 				if attached {FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]} tuple.item (2) as function then
 					create values.make (vars.count)
 					-- Calculate for each variable the respective value
 					from vars.start until vars.after loop
-						if attached {TUPLE[STRING,STRING]} stored_obj_attr_values.item (vars.item) as current_attr_tuple then
+						if attached {TUPLE [STRING,STRING]} stored_obj_attr_values.item (vars.item) as current_attr_tuple then
 							if attached {STRING} current_attr_tuple.item (1) as current_value then
 								if attached {STRING} current_attr_tuple.item (2) as current_type then
-									values.force (convert_string(current_value,current_type))
+									values.force (convert_string (current_value,current_type))
 								end
 							end
 						end
 						vars.forth
 					end
-					set_attribute(index, type, current_class_instance, function.item ([values]))
+					set_attribute (index, type, current_class_instance, function.item ([values]))
 				end
 			end
 		end
@@ -404,10 +404,10 @@ feature {NONE} -- Schema Evolution helper functions
 				reflection.set_double_field (index, obj, value.to_double)
 			-------------------------CHAR-------------------------
 			elseif type = reflection.character_8_type and value.count = 1 then
-				reflection.set_character_8_field (index, obj, value.area[1])
+				reflection.set_character_8_field (index, obj, value.area [1])
 
 			elseif type = reflection.character_32_type and value.count = 1 then
-				reflection.set_character_32_field (index, obj, value.area[1])
+				reflection.set_character_32_field (index, obj, value.area [1])
 			-------------------------BOOLEAN-------------------------
 			elseif type = reflection.boolean_type and value.is_boolean then
 				reflection.set_boolean_field (index, obj, value.to_boolean)

@@ -113,7 +113,7 @@ feature {PS_ABEL_EXPORT} -- Database results
 	last_result: ITERATION_CURSOR [PS_SQL_ROW]
 			-- The result of the last database operation
 
-	last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+	last_results: LINKED_LIST [ITERATION_CURSOR [PS_SQL_ROW]]
 			-- The results from the last multi-statement database operations
 
 	last_error: PS_ERROR

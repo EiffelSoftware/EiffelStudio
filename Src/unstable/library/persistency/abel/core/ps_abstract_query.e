@@ -1,7 +1,6 @@
 note
 	description:"[
-		This class contains the shared parts of both PS_TUPLE_QUERY
-		and PS_QUERY.
+		The shared parts for both PS_TUPLE_QUERY and PS_QUERY.
 
 		The generic parameter OBJECT_TYPE denotes the type of the objects
 		to be queried. By default ABEL will also return all objects of
@@ -11,9 +10,9 @@ note
 		The general workflow with queries is as follows:
 		
 			1) Create a new query object.
-			2) Adjust the retrieval paramaters
-			3) Execute them in a transaction or repository
-			4) Iterate over the results
+			2) Adjust the retrieval paramaters.
+			3) Execute them in a transaction or repository.
+			4) Iterate over the results.
 			5) Close the query.
 		
 		Iterating over the result can be done with the convenient 
@@ -60,6 +59,7 @@ feature -- Access
 
 	new_cursor: ITERATION_CURSOR [RESULT_TYPE]
 			-- Return a fresh cursor over the query result.
+			-- If the query is not executed or already closed, the cursor will point to an empty structure.
 			-- Note: The result is loaded lazily upon calling `{ITERATION_CURSOR}.forth'.
 			-- Note: The results are cached internally, thus it is possible to iterate over the result
 			--   many times without performance impact.
@@ -69,12 +69,18 @@ feature -- Access
 			else
 				Result := (create {LINKED_LIST [RESULT_TYPE]}.make).new_cursor
 			end
+		ensure then
+			after_when_not_executed: not is_executed implies Result.after
+			after_when_closed: is_closed implies Result.after
 		end
 
 feature -- Status report
 
 	is_executed: BOOLEAN
 			-- Has query been executed?
+		do
+			Result := attached internal_cursor
+		end
 
 	is_closed: BOOLEAN
 			-- Has the query been closed?
@@ -117,12 +123,16 @@ feature -- Element change
 			-- Set `is_non_root_ignored' to `value'.
 		do
 			is_non_root_ignored := value
+		ensure
+			is_non_root_ignored_set: is_non_root_ignored = value
 		end
 
 	set_is_subtype_included (value: BOOLEAN)
 			-- Set `is_subtype_included' to `value'.
 		do
 			is_subtype_included := value
+		ensure
+			is_subtype_included_set: is_subtype_included = value
 		end
 
 feature {PS_UNSAFE} -- Element change (unsafe)
@@ -132,8 +142,8 @@ feature {PS_UNSAFE} -- Element change (unsafe)
 			-- A depth of 1 means only the object will be loaded, but none of its referenced objects.
 			-- A depth of 2 means the object will be loaded an all its referenced objects
 			-- will be loaded with depth 1 (and so on...).
-			-- | Note: This setting may increase performance but is very dangerous because
-			-- | you may get invariant violations and void references even in void-safe mode!
+			-- Note: This setting may increase performance but is very dangerous because
+			-- you may get invariant violations and void references even in void-safe mode!
 		do
 			object_initialization_depth := depth
 		end
@@ -153,7 +163,6 @@ feature -- Disposal
 			transaction_impl := Void
 			internal_cursor := Void
 			create {PS_ITERATION_CURSOR [RESULT_TYPE]} stable_cursor.make (Current)
-			is_executed := False
 			result_cache.wipe_out
 			is_after := True
 		ensure
@@ -169,11 +178,9 @@ feature -- Disposal
 		end
 
 	close
-			-- Close the current query
+			-- Close the current query.
 		do
 			if not is_closed and is_executed then
-
-				is_closed := True
 				check
 					readonly_or_embedded: internal_transaction.is_readonly xor attached transaction
 				end
@@ -187,6 +194,13 @@ feature -- Disposal
 				fixme ("TODO: clean up internal data structures")
 			end
 			is_closed := True
+		ensure
+			closed: is_closed
+			not_active: attached transaction as tr implies not tr.active_queries.has (Current)
+			criteria_unchanged: criterion = old criterion
+			root_setting_unchanged: is_non_root_ignored = old is_non_root_ignored
+			initialization_depth_unchanged: object_initialization_depth = old object_initialization_depth
+			type_unchagned: generic_type  = old generic_type
 		end
 
 feature -- Contract support functions
@@ -231,15 +245,16 @@ feature {PS_ABEL_EXPORT} -- Implementation : Access
 		require
 			already_executed: is_executed
 		do
-			check attached transaction_impl as transact then
+			check from_precondition_and_invariant: attached transaction_impl as transact then
 				Result := transact
 			end
 		end
 
 	transaction_impl: detachable PS_INTERNAL_TRANSACTION
+			-- The detachable field for `internal_transaction'.
 
 	internal_cursor: detachable ITERATION_CURSOR [ANY]
-			-- The internal result cursor
+			-- The internal result cursor.
 
 feature {PS_ABEL_EXPORT} -- Implementation: Element change
 
@@ -248,7 +263,6 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 		require
 			not_yet_executed: not is_executed
 		do
-			is_executed := True
 			is_after := False
 			transaction_impl := a_transaction
 			internal_cursor := cursor
@@ -258,9 +272,12 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			cursor_set: internal_cursor = cursor
 		end
 
-	set_transaction (context: like transaction)
+	set_transaction (a_transaction: like transaction)
+			-- Set `transaction' to `a_transaction'.
 		do
-			transaction := context
+			transaction := a_transaction
+		ensure
+			transaction_set: transaction = a_transaction
 		end
 
 	retrieve_next
@@ -314,9 +331,6 @@ feature {NONE} -- Initialization
 
 invariant
 	valid_initialization_depth: object_initialization_depth > 0 or object_initialization_depth = -1
-
 	attached_transaction_when_executed: is_executed = attached transaction_impl
 	attached_cursor_when_executed: is_executed = attached internal_cursor
-	after_when_closed: is_closed implies new_cursor.after
-	after_when_not_executed: not is_executed implies new_cursor.after
 end

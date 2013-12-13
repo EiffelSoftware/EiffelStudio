@@ -1,5 +1,5 @@
 note
-	description: "Represents a query for objects of type OBJECT_TYPE."
+	description: "A query for objects of type OBJECT_TYPE."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 	retrieve_next
 			-- Retrieve the next item from the database and store it in `result_cache'.
 		do
-			check attached internal_cursor as cursor then
+			check from_precondition: attached internal_cursor as cursor then
 				cursor.forth
 				if cursor.after then
 					is_after := True

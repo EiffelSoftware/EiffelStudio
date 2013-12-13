@@ -76,7 +76,7 @@ feature {PS_ABEL_EXPORT}
 			Result := last_results.last
 		end
 
-	last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+	last_results: LINKED_LIST [ITERATION_CURSOR [PS_SQL_ROW]]
 			-- The results of the last database operations
 
 	last_error: PS_ERROR
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	compute_last_results: LINKED_LIST[ITERATION_CURSOR[PS_SQL_ROW]]
+	compute_last_results: LINKED_LIST [ITERATION_CURSOR [PS_SQL_ROW]]
 			-- Get the last results as a linked list.
 		local
 			result_list: ARRAYED_LIST [PS_SQL_ROW]

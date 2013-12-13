@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 			t_immediate: t.class_id = current_class.class_id
 		local
 			l_veen: VEEN
-			q: TYPE_A
+			q: detachable TYPE_A
 			i: INTEGER
 			saved_class: like current_class
 			saved_actual_type: like current_actual_type
@@ -777,11 +777,20 @@ feature {NONE} -- Implementation
 			e: like error_handler.error_level
 			a: LIKE_CURRENT
 			ast: detachable QUALIFIED_ANCHORED_TYPE_AS
+			saved_ast: like associated_type_ast
 		do
 			if attached error_handler as h then
 				e := h.error_level
 			end
+				-- Synchronize `associated_type_ast' to avoid updating wrong AST nodes (if this happens).
+			saved_ast := associated_type_ast
+			if attached {QUALIFIED_ANCHORED_TYPE_AS} saved_ast as ast_node then
+				associated_type_ast := ast_node.qualifier
+			else
+				associated_type_ast := Void
+			end
 			t.qualifier.process (Current)
+			associated_type_ast := saved_ast
 			if is_delayed then
 				last_type := Void
 			else

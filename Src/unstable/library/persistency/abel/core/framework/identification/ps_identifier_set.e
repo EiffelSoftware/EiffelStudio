@@ -46,8 +46,8 @@ feature {PS_ABEL_EXPORT} -- Access
 			across
 				weak_reference_items as cursor
 			loop
-				if cursor.item.object.exists then
-					Result.extend ([attach (cursor.item.object.item), cursor.item.identifier])
+				if attached cursor.item.object.item as strong_ref then
+					Result.extend ([strong_ref, cursor.item.identifier])
 				end
 			end
 		end
@@ -140,13 +140,14 @@ feature {NONE} -- Implementation
 			until
 				weak_reference_items.after or Result
 			loop
-				if not weak_reference_items.item.object.exists then
+				if attached weak_reference_items.item.object.item as strong_ref then
+						-- See if the objects are the same.
+					Result := Result or (strong_ref = object)
+					weak_reference_items.forth
+				else
 						-- Found a garbage-collected item
 					garbage_collected_items.extend (weak_reference_items.item.identifier)
 					weak_reference_items.remove
-				else
-					Result := Result or (attach (weak_reference_items.item.object.item) = object)
-					weak_reference_items.forth
 				end
 			end
 		end
@@ -165,17 +166,17 @@ feature {NONE} -- Implementation
 			until
 				weak_reference_items.after or found
 			loop
-				if not weak_reference_items.item.object.exists then
-						-- Found a garbage-collected item
-					garbage_collected_items.extend (weak_reference_items.item.identifier)
-					weak_reference_items.remove
-				else
+				if attached weak_reference_items.item.object.item as strong_ref then
 						-- See if the objects are the same and then return the identifier
-					if attach (weak_reference_items.item.object.item) = object then
+					if strong_ref = object then
 						Result := weak_reference_items.item.identifier
 						found := True
 					end
 					weak_reference_items.forth
+				else
+						-- Found a garbage-collected item
+					garbage_collected_items.extend (weak_reference_items.item.identifier)
+					weak_reference_items.remove
 				end
 			end
 		end

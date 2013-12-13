@@ -566,12 +566,10 @@ feature {NONE} -- Update agents
 
 	update_reference (obj: REFERENCE_CLASS_1)
 			-- An update on a reference in `obj'
-		local
-			ref_obj: REFERENCE_CLASS_1
 		do
-			ref_obj := attach (obj.refer)
-			ref_obj.update
---			executor.execute_update (ref_obj)
+			if attached obj.refer as ref_obj then
+				ref_obj.update
+			end
 		end
 
 end

@@ -34,7 +34,7 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- Note to implementors: It is highly recommended to cache the result, and
 			-- refresh it during a `retrieve' operation (or not at all if the result
 			-- is always stable).
-			create {LINKED_LIST [READABLE_STRING_GENERAL]} Result.make
+			create {ARRAYED_LIST [READABLE_STRING_GENERAL]} Result.make (database.count + collection_database.count)
 			create reflection
 
 			across
@@ -56,15 +56,16 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections of type `collection_type'.
 		do
-			prepare_collection (collection_type)
-			Result := attach (collection_database [collection_type.type.type_id]).new_cursor
+			Result := create_get_inner_collection_database (collection_type).new_cursor
 		end
 
 	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
 			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
 		do
-			prepare_collection (collection_type)
-			Result := attach (collection_database.item (collection_type.type.type_id)).item (collection_primary_key)
+			if attached collection_database [collection_type.type.type_id] as inner then
+				Result := inner [collection_primary_key]
+					-- Result may be Void when collection is not present.
+			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Transaction handling
@@ -107,16 +108,14 @@ feature{PS_READ_ONLY_BACKEND}
 --				transaction.error.raise
 --			end
 
-			prepare (type)
-			Result := attach (database [type.type.type_id]).deep_twin.new_cursor
+			Result := create_get_inner_database (type).deep_twin.new_cursor
 		end
 
 	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
 			-- See function `retrieve_by_primary'.
 			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
 		do
-			prepare (type)
-			Result := attach (database.item (type.type.type_id)).item (key)
+			Result := create_get_inner_database (type).item (key)
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing
@@ -124,8 +123,8 @@ feature {PS_ABEL_EXPORT} -- Testing
 	wipe_out, make
 			-- Wipe out everything and initialize new.
 		do
-			create database.make (50)
-			create collection_database.make (1)
+			create database.make (default_size)
+			create collection_database.make (default_size)
 			create plugins.make
 			plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 			max_primary := 0
@@ -194,10 +193,12 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 		do
-			across objects as cursor
+			across
+				objects as cursor
 			loop
-				prepare (cursor.item.metadata)
-				attach (database [cursor.item.metadata.type.type_id]).remove (cursor.item.primary_key)
+				if attached database [cursor.item.metadata.type.type_id] as inner then
+					inner.remove (cursor.item.primary_key)
+				end
 			end
 		end
 
@@ -209,8 +210,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			across
 				collections as cursor
 			loop
-				prepare_collection (cursor.item.metadata)
-				db := attach (collection_database [cursor.item.metadata.type.type_id])
+				db := create_get_inner_collection_database (cursor.item.metadata)
 
 				if cursor.item.is_update_delta and attached db [cursor.item.primary_key] as old_coll then
 
@@ -234,10 +234,12 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 	delete_collections (collections: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 		do
-			across collections as cursor
+			across
+				collections as cursor
 			loop
-				prepare_collection (cursor.item.metadata)
-				attach (collection_database [cursor.item.metadata.type.type_id]).remove (cursor.item.primary_key)
+				if attached collection_database [cursor.item.metadata.type.type_id] as inner then
+					inner.remove (cursor.item.primary_key)
+				end
 			end
 		end
 
@@ -246,7 +248,7 @@ feature {NONE} -- Implementation
 
 	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 		local
-			old_obj: PS_BACKEND_OBJECT
+			inner: like create_get_inner_database
 		do
 
 --			if success then -- Enable transaction conflict simulation
@@ -257,21 +259,28 @@ feature {NONE} -- Implementation
 --				transaction.error.raise
 --			end
 
-			across objects as cursor
+			across
+				objects as cursor
 			loop
-				if cursor.item.is_new then
-					prepare (cursor.item.metadata)
-					attach (database [cursor.item.metadata.type.type_id]).extend (cursor.item, cursor.item.primary_key)
-					cursor.item.declare_as_old
-				else
-					old_obj := attach (attach (database [cursor.item.metadata.type.type_id])[cursor.item.primary_key])
-					old_obj.set_is_root (cursor.item.is_root)
+				inner := create_get_inner_database (cursor.item.metadata)
+
+				if attached inner [cursor.item.primary_key] as old_obj then
+
+					check not_new: not cursor.item.is_new end
+
 					across
 						cursor.item.attributes as attr
+					from
+						old_obj.set_is_root (cursor.item.is_root)
 					loop
 						old_obj.remove_attribute (attr.item)
 						old_obj.add_attribute (attr.item, cursor.item.attribute_value (attr.item).value, cursor.item.attribute_value (attr.item).attribute_class_name)
 					end
+
+				else
+					check new: cursor.item.is_new end
+					inner.extend (cursor.item, cursor.item.primary_key)
+					cursor.item.declare_as_old
 				end
 			end
 		end
@@ -282,20 +291,32 @@ feature {NONE} -- Implementation
 		-- First key: Type ID
 		-- Second key: unique object identifier
 
-
-	prepare (type: PS_TYPE_METADATA)
+	create_get_inner_database (type: PS_TYPE_METADATA): HASH_TABLE [PS_BACKEND_OBJECT, INTEGER]
+			-- Return `database [type]'.
+			-- If not present, create a new hash table.
 		do
-			if not database.has (type.type.type_id) then
-				database.extend (create {HASH_TABLE [PS_BACKEND_OBJECT, INTEGER]}.make (100), type.type.type_id)
+			if attached database [type.type.type_id] as res then
+				Result := res
+			else
+				create Result.make (default_size)
+				database.extend (Result, type.type.type_id)
 			end
 		end
 
-
-	prepare_collection (type: PS_TYPE_METADATA)
+	create_get_inner_collection_database (type: PS_TYPE_METADATA): HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER]
+			-- Return `collection_database [type]'.
+			-- If not present, create a new hash table.
 		do
-			if not collection_database.has (type.type.type_id) then
-				collection_database.extend (create {HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER]}.make (100), type.type.type_id)
+			if attached collection_database [type.type.type_id] as res then
+				Result := res
+			else
+				create Result.make (default_size)
+				collection_database.extend (Result, type.type.type_id)
 			end
 		end
+
+feature {NONE} -- Constants
+
+	default_size: INTEGER = 1
 
 end

@@ -215,6 +215,11 @@ feature {NONE} -- Implementation
 			Result := a.first.is_equal (b.first) and a.second.is_equal (b.second)
 		end
 
+feature {PS_ABEL_EXPORT} -- Constants
+
+	value_type_item: STRING = "ps_value_item"
+			-- The fake attribute for value type objects.
+
 invariant
 	has_value_for_all_attributes: across attributes as attribute_cursor all has_attribute (attribute_cursor.item) end
 

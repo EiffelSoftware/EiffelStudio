@@ -17,6 +17,11 @@ inherit
 			default_create
 		end
 
+	PS_TYPE_TABLE
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create

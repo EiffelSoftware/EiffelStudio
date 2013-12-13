@@ -10,6 +10,8 @@ class
 inherit
 	PS_ABSTRACT_MANAGER
 
+	PS_TYPE_TABLE
+
 create
 	make
 
@@ -99,7 +101,7 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 				value_type_handlers as cursor
 			loop
 				if cursor.item.can_handle_type (type) then
-					Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<value_type_item>>), a_transaction)
+					Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
 					found := True
 				end
 			end
@@ -181,7 +183,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			-- can be processed right now. The result is true when
 			-- `type' is a value type or when the object has been retrieved before.
 		do
-			Result := (type.type.is_expanded and then basic_types.has (type.type.type_id))
+			Result := (type.type.is_expanded and then basic_expanded_types.has (type.type.type_id))
 				or else type.type.name.ends_with ("NONE")
 				or else (across value_type_handlers as cursor some cursor.item.can_handle_type (type) end)
 				or else (attached cache [type] as second_lvl
@@ -213,7 +215,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 
 			if type.type.name.ends_with ("NONE") then
 				Result := Void
-			elseif type.type.is_expanded and then basic_types.has (type.type.type_id) then
+			elseif type.type.is_expanded and then basic_expanded_types.has (type.type.type_id) then
 				if type.type.name.is_equal ("INTEGER_8") then
 					Result := value.to_integer_8
 				elseif type.type.name.is_equal ("INTEGER_16") then

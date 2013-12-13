@@ -139,8 +139,10 @@ feature {PS_BACKEND} -- Implementation
 			transaction_unchanged: transaction.is_active
 		end
 
-feature {NONE} -- Agents for contracts
+feature {NONE} -- Contract support
 
+	enable_expensive_contracts: BOOLEAN = True
+			-- Defines if some very expensive contracts should be enabled as well.
 
 	check_write (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a write was successful

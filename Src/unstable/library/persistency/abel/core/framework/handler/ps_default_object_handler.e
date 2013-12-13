@@ -229,7 +229,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 				if attached det_field as field then
 					field_type := write_manager.metadata_factory.create_metadata_from_object (field)
 
-					if not basic_types.has (field_type.type.type_id) then
+					if not basic_expanded_types.has (field_type.type.type_id) then
 							-- Reference type
 						from
 							k := 0

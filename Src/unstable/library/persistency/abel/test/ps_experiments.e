@@ -13,6 +13,25 @@ inherit
 
 feature
 
+	experiment_immutable_strings
+		local
+			t1, t2: TYPE [detachable ANY]
+			init: IMMUTABLE_STRING_8
+			criterion: PS_PREDEFINED_CRITERION
+		do
+			t1 := {ANY}
+			init := t1.name
+			t2 := {PS_EXPERIMENTS}
+			init := t2.name
+
+			create criterion.make ("internal_name", "=", "!ANY")
+			check equal_satisfied: criterion.is_satisfied_by (t1) end
+
+			create criterion.make ("internal_name", "like", "*EXP?RIM*")
+			check like_satisfied: criterion.is_satisfied_by (t2) end
+
+		end
+
 	experiment_reflector
 		local
 			factory: OBJECT_GRAPH_FACTORY

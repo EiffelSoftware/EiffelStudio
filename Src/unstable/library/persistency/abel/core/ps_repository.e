@@ -1,6 +1,6 @@
 note
 	description: "[
-		Represents an abstract repository with a common interface to 
+		An abstract repository with a common interface to 
 		read and manipulate persistent objects.
 		
 		To create a new repository, use the PS_*_REPOSITORY_FACTORY 
@@ -64,7 +64,7 @@ feature -- Element change
 		end
 
 	set_retry_count (count: INTEGER)
-			-- Set `retry_count' to `count'
+			-- Set `retry_count' to `count'.
 		require
 			positive: count >= 0
 		do
@@ -182,7 +182,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Querying operations
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
-			-- Execute the tuple query `tuple_query' within the readonly `transaction'.
+			-- Execute the tuple query `tuple_query' within `transaction'.
 		require
 			not_executed: not tuple_query.is_executed
 			transaction_repository_correct: transaction.repository = Current
@@ -270,6 +270,7 @@ feature {NONE} -- Rescue
 feature {PS_ABEL_EXPORT} -- Implementation
 
 	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
+			-- The object identifier manager.
 
 feature -- Constants
 

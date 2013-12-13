@@ -37,7 +37,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 --							attributeid INTEGER,
 --							runtimetype INTEGER,
 --							islong: BOOLEAN
---							value VARCHAR(128),
+--							value VARCHAR (128),
 --		
 --							PRIMARY KEY (objectid, attributeid),
 --							FOREIGN KEY (attributeid) REFERENCES ps_attribute (attributeid) ON DELETE CASCADE,
@@ -52,7 +52,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 				
 								CREATE TABLE ps_class (
 									classid INTEGER NOT NULL AUTO_INCREMENT	PRIMARY KEY, 
-									classname VARCHAR(64)
+									classname VARCHAR (64)
 								)
 			]"
 		end
@@ -62,7 +62,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 			Result := "[
 								CREATE TABLE ps_attribute (
 									attributeid INTEGER NOT NULL AUTO_INCREMENT	PRIMARY KEY,
-									name VARCHAR(128),
+									name VARCHAR (128),
 									class INTEGER,
 				
 									FOREIGN KEY (class) REFERENCES ps_class (classid) ON DELETE CASCADE
@@ -78,7 +78,7 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 					collectiontype INTEGER,
 					position INTEGER,
 					runtimetype INTEGER,
-					value VARCHAR(128),
+					value VARCHAR (128),
 
 					PRIMARY KEY (collectionid, position),
 					FOREIGN KEY (collectiontype) REFERENCES ps_class (classid) ON DELETE CASCADE,
@@ -92,8 +92,8 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 			Result := "[
 					CREATE TABLE ps_collection_info (
 					collectionid INTEGER NOT NULL,
-					info_key VARCHAR(128) NOT NULL,
-					info VARCHAR(128),
+					info_key VARCHAR (128) NOT NULL,
+					info VARCHAR (128),
 
 					PRIMARY KEY (collectionid, info_key),
 					FOREIGN KEY (collectionid) REFERENCES ps_collection (collectionid) ON DELETE CASCADE
@@ -144,7 +144,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 				+ none_key.out + ", -1, " + none_key.out + ", '')"
 		end
 
-	Assemble_multi_replace (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace (tuples: LIST [STRING]): STRING
 		do
 			across
 				tuples as cursor
@@ -156,10 +156,10 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 
 			-- Remove last comma
 			Result.remove_tail (1)
-			Result.append (" on duplicate key update runtimetype = VALUES(runtimetype), value = VALUES(value);")
+			Result.append (" on duplicate key update runtimetype = VALUES (runtimetype), value = VALUES (value);")
 		end
 
-	Assemble_multi_replace_collection (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace_collection (tuples: LIST [STRING]): STRING
 		do
 			across
 				tuples as cursor
@@ -171,11 +171,11 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 
 			-- Remove last comma
 			Result.remove_tail (1)
-			Result.append (" on duplicate key update collectiontype = VALUES(collectiontype), runtimetype = VALUES(runtimetype), value = VALUES(value)")
+			Result.append (" on duplicate key update collectiontype = VALUES (collectiontype), runtimetype = VALUES (runtimetype), value = VALUES (value)")
 
 		end
 
-	Assemble_multi_replace_collection_info (tuples: LIST[STRING]): STRING
+	Assemble_multi_replace_collection_info (tuples: LIST [STRING]): STRING
 		do
 			across
 				tuples as cursor
@@ -188,7 +188,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			-- Remove last comma
 			Result.remove_tail (1)
 
-			Result.append (" on duplicate key update info = VALUES(info)")
+			Result.append (" on duplicate key update info = VALUES (info)")
 		end
 
 feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
@@ -196,8 +196,8 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
 	For_update_appendix: STRING = " FOR UPDATE "
 
 
-	Query_last_object_autoincrement: STRING = "SELECT LAST_INSERT_ID()"
+	Query_last_object_autoincrement: STRING = "SELECT LAST_INSERT_ID ()"
 
-	Query_last_collection_autoincrement: STRING = "SELECT LAST_INSERT_ID()"
+	Query_last_collection_autoincrement: STRING = "SELECT LAST_INSERT_ID ()"
 
 end

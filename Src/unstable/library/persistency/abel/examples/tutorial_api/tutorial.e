@@ -81,7 +81,7 @@ class TUTORIAL
 --			if attached {CHILD} c1.father as dad then
 --				dad.celebrate_birthday
 --			end
---			executor.execute_update(c1)
+--			executor.execute_update (c1)
 --			print_children_result (query_for_children)
 --			print ("Celebrating the birthday for all PERSON objects in the repository")
 --			update_ages
@@ -193,20 +193,20 @@ class TUTORIAL
 --			age_criterion: PS_CRITERION
 --		do
 --			first_name_criterion :=
---				factory[[ "first_name", factory.equals, "Albo" ]]
+--				factory [[ "first_name", factory.equals, "Albo" ]]
 
 --			last_name_criterion :=
---				factory[[ "last_name", factory.equals, "Bitossi" ]]
+--				factory [[ "last_name", factory.equals, "Bitossi" ]]
 
 --			age_criterion :=
---				factory[[ agent age_more_than (?, 20)]]
+--				factory [[ agent age_more_than (?, 20)]]
 
 --			Result := first_name_criterion and last_name_criterion and not age_criterion
 
 --			-- using double brackets for compactness (comment this Result to get the previous one).
---			Result := factory[[ "first_name", "=", "Albo" ]]
---				and factory[[ "last_name", "=", "Bitossi" ]]
---				and not factory[[ agent age_more_than (?, 20) ]]
+--			Result := factory [[ "first_name", "=", "Albo" ]]
+--				and factory [[ "last_name", "=", "Bitossi" ]]
+--				and not factory [[ agent age_more_than (?, 20) ]]
 --		end
 
 --feature -- Deletion queries

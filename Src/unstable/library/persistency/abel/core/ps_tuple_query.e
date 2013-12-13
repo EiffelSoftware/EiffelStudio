@@ -1,6 +1,6 @@
 note
 	description: "[
-		Represents a query for objects of type OBJECT_TYPE.
+		A query for objects of type OBJECT_TYPE.
 		The result is a TUPLE containing attributes of the object.
 		
 		Only the attributes listed in the projection array are loaded.
@@ -94,7 +94,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 		do
 				-- This check is safe because of a combination of the invariant
 				-- and the precondition in ABSTRACT_QUERY.
-			check attached_cursor_and_executed: attached internal_cursor as my_cursor then
+			check from_precondition: attached internal_cursor as my_cursor then
 				my_cursor.forth
 
 				if my_cursor.after then
@@ -158,7 +158,7 @@ feature {NONE} -- Initialization
 
 
 	generate_tuple_type
-			-- Generate a tuple of correct type and size
+			-- Generate a tuple of correct type and size.
 		require
 			 projection_not_empty: projection.count > 0
 		local

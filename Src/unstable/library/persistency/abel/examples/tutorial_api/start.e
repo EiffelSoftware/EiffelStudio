@@ -83,7 +83,7 @@ feature -- Printing results
 	print_persons
 			-- Print all persons in the repository
 		local
-			query: PS_QUERY[PERSON]
+			query: PS_QUERY [PERSON]
 		do
 			-- To retrieve data we need to create a query object.
 			-- Note that the generic argunent in PS_QUERY denotes
@@ -110,7 +110,7 @@ feature -- Printing results
 	print_children
 			-- Print all children in the repository
 		local
-			query: PS_QUERY[CHILD]
+			query: PS_QUERY [CHILD]
 		do
 			create query.make
 			repository.execute_query (query)
@@ -184,7 +184,7 @@ feature -- Data modification
 	update_berno_citrini
 			-- Increase the age of Berno Citrini by one.
 		local
-			query: PS_QUERY[PERSON]
+			query: PS_QUERY [PERSON]
 			transaction: PS_TRANSACTION
 			berno: PERSON
 		do
@@ -225,7 +225,7 @@ feature -- Data modification
 			-- Increase the age of Berno Citrini by one.
 			-- Make use of criteria.
 		local
-			query: PS_QUERY[PERSON]
+			query: PS_QUERY [PERSON]
 			transaction: PS_TRANSACTION
 			berno: PERSON
 		do
@@ -425,7 +425,7 @@ feature -- Criteria
 			-- Show that a wrong attribute name leads to an exception.
 		local
 			retried: BOOLEAN
-			query: PS_QUERY[PERSON]
+			query: PS_QUERY [PERSON]
 		do
 			if not retried then
 

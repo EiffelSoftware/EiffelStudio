@@ -18,13 +18,13 @@ create
 
 feature {PS_ABEL_EXPORT} -- Primary key generation
 
-	generate_all_object_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_OBJECT], PS_TYPE_METADATA]
-			-- For each type `type_key' in `order', generate `order[type_key]' new objects in the database.
+	generate_all_object_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
+			-- For each type `type_key' in `order', generate `order [type_key]' new objects in the database.
 		local
 			all_primaries: INTEGER
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
-			current_list: LINKED_LIST[PS_BACKEND_OBJECT]
+			current_list: LINKED_LIST [PS_BACKEND_OBJECT]
 --			none_class_key: INTEGER
 --			existence_attribute_key: INTEGER
 		do
@@ -39,7 +39,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 
 			-- Invoke the stored procedure to generate the primary keys
 			connection := get_connection (transaction)
-			connection.execute_sql ("call generateprimaries(" + all_primaries.out + ")")
+			connection.execute_sql ("call generateprimaries (" + all_primaries.out + ")")
 
 			-- Distribute the generated numbers among the objects
 			across
@@ -71,8 +71,8 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			rollback (transaction)
 		end
 
-	generate_collection_primaries (order: HASH_TABLE[INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST[PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
-			-- For each type `type_key' in the hash table `order', generate `order[type_key]' new collections in the database.
+	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
+			-- For each type `type_key' in the hash table `order', generate `order [type_key]' new collections in the database.
 		do
 			fixme ("Use a stored procedure, like generate_all_object_primaries")
 			Result := Precursor (order, transaction)
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 				+ none_attribute.out + "," + none_type.out + ");" +
 			"[
 
-								INSERT INTO primaries (prim) VALUES (LAST_INSERT_ID());
+								INSERT INTO primaries (prim) VALUES (LAST_INSERT_ID ());
 								SET primary_count = primary_count - 1;
 							END WHILE;
 

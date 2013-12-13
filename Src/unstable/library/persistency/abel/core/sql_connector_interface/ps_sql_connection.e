@@ -62,7 +62,7 @@ feature {PS_ABEL_EXPORT} -- Database results
 		deferred
 		end
 
-	last_error: PS_ERROR
+	last_error: detachable PS_ERROR
 			-- The last occurred error
 		deferred
 		end

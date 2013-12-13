@@ -134,7 +134,7 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Did the last operation produce an error?
 		do
-			Result := attached last_error and not attached {PS_NO_ERROR} last_error
+			Result := attached last_error
 		end
 
 feature -- Element change
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 	set_error
 			-- Set the `last_error' field.
 		do
-			if attached transaction as tr and then not attached {PS_NO_ERROR} tr.error then
+			if attached transaction as tr then
 				last_error := tr.error
 			end
 		end

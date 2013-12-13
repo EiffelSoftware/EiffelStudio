@@ -17,10 +17,10 @@ feature
 
 feature {PS_ERROR} -- Visitor functions: Top-level categories
 
-	visit_no_error (no_error: PS_NO_ERROR)
-			-- When no error occured, doing nothing is a reasonable default.
-		do
-		end
+--	visit_no_error (no_error: PS_NO_ERROR)
+--			-- When no error occured, doing nothing is a reasonable default.
+--		do
+--		end
 
 	visit_uncategorized_error (error: PS_ERROR)
 			-- Visit an uncategorized error

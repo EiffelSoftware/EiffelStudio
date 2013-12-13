@@ -249,7 +249,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 			transaction_failed: not transaction.is_successful_commit
 			transaction_gone_in_id_manager: not id_manager.is_registered (transaction)
 			error_on_implicit_abort: not manual_rollback implies transaction.has_error
-			exception_raised_on_implicit_abort: not manual_rollback implies transaction.error.is_caught
+			exception_raised_on_implicit_abort: not manual_rollback implies attached transaction.error as error and then error.is_caught
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing

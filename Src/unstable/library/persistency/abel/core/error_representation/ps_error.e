@@ -27,7 +27,7 @@ feature -- Access
 			-- If the backend doesn't support error codes, the value is -1.
 		attribute
 		ensure
-			no_error_means_zero: (attached {PS_NO_ERROR} Current) = (Result = 0)
+			not_zero: Result /= 0
 		end
 
 	backend_error_message: detachable READABLE_STRING_GENERAL

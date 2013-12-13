@@ -11,7 +11,7 @@ inherit
 
 feature
 
-	convert_error (sqlstate: READABLE_STRING_GENERAL): PS_ERROR
+	convert_error (sqlstate: READABLE_STRING_GENERAL): detachable PS_ERROR
 			--Converts SQLState errors to ABEL error objects
 		require
 			exact_length: sqlstate.count = 5
@@ -211,18 +211,21 @@ feature
 				Result := error
 			end
 
-			Result.set_backend_sqlstate (sqlstate)
+			if attached Result then
+
+				Result.set_backend_sqlstate (sqlstate)
+			end
 
 		ensure
-			sqlstate_set: equal (Result.backend_sqlstate, sqlstate)
+			sqlstate_set: attached Result implies Result.backend_sqlstate ~ sqlstate
 		end
 
 
 feature {NONE} -- Factory functions
 
-	no_error: PS_NO_ERROR
+	no_error: detachable PS_ERROR
 		do
-			create Result
+			Result := Void
 		end
 
 	error: PS_ERROR

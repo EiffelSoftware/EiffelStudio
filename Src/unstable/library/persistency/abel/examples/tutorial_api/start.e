@@ -534,7 +534,7 @@ feature -- Tuple queries
 				-- It is also possible to add criteria. Agent criteria are not supported
 				-- for tuple queries however.
 				-- Lets search for all CHILD objects with last name Doe.
-			query.set_criterion (criterion_factory [["last_name", criterion_factory.equals, "Doe"]])
+			query.set_criterion (criterion_factory ("last_name", criterion_factory.equals, "Doe"))
 
 				-- The big advantage of tuple queries is that you can define which attributes
 				-- should be loaded. Therefore you can avoid loading a whole object graph

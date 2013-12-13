@@ -38,18 +38,28 @@ feature -- Creating a criterion
 			-- or three values of type [STRING, STRING, ANY], where the tuple values correspond
 			-- to the arguments of the `new_predefined' routine.
 			-- Using this notation criteria can be combined as shown in the example in the class header.
+		obsolete
+			"Use new_criterion with parenthesis alias."
 		require
 			well_formed: is_agent (tuple) or is_predefined (tuple)
 		do
-			if is_agent (tuple) then
-				check attached {PREDICATE [ANY, TUPLE [ANY]]} tuple [1] as predicate then
-					Result := new_agent (predicate)
-				end
+			Result := new_criterion (tuple)
+		end
+
+	new_criterion alias "()" (tuple: TUPLE [ANY]): PS_CRITERION
+			-- Creates an agent, a predefined criterion or a combination of both
+			-- using an uniform notation. `tuple' contains either a single agent PREDICATE
+			-- or three values of type [STRING, STRING, ANY], where the tuple values correspond
+			-- to the arguments of the `new_predefined' routine.
+			-- Using this notation criteria can be combined as shown in the example in the class header.
+		require
+			well_formed: is_agent (tuple) or is_predefined (tuple)
+		do
+			if attached {TUPLE [predicate: PREDICATE [ANY, TUPLE [ANY]]]} tuple as agent_tuple then
+				Result := new_agent (agent_tuple.predicate)
 			else
-					-- is_predefined = True, otherwise there would be a contract violation
-					-- however, we need to do all these checks again because of void safety-.-
-				check attached {STRING} tuple [1] as attr and attached {STRING} tuple [2] as operator and attached tuple [3] as value then
-					Result := new_predefined (attr, operator, value)
+				check from_precondition: attached {TUPLE [attr: STRING; operator: STRING; value: ANY]} tuple as predefined_tuple then
+					Result := new_predefined (predefined_tuple.attr, predefined_tuple.operator, predefined_tuple.value)
 				end
 			end
 		end
@@ -82,11 +92,9 @@ feature -- Preconditions
 	is_predefined (tuple: TUPLE [ANY]): BOOLEAN
 			-- Does `tuple' correspond to the format for predefined tuples and have a valid operator/value combination?
 		do
-			if attached {TUPLE [STRING, STRING, ANY]} tuple and then (attached {STRING} tuple [2] as operator and attached tuple [3] as value) then
-				Result := is_valid_combination (operator, value)
-			else
-				Result := False
-			end
+			Result :=
+				attached {TUPLE [attr: STRING; operator: STRING;  value: ANY]} tuple as tup
+				and then is_valid_combination (tup.operator, tup.value)
 		end
 
 end

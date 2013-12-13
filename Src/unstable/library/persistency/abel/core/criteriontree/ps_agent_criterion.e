@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	agent_criterion: PREDICATE [ANY, TUPLE [ANY]]
+	agent_criterion: PREDICATE [detachable ANY, detachable TUPLE]
 			-- The agent representing the current criterion.
 
 feature -- Check
@@ -64,7 +64,7 @@ feature -- Miscellaneous
 
 feature {NONE} -- Initialization
 
-	make (a_predicate: PREDICATE [ANY, TUPLE [ANY]])
+	make (a_predicate: PREDICATE [detachable ANY, detachable TUPLE])
 			-- Initialize `Current' with `a_predicate'
 		do
 			agent_criterion := a_predicate

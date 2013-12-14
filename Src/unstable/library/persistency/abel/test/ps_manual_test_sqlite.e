@@ -78,13 +78,13 @@ feature -- Tests
 
 
 	sqlite_tricky_wrapped_basic_types
-			-- Test basic types wrapped in CELL[ANY].
+			-- Test basic types wrapped in CELL [ANY].
 		do
 			tricky_tests.test_wrapped_basic_types
 		end
 
 	sqlite_tricky_wrapped_string_types
-			-- Test string types wrapped in CELL[ANY].
+			-- Test string types wrapped in CELL [ANY].
 		do
 			tricky_tests.test_wrapped_string_types
 		end

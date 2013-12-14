@@ -78,13 +78,13 @@ feature
 ----			io.new_line
 ----			print (int.physical_size (create {TEST_PERSON}.make ("A","B",3)))
 ----			io.new_line
-----			print (int.physical_size (create {CELL[INTEGER]}.put (42)))
+----			print (int.physical_size (create {CELL [INTEGER]}.put (42)))
 ----			io.new_line
-----			print (int.physical_size (create {CELL[BOOLEAN]}.put (True)))
+----			print (int.physical_size (create {CELL [BOOLEAN]}.put (True)))
 ----			io.new_line
-----			print (int.physical_size (create {CELL[detachable ANY]}.put (Void)))
+----			print (int.physical_size (create {CELL [detachable ANY]}.put (Void)))
 ----			io.new_line
-----			print (int.physical_size (create {PS_PAIR[detachable ANY,detachable ANY]}.make (Void, Void)))
+----			print (int.physical_size (create {PS_PAIR [detachable ANY,detachable ANY]}.make (Void, Void)))
 ----			io.new_line
 
 --			any := int.new_instance_of (test.generating_type.type_id)
@@ -101,7 +101,7 @@ feature
 --				print (sp2.count.out + "/" + sp2.capacity.out + "%N")
 --				sp2.extend (person)
 --				sp2.extend (person)
---				print (deep_equal(test, sp2))
+--				print (deep_equal (test, sp2))
 --				print (sp2.tagged_out)
 --			end
 
@@ -133,14 +133,14 @@ feature
 --		external
 --			"C inline use %"eif_eiffel.h%""
 --		alias
---			"HEADER($object) -> ov_flags = EO_SPEC | EO_COMP;"
+--			"HEADER ($object) -> ov_flags = EO_SPEC | EO_COMP;"
 --		end
 
 --	frozen header (object: ANY): NATURAL_32
 --		external
 --			"C inline use %"eif_eiffel.h%""
 --		alias
---			"return HEADER($object) -> ov_flags;"
+--			"return HEADER ($object) -> ov_flags;"
 --		end
 
 end

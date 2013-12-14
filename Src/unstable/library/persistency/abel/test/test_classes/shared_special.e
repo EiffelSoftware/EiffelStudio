@@ -9,10 +9,10 @@ class
 
 create
 	make
-	
+
 feature
 
-	special: SPECIAL[INTEGER]
+	special: SPECIAL [INTEGER]
 
 	make (a_special: like special)
 		do

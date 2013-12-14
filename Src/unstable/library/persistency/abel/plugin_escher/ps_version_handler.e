@@ -23,7 +23,7 @@ class
 
 --feature {NONE} -- Initialization
 
---	make (real: PS_BACKEND_COMPATIBILITY; schema_evolution_handlers: HASH_TABLE[SCHEMA_EVOLUTION_HANDLER,STRING])
+--	make (real: PS_BACKEND_COMPATIBILITY; schema_evolution_handlers: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER,STRING])
 --			-- Initialization for `Current'.
 --		local
 --			factory: PS_METADATA_FACTORY
@@ -41,7 +41,7 @@ class
 --	integer_metadata: PS_TYPE_METADATA
 --			-- Metadata for INTEGER
 
---	schema_evolution_handlers_table: HASH_TABLE[SCHEMA_EVOLUTION_HANDLER,STRING]
+--	schema_evolution_handlers_table: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER,STRING]
 --			-- Hashtable with class names as keys and respective schema evolution handlers as values
 
 --feature {PS_ABEL_EXPORT} -- Supported collection operations
@@ -91,7 +91,7 @@ class
 --			current_class_name, attr_name, attr_type_as_string: STRING
 --			exception: EXCEPTIONS
 
---			test_var: TUPLE[STRING,STRING]
+--			test_var: TUPLE [STRING,STRING]
 --				-- Used for testing purposes
 --		do
 --			create reflection
@@ -175,8 +175,8 @@ class
 --					if stored_version /= current_version then
 --						-- Save all attribute values in 'stored_obj_attr_values'
 --						-- This values could be needed to calculate functions returned by the schema evolution handler
---						stored_obj_attr_values := get_attribute_values(stored_object)
---						clean_stored_obj(stored_object)
+--						stored_obj_attr_values := get_attribute_values (stored_object)
+--						clean_stored_obj (stored_object)
 --						if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
 --							-- Create a fresh instance of the current class
 --							current_class_instance := reflection.new_instance_of (type.type.type_id)
@@ -194,7 +194,7 @@ class
 --									end
 --								else
 --									-- Attribute wasn't set by the schema evolution handler
---									if attached {TUPLE[STRING,STRING]} stored_obj_attr_values.item (attr_name) as tuple then
+--									if attached {TUPLE [STRING,STRING]} stored_obj_attr_values.item (attr_name) as tuple then
 --										if attached {STRING} tuple.item (1) as attr_value then
 --											if attached {STRING} tuple.item (2) as attr_type then
 --												stored_object.add_attribute (attr_name, attr_value, attr_type)
@@ -437,7 +437,7 @@ class
 --				-- If conversion function is available get it from the current schema evolution handler
 --				if attached {HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]} current_schema_evolution_handler.create_schema_evolution_handler (current_version, stored_version) as tmp then
 --					if attached {TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]]} tmp.item (attr_name) as tuple then
---						evaluate_function(current_class_instance, stored_obj_attr_values, type, index, tuple)
+--						evaluate_function (current_class_instance, stored_obj_attr_values, type, index, tuple)
 --						Result := true
 --					end
 --				end
@@ -451,26 +451,26 @@ class
 --			-- The attribute with index 'index' and type 'type' inside 'current_class_instance' needs to be set to the result of the function
 --		local
 --			reflection: INTERNAL
---			values: ARRAYED_LIST[ANY]
+--			values: ARRAYED_LIST [ANY]
 --		do
 --			create reflection
 --			-- Get the list of variables
---			if attached {LIST[STRING]} tuple.item (1) as vars then
+--			if attached {LIST [STRING]} tuple.item (1) as vars then
 --				-- Get the function
 --				if attached {FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]} tuple.item (2) as function then
 --					create values.make (vars.count)
 --					-- Calculate for each variable the respective value
 --					from vars.start until vars.after loop
---						if attached {TUPLE[STRING,STRING]} stored_obj_attr_values.item (vars.item) as current_attr_tuple then
+--						if attached {TUPLE [STRING,STRING]} stored_obj_attr_values.item (vars.item) as current_attr_tuple then
 --							if attached {STRING} current_attr_tuple.item (1) as current_value then
 --								if attached {STRING} current_attr_tuple.item (2) as current_type then
---									values.force (convert_string(current_value,current_type))
+--									values.force (convert_string (current_value,current_type))
 --								end
 --							end
 --						end
 --						vars.forth
 --					end
---					set_attribute(index, type, current_class_instance, function.item ([values]))
+--					set_attribute (index, type, current_class_instance, function.item ([values]))
 --				end
 --			end
 --		end
@@ -505,10 +505,10 @@ class
 --				reflection.set_double_field (index, obj, value.to_double)
 --			-------------------------CHAR-------------------------
 --			elseif type = reflection.character_8_type and value.count = 1 then
---				reflection.set_character_8_field (index, obj, value.area[1])
+--				reflection.set_character_8_field (index, obj, value.area [1])
 
 --			elseif type = reflection.character_32_type and value.count = 1 then
---				reflection.set_character_32_field (index, obj, value.area[1])
+--				reflection.set_character_32_field (index, obj, value.area [1])
 --			-------------------------BOOLEAN-------------------------
 --			elseif type = reflection.boolean_type and value.is_boolean then
 --				reflection.set_boolean_field (index, obj, value.to_boolean)

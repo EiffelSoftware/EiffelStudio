@@ -12,9 +12,9 @@ create
 
 feature
 
-	items: LINKED_LIST[ANY]
+	items: LINKED_LIST [ANY]
 
-	set_items (an_item: LINKED_LIST[ANY])
+	set_items (an_item: LINKED_LIST [ANY])
 		do
 			items := an_item
 		end

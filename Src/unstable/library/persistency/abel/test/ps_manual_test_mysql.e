@@ -25,7 +25,7 @@ feature
 --			internal_connection.set_port (db_port)
 --			internal_connection.connect
 
---			internal_connection.execute_query ("call generateprimaries(5);")
+--			internal_connection.execute_query ("call generateprimaries (5);")
 --			across internal_connection.last_results.first as cursor
 --			loop
 --				print (cursor.item)

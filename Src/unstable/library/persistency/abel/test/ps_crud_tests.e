@@ -104,7 +104,7 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 			create test.make (repository)
 			create obj
 			test.test_crud_operations (obj, agent {ANY}.do_nothing)
-				-- repository is clean after delete...
+			repository.clean_db_for_testing
 		end
 
 	test_flat_class_store
@@ -113,7 +113,6 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 			test: PS_GENERIC_CRUD_TEST [FLAT_CLASS_1]
 		do
 			create test.make (repository)
---			test.test_insert_special_equality (test_data.flat_class, agent {FLAT_CLASS_1}.is_almost_equal(?, 0.00001))
 			test.test_insert (test_data.flat_class)
 			repository.clean_db_for_testing
 		end
@@ -124,7 +123,6 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 			test: PS_GENERIC_CRUD_TEST [FLAT_CLASS_1]
 		do
 			create test.make (repository)
---			test.test_crud_operations_special_equality (test_data.flat_class, agent {FLAT_CLASS_1}.update, agent {FLAT_CLASS_1}.is_almost_equal(?, 0.00001))
 			test.test_crud_operations (test_data.flat_class, agent {FLAT_CLASS_1}.update)
 			repository.clean_db_for_testing
 		end
@@ -144,7 +142,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 	test_integer
 		local
-			test: PS_GENERIC_CRUD_TEST[INTEGER]
+			test: PS_GENERIC_CRUD_TEST [INTEGER]
 		do
 			repository.clean_db_for_testing
 			create test.make (repository)
@@ -153,7 +151,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 	test_string
 		local
-			test: PS_GENERIC_CRUD_TEST[STRING]
+			test: PS_GENERIC_CRUD_TEST [STRING]
 		do
 			repository.clean_db_for_testing
 			create test.make (repository)
@@ -162,7 +160,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 	test_embedded_expanded
 		local
-			test: PS_GENERIC_CRUD_TEST[EXPANDED_PERSON_CONTAINER]
+			test: PS_GENERIC_CRUD_TEST [EXPANDED_PERSON_CONTAINER]
 			container: EXPANDED_PERSON_CONTAINER
 		do
 
@@ -174,7 +172,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 	test_referenced_expanded
 		local
-			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 			person: EXPANDED_PERSON
 			anybox: ANY_BOX
 		do
@@ -187,7 +185,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 	test_immediate_expanded
 		local
-			test: PS_GENERIC_CRUD_TEST[EXPANDED_PERSON]
+			test: PS_GENERIC_CRUD_TEST [EXPANDED_PERSON]
 			person: EXPANDED_PERSON
 			anybox: ANY_BOX
 		do
@@ -199,9 +197,9 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 
 --	test_evil_object
 --		local
---			test: PS_GENERIC_CRUD_TEST [GENERIC_BOX[
---				GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY],
---				EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]]]
+--			test: PS_GENERIC_CRUD_TEST [GENERIC_BOX [
+--				GENERIC_BOX [REFERENCE_CLASS_1, detachable ANY],
+--				EXPANDED_GENERIC_BOX [detachable SPECIAL [ANY], detachable SPECIAL [EXPANDED_PERSON]]]]
 --		do
 --			repository.clean_db_for_testing
 --			create test.make (repository)
@@ -249,7 +247,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			test: PS_GENERIC_CRUD_TEST [ARRAY [TEST_PERSON]]
 		do
 			create test.make (repository)
-			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.put(test_data.array_of_persons.item (1), 2))
+			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.put (test_data.array_of_persons.item (1), 2))
 			repository.clean_db_for_testing
 		end
 
@@ -261,7 +259,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			create new.make ("some", "new_guy", 20)
 			create test.make (repository)
-			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.force(new, 5))
+			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.force (new, 5))
 			repository.clean_db_for_testing
 		end
 
@@ -281,7 +279,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			test: PS_GENERIC_CRUD_TEST [SPECIAL [TEST_PERSON]]
 		do
 			create test.make (repository)
-			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.put(test_data.special_of_persons.item (0), 1))
+			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.put (test_data.special_of_persons.item (0), 1))
 			repository.clean_db_for_testing
 		end
 
@@ -293,7 +291,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			create new.make ("some", "new_guy", 20)
 			create test.make (repository)
-			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.extend(new))
+			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.extend (new))
 			repository.clean_db_for_testing
 		end
 
@@ -305,7 +303,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			create test.make (repository)
 				--			print ("adsf")
 				--			test.test_insert (test_data.array_of_integers)
-			test.test_crud_operations (test_data.array_of_integers, agent {ARRAY [INTEGER]}.put(20, 10))
+			test.test_crud_operations (test_data.array_of_integers, agent {ARRAY [INTEGER]}.put (20, 10))
 		end
 
 	test_data_structures_store
@@ -326,7 +324,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			retrieved: DATA_STRUCTURES_CLASS_1
 			testdata_copy: DATA_STRUCTURES_CLASS_1
 
-			test: PS_GENERIC_CRUD_TEST[DATA_STRUCTURES_CLASS_1]
+			test: PS_GENERIC_CRUD_TEST [DATA_STRUCTURES_CLASS_1]
 		do
 			repository.clean_db_for_testing
 
@@ -335,7 +333,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				test_data.data_structures_1,
 				agent (retrieved_obj: DATA_STRUCTURES_CLASS_1)
 					do
-						retrieved_obj.array_1[1].update
+						retrieved_obj.array_1 [1].update
 					end
 			)
 			repository.clean_db_for_testing
@@ -345,15 +343,15 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			-- test if an update on a shared special instance works
 		local
 			a,b: SHARED_SPECIAL
-			special: SPECIAL[INTEGER]
-			query: PS_QUERY[SHARED_SPECIAL]
-			query2: PS_QUERY[SPECIAL[INTEGER]]
+			special: SPECIAL [INTEGER]
+			query: PS_QUERY [SHARED_SPECIAL]
+			query2: PS_QUERY [SPECIAL [INTEGER]]
 			transaction: PS_TRANSACTION
 		do
 			repository.clean_db_for_testing
 			create special.make_filled (0, 2)
-			create a.make(special)
-			create b.make(special)
+			create a.make (special)
+			create b.make (special)
 
 			transaction := repository.new_transaction
 
@@ -362,7 +360,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			--executor.execute_insert (a)
 			--executor.execute_insert (b)
 
-			special[0] := 1
+			special [0] := 1
 
 			transaction.update (special)
 --			executor.execute_update (special)
@@ -386,7 +384,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				-- Test a tuple store
 			local
 				box: ANY_BOX
-				test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+				test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 			do
 				repository.clean_db_for_testing
 				create box.set_item ([create {FLAT_CLASS_1}.make, 42, "abc"])
@@ -394,7 +392,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				test.test_crud_operations (box,
 					agent (b: ANY_BOX)
 					do
-						check attached {TUPLE} b.item as t and then attached {FLAT_CLASS_1} t[1] as fc then
+						check attached {TUPLE} b.item as t and then attached {FLAT_CLASS_1} t [1] as fc then
 							fc.update
 						end
 					end )
@@ -404,8 +402,8 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				-- Test a tuple store
 			local
 				box: ANY_BOX
-				hash: HASH_TABLE[FLAT_CLASS_1, STRING]
-				test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+				hash: HASH_TABLE [FLAT_CLASS_1, STRING]
+				test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 			do
 				repository.clean_db_for_testing
 				create hash.make (10)
@@ -415,7 +413,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				test.test_crud_operations (box,
 					agent (b: ANY_BOX)
 					do
-						check attached {HASH_TABLE[FLAT_CLASS_1, STRING]} b.item as h and then attached {FLAT_CLASS_1} h["something"] as fc then
+						check attached {HASH_TABLE [FLAT_CLASS_1, STRING]} b.item as h and then attached {FLAT_CLASS_1} h ["something"] as fc then
 							fc.update
 						end
 					end )
@@ -439,7 +437,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			-- A normal test with ANY_BOX not involving polymorphism
 		local
 			link: ANY_BOX
-			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 		do
 			create link.set_item (create {ANY}.default_create)
 			create test.make (repository)
@@ -452,7 +450,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			-- A test with an ANY_BOX, and a PERSON attached at runtime
 		local
 			link: ANY_BOX
-			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 		do
 			create link.set_item (test_data.people.first)
 			create test.make (repository)
@@ -464,7 +462,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			-- A test with ANY_BOX and an INTEGER attached at runtime
 		local
 			link: ANY_BOX
-			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 		do
 			create link.set_item (3)
 			create test.make (repository)
@@ -475,8 +473,8 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 	test_generic_object
 			-- Test a store with a generic object
 		local
-			list: LINKED_LIST[ANY]
-			test: PS_GENERIC_CRUD_TEST[LINKED_LIST[ANY]]
+			list: LINKED_LIST [ANY]
+			test: PS_GENERIC_CRUD_TEST [LINKED_LIST [ANY]]
 		do
 			create list.make
 			list.fill (test_data.people)
@@ -486,17 +484,17 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 		end
 
 	test_referenced_list
-			-- Test when an attribute has declared type LINKED_LIST[ANY] but dynamic type LINKED_LIST[PERSON]
+			-- Test when an attribute has declared type LINKED_LIST [ANY] but dynamic type LINKED_LIST [PERSON]
 		local
 			box: ANY_LIST_BOX
-			list: LINKED_LIST[TEST_PERSON]
-			test: PS_GENERIC_CRUD_TEST[ANY_LIST_BOX]
+			list: LINKED_LIST [TEST_PERSON]
+			test: PS_GENERIC_CRUD_TEST [ANY_LIST_BOX]
 		do
 			create list.make
 			list.fill (test_data.people)
 			create box.set_items (list)
 			create test.make (repository)
-			-- Regression test: the list within box got initialized as LINKED_LIST[ANY], and the list was empty.
+			-- Regression test: the list within box got initialized as LINKED_LIST [ANY], and the list was empty.
 			test.test_insert (box)
 			repository.clean_db_for_testing
 		end
@@ -506,7 +504,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 		local
 			first, last: FILE_NAME
 			person: TEST_PERSON
-			test: PS_GENERIC_CRUD_TEST[TEST_PERSON]
+			test: PS_GENERIC_CRUD_TEST [TEST_PERSON]
 		do
 			create first.make_from_string ("some")
 			create last.make_from_string ("string")
@@ -525,7 +523,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 		local
 			container: ANY_BOX
 			string: STRING_32
-			test: PS_GENERIC_CRUD_TEST[ANY_BOX]
+			test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 			conv: UTF_CONVERTER
 		do
 			create test.make (repository)

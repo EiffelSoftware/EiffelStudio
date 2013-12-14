@@ -43,7 +43,7 @@ feature -- Access
 --	transient_integer: INTEGER
 --	note option:transient attribute end
 
---	set_transient_integer(int: INTEGER) do transient_integer := int end
+--	set_transient_integer (int: INTEGER) do transient_integer := int end
 
 feature -- Basic operations
 

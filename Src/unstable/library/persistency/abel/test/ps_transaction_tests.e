@@ -116,7 +116,7 @@ feature {PS_REPOSITORY_TESTS}
 		local
 			some_person: TEST_PERSON
 			retrieved_person: TEST_PERSON
-			q1, q2: PS_QUERY[TEST_PERSON]
+			q1, q2: PS_QUERY [TEST_PERSON]
 
 			transaction: PS_TRANSACTION
 		do
@@ -153,7 +153,7 @@ feature {PS_REPOSITORY_TESTS}
 		local
 			some_person: TEST_PERSON
 			t1: PS_INTERNAL_TRANSACTION
-			q1, q2: PS_QUERY[TEST_PERSON]
+			q1, q2: PS_QUERY [TEST_PERSON]
 
 			transaction: PS_TRANSACTION
 		do
@@ -193,7 +193,7 @@ feature {PS_REPOSITORY_TESTS}
 		local
 --			some_person: TEST_PERSON
 --			t1: PS_INTERNAL_TRANSACTION
---			q1, q2: PS_OBJECT_QUERY[TEST_PERSON]
+--			q1, q2: PS_OBJECT_QUERY [TEST_PERSON]
 		do
 --			create some_person.make ("first_name", "last_name", 0)
 --			executor.execute_insert (some_person)

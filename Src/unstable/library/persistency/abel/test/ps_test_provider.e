@@ -108,7 +108,7 @@ feature {PS_TEST_PROVIDER}
 			object: ANY
 			context: PS_TRANSACTION
 			query: PS_QUERY [ANY]
-			cursor: ITERATION_CURSOR[ANY]
+			cursor: ITERATION_CURSOR [ANY]
 		do
 			object := an_object
 

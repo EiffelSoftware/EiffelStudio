@@ -55,9 +55,9 @@ feature
 			-- An ESCHER test object
 
 
-	evil_object: detachable GENERIC_BOX[
-		GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY],
-		EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]]
+	evil_object: detachable GENERIC_BOX [
+		GENERIC_BOX [REFERENCE_CLASS_1, detachable ANY],
+		EXPANDED_GENERIC_BOX [detachable SPECIAL [ANY], detachable SPECIAL [EXPANDED_PERSON]]]
 
 
 feature {NONE} -- Initialization
@@ -65,14 +65,14 @@ feature {NONE} -- Initialization
 
 	create_evil_object
 		local
-			first_part: GENERIC_BOX[REFERENCE_CLASS_1, detachable ANY]
-			second_part: EXPANDED_GENERIC_BOX[detachable SPECIAL[ANY], detachable SPECIAL[EXPANDED_PERSON]]
+			first_part: GENERIC_BOX [REFERENCE_CLASS_1, detachable ANY]
+			second_part: EXPANDED_GENERIC_BOX [detachable SPECIAL [ANY], detachable SPECIAL [EXPANDED_PERSON]]
 
-			any_special: SPECIAL[ANY]
-			person_special: SPECIAL[EXPANDED_PERSON]
+			any_special: SPECIAL [ANY]
+			person_special: SPECIAL [EXPANDED_PERSON]
 
-			tmp: EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]
-			any_special_object: EXPANDED_GENERIC_BOX[INTEGER, EXPANDED_GENERIC_BOX[INTEGER, detachable STRING]]
+			tmp: EXPANDED_GENERIC_BOX [INTEGER, detachable STRING]
+			any_special_object: EXPANDED_GENERIC_BOX [INTEGER, EXPANDED_GENERIC_BOX [INTEGER, detachable STRING]]
 		do
 			create any_special.make_empty (5)
 
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			any_special.extend (123.45)
 
 			create person_special.make_filled (create {EXPANDED_PERSON}, 3)
-			person_special[1] := create {EXPANDED_PERSON}.make ("another", "name", 100)
+			person_special [1] := create {EXPANDED_PERSON}.make ("another", "name", 100)
 
 			create second_part.set_item (any_special, person_special)
 
@@ -121,9 +121,9 @@ feature {NONE} -- Initialization
 			ref2.references.extend (ref3)
 			ref3.references.extend (reference_cycle)
 			ref3.references.extend (ref2)
-				--			ref3.references.extend (create {REFERENCE_CLASS_1}.make(5))
+				--			ref3.references.extend (create {REFERENCE_CLASS_1}.make (5))
 				--			reference_1.ref_arrays.grow (1)
-				--			reference_1.ref_arrays[1]:= ref2
+				--			reference_1.ref_arrays [1]:= ref2
 			create reference_to_single_other.make (1)
 			create ref2.make (2)
 			reference_to_single_other.add_ref (ref2)

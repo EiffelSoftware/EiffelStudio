@@ -39,7 +39,7 @@ feature
 			reflector: REFLECTED_REFERENCE_OBJECT
 			item_reflector: REFLECTED_REFERENCE_OBJECT
 
-			cell: CELL[E_DOUBLE_CELL[ANY, ANY]]
+			cell: CELL [E_DOUBLE_CELL [ANY, ANY]]
 			any: ANY
 		do
 			create factory
@@ -79,7 +79,7 @@ feature
 			person: EXPANDED_PERSON
 			internal: INTERNAL
 			traversal: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
-			box: GENERIC_BOX[TEST_PERSON, EXPANDED_PERSON]
+			box: GENERIC_BOX [TEST_PERSON, EXPANDED_PERSON]
 		do
 			create traversal
 			create container.set_item (5)
@@ -136,7 +136,7 @@ feature
 			reflection.set_object (box)
 			print (reflection.field_type (1))
 			println
-			print(reflection.field_type (2))
+			print (reflection.field_type (2))
 			println
 
 
@@ -145,7 +145,7 @@ feature
 
 	experiment_none_expanded
 		local
-			type: TYPE[NONE]
+			type: TYPE [NONE]
 		do
 			type := {NONE}
 			print (type.name)
@@ -181,12 +181,12 @@ feature
 --		do
 --			create p1.make ("Albo", "Bitossi", 3)
 --			create p2.make ("Albo", "Bitossi", 3)
---			assert ("equal", p1.is_deep_equal(p2))
+--			assert ("equal", p1.is_deep_equal (p2))
 --			p1.set (24)
---			assert ("not equal", not p1.is_deep_equal(p2))
+--			assert ("not equal", not p1.is_deep_equal (p2))
 --		end
 
-	experiment_agent_failure_with_arg (list: LINKED_LIST[detachable ANY])
+	experiment_agent_failure_with_arg (list: LINKED_LIST [detachable ANY])
 		do
 			check list.for_all (agent experiment_agent_failure_test_agent (?, True, create {ANY})) end
 		ensure
@@ -201,7 +201,7 @@ feature
 			end
 		end
 
-	generate_void(any: detachable ANY): detachable ANY
+	generate_void (any: detachable ANY): detachable ANY
 		do
 		end
 
@@ -336,13 +336,13 @@ feature
 			-- Investigate the relationship between reflection and tuples
 		local
 			reflection:INTERNAL
-			string_integer_tuple: TUPLE[STRING, INTEGER]
-			string_integer_tuple_2: TUPLE[STRING, INTEGER]
+			string_integer_tuple: TUPLE [STRING, INTEGER]
+			string_integer_tuple_2: TUPLE [STRING, INTEGER]
 			tuple: TUPLE
 			det_tuple: detachable TUPLE
 			any: ANY
 			i:INTEGER
-			special: SPECIAL[detachable ANY]
+			special: SPECIAL [detachable ANY]
 		do
 			create reflection
 			create string_integer_tuple -- generates detachable TUPLE [attached STRING, INTEGER]
@@ -357,26 +357,26 @@ feature
 			assert ("attached vs detachable", reflection.dynamic_type (string_integer_tuple) = reflection.dynamic_type (string_integer_tuple_2))
 
 			create tuple
-			print ("attached: "+(reflection.attached_type(reflection.dynamic_type(tuple))).out + ", detachable: " + (reflection.dynamic_type (tuple)).out)
+			print ("attached: "+(reflection.attached_type (reflection.dynamic_type (tuple))).out + ", detachable: " + (reflection.dynamic_type (tuple)).out)
 			println
 --			tuple.put (20, 3) -- fails, not enough space...
 
 
 			-- check if dynamic type generation via strings works
-			print (reflection.dynamic_type_from_string ("attached TUPLE[attached STRING, INTEGER]"))
+			print (reflection.dynamic_type_from_string ("attached TUPLE [attached STRING, INTEGER]"))
 			println
-			assert ("dynamic type from string equal", reflection.dynamic_type_from_string ("attached TUPLE[attached STRING, INTEGER]") = reflection.attached_type (reflection.dynamic_type (string_integer_tuple_2)))
+			assert ("dynamic type from string equal", reflection.dynamic_type_from_string ("attached TUPLE [attached STRING, INTEGER]") = reflection.attached_type (reflection.dynamic_type (string_integer_tuple_2)))
 
 			-- unknown types..
-			i := reflection.dynamic_type_from_string ("attached TUPLE[INTEGER, INTEGER, INTEGER, INTEGER, detachable CHAIN_HEAD]")
+			i := reflection.dynamic_type_from_string ("attached TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, detachable CHAIN_HEAD]")
 			print (i.out + " " + reflection.class_name_of_type (i)) -- apparently the eiffel runtime generates the type
 			println
 
 			-- Generation of known tuples
-			special := reflection.new_special_any_instance (reflection.dynamic_type_from_string ("attached SPECIAL[detachable ANY]"), 2)
+			special := reflection.new_special_any_instance (reflection.dynamic_type_from_string ("attached SPECIAL [detachable ANY]"), 2)
 			special.extend ("test")
 			special.extend (2)
-			det_tuple := reflection.new_tuple_from_special (reflection.dynamic_type_from_string ("attached TUPLE[attached STRING, INTEGER]"), special)
+			det_tuple := reflection.new_tuple_from_special (reflection.dynamic_type_from_string ("attached TUPLE [attached STRING, INTEGER]"), special)
 
 			check attached det_tuple as t then
 				tuple := t
@@ -385,7 +385,7 @@ feature
 			println
 
 			-- Generation of "unknown" tuples
-			special := reflection.new_special_any_instance (reflection.dynamic_type_from_string ("attached SPECIAL[detachable ANY]"), 5)
+			special := reflection.new_special_any_instance (reflection.dynamic_type_from_string ("attached SPECIAL [detachable ANY]"), 5)
 			special.extend (1)
 			special.extend (2)
 			special.extend (3)

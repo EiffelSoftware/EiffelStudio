@@ -50,10 +50,11 @@ feature -- Test execution
 
 			controller.repository.clean_db_for_testing
 
-			measure_insert_shared
-			measure_query_shared_all
-			measure_query_shared_select
-			emitter.write_results
+-- 			measure_insert_shared
+-- 			measure_query_shared_all
+-- 			measure_query_shared_select
+
+ 			emitter.write_results
 		end
 
 

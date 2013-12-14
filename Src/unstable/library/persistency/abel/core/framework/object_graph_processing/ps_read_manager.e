@@ -300,23 +300,6 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				referer.references.extend (i)
 				item (i).referers.extend (referer.index)
 			end
---			across
---				to_process_next as cursor
---			from
---				primary := key
---				found := False
---			until
---				found
---			loop
---				i := cursor.item
---				if item (i).primary_key = primary and then item (i).type.is_equal (type) then
---					check found_implies_cached: cache_lookup (key, type) = i end
---					found := True
---					-- Update the referers and references tables
---					referer.references.extend (i)
---					item (i).referers.extend (referer.index)
---				end
---			end
 
 				-- Extend the objects list for retrieval
 			if not found then
@@ -360,48 +343,88 @@ feature {NONE} -- Implementation: Loop body
 		local
 			i: INTEGER
 			identifier: PS_OBJECT_IDENTIFIER_WRAPPER
+			object: PS_OBJECT_DATA
 		do
-			-- Search for an appropriate handler for all items to be created
+				-- Search for an appropriate handler for all items to be created
 			assign_handlers (to_process)
 
-			-- Command the handlers to retrieve their objects.
-			-- (Most of them will place an order for a batch retrieve though)
-			do_all_in_set (agent {PS_HANDLER}.retrieve (?, Current), to_process)
+				-- Command the handlers to retrieve their objects.
+				-- (Most of them will place an order for a batch retrieve though)
 
-			-- Do a batch retrieve
+--			do_all_in_set (agent {PS_HANDLER}.retrieve (?, Current), to_process)
+			across
+				to_process as idx
+			loop
+				object := item (idx.item)
+				if not object.is_ignored then
+					check initialized: object.is_handler_initialized end
+					object.handler.retrieve (object, Current)
+				end
+			end
+
+				-- Do a batch retrieve
 			process_batch_retrieve
 
-			-- Create the objects, but don't initialize them yet
-			do_all_in_set (agent {PS_HANDLER}.create_object (?, Current), to_process)
+				-- Create the objects, but don't initialize them yet
+--			do_all_in_set (agent {PS_HANDLER}.create_object (?, Current), to_process)
+			across
+				to_process as idx
+			loop
+				object := item (idx.item)
+				if not object.is_ignored then
+					check initialized: object.is_handler_initialized end
+					object.handler.create_object (object, Current)
+				end
+			end
 
-			-- Identify and cache the objects
+
+				-- Identify and cache the objects
 			across
 				to_process as idx_cursor
 			loop
 				i := idx_cursor.item
 				if not item (i).is_ignored and not item (i).type.type.is_expanded then
-					-- Identify the object with the id_manager
+						-- Identify the object with the id_manager
 					id_manager.identify (item (i).reflector.object, transaction)
 
 					identifier := id_manager.identifier_wrapper (item (i).reflector.object, transaction)
 					item (i).set_identifier (identifier.object_identifier)
 
-					-- Update the ABEL id -> primary key mapping
+						-- Update the ABEL id -> primary key mapping
 					primary_key_mapper.add_entry (identifier, item (i).primary_key, transaction)
 
-					-- Update the root status
+						-- Update the root status
 					check attached item (i).backend_representation as br then
 						transaction.root_flags.force (br.is_root, identifier.object_identifier)
 					end
 				end
 			end
 
-			-- Update the references from the last iteration
-			do_all_in_set (agent {PS_HANDLER}.finish_initialize (?, Current), to_finalize)
+				-- Update the references from the last iteration
+--			do_all_in_set (agent {PS_HANDLER}.finish_initialize (?, Current), to_finalize)
+			across
+				to_finalize as idx
+			loop
+				object := item (idx.item)
+				if not object.is_ignored then
+					check initialized: object.is_handler_initialized end
+					object.handler.finish_initialize (object, Current)
+				end
+			end
 
-			-- Do some basic initialization and search for objects
-			-- which need to be built in the next iteration
-			do_all_in_set (agent {PS_HANDLER}.initialize (?, Current), to_process)
+
+				-- Do some basic initialization and search for objects
+				-- which need to be built in the next iteration
+--			do_all_in_set (agent {PS_HANDLER}.initialize (?, Current), to_process)
+			across
+				to_process as idx
+			loop
+				object := item (idx.item)
+				if not object.is_ignored then
+					check initialized: object.is_handler_initialized end
+					object.handler.initialize (object, Current)
+				end
+			end
 
 		end
 

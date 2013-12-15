@@ -1,10 +1,5 @@
-note
-
-	description: "Eiffel parser skeletons"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Eiffel parser skeleton."
 
 deferred class EIFFEL_PARSER_SKELETON
 
@@ -226,6 +221,12 @@ feature -- Status report
 -- Code commented for the time being while waiting for full implementation of type intervals.
 				-- For the time being we accept type intervals only if `provisional syntax'
 				-- has been selected.
+			Result := syntax_version = provisional_syntax
+		end
+
+	is_type_inference_supported: BOOLEAN
+			-- Is type inference supported so that some type declarations are optional?
+		do
 			Result := syntax_version = provisional_syntax
 		end
 
@@ -481,7 +482,7 @@ feature -- Access: result nodes
 	invariant_node: detachable INVARIANT_AS
 			-- Invariant node of AST
 
-	entity_declaration_node: detachable EIFFEL_LIST [TYPE_DEC_AS]
+	entity_declaration_node: detachable EIFFEL_LIST [LIST_DEC_AS]
 			-- Local clause node of AST
 
 feature -- Access
@@ -1127,6 +1128,8 @@ invariant
 	once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -1158,5 +1161,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_PARSER_SKELETON
+end
 

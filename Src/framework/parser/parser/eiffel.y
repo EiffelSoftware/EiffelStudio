@@ -170,6 +170,7 @@ create
 %type <detachable QUALIFIED_ANCHORED_TYPE_AS>	Unmarked_qualified_anchored_type
 %type <detachable CLASS_TYPE_AS>		Parent_class_type
 %type <detachable TYPE_DEC_AS>			Entity_declaration_group
+%type <detachable LIST_DEC_AS>			Local_declaration_group
 %type <detachable VARIANT_AS>			Variant Variant_opt
 %type <detachable FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
 
@@ -206,7 +207,8 @@ create
 %type <detachable KEY_LIST_AS>			Key_list
 %type <detachable EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
 %type <detachable TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
-%type <detachable TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
+%type <detachable TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list
+%type <detachable LIST_DEC_LIST_AS>	Local_declaration_list
 %type <detachable LOCAL_DEC_LIST_AS>	Local_declarations
 %type <detachable FORMAL_ARGU_DEC_LIST_AS> Formal_arguments Optional_formal_arguments
 %type <detachable CONSTRAINT_TRIPLE>	Constraint
@@ -278,7 +280,7 @@ Eiffel_parser:
 				end
 				entity_declaration_node := Void
 			}
-	|	TE_LOCAL Add_counter Entity_declaration_list Remove_counter
+	|	TE_LOCAL Add_counter Local_declaration_list Remove_counter
 			{
 				if not entity_declaration_parser or type_parser or expression_parser or feature_parser or indexing_parser or invariant_parser then
 					raise_error
@@ -1297,6 +1299,34 @@ Entity_declaration_group: Add_counter Identifier_list Remove_counter TE_COLON Ty
 			{ $$ := ast_factory.new_type_dec_as ($2, $5, $4) }
 	;
 
+Local_declaration_list: Local_declaration_group
+			{
+				$$ := ast_factory.new_eiffel_list_list_dec_as (counter_value + 1)
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	|	Local_declaration_group Increment_counter Local_declaration_list
+			{
+				$$ := $3
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	;
+
+Local_declaration_group:
+		Add_counter Identifier_list Remove_counter ASemi
+			{ 
+				if not is_type_inference_supported then
+					raise_error
+				end
+				$$ := ast_factory.new_list_dec_as ($2)
+			}
+	|	Add_counter Identifier_list Remove_counter TE_COLON Type ASemi
+			{ $$ := ast_factory.new_type_dec_as ($2, $5, $4) }
+	;
+
 Identifier_list: Identifier_as_lower
 			{
 				$$ := ast_factory.new_identifier_list (counter_value + 1)
@@ -1398,7 +1428,7 @@ Local_declarations: -- Empty
 			-- { $$ := Void }
 	|	TE_LOCAL
 			{ $$ := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (0), $1) }
-	|	TE_LOCAL Add_counter Entity_declaration_list Remove_counter
+	|	TE_LOCAL Add_counter Local_declaration_list Remove_counter
 			{ $$ := ast_factory.new_local_dec_list_as ($3, $1) }
 	;
 

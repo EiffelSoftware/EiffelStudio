@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Roundtrip visitor to simply iterate an AST tree and do nothing
 					Usage:
@@ -17,10 +17,6 @@ note
 						  	 have process the last attached-terminal, we check any non-attached terminals have been left, if so,
 						  	 we process thoes as well.
 				]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	AST_ROUNDTRIP_ITERATOR
@@ -1023,6 +1019,11 @@ feature
 			safe_process (l_as.compound)
 		end
 
+	process_list_dec_as (l_as: LIST_DEC_AS)
+		do
+			process_identifier_list (l_as.id_list)
+		end
+
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 		do
 			process_identifier_list (l_as.id_list)
@@ -1276,6 +1277,13 @@ feature
 			safe_process (l_as.closing_bracket_as (match_list))
 		end
 
+	process_list_dec_list_as (l_as: LIST_DEC_LIST_AS)
+		do
+			safe_process (l_as.opening_bracket_as (match_list))
+			process_eiffel_list (l_as)
+			safe_process (l_as.closing_bracket_as (match_list))
+		end
+
 	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 		do
 			safe_process (l_as.opening_bracket_as (match_list))
@@ -1513,6 +1521,8 @@ feature{NONE} -- Implementation
 invariant
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

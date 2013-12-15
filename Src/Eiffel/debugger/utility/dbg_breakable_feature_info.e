@@ -1,7 +1,5 @@
-note
-	description: "Summary description for {DEBUGGER_BREAKABLE_FEATURE_INFO}."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Debugger information for a feature."
 
 class
 	DBG_BREAKABLE_FEATURE_INFO
@@ -31,36 +29,36 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	error_occurred: BOOLEAN
-			-- Error occurred while computing feature info
+			-- Error occurred while computing feature info.
 
 feature -- Access
 
 	breakable_count: INTEGER
-			-- Last breakable index value
+			-- Last breakable index value.
 
 	breakable_nested_count: INTEGER
-			-- Last nested breakable index
+			-- Last nested breakable index.
 
 	class_c: CLASS_C
-			-- Associated class_c
+			-- Associated class_c.
 
 	feature_i: FEATURE_I
-			-- Associated feature_i
+			-- Associated feature_i.
 
 	feature_id: INTEGER
-			-- Associated feature's id
+			-- Associated feature's id.
 
 	class_id: INTEGER
-			-- Associated class's id
+			-- Associated class's id.
 
 	points: ARRAYED_LIST [DBG_BREAKABLE_POINT_INFO]
-			-- List of breakable point (including nested location)
+			-- List of breakable point (including nested location).
 
-	locals: detachable LIST [TUPLE [id: INTEGER; type: TYPE_AS]]
-			-- List of local's info	
+	locals: detachable LIST [TUPLE [id: INTEGER; type: detachable TYPE_AS]]
+			-- List of local's info.
 
 	object_test_locals: ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
-			-- List of object test local's info
+			-- List of object test local's info.
 
 feature -- Access: resolved
 
@@ -72,7 +70,7 @@ feature -- Access: resolved
 			-- require	resolved: resolved attribute end
 
 	object_test_locals_resolved: ARRAYED_LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
-			-- List of object test local's info
+			-- List of object test local's info.
 			-- require	resolved: resolved attribute end
 
 feature -- Backup
@@ -98,24 +96,22 @@ feature -- Backup
 feature -- Breakable data
 
 	reset_breakable_data
-			-- Reset breakable indexes data
+			-- Reset breakable indexes data.
 		do
 			breakable_count := 0
 			breakable_nested_count := 0
 		end
 
 	breakable_data: TUPLE [bp: like breakable_count; bp_nested: like breakable_nested_count]
-			-- Current breakable data
+			-- Current breakable data.
 		do
-			create Result
-			Result.bp := breakable_count
-			Result.bp_nested := breakable_nested_count
+			Result := [breakable_count, breakable_nested_count]
 		ensure
 			Result_attached: Result /= Void
 		end
 
 	restore_breakable_data (a_data: like breakable_data)
-			-- Restore breakable data from `a_data"
+			-- Restore breakable data from `a_data'.
 		require
 			a_data_attached: a_data /= Void
 		do
@@ -126,37 +122,37 @@ feature -- Breakable data
 feature -- Element change
 
 	set_error_occurred (b: BOOLEAN)
-			-- Set `error_occurred' to `b'
+			-- Set `error_occurred' to `b'.
 		do
 			error_occurred := b
 		end
 
 	set_resolved (b: BOOLEAN)
-			-- Set current as resolved for local variables
+			-- Set `resolved' to `b'.
 		do
 			resolved := b
 		end
 
 	set_locals (a_locals: like locals)
-			-- Set `locals' to `a_locals'
+			-- Set `locals' to `a_locals'.
 		do
 			locals := a_locals
 		end
 
 	set_local_table (a_local_table: like local_table)
-			-- Set `local_table' to `a_local_table'
+			-- Set `local_table' to `a_local_table'.
 		do
 			local_table := a_local_table
 		end
 
 	set_object_table_locals_resolved (a_object_test_locals_resolved: like object_test_locals_resolved)
-			-- Set `object_test_locals_resolved' to `a_object_test_locals_resolved'
+			-- Set `object_test_locals_resolved' to `a_object_test_locals_resolved'.
 		do
 			object_test_locals_resolved := a_object_test_locals_resolved
 		end
 
 	add_point (a_class: CLASS_C; a_line: INTEGER; a_text: STRING)
-			-- Add breakable point info
+			-- Add breakable point info.
 		require
 			a_class_attached: a_class /= Void
 			a_line_valid: a_line > 0
@@ -168,7 +164,7 @@ feature -- Element change
 		end
 
 	add_nested_point (a_class: CLASS_C; a_line: INTEGER; a_text: STRING)
-			-- Add nested breakable point info
+			-- Add nested breakable point info.
 		require
 			a_class_attached: a_class /= Void
 			a_line_valid: a_line > 0
@@ -179,7 +175,7 @@ feature -- Element change
 		end
 
 	add_object_test_local (a_name: ID_AS; a_type: detachable TYPE_AS; a_exp: detachable EXPR_AS)
-			-- Add object test local info
+			-- Add object test local info.
 		local
 			t: DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO
 		do
@@ -193,7 +189,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	internal_add_point_info (a_class: CLASS_C; a_line: INTEGER; a_text: STRING)
-			-- Implementation for `add(_*)_point_info'
+			-- Implementation for `add(_*)_point_info'.
 		require
 			a_class_attached: a_class /= Void
 			a_line_valid: a_line > 0
@@ -226,7 +222,9 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

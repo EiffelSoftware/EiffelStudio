@@ -1,9 +1,5 @@
-note
-	description	: "Representation of an Eiffel feature."
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date		: "$Date$";
-	revision	: "$Revision$"
+﻿note
+	description: "Representation of an Eiffel feature."
 
 class E_FEATURE
 
@@ -300,7 +296,7 @@ feature -- Properties
 		do
 		end;
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS]
+	locals: EIFFEL_LIST [LIST_DEC_AS]
 			-- Locals for current feature
 		do
 		end
@@ -501,7 +497,6 @@ feature -- Access
 			class_text: STRING;
 			start_position, end_position: INTEGER;
 			body_as: FEATURE_AS;
-			rout_as: ROUTINE_AS
 			c: like written_class;
 		do
 			c := written_class;
@@ -518,13 +513,12 @@ feature -- Access
 
 					-- Extract positional information
 				start_position := body_as.start_position
-				rout_as ?= body_as.body.content
-				if rout_as = Void then
+				if attached {ROUTINE_AS} body_as.body.content then
+					end_position := body_as.end_position
+				else
 						-- `body_as.end_position' excludes feature comments
 						-- Let's use take the text up-to the next syntax construct
 					end_position := body_as.next_position - 1
-				else
-					end_position := body_as.end_position
 				end
 
 				if c /= associated_class then
@@ -1297,6 +1291,8 @@ invariant
 	written_class_not_void: is_valid implies written_class /= Void
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -1328,4 +1324,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_FEATURE
+end

@@ -1,11 +1,5 @@
-note
-	description: "[
-			Analyzes local declaration blocks and to extract local declarations.
-		]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Analyzer of local declaration blocks to extract local declarations."
 
 class
 	ES_EDITOR_ANALYZER_LOCAL_LIST_STATE
@@ -96,7 +90,6 @@ feature {NONE} -- Basic operation
 			l_line: EDITOR_LINE
 			l_stop: BOOLEAN
 			l_wrapper: like eiffel_parser_wrapper
-			l_type_dec: detachable TYPE_DEC_AS
 			l_current_frame: ES_EDITOR_ANALYZER_FRAME
 			l_in_brace: INTEGER
 		do
@@ -155,13 +148,12 @@ feature {NONE} -- Basic operation
 					l_result.prepend ({EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
 					l_wrapper := eiffel_parser_wrapper
 					l_wrapper.parse_with_option_32 (entity_declaration_parser, l_result, a_info.context_class.group.options, True, a_info.context_class)
-					if attached {EIFFEL_LIST [TYPE_DEC_AS]} l_wrapper.ast_node as l_declarations then
+					if attached {EIFFEL_LIST [LIST_DEC_AS]} l_wrapper.ast_node as l_declarations then
 						l_current_frame := a_info.current_frame
 						from l_declarations.start until l_declarations.after loop
-							l_type_dec := l_declarations.item
-							if l_type_dec /= Void then
+							if attached l_declarations.item as l then
 									-- Add the AST local declaration.
-								l_current_frame.add_local (l_type_dec)
+								l_current_frame.add_local (l)
 							end
 							l_declarations.forth
 						end
@@ -171,6 +163,8 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

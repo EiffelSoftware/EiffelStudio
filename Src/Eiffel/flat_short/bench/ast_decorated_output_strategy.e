@@ -1,9 +1,5 @@
-note
+﻿note
 	description: "Process ast to decorated output text."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	AST_DECORATED_OUTPUT_STRATEGY
@@ -3299,6 +3295,31 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_list_dec_as (l_as: LIST_DEC_AS)
+		local
+			l_names_heap: like names_heap
+			l_text_formatter_decorator: like text_formatter_decorator
+		do
+			l_text_formatter_decorator := text_formatter_decorator
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			l_text_formatter_decorator.set_separator (ti_comma)
+			l_text_formatter_decorator.set_space_between_tokens
+			from
+				l_names_heap := names_heap
+				l_as.id_list.start
+			until
+				l_as.id_list.after
+			loop
+				format_local_with_id (l_as.id_list.item)
+				l_as.id_list.forth
+				if not l_as.id_list.after then
+					l_text_formatter_decorator.put_separator
+				end
+			end
+		end
+
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 		local
 			l_names_heap: like names_heap
@@ -4100,6 +4121,11 @@ feature {NONE} -- Implementation
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS)
+		do
+			process_eiffel_list (l_as)
+		end
+
+	process_list_dec_list_as (l_as: LIST_DEC_LIST_AS)
 		do
 			process_eiffel_list (l_as)
 		end
@@ -5185,6 +5211,8 @@ invariant
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -5216,4 +5244,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class AST_DECORATED_OUTPUT_STRATEGY
+end

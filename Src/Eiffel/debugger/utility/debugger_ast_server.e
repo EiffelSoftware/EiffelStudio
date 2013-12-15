@@ -1,7 +1,5 @@
-note
-	description: "Summary description for {DEBUGGER_AST_SERVER}."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "AST server for debugger."
 
 class
 	DEBUGGER_AST_SERVER
@@ -148,7 +146,7 @@ feature -- Report
 			l_local_table_resolved: like local_table
 			l_object_test_locals_resolved: like object_test_locals
 
-			l_locals: LIST [TUPLE [id: INTEGER; type: TYPE_AS]]
+			l_locals: LIST [TUPLE [id: INTEGER; type: detachable TYPE_AS]]
 			l_loc: TUPLE [id: INTEGER; type: TYPE_AS]
 
 			l_object_test_locals: detachable LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
@@ -156,7 +154,6 @@ feature -- Report
 
 			l_id: ID_AS
 			l_name_id: INTEGER
-			l_type_as: TYPE_AS
 			l_cl_type_a: CL_TYPE_A
 			l_solved_type_a: detachable TYPE_A
 			li: LOCAL_INFO
@@ -176,12 +173,6 @@ feature -- Report
 
 				fi := a_bfi.feature_i
 				cl := a_bfi.class_c
---				if a_class_type = Void then
---					l_cl_type_a := l_class_c.actual_type
---				else
---					cl := a_class_type.associated_class
---					l_cl_type_a := a_class_type.type
---				end
 				l_cl_type_a := cl.actual_type
 				l_feat_tbl := cl.feature_table --| fi.written_class.feature_table
 
@@ -209,9 +200,12 @@ feature -- Report
 						l_locals.after
 					loop
 						l_loc := l_locals.item
-						l_type_as := l_loc.type
-						l_solved_type_a := l_type_a_generator.evaluate_type (l_type_as, cl)
-						l_solved_type_a := l_type_a_checker.solved (l_solved_type_a, l_type_as)
+						if attached l_loc.type as l_type_as then
+							l_solved_type_a := l_type_a_generator.evaluate_type (l_type_as, cl)
+							l_solved_type_a := l_type_a_checker.solved (l_solved_type_a, l_type_as)
+						else
+							l_solved_type_a := Void
+						end
 						l_name_id := l_loc.id
 						create li -- .make (l_name_id)
 						li.set_position (i)
@@ -342,6 +336,8 @@ feature {NONE} -- Implementation
 			-- current index for FIFO `breakable_feature_info_storage'
 
 ;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

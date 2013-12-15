@@ -1,16 +1,16 @@
 ﻿note
-	description: "AST node for a sequence of typed variable declarations."
+	description: "AST node for a sequence of possibly untyped variable declarations."
 
-class TYPE_DEC_LIST_AS
+class LIST_DEC_LIST_AS
 
 inherit
-	EIFFEL_LIST [TYPE_DEC_AS]
+	EIFFEL_LIST [LIST_DEC_AS]
 		redefine
 			first_token, last_token, process
 		end
 
 create
-	make, make_filled
+	make_filled
 
 feature -- Roundtrip/Token
 
@@ -37,7 +37,7 @@ feature -- Visitor
 	process (a_visitor: AST_VISITOR)
 			-- Process current node.
 		do
-			a_visitor.process_type_dec_list_as (Current)
+			a_visitor.process_list_dec_list_as (Current)
 		end
 
 feature
@@ -56,8 +56,8 @@ feature
 			i: INTEGER
 		do
 			i := opening_bracket_as_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {SYMBOL_AS} a_list.i_th (i) as r then
+				Result := r
 			end
 		end
 
@@ -69,8 +69,8 @@ feature
 			i: INTEGER
 		do
 			i := closing_bracket_as_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {SYMBOL_AS} a_list.i_th (i) as r then
+				Result := r
 			end
 		end
 

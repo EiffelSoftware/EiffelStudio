@@ -1,9 +1,5 @@
-note
+﻿note
 	description: "Eiffel Pretty Printer."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	PRETTY_PRINTER
@@ -71,6 +67,7 @@ inherit
 			process_feature_as,
 			process_body_as,
 			process_formal_argu_dec_list_as,
+			process_list_dec_as,
 			process_type_dec_as,
 			process_constant_as,
 
@@ -1043,6 +1040,12 @@ feature {CLASS_AS} -- Features
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
+	process_list_dec_as (l_as: LIST_DEC_AS)
+			-- <Precursor>
+		do
+			process_and_print_identifier_list (l_as.id_list)
+		end
+
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 			-- Process type declaration `l_as'.
 		do
@@ -1951,6 +1954,8 @@ invariant
 	indent_attached: attached indent
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

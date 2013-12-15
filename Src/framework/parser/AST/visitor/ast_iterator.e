@@ -1,9 +1,5 @@
-note
+﻿note
 	description: "Visitor to iterate through all the nodes of an AST."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	AST_ITERATOR
@@ -668,6 +664,11 @@ feature {NONE} -- Implementation
 			safe_process (l_as.compound)
 		end
 
+	process_list_dec_as (l_as: LIST_DEC_AS)
+		do
+				-- Nothing to be done
+		end
+
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 		do
 			l_as.type.process (Current)
@@ -850,6 +851,12 @@ feature {NONE} -- Implementation
 			process_eiffel_list (l_as)
 		end
 
+	process_list_dec_list_as (l_as: LIST_DEC_LIST_AS)
+			-- Process `l_as'.
+		do
+			process_eiffel_list (l_as)
+		end
+
 	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 			-- Process `l_as'.
 		do
@@ -946,6 +953,8 @@ feature {NONE} -- Implementation
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

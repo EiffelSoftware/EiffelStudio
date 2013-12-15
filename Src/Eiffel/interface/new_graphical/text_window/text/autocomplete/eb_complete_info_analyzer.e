@@ -1,10 +1,5 @@
-note
+﻿note
 	description: "Code completion info analyzer."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class
 	EB_COMPLETE_INFO_ANALYZER
@@ -724,10 +719,10 @@ feature {NONE} -- Implementation
 			l_names_heap: NAMES_HEAP
 			l_feature: FEATURE_I
 			l_feature_as: FEATURE_AS
-			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			l_locals: EIFFEL_LIST [LIST_DEC_AS]
 			l_arguments: EIFFEL_LIST [TYPE_DEC_AS]
 			l_obj_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
-			l_type_dec_as_lists: ARRAY [EIFFEL_LIST [TYPE_DEC_AS]]
+			l_type_dec_as_lists: ARRAY [EIFFEL_LIST [LIST_DEC_AS]]
 			i: INTEGER
 		do
 			l_feature := current_feature_i
@@ -757,28 +752,29 @@ feature {NONE} -- Implementation
 							until
 								i > l_type_dec_as_lists.upper
 							loop
-								if attached {EIFFEL_LIST [TYPE_DEC_AS]} l_type_dec_as_lists[i] as ast_locs then
+								if attached l_type_dec_as_lists[i] as ast_locs then
 									from
 										ast_locs.start
 									until
 										ast_locs.after
 									loop
-										if attached {TYPE_DEC_AS} ast_locs.item as tda then
-											if
-												attached {IDENTIFIER_LIST} tda.id_list as id_list and then
-												not id_list.is_empty
-											then
-												from
-													id_list.start
-												until
-													id_list.after
-												loop
-													if attached l_names_heap.item_32 (id_list.item) as s then
-														l_type := type_a_generator.evaluate_type (tda.type, l_class)
-														Result.force (l_type, s)
+										if attached ast_locs.item as tda and then
+											attached tda.id_list as id_list
+										then
+											from
+												id_list.start
+											until
+												id_list.after
+											loop
+												if attached l_names_heap.item_32 (id_list.item) as s then
+													if attached tda.type as t then
+														l_type := type_a_generator.evaluate_type (t, l_class)
+													else
+														l_type := none_type
 													end
-													id_list.forth
+													Result.force (l_type, s)
 												end
+												id_list.forth
 											end
 										end
 										ast_locs.forth
@@ -1575,6 +1571,8 @@ feature {NONE} -- Implementation
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

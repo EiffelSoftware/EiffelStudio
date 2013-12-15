@@ -1,9 +1,5 @@
 ﻿note
-	description: "Perform type checking as well as generation of BYTE_NODE tree."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Type checking and code generation of BYTE_NODE tree."
 
 class
 	AST_FEATURE_CHECKER_GENERATOR
@@ -905,7 +901,7 @@ feature {NONE} -- Roundtrip
 			l_used_argument_names: SEARCH_TABLE [INTEGER]
 			l_used_local_names: SEARCH_TABLE [INTEGER]
 			l_arg_names: SPECIAL [INTEGER]
-			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			l_locals: EIFFEL_LIST [LIST_DEC_AS]
 			i: INTEGER
 			l_routine: ROUTINE_AS
 			l_id_list: IDENTIFIER_LIST
@@ -7673,6 +7669,11 @@ feature {NONE} -- Visitor
 			break_point_slot_count := break_point_slot_count + 1
 		end
 
+	process_list_dec_as (l_as: LIST_DEC_AS)
+		do
+			fixme ("what do we do about the identifiers?")
+		end
+
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 		do
 			check_type (l_as.type)
@@ -8179,6 +8180,12 @@ feature {NONE} -- Visitor
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS)
+			-- Process `l_as'.
+		do
+			process_eiffel_list (l_as)
+		end
+
+	process_list_dec_list_as (l_as: LIST_DEC_LIST_AS)
 			-- Process `l_as'.
 		do
 			process_eiffel_list (l_as)
@@ -10548,10 +10555,8 @@ feature {NONE} -- Implementation: checking locals
 			locals_not_void: l_as.locals /= Void
 		local
 			l_id_list: IDENTIFIER_LIST
-			l_local_type: TYPE_AS
 			l_local_name_id: INTEGER
 			l_local_name: STRING
-			l_solved_type: TYPE_A
 			i: INTEGER
 			l_local_info: LOCAL_INFO
 			l_context_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
@@ -10575,10 +10580,12 @@ feature {NONE} -- Implementation: checking locals
 				until
 					l_as.locals.after
 				loop
-					l_local_type := l_as.locals.item.type
-					check_type (l_local_type)
-					l_solved_type := last_type
-					if last_type /= Void then
+					if attached l_as.locals.item.type as l_local_type then
+						check_type (l_local_type)
+					else
+						last_type := none_type
+					end
+					if attached last_type as l_solved_type then
 						from
 							if not is_inherited then
 								instantiator.dispatch (l_solved_type, context.current_class)
@@ -11159,6 +11166,8 @@ feature {NONE} -- Type recording
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

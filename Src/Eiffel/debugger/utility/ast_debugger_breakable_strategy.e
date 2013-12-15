@@ -1,7 +1,5 @@
-note
-	description: "Summary description for {AST_DEBUGGER_BREAKABLE_STRATEGY}."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Debugger AST processor."
 
 class
 	AST_DEBUGGER_BREAKABLE_STRATEGY
@@ -467,9 +465,9 @@ feature {NONE} -- Iteration
 		local
 			l_info: like breakable_feature_info
 			l_body_ot_lst, l_inherited_ot_lst: ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
-			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			l_locals: EIFFEL_LIST [LIST_DEC_AS]
 			l_id_list: IDENTIFIER_LIST
-			l_local_vars: detachable ARRAYED_LIST [TUPLE [id: INTEGER; type: TYPE_AS]]
+			l_local_vars: detachable ARRAYED_LIST [TUPLE [id: INTEGER; type: detachable TYPE_AS]]
 		do
 			l_info := breakable_feature_info
 			if l_info /= Void then --and not current_feature_i.is_inline_agent then
@@ -696,6 +694,8 @@ feature {NONE} -- Implementation: Iteration
 		end
 
 ;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,100 +1,107 @@
 ﻿note
-	description: "AST node for a list of local decarations."
+	description: "Abstract description of an untyped identifier list declaration."
 
-class
-	LOCAL_DEC_LIST_AS
+class LIST_DEC_AS
 
 inherit
 	AST_EIFFEL
-
-create
-	make
-
-feature{NONE} -- Initialization
-
-	make (l_as: like locals; k_as: like local_keyword)
-			-- Initialize instance.
-		require
-			l_as_not_void: l_as /= Void
-		do
-			locals := l_as
-			if k_as /= Void then
-				local_keyword_index := k_as.index
-			end
-		ensure
-			locals_set: locals = l_as
-			local_keyword_set: k_as /= Void implies local_keyword_index = k_as.index
+		redefine
+			is_equivalent
 		end
 
-feature -- Access
+	SHARED_NAMES_HEAP
 
-	locals: EIFFEL_LIST [LIST_DEC_AS]
-			-- Local declarations.
+create
+	initialize
+
+feature {NONE} -- Initialization
+
+	initialize (i: like id_list)
+			-- Create a new AST node with the list of identifiers `i'.
+		require
+			i_not_void: attached i
+		do
+			id_list := i
+		ensure
+			id_list_set: id_list = i
+		end
 
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- Visitor feature.
+			-- process current element.
 		do
-			v.process_local_dec_list_as (Current)
+			v.process_list_dec_as (Current)
 		end
 
-	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
 		do
-			if locals = Void then
-				Result := other.locals = Void
-			else
-				Result := other.locals /= Void and then locals.is_equivalent (other.locals)
+			if attached id_list.id_list as l then
+				Result := l.first
 			end
+		end
+
+feature -- Access
+
+	id_list: IDENTIFIER_LIST
+			-- List of ids
+
+	item_name (i: INTEGER): detachable STRING
+			-- Name of `id' at position `i'.
+			-- item names are ascii compatible.
+		require
+			valid_index: id_list.valid_index (i)
+		do
+			Result := Names_heap.item (id_list.i_th (i))
+		end
+
+	type: detachable TYPE_AS
+			-- Specified type (if any).
+		do
+				-- Void by default.
 		end
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-			-- First token in current AST node
+			-- First token in current AST nodE
 		do
-			if a_list /= Void and local_keyword_index /= 0 then
-				Result := local_keyword (a_list)
-			elseif locals /= Void then
-				Result := locals.last_token (a_list)
+			if
+				attached a_list and then
+				attached id_list.id_list as l_list and then
+				not l_list.is_empty and then
+				a_list.valid_index (l_list.first)
+			then
+				Result := a_list.i_th (l_list.first)
 			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 			-- Last token in current AST node
 		do
-			if locals /= Void then
-				Result := locals.last_token (a_list)
-			end
-			if (Result = Void or else Result.is_null) and a_list /= Void and local_keyword_index /= 0 then
-				Result := local_keyword (a_list)
+			if
+				attached a_list and then
+				attached id_list.id_list as l_list and then
+				not l_list.is_empty and then
+				a_list.valid_index (l_list.first)
+			then
+				Result := a_list.i_th (l_list.last)
 			end
 		end
 
-feature -- Roundtrip
+feature -- Comparison
 
-	local_keyword_index: INTEGER
-			-- Index of keyword "local" associated with current AST node
-
-	local_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "local" associated with current AST node
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
+	is_equivalent (other: like Current): BOOLEAN
+			-- Is `other' equivalent to the current object ?
 		do
-			i := local_keyword_index
-			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as r then
-				Result := r
-			end
+			Result := equal (id_list, other.id_list)
 		end
 
-	index: INTEGER
-			-- <Precursor>
-		do
-			Result := local_keyword_index
-		end
+invariant
+	id_list_not_void: id_list /= Void
 
 note
 	date: "$Date$"
@@ -129,4 +136,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,21 +1,20 @@
-note
-	description:
-		"Abstract description of a type declaration. %
-		%Version for Bench."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Abstract description of a typed variables declaration."
 
 class TYPE_DEC_AS
 
 inherit
-	AST_EIFFEL
+	LIST_DEC_AS
+		rename
+			initialize as list_initialize
 		redefine
-			is_equivalent
+			first_token,
+			index,
+			is_equivalent,
+			last_token,
+			process,
+			type
 		end
-
-	SHARED_NAMES_HEAP
 
 create
 	initialize
@@ -28,7 +27,7 @@ feature {NONE} -- Initialization
 			i_not_void: i /= Void
 			t_not_void: t /= Void
 		do
-			id_list := i
+			list_initialize (i)
 			type := t
 			if c_as /= Void then
 				colon_symbol_index := c_as.index
@@ -60,8 +59,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := colon_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {SYMBOL_AS} a_list.i_th (i) as r then
+				Result := r
 			end
 		end
 
@@ -73,32 +72,16 @@ feature -- Roundtrip
 
 feature -- Access
 
-	id_list: IDENTIFIER_LIST
-			-- List of ids
-
 	type: TYPE_AS
-			-- Type
-
-	item_name (i: INTEGER): detachable STRING
-			-- Name of `id' at position `i'.
-			-- item names are ascii compatible.
-		require
-			valid_index: id_list.valid_index (i)
-		do
-			Result := Names_heap.item (id_list.i_th (i))
-		end
+			-- <Precursor>
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 			-- First token in current AST nodE
 		do
-			if a_list /= Void and (attached id_list.id_list as l_list and then not l_list.is_empty) then
-				if a_list.valid_index (l_list.first) then
-					Result := a_list.i_th (l_list.first)
-				end
-			end
-			if Result = Void then
+			Result := Precursor (a_list)
+			if not attached Result then
 				Result := type.first_token (a_list)
 			end
 		end
@@ -114,8 +97,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equal (id_list, other.id_list) and then
-				equivalent (type, other.type)
+			Result := Precursor (other) and then equivalent (type, other.type)
 		end
 
 feature {TYPE_DEC_AS, AST_FORMAL_GENERICS_PASS2} -- Replication
@@ -125,22 +107,14 @@ feature {TYPE_DEC_AS, AST_FORMAL_GENERICS_PASS2} -- Replication
 			valid_t: t /= Void
 		do
 			type := t
-		end;
-
-feature {TYPE_DEC_AS} -- Replication
-
-	set_id_list (id: like id_list)
-		require
-			valid_t: id /= Void
-		do
-			id_list := id
-		end;
+		end
 
 invariant
 	type_not_void: type /= Void
-	id_list_not_void: id_list /= Void
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -172,4 +146,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TYPE_DEC_AS
+end

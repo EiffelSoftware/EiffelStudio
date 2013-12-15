@@ -1,9 +1,5 @@
-note
-	description	: "Information about a call in the calling stack."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+﻿note
+	description: "Information about a call in the calling stack."
 	fixme: "Check retrieved arguments and locals validity"
 
 class CALL_STACK_ELEMENT_CLASSIC
@@ -455,14 +451,18 @@ feature {NONE} -- Implementation
 							loop
 								id_list := local_decl_grps.item.id_list
 								if not id_list.is_empty then
-									l_stat_class := static_class_for_local (local_decl_grps.item.type, rout_i, l_wc)
+									if attached local_decl_grps.item.type as t then
+										l_stat_class := static_class_for_local (t, rout_i, l_wc)
+									else
+										l_stat_class := Void
+									end
 									from
 										id_list.start
 									until
 										id_list.after or
 										l_index > l_upper
 									loop
-										value := l_locals[l_index]
+										value := l_locals [l_index]
 										value.set_item_number (counter)
 										counter := counter + 1
 										value.set_name (l_names_heap.item (id_list.item))
@@ -638,6 +638,8 @@ invariant
 	valid_level: level_in_stack >= 1
 
 note
+	date: "$Date$"
+	revision: "$Revision $"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -669,4 +671,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CALL_STACK_ELEMENT_CLASSIC
+end

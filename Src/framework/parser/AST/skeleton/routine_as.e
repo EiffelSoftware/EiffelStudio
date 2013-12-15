@@ -1,10 +1,5 @@
-note
-	description	: "Abstract description of the content of a standard %
-				  %feature. Version for Bench."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+﻿note
+	description	: "Abstract description of the content of a standard feature"
 
 class ROUTINE_AS
 
@@ -123,7 +118,7 @@ feature -- Attributes
 	precondition: detachable REQUIRE_AS
 			-- Precondition list
 
-	locals: detachable EIFFEL_LIST [TYPE_DEC_AS]
+	locals: detachable EIFFEL_LIST [LIST_DEC_AS]
 			-- Local declarations
 		do
 			if
@@ -390,6 +385,8 @@ invariant
 --	end_keyword_not_void: end_keyword /= Void
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -421,4 +418,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ROUTINE_AS
+end

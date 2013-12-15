@@ -1,10 +1,5 @@
-note
-	description : "Objects that ..."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	description: "Element of a call stack."
 
 deferred class
 	EIFFEL_CALL_STACK_ELEMENT
@@ -200,7 +195,7 @@ feature -- Properties
 	locals: LIST [ABSTRACT_DEBUG_VALUE]
 			-- Value of local variables
 		local
-			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			l_locals: EIFFEL_LIST [LIST_DEC_AS]
 			f: E_FEATURE
 		do
 			if not initialized then
@@ -284,7 +279,7 @@ feature {NONE} -- Implementation
 			initialized: initialized
 		end
 
-	local_decl_grps_from (feat: E_FEATURE): EIFFEL_LIST [TYPE_DEC_AS]
+	local_decl_grps_from (feat: E_FEATURE): EIFFEL_LIST [LIST_DEC_AS]
 			-- Locals declaration groups for `feat'.
 		do
 			Result := feat.locals
@@ -338,6 +333,8 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
+	date        : "$Date$"
+	revision    : "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -369,4 +366,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_CALL_STACK_ELEMENT
+end

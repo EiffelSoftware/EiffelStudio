@@ -1,10 +1,5 @@
-note
-	description: "Object to generate feature local variable domains used in Eiffel query language"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Object to generate feature local variable domains used in Eiffel query language."
 
 class
 	QL_LOCAL_DOMAIN_GENERATOR
@@ -68,8 +63,8 @@ feature -- Visit
 	process_feature (a_item: QL_FEATURE)
 			-- Process `a_item'.
 		local
-			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
-			l_type_dec_as: TYPE_DEC_AS
+			l_locals: EIFFEL_LIST [LIST_DEC_AS]
+			l_type_dec_as: LIST_DEC_AS
 			l_local: QL_LOCAL
 			l_cnt: INTEGER
 			i: INTEGER
@@ -175,6 +170,8 @@ feature{NONE} -- Implementation/Criterion interaction
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -205,7 +202,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

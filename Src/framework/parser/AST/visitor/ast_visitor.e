@@ -1,9 +1,5 @@
 note
 	description: "Visitor to traverse an AST."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$date: $"
-	revision: "$revision: $"
 
 deferred class
 	AST_VISITOR
@@ -441,6 +437,14 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		end
 
 	process_once_as (l_as: ONCE_AS)
+			-- Process `l_as'.
+		require
+			is_valid_visitor: is_valid
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_list_dec_as (l_as: LIST_DEC_AS)
 			-- Process `l_as'.
 		require
 			is_valid_visitor: is_valid
@@ -1296,6 +1300,14 @@ feature {AST_EIFFEL} -- Clickable visitor
 		deferred
 		end
 
+	process_list_dec_list_as (l_as: LIST_DEC_LIST_AS)
+			-- Process `l_as'.
+		require
+			is_valid_visitor: is_valid
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 			-- Process `l_as'.
 		require
@@ -1305,6 +1317,8 @@ feature {AST_EIFFEL} -- Clickable visitor
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -1336,4 +1350,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- AST_VISITOR
+end

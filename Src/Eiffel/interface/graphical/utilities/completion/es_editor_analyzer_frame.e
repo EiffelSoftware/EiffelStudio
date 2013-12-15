@@ -1,11 +1,5 @@
-note
-	description: "[
-			Encapsulates a completion stack frame, containing stacked local data.
-		]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Completion stack frame, containing stacked local data."
 
 class
 	ES_EDITOR_ANALYZER_FRAME
@@ -98,8 +92,8 @@ feature {NONE} -- Access
 			result_compares_objects: Result.object_comparison
 		end
 
-	ast_local_declarations: HASH_TABLE [TYPE_AS, STRING_32]
-			-- Table of AST local declarations, ones the were added through `add_local'
+	ast_local_declarations: HASH_TABLE [detachable TYPE_AS, STRING_32]
+			-- Table of AST local declarations, ones the were added through `add_local'.
 			--
 			-- value: Class type description.
 			-- key: Entity name.
@@ -183,13 +177,13 @@ feature -- Query
 		local
 			l_class: like context_class
 			l_feature: like context_feature
-			l_parsed_locals: HASH_TABLE [TYPE_AS, STRING_32]
-			l_locals: HASH_TABLE [TYPE_AS, STRING_32]
-			l_parent_locals: HASH_TABLE [TYPE_A, STRING_32]
+			l_parsed_locals: HASH_TABLE [detachable TYPE_AS, STRING_32]
+			l_locals: HASH_TABLE [detachable TYPE_AS, STRING_32]
+			l_parent_locals: HASH_TABLE [detachable TYPE_A, STRING_32]
 			l_generator: like type_a_generator
 			l_checker: like type_a_checker
 			l_name, l_anchor_name: STRING_32
-			l_type, l_solved_type: TYPE_A
+			l_solved_type: TYPE_A
 			l_parent_frame: ES_EDITOR_ANALYZER_FRAME
 			l_exit: BOOLEAN
 		do
@@ -216,8 +210,7 @@ feature -- Query
 				l_checker.init_with_feature_table (l_feature, l_class.feature_table, Void)
 				from l_locals.start until l_locals.after loop
 					l_name := l_locals.key_for_iteration
-					l_type := l_generator.evaluate_type (l_locals.item_for_iteration, l_class)
-					if l_type /= Void then
+					if attached l_locals.item_for_iteration as t and then attached l_generator.evaluate_type (t, l_class) as l_type then
 						l_solved_type := l_checker.solved (l_type, l_locals.item_for_iteration)
 						if l_solved_type = Void then
 								-- We have an unsolveable type at this level in the context frame.
@@ -281,11 +274,11 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	parsed_string_local_declarations: HASH_TABLE [TYPE_AS, STRING_32]
+	parsed_string_local_declarations: HASH_TABLE [detachable TYPE_AS, STRING_32]
 			-- Parses the string local declarations to retrieve a list of parsed AST declarations, similar
 			-- to `ast_local_declarations'.
 			--
-			-- value: Type abstract syntax node.
+			-- value: Type abstract syntax node (if any).
 			-- key: Local entity name.
 		require
 			internal_string_local_declarations_attached: internal_string_local_declarations /= Void
@@ -297,13 +290,11 @@ feature {NONE} -- Query
 			l_option: CONF_OPTION
 			l_parser: EIFFEL_PARSER
 			l_parser_wrapper: like eiffel_parser_wrapper
-			l_declarations: ARRAYED_LIST [TYPE_DEC_AS]
+			l_declarations: ARRAYED_LIST [LIST_DEC_AS]
 			l_entity_name_map: HASH_TABLE [STRING_32, STRING_32]
 			l_entity_name: STRING_32
 			l_prefix: STRING_32
-			l_type_dec: TYPE_DEC_AS
 			l_type: TYPE_AS
-			l_ids: IDENTIFIER_LIST
 			l_name: STRING_32
 		do
 			l_string_locals := string_local_declarations
@@ -372,28 +363,26 @@ feature {NONE} -- Query
 				-- Build result, assigning the type declartation to an index local entity name.
 			create Result.make (l_declarations.count * 2)
 			from l_declarations.start until l_declarations.after loop
-				l_type_dec := l_declarations.item
-				if l_type_dec /= Void then
-					l_ids := l_type_dec.id_list
-					if l_ids /= Void then
-							-- Iterate all ids.
-						from l_ids.start until l_ids.after loop
-							l_name := l_type_dec.item_name (l_ids.index)
-							l_type := l_type_dec.type
-							if l_type /= Void and then l_name /= Void and then not l_name.is_empty then
-								l_name := l_entity_name_map.item (l_name)
-								check
-										-- If this fails then convert the name to lower case, the compiler must have changed.
-										-- Or remove the two `l_entity_name.to_lower' called when extending `l_entity_name_map'.
-									l_entity_name_map_has_l_name: l_name /= Void
-								end
-								Result.force (l_type, l_name)
-								internal_locals := Void
-							else
-								check False end
+				if attached l_declarations.item as l_type_dec and then
+					attached l_type_dec.id_list as l_ids
+				then
+					l_type := l_type_dec.type
+						-- Iterate all ids.
+					from l_ids.start until l_ids.after loop
+						l_name := l_type_dec.item_name (l_ids.index)
+						if l_name /= Void and then not l_name.is_empty then
+							l_name := l_entity_name_map.item (l_name)
+							check
+									-- If this fails then convert the name to lower case, the compiler must have changed.
+									-- Or remove the two `l_entity_name.to_lower' called when extending `l_entity_name_map'.
+								l_entity_name_map_has_l_name: l_name /= Void
 							end
-							l_ids.forth
+							Result.force (l_type, l_name)
+							internal_locals := Void
+						else
+							check False end
 						end
+						l_ids.forth
 					end
 				end
 				l_declarations.forth
@@ -414,7 +403,7 @@ feature {NONE} -- Helpers
 
 feature -- Extension
 
-	add_local (a_type: TYPE_DEC_AS)
+	add_local (a_type: LIST_DEC_AS)
 			-- Adds a local entity to the frame, from an AST local declaration.
 			--
 			-- `a_type': The local type declaration.
@@ -428,20 +417,18 @@ feature -- Extension
 			l_ids := a_type.id_list
 			if l_ids /= Void then
 				l_type := a_type.type
-				if l_type /= Void then
-					l_ast_local_declarations := ast_local_declarations
-					from l_ids.start until l_ids.after loop
-						if
-							attached a_type.item_name (l_ids.index) as l_name and then
-							not l_name.is_empty
-						then
-							l_ast_local_declarations.force (l_type, l_name)
-							internal_locals := Void
-						else
-							check item_name_not_empty: False end
-						end
-						l_ids.forth
+				l_ast_local_declarations := ast_local_declarations
+				from l_ids.start until l_ids.after loop
+					if
+						attached a_type.item_name (l_ids.index) as l_name and then
+						not l_name.is_empty
+					then
+						l_ast_local_declarations.force (l_type, l_name)
+						internal_locals := Void
+					else
+						check item_name_not_empty: False end
 					end
+					l_ids.forth
 				end
 			end
 		ensure
@@ -488,6 +475,8 @@ invariant
 	--non_circular_parent: has_parent implies parent /= Void and then not is_parented_to_current (parent)
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

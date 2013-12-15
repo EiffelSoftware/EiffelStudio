@@ -1,10 +1,6 @@
 ﻿note
 
 	description: "AST node factories. Accepts UTF-8 encoding in STRING_8 instances."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class AST_FACTORY
 
@@ -1307,6 +1303,16 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
+	new_eiffel_list_list_dec_as (n: INTEGER): detachable LIST_DEC_LIST_AS
+			-- New empty list of LIST_DEC_AS
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make_filled (n)
+		ensure
+			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+		end
+
 	new_eiffel_list_type_dec_as (n: INTEGER): detachable TYPE_DEC_LIST_AS
 			-- New empty list of TYPE_DEC_AS
 		require
@@ -1858,6 +1864,14 @@ feature -- Access
 			end
 		end
 
+	new_list_dec_as (i: detachable IDENTIFIER_LIST): detachable LIST_DEC_AS
+			-- New TYPE_DEC AST node
+		do
+			if attached i then
+				create Result.initialize (i)
+			end
+		end
+
 	new_type_dec_as (i: detachable IDENTIFIER_LIST; t: detachable TYPE_AS; c_as: detachable SYMBOL_AS): detachable TYPE_DEC_AS
 			-- New TYPE_DEC AST node
 		do
@@ -1972,7 +1986,7 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
-	new_local_dec_list_as (l: detachable EIFFEL_LIST [TYPE_DEC_AS]; k_as: detachable KEYWORD_AS): detachable LOCAL_DEC_LIST_AS
+	new_local_dec_list_as (l: detachable EIFFEL_LIST [LIST_DEC_AS]; k_as: detachable KEYWORD_AS): detachable LOCAL_DEC_LIST_AS
 			-- New LOCAL_DEC_LIST AST node
 		do
 			if l /= Void then
@@ -2053,6 +2067,8 @@ feature {NONE} -- Implementation
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -2084,4 +2100,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class AST_FACTORY
+end

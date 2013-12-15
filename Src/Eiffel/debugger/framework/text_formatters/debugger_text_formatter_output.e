@@ -1,9 +1,5 @@
-note
-	description: "Routines for use by classes that need to display debugger related objects in TEXT_FORMATTER."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Routines for use by classes that need to display debugger related objects in {TEXT_FORMATTER}."
 
 class
 	DEBUGGER_TEXT_FORMATTER_OUTPUT
@@ -366,7 +362,7 @@ feature -- Call stack
 			resval: ABSTRACT_DEBUG_VALUE
 
 			local_names: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]
-			local_decl_grps: EIFFEL_LIST [TYPE_DEC_AS]
+			local_decl_grps: EIFFEL_LIST [LIST_DEC_AS]
 			locals_list: LIST [ABSTRACT_DEBUG_VALUE]
 		do
 			ecse ?= cse
@@ -818,9 +814,9 @@ feature {NONE} -- Constants
 
 	Is_unknown: STRING = " = Unknown"
 
-	Bit_label: STRING = "BIT ";
-
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

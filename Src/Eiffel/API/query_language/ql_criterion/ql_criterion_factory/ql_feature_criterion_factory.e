@@ -1,10 +1,5 @@
-note
-	description: "Factory to produce feature criteria"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Factory to produce feature criteria."
 
 class
 	QL_FEATURE_CRITERION_FACTORY
@@ -734,7 +729,7 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		local
-			l_locals:  EIFFEL_LIST [TYPE_DEC_AS]
+			l_locals:  EIFFEL_LIST [LIST_DEC_AS]
 		do
 			Result := a_item.is_real_feature
 			if Result then
@@ -1072,6 +1067,8 @@ feature{NONE} -- Implementation
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -1102,7 +1099,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

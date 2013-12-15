@@ -1,9 +1,5 @@
-note
+﻿note
 	description: "Internal representation of a system."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class SYSTEM_I
 
@@ -224,7 +220,7 @@ feature -- Properties
 	type_id_counter: COUNTER
 			-- Counter of valid instances of CLASS_TYPE
 
-	class_types: ARRAY [CLASS_TYPE]
+	class_types: ARRAY [detachable CLASS_TYPE]
 			-- Array of class types indexed by their `type_id'
 
 	skeleton_table: HASH_TABLE [STRING, STRING]
@@ -934,7 +930,7 @@ end
 		do
 			a_type_id := class_type.type_id
 			if a_type_id > class_types.count then
-				class_types.conservative_resize (1, a_type_id + System_chunk)
+				class_types.conservative_resize_with_default (Void, 1, a_type_id + System_chunk)
 			end
 			class_types.put (class_type, a_type_id)
 		end
@@ -3772,10 +3768,6 @@ feature -- Dead code removal
 			l_class := string_32_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
-				-- Protection of feature `make' of class TUPLE
-			l_class := tuple_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
-
 				-- Protection of ROUTINE class features
 			l_class := routine_class.compiled_class
 			l_feature_table := l_class.feature_table
@@ -6238,7 +6230,7 @@ feature -- Statistics
 	conformance_checks: TUPLE [nb, like_target, same: INTEGER]
 			--
 		once
-			create Result
+			Result := [{INTEGER} 0, {INTEGER} 0, {INTEGER} 0]
 		end
 
 	print_memory_statistics
@@ -6309,6 +6301,8 @@ feature {NONE} -- External features
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -6340,4 +6334,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SYSTEM_I
+end

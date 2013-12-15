@@ -1,9 +1,5 @@
-note
-	description	: "Information about a call in the calling stack."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+﻿note
+	description: "Information about a call in the calling stack."
 
 class CALL_STACK_ELEMENT_DOTNET
 
@@ -508,7 +504,7 @@ feature {NONE} -- Implementation
 		require
 			initialized_current_object
 		local
-			local_decl_grps: EIFFEL_LIST [TYPE_DEC_AS]
+			local_decl_grps: EIFFEL_LIST [LIST_DEC_AS]
 			l_ot_locals: like object_test_locals_info
 			id_list: IDENTIFIER_LIST
 			l_index: INTEGER
@@ -614,7 +610,11 @@ feature {NONE} -- Implementation
 							loop
 								id_list := local_decl_grps.item.id_list
 								if not id_list.is_empty then
-									l_stat_class := static_class_for_local (local_decl_grps.item.type, rout_i, l_wc)
+									if attached local_decl_grps.item.type as t then
+										l_stat_class := static_class_for_local (t, rout_i, l_wc)
+									else
+										l_stat_class := Void
+									end
 									from
 										id_list.start
 									until
@@ -827,6 +827,8 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
+	date		: "$Date$"
+	revision	: "$Revision $"
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -858,4 +860,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CALL_STACK_ELEMENT_DOTNET
+end

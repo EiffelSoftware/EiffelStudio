@@ -1,9 +1,5 @@
-note
+﻿note
 	description: "Representation of an eiffel routine."
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision$"
 
 class E_ROUTINE
 
@@ -74,7 +70,7 @@ feature -- Access
 			Result := arguments.argument_names
 		end
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS]
+	locals: EIFFEL_LIST [LIST_DEC_AS]
 		local
 			routine_as: detachable ROUTINE_AS
 		do
@@ -236,10 +232,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 			else
 				Result := Precursor
 			end
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -270,4 +268,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_ROUTINE
+end

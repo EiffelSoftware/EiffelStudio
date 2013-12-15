@@ -1,10 +1,5 @@
-note
-	description: "Object that represents a feature argument or a local variable used in Eiffel query language"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Descriptor of a feature argument or a local variable used in Eiffel query language."
 
 deferred class
 	QL_FEATURE_VARIABLE
@@ -73,7 +68,7 @@ feature -- Access
 	name: READABLE_STRING_32
 			-- Name of current item
 
-	ast: TYPE_DEC_AS
+	ast: LIST_DEC_AS
 			-- AST node associated with current item
 		do
 			if internal_ast = Void then
@@ -99,14 +94,14 @@ feature{NONE} -- Implementation
 		deferred
 		end
 
-	type_dec_ast_with_name (a_name: STRING; a_type_dec_list: EIFFEL_LIST [TYPE_DEC_AS]): TYPE_DEC_AS
+	type_dec_ast_with_name (a_name: STRING; a_type_dec_list: EIFFEL_LIST [LIST_DEC_AS]): LIST_DEC_AS
 			-- TYPE_DEC_AS object which has identifier named `a_name' in `a_type_dec_list'.
 			-- Void if no item is named `a_name' in `a_type_dec_list'.
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_type_dec: TYPE_DEC_AS
+			l_type_dec: LIST_DEC_AS
 			l_cnt: INTEGER
 			i: INTEGER
 		do
@@ -150,6 +145,8 @@ invariant
 	parent_is_real_feature: parent.is_real_feature
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

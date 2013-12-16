@@ -207,6 +207,9 @@ feature -- Attributes
 			Result := type.type_id
 		end
 
+	builtin_type: ARRAYED_LIST [INTEGER]
+			-- The builtin types of the attributes.
+
 feature -- Utilities
 
 	reflection: INTERNAL
@@ -216,14 +219,20 @@ feature {PS_METADATA_FACTORY} -- Initialization
 
 	make (a_type: TYPE [detachable ANY]; a_manager: PS_METADATA_FACTORY)
 			-- Initialize `Current'.
+		local
+			count: INTEGER
 		do
 			type := a_type
 			factory := a_manager
-			create attr_name_to_type_hash.make (100)
-			create attr_name_to_index_hash.make (100)
-			create {LINKED_LIST [STRING]} attributes.make
-			attributes.compare_objects
 			create reflection
+
+			count := reflection.field_count_of_type (type.type_id)
+
+			create attr_name_to_type_hash.make (count)
+			create attr_name_to_index_hash.make (count)
+			create {ARRAYED_LIST [STRING]} attributes.make (count)
+			create builtin_type.make (count)
+			attributes.compare_objects
 		end
 
 	initialize
@@ -249,6 +258,8 @@ feature {PS_METADATA_FACTORY} -- Initialization
 				attr_name_to_index_hash.extend (i, attr_name)
 				attr_name_to_type_hash.extend (attr_type_metadata, attr_name)
 				attributes.extend (attr_name)
+
+				builtin_type.extend (reflection.field_type_of_type (i, type.type_id))
 				i := i + 1
 			end
 		end

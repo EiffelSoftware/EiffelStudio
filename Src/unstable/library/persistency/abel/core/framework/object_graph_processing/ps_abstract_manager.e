@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			primary_key_mapper := key_mapper
 			create identity_type_handlers.make (tiny_size)
 			create value_type_handlers.make (tiny_size)
+			create type_handler_cache.make (tiny_size)
 		end
 
 	tiny_size: INTEGER = 5
@@ -138,28 +139,39 @@ feature {NONE} -- Utilities
 				set as idx_cursor
 			loop
 				i := idx_cursor.item
-				found := False
-				-- First search for value types.
-				across
-					value_type_handlers as v_cursor
-				until
-					found
-				loop
-					if v_cursor.item.can_handle (item (i)) then
-						item (i).set_handler (v_cursor.item)
-						found := True
+				if
+					attached type_handler_cache [item (i).type] as cached
+					and then cached.can_handle (item (i))
+				then
+					item (i).set_handler (cached)
+					found := True
+				else
+					found := False
+					-- First search for value types.
+					across
+						value_type_handlers as v_cursor
+					until
+						found
+					loop
+						if v_cursor.item.can_handle (item (i)) then
+							item (i).set_handler (v_cursor.item)
+							type_handler_cache.extend (v_cursor.item, item (i).type)
+							found := True
+						end
 					end
-				end
 
-				across
-					identity_type_handlers as i_cursor
-				until
-					found
-				loop
-					if i_cursor.item.can_handle (item (i)) then
-						item (i).set_handler (i_cursor.item)
-						found := True
+					across
+						identity_type_handlers as i_cursor
+					until
+						found
+					loop
+						if i_cursor.item.can_handle (item (i)) then
+							item (i).set_handler (i_cursor.item)
+							type_handler_cache.extend (i_cursor.item, item (i).type)
+							found := True
+						end
 					end
+
 				end
 
 				if not found then
@@ -170,6 +182,9 @@ feature {NONE} -- Utilities
 				end
 			end
 		end
+
+	type_handler_cache: HASH_TABLE [PS_HANDLER, PS_TYPE_METADATA]
+			-- A cache to quickly map a type to a handler.
 
 	search_value_type_handler (type: PS_TYPE_METADATA): detachable PS_HANDLER
 			-- Try to find a value type handler for `type'

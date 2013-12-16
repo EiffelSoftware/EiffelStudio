@@ -178,7 +178,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Querying operations
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
 			can_handle_retrieved_object: not query.is_after implies can_handle (query.result_cache.last)
-			not_after_means_known: not query.is_after implies (query.generic_type.is_expanded or is_identified (query.result_cache.last, transaction))
+			not_after_means_known: (not query.is_after and not transaction.is_readonly) implies (query.generic_type.is_expanded or is_identified (query.result_cache.last, transaction))
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)

@@ -40,34 +40,41 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			-- For any referenced object not yet loaded, tell the `read_manager'
 			-- to retrieve it in the next iteration.
 		local
-			new_instance: detachable ANY
 			reflector: REFLECTED_OBJECT
 
 			retrieved: PS_BACKEND_OBJECT
 			field_type: INTEGER
 			field_name: STRING
 			i: INTEGER
+			field_count: INTEGER
 
 			pos: INTEGER
 
 			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
+
+			dynamic_type: INTEGER
 		do
-			new_instance := object.reflector.object
 			reflector := object.reflector
 
 			retrieved := object.backend_object
 
 			from
 				i := 1
+				field_count := retrieved.metadata.attribute_count
 			until
-				i > reflector.field_count
+				i > field_count
 			loop
-				field_type := reflector.field_type (i)
-				field_name := reflector.field_name (i)
-				if retrieved.has_attribute (field_name) then
-					field := retrieved.attribute_value (reflector.field_name (i))
+--				field_type := reflector.field_type (i)
+--				field_name := reflector.field_name (i)
+				field_type := retrieved.metadata.builtin_type [i]
+				field_name := retrieved.metadata.attributes [i]
+
+--				if retrieved.has_attribute (field_name) then
+--					field := retrieved.attribute_value (field_name)
+				if attached retrieved.value_lookup (field_name) as f then
+					field := f
 
 					-- Assign basic expanded attributes
 					if
@@ -131,8 +138,13 @@ feature {PS_ABEL_EXPORT} -- Read functions
 						-- Try to assign as much as possible
 						--check expanded_not_implemented: field_type = reference_type end
 
-						if not field.type.is_equal ("NONE") then
-							dynamic_field_type := type_from_string (field.type)
+						dynamic_type := internal_lib.dynamic_type_from_string (field.type)
+						if dynamic_type /= ({detachable NONE}).type_id then
+
+
+--						if field.type /~ "NONE" then
+							dynamic_field_type := read_manager.metadata_factory.create_metadata_from_type_id (dynamic_type)
+			--				dynamic_field_type := type_from_string (field.type)
 
 							if read_manager.is_processable (field.value, dynamic_field_type) then
 								if field_type = reference_type and then attached read_manager.processed_object (field.value, dynamic_field_type, object) as val then

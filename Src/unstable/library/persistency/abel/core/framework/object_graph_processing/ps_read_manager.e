@@ -182,9 +182,27 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			-- Check if the object identified by the [`value', `type'] tuple
 			-- can be processed right now. The result is true when
 			-- `type' is a value type or when the object has been retrieved before.
+		require
+			not_none: not type.type.name.ends_with ("NONE")
+		local
+--			referee_index: INTEGER
+--			referee: PS_OBJECT_DATA
 		do
+--			Result := basic_expanded_types.has (type.type.type_id)
+--				or else (across value_type_handlers as cursor some cursor.item.can_handle_type (type) end)
+
+--			if not Result then
+--				check value_is_primary_key: value.is_integer end
+
+--				referee_index := cache_lookup (value.to_integer, type)
+
+--				if referee_index > 0 then
+--					referee := item (referee_index)
+--					Result := referee.is_ignored or referee.is_object_initialized
+--				end
+--			end
+
 			Result := (type.type.is_expanded and then basic_expanded_types.has (type.type.type_id))
-				or else type.type.name.ends_with ("NONE")
 				or else (across value_type_handlers as cursor some cursor.item.can_handle_type (type) end)
 				or else (attached cache [type] as second_lvl
 					and then second_lvl [value.to_integer] > 0
@@ -198,24 +216,15 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			-- The `referer' denotes the object issuing the request.
 		require
 			buildable: is_processable (value, type)
+			not_none: not type.type.name.ends_with ("NONE")
 		local
-			current_index:INTEGER
-			object_result: detachable PS_BACKEND_OBJECT
-			collection_result: detachable PS_BACKEND_COLLECTION
 			managed: MANAGED_POINTER
-			conv: UTF_CONVERTER
-
-			handler: detachable PS_HANDLER
+			referee_index: INTEGER
+			referee: PS_OBJECT_DATA
 		do
-			current_index := referer.index
-			-- Try to find a handler
-			handler := search_value_type_handler (type)
 
-			fixme ("No string comparisons")
-
-			if type.type.name.ends_with ("NONE") then
-				Result := Void
-			elseif type.type.is_expanded and then basic_expanded_types.has (type.type.type_id) then
+			if type.type.is_expanded and then basic_expanded_types.has (type.type.type_id) then
+				fixme ("No string comparisons")
 				if type.type.name.is_equal ("INTEGER_8") then
 					Result := value.to_integer_8
 				elseif type.type.name.is_equal ("INTEGER_16") then
@@ -255,28 +264,26 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 					end
 				end
 
-
-			elseif attached handler as safe_handler then
+			elseif attached search_value_type_handler (type) as safe_handler then
 				Result := safe_handler.build_from_string (value, type)
 
-			elseif
-				attached cache [type] as second_lvl
-				and then value.is_integer
-				and then second_lvl [value.to_integer] > 0
-			then
-				if attached item (second_lvl [value.to_integer]).backend_representation then
-					Result := item (second_lvl [value.to_integer]).reflector.object
-
-					item (current_index).references.extend (second_lvl [value.to_integer])
-					item (second_lvl [value.to_integer]).referers.extend (current_index)
-				else
-					Result := Void
-				end
-
 			else
-				check implementation_error: False end
-			end
+				check value_is_primary: value.is_integer end
 
+				referee_index := cache_lookup (value.to_integer, type)
+
+				if referee_index > 0 then
+					referee := item (referee_index)
+					if not referee.is_ignored then
+						Result := referee.reflector.object
+
+							-- The following two lines require about 25% of the total running time of this function.
+							-- They are usually only needed when dealing with relations...
+						referer.references.extend (referee_index)
+						referee.referers.extend (referer.index)
+					end
+				end
+			end
 		end
 
 	process_next (key: INTEGER; type: PS_TYPE_METADATA; referer: PS_OBJECT_DATA)
@@ -297,6 +304,10 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				end
 				found := True
 					-- Update the referers and references tables
+
+					-- The following two lines require about 25% of the total running time of this function.
+					-- They are usually only needed when dealing with relations...
+
 				referer.references.extend (i)
 				item (i).referers.extend (referer.index)
 			end
@@ -306,6 +317,10 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				add_object (create {PS_OBJECT_DATA}.make_with_primary_key (count + 1, key, type, current_level + 1), True)
 				to_process_next.extend (count)
 					-- Update the referers and references tables
+
+					-- The following two lines require about 25% of the total running time of this function.
+					-- They are usually only needed when dealing with relations...
+
 				referer.references.extend (count)
 				item (count).referers.extend (referer.index)
 			end
@@ -379,25 +394,31 @@ feature {NONE} -- Implementation: Loop body
 
 
 				-- Identify and cache the objects
+			if not transaction.is_readonly then
+
 			across
 				to_process as idx_cursor
 			loop
-				i := idx_cursor.item
-				if not item (i).is_ignored and not item (i).type.type.is_expanded then
-						-- Identify the object with the id_manager
-					id_manager.identify (item (i).reflector.object, transaction)
+--				i := idx_cursor.item
+				object := item (idx_cursor.item)
 
-					identifier := id_manager.identifier_wrapper (item (i).reflector.object, transaction)
-					item (i).set_identifier (identifier.object_identifier)
+				if not object.is_ignored and not object.type.type.is_expanded then
+						-- Identify the object with the id_manager
+					id_manager.identify (object.reflector.object, transaction)
+
+					identifier := id_manager.identifier_wrapper (object.reflector.object, transaction)
+					object.set_identifier (identifier.object_identifier)
 
 						-- Update the ABEL id -> primary key mapping
-					primary_key_mapper.add_entry (identifier, item (i).primary_key, transaction)
+					primary_key_mapper.add_entry (identifier, object.primary_key, transaction)
 
 						-- Update the root status
-					check attached item (i).backend_representation as br then
+					check attached object.backend_representation as br then
 						transaction.root_flags.force (br.is_root, identifier.object_identifier)
 					end
 				end
+			end
+
 			end
 
 				-- Update the references from the last iteration

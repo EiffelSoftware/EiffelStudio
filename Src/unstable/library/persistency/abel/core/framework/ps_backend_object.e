@@ -38,12 +38,19 @@ feature {PS_ABEL_EXPORT} -- Access
 			end
 		end
 
+	value_lookup (attribute_name: STRING): detachable TUPLE [value: STRING; attribute_class_name: IMMUTABLE_STRING_8]
+			-- The value of the attribute `attribute_name', if present.
+		do
+			Result := values [attribute_name]
+		end
+
 feature {PS_ABEL_EXPORT} -- Status report
 
 	has_attribute (attribute_name: STRING): BOOLEAN
 			-- Does the `Current' retrieved object have an attribute with name `attribute_name'?
 		do
-			Result := attributes.has (attribute_name)
+--			Result := attributes.has (attribute_name)
+			Result := values.has (attribute_name)
 		end
 
 	has_value_for_attribute (attribute_name: STRING): BOOLEAN
@@ -84,7 +91,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 				-- Ignore additional attributes (e.g. from plugins)
 				if metadata.attributes.has (cursor.key) then
 
-					attr_type := reflection.dynamic_type_from_string (cursor.item.second)
+					attr_type := reflection.dynamic_type_from_string (cursor.item.type)
 
 					-- For expanded types, or when an object was attached, the runtime type must conform to the declared type
 					Result := Result and (attr_type >= 0 implies
@@ -93,7 +100,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 					-- If a reference was Void during write, the runtime type was stored as NONE and the value is 0
 					Result := Result and (attr_type = reflection.none_type implies
 						not metadata.attribute_type (cursor.key).type.is_attached -- Type can be detachable
-						and cursor.item.first.is_empty) -- Value is an empty string
+						and cursor.item.value.is_empty) -- Value is an empty string
 				end
 			end
 		end
@@ -188,15 +195,15 @@ feature -- Debugging output
 			loop
 				Result.append ("%T%T")
 				Result.append (cursor.key + ": ")
-				Result.append (cursor.item.second + " = ")
-				Result.append (cursor.item.first)
+				Result.append (cursor.item.type + " = ")
+				Result.append (cursor.item.value)
 				Result.append ("%N")
 			end
 		end
 
 feature {NONE} -- Initialization
 
-	values: HASH_TABLE [PS_PAIR [STRING, IMMUTABLE_STRING_8], STRING]
+	values: HASH_TABLE [TUPLE [value: STRING; type: IMMUTABLE_STRING_8], STRING]
 			-- Maps attribute names to the corresponding value and runtime types.
 
 	make (key: INTEGER; class_data: PS_TYPE_METADATA)

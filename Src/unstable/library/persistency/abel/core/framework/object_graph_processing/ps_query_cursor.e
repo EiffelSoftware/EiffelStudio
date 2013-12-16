@@ -146,15 +146,17 @@ feature {PS_ABEL_EXPORT}
 			retrieved_entity: PS_BACKEND_ENTITY
 			new_object: PS_OBJECT_DATA
 
-			to_build: LINKED_LIST [INTEGER]
-			processed_item_list: LINKED_LIST [INTEGER]
+			to_build: ARRAYED_LIST [INTEGER]
+			processed_item_list:ARRAYED_LIST [INTEGER]
 		do
-			create processed_item_list.make
-			create to_build.make
+
 
 			from
 				batch_count := read_manager.backend.batch_retrieval_size
 				--batch_count := 1
+
+				create processed_item_list.make (batch_count.max (1))
+				create to_build.make (batch_count.max (1))
 			until
 				batch_count = 0 or current_result.after
 			loop

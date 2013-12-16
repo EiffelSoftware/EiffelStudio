@@ -32,7 +32,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 				end
 			end
 		ensure then
-			not_after_means_known: not is_after implies result_cache.last.generating_type.is_expanded or repository.is_identified (result_cache.last, internal_transaction)
+			not_after_means_known: not is_after implies result_cache.last.generating_type.is_expanded or repository.is_identified (result_cache.last, internal_transaction) or internal_transaction.is_readonly
 			can_handle_retrieved_object: not is_after implies repository.can_handle (result_cache.last)
 		rescue
 			repository.rollback_transaction (internal_transaction, False)

@@ -74,7 +74,7 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 	primary_key: INTEGER
 			-- The primary key of the current object, as used by the backend.
 
-	uninitialized_attributes: LINKED_LIST [INTEGER]
+	uninitialized_attributes: ARRAYED_LIST [INTEGER]
 			-- The fields which have not yet been set during retrieval.
 
 	handler: PS_HANDLER
@@ -197,9 +197,9 @@ feature {NONE} -- Initialization
 			internal_object := an_object
 			level := a_level
 			type := a_type
-			create {LINKED_LIST [INTEGER]} referers.make
-			create {LINKED_LIST [INTEGER]} references.make
-			create uninitialized_attributes.make
+			create {ARRAYED_LIST [INTEGER]} referers.make (1)
+			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
+			create uninitialized_attributes.make (a_type.attribute_count)
 		end
 
 	make_with_primary_key (idx: INTEGER; a_primary_key: INTEGER; a_type: PS_TYPE_METADATA; a_level: INTEGER)
@@ -209,9 +209,9 @@ feature {NONE} -- Initialization
 			type := a_type
 			level := a_level
 			primary_key := a_primary_key
-			create {LINKED_LIST [INTEGER]} referers.make
-			create {LINKED_LIST [INTEGER]} references.make
-			create uninitialized_attributes.make
+			create {ARRAYED_LIST [INTEGER]} referers.make (1)
+			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
+			create uninitialized_attributes.make (a_type.attribute_count)
 		end
 
 end

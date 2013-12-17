@@ -14,15 +14,8 @@
   <nav class="navbar navbar-default" role="navigation">
 		<!-- Brand and toggle get grouped for better mobile display -->
 	  <div class="navbar-header">
-		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-iron-navbar-collapse-1">
-		  <span class="sr-only">Toggle navigation</span>
-		  <span class="icon-bar"></span>
-		  <span class="icon-bar"></span>
-		  <span class="icon-bar"></span>
-		</button>
-		<a class="navbar-brand" href="{$current_url/}"><span class="glyphicon glyphicon-refresh"/></a>
+		<a class="navbar-brand" href="#"><span class="glyphicon glyphicon-refresh"/></a>
 	  </div>
-	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		<ul class="nav navbar-nav">
 		  {unless isempty="$menu"}
 				{foreach item="i_menu" from="$menu"}<li {if condition="$i_menu.is_active"}class ="active"{/if}>
@@ -47,7 +40,6 @@
 			  </li>
 			{/unless}
 		</ul>
-	  </div><!-- /.navbar-collapse -->
 	</nav>
   <div id="main">
   {unless isempty="$page_title"}<h1>{$page_title/}</h1>{/unless}

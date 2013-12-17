@@ -25,11 +25,11 @@ feature {PS_ABEL_EXPORT} -- Access: General information
 	index: INTEGER
 			-- The index of the current object.
 
-	referers: ARRAYED_LIST [INTEGER]
-			-- The index set of the objects holding a reference to the current object.
+	referer_count: INTEGER
+			-- The number of referers to this object.
 
-	references: ARRAYED_LIST [INTEGER]
-			-- The index set of the objects referred to by the current object.
+	last_referer: INTEGER
+			-- The last referer found during object graph traversal.
 
 	type: PS_TYPE_METADATA
 			-- Some information about the runtime type of the current object.
@@ -69,8 +69,6 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 
 	primary_key: INTEGER
 			-- The primary key of the current object, as used by the backend.
-
-	to_initialize: ARRAYED_LIST [detachable PS_TYPE_METADATA]
 
 	handler: PS_HANDLER
 			-- The handler for the current object.
@@ -167,6 +165,13 @@ feature {PS_ABEL_EXPORT} -- Element change
 			object_assigned: an_object = reflector
 		end
 
+	set_referer (referer_index: INTEGER)
+			-- Set the referer.
+		do
+			last_referer := referer_index
+			referer_count := referer_count + 1
+		end
+
 feature {NONE} -- Implementation
 
 	internal_handler: detachable like handler
@@ -181,33 +186,6 @@ feature {NONE} -- Implementation
 		note
 			option: stable
 		attribute
-		end
-
-feature {NONE} -- Initialization
-
-	make_with_object (idx: INTEGER; an_object: REFLECTED_OBJECT; a_level: INTEGER; a_type: PS_TYPE_METADATA)
-			-- Initialization for `Current'.
-		do
-			index := idx
-			internal_object := an_object
-			level := a_level
-			type := a_type
-			create {ARRAYED_LIST [INTEGER]} referers.make (1)
-			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
-			create to_initialize.make_filled (a_type.attribute_count)
-		end
-
-	make_with_primary_key (idx: INTEGER; a_primary_key: INTEGER; a_type: PS_TYPE_METADATA; a_level: INTEGER)
-			-- Initialization for `Current'
-		do
-			index := idx
-			type := a_type
-			level := a_level
-			primary_key := a_primary_key
-
-			create {ARRAYED_LIST [INTEGER]} referers.make (1)
-			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
-			create to_initialize.make_filled (a_type.attribute_count)
 		end
 
 end

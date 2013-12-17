@@ -279,8 +279,8 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 
 							-- The following two lines require about 25% of the total execution time of this function.
 							-- They are usually only needed when dealing with relations...
-						referer.references.extend (referee_index)
-						referee.referers.extend (referer.index)
+--						referer.references.extend (referee_index)
+						referee.set_referer (referer.index)
 					end
 				end
 			end
@@ -308,8 +308,8 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 					-- The following two lines require about 25% of the total execution time of this function.
 					-- They are usually only needed when dealing with relations...
 
-				referer.references.extend (i)
-				item (i).referers.extend (referer.index)
+--				referer.references.extend (i)
+				item (i).set_referer (referer.index)
 			end
 
 				-- Extend the objects list for retrieval
@@ -321,8 +321,8 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 					-- The following two lines require about 25% of the total execution time of this function.
 					-- They are usually only needed when dealing with relations...
 
-				referer.references.extend (count)
-				item (count).referers.extend (referer.index)
+--				referer.references.extend (count)
+				item (count).set_referer (referer.index)
 			end
 		end
 

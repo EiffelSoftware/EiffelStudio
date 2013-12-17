@@ -135,9 +135,9 @@ feature {PS_ABEL_EXPORT} -- Element change
 			class_name_not_empty: not class_name_of_value.is_empty
 			none_means_void_value: class_name_of_value.is_equal ("NONE") implies value.is_empty
 		local
-			pair: PS_PAIR [STRING, IMMUTABLE_STRING_8]
+			pair: TUPLE [STRING, IMMUTABLE_STRING_8]
 		do
-			create pair.make (value, class_name_of_value)
+			pair := [value, class_name_of_value]
 
 			if values.has (attribute_name) then
 				values.force (pair, attribute_name)

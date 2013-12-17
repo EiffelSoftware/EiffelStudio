@@ -10,7 +10,8 @@
 </head>
 <body>
 <div id="page">
-  <div id="header">{$big_title/}</div>
+  <div id="header">{$big_title/}
+  </div>
   <nav class="navbar navbar-default" role="navigation">
 		<!-- Brand and toggle get grouped for better mobile display -->
 	  <div class="navbar-header">
@@ -18,9 +19,26 @@
 	  </div>
 		<ul class="nav navbar-nav">
 		  {unless isempty="$menu"}
-				{foreach item="i_menu" from="$menu"}<li {if condition="$i_menu.is_active"}class ="active"{/if}>
+				{foreach item="i_menu" from="$menu"}
+				{if isempty="$i_menu.sub_links"}
+				<li {if condition="$i_menu.is_active"}class ="active"{/if}>
 					<a href="{$i_menu.url/}">{htmlentities}{$i_menu.title/}{/htmlentities}</a>
-				</li>{/foreach}
+				</li>
+				{/if}
+				{unless isempty="$i_menu.sub_links"}
+				<li class="{if condition="$i_menu.is_active"}active{/if} dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						{htmlentities}{$i_menu.title/}{/htmlentities}
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+					{foreach item="i_submenu" from="$i_menu.sub_links"}
+					<li><a href="{$i_submenu.url/}">{htmlentities}{$i_submenu.title/}{/htmlentities}</a></li>
+					{/foreach}
+					</ul>
+				</li>
+				{/unless}
+				{/foreach}
 		  {/unless}
 		  {if isempty="$iron_version_switch_urls"}
 			  {unless isempty="$iron_version"}<li>{$iron_version/}</li>{/unless}
@@ -40,6 +58,16 @@
 			  </li>
 			{/unless}
 		</ul>
+	    {unless isempty="$iron_version"}
+		<ul>
+		  <form class="navbar-form navbar-left" role="search" action="{$base_url/}/repository/{$iron_version.value/}/package/">
+			  <div class="form-group">
+				  <input type="text" class="form-control" placeholder="Search" name="name" tooltip="Wildcard are supported">
+			  </div>
+			  <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+		  </form>
+		</ul>
+		{/unless}
 	</nav>
   <div id="main">
   {unless isempty="$page_title"}<h1>{$page_title/}</h1>{/unless}

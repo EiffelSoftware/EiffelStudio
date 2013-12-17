@@ -41,6 +41,7 @@ feature -- Execution
 		do
 			r := new_response_message (req)
 			if attached package_version_from_id_path_parameter (req, "id") as l_package then
+				r.set_iron_version_package (l_package)
 				r.add_menu ("View", iron.package_version_view_web_page (l_package))
 				f := new_package_edit_form (l_package, req, False)
 				create l_theme.make_with_request (req)

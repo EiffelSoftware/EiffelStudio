@@ -481,8 +481,8 @@ feature -- Factory
 				Result.add_menu ("Account", iron.page (Void, "/user"))
 			end
 			if has_iron_version (req) then
-				Result.add_menu ("List of packages", iron.package_version_list_web_page (iron_version (req)))
 				Result.add_menu ("New package", iron.package_version_create_web_page (iron_version (req)))
+				Result.add_menu ("All packages", iron.package_version_list_web_page (iron_version (req)))
 			end
 		end
 

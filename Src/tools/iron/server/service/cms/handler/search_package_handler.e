@@ -46,6 +46,7 @@ feature -- Execution
 			l_title: detachable READABLE_STRING_32
 			l_found_count: INTEGER
 			l_total_count: INTEGER
+			kmp: KMP_WILD
 		do
 			if
 				attached {WSF_STRING} req.query_parameter ("name") as l_searched_name and then
@@ -55,16 +56,21 @@ feature -- Execution
 				lst := iron.database.version_packages (iron_version (req), 1, 0)
 				if lst /= Void then
 					l_total_count := lst.count
+					create kmp.make_empty
+					kmp.set_pattern (l_searched_name.value)
 					from
 						lst.start
 					until
 						lst.after
 					loop
-						if
-							attached lst.item.name as l_name and then
-							l_name.is_case_insensitive_equal_general (l_searched_name.value)
-						then
-							lst.forth
+						if attached lst.item.name as l_name then
+							kmp.set_text (l_name)
+--							if l_name.is_case_insensitive_equal_general (l_searched_name.value) then
+							if kmp.pattern_matches then
+								lst.forth
+							else
+								lst.remove
+							end
 						else
 							lst.remove
 						end

@@ -61,6 +61,8 @@ feature {NONE} -- Initialization
 
 	iron_version: detachable IRON_NODE_VERSION
 
+	iron_version_package: detachable IRON_NODE_VERSION_PACKAGE
+
 --feature -- Access
 
 --	location: detachable READABLE_STRING_8
@@ -71,6 +73,11 @@ feature -- Change
 	set_iron_version (v: like iron_version)
 		do
 			iron_version := v
+		end
+
+	set_iron_version_package (p: like iron_version_package)
+		do
+			iron_version_package := p
 		end
 
 	set_location (v: detachable READABLE_STRING_8)
@@ -127,16 +134,22 @@ feature -- Messages
 
 	add_menu (a_title: READABLE_STRING_8; a_url: READABLE_STRING_8)
 		local
-			lst: like menu_items
 			i: IRON_NODE_HTML_LINK
+		do
+			create i.make (a_url, a_title)
+			add_menu_item (i)
+		end
+
+	add_menu_item (lnk: IRON_NODE_HTML_LINK)
+		local
+			lst: like menu_items
 		do
 			lst := menu_items
 			if lst = Void then
 				create lst.make (1)
 				menu_items := lst
 			end
-			create i.make (a_url, a_title)
-			lst.force (i)
+			lst.force (lnk)
 		end
 
 feature {WSF_RESPONSE} -- Output
@@ -161,6 +174,9 @@ feature {WSF_RESPONSE} -- Output
 
 				tpl.add_value (request.absolute_script_url (""), "base_url")
 				tpl.add_value (request.request_uri, "current_url")
+				if attached iron_version_package as l_iron_version_package then
+					tpl.add_value (l_iron_version_package, "current_package")
+				end
 
 					-- <head>...
 				tpl.add_value (title, "title")
@@ -211,7 +227,7 @@ feature {WSF_RESPONSE} -- Output
 				create s.make_empty
 				append_html_messages_code (s)
 				if attached title as t then
-					tpl.add_value (html_encoded_string (t), "page_title")
+					tpl.add_value (t, "page_title")
 				end
 
 				if attached body as l_body then
@@ -293,7 +309,15 @@ feature {NONE} -- HTML Generation
 				across
 					lst as c
 				loop
-					s.append ("<li><a href=%"" + c.item.url + "%">" + html_encoder.encoded_string (c.item.title) + "</a></li>%N")
+					s.append ("<li><a href=%"" + c.item.url + "%">" + html_encoder.encoded_string (c.item.title) + "</a>")
+					if attached c.item.sub_links as sublst then
+						s.append ("<ul>")
+						across sublst as ic_sub loop
+							s.append ("<li><a href=%"" + ic_sub.item.url + "%">" + html_encoder.encoded_string (ic_sub.item.title) + "</a>")
+						end
+						s.append ("</ul>%N")
+					end
+					s.append ("</li>%N")
 				end
 			end
 			s.append ("</ul>")
@@ -317,7 +341,7 @@ feature {NONE} -- HTML Generation
 	append_html_big_title_code (s: STRING)
 		do
 			if attached title as l_title then
-				s.append ("<h2 class=%"bigtitle%">" + html_encoded_string (l_title) + "</h2>")
+				s.append ("<h2 class=%"bigtitle%">" + l_title + "</h2>")
 			end
 		end
 

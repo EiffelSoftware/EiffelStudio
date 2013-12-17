@@ -28,6 +28,9 @@ feature -- Access
 	title: READABLE_STRING_8
 			-- html encoded title.
 
+	sub_links: detachable ARRAYED_LIST [IRON_NODE_HTML_LINK]
+			-- Optional sub links
+
 	is_active: BOOLEAN
 
 feature -- Change
@@ -35,6 +38,26 @@ feature -- Change
 	set_is_active (b: BOOLEAN)
 		do
 			is_active := b
+		end
+
+	add_sublink_item (lnk: IRON_NODE_HTML_LINK)
+		local
+			lst: like sub_links
+		do
+			lst := sub_links
+			if lst = Void then
+				create lst.make (1)
+				sub_links := lst
+			end
+			lst.force (lnk)
+		end
+
+	add_sublink (a_url: READABLE_STRING_8; a_title: detachable READABLE_STRING_8)
+		local
+			lnk: IRON_NODE_HTML_LINK
+		do
+			create lnk.make (a_url, a_title)
+			add_sublink_item (lnk)
 		end
 
 ;note

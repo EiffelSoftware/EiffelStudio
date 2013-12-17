@@ -46,6 +46,7 @@ feature -- Execution
 		do
 			if attached package_version_from_id_path_parameter (req, "id") as l_package	then
 				r := new_response_message (req)
+				r.set_iron_version_package (l_package)
 				r.add_menu ("View", iron.package_version_view_web_page (l_package))
 				create s.make_empty
 				s.append ("<strong>[")
@@ -98,7 +99,7 @@ feature -- Execution
 			if attached package_version_from_id_path_parameter (req, "id") as l_package	then
 				if has_permission_to_modify_package_version (req, l_package) then
 					m := new_response_message (req)
-
+					m.set_iron_version_package (l_package)
 					create s.make_empty
 
 					m.add_menu ("View", iron.package_version_view_web_page (l_package))
@@ -173,8 +174,10 @@ feature -- Execution
 			s: STRING
 		do
 			if attached package_version_from_id_path_parameter (req, "id") as l_package then
+
 				if has_permission_to_modify_package_version (req, l_package) then
 					m := new_response_message (req)
+					m.set_iron_version_package (l_package)
 					create s.make_empty
 					m.add_menu ("View", iron.package_version_view_web_page (l_package))
 					if

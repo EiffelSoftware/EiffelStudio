@@ -134,7 +134,10 @@ feature -- Specific access
 		do
 			Result := opo_internal_class_c
 			if Result = Void then
-				Result := class_c_by_name ("INTERNAL")
+				Result := class_c_by_name ("REFLECTOR")
+				if Result = Void then
+					Result := class_c_by_name ("INTERNAL")
+				end
 				opo_internal_class_c := Result
 			end
 		ensure

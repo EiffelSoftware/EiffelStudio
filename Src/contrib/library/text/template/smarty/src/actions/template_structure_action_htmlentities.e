@@ -30,10 +30,7 @@ feature {NONE} -- Implementation
 		local
 			item_output: STRING
 		do
-			item_output := foreach_iteration_string (inside_text, False)
-			item_output.replace_substring_all ("&", "&amp;")
-			item_output.replace_substring_all ("<", "&lt;")
-			item_output.replace_substring_all (">", "&gt;")
+			item_output := (create {HTML_ENCODER}).encoded_string (foreach_iteration_string (inside_text, False))
 			set_forced_output (item_output)
 		end
 

@@ -105,6 +105,11 @@ feature -- Access: internal
 			Result := path.extended ("html")
 		end
 
+	html_template_path: PATH
+		once
+			Result := path.extended ("template").extended ("html")
+		end
+
 	tmp_path: PATH
 		once
 			Result := path.extended ("tmp")

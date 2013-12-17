@@ -41,6 +41,9 @@ feature -- Access
 	version: IRON_NODE_VERSION
 			-- Associated version.
 
+	download_count: INTEGER assign set_download_count
+			-- Download count.
+
 feature -- Comparison		
 
 	is_equal (other: IRON_NODE_VERSION_PACKAGE): BOOLEAN
@@ -148,6 +151,11 @@ feature -- Change
 		do
 			archive_path := v
 			get_archive_info
+		end
+
+	set_download_count (a_count: INTEGER)
+		do
+			download_count := a_count
 		end
 
 --	set_last_modified (dt: like last_modified)

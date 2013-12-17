@@ -57,9 +57,11 @@ feature -- Execution
 					attached l_package.archive_path as l_archive_path and then
 					u.file_path_exists (l_archive_path)
 				then
-					create md.make (l_archive_path.utf_8_name)
+					create md.make (l_archive_path.name)
 					md.set_no_cache
 					res.send (md)
+						-- Increment download
+					iron.database.increment_download_counter (l_package)
 				else
 					res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
 				end

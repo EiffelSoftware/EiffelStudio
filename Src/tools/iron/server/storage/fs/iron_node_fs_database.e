@@ -518,6 +518,7 @@ feature -- Version package
 					if u.file_path_exists (z) then
 						Result.set_archive_path (z.absolute_path)
 					end
+					Result.set_download_count (download_count (Result))
 				end
 			end
 		end
@@ -669,6 +670,42 @@ feature -- Version package
 						Result.force (e.item.name)
 					end
 				end
+			end
+		end
+
+	download_count (a_package: IRON_NODE_VERSION_PACKAGE): INTEGER
+		local
+			p: PATH
+			f: RAW_FILE
+			s: READABLE_STRING_8
+		do
+			p := package_version_counter_path (a_package)
+			create f.make_with_path (p)
+			if f.exists and then f.is_access_readable then
+				f.open_read
+				f.read_line_thread_aware
+				s := f.last_string
+				if s.is_integer then
+					Result := a_package.download_count.max (s.to_integer)
+				end
+				f.close
+			end
+			Result := a_package.download_count.max (Result)
+		end
+
+	increment_download_counter (a_package: IRON_NODE_VERSION_PACKAGE)
+		local
+			f: RAW_FILE
+			nb: INTEGER
+		do
+			nb := download_count (a_package)
+			a_package.download_count := nb + 1
+			create f.make_with_path (package_version_counter_path (a_package))
+			if not f.exists or else f.is_access_writable then
+				f.open_write
+				f.put_string (a_package.download_count.out)
+				f.put_new_line
+				f.close
 			end
 		end
 
@@ -1119,6 +1156,13 @@ feature {NONE} -- Initialization
 			valid_id: not a_id.is_empty
 		do
 			Result := packages_index_path (v).extended (a_id)
+		end
+
+	package_version_counter_path (a_package: IRON_NODE_VERSION_PACKAGE): PATH
+		require
+			package_with_id: a_package.has_id
+		do
+			Result := packages_index_path (a_package.version).extended (a_package.id).extended ("downloads")
 		end
 
 	package_archive_path (v: IRON_NODE_VERSION; a_id: READABLE_STRING_GENERAL): PATH

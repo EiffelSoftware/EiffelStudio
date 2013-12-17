@@ -44,7 +44,7 @@ feature -- Execution
 				create s.make (1024)
 				s.append ("<ul>")
 				create it.make (s, req, iron, iron_version (req))
-				it.set_is_long_version (True)
+				it.set_as_list_item (True)
 				it.set_user (current_user (req))
 				it.visit_package_version (l_package)
 

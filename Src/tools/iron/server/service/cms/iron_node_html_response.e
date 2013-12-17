@@ -15,7 +15,8 @@ inherit
 		rename
 			make as make_response
 		redefine
-			append_html_body_code
+			append_html_body_code,
+			send_to
 		end
 
 create
@@ -31,6 +32,9 @@ feature {NONE} -- Initialization
 			make_response
 			add_style (req.absolute_script_url (iron.html_page (iron_version, "style.css")), Void)
 			add_javascript_url (req.absolute_script_url (iron.html_page (iron_version, "iron.js")))
+--			add_style ("//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css", Void)
+--			add_style ("//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css", Void)
+--			add_javascript_url ("//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js")
 		end
 
 	make_with_body (b: READABLE_STRING_8; req: WSF_REQUEST; a_iron: like iron)
@@ -57,10 +61,10 @@ feature {NONE} -- Initialization
 
 	iron_version: detachable IRON_NODE_VERSION
 
-feature -- Access
+--feature -- Access
 
-	location: detachable READABLE_STRING_8
-			-- Redirected location if any.
+--	location: detachable READABLE_STRING_8
+--			-- Redirected location if any.
 
 feature -- Change
 
@@ -69,7 +73,7 @@ feature -- Change
 			iron_version := v
 		end
 
-	set_location (v: like location)
+	set_location (v: detachable READABLE_STRING_8)
 		do
 			if v = Void then
 				set_status_code ({HTTP_STATUS_CODE}.ok)
@@ -119,26 +123,133 @@ feature -- Messages
 
 	messages: detachable ARRAYED_LIST [TUPLE [message: READABLE_STRING_8; kind: INTEGER]]
 
-	menu_items: detachable ARRAYED_LIST [TUPLE [title: READABLE_STRING_32; url: READABLE_STRING_8]]
+	menu_items: detachable ARRAYED_LIST [IRON_NODE_HTML_LINK]
 
-	add_menu (a_title: READABLE_STRING_32; a_url: READABLE_STRING_8)
+	add_menu (a_title: READABLE_STRING_8; a_url: READABLE_STRING_8)
 		local
 			lst: like menu_items
+			i: IRON_NODE_HTML_LINK
 		do
 			lst := menu_items
 			if lst = Void then
 				create lst.make (1)
 				menu_items := lst
 			end
-			lst.force ([a_title, a_url])
+			create i.make (a_url, a_title)
+			lst.force (i)
+		end
+
+feature {WSF_RESPONSE} -- Output
+
+	send_to (res: WSF_RESPONSE)
+		local
+			l_version: detachable IRON_NODE_VERSION
+			p: PATH
+			ut: FILE_UTILITIES
+			tpl: TEMPLATE_FILE
+			s: STRING
+			h: like header
+			l_versions_alternatives: ARRAYED_LIST [IRON_NODE_HTML_LINK]
+			l_url: READABLE_STRING_8
+			l_new_url: STRING_8
+			lnk: IRON_NODE_HTML_LINK
+		do
+			p := iron.layout.html_template_path.extended ("page.tpl")
+			if ut.file_path_exists (p) then
+				create tpl.make_from_file (p.name)
+				tpl.analyze
+
+				tpl.add_value (request.absolute_script_url (""), "base_url")
+				tpl.add_value (request.request_uri, "current_url")
+
+					-- <head>...
+				tpl.add_value (title, "title")
+				create s.make_empty
+				if attached head_lines as l_lines and then not l_lines.is_empty then
+					across l_lines as ic loop
+						s.append (ic.item)
+						s.append_character ('%N')
+					end
+				end
+				tpl.add_value (s, "head")
+
+					-- Body data
+				tpl.add_value (iron.page_redirection (Void), "redirection_url")
+				tpl.add_value ("IRON package repository", "big_title")
+
+				l_version := iron_version
+				if l_version /= Void then
+					if l_version.is_default then
+						l_version := Void
+					else
+						tpl.add_value (l_version, "iron_version")
+					end
+				end
+				if attached iron.database.versions as l_versions then
+					create l_versions_alternatives.make (0)
+					l_url := request.request_uri
+					across
+						l_versions as c
+					loop
+						if l_version /= Void then
+							create l_new_url.make_from_string (l_url)
+							l_new_url.replace_substring_all ("/" + l_version.value + "/", "/" + c.item.value + "/")
+						else
+							create l_new_url.make_from_string (iron.page (c.item, "/"))
+						end
+						create lnk.make (l_new_url, c.item.value)
+						lnk.set_is_active (l_version ~ c.item)
+						l_versions_alternatives.force (lnk)
+					end
+					tpl.add_value (l_versions_alternatives, "iron_version_switch_urls")
+				end
+
+					-- menu
+				tpl.add_value (menu_items, "menu")
+
+					-- main
+				create s.make_empty
+				append_html_messages_code (s)
+				if attached title as t then
+					tpl.add_value (html_encoded_string (t), "page_title")
+				end
+
+				if attached body as l_body then
+					s.append (l_body)
+				end
+				tpl.add_value (s, "main")
+
+					-- footer
+				create s.make_empty
+				append_html_body_footer_code (s)
+				tpl.add_value (s, "footer")
+
+				create s.make_empty
+
+				tpl.get_output
+				if attached tpl.output as l_output then
+					h := header
+					res.set_status_code (status_code)
+					if not h.has_content_length then
+						h.put_content_length (l_output.count)
+					end
+					if not h.has_content_type then
+						h.put_content_type_text_html
+					end
+					res.put_header_text (h.string)
+					res.put_string (l_output)
+				else
+					Precursor (res)
+				end
+			else
+				Precursor (res)
+			end
 		end
 
 feature {NONE} -- HTML Generation
 
-	append_html_body_code (s: STRING_8)
+	append_html_body_header_code (s: STRING)
 		local
-			old_body, b: like body
-			h, f: STRING
 			l_version: detachable IRON_NODE_VERSION
 			l_form: WSF_FORM
 			l_combo: WSF_FORM_SELECT
@@ -146,12 +257,12 @@ feature {NONE} -- HTML Generation
 			l_url: READABLE_STRING_8
 			l_new_url: STRING_8
 		do
-			h := "<div id=%"page%"><div id=%"header%"> IRON package repository"
+			s.append ("IRON package repository")
 			l_version := iron_version
 			if l_version /= Void and then l_version.is_default then
 				l_version := Void
 			end
-			if l_version /= Void and attached iron.database.versions as l_versions then
+			if attached iron.database.versions as l_versions then
 				create l_form.make (iron.page_redirection (Void), "redirection")
 				l_form.set_method_get
 				create l_combo.make ("redirection")
@@ -171,53 +282,83 @@ feature {NONE} -- HTML Generation
 				end
 				l_form.extend (l_combo)
 				l_combo.add_html_attribute ("onchange", "this.form.submit()")
-				l_form.append_to_html (create {WSF_REQUEST_THEME}.make_with_request (request), h)
+				l_form.append_to_html (create {WSF_REQUEST_THEME}.make_with_request (request), s)
 			end
-			h.append ("</div>")
-			h.append ("<ul id=%"menu%" class=%"menu%">")
+		end
+
+	append_html_menu_code (s: STRING)
+		do
+			s.append ("<ul id=%"menu%" class=%"menu%">")
 			if attached menu_items as lst then
 				across
 					lst as c
 				loop
-					h.append ("<li><a href=%"" + c.item.url + "%">" + html_encoder.encoded_string (c.item.title) + "</a></li>%N")
+					s.append ("<li><a href=%"" + c.item.url + "%">" + html_encoder.encoded_string (c.item.title) + "</a></li>%N")
 				end
 			end
-			h.append ("</ul>")
-			h.append ("<div id=%"main%">")
+			s.append ("</ul>")
+		end
+
+	append_html_messages_code (s: STRING)
+		do
 			if attached messages as lst then
-				h.append ("<div id=%"dialog message%"><ul>")
+				s.append ("<div id=%"dialog message%"><ul>")
 				across
 					lst as c
 				loop
-					h.append ("<li>")
-					h.append (c.item.message)
-					h.append ("</li>")
+					s.append ("<li>")
+					s.append (c.item.message)
+					s.append ("</li>")
 				end
-				h.append ("</ul></div>")
+				s.append ("</ul></div>")
 			end
+		end
+
+	append_html_big_title_code (s: STRING)
+		do
 			if attached title as l_title then
-				h.append ("<h2 class=%"bigtitle%">" + html_encoded_string (l_title) + "</h2>")
+				s.append ("<h2 class=%"bigtitle%">" + html_encoded_string (l_title) + "</h2>")
 			end
-			f := "</div><div id=%"footer%"> -- IRON package repository ("
-			f.append ("<a href=%"" + request.script_url (iron.cms_page ("/api/")) + "%">API</a>")
+		end
+
+	append_html_body_main_code (s: STRING)
+		do
+			append_html_menu_code (s)
+			append_html_messages_code (s)
+			append_html_big_title_code (s)
+		end
+
+	append_html_body_footer_code (s: STRING)
+		do
+			s.append ("-- IRON package repository (")
+			s.append ("<a href=%"" + request.script_url (iron.cms_page ("/api/")) + "%">API</a>")
 			if iron.is_documentation_available then
-				f.append (" | ")
-				f.append ("<a href=%"" + request.script_url (iron.cms_page ("/doc/")) + "%">Documentation</a>")
+				s.append (" | ")
+				s.append ("<a href=%"" + request.script_url (iron.cms_page ("/doc/")) + "%">Documentation</a>")
 			end
-			f.append (") -- ")
-			f.append ("<br/>version " + version)
-			f.append ("</div></div>")
+			s.append (") -- ")
+			s.append ("<br/>version " + version)
+		end
+
+	append_html_body_code (s: STRING_8)
+		local
+			old_body, b: like body
+		do
 			old_body := body
+
+			create b.make_empty
+			b.append ("<div id=%"header%">")
+			append_html_body_header_code (b)
+			b.append ("</div>")
+			b.append ("<div id=%"main%">")
+			append_html_body_main_code (b)
 			if old_body /= Void then
-				create b.make (h.count + old_body.count + f.count)
-				b.append (h)
 				b.append (old_body)
-				b.append (f)
-			else
-				create b.make (h.count + f.count)
-				b.append (h)
-				b.append (f)
 			end
+			b.append ("</div>")
+			b.append ("<div id=%"footer%">")
+			append_html_body_footer_code (b)
+			b.append ("</div>")
 			set_body (b)
 			Precursor (s)
 			set_body (old_body)

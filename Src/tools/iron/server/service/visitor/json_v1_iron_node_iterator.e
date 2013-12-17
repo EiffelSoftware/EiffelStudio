@@ -199,7 +199,6 @@ feature -- Visit
 					end
 					j_object.put (j_array, "tags")
 				end
-
 			end
 --			if attached iron.database.path_associated_with_package (version, p) as l_paths then
 --				create j_array.make_array
@@ -241,6 +240,7 @@ feature -- Visit
 						js := date_as_string (dt)
 						j_object.put (js, "archive_date")
 					end
+					j_object.put (create {JSON_NUMBER}.make_integer (p.download_count), "download_count")
 				end
 				if attached p.description as l_description then
 					js := l_description

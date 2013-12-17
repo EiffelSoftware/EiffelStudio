@@ -56,7 +56,8 @@ feature -- Execution
 					create md.make (l_archive_path.utf_8_name)
 					md.set_no_cache
 					res.send (md)
-					-- Increment download
+						-- Increment download
+					iron.database.increment_download_counter (l_package)
 				else
 					res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
 				end

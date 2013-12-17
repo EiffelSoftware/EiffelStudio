@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PS_ABSTRACT_MANAGER
+	PS_ABSTRACT_MANAGER [G -> PS_OBJECT_DATA]
 
 inherit
 	PS_ABEL_EXPORT
@@ -42,7 +42,7 @@ feature {PS_ABEL_EXPORT} -- Access
 			correct: object_storage.count = Result
 		end
 
-	item (index: INTEGER): PS_OBJECT_DATA
+	item (index: INTEGER): G
 			-- Get the object with index `index'
 		require
 			valid_index: 1 <= index and index <= count
@@ -89,40 +89,6 @@ feature {PS_ABEL_EXPORT} -- Element change
 				value_type_handlers.extend (handler)
 			else
 				identity_type_handlers.extend (handler)
-			end
-		end
-
-	cascading_ignore (object: PS_OBJECT_DATA)
-			-- Ignore `object' and all objects transitively referenced by it.
-		local
-			stack: LINKED_STACK [INTEGER]
-			i: INTEGER
-		do
-			from
-				create stack.make
-				stack.extend (object.index)
-			until
-				stack.is_empty
-			loop
-				i := stack.item
-				stack.remove
-
-				item (i).ignore
-
-				across
-					item (i).references as ref_cursor
-				loop
-
-					check
-						correct_referer: item (ref_cursor.item).referers.count > 0
-						and (item (ref_cursor.item).referers.count = 1
-							implies item (ref_cursor.item).referers.first = i)
-					end
-
-					if item (ref_cursor.item).referers.count = 1 then
-						stack.extend (item (ref_cursor.item).index)
-					end
-				end
 			end
 		end
 
@@ -202,14 +168,14 @@ feature {NONE} -- Utilities
 			correct: attached Result implies Result.can_handle_type (type)
 		end
 
-	do_all (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, PS_OBJECT_DATA]])
+	do_all (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, G]])
 			-- Apply `operation' on all items.
 			-- Ignore items when {PS_OBJECT_DATA}.handler is void or {PS_OBJECT_DATA}.is_ignored is True.
 		do
 			do_all_in_set (operation, 1 |..| count)
 		end
 
-	do_all_in_set (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, PS_OBJECT_DATA]]; set: INDEXABLE [INTEGER, INTEGER])
+	do_all_in_set (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, G]]; set: INDEXABLE [INTEGER, INTEGER])
 			-- Apply `operation' on all items with an index in `set'.
 			-- Ignore items when {PS_OBJECT_DATA}.handler is void or {PS_OBJECT_DATA}.is_ignored is True.
 			-- Do nothing if `from_index' > `to_index'
@@ -239,7 +205,7 @@ feature {NONE} -- Internal data structures
 	value_type_handlers: ARRAYED_LIST [PS_HANDLER]
 			-- All value type handlers.
 
-	object_storage: ARRAYED_LIST [PS_OBJECT_DATA]
+	object_storage: ARRAYED_LIST [G]
 			-- An internal storage for objects.
 
 	internal_transaction: detachable like transaction

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	traversed_objects: ARRAYED_LIST [PS_OBJECT_DATA]
+	traversed_objects: ARRAYED_LIST [PS_OBJECT_WRITE_DATA]
 
 	factory: PS_METADATA_FACTORY
 			-- A factory for PS_TYPE_METADATA objects.
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 		local
 			reflected_object: REFLECTED_REFERENCE_OBJECT
 			type: PS_TYPE_METADATA
-			root_object_data: PS_OBJECT_DATA
+			root_object_data: PS_OBJECT_WRITE_DATA
 		do
 				-- Initialize the data structures first.
 			traversed_objects.wipe_out
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation: Agents
 		require
 			index_correct: traversed_objects [current_index].reflector.object.is_equal (referer.object)
 		local
-			new_object: PS_OBJECT_DATA
+			new_object: PS_OBJECT_WRITE_DATA
 			found: BOOLEAN
 		do
 			across

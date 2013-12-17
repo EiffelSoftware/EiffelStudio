@@ -8,7 +8,7 @@ class
 	PS_READ_MANAGER
 
 inherit
-	PS_ABSTRACT_MANAGER
+	PS_ABSTRACT_MANAGER [PS_OBJECT_READ_DATA]
 
 	PS_TYPE_TABLE
 
@@ -62,7 +62,7 @@ feature {PS_ABEL_EXPORT} -- Access
 
 feature {PS_ABEL_EXPORT} -- Element change
 
-	add_object (object: PS_OBJECT_DATA; cached: BOOLEAN)
+	add_object (object: PS_OBJECT_READ_DATA; cached: BOOLEAN)
 			-- Add `object' to the object_storage and register it in cache, if `cached' is True.
 		require
 			correct_index: object.index = count + 1
@@ -210,7 +210,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 						or item (second_lvl [value.to_integer]).is_ignored))
 		end
 
-	processed_object (value: STRING; type: PS_TYPE_METADATA; referer: PS_OBJECT_DATA): detachable ANY
+	processed_object (value: STRING; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA): detachable ANY
 			-- Get the object identified by the [`value', `type'] tuple.
 			-- The object may be served from cache or built on the fly in case of a value type.
 			-- The `referer' denotes the object issuing the request.
@@ -220,7 +220,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 		local
 			managed: MANAGED_POINTER
 			referee_index: INTEGER
-			referee: PS_OBJECT_DATA
+			referee: PS_OBJECT_READ_DATA
 		do
 
 			if type.type.is_expanded and then basic_expanded_types.has (type.type.type_id) then
@@ -286,7 +286,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			end
 		end
 
-	process_next (key: INTEGER; type: PS_TYPE_METADATA; referer: PS_OBJECT_DATA)
+	process_next (key: INTEGER; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA)
 			-- Retrieve the object with primary key `key' and type `type' in the next iteration.
 			-- The `referer' denotes the object issuing the request.
 		local
@@ -314,7 +314,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 
 				-- Extend the objects list for retrieval
 			if not found then
-				add_object (create {PS_OBJECT_DATA}.make_with_primary_key (count + 1, key, type, current_level + 1), True)
+				add_object (create {PS_OBJECT_READ_DATA}.make_with_primary_key (count + 1, key, type, current_level + 1), True)
 				to_process_next.extend (count)
 					-- Update the referers and references tables
 
@@ -330,7 +330,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 feature {PS_ABEL_EXPORT} -- Handler support: Batch Retrieval
 
 
-	add_to_object_batch_retrieve (object: PS_OBJECT_DATA)
+	add_to_object_batch_retrieve (object: PS_OBJECT_READ_DATA)
 			-- Register `object' to be added to the next batch retrieval request.
 		do
 			if not attached object.backend_representation then
@@ -338,7 +338,7 @@ feature {PS_ABEL_EXPORT} -- Handler support: Batch Retrieval
 			end
 		end
 
-	add_to_collection_batch_retrieve (collection: PS_OBJECT_DATA)
+	add_to_collection_batch_retrieve (collection: PS_OBJECT_READ_DATA)
 			-- Register `collection' to be added to the next batch retrieval request.
 		do
 			if not attached collection.backend_representation then
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation: Loop body
 		local
 			i: INTEGER
 			identifier: PS_OBJECT_IDENTIFIER_WRAPPER
-			object: PS_OBJECT_DATA
+			object: PS_OBJECT_READ_DATA
 		do
 				-- Search for an appropriate handler for all items to be created
 			assign_handlers (to_process)

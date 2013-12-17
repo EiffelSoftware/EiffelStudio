@@ -96,7 +96,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 feature {PS_ABEL_EXPORT} -- Read functions
 
 
-	retrieve (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)
+	retrieve (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Retrieve `object' from the database.
 		require
 			has_primary: object.primary_key > 0
@@ -106,7 +106,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		deferred
 		end
 
-	create_object (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)
+	create_object (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Create a new, uninitialized Eiffel object instance for `object'.
 		require
 			can_handle: can_handle (object)
@@ -126,7 +126,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			built: object.is_object_initialized
 		end
 
-	initialize (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)
+	initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Try to initialize the `object' as much as possible.
 			-- For any referenced object not yet loaded, tell the `read_manager'
 			-- to retrieve it in the next iteration.
@@ -140,7 +140,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		deferred
 		end
 
-	finish_initialize (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)
+	finish_initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Finish initialization of `object'.
 		require
 			can_handle: can_handle (object)
@@ -154,7 +154,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 feature {PS_ABEL_EXPORT} -- Write functions
 
-	set_is_persistent (object: PS_OBJECT_DATA)
+	set_is_persistent (object: PS_OBJECT_WRITE_DATA)
 			-- Set the `is_identified' attribute of `object'.
 		require
 			can_handle: can_handle (object)
@@ -163,7 +163,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			object.set_is_persistent (write_manager.id_manager.is_identified (object.reflector.object, write_manager.transaction))
 		end
 
-	set_identifier (object: PS_OBJECT_DATA)
+	set_identifier (object: PS_OBJECT_WRITE_DATA)
 			-- Set the ABEL `identifier' of `object'.
 		require
 			can_handle: can_handle (object)
@@ -183,7 +183,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			identifier_set: object.identifier > 0
 		end
 
-	generate_primary_key (object: PS_OBJECT_DATA)
+	generate_primary_key (object: PS_OBJECT_WRITE_DATA)
 			-- Generate a primary key for `object'.
 			-- If the object is not yet persistent, create a new primary key in the backend.
 		require
@@ -194,7 +194,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		deferred
 		end
 
-	generate_backend_representation (object: PS_OBJECT_DATA)
+	generate_backend_representation (object: PS_OBJECT_WRITE_DATA)
 			-- Create a new, uninitialized `backend_representation' for `object'.
 		require
 			can_handle: can_handle (object)
@@ -212,7 +212,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			empty_collection: is_mapping_to_collection implies object.backend_collection.collection_items.is_empty
 		end
 
-	initialize_backend_representation (object: PS_OBJECT_DATA)
+	initialize_backend_representation (object: PS_OBJECT_WRITE_DATA)
 			-- Initialize all attributes or items in `object.backend_representation'
 		require
 			can_handle: can_handle (object)
@@ -229,7 +229,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		deferred
 		end
 
-	write_backend_representation (object: PS_OBJECT_DATA)
+	write_backend_representation (object: PS_OBJECT_WRITE_DATA)
 			-- Write `object.backend_representation' to the database.
 		require
 			can_handle: can_handle (object)

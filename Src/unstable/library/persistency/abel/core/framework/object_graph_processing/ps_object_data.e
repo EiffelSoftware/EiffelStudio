@@ -4,15 +4,11 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	PS_OBJECT_DATA
 
 inherit
 	PS_ABEL_EXPORT
-
-create
-	make_with_object,
-	make_with_primary_key
 
 feature {PS_ABEL_EXPORT} -- Access: General information
 
@@ -73,9 +69,6 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 
 	primary_key: INTEGER
 			-- The primary key of the current object, as used by the backend.
-
---	uninitialized_attributes: ARRAYED_LIST [INTEGER]
-			-- The fields which have not yet been set during retrieval.
 
 	to_initialize: ARRAYED_LIST [detachable PS_TYPE_METADATA]
 
@@ -201,7 +194,6 @@ feature {NONE} -- Initialization
 			type := a_type
 			create {ARRAYED_LIST [INTEGER]} referers.make (1)
 			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
---			create uninitialized_attributes.make (a_type.attribute_count)
 			create to_initialize.make_filled (a_type.attribute_count)
 		end
 
@@ -215,7 +207,6 @@ feature {NONE} -- Initialization
 
 			create {ARRAYED_LIST [INTEGER]} referers.make (1)
 			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
---			create uninitialized_attributes.make (a_type.attribute_count)
 			create to_initialize.make_filled (a_type.attribute_count)
 		end
 

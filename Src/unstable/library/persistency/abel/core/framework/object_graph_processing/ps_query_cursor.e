@@ -144,7 +144,7 @@ feature {PS_ABEL_EXPORT}
 			batch_count: INTEGER
 
 			retrieved_entity: PS_BACKEND_ENTITY
-			new_object: PS_OBJECT_DATA
+			new_object: PS_OBJECT_READ_DATA
 
 			to_build: ARRAYED_LIST [INTEGER]
 			processed_item_list:ARRAYED_LIST [INTEGER]

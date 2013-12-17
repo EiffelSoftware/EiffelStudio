@@ -36,6 +36,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			retrieved: PS_BACKEND_COLLECTION
 			field_type: INTEGER
 			i: INTEGER
+			count: INTEGER
 			capacity: INTEGER
 
 			field: TUPLE [value: STRING; type:IMMUTABLE_STRING_8]
@@ -50,6 +51,8 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			check attached {TUPLE} new_instance as tuple then
 				from
 					i := 1
+					count := retrieved.collection_items.count
+					object.to_initialize.make_filled (count)
 				until
 					i > retrieved.collection_items.count
 				loop
@@ -63,7 +66,8 @@ feature {PS_ABEL_EXPORT} -- Read functions
 							tuple.put (read_manager.processed_object (field.value, dynamic_field_type, object), i)
 						else
 							read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
-							object.uninitialized_attributes.extend (i)
+
+							object.to_initialize.put_i_th (dynamic_field_type, i)
 						end
 					end
 					i := i + 1
@@ -79,17 +83,28 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			reflector: REFLECTED_OBJECT
 			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			dynamic_field_type: PS_TYPE_METADATA
-		do
-			index := object.index
-			across
-				object.uninitialized_attributes as field_idx
-			loop
-				field := object.backend_collection.collection_items [field_idx.item]
-				dynamic_field_type := type_from_string (field.type)
 
-				check attached {TUPLE} object.reflector.object as tuple then
-					tuple.put (read_manager.processed_object (field.value, dynamic_field_type, object), field_idx.item)
+			i: INTEGER
+			count: INTEGER
+			retrieved: PS_BACKEND_COLLECTION
+		do
+			retrieved := object.backend_collection
+
+			from
+				i := 1
+				count := retrieved.collection_items.count
+			until
+				i > retrieved.collection_items.count
+			loop
+				if attached object.to_initialize [i] as l_type  then
+					dynamic_field_type := l_type
+					field := object.backend_collection.collection_items [i]
+
+					check attached {TUPLE} object.reflector.object as tuple then
+						tuple.put (read_manager.processed_object (field.value, dynamic_field_type, object), i)
+					end
 				end
+				i := i + 1
 			end
 		end
 

@@ -35,7 +35,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 feature {PS_ABEL_EXPORT} -- Read functions
 
-	initialize (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)
+	initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Try to initialize the `object' as much as possible.
 			-- For any referenced object not yet loaded, tell the `read_manager'
 			-- to retrieve it in the next iteration.
@@ -158,7 +158,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			end
 		end
 
-	finish_initialize (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)
+	finish_initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Finish initialization of `object'.
 		local
 			index: INTEGER
@@ -216,7 +216,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 feature {PS_ABEL_EXPORT} -- Write functions
 
-	initialize_backend_representation (object: PS_OBJECT_DATA)
+	initialize_backend_representation (object: PS_OBJECT_WRITE_DATA)
 			-- Initialize all attributes or items in `object.backend_representation'
 		local
 			i, k: INTEGER

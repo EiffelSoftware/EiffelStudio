@@ -8,7 +8,7 @@ class
 	PS_WRITE_MANAGER
 
 inherit
-	PS_ABSTRACT_MANAGER
+	PS_ABSTRACT_MANAGER [PS_OBJECT_WRITE_DATA]
 
 create
 	make
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			create collections_to_write.make (small_size)
 		end
 
-feature -- Accesss: Static
+feature {PS_ABEL_EXPORT} -- Accesss: Static
 
 	backend: PS_BACKEND
 			-- An actual backend for the write operations.
@@ -41,7 +41,7 @@ feature -- Accesss: Static
 	traversal: PS_OBJECT_GRAPH_TRAVERSAL
 			-- An object to traverse and generate an object graph.
 
-feature -- Access: Per Write
+feature {PS_ABEL_EXPORT} -- Access: Per Write
 
 
 	object_primary_key_order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]
@@ -62,8 +62,7 @@ feature -- Access: Per Write
 	collections_to_write: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 			-- All collections to be written to the database.
 
-feature -- Write execution
-
+feature {PS_ABEL_EXPORT} -- Write execution
 
 	write (root_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert or update `root_object' and all objects reachable from it.
@@ -122,7 +121,7 @@ feature -- Write execution
 		local
 			reflected_object: REFLECTED_REFERENCE_OBJECT
 			type: PS_TYPE_METADATA
-			object_data: PS_OBJECT_DATA
+			object_data: PS_OBJECT_WRITE_DATA
 		do
 				-- Initialize the data structures first.
 			wipe_out
@@ -214,6 +213,41 @@ feature -- Write execution
 			end
 		end
 
+feature {PS_ABEL_EXPORT} -- Support
+
+	cascading_ignore (object: PS_OBJECT_DATA)
+			-- Ignore `object' and all objects transitively referenced by it.
+		local
+			stack: LINKED_STACK [INTEGER]
+			i: INTEGER
+		do
+			from
+				create stack.make
+				stack.extend (object.index)
+			until
+				stack.is_empty
+			loop
+				i := stack.item
+				stack.remove
+
+				item (i).ignore
+
+				across
+					item (i).references as ref_cursor
+				loop
+
+					check
+						correct_referer: item (ref_cursor.item).referers.count > 0
+						and (item (ref_cursor.item).referers.count = 1
+							implies item (ref_cursor.item).referers.first = i)
+					end
+
+					if item (ref_cursor.item).referers.count = 1 then
+						stack.extend (item (ref_cursor.item).index)
+					end
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 

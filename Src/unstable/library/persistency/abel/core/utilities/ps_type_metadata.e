@@ -68,7 +68,7 @@ feature -- Status report
 	is_generic_derivation: BOOLEAN
 			-- Does `Current' type have one or more generic parameters?
 		do
-			Result := reflection.generic_count_of_type (type.type_id) > 0
+			Result := generic_parameter_count > 0
 		end
 
 	is_subtype_of (other: PS_TYPE_METADATA): BOOLEAN
@@ -94,7 +94,11 @@ feature -- Genericity
 	generic_parameter_count: INTEGER
 			-- The number of generic parameters of `Current'.
 		do
-			Result := reflection.generic_count_of_type (type.type_id)
+			if is_none then
+				Result := 0
+			else
+				Result := reflection.generic_count_of_type (type.type_id)
+			end
 		ensure
 			non_negative: Result >= 0
 			positive_if_generic: is_generic_derivation implies Result > 0

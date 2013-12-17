@@ -24,7 +24,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 feature {PS_ABEL_EXPORT} -- Read functions
 
-	retrieve (object: PS_OBJECT_DATA; read_manager: PS_READ_MANAGER)
+	retrieve (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Retrieve `object' from the database.
 		do
 			read_manager.add_to_collection_batch_retrieve (object)
@@ -32,7 +32,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 feature {PS_ABEL_EXPORT} -- Write functions
 
-	generate_primary_key (object: PS_OBJECT_DATA)
+	generate_primary_key (object: PS_OBJECT_WRITE_DATA)
 			-- Generate a primary key for `object'.
 			-- If the object is not yet persistent, create a new primary key in the backend.
 		do
@@ -41,7 +41,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			end
 		end
 
-	generate_backend_representation (object: PS_OBJECT_DATA)
+	generate_backend_representation (object: PS_OBJECT_WRITE_DATA)
 			-- Create a new, uninitialized `backend_representation' for `object'.
 		local
 			new_command: PS_BACKEND_COLLECTION
@@ -60,7 +60,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		end
 
 
-	write_backend_representation (object: PS_OBJECT_DATA)
+	write_backend_representation (object: PS_OBJECT_WRITE_DATA)
 			-- Write `object.backend_representation' to the database.
 		do
 			write_manager.collections_to_write.extend (object.backend_collection)

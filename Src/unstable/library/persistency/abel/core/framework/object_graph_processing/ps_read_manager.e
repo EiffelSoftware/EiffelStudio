@@ -277,7 +277,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 					if not referee.is_ignored then
 						Result := referee.reflector.object
 
-							-- The following two lines require about 25% of the total running time of this function.
+							-- The following two lines require about 25% of the total execution time of this function.
 							-- They are usually only needed when dealing with relations...
 						referer.references.extend (referee_index)
 						referee.referers.extend (referer.index)
@@ -305,7 +305,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				found := True
 					-- Update the referers and references tables
 
-					-- The following two lines require about 25% of the total running time of this function.
+					-- The following two lines require about 25% of the total execution time of this function.
 					-- They are usually only needed when dealing with relations...
 
 				referer.references.extend (i)
@@ -318,7 +318,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				to_process_next.extend (count)
 					-- Update the referers and references tables
 
-					-- The following two lines require about 25% of the total running time of this function.
+					-- The following two lines require about 25% of the total execution time of this function.
 					-- They are usually only needed when dealing with relations...
 
 				referer.references.extend (count)

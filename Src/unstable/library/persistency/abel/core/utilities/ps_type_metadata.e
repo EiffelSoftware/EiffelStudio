@@ -43,6 +43,10 @@ feature -- Access
 
 feature -- Status report
 
+	is_none: BOOLEAN
+			-- Is `Current' the special `NONE' type?
+
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
@@ -137,11 +141,11 @@ feature -- Attributes
 
 	attribute_count: INTEGER
 			-- The number of attributes in `Current'.
-		do
-			Result := attributes.count
-		ensure
-			correct: Result = reflection.field_count_of_type (type.type_id)
-		end
+--		do
+--			Result := attributes.count
+--		ensure
+--			correct: Result = reflection.field_count_of_type (type.type_id)
+--		end
 
 	attributes: LIST [STRING]
 			-- Names of all attributes in `Current' type.
@@ -219,19 +223,25 @@ feature {PS_METADATA_FACTORY} -- Initialization
 
 	make (a_type: TYPE [detachable ANY]; a_manager: PS_METADATA_FACTORY)
 			-- Initialize `Current'.
-		local
-			count: INTEGER
+--		local
+--			count: INTEGER
 		do
 			type := a_type
 			factory := a_manager
 			create reflection
 
-			count := reflection.field_count_of_type (type.type_id)
+			if a_type.type_id = ({NONE}).type_id or a_type.type_id = ({detachable NONE}).type_id then
+				is_none := True
+				attribute_count := 0
+			else
+				is_none := False
+				attribute_count := reflection.field_count_of_type (type.type_id)
+			end
 
-			create attr_name_to_type_hash.make (count)
-			create attr_name_to_index_hash.make (count)
-			create {ARRAYED_LIST [STRING]} attributes.make (count)
-			create builtin_type.make (count)
+			create attr_name_to_type_hash.make (attribute_count)
+			create attr_name_to_index_hash.make (attribute_count)
+			create {ARRAYED_LIST [STRING]} attributes.make (attribute_count)
+			create builtin_type.make (attribute_count)
 			attributes.compare_objects
 		end
 
@@ -247,7 +257,7 @@ feature {PS_METADATA_FACTORY} -- Initialization
 			from
 				i := 1
 			until
-				i > reflection.field_count_of_type (type.type_id)
+				i > attribute_count
 			loop
 				attr_name := reflection.field_name_of_type (i, type.type_id)
 					-- Get the attribute type

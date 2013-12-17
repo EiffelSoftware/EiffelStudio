@@ -108,7 +108,12 @@ feature{PS_READ_ONLY_BACKEND}
 --				transaction.error.raise
 --			end
 
-			Result := create_get_inner_database (type).deep_twin.new_cursor
+			if attributes.count < type.attribute_count then
+					-- Prevent the QUERY_CURSOR from messing around with our database.
+				Result := create_get_inner_database (type).deep_twin.new_cursor
+			else
+				Result := create_get_inner_database (type).new_cursor
+			end
 		end
 
 	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT

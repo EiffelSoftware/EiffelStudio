@@ -153,6 +153,8 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				new_instance := inst
 			end
 
+			object.to_initialize.make_filled (retrieved.collection_items.count)
+
 			from
 				i := 1
 			until
@@ -168,7 +170,10 @@ feature {PS_ABEL_EXPORT} -- Read functions
 						new_instance.extend (read_manager.processed_object (field.value, dynamic_field_type, object))
 					else
 						read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
-						object.uninitialized_attributes.extend (i)
+
+--						object.uninitialized_attributes.extend (i)
+						object.to_initialize.put_i_th (dynamic_field_type, i)
+
 						if not new_instance.generating_type.generic_parameter_type (1).is_expanded then
 							new_instance.extend (Void)
 						end
@@ -199,17 +204,29 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			dynamic_field_type: PS_TYPE_METADATA
 
 			ref: INTEGER
+			i: INTEGER
 
 			processed: detachable ANY
+			retrieved: PS_BACKEND_COLLECTION
+			special: SPECIAL [detachable ANY]
 		do
 			index := object.index
-			across
-				object.uninitialized_attributes as field_idx
-			loop
-				field := object.backend_collection.collection_items [field_idx.item]
-				dynamic_field_type := type_from_string (field.type)
+			retrieved := object.backend_collection
+			check attached {SPECIAL [detachable ANY]} object.reflector.object as sp then
+				special := sp
+			end
 
-				check attached {SPECIAL [detachable ANY]} object.reflector.object as special then
+
+			from
+				i := 1
+			until
+				i > retrieved.collection_items.count
+			loop
+				if attached object.to_initialize [i] as l_type then
+
+					dynamic_field_type := l_type
+					field := object.backend_collection.collection_items [i]
+
 					processed := read_manager.processed_object (field.value, dynamic_field_type, object)
 
 						-- Update reflector for user-defined expanded objects or copy-semantics
@@ -218,18 +235,19 @@ feature {PS_ABEL_EXPORT} -- Read functions
 						special.extend (processed)
 
 						ref := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
-						read_manager.item (ref).set_object (create {PS_REFLECTED_SPECIAL_EXPANDED}.make_special_expanded (special, field_idx.item - 1))
+						read_manager.item (ref).set_object (create {PS_REFLECTED_SPECIAL_EXPANDED}.make_special_expanded (special, i - 1))
 
 					else
 
-						special.put (processed, field_idx.item-1)
+						special.put (processed, i-1)
 
-						if object.reflector.is_special_copy_semantics_item (field_idx.item - 1) then
+						if object.reflector.is_special_copy_semantics_item (i - 1) then
 							ref := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
-							read_manager.item (ref).set_object (object.reflector.special_copy_semantics_item (field_idx.item - 1))
+							read_manager.item (ref).set_object (object.reflector.special_copy_semantics_item (i - 1))
 						end
 					end
 				end
+				i := i + 1
 			end
 		end
 

@@ -29,10 +29,10 @@ feature {PS_ABEL_EXPORT} -- Access: General information
 	index: INTEGER
 			-- The index of the current object.
 
-	referers: LIST [INTEGER]
+	referers: ARRAYED_LIST [INTEGER]
 			-- The index set of the objects holding a reference to the current object.
 
-	references: LIST [INTEGER]
+	references: ARRAYED_LIST [INTEGER]
 			-- The index set of the objects referred to by the current object.
 
 	type: PS_TYPE_METADATA
@@ -74,8 +74,10 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 	primary_key: INTEGER
 			-- The primary key of the current object, as used by the backend.
 
-	uninitialized_attributes: ARRAYED_LIST [INTEGER]
+--	uninitialized_attributes: ARRAYED_LIST [INTEGER]
 			-- The fields which have not yet been set during retrieval.
+
+	to_initialize: ARRAYED_LIST [detachable PS_TYPE_METADATA]
 
 	handler: PS_HANDLER
 			-- The handler for the current object.
@@ -199,7 +201,8 @@ feature {NONE} -- Initialization
 			type := a_type
 			create {ARRAYED_LIST [INTEGER]} referers.make (1)
 			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
-			create uninitialized_attributes.make (a_type.attribute_count)
+--			create uninitialized_attributes.make (a_type.attribute_count)
+			create to_initialize.make_filled (a_type.attribute_count)
 		end
 
 	make_with_primary_key (idx: INTEGER; a_primary_key: INTEGER; a_type: PS_TYPE_METADATA; a_level: INTEGER)
@@ -209,9 +212,11 @@ feature {NONE} -- Initialization
 			type := a_type
 			level := a_level
 			primary_key := a_primary_key
+
 			create {ARRAYED_LIST [INTEGER]} referers.make (1)
 			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
-			create uninitialized_attributes.make (a_type.attribute_count)
+--			create uninitialized_attributes.make (a_type.attribute_count)
+			create to_initialize.make_filled (a_type.attribute_count)
 		end
 
 end

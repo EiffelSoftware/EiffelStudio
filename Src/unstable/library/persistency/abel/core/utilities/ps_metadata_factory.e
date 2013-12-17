@@ -27,6 +27,7 @@ feature -- Factory methods
 				type := reflection.type_of_type (type_id)
 				create Result.make (type, Current)
 				metadata_cache.extend (Result, type.type_id)
+				type_lookup.extend (Result, type.name)
 				Result.initialize
 			end
 		end
@@ -41,6 +42,7 @@ feature -- Factory methods
 			else
 				create Result.make (type, Current)
 				metadata_cache.extend (Result, type.type_id)
+				type_lookup.extend (Result, type.name)
 				Result.initialize
 			end
 		end
@@ -52,6 +54,19 @@ feature -- Factory methods
 		do
 			create reflection
 			Result := create_metadata_from_type (reflection.type_of_type (reflection.dynamic_type (object)))
+		end
+
+	create_metadata_from_string (type_string: IMMUTABLE_STRING_8): PS_TYPE_METADATA
+			-- Get the metadata for the type `type_string'.
+		local
+			reflection: INTERNAL
+		do
+			if attached type_lookup [type_string] as res then
+				Result := res
+			else
+				create reflection
+				Result := create_metadata_from_type_id (reflection.dynamic_type_from_string (type_string))
+			end
 		end
 
 
@@ -98,12 +113,15 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create metadata_cache.make (cache_capacity)
+			create type_lookup.make (cache_capacity)
 		end
 
 feature {NONE} -- Implementation
 
 	metadata_cache: HASH_TABLE [PS_TYPE_METADATA, INTEGER]
 			-- A cache for already generated metadata.
+
+	type_lookup: HASH_TABLE [PS_TYPE_METADATA, IMMUTABLE_STRING_8]
 
 	cache_capacity: INTEGER = 20
 			-- An arbitrarily chosen initial capacity for `metadata_cache'.

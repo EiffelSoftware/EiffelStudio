@@ -57,7 +57,6 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			dynamic_type: INTEGER
 		do
 			reflector := object.reflector
-
 			retrieved := object.backend_object
 
 			from
@@ -66,98 +65,92 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			until
 				i > field_count
 			loop
---				field_type := reflector.field_type (i)
---				field_name := reflector.field_name (i)
 				field_type := retrieved.metadata.builtin_type [i]
 				field_name := retrieved.metadata.attributes [i]
 
---				if retrieved.has_attribute (field_name) then
---					field := retrieved.attribute_value (field_name)
 				if attached retrieved.value_lookup (field_name) as f then
 					field := f
 
-					-- Assign basic expanded attributes
-					if
-						field_type /= reference_type
-						and field_type /= none_type
---						field_type > 1 -- excludes NONE, POINTER and Reference types
-						and field_type /= expanded_type -- excludes user-defined expanded types
-					then
+					inspect
+						field_type
 
-						inspect
-							field_type
+						-- Integers
+					when integer_8_type then
+						reflector.set_integer_8_field (i, field.value.to_integer_8)
+					when integer_16_type then
+						reflector.set_integer_16_field (i, field.value.to_integer_16)
+					when integer_32_type then
+						reflector.set_integer_32_field (i, field.value.to_integer_32)
+					when integer_64_type then
+						reflector.set_integer_64_field (i, field.value.to_integer_64)
 
-							-- Integers
-						when integer_8_type then
-							reflector.set_integer_8_field (i, field.value.to_integer_8)
-						when integer_16_type then
-							reflector.set_integer_16_field (i, field.value.to_integer_16)
-						when integer_32_type then
-							reflector.set_integer_32_field (i, field.value.to_integer_32)
-						when integer_64_type then
-							reflector.set_integer_64_field (i, field.value.to_integer_64)
+						-- Naturals
+					when natural_8_type then
+						reflector.set_natural_8_field (i, field.value.to_natural_8)
+					when natural_16_type then
+						reflector.set_natural_16_field (i, field.value.to_natural_16)
+					when natural_32_type then
+						reflector.set_natural_32_field (i, field.value.to_natural_32)
+					when natural_64_type then
+						reflector.set_natural_64_field (i, field.value.to_natural_64)
 
-							-- Naturals
-						when natural_8_type then
-							reflector.set_natural_8_field (i, field.value.to_natural_8)
-						when natural_16_type then
-							reflector.set_natural_16_field (i, field.value.to_natural_16)
-						when natural_32_type then
-							reflector.set_natural_32_field (i, field.value.to_natural_32)
-						when natural_64_type then
-							reflector.set_natural_64_field (i, field.value.to_natural_64)
+						-- Reals
+					when real_32_type then
+						create managed.make ({PLATFORM}.real_32_bytes)
+						managed.put_integer_32_be (field.value.to_integer_32, 0)
+						reflector.set_real_32_field (i, managed.read_real_32_be (0))
+					when real_64_type then
+						create managed.make ({PLATFORM}.real_64_bytes)
+						managed.put_integer_64_be (field.value.to_integer_64, 0)
+						reflector.set_real_64_field (i, managed.read_real_64_be (0))
 
-							-- Reals
-						when real_32_type then
-							create managed.make ({PLATFORM}.real_32_bytes)
-							managed.put_integer_32_be (field.value.to_integer_32, 0)
-							reflector.set_real_32_field (i, managed.read_real_32_be (0))
-						when real_64_type then
-							create managed.make ({PLATFORM}.real_64_bytes)
-							managed.put_integer_64_be (field.value.to_integer_64, 0)
-							reflector.set_real_64_field (i, managed.read_real_64_be (0))
+						-- Characters
+					when character_8_type then
+						reflector.set_character_8_field (i, field.value.to_natural_8.to_character_8)
+					when character_32_type then
+						reflector.set_character_32_field (i, field.value.to_natural_32.to_character_32)
 
-							-- Characters
-						when character_8_type then
-							reflector.set_character_8_field (i, field.value.to_natural_8.to_character_8)
-						when character_32_type then
-							reflector.set_character_32_field (i, field.value.to_natural_32.to_character_32)
+						-- Booleans
+					when boolean_type then
+						reflector.set_boolean_field (i, field.value.to_boolean)
 
-							-- Booleans
-						when boolean_type then
-							reflector.set_boolean_field (i, field.value.to_boolean)
-						when pointer_type then
-							fixme ("Should we give the user some warning?")
-							reflector.set_pointer_field (i, default_pointer)
-						else
-							check unknown_basic_type: False end
-						end
+						-- None, Pointer, Expanded and References
+					when none_type then
+							-- Do nothing
 
-					else -- NONE, References and expanded userdefined attributes
+					when pointer_type then
+						fixme ("Should we give the user some warning?")
+						reflector.set_pointer_field (i, default_pointer)
 
-						-- Try to assign as much as possible
-						--check expanded_not_implemented: field_type = reference_type end
+					when expanded_type then
 
-						dynamic_type := internal_lib.dynamic_type_from_string (field.type)
-						if dynamic_type /= ({detachable NONE}).type_id then
+						check value_is_primary_key: field.value.is_integer end
+						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+						read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
 
+						object.to_initialize.put_i_th (dynamic_field_type, i)
 
---						if field.type /~ "NONE" then
-							dynamic_field_type := read_manager.metadata_factory.create_metadata_from_type_id (dynamic_type)
-			--				dynamic_field_type := type_from_string (field.type)
+					when reference_type then
+
+						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+						if not dynamic_field_type.is_none then
 
 							if read_manager.is_processable (field.value, dynamic_field_type) then
-								if field_type = reference_type and then attached read_manager.processed_object (field.value, dynamic_field_type, object) as val then
+								if attached read_manager.processed_object (field.value, dynamic_field_type, object) as val then
 									reflector.set_reference_field (i, val)
 								end
 							else
-								-- Order all other reference attributes at read_manager for retrieval
+									-- Order all other reference attributes at read_manager for retrieval
+								check value_is_primary_key: field.value.is_integer end
+
 								read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
-								object.uninitialized_attributes.extend (i)
+								object.to_initialize.put_i_th (dynamic_field_type, i)
 							end
 						end
-					end
 
+					else
+						check unknown_basic_type: False end
+					end
 				end
 				i := i + 1
 			variant
@@ -174,34 +167,50 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			dynamic_field_type: PS_TYPE_METADATA
 
 			ref_item: INTEGER
+
+			retrieved: PS_BACKEND_OBJECT
+			i: INTEGER
+			count: INTEGER
 		do
 			index := object.index
-			across
-				object.uninitialized_attributes as field_idx
+
+			reflector := object.reflector
+			retrieved := object.backend_object
+
 			from
-				reflector := object.reflector
+				i := 1
+				count := object.type.attribute_count
+			until
+				i > count
+
 			loop
-				field := object.backend_object.attribute_value (reflector.field_name (field_idx.item))
-				dynamic_field_type := type_from_string (field.type)
+				if attached object.to_initialize.i_th (i) as dyn then
+					field := retrieved.attribute_value (object.type.attributes [i])
+					dynamic_field_type := dyn
 
-				inspect
-					reflector.field_type (field_idx.item)
-				when expanded_type then
+					inspect
+						object.type.builtin_type [i]
+					when expanded_type then
 
-					ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
-					read_manager.item (ref_item).set_object (reflector.expanded_field (field_idx.item))
-				when reference_type then
-
-					reflector.set_reference_field (field_idx.item, read_manager.processed_object (field.value, dynamic_field_type, object))
-
-					if reflector.is_copy_semantics_field (field_idx.item) then
-							-- Update the reflector of the referenced item!
 						ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
-						read_manager.item (ref_item).set_object (reflector.copy_semantics_field (field_idx.item))
+						read_manager.item (ref_item).set_object (reflector.expanded_field (i))
+					when reference_type then
+
+						reflector.set_reference_field (i, read_manager.processed_object (field.value, dynamic_field_type, object))
+
+						if reflector.is_copy_semantics_field (i) then
+								-- Update the reflector of the referenced item!
+							ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+							read_manager.item (ref_item).set_object (reflector.copy_semantics_field (i))
+						end
+					else
+						check implementation_error: False end
 					end
-				else
-					check implementation_error: False end
 				end
+
+				i := i + 1
+			variant
+				count - i + 1
 			end
 		end
 

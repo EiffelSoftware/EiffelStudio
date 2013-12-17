@@ -113,7 +113,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 	initialize_backend_representation (object: PS_OBJECT_WRITE_DATA)
 			-- Initialize all attributes or items in `object.backend_representation'
 		local
-			obj: PS_OBJECT_DATA
+			obj: PS_OBJECT_WRITE_DATA
 			i, k: INTEGER
 			type: PS_TYPE_METADATA
 			tuple: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]

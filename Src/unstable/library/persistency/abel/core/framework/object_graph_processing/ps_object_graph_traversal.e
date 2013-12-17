@@ -105,7 +105,7 @@ feature {NONE} -- Implementation: Agents
 				found
 			loop
 				if cursor.item.reflector.is_equal (referee) then
-					cursor.item.referers.extend (current_index)
+					cursor.item.set_referer (current_index)
 					traversed_objects [current_index].references.extend (cursor.cursor_index)
 					found := True
 				end
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation: Agents
 
 			if not found then
 				create new_object.make_with_object (traversed_objects.count + 1, referee.twin, traversed_objects [current_index].level + 1, factory.create_metadata_from_type_id (referee.dynamic_type))
-				new_object.referers.extend (current_index)
+				new_object.set_referer (current_index)
 				traversed_objects.extend (new_object)
 				traversed_objects [current_index].references.extend (traversed_objects.count)
 			end
@@ -154,10 +154,10 @@ feature -- Debugging output
 				end
 				Result.append ("%TLevel: " + cursor.item.level.out + "%N")
 
-				Result.append ("%TReferers:  ")
-				across cursor.item.referers as p_cursor loop Result.append (p_cursor.item.out + ", ") end
-				Result.remove_tail (1)
-				Result.put ('%N', Result.count)
+				Result.append ("%TReferer count: " + cursor.item.referer_count.out + "%N")
+				if cursor.item.referer_count > 0 then
+					Result.append ("%TLast referer: " + cursor.item.last_referer.out + "%N")
+				end
 
 				Result.append ("%TReferences:  ")
 				across cursor.item.references as ref_cursor loop Result.append (ref_cursor.item.out + ", ") end

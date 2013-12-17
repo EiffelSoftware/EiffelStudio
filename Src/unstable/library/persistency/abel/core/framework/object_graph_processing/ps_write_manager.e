@@ -236,13 +236,13 @@ feature {PS_ABEL_EXPORT} -- Support
 					item (i).references as ref_cursor
 				loop
 
-					check
-						correct_referer: item (ref_cursor.item).referers.count > 0
-						and (item (ref_cursor.item).referers.count = 1
-							implies item (ref_cursor.item).referers.first = i)
-					end
+--					check
+--						correct_referer: item (ref_cursor.item).referers.count > 0
+--						and (item (ref_cursor.item).referers.count = 1
+--							implies item (ref_cursor.item).referers.first = i)
+--					end
 
-					if item (ref_cursor.item).referers.count = 1 then
+					if item (ref_cursor.item).referer_count = 1 then
 						stack.extend (item (ref_cursor.item).index)
 					end
 				end

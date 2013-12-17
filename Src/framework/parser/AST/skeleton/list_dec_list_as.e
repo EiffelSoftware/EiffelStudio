@@ -12,6 +12,9 @@ inherit
 create
 	make_filled
 
+create {LIST_DEC_LIST_AS}
+	make
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

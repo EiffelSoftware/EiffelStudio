@@ -11,6 +11,11 @@ inherit
 
 	PS_VALUE_TYPE_HANDLER
 
+	PS_TYPE_TABLE
+		undefine
+			default_create
+		end
+
 create
 	make, default_create
 
@@ -19,6 +24,8 @@ feature {NONE} -- Implementation
 	internal_can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
 			-- Can `Current' handle objects of type `type'?
 		do
+--			Result := string_types.has (type.type.type_id)
+
 			Result :=
 				type.type.type_id = ({detachable STRING_8}).type_id
 				or else type.type.type_id = ({detachable STRING_32}).type_id

@@ -35,4 +35,14 @@ feature -- Access
 			Result.extend (True, ({POINTER}).type_id)
 		end
 
+	string_types: HASH_TABLE [BOOLEAN, INTEGER]
+			-- The supported string types.
+		once
+			create Result.make (4)
+			Result.extend (True, ({detachable STRING_8}).type_id)
+			Result.extend (True, ({detachable STRING_32}).type_id)
+			Result.extend (True, ({detachable IMMUTABLE_STRING_8}).type_id)
+			Result.extend (True, ({detachable IMMUTABLE_STRING_32}).type_id)
+		end
+
 end

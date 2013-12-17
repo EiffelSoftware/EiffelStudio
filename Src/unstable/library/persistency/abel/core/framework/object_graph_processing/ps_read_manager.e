@@ -97,13 +97,10 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 		do
 			Result := (create {LINKED_LIST [PS_BACKEND_ENTITY]}.make).new_cursor
 
-			across
-				value_type_handlers as cursor
-			loop
-				if cursor.item.can_handle_type (type) then
-					Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
-					found := True
-				end
+
+			if attached search_value_type_handler (type) then
+				Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
+				found := True
 			end
 
 			across
@@ -203,7 +200,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 --			end
 
 			Result := (type.type.is_expanded and then basic_expanded_types.has (type.type.type_id))
-				or else (across value_type_handlers as cursor some cursor.item.can_handle_type (type) end)
+				or else attached search_value_type_handler (type)
 				or else (attached cache [type] as second_lvl
 					and then second_lvl [value.to_integer] > 0
 					and then (item (second_lvl [value.to_integer]).is_object_initialized
@@ -276,10 +273,6 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 					referee := item (referee_index)
 					if not referee.is_ignored then
 						Result := referee.reflector.object
-
-							-- The following two lines require about 25% of the total execution time of this function.
-							-- They are usually only needed when dealing with relations...
---						referer.references.extend (referee_index)
 						referee.set_referer (referer.index)
 					end
 				end
@@ -303,12 +296,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 						and item (i).type ~ type
 				end
 				found := True
-					-- Update the referers and references tables
-
-					-- The following two lines require about 25% of the total execution time of this function.
-					-- They are usually only needed when dealing with relations...
-
---				referer.references.extend (i)
+					-- Update the referer
 				item (i).set_referer (referer.index)
 			end
 
@@ -316,12 +304,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			if not found then
 				add_object (create {PS_OBJECT_READ_DATA}.make_with_primary_key (count + 1, key, type, current_level + 1), True)
 				to_process_next.extend (count)
-					-- Update the referers and references tables
-
-					-- The following two lines require about 25% of the total execution time of this function.
-					-- They are usually only needed when dealing with relations...
-
---				referer.references.extend (count)
+					-- Update the referer
 				item (count).set_referer (referer.index)
 			end
 		end
@@ -366,7 +349,6 @@ feature {NONE} -- Implementation: Loop body
 				-- Command the handlers to retrieve their objects.
 				-- (Most of them will place an order for a batch retrieve though)
 
---			do_all_in_set (agent {PS_HANDLER}.retrieve (?, Current), to_process)
 			across
 				to_process as idx
 			loop
@@ -381,7 +363,6 @@ feature {NONE} -- Implementation: Loop body
 			process_batch_retrieve
 
 				-- Create the objects, but don't initialize them yet
---			do_all_in_set (agent {PS_HANDLER}.create_object (?, Current), to_process)
 			across
 				to_process as idx
 			loop
@@ -396,33 +377,31 @@ feature {NONE} -- Implementation: Loop body
 				-- Identify and cache the objects
 			if not transaction.is_readonly then
 
-			across
-				to_process as idx_cursor
-			loop
---				i := idx_cursor.item
-				object := item (idx_cursor.item)
+				across
+					to_process as idx_cursor
+				loop
+					object := item (idx_cursor.item)
 
-				if not object.is_ignored and not object.type.type.is_expanded then
-						-- Identify the object with the id_manager
-					id_manager.identify (object.reflector.object, transaction)
+					if not object.is_ignored and not object.type.type.is_expanded then
+							-- Identify the object with the id_manager
+						id_manager.identify (object.reflector.object, transaction)
 
-					identifier := id_manager.identifier_wrapper (object.reflector.object, transaction)
-					object.set_identifier (identifier.object_identifier)
+						identifier := id_manager.identifier_wrapper (object.reflector.object, transaction)
+						object.set_identifier (identifier.object_identifier)
 
-						-- Update the ABEL id -> primary key mapping
-					primary_key_mapper.add_entry (identifier, object.primary_key, transaction)
+							-- Update the ABEL id -> primary key mapping
+						primary_key_mapper.add_entry (identifier, object.primary_key, transaction)
 
-						-- Update the root status
-					check attached object.backend_representation as br then
-						transaction.root_flags.force (br.is_root, identifier.object_identifier)
+							-- Update the root status
+						check attached object.backend_representation as br then
+							transaction.root_flags.force (br.is_root, identifier.object_identifier)
+						end
 					end
 				end
-			end
 
 			end
 
 				-- Update the references from the last iteration
---			do_all_in_set (agent {PS_HANDLER}.finish_initialize (?, Current), to_finalize)
 			across
 				to_finalize as idx
 			loop
@@ -436,7 +415,6 @@ feature {NONE} -- Implementation: Loop body
 
 				-- Do some basic initialization and search for objects
 				-- which need to be built in the next iteration
---			do_all_in_set (agent {PS_HANDLER}.initialize (?, Current), to_process)
 			across
 				to_process as idx
 			loop

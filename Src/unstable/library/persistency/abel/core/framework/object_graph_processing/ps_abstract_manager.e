@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			id_manager := id_mgr
 			primary_key_mapper := key_mapper
 			create identity_type_handlers.make (tiny_size)
-			create value_type_handlers.make (tiny_size)
+			create value_type_handlers.make_empty (tiny_size)
 			create type_handler_cache.make (tiny_size)
 		end
 
@@ -86,6 +86,9 @@ feature {PS_ABEL_EXPORT} -- Element change
 			-- Add `handler' to the current manager.
 		do
 			if handler.is_mapping_to_value_type then
+				if value_type_handlers.count = value_type_handlers.capacity then
+					value_type_handlers := value_type_handlers.resized_area (2 * value_type_handlers.capacity + 1)
+				end
 				value_type_handlers.extend (handler)
 			else
 				identity_type_handlers.extend (handler)
@@ -98,22 +101,24 @@ feature {NONE} -- Utilities
 			-- Assign an appropriate handler for all objects with an index in `set'.
 		local
 			i: INTEGER
+			object: PS_OBJECT_DATA
 			found: BOOLEAN
 			not_found_exception: PS_INTERNAL_ERROR
 		do
 			across
 				set as idx_cursor
 			loop
-				i := idx_cursor.item
+				object := item (idx_cursor.item)
 				if
-					attached type_handler_cache [item (i).type] as cached
-					and then cached.can_handle (item (i))
+					attached type_handler_cache [object.type] as cached
+					and then cached.can_handle (object)
 				then
-					item (i).set_handler (cached)
-					found := True
+					object.set_handler (cached)
 				else
+
+					i := idx_cursor.item
 					found := False
-					-- First search for value types.
+						-- First search for value types.
 					across
 						value_type_handlers as v_cursor
 					until
@@ -138,13 +143,13 @@ feature {NONE} -- Utilities
 						end
 					end
 
-				end
+					if not found then
+						create not_found_exception
+						not_found_exception.set_description (
+							"Could not find a handler for type: " + item (i).type.type.name + "%N")
+						not_found_exception.raise
+					end
 
-				if not found then
-					create not_found_exception
-					not_found_exception.set_description (
-						"Could not find a handler for type: " + item (i).type.type.name + "%N")
-					not_found_exception.raise
 				end
 			end
 		end
@@ -154,15 +159,22 @@ feature {NONE} -- Utilities
 
 	search_value_type_handler (type: PS_TYPE_METADATA): detachable PS_HANDLER
 			-- Try to find a value type handler for `type'
+		local
+			i: INTEGER
+			handler: PS_HANDLER
 		do
-			across
-				value_type_handlers as cursor
+			from
+				i := value_type_handlers.count - 1
 			until
-				attached Result
+				i < 0
 			loop
-				if cursor.item.can_handle_type (type) then
-					Result := cursor.item
+				handler := value_type_handlers [i]
+				if handler.can_handle_type (type) then
+					Result := handler
 				end
+				i := i - 1
+			variant
+				i + 2
 			end
 		ensure
 			correct: attached Result implies Result.can_handle_type (type)
@@ -179,8 +191,6 @@ feature {NONE} -- Utilities
 			-- Apply `operation' on all items with an index in `set'.
 			-- Ignore items when {PS_OBJECT_DATA}.handler is void or {PS_OBJECT_DATA}.is_ignored is True.
 			-- Do nothing if `from_index' > `to_index'
---		require
---			indices_valid: 1 <= from_index and to_index <= count
 		local
 			index: INTEGER
 		do
@@ -202,8 +212,9 @@ feature {NONE} -- Internal data structures
 	identity_type_handlers: ARRAYED_LIST [PS_HANDLER]
 			-- All identity type handlers.
 
-	value_type_handlers: ARRAYED_LIST [PS_HANDLER]
+	value_type_handlers: SPECIAL [PS_HANDLER]
 			-- All value type handlers.
+
 
 	object_storage: ARRAYED_LIST [G]
 			-- An internal storage for objects.

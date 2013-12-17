@@ -66,6 +66,8 @@ feature {PS_ABEL_EXPORT} -- Write execution
 
 	write (root_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert or update `root_object' and all objects reachable from it.
+		local
+			object: PS_OBJECT_WRITE_DATA
 		do
 			wipe_out
 			internal_transaction := a_transaction
@@ -75,9 +77,39 @@ feature {PS_ABEL_EXPORT} -- Write execution
 			-- object_storage := traversal.traversed_objects
 
 			assign_handlers (1 |..| count)
-			do_all (agent {PS_HANDLER}.set_is_persistent)
-			do_all (agent {PS_HANDLER}.set_identifier)
-			do_all (agent {PS_HANDLER}.generate_primary_key)
+
+
+--			do_all (agent {PS_HANDLER}.set_is_persistent)
+			across
+				object_storage as cursor
+			loop
+				object := cursor.item
+				if not object.is_ignored then
+					object.handler.set_is_persistent (object)
+				end
+			end
+
+--			do_all (agent {PS_HANDLER}.set_identifier)
+			across
+				object_storage as cursor
+			loop
+				object := cursor.item
+				if not object.is_ignored then
+					object.handler.set_identifier (object)
+				end
+			end
+
+
+--			do_all (agent {PS_HANDLER}.generate_primary_key)
+			across
+				object_storage as cursor
+			loop
+				object := cursor.item
+				if not object.is_ignored then
+					object.handler.generate_primary_key (object)
+				end
+			end
+
 
 			if not object_primary_key_order.is_empty then
 				generated_object_primary_keys := backend.generate_all_object_primaries (object_primary_key_order, transaction)
@@ -89,8 +121,28 @@ feature {PS_ABEL_EXPORT} -- Write execution
 				across generated_collection_primary_keys as cursor2 loop cursor2.item.start end
 			end
 
-			do_all (agent {PS_HANDLER}.generate_backend_representation)
-			do_all (agent {PS_HANDLER}.initialize_backend_representation)
+--			do_all (agent {PS_HANDLER}.generate_backend_representation)
+			across
+				object_storage as cursor
+			loop
+				object := cursor.item
+				if not object.is_ignored then
+					object.handler.generate_backend_representation (object)
+				end
+			end
+
+
+--			do_all (agent {PS_HANDLER}.initialize_backend_representation)
+			across
+				object_storage as cursor
+			loop
+				object := cursor.item
+				if not object.is_ignored then
+					object.handler.initialize_backend_representation (object)
+				end
+			end
+
+
 
 			fixme ("Support the other root object strategies as well")
 			if not item (1).is_persistent then
@@ -104,7 +156,16 @@ feature {PS_ABEL_EXPORT} -- Write execution
 				end
 			end
 
-			do_all (agent {PS_HANDLER}.write_backend_representation)
+--			do_all (agent {PS_HANDLER}.write_backend_representation)
+			across
+				object_storage as cursor
+			loop
+				object := cursor.item
+				if not object.is_ignored then
+					object.handler.write_backend_representation (object)
+				end
+			end
+
 
 			if not objects_to_write.is_empty then
 				backend.write (objects_to_write, transaction)

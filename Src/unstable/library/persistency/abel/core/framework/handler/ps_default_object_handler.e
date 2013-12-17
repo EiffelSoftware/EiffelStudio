@@ -230,16 +230,18 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			found: BOOLEAN
 			is_expanded: BOOLEAN
 			ref_item: PS_OBJECT_DATA
+			field_count: INTEGER
 		do
 			backend_object := object.backend_object
+			field_count := object.type.attribute_count
 
 			from
 				i := 1
 			until
-				i > object.reflector.field_count
+				i > field_count
 			loop
 				fixme ("Try to avoid unnecessary copies")
-				if object.reflector.field_type (i) = object.reflector.expanded_type then
+				if object.type.builtin_type [i] = expanded_type then
 					det_field := object.reflector.expanded_field (i).object
 					is_expanded := True
 				else
@@ -279,14 +281,14 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 						ref_item := write_manager.item (object.references [k])
 						tuple := ref_item.handler.as_string_pair (ref_item)
-						backend_object.add_attribute (object.reflector.field_name (i), tuple.value, tuple.type)
+						backend_object.add_attribute (object.type.attributes [i], tuple.value, tuple.type)
 					else
 							-- Value type
-						backend_object.add_attribute (object.reflector.field_name (i), basic_attribute_value (field), field_type.name)
+						backend_object.add_attribute (object.type.attributes [i], basic_attribute_value (field), field_type.name)
 					end
 				else
 						-- Void reference
-					backend_object.add_attribute (object.reflector.field_name (i), "", create {IMMUTABLE_STRING_8}.make_from_string ("NONE"))
+					backend_object.add_attribute (object.type.attributes [i], "", create {IMMUTABLE_STRING_8}.make_from_string ("NONE"))
 				end
 				i := i + 1
 			end

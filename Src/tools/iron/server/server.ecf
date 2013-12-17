@@ -8,6 +8,7 @@
 		</file_rule>
 		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
 			<debug name="iron" enabled="true"/>
+			<debug name="no_cache" enabled="true"/>
 			<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -18,7 +19,10 @@
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf" readonly="false"/>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf" readonly="false"/>
 		<library name="iron_node" location="iron_node.ecf" readonly="false"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
 		<library name="notification_email" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email-safe.ecf" readonly="false"/>
+		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf" readonly="false"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 	</target>
 	<target name="server" extends="common">

@@ -132,6 +132,16 @@ feature -- Version Package: Access
 		deferred
 		end
 
+	download_count (a_package: IRON_NODE_VERSION_PACKAGE): INTEGER
+		deferred
+		end
+
+	increment_download_counter (a_package: IRON_NODE_VERSION_PACKAGE)
+		deferred
+		ensure
+			count_incremented: a_package.download_count > old a_package.download_count
+		end
+
 feature -- Version Package: change		
 
 	force_version_package (a_package: IRON_NODE_VERSION_PACKAGE)

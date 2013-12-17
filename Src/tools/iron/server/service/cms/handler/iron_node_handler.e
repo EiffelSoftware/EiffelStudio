@@ -12,6 +12,8 @@ inherit
 
 	WSF_SELF_DOCUMENTED_HANDLER
 
+	SHARED_HTML_ENCODER
+
 feature -- Change
 
 	set_iron (i: like iron)
@@ -398,7 +400,7 @@ feature -- Package form
 							-- Error
 						create p.make_empty
 						p.set_name (l_name)
-					end					
+					end
 				elseif l_path_id /= Void then
 					fd.report_error ("Missing package id from post!")
 					create p.make (l_path_id)
@@ -473,7 +475,7 @@ feature -- Factory
 			Result.set_iron_version (iron_version (req))
 			if attached current_user (req) as u then
 				Result.add_menu ("Home", iron.page (Void, ""))
-				Result.add_menu ("Account (" + u.name + ")", iron.page (Void, "/user"))
+				Result.add_menu ("Account (" + html_encoder.encoded_string (u.name) + ")", iron.page (Void, "/user"))
 			else
 				Result.add_menu ("Home", iron.page (Void, ""))
 				Result.add_menu ("Account", iron.page (Void, "/user"))

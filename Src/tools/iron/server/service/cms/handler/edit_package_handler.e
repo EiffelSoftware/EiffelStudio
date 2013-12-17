@@ -44,7 +44,7 @@ feature -- Execution
 				r.add_menu ("View", iron.package_version_view_web_page (l_package))
 				f := new_package_edit_form (l_package, req, False)
 				create l_theme.make_with_request (req)
-				r.set_title ("Edit package %"" + iron.html_encoder.general_decoded_string (l_package.human_identifier) + "%"")
+				r.set_title ("Edit package %"" + iron.html_encoder.general_encoded_string (l_package.human_identifier) + "%"")
 				r.set_body (f.to_html (l_theme))
 			else
 				r.set_body ("Missing parameter {id}")

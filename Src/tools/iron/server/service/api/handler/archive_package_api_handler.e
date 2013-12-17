@@ -124,10 +124,11 @@ feature -- Execution
 		do
 			if attached package_version_from_id_path_parameter (req, "id") as l_package then
 				if attached l_package.archive_path as p then
-					create m.make (p.utf_8_name)
+					create m.make (p.name)
 					m.set_base_name (l_package.id.as_lower + ".tar.bz2")
 					m.set_no_cache
 					res.send (m)
+					iron.database.increment_download_counter (l_package)
 				else
 					res.send (new_not_found_response_message (req))
 				end

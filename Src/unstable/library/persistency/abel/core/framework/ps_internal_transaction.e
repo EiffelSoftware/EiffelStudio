@@ -19,7 +19,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			repository := a_repository
-			create root_flags.make (100)
+			create root_flags.make (1)
+			create identifier_set.make
 			is_readonly := False
 			is_active := True
 
@@ -30,7 +31,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current', mark transaction as readonly.
 		do
 			repository := a_repository
-			create root_flags.make (100)
+			create root_flags.make (1)
+			create identifier_set.make
 			is_readonly := True
 			is_active := True
 
@@ -47,6 +49,8 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	root_flags: HASH_TABLE [BOOLEAN, INTEGER]
 			-- Mapping for ABEL identifier -> root status of every object.
+
+	identifier_set: PS_IDENTIFIER_SET
 
 feature {PS_ABEL_EXPORT} -- Status report
 

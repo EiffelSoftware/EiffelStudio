@@ -24,7 +24,7 @@ create {PS_ABEL_EXPORT}
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	attributes: LINKED_LIST [STRING]
+	attributes: ARRAYED_LIST [STRING]
 			-- The attributes of the object that have been loaded.
 
 	attribute_value (attribute_name: STRING): TUPLE [value: STRING; attribute_class_name: IMMUTABLE_STRING_8]
@@ -210,8 +210,8 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			precursor (key, class_data)
-			create values.make (10)
-			create attributes.make
+			create values.make (class_data.attribute_count + 1) -- Additional space for plugins.
+			create attributes.make (class_data.attribute_count + 1)
 			attributes.compare_objects
 		ensure then
 			attributes_empty: attributes.is_empty

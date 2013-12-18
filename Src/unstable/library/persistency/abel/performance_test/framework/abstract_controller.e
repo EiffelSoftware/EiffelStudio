@@ -31,7 +31,7 @@ feature -- Access
 	object_count: INTEGER
 			-- The default number of objects in the database.
 		do
-			Result := 10000
+			Result := 100000
 		end
 
 	selection_count: INTEGER

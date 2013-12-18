@@ -128,24 +128,30 @@ feature {PS_ABEL_EXPORT} -- Read functions
 						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
 						read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
 
-						object.to_initialize.put_i_th (dynamic_field_type, i)
+--						object.to_initialize.put_i_th (dynamic_field_type, i)
 
 					when reference_type then
 
 						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
 						if not dynamic_field_type.is_none then
 
-							if read_manager.is_processable (field.value, dynamic_field_type) then
-								if attached read_manager.processed_object (field.value, dynamic_field_type, object) as val then
-									reflector.set_reference_field (i, val)
-								end
-							else
-									-- Order all other reference attributes at read_manager for retrieval
-								check value_is_primary_key: field.value.is_integer end
-
-								read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
-								object.to_initialize.put_i_th (dynamic_field_type, i)
+							if attached read_manager.try_build_attribute (field.value, dynamic_field_type, object) as val then
+								reflector.set_reference_field (i, val)
+--							else
+--								object.to_initialize.put_i_th (dynamic_field_type, i)
 							end
+
+--							if read_manager.is_processable (field.value, dynamic_field_type) then
+--								if attached read_manager.processed_object (field.value, dynamic_field_type, object) as val then
+--									reflector.set_reference_field (i, val)
+--								end
+--							else
+--									-- Order all other reference attributes at read_manager for retrieval
+--								check value_is_primary_key: field.value.is_integer end
+
+--								read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
+--								object.to_initialize.put_i_th (dynamic_field_type, i)
+--							end
 						end
 
 					else
@@ -184,29 +190,60 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				i > count
 
 			loop
-				if attached object.to_initialize.i_th (i) as dyn then
-					field := retrieved.attribute_value (object.type.attributes [i])
-					dynamic_field_type := dyn
+				inspect
+					object.type.builtin_type [i]
 
-					inspect
-						object.type.builtin_type [i]
-					when expanded_type then
-
+				when expanded_type then
+					if attached retrieved.value_lookup (retrieved.metadata.attributes [i]) as f then
+						field := f
+						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
 						ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
 						read_manager.item (ref_item).set_object (reflector.expanded_field (i))
-					when reference_type then
-
-						reflector.set_reference_field (i, read_manager.processed_object (field.value, dynamic_field_type, object))
-
-						if reflector.is_copy_semantics_field (i) then
-								-- Update the reflector of the referenced item!
-							ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
-							read_manager.item (ref_item).set_object (reflector.copy_semantics_field (i))
-						end
-					else
-						check implementation_error: False end
 					end
+
+				when reference_type then
+					if reflector.reference_field (i) = Void and then attached retrieved.value_lookup (retrieved.metadata.attributes [i]) as f then
+						field := f
+						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+
+						if not dynamic_field_type.is_none then
+							reflector.set_reference_field (i, read_manager.build_attribute (field.value.to_integer, dynamic_field_type, object))
+							if reflector.is_copy_semantics_field (i) then
+									-- Update the reflector of the referenced item!
+								ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+								read_manager.item (ref_item).set_object (reflector.copy_semantics_field (i))
+							end
+
+						end
+
+					end
+				else
+
 				end
+
+--				if attached object.to_initialize.i_th (i) as dyn then
+--					field := retrieved.attribute_value (object.type.attributes [i])
+--					dynamic_field_type := dyn
+
+--					inspect
+--						object.type.builtin_type [i]
+--					when expanded_type then
+
+--						ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+--						read_manager.item (ref_item).set_object (reflector.expanded_field (i))
+--					when reference_type then
+
+--						reflector.set_reference_field (i, read_manager.processed_object (field.value, dynamic_field_type, object))
+
+--						if reflector.is_copy_semantics_field (i) then
+--								-- Update the reflector of the referenced item!
+--							ref_item := read_manager.cache_lookup (field.value.to_integer, dynamic_field_type)
+--							read_manager.item (ref_item).set_object (reflector.copy_semantics_field (i))
+--						end
+--					else
+--						check implementation_error: False end
+--					end
+--				end
 
 				i := i + 1
 			variant

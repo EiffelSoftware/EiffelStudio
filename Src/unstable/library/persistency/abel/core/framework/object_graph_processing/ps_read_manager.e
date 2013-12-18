@@ -58,6 +58,8 @@ feature {PS_ABEL_EXPORT} -- Access
 			if attached cache [type] as inner then
 				Result := inner [primary_key]
 			end
+		ensure
+			correct: Result > 0 implies item (Result).primary_key = primary_key and item (Result).type ~ type
 		end
 
 feature {PS_ABEL_EXPORT} -- Element change
@@ -175,6 +177,103 @@ feature {NONE}  -- Object building: loop control variables
 
 feature {PS_ABEL_EXPORT} -- Handler support functions
 
+	try_build_attribute (value: STRING; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA): detachable ANY
+			-- Check if the object identified by the [`value', `type'] tuple
+			-- can be processed right now. The result is attached when
+			-- `type' is a value type or when the object has been retrieved before.
+		require
+			not_none: not type.type.name.ends_with ("NONE")
+		local
+			managed: MANAGED_POINTER
+			referee_index: INTEGER
+			referee: PS_OBJECT_READ_DATA
+			foreign_key: INTEGER
+		do
+
+			if type.type.is_expanded and then basic_expanded_types.has (type.type.type_id) then
+
+				fixme ("No string comparisons")
+				if type.type.name.is_equal ("INTEGER_8") then
+					Result := value.to_integer_8
+				elseif type.type.name.is_equal ("INTEGER_16") then
+					Result := value.to_integer_16
+				elseif type.type.name.is_equal ("INTEGER_32") then
+					Result := value.to_integer_32
+				elseif type.type.name.is_equal ("INTEGER_64") then
+					Result := value.to_integer_64
+				elseif type.type.name.is_equal ("NATURAL_8") then
+					Result := value.to_natural_8
+				elseif type.type.name.is_equal ("NATURAL_16") then
+					Result := value.to_natural_16
+				elseif type.type.name.is_equal ("NATURAL_32") then
+					Result := value.to_natural_32
+				elseif type.type.name.is_equal ("NATURAL_64") then
+					Result := value.to_natural_64
+				elseif type.type.name.is_equal ("REAL_32") then
+					create managed.make ({PLATFORM}.real_32_bytes)
+					managed.put_integer_32_be (value.to_integer_32, 0)
+					Result := managed.read_real_32_be (0)
+				elseif type.type.name.is_equal ("REAL_64") then
+					create managed.make ({PLATFORM}.real_64_bytes)
+					managed.put_integer_64_be ( value.to_integer_64, 0)
+					Result := managed.read_real_64_be (0)
+				elseif type.type.name.is_equal ("BOOLEAN") then
+					Result := value.to_boolean
+				elseif type.type.name.is_equal ("CHARACTER_8") then
+					Result := value.to_natural_8.to_character_8
+				elseif type.type.name.is_equal ("CHARACTER_32") then
+					Result := value.to_natural_32.to_character_32
+				elseif type.type.name.is_equal ("POINTER") then
+					fixme ("Warn the user?")
+					Result := default_pointer
+				else
+					check
+						unknown_basic_type: False
+					end
+				end
+
+			elseif attached search_value_type_handler (type) as safe_handler then
+				Result := safe_handler.build_from_string (value, type)
+
+			else
+				check value_is_primary: value.is_integer end
+
+				foreign_key := value.to_integer
+				referee_index := cache_lookup (foreign_key, type)
+
+				if referee_index > 0 then
+					referee := item (referee_index)
+					if referee.is_ignored then
+						-- do nothing
+					elseif referee.is_object_initialized then
+						Result := referee.reflector.object
+						referee.set_referer (referer.index)
+					else
+						process_next (foreign_key, type, referer)
+					end
+				else
+					process_next (foreign_key, type, referer)
+				end
+			end
+		end
+
+	build_attribute (foreign_key: INTEGER; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA): detachable ANY
+			-- Get the reference to the object identified by [`foreign_key', `type'].
+		local
+			referee_index: INTEGER
+			referee: PS_OBJECT_READ_DATA
+		do
+			referee_index := cache_lookup (foreign_key, type)
+
+			check object_exists: referee_index > 0 end
+			referee := item (referee_index)
+			if not referee.is_ignored then
+				Result := referee.reflector.object
+				referee.set_referer (referer.index)
+			end
+		end
+
+
 	is_processable (value: STRING; type: PS_TYPE_METADATA): BOOLEAN
 			-- Check if the object identified by the [`value', `type'] tuple
 			-- can be processed right now. The result is true when
@@ -284,29 +383,31 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			-- The `referer' denotes the object issuing the request.
 		local
 			i: INTEGER
+			object: PS_OBJECT_READ_DATA
 			found: BOOLEAN
 		do
 				-- First check if the item is not already registered for retrieval
 			i := cache_lookup (key, type)
-			if i > 0 and then item (i).primary_key = key then
+
+			if i > 0 then
+				object := item (i)
+
 				check
 					equal_algorithm:
 						to_process_next.has (i)
-						and item (i).primary_key = key
-						and item (i).type ~ type
+						and object.primary_key = key
+						and object.type ~ type
 				end
-				found := True
-					-- Update the referer
-				item (i).set_referer (referer.index)
-			end
 
+			else
 				-- Extend the objects list for retrieval
-			if not found then
-				add_object (create {PS_OBJECT_READ_DATA}.make_with_primary_key (count + 1, key, type, current_level + 1), True)
-				to_process_next.extend (count)
-					-- Update the referer
-				item (count).set_referer (referer.index)
+				i := count + 1
+				create object.make_with_primary_key (i, key, type, current_level)
+				add_object (object, True)
+				to_process_next.extend (i)
 			end
+				-- Update the referer
+			object.set_referer (referer.index)
 		end
 
 

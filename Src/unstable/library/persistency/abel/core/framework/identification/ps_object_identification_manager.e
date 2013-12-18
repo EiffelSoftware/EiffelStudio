@@ -137,7 +137,8 @@ feature {PS_ABEL_EXPORT} -- Transaction management
 		do
 			if not is_registered (transaction) then
 				registered_transactions.extend (transaction)
-				transaction_sets.extend ([transaction, create {PS_IDENTIFIER_SET}.make])
+				--transaction_sets.extend ([transaction, create {PS_IDENTIFIER_SET}.make])
+				transaction_sets.extend ([transaction, transaction.identifier_set])
 			end
 		ensure
 			is_registered (transaction)
@@ -248,12 +249,13 @@ feature {NONE} -- Implementation
 		require
 			registered: is_registered (transaction)
 		do
-			Result:= global_set
-			across transaction_sets as cursor loop
-				if cursor.item.transaction = transaction then
-					Result:= cursor.item.set
-				end
-			end
+			Result := transaction.identifier_set
+--			Result:= global_set
+--			across transaction_sets as cursor loop
+--				if cursor.item.transaction = transaction then
+--					Result:= cursor.item.set
+--				end
+--			end
 		ensure
 			not_global: Result /= global_set
 		end

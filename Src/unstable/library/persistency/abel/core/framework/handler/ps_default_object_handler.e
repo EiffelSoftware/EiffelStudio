@@ -231,64 +231,133 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			is_expanded: BOOLEAN
 			ref_item: PS_OBJECT_DATA
 			field_count: INTEGER
+
+			reflector: REFLECTED_OBJECT
+			static_field_type: INTEGER
+			attribute_name: STRING
+
+			managed: MANAGED_POINTER
+			real: REAL_32
+			double: REAL_64
+
+			expanded_reflector: REFLECTED_OBJECT
 		do
 			backend_object := object.backend_object
 			field_count := object.type.attribute_count
+			reflector := object.reflector
 
 			from
 				i := 1
 			until
 				i > field_count
 			loop
-				fixme ("Try to avoid unnecessary copies")
-				if object.type.builtin_type [i] = expanded_type then
-					det_field := object.reflector.expanded_field (i).object
-					is_expanded := True
-				else
-					det_field := object.reflector.field (i)
-					is_expanded := False
-				end
+				static_field_type := object.type.builtin_type [i]
+				attribute_name := object.type.attributes [i]
+				inspect
+					static_field_type
 
-				if attached det_field as field then
-					field_type := write_manager.metadata_factory.create_metadata_from_object (field)
+					-- Integers
+				when integer_8_type then
+					backend_object.add_attribute (attribute_name, reflector.integer_8_field (i).out, basic_type_names [static_field_type])
+				when integer_16_type then
+					backend_object.add_attribute (attribute_name, reflector.integer_16_field (i).out, basic_type_names [static_field_type])
+				when integer_32_type then
+					backend_object.add_attribute (attribute_name, reflector.integer_32_field (i).out, basic_type_names [static_field_type])
+				when integer_64_type then
+					backend_object.add_attribute (attribute_name, reflector.integer_64_field (i).out, basic_type_names [static_field_type])
 
-					if not basic_expanded_types.has (field_type.type.type_id) then
-							-- Reference type
-						from
-							k := 0
-							found := False
-						until
-							k >= object.references.count or found
-						loop
-							k := k + 1
+					-- Naturals
+				when natural_8_type then
+					backend_object.add_attribute (attribute_name, reflector.natural_8_field (i).out, basic_type_names [static_field_type])
+				when natural_16_type then
+					backend_object.add_attribute (attribute_name, reflector.natural_16_field (i).out, basic_type_names [static_field_type])
+				when natural_32_type then
+					backend_object.add_attribute (attribute_name, reflector.natural_32_field (i).out, basic_type_names [static_field_type])
+				when natural_64_type then
+					backend_object.add_attribute (attribute_name, reflector.natural_64_field (i).out, basic_type_names [static_field_type])
 
-							fixme ("[
-								In theory the equality (=) operation should call `is_equal' on expanded objects.
-								In practice this doesn't work on expanded types created by {REFLECTED_OBJECT}.object.
-								Therefore we call the tilde (~) operator manually to ensure that `is_equal' is being
-								called on copy-semantics objects
-								]")
+					-- Reals
+				when real_32_type then
+					real := reflector.real_32_field (i)
+					create managed.make ({PLATFORM}.real_32_bytes)
+					managed.put_real_32_be (real, 0)
+					backend_object.add_attribute (attribute_name, managed.read_integer_32_be (0).out, basic_type_names [static_field_type])
 
+				when real_64_type then
+					double := reflector.real_64_field (i)
+					create managed.make ({PLATFORM}.real_64_bytes)
+					managed.put_real_64_be (double, 0)
+					backend_object.add_attribute (attribute_name, managed.read_integer_64_be (0).out, basic_type_names [static_field_type])
 
-							if is_expanded then
-								found :=  write_manager.item (object.references [k]).reflector.object ~ field
-							else
+					-- Characters
+				when character_8_type then
+					fixme ("natural_32_code ?")
+					backend_object.add_attribute (attribute_name, reflector.character_8_field (i).natural_32_code.out, basic_type_names [static_field_type])
+				when character_32_type then
+					backend_object.add_attribute (attribute_name, reflector.character_32_field (i).natural_32_code.out, basic_type_names [static_field_type])
+
+					-- Booleans
+				when boolean_type then
+					backend_object.add_attribute (attribute_name, reflector.boolean_field (i).out, basic_type_names [static_field_type])
+
+					-- None, Pointer, Expanded and References
+				when none_type then
+						-- Do nothing
+
+				when pointer_type then
+					fixme ("Should we give the user some warning?")
+					backend_object.add_attribute (attribute_name, default_pointer.out, basic_type_names [static_field_type])
+
+				when expanded_type then
+					expanded_reflector := object.reflector.expanded_field (i)
+
+					from
+						k := 0
+						found := False
+					until
+						k >= object.references.count or found
+					loop
+						k := k + 1
+						found :=  write_manager.item (object.references [k]).reflector ~ expanded_reflector
+					end
+
+					check reference_found: k <= object.references.count end
+
+					ref_item := write_manager.item (object.references [k])
+					tuple := ref_item.handler.as_string_pair (ref_item)
+					backend_object.add_attribute (object.type.attributes [i], tuple.value, tuple.type)
+
+				when reference_type then
+
+					if attached object.reflector.field (i) as field then
+
+						if basic_expanded_types.has (field.generating_type.type_id) then
+								-- Basic type, disguised in a copy-semantics object.
+							field_type := write_manager.metadata_factory.create_metadata_from_object (field)
+							backend_object.add_attribute (object.type.attributes [i], basic_attribute_value (field), field_type.name)
+						else
+								-- Reference type
+							from
+								k := 0
+								found := False
+							until
+								k >= object.references.count or found
+							loop
+								k := k + 1
 								found :=  write_manager.item (object.references [k]).reflector.object = field
 							end
+
+							check reference_found: k <= object.references.count end
+							ref_item := write_manager.item (object.references [k])
+							tuple := ref_item.handler.as_string_pair (ref_item)
+							backend_object.add_attribute (object.type.attributes [i], tuple.value, tuple.type)
 						end
-
-						check reference_found: k <= object.references.count end
-
-						ref_item := write_manager.item (object.references [k])
-						tuple := ref_item.handler.as_string_pair (ref_item)
-						backend_object.add_attribute (object.type.attributes [i], tuple.value, tuple.type)
 					else
-							-- Value type
-						backend_object.add_attribute (object.type.attributes [i], basic_attribute_value (field), field_type.name)
+							-- Void reference
+						backend_object.add_attribute (object.type.attributes [i], "", create {IMMUTABLE_STRING_8}.make_from_string ("NONE"))
 					end
 				else
-						-- Void reference
-					backend_object.add_attribute (object.type.attributes [i], "", create {IMMUTABLE_STRING_8}.make_from_string ("NONE"))
+					check unknown_static_type: False end
 				end
 				i := i + 1
 			end

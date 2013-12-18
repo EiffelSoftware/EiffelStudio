@@ -38,6 +38,8 @@ feature -- Command
 			internal_construct
 			l_window := develop_window.window
 
+				-- Save position in case of maxmized state or for Windows where we will
+				-- move the window offscreen.
 			l_x := l_window.x_position
 			l_y := l_window.y_position
 			if {PLATFORM}.is_windows then
@@ -69,13 +71,22 @@ feature -- Command
 			end
 
 			l_window.hide
-			l_window.set_position (l_x, l_y)
 
-			if attached {EB_DEVELOPMENT_WINDOW_DATA} develop_window.session_data.value (develop_window.development_window_data.development_window_data_id) as l_data then
-				if l_data.is_maximized then
-						-- Make sure that window is maximized next time we show it.
-					l_window.show_actions.extend_kamikaze (agent l_window.maximize)
-				end
+			if
+				attached {EB_DEVELOPMENT_WINDOW_DATA} develop_window.session_data.value (develop_window.development_window_data.development_window_data_id) as l_data and then
+				l_data.is_maximized
+			then
+					-- Position the maximized window to the same screen as before using the saved maximized positions.
+				l_window.set_position (l_data.maximized_x_position, l_data.maximized_y_position)
+					-- Make sure that window is maximized next time we show it.
+				l_window.show_actions.extend_kamikaze (agent l_window.maximize)
+					-- Once it is maximized, we make sure to restore the window to its former
+					-- unmaximized position.
+				l_window.restore_actions.extend_kamikaze (agent l_window.set_position (l_x, l_y))
+			elseif {PLATFORM}.is_windows then
+					-- Restore position of window to what was obtained before
+					-- putting it offscreen.
+				l_window.set_position (l_x, l_y)
 			end
 		end
 
@@ -314,7 +325,7 @@ feature{NONE} -- Implementation
 			-- Builder which build toolbars.
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,7 +27,6 @@ feature {NONE} -- Creation
 		do
 			save_window_state (a_window_data.is_minimized, a_window_data.is_maximized)
 			save_size (a_window_data.width, a_window_data.height)
-			save_maximized_size (a_window_data.maximized_width, a_window_data.maximized_height)
 			save_position (a_window_data.x_position, a_window_data.y_position)
 			save_maximized_position (a_window_data.maximized_x_position, a_window_data.maximized_y_position)
 			save_force_debug_mode (a_window_data.is_force_debug_mode)
@@ -68,24 +67,6 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 	show_formatter_marks: BOOLEAN
 			-- Show formatter marks?
-
-	width, height: INTEGER
-			-- Width and height for the development window.
-
-	x_position, y_position: INTEGER
-			-- X and Y position for development window.
-
-	maximized_width, maximized_height: INTEGER
-			-- Width and height for the development window when maximized.
-
-	maximized_x_position, maximized_y_position: INTEGER
-			-- X and Y position for development window when mazimized.
-
-	is_maximized: BOOLEAN
-			-- Is the development window maximized?
-
-	is_minimized: BOOLEAN
-			-- Is the development window minimized?
 
 	is_force_debug_mode: BOOLEAN
 			-- Is the development window force debug mode?
@@ -181,41 +162,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			editor_position_set: editor_position = a_position
 		end
 
-	save_size (a_width, a_height: INTEGER)
-			-- <Precursor>
-		do
-			width := a_width
-			height := a_height
-		end
-
-	save_maximized_size (a_width, a_height: INTEGER)
-			-- <Precursor>
-		do
-			maximized_width := a_width
-			maximized_height := a_height
-		end
-
-	save_position (a_x, a_y: INTEGER)
-			-- <Precursor>
-		do
-			x_position := a_x
-			y_position := a_y
-		end
-
-	save_maximized_position (a_x, a_y: INTEGER)
-			-- <Precursor>
-		do
-			maximized_x_position := a_x
-			maximized_y_position := a_y
-		end
-
-	save_window_state (a_minimized, a_maximized: BOOLEAN)
-			-- <Precursor>
-		do
-			is_maximized := a_maximized
-			is_minimized := a_minimized
-		end
-
 	save_force_debug_mode (a_bool: BOOLEAN)
 			-- Save if `is_force_debug_mode'
 		do
@@ -237,7 +183,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

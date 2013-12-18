@@ -38,7 +38,7 @@ feature {PS_ABEL_EXPORT} -- Access
 			end
 		end
 
-	value_lookup (attribute_name: STRING): detachable TUPLE [value: STRING; attribute_class_name: IMMUTABLE_STRING_8]
+	value_lookup (attribute_name: STRING): detachable TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			-- The value of the attribute `attribute_name', if present.
 		do
 			Result := values [attribute_name]

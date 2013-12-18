@@ -178,8 +178,8 @@ feature {NONE}  -- Object building: loop control variables
 feature {PS_ABEL_EXPORT} -- Handler support functions
 
 	try_build_attribute (value: STRING; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA): detachable ANY
-			-- Check if the object identified by the [`value', `type'] tuple
-			-- can be processed right now. The result is attached when
+			-- Check if the attribute identified by the [`value', `type'] tuple
+			-- can be built right now. The result is attached when
 			-- `type' is a value type or when the object has been retrieved before.
 		require
 			not_none: not type.type.name.ends_with ("NONE")
@@ -188,42 +188,42 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			referee_index: INTEGER
 			referee: PS_OBJECT_READ_DATA
 			foreign_key: INTEGER
+			l_type: INTEGER
 		do
+			l_type := type.type.type_id
+			if type.type.is_expanded and then basic_expanded_types.has (l_type) then
 
-			if type.type.is_expanded and then basic_expanded_types.has (type.type.type_id) then
-
-				fixme ("No string comparisons")
-				if type.type.name.is_equal ("INTEGER_8") then
+				if l_type = ({INTEGER_8}).type_id then
 					Result := value.to_integer_8
-				elseif type.type.name.is_equal ("INTEGER_16") then
+				elseif l_type = ({INTEGER_16}).type_id then
 					Result := value.to_integer_16
-				elseif type.type.name.is_equal ("INTEGER_32") then
+				elseif l_type = ({INTEGER_32}).type_id then
 					Result := value.to_integer_32
-				elseif type.type.name.is_equal ("INTEGER_64") then
+				elseif l_type = ({INTEGER_64}).type_id then
 					Result := value.to_integer_64
-				elseif type.type.name.is_equal ("NATURAL_8") then
+				elseif l_type = ({NATURAL_8}).type_id then
 					Result := value.to_natural_8
-				elseif type.type.name.is_equal ("NATURAL_16") then
+				elseif l_type = ({NATURAL_16}).type_id then
 					Result := value.to_natural_16
-				elseif type.type.name.is_equal ("NATURAL_32") then
+				elseif l_type = ({NATURAL_32}).type_id then
 					Result := value.to_natural_32
-				elseif type.type.name.is_equal ("NATURAL_64") then
+				elseif l_type = ({NATURAL_64}).type_id then
 					Result := value.to_natural_64
-				elseif type.type.name.is_equal ("REAL_32") then
+				elseif l_type = ({REAL_32}).type_id then
 					create managed.make ({PLATFORM}.real_32_bytes)
 					managed.put_integer_32_be (value.to_integer_32, 0)
 					Result := managed.read_real_32_be (0)
-				elseif type.type.name.is_equal ("REAL_64") then
+				elseif l_type = ({REAL_64}).type_id then
 					create managed.make ({PLATFORM}.real_64_bytes)
 					managed.put_integer_64_be ( value.to_integer_64, 0)
 					Result := managed.read_real_64_be (0)
-				elseif type.type.name.is_equal ("BOOLEAN") then
+				elseif l_type = ({BOOLEAN}).type_id then
 					Result := value.to_boolean
-				elseif type.type.name.is_equal ("CHARACTER_8") then
+				elseif l_type = ({CHARACTER_8}).type_id then
 					Result := value.to_natural_8.to_character_8
-				elseif type.type.name.is_equal ("CHARACTER_32") then
+				elseif l_type = ({CHARACTER_32}).type_id then
 					Result := value.to_natural_32.to_character_32
-				elseif type.type.name.is_equal ("POINTER") then
+				elseif l_type = ({POINTER}).type_id then
 					fixme ("Warn the user?")
 					Result := default_pointer
 				else
@@ -274,108 +274,19 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 		end
 
 
-	is_processable (value: STRING; type: PS_TYPE_METADATA): BOOLEAN
+	is_attribute_ready (value: STRING; type: PS_TYPE_METADATA): BOOLEAN
 			-- Check if the object identified by the [`value', `type'] tuple
 			-- can be processed right now. The result is true when
 			-- `type' is a value type or when the object has been retrieved before.
 		require
 			not_none: not type.type.name.ends_with ("NONE")
-		local
---			referee_index: INTEGER
---			referee: PS_OBJECT_DATA
 		do
---			Result := basic_expanded_types.has (type.type.type_id)
---				or else (across value_type_handlers as cursor some cursor.item.can_handle_type (type) end)
-
---			if not Result then
---				check value_is_primary_key: value.is_integer end
-
---				referee_index := cache_lookup (value.to_integer, type)
-
---				if referee_index > 0 then
---					referee := item (referee_index)
---					Result := referee.is_ignored or referee.is_object_initialized
---				end
---			end
-
 			Result := (type.type.is_expanded and then basic_expanded_types.has (type.type.type_id))
 				or else attached search_value_type_handler (type)
 				or else (attached cache [type] as second_lvl
 					and then second_lvl [value.to_integer] > 0
 					and then (item (second_lvl [value.to_integer]).is_object_initialized
 						or item (second_lvl [value.to_integer]).is_ignored))
-		end
-
-	processed_object (value: STRING; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA): detachable ANY
-			-- Get the object identified by the [`value', `type'] tuple.
-			-- The object may be served from cache or built on the fly in case of a value type.
-			-- The `referer' denotes the object issuing the request.
-		require
-			buildable: is_processable (value, type)
-			not_none: not type.type.name.ends_with ("NONE")
-		local
-			managed: MANAGED_POINTER
-			referee_index: INTEGER
-			referee: PS_OBJECT_READ_DATA
-		do
-
-			if type.type.is_expanded and then basic_expanded_types.has (type.type.type_id) then
-				fixme ("No string comparisons")
-				if type.type.name.is_equal ("INTEGER_8") then
-					Result := value.to_integer_8
-				elseif type.type.name.is_equal ("INTEGER_16") then
-					Result := value.to_integer_16
-				elseif type.type.name.is_equal ("INTEGER_32") then
-					Result := value.to_integer_32
-				elseif type.type.name.is_equal ("INTEGER_64") then
-					Result := value.to_integer_64
-				elseif type.type.name.is_equal ("NATURAL_8") then
-					Result := value.to_natural_8
-				elseif type.type.name.is_equal ("NATURAL_16") then
-					Result := value.to_natural_16
-				elseif type.type.name.is_equal ("NATURAL_32") then
-					Result := value.to_natural_32
-				elseif type.type.name.is_equal ("NATURAL_64") then
-					Result := value.to_natural_64
-				elseif type.type.name.is_equal ("REAL_32") then
-					create managed.make ({PLATFORM}.real_32_bytes)
-					managed.put_integer_32_be (value.to_integer_32, 0)
-					Result := managed.read_real_32_be (0)
-				elseif type.type.name.is_equal ("REAL_64") then
-					create managed.make ({PLATFORM}.real_64_bytes)
-					managed.put_integer_64_be ( value.to_integer_64, 0)
-					Result := managed.read_real_64_be (0)
-				elseif type.type.name.is_equal ("BOOLEAN") then
-					Result := value.to_boolean
-				elseif type.type.name.is_equal ("CHARACTER_8") then
-					Result := value.to_natural_8.to_character_8
-				elseif type.type.name.is_equal ("CHARACTER_32") then
-					Result := value.to_natural_32.to_character_32
-				elseif type.type.name.is_equal ("POINTER") then
-					fixme ("Warn the user?")
-					Result := default_pointer
-				else
-					check
-						unknown_basic_type: False
-					end
-				end
-
-			elseif attached search_value_type_handler (type) as safe_handler then
-				Result := safe_handler.build_from_string (value, type)
-
-			else
-				check value_is_primary: value.is_integer end
-
-				referee_index := cache_lookup (value.to_integer, type)
-
-				if referee_index > 0 then
-					referee := item (referee_index)
-					if not referee.is_ignored then
-						Result := referee.reflector.object
-						referee.set_referer (referer.index)
-					end
-				end
-			end
 		end
 
 	process_next (key: INTEGER; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA)

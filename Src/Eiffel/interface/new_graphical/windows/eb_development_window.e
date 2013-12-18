@@ -1532,9 +1532,10 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			-- Save window size.
 		do
 			if not window.is_minimized then
-				if window.is_maximized then
-					development_window_data.save_maximized_size (window.width, window.height)
-				else
+				if not window.is_maximized then
+						-- Only save the size of the window if not maximized,
+						-- since if maximized we know the size of the window, it is
+						-- the size of the screen.
 					development_window_data.save_size (window.width, window.height)
 				end
 			end

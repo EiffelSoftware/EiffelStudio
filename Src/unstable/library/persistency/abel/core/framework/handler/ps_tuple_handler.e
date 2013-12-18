@@ -28,83 +28,67 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			-- For any referenced object not yet loaded, tell the `read_manager'
 			-- to retrieve it in the next iteration.
 		local
-			index: INTEGER
-			type: PS_TYPE_METADATA
-			new_instance: detachable ANY
-			reflector: REFLECTED_REFERENCE_OBJECT
-
 			retrieved: PS_BACKEND_COLLECTION
-			field_type: INTEGER
-			i: INTEGER
 			count: INTEGER
-			capacity: INTEGER
+			i: INTEGER
 
 			field: TUPLE [value: STRING; type:IMMUTABLE_STRING_8]
-			dynamic_field_type: PS_TYPE_METADATA
-			managed: MANAGED_POINTER
+			l_type: PS_TYPE_METADATA
 		do
-			index := object.index
-			type := object.type
 			retrieved := object.backend_collection
-			new_instance := object.reflector.object
+			count := retrieved.collection_items.count
 
-			check attached {TUPLE} new_instance as tuple then
+			check attached {TUPLE} object.reflector.object as tuple then
 				from
 					i := 1
-					count := retrieved.collection_items.count
-					object.to_initialize.make_filled (count)
 				until
-					i > retrieved.collection_items.count
+					i > count
 				loop
 					field := retrieved.collection_items [i]
-
-					if not field.type.is_equal ("NONE") then
-
-						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_type_id (internal_lib.dynamic_type_from_string (field.type))
-
-						if read_manager.is_processable (field.value, dynamic_field_type) then
-							tuple.put (read_manager.processed_object (field.value, dynamic_field_type, object), i)
-						else
-							read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
-
-							object.to_initialize.put_i_th (dynamic_field_type, i)
-						end
+					l_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+					if
+						not l_type.is_none and then
+						attached read_manager.try_build_attribute (field.value, l_type, object) as obj
+					then
+						tuple [i] := obj
 					end
 					i := i + 1
+				variant
+					count + 1 - i
 				end
 			end
 		end
 
-
 	finish_initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Finish initialization of `object'.
 		local
-			index: INTEGER
-			reflector: REFLECTED_OBJECT
-			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
-			dynamic_field_type: PS_TYPE_METADATA
-
-			i: INTEGER
-			count: INTEGER
 			retrieved: PS_BACKEND_COLLECTION
+			count: INTEGER
+			i: INTEGER
+
+			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+			l_type: PS_TYPE_METADATA
 		do
 			retrieved := object.backend_collection
+			count := retrieved.collection_items.count
 
-			from
-				i := 1
-				count := retrieved.collection_items.count
-			until
-				i > retrieved.collection_items.count
-			loop
-				if attached object.to_initialize [i] as l_type  then
-					dynamic_field_type := l_type
-					field := object.backend_collection.collection_items [i]
-
-					check attached {TUPLE} object.reflector.object as tuple then
-						tuple.put (read_manager.processed_object (field.value, dynamic_field_type, object), i)
+			check attached {TUPLE} object.reflector.object as tuple then
+				from
+					i := 1
+				until
+					i > count
+				loop
+					if not attached tuple [i] then
+						field := retrieved.collection_items [i]
+						l_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+						if not l_type.is_none then
+							tuple [i] := read_manager.build_attribute (field.value.to_integer, l_type, object)
+						end
 					end
+					i := i + 1
+				variant
+					count + 1 - i
 				end
-				i := i + 1
 			end
 		end
 

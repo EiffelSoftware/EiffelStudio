@@ -18,9 +18,6 @@ feature {PS_ABEL_EXPORT} -- Status report
 	is_mapping_to_collection: BOOLEAN = False
 			-- Does `Current' map objects to a {PS_RETRIEVED_OBJECT_COLLECTION}?
 
---	is_mapping_to_value_type: BOOLEAN = False
---			-- Does `Current' map objects to a value type (i.e. STRING)?
-
 feature {PS_ABEL_EXPORT} -- Read functions
 
 	retrieve (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)

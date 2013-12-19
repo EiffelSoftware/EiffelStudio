@@ -10,7 +10,10 @@ class
 inherit
 	PS_BACKEND
 
-	PS_BACKEND_CONVERTER
+--	PS_BACKEND_CONVERTER
+--		redefine
+--			internal_specific_retrieve
+--		end
 
 create
 	make
@@ -47,6 +50,48 @@ feature {PS_ABEL_EXPORT} -- Access
 				collection_database as collection_cursor
 			loop
 				Result.extend (reflection.type_of_type (collection_cursor.key).name)
+			end
+		end
+
+	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
+			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
+		local
+			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
+		do
+			across
+				order as cursor
+			from
+				create list.make (order.count)
+				Result := list
+			loop
+				if
+					attached collection_database [cursor.item.type.type.type_id] as inner
+					and then attached inner [cursor.item.primary_key] as res
+				then
+					list.extend (res)
+				end
+			end
+		end
+
+	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+		local
+			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
+			i: INTEGER
+		do
+			from
+				create list.make (primaries.count)
+				Result := list
+				i := 1
+			until
+				i > primaries.count
+			loop
+				if attached create_get_inner_database (types [i]).item (primaries [i]) as retrieved_obj then
+					list.extend (retrieved_obj)
+				end
+				i := i + 1
+			variant
+				primaries.count + 1 - i
 			end
 		end
 

@@ -26,6 +26,7 @@ feature {PS_REPOSITORY_TESTS}
 			test_write_operations
 			test_immediate_retrieve
 			test_exact_retrieve_depth
+			test_initialization_with_cache
 		end
 
 	test_write_operations
@@ -147,6 +148,33 @@ feature {PS_REPOSITORY_TESTS}
 
 			query.close
 			transaction.commit
+			repository.clean_db_for_testing
+		end
+
+	test_initialization_with_cache
+		local
+			query: PS_QUERY [REFERENCE_CLASS_1]
+			transaction: PS_TRANSACTION
+		do
+			transaction := repository.new_transaction
+			transaction.insert (test_data.reference_cycle)
+
+			create query.make
+			query.set_object_initialization_depth (2)
+			transaction.execute_query (query)
+
+			across
+				query as cursor
+			loop
+				assert ("First-level references are initialized", attached cursor.item.refer)
+			end
+
+			assert ("Count is 3", query.result_cache.count = 3)
+
+			query.close
+			transaction.commit
+			repository.clean_db_for_testing
+		rescue
 			repository.clean_db_for_testing
 		end
 

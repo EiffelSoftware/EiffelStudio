@@ -146,17 +146,31 @@ feature {PS_ABEL_EXPORT}
 			retrieved_entity: PS_BACKEND_ENTITY
 			new_object: PS_OBJECT_READ_DATA
 
-			to_build: ARRAYED_LIST [INTEGER]
+			to_build: INDEXABLE [INTEGER, INTEGER]
+
+			to_build_array: ARRAYED_LIST [INTEGER]
+			to_build_interval: PS_INTEGER_INTERVAL
+
 			processed_item_list:ARRAYED_LIST [INTEGER]
 		do
 
 
 			from
+
 				batch_count := read_manager.backend.batch_retrieval_size
-				--batch_count := 1
+--				if batch_count < 1 then
+--						-- Some reasonable default to exploit caches.
+--					batch_count := 500
+--				end
+
+				if query.object_initialization_depth >= 0 then
+						-- Wipe out the read manager, because there are a lot of half-initialized objects.
+					read_manager.wipe_out
+				end
 
 				create processed_item_list.make (batch_count.max (1))
-				create to_build.make (batch_count.max (1))
+				create to_build_interval.make_new (read_manager.count + 1, read_manager.count)
+				to_build := to_build_interval
 			until
 				batch_count = 0 or current_result.after
 			loop
@@ -170,7 +184,6 @@ feature {PS_ABEL_EXPORT}
 
 					if index > 0 then
 						new_object := read_manager.item (index)
-						fixme ("Make sure this object is loaded to the correct depth.")
 					else
 						index := read_manager.count + 1
 						create new_object.make_with_primary_key (index, retrieved_entity.primary_key, retrieved_entity.metadata, 0)
@@ -187,6 +200,12 @@ feature {PS_ABEL_EXPORT}
 						end
 
 						new_object.set_backend_representation (retrieved_entity)
+
+						if index /= read_manager.count and then to_build = to_build_interval then
+							create to_build_array.make (2 * to_build_interval.count)
+							to_build_interval.do_all (agent to_build_array.extend)
+							to_build := to_build_array
+						end
 						to_build.extend (index)
 					end
 

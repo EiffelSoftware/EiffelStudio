@@ -55,7 +55,8 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			rollback (transaction)
 		end
 
-	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+--	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			-- See function `specific_retrieve'.
 			-- Use `internal_specific_retrieve' for contracts and other calls within a backend.
 		local
@@ -77,17 +78,17 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
 			actual_result: HASH_TABLE [PS_BACKEND_OBJECT, INTEGER]
 		do
-			create key_type_lookup.make (order.count)
-			create actual_result.make (order.count)
+			create key_type_lookup.make (primaries.count)
+			create actual_result.make (primaries.count)
 
 				-- Build the SQL query
 			sql_string := "SELECT * FROM ps_value WHERE objectid IN ("
-			sql_string.grow (sql_string.count + 10 * order.count + SQL_Strings.for_update_appendix.count)
+			sql_string.grow (sql_string.count + 10 * primaries.count + SQL_Strings.for_update_appendix.count)
 			across
-				order as order_cursor
+				1 |..| primaries.count as i
 			loop
-				sql_string.append (order_cursor.item.primary_key.out + ", ")
-				key_type_lookup.extend (order_cursor.item.type, order_cursor.item.primary_key)
+				sql_string.append (primaries [i.item].out + ", ")
+				key_type_lookup.extend (types [i.item], primaries [i.item])
 			end
 			sql_string.put (')', sql_string.count - 1)
 			if not transaction.is_readonly then

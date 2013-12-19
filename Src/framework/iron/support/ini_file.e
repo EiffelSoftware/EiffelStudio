@@ -42,6 +42,33 @@ feature -- Access
 			Result := data.item (n)
 		end
 
+	table_item (a_name: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
+		require
+			is_valid: is_valid
+		local
+			s: READABLE_STRING_GENERAL
+			i, n: INTEGER
+		do
+			create Result.make (0)
+			n := a_name.count
+			across
+				data as ic
+			loop
+				if attached ic.item as l_item then
+					s := ic.key
+					if s.count > n and then s.starts_with (a_name) and then s[n+1] = '[' then
+						i := s.index_of (']', n + 1)
+						if i > 0 then
+							Result.force (l_item, s.substring (n + 2, i - 1))
+						end
+					end
+				end
+			end
+			if Result.is_empty then
+				Result := Void
+			end
+		end
+
 feature -- Access
 
 	new_cursor: TABLE_ITERATION_CURSOR [detachable READABLE_STRING_32, READABLE_STRING_GENERAL]
@@ -171,5 +198,5 @@ feature {NONE} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-		
+
 end

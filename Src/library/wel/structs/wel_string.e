@@ -331,7 +331,7 @@ feature -- Element change
 					end
 					i := i + 1
 				end
-				if l_start < nb then
+				if l_start <= nb then
 						-- We need to store the last remaining chunk.
 					u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, l_start, nb, l_managed_data, j, upper_cell)
 					j := upper_cell.item + character_size
@@ -471,7 +471,7 @@ invariant
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

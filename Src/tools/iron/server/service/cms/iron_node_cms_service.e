@@ -150,7 +150,7 @@ feature -- handler
 			create s.make_empty
 			s.append ("<ul>")
 			s.append ("<li><a href=%"" + req.script_url (l_iron.cms_page ("")) + "%">Home</a></li>")
-			s.append ("<li><a href=%"" + req.script_url (l_iron.package_list_web_page) + "%">Any version</a></li>")
+--			s.append ("<li><a href=%"" + req.script_url (l_iron.package_list_web_page) + "%">Any version</a></li>")
 			across
 				l_iron.database.versions as c_version
 			loop

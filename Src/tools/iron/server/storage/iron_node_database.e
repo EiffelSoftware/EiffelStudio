@@ -208,7 +208,8 @@ feature -- Version Package: Criteria
 						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
 							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
 								do
-									Result := across obj.tags as ic some ic.item.is_case_insensitive_equal_general (s) end
+									Result := attached obj.tags as l_tags and then
+										across l_tags as ic some ic.item.is_case_insensitive_equal_general (s) end
 								end(?, v)
 							)
 					end)

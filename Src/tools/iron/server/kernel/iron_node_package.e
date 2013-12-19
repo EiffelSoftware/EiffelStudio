@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			else
 				create id.make_from_string (a_id)
 			end
-			create {ARRAYED_LIST [READABLE_STRING_32]} tags.make (0)
 		end
 
 feature -- Status
@@ -84,7 +83,9 @@ feature -- Access
 
 feature -- Tags
 
-	tags: LIST [READABLE_STRING_32]
+	tags: detachable LIST [READABLE_STRING_32]
+
+	links: detachable STRING_TABLE [IRON_NODE_LINK]
 
 feature -- Access: archive
 
@@ -95,15 +96,6 @@ feature -- Access: archive
 		end
 
 	has_archive: BOOLEAN
---		do
---			Result := archive_path /= Void
---		end
-
---	archive_path: detachable PATH
-
---	archive_file_size: INTEGER
-
---	archive_last_modified: detachable DATE_TIME
 
 feature -- Access: items	
 
@@ -171,12 +163,6 @@ feature -- Change
 			end
 		end
 
---	set_archive_path (v: detachable PATH)
---		do
---			archive_path := v
---			get_archive_info
---		end
-
 	set_owner (u: like owner)
 		do
 			owner := u
@@ -192,28 +178,76 @@ feature -- Change
 			create last_modified.make_now_utc
 		end
 
+	add_tag (t: READABLE_STRING_GENERAL)
+		local
+			l_tags: like tags
+			s: STRING_32
+		do
+			l_tags := tags
+			if l_tags = Void then
+				create {ARRAYED_LIST [READABLE_STRING_32]} l_tags.make (1)
+				tags := l_tags
+			end
+			create s.make_from_string_general (t)
+			s.left_adjust
+			s.right_adjust
+			l_tags.force (s)
+		end
+
+	remove_tag (t: READABLE_STRING_GENERAL)
+		local
+			l_tags: like tags
+		do
+			l_tags := tags
+			if l_tags /= Void then
+				from
+					l_tags.start
+				until
+					l_tags.after
+				loop
+					if l_tags.item.is_case_insensitive_equal_general (t) then
+						l_tags.remove
+					else
+						l_tags.forth
+					end
+				end
+				if l_tags.is_empty then
+					tags := Void
+				end
+			end
+		end
+
+	add_link (a_name: READABLE_STRING_GENERAL; a_link: IRON_NODE_LINK)
+		local
+			l_links: like links
+		do
+			l_links := links
+			if l_links = Void then
+				create l_links.make_caseless (1)
+				links := l_links
+			end
+			l_links.force (a_link, a_name)
+		end
+
+	remove_link (a_name: READABLE_STRING_GENERAL)
+		local
+			l_links: like links
+		do
+			l_links := links
+			if l_links /= Void then
+				l_links.remove (a_name)
+				if l_links.is_empty then
+					links := Void
+				end
+			end
+		end
+
 feature -- Visitor
 
 	accept (vis: IRON_NODE_VISITOR)
 		do
 			vis.visit_package (Current)
 		end
-
---feature {NONE} -- Implementation
-
---	get_archive_info
---		local
---			f: RAW_FILE
---		do
---			if attached archive_path as p then
---				create f.make_with_path (p)
---				archive_file_size := f.count
---				create archive_last_modified.make_from_epoch (f.change_date)
---			else
---				archive_file_size := 0
---				archive_last_modified := Void
---			end
---		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

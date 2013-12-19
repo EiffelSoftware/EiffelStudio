@@ -100,9 +100,14 @@ feature -- Access
 
 feature -- Tags
 
-	tags: LIST [READABLE_STRING_32]
+	tags: detachable LIST [READABLE_STRING_32]
 		do
 			Result := package.tags
+		end
+
+	links: detachable STRING_TABLE [IRON_NODE_LINK]
+		do
+			Result := package.links
 		end
 
 feature -- Access: archive

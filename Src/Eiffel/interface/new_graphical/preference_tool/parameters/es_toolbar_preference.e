@@ -86,10 +86,8 @@ feature {NONE} -- Implementation
 							Result.extend (l_button)
 							l_added.extend (l_toolbarable_command)
 							if l_command_visibility then
-								l_toolbarable_command.enable_displayed
 								l_button.enable_displayed
 							else
-								l_toolbarable_command.disable_displayed
 								l_button.disable_displayed
 							end
 						end
@@ -102,7 +100,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

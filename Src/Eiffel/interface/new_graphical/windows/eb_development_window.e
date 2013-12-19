@@ -2493,7 +2493,7 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Execution
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEBUGGER_MANAGER, EB_WINDOW_MANAGER,
 		EB_NEW_DEVELOPMENT_WINDOW_COMMAND} -- Access
 
-	development_window_data: EB_DEVELOPMENT_WINDOW_DATA
+	development_window_data: EB_DEVELOPMENT_WINDOW_PREFERENCES
 			-- Meta data describing `Current'.
 		do
 			Result := preferences.development_window_data

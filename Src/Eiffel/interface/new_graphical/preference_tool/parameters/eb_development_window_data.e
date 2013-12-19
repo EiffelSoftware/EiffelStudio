@@ -25,26 +25,6 @@ feature -- Value
 	is_minimized: BOOLEAN
 			-- Is the development window minimized?
 
-	is_force_debug_mode: BOOLEAN
-			-- Is the development window force debug mode?
-		deferred
-		end
-
-	context_unified_stone: BOOLEAN
-			-- Is the context tool linked?
-		deferred
-		end
-
-	general_toolbar_layout: ARRAY [STRING]
-			-- Toolbar organization
-		deferred
-		end
-
-	refactoring_toolbar_layout: ARRAY [STRING]
-			-- Toolbar organization
-		deferred
-		end
-
 feature -- Element change
 
 	save_size (a_width, a_height: INTEGER)
@@ -86,36 +66,6 @@ feature -- Element change
 		ensure
 			states_set: is_maximized = a_maximized and is_minimized = a_minimized
 		end
-
-	save_force_debug_mode (a_bool: BOOLEAN)
-			-- Save if `is_force_debug_mode'
-		deferred
-		ensure
-			mode_set: is_force_debug_mode = a_bool
-		end
-
-feature -- Basic operations
-
-	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			-- Retreive the general toolbar using the available commands in `command_pool'
-		deferred
-		end
-
-	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			-- Retreive the refactoring toolbar using the available commands in `command_pool'
-		deferred
-		end
-
-feature -- Data Ids for SESSION_MANAGER
-
-	development_window_data_id: STRING_8 = "com.eiffel.develop_window_data"
-			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA}.
-
-	development_window_project_data_id: STRING_8 = "com.eiffel.develop_window_project_data"
-			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA} for one project.		
-
-	development_window_count_id: STRING_8 = "com_eiffel.develop_window_count"
-			-- Session data id for how many {EB_DEVELOPMENT_WINDOW} exists in the session.
 
 ;note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

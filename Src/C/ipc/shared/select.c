@@ -47,7 +47,6 @@
 #include "eif_config.h"	    /* must always be first include files */
 #include "eif_portable.h"
 
-#include <sys/select.h> /* for Cray */
 #include <errno.h>
 #include "timehdr.h" 	/* %%ss moved */
 #include "select.h"

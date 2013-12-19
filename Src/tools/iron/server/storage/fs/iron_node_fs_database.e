@@ -523,6 +523,37 @@ feature -- Version package
 			end
 		end
 
+	version_packages_count (v: IRON_NODE_VERSION): INTEGER
+			-- Total number of package for version `v'.
+		local
+			p: PATH
+			d,t: DIRECTORY
+			i: INTEGER
+			l_path: PATH
+		do
+			p := packages_index_path (v)
+			create d.make_with_path (p)
+			if d.exists and then d.is_readable then
+				i := 0
+				create t.make_with_path (p) -- Initialize `t'
+				across
+					d.entries as c
+				loop
+					l_path := c.item
+					if
+						not l_path.is_current_symbol and then
+						not l_path.is_parent_symbol
+					then
+						t.make_with_path (p.extended_path (l_path)) -- reuse `t'
+						if t.exists then
+							i := i + 1
+						end
+					end
+				end
+				Result := i
+			end
+		end
+
 	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): detachable LIST [IRON_NODE_VERSION_PACKAGE]
 		local
 			p: PATH

@@ -37,26 +37,27 @@ feature -- Execution
 
 	handle_search_package (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			h: WSF_HEADER
 			s: detachable STRING
 			lst: detachable LIST [IRON_NODE_VERSION_PACKAGE]
 			html_vis: HTML_IRON_NODE_ITERATOR
 			html: IRON_NODE_HTML_RESPONSE
-			json_vis: JSON_V1_IRON_NODE_ITERATOR
 			l_title: detachable READABLE_STRING_32
 			l_found_count: INTEGER
 			l_total_count: INTEGER
 			kmp: KMP_WILD
 		do
+			html := new_response_message (req)
+
 			if
 				attached {WSF_STRING} req.query_parameter ("name") as l_searched_name and then
 				not l_searched_name.is_empty
 			then
-				l_title := {STRING_32} "Search IRON packages with name=%"" + l_searched_name.value + "%""
+				l_title := {STRING_32} "IRON packages matching name=%"" + l_searched_name.value + "%""
 				lst := iron.database.version_packages (iron_version (req), 1, 0)
 				if lst /= Void then
 					l_total_count := lst.count
 					create kmp.make_empty
+					kmp.disable_case_sensitive
 					kmp.set_pattern (l_searched_name.value)
 					from
 						lst.start
@@ -77,6 +78,17 @@ feature -- Execution
 					end
 					l_found_count := lst.count
 				end
+			elseif
+				attached {WSF_STRING} req.query_parameter ("query") as l_search_query and then
+				not l_search_query.is_empty
+			then
+				html.add_parameter (l_search_query.value, "search_query_text")
+				html.add_parameter (iron.database.version_package_criteria_factory.description, "search_query_description")
+				html.add_parameter (iron.database.version_package_criteria_factory.short_description, "search_query_short_description")
+				l_title := {STRING_32} "IRON packages matching query=%"" + l_search_query.value + "%""
+				l_total_count := iron.database.version_packages_count (iron_version (req))
+				lst := iron.database.query_version_packages (l_search_query.value, iron_version (req), 1, 0)
+				l_found_count := lst.count
 			else
 				lst := iron.database.version_packages (iron_version (req), 1, 0)
 				if lst /= Void then
@@ -84,34 +96,22 @@ feature -- Execution
 					l_found_count := lst.count
 				end
 			end
-			if req.is_content_type_accepted ("text/html") then
-				html := new_response_message (req)
-				create s.make_empty
-				if lst /= Void then
-					create html_vis.make (s, req, iron, iron_version (req))
-					html_vis.set_user (current_user (req))
-					html_vis.visit_package_version_iterable (lst)
-				end
-
-					-- Create new package
-				if l_title /= Void then
-					html.set_title (html.html_encoded_string (l_title))
-				else
-					html.set_title ("List of available IRON packages")
-				end
-				s.append ("<div>Found " + l_found_count.out + " out of " + l_total_count.out + " items.</div>")
-				html.set_body (s)
-				res.send (html)
-			else
-				create json_vis.make (req, iron, iron_version (req))
-				s := json_vis.package_versions_to_json (lst)
-
-				create h.make
-				h.put_content_type_application_json
-				h.put_content_length (s.count)
-				res.put_header_lines (h)
-				res.put_string (s)
+			create s.make_empty
+			if lst /= Void then
+				create html_vis.make (s, req, iron, iron_version (req))
+				html_vis.set_user (current_user (req))
+				html_vis.visit_package_version_iterable (lst)
 			end
+
+				-- Create new package
+			if l_title /= Void then
+				html.set_title (html.html_encoded_string (l_title))
+			else
+				html.set_title ("List of available IRON packages")
+			end
+			s.append ("<div>Found " + l_found_count.out + " out of " + l_total_count.out + " items.</div>")
+			html.set_body (s)
+			res.send (html)
 		end
 
 feature -- Documentation

@@ -62,9 +62,16 @@
 		<ul>
 		  <form class="navbar-form navbar-left" role="search" action="{$base_url/}/repository/{$iron_version.value/}/package/">
 			  <div class="form-group">
-				  <input type="text" class="form-control" placeholder="Search" name="name" tooltip="Wildcard are supported">
+				  <input type="text" class="form-control" placeholder="Search" name="query" 
+				  	tooltip="Wildcard are supported" 
+					{unless isempty="$search_query_text"}value="{$search_query_text/}"{/unless}></input>
 			  </div>
-			  <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+			  <button type="submit" class="btn btn-default" 
+				  {unless isempty="$search_query_description"}
+	 			    data-toggle="popover" data-html="true" data-placement="left" data-content="{nl2br}{htmlentities}{$search_query_description/}{/htmlentities}{/nl2br}" data-trigger="hover"
+				  {/unless}
+			  ><span class="glyphicon glyphicon-search"></span>
+			  </button>
 		  </form>
 		</ul>
 		{/unless}

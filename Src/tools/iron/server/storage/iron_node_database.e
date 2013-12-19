@@ -112,6 +112,11 @@ feature -- Version Package: Access
 			Result /= Void implies Result.package ~ package (a_id)
 		end
 
+	version_packages_count (v: IRON_NODE_VERSION): INTEGER
+			-- Total number of package for version `v'.
+		deferred
+		end
+
 	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): detachable LIST [IRON_NODE_VERSION_PACKAGE]
 			-- Range [a_lower:a_upper] of packages for version `v'
 			-- if a_upper <= 0 then a_upper start from the end.
@@ -140,6 +145,91 @@ feature -- Version Package: Access
 		deferred
 		ensure
 			count_incremented: a_package.download_count > old a_package.download_count
+		end
+
+	query_version_packages (q: READABLE_STRING_32; v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): LIST [IRON_NODE_VERSION_PACKAGE]
+			-- Range [a_lower:a_upper] of packages for version `v' meeting the criteria expressed by `q'
+			-- if a_upper <= 0 then a_upper start from the end.
+		local
+			i: INTEGER
+		do
+			create {ARRAYED_LIST [IRON_NODE_VERSION_PACKAGE]} Result.make (0)
+			if attached version_packages (v, 1, 0) as lst then
+				if attached version_package_criteria_factory.criteria_from_string (q) as crit then
+					Result := crit.list (lst)
+					if a_upper >= a_lower then
+						from
+							Result.start
+							i := 1
+						until
+							i = a_lower or Result.after
+						loop
+							Result.remove
+						end
+						from
+							Result.finish
+							i := a_upper - a_lower
+						until
+							Result.count = i
+						loop
+							Result.remove
+						end
+					end
+				end
+			end
+		end
+
+feature -- Version Package: Criteria
+
+	version_package_criteria_factory: CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]
+		once
+			create Result.make
+			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+					do
+						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
+							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
+								local
+									kmp: KMP_WILD
+								do
+									if attached obj.name as l_name then
+										if s.has ('*') or s.has ('?') then
+											create kmp.make (s, l_name)
+											kmp.disable_case_sensitive
+											Result := kmp.pattern_matches
+										else
+											Result := l_name.as_lower.has_substring (s.as_lower)
+										end
+									end
+								end(?, v)
+							)
+					end)
+			Result.register_builder ("tag", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+					do
+						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
+							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
+								do
+									Result := across obj.tags as ic some ic.item.is_case_insensitive_equal_general (s) end
+								end(?, v)
+							)
+					end)
+			Result.register_builder ("downloads", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+					local
+						i: INTEGER
+					do
+						if v.is_integer then
+							i := v.to_integer
+							create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
+								agent (obj: IRON_NODE_VERSION_PACKAGE; nb: INTEGER): BOOLEAN
+									do
+										Result := obj.download_count >= nb
+									end(?, i)
+								)
+						end
+					end)
+			Result.register_default_builder ("name")
+			Result.set_builder_description ("name", "has package name (support wildcard)")
+			Result.set_builder_description ("tag", "has tag")
+			Result.set_builder_description ("downloads", "has at least N downloads")
 		end
 
 feature -- Version Package: change		

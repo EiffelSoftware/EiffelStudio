@@ -63,10 +63,8 @@ feature {NONE} -- Initialization
 
 	iron_version_package: detachable IRON_NODE_VERSION_PACKAGE
 
---feature -- Access
-
---	location: detachable READABLE_STRING_8
---			-- Redirected location if any.
+	parameters: detachable STRING_TABLE [ANY]
+			-- Associated data, mainly for template mode.
 
 feature -- Change
 
@@ -89,6 +87,18 @@ feature -- Change
 				set_status_code ({HTTP_STATUS_CODE}.found)
 				header.put_location (v)
 			end
+		end
+
+	add_parameter (v: READABLE_STRING_GENERAL; k: READABLE_STRING_8)
+		local
+			d: like parameters
+		do
+			d := parameters
+			if d = Void then
+				create d.make (1)
+				parameters := d
+			end
+			d.force (v, k)
 		end
 
 feature -- Messages
@@ -166,11 +176,20 @@ feature {WSF_RESPONSE} -- Output
 			l_url: READABLE_STRING_8
 			l_new_url: STRING_8
 			lnk: IRON_NODE_HTML_LINK
+			utf: UTF_CONVERTER
 		do
 			p := iron.layout.html_template_path.extended ("page.tpl")
 			if ut.file_path_exists (p) then
 				create tpl.make_from_file (p.name)
 				tpl.analyze
+
+				if attached parameters as l_parameters then
+					across
+						l_parameters as ic
+					loop
+						tpl.add_value (ic.item, utf.escaped_utf_32_string_to_utf_8_string_8 (ic.key)) -- Conversion to STRING_8 !!
+					end
+				end
 
 				tpl.add_value (request.absolute_script_url (""), "base_url")
 				tpl.add_value (request.request_uri, "current_url")

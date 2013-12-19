@@ -9,6 +9,6 @@
 {/unless}
 <p class="text-muted text-right">
   <span>{$package.text_last_modified/}</span>
-  <span class="packagetooltip text-right" data-toggle="tooltip" data-placement="right" data-delay="{{show:1000, hide:100}}" title data-original-title="id={$package.id/}"><span class="glyphicon glyphicon-info-sign"></span></span>
+  <span class="packagetooltip text-right" data-toggle="popover" data-placement="right" data-content="id={$package.id/}"><span class="glyphicon glyphicon-info-sign"></span></span>
 </p>
 </li>

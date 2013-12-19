@@ -114,7 +114,8 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
-	frozen specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+--	frozen specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+	frozen specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			-- For each tuple in the list, retrieve the object where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
@@ -126,12 +127,17 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			-- Note: A primary key only has to be unique among the set of objects with type `type'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		require
-			not_empty: not order.is_empty
-			supported: across order as cursor all is_object_type_supported (cursor.item.type) end
+--			not_empty: not order.is_empty
+--			supported: across order as cursor all is_object_type_supported (cursor.item.type) end
 			transaction_active: transaction.is_active
+
+			not_empty: not primaries.is_empty
+			supported: across types as cursor all is_object_type_supported (cursor.item) end
+			same_count: primaries.count = types.count
 		do
 				-- Retrieve the results.
-			Result := internal_specific_retrieve (order, transaction)
+--			Result := internal_specific_retrieve (order, transaction)
+			Result := internal_specific_retrieve (primaries, types, transaction)
 
 				-- Apply the plugins for each item in the result.
 			across
@@ -140,7 +146,8 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 				apply_plugins (cursor.item, transaction)
 			end
 		ensure
-			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
+--			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
+			type_and_primary_correct: across Result as res_cursor all (across 1 |..| primaries.count as arg_cursor some res_cursor.item.primary_key = primaries [arg_cursor.item] and res_cursor.item.metadata = types [arg_cursor.item] end) end
 			attributes_present: across Result as cursor all cursor.item.metadata.attributes.for_all (agent (cursor.item).has_attribute) end
 			consistent: across Result as res_cursor all res_cursor.item.is_consistent end
 			transaction_unchanged: transaction.is_active
@@ -227,12 +234,14 @@ feature {PS_READ_ONLY_BACKEND} -- Implementation
 		deferred
 		end
 
-	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+--	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			-- See function `specific_retrieve'.
 			-- Use `internal_specific_retrieve' for contracts and other calls within a backend.
 		require
-			not_empty: not order.is_empty
-			supported: across order as cursor all is_object_type_supported (cursor.item.type) end
+			not_empty: not primaries.is_empty
+			same_count: primaries.count = types.count
+			supported: across types as cursor all is_object_type_supported (cursor.item) end
 		deferred
 		end
 

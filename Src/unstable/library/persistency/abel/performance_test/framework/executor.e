@@ -36,19 +36,29 @@ feature -- Test execution
 
 	perform_tests
 			-- Perform all tests for the given controller.
+		local
+			gc: MEMORY
 		do
+			create gc
+
 			controller.repository.clean_db_for_testing
 			measure_insert_flat
+			gc.full_collect
+			gc.full_coalesce
+
 			measure_query_flat_all
 			measure_query_flat_select
 
 			controller.repository.clean_db_for_testing
 
 			measure_insert_deep
+			gc.full_collect
+			gc.full_coalesce
+
 			measure_query_deep_all
 			measure_query_deep_select
-
-			controller.repository.clean_db_for_testing
+-- 
+-- 			controller.repository.clean_db_for_testing
 
 -- 			measure_insert_shared
 -- 			measure_query_shared_all

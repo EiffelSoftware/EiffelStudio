@@ -13,21 +13,27 @@ inherit
 feature {PS_ABEL_EXPORT}
 
 
-	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+--	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 		local
 			struct: PS_IMMUTABLE_STRUCTURE [STRING]
 			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
+			i: INTEGER
 		do
-			across
-				order as cursor
 			from
-				create list.make (order.count)
+				create list.make (primaries.count)
 				Result := list
+				i := 1
+			until
+				i > primaries.count
 			loop
-				create struct.make (cursor.item.type.attributes)
-				if attached internal_retrieve_by_primary (cursor.item.type, cursor.item.primary_key, struct, transaction) as retrieved_obj then
+				create struct.make (types [i].attributes)
+				if attached internal_retrieve_by_primary (types [i], primaries [i], struct, transaction) as retrieved_obj then
 					list.extend (retrieved_obj)
 				end
+				i := i + 1
+			variant
+				primaries.count + 1 - i
 			end
 		end
 

@@ -32,7 +32,9 @@ feature {NONE} -- Initialization
 			create object_storage.make (default_size)
 			create cache.make (small_size)
 
-			create objects_to_retrieve.make (small_size)
+--			create objects_to_retrieve.make (small_size)
+			create object_primaries_to_retrieve.make (small_size)
+			create object_types_to_retrieve.make (small_size)
 			create collections_to_retrieve.make (small_size)
 
 			to_process_next := new_interval
@@ -88,6 +90,20 @@ feature {PS_ABEL_EXPORT} -- Element change
 		ensure
 			inserted: count - 1 = old count
 			correct_position: item (object.index) = object
+		end
+
+	wipe_out
+			-- Empty caches and remove all data.
+		do
+			object_storage.wipe_out
+			cache.wipe_out
+			object_primaries_to_retrieve.wipe_out
+			object_types_to_retrieve.wipe_out
+			collections_to_retrieve.wipe_out
+
+			to_process_next := new_interval
+			to_process := new_interval
+			to_finalize := new_interval
 		end
 
 feature {PS_ABEL_EXPORT} -- Smart retrieval
@@ -242,6 +258,8 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				referee_index := cache_lookup (foreign_key, type)
 
 				if referee_index > 0 then
+
+
 					referee := item (referee_index)
 					if referee.is_ignored then
 						-- do nothing
@@ -264,6 +282,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 			referee: PS_OBJECT_READ_DATA
 		do
 			referee_index := cache_lookup (foreign_key, type)
+				check in_to_process: to_process.has (referee_index) end
 
 			check object_exists: referee_index > 0 end
 			referee := item (referee_index)
@@ -329,7 +348,9 @@ feature {PS_ABEL_EXPORT} -- Handler support: Batch Retrieval
 			-- Register `object' to be added to the next batch retrieval request.
 		do
 			if not attached object.backend_representation then
-				objects_to_retrieve.extend ([object.type, object.primary_key, object.index])
+--				objects_to_retrieve.extend ([object.type, object.primary_key, object.index])
+				object_types_to_retrieve.extend (object.type)
+				object_primaries_to_retrieve.extend (object.primary_key)
 			end
 		end
 
@@ -349,7 +370,9 @@ feature {NONE} -- Implementation: Loop body
 			-- Finish initialization of all objects in `to_finalize'
 		require
 			collections_to_retrieve.is_empty
-			objects_to_retrieve.is_empty
+--			objects_to_retrieve.is_empty
+			object_types_to_retrieve.is_empty
+			object_primaries_to_retrieve.is_empty
 		local
 			i: INTEGER
 			identifier: PS_OBJECT_IDENTIFIER_WRAPPER
@@ -365,10 +388,11 @@ feature {NONE} -- Implementation: Loop body
 				to_process as idx
 			loop
 				object := item (idx.item)
-				if not object.is_ignored then
-					check initialized: object.is_handler_initialized end
-					object.handler.retrieve (object, Current)
-				end
+
+				check not_ignored: not object.is_ignored end
+				check initialized: object.is_handler_initialized end
+
+				object.handler.retrieve (object, Current)
 			end
 
 				-- Do a batch retrieve
@@ -379,9 +403,14 @@ feature {NONE} -- Implementation: Loop body
 				to_process as idx
 			loop
 				object := item (idx.item)
-				if not object.is_ignored then
-					check initialized: object.is_handler_initialized end
+
+				check not_ignored: not object.is_ignored end
+				check initialized: object.is_handler_initialized end
+
+				if attached object.backend_representation then
 					object.handler.create_object (object, Current)
+				else
+					object.ignore
 				end
 			end
 
@@ -441,8 +470,12 @@ feature {NONE} -- Implementation: Loop body
 
 feature {NONE} -- Implementation: Batch retrieval
 
-	objects_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
+--	objects_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
 			-- All objects to be retrieved in the next batch retrieval operation.
+
+	object_primaries_to_retrieve: ARRAYED_LIST [INTEGER]
+
+	object_types_to_retrieve: ARRAYED_LIST [PS_TYPE_METADATA]
 
 	collections_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
 			-- All collections to be retrieved in the next batch retrieval operation.
@@ -456,8 +489,8 @@ feature {NONE} -- Implementation: Batch retrieval
 			retrieved_collections: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 		do
 
-			if not objects_to_retrieve.is_empty then
-				retrieved_objects := backend.specific_retrieve (objects_to_retrieve, transaction)
+			if not object_primaries_to_retrieve.is_empty then
+				retrieved_objects := backend.specific_retrieve (object_primaries_to_retrieve, object_types_to_retrieve, transaction)
 
 				across
 					retrieved_objects as obj
@@ -465,13 +498,13 @@ feature {NONE} -- Implementation: Batch retrieval
 					item (cache_lookup (obj.item.primary_key, obj.item.metadata)).set_backend_representation (obj.item)
 				end
 
-				across
-					objects_to_retrieve as cursor
-				loop
-					if not attached item (cursor.item.index).backend_representation then
-						item (cursor.item.index).ignore
-					end
-				end
+--				across
+--					objects_to_retrieve as cursor
+--				loop
+--					if not attached item (cursor.item.index).backend_representation then
+--						item (cursor.item.index).ignore
+--					end
+--				end
 
 			end
 
@@ -484,20 +517,25 @@ feature {NONE} -- Implementation: Batch retrieval
 					item (cache_lookup (coll.item.primary_key, coll.item.metadata)).set_backend_representation (coll.item)
 				end
 
-				across
-					collections_to_retrieve as cursor
-				loop
-					if not attached item (cursor.item.index).backend_representation then
-						item (cursor.item.index).ignore
-					end
-				end
+--				across
+--					collections_to_retrieve as cursor
+--				loop
+--					if not attached item (cursor.item.index).backend_representation then
+--						item (cursor.item.index).ignore
+--					end
+--				end
 
 			end
 
 			collections_to_retrieve.wipe_out
-			objects_to_retrieve.wipe_out
+--			objects_to_retrieve.wipe_out
+
+			object_primaries_to_retrieve.wipe_out
+			object_types_to_retrieve.wipe_out
+
 		ensure
-			cleared_arrays: collections_to_retrieve.is_empty and objects_to_retrieve.is_empty
+			cleared_arrays: collections_to_retrieve.is_empty -- and objects_to_retrieve.is_empty
+			more_cleared_arrays: object_primaries_to_retrieve.is_empty and object_types_to_retrieve.is_empty
 		end
 
 end

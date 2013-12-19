@@ -636,15 +636,23 @@ feature {NONE} -- Implementation
 		local
 			l_border: ES_BORDERED_WIDGET [EV_WIDGET]
 			l_hbox: EV_HORIZONTAL_BOX
-		once
-			create Result
-			create l_hbox
-			create l_border.make (l_hbox)
-			Result.extend (l_border)
-			l_hbox.extend (create {EV_LABEL}.make_with_text (interface_names.l_no_information_available))
+		do
+			if attached internal_nothing_widget as l_widget then
+				Result := l_widget
+			else
+				create Result
+				create l_hbox
+				create l_border.make (l_hbox)
+				Result.extend (l_border)
+				l_hbox.extend (create {EV_LABEL}.make_with_text (interface_names.l_no_information_available))
+				internal_nothing_widget := Result
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	internal_nothing_widget: detachable like nothing_widget
+			-- Storage for `nothing_widget'
 
 	internal_recycle
 			-- <precursor>

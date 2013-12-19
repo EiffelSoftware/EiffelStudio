@@ -183,7 +183,6 @@ if [ ! -f $1 ]; then
 		CANCEL
 	fi
 fi
-strip $1
 mv $1 ..
 cd ..
 fullrf $1.tar

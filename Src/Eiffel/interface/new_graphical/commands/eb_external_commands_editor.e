@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 				loaded.put (True)
 				update_commands_from_ini_file
 			end
-			enable_displayed
 		end
 
 	loaded: CELL [BOOLEAN]
@@ -476,7 +475,7 @@ feature {NONE} -- Properties
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

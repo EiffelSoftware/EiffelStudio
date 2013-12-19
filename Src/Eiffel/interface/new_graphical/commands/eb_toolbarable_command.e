@@ -68,24 +68,7 @@ feature -- Access
 			Result := False
 		end
 
-feature -- Status Report
-
-	is_displayed: BOOLEAN
-			-- Is the toolbar button currently displayed?
-
 feature -- Status setting
-
-	enable_displayed
-			-- Set `is_displayed' to True.
-		do
-			is_displayed := True
-		end
-
-	disable_displayed
-			-- Set `is_displayed' to False.
-		do
-			is_displayed := False
-		end
 
 	enable_sensitive
 			-- Set `is_sensitive' to True.
@@ -291,7 +274,7 @@ feature {NONE} -- Implementation
 	Closing_parenthesis: STRING = ")";
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

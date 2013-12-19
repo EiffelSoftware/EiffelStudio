@@ -342,14 +342,17 @@ feature {NONE} -- Parse
 
 feature -- Access
 
-	description: STRING_32
+	short_description: STRING_32
 		local
 			s: STRING_32
 		do
 			create s.make_empty
+			s.append ("Criteria:%N")
 			across
 				builders as c
 			loop
+				s.append_character (' ')
+				s.append_character (' ')
 				s.append_character ('[')
 				s.append_string_general (c.key)
 				s.append_character (']')
@@ -359,26 +362,47 @@ feature -- Access
 				end
 				s.append_character ('%N')
 			end
-			s.append ("%N")
-			s.append ("Operators: or, and, not%N")
-			s.append ("Usage:%N")
-			s.append ("%Tfoo:bar means 'foo:bar'%N" )
-			s.append ("%T-foo:bar means 'not foo:bar'%N")
-			s.append ("%T+foo:bar means 'or foo:bar'%N")
+			if attached default_builder_name as dft then
+				s.append ("%N  Default is [" + dft + "]%N")
+			end
+			Result := s
+		end
 
+	description: STRING_32
+		local
+			s: STRING_32
+		do
+			create s.make_from_string (short_description)
+			s.append ("%N")
+			s.append ("[
+				Operators: or, and, not
+				Usage: criterion:value
+				  prefix '-' -> 'not'
+				  prefix '+' -> 'or'
+				]")
+
+			if attached default_builder_name as dft then
+				s.append ("  value -> " + dft+ ".value%N")
+			end
 			Result := s
 		end
 
 feature -- Change		
 
 	register_builder (a_name: READABLE_STRING_GENERAL; bld: attached like builder)
+		local
+			t: like builders.item
 		do
-			builders.force ([bld, Void], a_name)
+			t := [bld, Void]
+			builders.force (t, a_name)
 		end
 
 	register_builder_with_description (a_name: READABLE_STRING_GENERAL; bld: attached like builder; a_desc: READABLE_STRING_GENERAL)
+		local
+			t: like builders.item
 		do
-			builders.force ([bld, a_desc], a_name)
+			t := [bld, a_desc]
+			builders.force (t, a_name)
 		end
 
 	register_default_builder (a_name: detachable READABLE_STRING_GENERAL)
@@ -386,6 +410,15 @@ feature -- Change
 			a_name /= Void implies has_criteria (a_name)
 		do
 			default_builder_name := a_name
+		end
+
+	set_builder_description (a_name: READABLE_STRING_GENERAL; a_desc: detachable READABLE_STRING_GENERAL)
+		require
+			has_criteria (a_name)
+		do
+			if attached builders.item (a_name) as b then
+				builders.force ([b.builder, a_desc], a_name)
+			end
 		end
 
 feature {NONE} -- Implementation		

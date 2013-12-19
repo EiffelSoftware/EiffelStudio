@@ -122,6 +122,7 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 		end
 
 	context_unified_stone: BOOLEAN
+			-- Is the context tool linked?
 		do
 			Result := context_unified_stone_preference.value
 		end
@@ -250,6 +251,17 @@ feature -- Basic operations
 			Result := retrieve_toolbar_items (command_pool, refactoring_toolbar_layout)
 		end
 
+feature -- Data Ids for SESSION_MANAGER
+
+	development_window_data_id: STRING_8 = "com.eiffel.develop_window_data"
+			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA}.
+
+	development_window_project_data_id: STRING_8 = "com.eiffel.develop_window_project_data"
+			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA} for one project.		
+
+	development_window_count_id: STRING_8 = "com_eiffel.develop_window_count"
+			-- Session data id for how many {EB_DEVELOPMENT_WINDOW} exists in the session.
+
 feature {NONE} -- Preference Strings
 
 	is_force_debug_mode_string: STRING = "interface.development_window.is_force_debug_mode"
@@ -362,7 +374,7 @@ invariant
 	estudio_dbg_menu_enabled_preference_not_void: estudio_dbg_menu_enabled_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

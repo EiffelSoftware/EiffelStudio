@@ -1,7 +1,7 @@
-body {margin: 5px 0 5px 0;
+body {margin: 5px 2px 5px 2px;
 background-color: #ddddff;}
 div#page {margin: auto;
-width: 800px;
+max-width: 900px;
 height: auto;
 border-left: solid 1px #ccf;
 border-right: solid 1px #ccf;

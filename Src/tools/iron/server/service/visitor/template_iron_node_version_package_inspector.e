@@ -37,6 +37,8 @@ feature -- Internal data
 					Result := cell_of (obj.owner)
 				elseif fn.is_case_insensitive_equal_general ("tags") then
 					Result := cell_of (obj.tags)
+				elseif fn.is_case_insensitive_equal_general ("links") then
+					Result := cell_of (obj.links)
 				elseif fn.is_case_insensitive_equal_general ("has_archive") then
 					Result := cell_of (obj.has_archive)
 				elseif fn.is_case_insensitive_equal_general ("archive_file_size") then

@@ -277,7 +277,16 @@ feature -- Package
 					across
 						s_tags.split (',') as tags_ic
 					loop
-						Result.tags.force (tags_ic.item)
+						Result.add_tag (tags_ic.item)
+					end
+				end
+				if attached inf.table_item ("links") as s_links then
+					across
+						s_links as links_ic
+					loop
+						if links_ic.item.is_valid_as_string_8 then
+							Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (links_ic.item.as_string_8, links_ic.key.to_string_32))
+						end
 					end
 				end
 
@@ -459,17 +468,36 @@ feature -- Package: change
 				inf.put (hdate.rfc1123_string, "last-modified")
 			end
 			create s.make_empty
-			across
-				a_package.tags as tags_ic
-			loop
-				if not s.is_empty then
-					s.append_character (',')
+			if attached a_package.tags as l_tags then
+				across
+					l_tags as tags_ic
+				loop
+					if not s.is_empty then
+						s.append_character (',')
+					end
+					s.append (tags_ic.item)
 				end
-				s.append (tags_ic.item)
 			end
 			if not s.is_empty then
 				inf.put (s, "tags")
 			end
+
+			if attached a_package.links as l_links then
+				across
+					l_links as link_ic
+				loop
+					create s.make_empty
+					if attached link_ic.item.title as lnk_title then
+						s.append_character ('%"')
+						s.append (lnk_title)
+						s.append_character ('%"')
+						s.append_character (' ')
+					end
+					s.append (link_ic.item.url)
+					inf.put (s, "links["+ link_ic.key +"]")
+				end
+			end
+
 
 			if attached a_package.owner as o then
 				inf.put (o.name, "owner")

@@ -104,7 +104,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			Result := wrapper
 
 				-- Execute plugins for the first item after retrieval.
-			if not Result.after then
+			if not Result.after and not plugins.is_empty then
 				apply_plugins (Result.item, transaction)
 			end
 		ensure
@@ -140,10 +140,12 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			Result := internal_specific_retrieve (primaries, types, transaction)
 
 				-- Apply the plugins for each item in the result.
-			across
-				Result as cursor
-			loop
-				apply_plugins (cursor.item, transaction)
+			if not plugins.is_empty then
+				across
+					Result as cursor
+				loop
+					apply_plugins (cursor.item, transaction)
+				end
 			end
 		ensure
 --			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end

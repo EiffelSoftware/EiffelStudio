@@ -51,7 +51,7 @@ feature -- Status report
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result:= type.type_id = other.type.type_id
+			Result:= hash_code = other.hash_code
 		end
 
 	is_basic_type: BOOLEAN
@@ -211,9 +211,6 @@ feature -- Attributes
 
 	hash_code: INTEGER
 			-- Hash code value.
-		do
-			Result := type.type_id
-		end
 
 	builtin_type: ARRAYED_LIST [INTEGER]
 			-- The builtin types of the attributes.
@@ -232,6 +229,7 @@ feature {PS_METADATA_FACTORY} -- Initialization
 		do
 			type := a_type
 			factory := a_manager
+			hash_code := type.hash_code
 			create reflection
 
 			if a_type.type_id = ({NONE}).type_id or a_type.type_id = ({detachable NONE}).type_id then
@@ -324,4 +322,5 @@ invariant
 	correct_genericity: (generic_parameter_count = 0) = not is_generic_derivation
 	attributes_splitted_correctly: basic_attributes.count + reference_attributes.count = attributes.count
 
+	hash_correct: hash_code = type.type_id
 end

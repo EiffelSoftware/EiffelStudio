@@ -36,20 +36,15 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER
 			-- The number of objects known to this manager.
-		do
-			Result := object_storage.count
-		ensure
-			correct: object_storage.count = Result
+		deferred
 		end
 
 	item (index: INTEGER): G
 			-- Get the object with index `index'
 		require
 			valid_index: 1 <= index and index <= count
-		do
-			Result := object_storage [index]
+		deferred
 		ensure
-			object_correct: object_storage [index] = Result
 			index_set: Result.index = index
 		end
 
@@ -214,10 +209,6 @@ feature {NONE} -- Internal data structures
 
 	value_type_handlers: SPECIAL [PS_HANDLER]
 			-- All value type handlers.
-
-
-	object_storage: ARRAYED_LIST [G]
-			-- An internal storage for objects.
 
 	internal_transaction: detachable like transaction
 			-- The detachable attribute for `transaction'

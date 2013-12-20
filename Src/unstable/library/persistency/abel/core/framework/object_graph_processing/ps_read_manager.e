@@ -24,12 +24,20 @@ feature {NONE} -- Initialization
 			a_backend: like backend;
 			a_transaction: like transaction)
 			-- Initialization for `Current'
+		local
+			bogus: PS_OBJECT_READ_DATA
 		do
 			initialize (a_metadata_factory, an_id_manager, a_primary_key_mapper)
 			backend := a_backend
 			internal_transaction := a_transaction
 
-			create object_storage.make (default_size)
+
+			create storage_array.make_empty (default_size)
+				-- Fill the first position with a bogus result.
+			create bogus.make_with_primary_key (0, -1, metadata_factory.create_metadata_from_type ({NONE}), -1)
+			storage_array.extend (bogus)
+
+--			create object_storage.make (default_size)
 			create cache.make (small_size)
 
 --			create objects_to_retrieve.make (small_size)
@@ -47,7 +55,25 @@ feature {NONE} -- Initialization
 			-- A cache to map a [type, primary_key] tuple to an index in `object_storage'.
 
 
+--	object_storage: ARRAYED_LIST [PS_OBJECT_READ_DATA]
+			-- An internal storage for objects.
+
+	storage_array: SPECIAL [PS_OBJECT_READ_DATA]
+			-- An internal storage for objects.
+
+
 feature {PS_ABEL_EXPORT} -- Access
+
+	count: INTEGER
+			-- The number of objects known to this manager.
+
+	item (index: INTEGER): PS_OBJECT_READ_DATA
+			-- Get the object with index `index'
+		do
+			Result := storage_array [index]
+		ensure then
+			object_correct: storage_array [index] = Result
+		end
 
 	backend: PS_READ_ONLY_BACKEND
 			-- The database backend.
@@ -73,7 +99,13 @@ feature {PS_ABEL_EXPORT} -- Element change
 		local
 			new_inner_cache: HASH_TABLE [INTEGER, INTEGER]
 		do
-			object_storage.extend (object)
+			count := count + 1
+			if count = storage_array.capacity then
+					-- Array is full...
+				storage_array := storage_array.aliased_resized_area (2 * count)
+			end
+			storage_array.extend (object)
+--			object_storage.extend (object)
 
 			-- Add the item to the cache.
 			-- Also add items which have not been found in the database (i.e. backend_representation = Void).
@@ -95,7 +127,9 @@ feature {PS_ABEL_EXPORT} -- Element change
 	wipe_out
 			-- Empty caches and remove all data.
 		do
-			object_storage.wipe_out
+--			object_storage.wipe_out
+			storage_array.keep_head (1)
+			count := 0
 			cache.wipe_out
 			object_primaries_to_retrieve.wipe_out
 			object_types_to_retrieve.wipe_out
@@ -538,4 +572,6 @@ feature {NONE} -- Implementation: Batch retrieval
 			more_cleared_arrays: object_primaries_to_retrieve.is_empty and object_types_to_retrieve.is_empty
 		end
 
+invariant
+	count_correct: count = storage_array.count - 1
 end

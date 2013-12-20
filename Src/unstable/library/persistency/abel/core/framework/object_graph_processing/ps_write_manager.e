@@ -33,6 +33,28 @@ feature {NONE} -- Initialization
 			create collections_to_write.make (small_size)
 		end
 
+	object_storage: ARRAYED_LIST [PS_OBJECT_WRITE_DATA]
+			-- An internal storage for objects.
+
+feature {PS_ABEL_EXPORT} -- Access
+
+	count: INTEGER
+			-- The number of objects known to this manager.
+		do
+			Result := object_storage.count
+		ensure then
+			correct: object_storage.count = Result
+		end
+
+	item (index: INTEGER): PS_OBJECT_WRITE_DATA
+			-- Get the object with index `index'
+		do
+			Result := object_storage [index]
+		ensure then
+			object_correct: object_storage [index] = Result
+			index_set: Result.index = index
+		end
+
 feature {PS_ABEL_EXPORT} -- Accesss: Static
 
 	backend: PS_BACKEND

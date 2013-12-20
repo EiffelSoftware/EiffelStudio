@@ -9,9 +9,25 @@ class
 
 inherit
 	PS_REPOSITORY_FACTORY
+		redefine
+			make
+		end
 
 create
 	make, make_uninitialized
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize with default handlers and plugins.
+		do
+			make_uninitialized
+
+			internal_handlers.extend (create {PS_STRING_HANDLER})
+			internal_handlers.extend (create {PS_TUPLE_HANDLER})
+			internal_handlers.extend (create {PS_SPECIAL_HANDLER})
+			internal_handlers.extend (create {PS_DEFAULT_OBJECT_HANDLER})
+		end
 
 feature -- Status report
 
